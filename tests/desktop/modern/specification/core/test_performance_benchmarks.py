@@ -19,9 +19,9 @@ import os
 from unittest.mock import Mock
 from typing import List, Dict, Any
 
-from src.core.events.event_bus import TypeSafeEventBus
-from src.core.dependency_injection.di_container import DIContainer
-from src.domain.models.core_models import (
+from desktop.modern.src.core.events.event_bus import TypeSafeEventBus
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,

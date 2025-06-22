@@ -19,12 +19,12 @@ from pathlib import Path
 from typing import List
 from collections import defaultdict
 
-from core.interfaces.organization_services import (
+from desktop.modern.src.core.interfaces.organization_services import (
     IImportAnalysisService,
     IFileSystemService,
     ICodePatternAnalysisService,
     ImportAnalysis,
-    ImportStandardizationReport
+    ImportStandardizationReport,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 class ImportAnalysisService(IImportAnalysisService):
     """
     Pure service for analyzing import patterns in Python files.
-    
+
     Coordinates AST parsing, pattern analysis, and reporting.
     Uses dependency injection for file system and pattern analysis.
     """
@@ -42,11 +42,11 @@ class ImportAnalysisService(IImportAnalysisService):
         self,
         file_system_service: IFileSystemService,
         pattern_analysis_service: ICodePatternAnalysisService,
-        project_root: Path
+        project_root: Path,
     ):
         """
         Initialize the import analysis service.
-        
+
         Args:
             file_system_service: Service for file system operations
             pattern_analysis_service: Service for pattern analysis
@@ -60,10 +60,10 @@ class ImportAnalysisService(IImportAnalysisService):
     def analyze_file(self, file_path: Path) -> ImportAnalysis:
         """
         Analyze import patterns in a single Python file.
-        
+
         Args:
             file_path: Path to the Python file to analyze
-            
+
         Returns:
             ImportAnalysis with detailed import pattern analysis
         """
@@ -112,8 +112,12 @@ class ImportAnalysisService(IImportAnalysisService):
                                 )
 
                             # Check for standard TKA patterns
-                            elif not self.pattern_analysis_service.is_standard_tka_import(module_name):
-                                if not self.pattern_analysis_service.is_external_library(module_name):
+                            elif not self.pattern_analysis_service.is_standard_tka_import(
+                                module_name
+                            ):
+                                if not self.pattern_analysis_service.is_external_library(
+                                    module_name
+                                ):
                                     inconsistent_imports.append(
                                         f"Non-standard TKA import: {module_name}"
                                     )
@@ -122,8 +126,10 @@ class ImportAnalysisService(IImportAnalysisService):
                                     )
 
             # Calculate compliance score
-            compliance_score = self.pattern_analysis_service.calculate_pattern_compliance_score(
-                total_imports, src_prefix_imports, len(inconsistent_imports)
+            compliance_score = (
+                self.pattern_analysis_service.calculate_pattern_compliance_score(
+                    total_imports, src_prefix_imports, len(inconsistent_imports)
+                )
             )
 
             return ImportAnalysis(
@@ -153,7 +159,7 @@ class ImportAnalysisService(IImportAnalysisService):
     def analyze_codebase(self) -> ImportStandardizationReport:
         """
         Analyze import patterns across the entire codebase.
-        
+
         Returns:
             ImportStandardizationReport with comprehensive analysis
         """
@@ -189,7 +195,9 @@ class ImportAnalysisService(IImportAnalysisService):
                 files_needing_fixes.append(analysis.file_path)
 
             for violation in analysis.inconsistent_imports:
-                violation_type = self.pattern_analysis_service.categorize_violation(violation)
+                violation_type = self.pattern_analysis_service.categorize_violation(
+                    violation
+                )
                 common_violations[violation_type] += 1
 
         # Generate standardization recommendations
@@ -229,29 +237,31 @@ class ImportAnalysisService(IImportAnalysisService):
             )
 
         # Add specific pattern recommendations
-        recommendations.extend([
-            "Use 'from domain.models.core_models import ...' for domain models",
-            "Use 'from application.services import ...' for application services",
-            "Use 'from presentation.components import ...' for UI components",
-            "Use 'from core.interfaces import ...' for core interfaces",
-            "Limit relative imports to maximum 3 levels (../../..)",
-            "Use relative imports only within the same module hierarchy",
-        ])
+        recommendations.extend(
+            [
+                "Use 'from domain.models.core_models import ...' for domain models",
+                "Use 'from application.services import ...' for application services",
+                "Use 'from presentation.components import ...' for UI components",
+                "Use 'from core.interfaces import ...' for core interfaces",
+                "Limit relative imports to maximum 3 levels (../../..)",
+                "Use relative imports only within the same module hierarchy",
+            ]
+        )
 
         return recommendations
 
     def get_analysis_summary(self, file_path: Path) -> dict:
         """
         Get a summary of analysis results for a specific file.
-        
+
         Args:
             file_path: Path to analyze
-            
+
         Returns:
             Dictionary with analysis summary
         """
         analysis = self.analyze_file(file_path)
-        
+
         return {
             "file_path": str(analysis.file_path),
             "total_imports": analysis.total_imports,
@@ -261,34 +271,46 @@ class ImportAnalysisService(IImportAnalysisService):
             "relative_imports": analysis.relative_imports,
             "absolute_imports": analysis.absolute_imports,
             "needs_fixes": analysis.compliance_score < 95.0,
-            "top_recommendations": analysis.recommendations[:3]  # Top 3 recommendations
+            "top_recommendations": analysis.recommendations[
+                :3
+            ],  # Top 3 recommendations
         }
 
     def validate_project_structure(self) -> dict:
         """
         Validate that the project has the expected structure for analysis.
-        
+
         Returns:
             Dictionary with validation results
         """
-        validation_results = {
-            "valid": True,
-            "issues": [],
-            "recommendations": []
-        }
-        
+        validation_results = {"valid": True, "issues": [], "recommendations": []}
+
         # Check if src directory exists
         if not self.src_root.exists():
             validation_results["valid"] = False
-            validation_results["issues"].append(f"src directory not found: {self.src_root}")
-            validation_results["recommendations"].append("Ensure project follows standard src/ layout")
-        
+            validation_results["issues"].append(
+                f"src directory not found: {self.src_root}"
+            )
+            validation_results["recommendations"].append(
+                "Ensure project follows standard src/ layout"
+            )
+
         # Check for expected TKA directories
-        expected_dirs = ["domain", "application", "presentation", "core", "infrastructure"]
+        expected_dirs = [
+            "domain",
+            "application",
+            "presentation",
+            "core",
+            "infrastructure",
+        ]
         for dir_name in expected_dirs:
             dir_path = self.src_root / dir_name
             if not dir_path.exists():
-                validation_results["issues"].append(f"Expected directory not found: {dir_path}")
-                validation_results["recommendations"].append(f"Create {dir_name}/ directory for TKA architecture")
-        
+                validation_results["issues"].append(
+                    f"Expected directory not found: {dir_path}"
+                )
+                validation_results["recommendations"].append(
+                    f"Create {dir_name}/ directory for TKA architecture"
+                )
+
         return validation_results

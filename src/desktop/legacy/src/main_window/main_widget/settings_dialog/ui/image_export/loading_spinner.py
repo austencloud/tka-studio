@@ -291,6 +291,5 @@ class WaitingSpinner(QWidget):
         super().hideEvent(event)
 
     def show(self) -> None:
-
         super().show()
         self._update_position()

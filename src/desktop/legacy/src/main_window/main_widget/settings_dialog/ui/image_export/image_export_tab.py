@@ -20,7 +20,6 @@ if TYPE_CHECKING:
 
 
 class ImageExportTab(QWidget):
-
     def __init__(self, settings_dialog: "LegacySettingsDialog"):
         super().__init__(settings_dialog)
         self.settings_dialog = settings_dialog
@@ -80,9 +79,9 @@ class ImageExportTab(QWidget):
         # In ImageExportTab.update_preview()
         options = self.settings_manager.image_export.get_all_image_export_options()
         options["user_name"] = self.control_panel.user_combo_box.currentText()
-        options["notes"] = (
-            self.control_panel.note_input.text()
-        )  # Use text field instead of combo box
+        options[
+            "notes"
+        ] = self.control_panel.note_input.text()  # Use text field instead of combo box
         options["export_date"] = datetime.now().strftime("%m-%d-%Y")
 
         sequence = self._get_current_sequence()

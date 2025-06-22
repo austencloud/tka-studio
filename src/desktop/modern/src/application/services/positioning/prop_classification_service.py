@@ -14,13 +14,13 @@ PROVIDES:
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     Location,
     Orientation,
 )
-from domain.models.pictograph_models import PropType
+from desktop.modern.src.domain.models.pictograph_models import PropType
 
 
 class IPropClassificationService(ABC):
@@ -54,7 +54,7 @@ class IPropClassificationService(ABC):
 class PropClassificationService(IPropClassificationService):
     """
     Pure service for prop classification operations.
-    
+
     Handles prop categorization and strategy determination without external dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -71,13 +71,13 @@ class PropClassificationService(IPropClassificationService):
             PropType.SWORD,
             PropType.GUITAR,
         }
-        
+
         self._medium_props = {
             PropType.DOUBLESTAR,
             PropType.BIGDOUBLESTAR,
             PropType.BIGBUUGENG,
         }
-        
+
         self._small_props = {
             PropType.BUUGENG,
             PropType.TRIAD,
@@ -92,7 +92,7 @@ class PropClassificationService(IPropClassificationService):
             PropType.TRIQUETRA,
             PropType.TRIQUETRA2,
         }
-        
+
         self._hand_props = {
             PropType.HAND,
         }
@@ -112,7 +112,7 @@ class PropClassificationService(IPropClassificationService):
 
         # Get current prop type (would normally come from settings)
         current_prop_type = self._get_current_prop_type()
-        
+
         # Classify the current prop type
         if current_prop_type in self._big_props:
             classification["big_props"].append(current_prop_type)
@@ -205,7 +205,9 @@ class PropClassificationService(IPropClassificationService):
         }
 
         # Calculate end orientation for this motion
-        end_orientation = self._calculate_end_orientation(motion_data, start_orientation)
+        end_orientation = self._calculate_end_orientation(
+            motion_data, start_orientation
+        )
 
         # Get rotation angle from mapping
         orientation_map = angle_map.get(end_orientation, angle_map[Orientation.IN])
@@ -229,7 +231,19 @@ class PropClassificationService(IPropClassificationService):
     def is_beta_ending_letter(self, letter: str) -> bool:
         """Check if letter ends at beta positions."""
         beta_ending_letters = [
-            "G", "H", "I", "J", "K", "L", "Y", "Z", "Y-", "Z-", "Ψ", "Ψ-", "β"
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "Y",
+            "Z",
+            "Y-",
+            "Z-",
+            "Ψ",
+            "Ψ-",
+            "β",
         ]
         return letter in beta_ending_letters
 

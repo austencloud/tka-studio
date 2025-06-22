@@ -5,27 +5,27 @@
 
 export enum MotionType {
   PRO = "pro",
-  ANTI = "anti", 
+  ANTI = "anti",
   FLOAT = "float",
   DASH = "dash",
-  STATIC = "static"
+  STATIC = "static",
 }
 
 export enum RotationDirection {
   CLOCKWISE = "cw",
-  COUNTER_CLOCKWISE = "ccw", 
-  NO_ROTATION = "no_rot"
+  COUNTER_CLOCKWISE = "ccw",
+  NO_ROTATION = "no_rot",
 }
 
 export enum Location {
   NORTH = "n",
   EAST = "e",
-  SOUTH = "s", 
+  SOUTH = "s",
   WEST = "w",
   NORTHEAST = "ne",
   SOUTHEAST = "se",
   SOUTHWEST = "sw",
-  NORTHWEST = "nw"
+  NORTHWEST = "nw",
 }
 
 export enum PropType {
@@ -36,12 +36,12 @@ export enum PropType {
   TRIAD = "triad",
   MINIHOOP = "minihoop",
   BIGBALL = "bigball",
-  FRACTALS = "fractals"
+  FRACTALS = "fractals",
 }
 
 export enum Color {
   BLUE = "blue",
-  RED = "red"
+  RED = "red",
 }
 
 export interface SharedSequenceType {
@@ -108,5 +108,5 @@ export type {
   SharedSequenceType as SequenceType,
   SharedBeatType as BeatType,
   SharedMotionType as MotionTypeData,
-  SharedSettingsType as SettingsType
+  SharedSettingsType as SettingsType,
 };

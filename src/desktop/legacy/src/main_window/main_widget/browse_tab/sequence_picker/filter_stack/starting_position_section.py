@@ -107,9 +107,9 @@ class StartingPositionSection(FilterSectionBase):
         image_path = os.path.join(self.IMAGE_DIR, f"{position.lower()}.png")
         if os.path.exists(image_path):
             original_pixmap = QPixmap(image_path)
-            self.original_pixmaps[position] = (
-                original_pixmap  # Store the original pixmap
-            )
+            self.original_pixmaps[
+                position
+            ] = original_pixmap  # Store the original pixmap
 
             # Make the image clickable
             image_placeholder.setCursor(Qt.CursorShape.PointingHandCursor)

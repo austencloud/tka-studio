@@ -6,7 +6,7 @@ Provides performance metrics and event statistics.
 import logging
 from fastapi import APIRouter, HTTPException
 
-from core.monitoring import performance_monitor, monitor_performance
+from desktop.modern.src.core.monitoring import performance_monitor, monitor_performance
 from ..models import APIResponse
 from ..dependencies import get_event_bus_dependency
 

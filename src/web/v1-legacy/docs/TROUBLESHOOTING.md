@@ -16,24 +16,27 @@ If you encounter a "504 Outdated Optimize Dep" error in your Vite application, t
 #### How to Fix It
 
 1. **Clear Vite's Cache**:
+
    ```bash
    # Use our custom script for a deep clean
    npm run clean:deep
-   
+
    # Or use the standard clean script
    npm run clean
    ```
 
 2. **Restart the Development Server**:
+
    ```bash
    # With a clean cache
    npm run dev:reset
-   
+
    # Or standard restart
    npm run dev
    ```
 
 3. **Update Vite Configuration**:
+
    - Make sure the problematic dependency is included in the `optimizeDeps.include` array in `vite.config.ts`.
    - Consider increasing timeouts for HMR and other operations.
 
@@ -50,16 +53,19 @@ html2canvas is a complex library that can cause issues with Vite's dependency op
 If html2canvas fails to load, try these approaches:
 
 1. **Use Direct Import**:
+
    ```typescript
-   import html2canvas from 'html2canvas';
+   import html2canvas from "html2canvas";
    ```
 
 2. **CDN Fallback**:
+
    ```typescript
    // If the bundled version fails, load from CDN
    const loadFromCDN = () => {
-     const script = document.createElement('script');
-     script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+     const script = document.createElement("script");
+     script.src =
+       "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
      document.head.appendChild(script);
      return new Promise((resolve) => {
        script.onload = () => resolve(window.html2canvas);
@@ -76,10 +82,12 @@ If html2canvas fails to load, try these approaches:
 If html2canvas renders incorrectly or not at all:
 
 1. **Check Element Visibility**:
+
    - Make sure the element you're trying to render is visible in the DOM.
    - Elements with `display: none` or zero dimensions won't render properly.
 
 2. **Cross-Origin Issues**:
+
    - Set `useCORS: true` and `allowTaint: true` in the html2canvas options.
    - Make sure any images or resources used in the element have proper CORS headers.
 
@@ -100,18 +108,22 @@ If you encounter errors with dynamic imports:
 ## General Vite Troubleshooting
 
 1. **Check for Vite Updates**:
+
    ```bash
    npm update vite @sveltejs/kit @sveltejs/vite-plugin-svelte
    ```
 
 2. **Inspect Network Requests**:
+
    - Use the browser's developer tools to inspect network requests.
    - Look for 404, 500, or other error responses.
 
 3. **Enable Verbose Logging**:
+
    - Set `logLevel: 'info'` in `vite.config.ts` to see more detailed logs.
 
 4. **Check for Plugin Conflicts**:
+
    - Disable plugins one by one to identify if a specific plugin is causing issues.
 
 5. **Rebuild Node Modules**:

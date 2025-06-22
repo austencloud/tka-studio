@@ -24,7 +24,7 @@ from .import_standardizer import (
 
 __all__ = [
     "ImportStandardizer",
-    "ComponentHierarchyOptimizer", 
+    "ComponentHierarchyOptimizer",
     "ImportAnalysis",
     "ImportStandardizationReport",
     "ComponentHierarchyAnalysis",

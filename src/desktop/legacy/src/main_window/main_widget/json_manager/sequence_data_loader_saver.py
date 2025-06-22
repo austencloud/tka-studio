@@ -152,9 +152,9 @@ class SequenceDataLoaderSaver:
                     "author"
                 ] = AppContext.settings_manager().users.get_current_user()
             if "level" not in sequence[0]:
-                sequence[0]["level"] = (
-                    SequenceLevelEvaluator.get_sequence_difficulty_level(sequence)
-                )
+                sequence[0][
+                    "level"
+                ] = SequenceLevelEvaluator.get_sequence_difficulty_level(sequence)
             if "prop_type" not in sequence[0]:
                 sequence[0]["prop_type"] = (
                     AppContext.settings_manager()

@@ -20,7 +20,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 import logging
 
 # Type imports
-from core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
 
 # A+ Enhancement: Import Qt integration - Temporarily disabled due to import issues
 # try:

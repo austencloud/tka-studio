@@ -11,7 +11,7 @@ from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QPainter, QPen, QColor
 from PyQt6.QtWidgets import QWidget
 
-from domain.models.core_models import LetterType
+from desktop.modern.src.domain.models.core_models import LetterType
 
 
 class PictographBorderManager:

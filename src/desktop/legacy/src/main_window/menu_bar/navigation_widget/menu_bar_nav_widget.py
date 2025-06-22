@@ -49,7 +49,6 @@ class MenuBarNavWidget(QWidget):
         main_layout.addWidget(self.container_frame)
 
         def on_tab_changed_handler(index):
-
             # Create a direct mapping from button index to tab names
             tab_mapping = {
                 0: "construct",

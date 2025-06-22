@@ -10,25 +10,31 @@ import pytest
 from typing import Protocol, Optional, runtime_checkable
 from dataclasses import dataclass
 
-from src.core.dependency_injection.di_container import (
+from desktop.modern.src.core.dependency_injection.di_container import (
     DIContainer,
     get_container,
     reset_container,
 )
-from src.core.exceptions import DependencyInjectionError
+from desktop.modern.src.core.exceptions import DependencyInjectionError
 
 
 # Test interfaces and implementations
 @runtime_checkable
 class ITestService(Protocol):
-    def get_value(self) -> str: ...
-    def process_data(self, data: str) -> str: ...
+    def get_value(self) -> str:
+        ...
+
+    def process_data(self, data: str) -> str:
+        ...
 
 
 @runtime_checkable
 class ITestRepository(Protocol):
-    def save(self, data: str) -> bool: ...
-    def load(self) -> str: ...
+    def save(self, data: str) -> bool:
+        ...
+
+    def load(self) -> str:
+        ...
 
 
 @dataclass

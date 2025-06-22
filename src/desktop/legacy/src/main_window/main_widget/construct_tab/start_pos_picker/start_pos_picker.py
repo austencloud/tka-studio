@@ -150,7 +150,6 @@ class StartPosPicker(BaseStartPosPicker):
         matching_letter_pictographs = self.pictograph_dataset.get(letter, [])
         for pictograph_data in matching_letter_pictographs:
             if pictograph_data[START_POS] == start_pos_key:
-
                 pictograph_data[BLUE_ATTRS][START_ORI] = start_pos_data[BLUE_ATTRS][
                     END_ORI
                 ]

@@ -16,12 +16,12 @@ No UI dependencies, completely testable in isolation.
 import logging
 from typing import Any, Callable, Optional
 
-from core.interfaces.option_picker_services import (
+from desktop.modern.src.core.interfaces.option_picker_services import (
     IOptionPickerDataService,
     IOptionPickerDisplayService,
     IOptionPickerEventService,
 )
-from domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import BeatData
 from PyQt6.QtWidgets import QWidget
 
 logger = logging.getLogger(__name__)

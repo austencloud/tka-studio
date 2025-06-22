@@ -14,6 +14,11 @@ from .sequence_commands import (
 )
 
 __all__ = [
-    "ICommand", "CommandProcessor", "CommandResult", "CommandError",
-    "AddBeatCommand", "RemoveBeatCommand", "UpdateBeatCommand",
+    "ICommand",
+    "CommandProcessor",
+    "CommandResult",
+    "CommandError",
+    "AddBeatCommand",
+    "RemoveBeatCommand",
+    "UpdateBeatCommand",
 ]

@@ -68,7 +68,6 @@ class FreeFormSequenceBuilder(BaseSequenceBuilder):
         blue_rot_dir: str,
         red_rot_dir: str,
     ):
-
         option_dicts = self._get_option_dicts()
         option_dicts = [deepcopy(option) for option in option_dicts]
 

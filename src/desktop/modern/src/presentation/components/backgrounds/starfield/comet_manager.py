@@ -7,11 +7,11 @@ from PyQt6.QtWidgets import QWidget
 class CometManager:
     """
     Manages comet appearance and animation with realistic tail effects.
-    
+
     Comets appear randomly from screen edges, travel across the sky with
     beautiful trailing effects, and fade out naturally.
     """
-    
+
     def __init__(self):
         self.comet_active = False
         self.comet = {
@@ -34,7 +34,7 @@ class CometManager:
     def activate_comet(self):
         """Activate the comet by setting its initial position and properties."""
         self.comet_active = True
-        
+
         # Choose random starting position from screen edges
         start_position_options = [
             (random.uniform(-0.1, 0), random.uniform(0.1, 0.9)),  # Coming from left
@@ -73,7 +73,7 @@ class CometManager:
             "off_screen": False,  # Reset the off-screen state when a new comet appears
             "fading": False,  # Comet is not yet fading its tail
         }
-        
+
         # Reset timer for next comet
         self.comet_timer = random.randint(400, 800)
 
@@ -124,7 +124,7 @@ class CometManager:
             return
 
         comet = self.comet
-        
+
         # Draw comet's tail with smooth gradient effect
         painter.setPen(Qt.PenStyle.NoPen)
 
@@ -145,30 +145,30 @@ class CometManager:
                 )
                 painter.setBrush(fading_color)
                 painter.setOpacity(opacity)
-                
+
                 # Draw tail segment
                 tail_size = int(size * opacity * 0.7)  # Tail gets smaller
                 painter.drawEllipse(
-                    tail_x - tail_size//2, 
-                    tail_y - tail_size//2, 
-                    tail_size, 
-                    tail_size
+                    tail_x - tail_size // 2,
+                    tail_y - tail_size // 2,
+                    tail_size,
+                    tail_size,
                 )
 
         # Draw the comet head (brightest part)
         if not comet["fading"]:
             comet_x = int(comet["x"] * widget.width())
             comet_y = int(comet["y"] * widget.height())
-            
+
             painter.setOpacity(1.0)
             painter.setBrush(comet["color"])
             comet_size = int(comet["size"])
             painter.drawEllipse(
-                comet_x - comet_size//2, 
-                comet_y - comet_size//2, 
-                comet_size, 
-                comet_size
+                comet_x - comet_size // 2,
+                comet_y - comet_size // 2,
+                comet_size,
+                comet_size,
             )
-        
+
         # Reset opacity for other drawing operations
         painter.setOpacity(1.0)

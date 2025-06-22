@@ -44,7 +44,10 @@ class StackFader:
 
         if self.manager.fades_enabled():
             self.manager.widget_fader.fade_widgets(
-                [current_widget], fade_in=False, duration=duration, callback=on_fade_out_finished
+                [current_widget],
+                fade_in=False,
+                duration=duration,
+                callback=on_fade_out_finished,
             )
         else:
             effect = self.manager.widget_fader._ensure_opacity_effect(current_widget)

@@ -43,7 +43,6 @@ class SequenceRotater(BaseSequenceModifier):
         QApplication.restoreOverrideCursor()
 
     def _rotate_sequence(self):
-
         metadata = (
             AppContext.json_manager().loader_saver.load_current_sequence()[0].copy()
         )

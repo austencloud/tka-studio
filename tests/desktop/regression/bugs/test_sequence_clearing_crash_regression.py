@@ -13,14 +13,15 @@ Focus on reproducing the exact scenario that caused the original bug.
 
 import pytest
 from pathlib import Path
-from domain.models.core_models import BeatData
-from domain.models.core_models import SequenceData
-from domain.models.core_models import PictographData
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.domain.models.pictograph_models import PictographData
 import sys
 
 # Add modern to path for imports
 modern_path = Path(__file__).parent.parent.parent.parent
 if str(modern_path) not in sys.path:
+    sys.path.insert(0, str(modern_path))
+
 
 @pytest.mark.regression
 @pytest.mark.critical
@@ -29,8 +30,8 @@ class TestSequenceClearingCrashRegression:
 
     def setup_method(self):
         """Setup for each test method."""
-        from domain.models.core_models import SequenceData, BeatData
-        from desktop.application.services.data.pictograph_dataset_service import (
+        from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
+        from desktop.modern.src.application.services.data.pictograph_dataset_service import (
             PictographDatasetService,
         )
 
@@ -75,8 +76,9 @@ class TestSequenceClearingCrashRegression:
                 sequence = self.SequenceData(beats=[beat1])
                 assert sequence.length == 1
 
-                # Add beat
-                updated_sequence = self.SequenceData(beats=[beat1, beat2])
+                # Add beat (fix beat numbers for sequence validation)
+                beat2_updated = beat2.update(beat_number=2)
+                updated_sequence = self.SequenceData(beats=[beat1, beat2_updated])
                 assert updated_sequence.length == 2
 
                 # Clear sequence

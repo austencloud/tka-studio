@@ -32,6 +32,23 @@ except ImportError:
     EventPriority = None
     EVENT_SYSTEM_AVAILABLE = False
 
+    # Create dummy event classes for type annotations
+    class BeatAddedEvent:
+        pass
+
+    class BeatRemovedEvent:
+        pass
+
+    class SequenceCreatedEvent:
+        pass
+
+    class LayoutRecalculatedEvent:
+        pass
+
+    class ComponentResizedEvent:
+        pass
+
+
 logger = logging.getLogger(__name__)
 
 

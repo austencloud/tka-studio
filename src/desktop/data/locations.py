@@ -20,4 +20,3 @@ horizontal_loc_mirror_map = {
 }
 
 cw_loc_order = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
-

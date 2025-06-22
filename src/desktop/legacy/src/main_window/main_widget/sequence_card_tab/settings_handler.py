@@ -3,8 +3,6 @@
 from interfaces.settings_manager_interface import ISettingsManager
 
 
-
-
 class SequenceCardSettingsHandler:
     def __init__(self, settings_manager: ISettingsManager):
         self.settings_manager = settings_manager

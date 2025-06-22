@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class SettingsTabManager:
     """
     Manages settings dialog tabs.
-    
+
     Responsibilities:
     - Create tab widgets
     - Organize tab order
@@ -28,38 +28,40 @@ class SettingsTabManager:
     """
 
     def __init__(
-        self, 
-        settings_manager, 
+        self,
+        settings_manager,
         state_manager: "SettingsStateManager",
         app_context: "ApplicationContext" = None,
-        parent_dialog=None
+        parent_dialog=None,
     ):
         self.settings_manager = settings_manager
         self.state_manager = state_manager
         self.app_context = app_context
         self.parent_dialog = parent_dialog
-        
+
         # Tab configuration
         self.tab_order = [
             "General",
-            "Prop Type", 
+            "Prop Type",
             "Visibility",
             "Beat Layout",
             "Image Export",
             "Codex Exporter",
         ]
-        
+
         self.tabs: Dict[str, QWidget] = {}
         self._real_tabs_available = self._check_real_tabs_availability()
 
-    def create_tabs(self, sidebar: QListWidget, content_area: QStackedWidget) -> Dict[str, QWidget]:
+    def create_tabs(
+        self, sidebar: QListWidget, content_area: QStackedWidget
+    ) -> Dict[str, QWidget]:
         """
         Create all tab widgets and populate sidebar and content area.
-        
+
         Args:
             sidebar: The sidebar list widget
             content_area: The stacked widget for tab content
-            
+
         Returns:
             Dictionary of created tab widgets
         """
@@ -78,6 +80,7 @@ class SettingsTabManager:
         except Exception as e:
             logger.error(f"Error creating tabs: {e}")
             import traceback
+
             traceback.print_exc()
             return {}
 
@@ -119,22 +122,25 @@ class SettingsTabManager:
         """Create fallback placeholder tabs."""
         try:
             from ..ui.enhanced_general.enhanced_general_tab import EnhancedGeneralTab
-            
+
             tabs = {
                 "General": EnhancedGeneralTab(
                     self.settings_manager, self.state_manager, self.parent_dialog
                 ),
             }
-            
+
             # Create placeholder tabs for others
             for tab_name in self.tab_order[1:]:  # Skip "General"
                 tabs[tab_name] = self._create_placeholder_tab(tab_name)
-                
+
             return tabs
-            
+
         except ImportError:
             # Ultimate fallback - all placeholder tabs
-            return {tab_name: self._create_placeholder_tab(tab_name) for tab_name in self.tab_order}
+            return {
+                tab_name: self._create_placeholder_tab(tab_name)
+                for tab_name in self.tab_order
+            }
 
     def _create_placeholder_tab(self, tab_name: str) -> QWidget:
         """Create a placeholder tab widget."""
@@ -145,7 +151,9 @@ class SettingsTabManager:
         layout.addWidget(label)
         return widget
 
-    def _populate_sidebar_and_content(self, sidebar: QListWidget, content_area: QStackedWidget):
+    def _populate_sidebar_and_content(
+        self, sidebar: QListWidget, content_area: QStackedWidget
+    ):
         """Populate the sidebar and content area with tabs."""
         for tab_name in self.tab_order:
             if tab_name in self.tabs:

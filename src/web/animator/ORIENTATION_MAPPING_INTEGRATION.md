@@ -12,14 +12,14 @@ The following rotation angles (in degrees) were systematically tested and valida
 
 ```json
 {
-	"n_hand": { "in": 90, "out": 270, "clockwise": 90, "counter": 180 },
-	"e_hand": { "in": 180, "out": 0, "clockwise": 90, "counter": 270 },
-	"s_hand": { "in": 270, "out": 90, "clockwise": 180, "counter": 270 },
-	"w_hand": { "in": 0, "out": 180, "clockwise": 270, "counter": 90 },
-	"ne": { "in": 135, "out": 315, "clockwise": 45, "counter": 225 },
-	"se": { "in": 225, "out": 45, "clockwise": 135, "counter": 315 },
-	"sw": { "in": 315, "out": 135, "clockwise": 225, "counter": 45 },
-	"nw": { "in": 45, "out": 225, "clockwise": 315, "counter": 135 }
+  "n_hand": { "in": 90, "out": 270, "clockwise": 90, "counter": 180 },
+  "e_hand": { "in": 180, "out": 0, "clockwise": 90, "counter": 270 },
+  "s_hand": { "in": 270, "out": 90, "clockwise": 180, "counter": 270 },
+  "w_hand": { "in": 0, "out": 180, "clockwise": 270, "counter": 90 },
+  "ne": { "in": 135, "out": 315, "clockwise": 45, "counter": 225 },
+  "se": { "in": 225, "out": 45, "clockwise": 135, "counter": 315 },
+  "sw": { "in": 315, "out": 135, "clockwise": 225, "counter": 45 },
+  "nw": { "in": 45, "out": 225, "clockwise": 315, "counter": 135 }
 }
 ```
 
@@ -68,33 +68,37 @@ The animation engine now uses a three-tier priority system for staff rotation:
 **Orientation Lookup:**
 
 ```typescript
-import { getOrientationAngle, getOrientationAngleRadians } from './utils/orientation-mapping.js';
+import {
+  getOrientationAngle,
+  getOrientationAngleRadians,
+} from "./utils/orientation-mapping.js";
 
 // Get angle in degrees
-const angle = getOrientationAngle('n_hand', 'in'); // Returns 90
+const angle = getOrientationAngle("n_hand", "in"); // Returns 90
 
 // Get angle in radians for calculations
-const radians = getOrientationAngleRadians('n_hand', 'in'); // Returns π/2
+const radians = getOrientationAngleRadians("n_hand", "in"); // Returns π/2
 ```
 
 **Sequence Processing:**
 
 ```typescript
-import { processSequenceWithOrientationMappings } from './utils/sequence-orientation-processor.js';
+import { processSequenceWithOrientationMappings } from "./utils/sequence-orientation-processor.js";
 
 // Process entire sequence to use orientation mappings
-const processedSequence = processSequenceWithOrientationMappings(originalSequence);
+const processedSequence =
+  processSequenceWithOrientationMappings(originalSequence);
 ```
 
 **Validation:**
 
 ```typescript
-import { validateSequenceOrientationIntegrity } from './utils/sequence-orientation-processor.js';
+import { validateSequenceOrientationIntegrity } from "./utils/sequence-orientation-processor.js";
 
 // Validate orientation continuity
 const validation = validateSequenceOrientationIntegrity(sequenceData);
 if (!validation.isValid) {
-	console.error('Orientation continuity errors:', validation.errors);
+  console.error("Orientation continuity errors:", validation.errors);
 }
 ```
 
@@ -157,17 +161,17 @@ Use `validateSequenceOrientationIntegrity()` to check for:
 ### Unit Tests
 
 ```typescript
-import { getOrientationAngle } from './utils/orientation-mapping.js';
+import { getOrientationAngle } from "./utils/orientation-mapping.js";
 
 // Test specific orientation mappings
-expect(getOrientationAngle('n_hand', 'in')).toBe(90);
-expect(getOrientationAngle('e_hand', 'out')).toBe(0);
+expect(getOrientationAngle("n_hand", "in")).toBe(90);
+expect(getOrientationAngle("e_hand", "out")).toBe(0);
 ```
 
 ### Integration Tests
 
 ```typescript
-import { processSequenceWithOrientationMappings } from './utils/sequence-orientation-processor.js';
+import { processSequenceWithOrientationMappings } from "./utils/sequence-orientation-processor.js";
 
 // Test sequence processing
 const processed = processSequenceWithOrientationMappings(testSequence);

@@ -25,26 +25,26 @@ test_dir = Path(__file__).parent.parent.parent
 src_dir = test_dir / "src"
 sys.path.insert(0, str(src_dir))
 
-from core.events import (
+from desktop.modern.src.core.events import (
     get_event_bus,
     reset_event_bus,
     ArrowPositionedEvent,
     PropPositionedEvent,
 )
-from application.services.positioning.arrow_management_service import (
+from desktop.modern.src.application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
-from application.services.positioning.prop_management_service import (
+from desktop.modern.src.application.services.positioning.prop_management_service import (
     PropManagementService,
 )
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     MotionData,
     MotionType,
     RotationDirection,
     Location,
     BeatData,
 )
-from domain.models.pictograph_models import (
+from desktop.modern.src.domain.models.pictograph_models import (
     ArrowData,
     PictographData,
     GridData,

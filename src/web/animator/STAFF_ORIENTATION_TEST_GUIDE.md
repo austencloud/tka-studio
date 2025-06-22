@@ -121,30 +121,31 @@ const orientationData = exportAllData(); // Downloads JSON file
 ### 2. Load into Animation System
 
 ```typescript
-import { loadOrientationMappingsFromJSON } from './utils/orientation-mapping.js';
-import { applyOrientationBasedRotationsToSequence } from './utils/orientation-integration.js';
+import { loadOrientationMappingsFromJSON } from "./utils/orientation-mapping.js";
+import { applyOrientationBasedRotationsToSequence } from "./utils/orientation-integration.js";
 
 // Load your test data
 const success = loadOrientationMappingsFromJSON(jsonData);
 
 // Apply to a sequence
-const updatedSequence = applyOrientationBasedRotationsToSequence(originalSequence);
+const updatedSequence =
+  applyOrientationBasedRotationsToSequence(originalSequence);
 ```
 
 ### 3. Use in Sequence Creation
 
 ```typescript
-import { createPropAttributesWithOrientation } from './utils/orientation-integration.js';
+import { createPropAttributesWithOrientation } from "./utils/orientation-integration.js";
 
 // Create prop attributes with automatic orientation-based rotation
 const blueAttributes = createPropAttributesWithOrientation(
-	's', // start location
-	'w', // end location
-	'in', // start orientation
-	'out', // end orientation
-	'pro', // motion type
-	'cw', // rotation direction
-	0 // turns
+  "s", // start location
+  "w", // end location
+  "in", // start orientation
+  "out", // end orientation
+  "pro", // motion type
+  "cw", // rotation direction
+  0, // turns
 );
 ```
 
@@ -160,18 +161,20 @@ const blueAttributes = createPropAttributesWithOrientation(
 
 ```typescript
 import {
-	getOrientationMappingStats,
-	validateOrientationMappings
-} from './utils/orientation-mapping.js';
+  getOrientationMappingStats,
+  validateOrientationMappings,
+} from "./utils/orientation-mapping.js";
 
 // Get completion statistics
 const stats = getOrientationMappingStats();
-console.log(`Completed ${stats.completedPositions}/${stats.totalPositions} positions`);
+console.log(
+  `Completed ${stats.completedPositions}/${stats.totalPositions} positions`,
+);
 
 // Validate data integrity
 const validation = validateOrientationMappings(orientationData);
 if (!validation.isValid) {
-	console.error('Validation errors:', validation.errors);
+  console.error("Validation errors:", validation.errors);
 }
 ```
 
@@ -180,7 +183,7 @@ if (!validation.isValid) {
 The system can export data in multiple formats:
 
 ```typescript
-import { OrientationMappingExporter } from './utils/orientation-mapping.js';
+import { OrientationMappingExporter } from "./utils/orientation-mapping.js";
 
 // JSON for programmatic use
 const json = OrientationMappingExporter.toJSON();

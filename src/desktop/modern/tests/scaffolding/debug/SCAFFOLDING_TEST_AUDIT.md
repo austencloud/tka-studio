@@ -122,11 +122,11 @@ All tests have import path issues that need to be resolved before they can be ru
 
 ### Audit Results Summary:
 
-- ✅ **test_glyph_visibility_fix.py**: FIXED → Converted to regression test
-- ✅ **test_dash_fix.py**: FIXED → Need to convert to regression test
-- ✅ **test_tka_dash_fix.py**: FIXED → Need to convert to regression test
-- ✅ **test_duplicate_refresh_fix.py**: FIXED → Need to convert to regression test
-- ✅ **test_v2_debugging.py**: FIXED → Need to convert to regression test
+- ✅ **test_glyph_visibility_fix.py**: FIXED → ✅ DELETED (2025-06-22) - Regression test exists
+- ✅ **test_dash_fix.py**: FIXED → ✅ DELETED (2025-06-22) - Regression test exists
+- ✅ **test_tka_dash_fix.py**: FIXED → ✅ DELETED (2025-06-22) - Regression test exists
+- ✅ **test_duplicate_refresh_fix.py**: FIXED → ✅ DELETED (2025-06-22) - Regression test exists
+- ✅ **test_v2_debugging.py**: FIXED → ✅ DELETED (2025-06-22) - Regression test exists
 - ❌ **test_start_position_clear.py**: ACTIVE BUG → Extended DELETE_AFTER date
 - 🔄 **test_text_overlay_implementation.py**: PARTIAL → Needs manual verification
 - 🔄 **test_workbench_text_overlay.py**: PARTIAL → `tests/scaffolding/debug/test_workbench_text_overlay_fixed.py`

@@ -19,7 +19,7 @@ from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, cast
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     Location,
     MotionData,
@@ -27,7 +27,7 @@ from domain.models.core_models import (
     RotationDirection,
     SequenceData,
 )
-from domain.models.pictograph_models import PictographData
+from desktop.modern.src.domain.models.pictograph_models import PictographData
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -57,6 +57,30 @@ except ImportError:
     get_event_bus = None
     CommandProcessor = None
     EVENT_SYSTEM_AVAILABLE = False
+
+    # Create dummy event classes for type annotations
+    class BeatAddedEvent:
+        pass
+
+    class BeatRemovedEvent:
+        pass
+
+    class BeatUpdatedEvent:
+        pass
+
+    class SequenceCreatedEvent:
+        pass
+
+    # Create dummy command classes
+    class AddBeatCommand:
+        pass
+
+    class RemoveBeatCommand:
+        pass
+
+    class UpdateBeatCommand:
+        pass
+
 
 try:
     from core.decorators import handle_service_errors

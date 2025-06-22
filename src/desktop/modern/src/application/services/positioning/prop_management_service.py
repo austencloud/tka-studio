@@ -20,7 +20,7 @@ from enum import Enum
 import uuid
 from datetime import datetime
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -46,7 +46,7 @@ except ImportError:
     PropPositionedEvent = None
     EventPriority = None
     EVENT_SYSTEM_AVAILABLE = False
-from domain.models.pictograph_models import PropType
+from desktop.modern.src.domain.models.pictograph_models import PropType
 
 
 class SeparationDirection(Enum):
@@ -327,17 +327,20 @@ class PropManagementService(IPropManagementService):
         motion_type = motion_data.motion_type
         turns = motion_data.turns
 
-        if turns in {0, 1, 2, 3}:
+        # Convert float turns to int for calculation
+        int_turns = int(turns)
+
+        if int_turns in {0, 1, 2, 3}:
             if motion_type in [MotionType.PRO, MotionType.STATIC]:
                 return (
                     start_orientation
-                    if int(turns) % 2 == 0
+                    if int_turns % 2 == 0
                     else self._switch_orientation(start_orientation)
                 )
             elif motion_type in [MotionType.ANTI, MotionType.DASH]:
                 return (
                     self._switch_orientation(start_orientation)
-                    if int(turns) % 2 == 0
+                    if int_turns % 2 == 0
                     else start_orientation
                 )
 
@@ -610,7 +613,6 @@ class PropManagementService(IPropManagementService):
         # Get rotation angle from mapping
         orientation_map = angle_map.get(end_orientation, angle_map[Orientation.IN])
         rotation_angle = orientation_map.get(location, 0)
-
         return float(rotation_angle)
 
     def cleanup(self):

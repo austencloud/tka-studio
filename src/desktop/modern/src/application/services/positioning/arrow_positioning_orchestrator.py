@@ -16,10 +16,10 @@ from abc import ABC, abstractmethod
 
 from PyQt6.QtCore import QPointF
 
-from domain.models.core_models import Location, MotionType
-from domain.models.pictograph_models import ArrowData
-from domain.models.pictograph_models import PictographData
-from domain.models.positioning_models import ArrowPositionResult
+from desktop.modern.src.domain.models.core_models import Location, MotionType
+from desktop.modern.src.domain.models.pictograph_models import ArrowData
+from desktop.modern.src.domain.models.pictograph_models import PictographData
+from desktop.modern.src.domain.models.positioning_models import ArrowPositionResult
 from .arrow_location_calculator import IArrowLocationCalculator, ArrowLocationCalculator
 from .arrow_rotation_calculator import IArrowRotationCalculator, ArrowRotationCalculator
 from .arrow_adjustment_service import IArrowAdjustmentService, ArrowAdjustmentService

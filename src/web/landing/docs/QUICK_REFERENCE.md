@@ -3,6 +3,7 @@
 ## Grid System Overview
 
 ### Feature Cards Layout
+
 ```css
 /* Desktop/Tablet: 2x2 Grid */
 .features-grid {
@@ -22,6 +23,7 @@
 ## Dark Mode Implementation
 
 ### Key CSS Variables
+
 ```css
 /* Light Mode */
 --surface-color: #ffffff;
@@ -33,32 +35,35 @@
 ```
 
 ### Feature Card Dark Mode
+
 ```css
 .feature-card {
-  background: var(--surface-color);  /* Not white! */
+  background: var(--surface-color); /* Not white! */
   border: 1px solid var(--border-color);
 }
 ```
 
 ## Responsive Breakpoints
 
-| Screen Size | Layout | Grid |
-|-------------|--------|------|
-| ≤768px | Mobile | 1 column × 4 rows |
-| 769px-1024px | Tablet | 2 columns × 2 rows |
-| >1024px | Desktop | 2 columns × 2 rows |
+| Screen Size  | Layout  | Grid               |
+| ------------ | ------- | ------------------ |
+| ≤768px       | Mobile  | 1 column × 4 rows  |
+| 769px-1024px | Tablet  | 2 columns × 2 rows |
+| >1024px      | Desktop | 2 columns × 2 rows |
 
 ## Background Image
 
 ### File Location
+
 - **Path**: `/static/hero-bg.svg`
 - **Format**: SVG (scalable, ~3KB)
 - **Theme**: Flow arts patterns (poi, staff movements)
 
 ### CSS Implementation
+
 ```css
 .hero-background {
-  background-image: url('/hero-bg.svg');
+  background-image: url("/hero-bg.svg");
   background-size: cover;
   background-position: center center;
 }
@@ -67,34 +72,43 @@
 ## Accessibility Features
 
 ### ARIA Labels
+
 ```html
-<div class="hero-background" 
-     role="img" 
-     aria-label="Abstract flow arts background showing poi and staff movement patterns">
-</div>
+<div
+  class="hero-background"
+  role="img"
+  aria-label="Abstract flow arts background showing poi and staff movement patterns"
+></div>
 ```
 
 ### User Preferences
+
 ```css
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .hero-background { transition: none; }
+  .hero-background {
+    transition: none;
+  }
 }
 
 /* High contrast */
 @media (prefers-contrast: high) {
-  .feature-card { border: 2px solid var(--text-color); }
+  .feature-card {
+    border: 2px solid var(--text-color);
+  }
 }
 ```
 
 ## Common Modifications
 
 ### Changing Background Image
+
 1. Replace `/static/hero-bg.svg` with new image
 2. Update `aria-label` to describe new image
 3. Test loading performance
 
 ### Adjusting Grid Layout
+
 ```css
 /* For 3-column layout */
 .features-grid {
@@ -104,6 +118,7 @@
 ```
 
 ### Modifying Spacing
+
 ```css
 /* Increase card spacing */
 .features-grid {
@@ -114,12 +129,14 @@
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Cards not equal height**: Ensure `align-items: stretch` on grid
 2. **Dark mode not working**: Check CSS custom properties usage
 3. **Mobile layout broken**: Verify media query syntax
 4. **Background not loading**: Check file path and SVG validity
 
 ### Debug Tools
+
 ```css
 /* Temporary grid visualization */
 .features-grid {

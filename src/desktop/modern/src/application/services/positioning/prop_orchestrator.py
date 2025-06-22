@@ -17,8 +17,8 @@ from PyQt6.QtCore import QPointF
 import uuid
 from datetime import datetime
 
-from domain.models.core_models import BeatData
-from domain.models.pictograph_models import PropType
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.pictograph_models import PropType
 from .direction_calculation_service import (
     IDirectionCalculationService,
     DirectionCalculationService,
@@ -47,6 +47,7 @@ try:
         PropPositionedEvent,
         EventPriority,
     )
+
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
     get_event_bus = None
@@ -84,7 +85,7 @@ class IPropOrchestrator(ABC):
 class PropOrchestrator(IPropOrchestrator):
     """
     Orchestrates prop positioning operations using focused services.
-    
+
     Coordinates direction calculation, offset calculation, JSON configuration,
     and prop classification services. Returns immutable positioning data.
     """
@@ -101,7 +102,9 @@ class PropOrchestrator(IPropOrchestrator):
         self.direction_service = direction_service or DirectionCalculationService()
         self.offset_service = offset_service or OffsetCalculationService()
         self.config_service = config_service or JSONConfigurationService()
-        self.classification_service = classification_service or PropClassificationService()
+        self.classification_service = (
+            classification_service or PropClassificationService()
+        )
 
         # Event system integration
         self.event_bus = event_bus or (
@@ -211,8 +214,16 @@ class PropOrchestrator(IPropOrchestrator):
             self._publish_positioning_event(
                 "overlap_detected",
                 {
-                    "blue_end_location": beat_data.blue_motion.end_loc.value if beat_data.blue_motion else None,
-                    "red_end_location": beat_data.red_motion.end_loc.value if beat_data.red_motion else None,
+                    "blue_end_location": (
+                        beat_data.blue_motion.end_loc.value
+                        if beat_data.blue_motion
+                        else None
+                    ),
+                    "red_end_location": (
+                        beat_data.red_motion.end_loc.value
+                        if beat_data.red_motion
+                        else None
+                    ),
                     "letter": beat_data.letter,
                 },
             )
@@ -247,7 +258,7 @@ class PropOrchestrator(IPropOrchestrator):
     def _apply_swap_override(self, beat_data: BeatData) -> BeatData:
         """Apply manual swap override from special placements."""
         override_data = self.config_service.get_swap_override_data(beat_data)
-        
+
         # TODO: Implement specific override application logic
         # This would modify the beat_data with specific positioning overrides
         return beat_data
@@ -271,7 +282,9 @@ class PropOrchestrator(IPropOrchestrator):
         # TODO: Integrate with actual settings system
         return PropType.HAND  # Default to smallest offset
 
-    def _publish_positioning_event(self, positioning_type: str, position_data: Dict[str, Any]) -> None:
+    def _publish_positioning_event(
+        self, positioning_type: str, position_data: Dict[str, Any]
+    ) -> None:
         """Publish positioning event if event system is available."""
         if self.event_bus and PropPositionedEvent:
             self.event_bus.publish(

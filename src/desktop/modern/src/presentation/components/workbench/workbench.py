@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING, Optional
 
-from core.interfaces.core_services import ILayoutService
-from core.interfaces.workbench_services import (
+from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from desktop.modern.src.core.interfaces.workbench_services import (
     IBeatDeletionService,
     IDictionaryService,
     IFullScreenService,
     IGraphEditorService,
     ISequenceWorkbenchService,
 )
-from domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 

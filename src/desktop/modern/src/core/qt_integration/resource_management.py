@@ -274,7 +274,9 @@ class QtResourceManager:
         pen_style = (
             style
             if style is not None
-            else getattr(Qt, "SolidLine", 1) if hasattr(Qt, "SolidLine") else 1
+            else getattr(Qt, "SolidLine", 1)
+            if hasattr(Qt, "SolidLine")
+            else 1
         )
 
         # Create cache key from pen properties
@@ -310,7 +312,9 @@ class QtResourceManager:
         brush_style = (
             style
             if style is not None
-            else getattr(Qt, "SolidPattern", 1) if hasattr(Qt, "SolidPattern") else 1
+            else getattr(Qt, "SolidPattern", 1)
+            if hasattr(Qt, "SolidPattern")
+            else 1
         )
 
         # Create cache key from brush properties

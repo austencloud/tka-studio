@@ -10,7 +10,7 @@ import pandas as pd
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -18,7 +18,7 @@ from domain.models.core_models import (
     Location,
     GlyphData,
 )
-from infrastructure.data_path_handler import DataPathHandler
+from desktop.modern.src.infrastructure.data_path_handler import DataPathHandler
 from .glyph_data_service import GlyphDataService
 
 

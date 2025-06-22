@@ -15,10 +15,10 @@ def clean_directory(path, patterns, description):
     path = Path(path)
     if not path.exists():
         return
-    
+
     print(f"🧹 Cleaning {description} in {path}...")
     cleaned_count = 0
-    
+
     for pattern in patterns:
         for item in path.rglob(pattern):
             try:
@@ -31,7 +31,7 @@ def clean_directory(path, patterns, description):
                 cleaned_count += 1
             except Exception as e:
                 print(f"   ⚠️  Could not remove {item}: {e}")
-    
+
     if cleaned_count == 0:
         print(f"   ✅ No {description} found")
     else:
@@ -42,7 +42,7 @@ def clean_monorepo():
     """Clean the entire monorepo."""
     root = Path(__file__).parent.parent
     print(f"🧹 Cleaning TKA monorepo at: {root.absolute()}")
-    
+
     # Python cache and build artifacts
     print("\n🐍 Cleaning Python artifacts...")
     python_patterns = [
@@ -57,19 +57,19 @@ def clean_monorepo():
         ".coverage",
         "coverage.xml",
         ".mypy_cache",
-        ".tox"
+        ".tox",
     ]
-    
+
     # Clean Python artifacts in desktop app
     desktop_path = root / "apps" / "desktop"
     if desktop_path.exists():
         clean_directory(desktop_path, python_patterns, "Python artifacts")
-    
+
     # Clean Python artifacts in packages
     packages_path = root / "packages"
     if packages_path.exists():
         clean_directory(packages_path, python_patterns, "Python artifacts")
-    
+
     # Node.js cache and build artifacts
     print("\n📦 Cleaning Node.js artifacts...")
     node_patterns = [
@@ -83,20 +83,20 @@ def clean_monorepo():
         ".nuxt",
         "coverage",
         ".nyc_output",
-        "*.tsbuildinfo"
+        "*.tsbuildinfo",
     ]
-    
+
     # Clean Node.js artifacts in web apps
     web_apps = ["web", "landing", "animator"]
     for app in web_apps:
         app_path = root / "apps" / app
         if app_path.exists():
             clean_directory(app_path, node_patterns, f"Node.js artifacts ({app})")
-    
+
     # Clean Node.js artifacts in packages
     if packages_path.exists():
         clean_directory(packages_path, node_patterns, "Node.js artifacts")
-    
+
     # Clean root node_modules
     root_node_modules = root / "node_modules"
     if root_node_modules.exists():
@@ -106,7 +106,7 @@ def clean_monorepo():
             print("   ✅ Root node_modules removed")
         except Exception as e:
             print(f"   ⚠️  Could not remove root node_modules: {e}")
-    
+
     # Test artifacts
     print("\n🧪 Cleaning test artifacts...")
     test_patterns = [
@@ -114,39 +114,26 @@ def clean_monorepo():
         "playwright-report",
         ".playwright",
         "screenshots",
-        "videos"
+        "videos",
     ]
-    
+
     for app in web_apps:
         app_path = root / "apps" / app
         if app_path.exists():
             clean_directory(app_path, test_patterns, f"test artifacts ({app})")
-    
+
     # Log files and temporary files
     print("\n📝 Cleaning logs and temporary files...")
-    temp_patterns = [
-        "*.log",
-        "*.tmp",
-        ".DS_Store",
-        "Thumbs.db",
-        "*.swp",
-        "*.swo",
-        "*~"
-    ]
-    
+    temp_patterns = ["*.log", "*.tmp", ".DS_Store", "Thumbs.db", "*.swp", "*.swo", "*~"]
+
     clean_directory(root, temp_patterns, "temporary files")
-    
+
     # IDE and editor files
     print("\n💻 Cleaning IDE artifacts...")
-    ide_patterns = [
-        ".vscode/settings.json.bak",
-        ".idea",
-        "*.sublime-workspace",
-        ".vs"
-    ]
-    
+    ide_patterns = [".vscode/settings.json.bak", ".idea", "*.sublime-workspace", ".vs"]
+
     clean_directory(root, ide_patterns, "IDE artifacts")
-    
+
     print("\n🎉 Cleanup complete!")
     print("\n💡 To rebuild everything:")
     print("   python scripts/setup.py        # Reinstall dependencies")

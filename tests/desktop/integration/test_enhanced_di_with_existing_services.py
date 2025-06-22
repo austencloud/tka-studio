@@ -10,7 +10,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import Mock
 
-from tka.desktop.core.dependency_injection.di_container import (
+from desktop.modern.src.core.dependency_injection.di_container import (
     DIContainer,
     reset_container,
 )

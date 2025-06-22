@@ -11,8 +11,8 @@ from typing import Dict, Any, Optional, Tuple
 import logging
 
 from PyQt6.QtCore import QSize
-from domain.models.core_models import SequenceData
-from core.interfaces.core_services import ILayoutService
+from desktop.modern.src.domain.models.core_models import SequenceData
+from desktop.modern.src.core.interfaces.core_services import ILayoutService
 
 from .layout_types import LayoutConfig, LayoutMode, ScalingMode
 from .beat_layout_calculator import BeatLayoutCalculator
@@ -24,6 +24,7 @@ from .ui_layout_provider import UILayoutProvider
 # Event-driven architecture imports
 try:
     from core.events import get_event_bus
+
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
     get_event_bus = None

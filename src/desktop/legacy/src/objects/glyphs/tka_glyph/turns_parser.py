@@ -17,7 +17,11 @@ def parse_turns_tuple_string(
                 else (
                     SAME
                     if item == "s"
-                    else OPP if item == "o" else "fl" if item == "fl" else item.strip()
+                    else OPP
+                    if item == "o"
+                    else "fl"
+                    if item == "fl"
+                    else item.strip()
                 )
             )
         )

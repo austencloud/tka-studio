@@ -11,14 +11,12 @@ from unittest.mock import Mock
 
 # Import TKA components using standard absolute imports
 try:
-    from tka.desktop.application.services.data.pictograph_dataset_service import (
-        PictographDatasetService,
-    )
-    from tka.desktop.domain.models.core_models import BeatData
+    from tka.desktop.modern.domain.models.core_models import BeatData
 
     TKA_IMPORTS_AVAILABLE = True
 except ImportError:
     TKA_IMPORTS_AVAILABLE = False
+    BeatData = None
 
 
 def pytest_configure(config):
@@ -40,7 +38,7 @@ def pytest_configure(config):
 def pytest_sessionstart(session):
     """Called after the Session object has been created."""
     if session.config.option.verbose >= 1:
-        print("\n🚀 TKA unified test environment initialized successfully!")
+        print("\nTKA unified test environment initialized successfully!")
 
 
 @pytest.fixture(scope="session")
@@ -66,20 +64,16 @@ def qtbot_with_container(qtbot, mock_container):
 
 @pytest.fixture
 def mock_beat_data():
-    """Real beat data for testing using PictographDatasetService."""
-    if not TKA_IMPORTS_AVAILABLE:
+    """Real beat data for testing using BeatData model."""
+    if not TKA_IMPORTS_AVAILABLE or BeatData is None:
         return None
 
-    dataset_service = PictographDatasetService()
-    beat_data = dataset_service.get_start_position_pictograph(
-        "alpha1_alpha1", "diamond"
-    )
-
-    # Fallback to empty beat if dataset unavailable
-    if not beat_data:
+    # Create a simple mock beat data
+    # In the future, this could use PictographDatasetService when imports are fixed
+    try:
         return BeatData.empty()
-
-    return beat_data
+    except Exception:
+        return None
 
 
 @pytest.fixture

@@ -6,7 +6,7 @@ Handles conversion between BeatData and BeatAPI models.
 import logging
 from typing import Optional
 
-from domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import BeatData
 
 from ..models import BeatAPI
 from .motion_converters import api_to_domain_motion, domain_to_api_motion

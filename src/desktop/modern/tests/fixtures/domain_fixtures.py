@@ -20,15 +20,11 @@ def sample_beat_data():
     """Provide sample beat data for testing."""
     try:
         from domain.models.core_models import BeatData
-        
-        beat = BeatData(
-            beat_number=1,
-            letter="A",
-            duration=1.0
-        )
-        
+
+        beat = BeatData(beat_number=1, letter="A", duration=1.0)
+
         return beat
-        
+
     except ImportError:
         pytest.skip("Core domain models not available")
 
@@ -38,21 +34,18 @@ def sample_sequence_data():
     """Provide sample sequence data for testing."""
     try:
         from domain.models.core_models import SequenceData, BeatData
-        
+
         beats = [
             BeatData(beat_number=1, letter="A", duration=1.0),
-            BeatData(beat_number=2, letter="B", duration=1.0)
+            BeatData(beat_number=2, letter="B", duration=1.0),
         ]
-        
+
         sequence = SequenceData(
-            name="Test Sequence",
-            word="AB",
-            beats=beats,
-            start_position="alpha1"
+            name="Test Sequence", word="AB", beats=beats, start_position="alpha1"
         )
-        
+
         return sequence
-        
+
     except ImportError:
         pytest.skip("Core domain models not available")
 
@@ -62,9 +55,9 @@ def empty_sequence_data():
     """Provide empty sequence data for testing."""
     try:
         from domain.models.core_models import SequenceData
-        
+
         return SequenceData.empty()
-        
+
     except ImportError:
         pytest.skip("Core domain models not available")
 
@@ -74,9 +67,12 @@ def sample_motion_data():
     """Provide sample motion data for testing."""
     try:
         from domain.models.core_models import (
-            MotionData, MotionType, RotationDirection, Location
+            MotionData,
+            MotionType,
+            RotationDirection,
+            Location,
         )
-        
+
         motion = MotionData(
             motion_type=MotionType.PRO,
             prop_rot_dir=RotationDirection.CLOCKWISE,
@@ -84,11 +80,11 @@ def sample_motion_data():
             end_loc=Location.SOUTH,
             turns=1.0,
             start_ori="in",
-            end_ori="out"
+            end_ori="out",
         )
-        
+
         return motion
-        
+
     except ImportError:
         pytest.skip("Motion domain models not available")
 
@@ -98,45 +94,42 @@ def sample_pictograph_data():
     """Provide sample pictograph data for testing."""
     try:
         from domain.models.pictograph_models import (
-            PictographData, GridData, GridMode, ArrowData
+            PictographData,
+            GridData,
+            GridMode,
+            ArrowData,
         )
         from domain.models.core_models import (
-            MotionData, MotionType, RotationDirection, Location
+            MotionData,
+            MotionType,
+            RotationDirection,
+            Location,
         )
-        
+
         # Create motion data
         motion = MotionData(
             motion_type=MotionType.PRO,
             prop_rot_dir=RotationDirection.CLOCKWISE,
             start_loc=Location.NORTH,
             end_loc=Location.SOUTH,
-            turns=1.0
+            turns=1.0,
         )
-        
+
         # Create arrow data
-        arrow = ArrowData(
-            color="blue",
-            motion_data=motion,
-            is_visible=True
-        )
-        
+        arrow = ArrowData(color="blue", motion_data=motion, is_visible=True)
+
         # Create grid data
         grid = GridData(
-            grid_mode=GridMode.DIAMOND,
-            center_x=475.0,
-            center_y=475.0,
-            radius=100.0
+            grid_mode=GridMode.DIAMOND, center_x=475.0, center_y=475.0, radius=100.0
         )
-        
+
         # Create pictograph
         pictograph = PictographData(
-            grid_data=grid,
-            arrows={"blue": arrow},
-            is_blank=False
+            grid_data=grid, arrows={"blue": arrow}, is_blank=False
         )
-        
+
         return pictograph
-        
+
     except ImportError:
         pytest.skip("Pictograph domain models not available")
 
@@ -157,8 +150,20 @@ def type2_letters():
 def valid_start_positions():
     """Provide valid start positions for testing."""
     return [
-        "alpha1", "alpha2", "alpha3", "alpha4",
-        "alpha5", "alpha6", "alpha7", "alpha8",
-        "beta1", "beta2", "beta3", "beta4",
-        "beta5", "beta6", "beta7", "beta8"
+        "alpha1",
+        "alpha2",
+        "alpha3",
+        "alpha4",
+        "alpha5",
+        "alpha6",
+        "alpha7",
+        "alpha8",
+        "beta1",
+        "beta2",
+        "beta3",
+        "beta4",
+        "beta5",
+        "beta6",
+        "beta7",
+        "beta8",
     ]

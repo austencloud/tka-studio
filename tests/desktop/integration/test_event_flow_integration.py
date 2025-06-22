@@ -19,34 +19,34 @@ from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
 import pytest
-from domain.models.core_models import BeatData, PictographData
+from desktop.modern.src.domain.models.core_models import BeatData, PictographData
 from tka_types import MotionType
 
 # Add src to path for imports
 test_dir = Path(__file__).parent.parent.parent
 src_dir = test_dir / "src"
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
-from domain.models.pictograph_models import (
+from desktop.modern.src.domain.models.pictograph_models import (
     ArrowData,
     GridData,
     GridMode,
     PictographData,
 )
 
-from desktop.application.services.positioning.arrow_management_service import (
+from desktop.modern.src.application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
-from desktop.application.services.positioning.prop_management_service import (
+from desktop.modern.src.application.services.positioning.prop_management_service import (
     PropManagementService,
 )
-from desktop.core.events import (
+from desktop.modern.src.core.events import (
     ArrowPositionedEvent,
     PropPositionedEvent,
     get_event_bus,

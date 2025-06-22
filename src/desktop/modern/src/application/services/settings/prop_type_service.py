@@ -1,6 +1,9 @@
 from typing import List
-from core.interfaces.tab_settings_interfaces import IPropTypeService, PropType
-from core.interfaces.core_services import IUIStateManagementService
+from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+    IPropTypeService,
+    PropType,
+)
+from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
 
 
 class PropTypeService(IPropTypeService):

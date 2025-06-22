@@ -10,11 +10,13 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtTest import QSignalSpy  # Changed from PyQt6.QtCore
 from PyQt6.QtWidgets import QGraphicsScene
 
-from src.application.services.graph_editor_service import GraphEditorService
-from src.application.services.graph_editor_hotkey_service import (
+from desktop.modern.src.application.services.graph_editor_service import (
+    GraphEditorService,
+)
+from desktop.modern.src.application.services.graph_editor_hotkey_service import (
     GraphEditorHotkeyService,
 )
-from presentation.components.workbench.graph_editor.graph_editor import (
+from desktop.modern.src.presentation.components.workbench.graph_editor.graph_editor import (
     GraphEditor,
 )
 

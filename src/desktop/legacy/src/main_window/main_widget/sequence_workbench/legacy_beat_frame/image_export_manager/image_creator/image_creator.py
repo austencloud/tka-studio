@@ -71,9 +71,10 @@ class ImageCreator:
 
         if options["add_reversal_symbols"]:
             self.reversal_processor.process_reversals(sequence, filled_beats)
-        options["additional_height_top"], options["additional_height_bottom"] = (
-            self._determine_additional_heights(options, num_filled_beats)
-        )
+        (
+            options["additional_height_top"],
+            options["additional_height_bottom"],
+        ) = self._determine_additional_heights(options, num_filled_beats)
         if dictionary or fullscreen_preview:
             options = self._parse_options_for_dictionary_or_fullscreen_preview(options)
         # Get the layout based on tFuckhe current beat frame layout
@@ -104,12 +105,13 @@ class ImageCreator:
         return image
 
     def _update_options(self, options: dict, num_filled_beats: int) -> dict:
-        options["additional_height_top"], options["additional_height_bottom"] = (
-            self._determine_additional_heights(options, num_filled_beats)
-        )
-        options["user_name"] = (
-            self.export_manager.settings_manager.users.get_current_user()
-        )
+        (
+            options["additional_height_top"],
+            options["additional_height_bottom"],
+        ) = self._determine_additional_heights(options, num_filled_beats)
+        options[
+            "user_name"
+        ] = self.export_manager.settings_manager.users.get_current_user()
         options["export_date"] = datetime.now().strftime("%m-%d-%Y")
         return options
 

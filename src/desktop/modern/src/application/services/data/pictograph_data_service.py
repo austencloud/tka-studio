@@ -15,15 +15,22 @@ from typing import List, Dict, Any, Optional
 from abc import ABC, abstractmethod
 import uuid
 
-from domain.models.core_models import BeatData
-from domain.models.pictograph_models import PictographData, GridData, GridMode, ArrowData
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.pictograph_models import (
+    PictographData,
+    GridData,
+    GridMode,
+    ArrowData,
+)
 
 
 class IPictographDataService(ABC):
     """Interface for pictograph data operations."""
 
     @abstractmethod
-    def create_pictograph(self, grid_mode: GridMode = GridMode.DIAMOND) -> PictographData:
+    def create_pictograph(
+        self, grid_mode: GridMode = GridMode.DIAMOND
+    ) -> PictographData:
         """Create a new blank pictograph."""
         pass
 
@@ -45,7 +52,9 @@ class IPictographDataService(ABC):
         pass
 
     @abstractmethod
-    def add_to_dataset(self, pictograph: PictographData, category: str = "user_created") -> str:
+    def add_to_dataset(
+        self, pictograph: PictographData, category: str = "user_created"
+    ) -> str:
         """Add pictograph to dataset."""
         pass
 
@@ -66,7 +75,9 @@ class PictographDataService(IPictographDataService):
         self._pictograph_cache: Dict[str, PictographData] = {}
         self._dataset_index: Dict[str, List[str]] = {}
 
-    def create_pictograph(self, grid_mode: GridMode = GridMode.DIAMOND) -> PictographData:
+    def create_pictograph(
+        self, grid_mode: GridMode = GridMode.DIAMOND
+    ) -> PictographData:
         """Create a new blank pictograph."""
         grid_data = GridData(
             grid_mode=grid_mode,
@@ -139,7 +150,9 @@ class PictographDataService(IPictographDataService):
 
         return results
 
-    def add_to_dataset(self, pictograph: PictographData, category: str = "user_created") -> str:
+    def add_to_dataset(
+        self, pictograph: PictographData, category: str = "user_created"
+    ) -> str:
         """Add pictograph to dataset."""
         pictograph_id = str(uuid.uuid4())
 
@@ -217,7 +230,10 @@ class PictographDataService(IPictographDataService):
             has_matching_motion = False
 
             for arrow in pictograph.arrows.values():
-                if arrow.motion_data and arrow.motion_data.motion_type == query_motion_type:
+                if (
+                    arrow.motion_data
+                    and arrow.motion_data.motion_type == query_motion_type
+                ):
                     has_matching_motion = True
                     break
 
@@ -230,7 +246,10 @@ class PictographDataService(IPictographDataService):
             has_matching_start = False
 
             for arrow in pictograph.arrows.values():
-                if arrow.motion_data and arrow.motion_data.start_loc == query_start_position:
+                if (
+                    arrow.motion_data
+                    and arrow.motion_data.start_loc == query_start_position
+                ):
                     has_matching_start = True
                     break
 

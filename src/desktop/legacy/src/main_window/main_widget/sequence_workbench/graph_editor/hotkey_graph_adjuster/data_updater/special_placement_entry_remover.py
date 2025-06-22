@@ -12,13 +12,12 @@ from objects.arrow.arrow import Arrow
 from placement_managers.attr_key_generator import (
     AttrKeyGenerator,
 )
+
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.hotkey_graph_adjuster import (
         HotkeyGraphAdjuster,
     )
     from .special_placement_data_updater import SpecialPlacementDataUpdater
-
-
 
 
 class SpecialPlacementEntryRemover:
@@ -109,7 +108,6 @@ class SpecialPlacementEntryRemover:
     def _handle_mixed_start_ori_mirrored_entry_removal(
         self, letter: Letter, arrow: "Arrow", ori_key, letter_data, key
     ):
-
         other_ori_key = self.data_updater.get_other_layer3_ori_key(ori_key)
 
         other_file_path = self._generate_file_path(

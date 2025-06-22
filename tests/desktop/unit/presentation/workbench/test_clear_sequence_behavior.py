@@ -10,15 +10,19 @@ from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
 import pytest
-from domain.models.core_models import BeatData, SequenceData
-from presentation.components.workbench.event_controller import WorkbenchEventController
-from presentation.components.workbench.sequence_beat_frame.beat_view import BeatView
-from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.presentation.components.workbench.event_controller import (
+    WorkbenchEventController,
+)
+from desktop.modern.src.presentation.components.workbench.sequence_beat_frame.beat_view import (
+    BeatView,
+)
+from desktop.modern.src.presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
     SequenceBeatFrame,
 )
 from PyQt6.QtWidgets import QApplication
 
-from desktop.application.services.layout.layout_management_service import (
+from desktop.modern.src.application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
 

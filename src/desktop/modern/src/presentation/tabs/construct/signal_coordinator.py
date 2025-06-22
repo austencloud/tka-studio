@@ -7,7 +7,7 @@ Responsible for connecting signals between components and handling signal routin
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from domain.models.core_models import SequenceData
+from desktop.modern.src.domain.models.core_models import SequenceData
 from .start_position_handler import StartPositionHandler
 from .option_picker_manager import OptionPickerManager
 from .sequence_manager import SequenceManager
@@ -104,9 +104,7 @@ class SignalCoordinator(QObject):
     def _handle_sequence_modified(self, sequence: SequenceData):
         """Handle sequence modification from sequence manager with cascade prevention"""
         if self._handling_sequence_modification:
-            print(
-                "🔄 Signal coordinator: Preventing cascade refresh (already handling)"
-            )
+            print("🔄 Signal coordinator: Preventing cascade refresh (already handling)")
             return
 
         try:

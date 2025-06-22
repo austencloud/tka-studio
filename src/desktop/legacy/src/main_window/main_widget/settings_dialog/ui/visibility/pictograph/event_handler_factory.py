@@ -142,7 +142,6 @@ class EventHandlerFactory:
             glyph.name, new_visibility
         )
 
-
         # Update UI
         self.manager.view.tab.buttons_widget.update_button_flags()
         self.manager.visibility_controller.fade_and_toggle_visibility(

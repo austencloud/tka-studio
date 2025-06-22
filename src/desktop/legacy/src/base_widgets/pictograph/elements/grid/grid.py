@@ -19,7 +19,6 @@ class Grid:
     def __init__(
         self, pictograph: "LegacyPictograph", grid_data: GridData, grid_mode: str
     ):
-
         self.pictograph = pictograph
         self.grid_data = grid_data
         self.grid_mode = grid_mode

@@ -15,18 +15,21 @@ print(f"Path exists: {os.path.exists(legacy_src)}")
 
 try:
     from enums.letter.letter import Letter
+
     print("✅ Letter imported successfully")
 except ImportError as e:
     print(f"❌ Letter import failed: {e}")
 
 try:
-    from enums.prop_type import PropType  
+    from enums.prop_type import PropType
+
     print("✅ PropType imported successfully")
 except ImportError as e:
     print(f"❌ PropType import failed: {e}")
 
 try:
     from main_window.main_widget.tab_name import TabName
+
     print("✅ TabName imported successfully")
 except ImportError as e:
     print(f"❌ TabName import failed: {e}")

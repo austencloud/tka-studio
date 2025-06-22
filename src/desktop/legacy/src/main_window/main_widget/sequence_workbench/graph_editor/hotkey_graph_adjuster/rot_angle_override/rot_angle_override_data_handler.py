@@ -22,7 +22,6 @@ class RotAngleOverrideDataHandler:
         self.key_generator = ArrowRotAngleOverrideKeyGenerator()
 
     def prepare_override_data(self) -> OverrideData:
-
         letter = self.manager.current_letter
         ori_key = self._generate_ori_key()
         turns_tuple = self.manager.turns_generator.generate_turns_tuple(

@@ -39,7 +39,9 @@ class FadeManager(QObject):
 
         # Fallback to legacy AppContext for backward compatibility
         try:
-            from src.legacy_settings_manager.global_settings.app_context import AppContext
+            from src.legacy_settings_manager.global_settings.app_context import (
+                AppContext,
+            )
 
             return AppContext.settings_manager().global_settings.get_enable_fades()
         except (AttributeError, RuntimeError):

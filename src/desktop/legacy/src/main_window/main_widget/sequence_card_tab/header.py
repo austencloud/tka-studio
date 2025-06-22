@@ -11,7 +11,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 
 
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -116,7 +115,8 @@ class SequenceCardHeader(QFrame):
         button_layout.setSpacing(12)
 
         self.export_button = self._create_action_button(
-            "Export Pages", self.sequence_car_tab.page_exporter.export_all_pages_as_images
+            "Export Pages",
+            self.sequence_car_tab.page_exporter.export_all_pages_as_images,
         )
         self.refresh_button = self._create_action_button(
             "Refresh", self.sequence_car_tab.load_sequences

@@ -76,7 +76,10 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         # Register services in dependency order
         self.register_event_system(container)
-        self.register_core_services(container)
+        self.register_core_services(
+            container
+        )  # Register core services including UI state management
+        self.register_data_services(container)
         self.register_motion_services(container)
         self.register_layout_services(container)
         self.register_pictograph_services(container)
@@ -123,19 +126,21 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         def create_layout_service():
             event_bus = None
             try:
-                if IEventBus:
-                    event_bus = container.resolve(IEventBus)
+                from core.events import IEventBus
+
+                event_bus = container.resolve(IEventBus)
             except Exception:
                 # Event bus not available, continue without it
                 pass
             return LayoutManagementService(event_bus=event_bus)
 
-        def create_ui_state_service():
-            return UIStateManagementService()
-
         # Register with factory functions for proper dependency resolution
         container.register_factory(ILayoutService, create_layout_service)
-        container.register_factory(IUIStateManagementService, create_ui_state_service)
+
+        # Register UI state service as singleton since it has no dependencies
+        container.register_singleton(
+            IUIStateManagementService, UIStateManagementService
+        )
 
     def register_motion_services(self, container: "DIContainer") -> None:
         """Register motion services using pure dependency injection."""
@@ -169,7 +174,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IPictographDataService,
             PictographDataService,
         )
-        from src.application.services.core.pictograph_management_service import (
+        from application.services.core.pictograph_management_service import (
             PictographManagementService,
         )
 
@@ -236,6 +241,19 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IPropOrchestrator,
             PropOrchestrator,
         )
+
+        # Register the unified management services
+        from application.services.positioning.arrow_management_service import (
+            ArrowManagementService,
+            IArrowManagementService,
+        )
+        from application.services.positioning.prop_management_service import (
+            PropManagementService,
+            IPropManagementService,
+        )
+
+        container.register_singleton(IArrowManagementService, ArrowManagementService)
+        container.register_singleton(IPropManagementService, PropManagementService)
 
         # Register the orchestrators
         container.register_singleton(

@@ -11,7 +11,7 @@ import asyncio
 from typing import List
 from unittest.mock import Mock
 
-from src.core.events.event_bus import (
+from desktop.modern.src.core.events.event_bus import (
     TypeSafeEventBus,
     SequenceEvent,
     ArrowEvent,

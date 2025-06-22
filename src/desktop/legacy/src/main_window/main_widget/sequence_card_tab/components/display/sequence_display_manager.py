@@ -499,4 +499,3 @@ class SequenceDisplayManager:
             logging.error(
                 f"Invalid position {self.current_position} for page's internal grid, max positions: {len(positions)}"
             )
-

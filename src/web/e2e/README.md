@@ -72,6 +72,7 @@ Performance tests measure:
 ## CI Integration
 
 Tests run automatically on GitHub Actions for:
+
 - Pull requests to main/master
 - Pushes to main/master
 - Manual triggers

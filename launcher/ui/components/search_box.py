@@ -14,7 +14,7 @@ from ..reliable_effects import get_shadow_manager
 
 class ReliableSearchBox(QLineEdit):
     """Reliable search box with consistent glassmorphism styling."""
-    
+
     def __init__(self, placeholder: str = "Search...", parent=None):
         super().__init__(parent)
         self.setPlaceholderText(placeholder)

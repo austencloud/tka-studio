@@ -7,9 +7,11 @@ with modern architecture patterns and Modern pictograph integration.
 
 from typing import Optional
 
-from domain.models.core_models import BeatData
-from presentation.components.pictograph.pictograph_component import PictographComponent
-from presentation.components.start_position_picker.start_text_overlay import (
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.presentation.components.pictograph.pictograph_component import (
+    PictographComponent,
+)
+from desktop.modern.src.presentation.components.start_position_picker.start_text_overlay import (
     StartTextOverlay,
 )
 from PyQt6.QtCore import QSize, Qt, pyqtSignal

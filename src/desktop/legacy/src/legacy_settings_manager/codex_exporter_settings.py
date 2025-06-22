@@ -5,7 +5,9 @@ Settings for the codex exporter.
 from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
 
 
 class CodexExporterSettings:

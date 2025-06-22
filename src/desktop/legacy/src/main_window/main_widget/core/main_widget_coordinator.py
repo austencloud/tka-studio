@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Optional
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget
 from PyQt6.QtCore import pyqtSignal
 
-from core.application_context import ApplicationContext
+from desktop.modern.src.core.application_context import ApplicationContext
 from .tab_manager import TabManager
 from .widget_manager import WidgetManager
 from .state_manager import StateManager

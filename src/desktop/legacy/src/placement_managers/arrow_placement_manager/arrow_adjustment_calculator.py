@@ -138,7 +138,6 @@ class ArrowAdjustmentCalculator:
         arrow: Arrow,
         turns_tuple: str,
     ) -> Optional[tuple[int, int]]:
-
         letter_adjustments: dict[str, dict[str, list]] = special_placements.get(
             letter.value, {}
         ).get(turns_tuple, {})

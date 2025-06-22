@@ -1,0 +1,15 @@
+#!/bin/bash
+echo "🧪 Running tests after merge..."
+
+# Run critical tests to ensure pulled changes didn't break anything
+python -m pytest tests/regression/bugs/ tests/specification/ -x --tb=short
+
+if [ $? -eq 0 ]; then
+    echo "✅ All critical tests passed after merge"
+else
+    echo "❌ CRITICAL TESTS FAILED after merge!"
+    echo "🚨 Your codebase may be broken!"
+    
+    # Optional: Send notification
+    # python scripts/notify_dev.py "Tests failed after git merge"
+fi

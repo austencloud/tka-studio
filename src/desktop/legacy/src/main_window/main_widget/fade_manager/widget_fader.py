@@ -92,7 +92,6 @@ class WidgetFader:
         anim_group.start()
 
     def _ensure_opacity_effect(self, widget: QWidget) -> QGraphicsOpacityEffect:
-
         effect = widget.graphicsEffect()
         if effect and isinstance(effect, QGraphicsOpacityEffect):
             return effect
@@ -107,7 +106,6 @@ class WidgetFader:
         callback: Union[callable, tuple[callable, callable]] = None,
         duration: int = 250,
     ) -> None:
-
         fade_enabled = self.manager.fades_enabled()
         first_callback = None
         second_callback = None

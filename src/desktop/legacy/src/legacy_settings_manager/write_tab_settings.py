@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
 
 
 class WriteTabSettings:

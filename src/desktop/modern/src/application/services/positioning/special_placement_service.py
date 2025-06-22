@@ -23,8 +23,12 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 from PyQt6.QtCore import QPointF
 
-from domain.models.core_models import MotionData, MotionType, Location
-from domain.models.pictograph_models import ArrowData, PictographData
+from desktop.modern.src.domain.models.core_models import (
+    MotionData,
+    MotionType,
+    Location,
+)
+from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
 
 
 class SpecialPlacementService:
@@ -76,7 +80,6 @@ class SpecialPlacementService:
         )
 
         if not letter_data:
-
             return None
 
         # Get turn-specific data

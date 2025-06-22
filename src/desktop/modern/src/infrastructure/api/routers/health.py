@@ -6,7 +6,7 @@ Provides system health and status information.
 import logging
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from core.monitoring import monitor_performance
+from desktop.modern.src.core.monitoring import monitor_performance
 from ..dependencies import check_service_health, are_all_services_healthy
 
 logger = logging.getLogger(__name__)

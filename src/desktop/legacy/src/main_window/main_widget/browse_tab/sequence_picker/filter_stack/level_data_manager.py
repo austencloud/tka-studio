@@ -12,9 +12,9 @@ from main_window.main_widget.metadata_extractor import (
 class LevelDataManager:
     def __init__(self):
         self.metadata_extractor = MetaDataExtractor()
-        self._all_sequences_with_levels: Optional[list[tuple[str, list[str], int]]] = (
-            None
-        )
+        self._all_sequences_with_levels: Optional[
+            list[tuple[str, list[str], int]]
+        ] = None
 
     def get_all_sequences_with_levels(self) -> list[tuple[str, list[str], int]]:
         if self._all_sequences_with_levels is None:

@@ -10,7 +10,7 @@ import logging
 
 try:
     # Try relative imports first (for normal package usage)
-    from domain.models.core_models import (
+    from desktop.modern.src.domain.models.core_models import (
         BeatData,
         MotionData,
         MotionType,
@@ -26,7 +26,7 @@ try:
 except ImportError:
     # Fallback to absolute imports (for standalone tests)
     try:
-        from domain.models.core_models import (
+        from desktop.modern.src.domain.models.core_models import (
             BeatData,
             MotionData,
             MotionType,

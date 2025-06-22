@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
-from application.services.data.data_conversion_service import DataConversionService
-from domain.models.core_models import BeatData
+from desktop.modern.src.application.services.data.data_conversion_service import (
+    DataConversionService,
+)
+from desktop.modern.src.domain.models.core_models import BeatData
 from PyQt6.QtCore import QObject
 
 if TYPE_CHECKING:
@@ -54,7 +56,9 @@ class BeatDataLoader(QObject):
 
     def __init__(self):
         super().__init__()
-        self._beat_options: List[BeatData] = (
+        self._beat_options: List[
+            BeatData
+        ] = (
             []
         )  # Create reverse mapping from positions_map for location tuples to positions
         self._location_to_position_map = self._create_location_to_position_mapping()
@@ -103,9 +107,7 @@ class BeatDataLoader(QObject):
             conversion_service = DataConversionService()
 
             if not sequence_data or len(sequence_data) < 2:
-                print(
-                    "   ❌ Insufficient sequence data, falling back to sample options"
-                )
+                print("   ❌ Insufficient sequence data, falling back to sample options")
                 print(f"      - sequence_data is None: {sequence_data is None}")
                 print(
                     f"      - sequence_data length: {len(sequence_data) if sequence_data else 0}"
@@ -389,9 +391,7 @@ class BeatDataLoader(QObject):
             )  # Create position key: (blue_location, red_location) where blue=left, red=right
             position_key = (blue_end, red_end)
             end_pos = self._location_to_position_map.get(position_key, "beta5")
-            print(
-                f"🎯 Calculated Modern end_pos: {end_pos} for beat {beat_data.letter}"
-            )
+            print(f"🎯 Calculated Modern end_pos: {end_pos} for beat {beat_data.letter}")
             return end_pos
 
         # Fallback

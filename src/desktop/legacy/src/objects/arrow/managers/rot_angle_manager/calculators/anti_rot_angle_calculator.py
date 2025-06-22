@@ -28,7 +28,6 @@ class AntiRotAngleCalculator(BaseRotAngleCalculator):
                 },
             }
         elif self.arrow.motion.state.start_ori in [CLOCK, COUNTER]:
-
             if self.arrow.motion.state.turns in [0.5, 1.5, 2.5]:
                 direction_map = {
                     CLOCKWISE: {

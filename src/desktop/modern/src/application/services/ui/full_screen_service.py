@@ -1,6 +1,6 @@
 from typing import Optional
-from domain.models.core_models import SequenceData
-from core.interfaces.workbench_services import IFullScreenService
+from desktop.modern.src.domain.models.core_models import SequenceData
+from desktop.modern.src.core.interfaces.workbench_services import IFullScreenService
 
 
 class FullScreenService(IFullScreenService):

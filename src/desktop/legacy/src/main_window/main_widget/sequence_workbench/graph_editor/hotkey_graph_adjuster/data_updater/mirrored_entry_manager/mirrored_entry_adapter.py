@@ -2,8 +2,12 @@ import logging
 from typing import TYPE_CHECKING, Optional
 
 from data.constants import DASH, STATIC
-from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import ArrowRotAngleOverrideKeyGenerator
-from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import TurnsTupleGenerator
+from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
+    ArrowRotAngleOverrideKeyGenerator,
+)
+from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
+    TurnsTupleGenerator,
+)
 from objects.arrow.arrow import Arrow
 from src.legacy_settings_manager.global_settings.app_context import AppContext
 
@@ -85,10 +89,11 @@ class MirroredEntryAdapter:
                 grid_mode = arrow.pictograph.state.grid_mode
 
                 # Use MirroredEntryUtils directly to match original behavior
-                other_ori_key, other_letter_data = (
-                    MirroredEntryUtils.get_keys_for_mixed_start_ori(
-                        grid_mode, letter, ori_key
-                    )
+                (
+                    other_ori_key,
+                    other_letter_data,
+                ) = MirroredEntryUtils.get_keys_for_mixed_start_ori(
+                    grid_mode, letter, ori_key
                 )
 
                 mirrored_turns_tuple = (
@@ -119,10 +124,11 @@ class MirroredEntryAdapter:
                 grid_mode = arrow.pictograph.state.grid_mode
 
                 # Use MirroredEntryUtils directly to match original behavior
-                other_ori_key, other_letter_data = (
-                    MirroredEntryUtils.get_keys_for_mixed_start_ori(
-                        grid_mode, letter, ori_key
-                    )
+                (
+                    other_ori_key,
+                    other_letter_data,
+                ) = MirroredEntryUtils.get_keys_for_mixed_start_ori(
+                    grid_mode, letter, ori_key
                 )
 
                 mirrored_turns_tuple = (

@@ -18,7 +18,9 @@ if TYPE_CHECKING:
     from main_window.main_widget.json_manager.special_placement_saver import (
         SpecialPlacementSaver,
     )
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
 
 
 class AppContext:

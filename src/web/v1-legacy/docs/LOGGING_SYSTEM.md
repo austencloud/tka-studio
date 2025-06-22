@@ -24,95 +24,97 @@ The logging system provides a unified approach to logging across the application
 ### Basic Logging
 
 ```typescript
-import { logger } from '$lib/core/logging';
+import { logger } from "$lib/core/logging";
 
 // Basic logging with different levels
-logger.trace('Detailed tracing information');
-logger.debug('Debug information');
-logger.info('General information');
-logger.warn('Warning message');
-logger.error('Error message');
-logger.fatal('Critical error message');
+logger.trace("Detailed tracing information");
+logger.debug("Debug information");
+logger.info("General information");
+logger.warn("Warning message");
+logger.error("Error message");
+logger.fatal("Critical error message");
 
 // Logging with additional data
-logger.info('User action', {
+logger.info("User action", {
   data: {
-    userId: 'user123',
-    action: 'click',
-    target: 'button'
-  }
+    userId: "user123",
+    action: "click",
+    target: "button",
+  },
 });
 
 // Logging errors
 try {
   // Some code that might throw
 } catch (error) {
-  logger.error('Operation failed', { error });
+  logger.error("Operation failed", { error });
 }
 ```
 
 ### Context Management
 
 ```typescript
-import { logger, createPictographContext } from '$lib/core/logging';
+import { logger, createPictographContext } from "$lib/core/logging";
 
 // Create a logger with pictograph-specific context
-const pictographLogger = logger.withContext(createPictographContext({
-  letter: 'A',
-  gridMode: 'diamond'
-}));
+const pictographLogger = logger.withContext(
+  createPictographContext({
+    letter: "A",
+    gridMode: "diamond",
+  }),
+);
 
 // All logs from this logger will include the pictograph context
-pictographLogger.info('Pictograph rendering started');
+pictographLogger.info("Pictograph rendering started");
 ```
 
 ### Performance Tracking
 
 ```typescript
-import { logger } from '$lib/core/logging';
+import { logger } from "$lib/core/logging";
 
 // Start timing an operation
-const timer = logger.startTimer('render-pictograph');
+const timer = logger.startTimer("render-pictograph");
 
 // Add checkpoints during the operation
-timer.checkpoint('grid-loaded');
-timer.checkpoint('props-positioned');
+timer.checkpoint("grid-loaded");
+timer.checkpoint("props-positioned");
 
 // End timing and log the result
-timer.end({ result: 'success' });
+timer.end({ result: "success" });
 ```
 
 ### Domain-Specific Logging
 
 ```typescript
-import { logger } from '$lib/core/logging';
+import { logger } from "$lib/core/logging";
 
 // Pictograph-specific logging
-logger.pictograph('Pictograph rendering complete', {
-  letter: 'A',
-  gridMode: 'diamond',
+logger.pictograph("Pictograph rendering complete", {
+  letter: "A",
+  gridMode: "diamond",
   renderMetrics: {
     renderTime: 42,
     componentsLoaded: 5,
-    totalComponents: 5
-  }
+    totalComponents: 5,
+  },
 });
 
 // SVG error logging
-logger.svgError('Failed to load SVG', {
-  path: '/images/props/ball.svg',
-  component: 'Prop',
+logger.svgError("Failed to load SVG", {
+  path: "/images/props/ball.svg",
+  component: "Prop",
   fallbackApplied: true,
-  error: new Error('404 Not Found')
+  error: new Error("404 Not Found"),
 });
 
 // State machine transition logging
 logger.transition({
-  machine: 'appMachine',
-  from: 'idle',
-  to: 'active',
-  event: 'ACTIVATE',
-  duration: 15
+  machine: "appMachine",
+  from: "idle",
+  to: "active",
+  event: "ACTIVATE",
+  duration: 15,
 });
 ```
 
@@ -145,7 +147,7 @@ The logging system can be configured via URL parameters:
   import { LogViewer } from '$lib/components/logging/LogViewer.svelte';
 </script>
 
-<LogViewer 
+<LogViewer
   maxHeight="400px"
   showToolbar={true}
   showTimestamps={true}
@@ -159,8 +161,8 @@ The logging system can be configured via URL parameters:
 ## Integration with XState
 
 ```typescript
-import { createMachine } from 'xstate';
-import { withLogging } from '$lib/core/logging';
+import { createMachine } from "xstate";
+import { withLogging } from "$lib/core/logging";
 
 // Create a machine with logging
 const machine = withLogging(
@@ -168,38 +170,40 @@ const machine = withLogging(
     // Machine configuration
   }),
   {
-    name: 'AppMachine',
+    name: "AppMachine",
     level: LogLevel.INFO,
-    includedEvents: ['IMPORTANT_EVENT'],
-    excludedEvents: ['TICK'],
-    contextFields: ['userId', 'currentView'],
+    includedEvents: ["IMPORTANT_EVENT"],
+    excludedEvents: ["TICK"],
+    contextFields: ["userId", "currentView"],
     includeSnapshots: true,
     logTransitions: true,
     performanceTracking: {
       enabled: true,
-      transitionThreshold: 50 // ms
-    }
-  }
+      transitionThreshold: 50, // ms
+    },
+  },
 );
 ```
 
 ## Error Handling
 
 ```typescript
-import { errorLogger, ErrorCategory, ErrorSeverity } from '$lib/core/logging';
+import { errorLogger, ErrorCategory, ErrorSeverity } from "$lib/core/logging";
 
 try {
   // Some code that might throw
 } catch (error) {
   errorLogger.log({
-    source: 'MyComponent',
+    source: "MyComponent",
     message: error.message,
     stack: error.stack,
     severity: ErrorSeverity.ERROR,
     category: ErrorCategory.COMPONENT_INITIALIZATION,
     context: {
-      componentProps: { /* relevant props */ }
-    }
+      componentProps: {
+        /* relevant props */
+      },
+    },
   });
 }
 ```
@@ -221,24 +225,24 @@ The logging system consists of the following components:
 ### Adding a New Transport
 
 ```typescript
-import { type LogTransport, type LogEntry } from '$lib/core/logging';
+import { type LogTransport, type LogEntry } from "$lib/core/logging";
 
 export class MyCustomTransport implements LogTransport {
-  name = 'custom';
-  
+  name = "custom";
+
   log(entry: LogEntry): void {
     // Custom log handling logic
   }
-  
+
   // Optional methods
   flush?(): Promise<void> {
     // Flush logs to destination
   }
-  
+
   clear?(): void {
     // Clear stored logs
   }
-  
+
   getEntries?(): LogEntry[] {
     // Return stored logs
   }
@@ -246,7 +250,7 @@ export class MyCustomTransport implements LogTransport {
 
 // Register the transport
 logger.setConfig({
-  transports: [new MyCustomTransport()]
+  transports: [new MyCustomTransport()],
 });
 ```
 
@@ -254,21 +258,24 @@ logger.setConfig({
 
 ```typescript
 // Extend the Logger interface
-declare module '$lib/core/logging' {
+declare module "$lib/core/logging" {
   interface Logger {
     myDomain(message: string, params: MyDomainParams): void;
   }
-  
+
   interface MyDomainParams {
     // Domain-specific parameters
   }
 }
 
 // Implement the method in LoggerImpl
-LoggerImpl.prototype.myDomain = function(message: string, params: MyDomainParams): void {
+LoggerImpl.prototype.myDomain = function (
+  message: string,
+  params: MyDomainParams,
+): void {
   this.log(LogLevel.INFO, message, {
     domain: LogDomain.MY_DOMAIN,
-    data: params
+    data: params,
   });
 };
 ```
@@ -276,6 +283,7 @@ LoggerImpl.prototype.myDomain = function(message: string, params: MyDomainParams
 ## Best Practices
 
 1. **Use Appropriate Log Levels**:
+
    - TRACE: Extremely detailed information for debugging complex issues
    - DEBUG: Detailed information useful during development
    - INFO: General information about application flow
@@ -284,16 +292,19 @@ LoggerImpl.prototype.myDomain = function(message: string, params: MyDomainParams
    - FATAL: Severe errors that prevent normal operation
 
 2. **Include Contextual Information**:
+
    - Always provide relevant context with logs
    - Use domain-specific logging methods when appropriate
    - Include correlation IDs for related operations
 
 3. **Performance Considerations**:
+
    - Use sampling for high-volume logs in production
    - Be mindful of the performance impact of logging
    - Consider using the memory transport only in development
 
 4. **Error Logging**:
+
    - Always include the original error object when logging errors
    - Categorize errors appropriately
    - Include recovery suggestions when possible

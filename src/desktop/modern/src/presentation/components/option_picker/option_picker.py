@@ -1,8 +1,10 @@
 from typing import Any, Callable, Dict, List, Optional
 
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.option_picker_services import IOptionPickerOrchestrator
-from domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.interfaces.option_picker_services import (
+    IOptionPickerOrchestrator,
+)
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 

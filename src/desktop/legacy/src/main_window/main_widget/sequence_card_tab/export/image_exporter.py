@@ -119,19 +119,22 @@ class SequenceCardImageExporter:
                 )
 
                 # Process the current batch
-                processed_sequences, regenerated_count, skipped_count, failed_count = (
-                    self._process_sequence_batch(
-                        word_folders,
-                        dictionary_path,
-                        export_path,
-                        batch_start,
-                        batch_end,
-                        processed_sequences,
-                        total_sequences,
-                        regenerated_count,
-                        skipped_count,
-                        failed_count,
-                    )
+                (
+                    processed_sequences,
+                    regenerated_count,
+                    skipped_count,
+                    failed_count,
+                ) = self._process_sequence_batch(
+                    word_folders,
+                    dictionary_path,
+                    export_path,
+                    batch_start,
+                    batch_end,
+                    processed_sequences,
+                    total_sequences,
+                    regenerated_count,
+                    skipped_count,
+                    failed_count,
                 )
 
                 # Force garbage collection between batches

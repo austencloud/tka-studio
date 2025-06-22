@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class CodexControlWidget(QWidget):
-
     def __init__(self, codex: "Codex"):
         super().__init__(codex)
         self.codex = codex

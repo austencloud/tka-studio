@@ -12,6 +12,7 @@ from data.constants import (
     STATIC,
     WEST,
 )
+
 loc_map_cw = {
     SOUTH: WEST,
     WEST: NORTH,

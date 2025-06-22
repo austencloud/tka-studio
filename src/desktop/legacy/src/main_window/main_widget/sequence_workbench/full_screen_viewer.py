@@ -61,9 +61,9 @@ class FullScreenViewer:
                         if hasattr(mw, "widget_manager") and hasattr(
                             mw.widget_manager, "_widgets"
                         ):
-                            mw.widget_manager._widgets["full_screen_overlay"] = (
-                                full_screen_overlay
-                            )
+                            mw.widget_manager._widgets[
+                                "full_screen_overlay"
+                            ] = full_screen_overlay
                     except (AttributeError, TypeError):
                         # Widget manager not available - overlay will still work
                         pass

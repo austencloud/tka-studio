@@ -7,7 +7,6 @@ from enums.letter.complementary_letter_getter import ComplementaryLetterGetter
 
 
 class MirroredComplementaryCAPExecutor(CAPExecutor):
-
     def __init__(self, circular_sequence_generator):
         super().__init__(circular_sequence_generator)
 
@@ -78,15 +77,15 @@ class MirroredComplementaryCAPExecutor(CAPExecutor):
         }
 
         # Ensure orientations are set properly
-        new_entry[BLUE_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, BLUE
-            )
+        new_entry[BLUE_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, BLUE
         )
-        new_entry[RED_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, RED
-            )
+        new_entry[RED_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, RED
         )
 
         return new_entry
@@ -121,13 +120,13 @@ class MirroredComplementaryCAPExecutor(CAPExecutor):
 
         # Handle floating states
         if previous_matching_beat_attributes.get(PREFLOAT_MOTION_TYPE):
-            new_entry_attributes[PREFLOAT_MOTION_TYPE] = (
-                previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
-            )
-            new_entry_attributes[PREFLOAT_PROP_ROT_DIR] = (
-                self.get_mirrored_prop_rot_dir(
-                    previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
-                )
+            new_entry_attributes[
+                PREFLOAT_MOTION_TYPE
+            ] = previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
+            new_entry_attributes[
+                PREFLOAT_PROP_ROT_DIR
+            ] = self.get_mirrored_prop_rot_dir(
+                previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
             )
 
         return new_entry_attributes

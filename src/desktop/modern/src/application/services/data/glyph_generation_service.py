@@ -15,7 +15,7 @@ PROVIDES:
 from typing import Optional, Tuple, Dict
 from abc import ABC, abstractmethod
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     GlyphData,
@@ -48,7 +48,7 @@ class IGlyphGenerationService(ABC):
 class GlyphGenerationService(IGlyphGenerationService):
     """
     Pure service for glyph generation operations.
-    
+
     Handles all glyph-related calculations without external dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -200,28 +200,58 @@ class GlyphGenerationService(IGlyphGenerationService):
         """Build letter type mapping."""
         return {
             # Type 1 letters (show elemental and VTG glyphs)
-            "A": LetterType.TYPE1, "B": LetterType.TYPE1, "C": LetterType.TYPE1,
-            "D": LetterType.TYPE1, "E": LetterType.TYPE1, "F": LetterType.TYPE1,
-            "G": LetterType.TYPE1, "H": LetterType.TYPE1, "I": LetterType.TYPE1,
-            "J": LetterType.TYPE1, "K": LetterType.TYPE1, "L": LetterType.TYPE1,
-            "M": LetterType.TYPE1, "N": LetterType.TYPE1, "O": LetterType.TYPE1,
-            "P": LetterType.TYPE1, "Q": LetterType.TYPE1, "R": LetterType.TYPE1,
-            "S": LetterType.TYPE1, "T": LetterType.TYPE1, "U": LetterType.TYPE1,
+            "A": LetterType.TYPE1,
+            "B": LetterType.TYPE1,
+            "C": LetterType.TYPE1,
+            "D": LetterType.TYPE1,
+            "E": LetterType.TYPE1,
+            "F": LetterType.TYPE1,
+            "G": LetterType.TYPE1,
+            "H": LetterType.TYPE1,
+            "I": LetterType.TYPE1,
+            "J": LetterType.TYPE1,
+            "K": LetterType.TYPE1,
+            "L": LetterType.TYPE1,
+            "M": LetterType.TYPE1,
+            "N": LetterType.TYPE1,
+            "O": LetterType.TYPE1,
+            "P": LetterType.TYPE1,
+            "Q": LetterType.TYPE1,
+            "R": LetterType.TYPE1,
+            "S": LetterType.TYPE1,
+            "T": LetterType.TYPE1,
+            "U": LetterType.TYPE1,
             "V": LetterType.TYPE1,
             # Type 2 letters (no elemental/VTG glyphs)
-            "W": LetterType.TYPE2, "X": LetterType.TYPE2, "Y": LetterType.TYPE2,
-            "Z": LetterType.TYPE2, "Σ": LetterType.TYPE2, "Δ": LetterType.TYPE2,
-            "θ": LetterType.TYPE2, "Ω": LetterType.TYPE2,
+            "W": LetterType.TYPE2,
+            "X": LetterType.TYPE2,
+            "Y": LetterType.TYPE2,
+            "Z": LetterType.TYPE2,
+            "Σ": LetterType.TYPE2,
+            "Δ": LetterType.TYPE2,
+            "θ": LetterType.TYPE2,
+            "Ω": LetterType.TYPE2,
             # Type 3 letters (no elemental/VTG glyphs)
-            "W-": LetterType.TYPE3, "X-": LetterType.TYPE3, "Y-": LetterType.TYPE3,
-            "Z-": LetterType.TYPE3, "Σ-": LetterType.TYPE3, "Δ-": LetterType.TYPE3,
-            "θ-": LetterType.TYPE3, "Ω-": LetterType.TYPE3,
+            "W-": LetterType.TYPE3,
+            "X-": LetterType.TYPE3,
+            "Y-": LetterType.TYPE3,
+            "Z-": LetterType.TYPE3,
+            "Σ-": LetterType.TYPE3,
+            "Δ-": LetterType.TYPE3,
+            "θ-": LetterType.TYPE3,
+            "Ω-": LetterType.TYPE3,
             # Type 4 letters (no elemental/VTG glyphs)
-            "Φ": LetterType.TYPE4, "Ψ": LetterType.TYPE4, "Λ": LetterType.TYPE4,
+            "Φ": LetterType.TYPE4,
+            "Ψ": LetterType.TYPE4,
+            "Λ": LetterType.TYPE4,
             # Type 5 letters (no elemental/VTG glyphs)
-            "Φ-": LetterType.TYPE5, "Ψ-": LetterType.TYPE5, "Λ-": LetterType.TYPE5,
+            "Φ-": LetterType.TYPE5,
+            "Ψ-": LetterType.TYPE5,
+            "Λ-": LetterType.TYPE5,
             # Type 6 letters (don't show positions)
-            "α": LetterType.TYPE6, "β": LetterType.TYPE6, "Γ": LetterType.TYPE6,
+            "α": LetterType.TYPE6,
+            "β": LetterType.TYPE6,
+            "Γ": LetterType.TYPE6,
         }
 
     def _build_glyph_mappings(self) -> Dict[str, str]:

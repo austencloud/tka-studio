@@ -30,10 +30,11 @@
   --border-glass: rgba(255, 255, 255, 0.1);
   --shadow-color: rgba(0, 0, 0, 0.3);
   --shadow-colored: rgba(118, 75, 162, 0.3);
-  
+
   /* Typography */
-  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-heading: 'Archivo Black', Arial, sans-serif;
+  --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  --font-family-heading: "Archivo Black", Arial, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -42,7 +43,7 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
-  
+
   /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -51,7 +52,7 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
-  
+
   /* Layout */
   --container-max-width: 1200px;
   --container-max-width-wide: 1600px;
@@ -62,7 +63,7 @@
   --border-radius: 8px;
   --border-radius-sm: 4px;
   --border-radius-lg: 12px;
-  
+
   /* Advanced Glassmorphism System */
   --glass-blur: 20px;
   --glass-blur-strong: 40px;
@@ -101,15 +102,25 @@
   --badge-all-text: #9e9e9e;
 
   /* Theme Adaptation Variables - Override these based on background */
-  --theme-surface-tint: rgba(255, 255, 255, 0.02); /* Subtle tint for surfaces */
+  --theme-surface-tint: rgba(
+    255,
+    255,
+    255,
+    0.02
+  ); /* Subtle tint for surfaces */
   --theme-text-contrast: 1; /* Multiplier for text contrast */
   --theme-border-opacity: 0.15; /* Border opacity adjustment */
 }
 
 /* Deep Ocean Theme Adaptations */
 [data-background="deepOcean"] {
-  --surface-color: rgba(255, 255, 255, 0.06); /* Slightly less opaque for ocean */
-  --surface-hover: rgba(255, 255, 255, 0.10);
+  --surface-color: rgba(
+    255,
+    255,
+    255,
+    0.06
+  ); /* Slightly less opaque for ocean */
+  --surface-hover: rgba(255, 255, 255, 0.1);
   --surface-active: rgba(255, 255, 255, 0.14);
   --surface-glass: rgba(255, 255, 255, 0.04);
   --theme-surface-tint: rgba(0, 150, 255, 0.03); /* Ocean blue tint */
@@ -117,7 +128,12 @@
 
 /* Night Sky Theme Adaptations */
 [data-background="nightSky"] {
-  --surface-color: rgba(255, 255, 255, 0.08); /* Standard opacity for night sky */
+  --surface-color: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Standard opacity for night sky */
   --surface-hover: rgba(255, 255, 255, 0.12);
   --surface-active: rgba(255, 255, 255, 0.16);
   --surface-glass: rgba(255, 255, 255, 0.05);
@@ -126,27 +142,21 @@
 
 /* Snowfall Theme Adaptations */
 [data-background="snowfall"] {
-  --surface-color: rgba(255, 255, 255, 0.10); /* More opaque for snow contrast */
+  --surface-color: rgba(255, 255, 255, 0.1); /* More opaque for snow contrast */
   --surface-hover: rgba(255, 255, 255, 0.14);
   --surface-active: rgba(255, 255, 255, 0.18);
   --surface-glass: rgba(255, 255, 255, 0.06);
   --theme-surface-tint: rgba(200, 220, 255, 0.03); /* Cool white tint */
 
   /* Glassmorphism Shadows */
-  --shadow-glass:
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 4px 16px rgba(0, 0, 0, 0.08),
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  --shadow-glass-hover:
-    0 12px 40px rgba(0, 0, 0, 0.15),
-    0 6px 20px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
+  --shadow-glass-hover: 0 12px 40px rgba(0, 0, 0, 0.15),
+    0 6px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  --shadow-glass-colored:
-    0 8px 32px var(--shadow-colored),
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  
+  --shadow-glass-colored: 0 8px 32px var(--shadow-colored),
+    0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
   /* Enhanced Transitions & Micro-interactions */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -219,7 +229,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: var(--background-color); /* Transparent to show dynamic backgrounds */
+  background: var(
+    --background-color
+  ); /* Transparent to show dynamic backgrounds */
   color: var(--text-color);
   font-size: var(--font-size-base);
   line-height: 1.6;
@@ -228,7 +240,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-heading);
   font-weight: 700;
   line-height: 1.2;
@@ -236,12 +253,24 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-color);
 }
 
-h1 { font-size: var(--font-size-4xl); }
-h2 { font-size: var(--font-size-3xl); }
-h3 { font-size: var(--font-size-2xl); }
-h4 { font-size: var(--font-size-xl); }
-h5 { font-size: var(--font-size-lg); }
-h6 { font-size: var(--font-size-base); }
+h1 {
+  font-size: var(--font-size-4xl);
+}
+h2 {
+  font-size: var(--font-size-3xl);
+}
+h3 {
+  font-size: var(--font-size-2xl);
+}
+h4 {
+  font-size: var(--font-size-xl);
+}
+h5 {
+  font-size: var(--font-size-lg);
+}
+h6 {
+  font-size: var(--font-size-base);
+}
 
 p {
   margin: 0 0 var(--spacing-md) 0;
@@ -260,7 +289,8 @@ a:hover {
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
   margin: 0 0 var(--spacing-md) 0;
   padding-left: var(--spacing-lg);
 }
@@ -270,7 +300,8 @@ li {
 }
 
 /* Advanced Glassmorphism Buttons */
-button, .btn {
+button,
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -297,19 +328,22 @@ button, .btn {
   will-change: transform, box-shadow, background;
 }
 
-button:hover, .btn:hover {
+button:hover,
+.btn:hover {
   background: var(--surface-hover);
   border: var(--glass-border-hover);
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--shadow-glass-hover);
 }
 
-button:active, .btn:active {
+button:active,
+.btn:active {
   transform: translateY(-1px) scale(1.01);
   background: var(--surface-active);
 }
 
-button:disabled, .btn:disabled {
+button:disabled,
+.btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
@@ -331,7 +365,9 @@ button:disabled, .btn:disabled {
 }
 
 /* Glassmorphism Form Elements */
-input, textarea, select {
+input,
+textarea,
+select {
   width: 100%;
   padding: var(--spacing-md);
   border: var(--glass-border);
@@ -352,7 +388,9 @@ input, textarea, select {
   will-change: border-color, box-shadow, background;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border: 2px solid var(--primary-color);
   background: var(--surface-hover);
@@ -362,7 +400,8 @@ input:focus, textarea:focus, select:focus {
   transform: translateY(-1px);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--text-muted);
   font-weight: 400;
 }
@@ -393,23 +432,53 @@ input::placeholder, textarea::placeholder {
   padding: 0 var(--container-padding-ultra);
 }
 
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
 
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: var(--spacing-xs); }
-.mb-2 { margin-bottom: var(--spacing-sm); }
-.mb-3 { margin-bottom: var(--spacing-md); }
-.mb-4 { margin-bottom: var(--spacing-lg); }
-.mb-5 { margin-bottom: var(--spacing-xl); }
+.mb-0 {
+  margin-bottom: 0;
+}
+.mb-1 {
+  margin-bottom: var(--spacing-xs);
+}
+.mb-2 {
+  margin-bottom: var(--spacing-sm);
+}
+.mb-3 {
+  margin-bottom: var(--spacing-md);
+}
+.mb-4 {
+  margin-bottom: var(--spacing-lg);
+}
+.mb-5 {
+  margin-bottom: var(--spacing-xl);
+}
 
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: var(--spacing-xs); }
-.mt-2 { margin-top: var(--spacing-sm); }
-.mt-3 { margin-top: var(--spacing-md); }
-.mt-4 { margin-top: var(--spacing-lg); }
-.mt-5 { margin-top: var(--spacing-xl); }
+.mt-0 {
+  margin-top: 0;
+}
+.mt-1 {
+  margin-top: var(--spacing-xs);
+}
+.mt-2 {
+  margin-top: var(--spacing-sm);
+}
+.mt-3 {
+  margin-top: var(--spacing-md);
+}
+.mt-4 {
+  margin-top: var(--spacing-lg);
+}
+.mt-5 {
+  margin-top: var(--spacing-xl);
+}
 
 /* Responsive utilities */
 @media (max-width: 768px) {
@@ -468,24 +537,44 @@ html {
 
 /* 2025 Glassmorphism Keyframe Animations */
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @keyframes glow {
-  0% { box-shadow: var(--shadow-glass); }
-  100% { box-shadow: var(--shadow-glass-colored); }
+  0% {
+    box-shadow: var(--shadow-glass);
+  }
+  100% {
+    box-shadow: var(--shadow-glass-colored);
+  }
 }
 
 @keyframes slideInUp {
@@ -518,11 +607,12 @@ html {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
-  a, a:visited {
+
+  a,
+  a:visited {
     text-decoration: underline;
   }
-  
+
   .no-print {
     display: none !important;
   }

@@ -20,9 +20,9 @@ class CodexDataManager:
 
     def __init__(self, codex: "Codex"):
         self.main_widget = codex.main_widget
-        self.pictograph_data: dict[str, Optional[dict]] = (
-            self._initialize_pictograph_data()
-        )
+        self.pictograph_data: dict[
+            str, Optional[dict]
+        ] = self._initialize_pictograph_data()
 
     def _initialize_pictograph_data(self) -> dict[str, Optional[dict]]:
         """Initializes the pictograph data for all letters."""

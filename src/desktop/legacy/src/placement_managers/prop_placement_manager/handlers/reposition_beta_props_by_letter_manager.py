@@ -39,7 +39,6 @@ class RepositionBetaByLetterHandler:
         self.move_prop(anti_prop, anti_direction)
 
     def reposition_J_K_L(self) -> None:
-
         red_dir = self.dir_calculator.get_dir(self.pictograph.elements.red_motion)
         blue_dir = self.dir_calculator.get_dir(self.pictograph.elements.blue_motion)
 
@@ -48,7 +47,6 @@ class RepositionBetaByLetterHandler:
             self.move_prop(self.pictograph.elements.blue_prop, blue_dir)
 
     def reposition_Y_Z(self) -> None:
-
         shift = (
             self.pictograph.elements.red_motion
             if self.pictograph.elements.red_motion.check.is_shift()

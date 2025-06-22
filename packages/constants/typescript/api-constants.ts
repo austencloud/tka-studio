@@ -10,19 +10,19 @@ export const API_TIMEOUT = 30000; // milliseconds
 export const ENDPOINTS = {
   health: "/api/health",
   sequences: "/api/sequences",
-  settings: "/api/settings", 
+  settings: "/api/settings",
   backgrounds: "/api/settings/backgrounds/available",
   sequenceById: "/api/sequences/{id}",
   saveSequence: "/api/sequences",
   deleteSequence: "/api/sequences/{id}",
   exportSequence: "/api/sequences/{id}/export",
-  importSequence: "/api/sequences/import"
+  importSequence: "/api/sequences/import",
 } as const;
 
 // Error messages
 export const ERROR_MESSAGES = {
   apiUnavailable: "API server is not available",
-  sequenceNotFound: "Sequence not found", 
+  sequenceNotFound: "Sequence not found",
   invalidData: "Invalid data provided",
   saveFailed: "Failed to save sequence",
   loadFailed: "Failed to load sequence",
@@ -32,7 +32,7 @@ export const ERROR_MESSAGES = {
   networkError: "Network connection error",
   timeoutError: "Request timeout",
   serverError: "Internal server error",
-  validationError: "Data validation error"
+  validationError: "Data validation error",
 } as const;
 
 // Success messages
@@ -43,7 +43,7 @@ export const SUCCESS_MESSAGES = {
   sequenceExported: "Sequence exported successfully",
   sequenceImported: "Sequence imported successfully",
   settingsSaved: "Settings saved successfully",
-  settingsLoaded: "Settings loaded successfully"
+  settingsLoaded: "Settings loaded successfully",
 } as const;
 
 // Settings keys
@@ -57,7 +57,7 @@ export const SETTING_KEYS = {
   defaultPropType: "app.default_prop_type",
   showGrid: "ui.show_grid",
   gridOpacity: "ui.grid_opacity",
-  animationSpeed: "ui.animation_speed"
+  animationSpeed: "ui.animation_speed",
 } as const;
 
 // Default values
@@ -71,7 +71,7 @@ export const DEFAULT_VALUES = {
   gridOpacity: 0.3,
   animationSpeed: 1.0,
   sequenceDuration: 4.0,
-  beatDuration: 1.0
+  beatDuration: 1.0,
 } as const;
 
 // HTTP Status codes
@@ -83,7 +83,7 @@ export const HTTP_STATUS = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
-  SERVICE_UNAVAILABLE: 503
+  SERVICE_UNAVAILABLE: 503,
 } as const;
 
 // File extensions
@@ -93,7 +93,7 @@ export const FILE_EXTENSIONS = {
   exportJson: ".json",
   exportCsv: ".csv",
   image: ".png",
-  video: ".mp4"
+  video: ".mp4",
 } as const;
 
 // Validation limits
@@ -104,7 +104,7 @@ export const VALIDATION_LIMITS = {
   minBeatDuration: 0.1,
   maxBeatDuration: 10.0,
   maxTurns: 10.0,
-  minTurns: -10.0
+  minTurns: -10.0,
 } as const;
 
 // Type helpers for better TypeScript support

@@ -3,8 +3,10 @@ from PyQt6.QtCore import pyqtSignal, Qt, QEvent
 from PyQt6.QtGui import QCloseEvent, QMouseEvent, QEnterEvent
 from typing import Optional
 
-from domain.models.core_models import BeatData
-from presentation.components.pictograph.pictograph_component import PictographComponent
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.presentation.components.pictograph.pictograph_component import (
+    PictographComponent,
+)
 
 
 class ClickablePictographFrame(QFrame):
@@ -38,9 +40,9 @@ class ClickablePictographFrame(QFrame):
         layout.setSpacing(0)
 
         try:
-            self.pictograph_component: Optional[PictographComponent] = (
-                PictographComponent(parent=None)
-            )
+            self.pictograph_component: Optional[
+                PictographComponent
+            ] = PictographComponent(parent=None)
             self.pictograph_component.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )

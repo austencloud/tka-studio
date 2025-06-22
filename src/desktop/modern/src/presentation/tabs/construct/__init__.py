@@ -22,7 +22,7 @@ from .data_conversion_service import DataConversionService
 
 __all__ = [
     "ConstructTabLayoutManager",
-    "StartPositionHandler", 
+    "StartPositionHandler",
     "OptionPickerManager",
     "SequenceManager",
     "SignalCoordinator",

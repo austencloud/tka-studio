@@ -4,7 +4,6 @@ from typing import Any, Protocol, runtime_checkable
 
 @runtime_checkable
 class ISettingsManager(Protocol):
-
     @abstractmethod
     def get_setting(self, section: str, key: str, default_value: Any = None) -> Any:
         pass
@@ -74,7 +73,6 @@ class ISettingsManager(Protocol):
 
 @runtime_checkable
 class IGlobalSettings(Protocol):
-
     @abstractmethod
     def get_current_tab(self) -> str:
         pass
@@ -102,7 +100,6 @@ class IGlobalSettings(Protocol):
 
 @runtime_checkable
 class IConstructTabSettings(Protocol):
-
     @abstractmethod
     def get_auto_builder_enabled(self) -> bool:
         pass
@@ -114,7 +111,6 @@ class IConstructTabSettings(Protocol):
 
 @runtime_checkable
 class IGenerateTabSettings(Protocol):
-
     @abstractmethod
     def get_level(self) -> int:
         pass
@@ -134,7 +130,6 @@ class IGenerateTabSettings(Protocol):
 
 @runtime_checkable
 class IBrowseTabSettings(Protocol):
-
     @abstractmethod
     def get_sort_method(self) -> str:
         pass
@@ -146,7 +141,6 @@ class IBrowseTabSettings(Protocol):
 
 @runtime_checkable
 class IWriteTabSettings(Protocol):
-
     @abstractmethod
     def get_auto_save_enabled(self) -> bool:
         pass
@@ -158,7 +152,6 @@ class IWriteTabSettings(Protocol):
 
 @runtime_checkable
 class IImageExportSettings(Protocol):
-
     @abstractmethod
     def get_include_start_position(self) -> bool:
         pass
@@ -170,7 +163,6 @@ class IImageExportSettings(Protocol):
 
 @runtime_checkable
 class ISequenceCardTabSettings(Protocol):
-
     @abstractmethod
     def get_columns_per_row(self) -> int:
         pass
@@ -182,7 +174,6 @@ class ISequenceCardTabSettings(Protocol):
 
 @runtime_checkable
 class IUserProfileSettings(Protocol):
-
     @abstractmethod
     def get_username(self) -> str:
         pass
@@ -198,7 +189,6 @@ class IUserProfileSettings(Protocol):
 
 @runtime_checkable
 class IVisibilitySettings(Protocol):
-
     @abstractmethod
     def get_show_grid(self) -> bool:
         pass

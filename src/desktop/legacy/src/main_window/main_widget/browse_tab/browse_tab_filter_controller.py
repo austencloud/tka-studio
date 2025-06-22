@@ -95,7 +95,9 @@ class BrowseTabFilterController:
                         return current_tab
 
             # Method 3: Fallback to settings (original method)
-            from src.legacy_settings_manager.global_settings.app_context import AppContext
+            from src.legacy_settings_manager.global_settings.app_context import (
+                AppContext,
+            )
 
             current_tab = (
                 AppContext.settings_manager().global_settings.get_current_tab()

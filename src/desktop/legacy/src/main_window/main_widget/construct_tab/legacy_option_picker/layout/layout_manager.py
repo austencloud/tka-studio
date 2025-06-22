@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import LegacyOptionPicker
+    from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
+        LegacyOptionPicker,
+    )
 
 
 class OptionPickerLayoutManager:

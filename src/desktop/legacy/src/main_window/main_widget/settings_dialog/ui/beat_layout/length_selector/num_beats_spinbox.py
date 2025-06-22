@@ -15,5 +15,3 @@ class NumBeatsSpinbox(QSpinBox):
         self.valueChanged.connect(
             lambda: self.length_selector.value_changed.emit(self.value())
         )
-
-

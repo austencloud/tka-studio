@@ -12,7 +12,6 @@ class PictographChecker:
         self.pictograph = pictograph
 
     def ends_with_beta(self) -> bool:
-
         return (
             self.pictograph.state.letter
             in self.pictograph.state.letter.get_letters_by_condition(

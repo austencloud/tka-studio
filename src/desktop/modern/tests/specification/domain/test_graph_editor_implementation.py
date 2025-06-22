@@ -15,14 +15,14 @@ sys.path.insert(0, str(src_path))
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton
 from PyQt6.QtCore import Qt
 
-from src.domain.models.core_models import BeatData
-from presentation.components.workbench.graph_editor.graph_editor import (
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.presentation.components.workbench.graph_editor.graph_editor import (
     GraphEditor,
 )
-from src.presentation.components.workbench.graph_editor.turn_selection_dialog import (
+from desktop.modern.src.presentation.components.workbench.graph_editor.turn_selection_dialog import (
     TurnSelectionDialog,
 )
-from src.application.services.graph_editor_hotkey_service import (
+from desktop.modern.src.application.services.graph_editor_hotkey_service import (
     GraphEditorHotkeyService,
 )
 from unittest.mock import Mock

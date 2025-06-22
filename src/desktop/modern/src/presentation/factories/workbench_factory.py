@@ -1,24 +1,31 @@
 from typing import Optional
 from PyQt6.QtWidgets import QWidget
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.core_services import ILayoutService, IUIStateManagementService
-from core.interfaces.workbench_services import (
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.interfaces.core_services import (
+    ILayoutService,
+    IUIStateManagementService,
+)
+from desktop.modern.src.core.interfaces.workbench_services import (
     ISequenceWorkbenchService,
     IFullScreenService,
     IBeatDeletionService,
     IGraphEditorService,
     IDictionaryService,
 )
-from application.services.core.sequence_management_service import (
+from desktop.modern.src.application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from application.services.ui.ui_state_management_service import (
+from desktop.modern.src.application.services.ui.ui_state_management_service import (
     UIStateManagementService,
 )
-from application.services.ui.full_screen_service import FullScreenService
-from application.services.graph_editor_service import GraphEditorService
+from desktop.modern.src.application.services.ui.full_screen_service import (
+    FullScreenService,
+)
+from desktop.modern.src.application.services.graph_editor_service import (
+    GraphEditorService,
+)
 
-from presentation.components.workbench import ModernSequenceWorkbench
+from desktop.modern.src.presentation.components.workbench import ModernSequenceWorkbench
 
 
 def create_modern_workbench(

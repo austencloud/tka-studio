@@ -7,7 +7,7 @@ providing all the complex dash location maps and calculations with high precisio
 
 from typing import Dict, Optional, Tuple
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     ArrowColor,
     BeatData,
     GridMode,

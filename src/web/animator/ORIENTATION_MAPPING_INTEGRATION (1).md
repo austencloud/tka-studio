@@ -28,16 +28,19 @@ The following rotation angles (in degrees) were systematically tested and valida
 ### 1. Core Files Modified
 
 **`src/lib/animator/utils/orientation-mapping.ts`**
+
 - Updated with finalized orientation mappings
 - Provides `getOrientationAngle()` and `getOrientationAngleRadians()` functions
 - Replaces placeholder data with validated test results
 
 **`src/lib/animator/core/engine/animation-engine.ts`**
+
 - Modified `calculateStaffRotation()` method
 - Added orientation mapping lookup before falling back to dynamic calculations
 - Maintains backward compatibility with existing motion types
 
 **`src/lib/animator/utils/sequence-orientation-processor.ts`** (New)
+
 - Processes complete sequences to use orientation mappings
 - Validates sequence orientation integrity
 - Generates processing reports
@@ -47,10 +50,12 @@ The following rotation angles (in degrees) were systematically tested and valida
 The animation engine now uses a three-tier priority system for staff rotation:
 
 1. **Manual Rotation Override** (Highest Priority)
+
    - If `manual_start_rotation` and `manual_end_rotation` are set
    - Used for precise control and testing
 
 2. **Orientation Mapping** (Medium Priority)
+
    - If `start_ori` and `end_ori` are available
    - Uses finalized orientation mappings for consistent results
 
@@ -61,32 +66,39 @@ The animation engine now uses a three-tier priority system for staff rotation:
 ### 3. Key Functions
 
 **Orientation Lookup:**
+
 ```typescript
-import { getOrientationAngle, getOrientationAngleRadians } from './utils/orientation-mapping.js';
+import {
+  getOrientationAngle,
+  getOrientationAngleRadians,
+} from "./utils/orientation-mapping.js";
 
 // Get angle in degrees
-const angle = getOrientationAngle('n_hand', 'in'); // Returns 90
+const angle = getOrientationAngle("n_hand", "in"); // Returns 90
 
 // Get angle in radians for calculations
-const radians = getOrientationAngleRadians('n_hand', 'in'); // Returns π/2
+const radians = getOrientationAngleRadians("n_hand", "in"); // Returns π/2
 ```
 
 **Sequence Processing:**
+
 ```typescript
-import { processSequenceWithOrientationMappings } from './utils/sequence-orientation-processor.js';
+import { processSequenceWithOrientationMappings } from "./utils/sequence-orientation-processor.js";
 
 // Process entire sequence to use orientation mappings
-const processedSequence = processSequenceWithOrientationMappings(originalSequence);
+const processedSequence =
+  processSequenceWithOrientationMappings(originalSequence);
 ```
 
 **Validation:**
+
 ```typescript
-import { validateSequenceOrientationIntegrity } from './utils/sequence-orientation-processor.js';
+import { validateSequenceOrientationIntegrity } from "./utils/sequence-orientation-processor.js";
 
 // Validate orientation continuity
 const validation = validateSequenceOrientationIntegrity(sequenceData);
 if (!validation.isValid) {
-    console.error('Orientation continuity errors:', validation.errors);
+  console.error("Orientation continuity errors:", validation.errors);
 }
 ```
 
@@ -105,6 +117,7 @@ Beat 3: start_ori='in', end_ori='counter'     ✗ Invalid (should start with 'cl
 ### Validation Function
 
 Use `validateSequenceOrientationIntegrity()` to check for:
+
 - Missing orientation data
 - Broken orientation continuity between beats
 - Invalid orientation values
@@ -126,16 +139,19 @@ Use `validateSequenceOrientationIntegrity()` to check for:
 ## Benefits
 
 ### 1. Consistency
+
 - **Predictable Results**: Same orientation always produces same rotation angle
 - **Visual Consistency**: Staff orientations look identical across different sequences
 - **No Motion Type Dependencies**: Orientation is independent of motion type
 
 ### 2. Precision
+
 - **Manually Validated**: Every angle was tested and validated through the test interface
 - **Exact Control**: Precise rotation angles instead of calculated approximations
 - **Visual Accuracy**: Orientations match exactly what was defined in the test interface
 
 ### 3. Maintainability
+
 - **Clear Data**: Orientation mappings are easy to understand and modify
 - **Centralized Control**: All orientation logic in one place
 - **Easy Testing**: Simple lookup functions for unit testing
@@ -143,17 +159,19 @@ Use `validateSequenceOrientationIntegrity()` to check for:
 ## Testing
 
 ### Unit Tests
+
 ```typescript
-import { getOrientationAngle } from './utils/orientation-mapping.js';
+import { getOrientationAngle } from "./utils/orientation-mapping.js";
 
 // Test specific orientation mappings
-expect(getOrientationAngle('n_hand', 'in')).toBe(90);
-expect(getOrientationAngle('e_hand', 'out')).toBe(0);
+expect(getOrientationAngle("n_hand", "in")).toBe(90);
+expect(getOrientationAngle("e_hand", "out")).toBe(0);
 ```
 
 ### Integration Tests
+
 ```typescript
-import { processSequenceWithOrientationMappings } from './utils/sequence-orientation-processor.js';
+import { processSequenceWithOrientationMappings } from "./utils/sequence-orientation-processor.js";
 
 // Test sequence processing
 const processed = processSequenceWithOrientationMappings(testSequence);
@@ -161,7 +179,9 @@ expect(processed[1].blue_attributes.manual_start_rotation).toBeDefined();
 ```
 
 ### Visual Testing
+
 Use the staff orientation test interface (`staff-orientation-test.html`) to:
+
 - Verify orientation mappings visually
 - Test new orientation combinations
 - Validate changes before integration
@@ -169,14 +189,17 @@ Use the staff orientation test interface (`staff-orientation-test.html`) to:
 ## Future Enhancements
 
 ### 1. Center Position
+
 - Add center position orientation mappings when needed
 - Extend test interface to include center position
 
 ### 2. Custom Orientations
+
 - Support for additional orientation types beyond the current 4
 - Dynamic orientation mapping updates
 
 ### 3. Animation Transitions
+
 - Smooth transition algorithms between orientation mappings
 - Advanced interpolation for complex orientation changes
 
@@ -185,10 +208,12 @@ Use the staff orientation test interface (`staff-orientation-test.html`) to:
 ### Common Issues
 
 1. **Missing Orientation Data**
+
    - Error: `Failed to get orientation mapping`
    - Solution: Ensure `start_ori` and `end_ori` are set in sequence data
 
 2. **Orientation Continuity Errors**
+
    - Error: Validation reports continuity mismatches
    - Solution: Fix sequence data so end_ori matches next start_ori
 

@@ -51,7 +51,6 @@ if TYPE_CHECKING:
 
 
 class StrictRotatedCAPExecutor(CAPExecutor):
-
     def __init__(self, circular_sequence_generator: "CircularSequenceBuilder"):
         self.circular_sequence_generator = circular_sequence_generator
         self.hand_rot_dir_calculator = HandpathCalculator()
@@ -236,15 +235,15 @@ class StrictRotatedCAPExecutor(CAPExecutor):
 
                 new_entry[BLUE_ATTRS][START_ORI] = previous_entry[BLUE_ATTRS][END_ORI]
                 new_entry[RED_ATTRS][START_ORI] = previous_entry[RED_ATTRS][END_ORI]
-                new_entry[BLUE_ATTRS][END_ORI] = (
-                    self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                        new_entry, BLUE
-                    )
+                new_entry[BLUE_ATTRS][
+                    END_ORI
+                ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+                    new_entry, BLUE
                 )
-                new_entry[RED_ATTRS][END_ORI] = (
-                    self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                        new_entry, RED
-                    )
+                new_entry[RED_ATTRS][
+                    END_ORI
+                ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+                    new_entry, RED
                 )
                 # new_entry[BLUE_ATTRS][PROP_ROT_DIR] = previous_matching_beat[
                 #     BLUE_ATTRS
@@ -308,15 +307,15 @@ class StrictRotatedCAPExecutor(CAPExecutor):
                 RED_ATTRS
             ][PREFLOAT_PROP_ROT_DIR]
 
-        new_entry[BLUE_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, BLUE
-            )
+        new_entry[BLUE_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, BLUE
         )
-        new_entry[RED_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, RED
-            )
+        new_entry[RED_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, RED
         )
 
         return new_entry
@@ -343,13 +342,13 @@ class StrictRotatedCAPExecutor(CAPExecutor):
 
         # Handle floating states
         if previous_matching_beat_attributes.get(PREFLOAT_MOTION_TYPE):
-            new_entry_attributes[PREFLOAT_MOTION_TYPE] = (
-                previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
-            )
-            new_entry_attributes[PREFLOAT_PROP_ROT_DIR] = (
-                self.get_mirrored_prop_rot_dir(
-                    previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
-                )
+            new_entry_attributes[
+                PREFLOAT_MOTION_TYPE
+            ] = previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
+            new_entry_attributes[
+                PREFLOAT_PROP_ROT_DIR
+            ] = self.get_mirrored_prop_rot_dir(
+                previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
             )
 
     def get_mirrored_prop_rot_dir(self, prop_rot_dir: str) -> str:

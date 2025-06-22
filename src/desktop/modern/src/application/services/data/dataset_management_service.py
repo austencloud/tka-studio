@@ -15,7 +15,7 @@ from typing import List, Dict, Any, Optional, TypedDict
 from abc import ABC, abstractmethod
 import uuid
 
-from domain.models.pictograph_models import PictographData
+from desktop.modern.src.domain.models.pictograph_models import PictographData
 
 
 class PictographSearchQuery(TypedDict, total=False):
@@ -57,7 +57,7 @@ class IDatasetManagementService(ABC):
 class DatasetManagementService(IDatasetManagementService):
     """
     Pure service for dataset management operations.
-    
+
     Handles in-memory caching and organization without external dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -154,10 +154,9 @@ class DatasetManagementService(IDatasetManagementService):
         """Get dataset statistics."""
         total_pictographs = len(self._pictograph_cache)
         categories = self.get_dataset_categories()
-        
+
         category_counts = {
-            category: len(self._dataset_index[category])
-            for category in categories
+            category: len(self._dataset_index[category]) for category in categories
         }
 
         return {

@@ -45,7 +45,7 @@ class ContextAwareScalingService:
         container_size: QSize,
         scene_size: QSize,
         parent_widget: Optional[QWidget] = None,
-        **context_params
+        **context_params,
     ) -> Tuple[float, float]:
         """
         Calculate context-aware scale factors for a pictograph.

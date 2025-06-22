@@ -8,7 +8,7 @@ Responsible for handling beat additions, sequence modifications, and workbench c
 from typing import Optional, Callable
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
 
 
 class SequenceManager(QObject):

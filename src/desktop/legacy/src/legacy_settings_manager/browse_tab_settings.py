@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING, Union
 from main_window.main_widget.browse_tab.browse_tab_filter_controller import datetime
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
 
 
 class BrowseTabSettings:

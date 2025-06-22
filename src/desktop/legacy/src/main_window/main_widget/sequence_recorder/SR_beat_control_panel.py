@@ -13,7 +13,9 @@ from PyQt6.QtWidgets import (
 
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_recorder.SR_main_control_frame import SR_MainControlFrame
+    from main_window.main_widget.sequence_recorder.SR_main_control_frame import (
+        SR_MainControlFrame,
+    )
 
 
 class SR_BeatControlPanel(QFrame):

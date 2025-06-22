@@ -12,9 +12,7 @@ from .select_layout_label import SelectLayoutLabel
 if TYPE_CHECKING:
     from ..layout_controls import LayoutControls
 
-BEAT_FRAME_LAYOUT_OPTIONS_PATH = get_data_path(
-    "beat_frame_layout_options.json"
-)
+BEAT_FRAME_LAYOUT_OPTIONS_PATH = get_data_path("beat_frame_layout_options.json")
 
 
 class LayoutSelector(QFrame):
@@ -44,7 +42,6 @@ class LayoutSelector(QFrame):
     def load_beat_frame_layout_options(
         self, file_path: str
     ) -> dict[int, list[list[int]]]:
-
         try:
             with open(file_path, "r") as f:
                 return {int(key): value for key, value in json.load(f).items()}

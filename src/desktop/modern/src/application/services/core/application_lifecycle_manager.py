@@ -54,7 +54,7 @@ class IApplicationLifecycleManager(ABC):
 class ApplicationLifecycleManager(IApplicationLifecycleManager):
     """
     Pure service for application lifecycle management.
-    
+
     Handles application initialization, window management, and startup coordination
     without business logic dependencies. Uses clean separation of concerns.
     """

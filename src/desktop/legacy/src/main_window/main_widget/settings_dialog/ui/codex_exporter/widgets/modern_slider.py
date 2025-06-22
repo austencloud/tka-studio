@@ -1,6 +1,7 @@
 """
 Modern slider with custom styling.
 """
+
 from PyQt6.QtWidgets import QSlider
 from PyQt6.QtCore import Qt
 

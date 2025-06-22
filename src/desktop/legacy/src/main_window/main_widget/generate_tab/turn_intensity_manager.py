@@ -13,11 +13,9 @@ class TurnIntensityManager:
         self.word_length = word_length
         self.level = level
         self.max_turn_intensity = max_turn_intensity
-        self.turns_allocated = [
-            0
-        ] * word_length  
-        self.turns_allocated_blue = [0] * word_length 
-        self.turns_allocated_red = [0] * word_length 
+        self.turns_allocated = [0] * word_length
+        self.turns_allocated_blue = [0] * word_length
+        self.turns_allocated_red = [0] * word_length
 
     def allocate_turns_for_blue_and_red(self) -> tuple[list[int], list[int]]:
         if self.level == 2:
@@ -25,7 +23,7 @@ class TurnIntensityManager:
         elif self.level == 3:
             possible_turns = [0, 0.5, 1, 1.5, 2, 2.5, 3, "fl"]
         else:
-            possible_turns = [0]  
+            possible_turns = [0]
 
         for i in range(self.word_length):
             turn_blue = random.choice(

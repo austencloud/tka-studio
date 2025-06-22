@@ -101,7 +101,9 @@ class MainWidget(QWidget):
     letter_determiner: "LetterDeterminer"
     special_placements: dict[str, dict[str, dict[str, dict[str, list[int]]]]]
 
-    def __init__(self, main_window: "MainWindow", splash_screen: "SplashScreen | None" = None):
+    def __init__(
+        self, main_window: "MainWindow", splash_screen: "SplashScreen | None" = None
+    ):
         super().__init__(main_window)
         self.main_window = main_window
         self.splash = splash_screen

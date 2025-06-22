@@ -7,7 +7,7 @@ Tests for Type 3 detection, dash location calculation, and compatibility with le
 from pathlib import Path
 
 import pytest
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     ArrowColor,
     BeatData,
     GridMode,
@@ -19,7 +19,7 @@ from domain.models.core_models import (
 )
 from tka_types import MotionType
 
-from desktop.application.services.positioning.dash_location_service import (
+from desktop.modern.src.application.services.positioning.dash_location_service import (
     DashLocationService,
 )
 

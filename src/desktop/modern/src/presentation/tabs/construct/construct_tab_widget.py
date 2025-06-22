@@ -2,9 +2,11 @@ from typing import Optional
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
-from core.dependency_injection.di_container import DIContainer
-from domain.models.core_models import SequenceData
-from application.services.ui.ui_state_management_service import UIStateManagementService
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.domain.models.core_models import SequenceData
+from desktop.modern.src.application.services.ui.ui_state_management_service import (
+    UIStateManagementService,
+)
 
 # Import refactored components
 from .layout_manager import ConstructTabLayoutManager

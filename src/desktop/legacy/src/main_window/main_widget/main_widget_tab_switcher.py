@@ -377,7 +377,9 @@ class MainWidgetTabSwitcher:
             pass
 
         try:
-            from src.legacy_settings_manager.global_settings.app_context import AppContext
+            from src.legacy_settings_manager.global_settings.app_context import (
+                AppContext,
+            )
 
             return AppContext.settings_manager().global_settings.get_current_tab()
         except (AttributeError, RuntimeError):
@@ -394,7 +396,9 @@ class MainWidgetTabSwitcher:
             pass
 
         try:
-            from src.legacy_settings_manager.global_settings.app_context import AppContext
+            from src.legacy_settings_manager.global_settings.app_context import (
+                AppContext,
+            )
 
             AppContext.settings_manager().global_settings.set_current_tab(tab_name)
         except (AttributeError, RuntimeError):

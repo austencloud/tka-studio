@@ -17,21 +17,24 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../.."))
 
-from src.core.dependency_injection.di_container import DIContainer
-from src.core.exceptions import DependencyInjectionError
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.exceptions import DependencyInjectionError
 
 
 # Test interfaces and implementations
 class IRepository(Protocol):
-    def get_data(self) -> str: ...
+    def get_data(self) -> str:
+        ...
 
 
 class IService(Protocol):
-    def process(self) -> str: ...
+    def process(self) -> str:
+        ...
 
 
 class IController(Protocol):
-    def handle_request(self) -> str: ...
+    def handle_request(self) -> str:
+        ...
 
 
 class Repository:

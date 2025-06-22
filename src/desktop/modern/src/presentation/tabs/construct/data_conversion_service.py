@@ -6,25 +6,25 @@ Responsible for converting between different data formats and optimizing perform
 """
 
 from typing import List, Dict, Any
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
 
 
 class DataConversionService:
     """
     Handles data conversion operations and caching for the construct tab.
-    
+
     Responsibilities:
     - Position key extraction and parsing
     - End position calculations with caching
     - Sequence format conversions (Modern to Legacy)
     - Cache management for performance optimization
     """
-    
+
     def __init__(self):
         # Performance optimization: Cache for position calculations
         self._position_cache = {}
         self._sequence_conversion_cache = {}
-    
+
     def extract_end_position_from_position_key(self, position_key: str) -> str:
         """Extract the actual end position from a position key like 'beta5_beta5'"""
         # Position keys are in format "start_end", we want the end part
@@ -149,13 +149,13 @@ class DataConversionService:
         except Exception as e:
             print(f"❌ Error converting sequence to Legacy format: {e}")
             return [{"metadata": "sequence_info"}]  # Fallback to empty sequence
-    
+
     def clear_caches(self):
         """Clear all caches to free memory"""
         self._position_cache.clear()
         self._sequence_conversion_cache.clear()
         print("🧹 Data conversion caches cleared")
-    
+
     def get_cache_stats(self) -> Dict[str, int]:
         """Get statistics about cache usage"""
         return {

@@ -29,13 +29,14 @@ except ImportError:
             self.interface_name = interface_name
             self.dependency_chain = dependency_chain or []
 
+
 logger = logging.getLogger(__name__)
 
 
 class ValidationEngine:
     """
     Comprehensive validation engine for dependency injection operations.
-    
+
     Provides validation for service registrations, dependency chains,
     Protocol compliance, and circular dependency detection.
     """
@@ -48,7 +49,7 @@ class ValidationEngine:
         if not inspect.isclass(implementation):
             raise DependencyInjectionError(
                 f"Implementation {implementation} must be a class",
-                interface_name=getattr(interface, '__name__', str(interface))
+                interface_name=getattr(interface, "__name__", str(interface)),
             )
 
         # Basic validation - implementation should be a subclass or implement interface
@@ -67,7 +68,9 @@ class ValidationEngine:
                     f"No inheritance relationship between {interface} and {implementation}"
                 )
 
-    def validate_protocol_implementation(self, protocol: Type, implementation: Type) -> None:
+    def validate_protocol_implementation(
+        self, protocol: Type, implementation: Type
+    ) -> None:
         """Validate implementation fulfills Protocol contract."""
         if not hasattr(protocol, "_is_protocol") or not protocol._is_protocol:
             return  # Not a Protocol, skip validation
@@ -87,7 +90,7 @@ class ValidationEngine:
             if not hasattr(implementation, method_name):
                 raise DependencyInjectionError(
                     f"{implementation.__name__} doesn't implement {method_name} from {protocol.__name__}",
-                    interface_name=protocol.__name__
+                    interface_name=protocol.__name__,
                 )
 
     def validate_dependency_chain(self, implementation: Type, registry: Any) -> None:
@@ -114,7 +117,7 @@ class ValidationEngine:
                 raise DependencyInjectionError(
                     f"Dependency {param_type.__name__} for {implementation.__name__} "
                     f"is not registered. Register it first or make parameter optional.",
-                    interface_name=implementation.__name__
+                    interface_name=implementation.__name__,
                 )
 
     def validate_all_registrations(self, registry: Any) -> None:
@@ -204,7 +207,9 @@ class ValidationEngine:
             cycle_path = (
                 " -> ".join(t.__name__ for t in visited) + f" -> {start_type.__name__}"
             )
-            raise DependencyInjectionError(f"Circular dependency detected: {cycle_path}")
+            raise DependencyInjectionError(
+                f"Circular dependency detected: {cycle_path}"
+            )
 
         visited.add(start_type)
 

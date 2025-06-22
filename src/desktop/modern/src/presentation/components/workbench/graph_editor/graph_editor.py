@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QHBoxLayout, QFrame
 from PyQt6.QtCore import pyqtSignal, QPropertyAnimation, QEasingCurve, QTimer, Qt
 from PyQt6.QtGui import QResizeEvent, QKeyEvent
 
-from core.interfaces.workbench_services import IGraphEditorService
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.core.interfaces.workbench_services import IGraphEditorService
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
 from .pictograph_container import GraphEditorPictographContainer
 from .adjustment_panel import AdjustmentPanel
 from .modern_toggle_tab import ModernToggleTab

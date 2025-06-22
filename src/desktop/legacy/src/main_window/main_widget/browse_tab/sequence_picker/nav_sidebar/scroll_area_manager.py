@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from main_window.main_widget.browse_tab.sequence_picker.nav_sidebar.sequence_picker_nav_sidebar import SequencePickerNavSidebar
+    from main_window.main_widget.browse_tab.sequence_picker.nav_sidebar.sequence_picker_nav_sidebar import (
+        SequencePickerNavSidebar,
+    )
 
 
 class NavSidebarScrollManager:

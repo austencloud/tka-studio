@@ -5,7 +5,9 @@ from typing import TYPE_CHECKING
 from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
 
 OVERRIDES_FILE = get_data_path("beat_layout_overrides.json")
 

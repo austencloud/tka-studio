@@ -181,7 +181,7 @@ class LazyProxy:
 class ResolverChain:
     """
     Manages the chain of resolvers using Strategy Pattern.
-    
+
     Provides a clean interface for adding resolvers and attempting resolution
     through the chain until one succeeds.
     """
@@ -202,13 +202,15 @@ class ResolverChain:
         for resolver in self._resolvers:
             if resolver.can_resolve(service_type, registry):
                 return resolver.resolve(service_type, registry, container)
-        
+
         # No resolver could handle this service type
         return None
 
     def can_resolve(self, service_type: Type, registry: Any) -> bool:
         """Check if any resolver in the chain can handle the service type."""
-        return any(resolver.can_resolve(service_type, registry) for resolver in self._resolvers)
+        return any(
+            resolver.can_resolve(service_type, registry) for resolver in self._resolvers
+        )
 
     def get_resolver_count(self) -> int:
         """Get the number of resolvers in the chain."""

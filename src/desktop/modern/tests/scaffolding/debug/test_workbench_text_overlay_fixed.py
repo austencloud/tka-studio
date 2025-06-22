@@ -48,24 +48,24 @@ def test_workbench_text_overlay_basic():
         print("✅ Construct tab created")
 
         # Test that the construct tab has expected components
-        if hasattr(construct_tab, '_workbench'):
+        if hasattr(construct_tab, "_workbench"):
             print("✅ Workbench component available")
-            
+
             workbench = construct_tab._workbench
-            if hasattr(workbench, '_beat_frame_section'):
+            if hasattr(workbench, "_beat_frame_section"):
                 print("✅ Beat frame section available")
-                
+
                 beat_frame_section = workbench._beat_frame_section
-                if hasattr(beat_frame_section, '_beat_frame'):
+                if hasattr(beat_frame_section, "_beat_frame"):
                     print("✅ Beat frame available")
-                    
+
                     beat_frame = beat_frame_section._beat_frame
-                    if hasattr(beat_frame, '_start_position_view'):
+                    if hasattr(beat_frame, "_start_position_view"):
                         print("✅ Start position view available")
                     else:
                         print("⚠️  Start position view not available")
-                        
-                    if hasattr(beat_frame, '_sequence_beat_views'):
+
+                    if hasattr(beat_frame, "_sequence_beat_views"):
                         print("✅ Sequence beat views available")
                     else:
                         print("⚠️  Sequence beat views not available")
@@ -82,6 +82,7 @@ def test_workbench_text_overlay_basic():
     except Exception as e:
         print(f"❌ Workbench text overlay test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -95,8 +96,12 @@ def test_text_overlay_components():
         if app is None:
             app = QApplication([])
 
-        from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
-        from application.services.layout.layout_management_service import LayoutManagementService
+        from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
+            SequenceBeatFrame,
+        )
+        from application.services.layout.layout_management_service import (
+            LayoutManagementService,
+        )
 
         # Create layout service
         layout_service = LayoutManagementService()
@@ -108,11 +113,11 @@ def test_text_overlay_components():
 
         # Check for text overlay related methods/attributes
         text_overlay_methods = [
-            'set_start_position',
-            'set_sequence',
-            'update_text_overlays',
-            '_update_start_position_text',
-            '_update_beat_number_text'
+            "set_start_position",
+            "set_sequence",
+            "update_text_overlays",
+            "_update_start_position_text",
+            "_update_beat_number_text",
         ]
 
         found_methods = []
@@ -133,6 +138,7 @@ def test_text_overlay_components():
     except Exception as e:
         print(f"❌ Text overlay components test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -146,8 +152,16 @@ def test_beat_view_text_overlays():
         if app is None:
             app = QApplication([])
 
-        from presentation.components.workbench.sequence_beat_frame.beat_views.base_beat_view import BaseBeatView
-        from domain.models.core_models import BeatData, MotionData, MotionType, Location, RotationDirection
+        from presentation.components.workbench.sequence_beat_frame.beat_views.base_beat_view import (
+            BaseBeatView,
+        )
+        from domain.models.core_models import (
+            BeatData,
+            MotionData,
+            MotionType,
+            Location,
+            RotationDirection,
+        )
 
         # Create test beat data
         test_motion = MotionData(
@@ -157,26 +171,23 @@ def test_beat_view_text_overlays():
             turns=0.0,
             prop_rot_dir=RotationDirection.CLOCKWISE,
             start_ori="in",
-            end_ori="in"
+            end_ori="in",
         )
 
         test_beat = BeatData(
-            beat_number=1,
-            letter="A",
-            blue_motion=test_motion,
-            red_motion=test_motion
+            beat_number=1, letter="A", blue_motion=test_motion, red_motion=test_motion
         )
 
         print("✅ Test beat data created")
 
         # Check if beat view classes have text overlay methods
         text_overlay_attributes = [
-            'text_overlay',
-            '_text_overlay',
-            'beat_number_label',
-            '_beat_number_label',
-            'start_text_label',
-            '_start_text_label'
+            "text_overlay",
+            "_text_overlay",
+            "beat_number_label",
+            "_beat_number_label",
+            "start_text_label",
+            "_start_text_label",
         ]
 
         # Note: We can't easily instantiate BaseBeatView without more setup,
@@ -187,6 +198,7 @@ def test_beat_view_text_overlays():
     except Exception as e:
         print(f"❌ Beat view text overlays test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 

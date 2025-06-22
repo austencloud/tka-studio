@@ -1,10 +1,13 @@
 # 🛡️ Bulletproof API Error Handling Solution
 
 ## Problem Statement
+
 Windows socket permission error `[WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions` was causing exception popups and application crashes, even in debug mode.
 
 ## 🎯 Solution Overview
+
 Implemented a comprehensive, bulletproof error handling system that ensures:
+
 - **No exception popups** - All errors are caught and logged to console only
 - **Graceful degradation** - Application continues running normally when API server fails
 - **Permanent solution** - Handles all socket permission scenarios robustly
@@ -13,6 +16,7 @@ Implemented a comprehensive, bulletproof error handling system that ensures:
 ## 🔧 Implementation Details
 
 ### 1. Enhanced Port Testing (`_test_port_availability`)
+
 **File**: `src/infrastructure/api/api_integration.py`
 
 ```python
@@ -49,6 +53,7 @@ def _test_port_availability(self, host: str, port: int) -> bool:
 ```
 
 **Key Features:**
+
 - ✅ Catches `PermissionError` (WinError 10013)
 - ✅ Handles all `OSError` variants with specific errno checking
 - ✅ Uses debug-level logging (no console spam)
@@ -56,6 +61,7 @@ def _test_port_availability(self, host: str, port: int) -> bool:
 - ✅ Short timeout prevents hanging
 
 ### 2. Bulletproof Safe Port Finding (`_find_safe_port`)
+
 **File**: `src/infrastructure/api/api_integration.py`
 
 ```python
@@ -67,7 +73,7 @@ def _find_safe_port(self, host: str, preferred_port: int) -> Optional[int]:
             return preferred_port
 
         # Define safe ports that typically don't require elevated permissions on Windows
-        safe_ports = [8080, 8888, 9000, 9090, 3000, 5000, 7000, 8000, 8001, 8002, 
+        safe_ports = [8080, 8888, 9000, 9090, 3000, 5000, 7000, 8000, 8001, 8002,
                      8003, 8004, 8005, 8006, 8007, 8008, 8009, 8010, 8011, 8012]
 
         # Try each safe port with individual error handling
@@ -96,7 +102,7 @@ def _find_safe_port(self, host: str, preferred_port: int) -> Optional[int]:
         logger.warning("Could not find any available port due to permission restrictions")
         logger.info("API server will be disabled for this session")
         return None
-        
+
     except Exception as e:
         # Ultimate fallback - catch any unexpected errors in the entire method
         logger.debug(f"Unexpected error in _find_safe_port: {e}")
@@ -105,6 +111,7 @@ def _find_safe_port(self, host: str, preferred_port: int) -> Optional[int]:
 ```
 
 **Key Features:**
+
 - ✅ Tries 20+ safe ports that don't require admin privileges
 - ✅ Individual error handling for each port test
 - ✅ System-assigned port fallback with error handling
@@ -112,6 +119,7 @@ def _find_safe_port(self, host: str, preferred_port: int) -> Optional[int]:
 - ✅ Returns `None` instead of raising exceptions
 
 ### 3. Enhanced Convenience Function (`start_api_server`)
+
 **File**: `src/infrastructure/api/api_integration.py`
 
 ```python
@@ -153,6 +161,7 @@ def start_api_server(
 ```
 
 **Key Features:**
+
 - ✅ Multiple layers of exception handling
 - ✅ Specific handling for `PermissionError` and `OSError`
 - ✅ Safe status checking with error handling
@@ -160,6 +169,7 @@ def start_api_server(
 - ✅ Debug-level logging for technical details
 
 ### 4. Main.py Integration
+
 **File**: `main.py`
 
 The main application already has comprehensive error handling:
@@ -181,7 +191,7 @@ def _start_api_server(self):
             print(f"⚠️ Network error starting API server: {e}")
     except Exception as e:
         print(f"⚠️ Unexpected error starting API server: {e}")
-    
+
     # Always continue with main application - API is optional
     print("✅ Main application startup continuing...")
 ```
@@ -201,6 +211,7 @@ def _start_api_server(self):
 ```
 
 ### Test Coverage:
+
 - ✅ Normal API server startup
 - ✅ Restricted port binding (port 80)
 - ✅ Invalid host binding
@@ -212,25 +223,30 @@ def _start_api_server(self):
 ## 🎯 Benefits
 
 ### 1. **No Exception Popups**
+
 - All errors are caught and logged to console only
 - No disruptive exception dialogs in debug or production mode
 
 ### 2. **Graceful Degradation**
+
 - Application continues running normally when API server fails
 - API features are optional, not critical to core functionality
 
 ### 3. **Comprehensive Coverage**
+
 - Handles `PermissionError` (WinError 10013)
 - Handles all `OSError` variants
 - Handles unexpected exceptions
 - Multiple layers of protection
 
 ### 4. **Debug-Friendly**
+
 - Debug-level logging for technical details
 - Warning-level logging for user-relevant information
 - No console spam in normal operation
 
 ### 5. **Windows-Optimized**
+
 - Specific handling for Windows socket permission restrictions
 - Safe port selection that doesn't require admin privileges
 - Proper error code detection (errno 10013, 10048, 10049)

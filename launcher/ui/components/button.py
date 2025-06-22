@@ -14,7 +14,7 @@ from ..reliable_effects import get_shadow_manager, get_animation_manager
 
 class ReliableButton(QPushButton):
     """Reliable button with consistent styling and animations."""
-    
+
     def __init__(self, text: str = "", variant: str = "primary", parent=None):
         super().__init__(text, parent)
         self.variant = variant

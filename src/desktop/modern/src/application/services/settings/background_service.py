@@ -3,8 +3,8 @@ Background service for managing background settings.
 """
 
 from typing import List
-from core.interfaces.background_interfaces import IBackgroundService
-from core.interfaces.core_services import IUIStateManagementService
+from desktop.modern.src.core.interfaces.background_interfaces import IBackgroundService
+from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
 
 
 class BackgroundService(IBackgroundService):

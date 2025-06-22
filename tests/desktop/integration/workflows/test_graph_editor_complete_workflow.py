@@ -23,11 +23,12 @@ import pytest
 from pathlib import Path
 
 from typing import Optional
-from desktop.domain.models.core_models import BeatData
-from desktop.domain.models.core_models import SequenceData
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
+
 
 class TestGraphEditorCompleteWorkflow:
     """Complete graph editor workflow tests."""
@@ -280,6 +281,7 @@ class TestGraphEditorCompleteWorkflow:
 
         except ImportError:
             pytest.skip("PyQt6 not available for UI testing")
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QObject, pyqtSignal
 import logging
 
-from core.application_context import ApplicationContext
+from desktop.modern.src.core.application_context import ApplicationContext
 
 if TYPE_CHECKING:
     from .main_widget_coordinator import MainWidgetCoordinator
@@ -154,9 +154,7 @@ class TabManager(QObject):
                 print("DEBUG: ✅ Added sequence_workbench to left stack")
                 logger.info("✅ Added sequence_workbench to left stack")
             else:
-                print(
-                    "DEBUG: ❌ sequence_workbench widget is None - not added to stack"
-                )
+                print("DEBUG: ❌ sequence_workbench widget is None - not added to stack")
                 logger.warning(
                     "❌ sequence_workbench widget is None - not added to stack"
                 )

@@ -11,28 +11,30 @@ from unittest.mock import Mock, MagicMock
 import uuid
 from datetime import datetime
 
-from desktop.core.events import (
-from domain.models.core_models import BeatData
-
+from desktop.domain.models.core_models import BeatData
+from desktop.modern.src.core.events import (
     TypeSafeEventBus,
     SequenceCreatedEvent,
     BeatAddedEvent,
     BeatRemovedEvent,
 )
-from desktop.application.services.core.sequence_management_service import (
+from desktop.modern.src.application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
+
 
 @pytest.fixture
 def event_bus():
     """Create event bus for testing."""
     return TypeSafeEventBus()
 
+
 @pytest.fixture
 def sequence_service(event_bus):
     """Create sequence management service with event bus."""
     return SequenceManagementService(event_bus=event_bus)
+
 
 class TestEventDrivenServiceIntegration:
     """Test event-driven service integration."""

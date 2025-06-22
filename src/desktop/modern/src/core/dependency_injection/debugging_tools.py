@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class DebuggingTools:
     """
     Comprehensive debugging and analysis tools for the DI container.
-    
+
     Provides detailed insights into service registrations, dependency graphs,
     and resolution patterns for troubleshooting and optimization.
     """
@@ -53,9 +53,9 @@ class DebuggingTools:
                 implementation = registry.get_factory_or_implementation(interface)
                 if inspect.isclass(implementation):
                     dependencies = self._get_service_dependencies(implementation)
-                    graph[f"{interface.__name__} -> {implementation.__name__} (transient)"] = [
-                        dep.__name__ for dep in dependencies
-                    ]
+                    graph[
+                        f"{interface.__name__} -> {implementation.__name__} (transient)"
+                    ] = [dep.__name__ for dep in dependencies]
 
         return graph
 
@@ -100,8 +100,20 @@ class DebuggingTools:
         from typing import Union
 
         primitive_types = {
-            str, int, float, bool, bytes, type(None), list, dict, tuple, set, frozenset,
-            Path, datetime, timedelta,
+            str,
+            int,
+            float,
+            bool,
+            bytes,
+            type(None),
+            list,
+            dict,
+            tuple,
+            set,
+            frozenset,
+            Path,
+            datetime,
+            timedelta,
         }
 
         if hasattr(param_type, "__origin__"):
@@ -123,7 +135,7 @@ class DebuggingTools:
     def analyze_service_registrations(self, registry: Any) -> Dict[str, Any]:
         """Analyze service registrations and provide detailed statistics."""
         all_registrations = registry.get_all_registrations()
-        
+
         analysis = {
             "total_services": len(all_registrations),
             "singleton_services": 0,
@@ -163,33 +175,37 @@ class DebuggingTools:
         """Trace the resolution path for a service type."""
         path = []
         visited = set()
-        
+
         def _trace_recursive(current_type: Type, depth: int = 0):
             if current_type in visited:
                 path.append(f"{'  ' * depth}CIRCULAR: {current_type.__name__}")
                 return
-            
+
             visited.add(current_type)
             path.append(f"{'  ' * depth}{current_type.__name__}")
-            
+
             implementation = registry.get_service_implementation(current_type)
             if implementation and inspect.isclass(implementation):
                 dependencies = self._get_service_dependencies(implementation)
                 for dep in dependencies:
                     _trace_recursive(dep, depth + 1)
-        
+
         _trace_recursive(service_type)
         return path
 
-    def record_resolution(self, service_type: Type, resolution_time: float, success: bool) -> None:
+    def record_resolution(
+        self, service_type: Type, resolution_time: float, success: bool
+    ) -> None:
         """Record a service resolution for performance analysis."""
-        self._resolution_history.append({
-            "service_type": service_type.__name__,
-            "resolution_time": resolution_time,
-            "success": success,
-            "timestamp": datetime.now().isoformat()
-        })
-        
+        self._resolution_history.append(
+            {
+                "service_type": service_type.__name__,
+                "resolution_time": resolution_time,
+                "success": success,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
+
         # Keep only last 1000 resolutions
         if len(self._resolution_history) > 1000:
             self._resolution_history = self._resolution_history[-1000:]
@@ -198,10 +214,10 @@ class DebuggingTools:
         """Get performance metrics for service resolution."""
         if not self._resolution_history:
             return {"message": "No resolution history available"}
-        
+
         successful_resolutions = [r for r in self._resolution_history if r["success"]]
         failed_resolutions = [r for r in self._resolution_history if not r["success"]]
-        
+
         if successful_resolutions:
             resolution_times = [r["resolution_time"] for r in successful_resolutions]
             avg_time = sum(resolution_times) / len(resolution_times)
@@ -209,16 +225,18 @@ class DebuggingTools:
             min_time = min(resolution_times)
         else:
             avg_time = max_time = min_time = 0
-        
+
         return {
             "total_resolutions": len(self._resolution_history),
             "successful_resolutions": len(successful_resolutions),
             "failed_resolutions": len(failed_resolutions),
-            "success_rate": len(successful_resolutions) / len(self._resolution_history) * 100,
+            "success_rate": len(successful_resolutions)
+            / len(self._resolution_history)
+            * 100,
             "average_resolution_time": avg_time,
             "max_resolution_time": max_time,
             "min_resolution_time": min_time,
-            "most_resolved_services": self._get_most_resolved_services()
+            "most_resolved_services": self._get_most_resolved_services(),
         }
 
     def _get_most_resolved_services(self) -> List[Dict[str, Any]]:
@@ -227,56 +245,66 @@ class DebuggingTools:
         for resolution in self._resolution_history:
             service_name = resolution["service_type"]
             service_counts[service_name] = service_counts.get(service_name, 0) + 1
-        
+
         # Sort by count and return top 10
-        sorted_services = sorted(service_counts.items(), key=lambda x: x[1], reverse=True)
-        return [{"service": name, "count": count} for name, count in sorted_services[:10]]
+        sorted_services = sorted(
+            service_counts.items(), key=lambda x: x[1], reverse=True
+        )
+        return [
+            {"service": name, "count": count} for name, count in sorted_services[:10]
+        ]
 
     def find_potential_issues(self, registry: Any) -> List[Dict[str, Any]]:
         """Find potential issues in the DI configuration."""
         issues = []
         all_registrations = registry.get_all_registrations()
-        
+
         # Check for services with many dependencies
         for interface, implementation in all_registrations.items():
             if inspect.isclass(implementation):
                 deps = self._get_service_dependencies(implementation)
                 if len(deps) > 10:
-                    issues.append({
-                        "type": "high_dependency_count",
-                        "service": interface.__name__,
-                        "dependency_count": len(deps),
-                        "message": f"Service {interface.__name__} has {len(deps)} dependencies"
-                    })
-        
+                    issues.append(
+                        {
+                            "type": "high_dependency_count",
+                            "service": interface.__name__,
+                            "dependency_count": len(deps),
+                            "message": f"Service {interface.__name__} has {len(deps)} dependencies",
+                        }
+                    )
+
         # Check for unused services (services that are registered but never used as dependencies)
         used_services = set()
         for interface, implementation in all_registrations.items():
             if inspect.isclass(implementation):
                 deps = self._get_service_dependencies(implementation)
                 used_services.update(deps)
-        
+
         for interface in all_registrations:
             if interface not in used_services:
-                issues.append({
-                    "type": "potentially_unused",
-                    "service": interface.__name__,
-                    "message": f"Service {interface.__name__} is registered but not used as a dependency"
-                })
-        
+                issues.append(
+                    {
+                        "type": "potentially_unused",
+                        "service": interface.__name__,
+                        "message": f"Service {interface.__name__} is registered but not used as a dependency",
+                    }
+                )
+
         return issues
 
-    def generate_diagnostic_report(self, registry: Any, lifecycle_manager: Any = None) -> str:
+    def generate_diagnostic_report(
+        self, registry: Any, lifecycle_manager: Any = None
+    ) -> str:
         """Generate a comprehensive diagnostic report."""
         analysis = self.analyze_service_registrations(registry)
         performance = self.get_performance_metrics()
         issues = self.find_potential_issues(registry)
-        
+
         report = []
         report.append("=== DI Container Diagnostic Report ===")
         report.append(f"Generated: {datetime.now().isoformat()}")
         report.append("")
-        
+
         # Service registration summary
         report.append("Service Registration Summary:")
         report.append(f"  Total Services: {analysis['total_services']}")
@@ -284,15 +312,17 @@ class DebuggingTools:
         report.append(f"  Transient Services: {analysis['transient_services']}")
         report.append(f"  Instance Services: {analysis['instance_services']}")
         report.append("")
-        
+
         # Performance metrics
         if isinstance(performance, dict) and "total_resolutions" in performance:
             report.append("Performance Metrics:")
             report.append(f"  Total Resolutions: {performance['total_resolutions']}")
             report.append(f"  Success Rate: {performance['success_rate']:.1f}%")
-            report.append(f"  Average Resolution Time: {performance['average_resolution_time']:.4f}s")
+            report.append(
+                f"  Average Resolution Time: {performance['average_resolution_time']:.4f}s"
+            )
             report.append("")
-        
+
         # Lifecycle information
         if lifecycle_manager:
             stats = lifecycle_manager.get_lifecycle_stats()
@@ -301,14 +331,14 @@ class DebuggingTools:
             report.append(f"  Initialized Services: {stats['initialized_services']}")
             report.append(f"  Active Scopes: {stats['active_scopes']}")
             report.append("")
-        
+
         # Issues
         if issues:
             report.append("Potential Issues:")
             for issue in issues[:10]:  # Show top 10 issues
                 report.append(f"  - {issue['message']}")
             report.append("")
-        
+
         return "\n".join(report)
 
     def clear_history(self) -> None:

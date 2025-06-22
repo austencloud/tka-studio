@@ -1,5 +1,3 @@
-
-
 import importlib
 
 from data.prop_class_mapping import PropType

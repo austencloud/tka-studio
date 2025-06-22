@@ -1,5 +1,6 @@
 from typing import Union
 
+
 class TurnsValue:
     def __init__(self, value: Union[int, float, str]):
         self._validate(value)

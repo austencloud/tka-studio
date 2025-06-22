@@ -560,7 +560,6 @@ class GraphEditorUIWorkflowTester:
                                 or "option" in widget_type.lower()
                                 or "frame" in widget_type.lower()
                             ):
-
                                 # Additional check: must be visible and have reasonable size
                                 if (
                                     widget.isVisible()

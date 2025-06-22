@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 import json
 from pathlib import Path
 
-from domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import BeatData
 
 
 class IJSONConfigurationService(ABC):
@@ -46,7 +46,7 @@ class IJSONConfigurationService(ABC):
 class JSONConfigurationService(IJSONConfigurationService):
     """
     Pure service for JSON configuration operations.
-    
+
     Handles all JSON file I/O and configuration management without external dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -122,18 +122,20 @@ class JSONConfigurationService(IJSONConfigurationService):
         }
 
         placements = self.load_special_placements()
-        
+
         # Validate special placements structure
         if not isinstance(placements, dict):
             validation_result["valid"] = False
-            validation_result["errors"].append("Special placements must be a dictionary")
+            validation_result["errors"].append(
+                "Special placements must be a dictionary"
+            )
             return validation_result
 
         # Validate individual placement entries
         for key, value in placements.items():
             if not isinstance(key, str):
                 validation_result["warnings"].append(f"Non-string key found: {key}")
-            
+
             if not isinstance(value, dict):
                 validation_result["warnings"].append(f"Non-dict value for key {key}")
 
@@ -149,7 +151,9 @@ class JSONConfigurationService(IJSONConfigurationService):
                     print(f"Loaded special placements from: {config_path}")
                     return
             except Exception as e:
-                print(f"Warning: Could not load special placements from {config_path}: {e}")
+                print(
+                    f"Warning: Could not load special placements from {config_path}: {e}"
+                )
                 continue
 
         # No configuration file found

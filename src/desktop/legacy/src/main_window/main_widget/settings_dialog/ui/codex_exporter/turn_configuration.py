@@ -3,7 +3,6 @@ import os
 
 
 class TurnConfiguration:
-
     @staticmethod
     def get_turn_combinations() -> List[Tuple[float, float]]:
         """Get all possible turn combinations.

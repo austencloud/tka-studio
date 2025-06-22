@@ -18,7 +18,6 @@ class CodexColorSwapper:
         self.control_widget = control_widget
 
     def _swap_colors(self, pictograph):
-
         if not pictograph:
             return
         pictograph[BLUE_ATTRS], pictograph[RED_ATTRS] = (

@@ -34,7 +34,7 @@ and tabs exist and will resolve correctly at runtime.
 
 from typing import Any, Dict, Optional
 
-from core.interfaces.core_services import IUIStateManagementService
+from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QCursor, QFont, QLinearGradient, QPainter
 from PyQt6.QtWidgets import (

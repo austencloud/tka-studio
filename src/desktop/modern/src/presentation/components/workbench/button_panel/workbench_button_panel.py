@@ -40,7 +40,12 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
                 self.add_to_dictionary_requested,
             ),
             ("save_image", "💾", "Save Image", self.save_image_requested),
-            ("view_fullscreen", "👁️", "View Fullscreen", self.view_fullscreen_requested),
+            (
+                "view_fullscreen",
+                "👁️",
+                "View Fullscreen",
+                self.view_fullscreen_requested,
+            ),
             # Spacer
             None,
             # Transform group

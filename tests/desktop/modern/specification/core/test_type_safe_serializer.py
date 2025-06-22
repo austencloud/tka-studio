@@ -12,12 +12,12 @@ from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
-from core.serialization.type_safe_serializer import (
+from desktop.modern.src.core.serialization.type_safe_serializer import (
     TypeSafeSerializer,
     BatchSerializer,
     SerializationError,
 )
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,

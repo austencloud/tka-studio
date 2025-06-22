@@ -15,7 +15,7 @@ from typing import Dict, Tuple
 from abc import ABC, abstractmethod
 from PyQt6.QtCore import QPointF
 
-from domain.models.pictograph_models import PropType
+from desktop.modern.src.domain.models.pictograph_models import PropType
 from .direction_calculation_service import SeparationDirection
 
 
@@ -31,7 +31,10 @@ class IOffsetCalculationService(ABC):
 
     @abstractmethod
     def calculate_separation_offsets(
-        self, blue_direction: SeparationDirection, red_direction: SeparationDirection, prop_type: PropType
+        self,
+        blue_direction: SeparationDirection,
+        red_direction: SeparationDirection,
+        prop_type: PropType,
     ) -> Tuple[QPointF, QPointF]:
         """Calculate separation offsets for blue and red props."""
         pass
@@ -45,7 +48,7 @@ class IOffsetCalculationService(ABC):
 class OffsetCalculationService(IOffsetCalculationService):
     """
     Pure service for offset calculation operations.
-    
+
     Handles all offset calculations without external dependencies.
     Uses the same logic as the BetaOffsetCalculator.
     """
@@ -95,12 +98,15 @@ class OffsetCalculationService(IOffsetCalculationService):
         return offset_map.get(direction, QPointF(0, 0))
 
     def calculate_separation_offsets(
-        self, blue_direction: SeparationDirection, red_direction: SeparationDirection, prop_type: PropType
+        self,
+        blue_direction: SeparationDirection,
+        red_direction: SeparationDirection,
+        prop_type: PropType,
     ) -> Tuple[QPointF, QPointF]:
         """Calculate separation offsets for blue and red props."""
         blue_offset = self.calculate_directional_offset(blue_direction, prop_type)
         red_offset = self.calculate_directional_offset(red_direction, prop_type)
-        
+
         return blue_offset, red_offset
 
     def get_prop_offset_divisor(self, prop_type: PropType) -> int:
@@ -117,7 +123,9 @@ class OffsetCalculationService(IOffsetCalculationService):
         base_offset = self.calculate_base_offset(prop_type)
         return base_offset / (2**0.5)
 
-    def scale_offset_for_scene_size(self, offset: QPointF, scene_size: float) -> QPointF:
+    def scale_offset_for_scene_size(
+        self, offset: QPointF, scene_size: float
+    ) -> QPointF:
         """Scale offset based on actual scene size vs reference size."""
         scale_factor = scene_size / self._scene_reference_size
         return QPointF(offset.x() * scale_factor, offset.y() * scale_factor)

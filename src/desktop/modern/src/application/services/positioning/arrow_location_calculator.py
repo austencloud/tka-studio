@@ -14,13 +14,13 @@ PROVIDES:
 from typing import Optional
 from abc import ABC, abstractmethod
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
 )
-from domain.models.pictograph_models import PictographData
-from domain.models.letter_type_classifier import LetterTypeClassifier
+from desktop.modern.src.domain.models.pictograph_models import PictographData
+from desktop.modern.src.domain.models.letter_type_classifier import LetterTypeClassifier
 from .dash_location_service import DashLocationService
 
 
@@ -38,7 +38,7 @@ class IArrowLocationCalculator(ABC):
 class ArrowLocationCalculator(IArrowLocationCalculator):
     """
     Pure algorithmic service for arrow location calculation.
-    
+
     Handles all arrow location algorithms without Qt dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -87,7 +87,11 @@ class ArrowLocationCalculator(IArrowLocationCalculator):
         """Calculate location for dash arrows using dash location service."""
         # Extract context for dash calculation
         letter_type = None
-        if pictograph_data and hasattr(pictograph_data, "letter") and pictograph_data.letter:
+        if (
+            pictograph_data
+            and hasattr(pictograph_data, "letter")
+            and pictograph_data.letter
+        ):
             letter_type = LetterTypeClassifier.get_letter_type(pictograph_data.letter)
 
         # Use dash location service for complex dash calculations

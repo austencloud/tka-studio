@@ -515,13 +515,13 @@ class SequenceData:
 
 class ArrowColor(Enum):
     """Arrow colors matching legacy constants."""
+
     RED = "red"
     BLUE = "blue"
 
 
 class GridMode(Enum):
     """Grid modes matching legacy constants."""
+
     DIAMOND = "diamond"
     BOX = "box"
-
-

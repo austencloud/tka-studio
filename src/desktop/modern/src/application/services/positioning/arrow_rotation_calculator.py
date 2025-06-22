@@ -15,7 +15,7 @@ PROVIDES:
 from typing import Dict
 from abc import ABC, abstractmethod
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
@@ -35,7 +35,7 @@ class IArrowRotationCalculator(ABC):
 class ArrowRotationCalculator(IArrowRotationCalculator):
     """
     Pure algorithmic service for arrow rotation calculation.
-    
+
     Handles all arrow rotation algorithms without Qt dependencies.
     Uses immutable data patterns following TKA architecture.
     """
@@ -166,6 +166,8 @@ class ArrowRotationCalculator(IArrowRotationCalculator):
             }
         return direction_map.get(location, 0.0)
 
-    def _calculate_float_rotation(self, motion: MotionData, location: Location) -> float:
+    def _calculate_float_rotation(
+        self, motion: MotionData, location: Location
+    ) -> float:
         """Calculate rotation for float arrows (similar to pro)."""
         return self._calculate_pro_rotation(motion, location)

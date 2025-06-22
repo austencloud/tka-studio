@@ -63,7 +63,6 @@ class OptionPickerSectionWidget(QGroupBox):
         self.pictograph_frame.setVisible(is_visible)
 
     def clear_pictographs(self) -> None:
-
         for pictograph in self.pictographs.values():
             self.pictograph_frame.layout.removeWidget(pictograph.elements.view)
             pictograph.elements.view.setVisible(False)

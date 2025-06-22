@@ -15,7 +15,7 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../src"))
 )
 
-from main_window.main_widget.settings_dialog.ui.codex_exporter.exporters.hybrid_exporter import (
+from desktop.legacy.src.main_window.main_widget.settings_dialog.ui.codex_exporter.exporters.hybrid_exporter import (
     HybridExporter,
 )
 from data.constants import RED, BLUE

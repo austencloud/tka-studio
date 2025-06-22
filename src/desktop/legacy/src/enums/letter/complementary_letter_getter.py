@@ -53,7 +53,6 @@ complementary_letter_mapping = {
 
 
 class ComplementaryLetterGetter:
-
     @staticmethod
     def get_complimentary_letter(letter: str) -> Letter:
         return Letter(complementary_letter_mapping[letter])

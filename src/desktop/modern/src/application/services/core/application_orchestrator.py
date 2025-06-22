@@ -57,7 +57,7 @@ class IApplicationOrchestrator(ABC):
 class ApplicationOrchestrator(IApplicationOrchestrator):
     """
     Orchestrates application initialization using focused services.
-    
+
     Coordinates service registration, UI setup, background management,
     and application lifecycle. Returns clean, maintainable architecture.
     """
@@ -95,7 +95,11 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
         # Step 1: Initialize application lifecycle
         self.lifecycle_manager.initialize_application(
-            main_window, target_screen, parallel_mode, parallel_geometry, progress_callback
+            main_window,
+            target_screen,
+            parallel_mode,
+            parallel_geometry,
+            progress_callback,
         )
 
         # Step 2: Configure services
@@ -183,9 +187,11 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
     def get_service_status(self) -> dict:
         """Get status of all managed services."""
         return {
-            "service_registration": self.service_manager.get_registration_status()
-            if hasattr(self.service_manager, "get_registration_status")
-            else {"status": "unknown"},
+            "service_registration": (
+                self.service_manager.get_registration_status()
+                if hasattr(self.service_manager, "get_registration_status")
+                else {"status": "unknown"}
+            ),
             "background_settings": self.background_manager.get_background_settings(),
             "application_info": self.lifecycle_manager.get_application_info(),
         }

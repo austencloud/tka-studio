@@ -301,9 +301,10 @@ class ExportPageRenderer:
             )
 
         # Calculate the available space in the cell (accounting for padding)
-        available_width, available_height = (
-            self.grid_calculator.calculate_available_cell_space(cell_width, cell_height)
-        )
+        (
+            available_width,
+            available_height,
+        ) = self.grid_calculator.calculate_available_cell_space(cell_width, cell_height)
 
         # Calculate the scaled image dimensions
         image_width, image_height = self.grid_calculator.calculate_image_dimensions(

@@ -100,7 +100,6 @@ class TurnsWidget(QWidget):
             if new_value == "fl" and hasattr(
                 self.adjustment_manager, "_prefloat_motion_type"
             ):
-
                 beat_index = self.adjustment_manager._get_beat_index()
                 if beat_index:
                     json_manager = AppContext.json_manager()

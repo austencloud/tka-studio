@@ -84,10 +84,10 @@ For SVG components:
 2. Add identifiers to important SVG elements:
 
 ```svelte
-<circle 
+<circle
   data-point-name="center"
-  cx="500" 
-  cy="500" 
+  cx="500"
+  cy="500"
   r="10"
 />
 ```
@@ -132,14 +132,14 @@ For performance-sensitive components:
 
 ```javascript
 // Start timing
-performance.mark('grid-render-start');
+performance.mark("grid-render-start");
 
 // Render the grid
 renderGrid();
 
 // End timing
-performance.mark('grid-render-end');
-performance.measure('grid-render', 'grid-render-start', 'grid-render-end');
+performance.mark("grid-render-end");
+performance.measure("grid-render", "grid-render-start", "grid-render-end");
 ```
 
 2. Expose performance metrics for testing:
@@ -147,12 +147,15 @@ performance.measure('grid-render', 'grid-render-start', 'grid-render-end');
 ```javascript
 // In your component
 onMount(() => {
-  if (typeof window !== 'undefined') {
-    window.addEventListener('grid-rendered', (e) => {
-      const renderTime = performance.getEntriesByName('grid-render')[0].duration;
-      dispatchEvent(new CustomEvent('performance-report', { 
-        detail: { component: 'grid', renderTime } 
-      }));
+  if (typeof window !== "undefined") {
+    window.addEventListener("grid-rendered", (e) => {
+      const renderTime =
+        performance.getEntriesByName("grid-render")[0].duration;
+      dispatchEvent(
+        new CustomEvent("performance-report", {
+          detail: { component: "grid", renderTime },
+        }),
+      );
     });
   }
 });

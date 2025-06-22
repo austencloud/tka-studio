@@ -32,8 +32,11 @@ class MirroredEntryRotAngleManager:
         )
         letter = arrow.pictograph.state.letter
         grid_mode = arrow.pictograph.state.grid_mode
-        other_ori_key, other_letter_data = (
-            self.manager.data_prep.get_keys_for_mixed_start_ori(grid_mode, letter, ori_key)
+        (
+            other_ori_key,
+            other_letter_data,
+        ) = self.manager.data_prep.get_keys_for_mixed_start_ori(
+            grid_mode, letter, ori_key
         )
 
         mirrored_turns_tuple = (
@@ -58,10 +61,13 @@ class MirroredEntryRotAngleManager:
             )
         )
         grid_mode = arrow.pictograph.state.grid_mode
-        other_ori_key, other_letter_data = (
-            self.manager.data_prep.get_keys_for_mixed_start_ori(grid_mode, letter, ori_key)
+        (
+            other_ori_key,
+            other_letter_data,
+        ) = self.manager.data_prep.get_keys_for_mixed_start_ori(
+            grid_mode, letter, ori_key
         )
-        
+
         mirrored_turns_tuple = (
             self.manager.turns_tuple_generator.generate_mirrored_tuple(arrow)
         )

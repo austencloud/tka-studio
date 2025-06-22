@@ -12,15 +12,15 @@ import logging
 
 # Import API models
 from .api_models import (
-    BeatAPI, 
-    SequenceAPI, 
-    CreateSequenceRequest, 
-    APIResponse, 
+    BeatAPI,
+    SequenceAPI,
+    CreateSequenceRequest,
+    APIResponse,
     CommandResponse,
     MotionAPI,
     MotionTypeAPI,
     RotationDirectionAPI,
-    LocationAPI
+    LocationAPI,
 )
 
 logger = logging.getLogger(__name__)
@@ -39,10 +39,12 @@ app.add_middleware(
 _current_sequence: Optional[SequenceAPI] = None
 _sequence_counter = 0
 
+
 def get_next_sequence_id() -> str:
     global _sequence_counter
     _sequence_counter += 1
     return f"seq_{_sequence_counter}"
+
 
 # Dependency injection placeholder - will be replaced with actual DI integration
 def get_sequence_service():
@@ -50,12 +52,13 @@ def get_sequence_service():
     # This will be replaced with actual service resolution from DI container
     return None
 
+
 # Simple conversion functions
 def domain_to_api_sequence(sequence) -> Optional[SequenceAPI]:
     """Convert domain SequenceData to API SequenceAPI."""
     if not sequence:
         return None
-    
+
     api_beats = []
     for beat in sequence.beats:
         # Convert domain BeatData to API BeatAPI
@@ -68,9 +71,9 @@ def domain_to_api_sequence(sequence) -> Optional[SequenceAPI]:
                 end_loc=LocationAPI(beat.blue_motion.end_loc.value),
                 turns=beat.blue_motion.turns,
                 start_ori=beat.blue_motion.start_ori,
-                end_ori=beat.blue_motion.end_ori
+                end_ori=beat.blue_motion.end_ori,
             )
-        
+
         red_motion = None
         if beat.red_motion:
             red_motion = MotionAPI(
@@ -80,9 +83,9 @@ def domain_to_api_sequence(sequence) -> Optional[SequenceAPI]:
                 end_loc=LocationAPI(beat.red_motion.end_loc.value),
                 turns=beat.red_motion.turns,
                 start_ori=beat.red_motion.start_ori,
-                end_ori=beat.red_motion.end_ori
+                end_ori=beat.red_motion.end_ori,
             )
-        
+
         api_beat = BeatAPI(
             id=beat.id,
             beat_number=beat.beat_number,
@@ -93,28 +96,26 @@ def domain_to_api_sequence(sequence) -> Optional[SequenceAPI]:
             blue_reversal=beat.blue_reversal,
             red_reversal=beat.red_reversal,
             is_blank=beat.is_blank,
-            metadata=beat.metadata
+            metadata=beat.metadata,
         )
         api_beats.append(api_beat)
-    
+
     return SequenceAPI(
         id=sequence.id,
         name=sequence.name,
         word=sequence.word,
         beats=api_beats,
         start_position=sequence.start_position,
-        metadata=sequence.metadata
+        metadata=sequence.metadata,
     )
+
 
 # API endpoints
 @app.get("/api/status")
 async def get_status():
     """Get application status."""
-    return {
-        "status": "running",
-        "version": "2.0.0",
-        "api_enabled": True
-    }
+    return {"status": "running", "version": "2.0.0", "api_enabled": True}
+
 
 @app.get("/api/current-sequence", response_model=Optional[SequenceAPI])
 async def get_current_sequence():
@@ -122,14 +123,15 @@ async def get_current_sequence():
     global _current_sequence
     return _current_sequence
 
+
 @app.post("/api/sequences", response_model=SequenceAPI)
 async def create_sequence(request: CreateSequenceRequest):
     """Create a new sequence."""
     try:
         global _current_sequence
-        
+
         sequence_id = get_next_sequence_id()
-        
+
         # Create beats for the sequence
         beats = []
         if request.beats:
@@ -142,22 +144,19 @@ async def create_sequence(request: CreateSequenceRequest):
                     beat_number=i + 1,
                     letter=None,
                     duration=1.0,
-                    is_blank=True
+                    is_blank=True,
                 )
                 beats.append(beat)
-        
-        sequence = SequenceAPI(
-            id=sequence_id,
-            name=request.name,
-            beats=beats
-        )
-        
+
+        sequence = SequenceAPI(id=sequence_id, name=request.name, beats=beats)
+
         _current_sequence = sequence
         return sequence
-        
+
     except Exception as e:
         logger.error(f"Failed to create sequence: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @app.post("/api/undo")
 async def undo_last_action():
@@ -167,8 +166,9 @@ async def undo_last_action():
         "success": False,
         "message": "Undo not yet implemented",
         "can_undo": False,
-        "can_redo": False
+        "can_redo": False,
     }
+
 
 @app.post("/api/redo")
 async def redo_last_action():
@@ -178,5 +178,5 @@ async def redo_last_action():
         "success": False,
         "message": "Redo not yet implemented",
         "can_undo": False,
-        "can_redo": False
+        "can_redo": False,
     }

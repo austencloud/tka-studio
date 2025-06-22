@@ -7,8 +7,8 @@ following Modern's modern UI patterns and clean architecture.
 
 from typing import Optional
 
-from core.interfaces.generation_services import GenerationMode
-from domain.models.generation_models import (
+from desktop.modern.src.core.interfaces.generation_services import GenerationMode
+from desktop.modern.src.domain.models.generation_models import (
     GenerationConfig,
     GenerationResult,
     GenerationState,
@@ -40,7 +40,6 @@ from .generation_controls import (
 
 
 class GeneratePanel(QWidget):
-
     generate_requested = pyqtSignal(GenerationConfig)
     auto_complete_requested = pyqtSignal()
     config_changed = pyqtSignal(GenerationConfig)

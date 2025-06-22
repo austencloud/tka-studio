@@ -1,9 +1,15 @@
 import pytest
 from enums.letter.letter import Letter
-from letter_determination.core import LetterDeterminer
-from letter_determination.services.attribute_manager import AttributeManager
-from letter_determination.services.motion_comparator import MotionComparator
-from letter_determination.services.json_handler import LetterDeterminationJsonHandler
+from desktop.legacy.src.letter_determination.core import LetterDeterminer
+from desktop.legacy.src.letter_determination.services.attribute_manager import (
+    AttributeManager,
+)
+from desktop.legacy.src.letter_determination.services.motion_comparator import (
+    MotionComparator,
+)
+from desktop.legacy.src.letter_determination.services.json_handler import (
+    LetterDeterminationJsonHandler,
+)
 from data.constants import (
     ANTI,
     BEAT,
@@ -247,4 +253,6 @@ def test_motion_comparator(mock_json_handler):
         PREFLOAT_PROP_ROT_DIR: COUNTER_CLOCKWISE,
     }
 
-    assert comparator.compare_motion_to_example(motion_1, motion_2) is True, "Motion comparison failed"
+    assert (
+        comparator.compare_motion_to_example(motion_1, motion_2) is True
+    ), "Motion comparison failed"

@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 
-
 from .codex_scroll_area import CodexScrollArea
 from .codex_toggle_button import CodexToggleButton
 from .codex_control_widget import CodexControlWidget

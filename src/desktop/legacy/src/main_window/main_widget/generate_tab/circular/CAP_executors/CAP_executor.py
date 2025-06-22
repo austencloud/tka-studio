@@ -32,7 +32,7 @@ class CAPExecutor:
         previous_entry,
         beat_number: int,
         final_intended_sequence_length: int,
-        **kwargs
+        **kwargs,
     ) -> dict:
         """Subclasses must implement logic for CAP transformation."""
         raise NotImplementedError("Subclasses must implement create_new_CAP_entry.")

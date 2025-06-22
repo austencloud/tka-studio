@@ -13,7 +13,7 @@ from .thumbnail_size_calculator import ThumbnailSizeCalculator
 
 __all__ = [
     "ThumbnailCoordinator",
-    "ThumbnailProcessor", 
+    "ThumbnailProcessor",
     "ThumbnailCacheManager",
     "ThumbnailEventHandler",
     "ThumbnailSizeCalculator",

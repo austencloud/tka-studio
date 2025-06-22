@@ -5,7 +5,7 @@
 ### 🔍 **OBSOLETE TEST FILES TO DELETE** (Testing Fixed Bugs/Deprecated Features):
 
 1. **test_background_widget_factory_fix.py** - Tests a specific TypeError fix that's already resolved
-2. **test_browse_tab_current_tab_fix.py** - Tests a specific tab detection fix that's already resolved  
+2. **test_browse_tab_current_tab_fix.py** - Tests a specific tab detection fix that's already resolved
 3. **test_circular_dependency_fix.py** - Tests circular dependency fix that's already resolved
 4. **test_complete_circular_dependency_fix.py** - Tests circular dependency fix that's already resolved
 5. **test_dependency_injection_fix.py** - Tests dependency injection fix that's already resolved
@@ -26,7 +26,7 @@
 ### 🔍 **OBSOLETE DEBUG/TESTING FILES TO DELETE**:
 
 19. **debug_appcontext_adapter.py** - Debug script for resolved issue
-20. **debug_circular_dependency.py** - Debug script for resolved issue  
+20. **debug_circular_dependency.py** - Debug script for resolved issue
 21. **debug_tab_creation.py** - Debug script for resolved issue
 22. **test_browse_tab_rebuild** - Directory for browse tab rebuild testing (likely obsolete)
 
@@ -48,6 +48,7 @@
 ### 📁 **TESTS DIRECTORY ANALYSIS**:
 
 The `tests/` directory contains:
+
 - `tests/unit/` - Unit tests for specific components
 - `tests/integration/` - Integration tests
 - Some test files that appear to be for core functionality

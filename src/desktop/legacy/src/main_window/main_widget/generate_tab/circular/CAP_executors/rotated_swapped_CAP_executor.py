@@ -43,7 +43,6 @@ if TYPE_CHECKING:
 
 
 class RotatedSwappedCAPExecutor(CAPExecutor):
-
     def __init__(self, circular_sequence_generator: "CircularSequenceBuilder"):
         self.circular_sequence_generator = circular_sequence_generator
         self.hand_rot_dir_calculator = HandpathCalculator()
@@ -146,15 +145,15 @@ class RotatedSwappedCAPExecutor(CAPExecutor):
                 RED_ATTRS
             ][PREFLOAT_PROP_ROT_DIR]
 
-        new_entry[BLUE_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, BLUE
-            )
+        new_entry[BLUE_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, BLUE
         )
-        new_entry[RED_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, RED
-            )
+        new_entry[RED_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, RED
         )
 
         return new_entry
@@ -246,10 +245,10 @@ class RotatedSwappedCAPExecutor(CAPExecutor):
 
         # Handle floating states
         if previous_matching_beat_attributes.get(PREFLOAT_MOTION_TYPE):
-            new_entry_attributes[PREFLOAT_MOTION_TYPE] = (
-                previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
-            )
-            new_entry_attributes[PREFLOAT_PROP_ROT_DIR] = (
-                previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
-            )
+            new_entry_attributes[
+                PREFLOAT_MOTION_TYPE
+            ] = previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
+            new_entry_attributes[
+                PREFLOAT_PROP_ROT_DIR
+            ] = previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
         return new_entry_attributes

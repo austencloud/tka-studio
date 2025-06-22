@@ -1,0 +1,12 @@
+{
+  "slack_webhook": null,
+  "email": {
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "username": null,
+    "password": null,
+    "to_email": null
+  },
+  "desktop_notifications": true,
+  "sound_alerts": true
+}

@@ -9,7 +9,6 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QColor
 
 
-
 class LengthOptionFrame(QFrame):
     length_clicked = pyqtSignal(int)
 

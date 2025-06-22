@@ -46,13 +46,16 @@ class ExportUIManager:
         # Try to get the last used export directory from settings
         try:
             import json
+
             settings_path = get_user_editable_resource_path("export_settings.json")
             default_dir = None
 
             if os.path.exists(settings_path):
                 with open(settings_path, "r") as f:
                     settings = json.load(f)
-                    default_dir = os.path.join(get_win32_photos_path(), "TKA Sequence Cards")
+                    default_dir = os.path.join(
+                        get_win32_photos_path(), "TKA Sequence Cards"
+                    )
 
             # If no saved directory or it doesn't exist, use My Pictures/TKA Sequence Cards
             if not default_dir or not os.path.exists(default_dir):

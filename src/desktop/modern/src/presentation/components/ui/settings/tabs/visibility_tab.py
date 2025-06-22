@@ -1,6 +1,8 @@
 from typing import Dict, Union
 
-from core.interfaces.tab_settings_interfaces import IVisibilityService
+from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+    IVisibilityService,
+)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (

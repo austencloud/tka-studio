@@ -2,7 +2,6 @@ from PyQt6.QtCore import QPointF
 from .grid_point import GridPoint
 
 
-
 class GridLayer:
     def __init__(self, points_data: dict[str, str]) -> None:
         self.points: dict[str, GridPoint] = {}

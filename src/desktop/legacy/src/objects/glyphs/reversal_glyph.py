@@ -43,9 +43,7 @@ class ReversalGlyph(QGraphicsItemGroup):
     def update_reversal_symbols(
         self, visible: bool = True, is_visibility_pictograph: bool = False
     ):
-
         if is_visibility_pictograph:
-
             self.reversal_items[BLUE].setVisible(True)
             self.reversal_items[RED].setVisible(True)
 
@@ -99,7 +97,6 @@ class ReversalGlyph(QGraphicsItemGroup):
         center_y = self.pictograph.height() / 2
 
         if blue_visible and red_visible:
-
             red_R = self.reversal_items[RED]
             blue_R = self.reversal_items[BLUE]
             total_height = (
@@ -110,12 +107,10 @@ class ReversalGlyph(QGraphicsItemGroup):
             red_R.setPos(0, red_R_y)
             blue_R.setPos(0, blue_R_y)
         elif blue_visible:
-
             blue_R = self.reversal_items[BLUE]
             blue_R_y = -blue_R.boundingRect().height() / 2
             blue_R.setPos(0, blue_R_y)
         elif red_visible:
-
             red_R = self.reversal_items[RED]
             red_R_y = -red_R.boundingRect().height() / 2
             red_R.setPos(0, red_R_y)

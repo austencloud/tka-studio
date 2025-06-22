@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
-from core.interfaces.workbench_services import IGraphEditorService
-from domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.core.interfaces.workbench_services import IGraphEditorService
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 

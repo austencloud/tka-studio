@@ -16,14 +16,16 @@ No UI dependencies, completely testable in isolation.
 import logging
 from typing import Optional, Union
 
-from core.interfaces.positioning_services import IArrowAdjustmentCalculator
-from domain.models.core_models import (
+from desktop.modern.src.core.interfaces.positioning_services import (
+    IArrowAdjustmentCalculator,
+)
+from desktop.modern.src.domain.models.core_models import (
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
-from domain.models.pictograph_models import ArrowData, PictographData
+from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
 from PyQt6.QtCore import QPointF
 
 from .default_placement_service import DefaultPlacementService

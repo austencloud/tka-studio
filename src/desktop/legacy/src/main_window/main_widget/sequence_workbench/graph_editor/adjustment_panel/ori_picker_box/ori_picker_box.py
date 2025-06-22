@@ -49,7 +49,9 @@ class OriPickerBox(QFrame):
         color_hex = (
             HEX_RED
             if self.color == "red"
-            else HEX_BLUE if self.color == "blue" else self.color
+            else HEX_BLUE
+            if self.color == "blue"
+            else self.color
         )
         whitened_color = ColorUtils.lighten_color(color_hex)
         self.setStyleSheet(

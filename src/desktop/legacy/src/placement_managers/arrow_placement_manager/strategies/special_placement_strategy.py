@@ -18,9 +18,9 @@ class SpecialPlacementStrategy:
     def __init__(self, ori_key_generator: "OriKeyGenerator") -> None:
         self.special_placement_loader = AppContext.special_placement_loader()
         self.ori_key_generator = ori_key_generator
-        self.special_placements: dict[str, dict[str, dict[str, Any]]] = (
-            self.special_placement_loader.load_or_return_special_placements()
-        )
+        self.special_placements: dict[
+            str, dict[str, dict[str, Any]]
+        ] = self.special_placement_loader.load_or_return_special_placements()
         self.attr_key_generator = AttrKeyGenerator()
 
     def get_special_placements(self) -> dict[str, dict[str, dict[str, Any]]]:

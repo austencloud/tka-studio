@@ -17,7 +17,9 @@ from PyQt6.QtWidgets import QMainWindow
 
 if TYPE_CHECKING:
     from core.dependency_injection.di_container import DIContainer
-    from presentation.components.backgrounds.background_widget import MainBackgroundWidget
+    from presentation.components.backgrounds.background_widget import (
+        MainBackgroundWidget,
+    )
 
 
 class IBackgroundManager(ABC):
@@ -49,7 +51,7 @@ class IBackgroundManager(ABC):
 class BackgroundManager(IBackgroundManager):
     """
     Pure service for background management operations.
-    
+
     Handles background widget lifecycle without business logic dependencies.
     Uses clean separation of concerns following TKA architecture.
     """
@@ -69,7 +71,9 @@ class BackgroundManager(IBackgroundManager):
             progress_callback(95, "Setting up background...")
 
         # Get background type from UI state service
-        from core.interfaces.core_services import IUIStateManagementService
+        from desktop.modern.src.core.interfaces.core_services import (
+            IUIStateManagementService,
+        )
 
         ui_state_service = container.resolve(IUIStateManagementService)
         background_type = ui_state_service.get_setting("background_type", "Aurora")
@@ -96,7 +100,9 @@ class BackgroundManager(IBackgroundManager):
                 self.cleanup_background(self.current_background)
 
             # Create new background widget
-            new_background = self._create_background_widget(main_window, background_type)
+            new_background = self._create_background_widget(
+                main_window, background_type
+            )
 
             # Position and show new background
             self._position_background(main_window, new_background)
@@ -214,5 +220,7 @@ class BackgroundManager(IBackgroundManager):
             "type": background_type,
             "active": True,
             "animated": self.is_background_animated(background_type),
-            "performance_impact": self.get_background_performance_impact(background_type),
+            "performance_impact": self.get_background_performance_impact(
+                background_type
+            ),
         }

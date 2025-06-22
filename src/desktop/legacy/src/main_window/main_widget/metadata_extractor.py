@@ -111,7 +111,6 @@ class MetaDataExtractor:
                 if metadata["sequence"][0]["level"] != 0:
                     return metadata["sequence"][0]["level"]
                 else:
-
                     evaluator = SequenceLevelEvaluator()
                     level = evaluator.get_sequence_difficulty_level(
                         metadata["sequence"]

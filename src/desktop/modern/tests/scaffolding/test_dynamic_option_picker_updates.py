@@ -26,15 +26,19 @@ from pathlib import Path
 modern_src_path = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,
     Location,
     MotionType,
 )
-from presentation.components.option_picker.beat_data_loader import BeatDataLoader
-from presentation.tabs.construct.construct_tab_widget import ConstructTabWidget
+from desktop.modern.src.presentation.components.option_picker.beat_data_loader import (
+    BeatDataLoader,
+)
+from desktop.modern.src.presentation.tabs.construct.construct_tab_widget import (
+    ConstructTabWidget,
+)
 
 
 class TestDynamicOptionPickerUpdates:
@@ -210,14 +214,17 @@ class TestDynamicOptionPickerUpdates:
         mock_option_picker_class.return_value = mock_option_picker
 
         # Create construct tab with mocked dependencies
-        with patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_workbench"
-        ), patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_start_position_picker"
-        ), patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_option_picker"
+        with (
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_workbench"
+            ),
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_start_position_picker"
+            ),
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_option_picker"
+            ),
         ):
-
             construct_tab = ConstructTabWidget()
             construct_tab.option_picker = mock_option_picker
 
@@ -253,14 +260,17 @@ class TestDynamicOptionPickerUpdates:
 
     def test_circular_signal_protection(self, app):
         """Test that circular signal emissions are prevented"""
-        with patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_workbench"
-        ), patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_start_position_picker"
-        ), patch(
-            "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_option_picker"
+        with (
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_workbench"
+            ),
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_start_position_picker"
+            ),
+            patch(
+                "presentation.tabs.construct_tab_widget.ConstructTabWidget._create_option_picker"
+            ),
         ):
-
             construct_tab = ConstructTabWidget()
             construct_tab.option_picker = Mock()
             construct_tab._emitting_signal = True  # Simulate ongoing emission

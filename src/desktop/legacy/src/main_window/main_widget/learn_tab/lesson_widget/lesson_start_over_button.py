@@ -3,9 +3,11 @@ from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import Qt
 
 
-
 if TYPE_CHECKING:
-    from main_window.main_widget.learn_tab.lesson_widget.lesson_results_widget import LessonResultsWidget
+    from main_window.main_widget.learn_tab.lesson_widget.lesson_results_widget import (
+        LessonResultsWidget,
+    )
+
 
 class LessonStartOverButton(QPushButton):
     """Custom Start Over button with resize functionality."""

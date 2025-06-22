@@ -4,12 +4,14 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPainter, QPen, QColor
 from PyQt6.QtCore import Qt
 
+
 class ThumbnailBorderOverlay(QWidget):
     """
     A transparent overlay that can draw a colored border on top of its parent widget.
     This avoids layout shifts because we never change the parent's style or padding;
     we just paint on top.
     """
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._border_color = QColor("transparent")

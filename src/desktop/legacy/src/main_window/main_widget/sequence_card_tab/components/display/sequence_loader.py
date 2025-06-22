@@ -7,24 +7,24 @@ from main_window.main_widget.metadata_extractor import MetaDataExtractor
 class SequenceLoader:
     """
     Responsible for loading and filtering sequence card images.
-    
+
     This class:
     1. Loads sequence card images from the file system
     2. Extracts metadata from images
     3. Filters sequences based on length
     4. Provides a consistent interface for accessing sequence data
     """
-    
+
     def __init__(self):
         self.metadata_extractor = MetaDataExtractor()
-        
+
     def get_all_sequences(self, images_path: str) -> List[Dict[str, Any]]:
         """
         Get all sequences from the sequence_card_images directory.
-        
+
         Args:
             images_path: Path to the sequence card images directory
-            
+
         Returns:
             List[Dict[str, Any]]: List of sequence data dictionaries
         """
@@ -75,17 +75,17 @@ class SequenceLoader:
                     )
 
         return sequences
-        
+
     def filter_sequences_by_length(
         self, sequences: List[Dict[str, Any]], length: int
     ) -> List[Dict[str, Any]]:
         """
         Filter sequences by the specified length.
-        
+
         Args:
             sequences: List of sequence data dictionaries
             length: Length to filter by (0 for all)
-            
+
         Returns:
             List[Dict[str, Any]]: Filtered list of sequence data dictionaries
         """

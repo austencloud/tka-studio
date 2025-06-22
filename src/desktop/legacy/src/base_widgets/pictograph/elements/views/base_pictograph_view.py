@@ -4,7 +4,6 @@ from PyQt6.QtCore import Qt, QEvent, QTimer
 from PyQt6.QtGui import QCursor, QAction, QKeyEvent
 
 
-
 if TYPE_CHECKING:
     from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 

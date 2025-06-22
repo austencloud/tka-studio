@@ -13,7 +13,7 @@ TESTS:
 
 import pytest
 from hypothesis import given, strategies as st, assume
-from src.domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     MotionData,
     BeatData,
     SequenceData,

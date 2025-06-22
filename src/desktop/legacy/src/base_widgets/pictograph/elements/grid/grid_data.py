@@ -44,7 +44,6 @@ class GridData:
         if point and point.coordinates:
             return point.coordinates
         else:
-
             return None
 
     def get_static_dash_coord(self, point_name: str) -> Optional[QPointF]:
@@ -52,7 +51,6 @@ class GridData:
         if point and point.coordinates:
             return point.coordinates
         else:
-
             return None
 
     def get_point(

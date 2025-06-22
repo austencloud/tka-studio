@@ -47,7 +47,6 @@ class SnowfallBackground(QWidget):
         self.santa_manager = SantaManager()
 
     def paint_background(self, parent_widget: QWidget, painter: QPainter):
-
         gradient = QLinearGradient(0, 0, 0, self.widget_height)
         gradient.setColorAt(0, QColor(20, 30, 48))
         gradient.setColorAt(1, QColor(50, 80, 120))

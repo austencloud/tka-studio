@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class LifecycleManager:
     """
     Manages service lifecycle including initialization, cleanup, and scoped instances.
-    
+
     Provides centralized lifecycle management for all services in the DI container,
     ensuring proper initialization and cleanup of resources.
     """
@@ -31,13 +31,17 @@ class LifecycleManager:
     def create_with_lifecycle(self, instance: Any) -> Any:
         """Create instance with proper lifecycle management."""
         # Call initialization method if it exists
-        if hasattr(instance, "initialize") and callable(getattr(instance, "initialize")):
+        if hasattr(instance, "initialize") and callable(
+            getattr(instance, "initialize")
+        ):
             try:
                 instance.initialize()
                 self._initialized_services.append(instance)
                 logger.debug(f"Initialized service: {type(instance).__name__}")
             except Exception as e:
-                logger.error(f"Failed to initialize service {type(instance).__name__}: {e}")
+                logger.error(
+                    f"Failed to initialize service {type(instance).__name__}: {e}"
+                )
                 raise
 
         # Register for cleanup if it has cleanup method
@@ -50,7 +54,7 @@ class LifecycleManager:
     def cleanup_all(self) -> None:
         """Cleanup all registered services."""
         logger.info(f"Starting cleanup of {len(self._cleanup_handlers)} services")
-        
+
         for cleanup_handler in reversed(self._cleanup_handlers):
             try:
                 cleanup_handler()
@@ -66,7 +70,7 @@ class LifecycleManager:
         """Create a new scope for scoped services."""
         if scope_id in self._scoped_instances:
             logger.warning(f"Scope {scope_id} already exists, overwriting")
-        
+
         self._scoped_instances[scope_id] = {}
         self._current_scope = scope_id
         logger.debug(f"Created scope: {scope_id}")
@@ -78,21 +82,25 @@ class LifecycleManager:
             return
 
         scope_instances = self._scoped_instances[scope_id]
-        logger.debug(f"Disposing scope {scope_id} with {len(scope_instances)} instances")
+        logger.debug(
+            f"Disposing scope {scope_id} with {len(scope_instances)} instances"
+        )
 
         # Cleanup scoped instances
         for instance in scope_instances.values():
             if hasattr(instance, "cleanup") and callable(getattr(instance, "cleanup")):
                 try:
                     instance.cleanup()
-                    logger.debug(f"Cleaned up scoped instance: {type(instance).__name__}")
+                    logger.debug(
+                        f"Cleaned up scoped instance: {type(instance).__name__}"
+                    )
                 except Exception as e:
                     logger.error(f"Error cleaning up scoped instance: {e}")
 
         del self._scoped_instances[scope_id]
         if self._current_scope == scope_id:
             self._current_scope = None
-        
+
         logger.debug(f"Disposed scope: {scope_id}")
 
     def get_scoped_instance(self, scope_id: str, service_type: Type) -> Optional[Any]:
@@ -101,13 +109,17 @@ class LifecycleManager:
             return None
         return self._scoped_instances[scope_id].get(service_type)
 
-    def set_scoped_instance(self, scope_id: str, service_type: Type, instance: Any) -> None:
+    def set_scoped_instance(
+        self, scope_id: str, service_type: Type, instance: Any
+    ) -> None:
         """Store an instance in a specific scope."""
         if scope_id not in self._scoped_instances:
             self.create_scope(scope_id)
-        
+
         self._scoped_instances[scope_id][service_type] = instance
-        logger.debug(f"Stored scoped instance: {type(instance).__name__} in scope {scope_id}")
+        logger.debug(
+            f"Stored scoped instance: {type(instance).__name__} in scope {scope_id}"
+        )
 
     def get_current_scope(self) -> Optional[str]:
         """Get the current active scope."""
@@ -141,7 +153,7 @@ class LifecycleManager:
         scope_ids = list(self._scoped_instances.keys())
         for scope_id in scope_ids:
             self.dispose_scope(scope_id)
-        
+
         self._current_scope = None
         logger.info("All scopes disposed")
 
@@ -155,25 +167,33 @@ class LifecycleManager:
 
     def force_cleanup_service(self, service_instance: Any) -> bool:
         """Force cleanup of a specific service instance."""
-        if hasattr(service_instance, "cleanup") and callable(getattr(service_instance, "cleanup")):
+        if hasattr(service_instance, "cleanup") and callable(
+            getattr(service_instance, "cleanup")
+        ):
             try:
                 service_instance.cleanup()
-                
+
                 # Remove from cleanup handlers if present
                 if service_instance.cleanup in self._cleanup_handlers:
                     self._cleanup_handlers.remove(service_instance.cleanup)
-                
+
                 # Remove from initialized services if present
                 if service_instance in self._initialized_services:
                     self._initialized_services.remove(service_instance)
-                
-                logger.debug(f"Force cleaned up service: {type(service_instance).__name__}")
+
+                logger.debug(
+                    f"Force cleaned up service: {type(service_instance).__name__}"
+                )
                 return True
             except Exception as e:
-                logger.error(f"Error during force cleanup of {type(service_instance).__name__}: {e}")
+                logger.error(
+                    f"Error during force cleanup of {type(service_instance).__name__}: {e}"
+                )
                 return False
-        
-        logger.warning(f"Service {type(service_instance).__name__} has no cleanup method")
+
+        logger.warning(
+            f"Service {type(service_instance).__name__} has no cleanup method"
+        )
         return False
 
     def get_lifecycle_stats(self) -> Dict[str, Any]:
@@ -185,7 +205,7 @@ class LifecycleManager:
             "total_scoped_instances": self.get_total_scoped_instances(),
             "current_scope": self._current_scope,
             "scope_details": {
-                scope_id: len(instances) 
+                scope_id: len(instances)
                 for scope_id, instances in self._scoped_instances.items()
-            }
+            },
         }

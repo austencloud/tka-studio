@@ -57,7 +57,6 @@ class NavSidebarManager:
         # for button in self.buttons:
         #     button.setFixedWidth(SidebarButton._max_button_width)  # ☢️ OBLITERATED!
 
-
     def resize_sidebar(self):
         """Handle sidebar resizing and reapply button widths."""
         SidebarButton.calculate_max_width(self.buttons)
@@ -181,4 +180,3 @@ class NavSidebarManager:
                 if bg_type in ["Rainbow", "AuroraBorealis", "Aurora"]
                 else "white"
             )
-

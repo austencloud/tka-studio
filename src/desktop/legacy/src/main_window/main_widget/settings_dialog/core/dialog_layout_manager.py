@@ -6,8 +6,13 @@ Handles UI layout creation and management.
 
 from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QStackedWidget, 
-    QWidget, QLabel, QPushButton
+    QDialog,
+    QVBoxLayout,
+    QHBoxLayout,
+    QStackedWidget,
+    QWidget,
+    QLabel,
+    QPushButton,
 )
 import logging
 
@@ -22,7 +27,7 @@ logger = logging.getLogger(__name__)
 class DialogLayoutManager:
     """
     Manages dialog layout creation and organization.
-    
+
     Responsibilities:
     - Create main layout structure
     - Setup header with title and close button
@@ -33,7 +38,7 @@ class DialogLayoutManager:
     def __init__(self, dialog: QDialog, app_context: "ApplicationContext" = None):
         self.dialog = dialog
         self.app_context = app_context
-        
+
         # Layout components
         self.main_container: QWidget = None
         self.sidebar: "SettingsDialogSidebar" = None
@@ -44,7 +49,7 @@ class DialogLayoutManager:
     def setup_layout(self) -> dict:
         """
         Setup the complete dialog layout.
-        
+
         Returns:
             Dictionary containing layout components for coordinator access
         """
@@ -81,11 +86,11 @@ class DialogLayoutManager:
 
         # Return components for coordinator access
         return {
-            'main_container': self.main_container,
-            'sidebar': self.sidebar,
-            'content_area': self.content_area,
-            'action_buttons': self.action_buttons,
-            'close_button': self.close_button
+            "main_container": self.main_container,
+            "sidebar": self.sidebar,
+            "content_area": self.content_area,
+            "action_buttons": self.action_buttons,
+            "close_button": self.close_button,
         }
 
     def _create_header(self) -> QHBoxLayout:
@@ -166,10 +171,12 @@ class DialogLayoutManager:
         # Import here to avoid circular imports
         try:
             from ..ui.settings_dialog_sidebar import SettingsDialogSidebar
+
             self.sidebar = SettingsDialogSidebar(self.dialog)
         except ImportError:
             # Fallback to simple list widget
             from PyQt6.QtWidgets import QListWidget
+
             self.sidebar = QListWidget(self.dialog)
             logger.warning("Using fallback sidebar implementation")
 
@@ -180,4 +187,5 @@ class DialogLayoutManager:
     def _create_action_buttons(self):
         """Create the action buttons."""
         from ..components.modern_action_buttons import ModernActionButtons
+
         self.action_buttons = ModernActionButtons(self.app_context)

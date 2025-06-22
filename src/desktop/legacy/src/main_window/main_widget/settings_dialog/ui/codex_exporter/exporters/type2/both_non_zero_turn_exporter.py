@@ -139,4 +139,3 @@ class BothNonZeroTurnExporter(Type2BaseExporter):
         )
 
         return exported_count
-

@@ -5,7 +5,9 @@ Grid mode selector component for the codex exporter.
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QButtonGroup
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
-from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    LegacySettingsManager,
+)
 from ..widgets import ModernRadioButton
 from .turn_config_style_provider import TurnConfigStyleProvider
 

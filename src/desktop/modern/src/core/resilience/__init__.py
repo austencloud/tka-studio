@@ -41,16 +41,15 @@ from .error_aggregation import (
 __all__ = [
     # Circuit Breaker
     "CircuitBreaker",
-    "CircuitBreakerState", 
+    "CircuitBreakerState",
     "CircuitBreakerError",
     "CircuitBreakerConfig",
     "CircuitBreakerMetrics",
     "circuit_breaker",
-    
     # Error Aggregation
     "ErrorAggregator",
     "ErrorRecord",
-    "ErrorGroup", 
+    "ErrorGroup",
     "ErrorSummary",
     "ErrorSeverity",
     "aggregate_errors",

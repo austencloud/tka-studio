@@ -25,7 +25,7 @@ modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
 
-from presentation.components.ui.splash_screen import SplashScreen
+from desktop.modern.src.presentation.components.ui.splash_screen import SplashScreen
 
 
 class KineticConstructorModern(QMainWindow):
@@ -188,9 +188,7 @@ def main():
                 )
             else:
                 target_screen = primary_screen
-                print(
-                    f"🔄 Modern forced to LEFT monitor (primary) for parallel testing"
-                )
+                print(f"🔄 Modern forced to LEFT monitor (primary) for parallel testing")
         else:
             target_screen = screens[1]  # Default to secondary
     else:

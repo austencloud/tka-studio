@@ -24,9 +24,11 @@ import uuid
 from datetime import datetime
 
 from PyQt6.QtCore import QSize
-from application.services.layout.beat_layout_calculator import BeatLayoutCalculator
-from domain.models.core_models import SequenceData
-from core.interfaces.core_services import ILayoutService
+from desktop.modern.src.application.services.layout.beat_layout_calculator import (
+    BeatLayoutCalculator,
+)
+from desktop.modern.src.domain.models.core_models import SequenceData
+from desktop.modern.src.core.interfaces.core_services import ILayoutService
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -129,7 +131,6 @@ class LayoutResult:
     total_size: Tuple[int, int]
     scaling_factor: float
     overflow: bool = False
-
 
 
 class ResponsiveScalingCalculator:

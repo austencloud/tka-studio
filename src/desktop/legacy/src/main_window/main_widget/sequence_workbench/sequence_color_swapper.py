@@ -71,7 +71,6 @@ class SequenceColorSwapper(BaseSequenceModifier):
         return swapped_sequence
 
     def _color_swap_pictograph_data(self, beat_data):
-
         beat_data[BLUE_ATTRS], beat_data[RED_ATTRS] = (
             beat_data[RED_ATTRS],
             beat_data[BLUE_ATTRS],

@@ -8,7 +8,10 @@ from fastapi.testclient import TestClient
 from unittest.mock import Mock
 
 # Import the FastAPI app
-from infrastructure.api.production_api import app, initialize_services
+from desktop.modern.src.infrastructure.api.production_api import (
+    app,
+    initialize_services,
+)
 
 
 @pytest.fixture
@@ -20,34 +23,33 @@ def client():
     except Exception:
         # Services might already be initialized
         pass
-    
+
     return TestClient(app)
 
 
 def test_sequence_crud_workflow(client):
     """Test complete sequence CRUD workflow."""
-    
+
     # 1. Create sequence
-    create_response = client.post("/api/sequences", json={
-        "name": "Test Sequence",
-        "length": 5
-    })
+    create_response = client.post(
+        "/api/sequences", json={"name": "Test Sequence", "length": 5}
+    )
     assert create_response.status_code == 200
     created_sequence = create_response.json()
     sequence_id = created_sequence["id"]
-    
+
     # Verify created sequence structure
     assert created_sequence["name"] == "Test Sequence"
     assert len(created_sequence["beats"]) == 5
     assert created_sequence["id"] is not None
-    
+
     # 2. Retrieve sequence by ID
     get_response = client.get(f"/api/sequences/{sequence_id}")
     assert get_response.status_code == 200
     retrieved_sequence = get_response.json()
     assert retrieved_sequence["name"] == "Test Sequence"
     assert retrieved_sequence["id"] == sequence_id
-    
+
     # 3. Update sequence
     update_data = retrieved_sequence.copy()
     update_data["name"] = "Updated Test Sequence"
@@ -56,7 +58,7 @@ def test_sequence_crud_workflow(client):
     updated_sequence = update_response.json()
     assert updated_sequence["name"] == "Updated Test Sequence"
     assert updated_sequence["id"] == sequence_id
-    
+
     # 4. Verify current sequence
     current_response = client.get("/api/sequences/current")
     assert current_response.status_code == 200
@@ -81,7 +83,7 @@ def test_update_nonexistent_sequence(client):
         "word": "",
         "beats": [],
         "start_position": None,
-        "metadata": {}
+        "metadata": {},
     }
     response = client.put("/api/sequences/nonexistent-id", json=update_data)
     assert response.status_code == 404
@@ -91,17 +93,11 @@ def test_update_nonexistent_sequence(client):
 def test_create_sequence_validation(client):
     """Test sequence creation with invalid data."""
     # Test empty name
-    response = client.post("/api/sequences", json={
-        "name": "",
-        "length": 5
-    })
+    response = client.post("/api/sequences", json={"name": "", "length": 5})
     assert response.status_code == 400
-    
+
     # Test invalid length
-    response = client.post("/api/sequences", json={
-        "name": "Test",
-        "length": 0
-    })
+    response = client.post("/api/sequences", json={"name": "Test", "length": 0})
     assert response.status_code == 400
 
 
@@ -116,30 +112,28 @@ def test_current_sequence_when_none_exists(client):
 
 def test_multiple_sequences_current_tracking(client):
     """Test that current sequence tracking works with multiple sequences."""
-    
+
     # Create first sequence
-    response1 = client.post("/api/sequences", json={
-        "name": "First Sequence",
-        "length": 3
-    })
+    response1 = client.post(
+        "/api/sequences", json={"name": "First Sequence", "length": 3}
+    )
     assert response1.status_code == 200
     first_id = response1.json()["id"]
-    
+
     # Create second sequence
-    response2 = client.post("/api/sequences", json={
-        "name": "Second Sequence", 
-        "length": 4
-    })
+    response2 = client.post(
+        "/api/sequences", json={"name": "Second Sequence", "length": 4}
+    )
     assert response2.status_code == 200
     second_id = response2.json()["id"]
-    
+
     # Current sequence should be the most recently created (second)
     current_response = client.get("/api/sequences/current")
     assert current_response.status_code == 200
     current_sequence = current_response.json()
     assert current_sequence["id"] == second_id
     assert current_sequence["name"] == "Second Sequence"
-    
+
     # Verify we can still get the first sequence by ID
     get_first_response = client.get(f"/api/sequences/{first_id}")
     assert get_first_response.status_code == 200

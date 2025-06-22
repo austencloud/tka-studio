@@ -424,7 +424,6 @@ class ThumbnailImageLabel(QLabel):
                     and metadata.get("target_width") == target_size.width()
                     and metadata.get("target_height") == target_size.height()
                 ):
-
                     # Load cached pixmap
                     pixmap = QPixmap(str(cache_file))
                     if not pixmap.isNull():

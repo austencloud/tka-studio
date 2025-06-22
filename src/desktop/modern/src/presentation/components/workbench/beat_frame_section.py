@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout
 from PyQt6.QtCore import pyqtSignal
 
 from .button_panel import ModernSequenceWorkbenchButtonPanel
-from domain.models.core_models import SequenceData, BeatData
-from core.interfaces.core_services import ILayoutService
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.core.interfaces.core_services import ILayoutService
 from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
 
 if TYPE_CHECKING:

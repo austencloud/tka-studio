@@ -26,7 +26,6 @@ class BeatFrameUpdater:
         self.json_manager = AppContext.json_manager()
 
     def update_beats_from_current_sequence_json(self) -> None:
-
         current_sequence_json = self.json_manager.loader_saver.load_current_sequence()
         sequence_entries = current_sequence_json[1:]
 

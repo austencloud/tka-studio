@@ -54,43 +54,47 @@ The manual rotation system extends the existing `PropAttributes` interface with 
 ### Basic Manual Rotation
 
 ```typescript
-import { setManualRotationDegrees } from './utils/manual-rotation.js';
+import { setManualRotationDegrees } from "./utils/manual-rotation.js";
 
 // Set blue prop to rotate from 0° to 90° clockwise
 step.blue_attributes = setManualRotationDegrees(
-	step.blue_attributes,
-	0, // start degrees
-	90, // end degrees
-	'cw' // direction
+  step.blue_attributes,
+  0, // start degrees
+  90, // end degrees
+  "cw", // direction
 );
 ```
 
 ### Using Presets
 
 ```typescript
-import { MOTION_TYPE_PRESETS } from './utils/rotation-presets.js';
+import { MOTION_TYPE_PRESETS } from "./utils/rotation-presets.js";
 
 // Apply pro isolation preset (90° rotation)
-step.blue_attributes = MOTION_TYPE_PRESETS.pro_isolation_cw(step.blue_attributes);
+step.blue_attributes = MOTION_TYPE_PRESETS.pro_isolation_cw(
+  step.blue_attributes,
+);
 
 // Apply float preset (no rotation)
-step.red_attributes = MOTION_TYPE_PRESETS.float_no_rotation(step.red_attributes);
+step.red_attributes = MOTION_TYPE_PRESETS.float_no_rotation(
+  step.red_attributes,
+);
 ```
 
 ### Batch Application
 
 ```typescript
-import { applyManualRotationsToSteps } from './utils/rotation-presets.js';
+import { applyManualRotationsToSteps } from "./utils/rotation-presets.js";
 
 const rotationMap = {
-	1: {
-		blue: { start: 0, end: 90, direction: 'cw' },
-		red: { start: 0, end: -90, direction: 'ccw' }
-	},
-	2: {
-		blue: { start: 90, end: 450, direction: 'cw' }, // 1 full turn + 90°
-		red: { start: -90, end: -90, direction: 'shortest' }
-	}
+  1: {
+    blue: { start: 0, end: 90, direction: "cw" },
+    red: { start: 0, end: -90, direction: "ccw" },
+  },
+  2: {
+    blue: { start: 90, end: 450, direction: "cw" }, // 1 full turn + 90°
+    red: { start: -90, end: -90, direction: "shortest" },
+  },
 };
 
 const updatedSteps = applyManualRotationsToSteps(steps, rotationMap);

@@ -10,16 +10,16 @@ from unittest.mock import Mock, MagicMock
 import uuid
 from datetime import datetime
 
-from core.events import (
+from desktop.modern.src.core.events import (
     TypeSafeEventBus,
     SequenceCreatedEvent,
     BeatAddedEvent,
     BeatRemovedEvent,
 )
-from application.services.core.sequence_management_service import (
+from desktop.modern.src.application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
 
 
 @pytest.fixture

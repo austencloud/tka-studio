@@ -21,8 +21,8 @@ The viewport meta tag in `app.html` includes `viewport-fit=cover` to enable safe
 
 ```html
 <meta
-	name="viewport"
-	content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
 />
 ```
 
@@ -32,17 +32,19 @@ We've created a dedicated CSS file (`src/lib/styles/safe-area.css`) that defines
 
 ```css
 :root {
-	/* Direct mapping to environment variables with fallbacks */
-	--safe-inset-top: env(safe-area-inset-top, 0px);
-	--safe-inset-right: env(safe-area-inset-right, 0px);
-	--safe-inset-bottom: env(safe-area-inset-bottom, 0px);
-	--safe-inset-left: env(safe-area-inset-left, 0px);
+  /* Direct mapping to environment variables with fallbacks */
+  --safe-inset-top: env(safe-area-inset-top, 0px);
+  --safe-inset-right: env(safe-area-inset-right, 0px);
+  --safe-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-inset-left: env(safe-area-inset-left, 0px);
 
-	/* Combined variables that integrate with existing spacing system */
-	--content-padding-top: calc(var(--base-spacing) + var(--safe-inset-top));
-	--content-padding-right: calc(var(--base-spacing) + var(--safe-inset-right));
-	--content-padding-bottom: calc(var(--base-spacing) + var(--safe-inset-bottom));
-	--content-padding-left: calc(var(--base-spacing) + var(--safe-inset-left));
+  /* Combined variables that integrate with existing spacing system */
+  --content-padding-top: calc(var(--base-spacing) + var(--safe-inset-top));
+  --content-padding-right: calc(var(--base-spacing) + var(--safe-inset-right));
+  --content-padding-bottom: calc(
+    var(--base-spacing) + var(--safe-inset-bottom)
+  );
+  --content-padding-left: calc(var(--base-spacing) + var(--safe-inset-left));
 }
 ```
 
@@ -84,10 +86,12 @@ To apply safe area insets to new components, you can:
 
 ```css
 .my-component {
-	padding-top: var(--safe-inset-top, 0px);
-	/* or */
-	padding: var(--safe-inset-top, 0px) var(--safe-inset-right, 0px) var(--safe-inset-bottom, 0px)
-		var(--safe-inset-left, 0px);
+  padding-top: var(--safe-inset-top, 0px);
+  /* or */
+  padding: var(--safe-inset-top, 0px) var(--safe-inset-right, 0px) var(
+      --safe-inset-bottom,
+      0px
+    ) var(--safe-inset-left, 0px);
 }
 ```
 
@@ -102,9 +106,9 @@ To apply safe area insets to new components, you can:
 
 ```css
 .fixed-element {
-	position: fixed;
-	top: var(--safe-position-top);
-	right: var(--safe-position-right);
+  position: fixed;
+  top: var(--safe-position-top);
+  right: var(--safe-position-right);
 }
 ```
 
@@ -112,9 +116,9 @@ To apply safe area insets to new components, you can:
 
 ```css
 .my-button {
-	position: absolute;
-	top: max(10px, var(--safe-inset-top, 0px));
-	right: max(10px, var(--safe-inset-right, 0px));
+  position: absolute;
+  top: max(10px, var(--safe-inset-top, 0px));
+  right: max(10px, var(--safe-inset-right, 0px));
 }
 ```
 

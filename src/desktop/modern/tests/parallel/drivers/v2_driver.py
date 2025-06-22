@@ -455,9 +455,9 @@ class ModernApplicationDriver(BaseApplicationDriver):
                 # Extract arrow data
                 arrows = pictograph_data.get("arrows", {})
                 for color, arrow_data in arrows.items():
-                    standardized_data["arrows"][color] = (
-                        self._extract_modern_arrow_data(arrow_data)
-                    )
+                    standardized_data["arrows"][
+                        color
+                    ] = self._extract_modern_arrow_data(arrow_data)
 
                 # Extract prop data
                 props = pictograph_data.get("props", {})

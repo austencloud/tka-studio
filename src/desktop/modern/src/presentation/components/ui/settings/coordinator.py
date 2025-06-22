@@ -4,7 +4,9 @@ Settings dialog coordinator for managing settings state and updates.
 
 from typing import Any, Callable, Dict
 
-from application.services.settings.settings_service import SettingsService
+from desktop.modern.src.application.services.settings.settings_service import (
+    SettingsService,
+)
 from PyQt6.QtCore import QObject, pyqtSignal
 
 

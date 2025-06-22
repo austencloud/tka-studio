@@ -125,7 +125,7 @@ class SequencePickerSectionManager:
                             )  # Added logging
             except FileNotFoundError as e:
                 print(f"[WARNING] File not found: {thumbnail} - {e}")
-                continue 
+                continue
             except Exception as e:
                 print(f"[ERROR] An error occurred while processing {thumbnail}: {e}")
 

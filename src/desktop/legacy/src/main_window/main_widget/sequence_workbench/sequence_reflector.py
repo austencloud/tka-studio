@@ -49,7 +49,6 @@ class SequenceReflector(BaseSequenceModifier):
         QApplication.restoreOverrideCursor()
 
     def _reflect_sequence(self):
-
         metadata = self.json_loader.load_current_sequence()[0].copy()
         mirrored_sequence = [metadata]
 

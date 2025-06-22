@@ -10,8 +10,10 @@ from typing import Optional
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from domain.models.core_models import VTGMode, ElementalType
-from presentation.components.pictograph.asset_utils import get_image_path
+from desktop.modern.src.domain.models.core_models import VTGMode, ElementalType
+from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+    get_image_path,
+)
 
 
 class ElementalGlyphRenderer:

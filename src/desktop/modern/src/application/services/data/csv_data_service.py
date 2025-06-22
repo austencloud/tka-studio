@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -49,7 +49,7 @@ class ICSVDataService(ABC):
 class CSVDataService(ICSVDataService):
     """
     Pure service for CSV data operations.
-    
+
     Handles all CSV file I/O and data conversion without caching or business logic.
     Uses immutable data patterns following TKA architecture.
     """
@@ -69,7 +69,7 @@ class CSVDataService(ICSVDataService):
     def load_csv_data(self, file_path: Optional[Path] = None) -> pd.DataFrame:
         """Load CSV data from file."""
         path_to_use = file_path or self._data_path
-        
+
         try:
             return pd.read_csv(path_to_use)
         except Exception as e:
@@ -138,10 +138,7 @@ class CSVDataService(ICSVDataService):
         df = self._load_cached_data()
         letter_data = df[df["letter"] == letter]
 
-        return [
-            self.convert_row_to_beat_data(row)
-            for _, row in letter_data.iterrows()
-        ]
+        return [self.convert_row_to_beat_data(row) for _, row in letter_data.iterrows()]
 
     def get_specific_pictograph(
         self, letter: str, index: int = 0

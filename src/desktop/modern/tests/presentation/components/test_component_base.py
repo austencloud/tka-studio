@@ -23,8 +23,11 @@ from unittest.mock import Mock, MagicMock, patch
 modern_src_path = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from presentation.components import ViewableComponentBase, AsyncViewableComponentBase
-from core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.presentation.components import (
+    ViewableComponentBase,
+    AsyncViewableComponentBase,
+)
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
 
 
 # Mock Qt classes to avoid DLL issues in testing

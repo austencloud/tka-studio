@@ -86,21 +86,21 @@
 
 ```typescript
 export const ANIMATION_CONSTANTS = {
-	// Canvas and rendering
-	DEFAULT_CANVAS_RADIUS: 200,
-	DEFAULT_PROP_SCALE: 0.4,
-	DEFAULT_PATH_RADIUS_RATIO: 0.4,
+  // Canvas and rendering
+  DEFAULT_CANVAS_RADIUS: 200,
+  DEFAULT_PROP_SCALE: 0.4,
+  DEFAULT_PATH_RADIUS_RATIO: 0.4,
 
-	// Animation timing
-	DEFAULT_ANIMATION_SPEED: 1.0,
-	TARGET_FPS: 60,
+  // Animation timing
+  DEFAULT_ANIMATION_SPEED: 1.0,
+  TARGET_FPS: 60,
 
-	// File processing
-	PNG_SIGNATURE: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
-	METADATA_KEYWORD: 'metadata',
+  // File processing
+  PNG_SIGNATURE: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
+  METADATA_KEYWORD: "metadata",
 
-	// UI timing
-	SUCCESS_MESSAGE_TIMEOUT: 5000
+  // UI timing
+  SUCCESS_MESSAGE_TIMEOUT: 5000,
 } as const;
 ```
 
@@ -109,19 +109,19 @@ export const ANIMATION_CONSTANTS = {
 ```typescript
 // Track prop changes
 $effect(() => {
-	blueProp;
-	redProp;
-	gridVisible;
-	needsRender = true;
+  blueProp;
+  redProp;
+  gridVisible;
+  needsRender = true;
 });
 
 // Only render when needed
 function renderLoop(): void {
-	if (needsRender) {
-		render();
-		needsRender = false;
-	}
-	rafId = requestAnimationFrame(renderLoop);
+  if (needsRender) {
+    render();
+    needsRender = false;
+  }
+  rafId = requestAnimationFrame(renderLoop);
 }
 ```
 

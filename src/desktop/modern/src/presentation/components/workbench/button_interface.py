@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, List
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from domain.models.core_models import SequenceData, BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
 
 
 class IWorkbenchButtonInterface(ABC):

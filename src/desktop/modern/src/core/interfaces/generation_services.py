@@ -71,7 +71,6 @@ class ValidationResult:
 
 
 class IGenerationService(ABC):
-
     @abstractmethod
     def generate_freeform_sequence(self, config: GenerationConfig) -> GenerationResult:
         pass
@@ -92,7 +91,6 @@ class IGenerationService(ABC):
 
 
 class ISequenceConfigurationService(ABC):
-
     @abstractmethod
     def get_current_config(self) -> GenerationConfig:
         pass
@@ -119,7 +117,6 @@ class ISequenceConfigurationService(ABC):
 
 
 class IGenerationValidationService(ABC):
-
     @abstractmethod
     def validate_length(self, length: int, mode: GenerationMode) -> ValidationResult:
         pass
@@ -144,7 +141,6 @@ class IGenerationValidationService(ABC):
 
 
 class IGenerationHistoryService(ABC):
-
     @abstractmethod
     def record_generation(
         self, config: GenerationConfig, result: GenerationResult

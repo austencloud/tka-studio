@@ -12,7 +12,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../src"))
 
-from infrastructure.api.main import app
+from desktop.modern.src.infrastructure.api.main import app
 
 
 @pytest.fixture

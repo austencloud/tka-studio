@@ -54,15 +54,17 @@ if TYPE_CHECKING:
 
     # Use Any to avoid type conflicts between real Qt types and mock types
     from typing import Any
+
     PointType = Any
     TransformType = Any
 else:
     # Runtime: Allow both real Qt types and mock types
     from typing import Any
+
     PointType = Any
     TransformType = Any
-    
-from application.services.positioning.default_placement_service import (
+
+from desktop.modern.src.application.services.positioning.default_placement_service import (
     DefaultPlacementService,
 )
 
@@ -73,7 +75,7 @@ except ImportError:
     QGraphicsSvgItem = None
 from enum import Enum
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -81,14 +83,14 @@ from domain.models.core_models import (
     RotationDirection,
     Orientation,
 )
-from domain.models.pictograph_models import (
+from desktop.modern.src.domain.models.pictograph_models import (
     ArrowData,
     PictographData,
     GridData,
     GridMode,
 )
 from .placement_key_service import PlacementKeyService
-from domain.models.letter_type_classifier import LetterTypeClassifier
+from desktop.modern.src.domain.models.letter_type_classifier import LetterTypeClassifier
 from .dash_location_service import DashLocationService
 
 # Event-driven architecture imports
@@ -223,16 +225,41 @@ class ArrowManagementService(IArrowManagementService):
         5. Return final position and rotation
         """
 
+        print(
+            f"🔍 ARROW PIPELINE DEBUG: Starting position calculation for {arrow_data.color} arrow"
+        )
+
         if not arrow_data.motion_data:
+            print(
+                f"   ❌ PIPELINE FAILURE: No motion data for {arrow_data.color} arrow"
+            )
             return self.CENTER_X, self.CENTER_Y, 0.0
 
         motion = arrow_data.motion_data
+        print(
+            f"   📊 Motion Data: {motion.motion_type.value} from {motion.start_loc.value} to {motion.end_loc.value}"
+        )
 
         # Step 1: Calculate arrow location
         arrow_location = self._calculate_arrow_location(motion, pictograph_data)
+        print(f"   🎯 Step 1 - Arrow location calculated: {arrow_location.value}")
 
         # Step 2: Compute initial position
         initial_position = self._compute_initial_position(motion, arrow_location)
+        print(
+            f"   📍 Step 2 - Initial position: ({initial_position.x()}, {initial_position.y()})"
+        )
+
+        # CRITICAL DEBUG: Check if we're getting center coordinates (indicates failure)
+        if initial_position.x() == 475.0 and initial_position.y() == 475.0:
+            print(
+                f"   🚨 CRITICAL: Arrow defaulting to center coordinates - pipeline failure detected!"
+            )
+            print(f"      Motion type: {motion.motion_type.value}")
+            print(f"      Arrow location: {arrow_location.value}")
+            print(
+                f"      Expected coordinate system: {'hand_points' if motion.motion_type.value in ['static', 'dash'] else 'layer2_points'}"
+            )
 
         # Step 3: Calculate rotation
         rotation = self._calculate_arrow_rotation(motion, arrow_location)
@@ -395,11 +422,46 @@ class ArrowManagementService(IArrowManagementService):
 
     def _get_layer2_coords(self, location: Location) -> Any:
         """Get layer2 point coordinates for shift arrows."""
-        return self.LAYER2_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
+        coords = self.LAYER2_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
+        print(
+            f"         🎯 Layer2 lookup for {location.value}: ({coords.x()}, {coords.y()})"
+        )
+        if coords.x() == 475.0 and coords.y() == 475.0:
+            print(
+                f"         🚨 LAYER2 FAILURE: Location {location.value} not found in LAYER2_POINTS!"
+            )
+            print(f"            Available locations: {list(self.LAYER2_POINTS.keys())}")
+        return coords
 
     def _get_hand_point_coords(self, location: Location) -> Any:
         """Get hand point coordinates for static/dash arrows."""
-        return self.HAND_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
+        coords = self.HAND_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
+        print(
+            f"         🎯 Hand point lookup for {location.value}: ({coords.x()}, {coords.y()})"
+        )
+        if coords.x() == 475.0 and coords.y() == 475.0:
+            print(
+                f"         🚨 HAND POINT FAILURE: Location {location.value} not found in HAND_POINTS!"
+            )
+            print(
+                f"            Available locations: {[loc.value for loc in self.HAND_POINTS.keys()]}"
+            )
+            print(f"            Location type: {type(location)}")
+            print(f"            Location object: {location}")
+            print(f"            Location in dict: {location in self.HAND_POINTS}")
+            # Check if it's a string vs enum issue
+            for key in self.HAND_POINTS.keys():
+                if hasattr(key, "value") and key.value == location.value:
+                    print(
+                        f"            Found matching value but different object: {key} vs {location}"
+                    )
+                    print(
+                        f"            Key type: {type(key)}, Location type: {type(location)}"
+                    )
+                    print(f"            Key id: {id(key)}, Location id: {id(location)}")
+                    print(f"            Key == Location: {key == location}")
+                    print(f"            Key is Location: {key is location}")
+        return coords
 
     def _calculate_arrow_rotation(
         self, motion: MotionData, arrow_location: Location

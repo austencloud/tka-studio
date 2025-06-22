@@ -5,7 +5,7 @@ Factory for creating SequencePropertiesManager instances with proper dependency 
 from typing import TYPE_CHECKING
 import logging
 
-from core.application_context import ApplicationContext
+from desktop.modern.src.core.application_context import ApplicationContext
 
 if TYPE_CHECKING:
     from .sequence_properties_manager import SequencePropertiesManager

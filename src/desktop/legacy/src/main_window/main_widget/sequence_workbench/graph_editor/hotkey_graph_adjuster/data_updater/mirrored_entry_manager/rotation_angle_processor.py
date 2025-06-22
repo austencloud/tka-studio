@@ -9,6 +9,7 @@ from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjust
 
 logger = logging.getLogger(__name__)
 
+
 class RotationAngleProcessor:
     def __init__(self):
         self.key_generator = ArrowRotAngleOverrideKeyGenerator()

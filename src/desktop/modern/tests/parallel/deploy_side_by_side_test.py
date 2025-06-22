@@ -247,9 +247,7 @@ class SideBySideTestDeployer:
 
             # Execute scenario with visual pauses
             for i, action in enumerate(scenario.actions):
-                print(
-                    f"\n🎯 Action {i+1}/{len(scenario.actions)}: {action.description}"
-                )
+                print(f"\n🎯 Action {i+1}/{len(scenario.actions)}: {action.description}")
 
                 # Execute action on both versions
                 result = await self.orchestrator._execute_parallel_action(action)

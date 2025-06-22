@@ -15,7 +15,7 @@ from .layout_styler import LayoutStyler
 __all__ = [
     "GlassmorphismCoordinator",
     "ColorManager",
-    "TypographyManager", 
+    "TypographyManager",
     "ComponentStyler",
     "EffectManager",
     "LayoutStyler",

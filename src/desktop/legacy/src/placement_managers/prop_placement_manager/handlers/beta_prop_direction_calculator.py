@@ -34,7 +34,6 @@ if TYPE_CHECKING:
 
 
 class BetaPropDirectionCalculator:
-
     def get_dir(self, motion: Motion) -> str:
         """Determine the translation direction based on the motion type, start location, end location, and end layer."""
         if (

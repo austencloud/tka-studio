@@ -15,22 +15,30 @@ from abc import ABC, abstractmethod
 
 import os
 
-from desktop.core.dependency_injection.di_container import DIContainer
-from desktop.core.exceptions import DependencyInjectionError
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.exceptions import DependencyInjectionError
+
 
 # Test interfaces and implementations
 class IRepository(Protocol):
-    def get_data(self) -> str: ...
+    def get_data(self) -> str:
+        ...
+
 
 class IService(Protocol):
-    def process(self) -> str: ...
+    def process(self) -> str:
+        ...
+
 
 class IController(Protocol):
-    def handle_request(self) -> str: ...
+    def handle_request(self) -> str:
+        ...
+
 
 class Repository:
     def get_data(self) -> str:
         return "data"
+
 
 class Service:
     def __init__(self, repository: IRepository):
@@ -39,6 +47,7 @@ class Service:
     def process(self) -> str:
         return f"processed: {self.repository.get_data()}"
 
+
 class Controller:
     def __init__(self, service: IService):
         self.service = service
@@ -46,17 +55,21 @@ class Controller:
     def handle_request(self) -> str:
         return f"handled: {self.service.process()}"
 
+
 class CircularA:
     def __init__(self, b: "CircularB"):
         self.b = b
+
 
 class CircularB:
     def __init__(self, a: CircularA):
         self.a = a
 
+
 class InvalidService:
     def __init__(self, missing_dependency: "NonExistentService"):
         self.missing = missing_dependency
+
 
 class TestEnhancedDIValidation:
     """Test enhanced DI container validation and error handling."""
@@ -214,6 +227,7 @@ class TestEnhancedDIValidation:
         # Should contain information about the dependency chain
         assert "Cannot resolve dependency" in str(error)
         assert "NonExistentService" in str(error)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

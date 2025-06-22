@@ -50,7 +50,6 @@ if TYPE_CHECKING:
 
 
 class RotatedComplementaryCAPExecutor(CAPExecutor):
-
     def __init__(self, circular_sequence_generator: "CircularSequenceBuilder"):
         self.circular_sequence_generator = circular_sequence_generator
         self.hand_rot_dir_calculator = HandpathCalculator()
@@ -192,15 +191,15 @@ class RotatedComplementaryCAPExecutor(CAPExecutor):
                 RED_ATTRS
             ][PREFLOAT_PROP_ROT_DIR]
 
-        new_entry[BLUE_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, BLUE
-            )
+        new_entry[BLUE_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, BLUE
         )
-        new_entry[RED_ATTRS][END_ORI] = (
-            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-                new_entry, RED
-            )
+        new_entry[RED_ATTRS][
+            END_ORI
+        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+            new_entry, RED
         )
 
         return new_entry
@@ -308,12 +307,12 @@ class RotatedComplementaryCAPExecutor(CAPExecutor):
 
         # Handle floating states
         if previous_matching_beat_attributes.get(PREFLOAT_MOTION_TYPE):
-            new_entry_attributes[PREFLOAT_MOTION_TYPE] = (
-                previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
-            )
-            new_entry_attributes[PREFLOAT_PROP_ROT_DIR] = (
-                previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
-            )
+            new_entry_attributes[
+                PREFLOAT_MOTION_TYPE
+            ] = previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
+            new_entry_attributes[
+                PREFLOAT_PROP_ROT_DIR
+            ] = previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
         return new_entry_attributes
 
     def get_other_motion_type(self, motion_type: str) -> str:

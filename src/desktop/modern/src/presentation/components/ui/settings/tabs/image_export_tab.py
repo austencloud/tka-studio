@@ -8,7 +8,9 @@ clean architecture and glassmorphism design.
 
 from typing import Dict, Optional, Union
 
-from core.interfaces.tab_settings_interfaces import IImageExportService
+from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+    IImageExportService,
+)
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
 from PyQt6.QtWidgets import (

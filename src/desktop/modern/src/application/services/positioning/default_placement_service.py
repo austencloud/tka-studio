@@ -31,7 +31,7 @@ except ImportError:
     QPointF = MockQPointF
     QT_AVAILABLE = False
 
-from domain.models.core_models import MotionData, MotionType
+from desktop.modern.src.domain.models.core_models import MotionData, MotionType
 
 
 class DefaultPlacementService:

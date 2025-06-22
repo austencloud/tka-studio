@@ -15,7 +15,7 @@ from typing import Dict, Tuple
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     MotionData,
     BeatData,
     Location,
@@ -62,7 +62,7 @@ class IDirectionCalculationService(ABC):
 class DirectionCalculationService(IDirectionCalculationService):
     """
     Pure service for direction calculation operations.
-    
+
     Handles complex direction calculations without external dependencies.
     Replicates BetaPropDirectionCalculator logic exactly for correct positioning.
     """
@@ -185,7 +185,9 @@ class DirectionCalculationService(IDirectionCalculationService):
         """Check if orientation is radial (in/out) vs nonradial (clock/counter)."""
         return orientation in ["in", "out"]
 
-    def get_opposite_direction(self, direction: SeparationDirection) -> SeparationDirection:
+    def get_opposite_direction(
+        self, direction: SeparationDirection
+    ) -> SeparationDirection:
         """Get opposite direction for symmetric positioning."""
         opposite_map = {
             SeparationDirection.LEFT: SeparationDirection.RIGHT,

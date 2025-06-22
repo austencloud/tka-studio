@@ -10,6 +10,7 @@ from enum import Enum
 
 class MotionType(Enum):
     """Motion types for kinetic sequences."""
+
     PRO = "pro"
     ANTI = "anti"
     FLOAT = "float"
@@ -19,6 +20,7 @@ class MotionType(Enum):
 
 class RotationDirection(Enum):
     """Rotation directions for motion."""
+
     CLOCKWISE = "cw"
     COUNTER_CLOCKWISE = "ccw"
     NO_ROTATION = "no_rot"
@@ -26,8 +28,9 @@ class RotationDirection(Enum):
 
 class Location(Enum):
     """Location positions for motion."""
+
     NORTH = "n"
-    EAST = "e" 
+    EAST = "e"
     SOUTH = "s"
     WEST = "w"
     NORTHEAST = "ne"
@@ -38,6 +41,7 @@ class Location(Enum):
 
 class PropType(Enum):
     """Prop types for kinetic sequences."""
+
     STAFF = "staff"
     CLUB = "club"
     BUUGENG = "buugeng"
@@ -50,6 +54,7 @@ class PropType(Enum):
 
 class Color(Enum):
     """Colors for motion elements."""
+
     BLUE = "blue"
     RED = "red"
 
@@ -57,6 +62,7 @@ class Color(Enum):
 @dataclass
 class SharedSequenceType:
     """Shared sequence type definition for API consistency."""
+
     id: str
     name: str
     word: str
@@ -65,15 +71,16 @@ class SharedSequenceType:
     total_duration: float
     start_position: Optional[str] = None
     metadata: Dict[str, Any] = None
-    
+
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
 
 
-@dataclass  
+@dataclass
 class SharedBeatType:
     """Shared beat type definition."""
+
     id: str
     beat_number: int
     letter: Optional[str]
@@ -81,7 +88,7 @@ class SharedBeatType:
     blue_motion: Optional[Dict[str, Any]] = None
     red_motion: Optional[Dict[str, Any]] = None
     metadata: Dict[str, Any] = None
-    
+
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
@@ -90,6 +97,7 @@ class SharedBeatType:
 @dataclass
 class SharedMotionType:
     """Shared motion type definition."""
+
     motion_type: MotionType
     prop_type: PropType
     color: Color
@@ -98,7 +106,7 @@ class SharedMotionType:
     rotation_direction: RotationDirection
     turns: float = 0.0
     metadata: Dict[str, Any] = None
-    
+
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
@@ -107,12 +115,13 @@ class SharedMotionType:
 @dataclass
 class SharedSettingsType:
     """Shared settings type definition."""
+
     background_type: str
     theme: str
     window_geometry: Optional[Dict[str, int]] = None
     last_sequence_id: Optional[str] = None
     metadata: Dict[str, Any] = None
-    
+
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
@@ -120,6 +129,13 @@ class SharedSettingsType:
 
 # Export for code generation
 __all__ = [
-    "MotionType", "RotationDirection", "Location", "PropType", "Color",
-    "SharedSequenceType", "SharedBeatType", "SharedMotionType", "SharedSettingsType"
+    "MotionType",
+    "RotationDirection",
+    "Location",
+    "PropType",
+    "Color",
+    "SharedSequenceType",
+    "SharedBeatType",
+    "SharedMotionType",
+    "SharedSettingsType",
 ]

@@ -20,8 +20,8 @@ from PyQt6.QtGui import QFont
 
 from ..pictograph.pictograph_component import PictographComponent
 
-from domain.models.core_models import BeatData
-from application.services.data.pictograph_dataset_service import (
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.application.services.data.pictograph_dataset_service import (
     PictographDatasetService,
 )
 

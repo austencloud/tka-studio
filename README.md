@@ -1,4 +1,5 @@
 # TKA Monorepo
+
 ## The Kinetic Constructor - Desktop and Web Applications
 
 [![CI/CD](https://github.com/austencloud/the-kinetic-constructor/actions/workflows/ci.yml/badge.svg)](https://github.com/austencloud/the-kinetic-constructor/actions/workflows/ci.yml)
@@ -13,7 +14,7 @@ A professional monorepo containing desktop (PyQt) and web (SvelteKit) applicatio
 ```
 TKA Monorepo
 ├── 🖥️  Desktop App (PyQt + FastAPI)
-├── 🌐 Web App (SvelteKit + TypeScript)  
+├── 🌐 Web App (SvelteKit + TypeScript)
 ├── 🎨 Landing Page (SvelteKit)
 ├── 🎬 Animator Tool (SvelteKit)
 └── 📦 Shared Packages (Types, Constants, Utils)
@@ -22,11 +23,13 @@ TKA Monorepo
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Python 3.9+** - [Download](https://python.org)
 - **Node.js 18+** - [Download](https://nodejs.org)
 - **Git** - [Download](https://git-scm.com)
 
 ### Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/austencloud/the-kinetic-constructor.git
@@ -37,11 +40,12 @@ python scripts/setup.py
 ```
 
 ### Development
+
 ```bash
 # Start desktop application
 python scripts/dev.py desktop
 
-# Start web application  
+# Start web application
 python scripts/dev.py web
 
 # Start API server only
@@ -63,33 +67,42 @@ python scripts/clean.py
 ## 📦 Applications
 
 ### Desktop Application (`apps/desktop/`)
+
 PyQt6-based desktop application with modern architecture:
+
 - **Modern**: Clean architecture with DI, services, events
 - **Legacy**: Existing codebase (maintenance mode)
 - **API**: FastAPI server for web integration
 
 **Key Features:**
+
 - Kinetic sequence construction
 - Real-time animation preview
 - Export/import functionality
 - Advanced editing tools
 
 ### Web Application (`apps/web/`)
+
 SvelteKit web application providing browser-based access:
+
 - Real-time synchronization with desktop
 - Responsive design
 - Progressive Web App features
 - Cross-platform compatibility
 
 ### Landing Page (`apps/landing/`)
+
 Marketing website built with SvelteKit:
+
 - Product showcase
 - Documentation
 - Download links
 - Community resources
 
 ### Animator Tool (`apps/animator/`)
+
 Specialized tool for pictograph animation:
+
 - Frame-by-frame animation
 - Export to various formats
 - Timeline editing
@@ -98,6 +111,7 @@ Specialized tool for pictograph animation:
 ## 🔧 Development
 
 ### Workspace Structure
+
 ```
 F:\CODE\TKA\
 ├── .vscode/                    # VSCode configuration
@@ -121,6 +135,7 @@ F:\CODE\TKA\
 ```
 
 ### Commands
+
 ```bash
 # Development
 npm run dev:desktop     # Start desktop app
@@ -147,6 +162,7 @@ npm run setup           # Setup environment
 ```
 
 ### VSCode Integration
+
 - Install recommended extensions
 - Use `Ctrl+Shift+P` → "Tasks: Run Task" for quick actions
 - Configured for Python and TypeScript debugging
@@ -158,7 +174,7 @@ npm run setup           # Setup environment
 # Desktop tests
 cd apps/desktop && python -m pytest modern/tests/
 
-# Web tests  
+# Web tests
 cd apps/web && npm test
 
 # Integration tests
@@ -173,7 +189,7 @@ python scripts/dev.py test
 ```bash
 # Build web applications
 npm run build:web
-npm run build:landing  
+npm run build:landing
 npm run build:animator
 
 # Build desktop application
@@ -200,6 +216,7 @@ python scripts/dev.py build
 5. Open Pull Request
 
 ### Development Workflow
+
 1. Run `python scripts/setup.py` to set up environment
 2. Use `python scripts/dev.py fullstack` for development
 3. Write tests for new features
@@ -209,6 +226,7 @@ python scripts/dev.py build
 ## 🔄 CI/CD
 
 Automated workflows handle:
+
 - **Testing**: Python and JavaScript tests
 - **Building**: All applications
 - **Security**: Vulnerability scanning

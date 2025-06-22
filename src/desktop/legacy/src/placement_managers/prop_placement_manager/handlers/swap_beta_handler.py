@@ -87,7 +87,6 @@ class SwapBetaHandler:
             )
 
     def _handle_type6_swap(self) -> None:
-
         red_direction = self.dir_calculator.get_dir(self.pictograph.elements.red_motion)
         blue_direction = self.dir_calculator.get_dir(
             self.pictograph.elements.blue_motion

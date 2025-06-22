@@ -16,18 +16,17 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 from typing import List, Dict, Any
 
-from desktop.core.events.event_bus import (
 from tka_types import MotionType
-from domain.models.core_models import BeatData
-from domain.models.core_models import SequenceData
-
+from desktop.modern.src.domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import SequenceData
+from desktop.modern.src.core.events.event_bus import (
     TypeSafeEventBus,
     SequenceEvent,
     UIEvent,
     BaseEvent,
 )
-from desktop.core.dependency_injection.di_container import DIContainer
-from domain.models.core_models import (
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,
@@ -36,6 +35,7 @@ from domain.models.core_models import (
     Location,
 )
 from dataclasses import dataclass, field
+
 
 @dataclass(frozen=True)
 class WorkflowEvent(BaseEvent):
@@ -48,6 +48,7 @@ class WorkflowEvent(BaseEvent):
     @property
     def event_type(self) -> str:
         return f"workflow.{self.operation}"
+
 
 class MockServiceRegistry:
     """Mock service registry for integration testing."""
@@ -75,10 +76,12 @@ class MockServiceRegistry:
             }
         )
 
+
 @pytest.fixture
 def mock_service_registry():
     """Provide mock service registry for tests."""
     return MockServiceRegistry()
+
 
 @pytest.fixture
 def sample_motion_data():
@@ -92,6 +95,7 @@ def sample_motion_data():
         start_ori="in",
         end_ori="out",
     )
+
 
 class TestSequenceCreationWorkflow:
     """Test complete sequence creation workflows."""
@@ -196,6 +200,7 @@ class TestSequenceCreationWorkflow:
         beat_events = [e for e in registry.workflow_events if "beat_number" in e]
         assert len(beat_events) == 4
         assert all(e["sequence_length"] == e["beat_number"] for e in beat_events)
+
 
 class TestPictographGenerationWorkflow:
     """Test pictograph generation workflows."""
@@ -322,6 +327,7 @@ class TestPictographGenerationWorkflow:
         assert len(pictograph_events) == 3
         assert all(e["sequence_id"] == sequence.id for e in pictograph_events)
 
+
 class TestCrossServiceIntegration:
     """Test integration between different services."""
 
@@ -330,14 +336,17 @@ class TestCrossServiceIntegration:
         registry = mock_service_registry
 
         # Mock services
-        with patch(
-            "src.application.services.arrow_management_service.ArrowManagementService"
-        ) as mock_arrow_service, patch(
-            "src.application.services.motion_management_service.MotionManagementService"
-        ) as mock_motion_service, patch(
-            "src.application.services.sequence_management_service.SequenceManagementService"
-        ) as mock_sequence_service:
-
+        with (
+            patch(
+                "src.application.services.arrow_management_service.ArrowManagementService"
+            ) as mock_arrow_service,
+            patch(
+                "src.application.services.motion_management_service.MotionManagementService"
+            ) as mock_motion_service,
+            patch(
+                "src.application.services.sequence_management_service.SequenceManagementService"
+            ) as mock_sequence_service,
+        ):
             # Configure mocks
             mock_motion_service.return_value.validate_motion_combination.return_value = (
                 True
@@ -402,6 +411,7 @@ class TestCrossServiceIntegration:
             "sequence",
         ]
         assert registry.workflow_events[1]["services_tested"] == 3
+
 
 class TestErrorPropagationWorkflows:
     """Test error handling and propagation in workflows."""
@@ -487,6 +497,7 @@ class TestErrorPropagationWorkflows:
         assert len(error_events) == 1
         assert error_events[0]["error_type"] == "ConnectionError"
         assert error_events[0]["component"] == "pictograph_service"
+
 
 class TestEventFlowValidation:
     """Test event flow validation across workflows."""

@@ -15,7 +15,8 @@ Prevents regression to old import patterns and enforces standardized imports.
 from pathlib import Path
 
 import pytest
-from domain.models.core_models import BeatData, PictographData, SequenceData
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.domain.models.pictograph_models import PictographData
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"

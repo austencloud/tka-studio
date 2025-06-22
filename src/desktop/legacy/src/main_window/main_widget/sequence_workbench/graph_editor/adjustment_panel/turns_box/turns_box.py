@@ -53,7 +53,9 @@ class TurnsBox(QFrame):
         color_hex = (
             HEX_RED
             if self.color == "red"
-            else HEX_BLUE if self.color == "blue" else self.color
+            else HEX_BLUE
+            if self.color == "blue"
+            else self.color
         )
         # Convert hex to RGB
         r, g, b = (

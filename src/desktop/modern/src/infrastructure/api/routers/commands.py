@@ -6,8 +6,8 @@ Handles undo/redo operations and command status.
 import logging
 from fastapi import APIRouter, Depends, HTTPException
 
-from core.monitoring import monitor_performance
-from core.commands import CommandProcessor
+from desktop.modern.src.core.monitoring import monitor_performance
+from desktop.modern.src.core.commands import CommandProcessor
 from ..models import CommandResponse
 from ..dependencies import get_command_processor
 

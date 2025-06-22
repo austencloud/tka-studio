@@ -43,7 +43,6 @@ class Dash(QGraphicsSvgItem):
         self.setPos(dash_x, dash_y)
 
     def update_dash(self) -> None:
-
         if "-" in self.glyph.pictograph.state.letter.value:
             self.add_dash()
             self.position_dash()

@@ -11,12 +11,14 @@ from PyQt6.QtCore import QPointF
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from domain.models.core_models import MotionData, Location
+from desktop.modern.src.domain.models.core_models import MotionData, Location
 
-from presentation.components.pictograph.asset_utils import get_image_path
+from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+    get_image_path,
+)
 
-from domain.models.core_models import Orientation
-from application.services.positioning.prop_management_service import (
+from desktop.modern.src.domain.models.core_models import Orientation
+from desktop.modern.src.application.services.positioning.prop_management_service import (
     PropManagementService,
 )
 
@@ -32,6 +34,7 @@ class PropRenderer:
         self.CENTER_X = 475
         self.CENTER_Y = 475
         self.HAND_RADIUS = 143.1
+
         self.prop_management_service = PropManagementService()
 
         # Store rendered props for overlap detection
@@ -92,9 +95,18 @@ class PropRenderer:
         target_hand_point_y = self.CENTER_Y + end_pos[1]
 
         prop_rotation = self._calculate_prop_rotation(motion_data)
+        print(f"🔄 PROP ROTATION DEBUG: {color} prop at {motion_data.end_loc.value}")
+        print(f"   Calculated rotation: {prop_rotation}°")
+
         bounds = prop_item.boundingRect()
         prop_item.setTransformOriginPoint(bounds.center())
         prop_item.setRotation(prop_rotation)
+
+        print(f"   Applied rotation: {prop_item.rotation()}°")
+        if abs(prop_rotation - prop_item.rotation()) > 0.1:
+            print(
+                f"   🚨 ROTATION MISMATCH: Expected {prop_rotation}°, got {prop_item.rotation()}°"
+            )
 
         self._place_prop_at_hand_point(
             prop_item, target_hand_point_x, target_hand_point_y
@@ -197,9 +209,10 @@ class PropRenderer:
             return
 
         # Calculate separation offsets
-        blue_offset, red_offset = (
-            self.prop_management_service.calculate_separation_offsets(beat_data)
-        )
+        (
+            blue_offset,
+            red_offset,
+        ) = self.prop_management_service.calculate_separation_offsets(beat_data)
 
         # Apply offsets to rendered props
         blue_prop = self.rendered_props["blue"]

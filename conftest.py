@@ -41,7 +41,7 @@ def pytest_configure(config):
 def pytest_sessionstart(session):
     """Called after the Session object has been created."""
     if session.config.option.verbose >= 1:
-        print("\n🚀 TKA Monorepo test environment initialized successfully!")
+        print("\nTKA Monorepo test environment initialized successfully!")
 
 
 @pytest.fixture(scope="session")

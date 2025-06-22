@@ -16,8 +16,14 @@ No UI dependencies, completely testable in isolation.
 import logging
 from PyQt6.QtCore import QPointF
 
-from core.interfaces.positioning_services import IArrowCoordinateSystemService
-from domain.models.core_models import MotionData, MotionType, Location
+from desktop.modern.src.core.interfaces.positioning_services import (
+    IArrowCoordinateSystemService,
+)
+from desktop.modern.src.domain.models.core_models import (
+    MotionData,
+    MotionType,
+    Location,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +31,7 @@ logger = logging.getLogger(__name__)
 class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
     """
     Pure service for coordinate system management and initial position calculation.
-    
+
     Manages the TKA coordinate systems without any UI dependencies.
     Provides precise coordinate mappings for different arrow types.
     """
@@ -69,11 +75,11 @@ class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
     def get_initial_position(self, motion: MotionData, location: Location) -> QPointF:
         """
         Get initial position coordinates based on motion type and location.
-        
+
         Args:
             motion: Motion data to determine coordinate system (hand points vs layer2)
             location: Arrow location
-            
+
         Returns:
             QPointF representing the initial position coordinates
         """
@@ -96,7 +102,9 @@ class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
         """Get layer2 point coordinates for shift arrows."""
         coords = self.LAYER2_POINTS.get(location)
         if coords is None:
-            logger.warning(f"No layer2 coordinates for location: {location}, using center")
+            logger.warning(
+                f"No layer2 coordinates for location: {location}, using center"
+            )
             return self.get_scene_center()
         return coords
 
@@ -104,14 +112,16 @@ class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
         """Get hand point coordinates for static/dash arrows."""
         coords = self.HAND_POINTS.get(location)
         if coords is None:
-            logger.warning(f"No hand point coordinates for location: {location}, using center")
+            logger.warning(
+                f"No hand point coordinates for location: {location}, using center"
+            )
             return self.get_scene_center()
         return coords
 
     def get_scene_dimensions(self) -> tuple[int, int]:
         """
         Get the scene dimensions.
-        
+
         Returns:
             Tuple of (width, height) for the scene
         """
@@ -120,47 +130,41 @@ class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
     def get_coordinate_info(self, location: Location) -> dict:
         """
         Get detailed coordinate information for debugging.
-        
+
         Args:
             location: Location to get coordinate info for
-            
+
         Returns:
             Dictionary with coordinate details
         """
         hand_point = self.HAND_POINTS.get(location)
         layer2_point = self.LAYER2_POINTS.get(location)
-        
+
         return {
             "location": location.value,
             "hand_point": {
                 "x": hand_point.x() if hand_point else None,
-                "y": hand_point.y() if hand_point else None
+                "y": hand_point.y() if hand_point else None,
             },
             "layer2_point": {
                 "x": layer2_point.x() if layer2_point else None,
-                "y": layer2_point.y() if layer2_point else None
+                "y": layer2_point.y() if layer2_point else None,
             },
-            "scene_center": {
-                "x": self.CENTER_X,
-                "y": self.CENTER_Y
-            },
-            "scene_size": self.SCENE_SIZE
+            "scene_center": {"x": self.CENTER_X, "y": self.CENTER_Y},
+            "scene_size": self.SCENE_SIZE,
         }
 
     def validate_coordinates(self, point: QPointF) -> bool:
         """
         Validate that coordinates are within scene bounds.
-        
+
         Args:
             point: Point to validate
-            
+
         Returns:
             True if point is within scene bounds
         """
-        return (
-            0 <= point.x() <= self.SCENE_SIZE and
-            0 <= point.y() <= self.SCENE_SIZE
-        )
+        return 0 <= point.x() <= self.SCENE_SIZE and 0 <= point.y() <= self.SCENE_SIZE
 
     def get_all_hand_points(self) -> dict[Location, QPointF]:
         """Get all hand point coordinates."""
@@ -173,6 +177,12 @@ class ArrowCoordinateSystemService(IArrowCoordinateSystemService):
     def get_supported_locations(self) -> list[Location]:
         """Get list of supported location values."""
         return [
-            Location.NORTH, Location.EAST, Location.SOUTH, Location.WEST,
-            Location.NORTHEAST, Location.SOUTHEAST, Location.SOUTHWEST, Location.NORTHWEST
+            Location.NORTH,
+            Location.EAST,
+            Location.SOUTH,
+            Location.WEST,
+            Location.NORTHEAST,
+            Location.SOUTHEAST,
+            Location.SOUTHWEST,
+            Location.NORTHWEST,
         ]

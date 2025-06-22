@@ -87,7 +87,6 @@ The migration includes:
 3. **Pictograph Store Adapter**: An adapter that provides backward compatibility with the old store API
 4. **Pictograph Component Rewrite**: Completely rewrote the component using Svelte 5 runes
 
-
 ## Lessons Learned and Challenges
 
 ### Type Compatibility Issues
@@ -138,32 +137,32 @@ Example of Svelte 5 runes in our codebase:
 ```typescript
 // Container with Svelte 5 runes
 function createSequenceContainer() {
-	// Create reactive state
-	const state = $state({
-		beats: [],
-		selectedBeatIds: [],
-		currentBeatId: null
-	});
+  // Create reactive state
+  const state = $state({
+    beats: [],
+    selectedBeatIds: [],
+    currentBeatId: null,
+  });
 
-	// Derived values
-	const selectedBeats = $derived(
-		state.beats.filter((beat) => state.selectedBeatIds.includes(beat.id))
-	);
+  // Derived values
+  const selectedBeats = $derived(
+    state.beats.filter((beat) => state.selectedBeatIds.includes(beat.id)),
+  );
 
-	// Actions
-	function addBeat(beat) {
-		state.beats = [...state.beats, beat];
-	}
+  // Actions
+  function addBeat(beat) {
+    state.beats = [...state.beats, beat];
+  }
 
-	return {
-		get state() {
-			return state;
-		},
-		get selectedBeats() {
-			return selectedBeats;
-		},
-		addBeat
-	};
+  return {
+    get state() {
+      return state;
+    },
+    get selectedBeats() {
+      return selectedBeats;
+    },
+    addBeat,
+  };
 }
 ```
 
@@ -181,46 +180,46 @@ Example of XState 5 in our codebase:
 
 ```typescript
 // XState 5 machine with improved typing
-import { setup } from 'xstate';
+import { setup } from "xstate";
 
 const sequenceMachine = setup({
-	types: {} as {
-		context: {
-			beats: Beat[];
-			selectedBeatIds: string[];
-			currentBeatId: string | null;
-		};
-		events:
-			| { type: 'ADD_BEAT'; beat: Beat }
-			| { type: 'SELECT_BEAT'; beatId: string }
-			| { type: 'CLEAR_SEQUENCE' };
-	},
-	actions: {
-		// Action implementations
-	}
+  types: {} as {
+    context: {
+      beats: Beat[];
+      selectedBeatIds: string[];
+      currentBeatId: string | null;
+    };
+    events:
+      | { type: "ADD_BEAT"; beat: Beat }
+      | { type: "SELECT_BEAT"; beatId: string }
+      | { type: "CLEAR_SEQUENCE" };
+  },
+  actions: {
+    // Action implementations
+  },
 }).createMachine({
-	id: 'sequence',
-	initial: 'idle',
-	context: {
-		beats: [],
-		selectedBeatIds: [],
-		currentBeatId: null
-	},
-	states: {
-		idle: {
-			on: {
-				ADD_BEAT: {
-					actions: 'addBeat'
-				},
-				SELECT_BEAT: {
-					actions: 'selectBeat'
-				},
-				CLEAR_SEQUENCE: {
-					actions: 'clearSequence'
-				}
-			}
-		}
-	}
+  id: "sequence",
+  initial: "idle",
+  context: {
+    beats: [],
+    selectedBeatIds: [],
+    currentBeatId: null,
+  },
+  states: {
+    idle: {
+      on: {
+        ADD_BEAT: {
+          actions: "addBeat",
+        },
+        SELECT_BEAT: {
+          actions: "selectBeat",
+        },
+        CLEAR_SEQUENCE: {
+          actions: "clearSequence",
+        },
+      },
+    },
+  },
 });
 ```
 

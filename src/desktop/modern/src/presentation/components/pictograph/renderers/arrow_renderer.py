@@ -10,10 +10,16 @@ from typing import Optional, TYPE_CHECKING
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from presentation.components.pictograph.asset_utils import get_image_path
-from domain.models.core_models import MotionData, Location, MotionType
-from domain.models.pictograph_models import ArrowData, PictographData
-from application.services.positioning.arrow_management_service import (
+from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+    get_image_path,
+)
+from desktop.modern.src.domain.models.core_models import (
+    MotionData,
+    Location,
+    MotionType,
+)
+from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
+from desktop.modern.src.application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
 
@@ -62,13 +68,20 @@ class ArrowRenderer:
         full_pictograph_data: Optional[PictographData] = None,
     ) -> None:
         """Render an arrow using SVG files."""
-        # CRITICAL FIX: Static motions with 0 turns should be completely invisible
-        if motion_data.motion_type == MotionType.STATIC and motion_data.turns == 0.0:
+        print(f"🏹 ARROW RENDERER DEBUG: Rendering {color} arrow")
+        print(f"   Motion: {motion_data.motion_type.value}, Turns: {motion_data.turns}")
+
+        # Note: Static motions with 0 turns should still show arrows in TKA
+        # Only filter out if explicitly marked as invisible
+        if hasattr(motion_data, "is_visible") and not motion_data.is_visible:
+            print(f"   ❌ Arrow filtered: marked as invisible")
             return
 
         arrow_svg_path = self._get_arrow_svg_file(motion_data)
+        print(f"   SVG path: {arrow_svg_path}")
 
         if os.path.exists(arrow_svg_path):
+            print(f"   ✅ SVG file exists")
             arrow_item = QGraphicsSvgItem()
 
             # Apply color transformation to SVG data
@@ -77,12 +90,15 @@ class ArrowRenderer:
 
             renderer = QSvgRenderer(bytearray(colored_svg_data, encoding="utf-8"))
             if renderer.isValid():
+                print(f"   ✅ SVG renderer valid")
                 arrow_item.setSharedRenderer(renderer)
 
-                position_x, position_y, rotation = (
-                    self._calculate_arrow_position_with_service(
-                        color, motion_data, full_pictograph_data
-                    )
+                (
+                    position_x,
+                    position_y,
+                    rotation,
+                ) = self._calculate_arrow_position_with_service(
+                    color, motion_data, full_pictograph_data
                 )
 
                 # CRITICAL: Set transform origin to arrow's visual center BEFORE rotation
@@ -118,10 +134,17 @@ class ArrowRenderer:
                 arrow_item.setPos(final_x, final_y)
                 arrow_item.setZValue(100)  # Bring arrows to front
                 self.scene.addItem(arrow_item)
+
+                print(
+                    f"   ✅ ARROW ADDED TO SCENE: {color} arrow at ({final_x:.1f}, {final_y:.1f})"
+                )
+                print(f"      Z-value: {arrow_item.zValue()}")
+                print(f"      Visible: {arrow_item.isVisible()}")
+                print(f"      Opacity: {arrow_item.opacity()}")
             else:
-                pass  # Invalid SVG renderer
+                print(f"   ❌ SVG renderer invalid for {arrow_svg_path}")
         else:
-            pass  # Missing SVG file
+            print(f"   ❌ SVG file not found: {arrow_svg_path}")
 
     def _get_arrow_svg_file(self, motion_data: MotionData) -> str:
         """Get the correct arrow SVG file path with proper motion type mapping."""

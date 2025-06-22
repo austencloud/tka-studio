@@ -15,36 +15,40 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 
-from core.dependency_injection.di_container import DIContainer
-from presentation.factories.workbench_factory import create_modern_workbench
-from presentation.components.option_picker.option_picker import OptionPicker
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.presentation.factories.workbench_factory import (
+    create_modern_workbench,
+)
+from desktop.modern.src.presentation.components.option_picker.option_picker import (
+    OptionPicker,
+)
 
 
 class ConstructTabLayoutManager:
     """
     Manages the UI layout and panel creation for the construct tab.
-    
+
     Responsibilities:
     - Setting up the main horizontal layout (50/50 split)
     - Creating workbench panel (left side)
     - Creating picker panel with stacked widget (right side)
     - Managing progress callbacks during initialization
     """
-    
+
     def __init__(
         self,
         container: DIContainer,
-        progress_callback: Optional[Callable[[str, float], None]] = None
+        progress_callback: Optional[Callable[[str, float], None]] = None,
     ):
         self.container = container
         self.progress_callback = progress_callback
-        
+
         # UI components that will be created
         self.workbench = None
         self.picker_stack = None
         self.start_position_picker = None
         self.option_picker = None
-    
+
     def setup_ui(self, parent_widget: QWidget) -> None:
         """Setup the main UI layout with progress updates"""
         if self.progress_callback:
@@ -162,7 +166,7 @@ class ConstructTabLayoutManager:
             self.option_picker = None
 
         return widget
-    
+
     def transition_to_option_picker(self):
         """Switch from start position picker to option picker"""
         if self.picker_stack:

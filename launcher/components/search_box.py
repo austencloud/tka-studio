@@ -15,6 +15,7 @@ ENHANCED_UI_AVAILABLE = False
 try:
     from ui.reliable_design_system import get_style_builder, get_theme_manager
     from ui.reliable_effects import HoverAnimationMixin, get_effect_manager
+
     ENHANCED_UI_AVAILABLE = True
 except ImportError as e:
     logger.debug(f"Enhanced UI components not available: {e}")

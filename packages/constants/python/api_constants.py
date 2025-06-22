@@ -7,14 +7,14 @@ API_TIMEOUT = 30
 # API Endpoints
 ENDPOINTS = {
     "health": "/api/health",
-    "sequences": "/api/sequences", 
+    "sequences": "/api/sequences",
     "settings": "/api/settings",
     "backgrounds": "/api/settings/backgrounds/available",
     "sequence_by_id": "/api/sequences/{id}",
     "save_sequence": "/api/sequences",
     "delete_sequence": "/api/sequences/{id}",
     "export_sequence": "/api/sequences/{id}/export",
-    "import_sequence": "/api/sequences/import"
+    "import_sequence": "/api/sequences/import",
 }
 
 # Error messages
@@ -30,7 +30,7 @@ ERROR_MESSAGES = {
     "network_error": "Network connection error",
     "timeout_error": "Request timeout",
     "server_error": "Internal server error",
-    "validation_error": "Data validation error"
+    "validation_error": "Data validation error",
 }
 
 # Success messages
@@ -41,7 +41,7 @@ SUCCESS_MESSAGES = {
     "sequence_exported": "Sequence exported successfully",
     "sequence_imported": "Sequence imported successfully",
     "settings_saved": "Settings saved successfully",
-    "settings_loaded": "Settings loaded successfully"
+    "settings_loaded": "Settings loaded successfully",
 }
 
 # Settings keys
@@ -55,7 +55,7 @@ SETTING_KEYS = {
     "default_prop_type": "app.default_prop_type",
     "show_grid": "ui.show_grid",
     "grid_opacity": "ui.grid_opacity",
-    "animation_speed": "ui.animation_speed"
+    "animation_speed": "ui.animation_speed",
 }
 
 # Default values
@@ -69,7 +69,7 @@ DEFAULT_VALUES = {
     "grid_opacity": 0.3,
     "animation_speed": 1.0,
     "sequence_duration": 4.0,
-    "beat_duration": 1.0
+    "beat_duration": 1.0,
 }
 
 # HTTP Status codes
@@ -81,7 +81,7 @@ HTTP_STATUS = {
     "FORBIDDEN": 403,
     "NOT_FOUND": 404,
     "INTERNAL_SERVER_ERROR": 500,
-    "SERVICE_UNAVAILABLE": 503
+    "SERVICE_UNAVAILABLE": 503,
 }
 
 # File extensions
@@ -91,7 +91,7 @@ FILE_EXTENSIONS = {
     "export_json": ".json",
     "export_csv": ".csv",
     "image": ".png",
-    "video": ".mp4"
+    "video": ".mp4",
 }
 
 # Validation limits
@@ -102,5 +102,5 @@ VALIDATION_LIMITS = {
     "min_beat_duration": 0.1,
     "max_beat_duration": 10.0,
     "max_turns": 10.0,
-    "min_turns": -10.0
+    "min_turns": -10.0,
 }

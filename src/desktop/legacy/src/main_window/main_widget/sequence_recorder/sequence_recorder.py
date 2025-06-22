@@ -31,7 +31,6 @@ class SequenceRecorder(QWidget):
             self.color_shift = 0
         self.update()
 
-
     def _setup_layout(self) -> None:
         capture_layout_hbox = QHBoxLayout()
         capture_layout_hbox.addWidget(self.capture_frame)

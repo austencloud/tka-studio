@@ -15,14 +15,14 @@ import pytest
 from unittest.mock import Mock, patch
 from typing import List, Dict, Any
 
-from src.core.events.event_bus import (
+from desktop.modern.src.core.events.event_bus import (
     TypeSafeEventBus,
     SequenceEvent,
     UIEvent,
     BaseEvent,
 )
-from src.core.dependency_injection.di_container import DIContainer
-from src.domain.models.core_models import (
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,
@@ -332,14 +332,17 @@ class TestCrossServiceIntegration:
         registry = mock_service_registry
 
         # Mock services
-        with patch(
-            "src.application.services.arrow_management_service.ArrowManagementService"
-        ) as mock_arrow_service, patch(
-            "src.application.services.motion_management_service.MotionManagementService"
-        ) as mock_motion_service, patch(
-            "src.application.services.sequence_management_service.SequenceManagementService"
-        ) as mock_sequence_service:
-
+        with (
+            patch(
+                "src.application.services.arrow_management_service.ArrowManagementService"
+            ) as mock_arrow_service,
+            patch(
+                "src.application.services.motion_management_service.MotionManagementService"
+            ) as mock_motion_service,
+            patch(
+                "src.application.services.sequence_management_service.SequenceManagementService"
+            ) as mock_sequence_service,
+        ):
             # Configure mocks
             mock_motion_service.return_value.validate_motion_combination.return_value = (
                 True

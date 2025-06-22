@@ -54,7 +54,6 @@ class StartToEndPosGlyph(QGraphicsItemGroup):
             and self.renderer_arrow.load(svg_file_arrow)
             and self.renderer_end.load(svg_file_end)
         ):
-
             self.start_glyph.setSharedRenderer(self.renderer_start)
             self.arrow_glyph.setSharedRenderer(self.renderer_arrow)
             self.end_glyph.setSharedRenderer(self.renderer_end)

@@ -10,14 +10,24 @@ from unittest.mock import Mock, MagicMock
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtCore import QSize
 
-from src.application.services.option_picker.option_picker_initialization_service import OptionPickerInitializationService
-from src.application.services.option_picker.option_picker_data_service import OptionPickerDataService
-from src.application.services.option_picker.option_picker_display_service import OptionPickerDisplayService
-from src.application.services.option_picker.option_picker_event_service import OptionPickerEventService
-from src.application.services.option_picker.option_picker_orchestrator import OptionPickerOrchestrator
+from desktop.modern.src.application.services.option_picker.option_picker_initialization_service import (
+    OptionPickerInitializationService,
+)
+from desktop.modern.src.application.services.option_picker.option_picker_data_service import (
+    OptionPickerDataService,
+)
+from desktop.modern.src.application.services.option_picker.option_picker_display_service import (
+    OptionPickerDisplayService,
+)
+from desktop.modern.src.application.services.option_picker.option_picker_event_service import (
+    OptionPickerEventService,
+)
+from desktop.modern.src.application.services.option_picker.option_picker_orchestrator import (
+    OptionPickerOrchestrator,
+)
 
-from src.domain.models.core_models import BeatData, SequenceData
-from src.core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
 
 
 class TestOptionPickerRefactor:
@@ -37,12 +47,12 @@ class TestOptionPickerRefactor:
         beat_loader.refresh_options.return_value = [
             BeatData(letter="A"),
             BeatData(letter="B"),
-            BeatData(letter="C")
+            BeatData(letter="C"),
         ]
         beat_loader.get_beat_options.return_value = [
             BeatData(letter="A"),
             BeatData(letter="B"),
-            BeatData(letter="C")
+            BeatData(letter="C"),
         ]
         return beat_loader
 
@@ -71,17 +81,19 @@ class TestOptionPickerRefactor:
         """Create event service."""
         return OptionPickerEventService()
 
-    def test_initialization_service(self, initialization_service, mock_container, mock_progress_callback):
+    def test_initialization_service(
+        self, initialization_service, mock_container, mock_progress_callback
+    ):
         """Test that initialization service works correctly."""
         # Test component initialization
         components = initialization_service.initialize_components(
             mock_container, mock_progress_callback
         )
-        
+
         assert "layout_service" in components
         assert "widget_factory" in components
         assert "beat_loader" in components
-        
+
         # Test validation
         assert initialization_service.validate_initialization(components)
 
@@ -91,12 +103,12 @@ class TestOptionPickerRefactor:
         options = data_service.load_beat_options()
         assert len(options) == 3
         assert all(isinstance(opt, BeatData) for opt in options)
-        
+
         # Test getting beat data by option ID
         beat_data = data_service.get_beat_data_for_option("beat_A")
         assert beat_data is not None
         assert beat_data.letter == "A"
-        
+
         # Test invalid option ID
         invalid_data = data_service.get_beat_data_for_option("invalid_id")
         assert invalid_data is None
@@ -108,10 +120,10 @@ class TestOptionPickerRefactor:
         mock_layout = Mock()
         mock_pool_manager = Mock()
         mock_size_provider = Mock(return_value=QSize(800, 600))
-        
+
         # This would normally fail without actual Qt widgets, but we can test the structure
         assert display_service.display_manager is None  # Not initialized yet
-        
+
         # Test validation
         assert not display_service.validate_display_components()
 
@@ -123,18 +135,18 @@ class TestOptionPickerRefactor:
         mock_beat_click_handler = Mock()
         mock_beat_data_click_handler = Mock()
         mock_filter_change_handler = Mock()
-        
+
         event_service.setup_event_handlers(
             mock_pool_manager,
             mock_filter_widget,
             mock_beat_click_handler,
             mock_beat_data_click_handler,
-            mock_filter_change_handler
+            mock_filter_change_handler,
         )
-        
+
         # Test validation
         assert event_service.validate_event_setup()
-        
+
         # Test event info
         event_info = event_service.get_event_info()
         assert event_info["validation_passed"]
@@ -146,15 +158,15 @@ class TestOptionPickerRefactor:
         mock_data_service = Mock()
         mock_display_service = Mock()
         mock_event_service = Mock()
-        
+
         orchestrator = OptionPickerOrchestrator(
             container=mock_container,
             initialization_service=mock_init_service,
             data_service=mock_data_service,
             display_service=mock_display_service,
-            event_service=mock_event_service
+            event_service=mock_event_service,
         )
-        
+
         assert orchestrator.container == mock_container
         assert orchestrator.initialization_service == mock_init_service
         assert orchestrator.data_service == mock_data_service
@@ -164,7 +176,7 @@ class TestOptionPickerRefactor:
     def test_data_service_statistics(self, data_service):
         """Test that data service provides useful statistics."""
         stats = data_service.get_data_statistics()
-        
+
         assert "total_options" in stats
         assert "unique_letters" in stats
         assert "letters" in stats
@@ -175,12 +187,12 @@ class TestOptionPickerRefactor:
         """Test that data service search functionality works."""
         # Load options first
         data_service.load_beat_options()
-        
+
         # Test search
         results = data_service.search_options("A")
         assert len(results) == 1
         assert results[0].letter == "A"
-        
+
         # Test empty search
         all_results = data_service.search_options("")
         assert len(all_results) == 3
@@ -190,10 +202,10 @@ class TestOptionPickerRefactor:
         # Load options
         options = data_service.load_beat_options()
         assert len(options) == 3
-        
+
         # Clear cache
         data_service.clear_cache()
-        
+
         # Get current options should still work (from beat loader)
         current_options = data_service.get_current_options()
         assert len(current_options) == 3
@@ -201,7 +213,7 @@ class TestOptionPickerRefactor:
     def test_data_service_validation(self, data_service):
         """Test that data service validates beat loader correctly."""
         assert data_service.validate_beat_loader() is True
-        
+
         # Test with invalid beat loader
         invalid_service = OptionPickerDataService(None)
         assert invalid_service.validate_beat_loader() is False
@@ -213,16 +225,14 @@ class TestOptionPickerRefactor:
         mock_filter_widget = Mock()
         mock_filter_widget.filter_changed = Mock()
         mock_filter_widget.filter_changed.disconnect = Mock()
-        
+
         event_service.setup_event_handlers(
-            mock_pool_manager,
-            mock_filter_widget,
-            Mock(), Mock(), Mock()
+            mock_pool_manager, mock_filter_widget, Mock(), Mock(), Mock()
         )
-        
+
         # Test cleanup
         event_service.cleanup()
-        
+
         # Verify handlers are cleared
         assert event_service.pool_manager is None
         assert event_service.filter_widget is None
@@ -232,9 +242,9 @@ class TestOptionPickerRefactor:
         # Test with broken beat loader
         broken_loader = Mock()
         broken_loader.refresh_options.side_effect = Exception("Test error")
-        
+
         broken_service = OptionPickerDataService(broken_loader)
-        
+
         # Should not raise exception, should return empty list
         options = broken_service.refresh_options()
         assert options == []
@@ -243,12 +253,12 @@ class TestOptionPickerRefactor:
         """Test refreshing from modern sequence data."""
         # Create mock sequence
         mock_sequence = Mock(spec=SequenceData)
-        
+
         # Mock beat loader method
         data_service.beat_loader.refresh_options_from_modern_sequence = Mock(
             return_value=[BeatData(letter="X")]
         )
-        
+
         # Test refresh
         options = data_service.refresh_from_modern_sequence(mock_sequence)
         assert len(options) == 1
@@ -258,12 +268,12 @@ class TestOptionPickerRefactor:
         """Test refreshing from legacy sequence data."""
         # Create mock legacy data
         legacy_data = [{"letter": "Y", "motion_type": "PRO"}]
-        
+
         # Mock beat loader method
         data_service.beat_loader.load_motion_combinations = Mock(
             return_value=[BeatData(letter="Y")]
         )
-        
+
         # Test refresh
         options = data_service.refresh_from_sequence_data(legacy_data)
         assert len(options) == 1

@@ -45,7 +45,6 @@ class BrowseTabSelectionHandler:
         self._update_labels_and_settings(image_label)
         QApplication.processEvents()
 
-
     def _update_sequence_data(
         self, image_label: "ThumbnailImageLabel", sequence_dict: dict
     ):
@@ -95,8 +94,6 @@ class BrowseTabSelectionHandler:
             is_favorite
         )
         self.sequence_viewer.thumbnail_box.word = word
-
-
 
     def select_viewer_thumbnail(self, thumbnail_box, index, word):
         """Selects a thumbnail in the sequence viewer."""

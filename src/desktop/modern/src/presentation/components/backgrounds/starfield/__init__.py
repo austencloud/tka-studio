@@ -6,7 +6,7 @@ from .ufo_manager import UFOManager
 
 __all__ = [
     "StarManager",
-    "CometManager", 
+    "CometManager",
     "MoonManager",
     "UFOManager",
 ]

@@ -12,6 +12,7 @@ Our application currently uses a hybrid state management approach:
 4. **State Registry**: A central registry for tracking, debugging, and persisting state
 
 While this approach has served us well, it has several challenges:
+
 - Complex boilerplate for creating stores
 - Inconsistent reactivity between components and external modules
 - Overhead from the registry system
@@ -72,28 +73,30 @@ We'll follow a gradual, incremental approach to minimize disruption:
 // src/lib/state/core/container.ts
 export function createContainer<T, A extends Record<string, Function>>(
   initialState: T,
-  actions: (state: T) => A
+  actions: (state: T) => A,
 ) {
   // Create state with runes
   const state = $state(initialState);
-  
+
   // Create actions with access to state
   const boundActions = actions(state);
-  
+
   // Create a reset function
   const reset = () => {
     Object.assign(state, initialState);
   };
-  
+
   return {
     // Getter for current state
-    get state() { return state },
-    
+    get state() {
+      return state;
+    },
+
     // Actions
     ...boundActions,
-    
+
     // Reset function
-    reset
+    reset,
   };
 }
 ```
@@ -102,11 +105,11 @@ export function createContainer<T, A extends Record<string, Function>>(
 
 ```typescript
 // src/lib/state/core/machine.ts
-import { setup } from 'xstate';
+import { setup } from "xstate";
 
 export function createMachine<
   TContext extends Record<string, any>,
-  TEvent extends { type: string }
+  TEvent extends { type: string },
 >(options: {
   id: string;
   initial: string;
@@ -121,12 +124,12 @@ export function createMachine<
       events: TEvent;
     },
     actions: options.actions || {},
-    actors: options.services || {}
+    actors: options.services || {},
   }).createMachine({
     id: options.id,
     initial: options.initial,
     context: options.context,
-    states: options.states
+    states: options.states,
   });
 }
 ```
@@ -135,24 +138,25 @@ export function createMachine<
 
 ```typescript
 // src/lib/state/core/adapters.ts
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export function containerToStore<T, A extends Record<string, Function>>(
-  container: { state: T } & A
+  container: { state: T } & A,
 ) {
   const { subscribe, set } = writable(container.state);
-  
+
   // Create proxy to update store when state changes
   $effect(() => {
     set(container.state);
   });
-  
+
   return {
     subscribe,
     ...Object.fromEntries(
-      Object.entries(container)
-        .filter(([key]) => key !== 'state' && typeof container[key] === 'function')
-    )
+      Object.entries(container).filter(
+        ([key]) => key !== "state" && typeof container[key] === "function",
+      ),
+    ),
   };
 }
 ```
@@ -165,18 +169,18 @@ export function containerToStore<T, A extends Record<string, Function>>(
 // Before
 function createPictographStore() {
   const { subscribe, set, update } = writable<PictographStoreState>({
-    status: 'idle',
+    status: "idle",
     data: null,
     error: null,
     // ...more initial state
   });
 
   function setData(data: PictographData) {
-    update(state => ({ ...state, data }));
+    update((state) => ({ ...state, data }));
   }
-  
+
   // ...more actions
-  
+
   return {
     subscribe,
     setData,
@@ -191,28 +195,32 @@ function createPictographStore() {
 // After
 function createPictographStore() {
   let state = $state({
-    status: 'idle',
+    status: "idle",
     data: null,
     error: null,
     // ...more initial state
   });
-  
+
   // Derived values
   const isLoading = $derived(
-    state.status !== 'idle' && 
-    state.status !== 'complete' && 
-    state.status !== 'error'
+    state.status !== "idle" &&
+      state.status !== "complete" &&
+      state.status !== "error",
   );
-  
+
   function setData(data: PictographData) {
     state.data = data;
   }
-  
+
   // ...more actions
-  
+
   return {
-    get state() { return state },
-    get isLoading() { return isLoading },
+    get state() {
+      return state;
+    },
+    get isLoading() {
+      return isLoading;
+    },
     setData,
     // ...more actions
   };
@@ -238,14 +246,17 @@ If issues arise during migration:
 ## Timeline and Milestones
 
 1. **Foundation (2 weeks)**
+
    - Create utilities and patterns
    - Set up testing infrastructure
 
 2. **Core State (3 weeks)**
+
    - Migrate application state
    - Migrate sequence state
 
 3. **Feature Migration (6-8 weeks)**
+
    - Migrate features one by one
    - Update components
 

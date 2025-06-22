@@ -1,9 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QSizePolicy
 from PyQt6.QtCore import Qt
 
-from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.scroll.option_scroll import OptionScroll
-from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_widget import OptionPickerSectionWidget
-
+from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.scroll.option_scroll import (
+    OptionScroll,
+)
+from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_widget import (
+    OptionPickerSectionWidget,
+)
 
 
 class OptionPickerSectionGroupWidget(QWidget):

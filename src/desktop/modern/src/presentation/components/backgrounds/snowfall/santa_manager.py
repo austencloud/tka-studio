@@ -32,7 +32,6 @@ class SantaManager:
 
     def animate_santa(self):
         if self.santa["active"]:
-
             # Move Santa across the screen
             self.santa["x"] += self.santa["speed"] * self.santa["direction"]
 
@@ -55,7 +54,6 @@ class SantaManager:
                 self.santa_interval = random.randint(500, 1000)
 
     def draw_santa(self, painter: QPainter, widget: QWidget):
-
         # Define minimum and maximum Santa widths in pixels
         MIN_SANTA_WIDTH = 50
         MAX_SANTA_WIDTH = 100

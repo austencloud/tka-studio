@@ -5,7 +5,7 @@ This service generates placement keys to determine which adjustment
 category to use (layer1_alpha, layer2_alpha, etc.).
 """
 
-from domain.models.core_models import MotionData, MotionType
+from desktop.modern.src.domain.models.core_models import MotionData, MotionType
 from .motion_orientation_service import (
     MotionOrientationService,
     Orientation,

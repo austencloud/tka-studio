@@ -20,7 +20,7 @@ PROVIDES:
 import logging
 from typing import TYPE_CHECKING
 
-from domain.models.core_models import MotionType, RotationDirection
+from desktop.modern.src.domain.models.core_models import MotionType, RotationDirection
 from PyQt6.QtGui import QTransform
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
@@ -59,13 +59,17 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
-from domain.models.pictograph_models import ArrowData, GridMode, PictographData
+from desktop.modern.src.domain.models.pictograph_models import (
+    ArrowData,
+    GridMode,
+    PictographData,
+)
 
 from .dash_location_service import DashLocationService
 from .default_placement_service import DefaultPlacementService

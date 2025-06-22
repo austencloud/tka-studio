@@ -8,37 +8,37 @@ Responsible for handling start position picker interactions and creating start p
 from typing import Optional, Callable
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from domain.models.core_models import BeatData
+from desktop.modern.src.domain.models.core_models import BeatData
 from .data_conversion_service import DataConversionService
 
 
 class StartPositionHandler(QObject):
     """
     Handles start position selection and data creation.
-    
+
     Responsibilities:
     - Processing start position selection events
     - Creating start position data from position keys
     - Managing start position to option picker transitions
     - Integrating with the pictograph dataset service
-    
+
     Signals:
     - start_position_created: Emitted when start position data is created
     - transition_requested: Emitted when transition to option picker is needed
     """
-    
+
     start_position_created = pyqtSignal(str, object)  # position_key, BeatData
     transition_requested = pyqtSignal()  # Request transition to option picker
-    
+
     def __init__(
         self,
         data_conversion_service: DataConversionService,
-        workbench_setter: Optional[Callable[[BeatData], None]] = None
+        workbench_setter: Optional[Callable[[BeatData], None]] = None,
     ):
         super().__init__()
         self.data_conversion_service = data_conversion_service
         self.workbench_setter = workbench_setter
-    
+
     def handle_start_position_selected(self, position_key: str):
         """Handle start position selection from the picker"""
         print(f"✅ Start position handler: Position selected: {position_key}")
@@ -52,7 +52,7 @@ class StartPositionHandler(QObject):
 
         # Emit signal with the created data
         self.start_position_created.emit(position_key, start_position_data)
-        
+
         # Request transition to option picker
         self.transition_requested.emit()
 
@@ -78,7 +78,9 @@ class StartPositionHandler(QObject):
 
                 # CRITICAL FIX: Add end_pos to beat data for option picker
                 beat_dict = beat_data.to_dict()
-                beat_dict["end_pos"] = self.data_conversion_service.extract_end_position_from_position_key(
+                beat_dict[
+                    "end_pos"
+                ] = self.data_conversion_service.extract_end_position_from_position_key(
                     position_key
                 )
 
@@ -100,7 +102,9 @@ class StartPositionHandler(QObject):
 
                 # Add end_pos to fallback too
                 fallback_dict = fallback_beat.to_dict()
-                fallback_dict["end_pos"] = self.data_conversion_service.extract_end_position_from_position_key(
+                fallback_dict[
+                    "end_pos"
+                ] = self.data_conversion_service.extract_end_position_from_position_key(
                     position_key
                 )
 
@@ -118,7 +122,9 @@ class StartPositionHandler(QObject):
 
             # Add end_pos to fallback
             fallback_dict = fallback_beat.to_dict()
-            fallback_dict["end_pos"] = self.data_conversion_service.extract_end_position_from_position_key(
+            fallback_dict[
+                "end_pos"
+            ] = self.data_conversion_service.extract_end_position_from_position_key(
                 position_key
             )
 

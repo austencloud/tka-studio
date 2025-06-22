@@ -18,10 +18,10 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from core.interfaces.organization_services import (
+from desktop.modern.src.core.interfaces.organization_services import (
     IComponentHierarchyAnalysisService,
     IFileSystemService,
-    ComponentHierarchyAnalysis
+    ComponentHierarchyAnalysis,
 )
 
 logger = logging.getLogger(__name__)
@@ -30,19 +30,15 @@ logger = logging.getLogger(__name__)
 class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
     """
     Pure service for analyzing component hierarchy structure and complexity.
-    
+
     Analyzes presentation layer components to identify architectural issues
     and optimization opportunities. Uses AST parsing for code analysis.
     """
 
-    def __init__(
-        self,
-        file_system_service: IFileSystemService,
-        project_root: Path
-    ):
+    def __init__(self, file_system_service: IFileSystemService, project_root: Path):
         """
         Initialize the component hierarchy analysis service.
-        
+
         Args:
             file_system_service: Service for file system operations
             project_root: Root directory of the project
@@ -60,7 +56,7 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
     def analyze_component_hierarchy(self) -> List[ComponentHierarchyAnalysis]:
         """
         Analyze component hierarchy across presentation layer.
-        
+
         Returns:
             List of ComponentHierarchyAnalysis for each component
         """
@@ -71,7 +67,9 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
             return []
 
         analyses = []
-        component_files = self.file_system_service.find_python_files(self.presentation_root)
+        component_files = self.file_system_service.find_python_files(
+            self.presentation_root
+        )
 
         logger.info(f"Analyzing {len(component_files)} component files...")
 
@@ -85,7 +83,7 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
     def generate_optimization_recommendations(self) -> List[str]:
         """
         Generate optimization recommendations for component hierarchy.
-        
+
         Returns:
             List of actionable optimization recommendations
         """
@@ -135,13 +133,15 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
 
         return recommendations
 
-    def _analyze_single_component(self, component_path: Path) -> Optional[ComponentHierarchyAnalysis]:
+    def _analyze_single_component(
+        self, component_path: Path
+    ) -> Optional[ComponentHierarchyAnalysis]:
         """
         Analyze a single component file.
-        
+
         Args:
             component_path: Path to the component file
-            
+
         Returns:
             ComponentHierarchyAnalysis or None if analysis failed
         """
@@ -216,10 +216,10 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
     def _extract_responsibilities(self, methods: List[ast.FunctionDef]) -> List[str]:
         """
         Extract responsibilities from method names.
-        
+
         Args:
             methods: List of method AST nodes
-            
+
         Returns:
             List of identified responsibilities
         """
@@ -233,36 +233,61 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
                 continue
 
             # Categorize by method name patterns
-            if any(pattern in method_name.lower() for pattern in ["load", "fetch", "get"]):
+            if any(
+                pattern in method_name.lower() for pattern in ["load", "fetch", "get"]
+            ):
                 responsibilities.append("data_loading")
-            elif any(pattern in method_name.lower() for pattern in ["save", "store", "persist"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["save", "store", "persist"]
+            ):
                 responsibilities.append("data_persistence")
-            elif any(pattern in method_name.lower() for pattern in ["render", "draw", "paint"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["render", "draw", "paint"]
+            ):
                 responsibilities.append("rendering")
-            elif any(pattern in method_name.lower() for pattern in ["handle", "on_", "process"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["handle", "on_", "process"]
+            ):
                 responsibilities.append("event_handling")
-            elif any(pattern in method_name.lower() for pattern in ["validate", "check", "verify"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["validate", "check", "verify"]
+            ):
                 responsibilities.append("validation")
-            elif any(pattern in method_name.lower() for pattern in ["update", "refresh", "sync"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["update", "refresh", "sync"]
+            ):
                 responsibilities.append("state_management")
-            elif any(pattern in method_name.lower() for pattern in ["create", "build", "make"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["create", "build", "make"]
+            ):
                 responsibilities.append("object_creation")
-            elif any(pattern in method_name.lower() for pattern in ["calculate", "compute", "process"]):
+            elif any(
+                pattern in method_name.lower()
+                for pattern in ["calculate", "compute", "process"]
+            ):
                 responsibilities.append("computation")
             else:
                 responsibilities.append("business_logic")
 
         return responsibilities
 
-    def _calculate_complexity_score(self, depth: int, classes: int, methods: int) -> float:
+    def _calculate_complexity_score(
+        self, depth: int, classes: int, methods: int
+    ) -> float:
         """
         Calculate component complexity score.
-        
+
         Args:
             depth: Hierarchy depth
             classes: Number of classes
             methods: Number of methods
-            
+
         Returns:
             Complexity score (0-100, higher is better)
         """
@@ -286,18 +311,18 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
     def get_component_summary(self, component_path: Path) -> dict:
         """
         Get a summary of analysis results for a specific component.
-        
+
         Args:
             component_path: Path to analyze
-            
+
         Returns:
             Dictionary with component summary
         """
         analysis = self._analyze_single_component(component_path)
-        
+
         if not analysis:
             return {"error": "Analysis failed"}
-        
+
         return {
             "component_path": str(analysis.component_path),
             "hierarchy_depth": analysis.hierarchy_depth,
@@ -307,35 +332,41 @@ class ComponentHierarchyAnalysisService(IComponentHierarchyAnalysisService):
             "responsibilities": analysis.responsibilities,
             "recommendations_count": len(analysis.recommendations),
             "needs_refactoring": analysis.complexity_score < 70,
-            "top_recommendations": analysis.recommendations[:3]  # Top 3 recommendations
+            "top_recommendations": analysis.recommendations[
+                :3
+            ],  # Top 3 recommendations
         }
 
     def validate_component_structure(self) -> dict:
         """
         Validate that the component structure follows TKA conventions.
-        
+
         Returns:
             Dictionary with validation results
         """
-        validation_results = {
-            "valid": True,
-            "issues": [],
-            "recommendations": []
-        }
-        
+        validation_results = {"valid": True, "issues": [], "recommendations": []}
+
         # Check if presentation directory exists
         if not self.presentation_root.exists():
             validation_results["valid"] = False
-            validation_results["issues"].append(f"Presentation directory not found: {self.presentation_root}")
-            validation_results["recommendations"].append("Create presentation/components/ directory structure")
-        
+            validation_results["issues"].append(
+                f"Presentation directory not found: {self.presentation_root}"
+            )
+            validation_results["recommendations"].append(
+                "Create presentation/components/ directory structure"
+            )
+
         # Check for expected component subdirectories
         if self.presentation_root.exists():
             expected_subdirs = ["workbench", "option_picker", "sequence_widget"]
             for subdir in expected_subdirs:
                 subdir_path = self.presentation_root / subdir
                 if not subdir_path.exists():
-                    validation_results["issues"].append(f"Expected component directory not found: {subdir_path}")
-                    validation_results["recommendations"].append(f"Consider organizing components in {subdir}/ directory")
-        
+                    validation_results["issues"].append(
+                        f"Expected component directory not found: {subdir_path}"
+                    )
+                    validation_results["recommendations"].append(
+                        f"Consider organizing components in {subdir}/ directory"
+                    )
+
         return validation_results

@@ -28,6 +28,14 @@ dev = [
     "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.21.0"
 ]
+test-automation = [
+    "pre-commit>=3.0.0",
+    "watchdog>=3.0.0",
+    "schedule>=1.2.0",
+    "pytest-xdist>=3.0.0",
+    "pytest-qt>=4.2.0",
+    "plyer>=2.1.0"
+]
 
 [tool.black]
 line-length = 88

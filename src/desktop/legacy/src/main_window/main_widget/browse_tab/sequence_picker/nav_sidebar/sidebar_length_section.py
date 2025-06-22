@@ -25,7 +25,6 @@ class SidebarLengthSection(BaseSidebarSection):
         self.manager.layout.addWidget(spacer_line)
         self._widgets_created.append(spacer_line)
 
-
         # Create a button for each length
         for section in sections_data:
             button = SidebarButton(str(section))

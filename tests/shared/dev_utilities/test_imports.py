@@ -26,6 +26,7 @@ try:
     from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication
     from PyQt6.QtCore import Qt, pyqtSignal
     from PyQt6.QtGui import QFont, QPixmap
+
     print("   ✓ PyQt6 imports successful")
 except ImportError as e:
     print(f"   ❌ PyQt6 import failed: {e}")
@@ -33,6 +34,7 @@ except ImportError as e:
 try:
     print("\n✅ Testing ui.components import...")
     from ui.components import ReliableApplicationCard
+
     print("   ✓ ui.components import successful")
 except ImportError as e:
     print(f"   ❌ ui.components import failed: {e}")
@@ -40,6 +42,7 @@ except ImportError as e:
 try:
     print("\n✅ Testing ui.reliable_effects import...")
     from ui.reliable_effects import get_animation_manager
+
     print("   ✓ ui.reliable_effects import successful")
 except ImportError as e:
     print(f"   ❌ ui.reliable_effects import failed: {e}")

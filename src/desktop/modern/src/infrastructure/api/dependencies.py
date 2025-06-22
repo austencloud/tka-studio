@@ -6,15 +6,18 @@ Provides all service dependencies for FastAPI endpoints.
 import logging
 from typing import Optional
 
-from application.services.core.sequence_management_service import (
+from desktop.modern.src.application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from application.services.positioning.arrow_management_service import (
+from desktop.modern.src.application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
-from core.commands import CommandProcessor
-from core.dependency_injection.di_container import DIContainer, get_container
-from core.events import IEventBus, get_event_bus
+from desktop.modern.src.core.commands import CommandProcessor
+from desktop.modern.src.core.dependency_injection.di_container import (
+    DIContainer,
+    get_container,
+)
+from desktop.modern.src.core.events import IEventBus, get_event_bus
 from fastapi import HTTPException, status
 
 logger = logging.getLogger(__name__)

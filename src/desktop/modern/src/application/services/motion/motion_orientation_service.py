@@ -14,7 +14,7 @@ while maintaining the proven orientation calculation algorithms.
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     Location,
     MotionData,
     MotionType,

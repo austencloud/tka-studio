@@ -8,7 +8,6 @@ from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjust
 
 
 class SpecialPlacementSaver:
-
     def save_json_data(self, data, file_path) -> None:
         """Write JSON data to a file with specific formatting."""
         data = PlacementDataCleaner.clean_placement_data(data)

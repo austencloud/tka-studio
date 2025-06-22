@@ -14,6 +14,7 @@ from dataclasses import dataclass
 @dataclass
 class ImportAnalysis:
     """Analysis results for import patterns in a file."""
+
     file_path: Path
     total_imports: int
     relative_imports: int
@@ -27,6 +28,7 @@ class ImportAnalysis:
 @dataclass
 class ImportStandardizationReport:
     """Comprehensive report of import standardization across codebase."""
+
     total_files_analyzed: int
     total_imports_found: int
     compliant_files: int
@@ -40,6 +42,7 @@ class ImportStandardizationReport:
 @dataclass
 class ComponentHierarchyAnalysis:
     """Analysis of component hierarchy depth and structure."""
+
     component_path: Path
     hierarchy_depth: int
     class_count: int
@@ -56,10 +59,10 @@ class IImportAnalysisService(ABC):
     def analyze_file(self, file_path: Path) -> ImportAnalysis:
         """
         Analyze import patterns in a single Python file.
-        
+
         Args:
             file_path: Path to the Python file to analyze
-            
+
         Returns:
             ImportAnalysis with detailed import pattern analysis
         """
@@ -69,7 +72,7 @@ class IImportAnalysisService(ABC):
     def analyze_codebase(self) -> ImportStandardizationReport:
         """
         Analyze import patterns across the entire codebase.
-        
+
         Returns:
             ImportStandardizationReport with comprehensive analysis
         """
@@ -83,24 +86,26 @@ class IImportStandardizationService(ABC):
     def fix_file_imports(self, file_path: Path, dry_run: bool = True) -> bool:
         """
         Fix import patterns in a single file.
-        
+
         Args:
             file_path: Path to the file to fix
             dry_run: If True, only show what would be changed
-            
+
         Returns:
             True if fixes were applied (or would be applied in dry_run)
         """
         pass
 
     @abstractmethod
-    def standardize_codebase(self, dry_run: bool = True) -> Dict[str, Union[int, float]]:
+    def standardize_codebase(
+        self, dry_run: bool = True
+    ) -> Dict[str, Union[int, float]]:
         """
         Standardize imports across the entire codebase.
-        
+
         Args:
             dry_run: If True, only show what would be changed
-            
+
         Returns:
             Dictionary with fix statistics
         """
@@ -114,7 +119,7 @@ class IComponentHierarchyAnalysisService(ABC):
     def analyze_component_hierarchy(self) -> List[ComponentHierarchyAnalysis]:
         """
         Analyze component hierarchy across presentation layer.
-        
+
         Returns:
             List of ComponentHierarchyAnalysis for each component
         """
@@ -124,7 +129,7 @@ class IComponentHierarchyAnalysisService(ABC):
     def generate_optimization_recommendations(self) -> List[str]:
         """
         Generate optimization recommendations for component hierarchy.
-        
+
         Returns:
             List of actionable optimization recommendations
         """
@@ -138,10 +143,10 @@ class IFileSystemService(ABC):
     def read_file(self, file_path: Path) -> str:
         """
         Read content from a file.
-        
+
         Args:
             file_path: Path to the file to read
-            
+
         Returns:
             File content as string
         """
@@ -151,7 +156,7 @@ class IFileSystemService(ABC):
     def write_file(self, file_path: Path, content: str) -> None:
         """
         Write content to a file.
-        
+
         Args:
             file_path: Path to the file to write
             content: Content to write
@@ -162,10 +167,10 @@ class IFileSystemService(ABC):
     def find_python_files(self, root_path: Path) -> List[Path]:
         """
         Find all Python files in a directory tree.
-        
+
         Args:
             root_path: Root directory to search
-            
+
         Returns:
             List of Python file paths
         """
@@ -179,10 +184,10 @@ class ICodePatternAnalysisService(ABC):
     def is_standard_tka_import(self, module_name: str) -> bool:
         """
         Check if import follows standard TKA patterns.
-        
+
         Args:
             module_name: Module name to check
-            
+
         Returns:
             True if import follows TKA standards
         """
@@ -192,10 +197,10 @@ class ICodePatternAnalysisService(ABC):
     def is_external_library(self, module_name: str) -> bool:
         """
         Check if import is from external library.
-        
+
         Args:
             module_name: Module name to check
-            
+
         Returns:
             True if import is from external library
         """
@@ -205,10 +210,10 @@ class ICodePatternAnalysisService(ABC):
     def categorize_violation(self, violation: str) -> str:
         """
         Categorize violation type for reporting.
-        
+
         Args:
             violation: Violation description
-            
+
         Returns:
             Violation category
         """

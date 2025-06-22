@@ -20,7 +20,6 @@ from objects.arrow.arrow import Arrow
 from PyQt6.QtCore import QPoint
 
 if TYPE_CHECKING:
-
     from base_widgets.pictograph.managers.pictograph_checker import PictographChecker
     from base_widgets.pictograph.managers.getter.pictograph_getter import (
         PictographGetter,

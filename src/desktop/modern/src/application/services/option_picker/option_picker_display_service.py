@@ -17,8 +17,10 @@ import logging
 from typing import List, Dict, Any, Callable
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
-from core.interfaces.option_picker_services import IOptionPickerDisplayService
-from domain.models.core_models import BeatData
+from desktop.modern.src.core.interfaces.option_picker_services import (
+    IOptionPickerDisplayService,
+)
+from desktop.modern.src.domain.models.core_models import BeatData
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ logger = logging.getLogger(__name__)
 class OptionPickerDisplayService(IOptionPickerDisplayService):
     """
     Pure service for option picker display management.
-    
+
     Coordinates display operations without any business logic.
     Provides clean interface for display updates.
     """
@@ -44,11 +46,11 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
         sections_container: QWidget,
         sections_layout: QVBoxLayout,
         pool_manager: Any,
-        size_provider: Callable
+        size_provider: Callable,
     ) -> None:
         """
         Initialize the display components.
-        
+
         Args:
             sections_container: Container for sections
             sections_layout: Layout for sections
@@ -62,8 +64,10 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
             self.size_provider = size_provider
 
             # Create display manager
-            from presentation.components.option_picker.display_manager import OptionPickerDisplayManager
-            
+            from presentation.components.option_picker.display_manager import (
+                OptionPickerDisplayManager,
+            )
+
             self.display_manager = OptionPickerDisplayManager(
                 sections_container,
                 sections_layout,
@@ -94,7 +98,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def update_beat_display(self, beat_options: List[BeatData]) -> None:
         """
         Update the display with new beat options.
-        
+
         Args:
             beat_options: List of beat data to display
         """
@@ -134,7 +138,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
                 return
 
             # Resize bottom row sections to proper 1/3 width
-            if hasattr(self.display_manager, 'resize_bottom_row_sections'):
+            if hasattr(self.display_manager, "resize_bottom_row_sections"):
                 self.display_manager.resize_bottom_row_sections()
 
             logger.debug("Resized sections")
@@ -145,7 +149,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def get_sections(self) -> Dict[str, Any]:
         """
         Get current display sections.
-        
+
         Returns:
             Dictionary of section name to section widget
         """
@@ -167,7 +171,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
                 logger.warning("Pool manager not available")
                 return
 
-            if hasattr(self.pool_manager, 'resize_all_frames'):
+            if hasattr(self.pool_manager, "resize_all_frames"):
                 self.pool_manager.resize_all_frames()
 
             logger.debug("Resized all frames")
@@ -185,7 +189,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
             # Get current sections and refresh them
             sections = self.get_sections()
             for section_name, section in sections.items():
-                if hasattr(section, 'refresh'):
+                if hasattr(section, "refresh"):
                     section.refresh()
 
             logger.debug("Refreshed display")
@@ -211,13 +215,13 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def get_display_info(self) -> Dict[str, Any]:
         """
         Get information about the current display state.
-        
+
         Returns:
             Dictionary with display information
         """
         try:
             sections = self.get_sections()
-            
+
             return {
                 "display_manager_initialized": self.display_manager is not None,
                 "sections_count": len(sections),
@@ -225,7 +229,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
                 "sections_container_available": self.sections_container is not None,
                 "sections_layout_available": self.sections_layout is not None,
                 "pool_manager_available": self.pool_manager is not None,
-                "size_provider_available": self.size_provider is not None
+                "size_provider_available": self.size_provider is not None,
             }
 
         except Exception as e:
@@ -234,13 +238,13 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
                 "display_manager_initialized": False,
                 "sections_count": 0,
                 "section_names": [],
-                "error": str(e)
+                "error": str(e),
             }
 
     def validate_display_components(self) -> bool:
         """
         Validate that all display components are properly initialized.
-        
+
         Returns:
             True if all components are valid
         """
@@ -270,7 +274,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def cleanup(self) -> None:
         """Clean up display resources."""
         try:
-            if self.display_manager and hasattr(self.display_manager, 'cleanup'):
+            if self.display_manager and hasattr(self.display_manager, "cleanup"):
                 self.display_manager.cleanup()
 
             self.display_manager = None
@@ -287,7 +291,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def set_section_visibility(self, section_name: str, visible: bool) -> None:
         """
         Set visibility of a specific section.
-        
+
         Args:
             section_name: Name of the section
             visible: Whether section should be visible
@@ -296,11 +300,13 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
             sections = self.get_sections()
             if section_name in sections:
                 section = sections[section_name]
-                if hasattr(section, 'setVisible'):
+                if hasattr(section, "setVisible"):
                     section.setVisible(visible)
                     logger.debug(f"Set section {section_name} visibility to {visible}")
                 else:
-                    logger.warning(f"Section {section_name} doesn't support visibility control")
+                    logger.warning(
+                        f"Section {section_name} doesn't support visibility control"
+                    )
             else:
                 logger.warning(f"Section {section_name} not found")
 
@@ -310,7 +316,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
     def get_section_count(self) -> int:
         """
         Get the number of display sections.
-        
+
         Returns:
             Number of sections
         """

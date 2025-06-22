@@ -12,7 +12,7 @@ from pathlib import Path
 modern_src_path = Path(__file__).parent.parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from domain.models.core_models import (
+from desktop.modern.src.domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -22,7 +22,9 @@ from domain.models.core_models import (
     ArrowColor,
     GridMode,
 )
-from application.services.positioning.dash_location_service import DashLocationService
+from desktop.modern.src.application.services.positioning.dash_location_service import (
+    DashLocationService,
+)
 
 
 class TestDashLocationService:

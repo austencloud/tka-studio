@@ -18,9 +18,11 @@ from typing import Dict, Any, Optional, Callable, Tuple
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtCore import QSize
 
-from core.interfaces.option_picker_services import IOptionPickerInitializationService
-from core.interfaces.core_services import ILayoutService
-from core.dependency_injection.di_container import DIContainer
+from desktop.modern.src.core.interfaces.option_picker_services import (
+    IOptionPickerInitializationService,
+)
+from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from desktop.modern.src.core.dependency_injection.di_container import DIContainer
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +30,7 @@ logger = logging.getLogger(__name__)
 class OptionPickerInitializationService(IOptionPickerInitializationService):
     """
     Pure service for option picker initialization logic.
-    
+
     Handles the complex initialization sequence without any UI concerns.
     Coordinates service creation and dependency resolution.
     """
@@ -40,20 +42,20 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
     def initialize_components(
         self,
         container: DIContainer,
-        progress_callback: Optional[Callable[[str, float], None]] = None
+        progress_callback: Optional[Callable[[str, float], None]] = None,
     ) -> Dict[str, Any]:
         """
         Initialize all option picker components.
-        
+
         Args:
             container: DI container for service resolution
             progress_callback: Optional progress reporting callback
-            
+
         Returns:
             Dictionary containing initialized components
         """
         components = {}
-        
+
         try:
             if progress_callback:
                 progress_callback("Resolving layout service", 0.1)
@@ -67,6 +69,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
 
             # Create widget factory
             from presentation.factories.widget_factory import OptionPickerWidgetFactory
+
             widget_factory = OptionPickerWidgetFactory(container)
             components["widget_factory"] = widget_factory
 
@@ -80,7 +83,10 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 progress_callback("Initializing beat data loader", 0.35)
 
             # Create beat data loader
-            from presentation.components.option_picker.beat_data_loader import BeatDataLoader
+            from presentation.components.option_picker.beat_data_loader import (
+                BeatDataLoader,
+            )
+
             beat_loader = BeatDataLoader()
             components["beat_loader"] = beat_loader
 
@@ -94,24 +100,23 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             raise
 
     def create_widget_hierarchy(
-        self,
-        container: DIContainer,
-        resize_callback: Callable[[], None]
+        self, container: DIContainer, resize_callback: Callable[[], None]
     ) -> Tuple[QWidget, QWidget, QVBoxLayout, QWidget]:
         """
         Create the widget hierarchy for option picker.
-        
+
         Args:
             container: DI container for service resolution
             resize_callback: Callback for widget resize events
-            
+
         Returns:
             Tuple of (main_widget, sections_container, sections_layout, filter_widget)
         """
         try:
             from presentation.factories.widget_factory import OptionPickerWidgetFactory
+
             widget_factory = OptionPickerWidgetFactory(container)
-            
+
             return widget_factory.create_widget(resize_callback)
 
         except Exception as e:
@@ -122,26 +127,28 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
         self,
         main_widget: QWidget,
         beat_click_handler: Callable[[str], None],
-        beat_data_click_handler: Callable[[object], None]
+        beat_data_click_handler: Callable[[object], None],
     ) -> Any:
         """
         Create and configure the pictograph pool manager.
-        
+
         Args:
             main_widget: Main widget for pool manager
             beat_click_handler: Handler for beat clicks
             beat_data_click_handler: Handler for beat data clicks
-            
+
         Returns:
             Configured pool manager
         """
         try:
-            from presentation.components.option_picker.pictograph_pool_manager import PictographPoolManager
-            
+            from presentation.components.option_picker.pictograph_pool_manager import (
+                PictographPoolManager,
+            )
+
             pool_manager = PictographPoolManager(main_widget)
             pool_manager.set_click_handler(beat_click_handler)
             pool_manager.set_beat_data_click_handler(beat_data_click_handler)
-            
+
             return pool_manager
 
         except Exception as e:
@@ -153,23 +160,25 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
         sections_container: QWidget,
         sections_layout: QVBoxLayout,
         pool_manager: Any,
-        main_widget: QWidget
+        main_widget: QWidget,
     ) -> Any:
         """
         Create and configure the display manager.
-        
+
         Args:
             sections_container: Container for sections
             sections_layout: Layout for sections
             pool_manager: Pictograph pool manager
             main_widget: Main widget for size calculations
-            
+
         Returns:
             Configured display manager
         """
         try:
-            from presentation.components.option_picker.display_manager import OptionPickerDisplayManager
-            
+            from presentation.components.option_picker.display_manager import (
+                OptionPickerDisplayManager,
+            )
+
             # Create size provider that gives sections the full available width
             def size_provider():
                 # Get actual available width from the option picker widget hierarchy
@@ -190,7 +199,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 pool_manager,
                 size_provider,
             )
-            
+
             return display_manager
 
         except Exception as e:
@@ -202,30 +211,32 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
         main_widget: QWidget,
         sections_container: QWidget,
         sections_layout: QVBoxLayout,
-        display_manager: Any
+        display_manager: Any,
     ) -> Any:
         """
         Create and configure the dimension analyzer.
-        
+
         Args:
             main_widget: Main widget
             sections_container: Sections container
             sections_layout: Sections layout
             display_manager: Display manager
-            
+
         Returns:
             Configured dimension analyzer
         """
         try:
-            from presentation.components.option_picker.dimension_analyzer import OptionPickerDimensionAnalyzer
-            
+            from presentation.components.option_picker.dimension_analyzer import (
+                OptionPickerDimensionAnalyzer,
+            )
+
             dimension_analyzer = OptionPickerDimensionAnalyzer(
                 main_widget,
                 sections_container,
                 sections_layout,
                 display_manager.get_sections(),
             )
-            
+
             return dimension_analyzer
 
         except Exception as e:
@@ -235,11 +246,11 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
     def initialize_pool(
         self,
         pool_manager: Any,
-        progress_callback: Optional[Callable[[str, float], None]] = None
+        progress_callback: Optional[Callable[[str, float], None]] = None,
     ) -> None:
         """
         Initialize the pictograph pool.
-        
+
         Args:
             pool_manager: Pool manager to initialize
             progress_callback: Optional progress reporting callback
@@ -258,11 +269,11 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
         self,
         filter_widget: QWidget,
         filter_change_handler: Callable[[str], None],
-        progress_callback: Optional[Callable[[str, float], None]] = None
+        progress_callback: Optional[Callable[[str, float], None]] = None,
     ) -> None:
         """
         Setup filter widget connections.
-        
+
         Args:
             filter_widget: Filter widget
             filter_change_handler: Handler for filter changes
@@ -281,33 +292,29 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
     def validate_initialization(self, components: Dict[str, Any]) -> bool:
         """
         Validate that all required components were initialized.
-        
+
         Args:
             components: Dictionary of initialized components
-            
+
         Returns:
             True if all components are valid
         """
-        required_components = [
-            "layout_service",
-            "widget_factory", 
-            "beat_loader"
-        ]
-        
+        required_components = ["layout_service", "widget_factory", "beat_loader"]
+
         for component_name in required_components:
             if component_name not in components or components[component_name] is None:
                 logger.error(f"Required component not initialized: {component_name}")
                 return False
-        
+
         return True
 
     def get_initialization_info(self, components: Dict[str, Any]) -> Dict[str, Any]:
         """
         Get information about the initialization process.
-        
+
         Args:
             components: Dictionary of initialized components
-            
+
         Returns:
             Dictionary with initialization information
         """
@@ -317,5 +324,5 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             "validation_passed": self.validate_initialization(components),
             "layout_service_available": components.get("layout_service") is not None,
             "widget_factory_available": components.get("widget_factory") is not None,
-            "beat_loader_available": components.get("beat_loader") is not None
+            "beat_loader_available": components.get("beat_loader") is not None,
         }

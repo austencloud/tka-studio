@@ -21,11 +21,11 @@ class BorderedPictographView(BasePictographView):
         self.primary_color = None
         self.secondary_color = None
         self.original_primary_color = None
-        
+
         self.original_secondary_color = None
         self.outer_border_width = 0
         self.inner_border_width = 0
-    
+
         self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.update_borders()
