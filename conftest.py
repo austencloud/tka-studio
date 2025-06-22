@@ -31,8 +31,11 @@ def pytest_configure(config):
 
     # Register custom markers
     config.addinivalue_line("markers", "modern: Tests for the modern codebase")
+    config.addinivalue_line("markers", "legacy: Tests for the legacy codebase")
+    config.addinivalue_line("markers", "launcher: Tests for the launcher")
     config.addinivalue_line("markers", "unit: Fast unit tests")
     config.addinivalue_line("markers", "integration: Integration tests")
+    config.addinivalue_line("markers", "e2e: End-to-end tests")
 
 
 def pytest_sessionstart(session):
@@ -50,8 +53,54 @@ def tka_project_root():
 
 
 @pytest.fixture(scope="session")
-def tka_desktop_root():
-    """Provide the TKA Desktop project root path."""
-    from project_root import get_tka_desktop_root
+def tka_modern_src():
+    """Provide the TKA Modern src path."""
+    from project_root import get_modern_src_root
 
-    return get_tka_desktop_root()
+    return get_modern_src_root()
+
+
+@pytest.fixture(scope="session")
+def tka_launcher_root():
+    """Provide the TKA Launcher root path."""
+    from project_root import get_launcher_root
+
+    return get_launcher_root()
+
+
+@pytest.fixture
+def mock_container():
+    """Mock dependency injection container."""
+    from unittest.mock import Mock
+
+    container = Mock()
+    container.resolve = Mock()
+    return container
+
+
+@pytest.fixture
+def mock_beat_data():
+    """Real beat data for testing using PictographDatasetService."""
+    try:
+        from application.services.data.pictograph_dataset_service import (
+            PictographDatasetService,
+        )
+
+        dataset_service = PictographDatasetService()
+        beat_data = dataset_service.get_start_position_pictograph(
+            "alpha1_alpha1", "diamond"
+        )
+
+        if beat_data:
+            return beat_data
+    except ImportError:
+        pass
+
+    # Fallback to empty beat if dataset unavailable
+    try:
+        from domain.models.core_models import BeatData
+
+        return BeatData.empty()
+    except ImportError:
+        # Final fallback
+        return None

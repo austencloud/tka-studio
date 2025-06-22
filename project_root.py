@@ -7,10 +7,10 @@ and sets up Python paths consistently across all execution contexts.
 
 The TKA monorepo structure:
 - TKA/ (root)
-  - tka-desktop/ (desktop application)
-  - tka-web/ (web applications)
-  - data/ (shared data)
-  - images/ (shared images)
+  - src/desktop/modern/src/ (modern desktop application)
+  - src/desktop/legacy/src/ (legacy desktop application)
+  - launcher/ (application launcher)
+  - packages/ (shared packages)
 
 Import this at the top of any script that needs reliable imports:
     from project_root import ensure_project_setup
@@ -37,14 +37,54 @@ def get_project_root() -> Path:
     return Path(__file__).parent.absolute()
 
 
-def get_tka_desktop_root() -> Path:
+def get_modern_src_root() -> Path:
     """
-    Get the absolute path to the tka-desktop directory.
-    
+    Get the absolute path to the modern desktop src directory.
+
     Returns:
-        Path: Absolute path to TKA/tka-desktop/ directory
+        Path: Absolute path to TKA/src/desktop/modern/src/ directory
     """
-    return get_project_root() / "tka-desktop"
+    return get_project_root() / "src" / "desktop" / "modern" / "src"
+
+
+def get_modern_root() -> Path:
+    """
+    Get the absolute path to the modern desktop directory.
+
+    Returns:
+        Path: Absolute path to TKA/src/desktop/modern/ directory
+    """
+    return get_project_root() / "src" / "desktop" / "modern"
+
+
+def get_legacy_src_root() -> Path:
+    """
+    Get the absolute path to the legacy desktop src directory.
+
+    Returns:
+        Path: Absolute path to TKA/src/desktop/legacy/src/ directory
+    """
+    return get_project_root() / "src" / "desktop" / "legacy" / "src"
+
+
+def get_launcher_root() -> Path:
+    """
+    Get the absolute path to the launcher directory.
+
+    Returns:
+        Path: Absolute path to TKA/launcher/ directory
+    """
+    return get_project_root() / "launcher"
+
+
+def get_packages_root() -> Path:
+    """
+    Get the absolute path to the packages directory.
+
+    Returns:
+        Path: Absolute path to TKA/packages/ directory
+    """
+    return get_project_root() / "packages"
 
 
 def get_import_paths() -> List[Path]:
@@ -55,15 +95,16 @@ def get_import_paths() -> List[Path]:
         List[Path]: All paths that should be in sys.path
     """
     project_root = get_project_root()
-    tka_desktop = get_tka_desktop_root()
 
     return [
-        # TKA Desktop paths (most specific first)
-        tka_desktop / "modern" / "src",  # Primary modern source code
-        tka_desktop / "modern",          # Modern directory
-        tka_desktop / "legacy" / "src",  # Legacy source code
-        tka_desktop,                     # TKA Desktop root
-        project_root,                    # TKA Monorepo root
+        # Most specific paths first for proper module resolution
+        get_modern_src_root(),  # Primary modern source code
+        get_modern_root(),  # Modern directory
+        get_legacy_src_root(),  # Legacy source code
+        project_root / "src" / "desktop",  # Desktop root
+        get_launcher_root(),  # Launcher
+        get_packages_root(),  # Shared packages
+        project_root,  # TKA Monorepo root
     ]
 
 
@@ -131,72 +172,90 @@ def validate_imports() -> bool:
         bool: True if all key imports work
     """
     test_imports = [
+        # Core modern imports
+        "domain.models.core_models",
+        "domain.models.pictograph_models",
+        "application.services.positioning.prop_orchestrator",
+        "core.events",
+        "core.dependency_injection.di_container",
+        # Infrastructure imports
+        "infrastructure.api.production_api",
+        # Presentation imports
         "presentation.components.workbench",
-        "domain.models.core_models", 
-        "application.services",
-        "infrastructure",
     ]
 
+    successful = 0
     for import_name in test_imports:
         try:
             __import__(import_name)
+            print(f"✅ {import_name}")
+            successful += 1
         except ImportError as e:
-            print(f"VALIDATION FAILED: Cannot import {import_name}: {e}")
-            return False
+            print(f"❌ {import_name}: {e}")
 
-    print("✅ All key imports validated successfully")
-    return True
+    print(f"\n📊 {successful}/{len(test_imports)} imports successful")
+    return successful == len(test_imports)
 
 
 def print_debug_info():
     """Print debugging information about paths and imports."""
     print("=== TKA MONOREPO IMPORT DEBUG INFO ===")
     print(f"TKA Monorepo Root: {get_project_root()}")
-    print(f"TKA Desktop Root: {get_tka_desktop_root()}")
+    print(f"Modern Src Root: {get_modern_src_root()}")
+    print(f"Modern Root: {get_modern_root()}")
+    print(f"Legacy Src Root: {get_legacy_src_root()}")
+    print(f"Launcher Root: {get_launcher_root()}")
+    print(f"Packages Root: {get_packages_root()}")
     print(f"Current Working Directory: {Path.cwd()}")
     print(f"Setup Completed: {_SETUP_COMPLETED}")
+
     print("\nImport Paths:")
     for i, path in enumerate(get_import_paths()):
         exists = "✅" if path.exists() else "❌"
         print(f"  {i+1}. {exists} {path}")
 
-    print(f"\nPython sys.path (first 5 entries):")
-    for i, path in enumerate(sys.path[:5]):
+    print(f"\nPython sys.path (first 10 entries):")
+    for i, path in enumerate(sys.path[:10]):
         print(f"  {i+1}. {path}")
 
     print(f"\nPYTHONPATH: {os.environ.get('PYTHONPATH', 'Not set')}")
 
 
 # BULLETPROOF AUTO-SETUP: This runs automatically when ANY Python file imports this module
-# This ensures that AI assistants and developers can run tests with standard commands
-# without needing to understand the project's import structure
 if __name__ != "__main__":
     try:
         ensure_project_setup()
     except Exception as e:
         # Fail silently to avoid breaking imports, but log the issue
         import warnings
+
         warnings.warn(f"TKA Monorepo auto-setup failed: {e}", UserWarning)
 
 # Export key constants and functions
 PROJECT_ROOT = get_project_root()
-TKA_DESKTOP_ROOT = get_tka_desktop_root()
-MODERN_SRC = TKA_DESKTOP_ROOT / "modern" / "src"
-MODERN_DIR = TKA_DESKTOP_ROOT / "modern"
-LEGACY_SRC = TKA_DESKTOP_ROOT / "legacy" / "src"
+MODERN_SRC = get_modern_src_root()
+MODERN_DIR = get_modern_root()
+LEGACY_SRC = get_legacy_src_root()
+LAUNCHER_ROOT = get_launcher_root()
+PACKAGES_ROOT = get_packages_root()
 
 __all__ = [
     "ensure_project_setup",  # Main function - import and call this
     "get_project_root",
-    "get_tka_desktop_root", 
+    "get_modern_src_root",
+    "get_modern_root",
+    "get_legacy_src_root",
+    "get_launcher_root",
+    "get_packages_root",
     "setup_python_paths",
     "validate_imports",
     "print_debug_info",
     "PROJECT_ROOT",
-    "TKA_DESKTOP_ROOT",
     "MODERN_SRC",
-    "MODERN_DIR", 
+    "MODERN_DIR",
     "LEGACY_SRC",
+    "LAUNCHER_ROOT",
+    "PACKAGES_ROOT",
 ]
 
 # If run directly, provide debugging info

@@ -1,66 +1,27 @@
 {
-  "python.defaultInterpreterPath": "./apps/desktop/venv/bin/python",
-  "python.analysis.extraPaths": [
-    "./apps/desktop/modern/src",
-    "./apps/desktop/legacy/src",
-    "./packages/shared-types/python"
-  ],
-  "python.analysis.typeCheckingMode": "basic",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.diagnosticMode": "workspace",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportArgumentType": "warning",
-    "reportAssignmentType": "warning",
-    "reportAttributeAccessIssue": "warning",
-    "reportCallIssue": "warning",
-    "reportGeneralTypeIssues": "warning",
-    "reportOptionalSubscript": "none",
-    "reportOptionalMemberAccess": "none",
-    "reportOptionalCall": "none",
-    "reportOptionalIterable": "none",
-    "reportOptionalContextManager": "none",
-    "reportOptionalOperand": "none",
-    "reportMissingParameterType": "none",
-    "reportMissingTypeArgument": "none",
-    "reportUnknownArgumentType": "none",
-    "reportUnknownLambdaType": "none",
-    "reportUnknownMemberType": "none",
-    "reportUnknownParameterType": "none",
-    "reportUnknownVariableType": "none",
-    "reportPrivateUsage": "none",
-    "reportIncompleteStub": "none",
-    "reportInconsistentConstructor": "none",
-    "reportUnusedImport": "none",
-    "reportUnusedVariable": "none"
-  },
-  "typescript.preferences.includePackageJsonAutoImports": "on",
-  "eslint.workingDirectories": [
-    "./apps/web",
-    "./apps/landing",
-    "./apps/animator"
-  ],
+  "python.defaultInterpreterPath": "python",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["./src/desktop/modern/tests", "./tests"],
+  "python.terminal.activateEnvironment": true,
   "files.exclude": {
     "**/__pycache__": true,
     "**/node_modules": true,
     "**/.pytest_cache": true,
-    "**/.svelte-kit": true,
     "**/dist": true,
     "**/build": true
   },
   "search.exclude": {
     "**/node_modules": true,
     "**/__pycache__": true,
-    "**/venv": true
+    "**/venv": true,
+    "**/.pytest_cache": true
   },
-  "python.testing.pytestEnabled": true,
-  "python.testing.pytestArgs": ["./apps/desktop/modern/tests"],
-  "typescript.preferences.importModuleSpecifier": "relative",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
   "files.associations": {
-    "test_*.py": "python"
+    "test_*.py": "python",
+    "conftest.py": "python"
   }
 }
