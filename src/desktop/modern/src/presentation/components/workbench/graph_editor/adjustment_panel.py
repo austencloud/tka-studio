@@ -1,15 +1,18 @@
 from typing import Optional
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-)
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtGui import QCursor, QMouseEvent
 
 from domain.models.core_models import BeatData, MotionType
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QCursor, QMouseEvent
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
+
+from .orientation_picker import OrientationPickerWidget
 from .turn_selection_dialog import TurnSelectionDialog
 
 
@@ -61,18 +64,35 @@ class AdjustmentPanel(QWidget):
         # Determine arrow color based on side
         self._arrow_color = "blue" if side == "left" else "red"
 
-        # UI components
+        # Create stacked widget like Legacy's QStackedLayout
+        self._stacked_widget = QStackedWidget(self)
+
+        # Add orientation picker (index 0) - like Legacy's ORI_WIDGET_INDEX
+        self._orientation_picker = OrientationPickerWidget(self._arrow_color)
+        self._orientation_picker.orientation_changed.connect(
+            self._on_orientation_changed
+        )
+        self._stacked_widget.addWidget(self._orientation_picker)
+
+        # Add existing turn controls (index 1) - like Legacy's TURNS_WIDGET_INDEX
+        self._turn_controls_widget = self._create_turn_controls_widget()
+        self._stacked_widget.addWidget(self._turn_controls_widget)
+
+        # Set layout
+        layout = QVBoxLayout(self)
+        layout.addWidget(self._stacked_widget)
+
+        # UI components for turn controls (will be created in _create_turn_controls_widget)
         self._hand_indicator: Optional[QLabel] = None
         self._turn_display: Optional[QPushButton] = None
         self._decrement_button: Optional[QPushButton] = None
         self._increment_button: Optional[QPushButton] = None
         self._motion_type_label: Optional[QLabel] = None
 
-        self._setup_ui()
-
-    def _setup_ui(self):
-        """Setup Legacy-exact UI structure: Hand Indicator, Turn Display, +/- Buttons, Motion Type."""
-        layout = QVBoxLayout(self)
+    def _create_turn_controls_widget(self):
+        """Create widget containing existing turn controls"""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
         layout.setContentsMargins(8, 8, 8, 8)
         layout.setSpacing(8)
 
@@ -163,6 +183,8 @@ class AdjustmentPanel(QWidget):
         layout.addWidget(self._motion_type_label)
 
         layout.addStretch()
+
+        return widget
 
     def _on_turn_display_clicked(self):
         """Handle turn display click to open turn selection dialog."""
@@ -258,26 +280,65 @@ class AdjustmentPanel(QWidget):
                     self.beat_modified.emit(self._current_beat)
 
     def set_beat(self, beat_data: Optional[BeatData]):
-        """Set beat data and update all UI elements."""
+        """Switch panels based on beat type like Legacy"""
         self._current_beat = beat_data
-        self._update_ui_for_beat()
+
+        # Switch based on beat type (like Legacy's update_adjustment_panel)
+        if not beat_data or getattr(beat_data, "is_start_position", False):
+            self._stacked_widget.setCurrentIndex(0)  # Show orientation picker
+            if beat_data:
+                self._update_orientation_picker(beat_data)
+        else:
+            self._stacked_widget.setCurrentIndex(1)  # Show turn controls
+            self._update_turn_controls(beat_data)
 
     def set_selected_arrow(self, arrow_id: str):
         """Set selected arrow and update UI highlighting."""
         self._selected_arrow_id = arrow_id
 
+    def _update_orientation_picker(self, beat_data: BeatData):
+        """Update orientation picker with beat data"""
+        # Get orientation from beat data for this arrow color
+        if self._arrow_color == "blue" and beat_data.blue_motion:
+            orientation = getattr(beat_data.blue_motion, "orientation", "in")
+        elif self._arrow_color == "red" and beat_data.red_motion:
+            orientation = getattr(beat_data.red_motion, "orientation", "in")
+        else:
+            orientation = "in"
+
+        self._orientation_picker.set_orientation(orientation)
+
+    def _update_turn_controls(self, beat_data: BeatData):
+        """Update turn controls with beat data"""
+        self._update_ui_for_beat()
+
+    def _on_orientation_changed(self, arrow_color: str, orientation: str):
+        """Handle orientation change from picker"""
+        if self._current_beat and hasattr(self._graph_editor, "_graph_service"):
+            # Apply orientation change through service
+            success = self._graph_editor._graph_service.apply_orientation_adjustment(
+                arrow_color, orientation
+            )
+            if success:
+                self.beat_modified.emit(self._current_beat)
+
     def _update_ui_for_beat(self):
         """Update UI elements based on current beat data."""
         if not self._current_beat:
-            self._turn_display.setText("0.0")
-            self._motion_type_label.setText("Static")
-            self._update_button_states(0.0)
+            if self._turn_display:
+                self._turn_display.setText("0.0")
+            if self._motion_type_label:
+                self._motion_type_label.setText("Static")
+            if self._turn_display:
+                self._update_button_states(0.0)
             return
 
         # Update turn display for this panel's arrow color
         current_turn = self._get_current_turn_value(self._arrow_color)
-        self._update_turn_display_value(current_turn)
-        self._update_button_states(current_turn)
+        if self._turn_display:
+            self._update_turn_display_value(current_turn)
+            self._update_button_states(current_turn)
 
         # Update motion type display
-        self._update_motion_type_display()
+        if self._motion_type_label:
+            self._update_motion_type_display()

@@ -1,6 +1,6 @@
-import sys
-import os
 import logging
+import os
+import sys
 
 
 def configure_import_paths():
@@ -44,8 +44,8 @@ def initialize_dependency_injection():
     This replaces the old AppContext singleton with proper dependency injection.
     """
     try:
-        from src.core.dependency_container import configure_dependencies
         from src.core.application_context import create_application_context
+        from src.core.dependency_container import configure_dependencies
         from src.core.migration_adapters import setup_legacy_compatibility
         from src.utils.logging_config import get_logger
 
@@ -149,8 +149,8 @@ def create_main_window(profiler, splash_screen, app_context):
 
 
 def install_handlers():
+    from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
     from src.utils.paint_event_supressor import PaintEventSuppressor
-    from PyQt6.QtCore import qInstallMessageHandler, QtMsgType
 
     # Install paint event suppressor
     PaintEventSuppressor.install_message_handler()
@@ -203,10 +203,12 @@ def detect_parallel_testing_mode():
 def main():
     configure_import_paths()
 
+    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
     from PyQt6.QtCore import QTimer
-    from src.splash_screen.splash_screen import SplashScreen
     from src.profiler import Profiler
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+    from src.splash_screen.splash_screen import SplashScreen
     from src.utils.logging_config import get_logger
     from src.utils.startup_silencer import silence_startup_logs
 

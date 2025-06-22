@@ -1,8 +1,9 @@
-from typing import Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import pyqtSignal
-from domain.models.core_models import SequenceData
+from typing import TYPE_CHECKING, Optional
+
 from core.interfaces.workbench_services import IGraphEditorService
+from domain.models.core_models import BeatData, SequenceData
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from .graph_editor.graph_editor import GraphEditor
@@ -78,6 +79,20 @@ class WorkbenchGraphSection(QWidget):
     def set_selected_beat(self, beat_index: int):
         """Set the currently selected beat index"""
         self._current_beat_index = beat_index
+
+    def set_selected_beat_data(self, beat_index: int, beat_data: "BeatData"):
+        """Set selected beat data for graph editor display"""
+        self._current_beat_index = beat_index
+
+        if self._graph_editor:
+            self._graph_editor.set_selected_beat(beat_data, beat_index)
+
+    def set_selected_start_position(self, start_position_data: Optional["BeatData"]):
+        """Set selected start position for graph editor display"""
+        self._current_beat_index = -1  # Special value for start position
+
+        if self._graph_editor:
+            self._graph_editor.set_selected_beat(start_position_data, -1)
 
     def update_toggle_position(self, animate: bool = True):
         """Update graph toggle tab position"""

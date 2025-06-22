@@ -7,11 +7,11 @@
     "apps/*"
   ],
   "scripts": {
-    "dev:desktop": "cd apps/desktop/modern && python main.py",
+    "dev:desktop": "cd src/desktop/modern && python main.py",
     "dev:web": "cd apps/web && npm run dev",
     "dev:landing": "cd apps/landing && npm run dev",
     "dev:animator": "cd apps/animator && npm run dev",
-    "dev:api": "cd apps/desktop/modern && python start_production_api.py",
+    "dev:api": "cd src/desktop/modern && python scripts/start_production_api.py",
     "dev:fullstack": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
     "build:web": "cd apps/web && npm run build",
     "build:landing": "cd apps/landing && npm run build",

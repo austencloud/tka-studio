@@ -101,7 +101,7 @@ class TKADeveloper:
             return None
 
         os.chdir(api_path)
-        process = subprocess.Popen([sys.executable, "start_production_api.py"])
+        process = subprocess.Popen([sys.executable, "scripts/start_production_api.py"])
         self.processes.append(process)
         print(f"✅ API server started (PID: {process.pid})")
         return process

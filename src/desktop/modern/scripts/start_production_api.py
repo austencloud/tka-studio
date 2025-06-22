@@ -14,16 +14,17 @@ def main():
     print("🚀 Starting TKA Desktop Production API")
     print("=" * 50)
     
-    # Ensure we're in the right directory
+    # Ensure we're in the modern directory (parent of scripts)
     script_dir = Path(__file__).parent
-    os.chdir(script_dir)
+    modern_dir = script_dir.parent
+    os.chdir(modern_dir)
     
     # Add src to Python path
-    src_path = script_dir / "src"
+    src_path = modern_dir / "src"
     if str(src_path) not in sys.path:
         sys.path.insert(0, str(src_path))
     
-    print(f"📁 Working directory: {script_dir}")
+    print(f"📁 Working directory: {modern_dir}")
     print(f"📦 Python path includes: {src_path}")
     
     # Check if uvicorn is available
@@ -66,9 +67,9 @@ def main():
     print("=" * 50)
     
     try:
-        # Start uvicorn server
+        # Start uvicorn server with corrected module path
         uvicorn.run(
-            "infrastructure.api.production_api:app",
+            "infrastructure.api.main:app",
             host="0.0.0.0",
             port=8000,
             reload=True,
@@ -82,7 +83,7 @@ def main():
         print("\n🔧 Troubleshooting:")
         print("  1. Make sure you're in the 'modern' directory")
         print("  2. Check that all dependencies are installed")
-        print("  3. Verify the src/infrastructure/api/production_api.py file exists")
+        print("  3. Verify the src/infrastructure/api/main.py file exists")
         return 1
     
     print("👋 TKA Desktop Production API shutdown complete")

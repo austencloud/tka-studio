@@ -6,20 +6,21 @@ with modern architecture patterns and Modern pictograph integration.
 """
 
 from typing import Optional
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFrame
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from PyQt6.QtGui import QMouseEvent, QPainter, QPen, QColor
 
+from domain.models.core_models import BeatData
 from presentation.components.pictograph.pictograph_component import PictographComponent
 from presentation.components.start_position_picker.start_text_overlay import (
     StartTextOverlay,
 )
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QColor, QMouseEvent, QPainter, QPen
+from PyQt6.QtWidgets import QFrame, QVBoxLayout, QWidget
+
 from .beat_number_overlay import (
     BeatNumberOverlay,
     add_beat_number_to_view,
     clear_all_beat_numbers_from_view,
 )
-from domain.models.core_models import BeatData
 
 
 class BeatView(QFrame):
@@ -79,7 +80,9 @@ class BeatView(QFrame):
         self._pictograph_component = PictographComponent(parent=None)
         if self._pictograph_component:
             self._pictograph_component.setParent(self)
-            self._pictograph_component.setMinimumSize(120, 120)  # Fill container
+            # CRITICAL FIX: Allow responsive scaling like StartPositionView
+            # Remove minimum size constraint to allow responsive scaling
+            self._pictograph_component.setMinimumSize(1, 1)
             # CRITICAL FIX: Set proper scaling context for beat frame
             from application.services.ui.context_aware_scaling_service import (
                 ScalingContext,
@@ -363,6 +366,27 @@ class BeatView(QFrame):
     def minimumSizeHint(self) -> QSize:
         """Provide minimum size hint"""
         return QSize(100, 100)
+
+    def resizeEvent(self, event):
+        """Handle resize events and update overlay scaling"""
+        super().resizeEvent(event)
+
+        # Update overlay scaling when the widget resizes
+        self._update_overlay_scaling()
+
+    def _update_overlay_scaling(self):
+        """Update scaling for all text overlays"""
+        # Update beat number overlay scaling
+        if self._beat_number_overlay and hasattr(
+            self._beat_number_overlay, "update_scaling"
+        ):
+            self._beat_number_overlay.update_scaling()
+
+        # Update START text overlay scaling
+        if self._start_text_overlay and hasattr(
+            self._start_text_overlay, "update_scaling"
+        ):
+            self._start_text_overlay.update_scaling()
 
     # Accessibility support
     def setAccessibleName(self, name: str):

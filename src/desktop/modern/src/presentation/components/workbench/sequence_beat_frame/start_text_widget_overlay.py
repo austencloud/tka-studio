@@ -10,9 +10,10 @@ with Modern's architecture than scene-based text overlays.
 """
 
 from typing import Optional
-from PyQt6.QtWidgets import QLabel, QWidget
-from PyQt6.QtGui import QFont
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QWidget
 
 
 class StartTextWidgetOverlay(QLabel):
@@ -25,6 +26,11 @@ class StartTextWidgetOverlay(QLabel):
 
     def __init__(self, parent_widget: Optional[QWidget] = None):
         super().__init__("Start", parent_widget)  # Use "Start" not "START" like Legacy
+
+        self._parent_widget = parent_widget
+        self._base_font_size = 10  # Base font size for scaling
+        self._base_size = (60, 30)  # Base size for scaling
+        self._base_position = (10, 2)  # Base position for scaling
 
         self._setup_styling()
         self._setup_positioning()
@@ -82,6 +88,35 @@ class StartTextWidgetOverlay(QLabel):
         current_font = self.font()
         current_font.setPointSize(font_size)
         self.setFont(current_font)
+
+    def update_scaling(self):
+        """Update the overlay scaling based on parent widget size"""
+        if not self._parent_widget:
+            return
+
+        # Calculate scale factor based on parent widget size vs base size (120x120)
+        parent_size = self._parent_widget.size()
+        base_size = 120  # Base size that the original overlay was designed for
+
+        scale_factor = min(
+            parent_size.width() / base_size, parent_size.height() / base_size
+        )
+
+        # Scale font size
+        scaled_font_size = max(
+            6, int(self._base_font_size * scale_factor)
+        )  # Minimum 6pt
+        current_font = self.font()
+        current_font.setPointSize(scaled_font_size)
+        self.setFont(current_font)
+
+        # Scale position and size
+        scaled_x = int(self._base_position[0] * scale_factor)
+        scaled_y = int(self._base_position[1] * scale_factor)
+        scaled_width = int(self._base_size[0] * scale_factor)
+        scaled_height = int(self._base_size[1] * scale_factor)
+
+        self.setGeometry(scaled_x, scaled_y, scaled_width, scaled_height)
 
 
 def add_start_text_to_view(

@@ -5,22 +5,13 @@ This component provides the core beat grid system with dynamic layout,
 replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 """
 
-from typing import Optional, List, Dict
-from PyQt6.QtWidgets import (
-    QWidget,
-    QGridLayout,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QScrollArea,
-    QFrame,
-)
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
+from typing import Dict, List, Optional
 
+from application.services.layout.beat_resizer_service import BeatResizerService
 from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
+from core.interfaces.core_services import ILayoutService
 from presentation.components.workbench.sequence_beat_frame.beat_selection_manager import (
     BeatSelectionManager,
 )
@@ -28,11 +19,18 @@ from presentation.components.workbench.sequence_beat_frame.beat_view import Beat
 from presentation.components.workbench.sequence_beat_frame.start_position_view import (
     StartPositionView,
 )
-from src.domain.models.core_models import SequenceData, BeatData
-from core.interfaces.core_services import ILayoutService
-from application.services.layout.beat_resizer_service import (
-    BeatResizerService,
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
 )
+from src.domain.models.core_models import BeatData, SequenceData
 
 
 class BeatFrame(QScrollArea):
@@ -274,7 +272,10 @@ class BeatFrame(QScrollArea):
     def _on_start_position_clicked(self):
         """Handle start position click events"""
         # Clear beat selection when start position is clicked
-        self.clear_selection()  # Responsive design
+        self.clear_selection()
+
+        # Emit special signal for start position selection (index -1)
+        self.beat_selected.emit(-1)  # Responsive design
 
     def resizeEvent(self, event):
         """Handle resize events with Legacy's complete resizing logic"""

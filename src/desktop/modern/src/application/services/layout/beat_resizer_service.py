@@ -5,16 +5,16 @@ Implements sophisticated beat sizing logic with precise
 dimension calculations and intelligent responsive behavior.
 """
 
-from typing import Tuple, Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Tuple, Union
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
 
 if TYPE_CHECKING:
+    from presentation.components.workbench.beat_frame.beat_frame import BeatFrame
+    from presentation.components.workbench.graph_editor.graph_editor import GraphEditor
     from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
         SequenceBeatFrame,
-    )
-    from presentation.components.workbench.beat_frame.beat_frame import (
-        BeatFrame,
     )
 
 # Type alias for beat frame components
@@ -39,6 +39,13 @@ class BeatResizerService:
     def __init__(self):
         self._last_calculated_size = None
         self._size_cache = {}
+
+        # Graph editor reference for accurate height calculations
+        self._graph_editor_ref: Optional["GraphEditor"] = None
+
+    def set_graph_editor_reference(self, graph_editor: "GraphEditor"):
+        """Set reference to graph editor for accurate height calculations"""
+        self._graph_editor_ref = graph_editor
 
     def resize_beat_frame(
         self, beat_frame: BeatFrameType, num_rows: int, num_columns: int
@@ -201,12 +208,23 @@ class BeatResizerService:
         return 200  # Reasonable default
 
     def _get_graph_editor_height(self, main_widget: QWidget) -> int:
-        """Get graph editor height or reasonable estimate"""
-        # Try to find graph editor, otherwise use reasonable default
+        """Get actual graph editor height, not a guess"""
+        # Use direct reference if available and visible
+        if self._graph_editor_ref and self._graph_editor_ref.is_visible():
+            return self._graph_editor_ref.height()
+
+        # Fallback: try to find graph editor by name
         graph_editor = self._find_child_by_name(main_widget, "graph_editor")
-        if graph_editor and hasattr(graph_editor, "height"):
-            return graph_editor.height()
-        return int(main_widget.height() * 0.3)  # Reasonable default (30% of height)
+        if (
+            graph_editor
+            and hasattr(graph_editor, "height")
+            and hasattr(graph_editor, "is_visible")
+        ):
+            if graph_editor.is_visible():
+                return graph_editor.height()
+
+        # If not visible, don't subtract any height
+        return 0
 
     def _find_child_by_name(self, widget: QWidget, name: str) -> Optional[QWidget]:
         """Find child widget by object name"""

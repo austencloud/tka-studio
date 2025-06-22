@@ -17,7 +17,7 @@ python verify_production_ready.py
 
 ### **2. Start Production API**
 ```bash
-python start_production_api.py
+python scripts/start_production_api.py
 ```
 
 ### **3. Access Documentation**
@@ -108,9 +108,9 @@ GET /api/events/stats - Get event bus statistics
 
 ### **Server Configuration**
 ```python
-# Default configuration in start_production_api.py
+# Default configuration in scripts/start_production_api.py
 uvicorn.run(
-    "infrastructure.api.production_api:app",
+    "infrastructure.api.main:app",
     host="0.0.0.0",      # All interfaces
     port=8000,           # Default port
     reload=True,         # Development mode
@@ -167,7 +167,7 @@ log_level="warning"    # Reduced logging
 
 ### **1. Local Development**
 ```bash
-python start_production_api.py
+python scripts/start_production_api.py
 ```
 
 ### **2. Docker Deployment**

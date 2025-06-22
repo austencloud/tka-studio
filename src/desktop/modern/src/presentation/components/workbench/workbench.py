@@ -1,22 +1,22 @@
-from typing import Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import pyqtSignal
-from core.interfaces.workbench_services import (
-    ISequenceWorkbenchService,
-    IFullScreenService,
-    IBeatDeletionService,
-    IGraphEditorService,
-    IDictionaryService,
-)
-from domain.models.core_models import SequenceData, BeatData
+from typing import TYPE_CHECKING, Optional
+
 from core.interfaces.core_services import ILayoutService
-from .indicator_section import WorkbenchIndicatorSection
-from .beat_frame_section import WorkbenchBeatFrameSection
-from .graph_section import WorkbenchGraphSection
-from .event_controller import WorkbenchEventController
-from .button_interface import (
-    WorkbenchButtonInterfaceAdapter,
+from core.interfaces.workbench_services import (
+    IBeatDeletionService,
+    IDictionaryService,
+    IFullScreenService,
+    IGraphEditorService,
+    ISequenceWorkbenchService,
 )
+from domain.models.core_models import BeatData, SequenceData
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
+from .beat_frame_section import WorkbenchBeatFrameSection
+from .button_interface import WorkbenchButtonInterfaceAdapter
+from .event_controller import WorkbenchEventController
+from .graph_section import WorkbenchGraphSection
+from .indicator_section import WorkbenchIndicatorSection
 
 if TYPE_CHECKING:
     pass
@@ -65,6 +65,7 @@ class ModernSequenceWorkbench(QWidget):
         self._setup_ui()
         self._connect_signals()
         self._setup_button_interface()
+        self._connect_graph_editor_to_beat_resizer()
 
     def _create_event_controller(
         self,
@@ -166,6 +167,24 @@ class ModernSequenceWorkbench(QWidget):
             self.operation_completed
         )
         self._button_interface.signals.operation_failed.connect(self.error_occurred)
+
+    def _connect_graph_editor_to_beat_resizer(self):
+        """Connect graph editor to beat resizer for accurate sizing"""
+        if self._graph_section and self._beat_frame_section:
+            # Get the graph editor from the graph section
+            graph_editor = getattr(self._graph_section, "_graph_editor", None)
+
+            # Get the beat frame from the beat frame section
+            beat_frame = getattr(self._beat_frame_section, "_beat_frame", None)
+
+            if graph_editor and beat_frame:
+                # Get the resizer service from the beat frame
+                resizer_service = getattr(beat_frame, "_resizer_service", None)
+
+                if resizer_service and hasattr(
+                    resizer_service, "set_graph_editor_reference"
+                ):
+                    resizer_service.set_graph_editor_reference(graph_editor)
 
     # Public API methods
     def set_sequence(self, sequence: SequenceData):
@@ -343,15 +362,22 @@ class ModernSequenceWorkbench(QWidget):
 
     # Component signal handlers
     def _on_beat_selected(self, beat_index: int):
-        """Handle beat selection from beat frame"""
+        """Handle beat selection from beat frame and update graph editor"""
+        # Enable delete button
         if self._beat_frame_section:
             self._beat_frame_section.set_button_enabled(
                 "delete_beat", beat_index is not None
             )
 
-        # Notify graph section about selected beat index
-        if self._graph_section and beat_index is not None:
-            self._graph_section.set_selected_beat(beat_index)
+        # Update graph editor with selected beat
+        if self._graph_section and self._current_sequence and beat_index is not None:
+            if beat_index < len(self._current_sequence.beats):
+                selected_beat = self._current_sequence.beats[beat_index]
+                self._graph_section.set_selected_beat_data(beat_index, selected_beat)
+            elif beat_index == -1:  # Start position selected
+                self._graph_section.set_selected_start_position(
+                    self._start_position_data
+                )
 
     def _on_beat_modified(self, beat_index: int, beat_data):
         """Handle beat modification from beat frame"""
@@ -392,9 +418,23 @@ class ModernSequenceWorkbench(QWidget):
         _ = arrow_data
 
     def _on_graph_visibility_changed(self, visible: bool):
-        """Handle graph visibility changes"""
+        """Handle graph visibility changes and resize beat frame accordingly"""
         if visible and self._graph_section:
             self._graph_section.set_sequence(self._current_sequence)
+
+        # Force beat frame resize when graph editor visibility changes
+        if self._beat_frame_section and hasattr(
+            self._beat_frame_section, "_beat_frame"
+        ):
+            beat_frame = self._beat_frame_section._beat_frame
+
+            if hasattr(beat_frame, "_resizer_service") and hasattr(
+                beat_frame, "_current_layout"
+            ):
+                layout = beat_frame._current_layout
+                beat_frame._resizer_service.resize_beat_frame(
+                    beat_frame, layout["rows"], layout["columns"]
+                )
 
     def resizeEvent(self, event):
         """Handle resize events for responsive design"""

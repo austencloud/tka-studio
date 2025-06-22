@@ -42,12 +42,11 @@
         "cwd": "${workspaceFolder}/apps/web"
       },
       "group": "build"
-    },
-    {
+    },    {
       "label": "Start API Server",
       "type": "shell",
       "command": "python",
-      "args": ["start_production_api.py"],
+      "args": ["scripts/start_production_api.py"],
       "options": {
         "cwd": "${workspaceFolder}/src/desktop/modern"
       },

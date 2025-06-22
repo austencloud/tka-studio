@@ -5,23 +5,17 @@ This component provides the core beat grid system with dynamic layout,
 replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 """
 
-from typing import Optional, List, Dict, TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QWidget,
-    QGridLayout,
-    QScrollArea,
-    QFrame,
-)
-from PyQt6.QtCore import Qt, pyqtSignal
+from typing import TYPE_CHECKING, Dict, List, Optional
 
-from domain.models.core_models import SequenceData, BeatData
+from application.services.layout.beat_resizer_service import BeatResizerService
 from core.interfaces.core_services import ILayoutService
-from application.services.layout.beat_resizer_service import (
-    BeatResizerService,
-)
+from domain.models.core_models import BeatData, SequenceData
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
+
+from .beat_selection_manager import BeatSelectionManager
 from .beat_view import BeatView
 from .start_position_view import StartPositionView
-from .beat_selection_manager import BeatSelectionManager
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -29,13 +23,13 @@ if TYPE_CHECKING:
 
 try:
     from core.events import (
-        get_event_bus,
-        SequenceCreatedEvent,
         BeatAddedEvent,
         BeatRemovedEvent,
         BeatUpdatedEvent,
-        LayoutRecalculatedEvent,
         EventPriority,
+        LayoutRecalculatedEvent,
+        SequenceCreatedEvent,
+        get_event_bus,
     )
 
     EVENT_SYSTEM_AVAILABLE = True
@@ -348,7 +342,10 @@ class SequenceBeatFrame(QScrollArea):
     def _on_start_position_clicked(self):
         """Handle start position click events"""
         # Clear beat selection when start position is clicked
-        self.clear_selection()  # Responsive design
+        self.clear_selection()
+
+        # Emit special signal for start position selection (index -1)
+        self.beat_selected.emit(-1)  # Responsive design
 
     def resizeEvent(self, event):
         """Handle resize events with Legacy's complete resizing logic"""

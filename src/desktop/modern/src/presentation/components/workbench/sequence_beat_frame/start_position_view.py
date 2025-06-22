@@ -6,12 +6,13 @@ integrating with Modern's start position picker and pictograph system.
 """
 
 from typing import Optional
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFrame
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
+
+from domain.models.core_models import BeatData
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QMouseEvent
+from PyQt6.QtWidgets import QFrame, QVBoxLayout, QWidget
 
 from ...pictograph.pictograph_component import PictographComponent
-from domain.models.core_models import BeatData
 from ...start_position_picker.start_text_overlay import StartTextOverlay
 from .start_text_widget_overlay import StartTextWidgetOverlay, add_start_text_to_view
 
@@ -302,6 +303,20 @@ class StartPositionView(QFrame):
     def minimumSizeHint(self) -> QSize:
         """Provide minimum size hint"""
         return QSize(100, 100)
+
+    def resizeEvent(self, event):
+        """Handle resize events and update overlay scaling"""
+        super().resizeEvent(event)
+
+        # Update overlay scaling when the widget resizes
+        self._update_overlay_scaling()
+
+    def _update_overlay_scaling(self):
+        """Update scaling for START text overlay"""
+        if self._start_text_widget_overlay and hasattr(
+            self._start_text_widget_overlay, "update_scaling"
+        ):
+            self._start_text_widget_overlay.update_scaling()
 
     # Accessibility support
     def setAccessibleName(self, name: str):
