@@ -13,45 +13,46 @@ TESTS:
 - Event subscription and cleanup
 """
 
-import pytest
-from pathlib import Path
-
-from unittest.mock import Mock, MagicMock
 import uuid
 from datetime import datetime
+from pathlib import Path
+from unittest.mock import MagicMock, Mock
+
+import pytest
+from domain.models.core_models import BeatData, PictographData
 from tka_types import MotionType
-from desktop.domain.models.core_models import BeatData
-from desktop.domain.models.core_models import PictographData
 
 # Add src to path for imports
 test_dir = Path(__file__).parent.parent.parent
 src_dir = test_dir / "src"
 
-from desktop.core.events import (
-    get_event_bus,
-    reset_event_bus,
-    ArrowPositionedEvent,
-    PropPositionedEvent,
+from domain.models.core_models import (
+    BeatData,
+    Location,
+    MotionData,
+    MotionType,
+    RotationDirection,
 )
+from domain.models.pictograph_models import (
+    ArrowData,
+    GridData,
+    GridMode,
+    PictographData,
+)
+
 from desktop.application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
 from desktop.application.services.positioning.prop_management_service import (
     PropManagementService,
 )
-from desktop.domain.models.core_models import (
-    MotionData,
-    MotionType,
-    RotationDirection,
-    Location,
-    BeatData,
+from desktop.core.events import (
+    ArrowPositionedEvent,
+    PropPositionedEvent,
+    get_event_bus,
+    reset_event_bus,
 )
-from desktop.domain.models.pictograph_models import (
-    ArrowData,
-    PictographData,
-    GridData,
-    GridMode,
-)
+
 
 class TestEventFlowIntegration:
     """Test event flow integration across services."""

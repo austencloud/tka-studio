@@ -18,8 +18,8 @@ from typing import List, Dict, Any
 
 from desktop.core.events.event_bus import (
 from tka_types import MotionType
-from desktop.domain.models.core_models import BeatData
-from desktop.domain.models.core_models import SequenceData
+from domain.models.core_models import BeatData
+from domain.models.core_models import SequenceData
 
     TypeSafeEventBus,
     SequenceEvent,
@@ -27,7 +27,7 @@ from desktop.domain.models.core_models import SequenceData
     BaseEvent,
 )
 from desktop.core.dependency_injection.di_container import DIContainer
-from desktop.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,

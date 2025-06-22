@@ -4,6 +4,27 @@ This directory contains utility and maintenance scripts for the TKA Desktop Mode
 
 ## Available Scripts
 
+### `start_production_api.py`
+
+**Purpose:** Starts the production-ready FastAPI server with proper configuration and dependency checks.
+
+**Usage:**
+
+```bash
+cd modern/
+python scripts/start_production_api.py
+```
+
+**Features:**
+
+- Automatically configures Python path for the modern project
+- Checks and installs required dependencies (uvicorn, fastapi)
+- Starts the production API server with optimal settings
+- Provides comprehensive status and URL information
+- Includes proper error handling and troubleshooting guidance
+
+**Dependencies:** Python 3.8+, automatically installs uvicorn and fastapi if missing
+
 ### `cleanup_script.sh`
 
 **Purpose:** Organizes project files according to the cleanup audit recommendations.

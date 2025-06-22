@@ -12,14 +12,14 @@ Import Pattern Enforcement Tests
 Prevents regression to old import patterns and enforces standardized imports.
 """
 
-import pytest
 from pathlib import Path
-from desktop.domain.models.core_models import BeatData
-from desktop.domain.models.core_models import SequenceData
-from desktop.domain.models.core_models import PictographData
+
+import pytest
+from domain.models.core_models import BeatData, PictographData, SequenceData
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
+
 
 class TestImportPatternEnforcement:
     """Import pattern enforcement tests."""
@@ -29,14 +29,14 @@ class TestImportPatternEnforcement:
         Test standardized import patterns contract.
 
         CONTRACT: Import patterns must be standardized:
-        - Use 'from desktop.presentation.' not 'from desktop.presentation.'
+        - Use 'from presentation.' not 'from presentation.'
         - Use 'from desktop.core.' not 'from desktop.core.'
-        - Use 'from desktop.domain.' not 'from desktop.domain.'
+        - Use 'from domain.' not 'from domain.'
         - Use 'from application.' not 'from desktop.application.'
         """
         # Test that standardized imports work
         try:
-            from desktop.domain.models.core_models import BeatData
+            from domain.models.core_models import BeatData
 
             assert BeatData is not None
         except ImportError:
@@ -63,19 +63,19 @@ class TestImportPatternEnforcement:
         Test presentation layer imports contract.
 
         CONTRACT: Presentation layer imports must be standardized:
-        - Components use 'from desktop.presentation.components.'
-        - Tabs use 'from desktop.presentation.tabs.'
-        - Factories use 'from desktop.presentation.factories.'
+        - Components use 'from presentation.components.'
+        - Tabs use 'from presentation.tabs.'
+        - Factories use 'from presentation.factories.'
         """
         try:
-            from desktop.presentation.tabs.construct.construct_tab import ConstructTab
+            from presentation.tabs.construct.construct_tab import ConstructTab
 
             assert ConstructTab is not None
         except ImportError:
             pytest.skip("Presentation tabs not available")
 
         try:
-            from desktop.presentation.factories.workbench_factory import create_modern_workbench
+            from presentation.factories.workbench_factory import create_modern_workbench
 
             assert create_modern_workbench is not None
         except ImportError:
@@ -152,12 +152,12 @@ class TestImportPatternEnforcement:
         Test domain layer imports contract.
 
         CONTRACT: Domain layer imports must be standardized:
-        - Core models use 'from desktop.domain.models.core_models'
-        - Pictograph models use 'from desktop.domain.models.pictograph_models'
+        - Core models use 'from domain.models.core_models'
+        - Pictograph models use 'from domain.models.pictograph_models'
         - Domain logic is independent of other layers
         """
         try:
-            from desktop.domain.models.core_models import BeatData, SequenceData, MotionData
+            from domain.models.core_models import BeatData, MotionData, SequenceData
 
             assert BeatData is not None
             assert SequenceData is not None
@@ -166,10 +166,10 @@ class TestImportPatternEnforcement:
             pytest.skip("Domain core models not available")
 
         try:
-            from desktop.domain.models.pictograph_models import (
-                PictographData,
-                GridData,
+            from domain.models.pictograph_models import (
                 ArrowData,
+                GridData,
+                PictographData,
             )
 
             assert PictographData is not None
@@ -192,7 +192,8 @@ class TestImportPatternEnforcement:
 
         try:
             # Test absolute imports work
-            from desktop.domain.models.core_models import BeatData
+            from domain.models.core_models import BeatData
+
             from desktop.application.services.layout.layout_management_service import (
                 LayoutManagementService,
             )
@@ -254,7 +255,8 @@ class TestImportPatternEnforcement:
 
         try:
             # These should work with new patterns
-            from desktop.domain.models.core_models import BeatData
+            from domain.models.core_models import BeatData
+
             from desktop.core.dependency_injection.di_container import DIContainer
 
             # If these work, we're using new patterns
@@ -263,6 +265,7 @@ class TestImportPatternEnforcement:
 
         except ImportError:
             pytest.skip("New import patterns not available")
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

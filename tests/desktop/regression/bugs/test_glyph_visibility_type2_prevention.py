@@ -12,11 +12,11 @@ AUTHOR: @austencloud
 import pytest
 from pathlib import Path
 from desktop.application.services.core.pictograph_management_service import (
-from desktop.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 
     PictographManagementService,
 )
-from desktop.domain.models.core_models import LetterType, BeatData
+from domain.models.core_models import LetterType, BeatData
 
 class TestGlyphVisibilityType2Prevention:
     """Regression test for glyph visibility bug prevention."""

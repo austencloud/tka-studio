@@ -12,7 +12,7 @@ import uuid
 from datetime import datetime
 
 from desktop.core.events import (
-from desktop.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 
     TypeSafeEventBus,
     SequenceCreatedEvent,
@@ -22,7 +22,7 @@ from desktop.domain.models.core_models import BeatData
 from desktop.application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from desktop.domain.models.core_models import SequenceData, BeatData
+from domain.models.core_models import SequenceData, BeatData
 
 @pytest.fixture
 def event_bus():

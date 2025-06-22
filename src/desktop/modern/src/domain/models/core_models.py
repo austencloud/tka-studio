@@ -525,24 +525,3 @@ class GridMode(Enum):
     BOX = "box"
 
 
-# Example of how these models eliminate technical debt:
-"""
-OLD WAY (tightly coupled, mutable, UI dependencies):
-    class Beat(Pictograph):  # Inherits from QGraphicsScene!
-        def __init__(self, beat_frame):
-            super().__init__()
-            self.beat_frame = beat_frame  # Tight coupling to UI
-            self.view = None  # UI component in business model
-            self.duration = 1
-            # Mutable state everywhere, hard to test
-
-NEW WAY (pure business logic, immutable, testable):
-    beat = BeatData(
-        letter="A",
-        duration=1.0,
-        blue_motion=MotionData(MotionType.SHIFT, RotationDirection.CLOCKWISE, ...),
-        red_motion=MotionData(MotionType.DASH, RotationDirection.CCW, ...)
-    )
-    # Immutable, no UI dependencies, easy to test, serializable
-    updated_beat = beat.update(duration=2.0)  # Creates new instance
-"""

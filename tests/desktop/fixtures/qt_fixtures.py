@@ -6,11 +6,13 @@ Qt Testing Fixtures
 Provides reusable Qt application and widget fixtures for testing.
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent / "src"
+
 
 @pytest.fixture
 def qt_app():
@@ -31,6 +33,7 @@ def qt_app():
     except ImportError:
         pytest.skip("PyQt6 not available for Qt testing")
 
+
 @pytest.fixture
 def qt_main_window(qt_app):
     """Provide a main window for testing."""
@@ -48,6 +51,7 @@ def qt_main_window(qt_app):
 
     except ImportError:
         pytest.skip("PyQt6 not available for main window testing")
+
 
 @pytest.fixture
 def qt_widget(qt_app):
@@ -67,11 +71,12 @@ def qt_widget(qt_app):
     except ImportError:
         pytest.skip("PyQt6 not available for widget testing")
 
+
 @pytest.fixture
 def construct_tab_widget(qt_app, workbench_di_container):
     """Provide a construct tab widget for testing."""
     try:
-        from desktop.presentation.tabs.construct.construct_tab import ConstructTab
+        from presentation.tabs.construct.construct_tab import ConstructTab
 
         construct_tab = ConstructTab(workbench_di_container)
         construct_tab.resize(800, 600)

@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tka-monorepo"
+name = "tka"
 version = "1.0.0"
-description = "The Kinetic Alphabet Monorepo"
+description = "The Kinetic Alphabet"
 authors = [
     {name = "Austen Cloud", email = "tkaflowarts@gmail.com"}
 ]
@@ -76,11 +76,23 @@ disable = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["src/desktop/modern/tests", "tests"]
+testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --strict-markers --strict-config"
+markers = [
+    "unit: Unit tests (fast, isolated)",
+    "integration: Integration tests (component interactions)",
+    "specification: Specification tests (requirements verification)",
+    "ui: User interface tests (with pytest-qt)",
+    "slow: Slow running tests (>5 seconds)",
+    "legacy: Legacy system tests",
+    "modern: Modern system tests",
+    "desktop: Desktop application tests",
+    "web: Web application tests",
+    "launcher: Launcher application tests"
+]
 
 [tool.pyright]
 # Include all source directories
@@ -160,3 +172,11 @@ reportAssignmentType = "none"
 reportInvalidTypeForm = "none"
 reportInvalidTypeArguments = "none"
 reportSelfClsParameterName = "none"
+
+[tool.setuptools]
+packages = ["tka.desktop.modern", "tka.desktop.legacy", "tka.launcher"]
+
+[tool.setuptools.package-dir]
+"tka.desktop.modern" = "src/desktop/modern/src"
+"tka.desktop.legacy" = "src/desktop/legacy/src"
+"tka.launcher" = "launcher"

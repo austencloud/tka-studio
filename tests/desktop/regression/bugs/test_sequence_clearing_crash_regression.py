@@ -13,9 +13,9 @@ Focus on reproducing the exact scenario that caused the original bug.
 
 import pytest
 from pathlib import Path
-from desktop.domain.models.core_models import BeatData
-from desktop.domain.models.core_models import SequenceData
-from desktop.domain.models.core_models import PictographData
+from domain.models.core_models import BeatData
+from domain.models.core_models import SequenceData
+from domain.models.core_models import PictographData
 import sys
 
 # Add modern to path for imports
@@ -29,7 +29,7 @@ class TestSequenceClearingCrashRegression:
 
     def setup_method(self):
         """Setup for each test method."""
-        from desktop.domain.models.core_models import SequenceData, BeatData
+        from domain.models.core_models import SequenceData, BeatData
         from desktop.application.services.data.pictograph_dataset_service import (
             PictographDatasetService,
         )

@@ -4,24 +4,27 @@ Unit tests for DashLocationService
 Tests for Type 3 detection, dash location calculation, and compatibility with legacy logic.
 """
 
-import pytest
 from pathlib import Path
-from tka_types import MotionType
-from desktop.domain.models.core_models import BeatData
 
-# Add modern/src to path for imports
-
-from desktop.domain.models.core_models import (
+import pytest
+from domain.models.core_models import (
+    ArrowColor,
     BeatData,
+    GridMode,
+    LetterType,
+    Location,
     MotionData,
     MotionType,
     RotationDirection,
-    Location,
-    LetterType,
-    ArrowColor,
-    GridMode,
 )
-from desktop.application.services.positioning.dash_location_service import DashLocationService
+from tka_types import MotionType
+
+from desktop.application.services.positioning.dash_location_service import (
+    DashLocationService,
+)
+
+# Add modern/src to path for imports
+
 
 class TestDashLocationService:
     """Test suite for DashLocationService."""
@@ -378,6 +381,7 @@ class TestDashLocationService:
 
         letter_info = self.service.analysis_service.get_letter_info(beat_data_type4)
         assert letter_info["letter_type"] != LetterType.TYPE3
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

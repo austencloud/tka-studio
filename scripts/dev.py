@@ -4,13 +4,13 @@ Unified development script for TKA monorepo.
 This script provides a single entry point for all development tasks.
 """
 
+import argparse
+import os
+import signal
 import subprocess
 import sys
-import os
-import argparse
 import threading
 import time
-import signal
 from pathlib import Path
 
 

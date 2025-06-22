@@ -1,0 +1,39 @@
+{
+  "simple_sequence": {
+    "id": "simple_001",
+    "length": 2,
+    "beats": [
+      {
+        "id": "beat_001",
+        "blue_motion": {"motion_type": "pro", "turns": 1.0},
+        "red_motion": {"motion_type": "anti", "turns": 0.5}
+      },
+      {
+        "id": "beat_002", 
+        "blue_motion": {"motion_type": "static", "turns": 0.0},
+        "red_motion": {"motion_type": "float", "turns": 2.0}
+      }
+    ]
+  },
+  "complex_sequence": {
+    "id": "complex_001",
+    "length": 8,
+    "beats": [
+      {
+        "id": "beat_001",
+        "blue_motion": {"motion_type": "pro", "turns": 1.0},
+        "red_motion": {"motion_type": "anti", "turns": 0.5}
+      },
+      {
+        "id": "beat_002",
+        "blue_motion": {"motion_type": "anti", "turns": 1.5},
+        "red_motion": {"motion_type": "pro", "turns": 1.0}
+      }
+    ]
+  },
+  "empty_sequence": {
+    "id": "empty_001",
+    "length": 0,
+    "beats": []
+  }
+}

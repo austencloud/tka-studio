@@ -11,13 +11,15 @@ Tests all enhanced features including:
 - Auto-registration with validation
 """
 
-import pytest
 from pathlib import Path
-from typing import Protocol, Optional
+from typing import Optional, Protocol
 from unittest.mock import Mock
 
+import pytest
+from domain.models.core_models import BeatData
+
 from desktop.core.dependency_injection.di_container import DIContainer, reset_container
-from desktop.domain.models.core_models import BeatData
+
 
 class IRepository(Protocol):
     """Test repository interface."""
@@ -25,15 +27,18 @@ class IRepository(Protocol):
     def save(self, data: str) -> None: ...
     def load(self, id: str) -> str: ...
 
+
 class IService(Protocol):
     """Test service interface."""
 
     def process(self, input: str) -> str: ...
 
+
 class IController(Protocol):
     """Test controller interface."""
 
     def handle(self, request: str) -> str: ...
+
 
 class Repository:
     """Test repository implementation."""
@@ -47,6 +52,7 @@ class Repository:
     def load(self, id: str) -> str:
         return self.data.get(id, "not found")
 
+
 class Service:
     """Test service implementation with dependency."""
 
@@ -56,6 +62,7 @@ class Service:
     def process(self, input: str) -> str:
         self.repo.save(input)
         return f"processed: {input}"
+
 
 class Controller:
     """Test controller with multiple dependencies and default parameter."""
@@ -67,6 +74,7 @@ class Controller:
     def handle(self, request: str) -> str:
         result = self.service.process(request)
         return f"[{self.config}] {result}"
+
 
 class ServiceWithLifecycle:
     """Test service with lifecycle methods."""
@@ -81,17 +89,20 @@ class ServiceWithLifecycle:
     def cleanup(self):
         self.cleaned_up = True
 
+
 class CircularA:
     """Test class for circular dependency detection."""
 
     def __init__(self, b: "CircularB"):
         self.b = b
 
+
 class CircularB:
     """Test class for circular dependency detection."""
 
     def __init__(self, a: CircularA):
         self.a = a
+
 
 class ServiceWithPrimitives:
     """Test service with primitive type parameters."""
@@ -100,6 +111,7 @@ class ServiceWithPrimitives:
         self.name = name
         self.count = count
         self.enabled = enabled
+
 
 class TestEnhancedDIContainer:
     """Test suite for enhanced DI container features."""
@@ -207,8 +219,8 @@ class TestEnhancedDIContainer:
         assert container._is_primitive_type(Optional[int])
 
         # Test Path and datetime
-        from pathlib import Path
         from datetime import datetime
+        from pathlib import Path
 
         assert container._is_primitive_type(Path)
         assert container._is_primitive_type(datetime)
@@ -334,6 +346,7 @@ class TestEnhancedDIContainer:
         assert IService in registrations
         assert registrations[IRepository] == Repository
         assert registrations[IService] == Service
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

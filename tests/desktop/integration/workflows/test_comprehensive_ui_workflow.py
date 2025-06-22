@@ -16,16 +16,16 @@ Critical Bug Detection:
 - Log all state changes for debugging
 """
 
+import sys
 import time
 import traceback
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from typing import Optional, List, Dict, Any
-from PyQt6.QtWidgets import QApplication, QWidget
-from PyQt6.QtCore import QTimer, QPoint, QPointF, Qt
+from PyQt6.QtCore import QPoint, QPointF, Qt, QTimer
 from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtTest import QTest
-from pathlib import Path
-import sys
+from PyQt6.QtWidgets import QApplication, QWidget
 
 # Add Modern source path and main directory
 
@@ -38,6 +38,7 @@ except ImportError:
     # Fallback import path
 
     from main import KineticConstructorModern
+
 
 class GraphEditorUIWorkflowTester:
     """Comprehensive end-to-end UI tester for TKA graph editor workflow"""
@@ -239,7 +240,7 @@ class GraphEditorUIWorkflowTester:
             if not start_positions and hasattr(
                 self.start_position_picker, "findChildren"
             ):
-                from PyQt6.QtWidgets import QPushButton, QLabel
+                from PyQt6.QtWidgets import QLabel, QPushButton
 
                 buttons = self.start_position_picker.findChildren(QPushButton)
                 labels = self.start_position_picker.findChildren(QLabel)
@@ -524,7 +525,7 @@ class GraphEditorUIWorkflowTester:
                 if hasattr(search_widget, "findChildren"):
                     # Look for clickable pictograph frames
                     try:
-                        from desktop.presentation.components.option_picker.clickable_pictograph_frame import (
+                        from presentation.components.option_picker.clickable_pictograph_frame import (
                             ClickablePictographFrame,
                         )
 
@@ -1147,6 +1148,7 @@ class GraphEditorUIWorkflowTester:
             self.log("🔍 Application remains open for inspection...")
             self.log("Press Ctrl+C to exit")
 
+
 def main():
     """Main test execution function"""
     tester = GraphEditorUIWorkflowTester()
@@ -1184,6 +1186,7 @@ def main():
         traceback.print_exc()
         tester.cleanup()
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())
