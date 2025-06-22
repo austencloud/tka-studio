@@ -8,31 +8,31 @@ from typing import Optional
 from PyQt6.QtWidgets import QGraphicsScene
 from PyQt6.QtGui import QBrush, QColor
 
-from desktop.modern.src.domain.models.core_models import BeatData, LetterType
-from desktop.modern.src.domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.core_models import BeatData, LetterType
+from domain.models.letter_type_classifier import LetterTypeClassifier
 
-from desktop.modern.src.presentation.components.pictograph.renderers.grid_renderer import (
+from presentation.components.pictograph.renderers.grid_renderer import (
     GridRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.prop_renderer import (
+from presentation.components.pictograph.renderers.prop_renderer import (
     PropRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.arrow_renderer import (
+from presentation.components.pictograph.renderers.arrow_renderer import (
     ArrowRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.letter_renderer import (
+from presentation.components.pictograph.renderers.letter_renderer import (
     LetterRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.elemental_glyph_renderer import (
+from presentation.components.pictograph.renderers.elemental_glyph_renderer import (
     ElementalGlyphRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.vtg_glyph_renderer import (
+from presentation.components.pictograph.renderers.vtg_glyph_renderer import (
     VTGGlyphRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.tka_glyph_renderer import (
+from presentation.components.pictograph.renderers.tka_glyph_renderer import (
     TKAGlyphRenderer,
 )
-from desktop.modern.src.presentation.components.pictograph.renderers.position_glyph_renderer import (
+from presentation.components.pictograph.renderers.position_glyph_renderer import (
     PositionGlyphRenderer,
 )
 

@@ -26,9 +26,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 modern_src_path = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.presentation.components import ViewableComponentBase
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from presentation.components import ViewableComponentBase
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import ILayoutService
 
 
 class MockQWidget:

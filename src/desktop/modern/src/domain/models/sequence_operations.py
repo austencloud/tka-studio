@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 from dataclasses import dataclass
-from .core_models import SequenceData, BeatData
+from domain.models.core_models import SequenceData, BeatData
 
 
 @dataclass(frozen=True)

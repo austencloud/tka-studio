@@ -9,9 +9,9 @@ import pytest
 from pathlib import Path
 from unittest.mock import Mock
 
-# Import TKA components using standard absolute imports
+# Import TKA components using relative imports from src directory
 try:
-    from tka.desktop.modern.domain.models.core_models import BeatData
+    from domain.models.core_models import BeatData
 
     TKA_IMPORTS_AVAILABLE = True
 except ImportError:
@@ -23,7 +23,7 @@ def pytest_configure(config):
     """Configure pytest with TKA workspace setup."""
     if not TKA_IMPORTS_AVAILABLE:
         pytest.exit(
-            "TKA imports not available. Make sure you've installed the package with 'pip install -e .'",
+            "TKA Modern imports not available. Make sure you're running pytest from the modern directory root.",
             returncode=1,
         )
 

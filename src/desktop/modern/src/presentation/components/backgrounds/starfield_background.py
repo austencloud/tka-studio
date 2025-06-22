@@ -3,7 +3,7 @@ from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtWidgets import QWidget
 
 # A+ Enhancement: Import Qt resource pooling
-from desktop.modern.src.core.qt_integration import (
+from core.qt_integration import (
     qt_resources,
     pooled_pen,
     pooled_brush,

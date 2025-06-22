@@ -526,7 +526,7 @@ class GraphEditorUIWorkflowTester:
                 if hasattr(search_widget, "findChildren"):
                     # Look for clickable pictograph frames
                     try:
-                        from src.presentation.components.option_picker.clickable_pictograph_frame import (
+                        from presentation.components.option_picker.clickable_pictograph_frame import (
                             ClickablePictographFrame,
                         )
 

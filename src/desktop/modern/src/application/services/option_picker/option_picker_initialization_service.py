@@ -18,11 +18,11 @@ from typing import Dict, Any, Optional, Callable, Tuple
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtCore import QSize
 
-from desktop.modern.src.core.interfaces.option_picker_services import (
+from core.interfaces.option_picker_services import (
     IOptionPickerInitializationService,
 )
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import ILayoutService
+from core.dependency_injection.di_container import DIContainer
 
 logger = logging.getLogger(__name__)
 

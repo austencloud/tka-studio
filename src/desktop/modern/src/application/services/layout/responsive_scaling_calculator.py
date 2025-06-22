@@ -12,8 +12,8 @@ from typing import Tuple
 from .layout_types import LayoutConfig, LayoutMode, ScalingMode
 
 try:
-    from src.core.decorators import handle_service_errors
-    from src.core.monitoring import monitor_performance
+    from core.decorators import handle_service_errors
+    from core.monitoring import monitor_performance
 except ImportError:
 
     def handle_service_errors(*args, **kwargs):

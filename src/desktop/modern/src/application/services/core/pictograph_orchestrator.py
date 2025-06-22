@@ -15,8 +15,8 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
-from desktop.modern.src.domain.models.core_models import BeatData
-from desktop.modern.src.domain.models.pictograph_models import (
+from domain.models.core_models import BeatData
+from domain.models.pictograph_models import (
     ArrowData,
     GridData,
     GridMode,

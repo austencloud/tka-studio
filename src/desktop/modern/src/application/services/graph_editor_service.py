@@ -1,7 +1,7 @@
 from typing import Optional, List
-from desktop.modern.src.core.interfaces.workbench_services import IGraphEditorService
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
-from desktop.modern.src.domain.models.core_models import (
+from core.interfaces.workbench_services import IGraphEditorService
+from core.interfaces.core_services import IUIStateManagementService
+from domain.models.core_models import (
     SequenceData,
     BeatData,
     MotionType,

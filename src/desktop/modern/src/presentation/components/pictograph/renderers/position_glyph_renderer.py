@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import QGraphicsItemGroup
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+from presentation.components.pictograph.asset_utils import (
     get_image_path,
 )
 

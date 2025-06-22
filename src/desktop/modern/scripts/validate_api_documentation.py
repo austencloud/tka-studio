@@ -17,7 +17,7 @@ from pathlib import Path
 modern_src_path = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.infrastructure.api.production_api import app
+from infrastructure.api.production_api import app
 
 
 def validate_api_documentation():

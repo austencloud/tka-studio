@@ -64,7 +64,7 @@ else:
     PointType = Any
     TransformType = Any
 
-from desktop.modern.src.application.services.positioning.default_placement_service import (
+from application.services.positioning.default_placement_service import (
     DefaultPlacementService,
 )
 
@@ -75,7 +75,7 @@ except ImportError:
     QGraphicsSvgItem = None
 from enum import Enum
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -83,14 +83,14 @@ from desktop.modern.src.domain.models.core_models import (
     RotationDirection,
     Orientation,
 )
-from desktop.modern.src.domain.models.pictograph_models import (
+from domain.models.pictograph_models import (
     ArrowData,
     PictographData,
     GridData,
     GridMode,
 )
 from .placement_key_service import PlacementKeyService
-from desktop.modern.src.domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.letter_type_classifier import LetterTypeClassifier
 from .dash_location_service import DashLocationService
 
 # Event-driven architecture imports
@@ -100,6 +100,7 @@ if TYPE_CHECKING:
 
 try:
     from core.events import (
+        IEventBus,
         get_event_bus,
         ArrowPositionedEvent,
         EventPriority,
@@ -108,6 +109,7 @@ try:
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
     # For tests or when event system is not available
+    IEventBus = None
     get_event_bus = None
     ArrowPositionedEvent = None
     EventPriority = None
@@ -179,30 +181,32 @@ class ArrowManagementService(IArrowManagementService):
 
         # CRITICAL FIX: Use correct coordinates from circle_coords.json
         # Hand point coordinates (for STATIC/DASH arrows) - inner grid positions where props are placed
+        # CRITICAL FIX: Use string keys to match the lookup method that uses location.value
         self.HAND_POINTS = {
-            Location.NORTH: QPointF(475.0, 331.9),
-            Location.EAST: QPointF(618.1, 475.0),
-            Location.SOUTH: QPointF(475.0, 618.1),
-            Location.WEST: QPointF(331.9, 475.0),
+            "n": QPointF(475.0, 331.9),
+            "e": QPointF(618.1, 475.0),
+            "s": QPointF(475.0, 618.1),
+            "w": QPointF(331.9, 475.0),
             # Diagonal hand points (calculated from radius)
-            Location.NORTHEAST: QPointF(618.1, 331.9),
-            Location.SOUTHEAST: QPointF(618.1, 618.1),
-            Location.SOUTHWEST: QPointF(331.9, 618.1),
-            Location.NORTHWEST: QPointF(331.9, 331.9),
+            "ne": QPointF(618.1, 331.9),
+            "se": QPointF(618.1, 618.1),
+            "sw": QPointF(331.9, 618.1),
+            "nw": QPointF(331.9, 331.9),
         }
 
         # Layer2 point coordinates (for PRO/ANTI/FLOAT arrows) - using DIAMOND layer2 points from circle_coords.json
+        # CRITICAL FIX: Use string keys to match the lookup method that uses location.value
         self.LAYER2_POINTS = {
             # Diamond layer2 points are diagonal positions
-            Location.NORTHEAST: QPointF(618.1, 331.9),
-            Location.SOUTHEAST: QPointF(618.1, 618.1),
-            Location.SOUTHWEST: QPointF(331.9, 618.1),
-            Location.NORTHWEST: QPointF(331.9, 331.9),
+            "ne": QPointF(618.1, 331.9),
+            "se": QPointF(618.1, 618.1),
+            "sw": QPointF(331.9, 618.1),
+            "nw": QPointF(331.9, 331.9),
             # For cardinal directions, map to nearest diagonal
-            Location.NORTH: QPointF(618.1, 331.9),  # Maps to NE
-            Location.EAST: QPointF(618.1, 618.1),  # Maps to SE
-            Location.SOUTH: QPointF(331.9, 618.1),  # Maps to SW
-            Location.WEST: QPointF(331.9, 331.9),  # Maps to NW
+            "n": QPointF(618.1, 331.9),  # Maps to NE
+            "e": QPointF(618.1, 618.1),  # Maps to SE
+            "s": QPointF(331.9, 618.1),  # Maps to SW
+            "w": QPointF(331.9, 331.9),  # Maps to NW
         }
 
         # Arrow mirroring conditions
@@ -422,45 +426,38 @@ class ArrowManagementService(IArrowManagementService):
 
     def _get_layer2_coords(self, location: Location) -> Any:
         """Get layer2 point coordinates for shift arrows."""
-        coords = self.LAYER2_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
+        # Use string value to avoid enum object identity issues
+        location_key = location.value
+        coords = self.LAYER2_POINTS.get(
+            location_key, QPointF(self.CENTER_X, self.CENTER_Y)
+        )
         print(
-            f"         🎯 Layer2 lookup for {location.value}: ({coords.x()}, {coords.y()})"
+            f"         🎯 Layer2 lookup for {location_key}: ({coords.x()}, {coords.y()})"
         )
         if coords.x() == 475.0 and coords.y() == 475.0:
             print(
-                f"         🚨 LAYER2 FAILURE: Location {location.value} not found in LAYER2_POINTS!"
+                f"         🚨 LAYER2 FAILURE: Location {location_key} not found in LAYER2_POINTS!"
             )
             print(f"            Available locations: {list(self.LAYER2_POINTS.keys())}")
         return coords
 
     def _get_hand_point_coords(self, location: Location) -> Any:
         """Get hand point coordinates for static/dash arrows."""
-        coords = self.HAND_POINTS.get(location, QPointF(self.CENTER_X, self.CENTER_Y))
-        print(
-            f"         🎯 Hand point lookup for {location.value}: ({coords.x()}, {coords.y()})"
+        # Use string value to avoid enum object identity issues
+        location_key = location.value
+        coords = self.HAND_POINTS.get(
+            location_key, QPointF(self.CENTER_X, self.CENTER_Y)
         )
+        print(
+            f"         🎯 Hand point lookup for {location_key}: ({coords.x()}, {coords.y()})"
+        )
+
         if coords.x() == 475.0 and coords.y() == 475.0:
             print(
-                f"         🚨 HAND POINT FAILURE: Location {location.value} not found in HAND_POINTS!"
+                f"         🚨 HAND POINT FAILURE: Location {location_key} not found in HAND_POINTS!"
             )
-            print(
-                f"            Available locations: {[loc.value for loc in self.HAND_POINTS.keys()]}"
-            )
-            print(f"            Location type: {type(location)}")
-            print(f"            Location object: {location}")
-            print(f"            Location in dict: {location in self.HAND_POINTS}")
-            # Check if it's a string vs enum issue
-            for key in self.HAND_POINTS.keys():
-                if hasattr(key, "value") and key.value == location.value:
-                    print(
-                        f"            Found matching value but different object: {key} vs {location}"
-                    )
-                    print(
-                        f"            Key type: {type(key)}, Location type: {type(location)}"
-                    )
-                    print(f"            Key id: {id(key)}, Location id: {id(location)}")
-                    print(f"            Key == Location: {key == location}")
-                    print(f"            Key is Location: {key is location}")
+            print(f"            Available locations: {list(self.HAND_POINTS.keys())}")
+
         return coords
 
     def _calculate_arrow_rotation(

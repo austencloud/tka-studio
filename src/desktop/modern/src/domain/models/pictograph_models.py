@@ -23,7 +23,7 @@ from typing import Dict, Optional, Any, Tuple
 from enum import Enum
 import uuid
 
-from .core_models import MotionData
+from domain.models.core_models import MotionData
 
 
 class GridMode(Enum):

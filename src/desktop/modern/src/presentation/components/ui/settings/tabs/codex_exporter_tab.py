@@ -24,7 +24,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QCursor
 
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class CodexExporterTab(QWidget):

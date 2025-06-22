@@ -7,14 +7,13 @@ It provides comprehensive pictograph analysis functionality.
 """
 
 from typing import Optional
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     LetterType,
     ArrowColor,
-    GridMode,
     Location,
 )
-from desktop.modern.src.domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import PictographData, GridMode
 
 
 class PictographAnalysisService:

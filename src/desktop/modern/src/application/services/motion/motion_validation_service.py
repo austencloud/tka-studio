@@ -15,7 +15,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Set, Tuple
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     Location,
     MotionData,
     MotionType,

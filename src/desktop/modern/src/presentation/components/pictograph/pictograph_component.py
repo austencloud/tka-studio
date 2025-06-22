@@ -7,10 +7,10 @@ from PyQt6.QtWidgets import QGraphicsView
 from PyQt6.QtCore import pyqtSignal, Qt, QTimer, QSize, QEvent
 from PyQt6.QtGui import QPainter, QKeyEvent, QResizeEvent, QEnterEvent
 
-from desktop.modern.src.application.services.ui.context_aware_scaling_service import (
+from application.services.ui.context_aware_scaling_service import (
     ScalingContext,
 )
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 
 from .pictograph_scene import PictographScene
 from .border_manager import BorderedPictographMixin

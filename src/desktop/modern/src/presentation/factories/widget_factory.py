@@ -2,8 +2,8 @@ from typing import Optional
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy
 from PyQt6.QtCore import Qt
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import ILayoutService
 from ..components.option_picker.option_picker_widget import ModernOptionPickerWidget
 from ..components.option_picker.option_picker_filter import OptionPickerFilter
 

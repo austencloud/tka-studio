@@ -16,7 +16,7 @@ import logging
 from pathlib import Path
 from typing import List
 
-from desktop.modern.src.core.interfaces.organization_services import IFileSystemService
+from core.interfaces.organization_services import IFileSystemService
 
 logger = logging.getLogger(__name__)
 

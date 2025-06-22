@@ -194,7 +194,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_positioning_services(self, container: "DIContainer") -> None:
         """Register the new refactored positioning services."""
-        # Import the new refactored positioning services
+        # Import the individual calculator services that are still used internally
         from application.services.positioning.arrow_adjustment_calculator_service import (
             ArrowAdjustmentCalculatorService,
         )
@@ -214,7 +214,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IArrowRotationCalculator,
         )
 
-        # Register the refactored positioning services
+        # Register individual calculator services (for potential internal use)
         container.register_singleton(
             IArrowLocationCalculator, ArrowLocationCalculatorService
         )
@@ -226,20 +226,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         )
         container.register_singleton(
             IArrowCoordinateSystemService, ArrowCoordinateSystemService
-        )
-
-        # Import the existing orchestrators
-        from application.services.core.pictograph_orchestrator import (
-            IPictographOrchestrator,
-            PictographOrchestrator,
-        )
-        from application.services.positioning.arrow_positioning_orchestrator import (
-            ArrowPositioningOrchestrator,
-            IArrowPositioningService,
-        )
-        from application.services.positioning.prop_orchestrator import (
-            IPropOrchestrator,
-            PropOrchestrator,
         )
 
         # Register the unified management services
@@ -255,10 +241,17 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         container.register_singleton(IArrowManagementService, ArrowManagementService)
         container.register_singleton(IPropManagementService, PropManagementService)
 
-        # Register the orchestrators
-        container.register_singleton(
-            IArrowPositioningService, ArrowPositioningOrchestrator
+        # Import existing prop orchestrator (keep if still needed)
+        from application.services.core.pictograph_orchestrator import (
+            IPictographOrchestrator,
+            PictographOrchestrator,
         )
+        from application.services.positioning.prop_orchestrator import (
+            IPropOrchestrator,
+            PropOrchestrator,
+        )
+
+        # Register remaining orchestrators
         container.register_singleton(IPropOrchestrator, PropOrchestrator)
         container.register_singleton(IPictographOrchestrator, PictographOrchestrator)
 

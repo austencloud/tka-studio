@@ -7,11 +7,11 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 
-from desktop.modern.src.core.monitoring import monitor_performance
+from core.monitoring import monitor_performance
 from ..models import SequenceAPI, CreateSequenceRequest
 from ..dependencies import get_sequence_service
 from ..converters import domain_to_api_sequence, api_to_domain_sequence
-from desktop.modern.src.application.services.core.sequence_management_service import (
+from application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
 

@@ -9,8 +9,8 @@ from abc import ABC, abstractmethod
 from typing import Tuple
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.domain.models.core_models import MotionData, Location
-from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
+from domain.models.core_models import MotionData, Location
+from domain.models.pictograph_models import ArrowData, PictographData
 
 
 class IArrowLocationCalculator(ABC):

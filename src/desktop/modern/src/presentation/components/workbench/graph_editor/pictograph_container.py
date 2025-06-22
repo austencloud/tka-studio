@@ -3,12 +3,12 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGraphicsView
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QMouseEvent, QPainter
 
-from desktop.modern.src.domain.models.core_models import BeatData
-from desktop.modern.src.domain.models.pictograph_models import PictographData
-from desktop.modern.src.application.services.core.pictograph_management_service import (
+from domain.models.core_models import BeatData
+from domain.models.pictograph_models import PictographData
+from application.services.core.pictograph_management_service import (
     PictographManagementService,
 )
-from desktop.modern.src.presentation.components.pictograph.pictograph_scene import (
+from presentation.components.pictograph.pictograph_scene import (
     PictographScene,
 )
 

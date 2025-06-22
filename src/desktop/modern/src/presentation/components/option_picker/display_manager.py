@@ -1,7 +1,7 @@
 from typing import List, Dict
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 from .option_picker_section import OptionPickerSection
 from .pictograph_pool_manager import PictographPoolManager
 from .letter_types import LetterType

@@ -16,15 +16,15 @@ Follows TKA's dependency injection patterns and clean architecture.
 import logging
 from typing import Any, Callable, Dict, List, Optional
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.core.interfaces.option_picker_services import (
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.option_picker_services import (
     IOptionPickerDataService,
     IOptionPickerDisplayService,
     IOptionPickerEventService,
     IOptionPickerInitializationService,
     IOptionPickerOrchestrator,
 )
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 

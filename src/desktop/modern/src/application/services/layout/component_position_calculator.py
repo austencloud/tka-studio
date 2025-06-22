@@ -12,8 +12,8 @@ from .beat_layout_calculator import BeatLayoutCalculator
 from .layout_types import LayoutMode
 
 try:
-    from src.core.decorators import handle_service_errors
-    from src.core.monitoring import monitor_performance
+    from core.decorators import handle_service_errors
+    from core.monitoring import monitor_performance
 except ImportError:
 
     def handle_service_errors(*args, **kwargs):

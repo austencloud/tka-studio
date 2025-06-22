@@ -17,10 +17,10 @@ No UI dependencies, completely testable in isolation.
 import logging
 from typing import Dict
 
-from desktop.modern.src.core.interfaces.positioning_services import (
+from core.interfaces.positioning_services import (
     IArrowRotationCalculator,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,

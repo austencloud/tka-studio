@@ -11,14 +11,14 @@ from PyQt6.QtCore import QPointF
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from desktop.modern.src.domain.models.core_models import MotionData, Location
+from domain.models.core_models import MotionData, Location
 
-from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+from presentation.components.pictograph.asset_utils import (
     get_image_path,
 )
 
-from desktop.modern.src.domain.models.core_models import Orientation
-from desktop.modern.src.application.services.positioning.prop_management_service import (
+from domain.models.core_models import Orientation
+from application.services.positioning.prop_management_service import (
     PropManagementService,
 )
 

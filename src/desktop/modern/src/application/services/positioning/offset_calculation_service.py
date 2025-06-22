@@ -15,7 +15,7 @@ from typing import Dict, Tuple
 from abc import ABC, abstractmethod
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.domain.models.pictograph_models import PropType
+from domain.models.pictograph_models import PropType
 from .direction_calculation_service import SeparationDirection
 
 

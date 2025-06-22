@@ -16,10 +16,10 @@ No UI dependencies, completely testable in isolation.
 import logging
 from typing import List, Dict, Any, Optional
 
-from desktop.modern.src.core.interfaces.option_picker_services import (
+from core.interfaces.option_picker_services import (
     IOptionPickerDataService,
 )
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from domain.models.core_models import BeatData, SequenceData
 
 logger = logging.getLogger(__name__)
 

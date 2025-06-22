@@ -15,14 +15,14 @@ import pytest
 from unittest.mock import Mock, patch
 from typing import List, Dict, Any
 
-from desktop.modern.src.core.events.event_bus import (
+from core.events.event_bus import (
     TypeSafeEventBus,
     SequenceEvent,
     UIEvent,
     BaseEvent,
 )
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.domain.models.core_models import (
+from core.dependency_injection.di_container import DIContainer
+from domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,

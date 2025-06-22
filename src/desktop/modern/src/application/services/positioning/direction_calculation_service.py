@@ -15,7 +15,7 @@ from typing import Dict, Tuple
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     BeatData,
     Location,

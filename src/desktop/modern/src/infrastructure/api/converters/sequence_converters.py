@@ -6,7 +6,7 @@ Handles conversion between SequenceData and SequenceAPI models.
 import logging
 from typing import List
 
-from desktop.modern.src.domain.models.core_models import SequenceData
+from domain.models.core_models import SequenceData
 
 from ..models import SequenceAPI
 from .beat_converters import api_to_domain_beat, domain_to_api_beat

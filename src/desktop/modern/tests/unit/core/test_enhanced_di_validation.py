@@ -17,8 +17,8 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../.."))
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.core.exceptions import DependencyInjectionError
+from core.dependency_injection.di_container import DIContainer
+from core.exceptions import DependencyInjectionError
 
 
 # Test interfaces and implementations

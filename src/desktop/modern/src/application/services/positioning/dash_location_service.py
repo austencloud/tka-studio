@@ -7,16 +7,16 @@ providing all the complex dash location maps and calculations with high precisio
 
 from typing import Dict, Optional, Tuple
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     ArrowColor,
     BeatData,
-    GridMode,
     LetterType,
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
+from domain.models.pictograph_models import GridMode
 
 from ..data.pictograph_analysis_service import PictographAnalysisService
 

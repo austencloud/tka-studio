@@ -24,11 +24,11 @@ import uuid
 from datetime import datetime
 
 from PyQt6.QtCore import QSize
-from desktop.modern.src.application.services.layout.beat_layout_calculator import (
+from application.services.layout.beat_layout_calculator import (
     BeatLayoutCalculator,
 )
-from desktop.modern.src.domain.models.core_models import SequenceData
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from domain.models.core_models import SequenceData
+from core.interfaces.core_services import ILayoutService
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -56,9 +56,9 @@ except ImportError:
     EVENT_SYSTEM_AVAILABLE = False
 
 try:
-    from src.core.decorators import handle_service_errors
-    from src.core.monitoring import monitor_performance
-    from src.core.exceptions import ServiceOperationError, ValidationError
+    from core.decorators import handle_service_errors
+    from core.monitoring import monitor_performance
+    from core.exceptions import ServiceOperationError, ValidationError
 except ImportError:
     # For tests, create dummy decorators if imports fail
     def handle_service_errors(*args, **kwargs):

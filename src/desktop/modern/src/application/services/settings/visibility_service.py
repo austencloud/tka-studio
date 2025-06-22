@@ -1,8 +1,8 @@
 from typing import Dict, Any
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IVisibilityService,
 )
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class VisibilityService(IVisibilityService):

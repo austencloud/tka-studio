@@ -140,7 +140,7 @@ extraPaths = [
 
 # TURN OFF ALL TYPE CHECKING
 pythonVersion = "3.12"
-typeCheckingMode = "off"
+typeCheckingMode = "basic"
 
 # DISABLE ALL REPORTS - NO MORE ERRORS
 reportMissingImports = "none"

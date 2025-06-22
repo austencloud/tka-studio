@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
 
 import pandas as pd
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     ElementalType,
     GlyphData,
@@ -34,7 +34,7 @@ from desktop.modern.src.domain.models.core_models import (
     RotationDirection,
     VTGMode,
 )
-from desktop.modern.src.domain.models.pictograph_models import (
+from domain.models.pictograph_models import (
     ArrowData,
     GridData,
     GridMode,

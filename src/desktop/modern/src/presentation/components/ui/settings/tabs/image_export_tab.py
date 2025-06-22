@@ -8,7 +8,7 @@ clean architecture and glassmorphism design.
 
 from typing import Dict, Optional, Union
 
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IImageExportService,
 )
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal

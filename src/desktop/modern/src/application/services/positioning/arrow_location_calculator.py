@@ -14,13 +14,13 @@ PROVIDES:
 from typing import Optional
 from abc import ABC, abstractmethod
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
 )
-from desktop.modern.src.domain.models.pictograph_models import PictographData
-from desktop.modern.src.domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.pictograph_models import PictographData
+from domain.models.letter_type_classifier import LetterTypeClassifier
 from .dash_location_service import DashLocationService
 
 

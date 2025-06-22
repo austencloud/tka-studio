@@ -71,7 +71,7 @@ class BackgroundManager(IBackgroundManager):
             progress_callback(95, "Setting up background...")
 
         # Get background type from UI state service
-        from desktop.modern.src.core.interfaces.core_services import (
+        from core.interfaces.core_services import (
             IUIStateManagementService,
         )
 

@@ -93,9 +93,8 @@ class TestStartPositionBehaviorContract:
             assert sequence.start_position == "alpha1"
             assert len(sequence.beats) == 1
 
-            # Clear sequence (create empty version)
-            cleared_sequence = SequenceData.empty()
-            cleared_sequence.name = sequence.name  # Preserve name
+            # Clear sequence (create empty version with preserved name)
+            cleared_sequence = SequenceData.empty().update(name=sequence.name)
 
             # Verify cleared state
             assert (
@@ -191,8 +190,8 @@ class TestStartPositionBehaviorContract:
             sequence = SequenceData.empty()
 
             for position, description in states:
-                # Update start position
-                sequence.start_position = position
+                # Update start position using immutable update
+                sequence = sequence.update(start_position=position)
 
                 # Verify state
                 assert sequence.start_position == position, f"Failed at {description}"

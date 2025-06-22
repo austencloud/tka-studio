@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IUserProfileService,
 )
 

@@ -15,7 +15,7 @@ PROVIDES:
 from typing import Optional, Tuple, Dict
 from abc import ABC, abstractmethod
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     GlyphData,

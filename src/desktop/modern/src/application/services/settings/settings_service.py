@@ -1,6 +1,6 @@
 from typing import Any, Dict
-from desktop.modern.src.core.interfaces.settings_interfaces import ISettingsService
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.settings_interfaces import ISettingsService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class SettingsService(ISettingsService):

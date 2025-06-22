@@ -7,10 +7,10 @@ import uuid
 from datetime import datetime
 
 from PyQt6.QtCore import QSize
-from desktop.modern.src.core.decorators import handle_service_errors
-from desktop.modern.src.core.monitoring import monitor_performance
-from desktop.modern.src.domain.models.core_models import SequenceData
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
+from core.decorators import handle_service_errors
+from core.monitoring import monitor_performance
+from domain.models.core_models import SequenceData
+from core.interfaces.core_services import ILayoutService
 
 
 class BeatLayoutCalculator:

@@ -18,7 +18,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from desktop.modern.src.core.interfaces.organization_services import (
+from core.interfaces.organization_services import (
     IComponentHierarchyAnalysisService,
     IFileSystemService,
     ComponentHierarchyAnalysis,

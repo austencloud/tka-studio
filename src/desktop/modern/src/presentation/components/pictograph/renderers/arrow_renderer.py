@@ -10,16 +10,16 @@ from typing import Optional, TYPE_CHECKING
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from desktop.modern.src.presentation.components.pictograph.asset_utils import (
+from presentation.components.pictograph.asset_utils import (
     get_image_path,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     Location,
     MotionType,
 )
-from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
-from desktop.modern.src.application.services.positioning.arrow_management_service import (
+from domain.models.pictograph_models import ArrowData, PictographData
+from application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
 

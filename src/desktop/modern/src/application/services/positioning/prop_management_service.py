@@ -20,7 +20,7 @@ from enum import Enum
 import uuid
 from datetime import datetime
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 
 try:
     from core.events import (
+        IEventBus,
         get_event_bus,
         PropPositionedEvent,
         EventPriority,
@@ -42,11 +43,12 @@ try:
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
     # For tests or when event system is not available
+    IEventBus = None
     get_event_bus = None
     PropPositionedEvent = None
     EventPriority = None
     EVENT_SYSTEM_AVAILABLE = False
-from desktop.modern.src.domain.models.pictograph_models import PropType
+from domain.models.pictograph_models import PropType
 
 
 class SeparationDirection(Enum):
@@ -99,7 +101,7 @@ class PropManagementService(IPropManagementService):
     - Prop overlap detection and resolution
     """
 
-    def __init__(self, event_bus: Optional["IEventBus"] = None):
+    def __init__(self, event_bus: Optional[IEventBus] = None):
         # Event system integration
         self.event_bus = event_bus or (
             get_event_bus() if EVENT_SYSTEM_AVAILABLE else None

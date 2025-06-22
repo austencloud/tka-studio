@@ -2,9 +2,9 @@ from typing import Optional
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.domain.models.core_models import SequenceData
-from desktop.modern.src.application.services.ui.ui_state_management_service import (
+from core.dependency_injection.di_container import DIContainer
+from domain.models.core_models import SequenceData
+from application.services.ui.ui_state_management_service import (
     UIStateManagementService,
 )
 

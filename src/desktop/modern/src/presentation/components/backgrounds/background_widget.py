@@ -3,22 +3,22 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPainter, QPixmap
 from PyQt6.QtCore import Qt, QTimer
 
-from desktop.modern.src.presentation.components.backgrounds.starfield_background import (
+from presentation.components.backgrounds.starfield_background import (
     StarfieldBackground,
 )
-from desktop.modern.src.presentation.components.backgrounds.aurora_background import (
+from presentation.components.backgrounds.aurora_background import (
     AuroraBackground,
 )
-from desktop.modern.src.presentation.components.backgrounds.aurora_borealis_background import (
+from presentation.components.backgrounds.aurora_borealis_background import (
     AuroraBorealisBackground,
 )
-from desktop.modern.src.presentation.components.backgrounds.snowfall_background import (
+from presentation.components.backgrounds.snowfall_background import (
     SnowfallBackground,
 )
-from desktop.modern.src.presentation.components.backgrounds.bubbles_background import (
+from presentation.components.backgrounds.bubbles_background import (
     BubblesBackground,
 )
-from desktop.modern.src.presentation.components.backgrounds.base_background import (
+from presentation.components.backgrounds.base_background import (
     BaseBackground,
 )
 

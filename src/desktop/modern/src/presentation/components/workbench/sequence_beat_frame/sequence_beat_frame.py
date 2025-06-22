@@ -7,11 +7,11 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from typing import TYPE_CHECKING, Dict, List, Optional
 
-from desktop.modern.src.application.services.layout.beat_resizer_service import (
+from application.services.layout.beat_resizer_service import (
     BeatResizerService,
 )
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from core.interfaces.core_services import ILayoutService
+from domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
 

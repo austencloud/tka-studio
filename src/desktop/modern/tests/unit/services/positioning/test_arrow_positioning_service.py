@@ -9,16 +9,16 @@ from unittest.mock import Mock, patch
 import pytest
 from PyQt6.QtCore import QPointF
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from desktop.modern.src.application.services.positioning.arrow_positioning_service import (
+from application.services.positioning.arrow_positioning_service import (
     ArrowPositioningService,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
-from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
+from domain.models.pictograph_models import ArrowData, PictographData
 
 
 class TestArrowPositioningServiceBehavior:

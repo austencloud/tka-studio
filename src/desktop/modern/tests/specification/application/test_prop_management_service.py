@@ -11,11 +11,11 @@ import random
 from pathlib import Path
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.application.services.positioning.prop_management_service import (
+from application.services.positioning.prop_management_service import (
     PropManagementService,
     IPropManagementService,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -24,7 +24,7 @@ from desktop.modern.src.domain.models.core_models import (
     Orientation,
 )
 
-from desktop.modern.src.domain.models.pictograph_models import PropType
+from domain.models.pictograph_models import PropType
 
 
 def load_beta_ending_pictographs():

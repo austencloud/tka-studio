@@ -19,9 +19,10 @@ import os
 from unittest.mock import Mock
 from typing import List, Dict, Any
 
-from desktop.modern.src.core.events.event_bus import TypeSafeEventBus
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.domain.models.core_models import (
+from core.events.event_bus import TypeSafeEventBus, BaseEvent
+from core.dependency_injection.di_container import DIContainer
+from dataclasses import dataclass, field
+from domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,
@@ -29,6 +30,18 @@ from desktop.modern.src.domain.models.core_models import (
     RotationDirection,
     Location,
 )
+
+
+@dataclass(frozen=True)
+class TestEvent(BaseEvent):
+    """Generic test event for performance testing."""
+
+    test_type: str = ""
+    data: Dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def event_type(self) -> str:
+        return f"test.{self.test_type}"
 
 
 class PerformanceTimer:
@@ -83,13 +96,14 @@ class TestEventBusPerformance:
         def handler(event_data):
             received_events.append(event_data)
 
-        event_bus.subscribe("test_event", handler)
+        subscription_id = event_bus.subscribe("test.test_event", handler)
 
         # Benchmark: Publish 1000 events
         event_count = 1000
         with PerformanceTimer() as timer:
             for i in range(event_count):
-                event_bus.publish("test_event", {"index": i})
+                event = TestEvent(test_type="test_event", data={"index": i})
+                event_bus.publish(event)
 
         # Performance assertion: Should handle 1000 events in under 100ms
         assert (
@@ -103,13 +117,13 @@ class TestEventBusPerformance:
 
         # Benchmark: Subscribe/unsubscribe 100 handlers
         handler_count = 100
-        handlers = []
+        subscription_ids = []
 
         with PerformanceTimer() as timer:
             for i in range(handler_count):
                 handler = lambda event_data, idx=i: None
-                handlers.append(handler)
-                event_bus.subscribe(f"event_{i}", handler)
+                subscription_id = event_bus.subscribe(f"event_{i}", handler)
+                subscription_ids.append(subscription_id)
 
         # Performance assertion: Should handle 100 subscriptions in under 10ms
         assert (
@@ -118,8 +132,8 @@ class TestEventBusPerformance:
 
         # Benchmark unsubscription
         with PerformanceTimer() as timer:
-            for i, handler in enumerate(handlers):
-                event_bus.unsubscribe(f"event_{i}", handler)
+            for subscription_id in subscription_ids:
+                event_bus.unsubscribe(subscription_id)
 
         assert (
             timer.duration < 0.01
@@ -130,16 +144,19 @@ class TestEventBusPerformance:
         event_bus = TypeSafeEventBus()
 
         # Setup handlers
-        handlers = []
+        subscription_ids = []
         for i in range(50):
             handler = lambda event_data, idx=i: None
-            handlers.append(handler)
-            event_bus.subscribe(f"event_{i}", handler)
+            subscription_id = event_bus.subscribe(f"event_{i}", handler)
+            subscription_ids.append(subscription_id)
 
         # Measure memory usage during event publishing
         with MemoryProfiler() as profiler:
             for i in range(1000):
-                event_bus.publish(f"event_{i % 50}", {"data": f"test_{i}"})
+                event = TestEvent(
+                    test_type=f"event_{i % 50}", data={"data": f"test_{i}"}
+                )
+                event_bus.publish(event)
 
         # Memory assertion: Should not leak significant memory
         # Allow up to 1MB memory increase for event processing
@@ -337,7 +354,7 @@ class TestIntegratedPerformance:
         def event_handler(event_data):
             workflow_events.append(event_data)
 
-        event_bus.subscribe("workflow_step", event_handler)
+        subscription_id = event_bus.subscribe("test.workflow_step", event_handler)
 
         # Benchmark: Complete workflow with events and DI
         workflow_count = 50
@@ -352,14 +369,15 @@ class TestIntegratedPerformance:
                     sequence = sequence.add_beat(beat)
 
                 # Publish workflow event
-                event_bus.publish(
-                    "workflow_step",
-                    {
+                event = TestEvent(
+                    test_type="workflow_step",
+                    data={
                         "workflow_id": i,
                         "sequence_length": sequence.length,
                         "step": "complete",
                     },
                 )
+                event_bus.publish(event)
 
         # Performance assertion: Should complete 50 workflows in under 100ms
         assert (
@@ -378,7 +396,7 @@ class TestIntegratedPerformance:
             nonlocal processed_count
             processed_count += 1
 
-        event_bus.subscribe("load_test", handler)
+        subscription_id = event_bus.subscribe("test.load_test", handler)
 
         # Sustained load test
         with MemoryProfiler() as profiler:
@@ -391,10 +409,11 @@ class TestIntegratedPerformance:
                         sequence = sequence.add_beat(beat)
 
                     # Publish event
-                    event_bus.publish(
-                        "load_test",
-                        {"cycle": cycle, "sequence": i, "length": sequence.length},
+                    event = TestEvent(
+                        test_type="load_test",
+                        data={"cycle": cycle, "sequence": i, "length": sequence.length},
                     )
+                    event_bus.publish(event)
 
                 # Force garbage collection between cycles
                 gc.collect()

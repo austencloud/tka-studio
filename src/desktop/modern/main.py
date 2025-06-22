@@ -25,7 +25,7 @@ modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
 
-from desktop.modern.src.presentation.components.ui.splash_screen import SplashScreen
+from presentation.components.ui.splash_screen import SplashScreen
 
 
 class KineticConstructorModern(QMainWindow):

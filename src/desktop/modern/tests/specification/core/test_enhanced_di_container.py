@@ -10,12 +10,12 @@ import pytest
 from typing import Protocol, Optional, runtime_checkable
 from dataclasses import dataclass
 
-from desktop.modern.src.core.dependency_injection.di_container import (
+from core.dependency_injection.di_container import (
     DIContainer,
     get_container,
     reset_container,
 )
-from desktop.modern.src.core.exceptions import DependencyInjectionError
+from core.exceptions import DependencyInjectionError
 
 
 # Test interfaces and implementations
@@ -288,7 +288,7 @@ class TestBackwardCompatibility:
 
     def test_simple_container_alias(self):
         """Test that SimpleContainer alias works."""
-        from src.core.dependency_injection.di_container import DIContainer
+        from core.dependency_injection.di_container import DIContainer
 
         # Should be the same as EnhancedContainer
         assert DIContainer is DIContainer

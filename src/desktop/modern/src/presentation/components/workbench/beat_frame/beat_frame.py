@@ -7,20 +7,20 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from typing import Dict, List, Optional
 
-from desktop.modern.src.application.services.layout.beat_resizer_service import (
+from application.services.layout.beat_resizer_service import (
     BeatResizerService,
 )
-from desktop.modern.src.application.services.layout.layout_management_service import (
+from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
-from desktop.modern.src.presentation.components.workbench.sequence_beat_frame.beat_selection_manager import (
+from core.interfaces.core_services import ILayoutService
+from presentation.components.workbench.sequence_beat_frame.beat_selection_manager import (
     BeatSelectionManager,
 )
-from desktop.modern.src.presentation.components.workbench.sequence_beat_frame.beat_view import (
+from presentation.components.workbench.sequence_beat_frame.beat_view import (
     BeatView,
 )
-from desktop.modern.src.presentation.components.workbench.sequence_beat_frame.start_position_view import (
+from presentation.components.workbench.sequence_beat_frame.start_position_view import (
     StartPositionView,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -34,7 +34,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from domain.models.core_models import BeatData, SequenceData
 
 
 class BeatFrame(QScrollArea):

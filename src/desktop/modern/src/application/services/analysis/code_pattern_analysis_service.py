@@ -17,7 +17,7 @@ import re
 import logging
 from typing import Dict, List
 
-from desktop.modern.src.core.interfaces.organization_services import (
+from core.interfaces.organization_services import (
     ICodePatternAnalysisService,
 )
 

@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 import json
 from pathlib import Path
 
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 
 
 class IJSONConfigurationService(ABC):

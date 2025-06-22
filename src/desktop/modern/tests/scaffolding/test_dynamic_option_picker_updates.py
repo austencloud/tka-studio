@@ -26,17 +26,17 @@ from pathlib import Path
 modern_src_path = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     SequenceData,
     MotionData,
     Location,
     MotionType,
 )
-from desktop.modern.src.presentation.components.option_picker.beat_data_loader import (
+from presentation.components.option_picker.beat_data_loader import (
     BeatDataLoader,
 )
-from desktop.modern.src.presentation.tabs.construct.construct_tab_widget import (
+from presentation.tabs.construct.construct_tab_widget import (
     ConstructTabWidget,
 )
 

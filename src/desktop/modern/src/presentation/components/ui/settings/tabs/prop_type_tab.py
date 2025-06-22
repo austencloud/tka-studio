@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IPropTypeService,
     PropType,
 )

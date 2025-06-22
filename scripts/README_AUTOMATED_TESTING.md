@@ -5,6 +5,7 @@ This directory contains a comprehensive automated testing pipeline that provides
 ## 🎯 Quick Start
 
 ### 1. One-Time Setup (5 minutes)
+
 ```bash
 # Run the setup script
 python scripts/setup_automated_testing.py
@@ -15,6 +16,7 @@ pre-commit install
 ```
 
 ### 2. Start Real-Time Testing
+
 ```bash
 # Start file watcher (runs tests automatically when you save files)
 python scripts/test_watcher.py
@@ -24,6 +26,7 @@ python scripts/run_automated_tests.py
 ```
 
 ### 3. VS Code Integration
+
 - Use `Ctrl+Shift+P` → "Tasks: Run Task"
 - Select "Start Test Watcher" for automatic testing
 - Select "Run Automated Tests" for comprehensive testing
@@ -51,24 +54,28 @@ python scripts/run_automated_tests.py
 ## 🚀 Features
 
 ### Immediate Feedback
+
 - Tests run automatically when you save Python files
 - Desktop notifications for failures
 - Sound alerts for immediate attention
 - Cross-platform support (Windows, macOS, Linux)
 
 ### Smart Test Selection
+
 - Regression tests run for any `src/` changes
 - Unit tests run for service/application changes
 - Related test files are automatically detected
 - Critical tests run first to catch breaking changes
 
 ### Comprehensive Reporting
+
 - Detailed test reports saved to `test_reports/`
 - JSON format for integration with other tools
 - Test counts, timing, and failure details
 - CI/CD integration with GitHub Actions
 
 ### Multi-Level Protection
+
 1. **File Watcher** - Real-time testing during development
 2. **Pre-commit Hooks** - Prevent committing broken code
 3. **Post-merge Hooks** - Verify pulled changes don't break tests
@@ -80,10 +87,12 @@ python scripts/run_automated_tests.py
 The system runs different test categories based on criticality:
 
 ### Critical Tests (Must Pass)
+
 - **Regression Tests** (`tests/regression/bugs/`) - Prevent known bugs from returning
 - **Specification Tests** (`tests/specification/`) - Core behavior verification
 
 ### Important Tests
+
 - **Unit Tests** (`tests/unit/`) - Fast, isolated component tests
 - **Integration Tests** (`tests/integration/`) - Component interaction tests
 
@@ -109,6 +118,7 @@ Configure notifications in `scripts/notification_config.json`:
 ## 📊 Usage Examples
 
 ### Development Workflow
+
 ```bash
 # 1. Start the watcher (in a separate terminal)
 python scripts/test_watcher.py
@@ -122,6 +132,7 @@ python scripts/test_watcher.py
 ```
 
 ### Manual Testing
+
 ```bash
 # Run all automated tests
 python scripts/run_automated_tests.py
@@ -133,6 +144,7 @@ python -m pytest tests/specification/ -v
 ```
 
 ### Continuous Monitoring
+
 ```bash
 # Start health monitor (runs in background)
 python scripts/health_monitor.py
@@ -154,6 +166,7 @@ The setup creates VS Code tasks accessible via `Ctrl+Shift+P` → "Tasks: Run Ta
 ## 🚨 Troubleshooting
 
 ### Test Watcher Not Running
+
 ```bash
 # Check if watchdog is installed
 pip install watchdog
@@ -163,6 +176,7 @@ chmod +x scripts/test_watcher.py
 ```
 
 ### Pre-commit Hooks Not Working
+
 ```bash
 # Reinstall hooks
 pre-commit uninstall
@@ -173,6 +187,7 @@ pre-commit run --all-files
 ```
 
 ### Notifications Not Working
+
 ```bash
 # Test notifications
 python scripts/notification_system.py
@@ -182,6 +197,7 @@ pip install plyer
 ```
 
 ### Git Hooks Not Running
+
 ```bash
 # Check hook permissions
 chmod +x .git/hooks/post-merge
@@ -193,6 +209,7 @@ chmod +x .git/hooks/post-merge
 ## 🔧 Customization
 
 ### Adding New Test Categories
+
 Edit `scripts/run_automated_tests.py`:
 
 ```python
@@ -205,6 +222,7 @@ Edit `scripts/run_automated_tests.py`:
 ```
 
 ### Changing Watch Patterns
+
 Edit `scripts/test_watcher.py`:
 
 ```python
@@ -214,6 +232,7 @@ if 'your_pattern/' in str(file_path):
 ```
 
 ### Custom Notifications
+
 Edit `scripts/notification_system.py` to add new notification methods.
 
 ## 📈 Performance
@@ -235,6 +254,7 @@ When adding new features:
 ## 📚 Dependencies
 
 Core dependencies installed by setup:
+
 - `pre-commit` - Pre-commit hooks
 - `watchdog` - File system monitoring
 - `schedule` - Task scheduling
@@ -244,6 +264,7 @@ Core dependencies installed by setup:
 - `pytest-qt` - Qt testing support
 
 Optional dependencies:
+
 - `plyer` - Cross-platform notifications (Windows)
 - `requests` - Slack notifications
 - `smtplib` - Email notifications (built-in)

@@ -29,10 +29,10 @@ class TestImportPatternEnforcement:
         Test standardized import patterns contract.
 
         CONTRACT: Import patterns must be standardized:
-        - Use 'from presentation.' not 'from src.presentation.'
-        - Use 'from core.' not 'from src.core.'
-        - Use 'from domain.' not 'from src.domain.'
-        - Use 'from application.' not 'from src.application.'
+        - Use 'from presentation.' not 'from presentation.'
+        - Use 'from core.' not 'from core.'
+        - Use 'from domain.' not 'from domain.'
+        - Use 'from application.' not 'from application.'
         """
         # Test that standardized imports work
         try:

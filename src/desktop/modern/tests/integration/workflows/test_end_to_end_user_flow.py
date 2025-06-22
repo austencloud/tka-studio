@@ -24,37 +24,37 @@ if modern_src_path not in sys.path:
     sys.path.insert(0, modern_src_path)
 
 # Updated imports for DI container patterns
-from desktop.modern.src.core.dependency_injection.di_container import (
+from core.dependency_injection.di_container import (
     DIContainer,
     get_container,
     reset_container,
 )
-from desktop.modern.src.presentation.factories.workbench_factory import (
+from presentation.factories.workbench_factory import (
     create_modern_workbench,
     configure_workbench_services,
 )
-from desktop.modern.src.presentation.tabs.construct.construct_tab_widget import (
+from presentation.tabs.construct.construct_tab_widget import (
     ConstructTabWidget,
 )
-from desktop.modern.src.core.interfaces.core_services import (
+from core.interfaces.core_services import (
     ILayoutService,
     IUIStateManagementService,
 )
-from desktop.modern.src.core.interfaces.workbench_services import (
+from core.interfaces.workbench_services import (
     ISequenceWorkbenchService,
     IFullScreenService,
     IBeatDeletionService,
     IGraphEditorService,
     IDictionaryService,
 )
-from desktop.modern.src.application.services.layout.layout_management_service import (
+from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
-from desktop.modern.src.application.services.ui.ui_state_management_service import (
+from application.services.ui.ui_state_management_service import (
     UIStateManagementService,
 )
 
-from desktop.modern.src.presentation.components.option_picker.clickable_pictograph_frame import (
+from presentation.components.option_picker.clickable_pictograph_frame import (
     ClickablePictographFrame,
 )
 from PyQt6.QtCore import Qt

@@ -20,7 +20,7 @@ PROVIDES:
 import logging
 from typing import TYPE_CHECKING
 
-from desktop.modern.src.domain.models.core_models import MotionType, RotationDirection
+from domain.models.core_models import MotionType, RotationDirection
 from PyQt6.QtGui import QTransform
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
@@ -33,9 +33,9 @@ from typing import Dict, Optional, Tuple, Union
 from PyQt6.QtCore import QPointF
 
 try:
-    from src.core.decorators import handle_service_errors
-    from src.core.exceptions import ServiceOperationError, ValidationError
-    from src.core.monitoring import monitor_performance
+    from core.decorators import handle_service_errors
+    from core.exceptions import ServiceOperationError, ValidationError
+    from core.monitoring import monitor_performance
 except ImportError:
     # For tests, create dummy decorators if imports fail
     def handle_service_errors(*args, **kwargs):
@@ -59,13 +59,13 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     Location,
     MotionData,
     MotionType,
     RotationDirection,
 )
-from desktop.modern.src.domain.models.pictograph_models import (
+from domain.models.pictograph_models import (
     ArrowData,
     GridMode,
     PictographData,

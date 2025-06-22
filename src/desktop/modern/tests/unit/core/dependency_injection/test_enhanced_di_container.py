@@ -22,11 +22,11 @@ import pytest
 from typing import Protocol, Optional
 from unittest.mock import Mock
 
-from desktop.modern.src.core.dependency_injection.di_container import (
+from core.dependency_injection.di_container import (
     DIContainer,
     reset_container,
 )
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 
 
 class IRepository(Protocol):

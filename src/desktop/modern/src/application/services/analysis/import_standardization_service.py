@@ -18,7 +18,7 @@ import logging
 from pathlib import Path
 from typing import Dict, Union
 
-from desktop.modern.src.core.interfaces.organization_services import (
+from core.interfaces.organization_services import (
     IImportStandardizationService,
     IFileSystemService,
     IImportAnalysisService,
@@ -215,7 +215,7 @@ class ImportStandardizationService(IImportStandardizationService):
         """
         test_cases = [
             (
-                "from src.domain.models import BeatData",
+                "from domain.models import BeatData",
                 "from domain.models import BeatData",
             ),
             (

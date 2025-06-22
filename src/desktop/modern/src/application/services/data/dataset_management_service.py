@@ -15,7 +15,7 @@ from typing import List, Dict, Any, Optional, TypedDict
 from abc import ABC, abstractmethod
 import uuid
 
-from desktop.modern.src.domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import PictographData
 
 
 class PictographSearchQuery(TypedDict, total=False):

@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,

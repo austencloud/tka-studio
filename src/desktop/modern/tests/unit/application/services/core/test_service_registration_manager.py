@@ -14,7 +14,7 @@ from unittest.mock import Mock, patch
 modern_src_path = Path(__file__).parent.parent.parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.application.services.core.service_registration_manager import (
+from application.services.core.service_registration_manager import (
     ServiceRegistrationManager,
     IServiceRegistrationManager,
 )

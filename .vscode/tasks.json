@@ -5,9 +5,7 @@
       "label": "Run All Tests",
       "type": "shell",
       "command": "python",
-      "args": [
-        "scripts/simple_test_runner.py"
-      ],
+      "args": ["scripts/simple_test_runner.py"],
       "group": "test",
       "presentation": {
         "echo": true,
@@ -20,9 +18,7 @@
       "label": "Start Test Watcher",
       "type": "shell",
       "command": "python",
-      "args": [
-        "scripts/test_watcher.py"
-      ],
+      "args": ["scripts/test_watcher.py"],
       "group": "test",
       "isBackground": true,
       "presentation": {
@@ -36,9 +32,7 @@
       "label": "Health Monitor",
       "type": "shell",
       "command": "python",
-      "args": [
-        "scripts/health_monitor.py"
-      ],
+      "args": ["scripts/health_monitor.py"],
       "group": "test",
       "isBackground": true,
       "presentation": {

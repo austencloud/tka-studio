@@ -19,7 +19,7 @@ from PyQt6.QtGui import (
     QBrush,
     QGuiApplication,
 )
-from desktop.modern.src.presentation.components.backgrounds.background_widget import (
+from presentation.components.backgrounds.background_widget import (
     MainBackgroundWidget,
 )
 

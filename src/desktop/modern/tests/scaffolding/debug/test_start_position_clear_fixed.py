@@ -22,29 +22,29 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QTimer
 
 # Modern imports with proper paths
-from desktop.modern.src.presentation.components.workbench.workbench import (
+from presentation.components.workbench.workbench import (
     ModernSequenceWorkbench,
 )
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.domain.models.core_models import SequenceData, BeatData
-from desktop.modern.src.core.interfaces.core_services import ILayoutService
-from desktop.modern.src.core.interfaces.workbench_services import (
+from core.dependency_injection.di_container import DIContainer
+from domain.models.core_models import SequenceData, BeatData
+from core.interfaces.core_services import ILayoutService
+from core.interfaces.workbench_services import (
     ISequenceWorkbenchService,
     IFullScreenService,
     IBeatDeletionService,
     IGraphEditorService,
     IDictionaryService,
 )
-from desktop.modern.src.application.services.layout.layout_management_service import (
+from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
-from desktop.modern.src.application.services.core.sequence_management_service import (
+from application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from desktop.modern.src.application.services.ui.full_screen_service import (
+from application.services.ui.full_screen_service import (
     FullScreenService,
 )
-from desktop.modern.src.application.services.graph_editor_service import (
+from application.services.graph_editor_service import (
     GraphEditorService,
 )
 

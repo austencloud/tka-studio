@@ -19,12 +19,12 @@ from dataclasses import dataclass, field
 import json
 from pathlib import Path
 
-from desktop.modern.src.core.events.event_bus import (
+from core.events.event_bus import (
     get_event_bus,
     UIEvent,
     EventPriority,
 )
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class UIComponent(Enum):

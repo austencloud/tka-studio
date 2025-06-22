@@ -15,11 +15,11 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.presentation.factories.workbench_factory import (
+from core.dependency_injection.di_container import DIContainer
+from presentation.factories.workbench_factory import (
     create_modern_workbench,
 )
-from desktop.modern.src.presentation.components.option_picker.option_picker import (
+from presentation.components.option_picker.option_picker import (
     OptionPicker,
 )
 

@@ -19,7 +19,7 @@ from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, cast
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     Location,
     MotionData,
@@ -27,7 +27,7 @@ from desktop.modern.src.domain.models.core_models import (
     RotationDirection,
     SequenceData,
 )
-from desktop.modern.src.domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import PictographData
 
 # Event-driven architecture imports
 if TYPE_CHECKING:

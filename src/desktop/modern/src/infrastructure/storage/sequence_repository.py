@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 import logging
 from datetime import datetime
 
-from desktop.modern.src.domain.models.core_models import SequenceData
+from domain.models.core_models import SequenceData
 
 logger = logging.getLogger(__name__)
 

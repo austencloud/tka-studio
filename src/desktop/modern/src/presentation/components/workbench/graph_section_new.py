@@ -1,8 +1,8 @@
 from typing import Optional, TYPE_CHECKING
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtCore import pyqtSignal
-from desktop.modern.src.domain.models.core_models import SequenceData
-from desktop.modern.src.core.interfaces.workbench_services import IGraphEditorService
+from domain.models.core_models import SequenceData
+from core.interfaces.workbench_services import IGraphEditorService
 
 if TYPE_CHECKING:
     from .graph_editor.graph_editor import GraphEditor

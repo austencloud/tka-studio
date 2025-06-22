@@ -7,10 +7,10 @@ Handles arrow positioning calculations and mirror checks.
 import logging
 from typing import Any, Dict
 
-from desktop.modern.src.application.services.positioning.arrow_management_service import (
+from application.services.positioning.arrow_management_service import (
     ArrowManagementService,
 )
-from desktop.modern.src.core.monitoring import monitor_performance
+from core.monitoring import monitor_performance
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..dependencies import get_arrow_service

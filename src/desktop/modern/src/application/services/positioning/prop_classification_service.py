@@ -14,13 +14,13 @@ PROVIDES:
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     Location,
     Orientation,
 )
-from desktop.modern.src.domain.models.pictograph_models import PropType
+from domain.models.pictograph_models import PropType
 
 
 class IPropClassificationService(ABC):

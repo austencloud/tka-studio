@@ -14,16 +14,16 @@ from unittest.mock import Mock
 modern_src_path = Path(__file__).parent.parent.parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
     RotationDirection,
 )
-from desktop.modern.src.domain.models.pictograph_models import ArrowData
-from desktop.modern.src.domain.models.pictograph_models import PictographData
-from desktop.modern.src.domain.models.positioning_models import ArrowPositionResult
-from desktop.modern.src.application.services.positioning.arrow_positioning_orchestrator import (
+from domain.models.pictograph_models import ArrowData
+from domain.models.pictograph_models import PictographData
+from domain.models.positioning_models import ArrowPositionResult
+from application.services.positioning.arrow_positioning_orchestrator import (
     ArrowPositioningOrchestrator,
     IArrowPositioningService,
 )

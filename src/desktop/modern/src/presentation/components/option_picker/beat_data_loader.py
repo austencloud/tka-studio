@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
-from desktop.modern.src.application.services.data.data_conversion_service import (
+from application.services.data.data_conversion_service import (
     DataConversionService,
 )
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 from PyQt6.QtCore import QObject
 
 if TYPE_CHECKING:

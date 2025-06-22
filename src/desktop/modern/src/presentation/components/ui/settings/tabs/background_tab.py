@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer
 from PyQt6.QtGui import QFont, QPainter, QCursor
 
-from desktop.modern.src.core.interfaces.background_interfaces import IBackgroundService
+from core.interfaces.background_interfaces import IBackgroundService
 
 
 class AnimatedBackgroundTile(QWidget):

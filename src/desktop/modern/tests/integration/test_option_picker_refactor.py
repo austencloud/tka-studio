@@ -10,24 +10,24 @@ from unittest.mock import Mock, MagicMock
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtCore import QSize
 
-from desktop.modern.src.application.services.option_picker.option_picker_initialization_service import (
+from application.services.option_picker.option_picker_initialization_service import (
     OptionPickerInitializationService,
 )
-from desktop.modern.src.application.services.option_picker.option_picker_data_service import (
+from application.services.option_picker.option_picker_data_service import (
     OptionPickerDataService,
 )
-from desktop.modern.src.application.services.option_picker.option_picker_display_service import (
+from application.services.option_picker.option_picker_display_service import (
     OptionPickerDisplayService,
 )
-from desktop.modern.src.application.services.option_picker.option_picker_event_service import (
+from application.services.option_picker.option_picker_event_service import (
     OptionPickerEventService,
 )
-from desktop.modern.src.application.services.option_picker.option_picker_orchestrator import (
+from application.services.option_picker.option_picker_orchestrator import (
     OptionPickerOrchestrator,
 )
 
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
+from domain.models.core_models import BeatData, SequenceData
+from core.dependency_injection.di_container import DIContainer
 
 
 class TestOptionPickerRefactor:

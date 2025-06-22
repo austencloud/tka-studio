@@ -8,7 +8,7 @@ Responsible for handling start position picker interactions and creating start p
 from typing import Optional, Callable
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.modern.src.domain.models.core_models import BeatData
+from domain.models.core_models import BeatData
 from .data_conversion_service import DataConversionService
 
 

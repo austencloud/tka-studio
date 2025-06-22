@@ -10,11 +10,11 @@ import pytest
 from typing import Tuple
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.application.services.positioning.arrow_management_service import (
+from application.services.positioning.arrow_management_service import (
     ArrowManagementService,
     IArrowManagementService,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -22,7 +22,7 @@ from desktop.modern.src.domain.models.core_models import (
     Location,
     Orientation,
 )
-from desktop.modern.src.domain.models.pictograph_models import (
+from domain.models.pictograph_models import (
     ArrowData,
     PictographData,
     GridData,

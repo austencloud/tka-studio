@@ -8,8 +8,8 @@ functionality, following TKA's clean architecture principles.
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from desktop.modern.src.core.dependency_injection.di_container import DIContainer
-from desktop.modern.src.domain.models.core_models import BeatData, SequenceData
+from core.dependency_injection.di_container import DIContainer
+from domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 

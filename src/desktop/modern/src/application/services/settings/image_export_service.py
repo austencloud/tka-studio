@@ -1,8 +1,8 @@
 from typing import Dict, Any, Tuple
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IImageExportService,
 )
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class ImageExportService(IImageExportService):

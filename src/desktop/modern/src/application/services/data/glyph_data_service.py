@@ -6,7 +6,7 @@ from beat data and motion information, following validated glyph classification 
 """
 
 from typing import Optional, Dict, Any
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     GlyphData,
     VTGMode,

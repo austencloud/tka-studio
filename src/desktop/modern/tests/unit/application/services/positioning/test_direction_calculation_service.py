@@ -13,7 +13,7 @@ from pathlib import Path
 modern_src_path = Path(__file__).parent.parent.parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     BeatData,
     MotionData,
     MotionType,
@@ -21,7 +21,7 @@ from desktop.modern.src.domain.models.core_models import (
     RotationDirection,
     Orientation,
 )
-from desktop.modern.src.application.services.positioning.direction_calculation_service import (
+from application.services.positioning.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
     SeparationDirection,

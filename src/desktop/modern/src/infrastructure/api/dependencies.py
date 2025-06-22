@@ -6,18 +6,20 @@ Provides all service dependencies for FastAPI endpoints.
 import logging
 from typing import Optional
 
-from desktop.modern.src.application.services.core.sequence_management_service import (
+from application.services.core.sequence_management_service import (
     SequenceManagementService,
+    ISequenceManagementService,
 )
-from desktop.modern.src.application.services.positioning.arrow_management_service import (
+from application.services.positioning.arrow_management_service import (
     ArrowManagementService,
+    IArrowManagementService,
 )
-from desktop.modern.src.core.commands import CommandProcessor
-from desktop.modern.src.core.dependency_injection.di_container import (
+from core.commands import CommandProcessor
+from core.dependency_injection.di_container import (
     DIContainer,
     get_container,
 )
-from desktop.modern.src.core.events import IEventBus, get_event_bus
+from core.events import IEventBus, get_event_bus
 from fastapi import HTTPException, status
 
 logger = logging.getLogger(__name__)
@@ -52,9 +54,9 @@ def initialize_services():
         # Initialize command processor
         _command_processor = CommandProcessor(_event_bus)
 
-        # Initialize core services
-        _sequence_service = SequenceManagementService(event_bus=_event_bus)
-        _arrow_service = ArrowManagementService(event_bus=_event_bus)
+        # Resolve services from DI container instead of direct instantiation
+        _sequence_service = _container.resolve(ISequenceManagementService)
+        _arrow_service = _container.resolve(IArrowManagementService)
 
         logger.info("All API services initialized successfully")
 
@@ -76,7 +78,7 @@ def cleanup_services():
         logger.info("Cleaning up API services...")
 
         # Cleanup services that require it
-        if _arrow_service:
+        if _arrow_service and hasattr(_arrow_service, "cleanup"):
             _arrow_service.cleanup()
 
         logger.info("API services cleanup complete")

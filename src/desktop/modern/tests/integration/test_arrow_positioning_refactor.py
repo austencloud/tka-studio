@@ -6,31 +6,50 @@ as the original monolithic ArrowPositioningService.
 """
 
 import pytest
-from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.application.services.positioning.arrow_positioning_service import (
+# Conditional PyQt6 imports for testing compatibility
+try:
+    from PyQt6.QtCore import QPointF
+
+    QT_AVAILABLE = True
+except ImportError:
+    # Create mock QPointF for testing when Qt is not available
+    class QPointF:
+        def __init__(self, x=0.0, y=0.0):
+            self._x = x
+            self._y = y
+
+        def x(self):
+            return self._x
+
+        def y(self):
+            return self._y
+
+    QT_AVAILABLE = False
+
+from application.services.positioning.arrow_positioning_service import (
     ArrowPositioningService,
 )
-from desktop.modern.src.application.services.positioning.arrow_location_calculator_service import (
+from application.services.positioning.arrow_location_calculator_service import (
     ArrowLocationCalculatorService,
 )
-from desktop.modern.src.application.services.positioning.arrow_rotation_calculator_service import (
+from application.services.positioning.arrow_rotation_calculator_service import (
     ArrowRotationCalculatorService,
 )
-from desktop.modern.src.application.services.positioning.arrow_adjustment_calculator_service import (
+from application.services.positioning.arrow_adjustment_calculator_service import (
     ArrowAdjustmentCalculatorService,
 )
-from desktop.modern.src.application.services.positioning.arrow_coordinate_system_service import (
+from application.services.positioning.arrow_coordinate_system_service import (
     ArrowCoordinateSystemService,
 )
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
     RotationDirection,
 )
-from desktop.modern.src.domain.models.pictograph_models import ArrowData, PictographData
+from domain.models.pictograph_models import ArrowData, PictographData
 
 
 class TestArrowPositioningRefactor:

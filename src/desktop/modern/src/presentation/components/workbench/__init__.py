@@ -4,7 +4,7 @@ Sequence Workbench Components
 Modern sequence workbench with modern architecture.
 """
 
-from desktop.modern.src.presentation.components.workbench.sequence_beat_frame import (
+from presentation.components.workbench.sequence_beat_frame import (
     SequenceBeatFrame,
     BeatView,
     StartPositionView,

@@ -37,12 +37,12 @@ import sys
 
 sys.modules["PyQt6.QtCore"] = type("MockModule", (), {"QPointF": MockQPointF})()
 
-from desktop.modern.src.domain.models.pictograph_models import PropType
-from desktop.modern.src.application.services.positioning.offset_calculation_service import (
+from domain.models.pictograph_models import PropType
+from application.services.positioning.offset_calculation_service import (
     OffsetCalculationService,
     IOffsetCalculationService,
 )
-from desktop.modern.src.application.services.positioning.direction_calculation_service import (
+from application.services.positioning.direction_calculation_service import (
     SeparationDirection,
 )
 

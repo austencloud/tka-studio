@@ -1,8 +1,8 @@
 from typing import Tuple, Dict, Any
-from desktop.modern.src.core.interfaces.tab_settings_interfaces import (
+from core.interfaces.tab_settings_interfaces import (
     IBeatLayoutService,
 )
-from desktop.modern.src.core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManagementService
 
 
 class BeatLayoutService(IBeatLayoutService):

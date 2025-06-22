@@ -7,11 +7,11 @@ Handles all beat-related operations including adding, updating, and removing bea
 import logging
 from typing import Optional
 
-from desktop.modern.src.application.services.core.sequence_management_service import (
+from application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from desktop.modern.src.core.commands import CommandProcessor
-from desktop.modern.src.core.monitoring import monitor_performance
+from core.commands import CommandProcessor
+from core.monitoring import monitor_performance
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..converters.beat_converters import api_to_domain_beat, domain_to_api_beat

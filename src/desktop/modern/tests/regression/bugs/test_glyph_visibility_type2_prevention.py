@@ -15,10 +15,10 @@ modern_src_path = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
 import pytest
-from desktop.modern.src.application.services.core.pictograph_management_service import (
+from application.services.core.pictograph_management_service import (
     PictographManagementService,
 )
-from desktop.modern.src.domain.models.core_models import LetterType, BeatData
+from domain.models.core_models import LetterType, BeatData
 
 
 class TestGlyphVisibilityType2Prevention:

@@ -15,7 +15,7 @@ PROVIDES:
 from typing import Dict
 from abc import ABC, abstractmethod
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,

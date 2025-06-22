@@ -15,15 +15,15 @@ No UI dependencies, completely testable in isolation.
 import logging
 from typing import Optional
 
-from desktop.modern.src.core.interfaces.positioning_services import (
+from core.interfaces.positioning_services import (
     IArrowLocationCalculator,
 )
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
 )
-from desktop.modern.src.domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import PictographData
 from .dash_location_service import DashLocationService
 
 logger = logging.getLogger(__name__)

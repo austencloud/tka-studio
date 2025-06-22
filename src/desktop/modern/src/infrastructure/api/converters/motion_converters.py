@@ -6,7 +6,7 @@ Handles conversion between MotionData and MotionAPI models.
 import logging
 from typing import Optional
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     Location,
     MotionData,
     MotionType,

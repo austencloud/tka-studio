@@ -16,13 +16,13 @@ from abc import ABC, abstractmethod
 
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.src.domain.models.core_models import (
+from domain.models.core_models import (
     MotionData,
     MotionType,
     RotationDirection,
 )
-from desktop.modern.src.domain.models.pictograph_models import ArrowData
-from desktop.modern.src.domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import ArrowData
+from domain.models.pictograph_models import PictographData
 from .default_placement_service import DefaultPlacementService
 from .placement_key_service import PlacementKeyService
 from .special_placement_service import SpecialPlacementService

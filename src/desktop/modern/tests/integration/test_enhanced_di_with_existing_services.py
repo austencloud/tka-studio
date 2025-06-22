@@ -16,7 +16,7 @@ sys.path.insert(0, str(modern_src_path))
 import pytest
 from unittest.mock import Mock
 
-from desktop.modern.src.core.dependency_injection.di_container import (
+from core.dependency_injection.di_container import (
     DIContainer,
     reset_container,
 )

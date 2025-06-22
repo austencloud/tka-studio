@@ -9,23 +9,23 @@ import pytest
 from pathlib import Path
 from unittest.mock import Mock
 
-from desktop.modern.src.core.organization.import_standardizer import (
+from core.organization.import_standardizer import (
     ImportStandardizer,
     ComponentHierarchyOptimizer,
 )
-from desktop.modern.src.infrastructure.file_system.file_system_service import (
+from infrastructure.file_system.file_system_service import (
     FileSystemService,
 )
-from desktop.modern.src.application.services.analysis.code_pattern_analysis_service import (
+from application.services.analysis.code_pattern_analysis_service import (
     CodePatternAnalysisService,
 )
-from desktop.modern.src.application.services.analysis.import_analysis_service import (
+from application.services.analysis.import_analysis_service import (
     ImportAnalysisService,
 )
-from desktop.modern.src.application.services.analysis.import_standardization_service import (
+from application.services.analysis.import_standardization_service import (
     ImportStandardizationService,
 )
-from desktop.modern.src.application.services.analysis.component_hierarchy_analysis_service import (
+from application.services.analysis.component_hierarchy_analysis_service import (
     ComponentHierarchyAnalysisService,
 )
 
@@ -44,9 +44,9 @@ class TestImportStandardizerRefactor:
         test_file = src_dir / "test_module.py"
         test_file.write_text(
             """
-from desktop.modern.src.domain.models import BeatData
+from domain.models import BeatData
 from modern.src.application import Service
-from desktop.modern.src.domain.models.core_models import MotionData
+from domain.models.core_models import MotionData
 import os
 """
         )
@@ -193,7 +193,7 @@ import os
         """Test that services provide useful validation methods."""
         # Test pattern validation
         validation = pattern_analysis_service.validate_import_pattern(
-            "from src.domain.models import BeatData"
+            "from domain.models import BeatData"
         )
         assert validation["valid"] is False
         assert "violations" in validation
