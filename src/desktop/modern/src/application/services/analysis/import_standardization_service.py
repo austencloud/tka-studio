@@ -10,15 +10,17 @@ from typing import Any, Optional
 
 class ImportStandardizationService:
     """Placeholder service implementation."""
-    
+
     def __init__(self):
         """Initialize the service."""
         pass
-        
+
     def __getattr__(self, name: str) -> Any:
         """Return a mock method for any attribute access."""
+
         def mock_method(*args, **kwargs):
             return None
+
         return mock_method
 
 

@@ -209,7 +209,9 @@ class TestProtocolValidation:
 
     def test_auto_register_rejects_invalid_implementation(self, container):
         """Test that auto_register rejects non-compliant implementations."""
-        with pytest.raises(DependencyInjectionError, match="doesn't implement get_value"):
+        with pytest.raises(
+            DependencyInjectionError, match="doesn't implement get_value"
+        ):
             container.auto_register(ITestService, InvalidService)
 
     def test_validation_with_concrete_classes(self, container):
@@ -267,7 +269,9 @@ class TestErrorHandling:
         # Register service that needs unregistered dependency
         container.register_singleton(ITestService, TestService)
 
-        with pytest.raises(DependencyInjectionError, match="Failed to resolve ITestRepository"):
+        with pytest.raises(
+            DependencyInjectionError, match="Failed to resolve ITestRepository"
+        ):
             container.resolve(ITestService)
 
     def test_creation_failure_handling(self, container):

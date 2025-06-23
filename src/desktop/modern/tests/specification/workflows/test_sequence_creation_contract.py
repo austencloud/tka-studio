@@ -234,7 +234,7 @@ class TestSequenceCreationWorkflowContract:
                 name=sequence_with_beats.name,  # Preserve name during creation
                 word="",
                 beats=[],
-                start_position=""
+                start_position="",
             )
 
             # Verify return to empty state

@@ -1,7 +1,6 @@
 # Application services package
 
 
-
 QT_SERVICES_AVAILABLE = False  # Set to False to avoid Qt dependencies in tests
 
 from .motion.motion_validation_service import (

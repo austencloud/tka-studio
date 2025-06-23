@@ -1,3 +1,4 @@
+from typing import Union
 from PyQt6.QtWidgets import (
     QLabel,
     QWidget,
@@ -51,7 +52,7 @@ class EditableLabel(QWidget):
             label.setTextFormat(Qt.TextFormat.PlainText)
         return label
 
-    def _create_edit_widget(self) -> QTextEdit | QLineEdit:
+    def _create_edit_widget(self) -> Union[QTextEdit, QLineEdit]:
         if self.multi_line:
             edit = QTextEdit(self)
             edit.setWordWrapMode(QTextOption.WrapMode.WordWrap)

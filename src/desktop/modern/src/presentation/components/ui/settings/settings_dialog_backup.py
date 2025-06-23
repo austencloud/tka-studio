@@ -83,7 +83,7 @@ class SettingsDialog(QDialog):
     def __init__(self, ui_state_service: IUIStateManagementService, parent=None):
         super().__init__(parent)
         self.ui_state_service = ui_state_service
-        
+
         # Initialize drag position for window dragging
         self.drag_position = None
 
@@ -102,7 +102,7 @@ class SettingsDialog(QDialog):
         # Initialize components
         self.services = SettingsServices(ui_state_service)
         self.animations = SettingsAnimations(self)
-        
+
         self._setup_coordinator()
         self._setup_dialog()
         self._create_ui()
@@ -486,7 +486,7 @@ class SettingsDialog(QDialog):
 
         # Create glassmorphism background with enhanced opacity for better visibility
         gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0, QColor(8, 12, 20, 250))   # Even more opaque
+        gradient.setColorAt(0, QColor(8, 12, 20, 250))  # Even more opaque
         gradient.setColorAt(0.3, QColor(12, 16, 24, 245))
         gradient.setColorAt(0.7, QColor(16, 20, 28, 248))
         gradient.setColorAt(1, QColor(10, 14, 22, 252))
@@ -512,7 +512,6 @@ class SettingsDialog(QDialog):
                     stop:1 rgba(255, 255, 255, 0.18));
                 border: 1px solid rgba(255, 255, 255, 0.35);
                 border-radius: 24px;
-                backdrop-filter: blur(20px);
             }
 
             #header_frame {

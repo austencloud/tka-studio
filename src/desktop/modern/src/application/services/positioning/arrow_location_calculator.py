@@ -36,8 +36,10 @@ class ArrowLocationCalculator:
             return self._calculate_shift_location(motion.start_loc, motion.end_loc)
         else:
             return motion.start_loc
-    
-    def _calculate_shift_location(self, start_loc: Location, end_loc: Location) -> Location:
+
+    def _calculate_shift_location(
+        self, start_loc: Location, end_loc: Location
+    ) -> Location:
         """Calculate shift location between two positions."""
         # Simplified shift calculation logic
         shift_map = {
@@ -50,7 +52,7 @@ class ArrowLocationCalculator:
             (Location.SOUTHWEST, Location.SOUTHEAST): Location.SOUTH,
             (Location.NORTHWEST, Location.SOUTHWEST): Location.WEST,
         }
-        
+
         return shift_map.get((start_loc, end_loc), start_loc)
 
 

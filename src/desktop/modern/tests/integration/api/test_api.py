@@ -182,7 +182,8 @@ def test_api_endpoint():
     """Test a single API endpoint - requires running server."""
     pytest.skip("Server integration test - run manually with server")
 
-@pytest.mark.requires_server 
+
+@pytest.mark.requires_server
 def test_tka_api():
     """Test all TKA API endpoints - requires running server."""
     pytest.skip("Server integration test - run manually with server")

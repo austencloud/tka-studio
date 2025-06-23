@@ -21,15 +21,18 @@ from core.exceptions import DependencyInjectionError
 
 # Test interfaces and implementations
 class IRepository(Protocol):
-    def get_data(self) -> str: ...
+    def get_data(self) -> str:
+        ...
 
 
 class IService(Protocol):
-    def process(self) -> str: ...
+    def process(self) -> str:
+        ...
 
 
 class IController(Protocol):
-    def handle_request(self) -> str: ...
+    def handle_request(self) -> str:
+        ...
 
 
 class Repository:

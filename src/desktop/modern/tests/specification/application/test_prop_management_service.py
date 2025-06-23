@@ -324,8 +324,10 @@ class TestDirectionalOffsets:
 
     def test_calculate_directional_offset_basic_directions(self, prop_service):
         """Test offset calculation for basic directions."""
-        from application.services.positioning.prop_management_service import SeparationDirection
-        
+        from application.services.positioning.prop_management_service import (
+            SeparationDirection,
+        )
+
         # Test with default prop type (Hand)
         prop_type = PropType.HAND if hasattr(PropType, "HAND") else list(PropType)[0]
 
@@ -358,10 +360,14 @@ class TestDirectionalOffsets:
         assert down_offset.x == 0
         assert down_offset.y > 0
 
-    def test_calculate_directional_offset_diagonal_directions(self, prop_service: "PropManagementService"):
+    def test_calculate_directional_offset_diagonal_directions(
+        self, prop_service: "PropManagementService"
+    ):
         """Test offset calculation for diagonal directions."""
-        from application.services.positioning.prop_management_service import SeparationDirection
-        
+        from application.services.positioning.prop_management_service import (
+            SeparationDirection,
+        )
+
         prop_type = PropType.HAND if hasattr(PropType, "HAND") else list(PropType)[0]
 
         upleft_offset = prop_service.calculate_directional_offset(

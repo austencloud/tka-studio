@@ -13,6 +13,8 @@ class PaintEventSuppressor:
                 "Painter",
                 "Unknown property cursor",
                 "Unknown property box-shadow",
+                "Unknown property backdrop-filter",
+                "Unknown property transform",
                 "QWidget::setMinimumSize",
                 "QFont::setPointSize",
                 "Section 'sequence_picker' not found",

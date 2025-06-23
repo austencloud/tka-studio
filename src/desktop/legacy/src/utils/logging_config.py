@@ -161,11 +161,11 @@ def configure_logging(default_level: int = None) -> logging.Logger:
     # Create console handler for logging to console with UTF-8 encoding
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(log_level)
-    
+
     # Force UTF-8 encoding for console output to handle Unicode characters
-    if hasattr(console_handler.stream, 'reconfigure'):
+    if hasattr(console_handler.stream, "reconfigure"):
         try:
-            console_handler.stream.reconfigure(encoding='utf-8', errors='replace')
+            console_handler.stream.reconfigure(encoding="utf-8", errors="replace")
         except:
             pass  # Fallback if reconfigure is not available
 
@@ -223,6 +223,31 @@ def configure_logging(default_level: int = None) -> logging.Logger:
     # Apply the aggressive filter
     aggressive_filter = AggressiveNoiseFilter()
     console_handler.addFilter(aggressive_filter)
+
+    # Create a Unicode compatibility filter for Windows console
+    class UnicodeCompatibilityFilter(logging.Filter):
+        def filter(self, record):
+            # Strip Unicode emoji characters that cause charmap encoding errors on Windows
+            import re
+
+            if hasattr(record, "msg") and isinstance(record.msg, str):
+                # Remove emoji and other problematic Unicode characters
+                record.msg = re.sub(r"[^\x00-\x7F]+", "", record.msg)
+            if hasattr(record, "getMessage"):
+                try:
+                    message = record.getMessage()
+                    # Clean the message of problematic Unicode
+                    cleaned_message = re.sub(r"[^\x00-\x7F]+", "", message)
+                    # Update the record if cleaning was needed
+                    if message != cleaned_message:
+                        record.msg = cleaned_message
+                        record.args = ()
+                except:
+                    pass
+            return True
+
+    # Add the Unicode compatibility filter to the console handler
+    console_handler.addFilter(UnicodeCompatibilityFilter())
 
     # Configure module-specific loggers to be even more restrictive
     configure_module_loggers()

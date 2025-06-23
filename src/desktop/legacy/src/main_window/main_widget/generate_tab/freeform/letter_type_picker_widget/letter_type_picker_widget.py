@@ -110,7 +110,7 @@ class LetterTypePickerWidget(QWidget):
         font = self.filter_label.font()
         font.setPointSize(font_size)
         self.filter_label.setFont(font)
-        
+
         try:
             global_settings = AppContext.settings_manager().global_settings
             color = self._get_font_color(global_settings.get_background_type())

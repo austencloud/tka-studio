@@ -226,6 +226,7 @@ if __name__ != "__main__":
     except Exception as e:
         # Fail silently to avoid breaking imports, but log the issue
         import warnings
+
         warnings.warn(f"TKA Monorepo auto-setup failed: {e}", UserWarning)
 
 # Export key constants and functions

@@ -97,8 +97,6 @@ class SettingCard(QFrame):
                     stop:0 rgba(255, 255, 255, 0.22),
                     stop:1 rgba(255, 255, 255, 0.16));
                 border-color: rgba(255, 255, 255, 0.35);
-                transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
             
             QLabel#setting_title {

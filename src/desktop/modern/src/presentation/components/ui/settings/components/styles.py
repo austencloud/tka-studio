@@ -9,7 +9,7 @@ proper borders, and smooth hover effects.
 
 class GlassmorphismStyles:
     """Central repository for all glassmorphism styling used in the settings dialog."""
-    
+
     @staticmethod
     def get_dialog_styles() -> str:
         """Get the complete stylesheet for the settings dialog."""
@@ -17,15 +17,13 @@ class GlassmorphismStyles:
             QDialog {
                 background: transparent;
             }
-            
-            #glassmorphism_container {
+              #glassmorphism_container {
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                     stop:0 rgba(255, 255, 255, 0.25),
                     stop:0.5 rgba(255, 255, 255, 0.20),
                     stop:1 rgba(255, 255, 255, 0.18));
                 border: 1px solid rgba(255, 255, 255, 0.35);
                 border-radius: 24px;
-                backdrop-filter: blur(20px);
             }
 
             #header_frame {

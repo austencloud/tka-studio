@@ -164,7 +164,6 @@ class GeneralTab(QWidget):
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 rgba(255, 255, 255, 0.20),
                     stop:1 rgba(255, 255, 255, 0.14));
-                box-shadow: 0 0 0 2px rgba(42, 130, 218, 0.2);
             }
             
             QCheckBox {
@@ -191,7 +190,6 @@ class GeneralTab(QWidget):
                     stop:0 rgba(34, 197, 94, 0.9),
                     stop:1 rgba(34, 197, 94, 0.7));
                 border-color: rgba(34, 197, 94, 1.0);
-                box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
             }
             
             QCheckBox::indicator:hover {
@@ -220,7 +218,6 @@ class GeneralTab(QWidget):
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 rgba(255, 255, 255, 0.20),
                     stop:1 rgba(255, 255, 255, 0.14));
-                box-shadow: 0 0 0 2px rgba(42, 130, 218, 0.2);
             }
             
             QComboBox::drop-down {

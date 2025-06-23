@@ -28,21 +28,25 @@ from core.exceptions import DependencyInjectionError
 class IRepository(Protocol):
     """Test repository interface."""
 
-    def save(self, data: str) -> None: ...
+    def save(self, data: str) -> None:
+        ...
 
-    def load(self, id: str) -> str: ...
+    def load(self, id: str) -> str:
+        ...
 
 
 class IService(Protocol):
     """Test service interface."""
 
-    def process(self, input: str) -> str: ...
+    def process(self, input: str) -> str:
+        ...
 
 
 class IController(Protocol):
     """Test controller interface."""
 
-    def handle(self, request: str) -> str: ...
+    def handle(self, request: str) -> str:
+        ...
 
 
 class Repository:

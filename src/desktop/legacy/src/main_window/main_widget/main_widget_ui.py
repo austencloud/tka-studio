@@ -6,7 +6,7 @@ from main_window.main_widget.fade_manager.fade_manager import FadeManager
 from main_window.main_widget.pictograph_collector import PictographCollector
 
 # SettingsDialog import moved to conditional import in _create_components
-from desktop.modern.src.core.migration_adapters import AppContextAdapter
+from core.migration_adapters import AppContextAdapter
 from .construct_tab.construct_tab_factory import ConstructTabFactory
 from .generate_tab.generate_tab_factory import GenerateTabFactory
 from .learn_tab.learn_tab_factory import LearnTabFactory
@@ -145,7 +145,7 @@ class MainWidgetUI:
         # mw.write_tab = WriteTab(mw)
 
         mw.background_widget = MainBackgroundWidgetFactory.create(
-            main_widget=mw, settings_manager=settings_manager
+            parent=mw, app_context=temp_app_context
         )
         mw.background_widget.lower()
         mw.state_handler.load_state(mw.sequence_workbench.beat_frame)

@@ -73,8 +73,7 @@ def get_pytest_args(args):
         pytest_args.append("--help")
     else:
         # Default: run working tests (exclude PyQt6 crashes and problematic imports)
-        exclude_patterns = [
-        ]
+        exclude_patterns = []
         pytest_args.extend(exclude_patterns)
 
     # Add any remaining arguments

@@ -23,7 +23,12 @@ if TYPE_CHECKING:
 class BeatFrameUpdater:
     def __init__(self, beat_frame: "LegacyBeatFrame") -> None:
         self.bf = beat_frame
-        self.json_manager = AppContext.json_manager()
+        # Use dependency injection instead of AppContext singleton
+        try:
+            self.json_manager = beat_frame.main_widget.app_context.json_manager
+        except AttributeError:
+            # Fallback to AppContext for backward compatibility
+            self.json_manager = AppContext.json_manager()
 
     def update_beats_from_current_sequence_json(self) -> None:
         current_sequence_json = self.json_manager.loader_saver.load_current_sequence()
