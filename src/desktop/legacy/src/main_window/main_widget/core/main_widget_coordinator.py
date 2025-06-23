@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING, Optional
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget
 from PyQt6.QtCore import pyqtSignal
 
-from desktop.modern.src.core.application_context import ApplicationContext
-from .tab_manager import TabManager
-from .widget_manager import WidgetManager
-from .state_manager import StateManager
-from .image_drag_drop_handler import ImageDragDropHandler
-from .image_drop_processor import ImageDropProcessor
+from core.application_context import ApplicationContext
+from main_window.main_widget.core.tab_manager import TabManager
+from main_window.main_widget.core.widget_manager import WidgetManager
+from main_window.main_widget.core.state_manager import StateManager
+from main_window.main_widget.core.image_drag_drop_handler import ImageDragDropHandler
+from main_window.main_widget.core.image_drop_processor import ImageDropProcessor
 
 if TYPE_CHECKING:
     from main_window.main_window import MainWindow

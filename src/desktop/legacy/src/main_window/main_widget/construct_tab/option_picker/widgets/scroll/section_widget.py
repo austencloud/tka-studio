@@ -4,7 +4,7 @@ from enums.letter.letter_type import LetterType
 
 from data.constants import OPP, SAME
 from PyQt6.QtCore import Qt
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
 from PyQt6.QtCore import QSize
 from main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_pictograph_frame import (

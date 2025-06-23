@@ -79,15 +79,18 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         adjustment = self.adjustment_calculator.calculate_adjustment(
             arrow_data, pictograph_data
         )  # Step 5: Compose final position
-        # Handle both QPointF (with x(), y() methods) and Point (with x, y attributes)
-        try:
-            # Try QPointF method call first
-            adjustment_x = adjustment.x()
-            adjustment_y = adjustment.y()
-        except TypeError:
-            # Fall back to Point attribute access
-            adjustment_x = adjustment.x
-            adjustment_y = adjustment.y
+        # Handle adjustment as float, QPointF, or Point object
+        if isinstance(adjustment, (int, float)):
+            adjustment_x = adjustment
+            adjustment_y = adjustment
+        elif hasattr(adjustment, "x") and hasattr(adjustment, "y"):
+            x_attr = adjustment.x
+            y_attr = adjustment.y
+            adjustment_x = x_attr() if callable(x_attr) else x_attr
+            adjustment_y = y_attr() if callable(y_attr) else y_attr
+        else:
+            adjustment_x = 0.0
+            adjustment_y = 0.0
 
         final_x = initial_position.x + adjustment_x
         final_y = initial_position.y + adjustment_y

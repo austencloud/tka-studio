@@ -6,10 +6,10 @@ from main_window.main_widget.special_placement_loader import SpecialPlacementLoa
 from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
+    from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
         LegacyOptionPicker,
     )
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
     from main import MainWindow
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from main_window.main_widget.json_manager.special_placement_saver import (
         SpecialPlacementSaver,
     )
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
     )
 
@@ -105,6 +105,18 @@ class AppContext:
                 f"AppContext.settings_manager() accessed before init() from module {cls.__module__}"
             )
             logger.error(f"Initialization status: {cls._initialized}")
+            
+            # Try to initialize with defaults if possible
+            if not cls._initialized:
+                logger.warning("Attempting to initialize AppContext with defaults...")
+                try:
+                    from legacy.src.legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
+                    cls._settings_manager = LegacySettingsManager()
+                    logger.warning("Emergency initialization successful")
+                    return cls._settings_manager
+                except Exception as e:
+                    logger.error(f"Emergency initialization failed: {e}")
+                    
             raise RuntimeError(
                 f"AppContext.settings_manager() accessed before init() from module {cls.__module__}"
             )
@@ -120,25 +132,55 @@ class AppContext:
                 f"AppContext.json_manager() accessed before init() from module {cls.__module__}"
             )
             logger.error(f"Initialization status: {cls._initialized}")
+            
+            # Try to initialize with defaults if possible
+            if not cls._initialized:
+                logger.warning("Attempting to initialize AppContext with defaults...")
+                try:
+                    from main_window.main_widget.json_manager.json_manager import JsonManager
+                    cls._json_manager = JsonManager()
+                    logger.warning("Emergency JSON manager initialization successful")
+                    return cls._json_manager
+                except Exception as e:
+                    logger.error(f"Emergency JSON manager initialization failed: {e}")
+                    
             raise RuntimeError(
                 f"AppContext.json_manager() accessed before init() from module {cls.__module__}"
             )
-        return cls._json_manager
-
-    @classmethod
+        return cls._json_manager    @classmethod
     def special_placement_saver(cls) -> "SpecialPlacementSaver":
         if cls._special_placement_handler is None:
-            raise RuntimeError(
-                "AppContext.special_placement_handler() accessed before init()"
-            )
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning("AppContext.special_placement_saver() accessed before init(), attempting emergency initialization")
+            try:
+                from main_window.main_widget.json_manager.special_placement_saver import SpecialPlacementSaver
+                cls._special_placement_handler = SpecialPlacementSaver()
+                logger.warning("Emergency special placement saver initialization successful")
+                return cls._special_placement_handler
+            except Exception as e:
+                logger.error(f"Emergency special placement saver initialization failed: {e}")
+                raise RuntimeError(
+                    "AppContext.special_placement_handler() accessed before init()"
+                )
         return cls._special_placement_handler
 
     @classmethod
     def special_placement_loader(cls) -> "SpecialPlacementLoader":
         if cls._special_placement_loader is None:
-            raise RuntimeError(
-                "AppContext.special_placement_loader() accessed before init()"
-            )
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning("AppContext.special_placement_loader() accessed before init(), attempting emergency initialization")
+            try:
+                from main_window.main_widget.special_placement_loader import SpecialPlacementLoader
+                cls._special_placement_loader = SpecialPlacementLoader()
+                logger.warning("Emergency special placement loader initialization successful")
+                return cls._special_placement_loader
+            except Exception as e:
+                logger.error(f"Emergency special placement loader initialization failed: {e}")
+                raise RuntimeError(
+                    "AppContext.special_placement_loader() accessed before init()"
+                )
         return cls._special_placement_loader
 
     @classmethod

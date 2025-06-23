@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from data.constants import BEAT
 
 if TYPE_CHECKING:
-    from src.base_widgets.pictograph.elements.views.beat_view import (
+    from base_widgets.pictograph.elements.views.beat_view import (
         LegacyBeatView,
     )
     from .json_sequence_updater import JsonSequenceUpdater

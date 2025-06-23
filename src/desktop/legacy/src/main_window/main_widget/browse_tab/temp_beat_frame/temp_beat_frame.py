@@ -17,7 +17,7 @@ from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame_layout_m
     TempBeatFrameLayoutManager,
 )
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
@@ -32,7 +32,7 @@ from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat_view import (
     StartPositionBeatView,
 )
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 
 if TYPE_CHECKING:

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from data.constants import BOX, DIAMOND
 from main_window.main_widget.grid_mode_checker import GridModeChecker
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from utils.path_helpers import get_image_path
 
 from .grid_data import GridData
@@ -10,7 +10,7 @@ from .grid_item import GridItem
 from .non_radial_points_group import NonRadialPointsGroup
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 GRID_DIR = "grid/"
 
@@ -48,10 +48,14 @@ class Grid:
         if non_radial_path:
             non_radial_points = NonRadialPointsGroup(non_radial_path)
             self.pictograph.addItem(non_radial_points)
-            is_visible = (
-                AppContext.settings_manager().visibility.get_non_radial_visibility()
-            )
-            non_radial_points.setVisible(is_visible)
+            try:
+                is_visible = (
+                    AppContext.settings_manager().visibility.get_non_radial_visibility()
+                )
+                non_radial_points.setVisible(is_visible)
+            except RuntimeError:
+                # AppContext not initialized yet, use default visibility
+                non_radial_points.setVisible(True)
             self.items[f"{self.grid_mode}_nonradial"] = non_radial_points
 
     def toggle_non_radial_points(self, visible: bool):

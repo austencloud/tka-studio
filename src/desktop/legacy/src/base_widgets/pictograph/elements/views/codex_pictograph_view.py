@@ -6,7 +6,7 @@ from base_widgets.pictograph.elements.views.base_pictograph_view import (
 
 if TYPE_CHECKING:
     from .....main_window.main_widget.codex.codex import Codex
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class CodexPictographView(BasePictographView):

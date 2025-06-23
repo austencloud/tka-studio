@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
 

@@ -5,7 +5,7 @@ from main_window.main_widget.turns_tuple_generator.turns_tuple_generators.base_t
 )
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class Type1HybridTurnsTupleGenerator(BaseTurnsTupleGenerator):

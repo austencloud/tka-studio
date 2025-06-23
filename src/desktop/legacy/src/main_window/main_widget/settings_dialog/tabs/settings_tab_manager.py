@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt
 import logging
 
 if TYPE_CHECKING:
-    from src.core.application_context import ApplicationContext
+    from core.application_context import ApplicationContext
     from ..core.settings_state_manager import SettingsStateManager
 
 logger = logging.getLogger(__name__)

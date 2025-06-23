@@ -5,7 +5,7 @@ from svg_manager.prop_svg_manager import PropSvgManager
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class SvgManager:

@@ -9,9 +9,11 @@ requiring any Legacy format conversions.
 from .beat_data_loader import BeatDataLoader
 from .display_manager import OptionPickerDisplayManager
 from .pictograph_pool_manager import PictographPoolManager
+from .option_picker import OptionPicker
 
 __all__ = [
     "BeatDataLoader",
     "OptionPickerDisplayManager",
     "PictographPoolManager",
+    "OptionPicker",
 ]

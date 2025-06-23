@@ -16,7 +16,7 @@ from .small_prop_positioner import SmallPropPositioner
 from .swap_beta_handler import SwapBetaHandler
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
     from ..prop_placement_manager import PropPlacementManager
 

@@ -2,7 +2,6 @@
 Arrow Rotation Calculator Service
 
 Pure algorithmic service for calculating arrow rotation angles based on motion data and location.
-Extracted from ArrowPositioningService to follow single responsibility principle.
 
 This service handles:
 - Static motion rotation (arrows point inward)

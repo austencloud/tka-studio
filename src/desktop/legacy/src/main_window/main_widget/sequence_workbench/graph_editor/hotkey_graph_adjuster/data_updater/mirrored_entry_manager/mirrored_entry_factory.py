@@ -5,7 +5,7 @@ Factory for creating and configuring mirrored entry components.
 import logging
 
 from objects.arrow.arrow import Arrow
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 from .mirrored_entry_service import MirroredEntryService
 

@@ -44,10 +44,18 @@ class AnimatedBackgroundTile(QWidget):
 
     def cleanup(self):
         """Clean up resources, particularly the animation timer."""
-        if hasattr(self, "animation_timer") and self.animation_timer:
-            if self.animation_timer.isActive():
-                self.animation_timer.stop()
-            self.animation_timer.deleteLater()
+        try:
+            if hasattr(self, "animation_timer") and self.animation_timer is not None:
+                if (
+                    hasattr(self.animation_timer, "isActive")
+                    and self.animation_timer.isActive()
+                ):
+                    self.animation_timer.stop()
+                if hasattr(self.animation_timer, "deleteLater"):
+                    self.animation_timer.deleteLater()
+                self.animation_timer = None
+        except RuntimeError:
+            # Timer already deleted by Qt, ignore
             self.animation_timer = None
 
     def closeEvent(self, event):
@@ -267,10 +275,14 @@ class BackgroundTab(QWidget):
 
     def cleanup(self):
         """Clean up all animated tiles and their resources."""
-        for tile in self.tiles.values():
-            if hasattr(tile, "cleanup"):
-                tile.cleanup()
-        self.tiles.clear()
+        try:
+            for tile in self.tiles.values():
+                if hasattr(tile, "cleanup"):
+                    tile.cleanup()
+            self.tiles.clear()
+        except RuntimeError:
+            # Widgets already deleted by Qt
+            self.tiles.clear()
 
     def closeEvent(self, event):
         """Handle widget close event."""

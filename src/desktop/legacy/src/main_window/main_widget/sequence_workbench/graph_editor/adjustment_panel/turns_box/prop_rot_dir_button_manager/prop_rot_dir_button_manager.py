@@ -13,7 +13,7 @@ from data.constants import (
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.turns_value import (
     TurnsValue,
 )
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_btn_state import (
     PropRotationState,
 )

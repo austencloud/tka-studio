@@ -4,7 +4,7 @@ from enums.letter.letter_condition import LetterCondition
 from enums.prop_type import PropType
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class PictographChecker:

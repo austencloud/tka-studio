@@ -5,8 +5,8 @@ from base_widgets.pictograph.elements.views.bordered_pictograph_view import (
 )
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-    from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
         LegacyOptionPicker,
     )
 

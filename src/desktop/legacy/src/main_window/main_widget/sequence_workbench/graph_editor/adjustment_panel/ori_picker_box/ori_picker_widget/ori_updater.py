@@ -3,7 +3,7 @@ from data.constants import *
 
 if TYPE_CHECKING:
     from .ori_picker_widget import OriPickerWidget
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
     from objects.motion.motion import Motion
 

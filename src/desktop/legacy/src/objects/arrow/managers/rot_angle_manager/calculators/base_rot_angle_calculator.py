@@ -7,7 +7,7 @@ from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjust
     ArrowRotAngleOverrideKeyGenerator,
 )
 from main_window.main_widget.grid_mode_checker import GridModeChecker
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.motion.handpath_calculator import (
     HandpathCalculator,
 )

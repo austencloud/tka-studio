@@ -4,7 +4,7 @@ Container component that combines all turn configuration components.
 
 from typing import Dict, Any
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QSizePolicy
-from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+from legacy_settings_manager.legacy_settings_manager import (
     LegacySettingsManager,
 )
 from ..widgets import ModernCard

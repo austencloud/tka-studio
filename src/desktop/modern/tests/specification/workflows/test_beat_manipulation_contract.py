@@ -122,7 +122,7 @@ class TestBeatManipulationWorkflowContract:
             service = SequenceManagementService()
 
             # Delete middle beat
-            updated_sequence = service.delete_beat(sequence, 1)  # Delete "B"
+            updated_sequence = service.remove_beat(sequence, 1)  # Delete "B"
 
             # Verify deletion
             assert len(updated_sequence.beats) == 2

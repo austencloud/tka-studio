@@ -4,42 +4,82 @@
     {
       "label": "Run All Tests",
       "type": "shell",
-      "command": "python",
-      "args": ["scripts/simple_test_runner.py"],
+      "command": "pytest",
+      "args": [
+        "src/desktop/modern/tests/",
+        "-v",
+        "--tb=short"
+      ],
       "group": "test",
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
         "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
       }
     },
     {
-      "label": "Start Test Watcher",
+      "label": "Run Tests (Specific File)",
       "type": "shell",
-      "command": "python",
-      "args": ["scripts/test_watcher.py"],
+      "command": "pytest",
+      "args": [
+        "${file}",
+        "-v",
+        "--tb=short"
+      ],
       "group": "test",
-      "isBackground": true,
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
         "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
       }
     },
     {
-      "label": "Health Monitor",
+      "label": "Run Failed Tests Only",
       "type": "shell",
-      "command": "python",
-      "args": ["scripts/health_monitor.py"],
+      "command": "pytest",
+      "args": [
+        "src/desktop/modern/tests/",
+        "--lf",
+        "-v",
+        "--tb=short"
+      ],
       "group": "test",
-      "isBackground": true,
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
         "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run Specific Test",
+      "type": "shell",
+      "command": "pytest",
+      "args": [
+        "src/desktop/modern/tests/unit/application/services/core/test_service_registration_manager.py",
+        "-v",
+        "--tb=short"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
       }
     }
   ]

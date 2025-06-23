@@ -17,7 +17,7 @@ from data.constants import (
     TIMING,
     TURNS,
 )
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 if TYPE_CHECKING:

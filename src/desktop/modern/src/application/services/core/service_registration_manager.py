@@ -194,69 +194,83 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_positioning_services(self, container: "DIContainer") -> None:
         """Register microservices-based positioning services."""
-        # Import the individual calculator services
-        from application.services.positioning.arrow_adjustment_calculator_service import (
-            ArrowAdjustmentCalculatorService,
-        )
-        from application.services.positioning.arrow_coordinate_system_service import (
-            ArrowCoordinateSystemService,
-        )
-        from application.services.positioning.arrow_location_calculator_service import (
-            ArrowLocationCalculatorService,
-        )
-        from application.services.positioning.arrow_rotation_calculator_service import (
-            ArrowRotationCalculatorService,
-        )
-        from application.services.positioning.arrow_positioning_orchestrator import (
-            ArrowPositioningOrchestrator,
-        )
-        from core.interfaces.positioning_services import (
-            IArrowAdjustmentCalculator,
-            IArrowCoordinateSystemService,
-            IArrowLocationCalculator,
-            IArrowRotationCalculator,
-            IArrowPositioningOrchestrator,
-        )
+        try:
+            # Import the individual calculator services
+            from application.services.positioning.arrow_adjustment_calculator_service import (
+                ArrowAdjustmentCalculatorService,
+            )
+            from application.services.positioning.arrow_coordinate_system_service import (
+                ArrowCoordinateSystemService,
+            )
+            from application.services.positioning.arrow_location_calculator_service import (
+                ArrowLocationCalculatorService,
+            )
+            from application.services.positioning.arrow_rotation_calculator_service import (
+                ArrowRotationCalculatorService,
+            )
+            from application.services.positioning.arrow_positioning_orchestrator import (
+                ArrowPositioningOrchestrator,
+            )
+            from core.interfaces.positioning_services import (
+                IArrowAdjustmentCalculator,
+                IArrowCoordinateSystemService,
+                IArrowLocationCalculator,
+                IArrowRotationCalculator,
+                IArrowPositioningOrchestrator,
+            )
 
-        # Register calculator microservices
-        container.register_singleton(
-            IArrowLocationCalculator, ArrowLocationCalculatorService
-        )
-        container.register_singleton(
-            IArrowRotationCalculator, ArrowRotationCalculatorService
-        )
-        container.register_singleton(
-            IArrowAdjustmentCalculator, ArrowAdjustmentCalculatorService
-        )
-        container.register_singleton(
-            IArrowCoordinateSystemService, ArrowCoordinateSystemService
-        )
+            # Register calculator microservices
+            container.register_singleton(
+                IArrowLocationCalculator, ArrowLocationCalculatorService
+            )
+            container.register_singleton(
+                IArrowRotationCalculator, ArrowRotationCalculatorService
+            )
+            container.register_singleton(
+                IArrowAdjustmentCalculator, ArrowAdjustmentCalculatorService
+            )
+            container.register_singleton(
+                IArrowCoordinateSystemService, ArrowCoordinateSystemService
+            )
 
-        # Register orchestrator (replaces monolith)
-        container.register_singleton(
-            IArrowPositioningOrchestrator, ArrowPositioningOrchestrator
-        )
+            # Register orchestrator (replaces monolith)
+            container.register_singleton(
+                IArrowPositioningOrchestrator, ArrowPositioningOrchestrator
+            )
+        except ImportError:
+            # Some positioning services not available - continue
+            pass
 
-        # Register prop management services
-        from application.services.positioning.prop_management_service import (
-            PropManagementService,
-            IPropManagementService,
-        )
+        try:
+            # Register prop management services
+            from application.services.positioning.prop_management_service import (
+                PropManagementService,
+                IPropManagementService,
+            )
 
-        container.register_singleton(IPropManagementService, PropManagementService)
+            container.register_singleton(IPropManagementService, PropManagementService)
+        except ImportError:
+            # Prop management service not available - continue
+            pass
 
-        # Import existing prop orchestrator (keep if still needed)
-        from application.services.core.pictograph_orchestrator import (
-            IPictographOrchestrator,
-            PictographOrchestrator,
-        )
-        from application.services.positioning.prop_orchestrator import (
-            IPropOrchestrator,
-            PropOrchestrator,
-        )  # Register remaining orchestrators
+        try:
+            # Import existing prop orchestrator (keep if still needed)
+            from application.services.core.pictograph_orchestrator import (
+                IPictographOrchestrator,
+                PictographOrchestrator,
+            )
+            from application.services.positioning.prop_orchestrator import (
+                IPropOrchestrator,
+                PropOrchestrator,
+            )  # Register remaining orchestrators
 
-        container.register_singleton(IPropOrchestrator, PropOrchestrator)
-        container.register_singleton(IPictographOrchestrator, PictographOrchestrator)
+            container.register_singleton(IPropOrchestrator, PropOrchestrator)
+            container.register_singleton(
+                IPictographOrchestrator, PictographOrchestrator
+            )
+        except ImportError:
+            # Orchestrators not available - continue
+            pass
 
     def register_option_picker_services(self, container: "DIContainer") -> None:
         """Register the refactored option picker services."""

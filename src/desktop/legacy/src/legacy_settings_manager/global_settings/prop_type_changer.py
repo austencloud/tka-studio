@@ -4,7 +4,7 @@ from data.constants import BLUE, RED
 from objects.prop.prop import Prop
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from ..legacy_settings_manager import LegacySettingsManager
 
 

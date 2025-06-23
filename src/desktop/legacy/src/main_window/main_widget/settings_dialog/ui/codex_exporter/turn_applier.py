@@ -7,7 +7,7 @@ from data.constants import RED, BLUE
 from objects.motion.motion import MotionOriCalculator
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class TurnApplier:

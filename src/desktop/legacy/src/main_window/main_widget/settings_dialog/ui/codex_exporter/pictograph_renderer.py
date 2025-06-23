@@ -7,7 +7,7 @@ from PyQt6.QtGui import QImage, QPainter
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
         ImageExportTab,
     )

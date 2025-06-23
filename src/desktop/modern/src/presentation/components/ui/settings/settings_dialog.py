@@ -1,36 +1,36 @@
-"""
-Production-ready settings dialog - drop-in replacement for ModernSettingsDialog.
+from typing import Any, Dict
 
-This is the enhanced settings dialog that combines the beautiful glassmorphism design
-from the legacy system with the modern architecture. It's designed to be a complete
-replacement for the existing ModernSettingsDialog.
+from core.interfaces.core_services import IUIStateManagementService
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import (
+    QBrush,
+    QColor,
+    QLinearGradient,
+    QPainter,
+    QPainterPath,
+    QRegion,
+)
+from PyQt6.QtCore import QRectF
+from PyQt6.QtWidgets import (
+    QDialog,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
-Features:
-- Glassmorphism design with translucent backgrounds and blur effects
-- Enhanced component architecture with reusable SettingCard, Toggle, ComboBox
-- Settings coordinator for centralized state management
-- Smooth animations and modern visual hierarchy
-- All essential tabs: General, Prop Types, Visibility, Beat Layout, Image Export, Background
-- Backward compatible service integration
-
-This dialog automatically creates and manages all required services internally,
-making it a true drop-in replacement that requires minimal integration effort.
-
-Usage:
-    Replace any instance of ModernSettingsDialog with SettingsDialog:
-
-    # Old way:
-    dialog = ModernSettingsDialog(ui_state_service, parent)
-
-    # New way:
-    dialog = SettingsDialog(ui_state_service, parent)
-
-The new dialog provides the same interface while delivering a significantly
-enhanced user experience with modern visual design.
-
-Note: Import errors in IDE are expected due to relative imports - all services
-and tabs exist and will resolve correctly at runtime.
-"""
+from .components import (
+    GlassmorphismStyles,
+    SettingsActionButtons,
+    SettingsAnimations,
+    SettingsContentArea,
+    SettingsHeader,
+    SettingsServices,
+    SettingsSidebar,
+)
 
 from typing import Any, Dict
 

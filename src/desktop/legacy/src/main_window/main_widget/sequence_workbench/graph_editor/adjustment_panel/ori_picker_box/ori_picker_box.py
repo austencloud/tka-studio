@@ -7,7 +7,7 @@ from .color_utils import ColorUtils
 
 if TYPE_CHECKING:
     from ..legacy_adjustment_panel import LegacyAdjustmentPanel
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class OriPickerBox(QFrame):

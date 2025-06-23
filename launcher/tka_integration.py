@@ -59,17 +59,19 @@ class TKAIntegrationService:
         try:
             # Try to import and use TKA's DI container
             from core.di_integration import get_launcher_container
-            from services.application_service import ApplicationService
-            from services.application_launch_service import ApplicationLaunchService
-            from services.settings_service import SettingsService
+            from core.interfaces import (
+                IApplicationService,
+                IApplicationLaunchService,
+                ISettingsService,
+            )
 
-            # Get the DI container
-            self.container = get_launcher_container(use_tka_container=True)
+            # Get the DI container - use launcher's own container for better control
+            self.container = get_launcher_container(use_tka_container=False)
 
-            # Resolve services
-            self.app_service = self.container.resolve(ApplicationService)
-            self.launch_service = self.container.resolve(ApplicationLaunchService)
-            self.settings_service = self.container.resolve(SettingsService)
+            # Resolve services by their interfaces (not concrete classes)
+            self.app_service = self.container.resolve(IApplicationService)
+            self.launch_service = self.container.resolve(IApplicationLaunchService)
+            self.settings_service = self.container.resolve(ISettingsService)
 
             logger.info("✅ TKA services initialized successfully")
 

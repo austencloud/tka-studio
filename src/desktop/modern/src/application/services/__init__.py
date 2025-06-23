@@ -1,9 +1,6 @@
 # Application services package
 
-# Note: Qt-dependent services (arrow_management_service, prop_management_service)
-# are not imported here to avoid DLL loading issues during testing.
-# Import them directly when needed:
-# from application.services.positioning.arrow_management_service import ArrowManagementService
+
 
 QT_SERVICES_AVAILABLE = False  # Set to False to avoid Qt dependencies in tests
 
@@ -27,7 +24,4 @@ __all__ = [
     "IMotionOrientationService",
     "PictographManagementService",
     "SequenceManagementService",
-    # Note: Qt-dependent services excluded to avoid DLL issues:
-    # "ArrowManagementService", "IArrowManagementService",
-    # "PropManagementService", "IPropManagementService"
 ]

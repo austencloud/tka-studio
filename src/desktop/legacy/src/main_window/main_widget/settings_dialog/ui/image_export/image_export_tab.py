@@ -14,7 +14,7 @@ from main_window.main_widget.settings_dialog.ui.image_export.loading_spinner imp
 
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.settings_dialog.legacy_settings_dialog import (
+    from main_window.main_widget.settings_dialog.legacy_settings_dialog import (
         LegacySettingsDialog,
     )
 

@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton
 from PyQt6.QtCore import pyqtSignal, Qt
 
 if TYPE_CHECKING:
-    from src.core.application_context import ApplicationContext
+    from core.application_context import ApplicationContext
 
 
 class ModernActionButtons(QWidget):

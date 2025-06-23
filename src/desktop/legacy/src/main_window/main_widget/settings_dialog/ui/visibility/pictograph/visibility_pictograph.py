@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import (
     ALPHA1,
     BLUE,

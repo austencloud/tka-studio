@@ -7,7 +7,7 @@ from enums.letter.letter import Letter
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.prop.prop import Prop
 
 if TYPE_CHECKING:

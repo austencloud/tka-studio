@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QToolTip, QApplication
 from PyQt6.QtGui import QCursor, QClipboard
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class dictCopier:

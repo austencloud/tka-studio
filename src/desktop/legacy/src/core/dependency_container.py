@@ -231,7 +231,7 @@ def _register_core_services(container: DependencyContainer) -> None:
     # Settings Manager
     try:
         from interfaces.settings_manager_interface import ISettingsManager
-        from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+        from legacy_settings_manager.legacy_settings_manager import (
             LegacySettingsManager,
         )
 

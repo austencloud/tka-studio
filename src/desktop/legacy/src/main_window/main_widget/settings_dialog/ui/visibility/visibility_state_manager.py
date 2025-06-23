@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
     )
 

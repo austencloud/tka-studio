@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any, List, Callable
 from PyQt6.QtWidgets import QGridLayout
 from PyQt6.QtCore import Qt
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
     LessonPictographView,

@@ -3,14 +3,14 @@ import re
 import logging
 from typing import Union, Optional, TYPE_CHECKING
 
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from .structural_variation_checker import StructuralVariationChecker
 from .thumbnail_generator import ThumbnailGenerator
 from ....main_widget.browse_tab.thumbnail_box.thumbnail_box import ThumbnailBox
 from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
 

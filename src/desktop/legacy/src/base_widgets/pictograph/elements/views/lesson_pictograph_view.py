@@ -8,7 +8,7 @@ from base_widgets.pictograph.elements.views.bordered_pictograph_view import (
 
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class LessonPictographView(BorderedPictographView):

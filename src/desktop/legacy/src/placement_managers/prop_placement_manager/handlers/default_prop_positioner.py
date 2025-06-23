@@ -9,7 +9,7 @@ from functools import lru_cache
 if TYPE_CHECKING:
     from base_widgets.pictograph.grid.grid_point import GridPoint
     from ..prop_placement_manager import PropPlacementManager
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 logger = logging.getLogger(__name__)
 

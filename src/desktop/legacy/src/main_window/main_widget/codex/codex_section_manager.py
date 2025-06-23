@@ -8,7 +8,7 @@ from base_widgets.pictograph.elements.views.codex_pictograph_view import (
     CodexPictographView,
 )
 from .codex_section_type_label import CodexSectionTypeLabel
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 if TYPE_CHECKING:
     from .codex import Codex

@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt, pyqtSignal, QSize, QEvent
 from PyQt6.QtGui import QPixmap, QPainter, QColor
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.settings_dialog.legacy_settings_dialog import (
+    from main_window.main_widget.settings_dialog.legacy_settings_dialog import (
         LegacySettingsDialog,
     )
 

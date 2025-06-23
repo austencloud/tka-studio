@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..widgets.legacy_option_picker import LegacyOptionPicker
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
 

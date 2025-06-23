@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from enums.glyph_enum import Glyph
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from main_window.main_widget.settings_dialog.ui.visibility.visibility_tab import (
         VisibilityTab,
     )

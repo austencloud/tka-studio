@@ -2,7 +2,7 @@ from copy import deepcopy
 from functools import partial
 from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from typing import Callable, List, TYPE_CHECKING
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import BOX, DIAMOND, END_POS, GRID_MODE, LETTER, START_POS
 from .advanced_start_pos_picker_pictograph_view import (
     AdvancedStartPosPickerPictographView,

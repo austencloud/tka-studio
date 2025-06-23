@@ -10,7 +10,7 @@ from .prop_rot_angle_manager import PropRotAngleManager
 
 if TYPE_CHECKING:
     from objects.arrow.arrow import Arrow
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from objects.motion.motion import Motion
 
 

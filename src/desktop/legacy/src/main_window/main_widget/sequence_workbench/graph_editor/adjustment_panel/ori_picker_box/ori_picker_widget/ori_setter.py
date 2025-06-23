@@ -1,6 +1,6 @@
 # orientation_setter.py
 from typing import TYPE_CHECKING
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import (
     BLUE,
     BLUE_ATTRS,

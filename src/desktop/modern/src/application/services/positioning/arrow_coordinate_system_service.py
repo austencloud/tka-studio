@@ -2,7 +2,6 @@
 Arrow Coordinate System Service
 
 Pure service for managing coordinate systems and initial position calculations.
-Extracted from ArrowPositioningService to follow single responsibility principle.
 
 This service handles:
 - Scene coordinate system management (950x950 scene with center at 475,475)

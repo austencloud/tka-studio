@@ -377,7 +377,7 @@ class MainWidgetTabSwitcher:
             pass
 
         try:
-            from src.legacy_settings_manager.global_settings.app_context import (
+            from legacy_settings_manager.global_settings.app_context import (
                 AppContext,
             )
 
@@ -396,7 +396,7 @@ class MainWidgetTabSwitcher:
             pass
 
         try:
-            from src.legacy_settings_manager.global_settings.app_context import (
+            from legacy_settings_manager.global_settings.app_context import (
                 AppContext,
             )
 

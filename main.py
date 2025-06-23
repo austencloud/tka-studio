@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
-Main entry point for The Kinetic Constructor (TKA) Monorepo.
+Main entry point for The Kinetic Constructor (TKA).
 
-This script provides a unified entry point for all TKA applications:
-- TKA Desktop (legacy and modern versions)
-- Launcher interface
-- Development tools
+This script provides a unified entry point that always launches the Modern Launcher,
+which gives access to all TKA applications and development tools:
+
+- TKA Desktop (Modern)
+- TKA Desktop (Legacy)
+- Web Applications
+- Development Tools
+- Test Suites
+- Settings and Utilities
 
 Usage:
-    python main.py                    # Launch TKA Desktop launcher
-    python main.py --legacy           # Launch legacy TKA directly
-    python main.py --modern           # Launch modern TKA directly
-    python main.py --dev              # Launch development tools
-    python main.py --help             # Show help
+    python main.py                    # Launch TKA Modern Launcher (recommended)
+    python main.py --legacy           # Show deprecation warning, then launch Modern Launcher
+    python main.py --modern           # Show deprecation warning, then launch Modern Launcher
+    python main.py --dev              # Show deprecation warning, then launch Modern Launcher
 """
 
 import os
@@ -142,26 +146,30 @@ def launch_dev_tools():
 
 
 def main():
-    """Main entry point with command line argument parsing."""
+    """Main entry point - always launch the Modern Launcher."""
     parser = argparse.ArgumentParser(
-        description="TKA Monorepo - The Kinetic Constructor",
+        description="TKA - The Kinetic Constructor",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  python main.py              # Launch TKA Desktop launcher
-  python main.py --modern     # Launch modern TKA directly
-  python main.py --dev        # Launch development tools
+TKA uses a unified Modern Launcher interface for all applications and tools.
         """,
     )
 
+    # Keep legacy arguments for backward compatibility but route everything to launcher
     parser.add_argument(
-        "--modern", action="store_true", help="Launch modern TKA Desktop directly"
+        "--modern",
+        action="store_true",
+        help="Launch modern TKA Desktop directly (legacy - use launcher instead)",
     )
     parser.add_argument(
-        "--legacy", action="store_true", help="Launch legacy TKA Desktop directly"
+        "--legacy",
+        action="store_true",
+        help="Launch legacy TKA Desktop directly (legacy - use launcher instead)",
     )
     parser.add_argument(
-        "--dev", action="store_true", help="Launch TKA development tools"
+        "--dev",
+        action="store_true",
+        help="Launch TKA development tools (legacy - use launcher instead)",
     )
 
     args = parser.parse_args()
@@ -169,16 +177,23 @@ Examples:
     # Setup monorepo environment
     setup_monorepo_paths()
 
-    # Route to appropriate launcher based on arguments
+    # Show deprecation warnings for direct launch arguments
     if args.modern:
-        return launch_modern_direct()
+        print(
+            "⚠️  Direct --modern launch is deprecated. Use the Modern Launcher to access TKA Desktop (Modern)."
+        )
     elif args.legacy:
-        return launch_legacy_direct()
+        print(
+            "⚠️  Direct --legacy launch is deprecated. Use the Modern Launcher to access TKA Desktop (Legacy)."
+        )
     elif args.dev:
-        return launch_dev_tools()
-    else:
-        # Default: launch the desktop launcher interface
-        return launch_desktop_launcher()
+        print(
+            "⚠️  Direct --dev launch is deprecated. Use the Modern Launcher to access Development Tools."
+        )
+
+    # Always launch the Modern Launcher - it provides access to everything
+    print("🚀 Launching TKA Modern Launcher...")
+    return launch_desktop_launcher()
 
 
 if __name__ == "__main__":

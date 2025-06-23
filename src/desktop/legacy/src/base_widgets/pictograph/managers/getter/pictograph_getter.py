@@ -18,7 +18,7 @@ from objects.arrow.arrow import Arrow
 from objects.motion.motion import Motion
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from objects.prop.prop import Prop
 
 

@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QLabel
 from PyQt6.QtCore import Qt, QSize
 from typing import Callable
 
-from legacy.src.main_window.main_widget.construct_tab.option_picker.resizable_mixin import (
+from main_window.main_widget.construct_tab.option_picker.resizable_mixin import (
     ResizableMixin,
 )
 

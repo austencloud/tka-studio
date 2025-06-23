@@ -83,24 +83,7 @@ disable = [
     "E0401"   # import-error (handled by .pylintrc)
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"
-addopts = "-v --tb=short --strict-markers --strict-config"
-markers = [
-    "unit: Unit tests (fast, isolated)",
-    "integration: Integration tests (component interactions)",
-    "specification: Specification tests (requirements verification)",
-    "ui: User interface tests (with pytest-qt)",
-    "slow: Slow running tests (>5 seconds)",
-    "legacy: Legacy system tests",
-    "modern: Modern system tests",
-    "desktop: Desktop application tests",
-    "web: Web application tests",
-    "launcher: Launcher application tests"
-]
+# pytest configuration moved to pytest.ini to avoid conflicts
 
 [tool.pyright]
 # Include all source directories

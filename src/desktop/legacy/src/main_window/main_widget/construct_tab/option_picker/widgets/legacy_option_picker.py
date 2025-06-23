@@ -2,7 +2,7 @@ from typing import Callable
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal, QSize
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.construct_tab.add_to_sequence_manager.add_to_sequence_manager import (
     AddToSequenceManager,
 )
@@ -17,7 +17,7 @@ from ..handlers.click_handler import OptionClickHandler
 from ..core.option_updater import OptionUpdater
 from .reversal_filter_widget import OptionPickerReversalFilter
 from ..layout.layout_manager import OptionPickerLayoutManager
-from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
 

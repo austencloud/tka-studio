@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, Any, Optional
 from PyQt6.QtWidgets import QFileDialog
 from PyQt6.QtGui import QImage
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import RED, BLUE
 
 if TYPE_CHECKING:

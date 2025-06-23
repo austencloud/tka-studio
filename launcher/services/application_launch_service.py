@@ -245,6 +245,14 @@ class ApplicationLaunchService(IApplicationLaunchService):
             command = app.command
             working_dir = app.working_dir or Path.cwd()
 
+            # Debug: Log launch details
+            logger.info(f"🔍 DEBUG: Launching {app.title}")
+            logger.info(f"🔍 DEBUG: Command: {command}")
+            logger.info(f"🔍 DEBUG: Working directory: {working_dir}")
+            logger.info(
+                f"🔍 DEBUG: Working directory exists: {working_dir.exists() if hasattr(working_dir, 'exists') else 'N/A'}"
+            )
+
             # Prepare environment
             env = dict(app.environment_vars) if app.environment_vars else None
 
@@ -252,15 +260,55 @@ class ApplicationLaunchService(IApplicationLaunchService):
             launch_options = request.launch_options or {}
 
             # Start the process
-            process = subprocess.Popen(
-                command,
-                shell=True,
-                cwd=working_dir,
-                env=env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                **launch_options,
-            )
+            # For GUI applications, don't capture output but don't create new console either
+            if app.category.value in ["Desktop Applications", "Web Applications"]:
+                # For GUI applications, use subprocess without output capture
+                logger.info(f"🚀 Launching GUI application: {app.title}")
+
+                process = subprocess.Popen(
+                    command,
+                    shell=True,
+                    cwd=working_dir,
+                    env=env,
+                    # Don't capture output for GUI apps - let it go to VS Code terminal
+                    # Don't create new console window
+                    **launch_options,
+                )
+            else:
+                # Command-line tools - capture output
+                process = subprocess.Popen(
+                    command,
+                    shell=True,
+                    cwd=working_dir,
+                    env=env,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    **launch_options,
+                )
+
+            # Give the process a moment to start
+            import time
+
+            time.sleep(0.5)
+
+            # Check if process is still running
+            if process.poll() is None:
+                logger.info(f"✅ Process started successfully (PID: {process.pid})")
+            else:
+                logger.error(
+                    f"❌ Process exited immediately with code: {process.returncode}"
+                )
+                # Try to get error output if available
+                try:
+                    if hasattr(process, "stderr") and process.stderr:
+                        stderr_output = process.stderr.read().decode(
+                            "utf-8", errors="ignore"
+                        )
+                        if stderr_output.strip():
+                            logger.error(f"❌ Process stderr: {stderr_output}")
+                except Exception:
+                    pass
+                return None
 
             logger.debug(f"Started process for {app.title}: {command}")
             return process

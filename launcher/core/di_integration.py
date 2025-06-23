@@ -182,14 +182,14 @@ class LauncherDIContainer:
         # Register settings service first (no dependencies)
         self.register_singleton(ISettingsService, SettingsService)
 
-        # Register state service (depends on settings)
+        # Register state service as singleton (depends on settings)
         def create_state_service():
             settings_service = self.resolve(ISettingsService)
             return LauncherStateService(settings_service)
 
         self.register_factory(ILauncherStateService, create_state_service)
 
-        # Register application service (depends on state)
+        # Register application service as singleton (depends on state)
         def create_application_service():
             state_service = self.resolve(ILauncherStateService)
             return ApplicationService(state_service)
@@ -199,7 +199,7 @@ class LauncherDIContainer:
         # Register screen service (no dependencies)
         self.register_singleton(IScreenService, ScreenService)
 
-        # Register application launch service (depends on state)
+        # Register application launch service as singleton (depends on state)
         def create_launch_service():
             state_service = self.resolve(ILauncherStateService)
             return ApplicationLaunchService(state_service)

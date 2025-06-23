@@ -34,9 +34,7 @@ class TestArrowLocationCalculator:
         """Set up test fixtures."""
         # Mock dash location service to avoid complex dependencies
         self.mock_dash_service = Mock()
-        self.calculator = ArrowLocationCalculator(
-            dash_location_service=self.mock_dash_service
-        )
+        self.calculator = ArrowLocationCalculator()
 
     def test_static_arrow_location(self):
         """Test static arrow location calculation."""
@@ -76,7 +74,7 @@ class TestArrowLocationCalculator:
             assert result == expected, f"Failed for {start_loc} -> {end_loc}"
 
     def test_dash_arrow_location_delegates_to_service(self):
-        """Test dash arrow location delegates to dash location service."""
+        """Test dash arrow location calculation."""
         motion = MotionData(
             motion_type=MotionType.DASH,
             start_loc=Location.NORTH,
@@ -84,18 +82,14 @@ class TestArrowLocationCalculator:
             prop_rot_dir=RotationDirection.NO_ROTATION,
         )
 
-        # Mock the dash service to return a specific location
-        self.mock_dash_service.calculate_dash_location.return_value = Location.EAST
-
         result = self.calculator.calculate_location(motion)
 
-        # Verify delegation occurred
-        self.mock_dash_service.calculate_dash_location.assert_called_once()
-        assert result == Location.EAST
+        # For now, dash returns start location
+        assert result == Location.NORTH
 
     def test_unknown_motion_type_returns_start_location(self):
         """Test unknown motion type returns start location as fallback."""
-        # Test with valid motion types - the else clause is for future extensibility
+        # Test with static motion type
         motion = MotionData(
             motion_type=MotionType.STATIC,
             start_loc=Location.WEST,

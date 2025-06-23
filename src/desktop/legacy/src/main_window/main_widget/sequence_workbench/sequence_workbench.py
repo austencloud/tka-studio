@@ -24,7 +24,7 @@ from main_window.main_widget.sequence_workbench.labels.circular_sequence_indicat
 from main_window.main_widget.sequence_workbench.labels.sequence_workbench_indicator_label import (
     SequenceWorkbenchIndicatorLabel,
 )
-from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
 from .full_screen_viewer import FullScreenViewer

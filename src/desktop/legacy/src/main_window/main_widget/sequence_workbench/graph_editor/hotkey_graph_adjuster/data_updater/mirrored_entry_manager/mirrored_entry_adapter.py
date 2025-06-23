@@ -9,7 +9,7 @@ from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import 
     TurnsTupleGenerator,
 )
 from objects.arrow.arrow import Arrow
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 from .mirrored_entry_factory import MirroredEntryFactory
 from .mirrored_entry_utils import MirroredEntryUtils

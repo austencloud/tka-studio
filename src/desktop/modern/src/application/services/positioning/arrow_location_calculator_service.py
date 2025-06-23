@@ -2,7 +2,6 @@
 Arrow Location Calculator Service
 
 Pure algorithmic service for calculating arrow locations based on motion data.
-Extracted from ArrowPositioningService to follow single responsibility principle.
 
 This service handles:
 - Static motion location calculation (uses start location)

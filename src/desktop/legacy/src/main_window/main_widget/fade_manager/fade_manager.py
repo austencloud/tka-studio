@@ -39,7 +39,7 @@ class FadeManager(QObject):
 
         # Fallback to legacy AppContext for backward compatibility
         try:
-            from src.legacy_settings_manager.global_settings.app_context import (
+            from legacy_settings_manager.global_settings.app_context import (
                 AppContext,
             )
 

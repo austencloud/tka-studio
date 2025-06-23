@@ -1,9 +1,9 @@
 from PyQt6.QtCore import pyqtSignal, QObject
 from typing import TYPE_CHECKING
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (
+    from main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (
         LegacyGraphEditor,
     )
     from objects.arrow.arrow import Arrow

@@ -8,7 +8,7 @@ from enums.letter.letter_type import LetterType
 from main_window.main_widget.generate_tab.freeform.letter_type_picker_widget.letter_type_button import (
     LetterTypeButton,
 )
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab
@@ -110,11 +110,16 @@ class LetterTypePickerWidget(QWidget):
         font = self.filter_label.font()
         font.setPointSize(font_size)
         self.filter_label.setFont(font)
-        global_settings = AppContext.settings_manager().global_settings
-        color = self._get_font_color(global_settings.get_background_type())
-        existing_style = self.filter_label.styleSheet()
-        new_style = f"{existing_style} color: {color};"
-        self.filter_label.setStyleSheet(new_style)
+        
+        try:
+            global_settings = AppContext.settings_manager().global_settings
+            color = self._get_font_color(global_settings.get_background_type())
+            existing_style = self.filter_label.styleSheet()
+            new_style = f"{existing_style} color: {color};"
+            self.filter_label.setStyleSheet(new_style)
+        except RuntimeError:
+            # AppContext not initialized yet, use default styling
+            pass
 
     def _get_font_color(self, bg_type: str) -> str:
         """Get the appropriate font color using the new MVVM architecture with graceful fallbacks."""

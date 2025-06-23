@@ -10,7 +10,7 @@ from data.constants import (
     START_ORI,
     START_POS,
 )
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from utils.reversal_detector import (
     ReversalDetector,
 )

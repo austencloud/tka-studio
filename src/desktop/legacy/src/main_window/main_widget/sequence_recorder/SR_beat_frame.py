@@ -24,7 +24,7 @@ from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
 from utils.path_helpers import get_my_videos_path
 
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 if TYPE_CHECKING:

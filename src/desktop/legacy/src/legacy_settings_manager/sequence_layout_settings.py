@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
     )
 

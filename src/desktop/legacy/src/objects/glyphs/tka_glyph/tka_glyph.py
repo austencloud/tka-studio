@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QGraphicsItemGroup
 
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 
 from .dot_handler.dot import Dot
 from .dot_handler.dot_handler import DotHandler
@@ -12,7 +12,7 @@ from .dash import Dash
 from .turns_number_group.turns_column import TurnsColumn
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class TKA_Glyph(QGraphicsItemGroup):

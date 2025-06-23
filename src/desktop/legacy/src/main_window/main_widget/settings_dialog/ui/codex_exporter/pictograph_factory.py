@@ -3,7 +3,7 @@ Creates pictographs for the codex exporter.
 """
 
 from typing import TYPE_CHECKING, Dict, Any, Union
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import GRID_MODE
 
 if TYPE_CHECKING:

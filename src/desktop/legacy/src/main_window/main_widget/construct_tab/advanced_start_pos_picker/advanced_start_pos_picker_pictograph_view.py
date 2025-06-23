@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.advanced_start_pos_picker.advanced_start_pos_picker import (
         AdvancedStartPosPicker,
     )
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class AdvancedStartPosPickerPictographView(BorderedPictographView):

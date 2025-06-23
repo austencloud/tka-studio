@@ -13,7 +13,7 @@ from data.constants import (
     START_POS,
     END_POS,
 )
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat import (
     StartPositionBeat,
@@ -24,7 +24,7 @@ from .choose_your_start_pos_label import ChooseYourStartPosLabel
 from .base_start_pos_picker import BaseStartPosPicker
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
 

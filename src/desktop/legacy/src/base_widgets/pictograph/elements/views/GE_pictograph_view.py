@@ -67,7 +67,7 @@ class GE_PictographView(BasePictographView):
         QApplication.restoreOverrideCursor()
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
-        from legacy.src.main_window.main_widget.sequence_workbench.graph_editor.pictograph_container.legacy_GE_pictograph_container import (
+        from main_window.main_widget.sequence_workbench.graph_editor.pictograph_container.legacy_GE_pictograph_container import (
             LegacyGraphEditorPictographContainer,
         )
 

@@ -159,6 +159,7 @@ class ApplicationService(IApplicationService):
     def _initialize_applications(self) -> None:
         """Initialize applications in the state service."""
         if not self._state_service:
+            logger.warning("No state service available for application initialization")
             return
 
         state = self._state_service.get_current_state()
@@ -174,6 +175,9 @@ class ApplicationService(IApplicationService):
 
     def _create_default_applications(self) -> List[ApplicationData]:
         """Create the default set of applications."""
+        # Get TKA root directory (launcher's parent)
+        tka_root = Path(__file__).parent.parent.parent
+
         return [
             # Desktop Applications
             ApplicationData(
@@ -182,8 +186,8 @@ class ApplicationService(IApplicationService):
                 description="Launch the legacy TKA Desktop application with full feature set",
                 icon="🏛️",
                 category=ApplicationCategory.DESKTOP,
-                command="python src/desktop/modern/main.py --legacy",
-                working_dir=Path.cwd(),
+                command="python main.py",
+                working_dir=tka_root / "src" / "desktop" / "legacy",
                 display_order=1,
             ),
             ApplicationData(
@@ -192,8 +196,8 @@ class ApplicationService(IApplicationService):
                 description="Launch the modern TKA Desktop application with updated architecture",
                 icon="✨",
                 category=ApplicationCategory.DESKTOP,
-                command="python src/desktop/modern/main.py",
-                working_dir=Path.cwd(),
+                command="python main.py",
+                working_dir=tka_root / "src" / "desktop" / "modern",
                 display_order=2,
             ),
             # Web Applications
@@ -204,7 +208,7 @@ class ApplicationService(IApplicationService):
                 icon="🌐",
                 category=ApplicationCategory.WEB,
                 command="npm run dev",
-                working_dir=Path.cwd().parent / "src" / "web" / "tka-web-app",
+                working_dir=tka_root / "src" / "web" / "animator",
                 display_order=3,
             ),
             ApplicationData(
@@ -214,7 +218,7 @@ class ApplicationService(IApplicationService):
                 icon="🏠",
                 category=ApplicationCategory.WEB,
                 command="npm run dev",
-                working_dir=Path.cwd().parent / "src" / "web" / "tka-landing-page",
+                working_dir=tka_root / "src" / "web" / "landing",
                 display_order=4,
             ),
             ApplicationData(
@@ -224,7 +228,7 @@ class ApplicationService(IApplicationService):
                 icon="🎬",
                 category=ApplicationCategory.WEB,
                 command="npm run dev",
-                working_dir=Path.cwd().parent / "src" / "web" / "pictograph-animator",
+                working_dir=tka_root / "src" / "web" / "animator",
                 display_order=5,
             ),
             # Development Tools
@@ -235,7 +239,7 @@ class ApplicationService(IApplicationService):
                 icon="🧪",
                 category=ApplicationCategory.DEVELOPMENT,
                 command="python -m pytest",
-                working_dir=Path.cwd(),
+                working_dir=tka_root,
                 display_order=6,
             ),
             ApplicationData(
@@ -245,8 +249,28 @@ class ApplicationService(IApplicationService):
                 icon="🛠️",
                 category=ApplicationCategory.DEVELOPMENT,
                 command="python scripts/dev.py",
-                working_dir=Path.cwd(),
+                working_dir=tka_root,
                 display_order=7,
+            ),
+            ApplicationData(
+                id="test_runner_focused",
+                title="Focused Tests",
+                description="Run only focused/failed tests for faster development",
+                icon="🎯",
+                category=ApplicationCategory.DEVELOPMENT,
+                command="python -m pytest --lf -v",
+                working_dir=tka_root,
+                display_order=8,
+            ),
+            ApplicationData(
+                id="code_formatter",
+                title="Code Formatter",
+                description="Format and lint the codebase using pre-commit hooks",
+                icon="✨",
+                category=ApplicationCategory.DEVELOPMENT,
+                command="pre-commit run --all-files",
+                working_dir=tka_root,
+                display_order=9,
             ),
             # Utilities
             ApplicationData(
@@ -255,7 +279,7 @@ class ApplicationService(IApplicationService):
                 description="Configure launcher preferences and behavior",
                 icon="⚙️",
                 category=ApplicationCategory.UTILITIES,
-                display_order=8,
+                display_order=10,
             ),
             ApplicationData(
                 id="about",
@@ -263,6 +287,6 @@ class ApplicationService(IApplicationService):
                 description="Information about The Kinetic Constructor project",
                 icon="ℹ️",
                 category=ApplicationCategory.UTILITIES,
-                display_order=9,
+                display_order=11,
             ),
         ]

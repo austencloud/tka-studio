@@ -3,8 +3,8 @@ from typing import Callable
 from enums.letter.letter import Letter
 from interfaces.json_manager_interface import IJsonManager
 from interfaces.settings_manager_interface import ISettingsManager
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
 from main_window.main_widget.fade_manager.fade_manager import FadeManager

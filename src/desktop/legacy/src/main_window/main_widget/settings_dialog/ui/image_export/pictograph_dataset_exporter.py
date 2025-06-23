@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog
 from PyQt6.QtGui import QImage, QPainter
 from PyQt6.QtCore import Qt
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import (
     START_POS,
     END_POS,

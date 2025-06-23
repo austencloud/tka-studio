@@ -6,7 +6,7 @@ from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class PictographCollector:

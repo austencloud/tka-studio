@@ -12,13 +12,13 @@ from .json_turns_updater import JsonTurnsUpdater
 
 
 if TYPE_CHECKING:
-    from src.main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
         Beat,
     )
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
-    from src.main_window.main_widget.json_manager.json_manager import JsonManager
+    from main_window.main_widget.json_manager.json_manager import JsonManager
 
 
 class JsonSequenceUpdater:

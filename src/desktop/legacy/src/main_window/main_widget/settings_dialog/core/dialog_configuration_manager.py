@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import QDialog, QApplication
 import logging
 
 if TYPE_CHECKING:
-    from src.core.application_context import ApplicationContext
+    from core.application_context import ApplicationContext
     from main_window.main_widget.main_widget import MainWidget
 
 logger = logging.getLogger(__name__)

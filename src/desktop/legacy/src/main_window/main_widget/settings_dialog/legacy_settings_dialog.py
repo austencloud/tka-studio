@@ -12,7 +12,7 @@ import logging
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
-    from src.core.application_context import ApplicationContext
+    from core.application_context import ApplicationContext
 
 logger = logging.getLogger(__name__)
 

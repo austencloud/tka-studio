@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
 import logging
 
 if TYPE_CHECKING:
-    from src.core.application_context import ApplicationContext
+    from core.application_context import ApplicationContext
     from ..ui.settings_dialog_sidebar import SettingsDialogSidebar
     from ..components.modern_action_buttons import ModernActionButtons
 

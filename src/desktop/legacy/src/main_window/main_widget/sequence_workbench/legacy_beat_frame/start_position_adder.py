@@ -3,7 +3,7 @@ from copy import deepcopy
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import BLUE_ATTRS, MOTION_TYPE, STATIC
 from interfaces.json_manager_interface import IJsonManager
 

@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from PyQt6.QtGui import QImage, QPainter
 from PyQt6.QtCore import Qt
 
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import LETTER, START_POS, END_POS, BLUE, RED, MOTION_TYPE
 from utils.path_helpers import get_my_photos_path
 

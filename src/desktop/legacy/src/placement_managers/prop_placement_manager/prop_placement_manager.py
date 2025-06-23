@@ -3,7 +3,7 @@ from .handlers.beta_prop_positioner import BetaPropPositioner
 from .handlers.default_prop_positioner import DefaultPropPositioner
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class PropPlacementManager:
@@ -34,7 +34,7 @@ class PropPlacementManager:
         Check if all motions are currently visible based on visibility settings.
         Returns True if all motions are visible, False otherwise.
         """
-        from src.legacy_settings_manager.global_settings.app_context import AppContext
+        from legacy_settings_manager.global_settings.app_context import AppContext
 
         try:
             settings = AppContext().settings_manager().visibility

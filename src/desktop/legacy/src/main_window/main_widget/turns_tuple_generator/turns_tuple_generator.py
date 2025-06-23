@@ -29,7 +29,7 @@ from .mirrored_turns_tuple_generator import MirroredTurnsTupleGenerator
 from objects.arrow.arrow import Arrow
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class TurnsTupleGenerator:

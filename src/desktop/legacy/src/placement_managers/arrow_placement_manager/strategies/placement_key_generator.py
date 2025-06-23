@@ -80,14 +80,12 @@ class PlacementKeyGenerator:
             has_gamma_props,
         )
 
-        key = arrow.motion.state.motion_type + (
+        motion_type = arrow.motion.state.motion_type or ""
+        key = motion_type + (
             key_suffix + motion_end_ori_key + key_middle if key_middle else ""
         )
         key_with_letter = f"{key}{letter_suffix}"
-
-        return self._select_key(
-            key_with_letter, key, arrow.motion.state.motion_type, default_placements
-        )
+        return self._select_key(key_with_letter, key, motion_type, default_placements)
 
     def _select_key(
         self, key_with_letter: str, key: str, motion_type: str, default_placements: dict

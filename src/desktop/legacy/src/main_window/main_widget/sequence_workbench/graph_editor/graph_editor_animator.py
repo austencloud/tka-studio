@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import QPropertyAnimation, QRect, QPoint, QEasingCurve, QObject
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (
+    from main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (
         LegacyGraphEditor,
     )
 

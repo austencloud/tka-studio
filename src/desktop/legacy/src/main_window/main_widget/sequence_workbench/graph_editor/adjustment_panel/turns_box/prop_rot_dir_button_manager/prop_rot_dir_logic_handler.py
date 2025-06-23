@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import QObject, pyqtSignal
 from data.constants import ANTI, CLOCKWISE, PRO
 from objects.motion.motion import Motion
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from utils.reversal_detector import ReversalDetector
 
 if TYPE_CHECKING:

@@ -20,7 +20,7 @@ from .visibility_toggler import VisibilityToggler
 from .buttons_widget.visibility_buttons_widget import VisibilityButtonsWidget
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.settings_dialog.legacy_settings_dialog import (
+    from main_window.main_widget.settings_dialog.legacy_settings_dialog import (
         LegacySettingsDialog,
     )
 

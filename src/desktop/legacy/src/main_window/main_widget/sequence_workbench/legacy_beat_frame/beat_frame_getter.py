@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from base_widgets.pictograph.elements.views.beat_view import (
         LegacyBeatView,
     )
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
 

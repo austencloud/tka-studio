@@ -62,6 +62,8 @@ class Orientation(Enum):
 
     IN = "in"
     OUT = "out"
+    CLOCK = "clock"
+    COUNTER = "counter"
 
 
 class Location(Enum):

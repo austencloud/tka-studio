@@ -5,7 +5,7 @@ from PyQt6.QtGui import QCursor, QAction, QKeyEvent
 
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class BasePictographView(QGraphicsView):

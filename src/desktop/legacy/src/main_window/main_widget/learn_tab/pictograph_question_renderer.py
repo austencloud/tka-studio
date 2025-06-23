@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QHBoxLayout, QWidget
-from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 from PyQt6.QtCore import Qt
 

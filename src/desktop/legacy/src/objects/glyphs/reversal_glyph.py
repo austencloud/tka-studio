@@ -6,11 +6,11 @@ from data.constants import BLUE, HEX_BLUE, HEX_RED, RED
 from main_window.main_widget.json_manager.current_sequence_loader import (
     CurrentSequenceLoader,
 )
-from src.legacy_settings_manager.global_settings.app_context import AppContext
+from legacy_settings_manager.global_settings.app_context import AppContext
 from utils.reversal_detector import ReversalDetector
 
 if TYPE_CHECKING:
-    from legacy.src.base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class ReversalGlyph(QGraphicsItemGroup):

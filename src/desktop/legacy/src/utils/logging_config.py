@@ -158,9 +158,16 @@ def configure_logging(default_level: int = None) -> logging.Logger:
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
 
-    # Create console handler for logging to console
+    # Create console handler for logging to console with UTF-8 encoding
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(log_level)
+    
+    # Force UTF-8 encoding for console output to handle Unicode characters
+    if hasattr(console_handler.stream, 'reconfigure'):
+        try:
+            console_handler.stream.reconfigure(encoding='utf-8', errors='replace')
+        except:
+            pass  # Fallback if reconfigure is not available
 
     # Use colorized formatter for console
     console_formatter = ColorizedFormatter()

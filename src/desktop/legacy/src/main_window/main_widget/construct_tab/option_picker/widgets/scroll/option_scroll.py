@@ -11,7 +11,7 @@ from enums.letter.letter_type import LetterType
 from PyQt6.QtCore import QSize
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
+    from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
         LegacyOptionPicker,
     )
 

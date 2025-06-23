@@ -6,7 +6,7 @@ from base_widgets.pictograph.elements.views.beat_view import (
 )
 
 if TYPE_CHECKING:
-    from legacy.src.main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
     from .image_export_manager import ImageExportManager

@@ -229,9 +229,13 @@ class TestSequenceCreationWorkflowContract:
             assert len(sequence_with_beats.beats) == 1
             assert sequence_with_beats.word == "A"
 
-            # Transition back to empty
-            empty_again = SequenceData.empty()
-            empty_again.name = sequence_with_beats.name  # Preserve name
+            # Transition back to empty (create new instance with preserved name)
+            empty_again = SequenceData(
+                name=sequence_with_beats.name,  # Preserve name during creation
+                word="",
+                beats=[],
+                start_position=""
+            )
 
             # Verify return to empty state
             assert len(empty_again.beats) == 0

@@ -78,7 +78,7 @@ class BrowseTabAspectRatioTester:
                 return True
             # Try using tab switcher
             elif hasattr(self.main_widget, "tab_switcher"):
-                from src.main_window.main_widget.main_widget_tab_switcher import TabName
+                from main_window.main_widget.main_widget_tab_switcher import TabName
 
                 self.main_widget.tab_switcher.switch_tab(TabName.BROWSE)
                 return True

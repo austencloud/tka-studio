@@ -287,7 +287,7 @@ class TabSwitchingConsistencyTester:
                 return True
             # Try using tab switcher (old system)
             elif hasattr(self.main_widget, "tab_switcher"):
-                from src.main_window.main_widget.main_widget_tab_switcher import TabName
+                from main_window.main_widget.main_widget_tab_switcher import TabName
 
                 tab_enum = getattr(TabName, tab_name.upper(), None)
                 if tab_enum:

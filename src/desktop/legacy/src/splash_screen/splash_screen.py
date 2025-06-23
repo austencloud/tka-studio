@@ -13,7 +13,7 @@ from .splash_layout_manager import SplashLayoutManager
 from .splash_updater import SplashUpdater
 
 if TYPE_CHECKING:
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
     )
     from main_window.main_widget.rainbow_progress_bar import (

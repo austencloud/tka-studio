@@ -324,56 +324,60 @@ class TestDirectionalOffsets:
 
     def test_calculate_directional_offset_basic_directions(self, prop_service):
         """Test offset calculation for basic directions."""
+        from application.services.positioning.prop_management_service import SeparationDirection
+        
         # Test with default prop type (Hand)
         prop_type = PropType.HAND if hasattr(PropType, "HAND") else list(PropType)[0]
 
-        left_offset = prop_service._calculate_directional_offset(
-            prop_service.LEFT, prop_type
+        left_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.LEFT, prop_type
         )
-        right_offset = prop_service._calculate_directional_offset(
-            prop_service.RIGHT, prop_type
+        right_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.RIGHT, prop_type
         )
-        up_offset = prop_service._calculate_directional_offset(
-            prop_service.UP, prop_type
+        up_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.UP, prop_type
         )
-        down_offset = prop_service._calculate_directional_offset(
-            prop_service.DOWN, prop_type
+        down_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.DOWN, prop_type
         )
 
         # Left should be negative x
-        assert left_offset.x() < 0
-        assert left_offset.y() == 0
+        assert left_offset.x < 0
+        assert left_offset.y == 0
 
         # Right should be positive x
-        assert right_offset.x() > 0
-        assert right_offset.y() == 0
+        assert right_offset.x > 0
+        assert right_offset.y == 0
 
         # Up should be negative y
-        assert up_offset.x() == 0
-        assert up_offset.y() < 0
+        assert up_offset.x == 0
+        assert up_offset.y < 0
 
         # Down should be positive y
-        assert down_offset.x() == 0
-        assert down_offset.y() > 0
+        assert down_offset.x == 0
+        assert down_offset.y > 0
 
     def test_calculate_directional_offset_diagonal_directions(self, prop_service: "PropManagementService"):
         """Test offset calculation for diagonal directions."""
+        from application.services.positioning.prop_management_service import SeparationDirection
+        
         prop_type = PropType.HAND if hasattr(PropType, "HAND") else list(PropType)[0]
 
-        upleft_offset = prop_service._calculate_directional_offset(
-            prop_service.UPLEFT, prop_type
+        upleft_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.UPLEFT, prop_type
         )
-        downright_offset = prop_service._calculate_directional_offset(
-            prop_service.DOWNRIGHT, prop_type
+        downright_offset = prop_service.calculate_directional_offset(
+            SeparationDirection.DOWNRIGHT, prop_type
         )
 
         # Up-left should be negative x and y
-        assert upleft_offset.x() < 0
-        assert upleft_offset.y() < 0
+        assert upleft_offset.x < 0
+        assert upleft_offset.y < 0
 
         # Down-right should be positive x and y
-        assert downright_offset.x() > 0
-        assert downright_offset.y() > 0
+        assert downright_offset.x > 0
+        assert downright_offset.y > 0
 
 
 class TestOrientationCalculations:

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Dict, Any, Optional
 from PyQt6.QtCore import QObject, pyqtSignal
 import logging
 
-from desktop.modern.src.core.application_context import ApplicationContext
+from core.application_context import ApplicationContext
 
 if TYPE_CHECKING:
     from .main_widget_coordinator import MainWidgetCoordinator
