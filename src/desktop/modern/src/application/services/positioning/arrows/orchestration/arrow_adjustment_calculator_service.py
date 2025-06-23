@@ -143,11 +143,13 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         Returns:
             Final position adjustment as Point
         """
+
         logger.info(
             f"Calculating adjustment for {arrow_data.color} arrow in letter {pictograph_data.letter}"
         )  # Step 1: Try special placement lookup
         special_adjustment = self._get_special_adjustment(arrow_data, pictograph_data)
         if special_adjustment is not None:
+
             logger.info(
                 f"Using special adjustment: ({special_adjustment.x()}, {special_adjustment.y()})"
             )
@@ -163,10 +165,8 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
             f"Using default adjustment: ({default_adjustment.x}, {default_adjustment.y})"
         )
 
-        # Convert Point to QPointF for consistency with quadrant service
-        default_qpoint = QPointF(
-            default_adjustment.x, default_adjustment.y
-        )  # Step 3: Apply final adjustments
+        # default_adjustment is already a QPointF, use it directly
+        default_qpoint = default_adjustment  # Step 3: Apply final adjustments
         final_qpoint = self._apply_final_adjustments(
             default_qpoint, arrow_data, pictograph_data
         )
@@ -243,11 +243,12 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         placement_key = self.placement_key_service.generate_placement_key(motion)
 
         # Get adjustment from default placement service
-        adjustment = self.default_placement_service.get_default_adjustment(
+        adjustment_point = self.default_placement_service.get_default_adjustment(
             motion, grid_mode="diamond", placement_key=placement_key
         )
 
-        return adjustment
+        # Convert Point to QPointF
+        return QPointF(adjustment_point.x, adjustment_point.y)
 
     def _apply_final_adjustments(
         self,

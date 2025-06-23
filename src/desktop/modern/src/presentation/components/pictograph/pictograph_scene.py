@@ -85,54 +85,40 @@ class PictographScene(QGraphicsScene):
 
         # Apply beta prop positioning after both props are rendered
         if self.beat_data.blue_motion and self.beat_data.red_motion:
-            self.prop_renderer.apply_beta_positioning(
-                self.beat_data
-            )  # Render arrows for blue and red motions
-        # Create full pictograph data for Type 3 detection
-        full_pictograph_data = None
-        if self.beat_data.blue_motion and self.beat_data.red_motion:
-            from domain.models.pictograph_models import PictographData, ArrowData
+            self.prop_renderer.apply_beta_positioning(self.beat_data)
 
-            blue_arrow = ArrowData(motion_data=self.beat_data.blue_motion, color="blue")
-            red_arrow = ArrowData(motion_data=self.beat_data.red_motion, color="red")
+        # CRITICAL FIX: Always create full pictograph data for special placement service
+        # The special placement service requires both blue and red arrow data to generate
+        # orientation keys and turns tuples, even when only one arrow is being rendered
+        from domain.models.pictograph_models import PictographData, ArrowData
 
-            # CRITICAL FIX: Include letter information for special placement service
-            full_pictograph_data = PictographData(
-                arrows={"blue": blue_arrow, "red": red_arrow},
-                letter=self.beat_data.letter,  # This enables special placement and logging
-            )
+        # Create arrow data for both colors, using None motion_data if not available
+        blue_arrow = (
+            ArrowData(motion_data=self.beat_data.blue_motion, color="blue")
+            if self.beat_data.blue_motion
+            else ArrowData(color="blue")
+        )
 
+        red_arrow = (
+            ArrowData(motion_data=self.beat_data.red_motion, color="red")
+            if self.beat_data.red_motion
+            else ArrowData(color="red")
+        )
+
+        # Always create full pictograph data with both arrows and letter
+        full_pictograph_data = PictographData(
+            arrows={"blue": blue_arrow, "red": red_arrow},
+            letter=self.beat_data.letter,  # Essential for special placement lookup
+        )
+
+        # Render arrows using the full pictograph data
         if self.beat_data.blue_motion:
-            # Create single-arrow pictograph data if full data doesn't exist
-            single_blue_data = full_pictograph_data
-            if not full_pictograph_data:
-                from domain.models.pictograph_models import PictographData, ArrowData
-
-                blue_arrow = ArrowData(
-                    motion_data=self.beat_data.blue_motion, color="blue"
-                )
-                single_blue_data = PictographData(
-                    arrows={"blue": blue_arrow}, letter=self.beat_data.letter
-                )
-
             self.arrow_renderer.render_arrow(
-                "blue", self.beat_data.blue_motion, single_blue_data
+                "blue", self.beat_data.blue_motion, full_pictograph_data
             )
         if self.beat_data.red_motion:
-            # Create single-arrow pictograph data if full data doesn't exist
-            single_red_data = full_pictograph_data
-            if not full_pictograph_data:
-                from domain.models.pictograph_models import PictographData, ArrowData
-
-                red_arrow = ArrowData(
-                    motion_data=self.beat_data.red_motion, color="red"
-                )
-                single_red_data = PictographData(
-                    arrows={"red": red_arrow}, letter=self.beat_data.letter
-                )
-
             self.arrow_renderer.render_arrow(
-                "red", self.beat_data.red_motion, single_red_data
+                "red", self.beat_data.red_motion, full_pictograph_data
             )
 
         # Render glyphs if glyph data is available

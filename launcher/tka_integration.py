@@ -187,6 +187,20 @@ class FallbackApplicationService:
         # Get the TKA root directory (parent of launcher directory)
         tka_root = Path(__file__).parent.parent
 
+        # Check if we're running in debug mode (debugpy is attached)
+        debug_mode = False
+        try:
+            import debugpy
+
+            debug_mode = debugpy.is_client_connected()
+        except ImportError:
+            pass
+
+        # Prepare debug command prefix if in debug mode
+        debug_prefix = ""
+        if debug_mode:
+            debug_prefix = "python -m debugpy --listen 5678 --wait-for-client "
+
         return [
             ApplicationData(
                 id="desktop_modern",
@@ -194,7 +208,17 @@ class FallbackApplicationService:
                 description="Modern TKA Desktop application with updated architecture",
                 icon="✨",
                 category=ApplicationCategory.DESKTOP,
-                command="python main.py --modern",
+                command=f"{debug_prefix}python main.py --modern",
+                working_dir=tka_root,
+                display_order=1,
+            ),
+            ApplicationData(
+                id="desktop_modern_debug",
+                title="TKA Desktop (Modern) - Debug",
+                description="Modern TKA Desktop with debugger attached (port 5679)",
+                icon="🐛",
+                category=ApplicationCategory.DEVELOPMENT,
+                command="python -m debugpy --listen 5679 --wait-for-client main.py --modern",
                 working_dir=tka_root,
                 display_order=1,
             ),
@@ -204,7 +228,17 @@ class FallbackApplicationService:
                 description="Legacy TKA Desktop application with full feature set",
                 icon="🏛️",
                 category=ApplicationCategory.DESKTOP,
-                command="python main.py",
+                command=f"{debug_prefix}python main.py",
+                working_dir=tka_root / "src" / "desktop" / "legacy",
+                display_order=2,
+            ),
+            ApplicationData(
+                id="desktop_legacy_debug",
+                title="TKA Desktop (Legacy) - Debug",
+                description="Legacy TKA Desktop with debugger attached (port 5680)",
+                icon="🐛",
+                category=ApplicationCategory.DEVELOPMENT,
+                command="python -m debugpy --listen 5680 --wait-for-client main.py",
                 working_dir=tka_root / "src" / "desktop" / "legacy",
                 display_order=2,
             ),
@@ -224,7 +258,7 @@ class FallbackApplicationService:
                 description="Developer utilities and debugging tools",
                 icon="🔧",
                 category=ApplicationCategory.DEVELOPMENT,
-                command="python main.py --dev",
+                command=f"{debug_prefix}python main.py --dev",
                 working_dir=tka_root,
                 display_order=4,
             ),

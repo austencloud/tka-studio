@@ -59,6 +59,7 @@ class SpecialPlacementService:
         Returns:
             QPointF with special adjustment or None if no special placement found
         """
+
         if not arrow_data.motion_data or not pictograph_data.letter:
             return None
 
@@ -84,28 +85,43 @@ class SpecialPlacementService:
 
         # Get turn-specific data
         turn_data = letter_data.get(turns_tuple, {})
+
         if not turn_data:
             return None
 
-        # Try motion-type-specific adjustment first (for letters like I)
-        motion_type_key = (
-            motion.motion_type.value.lower()
-        )  # "pro", "anti", "float", etc.
-
-        if motion_type_key in turn_data:
-            adjustment_values = turn_data[motion_type_key]
-            if isinstance(adjustment_values, list) and len(adjustment_values) == 2:
-                result = QPointF(adjustment_values[0], adjustment_values[1])
-                return result
-
-        # If motion type lookup failed, try color-based lookup (for letters like G, H)
+        # First, try direct color-based coordinate lookup (most common case)
         color_key = arrow_data.color.lower()  # "blue" or "red"
+        print(f"   � Trying color key: {color_key}")
 
         if color_key in turn_data:
             adjustment_values = turn_data[color_key]
             if isinstance(adjustment_values, list) and len(adjustment_values) == 2:
                 result = QPointF(adjustment_values[0], adjustment_values[1])
+                print(f"   ✅ COLOR COORDINATE MATCH: {result}")
                 return result
+
+        # Second, try motion-type-specific adjustment (for letters like I)
+        motion_type_key = (
+            motion.motion_type.value.lower()
+        )  # "pro", "anti", "float", etc.
+        print(f"   � Trying motion type key: {motion_type_key}")
+
+        if motion_type_key in turn_data:
+            adjustment_values = turn_data[motion_type_key]
+            if isinstance(adjustment_values, list) and len(adjustment_values) == 2:
+                result = QPointF(adjustment_values[0], adjustment_values[1])
+                print(f"   ✅ MOTION TYPE MATCH: {result}")
+                return result
+
+        # Third, check for special placement boolean flags (swap rules)
+        # Note: Boolean flags like "swap_beta_*" are for PROP SWAPPING, not arrow adjustments
+        # The arrow placement service should ignore these and return None
+        # The prop placement system will handle these flags separately
+        for _, value in turn_data.items():
+            if isinstance(value, bool) and value is True:
+                # Boolean flags are for prop swapping, not arrow placement
+                # Return None so the arrow uses default positioning
+                return None
 
         return None
 
@@ -165,12 +181,20 @@ class SpecialPlacementService:
         # For now, use simplified logic - can be enhanced based on actual requirements
         # This would need to be expanded to match the exact orientation key generation
 
-        # FIXED: Use Modern's actual data structure (blue_arrow.motion_data, red_arrow.motion_data)
+        # FIXED: Use Modern's actual data structure (arrows dictionary with color keys)
         try:
-            blue_motion = pictograph_data.blue_arrow.motion_data
-            red_motion = pictograph_data.red_arrow.motion_data
+            blue_arrow = pictograph_data.arrows.get("blue")
+            red_arrow = pictograph_data.arrows.get("red")
 
-            if blue_motion and red_motion:
+            if (
+                blue_arrow
+                and red_arrow
+                and blue_arrow.motion_data
+                and red_arrow.motion_data
+            ):
+                blue_motion = blue_arrow.motion_data
+                red_motion = red_arrow.motion_data
+
                 # Simplified layer detection based on orientations
                 # This matches the logic for determining orientation keys
                 blue_end_ori = getattr(blue_motion, "end_ori", "in")
@@ -207,11 +231,19 @@ class SpecialPlacementService:
         Format: "(blue_turns, red_turns)" e.g., "(0, 1.5)", "(1, 0.5)"
         """
         try:
-            # FIXED: Use Modern's actual data structure (blue_arrow.motion_data, red_arrow.motion_data)
-            blue_motion = pictograph_data.blue_arrow.motion_data
-            red_motion = pictograph_data.red_arrow.motion_data
+            # FIXED: Use Modern's actual data structure (arrows dictionary with color keys)
+            blue_arrow = pictograph_data.arrows.get("blue")
+            red_arrow = pictograph_data.arrows.get("red")
 
-            if blue_motion and red_motion:
+            if (
+                blue_arrow
+                and red_arrow
+                and blue_arrow.motion_data
+                and red_arrow.motion_data
+            ):
+                blue_motion = blue_arrow.motion_data
+                red_motion = red_arrow.motion_data
+
                 blue_turns = getattr(blue_motion, "turns", 0)
                 red_turns = getattr(red_motion, "turns", 0)
 

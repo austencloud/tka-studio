@@ -78,7 +78,9 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         # Step 4: Calculate adjustment
         adjustment = self.adjustment_calculator.calculate_adjustment(
             arrow_data, pictograph_data
-        )  # Step 5: Compose final position
+        )
+
+        # Step 5: Compose final position
         # Handle adjustment as float, QPointF, or Point object
         if isinstance(adjustment, (int, float)):
             adjustment_x = adjustment

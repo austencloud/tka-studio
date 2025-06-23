@@ -1,15 +1,120 @@
 {
+  // TKA Debug Configurations - Launcher automatically detects debug mode and launches apps directly
   // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python Debugger: main.py",
+      "name": "🚀 TKA Launcher (Auto-Debug Mode)",
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${workspaceFolder}/launcher"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "TKA",
+        "order": 1
+      }
+    },
+    {
+      "name": "✨ TKA Desktop Modern (Direct - Fallback)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/desktop/modern/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/src/desktop/modern",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${workspaceFolder}/src/desktop/modern"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "TKA Fallback",
+        "order": 1
+      }
+    },
+    {
+      "name": "🏛️ TKA Desktop Legacy (Direct - Fallback)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/desktop/legacy/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/src/desktop/legacy",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${workspaceFolder}/src/desktop/legacy"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "TKA Fallback",
+        "order": 2
+      }
+    },
+    {
+      "name": "🧪 Run Tests (Debug Mode)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "--tb=short"],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src",
+        "QT_API": "pyqt6"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "Testing",
+        "order": 1
+      }
+    },
+    {
+      "name": "🧪 Run Specific Test File",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "--tb=short", "${file}"],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src",
+        "QT_API": "pyqt6"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "Testing",
+        "order": 2
+      }
+    },
+    {
+      "name": "🔧 Debug Current Python File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${fileDirname}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "presentation": {
+        "group": "Utilities",
+        "order": 1
+      }
     }
   ]
 }
