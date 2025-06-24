@@ -46,7 +46,7 @@ class PictographAnalysisService:
         return {
             "is_phi_dash": letter in ["Φ-", "PHI_DASH", "Φ_DASH"],
             "is_psi_dash": letter in ["Ψ-", "PSI_DASH", "Ψ_DASH"],
-            "is_lambda": letter in ["Λ", "LAMBDA", "Λ_DASH"],
+            "is_lambda": letter in ["Λ", "LAMBDA"],
             "letter_type": self._determine_letter_type(beat_data),
         }
 
