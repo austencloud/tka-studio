@@ -21,6 +21,7 @@ from domain.models.core_models import (
     MotionData,
     MotionType,
     Location,
+    BeatData,
 )
 from domain.models.pictograph_models import PictographData
 from .dash_location_calculator import DashLocationCalculator
@@ -146,8 +147,23 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
         if pictograph_data is None:
             # For simple dash calculations that don't need pictograph context
             logger.warning("Dash location calculated without pictograph context")
+            return self.dash_location_service.calculate_dash_location(motion=motion)
 
-        return self.dash_location_service.calculate_dash_location(motion=motion)
+        # Extract BeatData from PictographData
+        beat_data = self._extract_beat_data_from_pictograph(pictograph_data)
+        if beat_data is None:
+            logger.warning(
+                "Could not extract beat data from pictograph, using simple calculation"
+            )
+            return self.dash_location_service.calculate_dash_location(motion=motion)
+
+        # Determine which arrow (blue/red) this motion belongs to
+        is_blue_arrow = self._is_blue_arrow_motion(motion, beat_data)
+
+        # Use the comprehensive dash location calculation
+        return self.dash_location_service.calculate_dash_location_from_beat(
+            beat_data, is_blue_arrow
+        )
 
     def get_supported_motion_types(self) -> list[MotionType]:
         """
@@ -184,8 +200,44 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
         if motion.motion_type in [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT]:
             # Shift motions require both start and end locations
             return motion.start_loc is not None and motion.end_loc is not None
-        elif motion.motion_type in [MotionType.STATIC, MotionType.DASH]:
+        if motion.motion_type in [MotionType.STATIC, MotionType.DASH]:
             # Static and dash motions require at least start location
             return motion.start_loc is not None
 
+        return True
+
+    def _extract_beat_data_from_pictograph(
+        self, pictograph: PictographData
+    ) -> Optional[BeatData]:
+        """Extract beat data from pictograph for dash location calculation."""
+        if not pictograph.arrows:
+            return None
+
+        # Extract motion data from arrows
+        blue_motion = None
+        red_motion = None
+
+        if "blue" in pictograph.arrows:
+            blue_motion = pictograph.arrows["blue"].motion_data
+
+        if "red" in pictograph.arrows:
+            red_motion = pictograph.arrows["red"].motion_data
+
+        # Create beat data
+        return BeatData(
+            beat_number=pictograph.metadata.get("created_from_beat", 1),
+            letter=pictograph.metadata.get("letter"),
+            blue_motion=blue_motion,
+            red_motion=red_motion,
+        )
+
+    def _is_blue_arrow_motion(self, motion: MotionData, beat_data: BeatData) -> bool:
+        """Determine if the given motion belongs to the blue arrow."""
+        # Compare the motion with blue and red motions in beat data
+        if beat_data.blue_motion == motion:
+            return True
+        if beat_data.red_motion == motion:
+            return False
+        # Fallback: if we can't determine, assume blue
+        logger.warning("Could not determine arrow color for motion, assuming blue")
         return True

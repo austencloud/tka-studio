@@ -19,8 +19,9 @@ from domain.models.core_models import (
     MotionType,
     Location,
     RotationDirection,
+    BeatData,
 )
-from domain.models.pictograph_models import PictographData
+from domain.models.pictograph_models import PictographData, ArrowData, GridData
 from application.services.positioning.arrows.calculation.arrow_location_calculator import (
     ArrowLocationCalculatorService as ArrowLocationCalculator,
 )
@@ -100,6 +101,125 @@ class TestArrowLocationCalculator:
         # Test that static motion returns start location
         result = self.calculator.calculate_location(motion)
         assert result == Location.WEST
+
+    def test_dash_arrow_location_with_pictograph_data(self):
+        """Test dash arrow location calculation with full pictograph context."""
+        # Create dash motion
+        dash_motion = MotionData(
+            motion_type=MotionType.DASH,
+            start_loc=Location.NORTH,
+            end_loc=Location.SOUTH,
+            prop_rot_dir=RotationDirection.NO_ROTATION,
+            turns=0.0,
+        )
+
+        # Create shift motion for Type 3 scenario
+        shift_motion = MotionData(
+            motion_type=MotionType.PRO,
+            start_loc=Location.EAST,
+            end_loc=Location.WEST,
+            prop_rot_dir=RotationDirection.CLOCKWISE,
+            turns=1.0,
+        )
+
+        # Create pictograph data with both arrows
+        pictograph_data = PictographData(
+            grid_data=GridData(),
+            arrows={
+                "blue": ArrowData(color="blue", motion_data=dash_motion),
+                "red": ArrowData(color="red", motion_data=shift_motion),
+            },
+            metadata={"letter": "A", "created_from_beat": 1},
+        )
+
+        # Test dash location calculation with pictograph context
+        result = self.calculator.calculate_location(dash_motion, pictograph_data)
+
+        # Should return a valid location (not None)
+        assert isinstance(result, Location)
+        # For this specific case, should return EAST (default zero turns mapping)
+        assert result == Location.EAST
+
+    def test_dash_arrow_location_without_pictograph_data(self):
+        """Test dash arrow location calculation without pictograph context."""
+        dash_motion = MotionData(
+            motion_type=MotionType.DASH,
+            start_loc=Location.NORTH,
+            end_loc=Location.SOUTH,
+            prop_rot_dir=RotationDirection.NO_ROTATION,
+            turns=0.0,
+        )
+
+        # Test without pictograph data - should still work but with limited context
+        result = self.calculator.calculate_location(dash_motion, None)
+
+        # Should return a valid location
+        assert isinstance(result, Location)
+        # Should return EAST for NORTH->SOUTH dash motion
+        assert result == Location.EAST
+
+    def test_extract_beat_data_from_pictograph(self):
+        """Test extraction of beat data from pictograph."""
+        # Create test motions
+        blue_motion = MotionData(
+            motion_type=MotionType.DASH,
+            start_loc=Location.NORTH,
+            end_loc=Location.SOUTH,
+            prop_rot_dir=RotationDirection.NO_ROTATION,
+        )
+
+        red_motion = MotionData(
+            motion_type=MotionType.PRO,
+            start_loc=Location.EAST,
+            end_loc=Location.WEST,
+            prop_rot_dir=RotationDirection.CLOCKWISE,
+        )
+
+        # Create pictograph data
+        pictograph_data = PictographData(
+            arrows={
+                "blue": ArrowData(color="blue", motion_data=blue_motion),
+                "red": ArrowData(color="red", motion_data=red_motion),
+            },
+            metadata={"letter": "A", "created_from_beat": 1},
+        )
+
+        # Test extraction
+        beat_data = self.calculator._extract_beat_data_from_pictograph(pictograph_data)
+
+        assert beat_data is not None
+        assert beat_data.blue_motion == blue_motion
+        assert beat_data.red_motion == red_motion
+        assert beat_data.letter == "A"
+        assert beat_data.beat_number == 1
+
+    def test_is_blue_arrow_motion(self):
+        """Test determination of arrow color from motion."""
+        blue_motion = MotionData(
+            motion_type=MotionType.DASH,
+            start_loc=Location.NORTH,
+            end_loc=Location.SOUTH,
+            prop_rot_dir=RotationDirection.NO_ROTATION,
+        )
+
+        red_motion = MotionData(
+            motion_type=MotionType.PRO,
+            start_loc=Location.EAST,
+            end_loc=Location.WEST,
+            prop_rot_dir=RotationDirection.CLOCKWISE,
+        )
+
+        beat_data = BeatData(
+            blue_motion=blue_motion,
+            red_motion=red_motion,
+            letter="A",
+        )
+
+        # Test blue motion identification
+        assert self.calculator._is_blue_arrow_motion(blue_motion, beat_data) == True
+
+        # Test red motion identification
+        assert self.calculator._is_blue_arrow_motion(red_motion, beat_data) == False
 
     def test_interface_compliance(self):
         """Test that ArrowLocationCalculator implements the interface correctly."""
