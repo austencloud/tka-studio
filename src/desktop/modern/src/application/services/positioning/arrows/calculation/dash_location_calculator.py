@@ -16,7 +16,7 @@ from domain.models.core_models import (
     MotionType,
     RotationDirection,
 )
-from domain.models.pictograph_models import GridMode
+from domain.models.pictograph_models import GridMode, PictographData
 
 from ....data.pictograph_analysis_service import PictographAnalysisService
 
@@ -38,7 +38,7 @@ class DashLocationCalculator:
         self.analysis_service = PictographAnalysisService()
 
     def calculate_dash_location_from_beat(
-        self, beat_data: BeatData, is_blue_arrow: bool
+        self, pictograph_data: PictographData, is_blue_arrow: bool
     ) -> Location:
         """
         High-level method to calculate dash location from beat data.
@@ -54,16 +54,42 @@ class DashLocationCalculator:
             Location where the dash arrow should be positioned
         """
         # Extract motion data for the specified arrow
-        motion = beat_data.blue_motion if is_blue_arrow else beat_data.red_motion
-        other_motion = beat_data.red_motion if is_blue_arrow else beat_data.blue_motion
+        motion = (
+            pictograph_data.arrows["blue"].motion_data
+            if is_blue_arrow
+            else pictograph_data.arrows["red"].motion_data
+        )
+        other_motion = (
+            pictograph_data.arrows["red"].motion_data
+            if is_blue_arrow
+            else pictograph_data.arrows["blue"].motion_data
+        )
 
         if not motion or motion.motion_type != MotionType.DASH:
             # If not a dash motion, return start location as fallback
             return motion.start_loc if motion else Location.NORTH
 
         # Use analysis service to extract all the parameters
-        letter_info = self.analysis_service.get_letter_info(beat_data)
-        grid_info = self.analysis_service.get_grid_info(beat_data)
+        letter_info = self.analysis_service.get_letter_info(pictograph_data)
+        letter_type = letter_info["letter_type"]
+        letter = pictograph_data.letter
+        print(letter, letter_type)
+
+        # Extract beat data for grid info analysis (get_grid_info expects BeatData)
+        from application.services.positioning.arrows.calculation.arrow_location_calculator import (
+            ArrowLocationCalculatorService,
+        )
+
+        location_calculator = ArrowLocationCalculatorService()
+        beat_data = location_calculator.extract_beat_data_from_pictograph(
+            pictograph_data
+        )
+
+        grid_info = (
+            self.analysis_service.get_grid_info(beat_data)
+            if beat_data
+            else {"grid_mode": "diamond", "shift_location": None}
+        )
         arrow_color = self.analysis_service.get_arrow_color(is_blue_arrow)
 
         # Call the detailed calculation method with all parameters

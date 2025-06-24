@@ -24,13 +24,18 @@ class PictographAnalysisService:
     - Letter types and special cases (Φ_DASH, Ψ_DASH, Λ)
     - Grid modes and shift arrow locations
     - Arrow colors and motion relationships
+
+    IMPORTANT DATA ACCESS PATTERNS:
+    - PictographData: Access motion via pictograph_data.arrows["blue"].motion_data
+    - BeatData: Access motion via beat_data.blue_motion
+    - Never access pictograph_data.blue_motion (doesn't exist!)
     """
 
     def __init__(self):
         """Initialize the pictograph analysis service."""
         pass
 
-    def get_letter_info(self, beat_data: BeatData) -> dict:
+    def get_letter_info(self, pictograph_data: PictographData) -> dict:
         """
         Extract letter information from beat data.
 
@@ -41,13 +46,13 @@ class PictographAnalysisService:
             - is_lambda: bool
             - letter_type: LetterType
         """
-        letter = beat_data.letter.upper() if beat_data.letter else ""
+        letter = pictograph_data.letter.upper() if pictograph_data.letter else ""
 
         return {
             "is_phi_dash": letter in ["Φ-", "PHI_DASH", "Φ_DASH"],
             "is_psi_dash": letter in ["Ψ-", "PSI_DASH", "Ψ_DASH"],
             "is_lambda": letter in ["Λ", "LAMBDA"],
-            "letter_type": self._determine_letter_type(beat_data),
+            "letter_type": self._determine_letter_type(pictograph_data),
         }
 
     def get_grid_info(self, beat_data: BeatData) -> dict:
@@ -72,15 +77,34 @@ class PictographAnalysisService:
         """Get arrow color enum based on boolean flag."""
         return ArrowColor.BLUE if is_blue_arrow else ArrowColor.RED
 
-    def _determine_letter_type(self, beat_data: BeatData) -> LetterType:
+    def _determine_letter_type(self, pictograph_data: PictographData) -> LetterType:
         """
-        Determine the letter type from beat data.
+        Determine the letter type from pictograph data.
 
-        This should analyze the motion patterns to determine if it's Type 3
+        This analyzes the motion patterns to determine if it's Type 3
         (one dash motion + one shift motion).
+
+        Args:
+            pictograph_data: PictographData object with arrows dictionary containing
+                           motion data accessible via pictograph_data.arrows["blue"].motion_data
+
+        Returns:
+            LetterType enum value (TYPE1, TYPE3, etc.)
+
+        Note:
+            Motion data must be accessed via pictograph_data.arrows["color"].motion_data,
+            NOT pictograph_data.blue_motion (which doesn't exist on PictographData).
         """
-        blue_motion = beat_data.blue_motion
-        red_motion = beat_data.red_motion
+        blue_motion = (
+            pictograph_data.arrows["blue"].motion_data
+            if "blue" in pictograph_data.arrows
+            else None
+        )
+        red_motion = (
+            pictograph_data.arrows["red"].motion_data
+            if "red" in pictograph_data.arrows
+            else None
+        )
 
         if not blue_motion or not red_motion:
             return LetterType.TYPE1  # Default fallback

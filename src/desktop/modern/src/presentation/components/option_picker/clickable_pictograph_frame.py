@@ -40,9 +40,9 @@ class ClickablePictographFrame(QFrame):
         layout.setSpacing(0)
 
         try:
-            self.pictograph_component: Optional[
-                PictographComponent
-            ] = PictographComponent(parent=None)
+            self.pictograph_component: Optional[PictographComponent] = (
+                PictographComponent(parent=None)
+            )
             self.pictograph_component.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )

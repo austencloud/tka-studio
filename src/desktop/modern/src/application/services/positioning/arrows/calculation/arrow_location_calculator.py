@@ -145,24 +145,21 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
             ValueError: If pictograph data is required but not provided
         """
         if pictograph_data is None:
-            # For simple dash calculations that don't need pictograph context
-            logger.warning("Dash location calculated without pictograph context")
-            return self.dash_location_service.calculate_dash_location(motion=motion)
+            logger.error("Dash location calculation requires pictograph context")
+            raise ValueError(
+                "Pictograph data is required for dash location calculation"
+            )
 
-        # Extract BeatData from PictographData
         beat_data = self.extract_beat_data_from_pictograph(pictograph_data)
         if beat_data is None:
-            logger.warning(
-                "Could not extract beat data from pictograph, using simple calculation"
-            )
-            return self.dash_location_service.calculate_dash_location(motion=motion)
+            logger.error("Could not extract beat data from pictograph")
+            raise ValueError("Beat data could not be extracted from pictograph")
 
         # Determine which arrow (blue/red) this motion belongs to
         is_blue_arrow = self.is_blue_arrow_motion(motion, beat_data)
-
         # Use the comprehensive dash location calculation
         return self.dash_location_service.calculate_dash_location_from_beat(
-            beat_data, is_blue_arrow
+            pictograph_data, is_blue_arrow
         )
 
     def get_supported_motion_types(self) -> list[MotionType]:
