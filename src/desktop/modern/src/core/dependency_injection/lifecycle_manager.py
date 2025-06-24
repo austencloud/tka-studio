@@ -23,7 +23,7 @@ class LifecycleManager:
     """
 
     def __init__(self):
-        self._cleanup_handlers: List[Callable] = []
+        self.cleanup_handlers: List[Callable] = []
         self._scoped_instances: Dict[str, Dict[Type, Any]] = {}
         self._current_scope: Optional[str] = None
         self._initialized_services: List[Any] = []
@@ -46,23 +46,23 @@ class LifecycleManager:
 
         # Register for cleanup if it has cleanup method
         if hasattr(instance, "cleanup") and callable(getattr(instance, "cleanup")):
-            self._cleanup_handlers.append(instance.cleanup)
+            self.cleanup_handlers.append(instance.cleanup)
             logger.debug(f"Registered cleanup for service: {type(instance).__name__}")
 
         return instance
 
     def cleanup_all(self) -> None:
         """Cleanup all registered services."""
-        logger.info(f"Starting cleanup of {len(self._cleanup_handlers)} services")
+        logger.info(f"Starting cleanup of {len(self.cleanup_handlers)} services")
 
-        for cleanup_handler in reversed(self._cleanup_handlers):
+        for cleanup_handler in reversed(self.cleanup_handlers):
             try:
                 cleanup_handler()
                 logger.debug("Service cleanup completed successfully")
             except Exception as e:
                 logger.error(f"Error during service cleanup: {e}")
 
-        self._cleanup_handlers.clear()
+        self.cleanup_handlers.clear()
         self._initialized_services.clear()
         logger.info("All services cleaned up")
 
@@ -159,7 +159,7 @@ class LifecycleManager:
 
     def get_cleanup_handler_count(self) -> int:
         """Get the number of registered cleanup handlers."""
-        return len(self._cleanup_handlers)
+        return len(self.cleanup_handlers)
 
     def get_initialized_service_count(self) -> int:
         """Get the number of initialized services."""
@@ -174,8 +174,8 @@ class LifecycleManager:
                 service_instance.cleanup()
 
                 # Remove from cleanup handlers if present
-                if service_instance.cleanup in self._cleanup_handlers:
-                    self._cleanup_handlers.remove(service_instance.cleanup)
+                if service_instance.cleanup in self.cleanup_handlers:
+                    self.cleanup_handlers.remove(service_instance.cleanup)
 
                 # Remove from initialized services if present
                 if service_instance in self._initialized_services:
@@ -199,7 +199,7 @@ class LifecycleManager:
     def get_lifecycle_stats(self) -> Dict[str, Any]:
         """Get comprehensive lifecycle statistics."""
         return {
-            "cleanup_handlers": len(self._cleanup_handlers),
+            "cleanup_handlers": len(self.cleanup_handlers),
             "initialized_services": len(self._initialized_services),
             "active_scopes": len(self._scoped_instances),
             "total_scoped_instances": self.get_total_scoped_instances(),

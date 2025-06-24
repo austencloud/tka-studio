@@ -171,8 +171,7 @@ class CSVDataService(ICSVDataService):
 
         letter = position_to_letter.get(position_key)
         if not letter:
-            print(f"⚠️ Unknown position key: {position_key}")
-            return None
+            return None  # Silent return for invalid position keys
 
         # Get the first pictograph for this letter
         pictographs = self.get_pictographs_by_letter(letter)

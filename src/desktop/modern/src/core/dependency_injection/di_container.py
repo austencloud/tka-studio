@@ -260,25 +260,25 @@ class DIContainer:
 
     def _is_primitive_type(self, param_type: Type) -> bool:
         """Check if a type is a primitive type (delegated to validation engine)."""
-        return self._validation_engine._is_primitive_type(param_type)
+        return self._validation_engine.is_primitive_type(param_type)
 
     @property
     def _singletons(self) -> Dict[Type, Any]:
         """Backward compatibility property for accessing singleton instances."""
         # Delegate to service registry
-        return self._registry._singletons
+        return self._registry.singletons
 
     @property
     def _services(self) -> Dict[Type, Any]:
         """Backward compatibility property for accessing service registrations."""
         # Delegate to service registry
-        return self._registry._services
+        return self._registry.services
 
     @property
     def _cleanup_handlers(self) -> List[Any]:
         """Backward compatibility property for accessing cleanup handlers."""
         # Delegate to lifecycle manager
-        return self._lifecycle_manager._cleanup_handlers
+        return self._lifecycle_manager.cleanup_handlers
 
 
 def get_container() -> DIContainer:

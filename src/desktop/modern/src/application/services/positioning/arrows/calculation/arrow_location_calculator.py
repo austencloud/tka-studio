@@ -150,7 +150,7 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
             return self.dash_location_service.calculate_dash_location(motion=motion)
 
         # Extract BeatData from PictographData
-        beat_data = self._extract_beat_data_from_pictograph(pictograph_data)
+        beat_data = self.extract_beat_data_from_pictograph(pictograph_data)
         if beat_data is None:
             logger.warning(
                 "Could not extract beat data from pictograph, using simple calculation"
@@ -158,7 +158,7 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
             return self.dash_location_service.calculate_dash_location(motion=motion)
 
         # Determine which arrow (blue/red) this motion belongs to
-        is_blue_arrow = self._is_blue_arrow_motion(motion, beat_data)
+        is_blue_arrow = self.is_blue_arrow_motion(motion, beat_data)
 
         # Use the comprehensive dash location calculation
         return self.dash_location_service.calculate_dash_location_from_beat(
@@ -206,7 +206,7 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
 
         return True
 
-    def _extract_beat_data_from_pictograph(
+    def extract_beat_data_from_pictograph(
         self, pictograph: PictographData
     ) -> Optional[BeatData]:
         """Extract beat data from pictograph for dash location calculation."""
@@ -231,7 +231,7 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
             red_motion=red_motion,
         )
 
-    def _is_blue_arrow_motion(self, motion: MotionData, beat_data: BeatData) -> bool:
+    def is_blue_arrow_motion(self, motion: MotionData, beat_data: BeatData) -> bool:
         """Determine if the given motion belongs to the blue arrow."""
         # Compare the motion with blue and red motions in beat data
         if beat_data.blue_motion == motion:

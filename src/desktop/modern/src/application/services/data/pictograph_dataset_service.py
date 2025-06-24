@@ -58,9 +58,9 @@ class PictographDatasetService:
 
             status = self._data_handler.validate_data_files()
             if not status["diamond_exists"]:
-                print(f"❌ Diamond dataset not found: {status['diamond_path']}")
+                print(f"⚠️ Diamond dataset not found: {status['diamond_path']}")
             if not status["box_exists"]:
-                print(f"❌ Box dataset not found: {status['box_path']}")
+                print(f"⚠️ Box dataset not found: {status['box_path']}")
 
         except Exception as e:
             print(f"❌ Error loading datasets: {e}")
@@ -88,8 +88,7 @@ class PictographDatasetService:
             )
 
             if dataset is None or dataset.empty:
-                print(f"❌ No {grid_mode} dataset available")
-                return None
+                return None  # Silent return for missing datasets
 
             # Parse position key
             start_pos, end_pos = position_key.split("_")
@@ -100,10 +99,7 @@ class PictographDatasetService:
             ]
 
             if matching_entries.empty:
-                print(
-                    f"❌ No start position found for {position_key} in {grid_mode} dataset"
-                )
-                return None
+                return None  # Silent return for missing entries
 
             # Take the first matching entry
             entry = matching_entries.iloc[0]
@@ -114,6 +110,9 @@ class PictographDatasetService:
             return beat_data
 
         except Exception as e:
+            # Only log actual unexpected errors, not validation failures
+            if "split" in str(e) or "NoneType" in str(e):
+                return None  # Silent return for invalid input format
             print(f"❌ Error getting start position {position_key}: {e}")
             return None
 

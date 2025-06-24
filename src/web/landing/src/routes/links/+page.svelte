@@ -196,9 +196,9 @@
       modalType: "vendor"
     },
     {
-      name: "Flowtyos",
+      name: "Flowtoys",
       description: "LED and visual poi manufacturer creating innovative programmable and interactive flow props.",
-      url: "https://flowtyos.com/",
+      url: "https://Flowtoys.com/",
       category: "vendors",
       level: "all",
       value: "Cutting-edge LED technology for visual flow arts and performance.",

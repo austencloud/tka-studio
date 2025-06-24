@@ -109,7 +109,7 @@ class ValidationEngine:
             param_type = type_hints.get(param_name, param.annotation)
 
             # Skip primitives
-            if self._is_primitive_type(param_type):
+            if self.is_primitive_type(param_type):
                 continue
 
             # Check if dependency is registered
@@ -171,7 +171,7 @@ class ValidationEngine:
                     param_type == inspect.Parameter.empty
                     or param_type == inspect._empty
                     or str(param_type) == "_empty"
-                    or self._is_primitive_type(param_type)
+                    or self.is_primitive_type(param_type)
                     or param.default != inspect.Parameter.empty
                     or param.kind
                     in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
@@ -242,7 +242,7 @@ class ValidationEngine:
                     continue
 
                 # Skip primitive types
-                if self._is_primitive_type(param_type):
+                if self.is_primitive_type(param_type):
                     continue
 
                 dependencies.append(param_type)
@@ -252,7 +252,7 @@ class ValidationEngine:
         except Exception:
             return []
 
-    def _is_primitive_type(self, param_type: Type) -> bool:
+    def is_primitive_type(self, param_type: Type) -> bool:
         """Check if a type is a primitive type that should not be resolved as a dependency."""
         from pathlib import Path
         from datetime import datetime, timedelta
@@ -284,7 +284,7 @@ class ValidationEngine:
                 if len(args) == 2 and type(None) in args:
                     # It's Optional[T], check the non-None type
                     non_none_type = next(arg for arg in args if arg is not type(None))
-                    return self._is_primitive_type(non_none_type)
+                    return self.is_primitive_type(non_none_type)
                 # For other Union types, check if all args are primitive
                 return all(arg in primitive_types for arg in args)
             # Other generic types like List[str], Dict[str, int] are considered primitive
