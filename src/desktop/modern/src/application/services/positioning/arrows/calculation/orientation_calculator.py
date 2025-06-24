@@ -20,7 +20,7 @@ from domain.models.core_models import Location, MotionData, MotionType, Orientat
 logger = logging.getLogger(__name__)
 
 
-class OrientationCalculationService:
+class OrientationCalculator:
     """
     Pure service for orientation calculations using exact legacy logic.
 

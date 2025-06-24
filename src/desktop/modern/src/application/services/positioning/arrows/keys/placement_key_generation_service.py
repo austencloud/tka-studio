@@ -201,9 +201,9 @@ class PlacementKeyGenerationService:
             return "IN"  # Default
 
         # Calculate end orientation similar to legacy
-        from .orientation_calculation_service import OrientationCalculationService
+        from ..calculation.orientation_calculator import OrientationCalculator
 
-        orientation_service = OrientationCalculationService()
+        orientation_service = OrientationCalculator()
 
         start_ori = getattr(motion_data, "start_ori", Orientation.IN)
         if isinstance(start_ori, str):

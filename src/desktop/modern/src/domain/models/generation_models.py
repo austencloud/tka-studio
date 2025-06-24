@@ -5,35 +5,87 @@ These immutable data classes represent the core business entities
 for sequence generation, following Modern's clean architecture principles.
 """
 
-from typing import Optional, Set, List
+from typing import Optional, Set, List, TYPE_CHECKING
 from dataclasses import dataclass, replace
 
-from ...core.interfaces.generation_services import (
-    GenerationMode,
-    PropContinuity,
-    LetterType,
-    SliceSize,
-    CAPType,
-    GenerationMetadata,
-    ValidationResult,
-)
+# Use TYPE_CHECKING to avoid circular imports
+if TYPE_CHECKING:
+    from core.interfaces.generation_services import (
+        GenerationMode,
+        PropContinuity,
+        LetterType,
+        SliceSize,
+        CAPType,
+        GenerationMetadata,
+        ValidationResult,
+    )
+else:
+    # Import at runtime or use simple types for now
+    try:
+        from core.interfaces.generation_services import (
+            GenerationMode,
+            PropContinuity,
+            LetterType,
+            SliceSize,
+            CAPType,
+            GenerationMetadata,
+            ValidationResult,
+        )
+    except ImportError:
+        # Define minimal enums if core interfaces not available
+        from enum import Enum
+        
+        class GenerationMode(Enum):
+            FREEFORM = "freeform"
+            CIRCULAR = "circular"
+        
+        class PropContinuity(Enum):
+            CONTINUOUS = "continuous"
+            RANDOM = "random"
+        
+        class LetterType(Enum):
+            TYPE1 = "Type1"
+            TYPE2 = "Type2" 
+            TYPE3 = "Type3"
+            TYPE4 = "Type4"
+            TYPE5 = "Type5"
+            TYPE6 = "Type6"
+        
+        class SliceSize(Enum):
+            QUARTERED = "quartered"
+            HALVED = "halved"
+        
+        class CAPType(Enum):
+            STRICT_ROTATED = "strict_rotated"
+        
+        GenerationMetadata = dict
+        ValidationResult = dict
 
 
 @dataclass(frozen=True)
 class GenerationConfig:
     """Immutable configuration for sequence generation"""
 
-    mode: GenerationMode = GenerationMode.FREEFORM
+    mode: 'GenerationMode' = None
     length: int = 16
     level: int = 1
     turn_intensity: float = 1.0
-    prop_continuity: PropContinuity = PropContinuity.CONTINUOUS
-    letter_types: Optional[Set[LetterType]] = None
-    slice_size: SliceSize = SliceSize.HALVED
-    cap_type: Optional[CAPType] = CAPType.STRICT_ROTATED
+    prop_continuity: 'PropContinuity' = None
+    letter_types: Optional[Set['LetterType']] = None
+    slice_size: 'SliceSize' = None
+    cap_type: Optional['CAPType'] = None
     start_position_key: Optional[str] = None
 
     def __post_init__(self):
+        # Set defaults if None
+        if self.mode is None:
+            object.__setattr__(self, "mode", GenerationMode.FREEFORM)
+        if self.prop_continuity is None:
+            object.__setattr__(self, "prop_continuity", PropContinuity.CONTINUOUS)
+        if self.slice_size is None:
+            object.__setattr__(self, "slice_size", SliceSize.HALVED)
+        if self.cap_type is None:
+            object.__setattr__(self, "cap_type", CAPType.STRICT_ROTATED)
         if self.letter_types is None:
             object.__setattr__(
                 self,
@@ -70,7 +122,7 @@ class GenerationResult:
     success: bool
     sequence_data: Optional[List[dict]] = None
     start_position_data: Optional[dict] = None
-    metadata: Optional[GenerationMetadata] = None
+    metadata: Optional['GenerationMetadata'] = None
     error_message: Optional[str] = None
     warnings: Optional[List[str]] = None
 

@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 from PyQt6.QtCore import QPointF
 
 from domain.models.pictograph_models import PropType
-from .direction_calculation_service import SeparationDirection
+from ...props.calculation.direction_calculation_service import SeparationDirection
 
 
 class IOffsetCalculationService(ABC):

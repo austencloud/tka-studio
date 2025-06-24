@@ -1,60 +1,191 @@
 """
-Arrow Location Calculator Service - Working Implementation
+Arrow Location Calculator Service
 
-This service calculates arrow locations based on motion data.
+Pure algorithmic service for calculating arrow locations based on motion data.
+
+This service handles:
+- Static motion location calculation (uses start location)
+- Shift motion location calculation (PRO/ANTI/FLOAT using start/end pair mapping)
+- Dash motion location calculation (with Type 3 detection support)
+
+No UI dependencies, completely testable in isolation.
 """
 
-from typing import Any, Optional, Protocol, runtime_checkable
-from domain.models.core_models import MotionData, MotionType, Location
+import logging
+from typing import Optional
+
+from core.interfaces.positioning_services import (
+    IArrowLocationCalculator,
+)
+from domain.models.core_models import (
+    MotionData,
+    MotionType,
+    Location,
+)
+from domain.models.pictograph_models import PictographData
+from .dash_location_calculator import DashLocationCalculator
+
+logger = logging.getLogger(__name__)
 
 
-@runtime_checkable
-class IArrowLocationCalculator(Protocol):
-    """Interface for arrow location calculator."""
+class ArrowLocationCalculatorService(IArrowLocationCalculator):
+    """
+    Pure algorithmic service for calculating arrow locations.
 
-    def calculate_location(self, motion: MotionData) -> Location:
-        """Calculate arrow location for given motion."""
-        ...
+    Implements location calculation algorithms without any UI dependencies.
+    Each motion type has its own calculation strategy.
+    """
 
+    def __init__(self, dash_location_service: Optional[DashLocationCalculator] = None):
+        """
+        Initialize the location calculator.
 
-class ArrowLocationCalculator:
-    """Arrow location calculator service implementation."""
+        Args:
+            dash_location_service: Service for dash location calculations
+        """
+        self.dash_location_service = dash_location_service or DashLocationCalculator()
 
-    def __init__(self):
-        """Initialize the service."""
-        pass
-
-    def calculate_location(self, motion: MotionData) -> Location:
-        """Calculate arrow location based on motion data."""
-        if motion.motion_type == MotionType.STATIC:
-            return motion.start_loc
-        elif motion.motion_type == MotionType.DASH:
-            # For now, return start location - would delegate to dash service in real implementation
-            return motion.start_loc
-        elif motion.motion_type in [MotionType.PRO, MotionType.ANTI]:
-            # Calculate shift location (simplified logic)
-            return self._calculate_shift_location(motion.start_loc, motion.end_loc)
-        else:
-            return motion.start_loc
-
-    def _calculate_shift_location(
-        self, start_loc: Location, end_loc: Location
-    ) -> Location:
-        """Calculate shift location between two positions."""
-        # Simplified shift calculation logic
-        shift_map = {
-            (Location.NORTH, Location.EAST): Location.NORTHEAST,
-            (Location.EAST, Location.SOUTH): Location.SOUTHEAST,
-            (Location.SOUTH, Location.WEST): Location.SOUTHWEST,
-            (Location.WEST, Location.NORTH): Location.NORTHWEST,
-            (Location.NORTHEAST, Location.NORTHWEST): Location.NORTH,
-            (Location.NORTHEAST, Location.SOUTHEAST): Location.EAST,
-            (Location.SOUTHWEST, Location.SOUTHEAST): Location.SOUTH,
-            (Location.NORTHWEST, Location.SOUTHWEST): Location.WEST,
+        # Direction pairs mapping for shift arrows (PRO/ANTI/FLOAT)
+        # Maps start/end location pairs to their calculated arrow location
+        self._shift_direction_pairs = {
+            frozenset({Location.NORTH, Location.EAST}): Location.NORTHEAST,
+            frozenset({Location.EAST, Location.SOUTH}): Location.SOUTHEAST,
+            frozenset({Location.SOUTH, Location.WEST}): Location.SOUTHWEST,
+            frozenset({Location.WEST, Location.NORTH}): Location.NORTHWEST,
+            frozenset({Location.NORTHEAST, Location.NORTHWEST}): Location.NORTH,
+            frozenset({Location.NORTHEAST, Location.SOUTHEAST}): Location.EAST,
+            frozenset({Location.SOUTHWEST, Location.SOUTHEAST}): Location.SOUTH,
+            frozenset({Location.NORTHWEST, Location.SOUTHWEST}): Location.WEST,
         }
 
-        return shift_map.get((start_loc, end_loc), start_loc)
+    def calculate_location(
+        self, motion: MotionData, pictograph_data: Optional[PictographData] = None
+    ) -> Location:
+        """
+        Calculate arrow location based on motion type and data.
 
+        Args:
+            motion: Motion data containing type, start/end locations, rotation direction
+            pictograph_data: Optional pictograph context for Type 3 detection
 
-# Export the service class and interface
-__all__ = ["ArrowLocationCalculator", "IArrowLocationCalculator"]
+        Returns:
+            Location enum value representing the calculated arrow location
+
+        Raises:
+            ValueError: If dash motion requires pictograph data but none provided
+        """
+        if motion.motion_type == MotionType.STATIC:
+            return self._calculate_static_location(motion)
+        elif motion.motion_type in [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT]:
+            return self._calculate_shift_location(motion)
+        elif motion.motion_type == MotionType.DASH:
+            return self._calculate_dash_location(motion, pictograph_data)
+        else:
+            logger.warning(
+                f"Unknown motion type: {motion.motion_type}, using start location"
+            )
+            return motion.start_loc
+
+    def _calculate_static_location(self, motion: MotionData) -> Location:
+        """
+        Calculate location for static arrows.
+
+        Static arrows use their start location directly.
+
+        Args:
+            motion: Motion data with STATIC type
+
+        Returns:
+            The start location of the motion
+        """
+        return motion.start_loc
+
+    def _calculate_shift_location(self, motion: MotionData) -> Location:
+        """
+        Calculate location for shift arrows (PRO/ANTI/FLOAT).
+
+        Shift arrows use a mapping from start/end location pairs to determine
+        their arrow location. This implements the proven shift location algorithm.
+
+        Args:
+            motion: Motion data with PRO, ANTI, or FLOAT type
+
+        Returns:
+            Calculated location based on start/end pair mapping
+        """
+        location_pair = frozenset({motion.start_loc, motion.end_loc})
+        calculated_location = self._shift_direction_pairs.get(
+            location_pair, motion.start_loc
+        )
+
+        logger.debug(
+            f"Shift location calculation: {motion.start_loc} -> {motion.end_loc} = {calculated_location}"
+        )
+
+        return calculated_location
+
+    def _calculate_dash_location(
+        self, motion: MotionData, pictograph_data: Optional[PictographData]
+    ) -> Location:
+        """
+        Calculate location for dash arrows.
+
+        Dash arrows use specialized logic that may require pictograph context
+        for Type 3 detection and other special cases.
+
+        Args:
+            motion: Motion data with DASH type
+            pictograph_data: Pictograph context for Type 3 detection
+
+        Returns:
+            Calculated dash location
+
+        Raises:
+            ValueError: If pictograph data is required but not provided
+        """
+        if pictograph_data is None:
+            # For simple dash calculations that don't need pictograph context
+            logger.warning("Dash location calculated without pictograph context")
+
+        return self.dash_location_service.calculate_dash_location(motion=motion)
+
+    def get_supported_motion_types(self) -> list[MotionType]:
+        """
+        Get list of motion types supported by this calculator.
+
+        Returns:
+            List of supported MotionType enum values
+        """
+        return [
+            MotionType.STATIC,
+            MotionType.PRO,
+            MotionType.ANTI,
+            MotionType.FLOAT,
+            MotionType.DASH,
+        ]
+
+    def validate_motion_data(self, motion: MotionData) -> bool:
+        """
+        Validate that motion data is suitable for location calculation.
+
+        Args:
+            motion: Motion data to validate
+
+        Returns:
+            True if motion data is valid for location calculation
+        """
+        if not motion:
+            return False
+
+        if motion.motion_type not in self.get_supported_motion_types():
+            return False
+
+        # Validate required fields based on motion type
+        if motion.motion_type in [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT]:
+            # Shift motions require both start and end locations
+            return motion.start_loc is not None and motion.end_loc is not None
+        elif motion.motion_type in [MotionType.STATIC, MotionType.DASH]:
+            # Static and dash motions require at least start location
+            return motion.start_loc is not None
+
+        return True

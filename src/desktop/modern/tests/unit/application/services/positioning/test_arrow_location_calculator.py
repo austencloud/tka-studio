@@ -21,10 +21,10 @@ from domain.models.core_models import (
     RotationDirection,
 )
 from domain.models.pictograph_models import PictographData
-from application.services.positioning.arrow_location_calculator import (
-    ArrowLocationCalculator,
-    IArrowLocationCalculator,
+from application.services.positioning.arrows.calculation.arrow_location_calculator import (
+    ArrowLocationCalculatorService as ArrowLocationCalculator,
 )
+from core.interfaces.positioning_services import IArrowLocationCalculator
 
 
 class TestArrowLocationCalculator:
@@ -84,8 +84,8 @@ class TestArrowLocationCalculator:
 
         result = self.calculator.calculate_location(motion)
 
-        # For now, dash returns start location
-        assert result == Location.NORTH
+        # Dash arrows use sophisticated mapping - RED arrow NORTH→SOUTH maps to EAST
+        assert result == Location.EAST
 
     def test_unknown_motion_type_returns_start_location(self):
         """Test unknown motion type returns start location as fallback."""

@@ -21,9 +21,8 @@ from domain.models.core_models import (
     RotationDirection,
     Orientation,
 )
-from application.services.positioning.direction_calculation_service import (
+from application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
-    IDirectionCalculationService,
     SeparationDirection,
 )
 
@@ -37,7 +36,7 @@ class TestDirectionCalculationService:
 
     def test_interface_compliance(self):
         """Test that DirectionCalculationService implements the interface correctly."""
-        assert isinstance(self.service, IDirectionCalculationService)
+        assert isinstance(self.service, DirectionCalculationService)
 
     def test_detect_grid_mode_diamond(self):
         """Test grid mode detection for diamond positions."""

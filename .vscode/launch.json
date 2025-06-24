@@ -13,7 +13,7 @@
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
       "env": {
-        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${workspaceFolder}/launcher"
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${workspaceFolder}/launcher:${workspaceFolder}/src/desktop/modern/src:${workspaceFolder}/src/desktop/legacy/src"
       },
       "stopOnEntry": false,
       "showReturnValue": true,

@@ -19,7 +19,7 @@ from presentation.components.pictograph.asset_utils import (
 )
 
 from domain.models.core_models import Orientation
-from application.services.positioning.prop_management_service import (
+from application.services.positioning.props.orchestration.prop_management_service import (
     PropManagementService,
 )
 from ui.adapters.qt_geometry_adapter import QtGeometryAdapter

@@ -248,15 +248,34 @@ class ApplicationLaunchService(IApplicationLaunchService):
                 "🐛 DEBUGGER DETECTED: VS Code debugger is attached to launcher"
             )
 
-        # For TKA applications, use direct imports when debugging
+        # For TKA applications, use debugpy-enabled subprocess when debugging
         if debug_mode and self._is_tka_application(app):
+            # Check if this app is already being launched to prevent multiple attempts
+            if hasattr(self, "_launching_apps") and app.id in self._launching_apps:
+                logger.warning(
+                    f"🔄 {app.title} is already being launched, ignoring duplicate request"
+                )
+                return None
+
+            # Check if app is already running
+            if app.id in self._running_processes:
+                existing_process = self._running_processes[app.id]
+                if existing_process.poll() is None:  # Still running
+                    logger.warning(f"🔄 {app.title} is already running (PID: {existing_process.pid}), ignoring duplicate request")
+                    return None
+
+            # Mark app as being launched
+            if not hasattr(self, "_launching_apps"):
+                self._launching_apps = set()
+            self._launching_apps.add(app.id)
+
             logger.info(
-                f"🐛 DEBUG MODE: Launching {app.title} with direct import (debugger will follow)"
+                f"🐛 DEBUG MODE: Launching {app.title} with enhanced subprocess (debugger will attach)"
             )
             logger.info(
                 "🎯 Your breakpoints in pictograph_scene.py and other files will now work!"
             )
-            return self._launch_tka_direct(app, request)
+            return self._launch_tka_enhanced_subprocess(app, request)
 
         try:
             # Prepare command
@@ -365,105 +384,81 @@ class ApplicationLaunchService(IApplicationLaunchService):
         }
         return app.id in tka_app_ids
 
-    def _launch_tka_direct(
+    def _launch_tka_enhanced_subprocess(
         self, app: ApplicationData, request: LaunchRequest
     ) -> Optional[subprocess.Popen]:
-        """Launch TKA application directly using imports (for debugging)."""
+        """Launch TKA application with enhanced subprocess and proper PYTHONPATH (for debugging)."""
         try:
-            import sys
+            import os
             from pathlib import Path
-            from PyQt6.QtCore import QTimer
 
             # Get TKA root directory
             tka_root = Path(__file__).parent.parent.parent
 
-            logger.info(f"🐛 Direct launching {app.title} in debug mode...")
+            logger.info(f"🐛 Launching {app.title} with enhanced subprocess...")
 
-            # Create a mock process object to maintain compatibility
-            class MockProcess:
-                def __init__(self, app_id: str):
-                    self.pid = 99999  # Fake PID for direct launches
-                    self.returncode = None
-                    self.app_id = app_id
+            # Prepare simple Python command (VS Code will attach debugger automatically)
+            if app.id in ["desktop_modern", "desktop_modern_debug"]:
+                working_dir = tka_root / "src" / "desktop" / "modern"
+                command = f"c:\\Python312\\python.exe main.py"
+            elif app.id in ["desktop_legacy", "desktop_legacy_debug"]:
+                working_dir = tka_root / "src" / "desktop" / "legacy"
+                command = f"c:\\Python312\\python.exe main.py"
+            else:
+                raise ValueError(f"Unknown TKA app: {app.id}")
 
-                def poll(self):
-                    return None  # Still running
+            logger.info(f"🔍 Command: {command}")
+            logger.info(f"🔍 Working directory: {working_dir}")
 
-                def terminate(self):
-                    logger.info(f"🛑 Terminating direct launch: {self.app_id}")
+            # Prepare environment with proper PYTHONPATH and inherit system environment
+            env = dict(os.environ)  # Start with system environment
+            if app.environment_vars:
+                env.update(app.environment_vars)  # Add app-specific vars
 
-                def kill(self):
-                    logger.info(f"🛑 Killing direct launch: {self.app_id}")
+            # Use the same PYTHONPATH as VS Code debug configuration
+            pythonpath_parts = [
+                str(tka_root),
+                str(tka_root / "src"),
+                str(tka_root / "launcher"),
+                str(tka_root / "src" / "desktop" / "modern" / "src"),
+                str(tka_root / "src" / "desktop" / "legacy" / "src"),
+            ]
+            # Use proper path separator for Windows
+            env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
 
-            # Use QTimer to launch in the main thread after a short delay
-            def launch_delayed():
-                try:
-                    original_cwd = Path.cwd()
+            logger.info(f"� PYTHONPATH: {env['PYTHONPATH']}")
+            logger.info(f"🔍 PATH exists: {'PATH' in env}")
+            logger.info(f"🔍 Environment variables count: {len(env)}")
 
-                    if app.id in ["desktop_modern", "desktop_modern_debug"]:
-                        # Launch modern desktop directly
-                        modern_path = tka_root / "src" / "desktop" / "modern"
-                        if str(modern_path) not in sys.path:
-                            sys.path.insert(0, str(modern_path))
-
-                        import os
-
-                        os.chdir(modern_path)
-
-                        try:
-                            from main import main as modern_main
-
-                            logger.info(
-                                "🚀 Starting TKA Desktop Modern in debug mode..."
-                            )
-                            # Launch in the same process - this will replace the launcher
-                            modern_main()
-                        finally:
-                            os.chdir(original_cwd)
-
-                    elif app.id in ["desktop_legacy", "desktop_legacy_debug"]:
-                        # Launch legacy desktop directly
-                        legacy_path = tka_root / "src" / "desktop" / "legacy"
-                        if str(legacy_path) not in sys.path:
-                            sys.path.insert(0, str(legacy_path))
-
-                        import os
-
-                        os.chdir(legacy_path)
-
-                        try:
-                            from main import main as legacy_main
-
-                            logger.info(
-                                "🚀 Starting TKA Desktop Legacy in debug mode..."
-                            )
-                            # Launch in the same process - this will replace the launcher
-                            legacy_main()
-                        finally:
-                            os.chdir(original_cwd)
-
-                except Exception as e:
-                    logger.error(f"❌ Failed to launch {app.title} directly: {e}")
-                    import traceback
-
-                    logger.error(f"❌ Full traceback: {traceback.format_exc()}")
-
-            # Schedule the launch for the next event loop iteration
-            QTimer.singleShot(100, launch_delayed)
-
-            # Return mock process
-            mock_process = MockProcess(app.id)
-            logger.info(
-                f"✅ {app.title} scheduled for direct launch with debugger attached (Mock PID: {mock_process.pid})"
+            # Launch the process with enhanced environment
+            process = subprocess.Popen(
+                command,
+                shell=True,
+                cwd=working_dir,
+                env=env,
+                # Don't capture output - let it go to VS Code terminal
             )
 
-            return mock_process
+            logger.info(f"✅ {app.title} launched with enhanced subprocess (PID: {process.pid})")
+            logger.info("🎯 VS Code debugger should automatically attach to the new process")
+            logger.info("🎯 Your breakpoints in pictograph_scene.py will work!")
+
+            # Remove from launching apps set
+            if hasattr(self, '_launching_apps') and app.id in self._launching_apps:
+                self._launching_apps.remove(app.id)
+
+            return process
 
         except Exception as e:
-            logger.error(f"❌ Failed to launch {app.title} directly: {e}")
+            logger.error(f"❌ Failed to launch {app.title} with debugpy: {e}")
             import traceback
-
             logger.error(f"❌ Full traceback: {traceback.format_exc()}")
+
+            # Clear from launching apps set on error
+            if hasattr(self, '_launching_apps') and app.id in self._launching_apps:
+                self._launching_apps.remove(app.id)
+                logger.info(f"🔄 Removed {app.id} from launching apps due to error")
+
             return None
 
     def cleanup(self):

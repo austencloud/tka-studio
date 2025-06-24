@@ -19,20 +19,20 @@ from datetime import datetime
 
 from domain.models.core_models import BeatData
 from domain.models.pictograph_models import PropType
-from .direction_calculation_service import (
+from ...props.calculation.direction_calculation_service import (
     IDirectionCalculationService,
     DirectionCalculationService,
     SeparationDirection,
 )
-from .offset_calculation_service import (
+from ...props.calculation.offset_calculation_service import (
     IOffsetCalculationService,
     OffsetCalculationService,
 )
-from .json_configuration_service import (
+from ...props.configuration.json_configuration_service import (
     IJSONConfigurationService,
     JSONConfigurationService,
 )
-from .prop_classification_service import (
+from ...props.calculation.prop_classification_service import (
     IPropClassificationService,
     PropClassificationService,
 )

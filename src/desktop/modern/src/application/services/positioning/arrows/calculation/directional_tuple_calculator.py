@@ -41,7 +41,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-class DirectionalTupleService:
+class DirectionalTupleCalculator:
     """
     Service for generating directional tuples using legacy rotation matrix logic.
 

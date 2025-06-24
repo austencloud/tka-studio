@@ -196,19 +196,19 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         """Register microservices-based positioning services."""
         try:
             # Import the individual calculator services
-            from application.services.positioning.arrow_adjustment_calculator_service import (
+            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
                 ArrowAdjustmentCalculatorService,
             )
-            from application.services.positioning.arrow_coordinate_system_service import (
+            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
                 ArrowCoordinateSystemService,
             )
-            from application.services.positioning.arrow_location_calculator_service import (
+            from application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
-            from application.services.positioning.arrow_rotation_calculator_service import (
+            from application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
                 ArrowRotationCalculatorService,
             )
-            from application.services.positioning.arrow_positioning_orchestrator import (
+            from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
             )
             from core.interfaces.positioning_services import (
@@ -243,7 +243,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         try:
             # Register prop management services
-            from application.services.positioning.prop_management_service import (
+            from application.services.positioning.props.orchestration.prop_management_service import (
                 PropManagementService,
                 IPropManagementService,
             )
@@ -259,7 +259,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
                 IPictographOrchestrator,
                 PictographOrchestrator,
             )
-            from application.services.positioning.prop_orchestrator import (
+            from application.services.positioning.props.orchestration.prop_orchestrator import (
                 IPropOrchestrator,
                 PropOrchestrator,
             )  # Register remaining orchestrators
@@ -320,7 +320,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             CSVDataService,
             ICSVDataService,
         )
-        from application.services.positioning.json_configuration_service import (
+        from application.services.positioning.props.configuration.json_configuration_service import (
             IJSONConfigurationService,
             JSONConfigurationService,
         )

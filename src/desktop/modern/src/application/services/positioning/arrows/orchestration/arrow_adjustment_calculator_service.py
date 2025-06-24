@@ -41,17 +41,25 @@ except ImportError:
 
 from core.types.geometry import Point
 
-from .default_placement_service import DefaultPlacementService
-from .orientation_calculation_service import OrientationCalculationService
-from .placement_key_generation_service import PlacementKeyGenerationService
-from .placement_key_service import PlacementKeyService
-from .quadrant_adjustment_service import QuadrantAdjustmentService
-from .special_placement_service import SpecialPlacementService
-from .special_placement_orientation_service import SpecialPlacementOrientationService
-from .turns_tuple_generation_service import TurnsTupleGenerationService
-from .attribute_key_generation_service import AttributeKeyGenerationService
-from .directional_tuple_service import DirectionalTupleService
-from .quadrant_index_service import QuadrantIndexService
+from ...arrows.placement.default_placement_service import DefaultPlacementService
+from ..calculation.orientation_calculator import (
+    OrientationCalculator,
+)
+from ...arrows.keys.placement_key_generation_service import (
+    PlacementKeyGenerationService,
+)
+from ...arrows.keys.placement_key_service import PlacementKeyService
+from ..calculation.quadrant_adjustment_service import QuadrantAdjustmentService
+from ...arrows.placement.special_placement_service import SpecialPlacementService
+from ...arrows.placement.special_placement_orientation_service import (
+    SpecialPlacementOrientationService,
+)
+from ...arrows.keys.turns_tuple_generation_service import TurnsTupleGenerationService
+from ...arrows.keys.attribute_key_generation_service import (
+    AttributeKeyGenerationService,
+)
+from ..calculation.directional_tuple_calculator import DirectionalTupleCalculator
+from ...arrows.calculation.quadrant_index_service import QuadrantIndexService
 
 logger = logging.getLogger(__name__)
 
@@ -71,14 +79,14 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         self,
         default_placement_service: Optional[DefaultPlacementService] = None,
         special_placement_service: Optional[SpecialPlacementService] = None,
-        orientation_service: Optional[OrientationCalculationService] = None,
+        orientation_service: Optional[OrientationCalculator] = None,
         key_generation_service: Optional[PlacementKeyGenerationService] = None,
         placement_key_service: Optional[PlacementKeyService] = None,
         quadrant_service: Optional[QuadrantAdjustmentService] = None,
         orientation_key_service: Optional[SpecialPlacementOrientationService] = None,
         turns_tuple_service: Optional[TurnsTupleGenerationService] = None,
         attribute_key_service: Optional[AttributeKeyGenerationService] = None,
-        directional_tuple_service: Optional[DirectionalTupleService] = None,
+        directional_tuple_service: Optional[DirectionalTupleCalculator] = None,
         quadrant_index_service: Optional[QuadrantIndexService] = None,
     ):
         """
@@ -103,9 +111,7 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         self.special_placement_service = (
             special_placement_service or SpecialPlacementService()
         )
-        self.orientation_service = (
-            orientation_service or OrientationCalculationService()
-        )
+        self.orientation_service = orientation_service or OrientationCalculator()
         self.key_generation_service = (
             key_generation_service or PlacementKeyGenerationService()
         )
@@ -120,7 +126,7 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         )
         # NEW: Core directional tuple services for quadrant-based positioning
         self.directional_tuple_service = (
-            directional_tuple_service or DirectionalTupleService()
+            directional_tuple_service or DirectionalTupleCalculator()
         )
         self.quadrant_index_service = quadrant_index_service or QuadrantIndexService()
 
@@ -283,7 +289,9 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         )
 
         # STEP 2: Calculate arrow location (where the arrow will be positioned)
-        from .arrow_location_calculator_service import ArrowLocationCalculatorService
+        from ..calculation.arrow_location_calculator import (
+            ArrowLocationCalculatorService,
+        )
 
         location_calculator = ArrowLocationCalculatorService()
         arrow_location = location_calculator.calculate_location(motion, pictograph_data)

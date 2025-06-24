@@ -7,7 +7,7 @@ from domain.models.core_models import BeatData
 from PyQt6.QtCore import QObject
 
 if TYPE_CHECKING:
-    from application.services.positioning.position_matching_service import (
+    from application.services.positioning.arrows.utilities.position_matching_service import (
         PositionMatchingService,
     )
     from domain.models.core_models import SequenceData
@@ -65,7 +65,7 @@ class BeatDataLoader(QObject):
 
         # Initialize services for dynamic refresh
         try:
-            from application.services.positioning.position_matching_service import (
+            from application.services.positioning.arrows.utilities.position_matching_service import (
                 PositionMatchingService,
             )
 
@@ -99,7 +99,7 @@ class BeatDataLoader(QObject):
                 )
 
         try:
-            from application.services.positioning.position_matching_service import (
+            from application.services.positioning.arrows.utilities.position_matching_service import (
                 PositionMatchingService,
             )
 
