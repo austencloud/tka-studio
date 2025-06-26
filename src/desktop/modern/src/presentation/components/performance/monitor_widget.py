@@ -21,7 +21,7 @@ except ImportError:
     # Fallback for environments without PyQt6
     QT_AVAILABLE = False
     QWidget = object
-    pyqtSignal = lambda: None
+    pyqtSignal = lambda *args, **kwargs: None
 
 from core.performance import get_profiler, get_qt_profiler, get_memory_tracker
 from core.performance.config import get_performance_config

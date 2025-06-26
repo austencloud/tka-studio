@@ -16,8 +16,32 @@ try:
 except ImportError:
     # Fallback for environments without FastAPI
     FASTAPI_AVAILABLE = False
-    APIRouter = object
-    HTTPException = Exception
+    class APIRouter:
+        """Fallback APIRouter for when FastAPI is not available."""
+        def __init__(self, prefix="", tags=None, **kwargs):
+            self.prefix = prefix
+            self.tags = tags or []
+            
+        def get(self, path, **kwargs):
+            def decorator(func):
+                return func
+            return decorator
+            
+        def post(self, path, **kwargs):
+            def decorator(func):
+                return func
+            return decorator
+    
+    def Query(default=None, **kwargs):
+        """Fallback Query for when FastAPI is not available."""
+        return default
+    
+    class HTTPException(Exception):
+        """Fallback HTTPException for when FastAPI is not available."""
+        def __init__(self, status_code=500, detail="Internal Server Error", **kwargs):
+            self.status_code = status_code
+            self.detail = detail
+            super().__init__(detail)
     BaseModel = object
 
 from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
@@ -75,7 +99,7 @@ class PerformanceAPI:
         self.profiler = get_profiler()
         self.qt_profiler = get_qt_profiler()
         self.memory_tracker = get_memory_tracker()
-        
+         
         if FASTAPI_AVAILABLE:
             self.router = APIRouter(prefix="/api/performance", tags=["performance"])
             self._setup_routes()

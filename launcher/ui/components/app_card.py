@@ -110,10 +110,7 @@ class ReliableApplicationCard(QFrame):
 
         layout.addStretch()
 
-        # Launch button
-        self.launch_btn = ReliableButton("Launch", "primary")
-        self.launch_btn.clicked.connect(self._on_launch_clicked)
-        layout.addWidget(self.launch_btn)
+        # Removed launch button - cards now use direct-click launching
 
     def _setup_styling(self):
         """Setup card styling."""
@@ -130,9 +127,7 @@ class ReliableApplicationCard(QFrame):
         """Setup visual effects."""
         self.shadow_manager.apply_card_shadow(self)
 
-    def _on_launch_clicked(self):
-        """Handle launch button click."""
-        self.launch_requested.emit(self.app_data.id)
+    # Removed _on_launch_clicked - using direct-click launching instead
 
     def set_selected(self, selected: bool):
         """Set selection state."""
@@ -185,9 +180,10 @@ class ReliableApplicationCard(QFrame):
         normal_anim.start()
 
     def mousePressEvent(self, event):
-        """Handle mouse press."""
+        """Handle mouse press - direct launch on click."""
         if event.button() == Qt.MouseButton.LeftButton:
-            self.clicked.emit(self.app_data)
+            # Direct launch instead of selection
+            self.launch_requested.emit(self.app_data.id)
 
             # Press animation
             press_anim = self.animation_manager.button_press_feedback(self)

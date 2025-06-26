@@ -19,7 +19,7 @@ except ImportError:
     # Fallback for environments without PyQt6
     QT_AVAILABLE = False
     QDialog = object
-    pyqtSignal = lambda: None
+    pyqtSignal = lambda *args, **kwargs: None
 
 from core.performance import get_profiler, get_performance_config
 from core.performance.config import PerformanceConfig

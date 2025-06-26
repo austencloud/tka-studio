@@ -23,8 +23,7 @@ class OptionPicker(ViewableComponentBase):
     - Event-driven communication
     - Proper lifecycle management
 
-    This works directly with Modern data structures (BeatData, SequenceData)
-    and never requires Legacy format conversions.
+    This works directly with Modern data structures (BeatData, SequenceData).
     """
 
     option_selected = pyqtSignal(str)
@@ -118,8 +117,8 @@ class OptionPicker(ViewableComponentBase):
     def refresh_options_from_sequence(
         self, sequence_data: List[Dict[str, Any]]
     ) -> None:
-        """Refresh options based on sequence state (DEPRECATED - Legacy-compatible)."""
-        # Delegate to load_motion_combinations for legacy compatibility
+        """Refresh options based on sequence state (DEPRECATED - compatibility)."""
+        # Delegate to load_motion_combinations for compatibility
         self.load_motion_combinations(sequence_data)
 
     def refresh_options_from_modern_sequence(self, sequence: SequenceData) -> None:
