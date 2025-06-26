@@ -3,7 +3,6 @@ from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjust
     SpecialPlacementDataUpdater,
 )
 
-
 from .arrow_placement_context import ArrowPlacementContext
 from .quadrant_index_handler import QuadrantIndexHandler
 from .arrow_adjustment_calculator import ArrowAdjustmentCalculator
@@ -53,20 +52,6 @@ class ArrowPlacementManager:
         dir_x, dir_y = (adjustment.x(), adjustment.y())
         final_x = initial_pos.x() + dir_x - arrow.boundingRect().center().x()
         final_y = initial_pos.y() + dir_y - arrow.boundingRect().center().y()
-
-        # ARROW POSITION LOGGING: Track final coordinates for letters G, H, I
-        letter = self.pictograph.state.letter
-        if letter and letter.value in ["G", "H", "I"]:
-            print(
-                f"🎯 Legacy ARROW POSITION: Letter {letter.value}, {arrow.state.color} arrow"
-            )
-            print(f"   Initial pos: ({initial_pos.x():.1f}, {initial_pos.y():.1f})")
-            print(f"   Adjustment: ({dir_x:.1f}, {dir_y:.1f})")
-            print(
-                f"   Bounding center: ({arrow.boundingRect().center().x():.1f}, {arrow.boundingRect().center().y():.1f})"
-            )
-            print(f"   ✅ FINAL POS: ({final_x:.1f}, {final_y:.1f})")
-
         arrow.setPos(final_x, final_y)
 
     def _build_context(self, arrow: "Arrow") -> ArrowPlacementContext:

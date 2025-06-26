@@ -155,57 +155,6 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             logger.error(f"Error creating pool manager: {e}")
             raise
 
-    def create_display_manager(
-        self,
-        sections_container: QWidget,
-        sections_layout: QVBoxLayout,
-        pool_manager: Any,
-        main_widget: QWidget,
-    ) -> Any:
-        """
-        Create and configure the display manager.
-
-        Args:
-            sections_container: Container for sections
-            sections_layout: Layout for sections
-            pool_manager: Pictograph pool manager
-            main_widget: Main widget for size calculations
-
-        Returns:
-            Configured display manager
-        """
-        try:
-            from presentation.components.option_picker.display_manager import (
-                OptionPickerDisplayManager,
-            )
-
-            # Create size provider that gives sections the full available width
-            def size_provider():
-                # Get actual available width from the option picker widget hierarchy
-                if main_widget and main_widget.width() > 0:
-                    # In Modern, the option picker IS the full available space
-                    # So sections should use the full widget width, not half
-                    actual_width = main_widget.width()
-                    actual_height = main_widget.height()
-                    # Return the actual size - sections will use full width
-                    return QSize(actual_width, actual_height)
-                else:
-                    # Fallback for initialization phase
-                    return QSize(1200, 800)
-
-            display_manager = OptionPickerDisplayManager(
-                sections_container,
-                sections_layout,
-                pool_manager,
-                size_provider,
-            )
-
-            return display_manager
-
-        except Exception as e:
-            logger.error(f"Error creating display manager: {e}")
-            raise
-
     def create_dimension_analyzer(
         self,
         main_widget: QWidget,

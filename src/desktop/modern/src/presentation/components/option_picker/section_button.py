@@ -48,6 +48,7 @@ class OptionPickerSectionButton(QPushButton):
         self._base_background_color = (
             "rgba(255, 255, 255, 200)"  # Base background
         )
+        self._resizing = False  # Prevent resize loops
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # Create embedded label for HTML text
@@ -137,10 +138,7 @@ class OptionPickerSectionButton(QPushButton):
             f"  background: {background_color};"
             f"  border: 1px solid rgba(255, 255, 255, 0.4);"
             f"  border-radius: {border_radius}px;"
-            f"  padding: 8px 20px;"
-            f"  margin: 2px;"
             f"  font-weight: bold;"
-            f"  min-height: 36px;"
             f"}}"
             f"QPushButton:hover {{"
             f"  background: rgba(255, 255, 255, 0.45);"
@@ -189,47 +187,49 @@ class OptionPickerSectionButton(QPushButton):
 
     def resizeEvent(self, event) -> None:
         """
-        Dynamic sizing: adapts to parent size with proper font scaling.
+        Legacy-exact dynamic sizing: font_size * 3 for height.
         """
-        super().resizeEvent(event)
-
-        # Sizing calculation with fallback
-        if self.section_widget.mw_size_provider and callable(
-            self.section_widget.mw_size_provider
-        ):
-            parent_height = self.section_widget.mw_size_provider().height()
-        else:
-            # Fallback to reasonable default
-            parent_height = 800
-
-        font_size = max(parent_height // 70, 10)
-        label_height = max(int(font_size * 1.8), 18)  # Reduced from 2.5 to 1.8 for shorter headers
-        label_width = max(int(label_height * 6), 100)
+        if not self._resizing:  # Prevent infinite resize loops
+            super().resizeEvent(event)
         
-        # HEADER HEIGHT DEBUG
-        old_size = (self.width(), self.height())
-        print(f"🏷️ [HEADER DEBUG] Button resize for {self.section_widget.letter_type}:")
-        print(f"   Parent height: {parent_height}px")
-        print(f"   Font size: {font_size}px")
-        print(f"   Calculated button size: {label_width} × {label_height}px")
-        print(f"   Old button size: {old_size[0]} × {old_size[1]}px")
+    def resize_to_fit(self):
+        """Resize button using legacy calculation."""
+        if self._resizing:  # Prevent recursive calls
+            return
+            
+        self._resizing = True
+        try:
+            # Legacy sizing calculation
+            if self.section_widget.mw_size_provider and callable(
+                self.section_widget.mw_size_provider
+            ):
+                parent_height = self.section_widget.mw_size_provider().height()
+            else:
+                parent_height = 800
 
-        # Apply font sizing
-        font = self.label.font()
-        font.setPointSize(font_size)
-        self.label.setFont(font)
+            font_size = max(parent_height // 70, 10)
+            label_height = max(int(font_size * 3), 20)  # Legacy: font_size * 3
+            label_width = max(int(label_height * 6), 100)  # Legacy: height * 6
+            
+            # Only resize if size actually changed
+            current_size = self.size()
+            if current_size.width() != label_width or current_size.height() != label_height:
+                print(f"🏷️ [HEADER DEBUG] Button resize for {self.section_widget.letter_type}:")
+                print(f"   Legacy calculation: font_size({font_size}) * 3 = {label_height}px height")
+                print(f"   Button size: {label_width} × {label_height}px")
 
-        # Button sizing
-        self.setFixedSize(QSize(label_width, label_height))
-        
-        # Post-resize debug
-        new_size = (self.width(), self.height())
-        print(f"   New button size: {new_size[0]} × {new_size[1]}px")
-        if new_size[1] != label_height:
-            print(f"   ⚠️  BUTTON HEIGHT MISMATCH: expected {label_height}px, got {new_size[1]}px")
+                # Apply font sizing
+                font = self.label.font()
+                font.setPointSize(font_size)
+                self.label.setFont(font)
 
-        # Reapply style for correct border radius
-        self._update_style()
+                # Button sizing using legacy calculation
+                self.setFixedSize(QSize(label_width, label_height))
+
+                # Reapply style for correct border radius
+                self._update_style()
+        finally:
+            self._resizing = False
 
     def toggle_expansion(self) -> None:
         """Toggle section expansion state and update text"""

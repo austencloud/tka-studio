@@ -16,4 +16,10 @@ class OptionPickerSectionPictographFrame(QFrame):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(self.section.option_scroll.spacing)
+
+        # Ensure frame expands to fill section width (like original QFrame behavior)
+        from PyQt6.QtWidgets import QSizePolicy
+
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)

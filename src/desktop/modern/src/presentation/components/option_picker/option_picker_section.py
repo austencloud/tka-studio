@@ -1,489 +1,281 @@
 from typing import List
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtCore import Qt
-from .section_button import OptionPickerSectionButton
 from .letter_types import LetterType
+from .option_picker_section_header import OptionPickerSectionHeader
+from .option_picker_section_pictograph_frame import OptionPickerSectionPictographFrame
 
 
 class OptionPickerSection(QWidget):
+    """
+    Refactored Option Picker Section following legacy architecture.
+
+    Components:
+    - OptionPickerSectionHeader: Handles header and button
+    - OptionPickerSectionPictographFrame: Handles pictograph grid
+
+    This matches the legacy structure for proper sizing.
+    """
+
     def __init__(self, letter_type: str, parent=None, mw_size_provider=None):
         super().__init__(parent)
         self.letter_type = letter_type
-        self.pictographs: List = []
         self.mw_size_provider = mw_size_provider
+        self.is_groupable = letter_type in [
+            LetterType.TYPE4,
+            LetterType.TYPE5,
+            LetterType.TYPE6,
+        ]
+        self._last_width = None  # Track width to prevent unnecessary resize
+        self._resize_in_progress = False  # Prevent resize cascades
+        self._debug_logged = False  # Only log once per major change
         self._setup_ui()
 
     def _setup_ui(self):
+        """Setup UI using legacy-style separation of concerns."""
+        # Main layout - legacy style: VBoxLayout with 0 margins and spacing
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)
-        layout.setSpacing(5)
+        layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
 
-        # Create a transparent container for the header button to ensure proper centering
-        header_container = QWidget()
-        header_container.setStyleSheet("background: transparent; border: none;")
-        header_layout = QHBoxLayout(header_container)
-        header_layout.setContentsMargins(0, 0, 0, 0)
-        header_layout.addStretch()
+        # Create header component
+        self.header = OptionPickerSectionHeader(self)
+        layout.addWidget(self.header)
 
-        self.header_button = OptionPickerSectionButton(self)
-        self.header_button.clicked.connect(self._toggle_section)
-        header_layout.addWidget(self.header_button)
-        header_layout.addStretch()
+        # Create pictograph frame component
+        self.pictograph_frame = OptionPickerSectionPictographFrame(self)
+        layout.addWidget(self.pictograph_frame)
 
-        layout.addWidget(header_container)
+        # Set transparent background
+        self.setStyleSheet("background-color: transparent; border: none;")
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        # Container with QGridLayout for pictographs
-        from PyQt6.QtWidgets import QFrame
+        # For compatibility, alias the frame as pictograph_container
+        self.pictograph_container = self.pictograph_frame
+        self.pictograph_layout = self.pictograph_frame.layout
+        self.pictographs = self.pictograph_frame.pictographs
 
-        self.pictograph_container = QFrame()
-        self.pictograph_layout = QGridLayout(self.pictograph_container)
-
-        # Layout settings
-        self.pictograph_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pictograph_layout.setContentsMargins(0, 0, 0, 0)
-        self.pictograph_layout.setSpacing(8)
-
-        layout.addWidget(self.pictograph_container)
-
-        # Transparent background, no borders
-        self.pictograph_container.setStyleSheet(
-            """
-            QWidget {
-                background-color: transparent;
-                border: none;
-            }
-        """
-        )
-
-        # Initialize container visibility to match button state (expanded by default)
-        self.pictograph_container.setVisible(self.header_button.is_expanded)
-
-    def _toggle_section(self):
-        self.header_button.toggle_expansion()
-        self.pictograph_container.setVisible(self.header_button.is_expanded)
-
-    def add_pictograph(self, pictograph_frame):
-        """Add pictograph using direct layout positioning with lifecycle safety"""
-        if not self._ensure_layout_validity():
-            self._recreate_layout_objects()
-            if not self._ensure_layout_validity():
-                return
-
-        self.pictographs.append(pictograph_frame)
-
-        COLUMN_COUNT = 8
-        count = len(self.pictographs)
-        row, col = divmod(count - 1, COLUMN_COUNT)
-
-        try:
-            if not self._ensure_layout_validity():
-                self.pictographs.remove(pictograph_frame)
-                return
-
-            self.pictograph_layout.addWidget(pictograph_frame, row, col)
-            pictograph_frame.setVisible(True)
-            self._update_container_size()
-
-        except RuntimeError:
-            if pictograph_frame in self.pictographs:
-                self.pictographs.remove(pictograph_frame)
-
-    def clear_pictographs(self):
-        """Clear pictographs using proper Qt widget lifecycle management"""
-        for pictograph in self.pictographs:
-            if pictograph is not None:
-                try:
-                    if hasattr(pictograph, "cleanup"):
-                        pictograph.cleanup()
-
-                    if self._ensure_layout_validity():
-                        self.pictograph_layout.removeWidget(pictograph)
-
-                    pictograph.setParent(None)
-                    pictograph.deleteLater()
-
-                except RuntimeError:
-                    pass
-
-        self.pictographs.clear()
-
-    def clear_pictographs_pool_style(self):
-        """Clear pictographs using pool approach: hide and remove from layout, don't delete"""
-        for pictograph in self.pictographs:
-            if pictograph is not None:
-                try:
-                    if self._ensure_layout_validity():
-                        self.pictograph_layout.removeWidget(pictograph)
-                    pictograph.setVisible(False)
-                except RuntimeError:
-                    pass
-
-        self.pictographs.clear()
-
-    def add_pictograph_from_pool(self, pictograph_frame):
-        """Add pictograph from pool (reuse existing objects)"""
-        if not self._ensure_layout_validity():
-            self._recreate_layout_objects()
-            if not self._ensure_layout_validity():
-                return
-
-        self.pictographs.append(pictograph_frame)
-
-        COLUMN_COUNT = 8
-        count = len(self.pictographs)
-        row, col = divmod(count - 1, COLUMN_COUNT)
-
-        try:
-            if not self._ensure_layout_validity():
-                self.pictographs.remove(pictograph_frame)
-                return
-
-            self.pictograph_layout.addWidget(pictograph_frame, row, col)
-
-            pictograph_frame.setVisible(True)
-            pictograph_frame.show()
-
-            if hasattr(pictograph_frame, "pictograph_component"):
-                pictograph_frame.pictograph_component.setVisible(True)
-                pictograph_frame.pictograph_component.show()
-
-            self._force_layout_activation()
-            self._update_container_size()
-
-        except RuntimeError:
-            if pictograph_frame in self.pictographs:
-                self.pictographs.remove(pictograph_frame)
-
-    def _ensure_layout_validity(self) -> bool:
-        """Check if layout objects are still valid (not deleted)"""
-        try:
-            # Try to access layout properties to check if they're still valid
-            if self.pictograph_container is None:
-                return False
-            if self.pictograph_layout is None:
-                return False
-
-            # Try to access a property to see if the C++ object is still alive
-            _ = self.pictograph_layout.count()
-            _ = self.pictograph_container.isVisible()
-            return True
-        except (RuntimeError, AttributeError):
-            return False
-
-    def _recreate_layout_objects(self):
-        """Recreate layout objects if they've been deleted"""
-        try:
-            from PyQt6.QtWidgets import QFrame
-
-            if (
-                hasattr(self, "pictograph_container")
-                and self.pictograph_container is not None
-            ):
-                try:
-                    self.pictograph_container.setParent(None)
-                except RuntimeError:
-                    pass
-
-            self.pictograph_container = QFrame()
-            self.pictograph_layout = QGridLayout(self.pictograph_container)
-
-            self.pictograph_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.pictograph_layout.setContentsMargins(0, 0, 0, 0)
-            self.pictograph_layout.setSpacing(8)
-
-            parent_layout = self.layout()
-            if parent_layout:
-                parent_layout.addWidget(self.pictograph_container)
-
-            self.pictograph_container.setStyleSheet(
-                """
-                QWidget {
-                    background-color: transparent;
-                    border: none;
-                }
-            """
-            )
-
-            self.pictograph_container.setVisible(self.header_button.is_expanded)
-
-        except Exception:
-            pass
+        # Access header button for compatibility
+        self.header_button = self.header.type_button
 
     def _get_global_pictograph_size(self) -> int:
         """
-        Calculate consistent pictograph size based on main window width.
-        All pictographs use the same size regardless of section.
+        Calculate consistent pictograph size using legacy algorithm.
+        Matches legacy option_view.py resize logic exactly.
         """
         if self.mw_size_provider:
             main_window_width = self.mw_size_provider().width()
-            
-            # Better size calculation: use width/12 instead of width/16 for larger icons
-            # This gives better sizes for typical window widths (800px+ common)
-            base_size = max(main_window_width // 12, 80)  # Minimum 80px (up from 60px)
-            final_size = min(base_size, 140)  # Maximum 140px (down from 160px)
-            
-            # DEBUG: Print sizing calculations
-            print(f"🔍 [DEBUG] Pictograph Sizing for {self.letter_type}:")
-            print(f"   Main Window Width: {main_window_width}px")
-            print(f"   Base Size (width/12): {main_window_width // 12}px")
-            print(f"   After min(80): {base_size}px")
-            print(f"   Final Size (max 140): {final_size}px")
-            
+            section_width = self.width() if self.width() > 0 else main_window_width
+
+            # Legacy algorithm: max(mw_width // 16, option_picker.width() // 8)
+            size = max(main_window_width // 16, section_width // 8)
+
+            # Legacy border width calculation: max(1, int(size * 0.015))
+            border_width = max(1, int(size * 0.015))
+
+            # Legacy spacing (grid spacing from frame)
+            spacing = (
+                self.pictograph_frame.layout.spacing()
+                if hasattr(self, "pictograph_frame")
+                else 3
+            )
+
+            # Legacy final calculation: size -= 2 * bw + spacing
+            final_size = size - (2 * border_width) - spacing
+
+            # Apply reasonable bounds to prevent extreme sizes
+            final_size = max(60, min(final_size, 200))
+
             return final_size
         else:
-            print(f"🔍 [DEBUG] Pictograph Sizing for {self.letter_type}: Using fallback (100px)")
             return 100  # Fallback size
 
-    def _update_container_size(self):
-        """Update container size using consistent pictograph sizing for all sections"""
-        if len(self.pictographs) == 0:
+    def add_pictograph(self, pictograph_frame):
+        """Add pictograph using frame component."""
+        self.pictograph_frame.add_pictograph(pictograph_frame)
+        self._update_size()
+
+        # Log comprehensive metrics only when pictographs are added
+        if len(self.pictograph_frame.pictographs) in [1, 4, 8, 16]:  # Key milestones
+            self._log_layout_metrics(
+                f"After adding pictograph #{len(self.pictograph_frame.pictographs)}"
+            )
+
+    def add_pictograph_from_pool(self, pictograph_frame):
+        """Add pictograph from pool using frame component."""
+        self.pictograph_frame.add_pictograph_from_pool(pictograph_frame)
+        self._update_size()
+
+    def clear_pictographs(self):
+        """Clear pictographs using frame component."""
+        self.pictograph_frame.clear_pictographs()
+
+    def clear_pictographs_pool_style(self):
+        """Clear pictographs using pool style."""
+        self.pictograph_frame.clear_pictographs_pool_style()
+
+    def _update_size(self):
+        """Update section size using legacy-style calculation."""
+        try:
+            # Get global pictograph size
+            pictograph_size = self._get_global_pictograph_size()
+
+            # Resize pictographs
+            self.pictograph_frame.resize_pictographs(pictograph_size)
+
+            # Calculate required heights
+            header_height = self.header.get_calculated_height()
+            pictograph_height = self.pictograph_frame.calculate_required_height(
+                pictograph_size
+            )
+
+            # Total section height (legacy style: just header + content)
+            total_height = header_height + pictograph_height
+
+            # Set minimum height for section
+            self.setMinimumHeight(total_height)
+
+            # Force header to correct size - but don't trigger more resizes
+            if hasattr(self.header, "type_button"):
+                # Directly set size without triggering resize events
+                self.header.type_button._resizing = True
+                try:
+                    calculated_height = self.header.get_calculated_height()
+                    self.header.setFixedHeight(calculated_height)
+
+                    # Size the button without triggering resize
+                    if hasattr(self, "mw_size_provider") and self.mw_size_provider:
+                        parent_height = self.mw_size_provider().height()
+                        font_size = max(parent_height // 70, 10)
+                        label_height = max(int(font_size * 3), 20)
+                        label_width = max(int(label_height * 6), 100)
+
+                        from PyQt6.QtCore import QSize
+
+                        self.header.type_button.setFixedSize(
+                            QSize(label_width, label_height)
+                        )
+                finally:
+                    self.header.type_button._resizing = False
+
+            # Update layout without triggering cascading resizes
+            self.updateGeometry()
+
+        except Exception as e:
+            print(f"⚠️ [ERROR] Size update failed for {self.letter_type}: {e}")
+
+    def _log_layout_metrics(self, context: str):
+        """Log comprehensive layout metrics for comparison with legacy."""
+        try:
+            if self.mw_size_provider:
+                main_window_size = self.mw_size_provider()
+                print(f"\n📊 [MODERN METRICS] {self.letter_type} - {context}")
+                print(
+                    f"   Main Window: {main_window_size.width()}x{main_window_size.height()}"
+                )
+                print(f"   Section: {self.width()}x{self.height()}")
+                print(
+                    f"   Frame: {self.pictograph_frame.width()}x{self.pictograph_frame.height()}"
+                )
+                print(f"   Grid spacing: {self.pictograph_frame.layout.spacing()}px")
+                print(f"   Pictograph count: {len(self.pictograph_frame.pictographs)}")
+                print(f"   Pictograph size: {self._get_global_pictograph_size()}px")
+
+                # Show section width calculation details
+                full_width = main_window_size.width()
+                expected_section_width = full_width // 2
+                print(
+                    f"   Section width calculation: {full_width} // 2 = {expected_section_width}px"
+                )
+                print(f"   Actual section width: {self.width()}px")
+
+                # Calculate grid utilization
+                if len(self.pictograph_frame.pictographs) > 0:
+                    rows = (len(self.pictograph_frame.pictographs) - 1) // 8 + 1
+                    print(f"   Grid layout: {rows} rows x 8 columns")
+
+                    # Calculate expected vs actual widths
+                    pictograph_size = self._get_global_pictograph_size()
+                    spacing = self.pictograph_frame.layout.spacing()
+                    expected_frame_width = (pictograph_size * 8) + (spacing * 7)
+                    utilization = (
+                        (expected_frame_width / self.pictograph_frame.width() * 100)
+                        if self.pictograph_frame.width() > 0
+                        else 0
+                    )
+                    print(f"   Expected frame width: {expected_frame_width}px")
+                    print(f"   Actual frame width: {self.pictograph_frame.width()}px")
+                    print(f"   Width utilization: {utilization:.1f}%")
+                print(f"   ---")
+        except Exception as e:
+            print(f"⚠️ [ERROR] Metrics logging failed: {e}")
+
+    def resizeEvent(self, event):
+        """Handle resize events using legacy approach."""
+        if self._resize_in_progress:
             return
 
-        if not self._ensure_layout_validity():
-            self._recreate_layout_objects()
-            if not self._ensure_layout_validity():
-                return
-
+        self._resize_in_progress = True
         try:
-            # Get consistent pictograph size for ALL sections
-            pictograph_size = self._get_global_pictograph_size()
-            
-            print(f"🔍 [DEBUG] Container Update for {self.letter_type}:")
-            print(f"   Number of pictographs: {len(self.pictographs)}")
-            print(f"   Calculated pictograph size: {pictograph_size}px")
-            
-            # Resize all pictographs to the same size
-            self._resize_pictograph_frames(pictograph_size)
-
-            # Calculate container dimensions based on section layout
             if self.mw_size_provider:
                 full_width = self.mw_size_provider().width()
-                print(f"   Full window width: {full_width}px")
 
+                # Calculate section width based on type
                 if self.letter_type in [
                     LetterType.TYPE4,
                     LetterType.TYPE5,
                     LetterType.TYPE6,
                 ]:
-                    # Bottom row sections share width equally
-                    section_width = (full_width - 20) // 3
-                    available_width = section_width - 20
-                    # Use fewer columns for bottom sections to fit the narrower width
-                    COLUMN_COUNT = min(4, max(2, available_width // (pictograph_size + 8)))
-                    print(f"   Bottom row section - Section width: {section_width}px")
-                    print(f"   Available width: {available_width}px")
-                    print(f"   Column count: {COLUMN_COUNT}")
-                else:
-                    # Top sections get full width
-                    section_width = full_width
-                    available_width = section_width - 40
+                    # Bottom row sections - use fixed calculation
+                    base_width = full_width // 2
                     COLUMN_COUNT = 8
-                    print(f"   Top section - Section width: {section_width}px")
-                    print(f"   Available width: {available_width}px")
-                    print(f"   Column count: {COLUMN_COUNT}")
-            else:
-                available_width = self._get_available_scroll_width()
-                COLUMN_COUNT = 8
-                print(f"   Using fallback width: {available_width}px")
+                    calculated_width = int((base_width / COLUMN_COUNT) - 3)
 
-            container_margins = 10
-            grid_spacing = 8
+                    view_width = (
+                        calculated_width
+                        if calculated_width < self.mw_size_provider().height() // 8
+                        else self.mw_size_provider().height() // 8
+                    )
+                    section_width = full_width // 3
+                else:
+                    # Top sections - use full width like legacy system
+                    section_width = full_width
 
-            # Calculate container dimensions
-            actual_width = available_width
-            max_row = (len(self.pictographs) - 1) // COLUMN_COUNT
-            rows_needed = max_row + 1
+                # Only resize if width actually changed significantly
+                if (
+                    self._last_width is None
+                    or abs(self._last_width - section_width) > 5
+                ):
+                    self._last_width = section_width
+                    self.setFixedWidth(section_width)
 
-            container_height = (
-                (rows_needed * pictograph_size)
-                + (grid_spacing * (rows_needed - 1))
-                + (2 * container_margins)
-            )
-            
-            # HEIGHT DEBUG: Add comprehensive height analysis
-            header_height = self.header_button.height() if hasattr(self, 'header_button') else 0
-            section_height = container_height + header_height + 10  # Reduced from 20 to 10 for tighter spacing
-            
-            print(f"📏 HEIGHT: {self.letter_type} - Container: {container_height}px, Header: {header_height}px, Total: {section_height}px")
+                    # Log only on significant width changes for Types 1-3
+                    if not self._debug_logged and self.letter_type in [
+                        "Type1",
+                        "Type2",
+                        "Type3",
+                    ]:
+                        self._log_layout_metrics("On resize width change")
+                        self._debug_logged = True
 
-            if not self._ensure_layout_validity():
-                return
-
-            # Set container size
-            self.pictograph_container.setMinimumSize(actual_width, container_height)
-            self.pictograph_container.setMaximumWidth(actual_width)
-            
-            print(f"   Set container size to: {actual_width} × {container_height}px")
-
-            from PyQt6.QtWidgets import QSizePolicy
-
-            self.pictograph_container.setSizePolicy(
-                QSizePolicy.Policy.Preferred,
-                QSizePolicy.Policy.Minimum,
-            )
-
-            # Set section height based on content
-            self.setMinimumHeight(section_height)
-            self.setSizePolicy(
-                QSizePolicy.Policy.Expanding,
-                QSizePolicy.Policy.Minimum,
-            )
-            
-            print(f"   Set section minimum height to: {section_height}px")
-
-            self._force_layout_activation()
-
-            self.pictograph_container.setVisible(True)
-            self.pictograph_container.show()
-            self.setVisible(True)
-            self.show()
-            
-            # POST-LAYOUT HEIGHT DEBUG
-            actual_section_height = self.height()
-            actual_container_height = self.pictograph_container.height()
-            actual_header_height = self.header_button.height() if hasattr(self, 'header_button') else 0
-            
-            print(f"   --- POST-LAYOUT ACTUAL SIZES ---")
-            print(f"   Actual section size: {self.width()} × {actual_section_height}px")
-            print(f"   Actual container size: {self.pictograph_container.width()} × {actual_container_height}px")
-            print(f"   Actual header size: {self.header_button.width()} × {actual_header_height}px")
-            print(f"   Height difference: calculated={section_height}px vs actual={actual_section_height}px")
-            if actual_section_height != section_height:
-                print(f"   ⚠️  HEIGHT MISMATCH: {actual_section_height - section_height}px difference")
-            print(f"   --- END HEIGHT ANALYSIS ---\n")
-
-        except RuntimeError:
-            pass
-
-    def _get_available_scroll_width(self) -> int:
-        """Get available width from parent scroll area, accounting for scroll bars"""
-        # Default fallback width
-        default_width = 600
-
-        # Try to find the scroll area in parent hierarchy
-        parent = self.parent()
-        while parent:
-            if hasattr(parent, "viewport") and hasattr(parent, "verticalScrollBar"):
-                # Found scroll area
-                viewport_width = parent.viewport().width()
-                scrollbar_width = (
-                    parent.verticalScrollBar().width()
-                    if parent.verticalScrollBar().isVisible()
-                    else 0
-                )
-                available_width = (
-                    viewport_width - scrollbar_width - 20
-                )  # Account for margins
-                return max(400, available_width)  # Minimum reasonable width
-            parent = parent.parent()
-
-        return default_width
-
-    def _resize_pictograph_frames(self, target_size: int) -> None:
-        """Resize all pictograph frames to the target size"""
-        print(f"🔍 [DEBUG] Resizing {len(self.pictographs)} pictograph frames to {target_size}px for {self.letter_type}")
-        
-        resized_count = 0
-        for pictograph_frame in self.pictographs:
-            if pictograph_frame and hasattr(pictograph_frame, "setFixedSize"):
-                try:
-                    # Get current size before resize
-                    current_size = (pictograph_frame.width(), pictograph_frame.height())
-                    pictograph_frame.setFixedSize(target_size, target_size)
-                    resized_count += 1
-                    
-                    if resized_count <= 3:  # Only print first few to avoid spam
-                        print(f"   Frame {resized_count}: {current_size} -> ({target_size}, {target_size})")
-                except RuntimeError:
-                    continue
-        
-        print(f"   Successfully resized {resized_count}/{len(self.pictographs)} frames")
-
-    def _force_layout_activation(self) -> None:
-        """Force the QGridLayout to activate and position widgets correctly"""
-        try:
-            self.pictograph_layout.activate()
-            self.pictograph_layout.update()
-            self.pictograph_container.updateGeometry()
-
-            from PyQt6.QtWidgets import QApplication
-
-            QApplication.processEvents()
-        except RuntimeError:
-            pass
-
-    def update_layout(self):
-        return
-
-    def _calculate_optimal_columns(self) -> int:
-        """Calculate optimal columns based on available width"""
-        # Get available width from the option picker container
-        available_width = 600  # Default fallback
-
-        # Try to get actual available width from parent hierarchy
-        parent = self.parent()
-        while parent:
-            if hasattr(parent, "sections_container"):
-                available_width = (
-                    parent.sections_container.width() - 40
-                )  # Account for margins
-                break
-            parent = parent.parent()
-
-        pictograph_width = 160 + 8  # Frame width + spacing
-
-        # Calculate max columns that fit
-        max_possible_columns = max(1, available_width // pictograph_width)
-
-        # Apply limits based on letter type
-        if self.letter_type == LetterType.TYPE1:
-            max_columns = min(8, max_possible_columns)
-        elif self.letter_type in [LetterType.TYPE4, LetterType.TYPE5, LetterType.TYPE6]:
-            max_columns = min(6, max_possible_columns)
-        else:
-            max_columns = min(7, max_possible_columns)
-
-        result = max(2, max_columns)
-        return result
-
-    def resizeEvent(self, event):
-        """Resize event to set proper section width"""
-        print(f"🔍 [DEBUG] ResizeEvent triggered for {self.letter_type}")
-        
-        if self.mw_size_provider:
-            # Different width handling for bottom row vs vertical sections
-            full_width = self.mw_size_provider().width()
-            print(f"   Main window width: {full_width}px")
-
-            # Check if this section is in the bottom row (sections 4, 5, 6)
-            if self.letter_type in [
-                LetterType.TYPE4,
-                LetterType.TYPE5,
-                LetterType.TYPE6,
-            ]:
-                # Bottom row sections share the width equally (1/3 each)
-                section_width = (
-                    full_width - 20
-                ) // 3  # Account for spacing between sections
-                print(f"   Bottom row section - calculated width: {section_width}px")
-            else:
-                # Vertical sections (1, 2, 3) get full width
-                section_width = full_width
-                print(f"   Top section - using full width: {section_width}px")
-
-            # Get current size before setting
-            current_size = (self.width(), self.height())
-            print(f"   Current section size: {current_size}")
-            
-            # Set the calculated width
-            self.setFixedWidth(section_width)
-            print(f"   Set section width to: {section_width}px")
-
-            # Also ensure pictograph container uses available width
-            if hasattr(self, "pictograph_container") and self.pictograph_container:
-                container_width = section_width - 20  # Account for margins
-                self.pictograph_container.setMinimumWidth(container_width)
-                self.pictograph_container.setMaximumWidth(container_width)
-                print(f"   Set container width to: {container_width}px")
+        except Exception as e:
+            print(f"⚠️ [ERROR] Resize failed for {self.letter_type}: {e}")
+        finally:
+            self._resize_in_progress = False
 
         super().resizeEvent(event)
+
+    def toggle_section(self):
+        """Toggle section visibility."""
+        is_visible = not self.pictograph_frame.isVisible()
+        self.pictograph_frame.setVisible(is_visible)
+
+    # Properties for compatibility with old code
+    @property
+    def pictographs(self):
+        return self.pictograph_frame.pictographs
+
+    @pictographs.setter
+    def pictographs(self, value):
+        self.pictograph_frame.pictographs = value

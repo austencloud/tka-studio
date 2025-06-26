@@ -118,28 +118,35 @@ class ClickablePictographFrame(QFrame):
         self.container_widget = container_widget
 
     def resize_frame(self) -> None:
+        """Resize frame using exact legacy algorithm from option_view.py"""
         if not self.container_widget:
             return
 
         try:
-            container_width: int = self.container_widget.width()
+            # Get main window width (legacy approach)
+            main_window = self.container_widget
+            while main_window.parent():
+                main_window = main_window.parent()
+            main_window_width = main_window.width() if main_window else 800
+
+            # Get container (section) width
+            container_width = self.container_widget.width()
             if container_width <= 0:
                 return
 
-            desired_columns: int = 8
-            spacing: int = 8
-            margin: int = 20
+            # Legacy algorithm: max(mw_width // 16, option_picker.width() // 8)
+            size = max(main_window_width // 16, container_width // 8)
 
-            available_width: int = container_width - (2 * margin)
+            # Legacy border width calculation: max(1, int(size * 0.015))
+            border_width = max(1, int(size * 0.015))
 
-            total_spacing: int = spacing * (desired_columns - 1)
-            size_per_pictograph: float = (
-                available_width - total_spacing
-            ) / desired_columns
+            # Legacy spacing (use grid spacing from parent layout)
+            spacing = 3  # Match the grid spacing used in pictograph frame
 
-            border_width: int = max(1, int(size_per_pictograph * 0.015))
-            final_size: int = int(size_per_pictograph - (2 * border_width))
+            # Legacy final calculation: size -= 2 * bw + spacing
+            final_size = size - (2 * border_width) - spacing
 
+            # Apply reasonable bounds to prevent extreme sizes
             final_size = max(60, min(final_size, 200))
 
             self.setFixedSize(final_size, final_size)

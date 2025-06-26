@@ -19,6 +19,15 @@ class LaunchMode(Enum):
     DOCKED = "docked"
 
 
+class DockPosition(Enum):
+    """Dock positioning options."""
+
+    BOTTOM_LEFT = "bottom_left"
+    BOTTOM_RIGHT = "bottom_right"
+    TOP_LEFT = "top_left"
+    TOP_RIGHT = "top_right"
+
+
 class ApplicationStatus(Enum):
     """Application execution status."""
 
@@ -125,6 +134,55 @@ class WindowGeometry:
 
 
 @dataclass(frozen=True)
+class DockConfiguration:
+    """
+    Immutable dock configuration data.
+
+    Represents dock-specific settings and positioning.
+    """
+
+    position: DockPosition = DockPosition.BOTTOM_LEFT
+    width: int = 64
+    height: int = 48  # Will match Windows taskbar height
+    margin_x: int = 0
+    margin_y: int = 0
+    always_on_top: bool = True
+    auto_hide: bool = False
+    screen_index: int = 0
+
+    def update(self, **kwargs) -> "DockConfiguration":
+        """Create a new instance with updated fields."""
+        return replace(self, **kwargs)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "position": self.position.value,
+            "width": self.width,
+            "height": self.height,
+            "margin_x": self.margin_x,
+            "margin_y": self.margin_y,
+            "always_on_top": self.always_on_top,
+            "auto_hide": self.auto_hide,
+            "screen_index": self.screen_index,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "DockConfiguration":
+        """Create from dictionary."""
+        return cls(
+            position=DockPosition(data.get("position", DockPosition.BOTTOM_LEFT.value)),
+            width=data.get("width", 64),
+            height=data.get("height", 48),
+            margin_x=data.get("margin_x", 0),
+            margin_y=data.get("margin_y", 0),
+            always_on_top=data.get("always_on_top", True),
+            auto_hide=data.get("auto_hide", False),
+            screen_index=data.get("screen_index", 0),
+        )
+
+
+@dataclass(frozen=True)
 class ScreenData:
     """Immutable screen/monitor data."""
 
@@ -154,6 +212,7 @@ class LauncherState:
     # Window state
     window_geometry: Optional[WindowGeometry] = None
     docked_geometry: Optional[WindowGeometry] = None
+    dock_configuration: DockConfiguration = field(default_factory=DockConfiguration)
 
     # Screen configuration
     target_screen_index: int = 0
@@ -187,6 +246,12 @@ class LauncherState:
     def with_docked_geometry(self, geometry: WindowGeometry) -> "LauncherState":
         """Update docked geometry."""
         return self.update(docked_geometry=geometry)
+
+    def with_dock_configuration(
+        self, dock_config: DockConfiguration
+    ) -> "LauncherState":
+        """Update dock configuration."""
+        return self.update(dock_configuration=dock_config)
 
     def with_application(self, app: ApplicationData) -> "LauncherState":
         """Update or add an application."""
