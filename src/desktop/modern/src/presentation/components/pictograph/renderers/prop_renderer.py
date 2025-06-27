@@ -127,16 +127,20 @@ class PropRenderer:
     ) -> Orientation:
         """Extract start orientation from motion data, with fallback to IN."""
         if hasattr(motion_data, "start_ori") and motion_data.start_ori:
-            # Convert string orientation to Orientation enum
-            ori_str = motion_data.start_ori.lower()
-            if ori_str == "in":
-                return Orientation.IN
-            elif ori_str == "out":
-                return Orientation.OUT
-            elif ori_str == "clock":
-                return Orientation.CLOCK
-            elif ori_str == "counter":
-                return Orientation.COUNTER
+            # Handle both string and Orientation enum cases
+            if isinstance(motion_data.start_ori, Orientation):
+                return motion_data.start_ori
+            else:
+                # Convert string orientation to Orientation enum
+                ori_str = motion_data.start_ori.lower()
+                if ori_str == "in":
+                    return Orientation.IN
+                elif ori_str == "out":
+                    return Orientation.OUT
+                elif ori_str == "clock":
+                    return Orientation.CLOCK
+                elif ori_str == "counter":
+                    return Orientation.COUNTER
 
         # Fallback to IN if no valid orientation found
         return Orientation.IN

@@ -213,6 +213,16 @@ class FallbackApplicationService:
                 display_order=1,
             ),
             ApplicationData(
+                id="sequence_workbench",
+                title="Sequence Workbench",
+                description="Standalone sequence workbench for development and testing",
+                icon="🎯",
+                category=ApplicationCategory.DESKTOP,
+                command="python standalone_sequence_workbench_exact.py",
+                working_dir=tka_root / "src" / "desktop" / "modern",
+                display_order=3,
+            ),
+            ApplicationData(
                 id="desktop_modern_debug",
                 title="TKA Desktop (Modern) - Debug",
                 description="Modern TKA Desktop with debugger attached (port 5679)",

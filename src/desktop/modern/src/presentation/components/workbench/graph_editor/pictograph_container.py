@@ -38,17 +38,26 @@ class GraphEditorPictographContainer(QWidget):
 
     def _setup_ui(self):
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(4, 4, 4, 4)
+        # Match legacy: no margins and no spacing like legacy container
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
 
         self._pictograph_view = ModernPictographView(self)
         self._pictograph_view.arrow_clicked.connect(self._on_arrow_clicked)
 
         layout.addWidget(self._pictograph_view)
 
+        # Set initial size - will be updated in resizeEvent to maintain square aspect ratio
         self.setFixedSize(300, 300)
+
+        # Set size policy to Fixed to match legacy behavior
+        from PyQt6.QtWidgets import QSizePolicy
+
+        self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+
         self.setStyleSheet(
             """
-            ModernPictographContainer {
+            GraphEditorPictographContainer {
                 border: 2px solid rgba(255, 255, 255, 0.2);
                 border-radius: 8px;
                 background-color: rgba(0, 0, 0, 0.1);
@@ -109,6 +118,24 @@ class GraphEditorPictographContainer(QWidget):
         self._selected_arrow_id = arrow_id
         self.arrow_selected.emit(arrow_id)
 
+    def resizeEvent(self, event):
+        """Handle resize events to maintain perfect square aspect ratio like legacy"""
+        super().resizeEvent(event)
+
+        # Get the graph editor's height to maintain square proportions
+        if self._graph_editor and hasattr(self._graph_editor, "height"):
+            graph_editor_height = self._graph_editor.height()
+            if graph_editor_height > 0:
+                # Enforce square aspect ratio: width = height = graph_editor_height
+                # This matches legacy: self.setFixedSize(self.graph_editor.height(), self.graph_editor.height())
+                square_size = graph_editor_height
+                self.setFixedSize(square_size, square_size)
+
+                # The pictograph view should fill the container completely (no margins now)
+                if self._pictograph_view:
+                    # No margins now, so view fills entire container
+                    self._pictograph_view.setFixedSize(square_size, square_size)
+
 
 class ModernPictographView(QGraphicsView):
     arrow_clicked = pyqtSignal(str)
@@ -126,8 +153,29 @@ class ModernPictographView(QGraphicsView):
         self.setScene(self._pictograph_scene)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.setDragMode(QGraphicsView.DragMode.NoDrag)
-        self.setFrameStyle(0)
-        self.setStyleSheet("background: transparent;")
+
+        # Remove all frames and borders like legacy
+        from PyQt6.QtWidgets import QFrame
+
+        self.setFrameStyle(QFrame.Shape.NoFrame)
+        self.setFrameShape(QFrame.Shape.NoFrame)
+        self.setLineWidth(0)
+        self.setMidLineWidth(0)
+        self.setStyleSheet("background: transparent; border: none;")
+
+        # Remove all margins like legacy implementation
+        self.setContentsMargins(0, 0, 0, 0)
+        viewport = self.viewport()
+        if viewport:
+            viewport.setContentsMargins(0, 0, 0, 0)
+        self.setViewportMargins(0, 0, 0, 0)
+
+        # Set alignment like legacy
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        # Disable scroll bars like legacy
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # Enable proper scaling and viewport updates
         self.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
@@ -154,31 +202,148 @@ class ModernPictographView(QGraphicsView):
         self._enable_arrow_selection()
 
     def _fit_pictograph_to_view(self):
-        """Fit the pictograph properly within the view container"""
+        """Fit the pictograph properly within the view container like legacy"""
         if not self._pictograph_scene:
             return
 
-        # Get scene bounds
-        scene_rect = self._pictograph_scene.itemsBoundingRect()
-        if scene_rect.isEmpty():
+        # Use legacy-style scaling: scene().sceneRect() and viewport().size()
+        scene_size = self._pictograph_scene.sceneRect().size()
+        view_size = self.viewport().size()
+
+        if scene_size.width() <= 0 or scene_size.height() <= 0:
             return
 
-        # Add some padding around the pictograph
-        padding = 20
-        padded_rect = scene_rect.adjusted(-padding, -padding, padding, padding)
+        # Calculate scale factor like legacy implementation
+        scale_factor = min(
+            view_size.width() / scene_size.width(),
+            view_size.height() / scene_size.height(),
+        )
 
-        # Fit the scene to the view with proper scaling
-        self.fitInView(padded_rect, Qt.AspectRatioMode.KeepAspectRatio)
+        # Apply scaling like legacy: resetTransform() then scale()
+        self.resetTransform()
+        self.scale(scale_factor, scale_factor)
 
-        print(f"🔍 Graph Editor Pictograph Scaling:")
-        print(f"   Scene rect: {scene_rect.width():.1f}x{scene_rect.height():.1f}")
-        print(f"   View size: {self.width()}x{self.height()}")
-        print(f"   Scale factor: {self.transform().m11():.3f}")
+        # Ensure the scene is properly positioned to show all content
+        # Instead of centerOn(), use setSceneRect to ensure full scene visibility
+        self.setSceneRect(self._pictograph_scene.sceneRect())
+
+        # Ensure the view shows the entire scene content
+        self.ensureVisible(self._pictograph_scene.sceneRect(), 0, 0)
+
+        # COMPREHENSIVE POSITION DEBUGGING
+        self._debug_positioning_data(scene_size, view_size, scale_factor)
+
+    def _debug_positioning_data(self, scene_size, view_size, scale_factor):
+        """Data-driven debugging to identify exact positioning issues"""
+        print("=" * 80)
+        print("🔍 COMPREHENSIVE PICTOGRAPH POSITIONING DEBUG")
+        print("=" * 80)
+
+        # 1. Basic scaling information
+        print(f"📐 Scene rect: {scene_size.width():.1f}x{scene_size.height():.1f}")
+        print(f"📐 View size: {view_size.width()}x{view_size.height()}")
+        print(f"📐 Scale factor: {scale_factor:.3f}")
+
+        # 2. View geometry and positioning
+        view_geometry = self.geometry()
+        print(
+            f"📍 View geometry: x={view_geometry.x()}, y={view_geometry.y()}, w={view_geometry.width()}, h={view_geometry.height()}"
+        )
+        print(f"📍 View bottom edge: {view_geometry.bottom()}")
+
+        # 3. Parent container geometry
+        if self._container:
+            container_geometry = self._container.geometry()
+            print(
+                f"📦 Container geometry: x={container_geometry.x()}, y={container_geometry.y()}, w={container_geometry.width()}, h={container_geometry.height()}"
+            )
+            print(f"📦 Container bottom edge: {container_geometry.bottom()}")
+
+            # Calculate clipping amount
+            view_bottom = view_geometry.bottom()
+            container_bottom = container_geometry.bottom()
+            clipping_amount = view_bottom - container_bottom
+            print(
+                f"✂️ Clipping analysis: view_bottom={view_bottom}, container_bottom={container_bottom}"
+            )
+            if clipping_amount > 0:
+                print(
+                    f"❌ CONTENT CLIPPED: {clipping_amount}px extends beyond container"
+                )
+            else:
+                print(f"✅ NO CLIPPING: {abs(clipping_amount)}px margin available")
+
+        # 4. Scene rect coordinates and viewport visible area
+        scene_rect = self._pictograph_scene.sceneRect()
+        print(
+            f"🎬 Scene rect coords: x={scene_rect.x()}, y={scene_rect.y()}, w={scene_rect.width()}, h={scene_rect.height()}"
+        )
+
+        viewport_rect = self.viewport().geometry()
+        print(
+            f"👁️ Viewport geometry: x={viewport_rect.x()}, y={viewport_rect.y()}, w={viewport_rect.width()}, h={viewport_rect.height()}"
+        )
+
+        # 5. Transform matrix analysis
+        transform = self.transform()
+        print(
+            f"🔄 Transform matrix: m11={transform.m11():.3f}, m22={transform.m22():.3f}, dx={transform.dx():.1f}, dy={transform.dy():.1f}"
+        )
+
+        # 6. Effective pictograph size after scaling
+        effective_width = scene_size.width() * scale_factor
+        effective_height = scene_size.height() * scale_factor
+        print(
+            f"📏 Effective pictograph size: {effective_width:.1f}x{effective_height:.1f}"
+        )
+
+        # 7. Positioning within container analysis
+        if self._container:
+            container_width = container_geometry.width()
+            container_height = container_geometry.height()
+
+            # Calculate how much space is used vs available
+            width_utilization = (effective_width / container_width) * 100
+            height_utilization = (effective_height / container_height) * 100
+            print(
+                f"📊 Space utilization: width={width_utilization:.1f}%, height={height_utilization:.1f}%"
+            )
+
+            # Check if pictograph fits within container bounds
+            if (
+                effective_width <= container_width
+                and effective_height <= container_height
+            ):
+                print("✅ Pictograph fits within container bounds")
+            else:
+                print("❌ Pictograph exceeds container bounds")
+                if effective_width > container_width:
+                    print(
+                        f"   Width overflow: {effective_width - container_width:.1f}px"
+                    )
+                if effective_height > container_height:
+                    print(
+                        f"   Height overflow: {effective_height - container_height:.1f}px"
+                    )
+
+        print("=" * 80)
 
     def resizeEvent(self, event):
-        """Handle resize events to maintain proper scaling"""
+        """Handle resize events to maintain proper scaling and square aspect ratio like legacy"""
         super().resizeEvent(event)
-        # Re-fit the pictograph when the view is resized
+
+        # Enforce square aspect ratio exactly like legacy GE_PictographView:
+        # self.setFixedSize(self.graph_editor.height(), self.graph_editor.height())
+        if self._container and hasattr(self._container, "_graph_editor"):
+            graph_editor = self._container._graph_editor
+            if graph_editor and hasattr(graph_editor, "height"):
+                graph_editor_height = graph_editor.height()
+                if graph_editor_height > 0:
+                    # No container margins now, so view matches graph editor height exactly
+                    square_size = graph_editor_height
+                    self.setFixedSize(square_size, square_size)
+
+        # Re-fit the pictograph when the view is resized (handles all scaling)
         self._fit_pictograph_to_view()
 
     def _enable_arrow_selection(self):

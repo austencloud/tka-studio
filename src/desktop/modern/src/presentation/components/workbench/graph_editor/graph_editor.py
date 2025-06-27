@@ -156,7 +156,7 @@ class GraphEditor(QFrame):
                     stop: 0.5 rgba(255, 255, 255, 0.10),
                     stop: 1 rgba(255, 255, 255, 0.05)
                 );
-                border: 2px solid rgba(255, 255, 255, 0.3);
+                border: 0px solid rgba(255, 255, 255, 0.3);
                 border-radius: 16px 16px 0px 0px;
             }
         """
@@ -165,8 +165,8 @@ class GraphEditor(QFrame):
         # Main horizontal layout matching Legacy's structure exactly
         main_layout = QHBoxLayout(self)
         # Increase margins to ensure content stays within rounded borders
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(16)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
 
         # Left adjustment controls (stretch=1, like Legacy's left_stack)
         self._left_adjustment_panel = AdjustmentPanel(self, side="left")
@@ -282,7 +282,7 @@ class GraphEditor(QFrame):
     def get_preferred_height(self) -> int:
         """Calculate preferred height constrained within available parent space"""
         if not self._parent_workbench:
-            return 250
+            return self.height()
 
         parent_height = self._parent_workbench.height()
         parent_width = self._parent_workbench.width()
@@ -303,7 +303,19 @@ class GraphEditor(QFrame):
     def _calculate_available_height(self) -> int:
         """Calculate available height within the parent workbench"""
         if not self._parent_workbench:
-            return 300
+            return 350 #TODO! the workbench isn't available when we check so it's using the default value
+
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
+        ### FIX THAT ^
 
         parent_height = self._parent_workbench.height()
 
@@ -474,6 +486,11 @@ class GraphEditor(QFrame):
         # Update toggle tab position (no animation during resize)
         if self._toggle_tab:
             self._toggle_tab.update_position(animate=False)
+
+        # Trigger pictograph container resize like legacy version
+        # Legacy: self.pictograph_container.GE_view.resizeEvent(event)
+        if self._pictograph_container:
+            self._pictograph_container.resizeEvent(event)
 
     def keyPressEvent(self, event: QKeyEvent):
         """Handle key press events for hotkeys."""

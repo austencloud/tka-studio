@@ -200,6 +200,16 @@ class ApplicationService(IApplicationService):
                 working_dir=tka_root / "src" / "desktop" / "modern",
                 display_order=2,
             ),
+            ApplicationData(
+                id="sequence_workbench",
+                title="Sequence Workbench",
+                description="Standalone sequence workbench for development and testing",
+                icon="🎯",
+                category=ApplicationCategory.DESKTOP,
+                command="python standalone_sequence_workbench_exact.py",
+                working_dir=tka_root / "src" / "desktop" / "modern",
+                display_order=3,
+            ),
             # Web Applications
             ApplicationData(
                 id="web_app",
