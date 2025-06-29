@@ -71,7 +71,7 @@ GenerateTab (QWidget)
 ```
 ModernGenerateTab (QWidget)
 ├── GenerateTabCoordinator (orchestrates everything)
-├── Left Panel: ModernSequenceWorkbench (SHARED with construct)
+├── Left Panel: SequenceWorkbench (SHARED with construct)
 ├── Right Panel: ModernGeneratePanel
 │   ├── GenerateConfigurationSection
 │   │   ├── GenerationModeSelector
@@ -180,7 +180,7 @@ class GenerationResult:
 **Problem**: Both construct and generate tabs need the exact same left-side behavior
 **Solution**:
 
-- Use the existing `ModernSequenceWorkbench` component
+- Use the existing `SequenceWorkbench` component
 - Pass the same service instances to both tabs
 - Ensure state synchronization via shared `ISequenceDataService`
 
@@ -311,7 +311,7 @@ class GenerationModeSelector(QWidget):
    ↓
 9. IGenerationService.generate_*_sequence()
    ↓
-10. GenerationResult → ModernSequenceWorkbench
+10. GenerationResult → SequenceWorkbench
     ↓
 11. Beat frame updates → Construct tab sync
 ```

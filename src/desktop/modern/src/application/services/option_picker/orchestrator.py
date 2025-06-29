@@ -76,21 +76,21 @@ class OptionPickerOrchestrator(QObject):
 
         # Initialize services with dependency injection
         if initialization_service is None:
-            from application.services.option_picker.option_picker_initialization_service import (
+            from application.services.option_picker.initialization_service import (
                 OptionPickerInitializationService,
             )
 
             initialization_service = OptionPickerInitializationService()
 
         if display_service is None:
-            from application.services.option_picker.option_picker_display_service import (
+            from application.services.option_picker.display_service import (
                 OptionPickerDisplayService,
             )
 
             display_service = OptionPickerDisplayService()
 
         if event_service is None:
-            from application.services.option_picker.option_picker_event_service import (
+            from application.services.option_picker.event_service import (
                 OptionPickerEventService,
             )
 
@@ -162,7 +162,7 @@ class OptionPickerOrchestrator(QObject):
             # Step 4: Create data service with beat loader
             beat_loader = components["beat_loader"]
             if self.data_service is None:
-                from application.services.option_picker.option_picker_data_service import (
+                from application.services.option_picker.data_service import (
                     OptionPickerDataService,
                 )
 

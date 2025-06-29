@@ -18,7 +18,7 @@ from PyQt6.QtTest import QTest
 from unittest.mock import Mock
 
 # TKA imports
-from presentation.components.workbench import ModernSequenceWorkbench
+from presentation.components.workbench import SequenceWorkbench
 from domain.models.core_models import SequenceData, BeatData
 
 
@@ -83,7 +83,7 @@ def debug_graph_editor_animation():
 
     # Create workbench
     print("📋 Creating workbench...")
-    workbench = ModernSequenceWorkbench(
+    workbench = SequenceWorkbench(
         layout_service=mock_container.resolve("ILayoutService"),
         workbench_service=mock_container.resolve("ISequenceWorkbenchService"),
         fullscreen_service=mock_container.resolve("IFullScreenService"),

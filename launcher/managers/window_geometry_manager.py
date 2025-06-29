@@ -21,7 +21,7 @@ from PyQt6.QtWidgets import QWidget, QApplication
 from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QScreen
 
-from config.launcher_config import LauncherConfig
+from config.config.launcher_config import LauncherConfig
 
 logger = logging.getLogger(__name__)
 

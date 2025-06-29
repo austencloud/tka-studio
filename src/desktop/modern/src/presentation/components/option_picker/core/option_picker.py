@@ -8,8 +8,9 @@ from domain.models.core_models import BeatData, SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
+from presentation.components.component_base import ViewableComponentBase
+
 # Import the new base class
-from ..component_base import ViewableComponentBase
 
 
 class OptionPicker(ViewableComponentBase):
@@ -49,7 +50,7 @@ class OptionPicker(ViewableComponentBase):
         self.progress_callback = progress_callback
 
         # Initialize orchestrator with dependency injection
-        from application.services.option_picker.option_picker_orchestrator import (
+        from application.services.option_picker.orchestrator import (
             OptionPickerOrchestrator,
         )
 

@@ -1,15 +1,12 @@
 {
   "version": "3.0.0",
   "window": {
-    "width": 1280,
-    "height": 720,
-    "x": 640,
-    "y": 390,
+    "width": 1200,
+    "height": 800,
+    "x": 680,
+    "y": 350,
     "maximized": false,
-    "mode": "docked",
-    "launcher_type": "horizontal",
-    "taskbar_overlay": true,
-    "auto_hide": false
+    "mode": "window"
   },
   "theme": {
     "theme": "dark",

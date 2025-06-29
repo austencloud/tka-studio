@@ -70,7 +70,6 @@ class DimensionCalculator:
             container_width, pictograph_height_per_section
         )
 
-        full_width_sections = min(3, section_count)
         shared_width_sections = max(0, section_count - 3)
         individual_section_width = container_width
         shared_section_width = container_width // 3 if shared_width_sections > 0 else container_width

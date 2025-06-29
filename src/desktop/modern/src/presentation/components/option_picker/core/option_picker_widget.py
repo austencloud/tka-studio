@@ -3,7 +3,7 @@ from PyQt6.QtGui import QResizeEvent
 from typing import Callable, List
 
 
-class ModernOptionPickerWidget(QWidget):
+class OptionPickerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._resize_callback = None
@@ -23,17 +23,13 @@ class ModernOptionPickerWidget(QWidget):
 
     def get_usable_width(self) -> int:
         """Get the usable width for pictograph sizing (excluding margins/padding)"""
-        # Account for any margins/padding in the option picker
-        return max(0, self.width() - 10)  # 10px for margins
-
+        return max(0, self.width() - 10)  
     def resizeEvent(self, event: QResizeEvent):
         super().resizeEvent(event)
 
-        # Call the original resize callback
         if self._resize_callback:
             self._resize_callback()
 
-        # Notify all sizing callbacks with the new usable width
         usable_width = self.get_usable_width()
         for callback in self._sizing_callbacks:
             try:

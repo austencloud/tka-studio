@@ -4,7 +4,7 @@ from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QFont
 
 
-class ModernSequenceWorkbenchButtonPanel(QWidget):
+class SequenceWorkbenchButtonPanel(QWidget):
     """Modern button panel for sequence workbench with glassmorphism styling and signals"""
 
     # Signals for button actions

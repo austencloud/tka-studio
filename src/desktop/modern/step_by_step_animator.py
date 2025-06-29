@@ -34,6 +34,8 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QPropertyAnimation, QEasingCurve
 from PyQt6.QtGui import QFont, QPalette, QColor
 
+from presentation.components.graph_editor.components.adjustment_panel import AdjustmentPanel
+
 # Add modern/src to path for imports
 modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
@@ -48,9 +50,7 @@ from domain.models.core_models import (
     Orientation,
 )
 from presentation.components.pictograph.pictograph_component import PictographComponent
-from presentation.components.workbench.graph_editor.components.adjustment_panel import (
-    AdjustmentPanel,
-)
+
 
 
 # Component Integration Framework

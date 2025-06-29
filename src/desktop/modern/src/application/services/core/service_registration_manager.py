@@ -277,19 +277,19 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
     def register_option_picker_services(self, container: "DIContainer") -> None:
         """Register the refactored option picker services."""
         # Import the refactored option picker services
-        from application.services.option_picker.option_picker_data_service import (
+        from application.services.option_picker.data_service import (
             OptionPickerDataService,
         )
-        from application.services.option_picker.option_picker_display_service import (
+        from application.services.option_picker.display_service import (
             OptionPickerDisplayService,
         )
-        from application.services.option_picker.option_picker_event_service import (
+        from application.services.option_picker.event_service import (
             OptionPickerEventService,
         )
-        from application.services.option_picker.option_picker_initialization_service import (
+        from application.services.option_picker.initialization_service import (
             OptionPickerInitializationService,
         )
-        from application.services.option_picker.option_picker_orchestrator import (
+        from application.services.option_picker.orchestrator import (
             OptionPickerOrchestrator,
         )
         from core.interfaces.option_picker_services import (

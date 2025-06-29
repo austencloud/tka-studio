@@ -8,7 +8,7 @@ from PyQt6.QtCore import QObject
 
 from domain.models.core_models import BeatData
 from application.services.data.data_conversion_service import DataConversionService
-from application.services.option_picker.option_orientation_update_service import (
+from application.services.option_picker.orientation_update_service import (
     OptionOrientationUpdateService,
 )
 from presentation.components.option_picker.services.data.position_matcher import (

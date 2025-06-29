@@ -2,10 +2,9 @@ from typing import Optional, TYPE_CHECKING
 from PyQt6.QtWidgets import QPushButton, QLabel, QHBoxLayout
 from PyQt6.QtGui import QFont, QMouseEvent
 from PyQt6.QtCore import Qt, QSize, pyqtSignal
-from .letter_types import LetterType
 
 if TYPE_CHECKING:
-    from .option_picker_section import OptionPickerSection
+    from presentation.components.option_picker.components.sections.section_widget import OptionPickerSection
 
 
 class LetterTypeTextPainter:

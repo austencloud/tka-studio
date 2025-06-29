@@ -2,7 +2,7 @@ from typing import Optional, TYPE_CHECKING
 from PyQt6.QtWidgets import QWidget, QHBoxLayout
 from PyQt6.QtCore import pyqtSignal
 
-from .button_panel import ModernSequenceWorkbenchButtonPanel
+from .button_panel import SequenceWorkbenchButtonPanel
 from domain.models.core_models import SequenceData, BeatData
 from core.interfaces.core_services import ILayoutService
 from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
@@ -42,7 +42,7 @@ class WorkbenchBeatFrameSection(QWidget):
 
         # Components
         self._beat_frame: Optional[SequenceBeatFrame] = None
-        self._button_panel: Optional[ModernSequenceWorkbenchButtonPanel] = None
+        self._button_panel: Optional[SequenceWorkbenchButtonPanel] = None
 
         self._setup_ui()
         self._connect_signals()
@@ -61,7 +61,7 @@ class WorkbenchBeatFrameSection(QWidget):
 
         # Create button panel (right side)
         print("🔧 DEBUG: Creating button panel in beat frame section...")
-        self._button_panel = ModernSequenceWorkbenchButtonPanel(self)
+        self._button_panel = SequenceWorkbenchButtonPanel(self)
         print(f"🔧 DEBUG: Button panel created: {self._button_panel}")
 
         # Add with proper proportions (10:1 ratio like Legacy)

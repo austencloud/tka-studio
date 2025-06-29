@@ -39,7 +39,7 @@ import tka_test_setup  # This line makes all TKA imports work automatically
 That's it! Now you can use imports like:
 
 ```python
-from presentation.components.workbench import ModernSequenceWorkbench
+from presentation.components.workbench import SequenceWorkbench
 from domain.models.core_models import SequenceData
 from application.services import WorkbenchService
 ```

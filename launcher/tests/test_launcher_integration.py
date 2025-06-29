@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from launcher_window import TKAModernWindow
 from window_mode_manager import WindowModeManager
 from window_geometry_manager import WindowGeometryManager
-from config.launcher_config import LauncherConfig
+from config.config.launcher_config import LauncherConfig
 from domain.models import ApplicationData, ApplicationCategory, ApplicationStatus
 
 logger = logging.getLogger(__name__)

@@ -4,8 +4,12 @@ from PyQt6.QtCore import Qt
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.core_services import ILayoutService
-from ..components.option_picker.option_picker_widget import ModernOptionPickerWidget
-from ..components.option_picker.option_picker_filter import OptionPickerFilter
+from presentation.components.option_picker.components.filters.option_filter import (
+    OptionPickerFilter,
+)
+from presentation.components.option_picker.core.option_picker_widget import (
+    OptionPickerWidget,
+)
 
 
 class OptionPickerWidgetFactory:
@@ -21,7 +25,7 @@ class OptionPickerWidgetFactory:
         """Create the main option picker widget with all components"""
         self._layout_service = self.container.resolve(ILayoutService)
 
-        widget = ModernOptionPickerWidget()
+        widget = OptionPickerWidget()
         if resize_callback:
             widget.set_resize_callback(resize_callback)
         widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)

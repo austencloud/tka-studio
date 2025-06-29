@@ -15,7 +15,7 @@ All domain/application/presentation absolute imports are preserved.
 
 # Core components (primary public API)
 from .core.option_picker import OptionPicker
-from .core.option_picker_widget import ModernOptionPickerWidget
+from .core.option_picker_widget import OptionPickerWidget
 
 # Services (for advanced usage)
 from .services.data.beat_loader import BeatDataLoader
@@ -28,7 +28,7 @@ from .types.letter_types import LetterType
 # Backward compatibility exports (maintain old interface)
 __all__ = [
     "OptionPicker",
-    "ModernOptionPickerWidget",
+    "OptionPickerWidget",
     "BeatDataLoader",
     "OptionPickerDisplayManager",
     "PictographPoolManager",

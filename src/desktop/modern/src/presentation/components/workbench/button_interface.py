@@ -2,7 +2,7 @@
 Workbench Button Interface for Sprint 2 Integration
 ===================================================
 
-Clean interface for button panel integration with ModernSequenceWorkbench.
+Clean interface for button panel integration with SequenceWorkbench.
 This interface provides the essential methods that the Sprint 2 button panel
 needs to interact with the sequence workbench without requiring full refactoring.
 

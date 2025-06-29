@@ -41,7 +41,7 @@ from domain.models import (
     DockConfiguration,
     DockPosition,
 )
-from config.launcher_config import LauncherConfig
+from config.config.launcher_config import LauncherConfig
 
 logger = logging.getLogger(__name__)
 

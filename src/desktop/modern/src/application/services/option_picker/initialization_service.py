@@ -175,16 +175,11 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             Configured dimension analyzer
         """
         try:
-            from presentation.components.option_picker.dimension_analyzer import (
-                OptionPickerDimensionAnalyzer,
+            from presentation.components.option_picker.services.layout.dimension_calculator import (
+                DimensionCalculator,
             )
 
-            dimension_analyzer = OptionPickerDimensionAnalyzer(
-                main_widget,
-                sections_container,
-                sections_layout,
-                display_manager.get_sections(),
-            )
+            dimension_analyzer = DimensionCalculator()
 
             return dimension_analyzer
 

@@ -49,7 +49,7 @@ class OptionPicker(ViewableComponentBase):
         self.progress_callback = progress_callback
 
         # Initialize orchestrator with dependency injection
-        from application.services.option_picker.option_picker_orchestrator import (
+        from application.services.option_picker.orchestrator import (
             OptionPickerOrchestrator,
         )
 

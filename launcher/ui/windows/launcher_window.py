@@ -20,7 +20,7 @@ Architecture:
 import logging
 
 from ui.layouts.application_grid import ApplicationGridWidget
-from config.launcher_config import LauncherConfig
+from config.config.launcher_config import LauncherConfig
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication,

@@ -15,7 +15,7 @@ from PyQt6.QtCore import Qt, QTimer, QPoint
 from PyQt6.QtTest import QTest
 
 # TKA imports
-from presentation.components.workbench import ModernSequenceWorkbench
+from presentation.components.workbench import SequenceWorkbench
 from presentation.components.workbench.graph_editor.components.toggle_tab import (
     ToggleTab,
 )
@@ -114,7 +114,7 @@ class GraphEditorAnimationTestSuite:
     def create_workbench(self, mock_container, sample_sequence):
         """Create a workbench instance for testing"""
         # Create workbench with mocked dependencies
-        workbench = ModernSequenceWorkbench(
+        workbench = SequenceWorkbench(
             layout_service=mock_container.resolve("ILayoutService"),
             workbench_service=mock_container.resolve("ISequenceWorkbenchService"),
             fullscreen_service=mock_container.resolve("IFullScreenService"),

@@ -16,7 +16,7 @@ def test_imports():
         print("Testing imports...")
         
         print("✓ Testing launcher_config...")
-        from config.launcher_config import LauncherConfig
+        from config.config.launcher_config import LauncherConfig
         
         print("✓ Testing tka_integration...")
         from tka_integration import TKAIntegrationService
@@ -44,7 +44,7 @@ def test_config():
     """Test the configuration system."""
     try:
         print("\nTesting configuration...")
-        from config.launcher_config import LauncherConfig
+        from config.config.launcher_config import LauncherConfig
         
         config = LauncherConfig()
         print(f"✓ Default mode: {config.get_window_mode()}")

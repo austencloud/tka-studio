@@ -1,7 +1,7 @@
 """
 Standalone Architectural Extraction of TKA Modern Sequence Workbench
 
-This file provides a precise extraction of the ModernSequenceWorkbench component
+This file provides a precise extraction of the SequenceWorkbench component
 from the main application, maintaining complete visual and functional fidelity.
 
 The extracted workbench replicates the exact left panel component hierarchy from
@@ -29,7 +29,7 @@ from presentation.factories.workbench_factory import (
     create_modern_workbench,
     configure_workbench_services,
 )
-from presentation.components.workbench.workbench import ModernSequenceWorkbench
+from presentation.components.workbench.workbench import SequenceWorkbench
 from core.interfaces.core_services import ILayoutService
 from core.interfaces.workbench_services import (
     ISequenceWorkbenchService,
@@ -51,7 +51,7 @@ from domain.models.core_models import (
 
 class StandaloneSequenceWorkbenchWindow(QMainWindow):
     """Unfortunately the pictograph
-    Standalone window hosting the exact ModernSequenceWorkbench component
+    Standalone window hosting the exact SequenceWorkbench component
 
     This window serves as a minimal container for the actual workbench component,
     preserving all original functionality, styling, and behavior patterns.
@@ -70,7 +70,7 @@ class StandaloneSequenceWorkbenchWindow(QMainWindow):
         self._configure_services()
 
         # Create the actual workbench component
-        self._workbench: Optional[ModernSequenceWorkbench] = None
+        self._workbench: Optional[SequenceWorkbench] = None
 
         # Setup UI with exact styling
         self._setup_ui()
@@ -353,7 +353,7 @@ class StandaloneSequenceWorkbenchWindow(QMainWindow):
             print(f"⚠️ Failed to import pictograph orchestrator services: {e}")
 
     def _setup_ui(self):
-        """Setup UI with the exact ModernSequenceWorkbench component"""
+        """Setup UI with the exact SequenceWorkbench component"""
         # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -364,7 +364,7 @@ class StandaloneSequenceWorkbenchWindow(QMainWindow):
         main_layout.setSpacing(0)
 
         try:
-            # Create the actual ModernSequenceWorkbench using the factory
+            # Create the actual SequenceWorkbench using the factory
             self._workbench = create_modern_workbench(
                 container=self._container, parent=central_widget
             )
@@ -372,7 +372,7 @@ class StandaloneSequenceWorkbenchWindow(QMainWindow):
             # Add workbench to layout
             main_layout.addWidget(self._workbench)
 
-            print("✅ ModernSequenceWorkbench component created successfully")
+            print("✅ SequenceWorkbench component created successfully")
 
         except Exception as e:
             print(f"❌ Failed to create workbench component: {e}")
@@ -668,7 +668,7 @@ class StandaloneSequenceWorkbenchWindow(QMainWindow):
             metadata={"is_start_position": True, "sequence_start_position": "alpha"},
         )
 
-    def get_workbench(self) -> Optional[ModernSequenceWorkbench]:
+    def get_workbench(self) -> Optional[SequenceWorkbench]:
         """Get the workbench component for external access"""
         return self._workbench
 
@@ -708,7 +708,7 @@ def main():
         workbench_window.show()
 
         print("🚀 Standalone workbench window displayed")
-        print("📋 This is an exact architectural extraction of ModernSequenceWorkbench")
+        print("📋 This is an exact architectural extraction of SequenceWorkbench")
         print("🎯 All functionality should match the main application exactly")
 
         return app.exec()

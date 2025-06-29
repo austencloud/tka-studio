@@ -29,7 +29,10 @@ class OptionPickerSectionHeader(QWidget):
         layout.addStretch(1)
 
         # Import and create the button
-        from .section_button import OptionPickerSectionButton
+
+        from presentation.components.option_picker.components.sections.buttons.section_button import (
+            OptionPickerSectionButton,
+        )
 
         self.type_button = OptionPickerSectionButton(self.section)
         layout.addWidget(self.type_button)

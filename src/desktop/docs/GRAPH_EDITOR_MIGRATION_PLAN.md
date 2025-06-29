@@ -38,7 +38,7 @@ This document outlines the comprehensive migration strategy for bringing the Leg
 #### **Component Layer**
 
 - ✅ **ModernGraphEditor** - Main component with animation system
-- ✅ **ModernSequenceWorkbench Integration** - Full signal connection
+- ✅ **SequenceWorkbench Integration** - Full signal connection
 - 🔄 **Sub-components** - Placeholder implementations (Phase 2)
 
 ### **Phase 2: Component Implementation** 🚧 IN PROGRESS
@@ -139,7 +139,7 @@ This document outlines the comprehensive migration strategy for bringing the Leg
 - [x] IGraphEditorService interface (12 methods)
 - [x] GraphEditorService implementation with state management
 - [x] ModernGraphEditor main component with animations
-- [x] ModernSequenceWorkbench integration
+- [x] SequenceWorkbench integration
 - [x] Dependency injection configuration
 - [x] Signal system architecture
 

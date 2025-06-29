@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 from application.services.data.data_conversion_service import (
     DataConversionService,
 )
-from application.services.option_picker.option_orientation_update_service import (
+from application.services.option_picker.orientation_update_service import (
     OptionOrientationUpdateService,
 )
 from domain.models.core_models import BeatData

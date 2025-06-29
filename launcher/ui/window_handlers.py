@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QResizeEvent, QCloseEvent
 
 from application_grid import ApplicationGridWidget
-from config.launcher_config import LauncherConfig
+from config.config.launcher_config import LauncherConfig
 
 logger = logging.getLogger(__name__)
 

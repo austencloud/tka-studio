@@ -1,3 +1,3 @@
-from .workbench_button_panel import ModernSequenceWorkbenchButtonPanel
+from .workbench_button_panel import SequenceWorkbenchButtonPanel
 
-__all__ = ["ModernSequenceWorkbenchButtonPanel"]
+__all__ = ["SequenceWorkbenchButtonPanel"]

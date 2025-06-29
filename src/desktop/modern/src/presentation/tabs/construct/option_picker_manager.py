@@ -10,9 +10,8 @@ from PyQt6.QtCore import QObject, pyqtSignal
 import time
 
 from domain.models.core_models import SequenceData, BeatData
-from presentation.components.option_picker.option_picker import (
-    OptionPicker,
-)
+from presentation.components.option_picker.core.option_picker import OptionPicker
+
 from .data_conversion_service import DataConversionService
 
 

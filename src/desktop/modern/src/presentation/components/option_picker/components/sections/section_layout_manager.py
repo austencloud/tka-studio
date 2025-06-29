@@ -133,7 +133,7 @@ class SectionLayoutManager:
         while widget:
             if (
                 hasattr(widget, "__class__")
-                and "ModernOptionPickerWidget" in widget.__class__.__name__
+                and "OptionPickerWidget" in widget.__class__.__name__
             ):
                 widget.add_sizing_callback(self._on_option_picker_resize)
                 print(
