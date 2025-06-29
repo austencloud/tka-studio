@@ -56,7 +56,7 @@ class GraphEditor(QFrame):
         self._parent_workbench = parent
 
         # Initialize specialized component managers
-        self._state_manager = GraphEditorStateManager(self)
+        self.state_manager = GraphEditorStateManager(self)
         self._animation_controller = GraphEditorAnimationController(self)
         self._layout_manager = GraphEditorLayoutManager(self)
         self._signal_coordinator = GraphEditorSignalCoordinator(self)
@@ -90,7 +90,7 @@ class GraphEditor(QFrame):
             hotkey_service=self._hotkey_service,
             animation_controller=self._animation_controller,
             layout_manager=self._layout_manager,
-            state_manager=self._state_manager,
+            state_manager=self.state_manager,
         )
 
         # Connect external signals to our public API
@@ -109,9 +109,7 @@ class GraphEditor(QFrame):
         )
 
         # Connect state manager visibility changes to animation controller
-        self._state_manager.visibility_changed.connect(
-            self._on_state_visibility_changed
-        )
+        self.state_manager.visibility_changed.connect(self._on_state_visibility_changed)
 
     def _on_state_visibility_changed(self, is_visible: bool) -> None:
         """Handle visibility state changes"""
@@ -124,7 +122,7 @@ class GraphEditor(QFrame):
 
     def set_sequence(self, sequence: Optional[SequenceData]) -> None:
         """Set the current sequence for display/editing"""
-        self._state_manager.set_current_sequence(sequence)
+        self.state_manager.set_current_sequence(sequence)
         self._graph_service.update_graph_display(sequence)
 
         # Update all UI components through layout manager
@@ -135,13 +133,13 @@ class GraphEditor(QFrame):
     ) -> None:
         """Set the currently selected beat for editing"""
         # Update state
-        self._state_manager.set_selected_beat(beat_data, beat_index)
+        self.state_manager.set_selected_beat(beat_data, beat_index)
 
         # Update service
         self._graph_service.set_selected_beat(beat_data, beat_index)
 
         # Update data flow service context
-        self._state_manager.update_data_flow_context(self._data_flow_service)
+        self.state_manager.update_data_flow_context(self._data_flow_service)
 
         # Update UI components
         self._layout_manager.update_component_display(beat_data=beat_data)
@@ -155,8 +153,18 @@ class GraphEditor(QFrame):
             print("  ⚠️ Animation already in progress, skipping")
             return
 
-        current_visibility = self._state_manager.is_visible()
-        print(f"  📊 Current visibility: {current_visibility}")
+        # Validate state synchronization before making decisions
+        print("  🔍 Calling validate_state_synchronization()...")
+        is_synchronized = self._animation_controller.validate_state_synchronization()
+        print(f"  🔍 Validation result: {is_synchronized}")
+        if not is_synchronized:
+            print("  🔧 State desynchronization detected and corrected")
+
+        current_visibility = self.state_manager.is_visible()
+        current_height = self.height()
+        print(
+            f"  📊 Current visibility: {current_visibility}, height: {current_height}"
+        )
 
         if current_visibility:
             # Hide: start animation (state will be updated when animation completes)
@@ -169,7 +177,7 @@ class GraphEditor(QFrame):
 
     def is_visible(self) -> bool:
         """Check if graph editor is currently visible"""
-        return self._state_manager.is_visible()
+        return self.state_manager.is_visible()
 
     def get_preferred_height(self) -> int:
         """Get the preferred height for the graph editor"""
@@ -226,9 +234,7 @@ class GraphEditor(QFrame):
     def _debug_setFixedHeight(self, height: int) -> None:
         """Debug wrapper for setFixedHeight to track all height changes"""
         current_height = self.height()
-        is_visible = (
-            hasattr(self, "_state_manager") and self._state_manager.is_visible()
-        )
+        is_visible = hasattr(self, "_state_manager") and self.state_manager.is_visible()
 
         print(
             f"🎯 [HEIGHT DEBUG] setFixedHeight called: {current_height}px -> {height}px (visible={is_visible})"
@@ -317,10 +323,9 @@ class GraphEditor(QFrame):
         """Handle resize events - delegate to layout manager"""
         # print hte call stack
         import traceback
+
         print("🔍 [HEIGHT DEBUG] Graph editor resize event called")
-        for line in traceback.format_stack()[
-            -5:
-        ]:  # Last 5 stack frames for context
+        for line in traceback.format_stack()[-5:]:  # Last 5 stack frames for context
             print(f"    {line.strip()}")
 
         # Delegate to layout manager
@@ -329,7 +334,7 @@ class GraphEditor(QFrame):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """Handle key press events for hotkeys"""
         # Only handle hotkeys when graph editor is visible and has focus
-        if not self._state_manager.is_visible():
+        if not self.state_manager.is_visible():
             super().keyPressEvent(event)
             return
 
@@ -346,7 +351,7 @@ class GraphEditor(QFrame):
 
     def get_state_manager(self) -> GraphEditorStateManager:
         """Get the state manager component"""
-        return self._state_manager
+        return self.state_manager
 
     def get_animation_controller(self) -> GraphEditorAnimationController:
         """Get the animation controller component"""
@@ -375,7 +380,7 @@ class GraphEditor(QFrame):
     def get_state_summary(self) -> dict:
         """Get a comprehensive summary of the current state (useful for debugging)"""
         return {
-            "state_manager": self._state_manager.get_state_summary(),
+            "state_manager": self.state_manager.get_state_summary(),
             "animation_controller": {
                 "is_animating": self._animation_controller.is_animating(),
                 "preferred_height": self._animation_controller.get_preferred_height(),
@@ -389,7 +394,7 @@ class GraphEditor(QFrame):
 
     def force_state_validation(self) -> bool:
         """Force validation of all component states"""
-        return self._state_manager.force_state_validation()
+        return self.state_manager.force_state_validation()
 
     def reconnect_signals(self) -> None:
         """Reconnect all signals (useful for debugging signal issues)"""
@@ -397,5 +402,5 @@ class GraphEditor(QFrame):
 
     def reset_to_initial_state(self) -> None:
         """Reset the graph editor to its initial state"""
-        self._state_manager.reset_all_state()
+        self.state_manager.reset_all_state()
         self.hide()

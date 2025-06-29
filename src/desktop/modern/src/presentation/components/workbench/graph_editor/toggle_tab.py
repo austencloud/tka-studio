@@ -173,7 +173,7 @@ class ToggleTab(QWidget):
         # Check if graph editor is currently animating - if so, real-time sync handles positioning
         if (
             hasattr(self._graph_editor, "_animation_controller")
-            and self._graph_editor._animation_controller._animating
+            and self._graph_editor._animation_controller.is_animating()
         ):
             print(
                 "🚫 [SYNC DEBUG] Blocking toggle tab position update - real-time sync active"
