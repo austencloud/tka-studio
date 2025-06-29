@@ -30,6 +30,7 @@ class WorkbenchBeatFrameSection(QWidget):
     copy_json_requested = pyqtSignal()
     delete_beat_requested = pyqtSignal()
     clear_sequence_requested = pyqtSignal()
+    edit_construct_toggle_requested = pyqtSignal(bool)
 
     def __init__(
         self, layout_service: ILayoutService, parent: Optional[QWidget] = None
@@ -99,6 +100,9 @@ class WorkbenchBeatFrameSection(QWidget):
             self._button_panel.delete_beat_requested.connect(self.delete_beat_requested)
             self._button_panel.clear_sequence_requested.connect(
                 self._handle_clear_sequence_request
+            )
+            self._button_panel.edit_construct_toggle_requested.connect(
+                self.edit_construct_toggle_requested
             )
 
     def _handle_clear_sequence_request(self):

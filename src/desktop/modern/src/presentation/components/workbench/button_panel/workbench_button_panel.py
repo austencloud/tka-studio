@@ -17,10 +17,14 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
     copy_json_requested = pyqtSignal()
     delete_beat_requested = pyqtSignal()
     clear_sequence_requested = pyqtSignal()
+    edit_construct_toggle_requested = pyqtSignal(
+        bool
+    )  # True for Edit mode, False for Construct mode
 
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
         self._buttons: Dict[str, QPushButton] = {}
+        self._edit_mode = False  # Track current mode: False = Construct, True = Edit
         self._setup_ui()
         self._apply_styling()
 
@@ -32,6 +36,15 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
 
         # Button configurations with emojis for modern appeal
         button_configs = [
+            # Edit/Construct toggle (top priority)
+            (
+                "edit_construct_toggle",
+                "✏️",
+                "Edit Mode",
+                self.edit_construct_toggle_requested,
+            ),
+            # Spacer
+            None,
             # Dictionary & Export group
             (
                 "add_to_dictionary",
@@ -79,7 +92,7 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
                 layout.addItem(spacer)
             else:
                 button_name, emoji, tooltip, signal = config
-                button = self._create_button(emoji, tooltip, signal)
+                button = self._create_button(button_name, emoji, tooltip, signal)
                 self._buttons[button_name] = button
                 layout.addWidget(button)
 
@@ -87,7 +100,7 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
         layout.addStretch()
 
     def _create_button(
-        self, emoji: str, tooltip: str, signal: pyqtSignal
+        self, button_name: str, emoji: str, tooltip: str, signal: pyqtSignal
     ) -> QPushButton:
         """Create a modern button with emoji and signal connection"""
         button = QPushButton(emoji)
@@ -102,9 +115,13 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
         button.setFont(font)
 
         # Connect to signal
-        button.clicked.connect(
-            lambda: self._handle_button_click(signal, button.toolTip())
-        )
+        if button_name == "edit_construct_toggle":
+            # Special handling for Edit/Construct toggle button
+            button.clicked.connect(self._handle_edit_construct_toggle)
+        else:
+            button.clicked.connect(
+                lambda: self._handle_button_click(signal, button.toolTip())
+            )
 
         return button
 
@@ -112,6 +129,23 @@ class ModernSequenceWorkbenchButtonPanel(QWidget):
         """Handle button click with debug output"""
         print(f"🔧 DEBUG: Button clicked - {tooltip}")
         signal.emit()
+
+    def _handle_edit_construct_toggle(self):
+        """Handle Edit/Construct toggle button click"""
+        self._edit_mode = not self._edit_mode
+        self._update_edit_construct_button()
+        self.edit_construct_toggle_requested.emit(self._edit_mode)
+
+    def _update_edit_construct_button(self):
+        """Update the Edit/Construct button appearance based on current mode"""
+        if "edit_construct_toggle" in self._buttons:
+            button = self._buttons["edit_construct_toggle"]
+            if self._edit_mode:
+                button.setText("🔧")  # Construct icon
+                button.setToolTip("Construct Mode")
+            else:
+                button.setText("✏️")  # Edit icon
+                button.setToolTip("Edit Mode")
 
     def _apply_styling(self):
         """Apply glassmorphism styling to the button panel and buttons"""

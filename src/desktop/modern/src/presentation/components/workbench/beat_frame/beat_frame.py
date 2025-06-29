@@ -100,6 +100,12 @@ class BeatFrame(QScrollArea):
         self._selection_manager = BeatSelectionManager(self._container_widget)
         self._selection_manager.selection_changed.connect(self._on_selection_changed)
 
+        # CRITICAL: Register beat views with selection manager for click handling
+        self._selection_manager.register_beat_views(self._beat_views)
+        print(
+            f"✅ Registered {len(self._beat_views)} beat views with selection manager"
+        )
+
         # Setup start position view
         self._setup_start_position()
 

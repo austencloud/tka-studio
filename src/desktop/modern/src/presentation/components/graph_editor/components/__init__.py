@@ -15,7 +15,6 @@ This package contains UI widgets and panels that provide:
 # Component imports
 from .adjustment_panel import AdjustmentPanel
 from .pictograph_container import GraphEditorPictographContainer
-from .toggle_tab import ToggleTab
 from .orientation_picker import OrientationPickerWidget
 from .turn_selection_dialog import TurnSelectionDialog
 

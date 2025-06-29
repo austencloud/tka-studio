@@ -88,6 +88,10 @@ class SignalCoordinator(QObject):
             self.layout_manager.workbench.operation_completed.connect(
                 self._handle_operation_completed
             )
+            # Edit/Construct toggle signal
+            self.layout_manager.workbench.edit_construct_toggle_requested.connect(
+                self._handle_edit_construct_toggle
+            )
 
     def _handle_start_position_created(self, position_key: str, start_position_data):
         """Handle start position creation"""
@@ -104,7 +108,9 @@ class SignalCoordinator(QObject):
     def _handle_sequence_modified(self, sequence: SequenceData):
         """Handle sequence modification from sequence manager with cascade prevention"""
         if self._handling_sequence_modification:
-            print("🔄 Signal coordinator: Preventing cascade refresh (already handling)")
+            print(
+                "🔄 Signal coordinator: Preventing cascade refresh (already handling)"
+            )
             return
 
         try:
@@ -148,6 +154,28 @@ class SignalCoordinator(QObject):
     def _handle_operation_completed(self, message: str):
         """Handle workbench operation completion"""
         print(f"✅ Signal coordinator: Operation completed: {message}")
+
+    def _handle_edit_construct_toggle(self, edit_mode: bool):
+        """Handle Edit/Construct toggle from workbench button panel"""
+        print(
+            f"✅ Signal coordinator: Edit/Construct toggle: {'Edit' if edit_mode else 'Construct'}"
+        )
+
+        if edit_mode:
+            # Switch to graph editor (index 2)
+            self.layout_manager.transition_to_graph_editor()
+        else:
+            # Switch back to appropriate picker based on sequence state
+            sequence = None
+            if hasattr(self.sequence_manager, "_get_current_sequence"):
+                sequence = self.sequence_manager._get_current_sequence()
+
+            if sequence and sequence.beats:
+                # Has beats, show option picker
+                self.layout_manager.transition_to_option_picker()
+            else:
+                # No beats, show start position picker
+                self.layout_manager.transition_to_start_position_picker()
 
     def clear_sequence(self):
         """Clear the current sequence (public interface)"""

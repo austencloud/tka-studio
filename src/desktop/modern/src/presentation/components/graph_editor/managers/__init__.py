@@ -12,13 +12,11 @@ This package contains managers that handle:
 """
 
 # Manager imports
-from .animation_controller import GraphEditorAnimationController
 from .layout_manager import GraphEditorLayoutManager
 from .state_manager import GraphEditorStateManager
 from .signal_coordinator import GraphEditorSignalCoordinator
 
 __all__ = [
-    "GraphEditorAnimationController",
     "GraphEditorLayoutManager",
     "GraphEditorStateManager",
     "GraphEditorSignalCoordinator",

@@ -17,7 +17,6 @@ from .workbench import (
 
 from .indicator_section import WorkbenchIndicatorSection
 from .beat_frame_section import WorkbenchBeatFrameSection
-from .graph_section import WorkbenchGraphSection
 from .event_controller import WorkbenchEventController
 from .button_interface import (
     WorkbenchButtonInterfaceAdapter,
@@ -40,7 +39,6 @@ __all__ = [
     # Core components
     "WorkbenchIndicatorSection",
     "WorkbenchBeatFrameSection",
-    "WorkbenchGraphSection",
     "WorkbenchEventController",
     # Interface adapters
     "WorkbenchButtonInterfaceAdapter",

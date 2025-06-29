@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import QVBoxLayout, QWidget
 from .beat_frame_section import WorkbenchBeatFrameSection
 from .button_interface import WorkbenchButtonInterfaceAdapter
 from .event_controller import WorkbenchEventController
-from .graph_section import WorkbenchGraphSection
+
 from .indicator_section import WorkbenchIndicatorSection
 
 if TYPE_CHECKING:
@@ -29,6 +29,9 @@ class SequenceWorkbench(QWidget):
     sequence_modified = pyqtSignal(object)  # SequenceData object
     operation_completed = pyqtSignal(str)
     error_occurred = pyqtSignal(str)
+    edit_construct_toggle_requested = pyqtSignal(
+        bool
+    )  # True for Edit mode, False for Construct mode
 
     def __init__(
         self,
@@ -54,7 +57,7 @@ class SequenceWorkbench(QWidget):
         # Components
         self._indicator_section: Optional[WorkbenchIndicatorSection] = None
         self._beat_frame_section: Optional[WorkbenchBeatFrameSection] = None
-        self._graph_section: Optional[WorkbenchGraphSection] = None
+
         self._event_controller: Optional[WorkbenchEventController] = None
         self._button_interface: Optional[WorkbenchButtonInterfaceAdapter] = None
 
@@ -65,7 +68,6 @@ class SequenceWorkbench(QWidget):
         self._setup_ui()
         self._connect_signals()
         self._setup_button_interface()
-        self._connect_graph_editor_to_beat_resizer()
 
     def _create_event_controller(
         self,
@@ -99,15 +101,6 @@ class SequenceWorkbench(QWidget):
             layout_service=self._layout_service, parent=self
         )
         main_layout.addWidget(self._beat_frame_section, 1)  # Takes remaining space
-
-        # Bottom section: Graph section (constrained size)
-        self._graph_section = WorkbenchGraphSection(
-            graph_service=self._graph_service,
-            parent=self,
-            workbench_width=self.width(),
-            workbench_height=self.height(),
-        )
-        main_layout.addWidget(self._graph_section, 0)  # No stretch
 
     def _connect_signals(self):
         """Connect component signals"""
@@ -147,22 +140,11 @@ class SequenceWorkbench(QWidget):
             self._beat_frame_section.clear_sequence_requested.connect(
                 self._handle_clear
             )
+            self._beat_frame_section.edit_construct_toggle_requested.connect(
+                self.edit_construct_toggle_requested
+            )
             print(
                 "🔧 DEBUG: Connected clear_sequence_requested signal to _handle_clear"
-            )
-
-        # Connect graph editor data flow to beat frame updates
-        if self._graph_section and hasattr(self._graph_section, "_data_flow_service"):
-            self._graph_section._data_flow_service.beat_frame_update_needed.connect(
-                self._on_graph_editor_beat_changed
-            )
-
-        if self._graph_section:
-            # Graph editor events
-            self._graph_section.beat_modified.connect(self._on_graph_beat_modified)
-            self._graph_section.arrow_selected.connect(self._on_graph_arrow_selected)
-            self._graph_section.visibility_changed.connect(
-                self._on_graph_visibility_changed
             )
 
         if self._event_controller:
@@ -179,24 +161,6 @@ class SequenceWorkbench(QWidget):
             self.operation_completed
         )
         self._button_interface.signals.operation_failed.connect(self.error_occurred)
-
-    def _connect_graph_editor_to_beat_resizer(self):
-        """Connect graph editor to beat resizer for accurate sizing"""
-        if self._graph_section and self._beat_frame_section:
-            # Get the graph editor from the graph section
-            graph_editor = getattr(self._graph_section, "_graph_editor", None)
-
-            # Get the beat frame from the beat frame section
-            beat_frame = getattr(self._beat_frame_section, "_beat_frame", None)
-
-            if graph_editor and beat_frame:
-                # Get the resizer service from the beat frame
-                resizer_service = getattr(beat_frame, "_resizer_service", None)
-
-                if resizer_service and hasattr(
-                    resizer_service, "set_graph_editor_reference"
-                ):
-                    resizer_service.set_graph_editor_reference(graph_editor)
 
     # Public API methods
     def set_sequence(self, sequence: SequenceData):
@@ -247,9 +211,6 @@ class SequenceWorkbench(QWidget):
 
         if self._beat_frame_section:
             self._beat_frame_section.set_sequence(self._current_sequence)
-
-        if self._graph_section:
-            self._graph_section.set_sequence(self._current_sequence)
 
     # Event handlers using the event controller
     def _handle_add_to_dictionary(self):
@@ -397,16 +358,6 @@ class SequenceWorkbench(QWidget):
                 "delete_beat", beat_index is not None
             )
 
-        # Update graph editor with selected beat
-        if self._graph_section and self._current_sequence and beat_index is not None:
-            if beat_index < len(self._current_sequence.beats):
-                selected_beat = self._current_sequence.beats[beat_index]
-                self._graph_section.set_selected_beat_data(beat_index, selected_beat)
-            elif beat_index == -1:  # Start position selected
-                self._graph_section.set_selected_start_position(
-                    self._start_position_data
-                )
-
     def _on_beat_modified(self, beat_index: int, beat_data):
         """Handle beat modification from beat frame"""
         if not self._current_sequence:
@@ -449,49 +400,9 @@ class SequenceWorkbench(QWidget):
                 self._current_sequence = self._current_sequence.update(beats=beats)
                 self.sequence_modified.emit(self._current_sequence)
 
-    def _on_graph_beat_modified(self, beat_index: int, beat_data):
-        """Handle beat modification from graph editor"""
-        if not self._current_sequence:
-            return
-
-        new_beats = list(self._current_sequence.beats)
-        if beat_index < len(new_beats):
-            new_beats[beat_index] = beat_data
-            self._current_sequence = self._current_sequence.update(beats=new_beats)
-            self.sequence_modified.emit(self._current_sequence)
-
-    def _on_graph_arrow_selected(self, arrow_data):
-        """Handle arrow selection in graph editor"""
-        # Store arrow data for potential future use
-        _ = arrow_data
-
-    def _on_graph_visibility_changed(self, visible: bool):
-        """Handle graph visibility changes and resize beat frame accordingly"""
-        if visible and self._graph_section:
-            self._graph_section.set_sequence(self._current_sequence)
-
-        # Force beat frame resize when graph editor visibility changes
-        if self._beat_frame_section and hasattr(
-            self._beat_frame_section, "_beat_frame"
-        ):
-            beat_frame = self._beat_frame_section._beat_frame
-
-            if hasattr(beat_frame, "_resizer_service") and hasattr(
-                beat_frame, "_current_layout"
-            ):
-                layout = beat_frame._current_layout
-                beat_frame._resizer_service.resize_beat_frame(
-                    beat_frame, layout["rows"], layout["columns"]
-                )
-
     def resizeEvent(self, event):
         """Handle resize events for responsive design"""
         super().resizeEvent(event)
 
         if self._beat_frame_section:
             self._beat_frame_section.update_button_sizes(self.height())
-
-        if self._graph_section:
-            # Pass new workbench dimensions to graph section
-            self._graph_section.update_workbench_size(self.width(), self.height())
-            self._graph_section.update_toggle_position(animate=False)

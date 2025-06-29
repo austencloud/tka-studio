@@ -34,7 +34,7 @@ class GraphEditorSignalCoordinator(QObject):
         # Will be set during initialization
         self._data_flow_service = None
         self._hotkey_service = None
-        self._animation_controller = None
+
         self._layout_manager = None
         self._state_manager = None
 
@@ -42,14 +42,12 @@ class GraphEditorSignalCoordinator(QObject):
         self,
         data_flow_service,
         hotkey_service,
-        animation_controller,
         layout_manager,
         state_manager,
     ) -> None:
         """Set component dependencies after initialization"""
         self._data_flow_service = data_flow_service
         self._hotkey_service = hotkey_service
-        self._animation_controller = animation_controller
         self._layout_manager = layout_manager
         self._state_manager = state_manager
 
@@ -60,7 +58,7 @@ class GraphEditorSignalCoordinator(QObject):
         """Connect all component signals"""
         self._connect_data_flow_signals()
         self._connect_hotkey_signals()
-        self._connect_animation_signals()
+
         self._connect_ui_component_signals()
 
     def _connect_data_flow_signals(self) -> None:
@@ -90,32 +88,8 @@ class GraphEditorSignalCoordinator(QObject):
                 self._on_prop_placement_override
             )
 
-    def _connect_animation_signals(self) -> None:
-        """Connect animation controller signals"""
-        if self._animation_controller:
-            self._animation_controller.animation_started.connect(
-                self._on_animation_started
-            )
-            self._animation_controller.animation_finished.connect(
-                self._on_animation_finished
-            )
-
     def _connect_ui_component_signals(self) -> None:
-        """Connect UI component signals (toggle tab, pictograph container, adjustment panels)"""
-        # Toggle tab signals
-        if (
-            hasattr(self._graph_editor, "_toggle_tab")
-            and self._graph_editor._toggle_tab
-        ):
-            self._graph_editor._toggle_tab.toggle_requested.connect(
-                self._on_toggle_requested
-            )
-            logger.debug(
-                "Connected toggle tab signal: %s",
-                type(self._graph_editor._toggle_tab).__name__,
-            )
-        else:
-            logger.warning("Toggle tab not found or not created yet")
+        """Connect UI component signals (pictograph container, adjustment panels)"""
 
         # Pictograph container signals
         if (
@@ -203,23 +177,7 @@ class GraphEditorSignalCoordinator(QObject):
         logger.debug("Prop placement override for arrow %s", arrow_id)
         # TODO: Implement prop placement override
 
-    # Animation Signal Handlers
-    def _on_animation_started(self, is_showing: bool) -> None:
-        """Handle animation start"""
-        # Toggle tab position is now handled by synchronized animations in animation controller
-        # No need to manually update position here
-        pass
-
-    def _on_animation_finished(self, is_visible: bool) -> None:
-        """Handle animation completion"""
-        # Emit visibility changed signal
-        self.visibility_changed.emit(is_visible)
-
     # UI Component Signal Handlers
-    def _on_toggle_requested(self) -> None:
-        """Handle toggle request from toggle tab"""
-        logger.debug("Toggle requested from toggle tab")
-        self._graph_editor.toggle_visibility()
 
     def _on_arrow_selected(self, arrow_id: str) -> None:
         """Handle arrow selection from pictograph container"""

@@ -73,6 +73,9 @@ class ConstructTabLayoutManager:
         picker_panel = self._create_picker_panel_with_progress()
         main_layout.addWidget(picker_panel, 1)  # Equal weight = 50%
 
+        # CRITICAL: Connect beat frame to graph editor after both components are created
+        self._connect_beat_frame_to_graph_editor()
+
         if self.progress_callback:
             self.progress_callback("Construct tab layout complete!", 1.0)
 
@@ -115,6 +118,13 @@ class ConstructTabLayoutManager:
         # Index 1: Option Picker
         option_widget = self._create_option_picker_widget_with_progress()
         self.picker_stack.addWidget(option_widget)
+
+        if self.progress_callback:
+            self.progress_callback("Creating graph editor widget...", 0.85)
+
+        # Index 2: Graph Editor
+        graph_editor_widget = self._create_graph_editor_widget()
+        self.picker_stack.addWidget(graph_editor_widget)
 
         if self.progress_callback:
             self.progress_callback("Configuring picker transitions...", 0.9)
@@ -167,6 +177,53 @@ class ConstructTabLayoutManager:
 
         return widget
 
+    def _create_graph_editor_widget(self) -> QWidget:
+        """Create graph editor widget for embedded use in stack widget"""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        try:
+            # Import simplified graph editor
+            from ...components.workbench.graph_editor.graph_editor import GraphEditor
+
+            # Create graph editor without complex dependencies (embedded mode)
+            self.graph_editor = GraphEditor(
+                graph_service=None,  # Simplified version doesn't require service
+                parent=None,  # No parent workbench for embedded mode
+                workbench_width=800,  # Default width, will be resized by container
+                workbench_height=300,  # Fixed height for embedded mode
+            )
+
+            layout.addWidget(self.graph_editor)
+
+            # Connect graph editor signals if needed
+            if hasattr(self.graph_editor, "beat_modified"):
+                self.graph_editor.beat_modified.connect(self._on_graph_beat_modified)
+
+        except Exception as e:
+            # Fallback if graph editor creation fails
+            fallback_label = QLabel(f"Graph editor unavailable: {e}")
+            fallback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            fallback_label.setStyleSheet("color: red; font-size: 14px; padding: 20px;")
+            layout.addWidget(fallback_label)
+            self.graph_editor = None
+
+            # Log the error for debugging
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to create graph editor: {e}", exc_info=True)
+
+        return widget
+
+    def _on_graph_beat_modified(self, beat_index: int, beat_data):
+        """Handle beat modification from graph editor"""
+        # Forward to sequence manager or other components as needed
+        print(f"🎵 Graph editor: Beat {beat_index} modified: {beat_data}")
+        # TODO: Connect to sequence manager when available
+
     def transition_to_option_picker(self):
         """Switch from start position picker to option picker"""
         if self.picker_stack:
@@ -176,3 +233,74 @@ class ConstructTabLayoutManager:
         """Switch back to start position picker"""
         if self.picker_stack:
             self.picker_stack.setCurrentIndex(0)
+
+    def transition_to_graph_editor(self):
+        """Switch to graph editor"""
+        if self.picker_stack:
+            self.picker_stack.setCurrentIndex(2)
+
+    def _connect_beat_frame_to_graph_editor(self):
+        """Connect beat frame selection signals to graph editor"""
+        if not self.workbench or not self.graph_editor:
+            return
+
+        # Get the beat frame from the workbench
+        beat_frame_section = getattr(self.workbench, "_beat_frame_section", None)
+        if not beat_frame_section:
+            return
+
+        beat_frame = getattr(beat_frame_section, "_beat_frame", None)
+        if not beat_frame:
+            return
+
+        # Connect beat selection signal to graph editor
+        beat_frame.beat_selected.connect(self._on_beat_selected_for_graph_editor)
+
+        print("✅ Connected beat frame to graph editor")
+
+    def _on_beat_selected_for_graph_editor(self, beat_index: int):
+        """Handle beat selection from beat frame and update graph editor"""
+        print(f"🔍 DEBUG: Beat selection received - index: {beat_index}")
+
+        if not self.graph_editor or not self.workbench:
+            print(
+                f"⚠️ Missing components - graph_editor: {bool(self.graph_editor)}, workbench: {bool(self.workbench)}"
+            )
+            return
+
+        # Get current sequence from workbench
+        current_sequence = self.workbench.get_sequence()
+        if not current_sequence:
+            print(f"⚠️ No current sequence available")
+            return
+
+        print(f"🔍 DEBUG: Current sequence has {len(current_sequence.beats)} beats")
+
+        # Handle start position selection (index -1)
+        if beat_index == -1:
+            # Get start position data from workbench
+            start_position_data = getattr(self.workbench, "_start_position_data", None)
+            if start_position_data:
+                self.graph_editor.set_selected_beat_data(-1, start_position_data)
+                print(f"✅ Graph editor updated with start position")
+            else:
+                print(f"⚠️ No start position data available")
+            return
+
+        # Handle regular beat selection
+        if 0 <= beat_index < len(current_sequence.beats):
+            beat_data = current_sequence.beats[beat_index]
+            print(
+                f"🔍 DEBUG: Beat data - letter: {beat_data.letter}, beat_number: {beat_data.beat_number}"
+            )
+            self.graph_editor.set_selected_beat_data(beat_index, beat_data)
+            print(f"✅ Graph editor updated with beat {beat_index + 1}")
+        else:
+            print(
+                f"⚠️ Invalid beat index: {beat_index} (sequence has {len(current_sequence.beats)} beats)"
+            )
+
+    def _on_graph_beat_modified(self, beat_index: int, beat_data):
+        """Handle beat modification from graph editor"""
+        print(f"✅ Graph editor modified beat {beat_index}")
+        # TODO: Implement beat modification handling

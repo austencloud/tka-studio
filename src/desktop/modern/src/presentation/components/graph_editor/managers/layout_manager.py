@@ -6,7 +6,7 @@ from PyQt6.QtGui import QResizeEvent
 
 from ..components.pictograph_container import GraphEditorPictographContainer
 from ..components.adjustment_panel import AdjustmentPanel
-from ..components.toggle_tab import ToggleTab
+
 from ..config import LayoutConfig, ColorConfig
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,6 @@ class GraphEditorLayoutManager(QObject):
         self._pictograph_container: Optional[GraphEditorPictographContainer] = None
         self._left_adjustment_panel: Optional[AdjustmentPanel] = None
         self._right_adjustment_panel: Optional[AdjustmentPanel] = None
-        self._toggle_tab: Optional[ToggleTab] = None
 
         # Layout
         self._main_layout: Optional[QHBoxLayout] = None
@@ -100,9 +99,6 @@ class GraphEditorLayoutManager(QObject):
             self._graph_editor, side="right", color="red"
         )
 
-        # Create toggle tab
-        self._toggle_tab = ToggleTab(self._graph_editor)
-
         # Store references in graph editor for backward compatibility
         self._graph_editor._pictograph_container = self._pictograph_container
         self._graph_editor._left_adjustment_panel = self._left_adjustment_panel
@@ -110,7 +106,6 @@ class GraphEditorLayoutManager(QObject):
         self._graph_editor._adjustment_panel = (
             self._right_adjustment_panel
         )  # Legacy compatibility
-        self._graph_editor._toggle_tab = self._toggle_tab
 
     def _arrange_components(self) -> None:
         """Arrange components in the layout"""
@@ -128,12 +123,6 @@ class GraphEditorLayoutManager(QObject):
         self._graph_editor.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
-
-    def show_toggle_tab(self) -> None:
-        """Show and raise the toggle tab"""
-        if self._toggle_tab:
-            self._toggle_tab.show()
-            self._toggle_tab.raise_()
 
     def update_component_display(self, beat_data=None, sequence_data=None) -> None:
         """
@@ -176,8 +165,3 @@ class GraphEditorLayoutManager(QObject):
     def right_adjustment_panel(self) -> Optional[AdjustmentPanel]:
         """Get the right adjustment panel"""
         return self._right_adjustment_panel
-
-    @property
-    def toggle_tab(self) -> Optional[ToggleTab]:
-        """Get the toggle tab"""
-        return self._toggle_tab
