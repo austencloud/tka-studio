@@ -30,7 +30,7 @@ tka_root = Path(__file__).parent.parent
 sys.path.insert(0, str(tka_root / "src" / "desktop" / "modern" / "src"))
 
 
-class TestAnimationE2E:
+class GraphEditorAnimationTestSuite:
     """End-to-end animation tests that validate complete UI workflows"""
 
     @pytest.fixture(autouse=True)
