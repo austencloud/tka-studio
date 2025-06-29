@@ -123,26 +123,38 @@ class ApplicationLaunchService(IApplicationLaunchService):
         self, app: ApplicationData, request: LaunchRequest
     ) -> Optional[subprocess.Popen]:
         """Launch application with debugger support using VS Code's subprocess debugging."""
-        
+
         logger.info("🐛 DEBUGGER MODE: Using automatic subprocess debugging")
-        
+
         # Use the same Python interpreter that's being debugged
         # This leverages VS Code's "subProcess": true feature
         python_executable = sys.executable
-        
+
         # Prepare the command based on application type
         if self._is_tka_desktop_app(app):
             # For TKA desktop apps, launch the main.py directly
             if "modern" in app.id:
-                script_path = Path(app.working_dir).parent.parent.parent / "src" / "desktop" / "modern" / "main.py"
+                script_path = (
+                    Path(app.working_dir).parent.parent.parent
+                    / "src"
+                    / "desktop"
+                    / "modern"
+                    / "main.py"
+                )
             elif "legacy" in app.id:
-                script_path = Path(app.working_dir).parent.parent.parent / "src" / "desktop" / "legacy" / "main.py"
+                script_path = (
+                    Path(app.working_dir).parent.parent.parent
+                    / "src"
+                    / "desktop"
+                    / "legacy"
+                    / "main.py"
+                )
             else:
                 script_path = Path(app.working_dir) / app.command.split()[-1]
-            
+
             # Build command that will inherit debugger
             command = [python_executable, str(script_path)]
-            
+
         else:
             # For other apps, use the original command but ensure Python subprocess inheritance
             if app.command.startswith("python"):
@@ -152,35 +164,41 @@ class ApplicationLaunchService(IApplicationLaunchService):
                 command = app.command.split()
 
         # Environment setup for debugging - use TKA root as working directory
-        tka_root = Path(app.working_dir).parent.parent.parent  # Go from src/desktop/modern back to TKA root
+        tka_root = Path(
+            app.working_dir
+        ).parent.parent.parent  # Go from src/desktop/modern back to TKA root
         env = os.environ.copy()
         if app.environment_vars:
             env.update(app.environment_vars)
-        
+
         # Ensure PYTHONPATH includes all necessary paths
         pythonpath_parts = [
             str(tka_root),
             str(tka_root / "src"),
             str(tka_root / "launcher"),
         ]
-        
+
         if "modern" in app.id:
-            pythonpath_parts.extend([
-                str(tka_root / "src" / "desktop" / "modern"),
-                str(tka_root / "src" / "desktop" / "modern" / "src"),
-            ])
+            pythonpath_parts.extend(
+                [
+                    str(tka_root / "src" / "desktop" / "modern"),
+                    str(tka_root / "src" / "desktop" / "modern" / "src"),
+                ]
+            )
         elif "legacy" in app.id:
-            pythonpath_parts.extend([
-                str(tka_root / "src" / "desktop" / "legacy"),
-            ])
-        
+            pythonpath_parts.extend(
+                [
+                    str(tka_root / "src" / "desktop" / "legacy"),
+                ]
+            )
+
         # Add existing PYTHONPATH if present
         existing_pythonpath = env.get("PYTHONPATH", "")
         if existing_pythonpath:
             pythonpath_parts.append(existing_pythonpath)
-        
+
         env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
-        
+
         # Log the launch details for debugging
         logger.info(f"🔍 DEBUG LAUNCH DETAILS:")
         logger.info(f"   Command: {' '.join(command)}")
@@ -199,12 +217,12 @@ class ApplicationLaunchService(IApplicationLaunchService):
                 stdin=None,
                 universal_newlines=True,  # Handle text properly
                 bufsize=1,  # Line buffered
-                encoding='utf-8',  # Fix emoji encoding
-                errors='replace',  # Replace problematic characters
+                encoding="utf-8",  # Fix emoji encoding
+                errors="replace",  # Replace problematic characters
                 # Important: Don't use shell=True as it breaks subprocess debugging
                 shell=False,
                 # On Windows, don't create new console
-                creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
 
             # Give the process a moment to start
@@ -212,12 +230,14 @@ class ApplicationLaunchService(IApplicationLaunchService):
 
             # Verify the process started successfully
             if process.poll() is None:
-                logger.info(f"✅ Debug process started successfully (PID: {process.pid})")
+                logger.info(
+                    f"✅ Debug process started successfully (PID: {process.pid})"
+                )
                 logger.info(f"🐛 Breakpoints should now work in the subprocess!")
-                
+
                 # Start a thread to forward subprocess output to main terminal
                 import threading
-                
+
                 def forward_output():
                     """Forward subprocess output to main terminal."""
                     try:
@@ -227,14 +247,16 @@ class ApplicationLaunchService(IApplicationLaunchService):
                             sys.stdout.flush()
                     except Exception as e:
                         logger.error(f"Error forwarding output: {e}")
-                
+
                 # Start output forwarding thread
                 output_thread = threading.Thread(target=forward_output, daemon=True)
                 output_thread.start()
-                
+
                 return process
             else:
-                logger.error(f"❌ Debug process exited immediately with code: {process.returncode}")
+                logger.error(
+                    f"❌ Debug process exited immediately with code: {process.returncode}"
+                )
                 return None
 
         except Exception as e:
@@ -285,10 +307,14 @@ class ApplicationLaunchService(IApplicationLaunchService):
 
             # Check if process is still running
             if process.poll() is None:
-                logger.info(f"✅ Standard process started successfully (PID: {process.pid})")
+                logger.info(
+                    f"✅ Standard process started successfully (PID: {process.pid})"
+                )
                 return process
             else:
-                logger.error(f"❌ Standard process exited immediately with code: {process.returncode}")
+                logger.error(
+                    f"❌ Standard process exited immediately with code: {process.returncode}"
+                )
                 return None
 
         except Exception as e:
@@ -423,6 +449,7 @@ class ApplicationLaunchService(IApplicationLaunchService):
         try:
             # Check for debugpy (VS Code debugger)
             import debugpy
+
             return debugpy.is_client_connected()
         except ImportError:
             pass
@@ -430,7 +457,8 @@ class ApplicationLaunchService(IApplicationLaunchService):
         try:
             # Check for pdb or other debuggers
             import sys
-            return hasattr(sys, 'gettrace') and sys.gettrace() is not None
+
+            return hasattr(sys, "gettrace") and sys.gettrace() is not None
         except:
             pass
 

@@ -64,7 +64,7 @@ class OptionPickerDisplayService(IOptionPickerDisplayService):
             self.size_provider = size_provider
 
             # Create display manager
-            from presentation.components.option_picker.display_manager import (
+            from presentation.components.option_picker.services.layout.display_service import (
                 OptionPickerDisplayManager,
             )
 

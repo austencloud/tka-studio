@@ -83,7 +83,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 progress_callback("Initializing beat data loader", 0.35)
 
             # Create beat data loader
-            from presentation.components.option_picker.beat_data_loader import (
+            from presentation.components.option_picker.services.data.beat_loader import (
                 BeatDataLoader,
             )
 
@@ -141,7 +141,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             Configured pool manager
         """
         try:
-            from presentation.components.option_picker.pictograph_pool_manager import (
+            from presentation.components.option_picker.services.data.pool_manager import (
                 PictographPoolManager,
             )
 

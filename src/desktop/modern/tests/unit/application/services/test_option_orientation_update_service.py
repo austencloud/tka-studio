@@ -25,7 +25,7 @@ from domain.models.core_models import (
     Location,
     Orientation,
 )
-from application.services.option_picker.option_orientation_update_service import (
+from application.services.option_picker.orientation_update_service import (
     OptionOrientationUpdateService,
 )
 

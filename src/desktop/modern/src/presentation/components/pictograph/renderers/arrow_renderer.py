@@ -23,8 +23,8 @@ from domain.models.core_models import (
 from domain.models.pictograph_models import ArrowData, PictographData
 from core.interfaces.positioning_services import IArrowPositioningOrchestrator
 from core.dependency_injection.di_container import get_container
-from presentation.components.pictograph.graphics_items.selectable_arrow_item import (
-    SelectableArrowItem,
+from presentation.components.pictograph.graphics_items.arrow_item import (
+    ArrowItem,
 )
 
 if TYPE_CHECKING:
@@ -102,7 +102,7 @@ class ArrowRenderer:
 
         arrow_svg_path = self._get_arrow_svg_file(motion_data, color)
 
-        arrow_item = SelectableArrowItem()
+        arrow_item = ArrowItem()
         arrow_item.arrow_color = color  # Set arrow color for selection
         renderer = None
 
@@ -358,9 +358,6 @@ class ArrowRenderer:
             for color in ["blue", "red"]:
                 for pattern in common_patterns:
                     relative_path = pattern.format(color=color)
-                    from presentation.components.pictograph.asset_utils import (
-                        get_image_path,
-                    )
 
                     full_path = get_image_path(relative_path)
                     if os.path.exists(full_path):
@@ -397,7 +394,9 @@ class ArrowRenderer:
     def get_cache_info(cls) -> str:
         """Get detailed cache information for debugging."""
         try:
-            cache_info = cls._load_svg_file_cached.cache_info()
+            cache_info = cls._load_svg_file_cached.cache_info(
+                cls._load_svg_file_cached
+            )
             hit_rate = (
                 cls._cache_stats["hits"]
                 / (cls._cache_stats["hits"] + cls._cache_stats["misses"])
