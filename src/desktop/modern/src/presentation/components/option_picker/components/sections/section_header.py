@@ -3,7 +3,9 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
-    from .option_picker_section import OptionPickerSection
+    from presentation.components.option_picker.components.sections.section_widget import (
+        OptionPickerSection,
+    )
 
 
 class OptionPickerSectionHeader(QWidget):

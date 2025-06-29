@@ -2,12 +2,14 @@ from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QFrame, QGridLayout
 from PyQt6.QtCore import Qt
 
-from presentation.components.option_picker.clickable_pictograph_frame import (
+from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
     ClickablePictographFrame,
 )
 
 if TYPE_CHECKING:
-    from .option_picker_section import OptionPickerSection
+    from presentation.components.option_picker.components.sections.section_widget import (
+        OptionPickerSection,
+    )
 
 
 class OptionPickerSectionPictographContainer(QFrame):
@@ -30,6 +32,7 @@ class OptionPickerSectionPictographContainer(QFrame):
         self.main_layout.setSpacing(3)
 
         from PyQt6.QtWidgets import QSizePolicy
+
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
         self.setStyleSheet(
             """
@@ -93,7 +96,6 @@ class OptionPickerSectionPictographContainer(QFrame):
     def resize_pictographs(self, target_size: int):
         """Resize all pictographs using legacy algorithm."""
         # Only print summary, not per-pictograph logs
-
 
         for pictograph_frame in self.pictographs:
             if pictograph_frame and hasattr(pictograph_frame, "resize_frame"):

@@ -1,19 +1,39 @@
 """
-Modern Option Picker Package
+Modern Option Picker Package - Hierarchical Structure
 
-This package contains the Modern option picker implementation that works
-directly with Modern data structures (BeatData, SequenceData) without
-requiring any Legacy format conversions.
+This package contains the Modern option picker implementation with
+improved hierarchical organization for better maintainability.
+
+Architecture follows clean separation:
+- core/ - Main orchestration and widget coordination
+- components/ - Reusable UI widgets organized by purpose
+- services/ - Business logic separated by domain (data/layout)
+- types/ - Type definitions and constants
+
+All domain/application/presentation absolute imports are preserved.
 """
 
-from .beat_data_loader import BeatDataLoader
-from .display_manager import OptionPickerDisplayManager
-from .pictograph_pool_manager import PictographPoolManager
-from .option_picker import OptionPicker
+# Core components (primary public API)
+from .core.option_picker import OptionPicker
+from .core.option_picker_widget import ModernOptionPickerWidget
 
+# Services (for advanced usage)
+from .services.data.beat_loader import BeatDataLoader
+from .services.layout.display_service import OptionPickerDisplayManager
+from .services.data.pool_manager import PictographPoolManager
+
+# Types
+from .types.letter_types import LetterType
+
+# Backward compatibility exports (maintain old interface)
 __all__ = [
+    "OptionPicker",
+    "ModernOptionPickerWidget",
     "BeatDataLoader",
     "OptionPickerDisplayManager",
     "PictographPoolManager",
-    "OptionPicker",
+    "LetterType",
 ]
+
+__version__ = "2.0.0"
+__restructured__ = True
