@@ -95,7 +95,7 @@ class PerformanceBenchmark:
     
     def benchmark_container_creation(self) -> Dict[str, PerformanceMetrics]:
         """Benchmark container creation across modes."""
-        print("🏗️ Benchmarking Container Creation")
+        print("[BUILD] Benchmarking Container Creation")
         print("-" * 40)
         
         results = {}
@@ -108,7 +108,7 @@ class PerformanceBenchmark:
             metrics = self.measure_operation(f"Create {mode} Container", mode, create_container)
             results[mode] = metrics
             
-            status = "✅" if metrics.success else "❌"
+            status = "[OK]" if metrics.success else "[ERROR]"
             print(f"{status} {mode:12} | {metrics.execution_time:.4f}s | "
                   f"{metrics.memory_delta:+.2f}MB | CPU: {metrics.cpu_percent:.1f}%")
         
@@ -116,7 +116,7 @@ class PerformanceBenchmark:
     
     def benchmark_sequence_operations(self, container, mode: str) -> Dict[str, PerformanceMetrics]:
         """Benchmark sequence operations for a specific mode."""
-        print(f"\n🎵 Benchmarking Sequence Operations - {mode}")
+        print(f"\n[MUSIC] Benchmarking Sequence Operations - {mode}")
         print("-" * 50)
         
         results = {}
@@ -134,7 +134,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Create 100 Sequences", mode, create_sequences)
         results["creation"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Create 100 Sequences | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} created")
         
@@ -145,7 +145,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Retrieve All Sequences", mode, retrieve_sequences)
         results["retrieval"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Retrieve All Sequences | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} retrieved")
         
@@ -162,7 +162,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Sequence Management Ops", mode, manage_sequences)
         results["management"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Management Operations | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} operations")
         
@@ -170,7 +170,7 @@ class PerformanceBenchmark:
     
     def benchmark_layout_calculations(self, container, mode: str) -> Dict[str, PerformanceMetrics]:
         """Benchmark layout calculations for a specific mode."""
-        print(f"\n📐 Benchmarking Layout Calculations - {mode}")
+        print(f"\n[RULER] Benchmarking Layout Calculations - {mode}")
         print("-" * 50)
         
         results = {}
@@ -189,7 +189,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Grid Layout Calculations", mode, calculate_grids)
         results["grid_calculations"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Grid Calculations | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} calculations")
         
@@ -208,7 +208,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Component Size Calculations", mode, calculate_components)
         results["component_calculations"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Component Calculations | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} calculations")
         
@@ -216,7 +216,7 @@ class PerformanceBenchmark:
     
     def benchmark_settings_operations(self, container, mode: str) -> Dict[str, PerformanceMetrics]:
         """Benchmark settings operations for a specific mode."""
-        print(f"\n⚙️ Benchmarking Settings Operations - {mode}")
+        print(f"\n[SETTINGS] Benchmarking Settings Operations - {mode}")
         print("-" * 50)
         
         results = {}
@@ -235,7 +235,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Settings Write Operations", mode, write_settings)
         results["write_operations"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Write Operations | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} writes")
         
@@ -253,7 +253,7 @@ class PerformanceBenchmark:
         metrics = self.measure_operation("Settings Read Operations", mode, read_settings)
         results["read_operations"] = metrics
         
-        status = "✅" if metrics.success else "❌"
+        status = "[OK]" if metrics.success else "[ERROR]"
         print(f"{status} Read Operations | {metrics.execution_time:.4f}s | "
               f"{metrics.memory_delta:+.2f}MB | {metrics.result_size} reads")
         
@@ -312,7 +312,7 @@ class PerformanceBenchmark:
 
 def run_comprehensive_benchmark():
     """Run comprehensive performance benchmark across all modes."""
-    print("🚀 TKA APPLICATION FACTORY PERFORMANCE BENCHMARK")
+    print("[LAUNCH] TKA APPLICATION FACTORY PERFORMANCE BENCHMARK")
     print("=" * 60)
     
     benchmark = PerformanceBenchmark()
@@ -326,7 +326,7 @@ def run_comprehensive_benchmark():
         try:
             containers[mode] = ApplicationFactory.create_app(mode)
         except Exception as e:
-            print(f"❌ Failed to create {mode} container: {e}")
+            print(f"[ERROR] Failed to create {mode} container: {e}")
             continue
     
     # Run operation benchmarks
@@ -338,7 +338,7 @@ def run_comprehensive_benchmark():
     # Generate and display report
     report = benchmark.generate_performance_report()
     
-    print(f"\n📊 PERFORMANCE BENCHMARK REPORT")
+    print(f"\n[CHART] PERFORMANCE BENCHMARK REPORT")
     print("=" * 50)
     
     for mode, summary in report['summary'].items():
@@ -353,7 +353,7 @@ def run_comprehensive_benchmark():
     
     # Display comparisons
     if report['mode_comparisons']:
-        print(f"\n🔄 MODE COMPARISONS:")
+        print(f"\n[RELOAD] MODE COMPARISONS:")
         for comparison, data in report['mode_comparisons'].items():
             mode1, mode2 = comparison.split('_vs_')
             print(f"\n{mode1.upper()} vs {mode2.upper()}:")
@@ -368,7 +368,7 @@ def save_benchmark_results(report: Dict[str, Any], filename: str = "benchmark_re
     output_path = Path(__file__).parent / filename
     with open(output_path, 'w') as f:
         json.dump(report, f, indent=2)
-    print(f"\n💾 Benchmark results saved to: {output_path}")
+    print(f"\n[SAVE] Benchmark results saved to: {output_path}")
 
 
 def main():
@@ -383,7 +383,7 @@ def main():
     save_benchmark_results(report)
     
     # Summary insights
-    print(f"\n💡 KEY INSIGHTS:")
+    print(f"\n[IDEA] KEY INSIGHTS:")
     print(f"   - TEST mode is optimized for speed and predictability")
     print(f"   - HEADLESS mode balances real logic with performance")
     print(f"   - Memory usage varies based on service implementations")

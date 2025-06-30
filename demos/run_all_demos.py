@@ -34,8 +34,8 @@ def run_demo_script(script_name: str, description: str) -> Dict[str, Any]:
             'output': ''
         }
     
-    print(f"🚀 Running {script_name}...")
-    print(f"📝 {description}")
+    print(f"[LAUNCH] Running {script_name}...")
+    print(f"[NOTE] {description}")
     print("-" * 40)
     
     start_time = time.time()
@@ -52,21 +52,21 @@ def run_demo_script(script_name: str, description: str) -> Dict[str, Any]:
         duration = time.time() - start_time
         
         if result.returncode == 0:
-            print("✅ Demo completed successfully!")
+            print("[OK] Demo completed successfully!")
             success = True
             error = None
         else:
-            print(f"⚠️ Demo completed with return code: {result.returncode}")
+            print(f"[WARNING] Demo completed with return code: {result.returncode}")
             success = True  # Still consider it successful if it ran
             error = f"Return code: {result.returncode}"
         
         # Print output
         if result.stdout:
-            print("\n📤 Demo Output:")
+            print("\n[OUTPUT] Demo Output:")
             print(result.stdout)
         
         if result.stderr:
-            print("\n⚠️ Demo Errors/Warnings:")
+            print("\n[WARNING] Demo Errors/Warnings:")
             print(result.stderr)
         
         return {
@@ -80,7 +80,7 @@ def run_demo_script(script_name: str, description: str) -> Dict[str, Any]:
         
     except subprocess.TimeoutExpired:
         duration = time.time() - start_time
-        print("❌ Demo timed out after 5 minutes")
+        print("[ERROR] Demo timed out after 5 minutes")
         return {
             'success': False,
             'error': 'Timeout after 5 minutes',
@@ -91,7 +91,7 @@ def run_demo_script(script_name: str, description: str) -> Dict[str, Any]:
         
     except Exception as e:
         duration = time.time() - start_time
-        print(f"❌ Demo failed with error: {e}")
+        print(f"[ERROR] Demo failed with error: {e}")
         return {
             'success': False,
             'error': str(e),
@@ -143,10 +143,10 @@ def main():
         result = run_demo_script(demo['script'], demo['description'])
         results[demo['script']] = result
         
-        print(f"\n⏱️ Demo Duration: {result['duration']:.2f} seconds")
+        print(f"\n[TIME] Demo Duration: {result['duration']:.2f} seconds")
         
         if not result['success']:
-            print(f"❌ Demo failed: {result['error']}")
+            print(f"[ERROR] Demo failed: {result['error']}")
         
         print("\n" + "=" * 80)
         
@@ -164,38 +164,39 @@ def main():
     successful_demos = sum(1 for result in results.values() if result['success'])
     total_demos = len(results)
     
-    print(f"📊 EXECUTION SUMMARY:")
+    print(f"[CHART] EXECUTION SUMMARY:")
     print(f"   Total Demonstrations: {total_demos}")
     print(f"   Successful: {successful_demos}")
     print(f"   Failed: {total_demos - successful_demos}")
     print(f"   Success Rate: {(successful_demos/total_demos)*100:.1f}%")
     print(f"   Total Duration: {total_duration:.2f} seconds")
     
-    print(f"\n📋 DETAILED RESULTS:")
+    print(f"\n[CLIPBOARD] DETAILED RESULTS:")
     for demo, result in results.items():
-        status = "✅ SUCCESS" if result['success'] else "❌ FAILED"
+        status = "[OK] SUCCESS" if result['success'] else "[ERROR] FAILED"
         duration = result['duration']
         error = f" ({result['error']})" if result['error'] else ""
-        print(f"   {status} {demo:<35} {duration:>8.2f}s{error}")
+        return_code = f" (Return code: {result.get('return_code', 'unknown')})"
+        print(f"   {status} {demo:<35} {duration:>8.2f}s{error}{return_code}")
     
     # Key insights
-    print(f"\n💡 KEY DEMONSTRATIONS COMPLETED:")
-    print(f"   ✅ Application Factory creates containers for all modes")
-    print(f"   ✅ Mock services provide fast, predictable testing environment")
-    print(f"   ✅ Headless mode enables server-side processing")
-    print(f"   ✅ Production mode integrates with real TKA services")
-    print(f"   ✅ AI agents can automate testing and batch processing")
-    print(f"   ✅ Performance varies appropriately between modes")
+    print(f"\n[IDEA] KEY DEMONSTRATIONS COMPLETED:")
+    print(f"   [OK] Application Factory creates containers for all modes")
+    print(f"   [OK] Mock services provide fast, predictable testing environment")
+    print(f"   [OK] Headless mode enables server-side processing")
+    print(f"   [OK] Production mode integrates with real TKA services")
+    print(f"   [OK] AI agents can automate testing and batch processing")
+    print(f"   [OK] Performance varies appropriately between modes")
     
     # Usage recommendations
-    print(f"\n🎯 USAGE RECOMMENDATIONS:")
-    print(f"   🧪 Use TEST mode for: AI agent testing, unit tests, rapid prototyping")
-    print(f"   🖥️ Use HEADLESS mode for: Server processing, CI/CD, batch operations")
-    print(f"   🎨 Use PRODUCTION mode for: Full desktop application, user interaction")
-    print(f"   📹 Use RECORDING mode for: Workflow capture, test generation (future)")
+    print(f"\n[TARGET] USAGE RECOMMENDATIONS:")
+    print(f"   [TEST] Use TEST mode for: AI agent testing, unit tests, rapid prototyping")
+    print(f"   [DISPLAY] Use HEADLESS mode for: Server processing, CI/CD, batch operations")
+    print(f"   [ART] Use PRODUCTION mode for: Full desktop application, user interaction")
+    print(f"   [RECORD] Use RECORDING mode for: Workflow capture, test generation (future)")
     
     # Next steps
-    print(f"\n🚀 NEXT STEPS:")
+    print(f"\n[LAUNCH] NEXT STEPS:")
     print(f"   1. Integrate Application Factory into your AI agent workflows")
     print(f"   2. Use TEST mode for rapid TKA functionality testing")
     print(f"   3. Deploy HEADLESS mode for server-side TKA processing")

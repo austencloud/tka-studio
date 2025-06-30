@@ -603,7 +603,6 @@ class UnifiedGridWidget:
 | **Dataset Services**  | `pictograph_dataset_service.py`, etc.     | 🟠 Major extensions    | 2-3 weeks  |
 | **Motion Services**   | `motion_*.py` services                    | 🟠 Algorithm updates   | 2-3 weeks  |
 | **UI Components**     | `option_picker_*.py`, `graph_editor_*.py` | 🟠 UI updates          | 2-3 weeks  |
-| **Validation**        | `motion_validation_service.py`            | 🟠 Rule engine rewrite | 1-2 weeks  |
 | **Arrow Positioning** | `arrow_positioning_service.py`            | 🟡 Extension           | 1-2 weeks  |
 | **Testing**           | All test files                            | 🟠 3x more test cases  | 2-3 weeks  |
 

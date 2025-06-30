@@ -119,7 +119,7 @@ class TKAModernLauncherApp:
         """Initialize the launcher components."""
         try:
             # Import here to avoid circular imports
-            from ui.windows.launcher_window import TKAModernWindow
+            from ui.windows.launcher_window import TKALauncherWindow
             from integration.tka_integration import TKAIntegrationService
 
             # Initialize TKA integration
@@ -128,7 +128,7 @@ class TKAModernLauncherApp:
 
             # Create main window
             logger.info("🪟 Creating main launcher window...")
-            self.main_window = TKAModernWindow(self.tka_integration)
+            self.main_window = TKALauncherWindow(self.tka_integration)
 
             # Connect cleanup signals
             self.app.aboutToQuit.connect(self._cleanup)

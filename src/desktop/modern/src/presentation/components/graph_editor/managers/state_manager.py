@@ -3,8 +3,20 @@ from typing import Optional, TYPE_CHECKING
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from domain.models.core_models import SequenceData, BeatData
+from ..utils.validation import (
+    validate_beat_data,
+    validate_sequence_data,
+    validate_beat_index,
+    ValidationError,
+)
+from ..utils.logging import (
+    create_component_logger,
+    log_method_call,
+    log_validation_errors,
+)
 
 logger = logging.getLogger(__name__)
+component_logger = create_component_logger("StateManager")
 
 if TYPE_CHECKING:
     from ..graph_editor import GraphEditor
@@ -44,17 +56,45 @@ class GraphEditorStateManager(QObject):
         self._state_consistent = True
         self._last_validation_error: Optional[str] = None
 
+        # Error recovery mechanisms
+        self._recovery_attempts = 0
+        self._max_recovery_attempts = 3
+        self._fallback_state_enabled = True
+        self._last_known_good_state = None
+
+        component_logger.info("StateManager initialized with error recovery enabled")
+
     # Visibility State
     def set_visibility(self, is_visible: bool, emit_signal: bool = True) -> None:
         """
-        Set the visibility state.
+        Set the visibility state with input validation.
 
         Args:
             is_visible: New visibility state
             emit_signal: Whether to emit the visibility_changed signal
+
+        Raises:
+            ValidationError: If is_visible is not a boolean
         """
+        # Input validation
+        if not isinstance(is_visible, bool):
+            error_msg = f"Visibility must be a boolean, got {type(is_visible).__name__}: {is_visible}"
+            component_logger.validation_error("is_visible", is_visible, error_msg)
+            raise ValidationError(error_msg, "is_visible", is_visible)
+
+        # Log method call
+        component_logger.method_call(
+            "set_visibility", {"is_visible": is_visible, "emit_signal": emit_signal}
+        )
+
         if self._is_visible != is_visible:
+            old_visibility = self._is_visible
             self._is_visible = is_visible
+
+            # Log state change
+            component_logger.state_change(
+                old_visibility, is_visible, {"emit_signal": emit_signal}
+            )
             logger.debug("State: Visibility changed to %s", is_visible)
 
             if emit_signal:
@@ -75,19 +115,175 @@ class GraphEditorStateManager(QObject):
         self.set_visibility(new_state)
         return new_state
 
+    # Error Recovery Methods
+    def _save_known_good_state(self) -> None:
+        """Save current state as a known good state for recovery."""
+        try:
+            self._last_known_good_state = {
+                "is_visible": self._is_visible,
+                "current_sequence": self._current_sequence,
+                "selected_beat": self._selected_beat,
+                "selected_beat_index": self._selected_beat_index,
+                "selected_arrow_id": self._selected_arrow_id,
+            }
+            component_logger.debug(
+                "Saved known good state",
+                {
+                    "sequence_name": (
+                        self._current_sequence.name if self._current_sequence else None
+                    ),
+                    "beat_index": self._selected_beat_index,
+                },
+            )
+        except Exception as e:
+            component_logger.error("Failed to save known good state", exception=e)
+
+    def _attempt_state_recovery(self) -> bool:
+        """
+        Attempt to recover from an invalid state.
+
+        Returns:
+            True if recovery was successful, False otherwise
+        """
+        if self._recovery_attempts >= self._max_recovery_attempts:
+            component_logger.error(
+                "Maximum recovery attempts exceeded",
+                {
+                    "attempts": self._recovery_attempts,
+                    "max_attempts": self._max_recovery_attempts,
+                },
+            )
+            return False
+
+        self._recovery_attempts += 1
+        component_logger.warning(
+            f"Attempting state recovery (attempt {self._recovery_attempts})"
+        )
+
+        try:
+            # Strategy 1: Restore last known good state
+            if self._last_known_good_state and self._fallback_state_enabled:
+                component_logger.info("Restoring last known good state")
+                self._restore_known_good_state()
+                return True
+
+            # Strategy 2: Reset to safe default state
+            component_logger.info("Resetting to safe default state")
+            self._reset_to_safe_state()
+            return True
+
+        except Exception as e:
+            component_logger.error("State recovery failed", exception=e)
+            return False
+
+    def _restore_known_good_state(self) -> None:
+        """Restore the last known good state."""
+        if not self._last_known_good_state:
+            raise ValueError("No known good state available for restoration")
+
+        state = self._last_known_good_state
+        self._is_visible = state["is_visible"]
+        self._current_sequence = state["current_sequence"]
+        self._selected_beat = state["selected_beat"]
+        self._selected_beat_index = state["selected_beat_index"]
+        self._selected_arrow_id = state["selected_arrow_id"]
+
+        # Emit signals to notify components of state restoration
+        self.visibility_changed.emit(self._is_visible)
+        self.sequence_changed.emit(self._current_sequence)
+        self.selected_beat_changed.emit(
+            self._selected_beat, self._selected_beat_index or -1
+        )
+        if self._selected_arrow_id:
+            self.selected_arrow_changed.emit(self._selected_arrow_id)
+
+    def _reset_to_safe_state(self) -> None:
+        """Reset to a safe default state."""
+        component_logger.info("Resetting to safe default state")
+
+        # Clear all state to safe defaults
+        self._is_visible = False
+        self._current_sequence = None
+        self._selected_beat = None
+        self._selected_beat_index = None
+        self._selected_arrow_id = None
+
+        # Reset validation flags
+        self._state_consistent = True
+        self._last_validation_error = None
+
+        # Emit signals to notify components
+        self.visibility_changed.emit(False)
+        self.sequence_changed.emit(None)
+        self.selected_beat_changed.emit(None, -1)
+
+    def enable_fallback_recovery(self, enabled: bool = True) -> None:
+        """Enable or disable fallback state recovery."""
+        self._fallback_state_enabled = enabled
+        component_logger.info(
+            f"Fallback recovery {'enabled' if enabled else 'disabled'}"
+        )
+
+    def reset_recovery_attempts(self) -> None:
+        """Reset the recovery attempt counter."""
+        self._recovery_attempts = 0
+        component_logger.debug("Recovery attempt counter reset")
+
     # Sequence State
     def set_current_sequence(
         self, sequence: Optional[SequenceData], emit_signal: bool = True
     ) -> None:
         """
-        Set the current sequence.
+        Set the current sequence with comprehensive validation.
 
         Args:
             sequence: New sequence data
             emit_signal: Whether to emit the sequence_changed signal
+
+        Raises:
+            ValidationError: If sequence data is invalid
         """
+        # Input validation
+        validation_result = validate_sequence_data(
+            sequence, allow_none=True, context={"operation": "set_current_sequence"}
+        )
+        if validation_result.has_errors:
+            log_validation_errors(
+                component_logger, validation_result, "set_current_sequence"
+            )
+            raise ValidationError(
+                f"Invalid sequence data: {validation_result.errors[0].message}",
+                "sequence",
+                sequence,
+            )
+
+        # Log warnings if any
+        if validation_result.has_warnings:
+            for warning in validation_result.warnings:
+                component_logger.warning(
+                    f"Sequence validation warning: {warning}",
+                    {"sequence_name": sequence.name if sequence else None},
+                )
+
+        # Log method call
+        component_logger.method_call(
+            "set_current_sequence",
+            {
+                "sequence_name": sequence.name if sequence else None,
+                "emit_signal": emit_signal,
+            },
+        )
+
         if self._current_sequence != sequence:
+            old_sequence = self._current_sequence
             self._current_sequence = sequence
+
+            # Log state change
+            component_logger.state_change(
+                old_sequence.name if old_sequence else None,
+                sequence.name if sequence else None,
+                {"emit_signal": emit_signal},
+            )
             logger.debug("State: Sequence changed to %s", sequence)
 
             # Validate sequence change doesn't break beat selection
@@ -115,21 +311,83 @@ class GraphEditorStateManager(QObject):
         emit_signal: bool = True,
     ) -> None:
         """
-        Set the selected beat and its index.
+        Set the selected beat and its index with comprehensive validation.
 
         Args:
             beat_data: Beat data to select
             beat_index: Index of the beat in the sequence
             emit_signal: Whether to emit the selected_beat_changed signal
+
+        Raises:
+            ValidationError: If beat data or index is invalid
         """
+        # Input validation for beat data
+        validation_result = validate_beat_data(
+            beat_data,
+            allow_none=True,
+            context={"operation": "set_selected_beat", "beat_index": beat_index},
+        )
+        if validation_result.has_errors:
+            log_validation_errors(
+                component_logger, validation_result, "set_selected_beat"
+            )
+            raise ValidationError(
+                f"Invalid beat data: {validation_result.errors[0].message}",
+                "beat_data",
+                beat_data,
+            )
+
+        # Input validation for beat index
+        if beat_index is not None:
+            sequence_length = (
+                len(self._current_sequence.beats) if self._current_sequence else 0
+            )
+            index_validation = validate_beat_index(
+                beat_index,
+                sequence_length,
+                allow_negative=True,
+                context={
+                    "operation": "set_selected_beat",
+                    "sequence_length": sequence_length,
+                },
+            )
+            if index_validation.has_errors:
+                log_validation_errors(
+                    component_logger, index_validation, "set_selected_beat"
+                )
+                raise ValidationError(
+                    f"Invalid beat index: {index_validation.errors[0].message}",
+                    "beat_index",
+                    beat_index,
+                )
+
+        # Log method call
+        component_logger.method_call(
+            "set_selected_beat",
+            {
+                "beat_letter": beat_data.letter if beat_data else None,
+                "beat_index": beat_index,
+                "emit_signal": emit_signal,
+            },
+        )
+
         state_changed = (
             self._selected_beat != beat_data or self._selected_beat_index != beat_index
         )
 
         if state_changed:
+            old_beat = self._selected_beat
+            old_index = self._selected_beat_index
+
             self._selected_beat = beat_data
             self._selected_beat_index = beat_index
 
+            # Log state change
+            component_logger.state_change(
+                f"{old_beat.letter if old_beat else None}@{old_index}",
+                f"{beat_data.letter if beat_data else None}@{beat_index}",
+                {"emit_signal": emit_signal},
+            )
             logger.debug(
                 "State: Selected beat changed to index %s: %s", beat_index, beat_data
             )
@@ -285,7 +543,29 @@ class GraphEditorStateManager(QObject):
         self._last_validation_error = "; ".join(errors) if errors else None
 
         if not self._state_consistent:
+            component_logger.error(
+                "State validation failed",
+                {"errors": errors, "validation_error": self._last_validation_error},
+            )
             logger.warning("State validation failed: %s", self._last_validation_error)
+
+            # Attempt automatic recovery if enabled
+            if self._fallback_state_enabled:
+                component_logger.info("Attempting automatic state recovery")
+                recovery_success = self._attempt_state_recovery()
+                if recovery_success:
+                    component_logger.info("State recovery successful")
+                    # Re-validate after recovery
+                    return self._validate_state()
+
+                component_logger.error(
+                    "State recovery failed - manual intervention required"
+                )
+        else:
+            # Save current state as known good state
+            self._save_known_good_state()
+            # Reset recovery attempts on successful validation
+            self.reset_recovery_attempts()
 
         return self._state_consistent
 

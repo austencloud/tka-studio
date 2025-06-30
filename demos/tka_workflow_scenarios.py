@@ -57,7 +57,7 @@ class TKAWorkflowDemo:
             seq_data_service = self.container.resolve(ISequenceDataService)
             seq_mgmt_service = self.container.resolve(ISequenceManagementService)
             
-            print("🎵 Creating multiple sequences with different characteristics...")
+            print("[MUSIC] Creating multiple sequences with different characteristics...")
             
             # Create different types of sequences
             sequence_configs = [
@@ -90,12 +90,12 @@ class TKAWorkflowDemo:
                 results['sequences_created'] += 1
                 results['total_beats'] += config["length"]
                 
-                print(f"  ✅ {config['name']}: {config['length']} beats, "
+                print(f"  [OK] {config['name']}: {config['length']} beats, "
                       f"created in {creation_time:.4f}s")
             
             # Retrieve and display all sequences
             all_sequences = seq_data_service.get_all_sequences()
-            print(f"\n📊 Summary:")
+            print(f"\n[CHART] Summary:")
             print(f"  - Total sequences created: {len(all_sequences)}")
             print(f"  - Average creation time: {sum(results['creation_times'])/len(results['creation_times']):.4f}s")
             print(f"  - Total beats across all sequences: {results['total_beats']}")
@@ -103,7 +103,7 @@ class TKAWorkflowDemo:
             # Test sequence operations
             if all_sequences:
                 test_sequence = all_sequences[0]
-                print(f"\n🔧 Testing operations on '{test_sequence['name']}':")
+                print(f"\n[TOOL] Testing operations on '{test_sequence['name']}':")
                 
                 # Add beats to sequence
                 for i in range(min(4, test_sequence.get('length', 0))):
@@ -113,16 +113,16 @@ class TKAWorkflowDemo:
                         'duration': 1.0
                     }
                     seq_mgmt_service.add_beat(test_sequence, beat_data, i)
-                    print(f"  ➕ Added beat {i+1}: {beat_data['letter']}")
+                    print(f"  [PLUS] Added beat {i+1}: {beat_data['letter']}")
                 
                 # Save updated sequence
                 seq_data_service.save_sequence(test_sequence)
-                print(f"  💾 Sequence updated and saved")
+                print(f"  [SAVE] Sequence updated and saved")
             
         except Exception as e:
             error_msg = f"Sequence workflow error: {e}"
             results['errors'].append(error_msg)
-            print(f"❌ {error_msg}")
+            print(f"[ERROR] {error_msg}")
         
         self.results['sequence_workflow'] = results
         return results
@@ -141,7 +141,7 @@ class TKAWorkflowDemo:
         try:
             layout_service = self.container.resolve(ILayoutService)
             
-            print("📐 Performing layout calculations for different scenarios...")
+            print("[RULER] Performing layout calculations for different scenarios...")
             
             # Test different container sizes (simulating different screen resolutions)
             test_scenarios = [
@@ -187,14 +187,14 @@ class TKAWorkflowDemo:
                 results['calculation_times'].append(calc_time)
                 results['calculations_performed'] += 1
                 
-                print(f"  📱 {scenario['name']} ({container_size[0]}x{container_size[1]}):")
+                print(f"  [DEVICE] {scenario['name']} ({container_size[0]}x{container_size[1]}):")
                 print(f"     Grid 16: {grid_16[0]}x{grid_16[1]}, Grid 32: {grid_32[0]}x{grid_32[1]}")
                 print(f"     Beat: {beat_size.width}x{beat_size.height}, Scale: {scaling_factor:.2f}")
                 print(f"     Calculated in {calc_time:.4f}s")
             
             # Performance summary
             avg_time = sum(results['calculation_times']) / len(results['calculation_times'])
-            print(f"\n⚡ Performance Summary:")
+            print(f"\n[LIGHTNING] Performance Summary:")
             print(f"  - Total calculations: {results['calculations_performed']}")
             print(f"  - Average calculation time: {avg_time:.4f}s")
             print(f"  - Fastest: {min(results['calculation_times']):.4f}s")
@@ -203,7 +203,7 @@ class TKAWorkflowDemo:
         except Exception as e:
             error_msg = f"Layout workflow error: {e}"
             results['errors'].append(error_msg)
-            print(f"❌ {error_msg}")
+            print(f"[ERROR] {error_msg}")
         
         self.results['layout_workflow'] = results
         return results
@@ -223,7 +223,7 @@ class TKAWorkflowDemo:
             settings_service = self.container.resolve(ISettingsService)
             ui_state_service = self.container.resolve(IUIStateManagementService)
             
-            print("⚙️ Managing application settings and UI state...")
+            print("[SETTINGS] Managing application settings and UI state...")
             
             # Set various types of settings
             settings_to_test = {
@@ -248,15 +248,15 @@ class TKAWorkflowDemo:
             
             # Set settings
             for category, settings in settings_to_test.items():
-                print(f"\n📝 Setting {category}:")
+                print(f"\n[LIST] Setting {category}:")
                 for key, value in settings.items():
                     full_key = f"{category}.{key}"
                     settings_service.set_setting(full_key, value)
                     results['settings_set'] += 1
-                    print(f"  ✅ {full_key} = {value}")
+                    print(f"  [OK] {full_key} = {value}")
             
             # Retrieve and verify settings
-            print(f"\n🔍 Retrieving and verifying settings:")
+            print(f"\n[SEARCH] Retrieving and verifying settings:")
             for category, settings in settings_to_test.items():
                 for key, expected_value in settings.items():
                     full_key = f"{category}.{key}"
@@ -264,54 +264,54 @@ class TKAWorkflowDemo:
                     results['settings_retrieved'] += 1
                     
                     if retrieved_value == expected_value:
-                        print(f"  ✅ {full_key}: {retrieved_value}")
+                        print(f"  [OK] {full_key}: {retrieved_value}")
                     else:
-                        print(f"  ❌ {full_key}: expected {expected_value}, got {retrieved_value}")
+                        print(f"  [ERROR] {full_key}: expected {expected_value}, got {retrieved_value}")
             
             # Test UI state management
-            print(f"\n🖥️ Testing UI state management:")
+            print(f"\n[DISPLAY] Testing UI state management:")
             ui_state_service.set_setting('current_tab', 'sequence_builder')
             ui_state_service.set_setting('sidebar_width', 300)
             
             current_tab = ui_state_service.get_setting('current_tab')
             sidebar_width = ui_state_service.get_setting('sidebar_width')
             
-            print(f"  📑 Current tab: {current_tab}")
-            print(f"  📏 Sidebar width: {sidebar_width}px")
+            print(f"  [TAB] Current tab: {current_tab}")
+            print(f"  [RULER] Sidebar width: {sidebar_width}px")
             
             # Test graph editor toggle
             graph_visible = ui_state_service.toggle_graph_editor()
-            print(f"  🎨 Graph editor visible: {graph_visible}")
+            print(f"  [ART] Graph editor visible: {graph_visible}")
             
             # Test persistence
-            print(f"\n💾 Testing settings persistence:")
+            print(f"\n[SAVE] Testing settings persistence:")
             try:
                 settings_service.save_settings()
                 settings_service.load_settings()
                 results['persistence_tested'] = True
-                print(f"  ✅ Settings save/load completed successfully")
+                print(f"  [OK] Settings save/load completed successfully")
                 
                 # Verify settings persist after save/load
                 test_value = settings_service.get_setting('user_preferences.theme')
                 if test_value == 'dark':
-                    print(f"  ✅ Settings persisted correctly: theme = {test_value}")
+                    print(f"  [OK] Settings persisted correctly: theme = {test_value}")
                 else:
-                    print(f"  ⚠️ Settings may not have persisted: theme = {test_value}")
+                    print(f"  [WARNING] Settings may not have persisted: theme = {test_value}")
                     
             except Exception as e:
-                print(f"  ⚠️ Persistence test: {e} (expected in test mode)")
+                print(f"  [WARNING] Persistence test: {e} (expected in test mode)")
             
         except Exception as e:
             error_msg = f"Settings workflow error: {e}"
             results['errors'].append(error_msg)
-            print(f"❌ {error_msg}")
+            print(f"[ERROR] {error_msg}")
         
         self.results['settings_workflow'] = results
         return results
     
     def run_all_workflows(self) -> Dict[str, Any]:
         """Run all workflow demonstrations."""
-        print(f"\n🚀 RUNNING ALL TKA WORKFLOWS IN {self.mode.upper()} MODE")
+        print(f"\n[LAUNCH] RUNNING ALL TKA WORKFLOWS IN {self.mode.upper()} MODE")
         print(f"{'='*80}")
         
         start_time = time.time()
@@ -324,19 +324,19 @@ class TKAWorkflowDemo:
         total_time = time.time() - start_time
         
         # Summary
-        print(f"\n📊 WORKFLOW EXECUTION SUMMARY - {self.mode.upper()} MODE")
+        print(f"\n[CHART] WORKFLOW EXECUTION SUMMARY - {self.mode.upper()} MODE")
         print(f"{'='*60}")
-        print(f"⏱️  Total execution time: {total_time:.4f}s")
-        print(f"🎵 Sequences created: {self.results.get('sequence_workflow', {}).get('sequences_created', 0)}")
-        print(f"📐 Layout calculations: {self.results.get('layout_workflow', {}).get('calculations_performed', 0)}")
-        print(f"⚙️  Settings managed: {self.results.get('settings_workflow', {}).get('settings_set', 0)}")
+        print(f"[TIME] Total execution time: {total_time:.4f}s")
+        print(f"[MUSIC] Sequences created: {self.results.get('sequence_workflow', {}).get('sequences_created', 0)}")
+        print(f"[RULER] Layout calculations: {self.results.get('layout_workflow', {}).get('calculations_performed', 0)}")
+        print(f"[SETTINGS] Settings managed: {self.results.get('settings_workflow', {}).get('settings_set', 0)}")
         
         # Error summary
         total_errors = sum(len(workflow.get('errors', [])) for workflow in self.results.values())
         if total_errors > 0:
-            print(f"❌ Total errors: {total_errors}")
+            print(f"[ERROR] Total errors: {total_errors}")
         else:
-            print(f"✅ All workflows completed successfully!")
+            print(f"[OK] All workflows completed successfully!")
         
         self.results['summary'] = {
             'mode': self.mode,
@@ -361,21 +361,21 @@ def compare_workflow_performance():
         ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
         modes_to_test.append(ApplicationMode.PRODUCTION)
     except Exception:
-        print("⚠️ Production mode not available for comparison")
+        print("[WARNING] Production mode not available for comparison")
     
     results = {}
     
     for mode in modes_to_test:
-        print(f"\n🔄 Running workflows in {mode} mode...")
+        print(f"\n[RELOAD] Running workflows in {mode} mode...")
         try:
             demo = TKAWorkflowDemo(mode)
             results[mode] = demo.run_all_workflows()
         except Exception as e:
-            print(f"❌ Failed to run {mode} workflows: {e}")
+            print(f"[ERROR] Failed to run {mode} workflows: {e}")
             results[mode] = None
     
     # Performance comparison table
-    print(f"\n📊 PERFORMANCE COMPARISON TABLE")
+    print(f"\n[CHART] PERFORMANCE COMPARISON TABLE")
     print(f"{'='*80}")
     print(f"{'Mode':<12} | {'Time (s)':<10} | {'Sequences':<10} | {'Layouts':<8} | {'Settings':<8} | {'Errors':<6}")
     print(f"{'-'*12} | {'-'*10} | {'-'*10} | {'-'*8} | {'-'*8} | {'-'*6}")
@@ -410,7 +410,7 @@ def main():
             demo = TKAWorkflowDemo(mode)
             individual_results[mode] = demo.run_all_workflows()
         except Exception as e:
-            print(f"❌ Failed to run {mode} demo: {e}")
+            print(f"[ERROR] Failed to run {mode} demo: {e}")
     
     # Run cross-mode comparison
     comparison_results = compare_workflow_performance()

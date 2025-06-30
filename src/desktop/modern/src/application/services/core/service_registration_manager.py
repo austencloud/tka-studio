@@ -148,13 +148,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IMotionOrientationService,
             MotionOrientationService,
         )
-        from application.services.motion.motion_validation_service import (
-            IMotionValidationService,
-            MotionValidationService,
-        )
 
-        # Register service types, not instances - pure DI
-        container.register_singleton(IMotionValidationService, MotionValidationService)
         container.register_singleton(
             IMotionOrientationService, MotionOrientationService
         )

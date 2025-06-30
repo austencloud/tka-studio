@@ -113,13 +113,13 @@ def demonstrate_services(container, mode: str):
         workbench_size = layout_service.get_workbench_size()
         picker_size = layout_service.get_picker_size()
 
-        print(f"🖥️  Main window size: {window_size.width}x{window_size.height}")
-        print(f"🔧 Workbench size: {workbench_size.width}x{workbench_size.height}")
-        print(f"🎯 Picker size: {picker_size.width}x{picker_size.height}")
+        print(f"[DISPLAY] Main window size: {window_size.width}x{window_size.height}")
+        print(f"[TOOL] Workbench size: {workbench_size.width}x{workbench_size.height}")
+        print(f"[TARGET] Picker size: {picker_size.width}x{picker_size.height}")
 
         # Test layout calculations
         layout_ratio = layout_service.get_layout_ratio()
-        print(f"📐 Layout ratio: {layout_ratio}")
+        print(f"[RULER] Layout ratio: {layout_ratio}")
 
         # Calculate component sizes
         beat_size = layout_service.calculate_component_size("beat_frame", window_size)
@@ -127,23 +127,23 @@ def demonstrate_services(container, mode: str):
             "pictograph", window_size
         )
 
-        print(f"🎵 Beat frame size: {beat_size.width}x{beat_size.height}")
-        print(f"🎨 Pictograph size: {pictograph_size.width}x{pictograph_size.height}")
+        print(f"[MUSIC] Beat frame size: {beat_size.width}x{beat_size.height}")
+        print(f"[ART] Pictograph size: {pictograph_size.width}x{pictograph_size.height}")
 
         # Test grid layout calculation
         grid_layout = layout_service.get_optimal_grid_layout(16, (1200, 800))
         print(
-            f"📊 Optimal grid for 16 items: {grid_layout[0]} rows x {grid_layout[1]} cols"
+            f"[CHART] Optimal grid for 16 items: {grid_layout[0]} rows x {grid_layout[1]} cols"
         )
 
     except Exception as e:
-        print(f"❌ Layout service error: {e}")
+        print(f"[ERROR] Layout service error: {e}")
 
     # Test Settings Service
     print_section("Settings Service Demo")
     try:
         settings_service = container.resolve(ISettingsService)
-        print(f"✅ Resolved ISettingsService: {type(settings_service).__name__}")
+        print(f"[OK] Resolved ISettingsService: {type(settings_service).__name__}")
 
         # Test setting and getting values
         settings_service.set_setting("demo_setting", f"value_from_{mode}_mode")
@@ -155,19 +155,19 @@ def demonstrate_services(container, mode: str):
         demo_list = settings_service.get_setting("demo_list")
         nonexistent = settings_service.get_setting("nonexistent", "default_value")
 
-        print(f"⚙️  Demo setting: {demo_setting}")
-        print(f"🔢 Demo number: {demo_number}")
-        print(f"📝 Demo list: {demo_list}")
-        print(f"❓ Nonexistent setting (with default): {nonexistent}")
+        print(f"[SETTINGS] Demo setting: {demo_setting}")
+        print(f"[NUMBER] Demo number: {demo_number}")
+        print(f"[LIST] Demo list: {demo_list}")
+        print(f"[QUESTION] Nonexistent setting (with default): {nonexistent}")
 
         # Test save/load operations
-        print("💾 Testing save/load operations...")
+        print("[SAVE] Testing save/load operations...")
         settings_service.save_settings()
         settings_service.load_settings()
-        print("✅ Save/load completed without errors")
+        print("[OK] Save/load completed without errors")
 
     except Exception as e:
-        print(f"❌ Settings service error: {e}")
+        print(f"[ERROR] Settings service error: {e}")
 
 
 def compare_modes():
@@ -185,14 +185,14 @@ def compare_modes():
     # Create containers for each mode
     for mode, description in modes_to_test:
         try:
-            print(f"\n🚀 Creating {mode} container...")
+            print(f"\n[LAUNCH] Creating {mode} container...")
             start_time = time.time()
             container = ApplicationFactory.create_app(mode)
             creation_time = time.time() - start_time
             containers[mode] = container
-            print(f"✅ {mode} container created in {creation_time:.4f}s")
+            print(f"[OK] {mode} container created in {creation_time:.4f}s")
         except Exception as e:
-            print(f"❌ Failed to create {mode} container: {e}")
+            print(f"[ERROR] Failed to create {mode} container: {e}")
             containers[mode] = None
 
     # Compare sequence operations across modes
@@ -276,10 +276,10 @@ def main():
 
     # Summary
     print_header("DEMONSTRATION SUMMARY")
-    print("✅ TEST MODE: Fast, predictable, isolated - perfect for automated testing")
-    print("✅ HEADLESS MODE: Real logic, no UI - ideal for batch processing")
-    print("✅ PRODUCTION MODE: Complete application - full desktop experience")
-    print("\n🎯 The Application Factory enables easy switching between these modes")
+    print("[OK] TEST MODE: Fast, predictable, isolated - perfect for automated testing")
+    print("[OK] HEADLESS MODE: Real logic, no UI - ideal for batch processing")
+    print("[OK] PRODUCTION MODE: Complete application - full desktop experience")
+    print("\n[TARGET] The Application Factory enables easy switching between these modes")
     print("   based on your specific use case and environment requirements.")
 
     return {

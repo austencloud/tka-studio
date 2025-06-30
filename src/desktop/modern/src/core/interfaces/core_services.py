@@ -183,7 +183,6 @@ class IArrowManagementService(ABC):
 
 # IMotionManagementService removed - bridge service eliminated
 # Consumers should use focused services directly:
-# - IMotionValidationService for validation
 # - IMotionGenerationService for generation
 # - IMotionOrientationService for orientation
 

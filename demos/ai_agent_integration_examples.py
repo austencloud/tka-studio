@@ -49,17 +49,17 @@ class TKATestAgent:
     def initialize(self) -> bool:
         """Initialize the test agent."""
         try:
-            print(f"🤖 Initializing TKA Test Agent in {self.mode} mode...")
+            print(f"[AI] Initializing TKA Test Agent in {self.mode} mode...")
             self.container = ApplicationFactory.create_app(self.mode)
-            print(f"✅ Agent initialized successfully")
+            print(f"[OK] Agent initialized successfully")
             return True
         except Exception as e:
-            print(f"❌ Agent initialization failed: {e}")
+            print(f"[ERROR] Agent initialization failed: {e}")
             return False
     
     def run_sequence_validation_tests(self) -> List[TestResult]:
         """Run automated sequence validation tests."""
-        print(f"\n🧪 Running sequence validation tests...")
+        print(f"\n[TEST] Running sequence validation tests...")
         
         test_cases = [
             {"name": "Valid Basic Sequence", "length": 8, "should_pass": True},
@@ -105,7 +105,7 @@ class TKATestAgent:
                     }
                 )
                 
-                status = "✅ PASS" if success else "❌ FAIL"
+                status = "[OK] PASS" if success else "[ERROR] FAIL"
                 print(f"  {status} {test_case['name']}: {duration:.4f}s")
                 
             except Exception as e:
@@ -117,7 +117,7 @@ class TKATestAgent:
                     details={'error': str(e)},
                     error_message=str(e)
                 )
-                print(f"  ❌ ERROR {test_case['name']}: {e}")
+                print(f"  [ERROR] ERROR {test_case['name']}: {e}")
             
             results.append(result)
             self.test_results.append(result)
@@ -126,7 +126,7 @@ class TKATestAgent:
     
     def run_layout_performance_tests(self) -> List[TestResult]:
         """Run automated layout performance tests."""
-        print(f"\n⚡ Running layout performance tests...")
+        print(f"\n[LIGHTNING] Running layout performance tests...")
         
         test_scenarios = [
             {"name": "Mobile Layout", "size": (800, 600), "items": 16},
@@ -172,7 +172,7 @@ class TKATestAgent:
                     }
                 )
                 
-                status = "✅ PASS" if success else "❌ FAIL"
+                status = "[OK] PASS" if success else "[ERROR] FAIL"
                 print(f"  {status} {scenario['name']}: avg {avg_calc_time:.6f}s per calc")
                 
             except Exception as e:
@@ -184,7 +184,7 @@ class TKATestAgent:
                     details={'error': str(e)},
                     error_message=str(e)
                 )
-                print(f"  ❌ ERROR {scenario['name']}: {e}")
+                print(f"  [ERROR] ERROR {scenario['name']}: {e}")
             
             results.append(result)
             self.test_results.append(result)
@@ -193,7 +193,7 @@ class TKATestAgent:
     
     def run_data_persistence_tests(self) -> List[TestResult]:
         """Run automated data persistence tests."""
-        print(f"\n💾 Running data persistence tests...")
+        print(f"\n[SAVE] Running data persistence tests...")
         
         results = []
         seq_data_service = self.container.resolve(ISequenceDataService)
@@ -232,7 +232,7 @@ class TKATestAgent:
                     }
                 )
                 
-                status = "✅ PASS" if success else "❌ FAIL"
+                status = "[OK] PASS" if success else "[ERROR] FAIL"
                 print(f"  {status} CREATE {seq_config['name']}: {duration:.4f}s")
                 
             except Exception as e:
@@ -244,7 +244,7 @@ class TKATestAgent:
                     details={'error': str(e)},
                     error_message=str(e)
                 )
-                print(f"  ❌ ERROR CREATE {seq_config['name']}: {e}")
+                print(f"  [ERROR] ERROR CREATE {seq_config['name']}: {e}")
             
             results.append(result)
             self.test_results.append(result)
@@ -267,7 +267,7 @@ class TKATestAgent:
                 }
             )
             
-            status = "✅ PASS" if success else "❌ FAIL"
+            status = "[OK] PASS" if success else "[ERROR] FAIL"
             print(f"  {status} READ All Sequences: found {len(all_sequences)}, {duration:.4f}s")
             
         except Exception as e:
@@ -279,7 +279,7 @@ class TKATestAgent:
                 details={'error': str(e)},
                 error_message=str(e)
             )
-            print(f"  ❌ ERROR READ All Sequences: {e}")
+            print(f"  [ERROR] ERROR READ All Sequences: {e}")
         
         results.append(result)
         self.test_results.append(result)
@@ -329,7 +329,7 @@ class TKABatchProcessor:
         
     def process_sequence_batch(self, sequence_configs: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Process a batch of sequences."""
-        print(f"\n🔄 Processing batch of {len(sequence_configs)} sequences in {self.mode} mode...")
+        print(f"\n[RELOAD] Processing batch of {len(sequence_configs)} sequences in {self.mode} mode...")
         
         seq_service = self.container.resolve(ISequenceManagementService)
         data_service = self.container.resolve(ISequenceDataService)
@@ -346,7 +346,7 @@ class TKABatchProcessor:
         
         for i, config in enumerate(sequence_configs):
             try:
-                print(f"  📝 Processing sequence {i+1}/{len(sequence_configs)}: {config['name']}")
+                print(f"  [LIST] Processing sequence {i+1}/{len(sequence_configs)}: {config['name']}")
                 
                 # Create sequence
                 sequence = seq_service.create_sequence(config['name'], config.get('length', 16))
@@ -371,7 +371,7 @@ class TKABatchProcessor:
                     'id': sequence.get('id', f"batch_{i}")
                 })
                 results['successful'] += 1
-                print(f"    ✅ Success")
+                print(f"    [OK] Success")
                 
             except Exception as e:
                 results['sequences'].append({
@@ -380,13 +380,13 @@ class TKABatchProcessor:
                     'error': str(e)
                 })
                 results['failed'] += 1
-                print(f"    ❌ Failed: {e}")
+                print(f"    [ERROR] Failed: {e}")
             
             results['processed'] += 1
         
         results['total_time'] = time.time() - start_time
         
-        print(f"\n📊 Batch processing complete:")
+        print(f"\n[CHART] Batch processing complete:")
         print(f"  - Processed: {results['processed']}")
         print(f"  - Successful: {results['successful']}")
         print(f"  - Failed: {results['failed']}")
@@ -398,7 +398,7 @@ class TKABatchProcessor:
 
 def demonstrate_ai_agent_testing():
     """Demonstrate AI agent automated testing."""
-    print("🤖 AI AGENT AUTOMATED TESTING DEMONSTRATION")
+    print("[AI] AI AGENT AUTOMATED TESTING DEMONSTRATION")
     print("="*60)
     
     # Initialize test agent
@@ -414,7 +414,7 @@ def demonstrate_ai_agent_testing():
     # Generate report
     report = agent.generate_test_report()
     
-    print(f"\n📋 TEST EXECUTION REPORT")
+    print(f"\n[CLIPBOARD] TEST EXECUTION REPORT")
     print(f"="*40)
     print(f"Mode: {report['summary']['mode']}")
     print(f"Total Tests: {report['summary']['total_tests']}")
@@ -429,7 +429,7 @@ def demonstrate_ai_agent_testing():
 
 def demonstrate_batch_processing():
     """Demonstrate batch processing capabilities."""
-    print("\n🔄 BATCH PROCESSING DEMONSTRATION")
+    print("\n[RELOAD] BATCH PROCESSING DEMONSTRATION")
     print("="*50)
     
     # Create sample sequence configurations
@@ -467,11 +467,11 @@ def main():
     batch_results = demonstrate_batch_processing()
     
     # Summary
-    print(f"\n🎯 INTEGRATION DEMONSTRATION SUMMARY")
+    print(f"\n[TARGET] INTEGRATION DEMONSTRATION SUMMARY")
     print(f"="*50)
-    print(f"✅ Automated Testing: {test_report['summary']['success_rate']:.1f}% success rate" if test_report else "❌ Testing failed")
-    print(f"✅ Batch Processing: {batch_results['successful']}/{batch_results['processed']} sequences processed" if batch_results else "❌ Batch processing failed")
-    print(f"\n💡 The Application Factory enables AI agents to:")
+    print(f"[OK] Automated Testing: {test_report['summary']['success_rate']:.1f}% success rate" if test_report else "[ERROR] Testing failed")
+    print(f"[OK] Batch Processing: {batch_results['successful']}/{batch_results['processed']} sequences processed" if batch_results else "[ERROR] Batch processing failed")
+    print(f"\n[IDEA] The Application Factory enables AI agents to:")
     print(f"   - Run comprehensive automated tests")
     print(f"   - Process sequences in batch mode")
     print(f"   - Integrate with TKA without UI dependencies")

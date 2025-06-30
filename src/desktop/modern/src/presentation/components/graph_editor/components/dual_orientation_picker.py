@@ -1,0 +1,295 @@
+"""
+Dual Orientation Picker Component for TKA Graph Editor
+======================================================
+
+Provides dual blue/red orientation selection panels for start position configuration.
+This component maintains the exact functionality of the legacy orientation picker
+while following TKA clean architecture patterns.
+
+Features:
+- Dual blue/red orientation picker panels (50/50 layout)
+- Four orientation options: IN, OUT, CLOCK, COUNTER
+- Current orientation display with color-coded styling
+- Real-time orientation updates and validation
+- Signal-based communication for orientation changes
+
+Architecture:
+- Follows TKA presentation layer patterns
+- Uses immutable domain models for data handling
+- Maintains clean separation between UI and business logic
+- Supports dependency injection for service integration
+"""
+
+import logging
+from typing import Optional
+
+from domain.models.core_models import BeatData
+from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtWidgets import (
+    QWidget,
+    QHBoxLayout,
+    QVBoxLayout,
+    QGroupBox,
+    QLabel,
+    QPushButton,
+)
+
+logger = logging.getLogger(__name__)
+
+
+class DualOrientationPicker(QWidget):
+    """
+    Dual blue/red orientation picker controls component.
+
+    This component provides orientation selection controls for start positions,
+    allowing users to set the initial orientation for both blue and red motions.
+    It maintains the exact functionality of the legacy implementation while being
+    properly componentized.
+
+    Features:
+    - Dual panels for blue and red orientation selection
+    - Four orientation options per panel: IN, OUT, CLOCK, COUNTER
+    - Current orientation display with visual feedback
+    - Color-coded styling for visual distinction
+    """
+
+    # Signals for communication with parent components
+    orientation_changed = pyqtSignal(str, str)  # color, orientation
+    beat_data_updated = pyqtSignal(BeatData)  # updated beat data
+
+    def __init__(self, parent=None):
+        """
+        Initialize the orientation picker controls.
+
+        Args:
+            parent: Parent widget (typically the graph editor)
+        """
+        super().__init__(parent)
+        self._current_beat_data: Optional[BeatData] = None
+
+        # State tracking for orientations
+        self._blue_orientation = "IN"
+        self._red_orientation = "IN"
+
+        # UI component references
+        self._blue_orientation_label: Optional[QLabel] = None
+        self._red_orientation_label: Optional[QLabel] = None
+
+        self._setup_ui()
+        logger.debug("DualOrientationPicker initialized")
+
+    def _setup_ui(self):
+        """Set up the dual orientation picker panels UI"""
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
+
+        # Blue orientation picker (left side)
+        blue_panel = self._create_orientation_panel("blue")
+        layout.addWidget(blue_panel, 1)
+
+        # Red orientation picker (right side)
+        red_panel = self._create_orientation_panel("red")
+        layout.addWidget(red_panel, 1)
+
+    def _create_orientation_panel(self, color: str) -> QWidget:
+        """
+        Create a single orientation picker panel for blue or red.
+
+        Args:
+            color: "blue" or "red" to determine styling and behavior
+
+        Returns:
+            QWidget: Configured orientation panel
+        """
+        panel = QGroupBox(f"{color.title()} Orientation")
+        layout = QVBoxLayout(panel)
+        layout.setContentsMargins(10, 15, 10, 10)
+        layout.setSpacing(8)
+
+        # Current orientation display
+        orientation_label = self._create_orientation_display(color)
+        layout.addWidget(orientation_label)
+
+        # Orientation selection buttons
+        buttons_widget = self._create_orientation_buttons(color)
+        layout.addWidget(buttons_widget)
+
+        # Apply color-specific styling
+        self._apply_panel_styling(panel, color)
+
+        # Store reference for updates
+        if color == "blue":
+            self._blue_orientation_label = orientation_label
+        else:
+            self._red_orientation_label = orientation_label
+
+        return panel
+
+    def _create_orientation_display(self, color: str) -> QLabel:
+        """Create the current orientation display label."""
+        orientation_label = QLabel("IN")
+        orientation_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        border_color = "#0066cc" if color == "blue" else "#cc0000"
+        text_color = "#0066cc" if color == "blue" else "#cc0000"
+
+        orientation_label.setStyleSheet(
+            f"""
+            QLabel {{
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 2px solid {border_color};
+                border-radius: 6px;
+                padding: 12px;
+                font-weight: bold;
+                font-size: 16px;
+                color: {text_color};
+                min-height: 30px;
+            }}
+        """
+        )
+
+        return orientation_label
+
+    def _create_orientation_buttons(self, color: str) -> QWidget:
+        """Create the orientation selection buttons."""
+        buttons_widget = QWidget()
+        buttons_layout = QHBoxLayout(buttons_widget)
+        buttons_layout.setContentsMargins(0, 0, 0, 0)
+        buttons_layout.setSpacing(5)
+
+        orientations = ["IN", "OUT", "CLOCK", "COUNTER"]
+        for orientation in orientations:
+            btn = QPushButton(orientation)
+            btn.setFixedSize(60, 30)
+            btn.clicked.connect(
+                lambda checked, ori=orientation, c=color: self._set_orientation(c, ori)
+            )
+            buttons_layout.addWidget(btn)
+
+        return buttons_widget
+
+    def _apply_panel_styling(self, panel: QGroupBox, color: str):
+        """
+        Apply color-specific styling to the orientation panel.
+
+        Args:
+            panel: The QGroupBox to style
+            color: "blue" or "red" to determine color scheme
+        """
+        if color == "blue":
+            border_color = "#0066cc"
+            bg_color = "rgba(0, 102, 204, 0.1)"
+        else:
+            border_color = "#cc0000"
+            bg_color = "rgba(204, 0, 0, 0.1)"
+
+        panel.setStyleSheet(
+            f"""
+            QGroupBox {{
+                background-color: {bg_color};
+                border: 2px solid {border_color};
+                border-radius: 8px;
+                font-weight: bold;
+                color: {border_color};
+            }}
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 8px 0 8px;
+                background-color: rgba(255, 255, 255, 0.9);
+            }}
+        """
+        )
+
+    def _set_orientation(self, color: str, orientation: str):
+        """
+        Set orientation for the specified color.
+
+        Args:
+            color: "blue" or "red"
+            orientation: "IN", "OUT", "CLOCK", or "COUNTER"
+        """
+        if color == "blue":
+            self._blue_orientation = orientation
+            if self._blue_orientation_label:
+                self._blue_orientation_label.setText(orientation)
+        else:
+            self._red_orientation = orientation
+            if self._red_orientation_label:
+                self._red_orientation_label.setText(orientation)
+
+        self.orientation_changed.emit(color, orientation)
+        logger.debug(f"{color.title()} orientation set to: {orientation}")
+
+    def set_beat_data(self, beat_data: Optional[BeatData]):
+        """
+        Set the current beat data and update the UI.
+
+        Args:
+            beat_data: Beat data to display (None to clear)
+        """
+        self._current_beat_data = beat_data
+
+        if beat_data:
+            # Extract current orientations from beat data
+            if beat_data.blue_motion:
+                blue_ori = getattr(beat_data.blue_motion, "start_ori", None)
+                if blue_ori:
+                    self._blue_orientation = (
+                        blue_ori.value if hasattr(blue_ori, "value") else str(blue_ori)
+                    )
+                else:
+                    self._blue_orientation = "IN"
+            else:
+                self._blue_orientation = "IN"
+
+            if beat_data.red_motion:
+                red_ori = getattr(beat_data.red_motion, "start_ori", None)
+                if red_ori:
+                    self._red_orientation = (
+                        red_ori.value if hasattr(red_ori, "value") else str(red_ori)
+                    )
+                else:
+                    self._red_orientation = "IN"
+            else:
+                self._red_orientation = "IN"
+        else:
+            # Reset to defaults
+            self._blue_orientation = "IN"
+            self._red_orientation = "IN"
+
+        # Update UI displays
+        self._update_orientation_displays()
+
+    def _update_orientation_displays(self):
+        """Update the orientation display labels"""
+        if self._blue_orientation_label:
+            self._blue_orientation_label.setText(self._blue_orientation)
+        if self._red_orientation_label:
+            self._red_orientation_label.setText(self._red_orientation)
+
+    def get_blue_orientation(self) -> str:
+        """Get the current blue orientation."""
+        return self._blue_orientation
+
+    def get_red_orientation(self) -> str:
+        """Get the current red orientation."""
+        return self._red_orientation
+
+    def set_blue_orientation(self, orientation: str):
+        """Set the blue orientation programmatically."""
+        self._set_orientation("blue", orientation)
+
+    def set_red_orientation(self, orientation: str):
+        """Set the red orientation programmatically."""
+        self._set_orientation("red", orientation)
+
+    def reset_orientations(self):
+        """Reset both orientations to default (IN)"""
+        self._set_orientation("blue", "IN")
+        self._set_orientation("red", "IN")
+
+    def get_current_beat_data(self) -> Optional[BeatData]:
+        """Get the currently set beat data."""
+        return self._current_beat_data
