@@ -72,10 +72,33 @@ class ArrowItem(QGraphicsSvgItem):
         # Remove hover effects if any
 
     def mousePressEvent(self, event):
-        """Handle mouse press for selection"""
+        """Handle mouse press for selection - context-aware behavior"""
         if event.button() == Qt.MouseButton.LeftButton:
-            # Emit selection signal through scene if available
-            if self.scene() and hasattr(self.scene(), "arrow_selected"):
-                self.scene().arrow_selected.emit(self.arrow_color)
+            # Check if we're in a graph editor context
+            if self._should_handle_arrow_click():
+                # Emit selection signal through scene if available
+                if self.scene() and hasattr(self.scene(), "arrow_selected"):
+                    self.scene().arrow_selected.emit(self.arrow_color)
+            else:
+                # In non-graph-editor contexts, ignore arrow click and let it bubble up
+                # This allows the pictograph itself to handle the click
+                event.ignore()
+                return
 
         super().mousePressEvent(event)
+
+    def _should_handle_arrow_click(self) -> bool:
+        """Determine if arrow clicks should be handled based on parent context"""
+        scene = self.scene()
+        if not scene:
+            return False
+
+        # Use the scene's existing context detection method
+        if hasattr(scene, "_determine_component_type"):
+            component_type = scene._determine_component_type()
+            # Only handle arrow clicks in graph editor context
+            return component_type == "graph_editor"
+
+        # Fallback: if no context detection available, allow arrow clicks
+        # This maintains backward compatibility
+        return True

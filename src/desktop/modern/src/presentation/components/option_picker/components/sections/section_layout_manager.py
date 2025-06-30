@@ -4,29 +4,49 @@ Split from option_picker_section.py - contains layout calculations and resize ha
 """
 
 from presentation.components.option_picker.types.letter_types import LetterType
+from presentation.components.option_picker.components.sections.section_widget import (
+    OptionPickerSection,
+)
 
 
 class SectionLayoutManager:
     """Handles layout calculations and sizing for option picker sections."""
 
-    def __init__(self, section_widget):
+    def __init__(self, section_widget: "OptionPickerSection"):
         self.section = section_widget
         self._last_width = None
         self._resize_in_progress = False
         self._debug_logged = False
         self._option_picker_width = 0
+        self._sizing_deferred = False  # ADD: Support for deferred sizing
+
+    def defer_sizing_updates(self):
+        """Defer sizing updates for batch operations"""
+        self._sizing_deferred = True
+
+    def resume_sizing_updates(self):
+        """Resume sizing updates"""
+        self._sizing_deferred = False
+
+    def update_size_once(self):
+        """Force a single size update"""
+        self._update_size()  # Always update when explicitly called
 
     def add_pictograph_from_pool(self, pictograph_frame):
-        """Add pictograph with proper container sizing."""
-        self._ensure_container_ready()
+        """MODIFIED: Skip sizing if deferred"""
+        if not self._sizing_deferred:
+            self._ensure_container_ready()
+
         self.section.section_pictograph_container.sync_width_with_section()
         self.section.section_pictograph_container.add_pictograph(pictograph_frame)
-        self._update_size()
+
+        if not self._sizing_deferred:
+            self._update_size()
 
     def _get_global_pictograph_size(self) -> int:
         """Calculate consistent pictograph size using layout algorithm."""
-        if self.section.mw_size_provider:
-            main_window_width = self.section.mw_size_provider().width()
+        if self.section.option_picker_size_provider:
+            main_window_width = self.section.option_picker_size_provider().width()
             frame_width = (
                 self.section.section_pictograph_container.width()
                 if self.section.section_pictograph_container.width() > 0
@@ -74,10 +94,10 @@ class SectionLayoutManager:
                     self.section.header.setFixedHeight(calculated_height)
 
                     if (
-                        hasattr(self.section, "mw_size_provider")
-                        and self.section.mw_size_provider
+                        hasattr(self.section, "option_picker_size_provider")
+                        and self.section.option_picker_size_provider
                     ):
-                        parent_height = self.section.mw_size_provider().height()
+                        parent_height = self.section.option_picker_size_provider().height()
                         font_size = max(parent_height // 70, 10)
                         label_height = max(int(font_size * 3), 20)
                         label_width = max(int(label_height * 6), 100)
@@ -102,8 +122,8 @@ class SectionLayoutManager:
 
         self._resize_in_progress = True
         try:
-            if self.section.mw_size_provider:
-                full_width = self.section.mw_size_provider().width()
+            if self.section.option_picker_size_provider:
+                full_width = self.section.option_picker_size_provider().width()
 
                 if self.section.letter_type in [
                     LetterType.TYPE4,
@@ -151,7 +171,7 @@ class SectionLayoutManager:
             )
 
     def _ensure_container_ready(self):
-        """Ensure the option picker container is properly sized."""
+        """FIXED: Ensure container is ready without forced event processing"""
         if self.section.parent():
             widget = self.section.parent()
             while widget:
@@ -160,10 +180,7 @@ class SectionLayoutManager:
                     and "ModernOptionPickerWidget" in widget.__class__.__name__
                 ):
                     widget.updateGeometry()
-                    widget.update()
-                    from PyQt6.QtWidgets import QApplication
-
-                    QApplication.processEvents()
+                    # REMOVED: QApplication.processEvents()  ← THIS WAS CAUSING SEQUENTIAL LOADING
                     break
                 elif (
                     hasattr(widget, "layout")
@@ -172,9 +189,6 @@ class SectionLayoutManager:
                     and widget.width() > 500
                 ):
                     widget.updateGeometry()
-                    widget.update()
-                    from PyQt6.QtWidgets import QApplication
-
-                    QApplication.processEvents()
+                    # REMOVED: QApplication.processEvents()  ← THIS WAS CAUSING SEQUENTIAL LOADING
                     break
                 widget = widget.parent()

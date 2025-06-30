@@ -20,6 +20,12 @@ from presentation.components.option_picker.core.option_picker import OptionPicke
 from presentation.factories.workbench_factory import (
     create_modern_workbench,
 )
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
+        SequenceBeatFrame,
+    )
 
 
 class ConstructTabLayoutManager:
@@ -121,6 +127,7 @@ class ConstructTabLayoutManager:
         from ...components.start_position_picker.start_position_picker import (
             StartPositionPicker,
         )
+
         self.start_position_picker = StartPositionPicker()
         layout.addWidget(self.start_position_picker)
         return widget
@@ -129,6 +136,7 @@ class ConstructTabLayoutManager:
         widget = QWidget()
         layout = QVBoxLayout(widget)
         try:
+
             def option_picker_progress(step: str, progress: float):
                 if self.progress_callback:
                     mapped_progress = 0.8 + (progress * 0.1)
@@ -154,6 +162,7 @@ class ConstructTabLayoutManager:
         layout.setSpacing(0)
         try:
             from presentation.components.graph_editor.graph_editor import GraphEditor
+
             self.graph_editor = GraphEditor(
                 graph_service=None,
                 parent=None,
@@ -170,6 +179,7 @@ class ConstructTabLayoutManager:
             layout.addWidget(fallback_label)
             self.graph_editor = None
             import logging
+
             logger = logging.getLogger(__name__)
             logger.error(f"Failed to create graph editor: {e}", exc_info=True)
         return widget
@@ -195,7 +205,9 @@ class ConstructTabLayoutManager:
         beat_frame_section = getattr(self.workbench, "_beat_frame_section", None)
         if not beat_frame_section:
             return
-        beat_frame = getattr(beat_frame_section, "_beat_frame", None)
+        beat_frame: "SequenceBeatFrame" = getattr(
+            beat_frame_section, "_beat_frame", None
+        )
         if not beat_frame:
             return
         beat_frame.beat_selected.connect(self._on_beat_selected_for_graph_editor)

@@ -2,16 +2,15 @@
 Graph Editor Managers Package
 ============================
 
-High-level coordination and state management components for the graph editor.
+Essential coordination components for the graph editor.
 
-This package contains managers that handle:
-- Animation coordination and control
+This package contains only the core managers needed for:
 - Layout management and calculations
 - State management and synchronization
 - Signal coordination between components
 """
 
-# Manager imports
+# Essential manager imports only
 from .layout_manager import GraphEditorLayoutManager
 from .state_manager import GraphEditorStateManager
 from .signal_coordinator import GraphEditorSignalCoordinator

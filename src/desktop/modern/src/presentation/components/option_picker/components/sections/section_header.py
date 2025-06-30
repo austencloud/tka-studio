@@ -56,8 +56,11 @@ class OptionPickerSectionHeader(QWidget):
 
     def get_calculated_height(self) -> int:
         """Calculate the height this header should have."""
-        if hasattr(self.section, "mw_size_provider") and self.section.mw_size_provider:
-            parent_height = self.section.mw_size_provider().height()
+        if (
+            hasattr(self.section, "mw_size_provider")
+            and self.section.option_picker_size_provider
+        ):
+            parent_height = self.section.option_picker_size_provider().height()
             font_size = max(parent_height // 70, 10)
             # Use legacy calculation: font_size * 3
             return max(int(font_size * 3), 20)

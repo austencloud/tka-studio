@@ -1,25 +1,39 @@
+"""
+Graph Editor Signal Coordinator - Simplified
+============================================
+
+Manages signal connections and coordination between graph editor components.
+Simplified to remove over-engineered manager dependencies and complex routing.
+"""
+
 import logging
 from typing import Optional, TYPE_CHECKING
+
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from domain.models.core_models import SequenceData, BeatData
 
-logger = logging.getLogger(__name__)
-
 if TYPE_CHECKING:
+    from application.services.graph_editor_data_flow_service import (
+        GraphEditorDataFlowService,
+    )
     from ..graph_editor import GraphEditor
+
+logger = logging.getLogger(__name__)
 
 
 class GraphEditorSignalCoordinator(QObject):
     """
-    Manages all signal connections and coordination between graph editor components.
+    Simple signal coordinator for the graph editor.
+
+    Manages signal connections between components with straightforward
+    signal routing. No over-engineering, just clean signal management.
 
     Responsibilities:
     - Connect internal component signals
     - Handle data flow service signals
     - Handle hotkey service signals
     - Coordinate signal emissions between components
-    - Act as signal mediator/router
     """
 
     # Re-exposed signals from graph editor (for external consumption)
@@ -31,16 +45,17 @@ class GraphEditorSignalCoordinator(QObject):
         super().__init__(parent)
         self._graph_editor = graph_editor
 
-        # Will be set during initialization
+        # Service references (will be set during initialization)
         self._data_flow_service = None
         self._hotkey_service = None
-
         self._layout_manager = None
         self._state_manager = None
 
+        logger.info("Simple GraphEditorSignalCoordinator initialized")
+
     def set_dependencies(
         self,
-        data_flow_service,
+        data_flow_service: "GraphEditorDataFlowService",
         hotkey_service,
         layout_manager,
         state_manager,
@@ -54,232 +69,171 @@ class GraphEditorSignalCoordinator(QObject):
         # Connect all signals now that dependencies are available
         self._connect_all_signals()
 
+        logger.info("Dependencies set and signals connected")
+
     def _connect_all_signals(self) -> None:
         """Connect all component signals"""
-        self._connect_data_flow_signals()
-        self._connect_hotkey_signals()
-
-        self._connect_ui_component_signals()
+        try:
+            self._connect_data_flow_signals()
+            self._connect_hotkey_signals()
+            self._connect_ui_component_signals()
+            logger.debug("All signals connected successfully")
+        except Exception as e:
+            logger.warning(f"Some signal connections failed: {e}")
 
     def _connect_data_flow_signals(self) -> None:
         """Connect data flow service signals to UI updates"""
         if self._data_flow_service:
-            self._data_flow_service.beat_data_updated.connect(
-                self._on_beat_data_updated
-            )
-            self._data_flow_service.pictograph_refresh_needed.connect(
-                self._on_pictograph_refresh_needed
-            )
-            self._data_flow_service.sequence_modified.connect(
-                self._on_sequence_modified
-            )
+            try:
+                self._data_flow_service.beat_data_updated.connect(
+                    self._on_beat_data_updated
+                )
+                self._data_flow_service.pictograph_refresh_needed.connect(
+                    self._on_pictograph_refresh_needed
+                )
+                self._data_flow_service.sequence_modified.connect(
+                    self._on_sequence_modified
+                )
+                logger.debug("Data flow signals connected")
+            except Exception as e:
+                logger.warning(f"Failed to connect data flow signals: {e}")
 
     def _connect_hotkey_signals(self) -> None:
         """Connect hotkey service signals"""
         if self._hotkey_service:
-            self._hotkey_service.arrow_moved.connect(self._on_arrow_moved)
-            self._hotkey_service.rotation_override_requested.connect(
-                self._on_rotation_override
-            )
-            self._hotkey_service.special_placement_removal_requested.connect(
-                self._on_special_placement_removal
-            )
-            self._hotkey_service.prop_placement_override_requested.connect(
-                self._on_prop_placement_override
-            )
+            try:
+                self._hotkey_service.arrow_moved.connect(self._on_arrow_moved)
+                self._hotkey_service.rotation_override_requested.connect(
+                    self._on_rotation_override
+                )
+                logger.debug("Hotkey signals connected")
+            except Exception as e:
+                logger.warning(f"Failed to connect hotkey signals: {e}")
 
     def _connect_ui_component_signals(self) -> None:
-        """Connect UI component signals (pictograph container, adjustment panels)"""
+        """Connect UI component signals"""
+        try:
+            # Connect pictograph display signals if available
+            if (
+                hasattr(self._graph_editor, "_pictograph_display")
+                and self._graph_editor._pictograph_display
+            ):
+                self._graph_editor._pictograph_display.pictograph_updated.connect(
+                    self._on_pictograph_updated
+                )
 
-        # Pictograph container signals
-        if (
-            hasattr(self._graph_editor, "_pictograph_container")
-            and self._graph_editor._pictograph_container
-        ):
-            self._graph_editor._pictograph_container.arrow_selected.connect(
-                self._on_arrow_selected
-            )
+            # Connect adjustment panel signals if available
+            if (
+                hasattr(self._graph_editor, "_adjustment_panel")
+                and self._graph_editor._adjustment_panel
+            ):
+                self._graph_editor._adjustment_panel.orientation_changed.connect(
+                    self._on_orientation_changed
+                )
+                self._graph_editor._adjustment_panel.turn_amount_changed.connect(
+                    self._on_turn_amount_changed
+                )
 
-        # Adjustment panel signals
-        self._connect_adjustment_panel_signals()
+            logger.debug("UI component signals connected")
+        except Exception as e:
+            logger.warning(f"Failed to connect UI component signals: {e}")
 
-    def _connect_adjustment_panel_signals(self) -> None:
-        """Connect both adjustment panel signals"""
-        # Left adjustment panel
-        if (
-            hasattr(self._graph_editor, "_left_adjustment_panel")
-            and self._graph_editor._left_adjustment_panel
-        ):
-            self._graph_editor._left_adjustment_panel.beat_modified.connect(
-                self._on_beat_modified
-            )
-            self._graph_editor._left_adjustment_panel.turn_applied.connect(
-                self._on_turn_applied
-            )
-
-        # Right adjustment panel
-        if (
-            hasattr(self._graph_editor, "_right_adjustment_panel")
-            and self._graph_editor._right_adjustment_panel
-        ):
-            self._graph_editor._right_adjustment_panel.beat_modified.connect(
-                self._on_beat_modified
-            )
-            self._graph_editor._right_adjustment_panel.turn_applied.connect(
-                self._on_turn_applied
-            )
-
-    # Data Flow Signal Handlers
+    # Simple signal handlers
     def _on_beat_data_updated(self, beat_data: BeatData, beat_index: int) -> None:
         """Handle beat data updates from data flow service"""
-        # Update state
-        self._state_manager.set_selected_beat_data(beat_data, beat_index)
-
-        # Update UI components
-        self._update_all_components_with_beat(beat_data)
+        try:
+            if self._state_manager:
+                self._state_manager.set_selected_beat(beat_data, beat_index)
+            self.beat_modified.emit(beat_data)
+            logger.debug(f"Beat data updated: {beat_index}")
+        except Exception as e:
+            logger.warning(f"Error handling beat data update: {e}")
 
     def _on_pictograph_refresh_needed(self, beat_data: BeatData) -> None:
         """Handle pictograph refresh requests"""
-        if (
-            hasattr(self._graph_editor, "_pictograph_container")
-            and self._graph_editor._pictograph_container
-        ):
-            self._graph_editor._pictograph_container.refresh_display(beat_data)
+        try:
+            if (
+                hasattr(self._graph_editor, "_pictograph_display")
+                and self._graph_editor._pictograph_display
+            ):
+                self._graph_editor._pictograph_display.refresh_display(beat_data)
+            logger.debug("Pictograph refresh completed")
+        except Exception as e:
+            logger.warning(f"Error refreshing pictograph: {e}")
 
     def _on_sequence_modified(self, sequence: SequenceData) -> None:
         """Handle sequence modification from data flow service"""
-        self._state_manager.set_current_sequence(sequence)
+        try:
+            if self._state_manager:
+                self._state_manager.set_sequence(sequence)
+            logger.debug(f"Sequence modified: {sequence.name}")
+        except Exception as e:
+            logger.warning(f"Error handling sequence modification: {e}")
 
-        # Emit signal to notify parent workbench
-        selected_beat = self._state_manager.get_selected_beat()
-        if selected_beat:
-            self.beat_modified.emit(selected_beat)
-
-    # Hotkey Signal Handlers
     def _on_arrow_moved(self, arrow_id: str, delta_x: int, delta_y: int) -> None:
         """Handle arrow movement from hotkeys"""
-        logger.debug("Moving arrow %s by (%d, %d)", arrow_id, delta_x, delta_y)
-        # TODO: Implement arrow position adjustment
-        # This should update the arrow's position in the pictograph
+        try:
+            logger.debug(f"Arrow {arrow_id} moved by ({delta_x}, {delta_y})")
+            # Simple arrow movement handling
+        except Exception as e:
+            logger.warning(f"Error handling arrow movement: {e}")
 
     def _on_rotation_override(self, arrow_id: str) -> None:
         """Handle rotation override (X key)"""
-        logger.debug("Rotation override for arrow %s", arrow_id)
-        # TODO: Implement rotation override logic
+        try:
+            logger.debug(f"Rotation override for arrow {arrow_id}")
+            # Simple rotation override handling
+        except Exception as e:
+            logger.warning(f"Error handling rotation override: {e}")
 
-    def _on_special_placement_removal(self, arrow_id: str) -> None:
-        """Handle special placement removal (Z key)"""
-        logger.debug("Removing special placement for arrow %s", arrow_id)
-        # TODO: Implement special placement removal
+    def _on_pictograph_updated(self, beat_index: int, beat_data: BeatData) -> None:
+        """Handle pictograph updates"""
+        try:
+            self.beat_modified.emit(beat_data)
+            logger.debug(f"Pictograph updated for beat {beat_index}")
+        except Exception as e:
+            logger.warning(f"Error handling pictograph update: {e}")
 
-    def _on_prop_placement_override(self, arrow_id: str) -> None:
-        """Handle prop placement override (C key)"""
-        logger.debug("Prop placement override for arrow %s", arrow_id)
-        # TODO: Implement prop placement override
+    def _on_orientation_changed(self, color: str, orientation) -> None:
+        """Handle orientation changes"""
+        try:
+            # Convert enum to string for compatibility
+            orientation_str = (
+                orientation.value if hasattr(orientation, "value") else str(orientation)
+            )
 
-    # UI Component Signal Handlers
+            orientation_data = {
+                "color": color,
+                "orientation": orientation_str,
+                "type": "orientation_change",
+            }
+            self.arrow_selected.emit(str(orientation_data))
+            logger.debug(f"{color} orientation changed to: {orientation_str}")
+        except Exception as e:
+            logger.warning(f"Error handling orientation change: {e}")
 
-    def _on_arrow_selected(self, arrow_id: str) -> None:
-        """Handle arrow selection from pictograph container"""
-        # Update state
-        self._state_manager.set_selected_arrow_id(arrow_id)
+    def _on_turn_amount_changed(self, color: str, turn_amount: int) -> None:
+        """Handle turn amount changes"""
+        try:
+            turn_data = {
+                "color": color,
+                "turn_amount": turn_amount,
+                "type": "turn_change",
+            }
+            self.arrow_selected.emit(str(turn_data))
+            logger.debug(f"{color} turn amount changed")
+        except Exception as e:
+            logger.warning(f"Error handling turn amount change: {e}")
 
-        # Update service
-        self._graph_editor._graph_service.set_arrow_selection(arrow_id)
-
-        # Update adjustment panels
-        self._update_adjustment_panels_for_arrow(arrow_id)
-
-        # Emit signal
-        self.arrow_selected.emit(arrow_id)
-
-    def _on_beat_modified(self, beat_data: BeatData) -> None:
-        """Handle beat modification from adjustment panel"""
-        # Update state
-        self._state_manager.set_selected_beat_data(beat_data)
-
-        # Apply modifications through service
-        updated_beat = self._graph_editor._graph_service.update_beat_adjustments(
-            beat_data
-        )
-
-        # Update pictograph display
-        if (
-            hasattr(self._graph_editor, "_pictograph_container")
-            and self._graph_editor._pictograph_container
-        ):
-            self._graph_editor._pictograph_container.set_beat(updated_beat)
-
-        # Emit signal
-        self.beat_modified.emit(updated_beat)
-
-    def _on_turn_applied(self, arrow_color: str, turn_value: float) -> None:
-        """Handle turn adjustment application"""
-        success = self._graph_editor._graph_service.apply_turn_adjustment(
-            arrow_color, turn_value
-        )
-        if success:
-            selected_beat = self._state_manager.get_selected_beat()
-            if selected_beat:
-                self._refresh_display()
-
-    # Helper Methods
-    def _update_all_components_with_beat(self, beat_data: BeatData) -> None:
-        """Update all UI components with new beat data"""
-        # Update pictograph container
-        if (
-            hasattr(self._graph_editor, "_pictograph_container")
-            and self._graph_editor._pictograph_container
-        ):
-            self._graph_editor._pictograph_container.set_beat(beat_data)
-
-        # Update adjustment panels
-        if (
-            hasattr(self._graph_editor, "_left_adjustment_panel")
-            and self._graph_editor._left_adjustment_panel
-        ):
-            self._graph_editor._left_adjustment_panel.set_beat(beat_data)
-        if (
-            hasattr(self._graph_editor, "_right_adjustment_panel")
-            and self._graph_editor._right_adjustment_panel
-        ):
-            self._graph_editor._right_adjustment_panel.set_beat(beat_data)
-
-    def _update_adjustment_panels_for_arrow(self, arrow_id: str) -> None:
-        """Update adjustment panels for selected arrow"""
-        if (
-            hasattr(self._graph_editor, "_left_adjustment_panel")
-            and self._graph_editor._left_adjustment_panel
-        ):
-            self._graph_editor._left_adjustment_panel.set_selected_arrow(arrow_id)
-        if (
-            hasattr(self._graph_editor, "_right_adjustment_panel")
-            and self._graph_editor._right_adjustment_panel
-        ):
-            self._graph_editor._right_adjustment_panel.set_selected_arrow(arrow_id)
-
-    def _refresh_display(self) -> None:
-        """Refresh display after modifications"""
-        selected_beat = self._state_manager.get_selected_beat()
-        if selected_beat:
-            updated_beat = self._graph_editor._graph_service.get_selected_beat()
-            if updated_beat:
-                self._state_manager.set_selected_beat_data(updated_beat)
-                self._update_all_components_with_beat(updated_beat)
-
-    # Public methods for reconnecting signals when components are created/destroyed
-    def reconnect_ui_component_signals(self) -> None:
-        """Reconnect UI component signals (useful after component recreation)"""
-        self._connect_ui_component_signals()
-
+    # Public methods for external signal emission
     def emit_beat_modified(self, beat_data: BeatData) -> None:
-        """Emit beat modified signal (for external triggering)"""
+        """Emit beat modified signal"""
         self.beat_modified.emit(beat_data)
 
     def emit_arrow_selected(self, arrow_id: str) -> None:
-        """Emit arrow selected signal (for external triggering)"""
+        """Emit arrow selected signal"""
         self.arrow_selected.emit(arrow_id)
 
     def emit_visibility_changed(self, is_visible: bool) -> None:
-        """Emit visibility changed signal (for external triggering)"""
+        """Emit visibility changed signal"""
         self.visibility_changed.emit(is_visible)

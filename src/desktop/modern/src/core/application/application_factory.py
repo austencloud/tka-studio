@@ -17,6 +17,8 @@ from core.dependency_injection.di_container import (
     reset_container,
 )
 
+logger = logging.getLogger(__name__)
+
 # Import existing service interfaces
 from core.interfaces.core_services import (
     ILayoutService,
@@ -43,9 +45,12 @@ from application.services.core.pictograph_management_service import (
 from application.services.settings.settings_service import SettingsService
 
 # Import file-based storage services
-from infrastructure.storage.file_based_sequence_data_service import FileBasedSequenceDataService
+from infrastructure.storage.file_based_sequence_data_service import (
+    FileBasedSequenceDataService,
+)
 from infrastructure.storage.file_based_settings_service import FileBasedSettingsService
 
+logger = logging.getLogger(__name__)
 # Import test doubles (to be created) - using try/except for graceful fallback
 try:
     from infrastructure.test_doubles.mock_services import (
@@ -68,8 +73,6 @@ try:
 except ImportError as e:
     logger.warning(f"Test doubles not available: {e}")
     TEST_DOUBLES_AVAILABLE = False
-
-logger = logging.getLogger(__name__)
 
 
 class ApplicationMode:
@@ -115,9 +118,16 @@ class ApplicationFactory:
             IPictographManagementService, PictographManagementService
         )
 
+        # Register visibility service
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
+        from application.services.settings.visibility_service import VisibilityService
+
+        container.register_singleton(IVisibilityService, VisibilityService)
+
         # TODO: Register remaining production services when identified:
         # container.register_singleton(IValidationService, ProductionValidationService)
         # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
+        
 
         logger.info("Created production application container")
         return container
@@ -156,6 +166,12 @@ class ApplicationFactory:
             IUIStateManagementService, MockUIStateManagementService
         )
 
+        # Register visibility service
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
+        from application.services.settings.visibility_service import VisibilityService
+
+        container.register_singleton(IVisibilityService, VisibilityService)
+
         logger.info("Created test application container")
         return container
 
@@ -192,6 +208,12 @@ class ApplicationFactory:
         container.register_singleton(
             IUIStateManagementService, HeadlessUIStateManagementService
         )
+
+        # Register visibility service
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
+        from application.services.settings.visibility_service import VisibilityService
+
+        container.register_singleton(IVisibilityService, VisibilityService)
 
         # TODO: Register remaining production services when identified:
         # container.register_singleton(IValidationService, ProductionValidationService)

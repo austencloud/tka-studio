@@ -3,9 +3,9 @@ Option Picker Section Widget - Main UI Component
 Split from option_picker_section.py - contains core section widget logic
 """
 
-from typing import List
+from typing import List, Callable
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 from presentation.components.option_picker.types.letter_types import LetterType
 from presentation.components.option_picker.components.sections.section_header import (
     OptionPickerSectionHeader,
@@ -21,10 +21,15 @@ class OptionPickerSection(QWidget):
     Contains UI setup and basic event handling.
     """
 
-    def __init__(self, letter_type: str, parent=None, mw_size_provider=None):
+    def __init__(
+        self,
+        letter_type: str,
+        parent=None,
+        option_picker_size_provider: Callable[[], QSize] = None,
+    ):
         super().__init__(parent)
         self.letter_type = letter_type
-        self.mw_size_provider = mw_size_provider
+        self.option_picker_size_provider = option_picker_size_provider
         self.is_groupable = letter_type in [
             LetterType.TYPE4,
             LetterType.TYPE5,
@@ -68,6 +73,21 @@ class OptionPickerSection(QWidget):
     def add_pictograph_from_pool(self, pictograph_frame):
         """Add pictograph from pool using layout manager."""
         self.layout_manager.add_pictograph_from_pool(pictograph_frame)
+
+    def add_multiple_pictographs_from_pool(self, pictograph_frames):
+        """BATCH add multiple pictographs without intermediate updates"""
+        # Defer sizing until all frames are added
+
+        try:
+            for frame in pictograph_frames:
+                # Add without triggering size updates
+                self.section_pictograph_container.add_pictograph(frame)
+
+            # Single size update at the end
+            self.layout_manager.update_size_once()
+
+        finally:
+            self.layout_manager.resume_sizing_updates()
 
     def clear_pictographs(self):
         """Clear pictographs using container component."""

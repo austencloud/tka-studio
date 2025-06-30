@@ -5,12 +5,16 @@ This scene coordinates multiple specialized renderers to create the complete pic
 """
 
 from typing import Optional
+import logging
+import uuid
 from PyQt6.QtWidgets import QGraphicsScene
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtCore import pyqtSignal
 
 from domain.models.core_models import BeatData, LetterType
 from domain.models.letter_type_classifier import LetterTypeClassifier
+
+logger = logging.getLogger(__name__)
 
 from presentation.components.pictograph.renderers.grid_renderer import (
     GridRenderer,
@@ -47,6 +51,22 @@ class PictographScene(QGraphicsScene):
         super().__init__(parent)
         self.beat_data: Optional[BeatData] = None
 
+        # Generate unique ID for this scene instance
+        self.scene_id = f"pictograph_scene_{uuid.uuid4().hex[:8]}"
+
+        # Track visibility states for each renderer
+        self._renderer_visibility = {
+            "grid": True,
+            "props": True,
+            "arrows": True,
+            "tka": True,
+            "vtg": True,
+            "elemental": True,
+            "positions": True,
+            "reversals": True,
+            "non_radial": True,
+        }
+
         self.SCENE_SIZE = 950
         self.CENTER_X = 475
         self.CENTER_Y = 475
@@ -64,6 +84,153 @@ class PictographScene(QGraphicsScene):
         self.tka_glyph_renderer = TKAGlyphRenderer(self)
         self.position_glyph_renderer = PositionGlyphRenderer(self)
 
+        # Register with global visibility service
+        self._register_with_global_service()
+
+    def _register_with_global_service(self):
+        """Register this scene with the global visibility service."""
+        try:
+            # Try to get the global visibility service from the DI container
+            from core.application.application_factory import ApplicationFactory
+            from application.services.pictograph.global_visibility_service import (
+                GlobalVisibilityService,
+            )
+
+            # Get or create global service instance
+            try:
+                container = ApplicationFactory.get_container()
+                if container:
+                    # Try to resolve from container (if registered)
+                    global_service = container.resolve(GlobalVisibilityService)
+                else:
+                    # Fallback to singleton pattern
+                    global_service = self._get_global_service_singleton()
+            except:
+                # Fallback to singleton pattern
+                global_service = self._get_global_service_singleton()
+
+            if global_service:
+                # Determine component type from parent hierarchy
+                component_type = self._determine_component_type()
+
+                # Register this scene
+                success = global_service.register_pictograph(
+                    pictograph_id=self.scene_id,
+                    pictograph_instance=self,
+                    component_type=component_type,
+                    update_method="update_visibility",
+                    metadata={
+                        "scene_size": self.SCENE_SIZE,
+                        "has_renderers": True,
+                        "created_at": str(uuid.uuid4()),
+                    },
+                )
+
+                if success:
+                    logger.debug(
+                        f"Registered PictographScene {self.scene_id} with GlobalVisibilityService"
+                    )
+                else:
+                    logger.warning(
+                        f"Failed to register PictographScene {self.scene_id}"
+                    )
+
+        except Exception as e:
+            logger.warning(f"Could not register with GlobalVisibilityService: {e}")
+
+    def _get_global_service_singleton(self):
+        """Get or create global service singleton."""
+        if not hasattr(PictographScene, "_global_service"):
+            from application.services.pictograph.global_visibility_service import (
+                GlobalVisibilityService,
+            )
+
+            PictographScene._global_service = GlobalVisibilityService()
+        return PictographScene._global_service
+
+    def _determine_component_type(self) -> str:
+        """Determine component type from parent hierarchy."""
+        parent = self.parent()
+        while parent:
+            class_name = parent.__class__.__name__.lower()
+            if "graph" in class_name:
+                return "graph_editor"
+            elif "beat" in class_name:
+                return "beat_frame"
+            elif "option" in class_name:
+                return "option_picker"
+            elif "preview" in class_name:
+                return "preview"
+            elif "sequence" in class_name:
+                return "sequence_viewer"
+            parent = parent.parent() if hasattr(parent, "parent") else None
+        return "unknown"
+
+    def is_in_graph_editor_context(self) -> bool:
+        """Check if this scene is being used in a graph editor context."""
+        return self._determine_component_type() == "graph_editor"
+
+    def update_visibility(self, element_type: str, element_name: str, visible: bool):
+        """Update visibility of specific elements in this scene."""
+        try:
+            logger.debug(
+                f"PictographScene {self.scene_id}: Updating {element_name} visibility to {visible}"
+            )
+
+            # Update internal visibility tracking
+            if element_name in self._renderer_visibility:
+                self._renderer_visibility[element_name] = visible
+
+            # Apply visibility changes to renderers
+            if element_name == "TKA":
+                self._set_renderer_visibility("tka", visible)
+            elif element_name == "VTG":
+                self._set_renderer_visibility("vtg", visible)
+            elif element_name == "Elemental":
+                self._set_renderer_visibility("elemental", visible)
+            elif element_name == "Positions":
+                self._set_renderer_visibility("positions", visible)
+            elif element_name == "Reversals":
+                self._set_renderer_visibility("reversals", visible)
+            elif element_name == "Non-radial_points":
+                self._set_renderer_visibility("non_radial", visible)
+            elif element_name in ["red_motion", "blue_motion"]:
+                # Motion visibility affects props and arrows
+                self._set_motion_visibility(element_name, visible)
+
+            # Re-render the scene with updated visibility
+            if self.beat_data:
+                self._render_pictograph()
+
+        except Exception as e:
+            logger.error(
+                f"Error updating visibility in PictographScene {self.scene_id}: {e}"
+            )
+
+    def _set_renderer_visibility(self, renderer_type: str, visible: bool):
+        """Set visibility for a specific renderer type."""
+        self._renderer_visibility[renderer_type] = visible
+
+        # Note: Individual renderers don't have setVisible() methods
+        # Visibility is controlled by whether they render or not during _render_pictograph()
+
+    def _set_motion_visibility(self, motion_type: str, visible: bool):
+        """Set visibility for motion-related renderers."""
+        if motion_type == "red_motion":
+            self._renderer_visibility["props"] = (
+                visible or self._renderer_visibility.get("blue_motion", True)
+            )
+            self._renderer_visibility["arrows"] = (
+                visible or self._renderer_visibility.get("blue_motion", True)
+            )
+        elif motion_type == "blue_motion":
+            self._renderer_visibility["props"] = (
+                visible or self._renderer_visibility.get("red_motion", True)
+            )
+            self._renderer_visibility["arrows"] = (
+                visible or self._renderer_visibility.get("red_motion", True)
+            )
+
     def update_beat(self, beat_data: BeatData) -> None:
         """Update the scene with new beat data."""
         self.beat_data = beat_data
@@ -77,14 +244,20 @@ class PictographScene(QGraphicsScene):
         if not self.beat_data:
             return
 
-        # Render grid
-        self.grid_renderer.render_grid()
+        # Render grid (if visible)
+        if self._renderer_visibility.get("grid", True):
+            self.grid_renderer.render_grid()
 
-        # Render props for blue and red motions
-        if self.beat_data.blue_motion:
-            self.prop_renderer.render_prop("blue", self.beat_data.blue_motion)
-        if self.beat_data.red_motion:
-            self.prop_renderer.render_prop("red", self.beat_data.red_motion)
+        # Render props for blue and red motions (if visible)
+        if self._renderer_visibility.get("props", True):
+            if self.beat_data.blue_motion and self._renderer_visibility.get(
+                "blue_motion", True
+            ):
+                self.prop_renderer.render_prop("blue", self.beat_data.blue_motion)
+            if self.beat_data.red_motion and self._renderer_visibility.get(
+                "red_motion", True
+            ):
+                self.prop_renderer.render_prop("red", self.beat_data.red_motion)
 
         # Apply beta prop positioning after both props are rendered
         if self.beat_data.blue_motion and self.beat_data.red_motion:
@@ -114,35 +287,54 @@ class PictographScene(QGraphicsScene):
             letter=self.beat_data.letter,  # Essential for special placement lookup
         )
 
-        # Render arrows using the full pictograph data
-        if self.beat_data.blue_motion:
-            self.arrow_renderer.render_arrow(
-                "blue", self.beat_data.blue_motion, full_pictograph_data
-            )
-        if self.beat_data.red_motion:
-            self.arrow_renderer.render_arrow(
-                "red", self.beat_data.red_motion, full_pictograph_data
-            )
+        # Render arrows using the full pictograph data (if visible)
+        if self._renderer_visibility.get("arrows", True):
+            if self.beat_data.blue_motion and self._renderer_visibility.get(
+                "blue_motion", True
+            ):
+                self.arrow_renderer.render_arrow(
+                    "blue", self.beat_data.blue_motion, full_pictograph_data
+                )
+            if self.beat_data.red_motion and self._renderer_visibility.get(
+                "red_motion", True
+            ):
+                self.arrow_renderer.render_arrow(
+                    "red", self.beat_data.red_motion, full_pictograph_data
+                )
 
-        # Render glyphs if glyph data is available
+        # Render glyphs if glyph data is available and visibility allows
         # Note: Letters are rendered via TKA glyph, not simple letter renderer
         if self.beat_data.glyph_data:
             glyph_data = self.beat_data.glyph_data
 
-            # Render elemental glyph
-            if glyph_data.show_elemental and glyph_data.vtg_mode:
+            # Render elemental glyph (if visible)
+            if (
+                glyph_data.show_elemental
+                and glyph_data.vtg_mode
+                and self._renderer_visibility.get("elemental", True)
+            ):
                 self.elemental_glyph_renderer.render_elemental_glyph(
                     glyph_data.vtg_mode,
                     glyph_data.letter_type.value if glyph_data.letter_type else None,
                 )
 
-            # Render VTG glyph
-            if glyph_data.show_vtg and glyph_data.vtg_mode:
+            # Render VTG glyph (if visible)
+            if (
+                glyph_data.show_vtg
+                and glyph_data.vtg_mode
+                and self._renderer_visibility.get("vtg", True)
+            ):
                 self.vtg_glyph_renderer.render_vtg_glyph(
                     glyph_data.vtg_mode,
                     glyph_data.letter_type.value if glyph_data.letter_type else None,
-                )  # Render TKA glyph
-            if glyph_data.show_tka and self.beat_data.letter:
+                )
+
+            # Render TKA glyph (if visible)
+            if (
+                glyph_data.show_tka
+                and self.beat_data.letter
+                and self._renderer_visibility.get("tka", True)
+            ):
                 # Determine the correct letter type from the actual letter
                 letter_type_str = LetterTypeClassifier.get_letter_type(
                     self.beat_data.letter
@@ -156,11 +348,12 @@ class PictographScene(QGraphicsScene):
                     glyph_data.turns_data,
                 )
 
-            # Render position glyph
+            # Render position glyph (if visible)
             if (
                 glyph_data.show_positions
                 and glyph_data.start_position
                 and glyph_data.end_position
+                and self._renderer_visibility.get("positions", True)
             ):
                 self.position_glyph_renderer.render_position_glyph(
                     glyph_data.start_position,

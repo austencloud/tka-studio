@@ -365,9 +365,6 @@ class ArrowRenderer:
                         self._load_svg_file_cached(full_path)
                         preloaded_count += 1
 
-            logger.info(
-                f"Pre-loaded {preloaded_count} common pre-colored SVG files into cache"
-            )
 
         except Exception as e:
             logger.warning(f"Failed to pre-load common SVG files: {e}")

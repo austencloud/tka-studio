@@ -43,7 +43,7 @@ class OptionPickerDisplayManager:
             section = OptionPickerSection(
                 section_type,
                 parent=self.sections_container,
-                mw_size_provider=self.mw_size_provider,
+                option_picker_size_provider=self.mw_size_provider,
             )
             self._sections[section_type] = section
             self.sections_layout.addWidget(section)
@@ -65,7 +65,7 @@ class OptionPickerDisplayManager:
             section = OptionPickerSection(
                 section_type,
                 parent=self.bottom_row_container,
-                mw_size_provider=self.mw_size_provider,
+                option_picker_size_provider=self.mw_size_provider,
             )
             self._sections[section_type] = section
             self.bottom_row_layout.addWidget(section)
@@ -127,7 +127,7 @@ class OptionPickerDisplayManager:
             self._fallback_update_beat_display(beat_options)
 
     def _batch_update_beat_display(self, beat_options: List[BeatData]) -> None:
-        """Optimized batch update implementation"""
+        """FIXED: True batch update with no sequential delays"""
         from domain.models.letter_type_classifier import LetterTypeClassifier
 
         # Step 1: Clear all sections in one pass
@@ -146,14 +146,26 @@ class OptionPickerDisplayManager:
                         beats_by_type[letter_type] = []
                     beats_by_type[letter_type].append((i, beat))
 
-        # Step 3: Batch update frames and add to sections
+        # Step 3: FIXED - True batch update with no intermediate sizing
         for letter_type, beat_list in beats_by_type.items():
             target_section = self._sections[letter_type]
+
+            # BATCH ALL FRAME PREPARATIONS FIRST
+            prepared_frames = []
             for pool_index, beat in beat_list:
                 frame = self.pool_manager.get_pictograph_from_pool(pool_index)
                 if frame:
+                    # Update frame data without triggering layout
                     frame.update_beat_data(beat)
                     frame.setParent(target_section.section_pictograph_container)
+                    prepared_frames.append(frame)
+
+            # BATCH ADD ALL FRAMES TO SECTION AT ONCE
+            if hasattr(target_section, "add_multiple_pictographs_from_pool"):
+                target_section.add_multiple_pictographs_from_pool(prepared_frames)
+            else:
+                # Fallback to individual adds if batch method not available yet
+                for frame in prepared_frames:
                     target_section.add_pictograph_from_pool(frame)
 
     def _fallback_update_beat_display(self, beat_options: List[BeatData]) -> None:

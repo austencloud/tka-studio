@@ -72,7 +72,7 @@ from .tabs.codex_exporter_tab import CodexExporterTab
 from .tabs.general_tab import GeneralTab
 from .tabs.image_export_tab import ImageExportTab
 from .tabs.prop_type_tab import PropTypeTab
-from .tabs.visibility_tab import VisibilityTab
+from .visibility.visibility_tab import VisibilityTab
 
 
 class SettingsDialog(QDialog):

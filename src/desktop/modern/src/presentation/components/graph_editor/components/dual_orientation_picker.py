@@ -23,7 +23,11 @@ Architecture:
 import logging
 from typing import Optional
 
-from domain.models.core_models import BeatData
+from domain.models.core_models import BeatData, Orientation
+from presentation.components.graph_editor.components.turn_adjustment_controls.styling_helpers import (
+    apply_modern_panel_styling,
+    apply_turn_button_styling,
+)
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import (
     QWidget,
@@ -43,8 +47,7 @@ class DualOrientationPicker(QWidget):
 
     This component provides orientation selection controls for start positions,
     allowing users to set the initial orientation for both blue and red motions.
-    It maintains the exact functionality of the legacy implementation while being
-    properly componentized.
+
 
     Features:
     - Dual panels for blue and red orientation selection
@@ -54,7 +57,9 @@ class DualOrientationPicker(QWidget):
     """
 
     # Signals for communication with parent components
-    orientation_changed = pyqtSignal(str, str)  # color, orientation
+    orientation_changed = pyqtSignal(
+        str, object
+    )  # color, orientation (Orientation enum)
     beat_data_updated = pyqtSignal(BeatData)  # updated beat data
 
     def __init__(self, parent=None):
@@ -68,8 +73,8 @@ class DualOrientationPicker(QWidget):
         self._current_beat_data: Optional[BeatData] = None
 
         # State tracking for orientations
-        self._blue_orientation = "IN"
-        self._red_orientation = "IN"
+        self._blue_orientation = Orientation.IN
+        self._red_orientation = Orientation.IN
 
         # UI component references
         self._blue_orientation_label: Optional[QLabel] = None
@@ -128,7 +133,7 @@ class DualOrientationPicker(QWidget):
 
     def _create_orientation_display(self, color: str) -> QLabel:
         """Create the current orientation display label."""
-        orientation_label = QLabel("IN")
+        orientation_label = QLabel(Orientation.IN.value.upper())
         orientation_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         border_color = "#0066cc" if color == "blue" else "#cc0000"
@@ -158,69 +163,57 @@ class DualOrientationPicker(QWidget):
         buttons_layout.setContentsMargins(0, 0, 0, 0)
         buttons_layout.setSpacing(5)
 
-        orientations = ["IN", "OUT", "CLOCK", "COUNTER"]
+        orientations = [
+            Orientation.IN,
+            Orientation.OUT,
+            Orientation.CLOCK,
+            Orientation.COUNTER,
+        ]
         for orientation in orientations:
-            btn = QPushButton(orientation)
-            btn.setFixedSize(60, 30)
+            btn = QPushButton(orientation.value.upper())
+            btn.setFixedSize(80, 40)  # Larger, more touch-friendly size
+            btn.setCheckable(True)  # Enable checkable state for selection feedback
             btn.clicked.connect(
-                lambda checked, ori=orientation, c=color: self._set_orientation(c, ori)
+                lambda _, ori=orientation, c=color: self._set_orientation(c, ori)
             )
+
+            # Apply modern button styling matching turn adjustment controls
+            apply_turn_button_styling(btn, color, orientation.value)
+
             buttons_layout.addWidget(btn)
 
         return buttons_widget
 
     def _apply_panel_styling(self, panel: QGroupBox, color: str):
         """
-        Apply color-specific styling to the orientation panel.
+        Apply modern glassmorphism styling to the orientation panel.
 
         Args:
             panel: The QGroupBox to style
             color: "blue" or "red" to determine color scheme
         """
-        if color == "blue":
-            border_color = "#0066cc"
-            bg_color = "rgba(0, 102, 204, 0.1)"
-        else:
-            border_color = "#cc0000"
-            bg_color = "rgba(204, 0, 0, 0.1)"
+        # Use the same modern styling as turn adjustment controls
+        apply_modern_panel_styling(panel, color)
 
-        panel.setStyleSheet(
-            f"""
-            QGroupBox {{
-                background-color: {bg_color};
-                border: 2px solid {border_color};
-                border-radius: 8px;
-                font-weight: bold;
-                color: {border_color};
-            }}
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: 10px;
-                padding: 0 8px 0 8px;
-                background-color: rgba(255, 255, 255, 0.9);
-            }}
-        """
-        )
-
-    def _set_orientation(self, color: str, orientation: str):
+    def _set_orientation(self, color: str, orientation: Orientation):
         """
         Set orientation for the specified color.
 
         Args:
             color: "blue" or "red"
-            orientation: "IN", "OUT", "CLOCK", or "COUNTER"
+            orientation: Orientation enum value
         """
         if color == "blue":
             self._blue_orientation = orientation
             if self._blue_orientation_label:
-                self._blue_orientation_label.setText(orientation)
+                self._blue_orientation_label.setText(orientation.value.upper())
         else:
             self._red_orientation = orientation
             if self._red_orientation_label:
-                self._red_orientation_label.setText(orientation)
+                self._red_orientation_label.setText(orientation.value.upper())
 
         self.orientation_changed.emit(color, orientation)
-        logger.debug(f"{color.title()} orientation set to: {orientation}")
+        logger.debug(f"{color.title()} orientation set to: {orientation.value}")
 
     def set_beat_data(self, beat_data: Optional[BeatData]):
         """
@@ -236,28 +229,40 @@ class DualOrientationPicker(QWidget):
             if beat_data.blue_motion:
                 blue_ori = getattr(beat_data.blue_motion, "start_ori", None)
                 if blue_ori:
-                    self._blue_orientation = (
-                        blue_ori.value if hasattr(blue_ori, "value") else str(blue_ori)
-                    )
+                    # Handle both enum and string values
+                    if isinstance(blue_ori, Orientation):
+                        self._blue_orientation = blue_ori
+                    else:
+                        # Convert string to enum
+                        try:
+                            self._blue_orientation = Orientation(str(blue_ori).lower())
+                        except ValueError:
+                            self._blue_orientation = Orientation.IN
                 else:
-                    self._blue_orientation = "IN"
+                    self._blue_orientation = Orientation.IN
             else:
-                self._blue_orientation = "IN"
+                self._blue_orientation = Orientation.IN
 
             if beat_data.red_motion:
                 red_ori = getattr(beat_data.red_motion, "start_ori", None)
                 if red_ori:
-                    self._red_orientation = (
-                        red_ori.value if hasattr(red_ori, "value") else str(red_ori)
-                    )
+                    # Handle both enum and string values
+                    if isinstance(red_ori, Orientation):
+                        self._red_orientation = red_ori
+                    else:
+                        # Convert string to enum
+                        try:
+                            self._red_orientation = Orientation(str(red_ori).lower())
+                        except ValueError:
+                            self._red_orientation = Orientation.IN
                 else:
-                    self._red_orientation = "IN"
+                    self._red_orientation = Orientation.IN
             else:
-                self._red_orientation = "IN"
+                self._red_orientation = Orientation.IN
         else:
             # Reset to defaults
-            self._blue_orientation = "IN"
-            self._red_orientation = "IN"
+            self._blue_orientation = Orientation.IN
+            self._red_orientation = Orientation.IN
 
         # Update UI displays
         self._update_orientation_displays()
@@ -265,30 +270,30 @@ class DualOrientationPicker(QWidget):
     def _update_orientation_displays(self):
         """Update the orientation display labels"""
         if self._blue_orientation_label:
-            self._blue_orientation_label.setText(self._blue_orientation)
+            self._blue_orientation_label.setText(self._blue_orientation.value.upper())
         if self._red_orientation_label:
-            self._red_orientation_label.setText(self._red_orientation)
+            self._red_orientation_label.setText(self._red_orientation.value.upper())
 
-    def get_blue_orientation(self) -> str:
+    def get_blue_orientation(self) -> Orientation:
         """Get the current blue orientation."""
         return self._blue_orientation
 
-    def get_red_orientation(self) -> str:
+    def get_red_orientation(self) -> Orientation:
         """Get the current red orientation."""
         return self._red_orientation
 
-    def set_blue_orientation(self, orientation: str):
+    def set_blue_orientation(self, orientation: Orientation):
         """Set the blue orientation programmatically."""
         self._set_orientation("blue", orientation)
 
-    def set_red_orientation(self, orientation: str):
+    def set_red_orientation(self, orientation: Orientation):
         """Set the red orientation programmatically."""
         self._set_orientation("red", orientation)
 
     def reset_orientations(self):
         """Reset both orientations to default (IN)"""
-        self._set_orientation("blue", "IN")
-        self._set_orientation("red", "IN")
+        self._set_orientation("blue", Orientation.IN)
+        self._set_orientation("red", Orientation.IN)
 
     def get_current_beat_data(self) -> Optional[BeatData]:
         """Get the currently set beat data."""

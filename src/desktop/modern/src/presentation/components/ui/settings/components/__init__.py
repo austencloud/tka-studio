@@ -10,6 +10,8 @@ from .header import SettingsHeader
 from .services import SettingsServices
 from .sidebar import SettingsSidebar
 from .toggle import Toggle
+from .motion_toggle import MotionToggle
+from .element_toggle import ElementToggle
 
 __all__ = [
     "ComboBox",
@@ -22,4 +24,6 @@ __all__ = [
     "SettingsServices",
     "SettingsSidebar",
     "Toggle",
+    "MotionToggle",
+    "ElementToggle",
 ]

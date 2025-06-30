@@ -68,7 +68,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 progress_callback("Creating widget factory", 0.15)
 
             # Create widget factory
-            from presentation.factories.widget_factory import OptionPickerWidgetFactory
+            from application.services.option_picker.option_picker_widget_factory import OptionPickerWidgetFactory
 
             widget_factory = OptionPickerWidgetFactory(container)
             components["widget_factory"] = widget_factory
@@ -113,7 +113,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             Tuple of (main_widget, sections_container, sections_layout, filter_widget)
         """
         try:
-            from presentation.factories.widget_factory import OptionPickerWidgetFactory
+            from application.services.option_picker.option_picker_widget_factory import OptionPickerWidgetFactory
 
             widget_factory = OptionPickerWidgetFactory(container)
 

@@ -22,39 +22,14 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from .components import (
-    GlassmorphismStyles,
-    SettingsActionButtons,
-    SettingsAnimations,
-    SettingsContentArea,
-    SettingsHeader,
-    SettingsServices,
-    SettingsSidebar,
-)
-
-from typing import Any, Dict
-
-from core.interfaces.core_services import IUIStateManagementService
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import (
-    QBrush,
-    QColor,
-    QLinearGradient,
-    QPainter,
-    QPainterPath,
-    QRegion,
-)
-from PyQt6.QtCore import QRectF
-from PyQt6.QtWidgets import (
-    QDialog,
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QListWidget,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+from presentation.components.ui.settings.coordinator import SettingsCoordinator
+from presentation.components.ui.settings.tabs.general_tab import GeneralTab
+from presentation.components.ui.settings.tabs.prop_type_tab import PropTypeTab
+from presentation.components.ui.settings.visibility.visibility_tab import VisibilityTab
+from presentation.components.ui.settings.tabs.beat_layout_tab import BeatLayoutTab
+from presentation.components.ui.settings.tabs.image_export_tab import ImageExportTab
+from presentation.components.ui.settings.tabs.background_tab import BackgroundTab
+from presentation.components.ui.settings.tabs.codex_exporter_tab import CodexExporterTab
 
 from .components import (
     GlassmorphismStyles,
@@ -65,14 +40,6 @@ from .components import (
     SettingsServices,
     SettingsSidebar,
 )
-from .coordinator import SettingsCoordinator
-from .tabs.background_tab import BackgroundTab
-from .tabs.beat_layout_tab import BeatLayoutTab
-from .tabs.codex_exporter_tab import CodexExporterTab
-from .tabs.general_tab import GeneralTab
-from .tabs.image_export_tab import ImageExportTab
-from .tabs.prop_type_tab import PropTypeTab
-from .tabs.visibility_tab import VisibilityTab
 
 
 class SettingsDialog(QDialog):

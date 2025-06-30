@@ -159,7 +159,7 @@ class IOptionPickerDisplayService(ABC):
         sections_container: Any,
         sections_layout: Any,
         pool_manager: Any,
-        size_provider: Callable,
+        option_picker_size_provider: Callable,
     ) -> None:
         """
         Initialize the display components.

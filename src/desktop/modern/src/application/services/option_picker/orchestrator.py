@@ -104,7 +104,7 @@ class OptionPickerOrchestrator(QObject):
         self.data_service = data_service
 
         # Component references
-        self.main_widget: Optional[QWidget] = None
+        self.option_picker_widget: Optional[QWidget] = None
         self.sections_container: Optional[QWidget] = None
         self.sections_layout = None
         self.filter_widget: Optional[QWidget] = None
@@ -140,7 +140,7 @@ class OptionPickerOrchestrator(QObject):
 
             # Step 2: Create widget hierarchy
             (
-                self.main_widget,
+                self.option_picker_widget,
                 self.sections_container,
                 self.sections_layout,
                 self.filter_widget,
@@ -153,7 +153,7 @@ class OptionPickerOrchestrator(QObject):
 
             # Step 3: Create pool manager
             self.pool_manager = self.initialization_service.create_pool_manager(
-                self.main_widget, self._handle_beat_click, self._handle_beat_data_click
+                self.option_picker_widget, self._handle_beat_click, self._handle_beat_data_click
             )
 
             if self.progress_callback:
@@ -185,7 +185,7 @@ class OptionPickerOrchestrator(QObject):
             # Step 6: Create dimension analyzer
             self.dimension_analyzer = (
                 self.initialization_service.create_dimension_analyzer(
-                    self.main_widget,
+                    self.option_picker_widget,
                     self.sections_container,
                     self.sections_layout,
                     self.display_service,
@@ -247,11 +247,11 @@ class OptionPickerOrchestrator(QObject):
         Returns:
             Main option picker widget
         """
-        if not self._initialized or not self.main_widget:
+        if not self._initialized or not self.option_picker_widget:
             raise RuntimeError(
                 "OptionPickerOrchestrator not initialized - call initialize() first"
             )
-        return self.main_widget
+        return self.option_picker_widget
 
     def load_motion_combinations(self, sequence_data: List[Dict[str, Any]]) -> None:
         """
@@ -343,7 +343,7 @@ class OptionPickerOrchestrator(QObject):
                 self.data_service.clear_cache()
 
             # Clear references
-            self.main_widget = None
+            self.option_picker_widget = None
             self.sections_container = None
             self.sections_layout = None
             self.filter_widget = None
@@ -362,9 +362,9 @@ class OptionPickerOrchestrator(QObject):
         def size_provider():
             from PyQt6.QtCore import QSize
 
-            if self.main_widget and self.main_widget.width() > 0:
-                actual_width = self.main_widget.width()
-                actual_height = self.main_widget.height()
+            if self.option_picker_widget and self.option_picker_widget.width() > 0:
+                actual_width = self.option_picker_widget.width()
+                actual_height = self.option_picker_widget.height()
                 return QSize(actual_width, actual_height)
             else:
                 return QSize(1200, 800)

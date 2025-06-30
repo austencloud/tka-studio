@@ -81,14 +81,11 @@ class GraphEditorLayoutManager(QObject):
             LayoutConfig.MAIN_LAYOUT_MARGINS,
             LayoutConfig.MAIN_LAYOUT_MARGINS,
             LayoutConfig.MAIN_LAYOUT_MARGINS,
-        )  # Small padding like web version
-        self._main_layout.setSpacing(
-            LayoutConfig.MAIN_LAYOUT_SPACING
-        )  # Space between components
+        )
+        self._main_layout.setSpacing(LayoutConfig.MAIN_LAYOUT_SPACING)
 
     def _create_components(self) -> None:
         """Create all UI components"""
-        # Create color-coded adjustment panels like web version
         self._left_adjustment_panel = AdjustmentPanel(
             self._graph_editor, side="left", color="blue"
         )
@@ -99,10 +96,6 @@ class GraphEditorLayoutManager(QObject):
             self._graph_editor, side="right", color="red"
         )
 
-        # Store references in graph editor for backward compatibility
-        self._graph_editor._pictograph_container = self._pictograph_container
-        self._graph_editor._left_adjustment_panel = self._left_adjustment_panel
-        self._graph_editor._right_adjustment_panel = self._right_adjustment_panel
         self._graph_editor._adjustment_panel = (
             self._right_adjustment_panel
         )  # Legacy compatibility

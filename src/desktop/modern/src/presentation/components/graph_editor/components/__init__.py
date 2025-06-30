@@ -24,13 +24,12 @@ from .pictograph_display_section import PictographDisplaySection
 from .main_adjustment_panel import MainAdjustmentPanel
 from .detailed_info_panel import DetailedInfoPanel
 from .dual_orientation_picker import DualOrientationPicker
-from .turn_adjustment_controls import TurnAdjustmentControls
+from .turn_adjustment_controls.turn_adjustment_controls import TurnAdjustmentControls
 
 # Legacy component imports (for backward compatibility)
 from .adjustment_panel import AdjustmentPanel
 from .pictograph_container import GraphEditorPictographContainer
 from .orientation_picker import OrientationPickerWidget
-from .turn_selection_dialog import TurnSelectionDialog
 
 __all__ = [
     # Refactored components (primary)
@@ -43,5 +42,4 @@ __all__ = [
     "AdjustmentPanel",
     "GraphEditorPictographContainer",
     "OrientationPickerWidget",
-    "TurnSelectionDialog",
 ]

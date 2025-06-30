@@ -4,7 +4,9 @@ from PyQt6.QtGui import QFont, QMouseEvent
 from PyQt6.QtCore import Qt, QSize, pyqtSignal
 
 if TYPE_CHECKING:
-    from presentation.components.option_picker.components.sections.section_widget import OptionPickerSection
+    from presentation.components.option_picker.components.sections.section_widget import (
+        OptionPickerSection,
+    )
 
 
 class LetterTypeTextPainter:
@@ -44,9 +46,7 @@ class OptionPickerSectionButton(QPushButton):
         super().__init__(section_widget)
         self.section_widget = section_widget
         self.is_expanded = True  # Sections start expanded
-        self._base_background_color = (
-            "rgba(255, 255, 255, 200)"  # Base background
-        )
+        self._base_background_color = "rgba(255, 255, 255, 200)"  # Base background
         self._resizing = False  # Prevent resize loops
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
@@ -190,31 +190,40 @@ class OptionPickerSectionButton(QPushButton):
         """
         if not self._resizing:  # Prevent infinite resize loops
             super().resizeEvent(event)
-        
+
     def resize_to_fit(self):
         """Resize button using legacy calculation."""
         if self._resizing:  # Prevent recursive calls
             return
-            
+
         self._resizing = True
         try:
             # Legacy sizing calculation
-            if self.section_widget.mw_size_provider and callable(
-                self.section_widget.mw_size_provider
+            if self.section_widget.option_picker_size_provider and callable(
+                self.section_widget.option_picker_size_provider
             ):
-                parent_height = self.section_widget.mw_size_provider().height()
+                parent_height = (
+                    self.section_widget.option_picker_size_provider().height()
+                )
             else:
                 parent_height = 800
 
             font_size = max(parent_height // 70, 10)
             label_height = max(int(font_size * 3), 20)  # Legacy: font_size * 3
             label_width = max(int(label_height * 6), 100)  # Legacy: height * 6
-            
+
             # Only resize if size actually changed
             current_size = self.size()
-            if current_size.width() != label_width or current_size.height() != label_height:
-                print(f"🏷️ [HEADER DEBUG] Button resize for {self.section_widget.letter_type}:")
-                print(f"   Legacy calculation: font_size({font_size}) * 3 = {label_height}px height")
+            if (
+                current_size.width() != label_width
+                or current_size.height() != label_height
+            ):
+                print(
+                    f"🏷️ [HEADER DEBUG] Button resize for {self.section_widget.letter_type}:"
+                )
+                print(
+                    f"   Legacy calculation: font_size({font_size}) * 3 = {label_height}px height"
+                )
                 print(f"   Button size: {label_width} × {label_height}px")
 
                 # Apply font sizing

@@ -14,7 +14,6 @@ from PyQt6.QtWidgets import (
 )
 
 from .orientation_picker import OrientationPickerWidget
-from .turn_selection_dialog import TurnSelectionDialog
 from ..config import UIConfig, TurnConfig, ColorConfig, LayoutConfig
 
 logger = logging.getLogger(__name__)
@@ -267,22 +266,22 @@ class AdjustmentPanel(QWidget):
         )
 
     def _on_turn_display_clicked(self):
-        """Handle turn display click to open turn selection dialog."""
+        """Handle turn display click - simplified for modern design."""
+        # With modern turn controls, the turn display click can just cycle through common values
         current_turn = self._get_current_turn_value(self._arrow_color)
 
-        # Get the position of the turn display widget for dialog positioning
-        widget_pos = self._turn_display.mapToGlobal(self._turn_display.rect().center())
+        # Cycle through common turn values: 0 -> 0.5 -> 1 -> 1.5 -> 2 -> 0
+        common_values = [0, 0.5, 1, 1.5, 2, 2.5, 3]
+        try:
+            current_index = common_values.index(current_turn)
+            next_index = (current_index + 1) % len(common_values)
+            selected_turn = common_values[next_index]
+        except ValueError:
+            # If current turn is not in common values, start with 0
+            selected_turn = 0
 
-        selected_turn = TurnSelectionDialog.get_turn_value(
-            parent=self,
-            current_turn=current_turn,
-            arrow_color=self._arrow_color,
-            position=widget_pos,
-        )
-
-        if selected_turn is not None:
-            self._apply_turn(self._arrow_color, selected_turn)
-            self._update_turn_display_value(selected_turn)
+        self._apply_turn(self._arrow_color, selected_turn)
+        self._update_turn_display_value(selected_turn)
 
     def _adjust_turn(self, amount: float):
         """Adjust turn value by the specified amount (Legacy-exact behavior)."""
@@ -346,9 +345,13 @@ class AdjustmentPanel(QWidget):
             return TurnConfig.MIN_TURN_VALUE
 
         if arrow_color == "blue" and self._current_beat.blue_motion:
-            return getattr(self._current_beat.blue_motion, "turns", TurnConfig.MIN_TURN_VALUE)
+            return getattr(
+                self._current_beat.blue_motion, "turns", TurnConfig.MIN_TURN_VALUE
+            )
         elif arrow_color == "red" and self._current_beat.red_motion:
-            return getattr(self._current_beat.red_motion, "turns", TurnConfig.MIN_TURN_VALUE)
+            return getattr(
+                self._current_beat.red_motion, "turns", TurnConfig.MIN_TURN_VALUE
+            )
 
         return TurnConfig.MIN_TURN_VALUE
 
@@ -445,12 +448,17 @@ class AdjustmentPanel(QWidget):
         """Update turn controls with beat data"""
         self._update_ui_for_beat()
 
-    def _on_orientation_changed(self, arrow_color: str, orientation: str):
+    def _on_orientation_changed(self, arrow_color: str, orientation):
         """Handle orientation change from picker"""
         if self._current_beat and hasattr(self._graph_editor, "_graph_service"):
+            # Convert enum to string for service layer compatibility
+            orientation_str = (
+                orientation.value if hasattr(orientation, "value") else str(orientation)
+            )
+
             # Apply orientation change through service
             success = self._graph_editor._graph_service.apply_orientation_adjustment(
-                arrow_color, orientation
+                arrow_color, orientation_str
             )
             if success:
                 self.beat_modified.emit(self._current_beat)

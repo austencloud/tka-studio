@@ -1,0 +1,447 @@
+{
+  "test_session": {
+    "timestamp": "2025-06-30T13:34:59.421217",
+    "total_duration": 27.68779683113098,
+    "components": {
+      "VisibilityTab": {
+        "name": "VisibilityTab",
+        "width": 640,
+        "height": 480,
+        "x": 0,
+        "y": 0,
+        "visible": false,
+        "enabled": true,
+        "creation_time": 0.4161837100982666,
+        "render_time": null,
+        "error_count": 0,
+        "last_error": null
+      }
+    },
+    "state_changes": [
+      {
+        "timestamp": 1751308526.223857,
+        "visibility_tab": {
+          "geometry": {
+            "size": "942x713",
+            "position": "(11, 158)",
+            "visible": true,
+            "enabled": true
+          },
+          "motion_toggles": 2,
+          "element_toggles": 6,
+          "preview_component": "Present",
+          "dependency_warning_visible": false,
+          "state_validation": true,
+          "motion_states": {
+            "blue": true,
+            "red": true
+          },
+          "element_states_count": 6
+        },
+        "pictograph_preview": {
+          "geometry": {
+            "size": "375x513",
+            "visible": true,
+            "enabled": true
+          },
+          "scene_status": "Present",
+          "view_status": "Present",
+          "sample_data_status": "Present",
+          "scene_details": {
+            "scene_rect": "950.0x950.0",
+            "items_count": 1,
+            "background_brush": "#ffffff"
+          },
+          "sample_data_details": {
+            "letter": "A",
+            "has_blue_motion": false,
+            "has_red_motion": false,
+            "has_glyph_data": false,
+            "is_blank": true
+          }
+        },
+        "state_manager": {
+          "all_motions_visible": true,
+          "validation_valid": true,
+          "validation_issues": 0,
+          "validation_warnings": 0,
+          "observer_counts": {
+            "glyph": 0,
+            "motion": 0,
+            "non_radial": 0,
+            "all": 0,
+            "buttons": 0
+          },
+          "glyph_states": {
+            "TKA": {
+              "base_visible": true,
+              "effective_visible": true,
+              "is_dependent": true
+            },
+            "Reversals": {
+              "base_visible": true,
+              "effective_visible": true,
+              "is_dependent": false
+            },
+            "VTG": {
+              "base_visible": true,
+              "effective_visible": true,
+              "is_dependent": true
+            },
+            "Elemental": {
+              "base_visible": true,
+              "effective_visible": true,
+              "is_dependent": true
+            },
+            "Positions": {
+              "base_visible": true,
+              "effective_visible": true,
+              "is_dependent": true
+            }
+          },
+          "motion_states": {
+            "red": true,
+            "blue": true
+          },
+          "non_radial_visible": true
+        },
+        "global_service": {
+          "statistics": {
+            "total_registrations": 0,
+            "active_registrations": 0,
+            "update_calls": 0,
+            "failed_updates": 0,
+            "component_types": []
+          },
+          "registered_pictographs": 0,
+          "component_types": [],
+          "active_registrations": 0,
+          "total_registrations": 0,
+          "update_calls": 0,
+          "failed_updates": 0
+        },
+        "layout_metrics": {
+          "splitter": {
+            "sizes": [
+              486,
+              393
+            ],
+            "proportions": [
+              "55.3%",
+              "44.7%"
+            ],
+            "orientation": "Horizontal"
+          },
+          "motion_controls": {
+            "blue_motion": {
+              "size": "191x50",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "red_motion": {
+              "size": "190x50",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            }
+          },
+          "element_controls": {
+            "TKA": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "Reversals": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "VTG": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "Elemental": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "Positions": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            },
+            "Non-radial_points": {
+              "size": "193x40",
+              "visible": true,
+              "enabled": true,
+              "checked": true
+            }
+          },
+          "total_tab_size": "942x713"
+        },
+        "performance": {
+          "uptime_seconds": 26.8,
+          "total_events": 9,
+          "init_events": 4,
+          "component_events": 1,
+          "error_events": 0,
+          "memory_mb": 156.01,
+          "error_rate": "0.0%"
+        }
+      }
+    ],
+    "performance_metrics": {
+      "uptime_seconds": 27.69,
+      "total_events": 10,
+      "init_events": 4,
+      "component_events": 1,
+      "error_events": 0,
+      "memory_mb": 156.02,
+      "error_rate": "0.0%"
+    },
+    "validation_results": {},
+    "issues_found": [],
+    "recommendations": []
+  },
+  "all_events": [
+    {
+      "timestamp": 0.0,
+      "category": "INIT",
+      "event": "Setting up TKA services",
+      "data": {}
+    },
+    {
+      "timestamp": 0.001508951187133789,
+      "category": "INIT",
+      "event": "Created test application container",
+      "data": {}
+    },
+    {
+      "timestamp": 0.001508951187133789,
+      "category": "INIT",
+      "event": "Resolved IVisibilityService",
+      "data": {}
+    },
+    {
+      "timestamp": 0.0025148391723632812,
+      "category": "INIT",
+      "event": "Created modern visibility components",
+      "data": {}
+    },
+    {
+      "timestamp": 0.004518747329711914,
+      "category": "VALIDATION",
+      "event": "TKA system validation passed",
+      "data": {
+        "success_rate": 1.0
+      }
+    },
+    {
+      "timestamp": 0.435715913772583,
+      "category": "COMPONENT",
+      "event": "VisibilityTab created",
+      "data": {
+        "creation_time": 0.4161837100982666
+      }
+    },
+    {
+      "timestamp": 0.44022369384765625,
+      "category": "UI",
+      "event": "Debug window setup complete",
+      "data": {}
+    },
+    {
+      "timestamp": 0.44022369384765625,
+      "category": "MONITOR",
+      "event": "Started continuous monitoring",
+      "data": {}
+    },
+    {
+      "timestamp": 26.80263924598694,
+      "category": "TEST",
+      "event": "Capturing current state",
+      "data": {}
+    },
+    {
+      "timestamp": 27.68779683113098,
+      "category": "TEST",
+      "event": "Exporting comprehensive report",
+      "data": {}
+    }
+  ],
+  "final_state": {
+    "visibility_tab": {
+      "geometry": {
+        "size": "942x713",
+        "position": "(11, 158)",
+        "visible": true,
+        "enabled": true
+      },
+      "motion_toggles": 2,
+      "element_toggles": 6,
+      "preview_component": "Present",
+      "dependency_warning_visible": false,
+      "state_validation": true,
+      "motion_states": {
+        "blue": true,
+        "red": true
+      },
+      "element_states_count": 6
+    },
+    "pictograph_preview": {
+      "geometry": {
+        "size": "375x513",
+        "visible": true,
+        "enabled": true
+      },
+      "scene_status": "Present",
+      "view_status": "Present",
+      "sample_data_status": "Present",
+      "scene_details": {
+        "scene_rect": "950.0x950.0",
+        "items_count": 1,
+        "background_brush": "#ffffff"
+      },
+      "sample_data_details": {
+        "letter": "A",
+        "has_blue_motion": false,
+        "has_red_motion": false,
+        "has_glyph_data": false,
+        "is_blank": true
+      }
+    },
+    "state_manager": {
+      "all_motions_visible": true,
+      "validation_valid": true,
+      "validation_issues": 0,
+      "validation_warnings": 0,
+      "observer_counts": {
+        "glyph": 0,
+        "motion": 0,
+        "non_radial": 0,
+        "all": 0,
+        "buttons": 0
+      },
+      "glyph_states": {
+        "TKA": {
+          "base_visible": true,
+          "effective_visible": true,
+          "is_dependent": true
+        },
+        "Reversals": {
+          "base_visible": true,
+          "effective_visible": true,
+          "is_dependent": false
+        },
+        "VTG": {
+          "base_visible": true,
+          "effective_visible": true,
+          "is_dependent": true
+        },
+        "Elemental": {
+          "base_visible": true,
+          "effective_visible": true,
+          "is_dependent": true
+        },
+        "Positions": {
+          "base_visible": true,
+          "effective_visible": true,
+          "is_dependent": true
+        }
+      },
+      "motion_states": {
+        "red": true,
+        "blue": true
+      },
+      "non_radial_visible": true
+    },
+    "global_service": {
+      "statistics": {
+        "total_registrations": 0,
+        "active_registrations": 0,
+        "update_calls": 0,
+        "failed_updates": 0,
+        "component_types": []
+      },
+      "registered_pictographs": 0,
+      "component_types": [],
+      "active_registrations": 0,
+      "total_registrations": 0,
+      "update_calls": 0,
+      "failed_updates": 0
+    },
+    "layout_metrics": {
+      "splitter": {
+        "sizes": [
+          486,
+          393
+        ],
+        "proportions": [
+          "55.3%",
+          "44.7%"
+        ],
+        "orientation": "Horizontal"
+      },
+      "motion_controls": {
+        "blue_motion": {
+          "size": "191x50",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "red_motion": {
+          "size": "190x50",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        }
+      },
+      "element_controls": {
+        "TKA": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "Reversals": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "VTG": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "Elemental": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "Positions": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        },
+        "Non-radial_points": {
+          "size": "193x40",
+          "visible": true,
+          "enabled": true,
+          "checked": true
+        }
+      },
+      "total_tab_size": "942x713"
+    }
+  }
+}
