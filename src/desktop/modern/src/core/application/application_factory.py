@@ -40,6 +40,11 @@ from application.services.core.sequence_management_service import (
 from application.services.core.pictograph_management_service import (
     PictographManagementService,
 )
+from application.services.settings.settings_service import SettingsService
+
+# Import file-based storage services
+from infrastructure.storage.file_based_sequence_data_service import FileBasedSequenceDataService
+from infrastructure.storage.file_based_settings_service import FileBasedSettingsService
 
 # Import test doubles (to be created) - using try/except for graceful fallback
 try:
@@ -94,6 +99,10 @@ class ApplicationFactory:
         """
         container = DIContainer()
 
+        # Register file-based data services
+        container.register_singleton(ISequenceDataService, FileBasedSequenceDataService)
+        container.register_singleton(ISettingsService, FileBasedSettingsService)
+
         # Register production services
         container.register_singleton(ILayoutService, LayoutManagementService)
         container.register_singleton(
@@ -107,8 +116,6 @@ class ApplicationFactory:
         )
 
         # TODO: Register remaining production services when identified:
-        # container.register_singleton(ISequenceDataService, FileSequenceDataService)
-        # container.register_singleton(ISettingsService, FileSettingsService)
         # container.register_singleton(IValidationService, ProductionValidationService)
         # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
 
@@ -168,6 +175,10 @@ class ApplicationFactory:
 
         container = DIContainer()
 
+        # Register file-based data services (same as production)
+        container.register_singleton(ISequenceDataService, FileBasedSequenceDataService)
+        container.register_singleton(ISettingsService, FileBasedSettingsService)
+
         # Real business logic services
         container.register_singleton(
             ISequenceManagementService, SequenceManagementService
@@ -176,17 +187,15 @@ class ApplicationFactory:
             IPictographManagementService, PictographManagementService
         )
 
-        # TODO: Register remaining production services when identified:
-        # container.register_singleton(ISequenceDataService, FileSequenceDataService)
-        # container.register_singleton(ISettingsService, FileSettingsService)
-        # container.register_singleton(IValidationService, ProductionValidationService)
-        # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
-
         # Headless UI services
         container.register_singleton(ILayoutService, HeadlessLayoutService)
         container.register_singleton(
             IUIStateManagementService, HeadlessUIStateManagementService
         )
+
+        # TODO: Register remaining production services when identified:
+        # container.register_singleton(IValidationService, ProductionValidationService)
+        # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
 
         logger.info("Created headless application container")
         return container

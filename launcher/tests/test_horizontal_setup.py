@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 # Add launcher directory to path
-launcher_dir = Path(__file__).parent
+launcher_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(launcher_dir))
 
 def test_imports():
@@ -15,20 +15,14 @@ def test_imports():
     try:
         print("Testing imports...")
         
-        print("✓ Testing launcher_config...")
-        from config.config.launcher_config import LauncherConfig
+        print("✓ Testing settings...")
+        from config.settings import SettingsManager, LauncherSettings
         
         print("✓ Testing tka_integration...")
-        from tka_integration import TKAIntegrationService
-        
-        print("✓ Testing horizontal_launcher...")
-        from horizontal_launcher import TKAHorizontalLauncher
-        
-        print("✓ Testing unified_launcher...")
-        from unified_launcher import TKAUnifiedLauncher
+        from integration.tka_integration import TKAIntegrationService
         
         print("✓ Testing main launcher...")
-        from main import TKAHorizontalLauncherApp
+        from main import TKAModernLauncherApp
         
         print("🎉 All imports successful!")
         return True
@@ -44,12 +38,15 @@ def test_config():
     """Test the configuration system."""
     try:
         print("\nTesting configuration...")
-        from config.config.launcher_config import LauncherConfig
+        from config.settings import SettingsManager
         
-        config = LauncherConfig()
-        print(f"✓ Default mode: {config.get_window_mode()}")
-        print(f"✓ Launcher type: {config.get_launcher_type()}")
-        print(f"✓ Taskbar overlay: {config.is_taskbar_overlay_enabled()}")
+        # Create settings manager (won't save to file in test)
+        settings = SettingsManager()
+        print(f"✓ Default mode: {settings.get('launch_mode')}")
+        print(f"✓ Window width: {settings.get('window_width')}")
+        print(f"✓ Window height: {settings.get('window_height')}")
+        print(f"✓ Theme: {settings.get('theme')}")
+        print(f"✓ Dock position: {settings.get('dock_position')}")
         
         return True
         
@@ -57,22 +54,49 @@ def test_config():
         print(f"❌ Config test error: {e}")
         return False
 
+def test_integration():
+    """Test TKA integration service."""
+    try:
+        print("\nTesting TKA integration...")
+        from integration.tka_integration import TKAIntegrationService
+        
+        # Create integration service
+        integration = TKAIntegrationService()
+        print("✓ TKA integration service created")
+        
+        # Test getting applications
+        apps = integration.get_applications()
+        print(f"✓ Found {len(apps)} applications")
+        
+        # List application names
+        for app in apps[:3]:  # Show first 3 apps
+            print(f"   - {app.title}")
+        
+        # Test cleanup
+        integration.cleanup()
+        print("✓ Integration cleanup successful")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Integration test error: {e}")
+        return False
+
 def main():
     """Run all tests."""
-    print("🧪 Testing TKA Horizontal Launcher Setup")
+    print("🧪 Testing TKA Modern Launcher Setup")
     print("=" * 50)
     
     success = True
     success &= test_imports()
     success &= test_config()
+    success &= test_integration()
     
     print("\n" + "=" * 50)
     if success:
-        print("🎉 All tests passed! Your horizontal launcher is ready.")
+        print("🎉 All tests passed! Your launcher is ready.")
         print("\n💡 To start the launcher:")
         print("   python main.py")
-        print("   or")
-        print("   double-click start_horizontal_launcher.bat")
     else:
         print("❌ Some tests failed. Check the error messages above.")
     

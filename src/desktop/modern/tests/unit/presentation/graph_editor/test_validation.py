@@ -6,10 +6,7 @@ Graph Editor Validation Tests
 Tests for the validation utilities and error handling in graph editor components.
 """
 
-from tests.fixtures.graph_editor import (
-    create_sample_beat_data,
-    create_sample_sequence_data,
-)
+
 import pytest
 import sys
 from pathlib import Path
