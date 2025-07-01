@@ -62,6 +62,7 @@ class StartPositionHandler(QObject):
             from application.services.data.pictograph_dataset_service import (
                 PictographDatasetService,
             )
+            from domain.models.core_models import GlyphData
 
             dataset_service = PictographDatasetService()
             # Get real start position data from dataset
@@ -70,62 +71,76 @@ class StartPositionHandler(QObject):
             )
 
             if real_start_position:
-                # Ensure it has proper beat number for start position AND end_pos for option picker
-                beat_data = real_start_position.update(
-                    beat_number=1,  # Start position is always beat 1
-                    duration=1.0,  # Standard duration
-                )
-
-                # CRITICAL FIX: Add end_pos to beat data for option picker
-                beat_dict = beat_data.to_dict()
-                beat_dict[
-                    "end_pos"
-                ] = self.data_conversion_service.extract_end_position_from_position_key(
+                # Extract the specific end position from position_key (like "gamma13")
+                specific_end_pos = self.data_conversion_service.extract_end_position_from_position_key(
                     position_key
+                )
+                
+                # Create proper glyph data with the specific position
+                glyph_data = GlyphData(
+                    start_position=position_key,  # The selected position key
+                    end_position=specific_end_pos,  # The specific end position like "gamma13"
+                )
+                
+                # Update the beat data with proper glyph data and position info
+                beat_data = real_start_position.update(
+                    beat_number=0,  # Start position is beat 0 in persistence
+                    duration=1.0,  # Standard duration
+                    glyph_data=glyph_data,  # Add the position data
                 )
 
                 print(
-                    f"🎯 Created start position data with end_pos: {beat_dict['end_pos']}"
+                    f"🎯 Created start position data: {position_key} -> {specific_end_pos}"
                 )
                 return beat_data
             else:
                 print(
                     f"⚠️ No real data found for position {position_key}, using fallback"
                 )
-                # Fallback to empty beat with position key as letter
+                # Fallback start position with proper glyph data
+                specific_end_pos = self.data_conversion_service.extract_end_position_from_position_key(
+                    position_key
+                )
+                
+                glyph_data = GlyphData(
+                    start_position=position_key,
+                    end_position=specific_end_pos,
+                )
+                
                 fallback_beat = BeatData.empty().update(
                     letter=position_key,
-                    beat_number=1,
+                    beat_number=0,
                     duration=1.0,
+                    glyph_data=glyph_data,
                     is_blank=False,
-                )
-
-                # Add end_pos to fallback too
-                fallback_dict = fallback_beat.to_dict()
-                fallback_dict[
-                    "end_pos"
-                ] = self.data_conversion_service.extract_end_position_from_position_key(
-                    position_key
                 )
 
                 return fallback_beat
 
         except Exception as e:
             print(f"❌ Error loading real start position data: {e}")
-            # Fallback to basic beat data
+            import traceback
+            traceback.print_exc()
+            
+            # Fallback to basic beat data with position info
+            try:
+                specific_end_pos = self.data_conversion_service.extract_end_position_from_position_key(
+                    position_key
+                )
+            except:
+                specific_end_pos = position_key  # Last resort fallback
+                
+            glyph_data = GlyphData(
+                start_position=position_key,
+                end_position=specific_end_pos,
+            )
+            
             fallback_beat = BeatData.empty().update(
                 letter=position_key,
-                beat_number=1,
+                beat_number=0,
                 duration=1.0,
+                glyph_data=glyph_data,
                 is_blank=False,
-            )
-
-            # Add end_pos to fallback
-            fallback_dict = fallback_beat.to_dict()
-            fallback_dict[
-                "end_pos"
-            ] = self.data_conversion_service.extract_end_position_from_position_key(
-                position_key
             )
 
             return fallback_beat

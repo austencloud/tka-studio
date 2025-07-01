@@ -70,10 +70,11 @@ class ConstructTabWidget(QWidget):
             self.data_conversion_service, workbench_setter=self._get_workbench_setter()
         )
 
-        # Sequence manager
+        # Sequence manager (pass start position handler)
         self.sequence_manager = SequenceManager(
             workbench_getter=self._get_workbench_getter(),
             workbench_setter=self._get_workbench_setter(),
+            start_position_handler=self.start_position_handler,
         )
 
         # Option picker manager (will be initialized after layout)

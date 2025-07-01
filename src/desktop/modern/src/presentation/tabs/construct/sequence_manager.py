@@ -39,10 +39,12 @@ class SequenceManager(QObject):
         self,
         workbench_getter: Optional[Callable[[], object]] = None,
         workbench_setter: Optional[Callable[[SequenceData], None]] = None,
+        start_position_handler: Optional[object] = None,
     ):
         super().__init__()
         self.workbench_getter = workbench_getter
         self.workbench_setter = workbench_setter
+        self.start_position_handler = start_position_handler
         self._emitting_signal = False
         self.orientation_update_service = OptionOrientationUpdateService()
         # Initialize sequence persistence service - exactly like legacy
@@ -83,6 +85,255 @@ class SequenceManager(QObject):
             print(f"❌ Error adding beat to sequence: {e}")
             import traceback
             traceback.print_exc()
+
+    def _convert_legacy_to_beat_data(self, beat_dict: dict, beat_number: int) -> BeatData:
+        """Convert legacy JSON format back to modern BeatData with full pictograph data"""
+        from domain.models.core_models import (
+            BeatData, MotionData, GlyphData, MotionType, RotationDirection, Location, Orientation
+        )
+        
+        # Extract basic beat info
+        letter = beat_dict.get("letter", "?")
+        duration = beat_dict.get("duration", 1.0)
+        start_pos = beat_dict.get("start_pos", "")
+        end_pos = beat_dict.get("end_pos", "")
+        timing = beat_dict.get("timing", "tog")
+        direction = beat_dict.get("direction", "same")
+        
+        # Create glyph data with position information
+        glyph_data = GlyphData(
+            start_position=start_pos,
+            end_position=end_pos,
+        )
+        
+        # Convert blue attributes to MotionData
+        blue_motion = None
+        blue_attrs = beat_dict.get("blue_attributes", {})
+        if blue_attrs:
+            try:
+                blue_motion = MotionData(
+                    motion_type=MotionType(blue_attrs.get("motion_type", "static")),
+                    prop_rot_dir=RotationDirection(blue_attrs.get("prop_rot_dir", "no_rot")),
+                    start_loc=Location(blue_attrs.get("start_loc", "s")),
+                    end_loc=Location(blue_attrs.get("end_loc", "s")),
+                    turns=float(blue_attrs.get("turns", 0)),
+                    start_ori=blue_attrs.get("start_ori", "in"),
+                    end_ori=blue_attrs.get("end_ori", "in"),
+                )
+            except Exception as e:
+                print(f"⚠️ Failed to create blue motion data: {e}")
+                # Fallback to static motion
+                blue_motion = MotionData(
+                    motion_type=MotionType.STATIC,
+                    prop_rot_dir=RotationDirection.NO_ROTATION,
+                    start_loc=Location.SOUTH,
+                    end_loc=Location.SOUTH,
+                )
+        
+        # Convert red attributes to MotionData
+        red_motion = None
+        red_attrs = beat_dict.get("red_attributes", {})
+        if red_attrs:
+            try:
+                red_motion = MotionData(
+                    motion_type=MotionType(red_attrs.get("motion_type", "static")),
+                    prop_rot_dir=RotationDirection(red_attrs.get("prop_rot_dir", "no_rot")),
+                    start_loc=Location(red_attrs.get("start_loc", "s")),
+                    end_loc=Location(red_attrs.get("end_loc", "s")),
+                    turns=float(red_attrs.get("turns", 0)),
+                    start_ori=red_attrs.get("start_ori", "in"),
+                    end_ori=red_attrs.get("end_ori", "in"),
+                )
+            except Exception as e:
+                print(f"⚠️ Failed to create red motion data: {e}")
+                # Fallback to static motion
+                red_motion = MotionData(
+                    motion_type=MotionType.STATIC,
+                    prop_rot_dir=RotationDirection.NO_ROTATION,
+                    start_loc=Location.SOUTH,
+                    end_loc=Location.SOUTH,
+                )
+        
+        # Create BeatData with all the extracted data
+        beat_data = BeatData(
+            beat_number=beat_number,
+            letter=letter,
+            duration=duration,
+            blue_motion=blue_motion,
+            red_motion=red_motion,
+            glyph_data=glyph_data,
+            metadata={
+                "timing": timing,
+                "direction": direction,
+                "original_beat_number": beat_dict.get("beat", beat_number),
+            }
+        )
+        
+        return beat_data
+
+    def _convert_legacy_start_position_to_beat_data(self, start_pos_dict: dict) -> BeatData:
+        """Convert legacy start position JSON back to modern BeatData with full data"""
+        from domain.models.core_models import (
+            BeatData, MotionData, GlyphData, MotionType, RotationDirection, Location
+        )
+        
+        # Extract basic start position info
+        letter = start_pos_dict.get("letter", "α")
+        sequence_start_position = start_pos_dict.get("sequence_start_position", "alpha")
+        end_pos = start_pos_dict.get("end_pos", "alpha1")
+        
+        # Create glyph data with position information
+        glyph_data = GlyphData(
+            start_position=sequence_start_position,
+            end_position=end_pos,
+        )
+        
+        # Convert blue attributes to MotionData (start positions usually static)
+        blue_motion = None
+        blue_attrs = start_pos_dict.get("blue_attributes", {})
+        if blue_attrs:
+            try:
+                blue_motion = MotionData(
+                    motion_type=MotionType(blue_attrs.get("motion_type", "static")),
+                    prop_rot_dir=RotationDirection(blue_attrs.get("prop_rot_dir", "no_rot")),
+                    start_loc=Location(blue_attrs.get("start_loc", "s")),
+                    end_loc=Location(blue_attrs.get("end_loc", "s")),
+                    turns=float(blue_attrs.get("turns", 0)),
+                    start_ori=blue_attrs.get("start_ori", "in"),
+                    end_ori=blue_attrs.get("end_ori", "in"),
+                )
+            except Exception as e:
+                print(f"⚠️ Failed to create blue motion data for start position: {e}")
+                blue_motion = MotionData(
+                    motion_type=MotionType.STATIC,
+                    prop_rot_dir=RotationDirection.NO_ROTATION,
+                    start_loc=Location.SOUTH,
+                    end_loc=Location.SOUTH,
+                )
+        
+        # Convert red attributes to MotionData
+        red_motion = None
+        red_attrs = start_pos_dict.get("red_attributes", {})
+        if red_attrs:
+            try:
+                red_motion = MotionData(
+                    motion_type=MotionType(red_attrs.get("motion_type", "static")),
+                    prop_rot_dir=RotationDirection(red_attrs.get("prop_rot_dir", "no_rot")),
+                    start_loc=Location(red_attrs.get("start_loc", "s")),
+                    end_loc=Location(red_attrs.get("end_loc", "s")),
+                    turns=float(red_attrs.get("turns", 0)),
+                    start_ori=red_attrs.get("start_ori", "in"),
+                    end_ori=red_attrs.get("end_ori", "in"),
+                )
+            except Exception as e:
+                print(f"⚠️ Failed to create red motion data for start position: {e}")
+                red_motion = MotionData(
+                    motion_type=MotionType.STATIC,
+                    prop_rot_dir=RotationDirection.NO_ROTATION,
+                    start_loc=Location.SOUTH,
+                    end_loc=Location.SOUTH,
+                )
+        
+        # Create BeatData for start position
+        start_position_beat = BeatData(
+            beat_number=0,  # Start position is beat 0
+            letter=letter,
+            duration=1.0,
+            blue_motion=blue_motion,
+            red_motion=red_motion,
+            glyph_data=glyph_data,
+            metadata={
+                "is_start_position": True,
+                "sequence_start_position": sequence_start_position,
+                "timing": start_pos_dict.get("timing", "none"),
+                "direction": start_pos_dict.get("direction", "none"),
+            }
+        )
+        
+        return start_position_beat
+
+    def _convert_beat_data_to_legacy_format(self, beat: BeatData, beat_number: int) -> dict:
+        """Convert modern BeatData to legacy JSON format exactly like legacy pictograph_data"""
+        # Extract position data from glyph_data if available
+        start_pos = ""
+        end_pos = ""
+        if beat.glyph_data:
+            start_pos = beat.glyph_data.start_position or ""
+            end_pos = beat.glyph_data.end_position or ""
+
+        # Extract motion data from blue_motion and red_motion
+        blue_attrs = {
+            "motion_type": "static",
+            "start_ori": "in",
+            "end_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "s",
+            "end_loc": "s",
+            "turns": 0,
+        }
+        
+        red_attrs = {
+            "motion_type": "static",
+            "start_ori": "in",
+            "end_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "s",
+            "end_loc": "s",
+            "turns": 0,
+        }
+
+        # Extract blue motion data if available
+        if beat.blue_motion:
+            blue_attrs.update({
+                "motion_type": beat.blue_motion.motion_type.value,
+                "start_ori": beat.blue_motion.start_ori,
+                "end_ori": beat.blue_motion.end_ori,
+                "prop_rot_dir": beat.blue_motion.prop_rot_dir.value,
+                "start_loc": beat.blue_motion.start_loc.value,
+                "end_loc": beat.blue_motion.end_loc.value,
+                "turns": int(beat.blue_motion.turns),
+            })
+
+        # Extract red motion data if available
+        if beat.red_motion:
+            red_attrs.update({
+                "motion_type": beat.red_motion.motion_type.value,
+                "start_ori": beat.red_motion.start_ori,
+                "end_ori": beat.red_motion.end_ori,
+                "prop_rot_dir": beat.red_motion.prop_rot_dir.value,
+                "start_loc": beat.red_motion.start_loc.value,
+                "end_loc": beat.red_motion.end_loc.value,
+                "turns": int(beat.red_motion.turns),
+            })
+
+        # Determine timing and direction from motion data
+        timing = "tog"  # Default
+        direction = "same"  # Default
+        
+        # If we have motion data, try to determine timing/direction
+        if beat.blue_motion and beat.red_motion:
+            # Check if blue and red are moving in same direction
+            if (beat.blue_motion.motion_type == beat.red_motion.motion_type and
+                beat.blue_motion.prop_rot_dir == beat.red_motion.prop_rot_dir):
+                direction = "same"
+            else:
+                direction = "opp"
+                
+            # For now, default to "tog" timing - this could be enhanced later
+            timing = "tog"
+
+        return {
+            "beat": beat_number,
+            "letter": beat.letter or "?",
+            "letter_type": "Type1",  # Default for now - could extract from glyph_data.letter_type
+            "duration": int(beat.duration),
+            "start_pos": start_pos,
+            "end_pos": end_pos,
+            "timing": timing,
+            "direction": direction,
+            "blue_attributes": blue_attrs,
+            "red_attributes": red_attrs,
+        }
 
     def clear_sequence(self):
         """Clear the current sequence - V1 behavior: hide all beats, keep start position visible"""
@@ -157,34 +408,7 @@ class SequenceManager(QObject):
             # Convert beats to legacy format (these will be beat 1, 2, 3, etc.)
             legacy_beats = []
             for i, beat in enumerate(sequence.beats):
-                beat_dict = {
-                    "beat": i + 1,  # Start numbering from 1 (start position is 0)
-                    "letter": beat.letter,
-                    "letter_type": "Type1",  # Default for now
-                    "duration": int(beat.duration),
-                    "start_pos": getattr(beat, 'start_position', ''),
-                    "end_pos": getattr(beat, 'end_position', ''),
-                    "timing": getattr(beat, 'timing', 'tog'),
-                    "direction": getattr(beat, 'direction', 'same'),
-                    "blue_attributes": {
-                        "motion_type": getattr(beat, 'blue_motion_type', 'pro'),
-                        "start_ori": getattr(beat, 'blue_start_ori', 'in'),
-                        "end_ori": getattr(beat, 'blue_end_ori', 'in'),
-                        "prop_rot_dir": getattr(beat, 'blue_prop_rot_dir', 'cw'),
-                        "start_loc": getattr(beat, 'blue_start_loc', 's'),
-                        "end_loc": getattr(beat, 'blue_end_loc', 's'),
-                        "turns": getattr(beat, 'blue_turns', 0),
-                    },
-                    "red_attributes": {
-                        "motion_type": getattr(beat, 'red_motion_type', 'pro'),
-                        "start_ori": getattr(beat, 'red_start_ori', 'in'),
-                        "end_ori": getattr(beat, 'red_end_ori', 'in'),
-                        "prop_rot_dir": getattr(beat, 'red_prop_rot_dir', 'cw'),
-                        "start_loc": getattr(beat, 'red_start_loc', 's'),
-                        "end_loc": getattr(beat, 'red_end_loc', 's'),
-                        "turns": getattr(beat, 'red_turns', 0),
-                    },
-                }
+                beat_dict = self._convert_beat_data_to_legacy_format(beat, i + 1)
                 legacy_beats.append(beat_dict)
             
             # Build final sequence: [metadata, start_position (if exists), beat1, beat2, ...]
@@ -327,42 +551,75 @@ class SequenceManager(QObject):
     
     def _convert_start_position_to_legacy_format(self, start_position_data: BeatData) -> dict:
         """Convert start position BeatData to legacy format exactly like JsonStartPositionHandler"""
-        # Extract start position type (alpha, beta, gamma) from end position
-        end_pos = getattr(start_position_data, 'end_position', 'alpha1')
-        if end_pos.startswith("alpha"):
-            sequence_start_position = "alpha"
-        elif end_pos.startswith("beta"):
-            sequence_start_position = "beta"
-        elif end_pos.startswith("gamma"):
-            sequence_start_position = "gamma"
-        else:
-            sequence_start_position = end_pos.rstrip("0123456789")
+        # Extract start position type (alpha, beta, gamma) from glyph_data if available
+        end_pos = "alpha1"  # Default
+        sequence_start_position = "alpha"  # Default
+        
+        if start_position_data.glyph_data and start_position_data.glyph_data.end_position:
+            end_pos = start_position_data.glyph_data.end_position
+            if end_pos.startswith("alpha"):
+                sequence_start_position = "alpha"
+            elif end_pos.startswith("beta"):
+                sequence_start_position = "beta"
+            elif end_pos.startswith("gamma"):
+                sequence_start_position = "gamma"
+            else:
+                sequence_start_position = end_pos.rstrip("0123456789")
+        
+        # Extract motion data for start position (usually static)
+        blue_attrs = {
+            "start_loc": "s",
+            "end_loc": "s",
+            "start_ori": "in",
+            "end_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "turns": 0,
+            "motion_type": "static",
+        }
+        
+        red_attrs = {
+            "start_loc": "s",
+            "end_loc": "s",
+            "start_ori": "in",
+            "end_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "turns": 0,
+            "motion_type": "static",
+        }
+        
+        # Extract blue motion data if available (though start positions are usually static)
+        if start_position_data.blue_motion:
+            blue_attrs.update({
+                "start_loc": start_position_data.blue_motion.start_loc.value,
+                "end_loc": start_position_data.blue_motion.end_loc.value,
+                "start_ori": start_position_data.blue_motion.start_ori,
+                "end_ori": start_position_data.blue_motion.end_ori,
+                "prop_rot_dir": start_position_data.blue_motion.prop_rot_dir.value,
+                "turns": int(start_position_data.blue_motion.turns),
+                "motion_type": start_position_data.blue_motion.motion_type.value,
+            })
+            
+        # Extract red motion data if available
+        if start_position_data.red_motion:
+            red_attrs.update({
+                "start_loc": start_position_data.red_motion.start_loc.value,
+                "end_loc": start_position_data.red_motion.end_loc.value,
+                "start_ori": start_position_data.red_motion.start_ori,
+                "end_ori": start_position_data.red_motion.end_ori,
+                "prop_rot_dir": start_position_data.red_motion.prop_rot_dir.value,
+                "turns": int(start_position_data.red_motion.turns),
+                "motion_type": start_position_data.red_motion.motion_type.value,
+            })
         
         return {
             "beat": 0,
             "sequence_start_position": sequence_start_position,
-            "letter": start_position_data.letter,
+            "letter": start_position_data.letter or "α",
             "end_pos": end_pos,
-            "timing": getattr(start_position_data, 'timing', 'none'),
-            "direction": getattr(start_position_data, 'direction', 'none'),
-            "blue_attributes": {
-                "start_loc": getattr(start_position_data, 'blue_start_loc', 's'),
-                "end_loc": getattr(start_position_data, 'blue_end_loc', 's'),
-                "start_ori": getattr(start_position_data, 'blue_start_ori', 'in'),
-                "end_ori": getattr(start_position_data, 'blue_end_ori', 'in'),
-                "prop_rot_dir": "no_rot",
-                "turns": 0,
-                "motion_type": "static",
-            },
-            "red_attributes": {
-                "start_loc": getattr(start_position_data, 'red_start_loc', 'n'),
-                "end_loc": getattr(start_position_data, 'red_end_loc', 'n'),
-                "start_ori": getattr(start_position_data, 'red_start_ori', 'in'),
-                "end_ori": getattr(start_position_data, 'red_end_ori', 'in'),
-                "prop_rot_dir": "no_rot",
-                "turns": 0,
-                "motion_type": "static",
-            },
+            "timing": "none",
+            "direction": "none",
+            "blue_attributes": blue_attrs,
+            "red_attributes": red_attrs,
         }
 
     def load_sequence_on_startup(self):
@@ -395,15 +652,15 @@ class SequenceManager(QObject):
                     beats_data.append(item)
                     print(f"✅ [SEQUENCE_MANAGER] Found beat {item.get('beat', '?')}: {item.get('letter', '?')}")
             
-            # Convert beats to modern format
-            from domain.models.core_models import BeatData
+            # Convert beats to modern format with full pictograph data
+            from domain.models.core_models import BeatData, MotionData, GlyphData
             beat_objects = []
             for i, beat_dict in enumerate(beats_data):
                 try:
-                    beat_obj = BeatData.from_dict(beat_dict)
-                    # Renumber beats to be sequential starting from 1
-                    beat_obj = beat_obj.update(beat_number=i + 1)
+                    # Convert legacy format back to modern BeatData with full data
+                    beat_obj = self._convert_legacy_to_beat_data(beat_dict, i + 1)
                     beat_objects.append(beat_obj)
+                    print(f"✅ [SEQUENCE_MANAGER] Converted beat {beat_obj.letter} with motion data")
                 except Exception as e:
                     print(f"⚠️ [SEQUENCE_MANAGER] Failed to convert beat {beat_dict.get('letter', '?')}: {e}")
                     # Create fallback beat with proper numbering
@@ -418,20 +675,27 @@ class SequenceManager(QObject):
                 # First, set start position if it exists (like legacy)
                 if start_position_data:
                     try:
-                        # Convert start position to BeatData
-                        start_pos_beat = BeatData.empty().update(
-                            letter=start_position_data.get("letter", "α"),
-                            beat_number=0,
-                            duration=1.0
-                        )
+                        # Extract the position key from the start position data
+                        position_key = start_position_data.get("sequence_start_position", "alpha")
+                        end_pos = start_position_data.get("end_pos", "alpha1")
                         
-                        # Set start position in workbench first
-                        if self.workbench_setter:
-                            self.workbench_setter(start_pos_beat)
-                            print(f"✅ [SEQUENCE_MANAGER] Start position loaded into workbench")
+                        print(f"🎯 [SEQUENCE_MANAGER] Loading start position: {position_key} -> {end_pos}")
+                        
+                        # Create start position BeatData from the saved data
+                        start_position_beat = self._convert_legacy_start_position_to_beat_data(start_position_data)
+                        
+                        # Set start position directly in workbench (don't trigger selection flow)
+                        workbench = self.workbench_getter()
+                        if workbench and hasattr(workbench, 'set_start_position'):
+                            workbench.set_start_position(start_position_beat)
+                            print(f"✅ [SEQUENCE_MANAGER] Start position loaded into workbench: {end_pos}")
+                        else:
+                            print(f"⚠️ [SEQUENCE_MANAGER] Workbench doesn't have set_start_position method")
                             
                     except Exception as e:
                         print(f"⚠️ [SEQUENCE_MANAGER] Failed to load start position: {e}")
+                        import traceback
+                        traceback.print_exc()
                 
                 # Then create and set the sequence
                 from domain.models.core_models import SequenceData
