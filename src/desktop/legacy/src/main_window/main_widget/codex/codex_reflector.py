@@ -31,7 +31,7 @@ class CodexReflector:
     def mirror_codex(self):
         """Apply mirroring logic to all pictographs in the Codex."""
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        for letter, pictograph in self.codex.data_manager.pictograph_data.items():
+        for _, pictograph in self.codex.data_manager.pictograph_data.items():
             if pictograph:
                 self._mirror_pictograph(pictograph)
         self.control_widget.refresh_pictograph_views()
