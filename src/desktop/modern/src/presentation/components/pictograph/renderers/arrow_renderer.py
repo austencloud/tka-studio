@@ -27,6 +27,33 @@ from presentation.components.pictograph.graphics_items.arrow_item import (
     ArrowItem,
 )
 
+
+class NonSelectableArrowItem(QGraphicsSvgItem):
+    """Non-selectable arrow for contexts outside graph editor."""
+    
+    def __init__(self, color: str, parent=None):
+        super().__init__(parent)
+        self.arrow_color = color
+        # Ensure it's completely non-interactive
+        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, False)
+        self.setAcceptHoverEvents(False)
+        # Make it transparent to mouse events
+        self.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
+        
+    def mousePressEvent(self, event):
+        """Always ignore mouse events to let them pass through to parent."""
+        print(f"🔴 [NON_SELECTABLE_ARROW] Click detected on {self.arrow_color} arrow - ignoring event")
+        # Ignore the event so it bubbles up to the pictograph
+        event.ignore()
+        
+    def hoverEnterEvent(self, event):
+        """Always ignore hover events."""
+        event.ignore()
+        
+    def hoverLeaveEvent(self, event):
+        """Always ignore hover events."""
+        event.ignore()
+
 if TYPE_CHECKING:
     from presentation.components.pictograph.pictograph_scene import PictographScene
 
@@ -102,8 +129,8 @@ class ArrowRenderer:
 
         arrow_svg_path = self._get_arrow_svg_file(motion_data, color)
 
-        arrow_item = ArrowItem()
-        arrow_item.arrow_color = color  # Set arrow color for selection
+        # Create different arrow types based on scene context
+        arrow_item = self._create_arrow_item_for_context(color)
         renderer = None
 
         if os.path.exists(arrow_svg_path):
@@ -182,6 +209,40 @@ class ArrowRenderer:
             self.scene.addItem(arrow_item)
         else:
             logger.error(f"Invalid SVG renderer for motion: {motion_data}")
+
+    def _create_arrow_item_for_context(self, color: str):
+        """Create appropriate arrow item type based on scene context."""
+        # Check if scene has context detection method
+        if hasattr(self.scene, "_determine_component_type"):
+            component_type = self.scene._determine_component_type()
+            
+            # DEBUG: Print what context we detected
+            print(f"🔍 [ARROW_RENDERER] Context detected: '{component_type}' for color '{color}'")
+            
+            # Also debug the parent hierarchy
+            parent = self.scene.parent()
+            hierarchy = []
+            while parent and len(hierarchy) < 5:  # Limit to avoid infinite loops
+                hierarchy.append(parent.__class__.__name__)
+                parent = parent.parent() if hasattr(parent, "parent") else None
+            print(f"🔍 [ARROW_RENDERER] Parent hierarchy: {' -> '.join(hierarchy)}")
+            
+            # Only create selectable ArrowItem for graph editor context
+            if component_type == "graph_editor":
+                arrow_item = ArrowItem()
+                arrow_item.arrow_color = color  # Set color for selection
+                print(f"✅ [ARROW_RENDERER] Created selectable ArrowItem for graph_editor context")
+                return arrow_item
+            
+            # For all other contexts (beat_frame, option_picker, etc.), use regular SVG item
+            arrow_item = NonSelectableArrowItem(color)
+            print(f"✅ [ARROW_RENDERER] Created NonSelectableArrowItem for '{component_type}' context")
+            return arrow_item
+        
+        # Fallback: if no context detection, use regular SVG item (safer default)
+        arrow_item = NonSelectableArrowItem(color)
+        print(f"✅ [ARROW_RENDERER] Created NonSelectableArrowItem (fallback - no context detection)")
+        return arrow_item
 
     def _get_arrow_svg_file(self, motion_data: MotionData, color: str) -> str:
         """Get the correct pre-colored arrow SVG file path with proper motion type mapping."""

@@ -134,10 +134,17 @@ class BeatView(QFrame):
         return self._beat_number
 
     def set_selected(self, selected: bool):
-        """Set selection state"""
+        """Set selection state and update cursor accordingly"""
         if self._is_selected != selected:
             self._is_selected = selected
             self._update_selection_style()
+            # Update cursor based on new selection state
+            if selected:
+                self.setCursor(Qt.CursorShape.ArrowCursor)  # Selected beats don't show pointer
+            elif self._beat_data:  # Non-selected beats with data show pointer when hovered
+                # Only update cursor if mouse is currently over this widget
+                if self.underMouse():
+                    self.setCursor(Qt.CursorShape.PointingHandCursor)
 
     def is_selected(self) -> bool:
         """Check if beat is selected"""
@@ -331,8 +338,12 @@ class BeatView(QFrame):
         super().mouseDoubleClickEvent(event)
 
     def enterEvent(self, event):
-        """Handle mouse enter events"""
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        """Handle mouse enter events - only show pointer cursor for selectable beats"""
+        # Only show pointer cursor if beat is not currently selected (like legacy)
+        if not self._is_selected and self._beat_data:
+            self.setCursor(Qt.CursorShape.PointingHandCursor)
+        else:
+            self.setCursor(Qt.CursorShape.ArrowCursor)
         self.set_highlighted(True)
         super().enterEvent(event)
 

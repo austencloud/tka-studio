@@ -151,19 +151,30 @@ class PictographScene(QGraphicsScene):
     def _determine_component_type(self) -> str:
         """Determine component type from parent hierarchy."""
         parent = self.parent()
+        hierarchy = []
         while parent:
             class_name = parent.__class__.__name__.lower()
+            hierarchy.append(class_name)
+            print(f"🔍 [SCENE_CONTEXT] Checking parent: {class_name}")
+            
             if "graph" in class_name:
+                print(f"✅ [SCENE_CONTEXT] Found graph_editor context!")
                 return "graph_editor"
             elif "beat" in class_name:
+                print(f"✅ [SCENE_CONTEXT] Found beat_frame context!")
                 return "beat_frame"
-            elif "option" in class_name:
+            elif "option" in class_name or "clickable" in class_name:
+                print(f"✅ [SCENE_CONTEXT] Found option_picker context!")
                 return "option_picker"
             elif "preview" in class_name:
+                print(f"✅ [SCENE_CONTEXT] Found preview context!")
                 return "preview"
             elif "sequence" in class_name:
+                print(f"✅ [SCENE_CONTEXT] Found sequence_viewer context!")
                 return "sequence_viewer"
             parent = parent.parent() if hasattr(parent, "parent") else None
+        
+        print(f"⚠️ [SCENE_CONTEXT] Unknown context! Hierarchy: {' -> '.join(hierarchy)}")
         return "unknown"
 
     def is_in_graph_editor_context(self) -> bool:

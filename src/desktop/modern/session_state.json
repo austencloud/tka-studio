@@ -2,21 +2,21 @@
   "session_metadata": {
     "session_id": "1c2ee9bc-a8eb-49ab-984f-ed2d496b4ccd",
     "created_at": "2025-07-01T15:29:15.639313",
-    "last_interaction": "2025-07-01T15:29:34.764014",
+    "last_interaction": "2025-07-01T15:50:08.546290",
     "tka_version": "modern"
   },
   "current_sequence": {
-    "sequence_id": "loaded_sequence",
+    "sequence_id": "cb33c48b-1ce2-4826-9993-efe3d419afd0",
     "sequence_data": {
-      "id": "loaded_sequence",
-      "name": "\u0394-Y\u03a9",
+      "id": "cb33c48b-1ce2-4826-9993-efe3d419afd0",
+      "name": "Empty Sequence",
       "word": "",
       "beats": [
         {
-          "id": "1eeec20f-7759-4086-b889-245d09d1d905",
+          "id": "e94d7fe0-d52b-4ac8-b18d-4f950d5b8ef9",
           "beat_number": 1,
           "letter": "\u0394-",
-          "duration": 1,
+          "duration": 1.0,
           "blue_motion": {
             "motion_type": "dash",
             "prop_rot_dir": "no_rot",
@@ -36,15 +36,15 @@
             "end_ori": "out"
           },
           "glyph_data": {
-            "vtg_mode": null,
-            "elemental_type": null,
-            "letter_type": null,
-            "has_dash": false,
+            "vtg_mode": "TO",
+            "elemental_type": "earth",
+            "letter_type": "Type3",
+            "has_dash": true,
             "turns_data": null,
             "start_position": "beta5",
             "end_position": "gamma15",
-            "show_elemental": true,
-            "show_vtg": true,
+            "show_elemental": false,
+            "show_vtg": false,
             "show_tka": true,
             "show_positions": true
           },
@@ -52,104 +52,13 @@
           "red_reversal": false,
           "is_blank": false,
           "metadata": {
-            "timing": "tog",
-            "direction": "opp",
-            "original_beat_number": 1
-          }
-        },
-        {
-          "id": "fcabb20d-2afa-4106-9dd2-60f5c2f65e48",
-          "beat_number": 2,
-          "letter": "Y",
-          "duration": 1,
-          "blue_motion": {
-            "motion_type": "pro",
-            "prop_rot_dir": "ccw",
-            "start_loc": "n",
-            "end_loc": "w",
-            "turns": 0.0,
-            "start_ori": "out",
-            "end_ori": "out"
-          },
-          "red_motion": {
-            "motion_type": "static",
-            "prop_rot_dir": "no_rot",
-            "start_loc": "w",
-            "end_loc": "w",
-            "turns": 0.0,
-            "start_ori": "out",
-            "end_ori": "out"
-          },
-          "glyph_data": {
-            "vtg_mode": null,
-            "elemental_type": null,
-            "letter_type": null,
-            "has_dash": false,
-            "turns_data": null,
-            "start_position": "gamma15",
-            "end_position": "beta7",
-            "show_elemental": true,
-            "show_vtg": true,
-            "show_tka": true,
-            "show_positions": true
-          },
-          "blue_reversal": false,
-          "red_reversal": false,
-          "is_blank": false,
-          "metadata": {
-            "timing": "tog",
-            "direction": "opp",
-            "original_beat_number": 2
-          }
-        },
-        {
-          "id": "6cbea3e4-4a76-4ea6-9c0f-14ede730a867",
-          "beat_number": 3,
-          "letter": "\u03a9",
-          "duration": 1,
-          "blue_motion": {
-            "motion_type": "anti",
-            "prop_rot_dir": "cw",
-            "start_loc": "w",
-            "end_loc": "s",
-            "turns": 0.0,
-            "start_ori": "out",
-            "end_ori": "in"
-          },
-          "red_motion": {
-            "motion_type": "static",
-            "prop_rot_dir": "no_rot",
-            "start_loc": "w",
-            "end_loc": "w",
-            "turns": 0.0,
-            "start_ori": "out",
-            "end_ori": "out"
-          },
-          "glyph_data": {
-            "vtg_mode": null,
-            "elemental_type": null,
-            "letter_type": null,
-            "has_dash": false,
-            "turns_data": null,
-            "start_position": "beta7",
-            "end_position": "gamma7",
-            "show_elemental": true,
-            "show_vtg": true,
-            "show_tka": true,
-            "show_positions": true
-          },
-          "blue_reversal": false,
-          "red_reversal": false,
-          "is_blank": false,
-          "metadata": {
-            "timing": "tog",
-            "direction": "opp",
-            "original_beat_number": 3
+            "start_pos": "beta5",
+            "end_pos": "gamma15"
           }
         }
       ],
       "start_position": {
-        "id": "c1875037-33c9-4bb8-b9ec-121978534fb3",
+        "id": "934a0b93-1fa4-456a-8642-abb26bf91b6b",
         "beat_number": 0,
         "letter": "\u03b2",
         "duration": 1.0,
@@ -177,7 +86,7 @@
           "letter_type": null,
           "has_dash": false,
           "turns_data": null,
-          "start_position": "beta",
+          "start_position": "beta5_beta5",
           "end_position": "beta5",
           "show_elemental": true,
           "show_vtg": true,
@@ -187,12 +96,7 @@
         "blue_reversal": false,
         "red_reversal": false,
         "is_blank": false,
-        "metadata": {
-          "is_start_position": true,
-          "sequence_start_position": "beta",
-          "timing": "none",
-          "direction": "none"
-        }
+        "metadata": {}
       },
       "metadata": {}
     }
