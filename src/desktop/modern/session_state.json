@@ -2,16 +2,61 @@
   "session_metadata": {
     "session_id": "1c2ee9bc-a8eb-49ab-984f-ed2d496b4ccd",
     "created_at": "2025-07-01T15:29:15.639313",
-    "last_interaction": "2025-07-02T15:57:28.155079",
+    "last_interaction": "2025-07-02T18:35:45.473804",
     "tka_version": "modern"
   },
   "current_sequence": {
-    "sequence_id": "280c2fe8-a14b-42e5-870a-12ecbfaad60a",
+    "sequence_id": "04e440ff-4b5d-4250-adb5-0234de3ac420",
     "sequence_data": {
-      "id": "280c2fe8-a14b-42e5-870a-12ecbfaad60a",
+      "id": "04e440ff-4b5d-4250-adb5-0234de3ac420",
       "name": "Empty Sequence",
       "word": "",
-      "beats": [],
+      "beats": [
+        {
+          "id": "012e1487-d050-4e24-b91f-aa9c2ff785f9",
+          "beat_number": 1,
+          "letter": "\u03a3",
+          "duration": 1.0,
+          "blue_motion": {
+            "motion_type": "static",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "s",
+            "end_loc": "s",
+            "turns": 0.0,
+            "start_ori": "in",
+            "end_ori": "in"
+          },
+          "red_motion": {
+            "motion_type": "pro",
+            "prop_rot_dir": "ccw",
+            "start_loc": "n",
+            "end_loc": "w",
+            "turns": 0.0,
+            "start_ori": "in",
+            "end_ori": "in"
+          },
+          "glyph_data": {
+            "vtg_mode": "SO",
+            "elemental_type": "water",
+            "letter_type": "Type2",
+            "has_dash": false,
+            "turns_data": null,
+            "start_position": "alpha1",
+            "end_position": "gamma7",
+            "show_elemental": false,
+            "show_vtg": false,
+            "show_tka": true,
+            "show_positions": true
+          },
+          "blue_reversal": false,
+          "red_reversal": false,
+          "is_blank": false,
+          "metadata": {
+            "start_pos": "alpha1",
+            "end_pos": "gamma7"
+          }
+        }
+      ],
       "start_position": null,
       "metadata": {}
     }

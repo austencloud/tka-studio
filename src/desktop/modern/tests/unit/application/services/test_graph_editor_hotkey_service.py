@@ -1,25 +1,19 @@
 """
-Unit tests for GraphEditorHotkeyService
-
-Tests the hotkey handling functionality including WASD movement,
-modifier keys, and special commands.
+TEST LIFECYCLE: UNIT
+PURPOSE: Test GraphEditorHotkeyService keyboard handling functionality
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import Mock, MagicMock
 from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtGui import QKeyEvent
-
-# Add modern/src to path for imports
-modern_src_path = Path(__file__).parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 from application.services.graph_editor_hotkey_service import GraphEditorHotkeyService
 from domain.models.core_models import BeatData, MotionData, MotionType
 
 
+@pytest.mark.unit
 class TestGraphEditorHotkeyService:
     """Test the graph editor hotkey service"""
 

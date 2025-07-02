@@ -43,40 +43,31 @@ class DockPositionManager:
 
     def calculate_dock_height(self, application_count: int = None) -> int:
         """Calculate appropriate dock height based on number of applications."""
-        if application_count is None:
-            # Use estimated count for initial calculation
-            estimated_apps = 6
-        else:
-            estimated_apps = application_count
-
-        total_height = self.base_height + (
-            estimated_apps * (self.icon_size + self.icon_spacing)
-        )
-
-        # Limit to screen height
         screen = QApplication.primaryScreen()
         if screen:
-            screen_height = screen.geometry().height()
-            max_height = int(screen_height * 0.8)  # 80% of screen height
-            total_height = min(total_height, max_height)
-
-        return total_height
+            full_h = screen.geometry().height()
+            avail_h = screen.availableGeometry().height()
+            task_h = full_h - avail_h
+            # subtract a small padding to ensure icons don't exceed taskbar
+            dock_h = max(task_h - 2, 0)
+            logger.debug(f"🔧 Taskbar height: {task_h}, setting dock height: {dock_h}")
+            return dock_h
+        # Fallback to default icon size plus padding
+        return self.base_height + self.icon_size + self.icon_spacing
 
     def calculate_actual_dock_height(self, applications: List[ApplicationData]) -> int:
         """Calculate dock height based on actual number of applications."""
-        app_count = len(applications)
-        total_height = self.base_height + (
-            app_count * (self.icon_size + self.icon_spacing)
-        )
-
-        # Limit to screen height
+        # Use same logic as calculate_dock_height
         screen = QApplication.primaryScreen()
         if screen:
-            screen_height = screen.geometry().height()
-            max_height = int(screen_height * 0.8)
-            total_height = min(total_height, max_height)
-
-        return total_height
+            full_h = screen.geometry().height()
+            avail_h = screen.availableGeometry().height()
+            task_h = full_h - avail_h
+            dock_h = max(task_h - 2, 0)
+            logger.debug(f"🔧 Taskbar height: {task_h}, actual dock height: {dock_h}")
+            return dock_h
+        # Fallback to default icon size plus padding
+        return self.base_height + self.icon_size + self.icon_spacing
 
     def position_dock(self, dock_widget) -> bool:
         """Position the dock on screen according to configuration."""
@@ -85,6 +76,7 @@ class DockPositionManager:
             logger.warning("⚠️ No screen available for dock positioning")
             return False
 
+        # Use full screen geometry so dock overlays the taskbar
         screen_geometry = screen.geometry()
         dock_rect = self.calculate_dock_position(screen_geometry, dock_widget.height())
 
@@ -95,14 +87,11 @@ class DockPositionManager:
     def calculate_dock_position(
         self, screen_geometry: QRect, dock_height: int
     ) -> QRect:
-        """Calculate dock position based on configuration."""
-        dock_width = self.dock_config.width
-
+        """Calculate horizontal bottom-docked position overlaying the taskbar."""
+        # Full width dock overlaying taskbar at bottom
+        dock_width = screen_geometry.width() - 2 * self.dock_config.margin_x
         x = screen_geometry.left() + self.dock_config.margin_x
-        y = (
-            screen_geometry.bottom() - dock_height - self.dock_config.margin_y - 48
-        )  # Account for taskbar
-
+        y = screen_geometry.bottom() - dock_height - self.dock_config.margin_y
         return QRect(x, y, dock_width, dock_height)
 
     def get_dock_geometry(self, dock_widget) -> WindowGeometry:

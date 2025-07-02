@@ -159,13 +159,14 @@ class PictographScene(QGraphicsScene):
         """
         try:
             # Try to get context service from DI container
-            from core.application.application_factory import get_container
+            from core.application.application_factory import ApplicationFactory
             from core.interfaces.core_services import IPictographContextService
             from application.services.ui.context_aware_scaling_service import (
                 RenderingContext,
             )
 
-            container = get_container()
+            # Use proper application factory method
+            container = ApplicationFactory.create_app_from_args()
             if container:
                 context_service = container.resolve(IPictographContextService)
                 print(

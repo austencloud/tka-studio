@@ -1,20 +1,11 @@
 """
-Tests for OptionOrientationUpdateService
-
-Verifies that the modern orientation update service correctly:
-1. Extracts end orientations from the last beat in a sequence
-2. Sets those as start orientations for option beats
-3. Calculates new end orientations using the modern orientation calculator
+TEST LIFECYCLE: UNIT
+PURPOSE: Test OptionOrientationUpdateService orientation calculation functionality
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import Mock, patch
-
-# Add modern/src to path for imports
-modern_src_path = Path(__file__).parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 from domain.models.core_models import (
     BeatData,
@@ -30,6 +21,7 @@ from application.services.option_picker.orientation_update_service import (
 )
 
 
+@pytest.mark.unit
 class TestOptionOrientationUpdateService:
     """Test suite for OptionOrientationUpdateService"""
 

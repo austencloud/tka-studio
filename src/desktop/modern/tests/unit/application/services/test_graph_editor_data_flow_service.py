@@ -1,19 +1,12 @@
 """
-Unit tests for GraphEditorDataFlowService
-
-Tests the core data flow functionality for the graph editor including
-beat data updates, signal emission, and panel mode determination.
+TEST LIFECYCLE: UNIT
+PURPOSE: Test GraphEditorDataFlowService core functionality
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import Mock, MagicMock
 from PyQt6.QtCore import QObject
-
-# Add modern/src to path for imports
-modern_src_path = Path(__file__).parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 from application.services.graph_editor_data_flow_service import (
     GraphEditorDataFlowService,
@@ -28,6 +21,7 @@ from domain.models.core_models import (
 )
 
 
+@pytest.mark.unit
 class TestGraphEditorDataFlowService:
     """Test the graph editor data flow service"""
 

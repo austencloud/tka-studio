@@ -1,17 +1,10 @@
 """
-Unit tests for DirectionCalculationService
-
-Tests the pure direction calculation service.
-Validates extraction from PropManagementService maintains functionality.
+TEST LIFECYCLE: UNIT
+PURPOSE: Test DirectionCalculationService prop separation direction calculations
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
-
-# Add modern/src to path for imports
-modern_src_path = Path(__file__).parent.parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 from domain.models.core_models import (
     BeatData,
@@ -27,6 +20,7 @@ from application.services.positioning.props.calculation.direction_calculation_se
 )
 
 
+@pytest.mark.unit
 class TestDirectionCalculationService:
     """Test suite for DirectionCalculationService."""
 

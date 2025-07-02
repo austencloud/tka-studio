@@ -3,7 +3,7 @@ Settings service implementation that adapts UIStateManagementService.
 """
 
 from typing import Any, Dict
-from core.interfaces.settings_interfaces import ISettingsService
+from core.interfaces.core_services import ISettingsService
 from core.interfaces.core_services import IUIStateManagementService
 
 

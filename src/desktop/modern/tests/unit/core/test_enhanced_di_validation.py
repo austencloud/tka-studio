@@ -1,11 +1,7 @@
 """
-Test enhanced dependency injection validation and error handling.
-
-This test suite validates the enhanced DI container features including:
-- Comprehensive error handling with custom exceptions
-- Circular dependency detection with detailed error messages
-- Registration validation
-- Dependency graph generation
+TEST LIFECYCLE: UNIT
+PURPOSE: Test enhanced DI container validation and error handling
+AUTHOR: @ai-agent
 """
 
 import pytest
@@ -21,18 +17,15 @@ from core.exceptions import DependencyInjectionError
 
 # Test interfaces and implementations
 class IRepository(Protocol):
-    def get_data(self) -> str:
-        ...
+    def get_data(self) -> str: ...
 
 
 class IService(Protocol):
-    def process(self) -> str:
-        ...
+    def process(self) -> str: ...
 
 
 class IController(Protocol):
-    def handle_request(self) -> str:
-        ...
+    def handle_request(self) -> str: ...
 
 
 class Repository:
@@ -71,6 +64,7 @@ class InvalidService:
         self.missing = missing_dependency
 
 
+@pytest.mark.unit
 class TestEnhancedDIValidation:
     """Test enhanced DI container validation and error handling."""
 

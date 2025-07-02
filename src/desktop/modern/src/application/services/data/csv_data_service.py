@@ -47,22 +47,21 @@ class ICSVDataService(ABC):
 
 
 class CSVDataService(ICSVDataService):
-    """
-    Pure service for CSV data operations.
-
-    Handles all CSV file I/O and data conversion without caching or business logic.
-    Uses immutable data patterns following TKA architecture.
-    """
-
     def __init__(self, data_path: Optional[Path] = None):
-        """Initialize with optional data path."""
         if data_path is None:
-            # Default path from modern/src/application/services/data/ to project root data/
-            data_path = (
-                Path(__file__).parent.parent.parent.parent.parent.parent
-                / "data"
-                / "DiamondPictographDataframe.csv"
-            )
+            # Find project root by searching for a 'data' folder upwards from this file
+            current = Path(__file__).resolve().parent
+            root_data = None
+            for parent in [current] + list(current.parents):
+                candidate = parent / "data"
+                if candidate.is_dir():
+                    root_data = candidate
+                    break
+            if root_data is None:
+                raise FileNotFoundError(
+                    "Could not locate 'data' directory in parent paths."
+                )
+            data_path = root_data / "DiamondPictographDataframe.csv"
         self._data_path = data_path
         self._csv_data: Optional[pd.DataFrame] = None
 

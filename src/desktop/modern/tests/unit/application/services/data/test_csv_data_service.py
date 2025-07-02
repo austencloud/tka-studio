@@ -1,19 +1,12 @@
 """
-Unit tests for CSVDataService
-
-Tests the pure CSV data loading and conversion service.
-Validates extraction from PictographManagementService maintains functionality.
+TEST LIFECYCLE: UNIT
+PURPOSE: Test CSVDataService data loading and conversion functionality
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import Mock, patch
 import pandas as pd
-
-# Add modern/src to path for imports
-modern_src_path = Path(__file__).parent.parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 from domain.models.core_models import (
     BeatData,
@@ -28,6 +21,7 @@ from application.services.data.csv_data_service import (
 )
 
 
+@pytest.mark.unit
 class TestCSVDataService:
     """Test suite for CSVDataService."""
 

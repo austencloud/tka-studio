@@ -59,6 +59,10 @@ class WorkbenchBeatFrameSection(QWidget):
         )
         self._beat_frame.setMinimumHeight(400)
 
+        # CRITICAL FIX: Ensure beat frame is visible
+        self._beat_frame.show()
+        self._beat_frame.setVisible(True)
+
         # Create button panel (right side)
         print("🔧 DEBUG: Creating button panel in beat frame section...")
         self._button_panel = SequenceWorkbenchButtonPanel(self)
@@ -67,6 +71,10 @@ class WorkbenchBeatFrameSection(QWidget):
         # Add with proper proportions (10:1 ratio like Legacy)
         layout.addWidget(self._beat_frame, 10)
         layout.addWidget(self._button_panel, 1)
+
+        # CRITICAL FIX: Ensure the beat frame section itself is visible
+        self.show()
+        self.setVisible(True)
 
     def _connect_signals(self):
         """Connect internal component signals"""
@@ -137,6 +145,27 @@ class WorkbenchBeatFrameSection(QWidget):
         self._start_position_data = start_position_data
         if self._beat_frame:
             self._beat_frame.set_start_position(start_position_data)
+
+    def initialize_cleared_start_position(self):
+        """Initialize start position view in cleared state (shows START text only)"""
+        print("🔧 [BEAT_FRAME_SECTION] Initializing cleared start position view")
+
+        # CRITICAL FIX: Ensure beat frame section is visible
+        self.show()
+        self.setVisible(True)
+
+        # Check visibility status
+        section_visible = self.isVisible()
+        parent_visible = self.parent().isVisible() if self.parent() else "No parent"
+        print(
+            f"🔍 [BEAT_FRAME_SECTION] Visibility status: section_visible={section_visible}, parent_visible={parent_visible}"
+        )
+
+        self._start_position_data = None
+        if self._beat_frame:
+            self._beat_frame.initialize_cleared_start_position()
+        else:
+            print("❌ [BEAT_FRAME_SECTION] No beat frame available!")
 
     def get_selected_beat_index(self) -> Optional[int]:
         """Get selected beat index from beat frame"""

@@ -16,7 +16,7 @@ Architecture:
 """
 
 import logging
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFrame
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame
 from PyQt6.QtCore import Qt
 
 from domain.models import DockConfiguration
@@ -33,7 +33,7 @@ class DockWindowSetup:
 
     def setup_dock_window(self, dock_widget: QWidget):
         """Setup dock window properties."""
-        # Window flags for dock behavior
+        # Standard dock flags: frameless, always on top
         dock_widget.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -51,29 +51,59 @@ class DockWindowSetup:
         # Set window title
         dock_widget.setWindowTitle("TKA Dock")
 
+        # On Windows, ensure it doesn't deactivate or hide when taskbar is clicked
+        try:
+            import sys, ctypes
+            if sys.platform.startswith("win"):
+                hwnd = int(dock_widget.winId())
+                # Apply extended window styles to prevent hiding
+                GWL_EXSTYLE = -20
+                WS_EX_TOOLWINDOW = 0x00000080
+                WS_EX_LAYERED = 0x00080000
+                WS_EX_TOPMOST = 0x00000008
+                WS_EX_NOACTIVATE = 0x08000000
+                
+                # Get current extended styles and add our flags
+                current_ex_style = ctypes.windll.user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
+                new_ex_style = current_ex_style | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE
+                ctypes.windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, new_ex_style)
+                
+                # Force topmost positioning
+                SWP_NOMOVE = 0x0002
+                SWP_NOSIZE = 0x0001
+                SWP_NOACTIVATE = 0x0010
+                HWND_TOPMOST = -1
+                ctypes.windll.user32.SetWindowPos(
+                    hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
+                )
+        except Exception:
+            logger.warning("⚠️ Failed to configure Win32 extended styles for dock window")
+
         logger.debug("✅ Dock window properties configured")
 
     def setup_layout(
         self, dock_widget: QWidget
     ) -> tuple[QVBoxLayout, QFrame, QVBoxLayout]:
         """Setup the dock layout and return layout components."""
-        # Main layout - vertical for stacking icons
+        # Main layout - vertical container; icons row at bottom, no padding
         main_layout = QVBoxLayout(dock_widget)
-        main_layout.setContentsMargins(4, 4, 4, 4)
-        main_layout.setSpacing(2)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
 
         # Application icons container
         icons_container = QFrame()
         icons_container.setObjectName("dock_icons_container")
 
-        icons_layout = QVBoxLayout(icons_container)
+        # Icons layout - horizontal row aligned left
+        icons_layout = QHBoxLayout(icons_container)
         icons_layout.setContentsMargins(0, 0, 0, 0)
-        icons_layout.setSpacing(2)
+        icons_layout.setSpacing(self.get_icon_spacing())
+        icons_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
+        main_layout.addStretch()  # Push icons to bottom
         main_layout.addWidget(icons_container)
-        main_layout.addStretch()  # Push icons to top
 
-        logger.debug("✅ Dock layout configured")
+        logger.debug("✅ Dock layout configured with horizontal icons layout")
 
         return main_layout, icons_container, icons_layout
 
@@ -100,7 +130,8 @@ class DockWindowSetup:
 
     def apply_size_configuration(self, dock_widget: QWidget, height: int):
         """Apply size configuration to the dock widget."""
-        dock_widget.setFixedSize(self.dock_config.width, height)
+        # Set fixed height; width will be set dynamically by position manager
+        dock_widget.setFixedHeight(height)
         logger.debug(f"✅ Dock size set to {self.dock_config.width}x{height}")
 
     def get_window_flags(self) -> Qt.WindowType:

@@ -117,6 +117,10 @@ class SequenceBeatFrame(QScrollArea):
         self._container_widget = QWidget()
         self.setWidget(self._container_widget)
 
+        # CRITICAL FIX: Ensure container widget is visible
+        self._container_widget.show()
+        self._container_widget.setVisible(True)
+
         # Create grid layout directly like legacy - no header section or info labels
         self._grid_layout = QGridLayout(self._container_widget)
         self._grid_layout.setSpacing(0)  # Zero spacing like legacy
@@ -175,6 +179,10 @@ class SequenceBeatFrame(QScrollArea):
 
         # Add to grid at (0, 0)
         self._grid_layout.addWidget(self._start_position_view, 0, 0, 1, 1)
+
+        # CRITICAL FIX: Ensure start position view is visible
+        self._start_position_view.show()
+        self._start_position_view.setVisible(True)
 
     def _setup_event_subscriptions(self):
         """Setup event subscriptions for reactive UI updates."""
@@ -249,6 +257,29 @@ class SequenceBeatFrame(QScrollArea):
         """Set the start position data (separate from sequence beats like legacy)"""
         if self._start_position_view:
             self._start_position_view.set_position_data(start_position_data)
+
+    def initialize_cleared_start_position(self):
+        """Initialize start position view in cleared state (shows START text only)"""
+        print("🔧 [SEQUENCE_BEAT_FRAME] Initializing cleared start position view")
+
+        # CRITICAL FIX: Ensure the beat frame container itself is visible
+        self.show()
+        self.setVisible(True)
+        if self._container_widget:
+            self._container_widget.show()
+            self._container_widget.setVisible(True)
+
+        # Check scroll area visibility
+        scroll_area_visible = self.isVisible()
+        parent_visible = self.parent().isVisible() if self.parent() else "No parent"
+
+        if self._start_position_view:
+            self._start_position_view.clear_position_data()
+            print(
+                f"✅ [SEQUENCE_BEAT_FRAME] Start position view cleared and initialized: visible={self._start_position_view.isVisible()}, container_visible={self._container_widget.isVisible() if self._container_widget else 'None'}, scroll_area_visible={scroll_area_visible}, parent_visible={parent_visible}"
+            )
+        else:
+            print("❌ [SEQUENCE_BEAT_FRAME] No start position view to initialize!")
 
     def get_selected_beat_index(self) -> Optional[int]:
         """Get the currently selected beat index"""
@@ -329,7 +360,10 @@ class SequenceBeatFrame(QScrollArea):
         # Always ensure start position is visible at (0,0) - Legacy behavior
         if self._start_position_view:
             self._start_position_view.show()
-            print("✅ [SEQUENCE_BEAT_FRAME] Start position view shown")
+            self._start_position_view.setVisible(True)
+            print(
+                f"✅ [SEQUENCE_BEAT_FRAME] Start position view shown: visible={self._start_position_view.isVisible()}"
+            )
 
         if not self._current_sequence:
             print("🔍 [SEQUENCE_BEAT_FRAME] No current sequence - hiding beat numbers")

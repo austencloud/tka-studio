@@ -86,6 +86,130 @@ class TKAMainWindow(QMainWindow):
             self.orchestrator.handle_window_resize(self)
 
 
+def refresh_component_visibility(window):
+    """Refresh visibility of all components after main window is shown"""
+    try:
+        print("🔧 [MAIN] Refreshing component visibility after window shown...")
+
+        # Get the tab widget
+        tab_widget = getattr(window, "tab_widget", None)
+        if not tab_widget:
+            print("❌ [MAIN] No tab widget found")
+            return
+
+        # Force tab widget to be visible
+        tab_widget.show()
+        tab_widget.setVisible(True)
+
+        # Get the construct tab (should be at index 0)
+        construct_tab = tab_widget.widget(0)
+        if not construct_tab:
+            print("❌ [MAIN] No construct tab found")
+            return
+
+        # Force construct tab to be visible
+        construct_tab.show()
+        construct_tab.setVisible(True)
+
+        # Get the workbench from the construct tab
+        workbench = getattr(construct_tab, "workbench", None)
+        if not workbench:
+            print("❌ [MAIN] No workbench found in construct tab")
+            return
+
+        # Force workbench to be visible
+        workbench.show()
+        workbench.setVisible(True)
+
+        # Get the beat frame section from the workbench (using correct attribute name)
+        beat_frame_section = getattr(workbench, "_beat_frame_section", None)
+        if not beat_frame_section:
+            print("❌ [MAIN] No _beat_frame_section found in workbench")
+            return
+
+        # Force beat frame section to be visible
+        beat_frame_section.show()
+        beat_frame_section.setVisible(True)
+
+        # Get the beat frame from the beat frame section (using correct attribute name)
+        beat_frame = getattr(beat_frame_section, "_beat_frame", None)
+        if not beat_frame:
+            print("❌ [MAIN] No _beat_frame found in beat frame section")
+            return
+
+        # Force beat frame to be visible
+        beat_frame.show()
+        beat_frame.setVisible(True)
+
+        # Get the start position view from the beat frame (using correct attribute name)
+        start_position_view = getattr(beat_frame, "_start_position_view", None)
+        if not start_position_view:
+            print("❌ [MAIN] No _start_position_view found in beat frame")
+            return
+
+        # Force start position view to be visible
+        start_position_view.show()
+        start_position_view.setVisible(True)
+
+        # CRITICAL DEBUG: Check start position view size and geometry
+        start_pos_size = start_position_view.size()
+        start_pos_geometry = start_position_view.geometry()
+        start_pos_minimum_size = start_position_view.minimumSize()
+        start_pos_maximum_size = start_position_view.maximumSize()
+        start_pos_size_hint = start_position_view.sizeHint()
+
+        print(f"🔍 [MAIN] Start position view details:")
+        print(f"   Size: {start_pos_size}")
+        print(f"   Geometry: {start_pos_geometry}")
+        print(f"   Minimum size: {start_pos_minimum_size}")
+        print(f"   Maximum size: {start_pos_maximum_size}")
+        print(f"   Size hint: {start_pos_size_hint}")
+
+        # Force a specific size if it's collapsed to 1x1 or zero
+        if start_pos_size.width() <= 1 or start_pos_size.height() <= 1:
+            print(
+                "🔧 [MAIN] Start position view has collapsed size, forcing proper size..."
+            )
+            start_position_view.setMinimumSize(120, 120)
+            start_position_view.setMaximumSize(120, 120)
+            start_position_view.setFixedSize(120, 120)
+            start_position_view.resize(120, 120)
+            start_position_view.updateGeometry()
+
+            # Also fix the pictograph component inside
+            pictograph_component = getattr(
+                start_position_view, "_pictograph_component", None
+            )
+            if pictograph_component:
+                pictograph_component.setMinimumSize(100, 100)
+                pictograph_component.resize(100, 100)
+                pictograph_component.updateGeometry()
+
+            print(f"🔧 [MAIN] After resize: {start_position_view.size()}")
+
+        # Check final visibility status
+        tab_visible = tab_widget.isVisible()
+        construct_visible = construct_tab.isVisible()
+        workbench_visible = workbench.isVisible()
+        section_visible = beat_frame_section.isVisible()
+        frame_visible = beat_frame.isVisible()
+        start_pos_visible = start_position_view.isVisible()
+
+        print(f"✅ [MAIN] Component visibility refreshed:")
+        print(f"   Tab widget: {tab_visible}")
+        print(f"   Construct tab: {construct_visible}")
+        print(f"   Workbench: {workbench_visible}")
+        print(f"   Beat frame section: {section_visible}")
+        print(f"   Beat frame: {frame_visible}")
+        print(f"   Start position view: {start_pos_visible}")
+
+    except Exception as e:
+        print(f"❌ [MAIN] Error refreshing component visibility: {e}")
+        import traceback
+
+        traceback.print_exc()
+
+
 def detect_parallel_testing_mode():
     import argparse
     import os
@@ -253,8 +377,14 @@ def main():
                 return
             splash.update_progress(100, "Ready!")
             app.processEvents()
+
+            # Show window immediately after UI setup
+            window.show()
+            window.raise_()
+            print(f"🔍 [MAIN] Main window shown: visible={window.isVisible()}")
+
+            # Hide splash screen after window is visible
             QTimer.singleShot(200, lambda: splash.hide_animated())
-            QTimer.singleShot(300, lambda: window.show())
 
         fade_in_animation.finished.connect(start_initialization)
         return app.exec()

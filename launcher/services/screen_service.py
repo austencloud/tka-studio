@@ -103,12 +103,12 @@ class ScreenService(IScreenService):
         self, screen: ScreenData, dock_width: int = 110
     ) -> WindowGeometry:
         """Calculate geometry for docked mode on the specified screen."""
-        # Position dock at left edge of screen
+        # Position dock at bottom left as horizontal panel overlaying taskbar
         return WindowGeometry(
             x=screen.geometry.x,
-            y=screen.geometry.y,
-            width=dock_width,
-            height=screen.geometry.height,
+            y=screen.geometry.y + screen.geometry.height - dock_width,
+            width=screen.geometry.width,
+            height=dock_width,
         )
 
     def calculate_centered_geometry(

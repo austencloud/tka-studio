@@ -60,8 +60,8 @@ class StartPositionView(QFrame):
 
         # Pictograph component fills the entire container like legacy
         self._pictograph_component = PictographComponent(parent=None)
-        # Remove minimum size constraint to allow responsive scaling
-        self._pictograph_component.setMinimumSize(1, 1)
+        # CRITICAL FIX: Set proper minimum size to prevent collapse to 1x1
+        self._pictograph_component.setMinimumSize(100, 100)
 
         # CRITICAL FIX: Disable borders in beat frame context (like Legacy)
         # Start position should be borderless in beat frame, unlike option pickers
@@ -74,6 +74,9 @@ class StartPositionView(QFrame):
 
         # CRITICAL FIX: Always show the start position view like legacy
         self.show()
+        print(
+            f"🔍 [START_POSITION_VIEW] Component created and shown: visible={self.isVisible()}, size={self.size()}"
+        )
 
         # Initialize with START text overlay (always visible like legacy)
         # Use a timer to ensure the pictograph component is fully initialized
@@ -124,6 +127,18 @@ class StartPositionView(QFrame):
         self._position_data = None
         self._position_key = None
         self._show_cleared_state()
+
+        # CRITICAL FIX: Force visibility after clearing
+        self.show()
+        self.setVisible(True)
+
+        # Check parent visibility chain
+        parent = self.parent()
+        parent_visible = parent.isVisible() if parent else "No parent"
+
+        print(
+            f"🔍 [START_POSITION_VIEW] Position cleared: visible={self.isVisible()}, size={self.size()}, parent_visible={parent_visible}"
+        )
 
     def set_highlighted(self, highlighted: bool):
         """Set highlight state"""

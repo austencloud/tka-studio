@@ -54,8 +54,8 @@ class TestModernVisibilityIntegration:
         assert self.state_manager.get_motion_visibility("red") is not None
         
         # Test dependency logic
-        initial_blue = self.state_manager.get_motion_visibility("blue")
-        initial_red = self.state_manager.get_motion_visibility("red")
+        _ = self.state_manager.get_motion_visibility("blue")
+        _ = self.state_manager.get_motion_visibility("red")
         
         # Test glyph dependency on motions
         tka_visible = self.state_manager.get_glyph_visibility("TKA")
@@ -338,7 +338,7 @@ class TestModernVisibilityIntegration:
         passed_tests = sum(1 for result in self.test_results.values() if result)
         success_rate = passed_tests / total_tests if total_tests > 0 else 0
         
-        overall_success = success_rate >= 0.9  # 90% success threshold
+        overall_success = success_rate == 1 # 100% success threshold
         
         results = {
             "overall_success": overall_success,

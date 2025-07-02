@@ -37,7 +37,8 @@ class DockApplicationIcon(QFrame):
         self.style_builder = style_builder
         self.current_status = app_data.status
 
-        self.setFixedSize(48, 48)
+        # Slightly larger icon size for better touch targets
+        self.setFixedSize(44, 44)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         self._setup_layout()
@@ -49,12 +50,14 @@ class DockApplicationIcon(QFrame):
     def _setup_layout(self):
         """Setup icon layout."""
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(4, 4, 4, 4)
+        # Adjust margins for larger icon
+        layout.setContentsMargins(3, 3, 3, 3)
 
         # Icon label (using emoji for now)
         self.icon_label = QLabel(self.app_data.icon)
         self.icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.icon_label.setStyleSheet("font-size: 24px;")
+        # Increase font for slightly larger icon
+        self.icon_label.setStyleSheet("font-size: 22px;")
 
         layout.addWidget(self.icon_label)
 

@@ -77,6 +77,9 @@ class SignalCoordinator(QObject):
         # Sequence manager signals
         self.sequence_manager.sequence_modified.connect(self._handle_sequence_modified)
         self.sequence_manager.sequence_cleared.connect(self._handle_sequence_cleared)
+        self.sequence_manager.start_position_loaded_from_persistence.connect(
+            self._handle_start_position_loaded_from_persistence
+        )
 
         # Workbench signals (SINGLE PATH) - Prevent cascade refreshes
         if self.layout_manager.workbench:
@@ -108,6 +111,24 @@ class SignalCoordinator(QObject):
         # Emit external signal
         self.start_position_set.emit(position_key)
 
+    def _handle_start_position_loaded_from_persistence(
+        self, position_key: str, start_position_data
+    ):
+        """Handle start position loaded from persistence during startup"""
+        print(
+            f"🎯 [SIGNAL_COORDINATOR] Start position loaded from persistence: {position_key}"
+        )
+
+        # CRITICAL FIX: Populate option picker with valid combinations
+        # This ensures the option picker shows motion options when start position is restored
+        self.option_picker_manager.populate_from_start_position(
+            position_key, start_position_data
+        )
+
+        print(
+            f"✅ [SIGNAL_COORDINATOR] Option picker populated for restored start position: {position_key}"
+        )
+
     def _handle_sequence_modified(self, sequence: SequenceData):
         """Handle sequence modification from sequence manager with cascade prevention"""
         if self._handling_sequence_modification:
@@ -123,25 +144,34 @@ class SignalCoordinator(QObject):
                 f"✅ Signal coordinator: Sequence modified with {sequence.length if sequence else 0} beats"
             )
 
-            # Enhanced sequence state detection with preserved start position support
-            is_empty_sequence = (
-                sequence is None
-                or sequence.length == 0
-                or (sequence.length == 1 and sequence.beats[0].is_blank)
-                or sequence.metadata.get("cleared") is True
+            # CRITICAL FIX: Use legacy-compatible logic for sequence modification handling
+            # Check if start position is set in workbench
+            start_position_set = False
+            if hasattr(self.sequence_manager, "workbench_getter"):
+                workbench = self.sequence_manager.workbench_getter()
+                if workbench and hasattr(workbench, "_start_position_data"):
+                    start_position_set = workbench._start_position_data is not None
+
+            has_beats = (
+                sequence is not None
+                and sequence.length > 0
+                and not (sequence.length == 1 and sequence.beats[0].is_blank)
+                and sequence.metadata.get("cleared") is not True
             )
 
-            if is_empty_sequence:
+            if start_position_set or has_beats:
                 print(
-                    "🗑️ Empty/cleared sequence detected, transitioning to start position picker"
+                    f"📊 [SIGNAL_COORDINATOR] Sequence content detected (start_pos_set={start_position_set}, has_beats={has_beats})"
                 )
-                self.layout_manager.transition_to_start_position_picker()
-            else:
-                print("📊 Sequence has content, ensuring option picker is visible")
-                # Ensure we're showing the option picker for non-empty sequences
+                # Ensure we're showing the option picker when start position is set OR beats exist
                 self.layout_manager.transition_to_option_picker()
                 # Refresh option picker based on sequence state
                 self.option_picker_manager.refresh_from_sequence(sequence)
+            else:
+                print(
+                    "🗑️ [SIGNAL_COORDINATOR] Completely empty sequence, transitioning to start position picker"
+                )
+                self.layout_manager.transition_to_start_position_picker()
 
             # Emit external signal
             self.sequence_modified.emit(sequence)
@@ -173,11 +203,30 @@ class SignalCoordinator(QObject):
             if hasattr(self.sequence_manager, "_get_current_sequence"):
                 sequence = self.sequence_manager._get_current_sequence()
 
-            if sequence and sequence.beats:
-                # Has beats, show option picker
+            # CRITICAL FIX: Use legacy-compatible logic for picker selection
+            # Show start position picker ONLY when completely empty (no start position AND no beats)
+            # Show option picker when start position is set OR beats exist
+
+            # Check if start position is set in workbench
+            start_position_set = False
+            if hasattr(self.sequence_manager, "workbench_getter"):
+                workbench = self.sequence_manager.workbench_getter()
+                if workbench and hasattr(workbench, "_start_position_data"):
+                    start_position_set = workbench._start_position_data is not None
+
+            has_beats = sequence and sequence.beats and len(sequence.beats) > 0
+
+            if start_position_set or has_beats:
+                # Start position is set OR beats exist → show option picker
+                print(
+                    f"🎯 [SIGNAL_COORDINATOR] Showing option picker (start_pos_set={start_position_set}, has_beats={has_beats})"
+                )
                 self.layout_manager.transition_to_option_picker()
             else:
-                # No beats, show start position picker
+                # Completely empty (no start position AND no beats) → show start position picker
+                print(
+                    f"🎯 [SIGNAL_COORDINATOR] Showing start position picker (completely empty)"
+                )
                 self.layout_manager.transition_to_start_position_picker()
 
     def clear_sequence(self):

@@ -1,44 +1,34 @@
 """
-Test Application Factory implementation.
-
-Verifies that all application modes work correctly.
+TEST LIFECYCLE: SPECIFICATION
+PURPOSE: Ensure ApplicationFactory creates proper DI containers for all modes
+PERMANENT: Application factory must work with TKA's sophisticated architecture
+AUTHOR: @ai-agent
 """
 
 import pytest
-import sys
-from pathlib import Path
-
-# Add src to path
-src_path = Path(__file__).parent.parent / "src" / "desktop" / "modern" / "src"
-sys.path.insert(0, str(src_path))
-
-from core.application.application_factory import ApplicationFactory, ApplicationMode
 from core.interfaces.core_services import (
-    ISequenceDataService,
     ILayoutService,
-    ISettingsService
+    ISequenceDataService,
+    ISettingsService,
 )
+from core.testing.ai_agent_helpers import TKAAITestHelper
+from core.application.application_factory import ApplicationFactory, ApplicationMode
 
 
-class TestApplicationFactory:
-    """Test the Application Factory functionality."""
+@pytest.mark.specification
+@pytest.mark.critical
+class TestApplicationFactoryContract:
+    """PERMANENT: Application factory behavioral contracts - NEVER DELETE"""
 
-    def test_create_test_app(self):
-        """Test creating test application."""
-        container = ApplicationFactory.create_test_app()
+    def test_application_factory_integration_contract(self):
+        """PERMANENT: ApplicationFactory must work with TKAAITestHelper"""
+        helper = TKAAITestHelper(use_test_mode=True)
 
-        # Verify container is created
-        assert container is not None
-
-        # Verify we can resolve test services
-        sequence_service = container.resolve(ISequenceDataService)
-        assert sequence_service is not None
-
-        layout_service = container.resolve(ILayoutService)
-        assert layout_service is not None
-
-        settings_service = container.resolve(ISettingsService)
-        assert settings_service is not None
+        # Contract: Helper should initialize successfully with test app
+        assert helper.container is not None
+        assert helper.sequence_service is not None
+        assert helper.pictograph_service is not None
+        assert helper.validation_service is not None
 
     def test_create_headless_app(self):
         """Test creating headless application."""
@@ -62,11 +52,15 @@ class TestApplicationFactory:
     def test_create_app_from_args(self):
         """Test creating app from command line arguments."""
         # Test with test mode
-        test_container = ApplicationFactory.create_app_from_args(["script.py", "--test"])
+        test_container = ApplicationFactory.create_app_from_args(
+            ["script.py", "--test"]
+        )
         assert test_container is not None
 
         # Test with headless mode
-        headless_container = ApplicationFactory.create_app_from_args(["script.py", "--headless"])
+        headless_container = ApplicationFactory.create_app_from_args(
+            ["script.py", "--headless"]
+        )
         assert headless_container is not None
 
         # Test with no args (production mode)
@@ -84,12 +78,12 @@ class TestMockServices:
 
         # Test creating a sequence
         sequence = service.create_new_sequence("Test Sequence")
-        assert sequence['name'] == "Test Sequence"
-        assert sequence['id'] is not None
+        assert sequence["name"] == "Test Sequence"
+        assert sequence["id"] is not None
 
         # Test saving and retrieving
         assert service.save_sequence(sequence) is True
-        retrieved = service.get_sequence_by_id(sequence['id'])
+        retrieved = service.get_sequence_by_id(sequence["id"])
         assert retrieved == sequence
 
         # Test getting all sequences

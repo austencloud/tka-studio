@@ -222,6 +222,23 @@ class UISetupManager(IUISetupManager):
 
             self.tab_widget.addTab(construct_tab, "🔧 Construct")
 
+            # CRITICAL FIX: Ensure tab widget and construct tab are visible
+            self.tab_widget.show()
+            self.tab_widget.setVisible(True)
+            construct_tab.show()
+            construct_tab.setVisible(True)
+
+            # Set construct tab as current tab
+            self.tab_widget.setCurrentIndex(0)
+
+            # Check visibility status
+            tab_widget_visible = self.tab_widget.isVisible()
+            construct_tab_visible = construct_tab.isVisible()
+            current_tab_index = self.tab_widget.currentIndex()
+            print(
+                f"🔍 [UI_SETUP] Tab widget visible: {tab_widget_visible}, construct tab visible: {construct_tab_visible}, current tab: {current_tab_index}"
+            )
+
             if progress_callback:
                 progress_callback(92, "Construct tab loaded successfully!")
 

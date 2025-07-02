@@ -26,6 +26,8 @@ import logging
 from typing import Optional
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QTimer, pyqtSignal
+import ctypes
+import sys
 
 from domain.models import (
     DockConfiguration,
@@ -91,6 +93,8 @@ class TKADockWindow(QWidget):
         self._initialize_window()
 
         logger.info("✅ TKA Dock Window initialized")
+        # Ensure always-on-top after initial show
+        self._install_always_on_top()
 
     def _connect_signals(self):
         """Connect all manager signals to dock window methods."""
@@ -313,3 +317,31 @@ class TKADockWindow(QWidget):
     def get_dock_geometry(self) -> WindowGeometry:
         """Get current dock geometry for state persistence."""
         return self.position_manager.get_dock_geometry(self)
+
+    def _install_always_on_top(self):
+        """Install topmost enforcement via Win32 API after window is shown."""
+        # Install timer to periodically enforce topmost status
+        self.topmost_timer = QTimer()
+        self.topmost_timer.timeout.connect(self._enforce_topmost)
+        self.topmost_timer.start(100)  # Check every 100ms
+
+    def _enforce_topmost(self):
+        """Periodically enforce topmost status."""
+        try:
+            if sys.platform.startswith("win") and self.isVisible():
+                hwnd = int(self.winId())
+                # Check if window is still topmost
+                topmost_hwnd = ctypes.windll.user32.GetTopWindow(0)
+                if topmost_hwnd != hwnd:
+                    # Force back to topmost
+                    SWP_NOMOVE = 0x0002
+                    SWP_NOSIZE = 0x0001
+                    SWP_NOACTIVATE = 0x0010
+                    HWND_TOPMOST = -1
+                    ctypes.windll.user32.SetWindowPos(
+                        hwnd, HWND_TOPMOST, 0, 0, 0, 0, 
+                        SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
+                    )
+                    self.raise_()
+        except Exception:
+            pass  # Silently fail to avoid spam

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
@@ -15,6 +15,9 @@ from .option_picker_manager import OptionPickerManager
 from .sequence_manager import SequenceManager
 from .signal_coordinator import SignalCoordinator
 from .data_conversion_service import DataConversionService
+
+if TYPE_CHECKING:
+    from presentation.components.workbench.workbench import SequenceWorkbench
 
 
 class ConstructTabWidget(QWidget):
@@ -88,6 +91,17 @@ class ConstructTabWidget(QWidget):
         # Delegate UI setup to layout manager
         self.layout_manager.setup_ui(self)
 
+        # CRITICAL FIX: Ensure construct tab is visible
+        self.show()
+        self.setVisible(True)
+
+        # Check construct tab visibility
+        tab_visible = self.isVisible()
+        parent_visible = self.parent().isVisible() if self.parent() else "No parent"
+        print(
+            f"🔍 [CONSTRUCT_TAB] After setup - tab_visible={tab_visible}, parent_visible={parent_visible}"
+        )
+
         # Initialize option picker manager after layout is created
         self.option_picker_manager = OptionPickerManager(
             self.layout_manager.option_picker, self.data_conversion_service
@@ -100,7 +114,7 @@ class ConstructTabWidget(QWidget):
             self.option_picker_manager,
             self.sequence_manager,
         )
-        
+
         # Load sequence from current_sequence.json on startup if no session restoration
         # This mimics the legacy behavior of automatically loading the current sequence
         self._load_sequence_on_startup()
@@ -133,7 +147,9 @@ class ConstructTabWidget(QWidget):
         """Get a function that can set data on the workbench"""
 
         def set_workbench_data(data):
-            workbench = getattr(self.layout_manager, "workbench", None)
+            workbench: Optional[SequenceWorkbench] = getattr(
+                self.layout_manager, "workbench", None
+            )
             if workbench:
                 if hasattr(data, "beats"):  # SequenceData
                     workbench.set_sequence(data)
@@ -157,19 +173,20 @@ class ConstructTabWidget(QWidget):
     def workbench(self):
         """Access to the workbench component"""
         return getattr(self.layout_manager, "workbench", None)
-        
+
     def _load_sequence_on_startup(self):
         """Load sequence from current_sequence.json on startup - exactly like legacy"""
         try:
             print("🔍 [CONSTRUCT_TAB] Checking for sequence to load on startup...")
-            
+
             # Use a small delay to ensure UI is fully ready
             from PyQt6.QtCore import QTimer
+
             QTimer.singleShot(100, self._perform_sequence_load)
-            
+
         except Exception as e:
             print(f"❌ [CONSTRUCT_TAB] Failed to setup sequence loading: {e}")
-            
+
     def _perform_sequence_load(self):
         """Perform the actual sequence loading after UI is ready"""
         try:

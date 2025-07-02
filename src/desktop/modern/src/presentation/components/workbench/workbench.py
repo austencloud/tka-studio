@@ -444,6 +444,14 @@ class SequenceWorkbench(QWidget):
                     start_pos_to_restore = BeatData.from_dict(start_pos_to_restore)
 
                 self.set_start_position(start_pos_to_restore)
+            else:
+                # CRITICAL FIX: Always initialize start position view, even when cleared
+                # This ensures the "START" text overlay is visible after restoration
+                print(
+                    "🔧 [WORKBENCH] No start position data - initializing cleared start position view"
+                )
+                if self._beat_frame_section:
+                    self._beat_frame_section.initialize_cleared_start_position()
 
         except Exception as e:
             print(f"❌ [WORKBENCH] Failed to restore sequence: {e}")

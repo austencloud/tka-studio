@@ -16,6 +16,7 @@ The `completed-implementations/` folder contains documentation for features and 
 ## Archival Strategy
 
 These documents were archived because:
+
 1. They represent completed work that doesn't need ongoing reference
 2. The knowledge they contain should now be embedded in code comments or current architecture docs
 3. They were creating noise in the main docs folder for new developers
