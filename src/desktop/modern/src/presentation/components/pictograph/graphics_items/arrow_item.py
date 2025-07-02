@@ -29,7 +29,7 @@ class ArrowItem(QGraphicsSvgItem):
         # Graph editor will explicitly enable selection when needed
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, False)
         self.setAcceptHoverEvents(False)
-        self.setCursor(Qt.CursorShape.ArrowCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
     def enable_selection(self):
         """Enable arrow selection - called by graph editor container"""
@@ -73,7 +73,6 @@ class ArrowItem(QGraphicsSvgItem):
     def hoverEnterEvent(self, event):
         """Handle hover enter - only if hover events enabled"""
         if self.acceptHoverEvents():
-            self.setCursor(Qt.CursorShape.PointingHandCursor)
             super().hoverEnterEvent(event)
         else:
             event.ignore()

@@ -150,11 +150,8 @@ class TKAModernLauncherApp:
                 logger.error("❌ Launcher initialization failed")
                 return 1
 
-            # Show the main window
-            self.main_window.show()
-
-            # Center the window on screen
-            self._center_window()
+            # Check if we should start in docked mode
+            self._setup_initial_mode()
 
             logger.info("🎯 TKA Fluent Launcher is ready!")
 
@@ -164,6 +161,29 @@ class TKAModernLauncherApp:
         except Exception as e:
             logger.error(f"💥 Fatal error in launcher: {e}")
             return 1
+
+    def _setup_initial_mode(self):
+        """Setup the initial display mode based on saved preferences."""
+        try:
+            # Check the mode manager's current mode (which was set based on TKA settings)
+            current_mode = self.main_window.mode_manager.current_mode
+            
+            if current_mode == "docked":
+                logger.info("🔄 Starting in docked mode based on saved preferences")
+                # Switch to dock mode immediately
+                self.main_window.mode_manager.switch_to_dock_mode()
+            else:
+                logger.info("🪟 Starting in window mode")
+                # Show the main window
+                self.main_window.show()
+                # Center the window on screen  
+                self._center_window()
+                
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to setup initial mode, defaulting to window: {e}")
+            # Fallback to window mode
+            self.main_window.show()
+            self._center_window()
 
     def _center_window(self):
         """Center the main window on the screen."""

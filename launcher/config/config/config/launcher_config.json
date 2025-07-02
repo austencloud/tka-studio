@@ -4,9 +4,9 @@
     "width": 1200,
     "height": 800,
     "x": 680,
-    "y": 350,
+    "y": 316,
     "maximized": false,
-    "mode": "window"
+    "mode": "docked"
   },
   "theme": {
     "theme": "dark",

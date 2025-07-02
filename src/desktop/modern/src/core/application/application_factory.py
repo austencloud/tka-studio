@@ -144,9 +144,7 @@ class ApplicationFactory:
             IPictographContextService, PictographContextService
         )
 
-        # TODO: Register remaining production services when identified:
-        # container.register_singleton(IValidationService, ProductionValidationService)
-        # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
+
 
         logger.info("Created production application container")
         return container
@@ -262,9 +260,7 @@ class ApplicationFactory:
             IPictographContextService, PictographContextService
         )
 
-        # TODO: Register remaining production services when identified:
-        # container.register_singleton(IValidationService, ProductionValidationService)
-        # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
+
 
         logger.info("Created headless application container")
         return container
@@ -280,10 +276,6 @@ class ApplicationFactory:
         """
         # Start with production app
         container = ApplicationFactory.create_production_app()
-
-        # TODO: Wrap services with recording decorators (implement in future hack)
-        # This is placeholder for Hack #4
-
         logger.info("Created recording application container")
         return container
 

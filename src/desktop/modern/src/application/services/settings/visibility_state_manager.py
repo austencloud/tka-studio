@@ -57,10 +57,12 @@ class ModernVisibilityStateManager:
             )
 
             try:
-                container = ApplicationFactory.get_container()
+                from core.application.application_factory import get_container
+
+                container = get_container()
                 if container:
                     return container.resolve(GlobalVisibilityService)
-            except:
+            except Exception:
                 pass
 
             # Fallback to singleton pattern

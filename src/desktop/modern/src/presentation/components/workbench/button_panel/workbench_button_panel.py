@@ -17,9 +17,7 @@ class SequenceWorkbenchButtonPanel(QWidget):
     copy_json_requested = pyqtSignal()
     delete_beat_requested = pyqtSignal()
     clear_sequence_requested = pyqtSignal()
-    edit_construct_toggle_requested = pyqtSignal(
-        bool
-    )  # True for Edit mode, False for Construct mode
+    edit_construct_toggle_requested = pyqtSignal(bool)
 
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)

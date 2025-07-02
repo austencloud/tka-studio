@@ -145,7 +145,7 @@ class SettingsService(ISettingsService):
         """Create default settings."""
         return {
             # UI Settings
-            "launch_mode": "window",
+            "launch_mode": "docked",  # Default to docked mode
             "window_width": 1000,
             "window_height": 700,
             "dock_width": 110,

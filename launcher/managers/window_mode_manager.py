@@ -34,7 +34,8 @@ class WindowModeManager(QObject):
         """Initialize the mode manager."""
         super().__init__(parent)
 
-        self.current_mode = "window"  # "window" or "docked"
+        # Initialize with window mode, will be updated when components are set
+        self.current_mode = "docked"  # "window" or "docked" - default to docked
         self.main_window = None
         self.dock_window = None
         self.tka_integration = None
@@ -43,6 +44,41 @@ class WindowModeManager(QObject):
         """Set the main window and TKA integration components."""
         self.main_window = main_window
         self.tka_integration = tka_integration
+        
+        # Check if we should initialize in docked mode based on settings
+        self._initialize_mode_from_settings()
+
+    def _initialize_mode_from_settings(self):
+        """Initialize the current mode based on saved settings."""
+        try:
+            # Try to use TKA integration settings first (if available)
+            if self.tka_integration and hasattr(self.tka_integration, 'settings_service'):
+                settings_service = self.tka_integration.settings_service
+                launch_mode = settings_service.get_setting('launch_mode', 'docked')
+                should_dock = launch_mode == 'docked'
+                logger.info(f"🔍 TKA Settings check - launch_mode: {launch_mode}, should_dock: {should_dock}")
+            else:
+                # Fallback to standalone settings manager
+                from config.settings import SettingsManager
+                settings_manager = SettingsManager()
+                
+                should_dock = settings_manager.should_restore_to_docked()
+                launch_mode = settings_manager.get('launch_mode', 'docked')
+                auto_start = settings_manager.get('auto_start_docked', True)
+                
+                logger.info(f"🔍 Fallback Settings check - launch_mode: {launch_mode}, auto_start_docked: {auto_start}, should_restore_to_docked: {should_dock}")
+            
+            if should_dock:
+                # Set the mode but don't switch yet - this will be handled by the main app
+                self.current_mode = "docked"
+                logger.info("🔄 Mode manager initialized for docked mode")
+            else:
+                self.current_mode = "window"
+                logger.info("🪟 Mode manager initialized for window mode")
+                
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to read mode from settings, defaulting to window: {e}")
+            self.current_mode = "window"
 
     def toggle_mode(self):
         """Toggle between window and dock modes."""
@@ -53,10 +89,6 @@ class WindowModeManager(QObject):
 
     def switch_to_dock_mode(self):
         """Switch from window mode to dock mode."""
-        if self.current_mode == "docked":
-            logger.info("Already in dock mode")
-            return
-
         try:
             logger.info("🔄 Switching to dock mode...")
 
@@ -64,8 +96,8 @@ class WindowModeManager(QObject):
             if not self.dock_window:
                 self._create_dock_window()
 
-            # Hide main window
-            if self.main_window:
+            # Hide main window if it's visible
+            if self.main_window and self.main_window.isVisible():
                 self.main_window.hide()
 
             # Show dock window

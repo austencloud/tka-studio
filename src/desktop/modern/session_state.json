@@ -2,13 +2,13 @@
   "session_metadata": {
     "session_id": "1c2ee9bc-a8eb-49ab-984f-ed2d496b4ccd",
     "created_at": "2025-07-01T15:29:15.639313",
-    "last_interaction": "2025-07-02T15:31:37.736477",
+    "last_interaction": "2025-07-02T15:57:28.155079",
     "tka_version": "modern"
   },
   "current_sequence": {
-    "sequence_id": "ab84d23b-9f31-4022-982e-65ad07fb8d48",
+    "sequence_id": "280c2fe8-a14b-42e5-870a-12ecbfaad60a",
     "sequence_data": {
-      "id": "ab84d23b-9f31-4022-982e-65ad07fb8d48",
+      "id": "280c2fe8-a14b-42e5-870a-12ecbfaad60a",
       "name": "Empty Sequence",
       "word": "",
       "beats": [],

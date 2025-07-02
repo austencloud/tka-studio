@@ -98,14 +98,16 @@ class PictographScene(QGraphicsScene):
 
             # Get or create global service instance
             try:
-                container = ApplicationFactory.get_container()
+                from core.application.application_factory import get_container
+
+                container = get_container()
                 if container:
                     # Try to resolve from container (if registered)
                     global_service = container.resolve(GlobalVisibilityService)
                 else:
                     # Fallback to singleton pattern
                     global_service = self._get_global_service_singleton()
-            except:
+            except Exception:
                 # Fallback to singleton pattern
                 global_service = self._get_global_service_singleton()
 

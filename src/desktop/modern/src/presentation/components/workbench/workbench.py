@@ -293,6 +293,7 @@ class SequenceWorkbench(QWidget):
             self._current_sequence = updated_sequence
             self.clear_start_position()
             self._update_all_components()
+            self._graph_service.toggle_graph_visibility()
             self.sequence_modified.emit(updated_sequence)
         self._show_operation_result("clear_sequence", success, message)
 
