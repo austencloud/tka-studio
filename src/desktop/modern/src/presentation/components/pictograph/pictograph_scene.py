@@ -149,15 +149,58 @@ class PictographScene(QGraphicsScene):
         return PictographScene._global_service
 
     def _determine_component_type(self) -> str:
-        """Determine component type from parent hierarchy."""
+        """
+        Determine component type using the robust context service.
+
+        This method is deprecated and maintained for backward compatibility.
+        New code should use the context service directly.
+        """
+        try:
+            # Try to get context service from DI container
+            from core.application.application_factory import get_container
+            from core.interfaces.core_services import IPictographContextService
+            from application.services.ui.context_aware_scaling_service import (
+                RenderingContext,
+            )
+
+            container = get_container()
+            if container:
+                context_service = container.resolve(IPictographContextService)
+                print(
+                    f"✅ [PICTOGRAPH_SCENE] Successfully resolved IPictographContextService: {type(context_service).__name__}"
+                )
+                context = context_service.determine_context_from_scene(self)
+
+                # Convert enum to string for backward compatibility
+                context_map = {
+                    RenderingContext.GRAPH_EDITOR: "graph_editor",
+                    RenderingContext.BEAT_FRAME: "beat_frame",
+                    RenderingContext.OPTION_PICKER: "option_picker",
+                    RenderingContext.PREVIEW: "preview",
+                    RenderingContext.SEQUENCE_VIEWER: "sequence_viewer",
+                    RenderingContext.UNKNOWN: "unknown",
+                }
+
+                result = context_map.get(context, "unknown")
+                print(f"✅ [SCENE_CONTEXT] Context service determined: {result}")
+                return result
+
+        except Exception as e:
+            print(f"⚠️ [SCENE_CONTEXT] Context service failed, using fallback: {e}")
+
+        # Fallback to original logic for backward compatibility
+        return self._legacy_determine_component_type()
+
+    def _legacy_determine_component_type(self) -> str:
+        """Legacy context detection method (deprecated)."""
         parent = self.parent()
         hierarchy = []
         while parent:
             class_name = parent.__class__.__name__.lower()
             hierarchy.append(class_name)
             print(f"🔍 [SCENE_CONTEXT] Checking parent: {class_name}")
-            
-            if "graph" in class_name:
+
+            if "grapheditor" in class_name:
                 print(f"✅ [SCENE_CONTEXT] Found graph_editor context!")
                 return "graph_editor"
             elif "beat" in class_name:
@@ -173,7 +216,7 @@ class PictographScene(QGraphicsScene):
                 print(f"✅ [SCENE_CONTEXT] Found sequence_viewer context!")
                 return "sequence_viewer"
             parent = parent.parent() if hasattr(parent, "parent") else None
-        
+
         print(f"⚠️ [SCENE_CONTEXT] Unknown context! Hierarchy: {' -> '.join(hierarchy)}")
         return "unknown"
 

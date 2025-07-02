@@ -23,6 +23,17 @@ class ScalingContext(Enum):
     DEFAULT = "default"
 
 
+class RenderingContext(Enum):
+    """Different contexts where pictographs are rendered, affecting arrow behavior."""
+
+    GRAPH_EDITOR = "graph_editor"
+    BEAT_FRAME = "beat_frame"
+    OPTION_PICKER = "option_picker"
+    PREVIEW = "preview"
+    SEQUENCE_VIEWER = "sequence_viewer"
+    UNKNOWN = "unknown"
+
+
 class ContextAwareScalingService:
     """
     Service that provides context-aware scaling calculations matching proven behavior.

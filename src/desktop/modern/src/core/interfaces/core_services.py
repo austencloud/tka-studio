@@ -5,7 +5,7 @@ These interfaces define the contracts for core services, replacing tightly-coupl
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Any, Tuple, Protocol
 from core.types import Size
 
 
@@ -256,6 +256,30 @@ class IUIStateManagementService(ABC):
     @abstractmethod
     def toggle_graph_editor(self) -> bool:
         """Toggle graph editor visibility."""
+        pass
+
+
+class IPictographContextService(ABC):
+    """Interface for pictograph context detection and management."""
+
+    @abstractmethod
+    def register_context_provider(self, component_id: str, context: Any) -> None:
+        """Register a component with its explicit context."""
+        pass
+
+    @abstractmethod
+    def get_context_for_component(self, component_id: str) -> Any:
+        """Get the rendering context for a specific component."""
+        pass
+
+    @abstractmethod
+    def determine_context_from_provider(self, provider: Any) -> Any:
+        """Determine context from a context provider component."""
+        pass
+
+    @abstractmethod
+    def determine_context_from_scene(self, scene: Any) -> Any:
+        """Determine context from a pictograph scene."""
         pass
 
 

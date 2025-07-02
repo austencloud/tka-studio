@@ -28,32 +28,6 @@ from presentation.components.pictograph.graphics_items.arrow_item import (
 )
 
 
-class NonSelectableArrowItem(QGraphicsSvgItem):
-    """Non-selectable arrow for contexts outside graph editor."""
-    
-    def __init__(self, color: str, parent=None):
-        super().__init__(parent)
-        self.arrow_color = color
-        # Ensure it's completely non-interactive
-        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, False)
-        self.setAcceptHoverEvents(False)
-        # Make it transparent to mouse events
-        self.setAcceptedMouseButtons(Qt.MouseButton.NoButton)
-        
-    def mousePressEvent(self, event):
-        """Always ignore mouse events to let them pass through to parent."""
-        print(f"🔴 [NON_SELECTABLE_ARROW] Click detected on {self.arrow_color} arrow - ignoring event")
-        # Ignore the event so it bubbles up to the pictograph
-        event.ignore()
-        
-    def hoverEnterEvent(self, event):
-        """Always ignore hover events."""
-        event.ignore()
-        
-    def hoverLeaveEvent(self, event):
-        """Always ignore hover events."""
-        event.ignore()
-
 if TYPE_CHECKING:
     from presentation.components.pictograph.pictograph_scene import PictographScene
 
@@ -128,8 +102,7 @@ class ArrowRenderer:
             return
 
         arrow_svg_path = self._get_arrow_svg_file(motion_data, color)
-
-        # Create different arrow types based on scene context
+        # component_type = self.scene._determine_component_type()
         arrow_item = self._create_arrow_item_for_context(color)
         renderer = None
 
@@ -212,13 +185,19 @@ class ArrowRenderer:
 
     def _create_arrow_item_for_context(self, color: str):
         """Create appropriate arrow item type based on scene context."""
-        # Check if scene has context detection method
+        # Always create an ArrowItem - context detection will configure behavior
+        arrow_item = ArrowItem()
+        arrow_item.arrow_color = color  # Set color for all contexts
+
+        # Check if scene has context detection method for debugging
         if hasattr(self.scene, "_determine_component_type"):
             component_type = self.scene._determine_component_type()
-            
+
             # DEBUG: Print what context we detected
-            print(f"🔍 [ARROW_RENDERER] Context detected: '{component_type}' for color '{color}'")
-            
+            print(
+                f"🔍 [ARROW_RENDERER] Context detected: '{component_type}' for color '{color}'"
+            )
+
             # Also debug the parent hierarchy
             parent = self.scene.parent()
             hierarchy = []
@@ -226,22 +205,16 @@ class ArrowRenderer:
                 hierarchy.append(parent.__class__.__name__)
                 parent = parent.parent() if hasattr(parent, "parent") else None
             print(f"🔍 [ARROW_RENDERER] Parent hierarchy: {' -> '.join(hierarchy)}")
-            
-            # Only create selectable ArrowItem for graph editor context
-            if component_type == "graph_editor":
-                arrow_item = ArrowItem()
-                arrow_item.arrow_color = color  # Set color for selection
-                print(f"✅ [ARROW_RENDERER] Created selectable ArrowItem for graph_editor context")
-                return arrow_item
-            
-            # For all other contexts (beat_frame, option_picker, etc.), use regular SVG item
-            arrow_item = NonSelectableArrowItem(color)
-            print(f"✅ [ARROW_RENDERER] Created NonSelectableArrowItem for '{component_type}' context")
-            return arrow_item
-        
-        # Fallback: if no context detection, use regular SVG item (safer default)
-        arrow_item = NonSelectableArrowItem(color)
-        print(f"✅ [ARROW_RENDERER] Created NonSelectableArrowItem (fallback - no context detection)")
+
+            print(
+                f"✅ [ARROW_RENDERER] Created ArrowItem for '{component_type}' context"
+            )
+        else:
+            print(
+                f"✅ [ARROW_RENDERER] Created ArrowItem (no context detection available)"
+            )
+
+        # Return the arrow item - it will configure its own behavior based on context
         return arrow_item
 
     def _get_arrow_svg_file(self, motion_data: MotionData, color: str) -> str:
@@ -426,7 +399,6 @@ class ArrowRenderer:
                         self._load_svg_file_cached(full_path)
                         preloaded_count += 1
 
-
         except Exception as e:
             logger.warning(f"Failed to pre-load common SVG files: {e}")
 
@@ -452,9 +424,7 @@ class ArrowRenderer:
     def get_cache_info(cls) -> str:
         """Get detailed cache information for debugging."""
         try:
-            cache_info = cls._load_svg_file_cached.cache_info(
-                cls._load_svg_file_cached
-            )
+            cache_info = cls._load_svg_file_cached.cache_info(cls._load_svg_file_cached)
             hit_rate = (
                 cls._cache_stats["hits"]
                 / (cls._cache_stats["hits"] + cls._cache_stats["misses"])

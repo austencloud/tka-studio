@@ -134,6 +134,16 @@ class ApplicationFactory:
 
         container.register_singleton(IVisibilityService, VisibilityService)
 
+        # Register pictograph context service
+        from core.interfaces.core_services import IPictographContextService
+        from application.services.ui.pictograph_context_service import (
+            PictographContextService,
+        )
+
+        container.register_singleton(
+            IPictographContextService, PictographContextService
+        )
+
         # TODO: Register remaining production services when identified:
         # container.register_singleton(IValidationService, ProductionValidationService)
         # container.register_singleton(IArrowManagementService, ProductionArrowManagementService)
@@ -185,6 +195,16 @@ class ApplicationFactory:
 
         container.register_singleton(IVisibilityService, VisibilityService)
 
+        # Register pictograph context service
+        from core.interfaces.core_services import IPictographContextService
+        from application.services.ui.pictograph_context_service import (
+            PictographContextService,
+        )
+
+        container.register_singleton(
+            IPictographContextService, PictographContextService
+        )
+
         logger.info("Created test application container")
         return container
 
@@ -231,6 +251,16 @@ class ApplicationFactory:
         from application.services.settings.visibility_service import VisibilityService
 
         container.register_singleton(IVisibilityService, VisibilityService)
+
+        # Register pictograph context service
+        from core.interfaces.core_services import IPictographContextService
+        from application.services.ui.pictograph_context_service import (
+            PictographContextService,
+        )
+
+        container.register_singleton(
+            IPictographContextService, PictographContextService
+        )
 
         # TODO: Register remaining production services when identified:
         # container.register_singleton(IValidationService, ProductionValidationService)

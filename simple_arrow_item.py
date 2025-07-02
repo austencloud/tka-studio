@@ -10,7 +10,7 @@ Dead simple approach like the legacy version:
 from typing import Optional
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPen, QColor
+from PyQt6.QtGui import QColor
 
 
 class ArrowItem(QGraphicsSvgItem):
@@ -101,7 +101,7 @@ class ArrowItem(QGraphicsSvgItem):
         """Custom paint to show selection highlight"""
         # Draw the SVG first
         super().paint(painter, option, widget)
-
+        
         # Add highlight if selected
         if self.is_highlighted:
             painter.setPen(QPen(self.highlight_color, self.highlight_pen_width))

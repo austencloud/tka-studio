@@ -517,9 +517,7 @@ class SequenceData:
             "name": self.name,
             "word": self.word,
             "beats": [beat.to_dict() for beat in self.beats],
-            "start_position": (
-                self.start_position.to_dict() if self.start_position else None
-            ),
+            "start_position": self.start_position,
             "metadata": self.metadata,
         }
 
@@ -528,21 +526,12 @@ class SequenceData:
         """Create from dictionary."""
         beats = [BeatData.from_dict(beat_data) for beat_data in data.get("beats", [])]
 
-        # Reconstruct start position from dictionary if present
-        start_position = None
-        start_pos_data = data.get("start_position")
-        if start_pos_data:
-            if isinstance(start_pos_data, dict):
-                start_position = BeatData.from_dict(start_pos_data)
-            else:
-                start_position = start_pos_data  # Already a BeatData object
-
         return cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
             word=data.get("word", ""),
             beats=beats,
-            start_position=start_position,
+            start_position=data.get("start_position"),
             metadata=data.get("metadata", {}),
         )
 

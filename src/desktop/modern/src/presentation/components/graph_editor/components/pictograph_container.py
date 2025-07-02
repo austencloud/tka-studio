@@ -367,13 +367,10 @@ class ModernPictographView(QGraphicsView):
             if hasattr(arrow_renderer, "arrow_clicked"):
                 arrow_renderer.arrow_clicked.connect(self._on_arrow_clicked)
 
-        # Make arrows clickable by enabling mouse events on arrow items
+        # Make arrows clickable by calling enable_selection() on arrow items
         for item in self._pictograph_scene.items():
-            if hasattr(item, "arrow_color"):  # Arrow items should have this attribute
-                item.setFlag(item.GraphicsItemFlag.ItemIsSelectable, True)
-                item.setAcceptHoverEvents(True)
-                # Set cursor for arrow items
-                item.setCursor(Qt.CursorShape.PointingHandCursor)
+            if hasattr(item, "arrow_color") and hasattr(item, "enable_selection"):
+                item.enable_selection()  # Simple method call - no complex context detection
 
     def _on_arrow_clicked(self, arrow_color: str):
         """Handle arrow click from Modern pictograph scene."""

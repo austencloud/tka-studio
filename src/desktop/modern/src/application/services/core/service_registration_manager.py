@@ -171,12 +171,33 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         from application.services.core.pictograph_management_service import (
             PictographManagementService,
         )
+        from core.interfaces.core_services import IPictographContextService
+        from application.services.ui.pictograph_context_service import (
+            PictographContextService,
+        )
 
         # Register service types, not instances - pure DI
         container.register_singleton(IPictographDataService, PictographDataService)
         container.register_singleton(
             PictographManagementService, PictographManagementService
         )
+
+        # Register pictograph context service for robust context detection
+        container.register_singleton(
+            IPictographContextService, PictographContextService
+        )
+        print("🔧 [SERVICE_REGISTRATION] Registered IPictographContextService")
+
+        # Debug: Verify service can be resolved immediately after registration
+        try:
+            test_service = container.resolve(IPictographContextService)
+            print(
+                f"✅ [SERVICE_REGISTRATION] IPictographContextService resolved successfully: {type(test_service).__name__}"
+            )
+        except Exception as e:
+            print(
+                f"❌ [SERVICE_REGISTRATION] Failed to resolve IPictographContextService: {e}"
+            )
 
     def register_workbench_services(self, container: "DIContainer") -> None:
         """Register workbench services."""
