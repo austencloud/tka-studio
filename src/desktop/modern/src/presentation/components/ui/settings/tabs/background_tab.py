@@ -2,7 +2,6 @@
 Background settings tab with animated clickable preview tiles.
 """
 
-from typing import Optional
 from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,

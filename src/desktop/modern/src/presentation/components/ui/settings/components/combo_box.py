@@ -5,7 +5,7 @@ Modern combo box component with glassmorphism styling.
 from typing import Any, List, Optional
 
 from PyQt6.QtCore import QModelIndex, QPointF, Qt
-from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPen
+from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter
 from PyQt6.QtWidgets import QComboBox, QStyle, QStyledItemDelegate, QStyleOptionViewItem
 
 

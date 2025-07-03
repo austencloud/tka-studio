@@ -11,7 +11,6 @@ from typing import List, Dict, Any, Set
 
 from core.interfaces.generation_services import (
     IGenerationService,
-    GenerationMode,
     PropContinuity,
     LetterType,
 )
@@ -364,7 +363,6 @@ class FreeformGenerationService(IGenerationService):
         """Add start position if sequence only has one beat."""
         # This would call the start position manager
         # For now, placeholder implementation
-        pass
 
     # Required interface methods (not implemented in Phase 1)
     def generate_circular_sequence(self, config: GenerationConfig) -> GenerationResult:

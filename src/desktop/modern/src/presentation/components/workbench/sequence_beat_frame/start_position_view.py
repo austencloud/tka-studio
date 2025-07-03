@@ -380,7 +380,6 @@ class StartPositionView(QFrame):
         """Pulse animation to draw attention to start position"""
         # TODO: Implement smooth pulse animation
         # This could be used when transitioning from start position picker
-        pass
 
     def set_loading_state(self, loading: bool):
         """Set loading state while position is being processed"""

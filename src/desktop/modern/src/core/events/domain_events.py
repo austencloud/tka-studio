@@ -5,9 +5,7 @@ These events replace direct method calls between services.
 
 from dataclasses import dataclass, field
 from typing import Optional, Any, Dict, List
-from datetime import datetime
-import uuid
-from .event_bus import BaseEvent, EventPriority
+from .event_bus import BaseEvent
 
 
 # === Sequence Domain Events ===

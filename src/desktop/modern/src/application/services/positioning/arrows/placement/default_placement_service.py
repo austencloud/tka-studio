@@ -7,7 +7,6 @@ arrow positioning with comprehensive adjustment data.
 
 import json
 import codecs
-import os
 from pathlib import Path
 from typing import Dict, Any, Optional
 

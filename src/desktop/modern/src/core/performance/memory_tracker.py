@@ -9,17 +9,13 @@ resource management and monitoring infrastructure.
 import gc
 import psutil
 import threading
-import time
-from typing import Dict, List, Optional, Any, Set
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 import logging
-import weakref
 
 from core.types.result import (
     Result,
-    Success,
-    Failure,
     AppError,
     ErrorType,
     success,

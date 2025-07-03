@@ -13,7 +13,7 @@ This service provides a clean, unified interface for all UI state operations
 while maintaining the proven algorithms from the individual services.
 """
 
-from typing import Dict, Any, Optional, List, Callable
+from typing import Dict, Any, Optional, Callable
 from enum import Enum
 from dataclasses import dataclass, field
 import json

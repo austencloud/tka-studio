@@ -21,7 +21,6 @@ from PyQt6.QtWidgets import QFrame, QVBoxLayout, QWidget
 from .beat_number_overlay import (
     BeatNumberOverlay,
     add_beat_number_to_view,
-    clear_all_beat_numbers_from_view,
 )
 
 

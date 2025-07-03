@@ -15,14 +15,11 @@ import time
 import weakref
 from typing import Dict, List, Optional, Any, Set
 from dataclasses import dataclass, field
-from datetime import datetime
 import logging
 
 try:
-    from PyQt6.QtCore import (QObject, QTimer, QEvent, QCoreApplication,
-                             pyqtSignal, QMetaMethod, QThread)
-    from PyQt6.QtWidgets import QApplication, QWidget, QGraphicsScene, QGraphicsView
-    from PyQt6.QtGui import QPaintEvent, QResizeEvent
+    from PyQt6.QtCore import (QObject, QEvent, pyqtSignal)
+    from PyQt6.QtWidgets import QApplication
     QT_AVAILABLE = True
 except ImportError:
     # Fallback for environments without PyQt6
@@ -31,8 +28,8 @@ except ImportError:
     QEvent = object
     pyqtSignal = lambda: None
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
-from .metrics import QtEventMetrics, PerformanceMetrics
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
+from .metrics import QtEventMetrics
 from .config import PerformanceConfig, get_performance_config
 
 logger = logging.getLogger(__name__)

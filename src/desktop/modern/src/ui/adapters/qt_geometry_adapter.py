@@ -5,13 +5,11 @@ These adapters are used in the UI layer to bridge between the clean architecture
 core types and the PyQt6 framework types.
 """
 
-from typing import Optional
 
 from core.types import Size, Point, Rect
 
 try:
     from PyQt6.QtCore import QSize, QPointF, QRect
-    from PyQt6.QtWidgets import QWidget
 
     QT_AVAILABLE = True
 except ImportError:

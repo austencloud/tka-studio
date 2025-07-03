@@ -13,7 +13,6 @@ from application.services.layout.beat_resizer_service import (
 from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
-from core.interfaces.core_services import ILayoutService
 from presentation.components.workbench.sequence_beat_frame.beat_selection_manager import (
     BeatSelectionManager,
 )
@@ -24,14 +23,10 @@ from presentation.components.workbench.sequence_beat_frame.start_position_view i
     StartPositionView,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QFrame,
     QGridLayout,
-    QHBoxLayout,
-    QLabel,
     QScrollArea,
-    QVBoxLayout,
     QWidget,
 )
 from domain.models.core_models import BeatData, SequenceData

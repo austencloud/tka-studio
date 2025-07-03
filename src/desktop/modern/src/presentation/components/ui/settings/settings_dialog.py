@@ -276,7 +276,6 @@ class SettingsDialog(QDialog):
     def _reset_settings(self):
         """Reset all settings to defaults with confirmation."""
         # TODO: Implement reset confirmation dialog
-        pass
 
     def paintEvent(self, event):
         """Custom paint event for glassmorphism background with proper masking."""

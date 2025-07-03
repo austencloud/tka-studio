@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict
 from core.interfaces.tab_settings_interfaces import (
     IVisibilityService,
 )

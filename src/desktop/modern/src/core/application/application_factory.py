@@ -13,8 +13,6 @@ import sys
 import logging
 from core.dependency_injection.di_container import (
     DIContainer,
-    get_container,
-    reset_container,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,7 +42,6 @@ from application.services.core.pictograph_management_service import (
     PictographManagementService,
 )
 from application.services.core.session_state_service import SessionStateService
-from application.services.settings.settings_service import SettingsService
 
 # Import file-based storage services
 from infrastructure.storage.file_based_sequence_data_service import (

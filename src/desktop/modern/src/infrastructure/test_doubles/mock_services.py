@@ -89,7 +89,6 @@ class MockLayoutService(ILayoutService):
 
     def set_layout_ratio(self, ratio: tuple[int, int]) -> None:
         """Mock set layout ratio."""
-        pass
 
     def calculate_component_size(self, component_type: str, parent_size: Size) -> Size:
         """Calculate component size with simple logic."""
@@ -154,11 +153,9 @@ class InMemorySettingsService(ISettingsService):
 
     def save_settings(self) -> None:
         """Mock save settings (no-op)."""
-        pass
 
     def load_settings(self) -> None:
         """Mock load settings (no-op)."""
-        pass
 
 
 class MockValidationService(IValidationService):

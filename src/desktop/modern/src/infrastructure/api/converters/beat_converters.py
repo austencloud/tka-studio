@@ -4,7 +4,6 @@ Handles conversion between BeatData and BeatAPI models.
 """
 
 import logging
-from typing import Optional
 
 from domain.models.core_models import BeatData
 

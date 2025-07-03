@@ -11,7 +11,7 @@ PROVIDES:
 - Overlap detection logic
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List
 from abc import ABC, abstractmethod
 
 from domain.models.core_models import (
@@ -29,26 +29,22 @@ class IPropClassificationService(ABC):
     @abstractmethod
     def classify_props_by_size(self, beat_data: BeatData) -> Dict[str, List]:
         """Classify props by size categories (big, small, hands)."""
-        pass
 
     @abstractmethod
     def get_repositioning_strategy(
         self, beat_data: BeatData, prop_classification: Dict[str, List]
     ) -> str:
         """Determine repositioning strategy based on prop classification and letter."""
-        pass
 
     @abstractmethod
     def detect_prop_overlap(self, beat_data: BeatData) -> bool:
         """Detect if props overlap based on position and category."""
-        pass
 
     @abstractmethod
     def calculate_prop_rotation_angle(
         self, motion_data: MotionData, start_orientation: Orientation = Orientation.IN
     ) -> float:
         """Calculate prop rotation angle based on motion data and orientation."""
-        pass
 
 
 class PropClassificationService(IPropClassificationService):

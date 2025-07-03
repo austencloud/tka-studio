@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
     QGridLayout,
     QLabel,
     QScrollArea,
@@ -10,7 +9,6 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QFont
 
-from domain.models.core_models import BeatData
 from application.services.data.pictograph_dataset_service import (
     PictographDatasetService,
 )

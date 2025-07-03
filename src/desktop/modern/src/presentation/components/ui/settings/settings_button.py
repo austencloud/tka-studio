@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QIcon, QCursor
+from PyQt6.QtGui import QCursor
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 
 if TYPE_CHECKING:

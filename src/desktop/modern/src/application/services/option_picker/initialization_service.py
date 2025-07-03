@@ -16,7 +16,6 @@ Uses dependency injection and follows TKA's clean architecture.
 import logging
 from typing import Dict, Any, Optional, Callable, Tuple
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import QSize
 
 from core.interfaces.option_picker_services import (
     IOptionPickerInitializationService,
@@ -37,7 +36,6 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
 
     def __init__(self):
         """Initialize the initialization service."""
-        pass
 
     def initialize_components(
         self,

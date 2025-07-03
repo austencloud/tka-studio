@@ -14,18 +14,16 @@ from core.application.application_factory import ApplicationFactory
 from core.interfaces.core_services import (
     ISequenceManagementService,
     IPictographManagementService,
-    ISequenceDataService,
     IValidationService,
 )
 from domain.models.core_models import (
     BeatData,
-    SequenceData,
     MotionData,
     MotionType,
     Location,
     RotationDirection,
 )
-from domain.models.pictograph_models import PictographData, GridMode
+from domain.models.pictograph_models import GridMode
 
 logger = logging.getLogger(__name__)
 

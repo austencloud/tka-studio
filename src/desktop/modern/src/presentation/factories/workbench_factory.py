@@ -30,9 +30,6 @@ from core.interfaces.workbench_services import (
 from application.services.core.sequence_management_service import (
     SequenceManagementService,
 )
-from application.services.ui.ui_state_management_service import (
-    UIStateManagementService,
-)
 from application.services.ui.full_screen_service import (
     FullScreenService,
 )

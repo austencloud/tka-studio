@@ -8,7 +8,6 @@ Faithful port of the turns tuple generation logic from legacy special placement 
 """
 
 import logging
-from typing import Optional
 
 from domain.models.core_models import MotionData
 from domain.models.pictograph_models import PictographData

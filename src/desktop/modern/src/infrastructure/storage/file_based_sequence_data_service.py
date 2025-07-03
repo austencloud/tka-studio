@@ -5,7 +5,6 @@ Provides persistent sequence data storage using JSON files.
 """
 
 import json
-import os
 from typing import List, Optional, Dict, Any
 from pathlib import Path
 import logging

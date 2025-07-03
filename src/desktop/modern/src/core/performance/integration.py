@@ -9,7 +9,7 @@ import logging
 from typing import Optional, Dict, Any, Callable
 from functools import wraps
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
 from .profiler import get_profiler, profile
 from .qt_profiler import get_qt_profiler
 from .memory_tracker import get_memory_tracker

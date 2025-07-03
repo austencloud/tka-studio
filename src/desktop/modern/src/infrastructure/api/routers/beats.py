@@ -5,7 +5,6 @@ Handles all beat-related operations including adding, updating, and removing bea
 """
 
 import logging
-from typing import Optional
 
 from application.services.core.sequence_management_service import (
     SequenceManagementService,

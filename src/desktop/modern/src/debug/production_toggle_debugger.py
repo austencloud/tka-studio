@@ -6,7 +6,6 @@ Real-time debugging tool that runs within the actual TKA application
 to monitor toggle functionality and identify production-specific failures.
 """
 
-import logging
 import time
 from typing import Optional, Any, Dict, List
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal

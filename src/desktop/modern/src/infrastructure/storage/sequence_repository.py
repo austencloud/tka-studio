@@ -5,7 +5,6 @@ Provides in-memory storage for sequences with CRUD operations.
 
 from typing import Dict, List, Optional
 import logging
-from datetime import datetime
 
 from domain.models.core_models import SequenceData
 

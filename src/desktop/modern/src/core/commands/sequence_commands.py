@@ -11,9 +11,9 @@ from typing import TYPE_CHECKING, Any, Optional
 from .command_system import ICommand
 
 if TYPE_CHECKING:
-    from ..events import IEventBus
+    pass
 
-from ..events import BeatAddedEvent, BeatRemovedEvent, BeatUpdatedEvent, IEventBus
+from ..events import BeatAddedEvent, BeatRemovedEvent, BeatUpdatedEvent
 
 # Use absolute imports to avoid relative import issues
 if TYPE_CHECKING:

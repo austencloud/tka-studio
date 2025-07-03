@@ -14,9 +14,8 @@ DECORATORS:
 import logging
 import time
 import functools
-from typing import Callable, Any, Optional, Type, Union, Dict
+from typing import Callable, Any, Optional, Type, Union
 from .exceptions import (
-    ServiceOperationError,
     ValidationError,
     TKABaseException,
     service_error,

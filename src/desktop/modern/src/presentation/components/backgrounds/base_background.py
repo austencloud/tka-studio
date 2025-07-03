@@ -23,4 +23,3 @@ class BaseBackground(QObject):
     @abstractmethod
     def paint_background(self, widget: "QWidget", painter: "QPainter"):
         """Override this method to implement background painting logic"""
-        pass

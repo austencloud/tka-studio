@@ -14,7 +14,7 @@ PROVIDES: Clean component architecture with dependency injection
 """
 
 from abc import ABC, abstractmethod, ABCMeta
-from typing import Optional, Any, Dict, List, TYPE_CHECKING
+from typing import Optional, Any, List
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QObject, pyqtSignal
 import logging
@@ -51,7 +51,6 @@ logger = logging.getLogger(__name__)
 class QObjectABCMeta(type(QObject), ABCMeta):
     """Metaclass that combines QObject's metaclass with ABCMeta."""
 
-    pass
 
 
 class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
@@ -157,7 +156,6 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
 
         NEVER access global state or main widget - use dependency injection only.
         """
-        pass
 
     @abstractmethod
     def get_widget(self) -> QWidget:
@@ -170,7 +168,6 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         Returns:
             QWidget: The main widget for this component
         """
-        pass
 
     @property
     def is_initialized(self) -> bool:
@@ -345,7 +342,6 @@ class AsyncViewableComponentBase(ViewableComponentBase):
         Components that need async initialization should override this method
         instead of initialize().
         """
-        pass
 
     async def async_cleanup(self) -> None:
         """
@@ -353,7 +349,6 @@ class AsyncViewableComponentBase(ViewableComponentBase):
 
         Components that need async cleanup should override this method.
         """
-        pass
 
 
 # Convenience type aliases

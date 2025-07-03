@@ -36,4 +36,3 @@ class SettingsServiceAdapter(ISettingsService):
     def save_settings(self) -> None:
         """Save settings."""
         # UIStateManagementService handles auto-saving
-        pass

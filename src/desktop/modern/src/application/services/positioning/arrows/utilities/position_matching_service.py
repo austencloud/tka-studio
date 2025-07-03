@@ -160,9 +160,6 @@ class PositionMatchingService:
         """Convert dictionary item to BeatData using actual motion data from the dictionary."""
         from domain.models.core_models import (
             MotionData,
-            MotionType,
-            Location,
-            RotationDirection,
         )
 
         # Extract basic data

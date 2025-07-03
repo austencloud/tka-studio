@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
 
 
 @dataclass(frozen=True)

@@ -2,7 +2,7 @@
 
 # API infrastructure exports
 try:
-    from .api import *
+    pass
 except ImportError:
     # API infrastructure not available
     pass

@@ -5,10 +5,8 @@ This service provides access to the actual pictograph dataset,
 enabling pixel-perfect accuracy for start position selection and motion combinations.
 """
 
-import os
 import pandas as pd
 from typing import Dict, Any, Optional, List
-from pathlib import Path
 
 from domain.models.core_models import (
     BeatData,
@@ -16,7 +14,6 @@ from domain.models.core_models import (
     MotionType,
     RotationDirection,
     Location,
-    GlyphData,
 )
 from infrastructure.data_path_handler import DataPathHandler
 from .glyph_data_service import GlyphDataService

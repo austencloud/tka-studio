@@ -1,5 +1,5 @@
-from typing import Dict, Any, List
-from ...infrastructure.config.constants import MOTION_TYPES, DIRECTIONS, PROPS
+from typing import Dict, Any
+from ...infrastructure.config.constants import PROPS
 
 
 class VtgConfigurationService:

@@ -5,7 +5,7 @@ These interfaces define the contracts for core services, replacing tightly-coupl
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Any, Tuple, Protocol, Callable
+from typing import List, Optional, Dict, Any, Tuple, Callable
 from core.types import Size
 
 
@@ -21,32 +21,26 @@ class ILayoutService(ABC):
     @abstractmethod
     def get_main_window_size(self) -> Size:
         """Get the main window size."""
-        pass
 
     @abstractmethod
     def get_workbench_size(self) -> Size:
         """Get the workbench area size."""
-        pass
 
     @abstractmethod
     def get_picker_size(self) -> Size:
         """Get the option picker size."""
-        pass
 
     @abstractmethod
     def get_layout_ratio(self) -> tuple[int, int]:
         """Get the layout ratio (workbench:picker)."""
-        pass
 
     @abstractmethod
     def set_layout_ratio(self, ratio: tuple[int, int]) -> None:
         """Set the layout ratio."""
-        pass
 
     @abstractmethod
     def calculate_component_size(self, component_type: str, parent_size: Size) -> Size:
         """Calculate component size based on parent and type."""
-        pass
 
     # Advanced Layout Methods (formerly ILayoutManagementService)
     @abstractmethod
@@ -54,28 +48,24 @@ class ILayoutService(ABC):
         self, sequence: Any, container_size: Tuple[int, int]
     ) -> Dict[str, Any]:
         """Calculate layout for beat frames in a sequence."""
-        pass
 
     @abstractmethod
     def calculate_responsive_scaling(
         self, content_size: Tuple[int, int], container_size: Tuple[int, int]
     ) -> float:
         """Calculate responsive scaling factor."""
-        pass
 
     @abstractmethod
     def get_optimal_grid_layout(
         self, item_count: int, container_size: Tuple[int, int]
     ) -> Tuple[int, int]:
         """Get optimal grid layout (rows, cols) for items."""
-        pass
 
     @abstractmethod
     def calculate_component_positions(
         self, layout_config: Dict[str, Any]
     ) -> Dict[str, Tuple[int, int]]:
         """Calculate positions for UI components."""
-        pass
 
 
 class ISettingsService(ABC):
@@ -84,22 +74,18 @@ class ISettingsService(ABC):
     @abstractmethod
     def get_setting(self, key: str, default: Any = None) -> Any:
         """Get a setting value."""
-        pass
 
     @abstractmethod
     def set_setting(self, key: str, value: Any) -> None:
         """Set a setting value."""
-        pass
 
     @abstractmethod
     def save_settings(self) -> None:
         """Save settings to persistent storage."""
-        pass
 
     @abstractmethod
     def load_settings(self) -> None:
         """Load settings from persistent storage."""
-        pass
 
 
 class ISequenceDataService(ABC):
@@ -108,27 +94,22 @@ class ISequenceDataService(ABC):
     @abstractmethod
     def get_all_sequences(self) -> List[Dict[str, Any]]:
         """Get all available sequences."""
-        pass
 
     @abstractmethod
     def get_sequence_by_id(self, sequence_id: str) -> Optional[Dict[str, Any]]:
         """Get a specific sequence by ID."""
-        pass
 
     @abstractmethod
     def save_sequence(self, sequence_data: Dict[str, Any]) -> bool:
         """Save sequence data."""
-        pass
 
     @abstractmethod
     def delete_sequence(self, sequence_id: str) -> bool:
         """Delete a sequence."""
-        pass
 
     @abstractmethod
     def create_new_sequence(self, name: str) -> Dict[str, Any]:
         """Create a new empty sequence."""
-        pass
 
 
 class IValidationService(ABC):
@@ -137,22 +118,18 @@ class IValidationService(ABC):
     @abstractmethod
     def validate_sequence(self, sequence_data: Dict[str, Any]) -> bool:
         """Validate a sequence."""
-        pass
 
     @abstractmethod
     def validate_beat(self, beat_data: Dict[str, Any]) -> bool:
         """Validate a beat."""
-        pass
 
     @abstractmethod
     def validate_motion(self, motion_data: Dict[str, Any]) -> bool:
         """Validate a motion."""
-        pass
 
     @abstractmethod
     def get_validation_errors(self, data: Dict[str, Any]) -> List[str]:
         """Get validation errors for data."""
-        pass
 
 
 class IArrowManagementService(ABC):
@@ -163,22 +140,18 @@ class IArrowManagementService(ABC):
         self, arrow_data: Any, pictograph_data: Any
     ) -> Tuple[float, float, float]:
         """Calculate complete arrow position and rotation."""
-        pass
 
     @abstractmethod
     def should_mirror_arrow(self, arrow_data: Any) -> bool:
         """Determine if arrow should be mirrored based on motion type."""
-        pass
 
     @abstractmethod
     def apply_beta_positioning(self, beat_data: Any) -> Any:
         """Apply beta prop positioning if needed."""
-        pass
 
     @abstractmethod
     def calculate_all_arrow_positions(self, pictograph_data: Any) -> Any:
         """Calculate positions for all arrows in pictograph."""
-        pass
 
 
 # IMotionManagementService removed - bridge service eliminated
@@ -193,27 +166,22 @@ class ISequenceManagementService(ABC):
     @abstractmethod
     def create_sequence(self, name: str, length: int = 16) -> Any:
         """Create a new sequence with specified length."""
-        pass
 
     @abstractmethod
     def add_beat(self, sequence: Any, beat: Any, position: int) -> Any:
         """Add beat to sequence at specified position."""
-        pass
 
     @abstractmethod
     def remove_beat(self, sequence: Any, position: int) -> Any:
         """Remove beat from sequence at specified position."""
-        pass
 
     @abstractmethod
     def generate_sequence(self, sequence_type: str, length: int, **kwargs) -> Any:
         """Generate sequence using specified algorithm."""
-        pass
 
     @abstractmethod
     def apply_workbench_operation(self, sequence: Any, operation: str, **kwargs) -> Any:
         """Apply workbench transformation to sequence."""
-        pass
 
 
 class IPictographManagementService(ABC):
@@ -222,17 +190,14 @@ class IPictographManagementService(ABC):
     @abstractmethod
     def create_pictograph(self, grid_mode: Any = None) -> Any:
         """Create a new blank pictograph."""
-        pass
 
     @abstractmethod
     def create_from_beat(self, beat_data: Any) -> Any:
         """Create pictograph from beat data."""
-        pass
 
     @abstractmethod
     def search_dataset(self, query: Dict[str, Any]) -> List[Any]:
         """Search pictograph dataset with query."""
-        pass
 
 
 class IUIStateManagementService(ABC):
@@ -241,22 +206,18 @@ class IUIStateManagementService(ABC):
     @abstractmethod
     def get_setting(self, key: str, default: Any = None) -> Any:
         """Get a setting value."""
-        pass
 
     @abstractmethod
     def set_setting(self, key: str, value: Any) -> None:
         """Set a setting value."""
-        pass
 
     @abstractmethod
     def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
         """Get state for a specific tab."""
-        pass
 
     @abstractmethod
     def toggle_graph_editor(self) -> bool:
         """Toggle graph editor visibility."""
-        pass
 
 
 class IPictographContextService(ABC):
@@ -265,22 +226,18 @@ class IPictographContextService(ABC):
     @abstractmethod
     def register_context_provider(self, component_id: str, context: Any) -> None:
         """Register a component with its explicit context."""
-        pass
 
     @abstractmethod
     def get_context_for_component(self, component_id: str) -> Any:
         """Get the rendering context for a specific component."""
-        pass
 
     @abstractmethod
     def determine_context_from_provider(self, provider: Any) -> Any:
         """Determine context from a context provider component."""
-        pass
 
     @abstractmethod
     def determine_context_from_scene(self, scene: Any) -> Any:
         """Determine context from a pictograph scene."""
-        pass
 
 
 # ILayoutManagementService has been consolidated into ILayoutService above
@@ -295,19 +252,16 @@ class IBeatLoadingService(ABC):
         self, sequence_data: List[Dict[str, Any]]
     ) -> List[Any]:
         """Load motion combinations with position matching."""
-        pass
 
     @abstractmethod
     def filter_valid_options(
         self, beat_options: List[Any], end_position: str
     ) -> List[Any]:
         """Filter beat options based on end position."""
-        pass
 
     @abstractmethod
     def get_sample_beat_options(self) -> List[Any]:
         """Get fallback sample options."""
-        pass
 
 
 class IObjectPoolService(ABC):
@@ -322,14 +276,11 @@ class IObjectPoolService(ABC):
         progress_callback: Optional[Callable] = None,
     ) -> None:
         """Initialize object pool with progress tracking."""
-        pass
 
     @abstractmethod
     def get_pooled_object(self, pool_name: str, index: int) -> Optional[Any]:
         """Get object from pool by index."""
-        pass
 
     @abstractmethod
     def reset_pool(self, pool_name: str) -> None:
         """Reset pool state."""
-        pass

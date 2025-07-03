@@ -7,14 +7,11 @@ Integrates with existing configuration patterns and supports environment-based s
 
 import os
 import logging
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, List
 from dataclasses import dataclass
-from pathlib import Path
 
 from core.types.result import (
     Result,
-    Success,
-    Failure,
     AppError,
     ErrorType,
     success,

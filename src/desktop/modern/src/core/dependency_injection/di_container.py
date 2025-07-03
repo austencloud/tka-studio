@@ -9,7 +9,7 @@ from typing import TypeVar, Type, Dict, Any, Optional, Set, List
 import logging
 
 # Import refactored modules
-from .service_registry import ServiceRegistry, ServiceScope, ServiceDescriptor
+from .service_registry import ServiceRegistry, ServiceScope
 from .service_resolvers import ResolverChain, LazyProxy
 from .lifecycle_manager import LifecycleManager
 from .validation_engine import ValidationEngine

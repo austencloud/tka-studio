@@ -5,7 +5,7 @@ This service determines glyph information (VTG mode, elemental type, letter type
 from beat data and motion information, following validated glyph classification logic.
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional
 from domain.models.core_models import (
     BeatData,
     GlyphData,

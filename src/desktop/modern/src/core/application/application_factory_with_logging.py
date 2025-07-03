@@ -15,7 +15,6 @@ INTEGRATION BENEFITS:
 from typing import Optional
 import sys
 import logging
-import os
 
 # Import original factory
 from .application_factory import ApplicationFactory as OriginalApplicationFactory, ApplicationMode
@@ -27,8 +26,7 @@ try:
         setup_arrow_positioning_logging_only,
         enable_quiet_mode,
         enable_performance_monitoring,
-        configure_from_environment,
-        LoggingEnvironments
+        configure_from_environment
     )
     SMART_LOGGING_AVAILABLE = True
 except ImportError:

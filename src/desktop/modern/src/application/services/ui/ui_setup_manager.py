@@ -41,17 +41,14 @@ class IUISetupManager(ABC):
         progress_callback: Optional[Callable] = None,
     ) -> QTabWidget:
         """Setup the main UI components and return the tab widget."""
-        pass
 
     @abstractmethod
     def create_header_layout(self, main_window: QMainWindow) -> QHBoxLayout:
         """Create header layout with title and settings button."""
-        pass
 
     @abstractmethod
     def create_tab_widget(self) -> QTabWidget:
         """Create and configure the main tab widget."""
-        pass
 
 
 class UISetupManager(IUISetupManager):

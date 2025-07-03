@@ -4,7 +4,7 @@ Direct pictograph view for Kinetic Constructor - matches legacy container hierar
 
 from typing import Optional, Any
 from PyQt6.QtWidgets import QGraphicsView
-from PyQt6.QtCore import pyqtSignal, Qt, QTimer, QSize, QEvent
+from PyQt6.QtCore import pyqtSignal, Qt, QTimer, QEvent
 from PyQt6.QtGui import QPainter, QKeyEvent, QResizeEvent, QEnterEvent
 
 from application.services.ui.context_aware_scaling_service import (

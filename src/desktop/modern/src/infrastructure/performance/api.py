@@ -6,11 +6,11 @@ Integrates with existing FastAPI infrastructure and follows TKA patterns.
 """
 
 from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
 
 try:
-    from fastapi import APIRouter, HTTPException, Query, Depends
+    from fastapi import APIRouter, HTTPException, Query
     from pydantic import BaseModel
     FASTAPI_AVAILABLE = True
 except ImportError:
@@ -44,7 +44,6 @@ except ImportError:
             super().__init__(detail)
     BaseModel = object
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
 from core.performance import get_profiler, get_qt_profiler, get_memory_tracker
 from .storage import get_performance_storage
 

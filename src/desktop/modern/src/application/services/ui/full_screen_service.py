@@ -1,4 +1,3 @@
-from typing import Optional
 from domain.models.core_models import SequenceData
 from core.interfaces.workbench_services import IFullScreenService
 
@@ -22,4 +21,3 @@ class FullScreenService(IFullScreenService):
         print(
             f"🖥️ Full screen view requested for sequence with {len(sequence.beats)} beats"
         )
-        pass

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 
 
 class PictographRepository(ABC):

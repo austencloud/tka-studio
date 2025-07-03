@@ -11,7 +11,7 @@ Faithful port of the orientation key generation logic from legacy special placem
 import logging
 from typing import Optional
 
-from domain.models.core_models import MotionData, MotionType, Orientation
+from domain.models.core_models import MotionData, Orientation
 from domain.models.pictograph_models import PictographData
 from application.services.validation.pictograph_checker_service import (
     PictographCheckerService,

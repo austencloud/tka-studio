@@ -29,11 +29,9 @@ from .components.main_adjustment_panel import MainAdjustmentPanel
 
 # Import essential utilities
 from .utils.validation import (
-    ValidationError,
     ValidationResult,
     validate_beat_data,
     validate_sequence_data,
-    validate_beat_index,
 )
 
 if TYPE_CHECKING:

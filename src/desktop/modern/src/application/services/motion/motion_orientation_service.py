@@ -30,12 +30,10 @@ class IMotionOrientationService(ABC):
         self, motion: MotionData, start_orientation: Orientation = Orientation.IN
     ) -> Orientation:
         """Calculate end orientation for a motion."""
-        pass
 
     @abstractmethod
     def flip_orientation(self, orientation: Orientation) -> Orientation:
         """Flip orientation between IN and OUT."""
-        pass
 
 
 class MotionOrientationService(IMotionOrientationService):

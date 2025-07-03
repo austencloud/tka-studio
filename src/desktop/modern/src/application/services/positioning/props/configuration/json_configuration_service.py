@@ -27,22 +27,18 @@ class IJSONConfigurationService(ABC):
     @abstractmethod
     def load_special_placements(self) -> Dict[str, Any]:
         """Load special placement data from JSON configuration files."""
-        pass
 
     @abstractmethod
     def generate_override_key(self, beat_data: BeatData) -> str:
         """Generate key for swap override lookup."""
-        pass
 
     @abstractmethod
     def has_swap_override(self, beat_data: BeatData) -> bool:
         """Check if beat has manual swap override in special placements."""
-        pass
 
     @abstractmethod
     def get_swap_override_data(self, beat_data: BeatData) -> Dict[str, Any]:
         """Get swap override data for beat."""
-        pass
 
 
 class JSONConfigurationService(IJSONConfigurationService):

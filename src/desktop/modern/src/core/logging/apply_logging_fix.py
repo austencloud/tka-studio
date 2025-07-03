@@ -22,7 +22,6 @@ MODES:
 """
 
 import sys
-import os
 import logging
 import argparse
 from pathlib import Path
@@ -34,10 +33,7 @@ sys.path.insert(0, str(src_path))
 try:
     from core.logging import (
         setup_arrow_positioning_logging_only,
-        setup_smart_logging,
-        enable_quiet_mode,
-        enable_verbose_mode,
-        configure_from_environment
+        setup_smart_logging
     )
     LOGGING_SYSTEM_AVAILABLE = True
 except ImportError as e:

@@ -13,7 +13,6 @@ import logging
 from typing import Dict, Any, Optional, Tuple, List
 from dataclasses import dataclass
 from enum import Enum
-import weakref
 
 logger = logging.getLogger(__name__)
 

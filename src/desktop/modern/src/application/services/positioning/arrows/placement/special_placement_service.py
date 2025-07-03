@@ -18,7 +18,6 @@ PROVIDES:
 """
 
 import json
-import os
 import time
 import logging
 from pathlib import Path
@@ -27,8 +26,6 @@ from PyQt6.QtCore import QPointF
 
 from domain.models.core_models import (
     MotionData,
-    MotionType,
-    Location,
     Orientation,
 )
 from domain.models.pictograph_models import ArrowData, PictographData

@@ -6,7 +6,7 @@ that updates as options are toggled, following the legacy functionality but with
 clean architecture and glassmorphism design.
 """
 
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
 from core.interfaces.tab_settings_interfaces import (
     IImageExportService,
@@ -17,8 +17,6 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFrame,
-    QGridLayout,
-    QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,

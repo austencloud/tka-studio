@@ -1,7 +1,6 @@
 # Modern Domain Module
 
 # Export models for easy importing
-from .models import *
 
 __all__ = [
     # Re-export everything from models

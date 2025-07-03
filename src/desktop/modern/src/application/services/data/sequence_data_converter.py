@@ -5,7 +5,6 @@ Handles conversion between legacy JSON format and modern domain models.
 Responsible for maintaining compatibility with legacy sequence data structures.
 """
 
-from typing import Dict, Any
 from domain.models.core_models import (
     BeatData,
     SequenceData,

@@ -21,7 +21,7 @@ import os
 from dataclasses import dataclass
 from typing import Optional
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
 from core.config.data_config import DataConfig, create_data_config
 
 

@@ -23,8 +23,7 @@ def start_api_server(host="localhost", port=8000):
     """
     try:
         # Try to import fastapi dependencies
-        import fastapi
-        import uvicorn
+        pass
 
         logger.info(f"🚀 Starting API server on {host}:{port}")
         # This would contain the actual server startup logic

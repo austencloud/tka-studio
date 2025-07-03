@@ -10,14 +10,7 @@ Provides multi-language access to TKA functionality through:
 
 # Minimal API exports for Phase 1
 try:
-    from .minimal_api import app as minimal_app
-    from .api_integration import (
-        TKAAPIIntegration,
-        get_api_integration,
-        start_api_server,
-        stop_api_server,
-        is_api_running,
-    )
+    pass
 
     __all__ = [
         "minimal_app",

@@ -11,7 +11,6 @@ PROVIDES:
 - Complex direction logic replication from BetaPropDirectionCalculator
 """
 
-from typing import Dict, Tuple
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -44,19 +43,16 @@ class IDirectionCalculationService(ABC):
         self, motion: MotionData, beat_data: BeatData, color: str
     ) -> SeparationDirection:
         """Calculate the direction props should be separated."""
-        pass
 
     @abstractmethod
     def calculate_end_orientation(
         self, motion_data: MotionData, start_orientation: Orientation = Orientation.IN
     ) -> Orientation:
         """Calculate end orientation for placement calculations."""
-        pass
 
     @abstractmethod
     def detect_grid_mode(self, location: Location) -> str:
         """Detect grid mode (diamond or box) based on location."""
-        pass
 
 
 class DirectionCalculationService(IDirectionCalculationService):

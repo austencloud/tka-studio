@@ -26,7 +26,6 @@ class QuadrantIndexService:
 
     def __init__(self):
         """Initialize the quadrant index service."""
-        pass
 
     def get_quadrant_index(
         self, motion: MotionData, arrow_location: Location

@@ -3,11 +3,6 @@ from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtWidgets import QWidget
 
 # A+ Enhancement: Import Qt resource pooling
-from presentation.qt_integration import (
-    qt_resources,
-    pooled_pen,
-    pooled_brush,
-)
 
 from .starfield.star_manager import StarManager
 from .starfield.comet_manager import CometManager

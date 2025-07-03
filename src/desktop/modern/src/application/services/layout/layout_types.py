@@ -1,14 +1,9 @@
-from typing import Dict, Any, Optional, Tuple, List, Union, TYPE_CHECKING
+from typing import Dict, Optional, Tuple, TYPE_CHECKING
 from enum import Enum
 from dataclasses import dataclass
-import math
 import logging
-import uuid
-from datetime import datetime
 
 
-from domain.models.core_models import SequenceData
-from core.interfaces.core_services import ILayoutService
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -19,12 +14,6 @@ try:
         IEventBus,
         get_event_bus,
         EventPriority,
-        BeatAddedEvent,
-        BeatRemovedEvent,
-        BeatUpdatedEvent,
-        SequenceCreatedEvent,
-        LayoutRecalculatedEvent,
-        ComponentResizedEvent,
     )
 
     EVENT_SYSTEM_AVAILABLE = True

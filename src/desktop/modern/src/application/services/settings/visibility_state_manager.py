@@ -5,7 +5,7 @@ Provides sophisticated state management with observer pattern, dependency logic,
 validation, and integration with existing IVisibilityService.
 """
 
-from typing import Dict, List, Callable, Any, Optional
+from typing import Dict, List, Callable, Any
 import logging
 from threading import Lock
 
@@ -51,7 +51,6 @@ class ModernVisibilityStateManager:
         """Get or create global visibility service."""
         try:
             # Try to get from DI container first
-            from core.application.application_factory import ApplicationFactory
             from application.services.pictograph.global_visibility_service import (
                 GlobalVisibilityService,
             )

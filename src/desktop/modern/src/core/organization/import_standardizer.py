@@ -5,7 +5,7 @@ This file was auto-generated to resolve import errors in tests.
 Replace with actual implementation when needed.
 """
 
-from typing import Any, Optional
+from typing import Any
 
 
 class ImportStandardizer:
@@ -29,7 +29,6 @@ class ComponentHierarchyOptimizer:
 
     def __init__(self):
         """Initialize the optimizer."""
-        pass
 
     def __getattr__(self, name: str) -> Any:
         """Return a mock method for any attribute access."""
@@ -45,7 +44,6 @@ class ImportPatternAnalyzer:
 
     def __init__(self):
         """Initialize the analyzer."""
-        pass
 
     def __getattr__(self, name: str) -> Any:
         """Return a mock method for any attribute access."""

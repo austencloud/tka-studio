@@ -7,8 +7,8 @@ for TKA's smart logging system.
 
 import logging
 import os
-from typing import Dict, Optional
-from .smart_logger import LoggingConfig, get_smart_logger
+from typing import Dict
+from .smart_logger import LoggingConfig
 from .arrow_positioning_logger import get_arrow_positioning_logger
 
 

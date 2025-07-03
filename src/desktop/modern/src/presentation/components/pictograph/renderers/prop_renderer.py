@@ -6,7 +6,6 @@ from PyQt6.QtCore import QPointF
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
-from core.types import Point
 from domain.models.core_models import MotionData, Location
 
 from presentation.components.pictograph.asset_utils import (

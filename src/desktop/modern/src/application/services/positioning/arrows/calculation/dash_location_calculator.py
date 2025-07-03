@@ -5,11 +5,10 @@ This service implements comprehensive dash location calculation logic,
 providing all the complex dash location maps and calculations with high precision.
 """
 
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 from domain.models.core_models import (
     ArrowColor,
-    BeatData,
     LetterType,
     Location,
     MotionData,

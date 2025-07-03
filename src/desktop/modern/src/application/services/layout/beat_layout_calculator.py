@@ -1,16 +1,10 @@
-from typing import Dict, Any, Optional, Tuple, List, Union, TYPE_CHECKING
-from enum import Enum
-from dataclasses import dataclass
+from typing import Dict, Any, Tuple
 import math
-import logging
-import uuid
-from datetime import datetime
 
 
 from core.decorators import handle_service_errors
 from core.monitoring import monitor_performance
 from domain.models.core_models import SequenceData
-from core.interfaces.core_services import ILayoutService
 
 
 class BeatLayoutCalculator:
@@ -25,7 +19,6 @@ class BeatLayoutCalculator:
     def __init__(self):
         """Initialize the beat layout calculator."""
         # No initialization needed - all methods are stateless calculations
-        pass
 
     @handle_service_errors("calculate_beat_frame_layout")
     @monitor_performance("layout_calculation")

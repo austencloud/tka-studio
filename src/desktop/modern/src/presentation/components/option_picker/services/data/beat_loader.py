@@ -7,7 +7,7 @@ the extracted business service and handles Qt-specific concerns.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from PyQt6.QtCore import QObject
 
 from domain.models.core_models import BeatData

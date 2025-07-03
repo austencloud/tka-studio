@@ -22,10 +22,6 @@ import logging
 
 from core.interfaces.positioning_services import IArrowAdjustmentCalculator
 from core.types.result import (
-    Result,
-    Success,
-    Failure,
-    AppError,
     ErrorType,
     success,
     failure,
@@ -33,8 +29,6 @@ from core.types.result import (
 )
 from core.types.coordinates import (
     PositionResult,
-    qpoint_to_point,
-    point_to_qpoint,
     get_default_point,
 )
 from core.types.geometry import Point

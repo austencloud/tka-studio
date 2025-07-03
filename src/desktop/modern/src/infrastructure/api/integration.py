@@ -7,10 +7,9 @@ import asyncio
 import threading
 import logging
 import socket
-import subprocess
 import psutil
 import time
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple
 from contextlib import contextmanager, suppress
 
 logger = logging.getLogger(__name__)
@@ -516,7 +515,6 @@ def get_process_using_port(port: int) -> Optional[Tuple[int, str]]:
 class TKAAPIIntegration(UltraSafeAPIIntegration):
     """Backward compatibility alias."""
 
-    pass
 
 
 def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:

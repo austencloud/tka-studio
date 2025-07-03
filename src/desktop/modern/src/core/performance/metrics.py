@@ -8,7 +8,7 @@ and performance trend detection for the TKA performance framework.
 import statistics
 import numpy as np
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from datetime import datetime
 from enum import Enum
 

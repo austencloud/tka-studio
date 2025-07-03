@@ -9,7 +9,7 @@ with context information and consistent formatting.
 
 import logging
 import functools
-from typing import Any, Dict, Optional, Callable
+from typing import Any, Dict, Callable
 from datetime import datetime
 import traceback
 

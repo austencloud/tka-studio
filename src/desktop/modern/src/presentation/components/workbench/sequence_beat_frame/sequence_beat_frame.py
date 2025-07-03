@@ -464,7 +464,6 @@ class SequenceBeatFrame(QScrollArea):
         """Handle sequence created event by updating display."""
         # Note: We don't automatically load the sequence here since the UI
         # should explicitly call set_sequence() when ready
-        pass
 
     def _on_beat_added(self, event: BeatAddedEvent):
         """Handle beat added event by refreshing layout if this is our sequence."""

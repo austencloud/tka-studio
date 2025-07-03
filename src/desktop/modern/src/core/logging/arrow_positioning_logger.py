@@ -7,7 +7,7 @@ that were generating excessive verbosity in the original logs.
 
 import logging
 import time
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from .smart_logger import SmartLogger, LoggingConfig, LogLevel
 
 

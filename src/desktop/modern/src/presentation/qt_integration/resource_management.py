@@ -10,11 +10,10 @@ fonts, graphics items) with automatic lifecycle management and performance optim
 
 import hashlib
 import logging
-import weakref
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from threading import Lock
-from typing import Any, Callable, Dict, Generic, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
 
 # Import Qt modules with compatibility
 try:

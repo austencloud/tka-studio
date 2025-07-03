@@ -1,11 +1,11 @@
-from typing import Dict, Optional
+from typing import Dict
 
 from core.interfaces.tab_settings_interfaces import (
     IPropTypeService,
     PropType,
 )
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtGui import QCursor, QFont, QIcon, QPixmap
+from PyQt6.QtGui import QCursor, QFont, QIcon
 from PyQt6.QtWidgets import QGridLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 

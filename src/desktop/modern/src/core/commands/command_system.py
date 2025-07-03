@@ -11,10 +11,9 @@ import logging
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from ..events import IEventBus
+    pass
 
 from ..events import (
-    IEventBus,
     CommandExecutedEvent,
     CommandUndoneEvent,
     CommandRedoneEvent,
@@ -49,33 +48,27 @@ class ICommand(Generic[T], ABC):
     @abstractmethod
     def command_id(self) -> str:
         """Unique identifier for this command instance."""
-        pass
 
     @property
     @abstractmethod
     def description(self) -> str:
         """Human-readable description of what this command does."""
-        pass
 
     @abstractmethod
     def execute(self) -> T:
         """Execute the command and return result."""
-        pass
 
     @abstractmethod
     def undo(self) -> T:
         """Undo the command and return previous state."""
-        pass
 
     @abstractmethod
     def can_execute(self) -> bool:
         """Check if command can be executed in current state."""
-        pass
 
     @abstractmethod
     def can_undo(self) -> bool:
         """Check if command can be undone."""
-        pass
 
 
 class CommandProcessor:

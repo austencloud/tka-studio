@@ -27,7 +27,6 @@ class IOffsetCalculationService(ABC):
         self, direction: SeparationDirection, prop_type: PropType
     ) -> QPointF:
         """Calculate offset based on direction and prop type."""
-        pass
 
     @abstractmethod
     def calculate_separation_offsets(
@@ -37,12 +36,10 @@ class IOffsetCalculationService(ABC):
         prop_type: PropType,
     ) -> Tuple[QPointF, QPointF]:
         """Calculate separation offsets for blue and red props."""
-        pass
 
     @abstractmethod
     def get_prop_offset_divisor(self, prop_type: PropType) -> int:
         """Get offset divisor for prop type."""
-        pass
 
 
 class OffsetCalculationService(IOffsetCalculationService):

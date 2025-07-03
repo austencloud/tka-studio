@@ -6,7 +6,7 @@ Provides live updates of performance metrics, memory usage, and system status.
 """
 
 import logging
-from typing import Dict, List, Optional, Any
+from typing import Optional
 from datetime import datetime
 
 try:
@@ -25,8 +25,7 @@ try:
         QGridLayout,
         QFrame,
     )
-    from PyQt6.QtCore import QTimer, pyqtSignal, Qt
-    from PyQt6.QtGui import QFont, QColor, QPalette
+    from PyQt6.QtCore import QTimer, pyqtSignal
 
     QT_AVAILABLE = True
 except ImportError:

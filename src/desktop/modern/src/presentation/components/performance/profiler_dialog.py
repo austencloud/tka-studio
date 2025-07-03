@@ -6,7 +6,6 @@ Provides user-friendly interface for profiler settings and session management.
 """
 
 import logging
-from typing import Optional
 
 try:
     from PyQt6.QtWidgets import (
@@ -26,7 +25,7 @@ try:
         QWidget,
         QMessageBox,
     )
-    from PyQt6.QtCore import Qt, pyqtSignal
+    from PyQt6.QtCore import pyqtSignal
 
     QT_AVAILABLE = True
 except ImportError:

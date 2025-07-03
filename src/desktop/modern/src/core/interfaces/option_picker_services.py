@@ -31,7 +31,6 @@ class IOptionPickerInitializationService(ABC):
         Returns:
             Dictionary containing initialized components
         """
-        pass
 
     @abstractmethod
     def create_widget_hierarchy(
@@ -47,7 +46,6 @@ class IOptionPickerInitializationService(ABC):
         Returns:
             Tuple of (main_widget, sections_container, sections_layout, filter_widget)
         """
-        pass
 
     @abstractmethod
     def create_pool_manager(
@@ -67,7 +65,6 @@ class IOptionPickerInitializationService(ABC):
         Returns:
             Configured pool manager
         """
-        pass
 
 
 class IOptionPickerDataService(ABC):
@@ -81,7 +78,6 @@ class IOptionPickerDataService(ABC):
         Returns:
             List of available beat data options
         """
-        pass
 
     @abstractmethod
     def refresh_options(self) -> List[BeatData]:
@@ -91,7 +87,6 @@ class IOptionPickerDataService(ABC):
         Returns:
             Updated list of beat data options
         """
-        pass
 
     @abstractmethod
     def refresh_from_sequence_data(
@@ -106,7 +101,6 @@ class IOptionPickerDataService(ABC):
         Returns:
             Updated list of beat data options
         """
-        pass
 
     @abstractmethod
     def refresh_from_sequence(self, sequence: SequenceData) -> List[BeatData]:
@@ -119,7 +113,6 @@ class IOptionPickerDataService(ABC):
         Returns:
             Updated list of beat data options
         """
-        pass
 
     @abstractmethod
     def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
@@ -132,7 +125,6 @@ class IOptionPickerDataService(ABC):
         Returns:
             BeatData if found, None otherwise
         """
-        pass
 
     @abstractmethod
     def get_current_options(self) -> List[BeatData]:
@@ -142,12 +134,10 @@ class IOptionPickerDataService(ABC):
         Returns:
             Current list of beat data options
         """
-        pass
 
     @abstractmethod
     def clear_cache(self) -> None:
         """Clear cached options."""
-        pass
 
 
 class IOptionPickerDisplayService(ABC):
@@ -170,12 +160,10 @@ class IOptionPickerDisplayService(ABC):
             pool_manager: Pictograph pool manager
             size_provider: Function to provide size information
         """
-        pass
 
     @abstractmethod
     def create_sections(self) -> None:
         """Create display sections for beat options."""
-        pass
 
     @abstractmethod
     def update_beat_display(self, beat_options: List[BeatData]) -> None:
@@ -185,17 +173,14 @@ class IOptionPickerDisplayService(ABC):
         Args:
             beat_options: List of beat data to display
         """
-        pass
 
     @abstractmethod
     def ensure_sections_visible(self) -> None:
         """Ensure all sections are visible after updates."""
-        pass
 
     @abstractmethod
     def resize_sections(self) -> None:
         """Resize sections to fit current container."""
-        pass
 
     @abstractmethod
     def get_sections(self) -> Dict[str, Any]:
@@ -205,12 +190,10 @@ class IOptionPickerDisplayService(ABC):
         Returns:
             Dictionary of section name to section widget
         """
-        pass
 
     @abstractmethod
     def cleanup(self) -> None:
         """Clean up display resources."""
-        pass
 
 
 class IOptionPickerEventService(ABC):
@@ -235,7 +218,6 @@ class IOptionPickerEventService(ABC):
             beat_data_click_handler: Handler for beat data clicks
             filter_change_handler: Handler for filter changes
         """
-        pass
 
     @abstractmethod
     def handle_widget_resize(
@@ -248,7 +230,6 @@ class IOptionPickerEventService(ABC):
             pool_manager: Pictograph pool manager
             display_service: Display service for section resizing
         """
-        pass
 
     @abstractmethod
     def handle_filter_change(
@@ -265,12 +246,10 @@ class IOptionPickerEventService(ABC):
             data_service: Data service for getting options
             display_service: Display service for updating display
         """
-        pass
 
     @abstractmethod
     def cleanup(self) -> None:
         """Clean up event service resources."""
-        pass
 
 
 class IOptionPickerOrchestrator(ABC):
@@ -286,7 +265,6 @@ class IOptionPickerOrchestrator(ABC):
         Args:
             progress_callback: Optional progress reporting callback
         """
-        pass
 
     @abstractmethod
     def get_widget(self) -> Any:
@@ -296,7 +274,6 @@ class IOptionPickerOrchestrator(ABC):
         Returns:
             Main option picker widget
         """
-        pass
 
     @abstractmethod
     def load_motion_combinations(self, sequence_data: List[Dict[str, Any]]) -> None:
@@ -306,12 +283,10 @@ class IOptionPickerOrchestrator(ABC):
         Args:
             sequence_data: Sequence data to load combinations from
         """
-        pass
 
     @abstractmethod
     def refresh_options(self) -> None:
         """Refresh the option picker with latest beat options."""
-        pass
 
     @abstractmethod
     def refresh_from_modern_sequence(self, sequence: SequenceData) -> None:
@@ -321,7 +296,6 @@ class IOptionPickerOrchestrator(ABC):
         Args:
             sequence: Modern sequence data
         """
-        pass
 
     @abstractmethod
     def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
@@ -334,9 +308,7 @@ class IOptionPickerOrchestrator(ABC):
         Returns:
             BeatData if found, None otherwise
         """
-        pass
 
     @abstractmethod
     def cleanup(self) -> None:
         """Clean up option picker resources."""
-        pass

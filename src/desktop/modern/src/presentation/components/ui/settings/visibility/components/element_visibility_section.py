@@ -6,9 +6,9 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 """
 
 import logging
-from typing import Dict, Optional
+from typing import Dict
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QVBoxLayout, QGridLayout, QLabel
 

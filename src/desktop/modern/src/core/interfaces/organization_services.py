@@ -66,7 +66,6 @@ class IImportAnalysisService(ABC):
         Returns:
             ImportAnalysis with detailed import pattern analysis
         """
-        pass
 
     @abstractmethod
     def analyze_codebase(self) -> ImportStandardizationReport:
@@ -76,7 +75,6 @@ class IImportAnalysisService(ABC):
         Returns:
             ImportStandardizationReport with comprehensive analysis
         """
-        pass
 
 
 class IImportStandardizationService(ABC):
@@ -94,7 +92,6 @@ class IImportStandardizationService(ABC):
         Returns:
             True if fixes were applied (or would be applied in dry_run)
         """
-        pass
 
     @abstractmethod
     def standardize_codebase(
@@ -109,7 +106,6 @@ class IImportStandardizationService(ABC):
         Returns:
             Dictionary with fix statistics
         """
-        pass
 
 
 class IComponentHierarchyAnalysisService(ABC):
@@ -123,7 +119,6 @@ class IComponentHierarchyAnalysisService(ABC):
         Returns:
             List of ComponentHierarchyAnalysis for each component
         """
-        pass
 
     @abstractmethod
     def generate_optimization_recommendations(self) -> List[str]:
@@ -133,7 +128,6 @@ class IComponentHierarchyAnalysisService(ABC):
         Returns:
             List of actionable optimization recommendations
         """
-        pass
 
 
 class IFileSystemService(ABC):
@@ -150,7 +144,6 @@ class IFileSystemService(ABC):
         Returns:
             File content as string
         """
-        pass
 
     @abstractmethod
     def write_file(self, file_path: Path, content: str) -> None:
@@ -161,7 +154,6 @@ class IFileSystemService(ABC):
             file_path: Path to the file to write
             content: Content to write
         """
-        pass
 
     @abstractmethod
     def find_python_files(self, root_path: Path) -> List[Path]:
@@ -174,7 +166,6 @@ class IFileSystemService(ABC):
         Returns:
             List of Python file paths
         """
-        pass
 
 
 class ICodePatternAnalysisService(ABC):
@@ -191,7 +182,6 @@ class ICodePatternAnalysisService(ABC):
         Returns:
             True if import follows TKA standards
         """
-        pass
 
     @abstractmethod
     def is_external_library(self, module_name: str) -> bool:
@@ -204,7 +194,6 @@ class ICodePatternAnalysisService(ABC):
         Returns:
             True if import is from external library
         """
-        pass
 
     @abstractmethod
     def categorize_violation(self, violation: str) -> str:
@@ -217,4 +206,3 @@ class ICodePatternAnalysisService(ABC):
         Returns:
             Violation category
         """
-        pass

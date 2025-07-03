@@ -9,7 +9,7 @@ Provides a type-safe, high-performance event system for Modern architecture:
 - Memory-efficient subscription management
 """
 
-from typing import Dict, List, Callable, Any, TypeVar, Generic, Optional, Union
+from typing import Dict, List, Callable, Any, TypeVar, Optional, Union
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -49,7 +49,6 @@ class BaseEvent(ABC):
     @abstractmethod
     def event_type(self) -> str:
         """Unique identifier for this event type."""
-        pass
 
 
 @dataclass(frozen=True)
@@ -130,12 +129,10 @@ class IEventBus(ABC):
     @abstractmethod
     def publish(self, event: BaseEvent) -> None:
         """Publish an event to all subscribers."""
-        pass
 
     @abstractmethod
     async def publish_async(self, event: BaseEvent) -> None:
         """Publish an event asynchronously."""
-        pass
 
     @abstractmethod
     def subscribe(
@@ -146,12 +143,10 @@ class IEventBus(ABC):
         filter_func: Optional[Callable[[BaseEvent], bool]] = None,
     ) -> str:
         """Subscribe to an event type."""
-        pass
 
     @abstractmethod
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from an event type."""
-        pass
 
 
 class TypeSafeEventBus(IEventBus):

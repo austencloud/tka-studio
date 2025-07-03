@@ -1,10 +1,9 @@
 # TODO: Rewrite this to remove all the hallucinated graph and make it match the legacy version
 
 
-from typing import Optional, List, Callable
+from typing import Optional, List
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QObject, pyqtSignal, Qt
-from PyQt6.QtGui import QKeyEvent
 
 from .beat_view import BeatView
 

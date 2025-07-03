@@ -4,7 +4,6 @@ Handles conversion between MotionData and MotionAPI models.
 """
 
 import logging
-from typing import Optional
 
 from domain.models.core_models import (
     Location,

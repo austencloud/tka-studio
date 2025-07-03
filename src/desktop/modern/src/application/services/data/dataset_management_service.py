@@ -36,22 +36,18 @@ class IDatasetManagementService(ABC):
         self, pictograph: PictographData, category: str = "user_created"
     ) -> str:
         """Add pictograph to dataset."""
-        pass
 
     @abstractmethod
     def search_dataset(self, query: PictographSearchQuery) -> List[PictographData]:
         """Search pictograph dataset with query."""
-        pass
 
     @abstractmethod
     def get_dataset_categories(self) -> List[str]:
         """Get all available dataset categories."""
-        pass
 
     @abstractmethod
     def get_pictographs_by_category(self, category: str) -> List[PictographData]:
         """Get all pictographs in a category."""
-        pass
 
 
 class DatasetManagementService(IDatasetManagementService):

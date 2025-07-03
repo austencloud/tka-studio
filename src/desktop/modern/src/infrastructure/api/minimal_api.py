@@ -3,11 +3,9 @@ Minimal REST API for TKA Desktop.
 Provides external access to core functionality with minimal overhead.
 """
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-import asyncio
-import threading
 import logging
 
 # Import API models
@@ -15,8 +13,6 @@ from .api_models import (
     BeatAPI,
     SequenceAPI,
     CreateSequenceRequest,
-    APIResponse,
-    CommandResponse,
     MotionAPI,
     MotionTypeAPI,
     RotationDirectionAPI,

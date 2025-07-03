@@ -10,7 +10,7 @@ Phase 0 - Days 2-3: Strategic partial refactoring for Sprint 2 preparation.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import Optional
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from domain.models.core_models import SequenceData, BeatData
@@ -28,67 +28,54 @@ class IWorkbenchButtonInterface(ABC):
     @abstractmethod
     def clear_sequence(self) -> None:
         """Clear the current sequence, preserving start position."""
-        pass
 
     @abstractmethod
     def delete_selected_beat(self) -> None:
         """Delete the currently selected beat from the sequence."""
-        pass
 
     @abstractmethod
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence being edited."""
-        pass
 
     @abstractmethod
     def get_selected_beat_index(self) -> Optional[int]:
         """Get the index of the currently selected beat."""
-        pass
 
     @abstractmethod
     def get_start_position(self) -> Optional[BeatData]:
         """Get the current start position data."""
-        pass
 
     @abstractmethod
     def update_sequence_display(self) -> None:
         """Update the visual display of the sequence."""
-        pass
 
     @abstractmethod
     def export_sequence_image(self) -> bool:
         """Export the current sequence as an image."""
-        pass
 
     @abstractmethod
     def export_sequence_json(self) -> str:
         """Export the current sequence as JSON."""
-        pass
 
     @abstractmethod
     def swap_colors(self) -> None:
         """Swap blue and red colors in the sequence."""
-        pass
 
     @abstractmethod
     def mirror_sequence(self) -> None:
         """Mirror the sequence horizontally."""
-        pass
 
     @abstractmethod
     def rotate_sequence(self) -> None:
         """Rotate the sequence."""
-        pass
 
     @abstractmethod
     def add_to_dictionary(self) -> bool:
         """Add the current sequence to the dictionary."""
-        pass
 
     @abstractmethod
     def show_fullscreen(self) -> None:
         """Show the sequence in fullscreen mode."""
-        pass
 
 
 class WorkbenchButtonSignals(QObject):

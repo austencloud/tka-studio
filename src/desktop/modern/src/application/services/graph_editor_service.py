@@ -217,7 +217,6 @@ class GraphEditorService(IGraphEditorService):
         """Notify all UI components that beat data has changed"""
         # TODO: Implement signal emission for UI synchronization
         # This should emit signals that the graph editor and other components can listen to
-        pass
 
     def cleanup(self) -> None:
         """Clean up resources and state"""

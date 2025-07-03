@@ -32,31 +32,26 @@ class IPictographDataService(ABC):
         self, grid_mode: GridMode = GridMode.DIAMOND
     ) -> PictographData:
         """Create a new blank pictograph."""
-        pass
 
     @abstractmethod
     def create_from_beat(self, beat_data: BeatData) -> PictographData:
         """Create pictograph from beat data."""
-        pass
 
     @abstractmethod
     def update_pictograph_arrows(
         self, pictograph: PictographData, arrows: Dict[str, ArrowData]
     ) -> PictographData:
         """Update arrows in pictograph."""
-        pass
 
     @abstractmethod
     def search_dataset(self, query: Dict[str, Any]) -> List[PictographData]:
         """Search pictograph dataset with query."""
-        pass
 
     @abstractmethod
     def add_to_dataset(
         self, pictograph: PictographData, category: str = "user_created"
     ) -> str:
         """Add pictograph to dataset."""
-        pass
 
 
 class PictographDataService(IPictographDataService):

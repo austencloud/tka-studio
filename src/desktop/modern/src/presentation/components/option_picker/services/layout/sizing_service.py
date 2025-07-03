@@ -3,8 +3,8 @@ Responsive Sizing Service - Dynamic Sizing Management
 Split from responsive_sizing_manager.py - contains core sizing coordination
 """
 
-from typing import Dict, List, Callable, Optional, Tuple
-from PyQt6.QtWidgets import QWidget, QApplication
+from typing import Dict, Callable, Optional
+from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QSize, QTimer, pyqtSignal, QObject
 
 

@@ -12,8 +12,7 @@ This module provides intelligent logging that:
 import logging
 import time
 import functools
-import os
-from typing import Any, Optional, Dict, Callable
+from typing import Any, Dict, Callable
 from dataclasses import dataclass
 from enum import Enum
 

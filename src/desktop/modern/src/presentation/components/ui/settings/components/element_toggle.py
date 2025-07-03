@@ -7,7 +7,6 @@ Extracted from the monolithic visibility tab for better component organization.
 
 from typing import Optional
 
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QCheckBox
 
 

@@ -13,7 +13,6 @@ Ported from legacy MotionOriCalculator for accuracy.
 """
 
 import logging
-from typing import Dict
 
 from domain.models.core_models import Location, MotionData, MotionType, Orientation
 

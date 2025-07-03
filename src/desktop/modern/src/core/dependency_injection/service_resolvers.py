@@ -7,11 +7,10 @@ Contains all resolver implementations using the Strategy Pattern:
 - FactoryResolver: Handles factory-based service creation
 """
 
-from typing import Type, Any, Dict, get_type_hints, Set
+from typing import Type, Any, Dict, get_type_hints
 from abc import ABC, abstractmethod
 import inspect
 import logging
-from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +21,10 @@ class IServiceResolver(ABC):
     @abstractmethod
     def can_resolve(self, service_type: Type, registry: Any) -> bool:
         """Check if this resolver can handle the given service type."""
-        pass
 
     @abstractmethod
     def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
         """Resolve the service instance."""
-        pass
 
 
 class SingletonResolver(IServiceResolver):

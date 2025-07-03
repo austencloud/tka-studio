@@ -25,11 +25,9 @@ USAGE:
 """
 
 import logging
-from typing import Optional
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
-from core.types.coordinates import PositionResult, qpoint_to_point, point_to_qpoint, get_default_point
-from core.types.geometry import Point
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
+from core.types.coordinates import PositionResult, qpoint_to_point
 from domain.models.pictograph_models import ArrowData, PictographData
 
 # Conditional PyQt6 imports for testing compatibility

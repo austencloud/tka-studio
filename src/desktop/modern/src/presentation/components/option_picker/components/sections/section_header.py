@@ -1,6 +1,5 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QWidget, QHBoxLayout
-from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
     from presentation.components.option_picker.components.sections.section_widget import (

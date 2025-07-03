@@ -12,13 +12,10 @@ import threading
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 from datetime import datetime, timedelta
-from dataclasses import asdict
 import logging
 
 from core.types.result import (
     Result,
-    Success,
-    Failure,
     AppError,
     ErrorType,
     success,
@@ -26,7 +23,6 @@ from core.types.result import (
     app_error,
 )
 from core.performance.config import PerformanceConfig, get_performance_config
-from core.performance.metrics import FunctionMetrics, SystemMetrics
 from core.performance.profiler import ProfilerSession
 
 logger = logging.getLogger(__name__)

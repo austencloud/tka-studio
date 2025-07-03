@@ -29,7 +29,7 @@ USAGE:
 
 from typing import Union
 from core.types.geometry import Point
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
 
 # Conditional PyQt6 imports for testing compatibility
 try:

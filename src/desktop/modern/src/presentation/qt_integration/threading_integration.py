@@ -12,10 +12,9 @@ import asyncio
 import logging
 import threading
 import time
-import weakref
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Dict, List, Optional, TypeVar, Union
+from typing import Any, Awaitable, Callable, Dict, List, Optional, TypeVar
 
 # Import Qt modules with compatibility
 try:

@@ -9,7 +9,7 @@ missing from the modern arrow positioning system.
 """
 
 import logging
-from typing import List, Tuple, Callable, Dict, Any
+from typing import List, Tuple
 
 from domain.models.core_models import (
     MotionData,

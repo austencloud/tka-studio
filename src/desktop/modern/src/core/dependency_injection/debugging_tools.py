@@ -9,7 +9,7 @@ Provides:
 - Diagnostic information
 """
 
-from typing import Dict, List, Type, Any, Set, get_type_hints
+from typing import Dict, List, Type, Any, get_type_hints
 import inspect
 import logging
 from datetime import datetime

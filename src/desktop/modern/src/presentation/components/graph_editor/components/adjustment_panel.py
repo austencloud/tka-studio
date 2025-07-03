@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 )
 
 from .orientation_picker import OrientationPickerWidget
-from ..config import UIConfig, TurnConfig, ColorConfig, LayoutConfig
+from ..config import UIConfig, TurnConfig, ColorConfig
 
 logger = logging.getLogger(__name__)
 

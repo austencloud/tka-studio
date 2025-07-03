@@ -3,7 +3,7 @@ Option Picker Section Widget - Main UI Component
 Split from option_picker_section.py - contains core section widget logic
 """
 
-from typing import List, Callable
+from typing import Callable
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtCore import Qt, QSize
 from presentation.components.option_picker.types.letter_types import LetterType

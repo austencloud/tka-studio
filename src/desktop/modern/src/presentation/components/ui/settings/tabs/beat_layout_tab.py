@@ -2,14 +2,12 @@ from typing import Dict
 from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
     QLabel,
     QSpinBox,
-    QComboBox,
     QFrame,
     QGridLayout,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 
 from core.interfaces.tab_settings_interfaces import (

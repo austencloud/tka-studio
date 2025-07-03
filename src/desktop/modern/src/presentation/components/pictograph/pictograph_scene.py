@@ -91,7 +91,6 @@ class PictographScene(QGraphicsScene):
         """Register this scene with the global visibility service."""
         try:
             # Try to get the global visibility service from the DI container
-            from core.application.application_factory import ApplicationFactory
             from application.services.pictograph.global_visibility_service import (
                 GlobalVisibilityService,
             )

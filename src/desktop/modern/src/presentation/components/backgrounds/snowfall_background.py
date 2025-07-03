@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot, QTimer, Qt
+from PyQt6.QtCore import QThread, pyqtSlot, Qt
 from PyQt6.QtGui import QPainter, QPixmap, QColor, QLinearGradient
 from PyQt6.QtWidgets import QWidget
 
@@ -11,7 +11,7 @@ from .snowfall.shooting_star_manager import ShootingStarManager
 from .snowfall.santa_manager import SantaManager
 
 if TYPE_CHECKING:
-    from PyQt6.QtWidgets import QWidget as ParentWidget
+    pass
 
 
 class SnowfallBackground(BaseBackground):

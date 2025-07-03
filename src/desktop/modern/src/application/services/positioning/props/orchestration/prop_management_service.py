@@ -70,22 +70,18 @@ class IPropManagementService(ABC):
     @abstractmethod
     def should_apply_beta_positioning(self, beat_data: BeatData) -> bool:
         """Determine if beta positioning should be applied."""
-        pass
 
     @abstractmethod
     def apply_beta_positioning(self, beat_data: BeatData) -> BeatData:
         """Apply beta prop positioning if conditions are met."""
-        pass
 
     @abstractmethod
     def calculate_separation_offsets(self, beat_data: BeatData) -> Tuple[Point, Point]:
         """Calculate separation offsets for blue and red props."""
-        pass
 
     @abstractmethod
     def detect_prop_overlap(self, beat_data: BeatData) -> bool:
         """Detect if props overlap based on position and category."""
-        pass
 
 
 class PropManagementService(IPropManagementService):

@@ -14,7 +14,6 @@ No UI dependencies, completely testable in isolation.
 """
 
 import logging
-from typing import Dict
 
 from core.interfaces.positioning_services import (
     IArrowRotationCalculator,

@@ -5,15 +5,12 @@ This tab provides functionality to export pictographs with turn configurations,
 following TKA's modern clean architecture and glassmorphism design.
 """
 
-from typing import Optional, Dict, Any
 from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QFrame,
-    QSlider,
     QCheckBox,
     QComboBox,
     QSpinBox,

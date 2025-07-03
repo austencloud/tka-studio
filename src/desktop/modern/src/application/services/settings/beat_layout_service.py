@@ -1,4 +1,4 @@
-from typing import Tuple, Dict, Any
+from typing import Tuple, Dict
 from core.interfaces.tab_settings_interfaces import (
     IBeatLayoutService,
 )

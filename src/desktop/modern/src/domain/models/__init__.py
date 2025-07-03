@@ -46,28 +46,12 @@ from .letter_type_classifier import (
 
 # Import generation and settings models with error handling
 try:
-    from .generation_models import (
-        GenerationConfig,
-        GenerationResult,
-        GenerationState,
-    )
     _GENERATION_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Generation models not available: {e}")
     _GENERATION_AVAILABLE = False
 
 try:
-    from .settings_models import (
-        UserProfileData,
-        VisibilitySettingsData,
-        BeatLayoutData,
-        ImageExportSettingsData,
-        CodexExportSettingsData,
-        GlobalSettingsData,
-        SettingsData,
-        DEFAULT_SETTINGS,
-        BackgroundType,
-    )
     _SETTINGS_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Settings models not available: {e}")

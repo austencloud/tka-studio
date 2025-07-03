@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from core.interfaces.tab_settings_interfaces import (
     IUserProfileService,
 )

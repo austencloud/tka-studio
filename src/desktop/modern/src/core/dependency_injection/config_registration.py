@@ -23,8 +23,6 @@ from typing import Optional
 
 from core.types.result import (
     Result,
-    Success,
-    Failure,
     AppError,
     ErrorType,
     success,

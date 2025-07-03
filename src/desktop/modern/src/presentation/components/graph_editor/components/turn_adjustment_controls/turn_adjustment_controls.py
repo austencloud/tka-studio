@@ -7,7 +7,7 @@ Features glassmorphism styling and direct turn value selection.
 """
 
 import logging
-from typing import Optional, Dict
+from typing import Optional
 from domain.models.core_models import BeatData, MotionData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QGroupBox

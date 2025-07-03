@@ -6,9 +6,8 @@ Updated to work with the modern domain models and letter type classification sys
 """
 
 import logging
-from typing import Optional
 
-from domain.models.core_models import Orientation, MotionType, MotionData
+from domain.models.core_models import Orientation, MotionData
 from domain.models.pictograph_models import PictographData
 from domain.models.letter_condition import LetterCondition
 

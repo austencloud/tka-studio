@@ -1,6 +1,5 @@
 from typing import Optional
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
-from PyQt6.QtCore import pyqtSignal
 from domain.models.core_models import SequenceData
 from core.interfaces.workbench_services import IDictionaryService
 

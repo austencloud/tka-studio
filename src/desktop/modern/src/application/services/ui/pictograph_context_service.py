@@ -6,8 +6,6 @@ Replaces brittle string matching with explicit context declaration and service-b
 """
 
 from typing import Optional, Dict, Any, Protocol, runtime_checkable
-from abc import ABC, abstractmethod
-from enum import Enum
 import logging
 
 from application.services.ui.context_aware_scaling_service import RenderingContext
@@ -22,7 +20,6 @@ class IPictographContextProvider(Protocol):
 
     def get_rendering_context(self) -> RenderingContext:
         """Return the rendering context for this component."""
-        pass
 
 
 class PictographContextService(IPictographContextService):

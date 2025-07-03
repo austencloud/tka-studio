@@ -69,7 +69,6 @@ class ISessionStateService(ABC):
         Returns:
             bool: True if save was successful, False otherwise
         """
-        pass
     
     @abstractmethod
     def load_session_state(self) -> SessionRestoreResult:
@@ -79,7 +78,6 @@ class ISessionStateService(ABC):
         Returns:
             SessionRestoreResult: Result of restoration attempt
         """
-        pass
     
     @abstractmethod
     def update_current_sequence(self, sequence_data: Any, sequence_id: str) -> None:
@@ -90,7 +88,6 @@ class ISessionStateService(ABC):
             sequence_data: The sequence data to store
             sequence_id: Unique identifier for the sequence
         """
-        pass
     
     @abstractmethod
     def update_workbench_state(self, beat_index: Optional[int], 
@@ -104,7 +101,6 @@ class ISessionStateService(ABC):
             beat_data: Currently selected beat data
             start_position: Current start position data
         """
-        pass
     
     @abstractmethod
     def update_graph_editor_state(self, visible: bool, 
@@ -120,7 +116,6 @@ class ISessionStateService(ABC):
             selected_arrow: Selected arrow identifier
             height: Graph editor height (optional)
         """
-        pass
     
     @abstractmethod
     def update_ui_state(self, active_tab: str, 
@@ -134,7 +129,6 @@ class ISessionStateService(ABC):
             beat_layout: Beat layout configuration
             component_visibility: Component visibility states
         """
-        pass
     
     @abstractmethod
     def should_restore_session(self) -> bool:
@@ -144,7 +138,6 @@ class ISessionStateService(ABC):
         Returns:
             bool: True if session should be restored, False if too stale
         """
-        pass
     
     @abstractmethod
     def mark_interaction(self) -> None:
@@ -152,7 +145,6 @@ class ISessionStateService(ABC):
         Mark user interaction to trigger debounced auto-save.
         This method should be called after any meaningful user interaction.
         """
-        pass
     
     @abstractmethod
     def clear_session(self) -> bool:
@@ -162,7 +154,6 @@ class ISessionStateService(ABC):
         Returns:
             bool: True if clear was successful, False otherwise
         """
-        pass
     
     @abstractmethod
     def get_current_session_state(self) -> Optional[SessionState]:
@@ -172,7 +163,6 @@ class ISessionStateService(ABC):
         Returns:
             Optional[SessionState]: Current session state or None
         """
-        pass
     
     @abstractmethod
     def is_auto_save_enabled(self) -> bool:
@@ -182,7 +172,6 @@ class ISessionStateService(ABC):
         Returns:
             bool: True if auto-save is enabled, False otherwise
         """
-        pass
     
     @abstractmethod
     def set_auto_save_enabled(self, enabled: bool) -> None:
@@ -192,4 +181,3 @@ class ISessionStateService(ABC):
         Args:
             enabled: Whether to enable auto-save
         """
-        pass

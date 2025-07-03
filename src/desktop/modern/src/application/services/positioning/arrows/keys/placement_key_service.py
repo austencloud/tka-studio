@@ -15,8 +15,8 @@ This achieves 100% functional parity with the legacy PlacementKeyGenerator.
 import logging
 from typing import Optional
 
-from domain.models.core_models import MotionData, MotionType, Orientation
-from domain.models.pictograph_models import ArrowData, PictographData
+from domain.models.core_models import MotionData, Orientation
+from domain.models.pictograph_models import PictographData
 from domain.models.letter_type_classifier import LetterTypeClassifier
 from application.services.validation.pictograph_checker_service import (
     PictographCheckerService,
@@ -35,7 +35,6 @@ class PlacementKeyService:
 
     def __init__(self):
         """Initialize the placement key service."""
-        pass
 
     def generate_placement_key(
         self,

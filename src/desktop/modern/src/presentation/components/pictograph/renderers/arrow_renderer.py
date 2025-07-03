@@ -9,7 +9,6 @@ import re
 import logging
 from functools import lru_cache
 from typing import Optional, TYPE_CHECKING, Dict, Set
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtSvg import QSvgRenderer
 
 from presentation.components.pictograph.asset_utils import (

@@ -33,7 +33,6 @@ class PictographAnalysisService:
 
     def __init__(self):
         """Initialize the pictograph analysis service."""
-        pass
 
     def get_letter_info(self, pictograph_data: PictographData) -> dict:
         """

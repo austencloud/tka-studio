@@ -25,7 +25,7 @@ import logging
 from typing import Dict, Any
 import pandas as pd
 
-from core.types.result import Result, Success, Failure, AppError, ErrorType, success, failure, app_error
+from core.types.result import Result, AppError, ErrorType, success, failure, app_error
 from core.config.data_config import DataConfig
 
 logger = logging.getLogger(__name__)

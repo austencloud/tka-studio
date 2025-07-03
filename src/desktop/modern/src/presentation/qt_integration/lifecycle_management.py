@@ -8,13 +8,11 @@ ARCHITECTURE: Provides automatic lifecycle management for Qt objects with
 smart cleanup registration, resource tracking, and automatic memory management.
 """
 
-import atexit
-import gc
 import logging
 import weakref
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Set, Type, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
 
 # Import Qt modules with compatibility
 try:

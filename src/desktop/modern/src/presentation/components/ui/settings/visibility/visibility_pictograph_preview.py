@@ -5,10 +5,10 @@ Uses modern PictographScene with modular renderers to show actual pictograph
 that updates in real-time as visibility settings change.
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 import logging
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGraphicsView, QLabel, QSizePolicy
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QPropertyAnimation, QEasingCurve
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QPropertyAnimation
 from PyQt6.QtGui import QFont
 
 from domain.models.core_models import (

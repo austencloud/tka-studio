@@ -34,7 +34,6 @@ class PlacementKeyGenerationService:
 
     def __init__(self):
         """Initialize the placement key generation service."""
-        pass
 
     def _get_motion_end_ori_key(
         self, has_hybrid_orientation: bool, motion_end_ori: str

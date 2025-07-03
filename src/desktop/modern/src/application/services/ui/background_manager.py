@@ -33,19 +33,16 @@ class IBackgroundManager(ABC):
         progress_callback: Optional[callable] = None,
     ) -> "MainBackgroundWidget":
         """Setup background widget for the main window."""
-        pass
 
     @abstractmethod
     def apply_background_change(
         self, main_window: QMainWindow, background_type: str
     ) -> None:
         """Apply a background change immediately."""
-        pass
 
     @abstractmethod
     def cleanup_background(self, background_widget: "MainBackgroundWidget") -> None:
         """Clean up background widget resources."""
-        pass
 
 
 class BackgroundManager(IBackgroundManager):

@@ -32,17 +32,14 @@ class IGlyphGenerationService(ABC):
     @abstractmethod
     def generate_glyph_data(self, beat_data: BeatData) -> Optional[GlyphData]:
         """Generate glyph data for beat data."""
-        pass
 
     @abstractmethod
     def determine_letter_type(self, letter: str) -> Optional[LetterType]:
         """Determine letter type from letter string."""
-        pass
 
     @abstractmethod
     def generate_glyph_key(self, beat_data: BeatData) -> str:
         """Generate glyph key for beat data."""
-        pass
 
 
 class GlyphGenerationService(IGlyphGenerationService):
