@@ -95,6 +95,9 @@ class PictographScene(QGraphicsScene):
             from application.services.pictograph.global_visibility_service import (
                 GlobalVisibilityService,
             )
+            from application.services.pictograph.global_visibility_service_singleton import (
+                get_global_visibility_service,
+            )
 
             # Get or create global service instance
             try:
@@ -106,10 +109,10 @@ class PictographScene(QGraphicsScene):
                     global_service = container.resolve(GlobalVisibilityService)
                 else:
                     # Fallback to singleton pattern
-                    global_service = self._get_global_service_singleton()
+                    global_service = get_global_visibility_service()
             except Exception:
                 # Fallback to singleton pattern
-                global_service = self._get_global_service_singleton()
+                global_service = get_global_visibility_service()
 
             if global_service:
                 # Determine component type from parent hierarchy
@@ -139,16 +142,6 @@ class PictographScene(QGraphicsScene):
 
         except Exception as e:
             logger.warning(f"Could not register with GlobalVisibilityService: {e}")
-
-    def _get_global_service_singleton(self):
-        """Get or create global service singleton."""
-        if not hasattr(PictographScene, "_global_service"):
-            from application.services.pictograph.global_visibility_service import (
-                GlobalVisibilityService,
-            )
-
-            PictographScene._global_service = GlobalVisibilityService()
-        return PictographScene._global_service
 
     def _determine_component_type(self) -> str:
         """

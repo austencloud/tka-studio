@@ -25,6 +25,9 @@ from application.services.settings.visibility_state_manager import (
 from application.services.pictograph.global_visibility_service import (
     GlobalVisibilityService,
 )
+from application.services.pictograph.global_visibility_service_singleton import (
+    get_global_visibility_service,
+)
 from presentation.components.ui.settings.visibility.components import (
     MotionControlsSection,
     ElementVisibilitySection,
@@ -72,7 +75,7 @@ class VisibilityTab(QWidget):
         self.visibility_service = visibility_service
         self.state_manager = ModernVisibilityStateManager(visibility_service)
         self.global_visibility_service = (
-            global_visibility_service or GlobalVisibilityService()
+            global_visibility_service or get_global_visibility_service()
         )
 
         # Component sections
@@ -303,9 +306,41 @@ class VisibilityTab(QWidget):
     def _apply_global_updates(self):
         """Apply visibility changes to all pictographs globally."""
         try:
-            # This would trigger global updates through the global visibility service
-            # For now, just log the action
-            logger.debug("Applying global visibility updates")
+            # Get current visibility states
+            motion_states = {}
+            element_states = {}
+            
+            if self.motion_section:
+                motion_states = self.motion_section.get_motion_states()
+                
+            if self.element_section:
+                element_states = self.element_section.get_element_states()
+            
+            # Apply motion visibility changes
+            for color, visible in motion_states.items():
+                result = self.global_visibility_service.apply_visibility_change(
+                    element_type="motion",
+                    element_name=f"{color}_motion",
+                    visible=visible
+                )
+                logger.debug(f"Applied motion visibility {color}={visible}: {result['success_count']} updated")
+            
+            # Apply element visibility changes  
+            for element_name, visible in element_states.items():
+                # Determine appropriate element type
+                if element_name == "Non-radial_points":
+                    element_type = "grid"
+                else:
+                    element_type = "glyph"
+                    
+                result = self.global_visibility_service.apply_visibility_change(
+                    element_type=element_type,
+                    element_name=element_name,
+                    visible=visible
+                )
+                logger.debug(f"Applied element visibility {element_name}={visible}: {result['success_count']} updated")
+            
+            logger.info("Successfully applied global visibility updates")
 
         except Exception as e:
             logger.error(f"Error applying global updates: {e}")
@@ -356,25 +391,6 @@ class VisibilityTab(QWidget):
 
         except Exception as e:
             logger.error(f"Error during visibility tab cleanup: {e}")
-
-    def _schedule_global_update(self):
-        """Schedule a global update with debouncing."""
-        self._update_timer.stop()
-        self._update_timer.start(200)  # 200ms delay for batching
-
-    def _apply_global_updates(self):
-        """Apply visibility changes to all pictographs globally."""
-        try:
-            # This would trigger global updates through the global visibility service
-            # For now, just log the action
-            logger.debug("Applying global visibility updates")
-
-        except Exception as e:
-            logger.error(f"Error applying global updates: {e}")
-
-    def _on_preview_updated(self):
-        """Handle preview update notifications."""
-        logger.debug("Preview updated")
 
     def _apply_styling(self):
         """Apply modern glassmorphism styling to the entire tab."""

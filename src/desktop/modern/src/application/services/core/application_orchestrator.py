@@ -42,17 +42,14 @@ class IApplicationOrchestrator(ABC):
         enable_api=True,
     ) -> QTabWidget:
         """Initialize complete application using orchestrated services."""
-        pass
 
     @abstractmethod
     def handle_window_resize(self, main_window: QMainWindow) -> None:
         """Handle main window resize events."""
-        pass
 
     @abstractmethod
     def cleanup_application(self) -> None:
         """Clean up application resources."""
-        pass
 
 
 class ApplicationOrchestrator(IApplicationOrchestrator):

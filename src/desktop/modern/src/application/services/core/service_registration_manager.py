@@ -40,22 +40,18 @@ class IServiceRegistrationManager(ABC):
     @abstractmethod
     def register_all_services(self, container: "DIContainer") -> None:
         """Register all application services in the DI container."""
-        pass
 
     @abstractmethod
     def register_event_system(self, container: "DIContainer") -> None:
         """Register event system and command infrastructure."""
-        pass
 
     @abstractmethod
     def register_core_services(self, container: "DIContainer") -> None:
         """Register core services using pure dependency injection."""
-        pass
 
     @abstractmethod
     def register_motion_services(self, container: "DIContainer") -> None:
         """Register motion services using pure dependency injection."""
-        pass
 
 
 class ServiceRegistrationManager(IServiceRegistrationManager):
@@ -160,7 +156,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         #
         # The old separate services (BeatLayoutService, ResponsiveLayoutService,
         # ComponentLayoutService) have been consolidated for better maintainability
-        pass
 
     def register_pictograph_services(self, container: "DIContainer") -> None:
         """Register pictograph services using pure dependency injection."""
@@ -256,7 +251,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             # Some positioning services not available - continue
             print(f"⚠️ Failed to import positioning services: {e}")
             print(f"   This means IArrowPositioningOrchestrator will not be available")
-            pass
 
         try:
             # Register prop management services

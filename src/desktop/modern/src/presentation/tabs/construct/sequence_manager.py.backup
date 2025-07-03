@@ -220,30 +220,33 @@ class SequenceManager(QObject):
     def clear_sequence(self):
         """Clear the current sequence - exactly like legacy"""
         try:
-            # Clear sequence in workbench
-            if self.workbench_setter:
-                empty_sequence = SequenceData.empty()
-                self.workbench_setter(empty_sequence)
-                print("✅ Cleared sequence in workbench")
+            print("🔄 [SEQUENCE_MANAGER] Clearing sequence...")
 
-            # Clear start position
-            self.clear_start_position()
-
-            # Clear persistence
+            # Clear persistence FIRST (this ensures clean slate)
             from application.services.core.sequence_persistence_service import (
                 SequencePersistenceService,
             )
 
             persistence_service = SequencePersistenceService()
             persistence_service.clear_current_sequence()
-            print("✅ Cleared sequence persistence")
+            print("✅ [SEQUENCE_MANAGER] Cleared sequence persistence")
+
+            # Clear sequence in workbench
+            if self.workbench_setter:
+                empty_sequence = SequenceData.empty()
+                self.workbench_setter(empty_sequence)
+                print("✅ [SEQUENCE_MANAGER] Cleared sequence in workbench")
+
+            # Clear start position (this should not affect persistence since it's already cleared)
+            self.clear_start_position()
+            print("✅ [SEQUENCE_MANAGER] Cleared start position")
 
             # Emit signal
             self.sequence_cleared.emit()
-            print("✅ Sequence cleared successfully")
+            print("✅ [SEQUENCE_MANAGER] Sequence cleared successfully")
 
         except Exception as e:
-            print(f"❌ Failed to clear sequence: {e}")
+            print(f"❌ [SEQUENCE_MANAGER] Failed to clear sequence: {e}")
             import traceback
 
             traceback.print_exc()

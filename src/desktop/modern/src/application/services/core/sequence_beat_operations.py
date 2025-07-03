@@ -47,29 +47,45 @@ class SequenceBeatOperations(QObject):
 
     def add_beat_to_sequence(self, beat_data: BeatData):
         """Add a beat to the current sequence"""
+        print(
+            f"🔄 [BEAT_OPERATIONS] add_beat_to_sequence called with: {beat_data.letter}"
+        )
+
         current_sequence = self._get_current_sequence()
         if current_sequence is None:
             current_sequence = SequenceData.empty()
+            print(f"🔄 [BEAT_OPERATIONS] Using empty sequence")
+        else:
+            print(
+                f"🔄 [BEAT_OPERATIONS] Current sequence has {len(current_sequence.beats)} beats"
+            )
 
         try:
             # Add beat to sequence
             new_sequence = current_sequence.add_beat(beat_data)
+            print(
+                f"🔄 [BEAT_OPERATIONS] New sequence has {len(new_sequence.beats)} beats"
+            )
 
             # Update workbench
             if self.workbench_setter:
                 self.workbench_setter(new_sequence)
+                print(f"✅ [BEAT_OPERATIONS] Updated workbench")
 
             # Save to persistence
+            print(f"🔄 [BEAT_OPERATIONS] Saving to persistence...")
             self._save_sequence_to_persistence(new_sequence)
 
             # Emit signal
             position = len(new_sequence.beats) - 1
             self.beat_added.emit(beat_data, position)
 
-            print(f"✅ Added beat {beat_data.letter} to sequence (position {position})")
+            print(
+                f"✅ [BEAT_OPERATIONS] Added beat {beat_data.letter} to sequence (position {position})"
+            )
 
         except Exception as e:
-            print(f"❌ Error adding beat to sequence: {e}")
+            print(f"❌ [BEAT_OPERATIONS] Error adding beat to sequence: {e}")
             import traceback
 
             traceback.print_exc()
@@ -300,29 +316,3 @@ class SequenceBeatOperations(QObject):
             if n % i == 0 and can_form_by_repeating(word, pattern):
                 return pattern
         return word
-
-    def _save_sequence_to_persistence(self, sequence: SequenceData):
-        """Convert modern SequenceData to legacy format and save to current_sequence.json"""
-        try:
-            import json
-            from pathlib import Path
-
-            # Convert to legacy format using data converter
-            legacy_data = self.data_converter.convert_sequence_to_legacy_format(
-                sequence
-            )
-
-            # Save to current_sequence.json (same location as legacy)
-            sequence_file = Path("src/desktop/modern/current_sequence.json")
-            with open(sequence_file, "w") as f:
-                json.dump(legacy_data, f, indent=2)
-
-            print(
-                f"✅ [BEAT_OPERATIONS] Sequence saved to persistence: {len(legacy_data)} items"
-            )
-
-        except Exception as e:
-            print(f"❌ [BEAT_OPERATIONS] Failed to save sequence to persistence: {e}")
-            import traceback
-
-            traceback.print_exc()

@@ -16,7 +16,6 @@ from typing import Optional, Tuple, Callable
 from abc import ABC, abstractmethod
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtGui import QGuiApplication
-from PyQt6.QtCore import QRect
 
 # Import session service interface
 from core.interfaces.session_services import ISessionStateService
@@ -35,7 +34,6 @@ class IApplicationLifecycleManager(ABC):
         progress_callback: Optional[Callable] = None,
     ) -> None:
         """Initialize application with proper lifecycle management."""
-        pass
 
     @abstractmethod
     def set_window_dimensions(
@@ -46,12 +44,10 @@ class IApplicationLifecycleManager(ABC):
         parallel_geometry=None,
     ) -> None:
         """Set window dimensions using modern responsive design."""
-        pass
 
     @abstractmethod
     def detect_parallel_testing_mode(self) -> Tuple[bool, str, str]:
         """Detect if we're running in parallel testing mode."""
-        pass
 
 
 class ApplicationLifecycleManager(IApplicationLifecycleManager):

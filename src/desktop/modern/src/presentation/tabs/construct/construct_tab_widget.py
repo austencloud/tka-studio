@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import pyqtSignal
 
 from core.dependency_injection.di_container import DIContainer
-from domain.models.core_models import SequenceData
+from domain.models.core_models import SequenceData, BeatData
 from application.services.ui.ui_state_management_service import (
     UIStateManagementService,
 )
@@ -12,9 +12,16 @@ from application.services.ui.ui_state_management_service import (
 from .layout_manager import ConstructTabLayoutManager
 from .start_position_handler import StartPositionHandler
 from .option_picker_manager import OptionPickerManager
-from .sequence_manager import SequenceManager
 from .signal_coordinator import SignalCoordinator
 from .data_conversion_service import DataConversionService
+
+# Import services from application layer (moved from presentation)
+from application.services.core.sequence_loading_service import SequenceLoadingService
+from application.services.core.sequence_beat_operations import SequenceBeatOperations
+from application.services.core.sequence_start_position_manager import (
+    SequenceStartPositionManager,
+)
+from application.services.data.sequence_data_converter import SequenceDataConverter
 
 if TYPE_CHECKING:
     from presentation.components.workbench.workbench import SequenceWorkbench
@@ -22,13 +29,15 @@ if TYPE_CHECKING:
 
 class ConstructTabWidget(QWidget):
     """
-    Refactored ConstructTabWidget using composition and dependency injection.
+    Refactored ConstructTabWidget using direct service injection.
 
-    This streamlined version coordinates between specialized component classes:
+    This streamlined version coordinates between specialized services:
     - LayoutManager: Handles UI layout and panel creation
     - StartPositionHandler: Manages start position selection
     - OptionPickerManager: Handles option picker operations
-    - SequenceManager: Manages sequence operations
+    - SequenceLoadingService: Handles sequence loading from persistence
+    - SequenceBeatOperations: Manages beat-level operations
+    - SequenceStartPositionManager: Manages start position operations
     - SignalCoordinator: Coordinates signals between components
     - DataConversionService: Handles data conversions and caching
     """
@@ -38,6 +47,9 @@ class ConstructTabWidget(QWidget):
     start_position_set = pyqtSignal(
         str
     )  # Emits position key when start position is set
+    start_position_loaded_from_persistence = pyqtSignal(
+        str, object
+    )  # position_key, BeatData
 
     def __init__(
         self,
@@ -58,10 +70,34 @@ class ConstructTabWidget(QWidget):
         self._connect_external_signals()
 
     def _initialize_components(self):
-        """Initialize all component services using dependency injection"""
+        """Initialize all services directly via dependency injection"""
 
-        # Data conversion service (no dependencies)
+        # Get workbench references for services
+        workbench_getter = self._get_workbench_getter()
+        workbench_setter = self._get_workbench_setter()
+
+        # Initialize core services
         self.data_conversion_service = DataConversionService()
+        self.data_converter = SequenceDataConverter()
+
+        # Initialize sequence services directly
+        self.loading_service = SequenceLoadingService(
+            workbench_getter=workbench_getter,
+            workbench_setter=workbench_setter,
+            data_converter=self.data_converter,
+        )
+
+        self.beat_operations = SequenceBeatOperations(
+            workbench_getter=workbench_getter,
+            workbench_setter=workbench_setter,
+            data_converter=self.data_converter,
+        )
+
+        self.start_position_manager = SequenceStartPositionManager(
+            workbench_getter=workbench_getter,
+            workbench_setter=workbench_setter,
+            data_converter=self.data_converter,
+        )
 
         # Layout manager
         self.layout_manager = ConstructTabLayoutManager(
@@ -70,14 +106,7 @@ class ConstructTabWidget(QWidget):
 
         # Start position handler
         self.start_position_handler = StartPositionHandler(
-            self.data_conversion_service, workbench_setter=self._get_workbench_setter()
-        )
-
-        # Sequence manager (pass start position handler)
-        self.sequence_manager = SequenceManager(
-            workbench_getter=self._get_workbench_getter(),
-            workbench_setter=self._get_workbench_setter(),
-            start_position_handler=self.start_position_handler,
+            self.data_conversion_service, workbench_setter=workbench_setter
         )
 
         # Option picker manager (will be initialized after layout)
@@ -85,6 +114,70 @@ class ConstructTabWidget(QWidget):
 
         # Signal coordinator (will be initialized after all components)
         self.signal_coordinator = None
+
+        # Connect service signals directly
+        self._connect_service_signals()
+
+    def _connect_service_signals(self):
+        """Connect service signals directly to our signals."""
+
+        # Loading service signals
+        self.loading_service.sequence_loaded.connect(self.sequence_modified.emit)
+        self.loading_service.start_position_loaded.connect(
+            self._on_start_position_loaded
+        )
+
+        # Beat operations signals
+        self.beat_operations.beat_added.connect(self._on_beat_added)
+        self.beat_operations.beat_removed.connect(self._on_beat_removed)
+        self.beat_operations.beat_updated.connect(self._on_beat_updated)
+
+        # Start position signals
+        self.start_position_manager.start_position_set.connect(
+            self._on_start_position_set
+        )
+        self.start_position_manager.start_position_updated.connect(
+            self._on_start_position_updated
+        )
+
+    # Signal handlers (the real value that was in SequenceManager)
+    def _on_start_position_loaded(
+        self, start_position_data: BeatData, position_key: str
+    ):
+        """Handle start position loaded."""
+        print(
+            f"🎯 Start position loaded: {start_position_data.letter} ({position_key})"
+        )
+        self.start_position_loaded_from_persistence.emit(
+            position_key, start_position_data
+        )
+
+    def _on_beat_added(self, beat_data: BeatData, position: int):
+        """Handle beat added."""
+        current_sequence = self.loading_service.get_current_sequence_from_workbench()
+        if current_sequence:
+            self.sequence_modified.emit(current_sequence)
+
+    def _on_beat_removed(self, position: int):
+        """Handle beat removed."""
+        current_sequence = self.loading_service.get_current_sequence_from_workbench()
+        if current_sequence:
+            self.sequence_modified.emit(current_sequence)
+
+    def _on_beat_updated(self, beat_data: BeatData, position: int):
+        """Handle beat updated."""
+        current_sequence = self.loading_service.get_current_sequence_from_workbench()
+        if current_sequence:
+            self.sequence_modified.emit(current_sequence)
+
+    def _on_start_position_set(self, start_position_data: BeatData):
+        """Handle start position set."""
+        print(f"🎯 Start position set: {start_position_data.letter}")
+        self.start_position_set.emit(start_position_data.letter)
+
+    def _on_start_position_updated(self, start_position_data: BeatData):
+        """Handle start position updated."""
+        print(f"🎯 Start position updated: {start_position_data.letter}")
 
     def _setup_ui_with_progress(self):
         """Setup UI using the layout manager"""
@@ -112,7 +205,9 @@ class ConstructTabWidget(QWidget):
             self.layout_manager,
             self.start_position_handler,
             self.option_picker_manager,
-            self.sequence_manager,
+            self.loading_service,
+            self.beat_operations,
+            self.start_position_manager,
         )
 
         # Load sequence from current_sequence.json on startup if no session restoration
@@ -161,8 +256,40 @@ class ConstructTabWidget(QWidget):
     # Public interface methods
     def clear_sequence(self):
         """Clear the current sequence and reset to start position picker"""
-        if self.signal_coordinator:
-            self.signal_coordinator.clear_sequence()
+        try:
+            print("🔄 [CONSTRUCT_TAB] Clearing sequence...")
+
+            # Clear persistence FIRST
+            from application.services.core.sequence_persistence_service import (
+                SequencePersistenceService,
+            )
+
+            persistence_service = SequencePersistenceService()
+            persistence_service.clear_current_sequence()
+            print("✅ [CONSTRUCT_TAB] Cleared sequence persistence")
+
+            # Clear start position FIRST (before setting empty sequence)
+            # This prevents signal coordinator from seeing stale start position data
+            self.start_position_manager.clear_start_position()
+            print("✅ [CONSTRUCT_TAB] Cleared start position")
+
+            # Clear sequence in workbench AFTER start position is cleared
+            workbench_setter = self._get_workbench_setter()
+            if workbench_setter:
+                empty_sequence = SequenceData.empty()
+                workbench_setter(empty_sequence)
+                print("✅ [CONSTRUCT_TAB] Cleared sequence in workbench")
+
+            # NOTE: UI transition is handled automatically by signal coordinator
+            # based on sequence state - no manual transition needed
+
+            print("✅ [CONSTRUCT_TAB] Sequence cleared successfully")
+
+        except Exception as e:
+            print(f"❌ [CONSTRUCT_TAB] Failed to clear sequence: {e}")
+            import traceback
+
+            traceback.print_exc()
 
     def force_picker_update(self):
         """Force an update of the picker state based on current sequence state"""
@@ -173,6 +300,33 @@ class ConstructTabWidget(QWidget):
     def workbench(self):
         """Access to the workbench component"""
         return getattr(self.layout_manager, "workbench", None)
+
+    # Direct service access methods for external use
+    def add_beat_to_sequence(self, beat_data: BeatData):
+        """Add beat directly via beat operations service."""
+        self.beat_operations.add_beat_to_sequence(beat_data)
+
+    def set_start_position(self, start_position_data: BeatData):
+        """Set start position directly via start position manager."""
+        self.start_position_manager.set_start_position(start_position_data)
+
+    def get_current_sequence(self) -> Optional[SequenceData]:
+        """Get current sequence directly via loading service."""
+        return self.loading_service.get_current_sequence_from_workbench()
+
+    def remove_beat(self, beat_index: int):
+        """Remove beat directly via beat operations service."""
+        self.beat_operations.remove_beat(beat_index)
+
+    def update_beat_turns(self, beat_index: int, color: str, new_turns: int):
+        """Update beat turns directly via beat operations service."""
+        self.beat_operations.update_beat_turns(beat_index, color, new_turns)
+
+    def update_beat_orientation(
+        self, beat_index: int, color: str, new_orientation: int
+    ):
+        """Update beat orientation directly via beat operations service."""
+        self.beat_operations.update_beat_orientation(beat_index, color, new_orientation)
 
     def _load_sequence_on_startup(self):
         """Load sequence from current_sequence.json on startup - exactly like legacy"""
@@ -190,9 +344,9 @@ class ConstructTabWidget(QWidget):
     def _perform_sequence_load(self):
         """Perform the actual sequence loading after UI is ready"""
         try:
-            if self.sequence_manager:
-                self.sequence_manager.load_sequence_on_startup()
+            if self.loading_service:
+                self.loading_service.load_sequence_on_startup()
             else:
-                print("❌ [CONSTRUCT_TAB] No sequence manager available for loading")
+                print("❌ [CONSTRUCT_TAB] No loading service available for loading")
         except Exception as e:
             print(f"❌ [CONSTRUCT_TAB] Failed to load sequence on startup: {e}")

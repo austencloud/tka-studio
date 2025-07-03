@@ -6,10 +6,10 @@ that follow TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, Optional, List, Dict, Any
 
 from core.types import Point
-from domain.models.core_models import MotionData, Location
+from domain.models.core_models import MotionData, Location, BeatData
 from domain.models.pictograph_models import ArrowData, PictographData
 
 
@@ -153,4 +153,37 @@ class IArrowPositioningOrchestrator(ABC):
         Returns:
             None
         """
+        pass
+
+
+class IPositionMatchingService(ABC):
+    """Interface for position matching and calculation services."""
+
+    @abstractmethod
+    def extract_end_position(self, last_beat: Dict[str, Any]) -> Optional[str]:
+        """Extract end position from beat data."""
+        pass
+
+    @abstractmethod
+    def calculate_end_position_from_motions(
+        self, beat_data: Dict[str, Any]
+    ) -> Optional[str]:
+        """Calculate end position from motion attributes."""
+        pass
+
+    @abstractmethod
+    def get_position_from_locations(
+        self, start_loc: str, end_loc: str
+    ) -> Optional[str]:
+        """Get position key from start and end locations."""
+        pass
+
+    @abstractmethod
+    def has_motion_attributes(self, beat_data: Dict[str, Any]) -> bool:
+        """Check if beat data has motion attributes."""
+        pass
+
+    @abstractmethod
+    def extract_modern_end_position(self, beat_data: BeatData) -> Optional[str]:
+        """Extract end position directly from Modern BeatData."""
         pass

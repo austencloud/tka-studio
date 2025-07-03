@@ -20,7 +20,7 @@ import uuid
 from abc import ABC, abstractmethod
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
+from typing import Dict, List, Optional, Tuple, TypedDict, Union
 
 import pandas as pd
 from domain.models.core_models import (
@@ -39,7 +39,6 @@ from domain.models.pictograph_models import (
     GridData,
     GridMode,
     PictographData,
-    PropData,
 )
 
 
@@ -61,24 +60,20 @@ class IPictographManagementService(ABC):
         self, grid_mode: GridMode = GridMode.DIAMOND
     ) -> PictographData:
         """Create a new blank pictograph."""
-        pass
 
     @abstractmethod
     def create_from_beat(self, beat_data: BeatData) -> PictographData:
         """Create pictograph from beat data."""
-        pass
 
     @abstractmethod
     def update_pictograph_arrows(
         self, pictograph: PictographData, arrows: Dict[str, ArrowData]
     ) -> PictographData:
         """Update arrows in pictograph."""
-        pass
 
     @abstractmethod
     def search_dataset(self, query: PictographSearchQuery) -> List[PictographData]:
         """Search pictograph dataset with query."""
-        pass
 
 
 class PictographContext(Enum):

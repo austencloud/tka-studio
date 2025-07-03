@@ -189,30 +189,12 @@ class ArrowRenderer:
         arrow_item = ArrowItem()
         arrow_item.arrow_color = color  # Set color for all contexts
 
-        # Check if scene has context detection method for debugging
-        if hasattr(self.scene, "_determine_component_type"):
-            component_type = self.scene._determine_component_type()
-
-            # DEBUG: Print what context we detected
-            print(
-                f"🔍 [ARROW_RENDERER] Context detected: '{component_type}' for color '{color}'"
-            )
-
-            # Also debug the parent hierarchy
-            parent = self.scene.parent()
-            hierarchy = []
-            while parent and len(hierarchy) < 5:  # Limit to avoid infinite loops
-                hierarchy.append(parent.__class__.__name__)
-                parent = parent.parent() if hasattr(parent, "parent") else None
-            print(f"🔍 [ARROW_RENDERER] Parent hierarchy: {' -> '.join(hierarchy)}")
-
-            print(
-                f"✅ [ARROW_RENDERER] Created ArrowItem for '{component_type}' context"
-            )
-        else:
-            print(
-                f"✅ [ARROW_RENDERER] Created ArrowItem (no context detection available)"
-            )
+        # Also debug the parent hierarchy
+        parent = self.scene.parent()
+        hierarchy = []
+        while parent and len(hierarchy) < 5:  # Limit to avoid infinite loops
+            hierarchy.append(parent.__class__.__name__)
+            parent = parent.parent() if hasattr(parent, "parent") else None
 
         # Return the arrow item - it will configure its own behavior based on context
         return arrow_item

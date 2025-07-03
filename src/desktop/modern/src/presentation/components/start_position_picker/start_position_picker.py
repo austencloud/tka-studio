@@ -40,8 +40,6 @@ class StartPositionOption(QWidget):
                 border: 2px solid rgba(255,255,255,0.25);
                 border-radius: 18px;
                 background: rgba(255,255,255,0.18);
-                backdrop-filter: blur(12px);
-                box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
             }
             QWidget:hover {
                 border-color: #007bff;
@@ -92,7 +90,6 @@ class StartPositionPicker(QWidget):
                 background: rgba(255,255,255,0.18);
                 border-radius: 24px;
                 border: 1.5px solid rgba(255,255,255,0.25);
-                box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
                 backdrop-filter: blur(16px);
             }
             QLabel#GlassTitle {

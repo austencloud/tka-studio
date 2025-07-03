@@ -294,6 +294,9 @@ class SequenceWorkbench(QWidget):
             self.clear_start_position()
             self._update_all_components()
             self._graph_service.toggle_graph_visibility()
+            print(
+                f"🔄 [WORKBENCH] Emitting sequence_modified signal after clear: seq_length={updated_sequence.length}"
+            )
             self.sequence_modified.emit(updated_sequence)
         self._show_operation_result("clear_sequence", success, message)
 

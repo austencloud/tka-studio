@@ -5,7 +5,7 @@ These interfaces define the contracts for core services, replacing tightly-coupl
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Any, Tuple, Protocol
+from typing import List, Optional, Dict, Any, Tuple, Protocol, Callable
 from core.types import Size
 
 
@@ -285,3 +285,51 @@ class IPictographContextService(ABC):
 
 # ILayoutManagementService has been consolidated into ILayoutService above
 # This removes the duplicate interface definition to reduce complexity
+
+
+class IBeatLoadingService(ABC):
+    """Interface for beat data loading orchestration."""
+
+    @abstractmethod
+    def load_motion_combinations(
+        self, sequence_data: List[Dict[str, Any]]
+    ) -> List[Any]:
+        """Load motion combinations with position matching."""
+        pass
+
+    @abstractmethod
+    def filter_valid_options(
+        self, beat_options: List[Any], end_position: str
+    ) -> List[Any]:
+        """Filter beat options based on end position."""
+        pass
+
+    @abstractmethod
+    def get_sample_beat_options(self) -> List[Any]:
+        """Get fallback sample options."""
+        pass
+
+
+class IObjectPoolService(ABC):
+    """Interface for object pool management."""
+
+    @abstractmethod
+    def initialize_pool(
+        self,
+        pool_name: str,
+        max_objects: int,
+        object_factory: Callable[[], Any],
+        progress_callback: Optional[Callable] = None,
+    ) -> None:
+        """Initialize object pool with progress tracking."""
+        pass
+
+    @abstractmethod
+    def get_pooled_object(self, pool_name: str, index: int) -> Optional[Any]:
+        """Get object from pool by index."""
+        pass
+
+    @abstractmethod
+    def reset_pool(self, pool_name: str) -> None:
+        """Reset pool state."""
+        pass

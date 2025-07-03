@@ -184,10 +184,13 @@ class SequenceStartPositionManager(QObject):
     def clear_start_position(self):
         """Clear the current start position"""
         try:
+            print("🔄 [START_POS_MGR] Clearing start position...")
+
             # Clear from workbench
             workbench = self.workbench_getter()
             if workbench and hasattr(workbench, "_start_position_data"):
                 workbench._start_position_data = None
+                print("✅ [START_POS_MGR] Cleared from workbench")
 
                 # Clear from beat frame if available
                 if hasattr(workbench, "_beat_frame_section"):
@@ -196,19 +199,22 @@ class SequenceStartPositionManager(QObject):
                         beat_frame_section, "initialize_cleared_start_position"
                     ):
                         beat_frame_section.initialize_cleared_start_position()
+                        print("✅ [START_POS_MGR] Cleared from beat frame")
 
-            # Clear from persistence
+            # Clear from persistence (only if sequence exists and has start position)
             sequence = self.persistence_service.load_current_sequence()
             if len(sequence) > 1 and sequence[1].get("beat") == 0:
                 # Remove start position entry
                 sequence.pop(1)
                 self.persistence_service.save_current_sequence(sequence)
-                print("✅ Cleared start position from persistence")
+                print("✅ [START_POS_MGR] Cleared start position from persistence")
+            else:
+                print("ℹ️ [START_POS_MGR] No start position in persistence to clear")
 
-            print("✅ Start position cleared")
+            print("✅ [START_POS_MGR] Start position cleared")
 
         except Exception as e:
-            print(f"❌ Failed to clear start position: {e}")
+            print(f"❌ [START_POS_MGR] Failed to clear start position: {e}")
             import traceback
 
             traceback.print_exc()

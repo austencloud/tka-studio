@@ -55,6 +55,9 @@ class ModernVisibilityStateManager:
             from application.services.pictograph.global_visibility_service import (
                 GlobalVisibilityService,
             )
+            from application.services.pictograph.global_visibility_service_singleton import (
+                get_global_visibility_service,
+            )
 
             try:
                 from core.application.application_factory import get_container
@@ -66,11 +69,7 @@ class ModernVisibilityStateManager:
                 pass
 
             # Fallback to singleton pattern
-            if not hasattr(ModernVisibilityStateManager, "_global_service_singleton"):
-                ModernVisibilityStateManager._global_service_singleton = (
-                    GlobalVisibilityService()
-                )
-            return ModernVisibilityStateManager._global_service_singleton
+            return get_global_visibility_service()
 
         except Exception as e:
             logger.warning(f"Could not get GlobalVisibilityService: {e}")

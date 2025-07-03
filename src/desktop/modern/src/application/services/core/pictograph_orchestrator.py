@@ -13,7 +13,7 @@ PROVIDES:
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from domain.models.core_models import BeatData
 from domain.models.pictograph_models import (
@@ -21,7 +21,6 @@ from domain.models.pictograph_models import (
     GridData,
     GridMode,
     PictographData,
-    PropData,
 )
 
 from ..data.csv_data_service import CSVDataService, ICSVDataService
@@ -53,24 +52,20 @@ class IPictographOrchestrator(ABC):
         self, grid_mode: GridMode = GridMode.DIAMOND
     ) -> PictographData:
         """Create a new blank pictograph."""
-        pass
 
     @abstractmethod
     def create_from_beat(self, beat_data: BeatData) -> PictographData:
         """Create pictograph from beat data."""
-        pass
 
     @abstractmethod
     def update_pictograph_arrows(
         self, pictograph: PictographData, arrows: Dict[str, ArrowData]
     ) -> PictographData:
         """Update arrows in pictograph."""
-        pass
 
     @abstractmethod
     def search_dataset(self, query: PictographSearchQuery) -> List[PictographData]:
         """Search pictograph dataset with query."""
-        pass
 
 
 class PictographOrchestrator(IPictographOrchestrator):

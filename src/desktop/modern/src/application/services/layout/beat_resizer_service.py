@@ -10,9 +10,10 @@ from typing import TYPE_CHECKING, Optional, Tuple, Union
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
 
+
 if TYPE_CHECKING:
+    from presentation.components.graph_editor.graph_editor import GraphEditor
     from presentation.components.workbench.beat_frame.beat_frame import BeatFrame
-    from presentation.components.workbench.graph_editor.graph_editor import GraphEditor
     from presentation.components.workbench.sequence_beat_frame.sequence_beat_frame import (
         SequenceBeatFrame,
     )

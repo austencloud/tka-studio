@@ -43,7 +43,7 @@ from core.interfaces.session_services import (
 )
 from core.interfaces.core_services import IUIStateManagementService
 from core.interfaces.organization_services import IFileSystemService
-from core.events.event_bus import get_event_bus, UIEvent, EventPriority
+from core.events.event_bus import get_event_bus
 
 logger = logging.getLogger(__name__)
 

@@ -13,6 +13,8 @@ from application.services.core.sequence_persistence_service import (
     SequencePersistenceService,
 )
 
+from presentation.components.workbench.workbench import SequenceWorkbench
+
 
 class SequenceLoadingService(QObject):
     """
@@ -30,7 +32,7 @@ class SequenceLoadingService(QObject):
 
     def __init__(
         self,
-        workbench_getter: Optional[Callable[[], object]] = None,
+        workbench_getter: Optional[Callable[[], SequenceWorkbench]] = None,
         workbench_setter: Optional[Callable[[SequenceData], None]] = None,
         data_converter: Optional[object] = None,
     ):

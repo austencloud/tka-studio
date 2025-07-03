@@ -144,7 +144,16 @@ class ApplicationFactory:
             IPictographContextService, PictographContextService
         )
 
+        # Register extracted services
+        from core.dependency_injection.config_registration import (
+            register_extracted_services,
+        )
 
+        register_result = register_extracted_services(container)
+        if register_result.is_failure():
+            logger.warning(
+                f"Failed to register extracted services: {register_result.error}"
+            )
 
         logger.info("Created production application container")
         return container
@@ -203,6 +212,17 @@ class ApplicationFactory:
             IPictographContextService, PictographContextService
         )
 
+        # Register extracted services
+        from core.dependency_injection.config_registration import (
+            register_extracted_services,
+        )
+
+        register_result = register_extracted_services(container)
+        if register_result.is_failure():
+            logger.warning(
+                f"Failed to register extracted services: {register_result.error}"
+            )
+
         logger.info("Created test application container")
         return container
 
@@ -260,7 +280,16 @@ class ApplicationFactory:
             IPictographContextService, PictographContextService
         )
 
+        # Register extracted services
+        from core.dependency_injection.config_registration import (
+            register_extracted_services,
+        )
 
+        register_result = register_extracted_services(container)
+        if register_result.is_failure():
+            logger.warning(
+                f"Failed to register extracted services: {register_result.error}"
+            )
 
         logger.info("Created headless application container")
         return container

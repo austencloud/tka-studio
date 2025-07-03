@@ -54,21 +54,12 @@ class SequenceDataConverter:
             # Do NOT convert "alpha", "beta", "gamma" - those are position TYPES, not locations
             return str(loc_str) if loc_str else "n"
 
-        def convert_orientation(ori_value) -> str:
-            """Convert legacy orientation values to valid Orientation enum values"""
-            # Orientations are stored as strings in JSON: "in", "out", "clock", "counter"
-            # Only convert if we get numeric values (legacy compatibility)
-            if isinstance(ori_value, (int, float)):
-                ori_map = {0: "in", 90: "clock", 180: "out", 270: "counter"}
-                return ori_map.get(int(ori_value), "in")
-            return str(ori_value) if ori_value else "in"
-
         blue_motion = MotionData(
             motion_type=MotionType(blue_attrs.get("motion_type", "static")),
             start_loc=Location(convert_location(blue_attrs.get("start_loc", "n"))),
             end_loc=Location(convert_location(blue_attrs.get("end_loc", "n"))),
-            start_ori=convert_orientation(blue_attrs.get("start_ori", "in")),
-            end_ori=convert_orientation(blue_attrs.get("end_ori", "in")),
+            start_ori=Orientation(blue_attrs.get("start_ori", "in")),
+            end_ori=Orientation(blue_attrs.get("end_ori", "in")),
             prop_rot_dir=RotationDirection(blue_attrs.get("prop_rot_dir", "no_rot")),
             turns=blue_attrs.get("turns", 0),
         )
@@ -77,8 +68,8 @@ class SequenceDataConverter:
             motion_type=MotionType(red_attrs.get("motion_type", "static")),
             start_loc=Location(convert_location(red_attrs.get("start_loc", "n"))),
             end_loc=Location(convert_location(red_attrs.get("end_loc", "n"))),
-            start_ori=convert_orientation(red_attrs.get("start_ori", "in")),
-            end_ori=convert_orientation(red_attrs.get("end_ori", "in")),
+            start_ori=Orientation(red_attrs.get("start_ori", "in")),
+            end_ori=Orientation(red_attrs.get("end_ori", "in")),
             prop_rot_dir=RotationDirection(red_attrs.get("prop_rot_dir", "no_rot")),
             turns=red_attrs.get("turns", 0),
         )
@@ -288,12 +279,12 @@ class SequenceDataConverter:
         # Convert motion data
         blue_attrs = {
             "start_loc": (
-                start_position_data.blue_motion.start_location.value
+                start_position_data.blue_motion.start_loc.value
                 if start_position_data.blue_motion
                 else sequence_start_position
             ),
             "end_loc": (
-                start_position_data.blue_motion.end_location.value
+                start_position_data.blue_motion.end_loc.value
                 if start_position_data.blue_motion
                 else sequence_start_position
             ),
@@ -328,12 +319,12 @@ class SequenceDataConverter:
 
         red_attrs = {
             "start_loc": (
-                start_position_data.red_motion.start_location.value
+                start_position_data.red_motion.start_loc.value
                 if start_position_data.red_motion
                 else sequence_start_position
             ),
             "end_loc": (
-                start_position_data.red_motion.end_location.value
+                start_position_data.red_motion.end_loc.value
                 if start_position_data.red_motion
                 else sequence_start_position
             ),
@@ -382,18 +373,37 @@ class SequenceDataConverter:
         try:
             legacy_data = []
 
-            # Add sequence metadata as first item
+            # Separate start position from regular beats
+            start_position_beat = None
+            regular_beats = []
+
+            for beat in sequence.beats:
+                if beat.beat_number == 0 and beat.metadata.get(
+                    "is_start_position", False
+                ):
+                    start_position_beat = beat
+                else:
+                    regular_beats.append(beat)
+
+            # Add sequence metadata as first item [0]
             metadata = {
                 "sequence_name": sequence.name,
-                "beat_count": len(sequence.beats),
-                "length": len(sequence.beats),
+                "beat_count": len(regular_beats),  # Only count regular beats
+                "length": len(regular_beats),
                 "level": 1,
                 "sequence_start_position": "alpha",  # Default for now
             }
             legacy_data.append(metadata)
 
-            # Convert each beat to legacy format
-            for beat in sequence.beats:
+            # Only add start position if it actually exists (user selected one)
+            if start_position_beat:
+                start_pos_dict = self.convert_start_position_to_legacy_format(
+                    start_position_beat
+                )
+                legacy_data.append(start_pos_dict)
+
+            # Convert regular beats to legacy format (starting at index [2])
+            for beat in regular_beats:
                 beat_dict = self._convert_beat_to_legacy_dict(beat)
                 legacy_data.append(beat_dict)
 
@@ -420,8 +430,10 @@ class SequenceDataConverter:
                     beat.blue_motion.start_loc.value if beat.blue_motion else "s"
                 ),
                 "end_loc": beat.blue_motion.end_loc.value if beat.blue_motion else "s",
-                "start_ori": beat.blue_motion.start_ori if beat.blue_motion else "in",
-                "end_ori": beat.blue_motion.end_ori if beat.blue_motion else "in",
+                "start_ori": (
+                    beat.blue_motion.start_ori.value if beat.blue_motion else "in"
+                ),
+                "end_ori": beat.blue_motion.end_ori.value if beat.blue_motion else "in",
                 "prop_rot_dir": (
                     beat.blue_motion.prop_rot_dir.value
                     if beat.blue_motion
@@ -437,8 +449,10 @@ class SequenceDataConverter:
                     beat.red_motion.start_loc.value if beat.red_motion else "s"
                 ),
                 "end_loc": beat.red_motion.end_loc.value if beat.red_motion else "s",
-                "start_ori": beat.red_motion.start_ori if beat.red_motion else "in",
-                "end_ori": beat.red_motion.end_ori if beat.red_motion else "in",
+                "start_ori": (
+                    beat.red_motion.start_ori.value if beat.red_motion else "in"
+                ),
+                "end_ori": beat.red_motion.end_ori.value if beat.red_motion else "in",
                 "prop_rot_dir": (
                     beat.red_motion.prop_rot_dir.value if beat.red_motion else "no_rot"
                 ),

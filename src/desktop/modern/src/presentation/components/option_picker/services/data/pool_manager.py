@@ -1,3 +1,12 @@
+"""
+Pool Manager - UI Adapter for Object Pool Management
+
+This is now a thin UI adapter that delegates business logic to the
+ObjectPoolService. It maintains backward compatibility while using
+the extracted business service and handles Qt-specific concerns.
+"""
+
+import logging
 from typing import TYPE_CHECKING, List, Optional, Callable
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QObject
@@ -9,6 +18,7 @@ from domain.models.core_models import (
     Location,
     RotationDirection,
 )
+from core.interfaces.core_services import IObjectPoolService
 from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
     ClickablePictographFrame,
 )
@@ -18,19 +28,52 @@ if TYPE_CHECKING:
         PictographDatasetService,
     )
 
+logger = logging.getLogger(__name__)
+
 
 class PictographPoolManager(QObject):
-    """Manages Legacy-style object pooling for pictograph frames to prevent Qt deletion cascade"""
+    """
+    UI adapter for pictograph object pool management.
+
+    This class now delegates business logic to the IObjectPoolService
+    while maintaining Qt-specific functionality and the same public interface
+    for backward compatibility.
+    """
 
     MAX_PICTOGRAPHS = 36  # Same as Legacy's OptionFactory.MAX_PICTOGRAPHS
 
-    def __init__(self, parent_widget: QWidget):
+    def __init__(
+        self, parent_widget: QWidget, pool_service: Optional[IObjectPoolService] = None
+    ):
+        """
+        Initialize pictograph pool manager with injected business service.
+
+        Args:
+            parent_widget: Parent Qt widget for pictograph frames
+            pool_service: Injected object pool service
+        """
         super().__init__()
         self.parent_widget = parent_widget
         self._pictograph_pool: List[ClickablePictographFrame] = []
         self._pool_initialized = False
         self._click_handler: Optional[Callable] = None
         self._beat_data_click_handler: Optional[Callable] = None
+        self._pool_service = pool_service
+
+        # Fallback for legacy compatibility - will be removed in future versions
+        if not self._pool_service:
+            try:
+                from application.services.core.object_pool_service import (
+                    ObjectPoolService,
+                )
+
+                self._pool_service = ObjectPoolService()
+                logger.warning(
+                    "Using fallback object pool service - consider using DI container"
+                )
+            except ImportError:
+                logger.error("Object pool service not available")
+                self._pool_service = None
 
     def set_click_handler(self, handler: Callable[[str], None]) -> None:
         """Set the click handler for all pool objects"""
@@ -41,81 +84,95 @@ class PictographPoolManager(QObject):
         self._beat_data_click_handler = beat_data_handler
 
     def initialize_pool(self, progress_callback: Optional[Callable] = None) -> None:
-        """Initialize Legacy-style object pool with progress updates"""
+        """
+        Initialize pictograph object pool with progress updates.
+
+        Args:
+            progress_callback: Optional progress reporting callback
+        """
         if self._pool_initialized:
+            logger.debug("Pool already initialized")
             return
 
-        if progress_callback:
-            progress_callback("Starting pictograph pool initialization", 0.3)
+        if not self._pool_service:
+            logger.error("Pool service not available, using fallback")
+            self._create_fallback_pool(progress_callback)
+            return
 
         try:
-            if progress_callback:
-                progress_callback("Loading pictograph dataset service", 0.4)
+            # Create factory function for pictograph frames
+            def pictograph_frame_factory() -> Optional[ClickablePictographFrame]:
+                return self._create_pictograph_frame()
 
+            # Use business service to initialize pool
+            self._pool_service.initialize_pool(
+                pool_name="pictographs",
+                max_objects=self.MAX_PICTOGRAPHS,
+                object_factory=pictograph_frame_factory,
+                progress_callback=progress_callback,
+            )
+
+            # Get the created objects from the service
+            for i in range(self.MAX_PICTOGRAPHS):
+                frame = self._pool_service.get_pooled_object("pictographs", i)
+                if frame:
+                    self._pictograph_pool.append(frame)
+
+            self._pool_initialized = True
+
+            logger.info(
+                f"Pictograph pool initialized with {len(self._pictograph_pool)} objects"
+            )
+
+        except Exception as e:
+            logger.error(f"Error initializing pool via service: {e}")
+            self._create_fallback_pool(progress_callback)
+
+    def _create_pictograph_frame(self) -> Optional[ClickablePictographFrame]:
+        """
+        Create a single pictograph frame with real data.
+
+        Returns:
+            ClickablePictographFrame if successful, None otherwise
+        """
+        try:
             from application.services.data.pictograph_dataset_service import (
                 PictographDatasetService,
             )
 
             dataset_service = PictographDatasetService()
-
-            if progress_callback:
-                progress_callback("Preparing start position data", 0.5)
-
             start_positions = ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"]
-            pool_progress_start = 0.5
-            pool_progress_range = 0.3
 
-            for i in range(self.MAX_PICTOGRAPHS):
-                try:
-                    if i % 6 == 0 and progress_callback:
-                        progress = (
-                            pool_progress_start
-                            + (i / self.MAX_PICTOGRAPHS) * pool_progress_range
-                        )
-                        progress_callback(
-                            f"Creating pool object {i+1}/{self.MAX_PICTOGRAPHS}",
-                            progress,
-                        )
+            # Cycle through start positions
+            position_key = start_positions[
+                len(self._pictograph_pool) % len(start_positions)
+            ]
+            real_beat_data = dataset_service.get_start_position_pictograph(
+                position_key, "diamond"
+            )
 
-                    position_key = start_positions[i % len(start_positions)]
-                    real_beat_data = dataset_service.get_start_position_pictograph(
-                        position_key, "diamond"
-                    )
+            if real_beat_data is None:
+                real_beat_data = self._get_fallback_beat_data(dataset_service)
 
-                    if real_beat_data is None:
-                        real_beat_data = self._get_fallback_beat_data(dataset_service)
+            if real_beat_data is None:
+                real_beat_data = self._create_minimal_beat_data()
 
-                    if real_beat_data is None:
-                        real_beat_data = self._create_minimal_beat_data()
+            frame = ClickablePictographFrame(real_beat_data, parent=self.parent_widget)
 
-                    frame = ClickablePictographFrame(
-                        real_beat_data, parent=self.parent_widget
-                    )
-                    if self._click_handler:
-                        frame.clicked.connect(self._click_handler)
-                    if self._beat_data_click_handler:
-                        frame.beat_data_clicked.connect(self._beat_data_click_handler)
-                    frame.setVisible(False)
-                    frame.set_container_widget(self.parent_widget)
+            # Set up event handlers
+            if self._click_handler:
+                frame.clicked.connect(self._click_handler)
+            if self._beat_data_click_handler:
+                frame.beat_data_clicked.connect(self._beat_data_click_handler)
 
-                    self._pictograph_pool.append(frame)
+            frame.setVisible(False)
+            frame.set_container_widget(self.parent_widget)
 
-                except Exception as e:
-                    print(f"❌ Failed to create pool object {i}: {e}")
-                    break
+            return frame
 
         except Exception as e:
-            print(f"❌ Failed to initialize dataset service: {e}")
-            self._create_fallback_pool(progress_callback)
-
-        self._pool_initialized = True
-
-        if progress_callback:
-            progress_callback("Pictograph pool initialization complete", 0.8)
-
-        print(
-            f"✅ Pictograph pool initialized with {len(self._pictograph_pool)} objects"
-        )
+            logger.error(f"Error creating pictograph frame: {e}")
+            return None
 
     def _get_fallback_beat_data(
         self, dataset_service: "PictographDatasetService"

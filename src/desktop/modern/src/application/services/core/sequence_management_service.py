@@ -14,25 +14,17 @@ while maintaining the proven algorithms from the individual services.
 import logging
 import uuid
 from abc import ABC, abstractmethod
-from copy import deepcopy
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, Optional, cast
 
 from domain.models.core_models import (
     BeatData,
-    Location,
-    MotionData,
-    MotionType,
-    RotationDirection,
     SequenceData,
 )
-from domain.models.pictograph_models import PictographData
 
-# Event-driven architecture imports
 if TYPE_CHECKING:
     from core.commands import CommandProcessor
-    from core.events import IEventBus
 
 try:
     from core.commands import (
@@ -44,8 +36,6 @@ try:
     from core.events import (
         BeatAddedEvent,
         BeatRemovedEvent,
-        BeatUpdatedEvent,
-        IEventBus,
         SequenceCreatedEvent,
         get_event_bus,
     )
@@ -116,98 +106,76 @@ class ISequenceManagementService(ABC):
     @abstractmethod
     def create_sequence(self, name: str, length: int = 16) -> SequenceData:
         """Create a new sequence with specified length."""
-        pass
 
     @abstractmethod
     def add_beat(
         self, sequence: SequenceData, beat: BeatData, position: int
     ) -> SequenceData:
         """Add beat to sequence at specified position."""
-        pass
 
     @abstractmethod
     def remove_beat(self, sequence: SequenceData, position: int) -> SequenceData:
         """Remove beat from sequence at specified position."""
-        pass
 
-    @abstractmethod
-    def generate_sequence(
-        self, sequence_type: str, length: int, **kwargs
-    ) -> SequenceData:
-        """Generate sequence using specified algorithm."""
-        pass
 
     @abstractmethod
     def apply_workbench_operation(
         self, sequence: SequenceData, operation: str, **kwargs
     ) -> SequenceData:
         """Apply workbench transformation to sequence."""
-        pass
 
     # NEW: Event-driven methods with undo support
     @abstractmethod
     def create_sequence_with_events(self, name: str, length: int = 16) -> SequenceData:
         """Create sequence and publish creation event."""
-        pass
 
     @abstractmethod
     def add_beat_with_undo(
         self, beat: BeatData, position: Optional[int] = None
     ) -> SequenceData:
         """Add beat using command pattern with undo support."""
-        pass
 
     @abstractmethod
     def remove_beat_with_undo(self, position: int) -> SequenceData:
         """Remove beat using command pattern with undo support."""
-        pass
 
     @abstractmethod
     def update_beat_with_undo(
         self, beat_number: int, field_name: str, new_value: Any
     ) -> SequenceData:
         """Update beat field using command pattern with undo support."""
-        pass
 
     @abstractmethod
     def undo_last_operation(self) -> Optional[SequenceData]:
         """Undo the last operation."""
-        pass
 
     @abstractmethod
     def redo_last_operation(self) -> Optional[SequenceData]:
         """Redo the last undone operation."""
-        pass
 
     @abstractmethod
     def can_undo(self) -> bool:
         """Check if undo is available."""
-        pass
 
     @abstractmethod
     def can_redo(self) -> bool:
         """Check if redo is available."""
-        pass
 
     @abstractmethod
     def get_undo_description(self) -> Optional[str]:
         """Get description of operation that would be undone."""
-        pass
 
     @abstractmethod
     def get_redo_description(self) -> Optional[str]:
         """Get description of operation that would be redone."""
-        pass
 
     @abstractmethod
     def set_current_sequence(self, sequence: SequenceData) -> None:
         """Set the current sequence for event-driven operations."""
-        pass
 
     @abstractmethod
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence."""
-        pass
 
 
 class SequenceType(Enum):
@@ -449,27 +417,6 @@ class SequenceManagementService(ISequenceManagementService):
             )
 
         return updated_sequence
-
-    @handle_service_errors("generate_sequence")
-    @monitor_performance("sequence_generation")
-    def generate_sequence(
-        self, sequence_type: str, length: int, **kwargs
-    ) -> SequenceData:
-        """Generate sequence using specified algorithm."""
-        sequence_type_enum = SequenceType(sequence_type)
-
-        if sequence_type_enum == SequenceType.FREEFORM:
-            return self._generate_freeform_sequence(length, **kwargs)
-        elif sequence_type_enum == SequenceType.CIRCULAR:
-            return self._generate_circular_sequence(length, **kwargs)
-        elif sequence_type_enum == SequenceType.AUTO_COMPLETE:
-            return self._generate_auto_complete_sequence(length, **kwargs)
-        elif sequence_type_enum == SequenceType.MIRROR:
-            return self._generate_mirror_sequence(length, **kwargs)
-        elif sequence_type_enum == SequenceType.CONTINUOUS:
-            return self._generate_continuous_sequence(length, **kwargs)
-        else:
-            raise ValueError(f"Unknown sequence type: {sequence_type}")
 
     @handle_service_errors("apply_workbench_operation")
     @monitor_performance("workbench_operation")

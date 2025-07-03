@@ -129,6 +129,15 @@ class WorkbenchEventController(QObject):
 
     def handle_clear(self) -> tuple[bool, str, Optional[SequenceData]]:
         try:
+            # Clear persistence FIRST - this ensures current_sequence.json is cleared
+            from application.services.core.sequence_persistence_service import (
+                SequencePersistenceService,
+            )
+
+            persistence_service = SequencePersistenceService()
+            persistence_service.clear_current_sequence()
+            print("✅ [EVENT_CONTROLLER] Cleared sequence persistence")
+
             # Allow clearing even when no sequence exists - the workbench will handle
             # clearing start position data. This enables clearing when only a start
             # position is selected (no beats added yet).
