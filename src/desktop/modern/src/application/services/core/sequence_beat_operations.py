@@ -254,11 +254,26 @@ class SequenceBeatOperations(QObject):
 
             # Convert beats to legacy format (these will be beat 1, 2, 3, etc.)
             legacy_beats = []
+            print(
+                f"🔍 [PERSISTENCE] Converting {len(sequence.beats)} beats to legacy format"
+            )
             for i, beat in enumerate(sequence.beats):
-                beat_dict = self.data_converter.convert_beat_data_to_legacy_format(
-                    beat, i + 1
-                )
-                legacy_beats.append(beat_dict)
+                print(f"🔍 [PERSISTENCE] Converting beat {i}: {beat.letter}")
+                try:
+                    beat_dict = self.data_converter.convert_beat_data_to_legacy_format(
+                        beat, i + 1
+                    )
+                    print(
+                        f"🔍 [PERSISTENCE] Converted beat {i} successfully: {beat_dict.get('letter', 'unknown')}"
+                    )
+                    legacy_beats.append(beat_dict)
+                except Exception as e:
+                    print(
+                        f"❌ [PERSISTENCE] Failed to convert beat {i} ({beat.letter}): {e}"
+                    )
+                    import traceback
+
+                    traceback.print_exc()
 
             # Create metadata
             metadata = {
@@ -278,6 +293,14 @@ class SequenceBeatOperations(QObject):
 
             # Add beats
             complete_sequence.extend(legacy_beats)
+
+            print(f"🔍 [PERSISTENCE] Final sequence structure:")
+            print(f"🔍 [PERSISTENCE] - Metadata: {metadata}")
+            print(
+                f"🔍 [PERSISTENCE] - Start position: {existing_start_position is not None}"
+            )
+            print(f"🔍 [PERSISTENCE] - Legacy beats: {len(legacy_beats)}")
+            print(f"🔍 [PERSISTENCE] - Total items: {len(complete_sequence)}")
 
             # Save to persistence
             self.persistence_service.save_current_sequence(complete_sequence)

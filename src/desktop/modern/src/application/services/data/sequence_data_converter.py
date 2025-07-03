@@ -196,21 +196,15 @@ class SequenceDataConverter:
         # Convert blue motion data
         blue_attrs = {
             "start_loc": (
-                beat.blue_motion.start_location.value if beat.blue_motion else "alpha"
+                beat.blue_motion.start_loc.value if beat.blue_motion else "alpha"
             ),
             "end_loc": (
-                beat.blue_motion.end_location.value if beat.blue_motion else "alpha"
+                beat.blue_motion.end_loc.value if beat.blue_motion else "alpha"
             ),
-            "start_ori": (
-                beat.blue_motion.start_orientation.value if beat.blue_motion else 0
-            ),
-            "end_ori": (
-                beat.blue_motion.end_orientation.value if beat.blue_motion else 0
-            ),
+            "start_ori": (beat.blue_motion.start_ori.value if beat.blue_motion else 0),
+            "end_ori": (beat.blue_motion.end_ori.value if beat.blue_motion else 0),
             "prop_rot_dir": (
-                beat.blue_motion.rotation_direction.value
-                if beat.blue_motion
-                else "no_rot"
+                beat.blue_motion.prop_rot_dir.value if beat.blue_motion else "no_rot"
             ),
             "turns": beat.blue_motion.turns if beat.blue_motion else 0,
             "motion_type": (
@@ -221,19 +215,13 @@ class SequenceDataConverter:
         # Convert red motion data
         red_attrs = {
             "start_loc": (
-                beat.red_motion.start_location.value if beat.red_motion else "alpha"
+                beat.red_motion.start_loc.value if beat.red_motion else "alpha"
             ),
-            "end_loc": (
-                beat.red_motion.end_location.value if beat.red_motion else "alpha"
-            ),
-            "start_ori": (
-                beat.red_motion.start_orientation.value if beat.red_motion else 0
-            ),
-            "end_ori": beat.red_motion.end_orientation.value if beat.red_motion else 0,
+            "end_loc": (beat.red_motion.end_loc.value if beat.red_motion else "alpha"),
+            "start_ori": (beat.red_motion.start_ori.value if beat.red_motion else 0),
+            "end_ori": beat.red_motion.end_ori.value if beat.red_motion else 0,
             "prop_rot_dir": (
-                beat.red_motion.rotation_direction.value
-                if beat.red_motion
-                else "no_rot"
+                beat.red_motion.prop_rot_dir.value if beat.red_motion else "no_rot"
             ),
             "turns": beat.red_motion.turns if beat.red_motion else 0,
             "motion_type": (
