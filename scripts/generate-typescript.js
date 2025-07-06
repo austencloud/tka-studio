@@ -53,6 +53,7 @@ async function generateTypeScript(schemaPath, outputPath) {
     console.log(`✅ Generated: ${outputPath}`);
   } catch (error) {
     console.error(`❌ Error generating ${outputPath}:`, error.message);
+    console.error("Full error:", error);
     process.exit(1);
   }
 }
@@ -63,11 +64,32 @@ async function generateTypeScript(schemaPath, outputPath) {
 async function main() {
   console.log("🚀 Starting TypeScript generation from JSON schemas...\n");
 
-  // Generate MotionData
-  await generateTypeScript(
-    "schemas/motion-data.json",
-    "generated/typescript/motion-data.ts"
-  );
+  // Generate all schemas
+  const schemas = [
+    {
+      schema: "schemas/motion-data.json",
+      output: "generated/typescript/motion-data.ts",
+    },
+    {
+      schema: "schemas/pictograph-data.json",
+      output: "generated/typescript/pictograph-data.ts",
+    },
+    {
+      schema: "schemas/beat-data.json",
+      output: "generated/typescript/beat-data.ts",
+    },
+    {
+      schema: "schemas/sequence-data.json",
+      output: "generated/typescript/sequence-data.ts",
+    },
+  ];
+
+  console.log(`📋 Found ${schemas.length} schemas to generate`);
+
+  for (const { schema, output } of schemas) {
+    console.log(`🔄 Processing: ${schema}`);
+    await generateTypeScript(schema, output);
+  }
 
   console.log("\n✨ TypeScript generation complete!");
 }

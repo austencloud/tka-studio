@@ -8,13 +8,28 @@
 
 import { writable, derived, type Writable, type Readable } from 'svelte/store';
 import {
-	sequenceContainer,
-	selectedBeats,
-	currentBeat,
-	beatCount,
-	sequenceDifficulty
+	sequenceContainer
 } from './SequenceContainer.js';
-import type { SequenceState, BeatData } from './SequenceContainer.js';
+
+// Define types based on the container structure
+export interface BeatData {
+	id: string;
+	number: number;
+	[key: string]: any; // Allow additional properties for flexibility
+}
+
+export interface SequenceState {
+	beats: BeatData[];
+	startPosition: any;
+	metadata: {
+		name: string;
+		difficulty: number;
+		[key: string]: any;
+	};
+	selectedBeatIds: string[];
+	currentBeatIndex: number;
+	isModified: boolean;
+}
 
 /**
  * Create a store adapter for the sequence container
@@ -33,7 +48,11 @@ function createSequenceStoreAdapter(): Writable<SequenceState> & {
 	markAsSaved: () => void;
 } {
 	// Create a writable store that reflects the container's state
-	const { subscribe, set } = writable<SequenceState>(sequenceContainer.state);
+	const { subscribe, set } = writable<SequenceState>({
+		...sequenceContainer.state,
+		currentBeatIndex: 0,
+		isModified: false
+	});
 
 	// Set up a subscription to update the store when the container changes
 	// Try to use the subscribe method if available, otherwise fall back to polling
@@ -45,8 +64,12 @@ function createSequenceStoreAdapter(): Writable<SequenceState> & {
 		typeof (sequenceContainer as any).subscribe === 'function'
 	) {
 		// Use the subscribe method
-		const unsubscribe = (sequenceContainer as any).subscribe((state: SequenceState) => {
-			set(state);
+		const unsubscribe = (sequenceContainer as any).subscribe((state: any) => {
+			set({
+				...state,
+				currentBeatIndex: 0,
+				isModified: false
+			});
 		});
 
 		cleanup = () => {
@@ -58,7 +81,11 @@ function createSequenceStoreAdapter(): Writable<SequenceState> & {
 		// Fall back to polling with a short interval
 		// This approach works reliably for adding beats to the sequence
 		const intervalId = setInterval(() => {
-			set(sequenceContainer.state);
+			set({
+				...sequenceContainer.state,
+				currentBeatIndex: 0,
+				isModified: false
+			});
 		}, 16); // Poll at approximately 60fps for smoother updates
 
 		cleanup = () => {
@@ -77,50 +104,59 @@ function createSequenceStoreAdapter(): Writable<SequenceState> & {
 	return {
 		subscribe,
 		set: (value: SequenceState) => {
-			// Update the container when the store is set
-			sequenceContainer.setSequence(value.beats);
-			sequenceContainer.updateMetadata(value.metadata);
+			// Update the container when the store is set (with safety checks)
+			if (sequenceContainer.setSequence) sequenceContainer.setSequence(value.beats);
+			if (sequenceContainer.updateMetadata) sequenceContainer.updateMetadata(value.metadata);
 			if (value.selectedBeatIds.length > 0) {
 				// Clear existing selection first
-				sequenceContainer.clearSelection();
+				if (sequenceContainer.clearSelection) sequenceContainer.clearSelection();
 				// Then add each selected beat
-				value.selectedBeatIds.forEach((id) => sequenceContainer.selectBeat(id, true));
+				value.selectedBeatIds.forEach((id) => {
+					if (sequenceContainer.selectBeat) sequenceContainer.selectBeat(id, true);
+				});
 			}
-			sequenceContainer.setCurrentBeatIndex(value.currentBeatIndex);
-			if (!value.isModified) {
+			if (sequenceContainer.setCurrentBeatIndex) sequenceContainer.setCurrentBeatIndex(value.currentBeatIndex);
+			if (!value.isModified && sequenceContainer.markAsSaved) {
 				sequenceContainer.markAsSaved();
 			}
 			set(value);
 		},
 		update: (updater: (value: SequenceState) => SequenceState) => {
-			const newValue = updater(sequenceContainer.state);
-			// Update the container with the new value
-			sequenceContainer.setSequence(newValue.beats);
-			sequenceContainer.updateMetadata(newValue.metadata);
+			const currentState = {
+				...sequenceContainer.state,
+				currentBeatIndex: 0,
+				isModified: false
+			};
+			const newValue = updater(currentState);
+			// Update the container with the new value (with safety checks)
+			if (sequenceContainer.setSequence) sequenceContainer.setSequence(newValue.beats);
+			if (sequenceContainer.updateMetadata) sequenceContainer.updateMetadata(newValue.metadata);
 			if (newValue.selectedBeatIds.length > 0) {
 				// Clear existing selection first
-				sequenceContainer.clearSelection();
+				if (sequenceContainer.clearSelection) sequenceContainer.clearSelection();
 				// Then add each selected beat
-				newValue.selectedBeatIds.forEach((id) => sequenceContainer.selectBeat(id, true));
+				newValue.selectedBeatIds.forEach((id) => {
+					if (sequenceContainer.selectBeat) sequenceContainer.selectBeat(id, true);
+				});
 			}
-			sequenceContainer.setCurrentBeatIndex(newValue.currentBeatIndex);
-			if (!newValue.isModified) {
+			if (sequenceContainer.setCurrentBeatIndex) sequenceContainer.setCurrentBeatIndex(newValue.currentBeatIndex);
+			if (!newValue.isModified && sequenceContainer.markAsSaved) {
 				sequenceContainer.markAsSaved();
 			}
 			set(newValue);
 		},
-		// Forward action methods to the container
-		addBeat: sequenceContainer.addBeat,
-		addBeats: sequenceContainer.addBeats,
-		setSequence: sequenceContainer.setSequence,
-		removeBeat: sequenceContainer.removeBeat,
-		updateBeat: sequenceContainer.updateBeat,
-		selectBeat: sequenceContainer.selectBeat,
-		deselectBeat: sequenceContainer.deselectBeat,
-		clearSelection: sequenceContainer.clearSelection,
-		setCurrentBeatIndex: sequenceContainer.setCurrentBeatIndex,
-		updateMetadata: sequenceContainer.updateMetadata,
-		markAsSaved: sequenceContainer.markAsSaved
+		// Forward action methods to the container (with fallbacks for missing methods)
+		addBeat: sequenceContainer.addBeat || (() => {}),
+		addBeats: sequenceContainer.addBeats || (() => {}),
+		setSequence: sequenceContainer.setSequence || (() => {}),
+		removeBeat: sequenceContainer.removeBeat || (() => {}),
+		updateBeat: sequenceContainer.updateBeat || (() => {}),
+		selectBeat: sequenceContainer.selectBeat || (() => {}),
+		deselectBeat: sequenceContainer.deselectBeat || (() => {}),
+		clearSelection: sequenceContainer.clearSelection || (() => {}),
+		setCurrentBeatIndex: sequenceContainer.setCurrentBeatIndex || (() => {}),
+		updateMetadata: sequenceContainer.updateMetadata || (() => {}),
+		markAsSaved: sequenceContainer.markAsSaved || (() => {})
 	};
 }
 
@@ -147,5 +183,4 @@ export const sequenceDifficultyStore: Readable<number> = derived(
 	($store) => $store.metadata.difficulty
 );
 
-// Export the derived values from the container for modern usage
-export { selectedBeats, currentBeat, beatCount, sequenceDifficulty };
+// Note: For modern usage, use the derived stores above or access sequenceContainer directly

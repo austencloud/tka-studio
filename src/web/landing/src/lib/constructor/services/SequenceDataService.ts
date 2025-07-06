@@ -4,6 +4,7 @@ import { browser } from '$app/environment';
 
 // Constants
 const DIAMOND = 'diamond';
+const STORAGE_KEY = 'tka_current_sequence';
 
 // Define the sequence metadata structure
 export interface SequenceMetadata {
@@ -83,8 +84,6 @@ export interface SequenceStartPos {
 }
 
 class SequenceDataService {
-	private currentSequenceJsonPath = '/current_sequence.json';
-
 	// Default metadata for a new sequence
 	private defaultMetadata: SequenceMetadata = {
 		word: '',
@@ -108,20 +107,21 @@ class SequenceDataService {
 		this.loadSequence();
 	}
 
-	// Load sequence from JSON file
+	// Load sequence from localStorage
 	async loadSequence() {
 		if (!browser) return;
 
 		try {
-			const response = await fetch(this.currentSequenceJsonPath);
+			const stored = localStorage.getItem(STORAGE_KEY);
+			let sequence;
 
-			if (!response.ok) {
-				// If file doesn't exist, create default sequence
-				await this.saveSequence([this.defaultMetadata]);
-				return;
+			if (stored) {
+				sequence = JSON.parse(stored);
+			} else {
+				// If no stored sequence, create default
+				sequence = [this.defaultMetadata];
+				await this.saveSequence(sequence);
 			}
-
-			const sequence = await response.json();
 
 			// Ensure we always have metadata at index 0
 			if (!sequence[0] || !('word' in sequence[0])) {
@@ -131,11 +131,14 @@ class SequenceDataService {
 			this.sequenceStore.set(sequence);
 		} catch (error) {
 			console.error('Error loading sequence:', error);
-			await this.saveSequence([this.defaultMetadata]);
+			// Fall back to default sequence
+			const defaultSequence = [this.defaultMetadata];
+			await this.saveSequence(defaultSequence);
+			this.sequenceStore.set(defaultSequence);
 		}
 	}
 
-	// Save sequence to JSON file
+	// Save sequence to localStorage
 	async saveSequence(sequence?: (SequenceMetadata | SequenceBeat)[]) {
 		if (!browser) return;
 
@@ -157,18 +160,8 @@ class SequenceDataService {
 			// Add beat numbers
 			this.assignBeatNumbers(sequenceToSave);
 
-			// Save to file
-			const response = await fetch(this.currentSequenceJsonPath, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(sequenceToSave, null, 2)
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to save sequence');
-			}
+			// Save to localStorage
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(sequenceToSave, null, 2));
 
 			// Update the store
 			this.sequenceStore.set(sequenceToSave);
@@ -307,6 +300,23 @@ class SequenceDataService {
 	// Clear the current sequence
 	async clearSequence() {
 		await this.saveSequence([this.defaultMetadata]);
+	}
+
+	// Export sequence as JSON (for download)
+	exportSequence(): string {
+		const sequence = this.getCurrentSequence();
+		return JSON.stringify(sequence, null, 2);
+	}
+
+	// Import sequence from JSON string
+	async importSequence(jsonString: string) {
+		try {
+			const sequence = JSON.parse(jsonString);
+			await this.saveSequence(sequence);
+		} catch (error) {
+			console.error('Error importing sequence:', error);
+			throw new Error('Invalid sequence format');
+		}
 	}
 }
 

@@ -65,6 +65,12 @@ async function main() {
     "generated/typescript/motion-data.ts"
   );
 
+  // Generate PictographData
+  await generateTypeScript(
+    "schemas/pictograph-data.json",
+    "generated/typescript/pictograph-data.ts"
+  );
+
   console.log("\n✨ TypeScript generation complete!");
 }
 
