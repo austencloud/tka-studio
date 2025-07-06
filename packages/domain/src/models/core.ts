@@ -1,9 +1,9 @@
 /**
  * Core Domain Models for TKA
- * 
+ *
  * These are the fundamental business models converted from Python to TypeScript.
  * They maintain exact compatibility with the desktop application's domain models.
- * 
+ *
  * Source: src/desktop/modern/src/domain/models/core_models.py
  */
 
@@ -16,33 +16,33 @@ export enum MotionType {
   ANTI = "anti",
   FLOAT = "float",
   DASH = "dash",
-  STATIC = "static"
+  STATIC = "static",
 }
 
 export enum HandMotionType {
   SHIFT = "shift",
   DASH = "dash",
-  STATIC = "static"
+  STATIC = "static",
 }
 
 export enum HandPath {
   CLOCKWISE = "cw",
   COUNTER_CLOCKWISE = "ccw",
   DASH = "dash",
-  STATIC = "static"
+  STATIC = "static",
 }
 
 export enum RotationDirection {
   CLOCKWISE = "cw",
   COUNTER_CLOCKWISE = "ccw",
-  NO_ROTATION = "no_rot"
+  NO_ROTATION = "no_rot",
 }
 
 export enum Orientation {
   IN = "in",
   OUT = "out",
   CLOCK = "clock",
-  COUNTER = "counter"
+  COUNTER = "counter",
 }
 
 export enum Location {
@@ -53,7 +53,7 @@ export enum Location {
   NORTHEAST = "ne",
   SOUTHEAST = "se",
   SOUTHWEST = "sw",
-  NORTHWEST = "nw"
+  NORTHWEST = "nw",
 }
 
 export enum GridPosition {
@@ -93,7 +93,7 @@ export enum GridPosition {
   GAMMA13 = "gamma13",
   GAMMA14 = "gamma14",
   GAMMA15 = "gamma15",
-  GAMMA16 = "gamma16"
+  GAMMA16 = "gamma16",
 }
 
 export enum VTGMode {
@@ -102,7 +102,7 @@ export enum VTGMode {
   TOG_SAME = "TS",
   TOG_OPP = "TO",
   QUARTER_SAME = "QS",
-  QUARTER_OPP = "QO"
+  QUARTER_OPP = "QO",
 }
 
 export enum ElementalType {
@@ -111,7 +111,7 @@ export enum ElementalType {
   EARTH = "earth",
   AIR = "air",
   SUN = "sun",
-  MOON = "moon"
+  MOON = "moon",
 }
 
 export enum LetterType {
@@ -123,17 +123,67 @@ export enum LetterType {
   TYPE6 = "Type6",
   TYPE7 = "Type7",
   TYPE8 = "Type8",
-  TYPE9 = "Type9"
+  TYPE9 = "Type9",
 }
 
 export enum ArrowColor {
   RED = "red",
-  BLUE = "blue"
+  BLUE = "blue",
 }
 
 export enum GridMode {
   DIAMOND = "diamond",
-  BOX = "box"
+  BOX = "box",
+}
+
+export enum Letter {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
+  G = "G",
+  H = "H",
+  I = "I",
+  J = "J",
+  K = "K",
+  L = "L",
+  M = "M",
+  N = "N",
+  O = "O",
+  P = "P",
+  Q = "Q",
+  R = "R",
+  S = "S",
+  T = "T",
+  U = "U",
+  V = "V",
+  W = "W",
+  X = "X",
+  Y = "Y",
+  Z = "Z",
+  Σ = "Σ",
+  Δ = "Δ",
+  θ = "θ",
+  Ω = "Ω",
+  W_DASH = "W-",
+  X_DASH = "X-",
+  Y_DASH = "Y-",
+  Z_DASH = "Z-",
+  Σ_DASH = "Σ-",
+  Δ_DASH = "Δ-",
+  θ_DASH = "θ-",
+  Ω_DASH = "Ω-",
+  Φ = "Φ",
+  Ψ = "Ψ",
+  Λ = "Λ",
+  Φ_DASH = "Φ-",
+  Ψ_DASH = "Ψ-",
+  Λ_DASH = "Λ-",
+  α = "α",
+  β = "β",
+  Γ = "Γ",
 }
 
 // ============================================================================
@@ -160,19 +210,19 @@ export interface MotionData {
 export interface GlyphData {
   // VTG glyph data
   vtg_mode?: VTGMode | null;
-  
+
   // Elemental glyph data
   elemental_type?: ElementalType | null;
-  
+
   // TKA glyph data
   letter_type?: LetterType | null;
   has_dash: boolean;
   turns_data?: string | null;
-  
+
   // Start-to-end position glyph data
   start_position?: string | null;
   end_position?: string | null;
-  
+
   // Visibility flags
   show_elemental: boolean;
   show_vtg: boolean;
@@ -188,27 +238,27 @@ export interface GlyphData {
  * Convert orientation value to Orientation enum with backward compatibility.
  */
 export function convertOrientation(value: any): Orientation {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const valueLower = value.toLowerCase().trim();
     const orientationMap: Record<string, Orientation> = {
-      'in': Orientation.IN,
-      'out': Orientation.OUT,
-      'clock': Orientation.CLOCK,
-      'counter': Orientation.COUNTER
+      in: Orientation.IN,
+      out: Orientation.OUT,
+      clock: Orientation.CLOCK,
+      counter: Orientation.COUNTER,
     };
     return orientationMap[valueLower] || Orientation.IN;
   }
-  
-  if (typeof value === 'number') {
+
+  if (typeof value === "number") {
     const angleMap: Record<number, Orientation> = {
       0: Orientation.IN,
       90: Orientation.CLOCK,
       180: Orientation.OUT,
-      270: Orientation.COUNTER
+      270: Orientation.COUNTER,
     };
     return angleMap[Math.round(value)] || Orientation.IN;
   }
-  
+
   return Orientation.IN;
 }
 
@@ -223,7 +273,7 @@ export function createDefaultMotionData(): MotionData {
     end_loc: Location.EAST,
     turns: 0,
     start_ori: Orientation.IN,
-    end_ori: Orientation.IN
+    end_ori: Orientation.IN,
   };
 }
 
@@ -242,6 +292,6 @@ export function createDefaultGlyphData(): GlyphData {
     show_elemental: true,
     show_vtg: true,
     show_tka: true,
-    show_positions: true
+    show_positions: true,
   };
 }

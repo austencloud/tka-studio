@@ -29,6 +29,7 @@
     "vite": "^6.0.0"
   },
   "dependencies": {
+    "@tka/domain": "workspace:*",
     "@types/suncalc": "^1.9.2",
     "suncalc": "^1.9.0"
   }

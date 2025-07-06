@@ -1,7 +1,7 @@
 <!-- src/lib/components/SequenceWorkbench/BeatFrame/SelectionBorderOverlay.svelte -->
 <script lang="ts">
 	import { LetterType } from '../../types/LetterType.js';
-	import type { Letter } from '../types/Letter.js';
+	import type { Letter } from '@tka/domain';
 	import type { PictographData } from '../types/PictographData.js';
 
 	// Props using Svelte 5 runes
