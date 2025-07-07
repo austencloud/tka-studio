@@ -1,8 +1,7 @@
 from PyQt6.QtCore import QRunnable
 
-from main_window.main_widget.main_background_widget.backgrounds.snowfall.snowflake import (
-    Snowflake,
-)
+from main_window.main_widget.main_background_widget.backgrounds.snowfall.new.snowflake import Snowflake
+
 
 
 class SnowflakeUpdateTask(QRunnable):

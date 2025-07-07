@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from main_window.settings_manager.settings_manager import SettingsManager
+    from legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
 
 
 class SequenceShareSettings:
     DEFAULT_SEQUENCE_SHARING_SETTINGS = {"recipients": []}
 
-    def __init__(self, settings_manager: "SettingsManager") -> None:
+    def __init__(self, settings_manager: "LegacySettingsManager") -> None:
         self.settings_manager = settings_manager
 
     def get_saved_recipients(self):

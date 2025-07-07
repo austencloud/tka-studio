@@ -1,3 +1,6 @@
+from data.constants import SEQUENCE_START_POSITION, BLUE_ATTRS, RED_ATTRS, TURNS
+
+
 class TurnPatternConverter:
     def sequence_to_pattern(self, sequence: list[dict]) -> str:
         """
@@ -9,8 +12,8 @@ class TurnPatternConverter:
             if SEQUENCE_START_POSITION in item or "prop_type" in item:
                 continue  # Skip the item with the starting position key
 
-            blue_attributes = item[BLUE_ATTRIBUTES]
-            red_attributes = item[RED_ATTRIBUTES]
+            blue_attributes = item[BLUE_ATTRS]
+            red_attributes = item[RED_ATTRS]
             blue_turns = blue_attributes.get(TURNS, 0)
             red_turns = red_attributes.get(TURNS, 0)
 

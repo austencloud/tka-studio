@@ -122,8 +122,18 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         if not arrow_data.motion_data:
             return False
 
-        motion_type = arrow_data.motion_data.motion_type.value.lower()
-        prop_rot_dir = arrow_data.motion_data.prop_rot_dir.value.lower()
+        # Handle both enum and string values for backward compatibility
+        motion_type = arrow_data.motion_data.motion_type
+        if hasattr(motion_type, 'value'):
+            motion_type = motion_type.value.lower()
+        else:
+            motion_type = str(motion_type).lower()
+        
+        prop_rot_dir = arrow_data.motion_data.prop_rot_dir
+        if hasattr(prop_rot_dir, 'value'):
+            prop_rot_dir = prop_rot_dir.value.lower()
+        else:
+            prop_rot_dir = str(prop_rot_dir).lower()
 
         if motion_type == "anti":
             return self.mirror_conditions["anti"].get(prop_rot_dir, False)

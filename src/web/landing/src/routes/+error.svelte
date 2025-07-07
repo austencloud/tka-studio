@@ -8,7 +8,7 @@
     mounted = true;
   });
   
-  $: status = $page.error?.status || 500;
+  $: status = ($page.error as any)?.status || 500;
   $: message = $page.error?.message || 'Something went wrong';
 </script>
 

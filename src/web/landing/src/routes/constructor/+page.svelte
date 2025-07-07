@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import ConstructTab from '../../lib/constructor/ConstructTab.svelte';
+  import ConstructTab from '$lib/features/constructor/ConstructTab.svelte';
 
   let mounted = false;
   let constructorHeight = 'calc(100vh - 80px)'; // Default fallback

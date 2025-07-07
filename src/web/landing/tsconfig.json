@@ -9,17 +9,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "baseUrl": ".",
-    "paths": {
-      "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"],
-      "@tka/domain": ["../../../packages/domain/src/index.ts"],
-      "@tka/domain/*": ["../../../packages/domain/src/*"],
-      "$lib/core/*": ["src/lib/core/*"],
-      "$lib/shared/*": ["src/lib/core/shared/*"],
-      "$lib/features/*": ["src/lib/features/*"]
-    }
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   }
 }

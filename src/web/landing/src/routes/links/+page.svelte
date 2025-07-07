@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { modalState, modalActions, type ResourceModalData } from '$lib/stores/modalStore';
+  import { modalState, modalActions, type ResourceModalData } from '$lib/core/shared/stores/modalStore';
   import ResourceModal from '$lib/components/resource-guide/ResourceModal.svelte';
   import VTGContent from '$lib/components/resource-guide/content/VTGContent.svelte';
 

@@ -1,54 +1,44 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://tka.dev/schemas/motion-data.json",
-  "title": "MotionData",
-  "description": "Immutable motion data for props and arrows. Replaces complex motion attribute dictionaries.",
+  "title": "MotionData v2",
+  "description": "Immutable motion data based on modern desktop domain model",
   "type": "object",
   "properties": {
-    "motion_type": {
-      "type": "string",
-      "enum": ["pro", "anti", "float", "dash", "static"],
-      "description": "Type of motion being performed"
+    "motionType": {
+      "$ref": "core-enums.json#/definitions/MotionType"
     },
-    "prop_rot_dir": {
-      "type": "string", 
-      "enum": ["cw", "ccw", "no_rot"],
-      "description": "Direction of prop rotation"
+    "propRotDir": {
+      "$ref": "core-enums.json#/definitions/RotationDirection"
     },
-    "start_loc": {
-      "type": "string",
-      "enum": ["n", "e", "s", "w", "ne", "nw", "se", "sw"],
-      "description": "Starting location on the grid"
+    "startLoc": {
+      "$ref": "core-enums.json#/definitions/Location"
     },
-    "end_loc": {
-      "type": "string", 
-      "enum": ["n", "e", "s", "w", "ne", "nw", "se", "sw"],
-      "description": "Ending location on the grid"
+    "endLoc": {
+      "$ref": "core-enums.json#/definitions/Location"
     },
     "turns": {
       "type": "number",
       "minimum": 0,
       "description": "Number of turns in the motion"
     },
-    "start_ori": {
-      "type": "string",
-      "enum": ["in", "out", "clock", "counter"],
-      "description": "Starting orientation"
+    "startOri": {
+      "$ref": "core-enums.json#/definitions/Orientation",
+      "default": "in"
     },
-    "end_ori": {
-      "type": "string",
-      "enum": ["in", "out", "clock", "counter"], 
-      "description": "Ending orientation"
+    "endOri": {
+      "$ref": "core-enums.json#/definitions/Orientation",
+      "default": "in"
     }
   },
   "required": [
-    "motion_type",
-    "prop_rot_dir", 
-    "start_loc",
-    "end_loc",
+    "motionType",
+    "propRotDir",
+    "startLoc",
+    "endLoc",
     "turns",
-    "start_ori",
-    "end_ori"
+    "startOri",
+    "endOri"
   ],
   "additionalProperties": false
 }

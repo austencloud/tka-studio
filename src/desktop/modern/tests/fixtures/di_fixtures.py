@@ -18,7 +18,7 @@ modern_src = Path(__file__).parent.parent.parent / "src"
 def clean_di_container():
     """Provide a clean DI container for testing."""
     try:
-        from desktop.core.dependency_injection.di_container import (
+        from core.dependency_injection.di_container import (
             DIContainer,
             reset_container,
         )
@@ -42,17 +42,17 @@ def clean_di_container():
 def configured_di_container():
     """Provide a DI container with basic services configured."""
     try:
-        from desktop.application.services.layout.layout_management_service import (
+        from application.services.layout.layout_management_service import (
             LayoutManagementService,
         )
-        from desktop.application.services.ui.ui_state_management_service import (
+        from application.services.ui.ui_state_management_service import (
             UIStateManagementService,
         )
-        from desktop.core.dependency_injection.di_container import (
+        from core.dependency_injection.di_container import (
             DIContainer,
             reset_container,
         )
-        from desktop.core.interfaces.core_services import (
+        from core.interfaces.core_services import (
             ILayoutService,
             IUIStateManagementService,
         )
@@ -86,17 +86,17 @@ def workbench_di_container():
             configure_workbench_services,
         )
 
-        from desktop.application.services.layout.layout_management_service import (
+        from application.services.layout.layout_management_service import (
             LayoutManagementService,
         )
-        from desktop.application.services.ui.ui_state_management_service import (
+        from application.services.ui.ui_state_management_service import (
             UIStateManagementService,
         )
-        from desktop.core.dependency_injection.di_container import (
+        from core.dependency_injection.di_container import (
             DIContainer,
             reset_container,
         )
-        from desktop.core.interfaces.core_services import (
+        from core.interfaces.core_services import (
             ILayoutService,
             IUIStateManagementService,
         )
@@ -129,7 +129,7 @@ def workbench_di_container():
 def event_bus():
     """Provide a clean event bus for testing."""
     try:
-        from desktop.core.events import get_event_bus, reset_event_bus
+        from core.events import get_event_bus, reset_event_bus
 
         # Reset event bus to clean state
         reset_event_bus()

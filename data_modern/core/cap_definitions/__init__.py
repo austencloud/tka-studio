@@ -10,13 +10,14 @@ Modules:
 """
 
 try:
-    from .halved_caps import halved_CAPs
-    from .quartered_caps import quartered_CAPs
+    from .halved_CAPs import halved_CAPs
+    from .quartered_CAPs import quartered_CAPs
+    
 except ImportError:
     pass
 
 __all__ = [
-    "halved_caps",
-    "quartered_caps", 
+    "halved_CAPs",
+    "quartered_CAPs",
     "cap_executors"
 ]

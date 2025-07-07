@@ -16,8 +16,8 @@
     errorLogger,
     ErrorSeverity,
     ErrorCategory
-  } from '../core/logging.js';
-	import LogViewer from '../components/logging/LogViewer.svelte';
+  } from '../../logging';
+	// import LogViewer from '../components/logging/LogViewer.svelte'; // TODO: Create LogViewer component
   
   // Test basic logging
   function testBasicLogging() {

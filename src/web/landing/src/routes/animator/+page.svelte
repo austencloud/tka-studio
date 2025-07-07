@@ -2,24 +2,33 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	// Import modular components and utilities
-	import type { PropState, CanvasState, MessageType } from '../../lib/animator/types.js';
-	import { AnimationEngine } from '../../lib/animator/animation-engine.js';
-	import { processSequenceData } from '../../lib/animator/sequence-processor.js';
-	import { loadAllImages, render, drawErrorMessage, drawLoadingMessage } from '../../lib/animator/canvas-renderer.js';
-	
-	// Import constants and default data
-	import { CANVAS_SIZE, defaultSequence, title, description } from '../../lib/animator/constants.js';
+	// Import all animation types and functions
+	import type {
+		PropState,
+		CanvasState,
+		MessageType
+	} from '$lib/core/animation/types';
+	import {
+		AnimationEngine,
+		processSequenceData,
+		loadAllImages,
+		render as renderCanvas,
+		drawErrorMessage,
+		drawLoadingMessage,
+		CANVAS_SIZE,
+		defaultSequence,
+		title,
+		description
+	} from '$lib/core/animation';
 
-	
 	// Import UI components
-	import SequenceInput from '../../lib/animator/SequenceInput.svelte';
-	import AnimationCanvas from '../../lib/animator/AnimationCanvas.svelte';
-	import PlaybackControls from '../../lib/animator/PlaybackControls.svelte';
-	import SpeedControl from '../../lib/animator/SpeedControl.svelte';
-	import BeatControl from '../../lib/animator/BeatControl.svelte';
-	import LoopControl from '../../lib/animator/LoopControl.svelte';
-  	import InfoDisplay from '../../lib/animator/InfoDisplay.svelte';
+	import SequenceInput from '$lib/core/animation/SequenceInput.svelte';
+	import AnimationCanvas from '$lib/core/animation/AnimationCanvas.svelte';
+	import PlaybackControls from '$lib/core/animation/PlaybackControls.svelte';
+	import SpeedControl from '$lib/core/animation/SpeedControl.svelte';
+	import BeatControl from '$lib/core/animation/BeatControl.svelte';
+	import LoopControl from '$lib/core/animation/LoopControl.svelte';
+  	import InfoDisplay from '$lib/core/animation/InfoDisplay.svelte';
 
 	// State using Svelte 5 runes
 	let isClient = $state(false);
@@ -163,7 +172,7 @@
 
 	// Animation callbacks
 	function handleRender() {
-		render(canvasState, bluePropState, redPropState);
+		renderCanvas(canvasState, bluePropState, redPropState);
 	}
 
 	function handleUIUpdate() {

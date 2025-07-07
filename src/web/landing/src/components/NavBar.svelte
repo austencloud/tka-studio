@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SettingsModal from '../lib/components/SettingsModal.svelte';
+  import SettingsModal from '$lib/core/shared/components/SettingsModal.svelte';
 
   interface Props {
     currentBackground?: string;

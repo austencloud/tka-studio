@@ -4,15 +4,15 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from typing import TYPE_CHECKING
 from data.constants import IN, COUNTER, OUT, CLOCK
 from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import LegacyOptionPicker
 from .ori_setter import OrientationSetter
 from .ori_text_label import OrientationTextLabel
 from .clickable_ori_label import ClickableOriLabel
 from .rotate_buttons_widget import RotateButtonsWidget
 
+
 if TYPE_CHECKING:
-    from main_window.main_widget.construct_tab.option_picker.widgets.option_picker_widget import (
-        OptionPickerWidget,
-    )
+
     from ..ori_picker_box import OriPickerBox
 
 
@@ -22,7 +22,7 @@ class OriPickerWidget(QWidget):
     ori_adjusted = pyqtSignal(str)
     current_orientation_index = 0
     orientations = [IN, COUNTER, OUT, CLOCK]
-    option_picker: "OptionPickerWidget" = None
+    option_picker: "LegacyOptionPicker" = None
 
     def __init__(self, ori_picker_box: "OriPickerBox") -> None:
         super().__init__(ori_picker_box)

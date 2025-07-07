@@ -32,8 +32,8 @@ def test_real_launcher_integration():
     logger.info("🧪 Testing dock integration with real TKA launcher...")
 
     try:
-        from launcher_window import TKAModernWindow
-        from tka_integration import TKAIntegrationService
+        from ui.windows.launcher_window import TKALauncherWindow as TKAModernWindow
+        from integration.tka_integration import TKAIntegrationService
 
         # Initialize real TKA integration
         logger.info("🔗 Initializing TKA integration...")
@@ -91,7 +91,7 @@ def test_application_launch_consistency():
     logger.info("🧪 Testing application launch consistency...")
 
     try:
-        from tka_integration import TKAIntegrationService
+        from integration.tka_integration import TKAIntegrationService
 
         # Initialize TKA integration
         tka_integration = TKAIntegrationService()

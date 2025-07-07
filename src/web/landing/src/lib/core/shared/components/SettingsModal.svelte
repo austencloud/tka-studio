@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
+  import { browser } from '$app/environment';
   import BackgroundSelector from './BackgroundSelector.svelte';
   
   interface Props {
@@ -11,9 +12,15 @@
   
   let { isOpen = false, currentBackground = 'deepOcean', onClose, onBackgroundChange }: Props = $props();
   
-  let modalElement: HTMLDivElement;
+  let modalElement = $state<HTMLDivElement>();
   let firstFocusableElement: HTMLElement;
   let lastFocusableElement: HTMLElement;
+  let mounted = $state(false);
+  
+  // Only render on client to avoid hydration issues
+  onMount(() => {
+    mounted = true;
+  });
   
   // Handle escape key and focus trapping
   onMount(() => {
@@ -69,22 +76,15 @@
     }
   });
   
-  function handleBackdropClick(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      onClose?.();
-    }
-  }
-  
   function handleBackgroundChange(event: CustomEvent) {
     onBackgroundChange?.(event.detail);
   }
 </script>
 
-{#if isOpen}
+{#if mounted && isOpen}
   <!-- Modal backdrop -->
   <div 
     class="modal-backdrop" 
-    onclick={handleBackdropClick}
     role="dialog" 
     aria-modal="true" 
     aria-labelledby="settings-title"

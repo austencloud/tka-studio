@@ -1,6 +1,6 @@
 // Canvas rendering utilities for the pictograph animator
 
-import type { PropState, CanvasState } from "./types.js";
+import type { PropState, CanvasState } from "./types";
 import {
   CANVAS_SIZE,
   GRID_VIEWBOX_SIZE,
@@ -11,7 +11,7 @@ import {
   STAFF_CENTER_Y,
   gridSvgString,
   staffBaseSvgString,
-} from "./constants.js";
+} from "./constants";
 
 const gridScaleFactor = CANVAS_SIZE / GRID_VIEWBOX_SIZE;
 const scaledHalfwayRadius = GRID_HALFWAY_POINT_OFFSET * gridScaleFactor;

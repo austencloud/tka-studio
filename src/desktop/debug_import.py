@@ -57,13 +57,13 @@ except Exception as e:
 
 try:
     print("\n3. Testing option picker component imports...")
-    from presentation.components.option_picker.option_picker_widget import (
+    from presentation.components.option_picker.core.option_picker_widget import (
         ModernOptionPickerWidget,
     )
 
     print("✓ ModernOptionPickerWidget imported")
 
-    from presentation.components.option_picker.option_picker_filter import (
+    from presentation.components.option_picker.components.filters.option_filter import (
         OptionPickerFilter,
     )
 

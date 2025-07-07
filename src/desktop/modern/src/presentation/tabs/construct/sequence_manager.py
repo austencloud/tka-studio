@@ -128,8 +128,8 @@ class SequenceManager(QObject):
                     start_loc=Location(blue_attrs.get("start_loc", "s")),
                     end_loc=Location(blue_attrs.get("end_loc", "s")),
                     turns=float(blue_attrs.get("turns", 0)),
-                    start_ori=blue_attrs.get("start_ori", "in"),
-                    end_ori=blue_attrs.get("end_ori", "in"),
+                    start_ori=Orientation(blue_attrs.get("start_ori", "in")),
+                    end_ori=Orientation(blue_attrs.get("end_ori", "in")),
                 )
             except Exception as e:
                 print(f"⚠️ Failed to create blue motion data: {e}")
@@ -139,6 +139,8 @@ class SequenceManager(QObject):
                     prop_rot_dir=RotationDirection.NO_ROTATION,
                     start_loc=Location.SOUTH,
                     end_loc=Location.SOUTH,
+                    start_ori=Orientation.IN,
+                    end_ori=Orientation.IN,
                 )
 
         # Convert red attributes to MotionData
@@ -154,8 +156,8 @@ class SequenceManager(QObject):
                     start_loc=Location(red_attrs.get("start_loc", "s")),
                     end_loc=Location(red_attrs.get("end_loc", "s")),
                     turns=float(red_attrs.get("turns", 0)),
-                    start_ori=red_attrs.get("start_ori", "in"),
-                    end_ori=red_attrs.get("end_ori", "in"),
+                    start_ori=Orientation(red_attrs.get("start_ori", "in")),
+                    end_ori=Orientation(red_attrs.get("end_ori", "in")),
                 )
             except Exception as e:
                 print(f"⚠️ Failed to create red motion data: {e}")
@@ -165,6 +167,8 @@ class SequenceManager(QObject):
                     prop_rot_dir=RotationDirection.NO_ROTATION,
                     start_loc=Location.SOUTH,
                     end_loc=Location.SOUTH,
+                    start_ori=Orientation.IN,
+                    end_ori=Orientation.IN,
                 )
 
         # Create BeatData with all the extracted data

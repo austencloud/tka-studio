@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tka.dev/schemas/sequence-data.json",
+  "title": "SequenceData v2",
+  "description": "Complete kinetic sequence data based on modern desktop domain model",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this sequence"
+    },
+    "name": {
+      "type": "string",
+      "default": "",
+      "description": "Human-readable name for the sequence"
+    },
+
+    "beats": {
+      "type": "array",
+      "items": {
+        "$ref": "beat-data.json"
+      },
+      "default": [],
+      "description": "Array of beats in sequence order"
+    },
+    "createdAt": {
+      "anyOf": [{ "type": "string" }, { "type": "null" }],
+      "description": "Creation timestamp"
+    },
+    "updatedAt": {
+      "anyOf": [{ "type": "string" }, { "type": "null" }],
+      "description": "Last update timestamp"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0",
+      "description": "Schema version"
+    },
+    "length": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 8,
+      "description": "Sequence length"
+    },
+    "difficulty": {
+      "anyOf": [{ "type": "string" }, { "type": "null" }],
+      "description": "Difficulty level"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Sequence tags"
+    }
+  },
+  "required": ["id", "name", "beats"],
+  "additionalProperties": false
+}

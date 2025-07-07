@@ -1,71 +1,64 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://tka.dev/schemas/beat-data-v2.json",
+  "$id": "https://tka.dev/schemas/beat-data.json",
   "title": "BeatData v2",
   "description": "Pure business data for a single beat based on modern desktop domain model",
   "type": "object",
   "properties": {
-    "id": {
-      "type": "string",
-      "description": "Unique identifier for this beat"
-    },
-    "beat_number": {
+    "beatNumber": {
       "type": "integer",
       "minimum": 0,
       "description": "Position in sequence (0 for start position, 1+ for regular beats)"
     },
     "letter": {
-      "anyOf": [
-        {"type": "string"},
-        {"type": "null"}
-      ],
+      "anyOf": [{ "type": "string" }, { "type": "null" }],
       "description": "TKA letter for this beat"
     },
     "duration": {
       "type": "number",
-      "minimum": 0,
-      "exclusiveMinimum": true,
+      "exclusiveMinimum": 0,
       "default": 1.0,
       "description": "Duration of this beat in time units"
     },
-    "blue_motion": {
-      "anyOf": [
-        {"$ref": "motion-data-v2.json"},
-        {"type": "null"}
-      ],
+    "blueMotion": {
+      "anyOf": [{ "$ref": "motion-data.json" }, { "type": "null" }],
       "description": "Blue motion data"
     },
-    "red_motion": {
-      "anyOf": [
-        {"$ref": "motion-data-v2.json"},
-        {"type": "null"}
-      ],
+    "redMotion": {
+      "anyOf": [{ "$ref": "motion-data.json" }, { "type": "null" }],
       "description": "Red motion data"
     },
-    "glyph_data": {
-      "anyOf": [
-        {"$ref": "glyph-data.json"},
-        {"type": "null"}
-      ],
+    "pictographData": {
+      "anyOf": [{ "type": "object" }, { "type": "null" }],
+      "description": "Pictograph rendering data"
+    },
+    "glyphData": {
+      "anyOf": [{ "type": "object" }, { "type": "null" }],
       "description": "Glyph rendering data"
     },
-    "blue_reversal": {
+    "blueReversal": {
       "type": "boolean",
       "default": false,
       "description": "Whether blue motion is reversed"
     },
-    "red_reversal": {
+    "redReversal": {
       "type": "boolean",
       "default": false,
       "description": "Whether red motion is reversed"
     },
-    "is_blank": {
+    "filled": {
       "type": "boolean",
       "default": false,
-      "description": "Whether this is a blank/empty beat"
+      "description": "Whether this beat is filled/complete"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Tags associated with this beat"
     },
     "metadata": {
-      "type": "object",
+      "anyOf": [{ "type": "object" }, { "type": "null" }],
       "description": "Additional metadata for this beat",
       "additionalProperties": true,
       "properties": {
@@ -77,9 +70,6 @@
       }
     }
   },
-  "required": [
-    "id",
-    "beat_number"
-  ],
+  "required": ["beatNumber", "letter", "blueMotion", "redMotion"],
   "additionalProperties": false
 }

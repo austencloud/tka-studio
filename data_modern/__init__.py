@@ -30,5 +30,6 @@ __all__ = [
     "layouts",
     "dictionary",
     "settings",
-    "runtime"
+    "runtime",
+    "domain"
 ]

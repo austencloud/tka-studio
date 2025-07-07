@@ -32,8 +32,8 @@
   --shadow-colored: rgba(118, 75, 162, 0.3);
 
   /* Typography */
-  --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  --font-family-primary:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-heading: "Archivo Black", Arial, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -149,13 +149,15 @@
   --theme-surface-tint: rgba(200, 220, 255, 0.03); /* Cool white tint */
 
   /* Glassmorphism Shadows */
-  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08),
+  --shadow-glass:
+    0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  --shadow-glass-hover: 0 12px 40px rgba(0, 0, 0, 0.15),
-    0 6px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  --shadow-glass-colored: 0 8px 32px var(--shadow-colored),
-    0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-glass-hover:
+    0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --shadow-glass-colored:
+    0 8px 32px var(--shadow-colored), 0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
   /* Enhanced Transitions & Micro-interactions */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -224,6 +226,10 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Ensure full viewport coverage for backgrounds */
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll issues */
 }
 
 body {
@@ -236,7 +242,9 @@ body {
   font-size: var(--font-size-base);
   line-height: 1.6;
   min-height: 100vh;
+  width: 100%;
   position: relative; /* For background positioning */
+  overflow-x: hidden; /* Prevent horizontal scroll issues */
 }
 
 /* Typography */

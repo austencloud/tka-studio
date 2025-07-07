@@ -203,7 +203,7 @@ def detect_parallel_testing_mode():
 def main():
     configure_import_paths()
 
-    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+    from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
     )
     from PyQt6.QtCore import QTimer

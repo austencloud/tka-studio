@@ -145,25 +145,7 @@ class TKASystemTray:
         self.hotkey_thread.f5_pressed.connect(self._toggle_launcher)
         self.hotkey_thread.start()
         
-    def _show_launcher(self):
-        """Show the simple launcher"""
-        try:
-            if not self.launcher_app:
-                # Import and create launcher
-                from simple_launcher import TKALauncherApp
-                self.launcher_app = TKALauncherApp()
-                
-                # Create launcher window without starting event loop
-                from simple_launcher import SimpleTKALauncher
-                self.launcher_app.launcher = SimpleTKALauncher()
-                
-            # Show launcher
-            self.launcher_app.show_launcher()
-            logger.info("👁️ Launcher shown from tray")
-            
-        except Exception as e:
-            logger.error(f"❌ Failed to show launcher: {e}")
-    
+
     def _toggle_launcher(self):
         """Toggle launcher visibility"""
         try:

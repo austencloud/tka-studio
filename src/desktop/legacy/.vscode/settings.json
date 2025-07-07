@@ -1,0 +1,11 @@
+{
+  "python.analysis.extraPaths": ["./src"],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.defaultInterpreterPath": "C:/Python312/python.exe",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "warning",
+    "reportMissingModuleSource": "none"
+  }
+}

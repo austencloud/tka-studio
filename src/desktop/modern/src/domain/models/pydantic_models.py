@@ -150,6 +150,9 @@ class SequenceData(TKABaseModel):
     length: int = Field(ge=1, default=8)
     difficulty: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
+
+    # Additional metadata for extensibility
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
     
     def add_beat(self, beat: BeatData) -> 'SequenceData':
         """Add a beat and return a new sequence (immutable)."""
@@ -161,6 +164,10 @@ class SequenceData(TKABaseModel):
         new_beats = self.beats.copy()
         new_beats[index] = beat
         return self.model_copy(update={'beats': new_beats})
+
+    def update(self, **kwargs) -> 'SequenceData':
+        """Update sequence fields and return a new sequence (immutable)."""
+        return self.model_copy(update=kwargs)
 
 
 # Factory functions for easy creation

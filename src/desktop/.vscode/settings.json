@@ -2,7 +2,8 @@
   "python.analysis.extraPaths": [
     "${workspaceFolder}/src",
     "./v2/src",
-    "./modern/src"
+    "./modern/src",
+    "./legacy/src"
   ],
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.autoImportCompletions": true,

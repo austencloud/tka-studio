@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CanvasState } from './types.js';
+	import type { CanvasState } from './types';
 
 	interface Props {
 		canvasState: CanvasState;

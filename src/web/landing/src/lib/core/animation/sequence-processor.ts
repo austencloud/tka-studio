@@ -1,6 +1,6 @@
 // Sequence processing and data validation utilities
 
-import type { StepDefinition, StepEndpoints } from "./types.js";
+import type { StepDefinition, StepEndpoints } from "./types";
 import {
   mapPositionToAngle,
   mapOrientationToAngle,
@@ -9,7 +9,7 @@ import {
   calculateAntispinTargetAngle,
   calculateStaticStaffAngle,
   calculateDashTargetAngle,
-} from "./math-utils.js";
+} from "./math-utils";
 
 // Core logic for calculating step endpoints
 export function calculateStepEndpoints(

@@ -45,38 +45,77 @@ class SequenceDataConverter:
         red_attrs = beat_dict.get("red_attributes", {})
 
         # Create motion data for blue and red
-        # CORRECTED: Handle location and orientation conversion properly
-        def convert_location(loc_str: str) -> str:
-            """Convert legacy location strings to valid Location enum values"""
-            # Location strings are already correct: "n", "s", "e", "w", "ne", "nw", "se", "sw"
-            # Do NOT convert "alpha", "beta", "gamma" - those are position TYPES, not locations
-            return str(loc_str) if loc_str else "n"
+        # CORRECTED: Convert strings to proper enum values
+        def convert_motion_type(motion_str: str) -> MotionType:
+            """Convert motion type string to MotionType enum"""
+            motion_map = {
+                "pro": MotionType.PRO,
+                "anti": MotionType.ANTI,
+                "static": MotionType.STATIC,
+                "dash": MotionType.DASH,
+                "float": MotionType.FLOAT,
+            }
+            return motion_map.get(motion_str, MotionType.STATIC)
+
+        def convert_location(loc_str: str) -> Location:
+            """Convert location string to Location enum"""
+            location_map = {
+                "n": Location.NORTH,
+                "s": Location.SOUTH,
+                "e": Location.EAST,
+                "w": Location.WEST,
+                "ne": Location.NORTHEAST,
+                "nw": Location.NORTHWEST,
+                "se": Location.SOUTHEAST,
+                "sw": Location.SOUTHWEST,
+            }
+            return location_map.get(loc_str, Location.NORTH)
+
+        def convert_rotation_dir(rot_str: str) -> RotationDirection:
+            """Convert rotation direction string to RotationDirection enum"""
+            rotation_map = {
+                "cw": RotationDirection.CLOCKWISE,
+                "ccw": RotationDirection.COUNTER_CLOCKWISE,
+                "no_rot": RotationDirection.NO_ROTATION,
+            }
+            return rotation_map.get(rot_str, RotationDirection.NO_ROTATION)
+
+        def convert_orientation(ori_str: str) -> Orientation:
+            """Convert orientation string to Orientation enum"""
+            orientation_map = {
+                "in": Orientation.IN,
+                "out": Orientation.OUT,
+                "clock": Orientation.CLOCK,
+                "counter": Orientation.COUNTER,
+            }
+            return orientation_map.get(ori_str, Orientation.IN)
 
         blue_motion = MotionData(
-            motion_type=blue_attrs.get("motion_type", "static"),
+            motion_type=convert_motion_type(blue_attrs.get("motion_type", "static")),
             start_loc=convert_location(blue_attrs.get("start_loc", "n")),
             end_loc=convert_location(blue_attrs.get("end_loc", "n")),
-            start_ori=blue_attrs.get("start_ori", "in"),
-            end_ori=blue_attrs.get("end_ori", "in"),
-            prop_rot_dir=blue_attrs.get("prop_rot_dir", "no_rot"),
+            start_ori=convert_orientation(blue_attrs.get("start_ori", "in")),
+            end_ori=convert_orientation(blue_attrs.get("end_ori", "in")),
+            prop_rot_dir=convert_rotation_dir(blue_attrs.get("prop_rot_dir", "no_rot")),
             turns=blue_attrs.get("turns", 0),
         )
 
         red_motion = MotionData(
-            motion_type=red_attrs.get("motion_type", "static"),
+            motion_type=convert_motion_type(red_attrs.get("motion_type", "static")),
             start_loc=convert_location(red_attrs.get("start_loc", "n")),
             end_loc=convert_location(red_attrs.get("end_loc", "n")),
-            start_ori=red_attrs.get("start_ori", "in"),
-            end_ori=red_attrs.get("end_ori", "in"),
-            prop_rot_dir=red_attrs.get("prop_rot_dir", "no_rot"),
+            start_ori=convert_orientation(red_attrs.get("start_ori", "in")),
+            end_ori=convert_orientation(red_attrs.get("end_ori", "in")),
+            prop_rot_dir=convert_rotation_dir(red_attrs.get("prop_rot_dir", "no_rot")),
             turns=red_attrs.get("turns", 0),
         )
 
-        # Create glyph data as dictionary (Pydantic models use Dict[str, Any])
-        glyph_data = {
-            "start_position": start_pos,
-            "end_position": end_pos,
-        }
+        # Create glyph data as proper GlyphData object
+        from domain.models.core_models import GlyphData
+        glyph_data = GlyphData(
+            start_position=start_pos,
+            end_position=end_pos,
+        )
 
         # Create complete beat data
         beat_data = BeatData(
@@ -106,20 +145,37 @@ class SequenceDataConverter:
 
         # Create motion data for blue and red (start positions are typically static)
         # CORRECTED: Handle location and orientation conversion properly
-        def convert_location(loc_str: str) -> str:
+        def convert_location(loc_str: str) -> Location:
             """Convert legacy location strings to valid Location enum values"""
             # Location strings are already correct: "n", "s", "e", "w", "ne", "nw", "se", "sw"
             # Do NOT convert "alpha", "beta", "gamma" - those are position TYPES, not locations
-            return str(loc_str) if loc_str else "n"
+            location_map = {
+                "n": Location.NORTH,
+                "s": Location.SOUTH,
+                "e": Location.EAST,
+                "w": Location.WEST,
+                "ne": Location.NORTHEAST,
+                "nw": Location.NORTHWEST,
+                "se": Location.SOUTHEAST,
+                "sw": Location.SOUTHWEST,
+            }
+            return location_map.get(loc_str, Location.NORTH)
 
-        def convert_orientation(ori_value) -> str:
+        def convert_orientation(ori_value) -> Orientation:
             """Convert legacy orientation values to valid Orientation enum values"""
             # Orientations are stored as strings in JSON: "in", "out", "clock", "counter"
             # Only convert if we get numeric values (legacy compatibility)
             if isinstance(ori_value, (int, float)):
-                ori_map = {0: "in", 90: "clock", 180: "out", 270: "counter"}
-                return ori_map.get(int(ori_value), "in")
-            return str(ori_value) if ori_value else "in"
+                ori_map = {0: Orientation.IN, 90: Orientation.CLOCK, 180: Orientation.OUT, 270: Orientation.COUNTER}
+                return ori_map.get(int(ori_value), Orientation.IN)
+
+            orientation_map = {
+                "in": Orientation.IN,
+                "out": Orientation.OUT,
+                "clock": Orientation.CLOCK,
+                "counter": Orientation.COUNTER,
+            }
+            return orientation_map.get(str(ori_value), Orientation.IN)
 
         blue_motion = MotionData(
             motion_type=self._convert_motion_type(blue_attrs.get("motion_type", "static")),
@@ -149,11 +205,12 @@ class SequenceDataConverter:
             turns=red_attrs.get("turns", 0),
         )
 
-        # Create glyph data with position information as dictionary
-        glyph_data = {
-            "start_position": sequence_start_position,
-            "end_position": end_pos,
-        }
+        # Create glyph data with position information as proper GlyphData object
+        from domain.models.core_models import GlyphData
+        glyph_data = GlyphData(
+            start_position=sequence_start_position,
+            end_position=end_pos,
+        )
 
         # Create start position beat data
         start_position_beat = BeatData(

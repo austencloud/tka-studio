@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
-    from main import MainWindow
+    from main_window.main_window import MainWindow
     from objects.arrow.arrow import Arrow
     from main_window.main_widget.json_manager.json_manager import JsonManager
     from main_window.main_widget.json_manager.special_placement_saver import (
@@ -110,7 +110,7 @@ class AppContext:
             if not cls._initialized:
                 logger.warning("Attempting to initialize AppContext with defaults...")
                 try:
-                    from legacy.src.legacy_settings_manager.legacy_settings_manager import (
+                    from legacy_settings_manager.legacy_settings_manager import (
                         LegacySettingsManager,
                     )
 

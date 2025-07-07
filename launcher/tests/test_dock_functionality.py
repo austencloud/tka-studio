@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 def test_dock_window_creation():
     """Test dock window creation and basic functionality."""
     try:
-        from dock_window import TKADockWindow
+        from ui.windows.dock_window import TKADockWindow
         from domain.models import (
             DockConfiguration,
             DockPosition,
@@ -101,7 +101,7 @@ def test_dock_window_creation():
 def test_mode_switching():
     """Test mode switching functionality."""
     try:
-        from launcher_window import TKAModernWindow
+        from ui.windows.launcher_window import TKALauncherWindow as TKAModernWindow
 
         class MockTKAIntegration:
             def get_applications(self):
@@ -162,7 +162,7 @@ def test_state_persistence():
 def test_visual_indicators():
     """Test visual state indicators."""
     try:
-        from dock_window import DockApplicationIcon
+        from ui.windows.dock_window import DockApplicationIcon
         from domain.models import (
             ApplicationData,
             ApplicationCategory,
@@ -202,7 +202,7 @@ def test_visual_indicators():
 def test_application_launching():
     """Test application launching functionality in dock mode."""
     try:
-        from dock_window import TKADockWindow
+        from ui.windows.dock_window import TKADockWindow
         from domain.models import (
             DockConfiguration,
             DockPosition,

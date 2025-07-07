@@ -1,2 +1,2 @@
-// Background types barrel export  
-export * from './types.js';
+// Background types barrel export
+export * from "./types.js";

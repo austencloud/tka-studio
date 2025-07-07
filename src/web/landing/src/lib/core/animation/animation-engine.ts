@@ -1,13 +1,13 @@
 // Animation engine for the pictograph animator
 
-import type { AnimationState, PropState, StepDefinition } from "./types.js";
-import { calculateStepEndpoints } from "./sequence-processor.js";
+import type { AnimationState, PropState, StepDefinition } from "./types";
+import { calculateStepEndpoints } from "./sequence-processor";
 import {
   lerpAngle,
   calculateProIsolationStaffAngle,
   mapPositionToAngle,
-} from "./math-utils.js";
-import { PI } from "./constants.js";
+} from "./math-utils";
+import { PI } from "./constants";
 
 export class AnimationEngine {
   private animationState: AnimationState;

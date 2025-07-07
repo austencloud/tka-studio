@@ -11,9 +11,13 @@
   "python.analysis.extraPaths": [
     "./src/desktop/modern/src",
     "./src/desktop/modern",
+    "./src/desktop/legacy/src",
+    "./src/desktop/legacy",
     "./src",
-    "."
+    ".",
+    "./src/desktop"
   ],
   "python.defaultInterpreterPath": "C:/Python312/python.exe",
-  "python.analysis.diagnosticMode": "workspace"
+  "python.analysis.diagnosticMode": "workspace",
+  "python.envFile": "${workspaceFolder}/src/desktop/legacy/.env"
 }

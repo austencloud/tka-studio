@@ -57,7 +57,7 @@ class TKAIntegrationService:
         try:
             # Use launcher's DI container with launcher applications
             from core.di_integration import get_launcher_container
-            from core.interfaces import (
+            from launcher.core.interfaces import (
                 IApplicationService,
                 IApplicationLaunchService,
                 ISettingsService,

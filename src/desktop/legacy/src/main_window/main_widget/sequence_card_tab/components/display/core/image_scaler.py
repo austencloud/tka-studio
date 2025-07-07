@@ -9,12 +9,13 @@ from typing import TYPE_CHECKING
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtCore import QSize
 
+
 from ..scaling.scaling_calculator import ScalingCalculator
 from ..scaling.quality_enhancer import QualityEnhancer
 from ..scaling.aspect_ratio_manager import AspectRatioManager
 
 if TYPE_CHECKING:
-    from ..pages.printable_factory import PrintablePageFactory
+    from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import PrintablePageFactory
 
 
 class ImageScaler:

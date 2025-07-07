@@ -1,6 +1,6 @@
 // Mathematical utility functions for the pictograph animator
 
-import { locationAngles, PI, TWO_PI, HALF_PI } from "./constants.js";
+import { locationAngles, PI, TWO_PI, HALF_PI } from "./constants";
 
 // Utility functions
 export function normalizeAnglePositive(angle: number): number {

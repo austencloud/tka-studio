@@ -2,21 +2,24 @@
     import '../app.css';
     import NavBar from '../components/NavBar.svelte';
     import Footer from '../components/Footer.svelte';
-    import SimpleNightSkyCanvas from '../lib/components/Backgrounds/SimpleNightSkyCanvas.svelte';
+    import BackgroundProvider from '$lib/features/backgrounds/Backgrounds/BackgroundProvider.svelte';
+    import BackgroundCanvas from '$lib/features/backgrounds/Backgrounds/BackgroundCanvas.svelte';
     import { onMount } from 'svelte';
     import type { LayoutData } from './$types.js';
-    import { initializePictographData } from '$lib/constructor/stores/pictograph/pictographStore.js';
     import { browser } from '$app/environment';
+  import { initializePictographData } from '$lib/features/constructor/stores/pictograph/pictographStore.js';
 
     // Props from layout server
     export let data: LayoutData;
 
     // Default to night sky background - full system with constellations and moon
-    let currentBackground: 'deepOcean' | 'snowfall' | 'nightSky' | 'static' = 'nightSky';
+    let currentBackground: 'deepOcean' | 'snowfall' | 'nightSky' = 'nightSky';
     let initialized = false;
 
     function handleBackgroundChange(background: string) {
-      currentBackground = background as 'deepOcean' | 'snowfall' | 'nightSky' | 'static';
+      if (background === 'deepOcean' || background === 'snowfall' || background === 'nightSky') {
+        currentBackground = background;
+      }
     }
 
     onMount(() => {
@@ -40,10 +43,12 @@
     });
   </script>
 
-  <!-- Simplified Night Sky System -->
-  <div class="app-content" data-background="nightSky">
-    <!-- Direct NightSkyBackgroundSystem implementation -->
-    <SimpleNightSkyCanvas />
+  <!-- Background System -->
+  <BackgroundProvider backgroundType={currentBackground}>
+    <BackgroundCanvas backgroundType={currentBackground} />
+    
+    <!-- App Content with Dynamic Background -->
+    <div class="app-content" data-background={currentBackground}>
 
     <header>
       <NavBar {currentBackground} onBackgroundChange={handleBackgroundChange} />
@@ -57,18 +62,21 @@
       <Footer />
     </footer>
   </div>
+  </BackgroundProvider>
 
   <style>
     .app-content {
       position: relative;
       z-index: 1; /* Ensure content is above background */
       min-height: 100vh;
+      width: 100%;
       display: flex;
       flex-direction: column;
     }
 
     header {
       /* Remove background to let NavBar handle its own styling */
+      width: 100%;
       padding: 0;
       color: white;
       position: relative;
@@ -76,6 +84,7 @@
     }
 
     main {
+      width: 100%;
       padding: var(--container-padding);
       min-height: 80vh;
       flex: 1;
@@ -83,6 +92,7 @@
     }
 
     footer {
+      width: 100%;
       margin-top: 20px;
       position: relative;
     }

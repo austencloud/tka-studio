@@ -5,12 +5,23 @@ Integrates launcher services with TKA's DI container following
 clean architecture patterns and service registration conventions.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Optional
+from typing import Optional, TYPE_CHECKING, Any
+
+from launcher.core.interfaces import IApplicationLaunchService, IApplicationService, ILauncherStateService, IScreenService
+
+if TYPE_CHECKING:
+    from core.dependency_injection.di_container import DIContainer
 
 # Import TKA's DI container
 try:
-    from src.desktop.modern.src.core.dependency_injection.di_container import (
+    # Ensure project root is set up for imports
+    from project_root import ensure_project_setup
+    ensure_project_setup()
+
+    from core.dependency_injection.di_container import (
         DIContainer,
         get_container,
     )
@@ -22,15 +33,8 @@ except ImportError:
     DIContainer = None
     get_container = None
 
-from core.interfaces import (
-    ILauncherStateService,
-    IApplicationService,
-    ISettingsService,
-    IAnimationService,
-    IScreenService,
-    IApplicationLaunchService,
-    IEventBus,
-)
+
+from launcher.core.interfaces import ISettingsService
 from services.launcher_state_service import LauncherStateService
 from services.application_service import ApplicationService
 from services.settings_service import SettingsService
@@ -51,7 +55,7 @@ class LauncherDIContainer:
     def __init__(self, use_tka_container: bool = True):
         """Initialize the launcher DI container."""
         self._use_tka_container = use_tka_container and TKA_DI_AVAILABLE
-        self._container: Optional[DIContainer] = None
+        self._container: Optional["DIContainer"] = None
         self._services = {}
         self._singletons = {}
 

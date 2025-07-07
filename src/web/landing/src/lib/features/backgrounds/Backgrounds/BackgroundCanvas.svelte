@@ -160,18 +160,18 @@
 
 			activeContext.startAnimation(
 				(ctx, dimensions) => {
-					// Just draw a simple gradient to test if animation loop itself causes issues
-					const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height);
-					gradient.addColorStop(0, '#0A0E2C');
-					gradient.addColorStop(1, '#4A5490');
-					ctx.fillStyle = gradient;
-					ctx.fillRect(0, 0, dimensions.width, dimensions.height);
-
-					// NO BACKGROUND SYSTEM CALLS AT ALL
-					// if (reactiveFirewall.backgroundSystem) {
-					// 	reactiveFirewall.backgroundSystem.update(dimensions);
-					// 	reactiveFirewall.backgroundSystem.draw(ctx, dimensions);
-					// }
+					// Draw the actual animated background
+					if (reactiveFirewall.backgroundSystem) {
+						reactiveFirewall.backgroundSystem.update(dimensions);
+						reactiveFirewall.backgroundSystem.draw(ctx, dimensions);
+					} else {
+						// Fallback gradient if background system isn't ready
+						const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height);
+						gradient.addColorStop(0, '#0A0E2C');
+						gradient.addColorStop(1, '#4A5490');
+						ctx.fillStyle = gradient;
+						ctx.fillRect(0, 0, dimensions.width, dimensions.height);
+					}
 				},
 				(metrics) => {
 					// PERFORMANCE MONITORING: Completely isolated from reactive state
@@ -215,6 +215,8 @@
 	onDestroy(() => {
 		if (!browser) return;
 
+
+
 		// Remove event listener
 		window.removeEventListener('changeBackground', handleBackgroundChange as EventListener);
 
@@ -250,32 +252,37 @@
 		bind:this={canvas}
 		class="background-canvas"
 		style="
-			position: absolute;
+			position: fixed;
 			top: 0;
 			left: 0;
-			right: 0;
-			bottom: 0;
-			width: 100%;
-			height: 100%;
+			width: 100vw;
+			height: 100vh;
 			z-index: -1;
+			pointer-events: none;
 		"
 	></canvas>
 </div>
 
 <style>
 	.background-canvas-container {
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
-		right: 0;
-		bottom: 0;
-		width: 100%;
-		height: 100%;
+		width: 100vw;
+		height: 100vh;
 		z-index: -1;
 		overflow: hidden;
+		pointer-events: none;
+		/* Prevent any layout shift issues */
+		transform: translateZ(0); /* GPU acceleration */
+		will-change: transform;
 	}
 
 	.background-canvas {
 		display: block;
+		/* Ensure perfect canvas positioning */
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
 	}
 </style>
