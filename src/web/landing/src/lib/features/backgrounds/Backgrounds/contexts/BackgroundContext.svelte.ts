@@ -25,16 +25,16 @@ const BACKGROUND_CONTEXT_KEY = "background-context-runes";
  * Interface for the runes-based background context
  */
 export interface RunesBackgroundContext {
-  // State
-  dimensions: Dimensions;
-  performanceMetrics: PerformanceMetrics;
-  isActive: boolean;
-  qualityLevel: QualityLevel;
-  isLoading: boolean;
-  backgroundType: BackgroundType;
-  isInitialized: boolean;
-  shouldRender: boolean;
-  backgroundSystem: BackgroundSystem | null;
+  // State getters to avoid direct reference issues
+  getDimensions: () => Dimensions;
+  getPerformanceMetrics: () => PerformanceMetrics;
+  getIsActive: () => boolean;
+  getQualityLevel: () => QualityLevel;
+  getIsLoading: () => boolean;
+  getBackgroundType: () => BackgroundType;
+  getIsInitialized: () => boolean;
+  getShouldRender: () => boolean;
+  getBackgroundSystem: () => BackgroundSystem | null;
 
   // Methods
   initializeCanvas: (canvas: HTMLCanvasElement, onReady?: () => void) => void;
@@ -84,33 +84,25 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
   }
 
   // Initialize state with runes - use window dimensions if available
-  let dimensions = $state<Dimensions>({
+  const dimensions = $state<Dimensions>({
     width: browser ? window.innerWidth : 1920,
     height: browser ? window.innerHeight : 1080,
   });
-  let performanceMetrics = $state<PerformanceMetrics>({
+  const performanceMetrics = $state<PerformanceMetrics>({
     fps: 60,
     warnings: [],
   });
-  let isActive = $state(true);
-  let qualityLevel = $state<QualityLevel>(detectAppropriateQuality());
-  let isLoading = $state(false);
-  let backgroundType = $state<BackgroundType>("nightSky");
-  let isInitialized = $state(false);
+  const isActive = $state(true);
+  const qualityLevel = $state<QualityLevel>(detectAppropriateQuality());
+  const isLoading = $state(false);
+  const backgroundType = $state<BackgroundType>("nightSky");
+  const isInitialized = $state(false);
 
-  // NUCLEAR TEST: Disable potentially problematic $derived statement
-  // console.log('🧪 NUCLEAR TEST: Disabling shouldRender $derived in BackgroundContext');
-
-  // // Derived values
-  // const shouldRender = $derived(isActive && performanceMetrics.fps > 30);
-
-  // FALLBACK: Use a simple static value
-  const shouldRender = true;
+  // Derived values using $derived properly
+  const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
 
   // Create background system based on type and quality
-  let backgroundSystem = $state<BackgroundSystem | null>(null);
-
-  // Flag to prevent circular updates
+  const backgroundSystem = $state<BackgroundSystem | null>(null);
 
   // Create and track a single background system during context initialization
   if (browser && !backgroundSystem) {
@@ -254,7 +246,8 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
     const initialHeight = window.innerHeight;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
-    dimensions = { width: initialWidth, height: initialHeight };
+    dimensions.width = initialWidth;
+    dimensions.height = initialHeight;
 
     // Set canvas size considering device pixel ratio for crisp rendering
     // Use viewport dimensions to ensure proper coverage
@@ -297,7 +290,8 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
       // Update dimensions immediately for responsive background
       const oldDimensions = { ...dimensions };
-      dimensions = { width: newWidth, height: newHeight };
+      dimensions.width = newWidth;
+      dimensions.height = newHeight;
 
       // Debounce background reinitialization for performance
       resizeTimeout = window.setTimeout(() => {
@@ -348,18 +342,15 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
     window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    // NUCLEAR TEST: Disable the cleanup $effect block
-    // console.log('🧪 NUCLEAR TEST: Disabling cleanup $effect in BackgroundContext');
-
-    // // Set up cleanup when component is destroyed
-    // $effect(() => {
-    // 	// Return cleanup function
-    // 	return () => {
-    // 		window.removeEventListener('resize', handleResize);
-    // 		document.removeEventListener('visibilitychange', handleVisibilityChange);
-    // 		stopAnimation();
-    // 	};
-    // });
+    // Set up cleanup when component is destroyed
+    $effect(() => {
+      // Return cleanup function
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        stopAnimation();
+      };
+    });
 
     isInitialized = true;
 
@@ -375,8 +366,6 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
   // Performance tracker
   const performanceTracker = PerformanceTracker.getInstance();
-
-  // EXACT REPLACEMENT for startAnimation function in BackgroundContext.svelte.ts
 
   // Start animation - FIXED VERSION
   function startAnimation(
@@ -399,13 +388,6 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
     performanceTracker.reset();
 
-    // CRITICAL FIX: Capture reactive state values ONCE before starting animation loop
-    // to prevent accessing $state variables inside requestAnimationFrame
-    const initialStateSnapshot = {
-      isActiveSnapshot: isActive,
-      dimensionsSnapshot: { ...dimensions },
-    };
-
     const animate = () => {
       if (!ctx || !canvas) return;
 
@@ -413,27 +395,23 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
       const perfStatus = performanceTracker.getPerformanceStatus();
 
-      // CRITICAL FIX: Create non-reactive metrics object (don't update $state)
-      const currentMetrics = {
-        fps: perfStatus.fps,
-        warnings: perfStatus.warnings,
-      };
+      // Update reactive metrics
+      performanceMetrics.fps = perfStatus.fps;
+      performanceMetrics.warnings = perfStatus.warnings;
 
-      // Report to callback without updating reactive state
+      // Report to callback
       if (reportCallback) {
-        reportCallback(currentMetrics);
+        reportCallback(performanceMetrics);
       }
 
-      // CRITICAL FIX: Use current canvas dimensions for proper resize handling
+      // Get current canvas dimensions for proper resize handling
       const currentDimensions = {
         width: canvas.width / (window.devicePixelRatio || 1),
         height: canvas.height / (window.devicePixelRatio || 1),
       };
 
-      // Only use performance-based rendering decision to avoid reactive state access
-      const shouldRenderNow = perfStatus.fps > 30;
-
-      if (shouldRenderNow) {
+      // Check if we should render
+      if (shouldRender() && isActive) {
         ctx.clearRect(0, 0, currentDimensions.width, currentDimensions.height);
         renderFn(ctx, currentDimensions);
       }
@@ -443,6 +421,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
     animationFrameId = requestAnimationFrame(animate);
   }
+
   // Stop animation
   function stopAnimation(): void {
     if (animationFrameId) {
@@ -551,16 +530,16 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
   }
 
   const context = {
-    // State - use direct property access instead of getters to avoid circular references
-    dimensions,
-    performanceMetrics,
-    isActive,
-    qualityLevel,
-    isLoading,
-    backgroundType,
-    isInitialized,
-    shouldRender,
-    backgroundSystem,
+    // State getters to prevent direct reference issues
+    getDimensions: () => dimensions,
+    getPerformanceMetrics: () => performanceMetrics,
+    getIsActive: () => isActive,
+    getQualityLevel: () => qualityLevel,
+    getIsLoading: () => isLoading,
+    getBackgroundType: () => backgroundType,
+    getIsInitialized: () => isInitialized,
+    getShouldRender: () => shouldRender(),
+    getBackgroundSystem: () => backgroundSystem,
 
     // Methods
     initializeCanvas,
@@ -600,7 +579,7 @@ function createMockRunesBackgroundContext(): RunesBackgroundContext {
   const isLoading = $state(false);
   const backgroundType = $state<BackgroundType>("snowfall");
   const isInitialized = $state(false);
-  const shouldRender = $derived(isActive && performanceMetrics.fps > 30);
+  const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
 
   // Create a mock background system
   const mockSystem = {
@@ -611,18 +590,20 @@ function createMockRunesBackgroundContext(): RunesBackgroundContext {
     cleanup: () => {},
   } as BackgroundSystem;
 
+  const backgroundSystem = $state<BackgroundSystem | null>(mockSystem);
+
   // Return a mock context with no-op functions
   return {
-    // State - use direct property access instead of getters
-    dimensions,
-    performanceMetrics,
-    isActive,
-    qualityLevel,
-    isLoading,
-    backgroundType,
-    isInitialized,
-    shouldRender,
-    backgroundSystem: mockSystem,
+    // State getters to prevent direct reference issues
+    getDimensions: () => dimensions,
+    getPerformanceMetrics: () => performanceMetrics,
+    getIsActive: () => isActive,
+    getQualityLevel: () => qualityLevel,
+    getIsLoading: () => isLoading,
+    getBackgroundType: () => backgroundType,
+    getIsInitialized: () => isInitialized,
+    getShouldRender: () => shouldRender(),
+    getBackgroundSystem: () => backgroundSystem,
 
     // No-op methods for SSR
     initializeCanvas: () => {},
@@ -709,18 +690,19 @@ export function useBackgroundContext() {
     const isLoading = $state(false);
     const backgroundType = $state<BackgroundType>("snowfall");
     const isInitialized = $state(false);
-    const shouldRender = $derived(isActive && performanceMetrics.fps > 30);
+    const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
 
     return {
-      // State - use direct property access instead of getters
-      dimensions,
-      performanceMetrics,
-      isActive,
-      qualityLevel,
-      isLoading,
-      backgroundType,
-      isInitialized,
-      shouldRender,
+      // State getters to prevent direct reference issues
+      getDimensions: () => dimensions,
+      getPerformanceMetrics: () => performanceMetrics,
+      getIsActive: () => isActive,
+      getQualityLevel: () => qualityLevel,
+      getIsLoading: () => isLoading,
+      getBackgroundType: () => backgroundType,
+      getIsInitialized: () => isInitialized,
+      getShouldRender: () => shouldRender(),
+      getBackgroundSystem: () => null,
 
       // No-op methods for SSR
       setQuality: () => {},
@@ -730,6 +712,8 @@ export function useBackgroundContext() {
       startAnimation: () => {},
       stopAnimation: () => {},
       cleanup: () => {},
+      savePreferences: () => {},
+      loadPreferences: () => {},
     };
   }
 

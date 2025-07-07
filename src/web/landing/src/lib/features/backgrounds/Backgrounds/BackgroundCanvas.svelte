@@ -104,27 +104,27 @@
 		if (activeContext) {
 			// Test context operations with untrack() protection
 			untrack(() => {
-				// Set initial values from props to context once on mount
-				const propBgType = props.backgroundType || 'nightSky';
-				const propLoading = props.appIsLoading !== undefined ? props.appIsLoading : true;
+			// Set initial values from props to context once on mount
+			const propBgType = props.backgroundType || 'nightSky';
+			const propLoading = props.appIsLoading !== undefined ? props.appIsLoading : true;
 
-				if (propBgType && propBgType !== activeContext.backgroundType) {
-					activeContext.setBackgroundType(propBgType);
-				}
+			if (propBgType && propBgType !== activeContext.getBackgroundType()) {
+			activeContext.setBackgroundType(propBgType);
+			}
 
-				if (propLoading !== undefined && propLoading !== activeContext.isLoading) {
-					activeContext.setLoading(propLoading);
+			if (propLoading !== undefined && propLoading !== activeContext.getIsLoading()) {
+			activeContext.setLoading(propLoading);
 
-					const quality: QualityLevel = propLoading ? 'medium' : 'high';
-					if (quality !== activeContext.qualityLevel) {
-						activeContext.setQuality(quality);
-					}
-				}
+			const quality: QualityLevel = propLoading ? 'medium' : 'high';
+			if (quality !== activeContext.getQualityLevel()) {
+			activeContext.setQuality(quality);
+			}
+			}
 			});
 
 			// Get the background system if it exists
-			if ('backgroundSystem' in activeContext) {
-				currentBackgroundSystem = (activeContext as any).backgroundSystem;
+			if ('getBackgroundSystem' in activeContext) {
+				currentBackgroundSystem = activeContext.getBackgroundSystem();
 			}
 
 			// Test Three.js initialization with untrack() protection
@@ -132,8 +132,8 @@
 				if (canvas) {
 					activeContext.initializeCanvas(canvas, () => {
 						// Get updated background system after initialization
-						if ('backgroundSystem' in activeContext) {
-							currentBackgroundSystem = (activeContext as any).backgroundSystem;
+						if ('getBackgroundSystem' in activeContext) {
+							currentBackgroundSystem = activeContext.getBackgroundSystem();
 						}
 
 						// Call the onReady callback if provided (but only once)
@@ -151,10 +151,10 @@
 				return {
 					// Capture background system reference once
 					backgroundSystem:
-						'backgroundSystem' in activeContext ? (activeContext as any).backgroundSystem : null,
+						'getBackgroundSystem' in activeContext ? activeContext.getBackgroundSystem() : null,
 					// Capture any other reactive values that might be needed
 					isActive: true,
-					qualityLevel: activeContext.qualityLevel || 'medium'
+					qualityLevel: activeContext.getQualityLevel() || 'medium'
 				};
 			});
 
