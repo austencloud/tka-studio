@@ -13,22 +13,22 @@ import type { BeatDataSimple } from "../../generated/typescript/beat-data-simple
 describe("Generated MotionData Type", () => {
   it("should accept valid motion data", () => {
     const validMotion: MotionData = {
-      motion_type: "pro",
-      prop_rot_dir: "cw",
-      start_loc: "n",
-      end_loc: "e",
+      motionType: "pro",
+      propRotDir: "cw",
+      startLoc: "n",
+      endLoc: "e",
       turns: 1,
-      start_ori: "in",
-      end_ori: "out",
+      startOri: "in",
+      endOri: "out",
     };
 
     // TypeScript compilation success means the type is correct
-    expect(validMotion.motion_type).toBe("pro");
+    expect(validMotion.motionType).toBe("pro");
     expect(validMotion.turns).toBe(1);
   });
 
-  it("should have correct enum values for motion_type", () => {
-    const motionTypes: MotionData["motion_type"][] = [
+  it("should have correct enum values for motionType", () => {
+    const motionTypes: MotionData["motionType"][] = [
       "pro",
       "anti",
       "float",
@@ -38,20 +38,20 @@ describe("Generated MotionData Type", () => {
 
     motionTypes.forEach((type) => {
       const motion: MotionData = {
-        motion_type: type,
-        prop_rot_dir: "cw",
-        start_loc: "n",
-        end_loc: "e",
+        motionType: type,
+        propRotDir: "cw",
+        startLoc: "n",
+        endLoc: "e",
         turns: 0,
-        start_ori: "in",
-        end_ori: "in",
+        startOri: "in",
+        endOri: "in",
       };
-      expect(motion.motion_type).toBe(type);
+      expect(motion.motionType).toBe(type);
     });
   });
 
   it("should have correct enum values for locations", () => {
-    const locations: MotionData["start_loc"][] = [
+    const locations: MotionData["startLoc"][] = [
       "n",
       "e",
       "s",
@@ -64,21 +64,21 @@ describe("Generated MotionData Type", () => {
 
     locations.forEach((loc) => {
       const motion: MotionData = {
-        motion_type: "pro",
-        prop_rot_dir: "cw",
-        start_loc: loc,
-        end_loc: loc,
+        motionType: "pro",
+        propRotDir: "cw",
+        startLoc: loc,
+        endLoc: loc,
         turns: 0,
-        start_ori: "in",
-        end_ori: "in",
+        startOri: "in",
+        endOri: "in",
       };
-      expect(motion.start_loc).toBe(loc);
-      expect(motion.end_loc).toBe(loc);
+      expect(motion.startLoc).toBe(loc);
+      expect(motion.endLoc).toBe(loc);
     });
   });
 
   it("should have correct enum values for orientations", () => {
-    const orientations: MotionData["start_ori"][] = [
+    const orientations: MotionData["startOri"][] = [
       "in",
       "out",
       "clock",
@@ -87,45 +87,45 @@ describe("Generated MotionData Type", () => {
 
     orientations.forEach((ori) => {
       const motion: MotionData = {
-        motion_type: "pro",
-        prop_rot_dir: "cw",
-        start_loc: "n",
-        end_loc: "e",
+        motionType: "pro",
+        propRotDir: "cw",
+        startLoc: "n",
+        endLoc: "e",
         turns: 0,
-        start_ori: ori,
-        end_ori: ori,
+        startOri: ori,
+        endOri: ori,
       };
-      expect(motion.start_ori).toBe(ori);
-      expect(motion.end_ori).toBe(ori);
+      expect(motion.startOri).toBe(ori);
+      expect(motion.endOri).toBe(ori);
     });
   });
 
   it("should have correct enum values for prop rotation direction", () => {
-    const rotDirs: MotionData["prop_rot_dir"][] = ["cw", "ccw", "no_rot"];
+    const rotDirs: MotionData["propRotDir"][] = ["cw", "ccw", "no_rot"];
 
     rotDirs.forEach((dir) => {
       const motion: MotionData = {
-        motion_type: "pro",
-        prop_rot_dir: dir,
-        start_loc: "n",
-        end_loc: "e",
+        motionType: "pro",
+        propRotDir: dir,
+        startLoc: "n",
+        endLoc: "e",
         turns: 0,
-        start_ori: "in",
-        end_ori: "in",
+        startOri: "in",
+        endOri: "in",
       };
-      expect(motion.prop_rot_dir).toBe(dir);
+      expect(motion.propRotDir).toBe(dir);
     });
   });
 
   it("should handle numeric turns correctly", () => {
     const motion: MotionData = {
-      motion_type: "pro",
-      prop_rot_dir: "cw",
-      start_loc: "n",
-      end_loc: "e",
+      motionType: "pro",
+      propRotDir: "cw",
+      startLoc: "n",
+      endLoc: "e",
       turns: 3.5,
-      start_ori: "in",
-      end_ori: "out",
+      startOri: "in",
+      endOri: "out",
     };
 
     expect(typeof motion.turns).toBe("number");
@@ -136,30 +136,30 @@ describe("Generated MotionData Type", () => {
 describe("Generated PictographData Type", () => {
   it("should accept valid pictograph data", () => {
     const validPictograph: PictographData = {
-      grid_mode: "diamond",
+      gridMode: "diamond",
       grid: "test-grid",
     };
 
-    expect(validPictograph.grid_mode).toBe("diamond");
+    expect(validPictograph.gridMode).toBe("diamond");
     expect(validPictograph.grid).toBe("test-grid");
   });
 
   it("should handle optional fields correctly", () => {
     const pictograph: PictographData = {
-      grid_mode: "box",
+      gridMode: "box",
       grid: "test",
       letter: "A",
-      start_pos: "alpha1",
-      end_pos: "beta2",
+      startPos: "alpha1",
+      endPos: "beta2",
       timing: "split",
       direction: "same",
-      is_start_position: true,
+      isStartPosition: true,
     };
 
     expect(pictograph.letter).toBe("A");
-    expect(pictograph.start_pos).toBe("alpha1");
+    expect(pictograph.startPos).toBe("alpha1");
     expect(pictograph.timing).toBe("split");
-    expect(pictograph.is_start_position).toBe(true);
+    expect(pictograph.isStartPosition).toBe(true);
   });
 });
 

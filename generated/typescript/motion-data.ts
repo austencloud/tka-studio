@@ -12,19 +12,19 @@ export interface MotionData {
   /**
    * Type of motion being performed
    */
-  motionType: 'pro' | 'anti' | 'float' | 'dash' | 'static';
+  motion_type: 'pro' | 'anti' | 'float' | 'dash' | 'static';
   /**
    * Direction of prop rotation
    */
-  propRotDir: 'cw' | 'ccw' | 'no_rot';
+  prop_rot_dir: 'cw' | 'ccw' | 'no_rot';
   /**
    * Starting location on the grid
    */
-  startLoc: 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+  start_loc: 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
   /**
    * Ending location on the grid
    */
-  endLoc: 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+  end_loc: 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
   /**
    * Number of turns in the motion
    */
@@ -32,9 +32,9 @@ export interface MotionData {
   /**
    * Starting orientation
    */
-  startOri: 'in' | 'out' | 'clock' | 'counter';
+  start_ori: 'in' | 'out' | 'clock' | 'counter';
   /**
    * Ending orientation
    */
-  endOri: 'in' | 'out' | 'clock' | 'counter';
+  end_ori: 'in' | 'out' | 'clock' | 'counter';
 }

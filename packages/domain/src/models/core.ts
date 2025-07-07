@@ -7,6 +7,9 @@
  * Source: src/desktop/modern/src/domain/models/core_models.py
  */
 
+// Import generated types
+import type { MotionData } from "../generated/typescript/motion-data.js";
+
 // ============================================================================
 // ENUMS - Matching Python exactly
 // ============================================================================
@@ -191,18 +194,20 @@ export enum Letter {
 // ============================================================================
 
 /**
- * Immutable motion data for props and arrows.
- * Replaces complex motion attribute dictionaries.
+ * REPLACED BY GENERATED TYPE: packages/domain/generated/typescript/motion-data.ts
+ *
+ * This manual interface has been replaced by the schema-generated version.
+ * The generated version uses snake_case property names to match the JSON schema.
  */
-export interface MotionData {
-  motion_type: MotionType;
-  prop_rot_dir: RotationDirection;
-  start_loc: Location;
-  end_loc: Location;
-  turns: number;
-  start_ori: Orientation;
-  end_ori: Orientation;
-}
+// export interface MotionData {
+//   motion_type: MotionType;
+//   prop_rot_dir: RotationDirection;
+//   start_loc: Location;
+//   end_loc: Location;
+//   turns: number;
+//   start_ori: Orientation;
+//   end_ori: Orientation;
+// }
 
 /**
  * Data for pictograph glyphs (elemental, VTG, TKA, position).
@@ -264,16 +269,17 @@ export function convertOrientation(value: any): Orientation {
 
 /**
  * Create a default motion data object.
+ * Updated to work with generated MotionData interface (camelCase).
  */
 export function createDefaultMotionData(): MotionData {
   return {
-    motion_type: MotionType.PRO,
-    prop_rot_dir: RotationDirection.CLOCKWISE,
-    start_loc: Location.NORTH,
-    end_loc: Location.EAST,
+    motionType: "pro",
+    propRotDir: "cw",
+    startLoc: "n",
+    endLoc: "e",
     turns: 0,
-    start_ori: Orientation.IN,
-    end_ori: Orientation.IN,
+    startOri: "in",
+    endOri: "in",
   };
 }
 

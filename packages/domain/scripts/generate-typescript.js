@@ -20,25 +20,50 @@ function toCamelCase(str) {
 }
 
 /**
+ * Post-process generated TypeScript to convert property names to camelCase
+ */
+function convertSnakeCaseToCamelCase(typescript) {
+  // Convert property names in interface definitions
+  // Pattern: "  property_name:" -> "  propertyName:"
+  // Also handle optional properties: "  property_name?:" -> "  propertyName?:"
+  return typescript.replace(
+    /^(\s+)([a-z][a-z0-9_]*\??):(\s)/gm,
+    (match, indent, propNameWithOptional, colon) => {
+      // Check if property is optional
+      const isOptional = propNameWithOptional.endsWith("?");
+      const propName = isOptional
+        ? propNameWithOptional.slice(0, -1)
+        : propNameWithOptional;
+      const camelCaseName = toCamelCase(propName);
+      const optionalSuffix = isOptional ? "?" : "";
+      return `${indent}${camelCaseName}${optionalSuffix}:${colon}`;
+    }
+  );
+}
+
+/**
  * Generate TypeScript from a schema file
  */
 async function generateTypeScript(schemaPath, outputPath) {
   console.log(`🔄 Generating TypeScript from ${schemaPath}...`);
 
   try {
-    // Generate TypeScript with camelCase property names
-    const typescript = await compileFromFile(schemaPath, {
+    // Generate TypeScript first
+    let typescript = await compileFromFile(schemaPath, {
       style: {
         singleQuote: true,
         semi: true,
       },
       bannerComment: `/**
  * Generated from ${schemaPath}
- * 
+ *
  * This file is auto-generated. Do not edit manually.
  * To make changes, update the JSON schema and regenerate.
  */`,
     });
+
+    // Post-process to convert snake_case to camelCase
+    typescript = convertSnakeCaseToCamelCase(typescript);
 
     // Ensure output directory exists
     mkdirSync(dirname(outputPath), { recursive: true });
