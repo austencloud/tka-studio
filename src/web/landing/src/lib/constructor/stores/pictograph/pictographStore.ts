@@ -1,6 +1,9 @@
 // src/lib/constructor/stores/pictograph/pictographStore.ts
 import { writable } from "svelte/store";
 import type { PictographData } from "$lib/con Call structor/types/PictographData.js";
+// TODO: Migrate to schema-based MotionData from @tka/domain
+// Current UI MotionData has additional properties (id, color, handRotDir, leadState)
+// that are not in the core domain schema
 import type { MotionData } from "$lib/constructor/types/MotionData.js";
 import { LetterUtils } from "$lib/constructor/utils/LetterUtils.js";
 
