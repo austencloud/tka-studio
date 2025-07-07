@@ -31,7 +31,7 @@
     "docs:serve": "cd docs && python -m http.server 8080"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.11",
     "autoprefixer": "^10.4.21",
     "concurrently": "^8.2.0",
     "cross-env": "^7.0.3",
