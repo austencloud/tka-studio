@@ -21,7 +21,7 @@ from application.services.pictographs.pictograph_management_service import (
 from domain.models.pictograph_models import PictographData
 
 
-class IDatasetManagementService(ABC):
+class IDatasetManager(ABC):
     """Interface for dataset management operations."""
 
     @abstractmethod
@@ -43,7 +43,7 @@ class IDatasetManagementService(ABC):
         """Get all pictographs in a category."""
 
 
-class DatasetManagementService(IDatasetManagementService):
+class DatasetManager(IDatasetManager):
     """
     Pure service for dataset management operations.
 

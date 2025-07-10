@@ -16,7 +16,7 @@ This version uses clean component-based architecture with:
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from core.interfaces.session_services import ISessionStateService
+from core.interfaces.session_services import ISessionStateTracker
 from core.interfaces.workbench_services import IGraphEditorService
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
@@ -74,7 +74,7 @@ class GraphEditor(QFrame):
         parent: Optional["SequenceWorkbench"] = None,
         workbench_width: int = 800,
         workbench_height: int = 600,
-        session_service: Optional[ISessionStateService] = None,
+        session_service: Optional[ISessionStateTracker] = None,
     ):
         super().__init__(parent)
         self._graph_service = graph_service

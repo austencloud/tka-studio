@@ -31,7 +31,7 @@ from core.config.app_config import (
 )
 from core.config.data_config import DataConfig, create_data_config
 from core.dependency_injection.di_container import DIContainer
-from core.interfaces.core_services import IObjectPoolService
+from core.interfaces.core_services import IObjectPoolManager
 from core.interfaces.positioning_services import IPositionMatchingService
 from core.types.result import AppError, ErrorType, Result, app_error, failure, success
 
@@ -131,7 +131,7 @@ def register_data_config_only(
 
 
 def register_positioning_services_with_config(
-container: "DIContainer", positioning_config: Optional[PositioningConfig] = None
+    container: "DIContainer", positioning_config: Optional[PositioningConfig] = None
 ) -> Result[bool, AppError]:
     """
     Register positioning services with configuration injection.
@@ -314,9 +314,9 @@ def register_extracted_services(container) -> Result[bool, AppError]:
         # Its functionality was split into focused microservices
 
         # Register object pool service
-        from application.services.core.object_pool_service import ObjectPoolService
+        from application.services.core.object_pool_manager import ObjectPoolManager
 
-        container.register_singleton(IObjectPoolService, ObjectPoolService)
+        container.register_singleton(IObjectPoolManager, ObjectPoolManager)
 
         # Register positioning services using ServiceRegistrationManager
         try:

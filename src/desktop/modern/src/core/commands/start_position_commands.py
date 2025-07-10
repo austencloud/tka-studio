@@ -107,15 +107,13 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 raise ValueError("Data conversion service not available")
 
             # Get the dataset query service
-            from application.services.data.dataset_query_service import (
-                DatasetQueryService,
-            )
+            from application.services.data.dataset_quiry import DatasetQuery
             from domain.models.glyph_models import GlyphData
 
-            dataset_service = DatasetQueryService()
+            dataset_service = DatasetQuery()
 
             # Get real start position data from dataset
-            real_start_position = dataset_service.get_start_position_pictograph(
+            real_start_position = dataset_service.get_start_position_beat_data(
                 self.position_key, "diamond"
             )
 

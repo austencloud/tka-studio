@@ -8,6 +8,7 @@ integrating with Modern's start position picker and pictograph system.
 from typing import Optional
 
 from domain.models import BeatData
+from domain.models.pictograph_models import PictographData
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import QFrame, QVBoxLayout, QWidget

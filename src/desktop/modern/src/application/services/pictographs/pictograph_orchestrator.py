@@ -15,11 +15,8 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Dict, List, Optional, Union
 
-from application.services.data.csv_data_service import CSVDataService, ICSVDataService
-from application.services.data.dataset_management_service import (
-    DatasetManagementService,
-    IDatasetManagementService,
-)
+from application.services.data.csv_reader import CSVReader, ICSVReader
+from application.services.data.dataset_manager import DatasetManager, IDatasetManager
 from application.services.glyphs.glyph_generation_service import (
     GlyphGenerationService,
     IGlyphGenerationService,
@@ -79,14 +76,14 @@ class PictographOrchestrator(IPictographOrchestrator):
 
     def __init__(
         self,
-        csv_service: Optional[ICSVDataService] = None,
+        csv_service: Optional[ICSVReader] = None,
         glyph_service: Optional[IGlyphGenerationService] = None,
-        dataset_service: Optional[IDatasetManagementService] = None,
+        dataset_service: Optional[IDatasetManager] = None,
     ):
         """Initialize with dependency injection."""
-        self.csv_service = csv_service or CSVDataService()
+        self.csv_service = csv_service or CSVReader()
         self.glyph_service = glyph_service or GlyphGenerationService()
-        self.dataset_service = dataset_service or DatasetManagementService()
+        self.dataset_service = dataset_service or DatasetManager()
 
         # Context configuration
         self._context_configs = self._load_context_configs()

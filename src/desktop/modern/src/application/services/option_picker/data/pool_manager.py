@@ -9,7 +9,7 @@ the extracted business service and handles Qt-specific concerns.
 import logging
 from typing import TYPE_CHECKING, Callable, List, Optional
 
-from core.interfaces.core_services import IObjectPoolService
+from core.interfaces.core_services import IObjectPoolManager
 from domain.models.beat_data import BeatData
 from domain.models.enums import Location, MotionType, RotationDirection
 from domain.models.motion_models import MotionData
@@ -20,7 +20,7 @@ from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
-    from application.services.data.dataset_query_service import DatasetQueryService
+    from application.services.data.dataset_quiry import DatasetQuery
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ class PictographPoolManager(QObject):
     MAX_PICTOGRAPHS = 36  # Same as Legacy's OptionFactory.MAX_PICTOGRAPHS
 
     def __init__(
-        self, parent_widget: QWidget, pool_service: Optional[IObjectPoolService] = None
+        self, parent_widget: QWidget, pool_service: Optional[IObjectPoolManager] = None
     ):
         """
         Initialize pictograph pool manager with injected business service.
@@ -57,11 +57,11 @@ class PictographPoolManager(QObject):
         # Fallback for legacy compatibility - will be removed in future versions
         if not self._pool_service:
             try:
-                from application.services.core.object_pool_service import (
-                    ObjectPoolService,
+                from application.services.core.object_pool_manager import (
+                    ObjectPoolManager,
                 )
 
-                self._pool_service = ObjectPoolService()
+                self._pool_service = ObjectPoolManager()
                 logger.warning(
                     "Using fallback object pool service - consider using DI container"
                 )
@@ -128,12 +128,10 @@ class PictographPoolManager(QObject):
             ClickablePictographFrame if successful, None otherwise
         """
         try:
-            from application.services.data.dataset_query_service import (
-                DatasetQueryService,
-            )
+            from application.services.data.dataset_quiry import DatasetQuery
             from application.services.data.position_resolver import PositionResolver
 
-            dataset_service = DatasetQueryService()
+            dataset_service = DatasetQuery()
             position_resolver = PositionResolver()
             start_positions = position_resolver.get_start_positions("diamond")
 

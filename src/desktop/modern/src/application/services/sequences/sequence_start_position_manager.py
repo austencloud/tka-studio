@@ -12,6 +12,7 @@ from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
 from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -42,10 +43,19 @@ class SequenceStartPositionManager(QObject):
         self.data_converter = data_converter
         self.persistence_service = SequencePersistenceService()
 
-    def set_start_position(self, start_position_data: BeatData):
-        """Set the start position - exactly like legacy"""
+    def set_start_position(self, start_position_data):
+        """Set the start position - accepts both PictographData and BeatData"""
+        # Convert PictographData to BeatData if needed for sequence operations
+        if isinstance(start_position_data, PictographData):
+            print(
+                f"🔄 [START_POS_MGR] Converting PictographData to BeatData for sequence operations"
+            )
+            beat_data = self._convert_pictograph_to_beat_data(start_position_data)
+        else:
+            beat_data = start_position_data
+
         print(
-            f"🔄 [START_POS_MGR] set_start_position called with: {start_position_data.letter if start_position_data else 'None'}"
+            f"🔄 [START_POS_MGR] set_start_position called with: {beat_data.letter if beat_data else 'None'}"
         )
 
         try:
@@ -62,9 +72,7 @@ class SequenceStartPositionManager(QObject):
             # Convert start position to legacy format and save as beat 0
             print(f"🔄 [START_POS_MGR] Converting start position to legacy format...")
             start_pos_dict = (
-                self.data_converter.convert_start_position_to_legacy_format(
-                    start_position_data
-                )
+                self.data_converter.convert_start_position_to_legacy_format(beat_data)
             )
             print(f"✅ [START_POS_MGR] Converted to legacy format: {start_pos_dict}")
 
@@ -98,9 +106,9 @@ class SequenceStartPositionManager(QObject):
             # Set start position in workbench
             workbench = self.workbench_getter() if self.workbench_getter else None
             if workbench and hasattr(workbench, "set_start_position"):
-                workbench.set_start_position(start_position_data)
+                workbench.set_start_position(beat_data)
                 print(
-                    f"✅ [START_POS_MGR] Start position set in workbench: {start_position_data.letter}"
+                    f"✅ [START_POS_MGR] Start position set in workbench: {beat_data.letter}"
                 )
             else:
                 print(
@@ -108,14 +116,12 @@ class SequenceStartPositionManager(QObject):
                 )
 
             # Emit signal
-            self.start_position_set.emit(start_position_data)
+            self.start_position_set.emit(beat_data)
             print(
-                f"✅ [START_POS_MGR] Signal emitted for start position: {start_position_data.letter}"
+                f"✅ [START_POS_MGR] Signal emitted for start position: {beat_data.letter}"
             )
 
-            print(
-                f"✅ [START_POS_MGR] Set start position complete: {start_position_data.letter}"
-            )
+            print(f"✅ [START_POS_MGR] Set start position complete: {beat_data.letter}")
 
         except Exception as e:
             print(f"❌ [START_POS_MGR] Failed to set start position: {e}")
@@ -293,3 +299,78 @@ class SequenceStartPositionManager(QObject):
         except Exception as e:
             print(f"❌ Error checking start position: {e}")
         return False
+
+    def _convert_pictograph_to_beat_data(
+        self, pictograph_data: PictographData
+    ) -> BeatData:
+        """Convert PictographData to BeatData for sequence operations."""
+        from domain.models.glyph_models import GlyphData
+        from domain.models.motion_models import MotionData
+
+        # Extract motion data from arrows
+        blue_motion = None
+        red_motion = None
+
+        if pictograph_data.arrows:
+            if "blue" in pictograph_data.arrows:
+                arrow = pictograph_data.arrows["blue"]
+                from domain.models.enums import (
+                    Location,
+                    MotionType,
+                    Orientation,
+                    RotationDirection,
+                )
+
+                blue_motion = MotionData(
+                    motion_type=getattr(arrow, "motion_type", MotionType.STATIC),
+                    prop_rot_dir=RotationDirection.CLOCKWISE,  # Default for start positions
+                    start_loc=getattr(arrow, "location", Location.NORTH),
+                    start_ori=getattr(arrow, "orientation", Orientation.IN),
+                    end_loc=getattr(
+                        arrow, "location", Location.NORTH
+                    ),  # For start positions, end = start
+                    end_ori=getattr(arrow, "orientation", Orientation.IN),
+                    turns=0.0,  # Start positions have no turns
+                )
+
+            if "red" in pictograph_data.arrows:
+                arrow = pictograph_data.arrows["red"]
+                from domain.models.enums import (
+                    Location,
+                    MotionType,
+                    Orientation,
+                    RotationDirection,
+                )
+
+                red_motion = MotionData(
+                    motion_type=getattr(arrow, "motion_type", MotionType.STATIC),
+                    prop_rot_dir=RotationDirection.CLOCKWISE,  # Default for start positions
+                    start_loc=getattr(arrow, "location", Location.NORTH),
+                    start_ori=getattr(arrow, "orientation", Orientation.IN),
+                    end_loc=getattr(
+                        arrow, "location", Location.NORTH
+                    ),  # For start positions, end = start
+                    end_ori=getattr(arrow, "orientation", Orientation.IN),
+                    turns=0.0,  # Start positions have no turns
+                )
+
+        # Create glyph data
+        glyph_data = GlyphData(
+            start_position=pictograph_data.start_position,
+            end_position=pictograph_data.end_position,
+        )
+
+        # Ensure metadata includes start position flag
+        metadata = pictograph_data.metadata or {}
+        metadata["is_start_position"] = True
+
+        return BeatData(
+            letter=pictograph_data.letter,
+            beat_number=0,  # Start position is beat 0
+            duration=1.0,
+            blue_motion=blue_motion,
+            red_motion=red_motion,
+            glyph_data=glyph_data,
+            is_blank=pictograph_data.is_blank,
+            metadata=metadata,
+        )

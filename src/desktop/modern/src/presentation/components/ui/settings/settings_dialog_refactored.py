@@ -34,17 +34,10 @@ and tabs exist and will resolve correctly at runtime.
 
 from typing import Any, Dict
 
+from application.services.ui.settings import SettingsServices
 from core.interfaces.core_services import IUIStateManagementService
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import (
-    QBrush,
-    QColor,
-    QLinearGradient,
-    QPainter,
-    QPainterPath,
-    QRegion,
-)
-from PyQt6.QtCore import QRectF
+from PyQt6.QtCore import QRectF, Qt, pyqtSignal
+from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QRegion
 from PyQt6.QtWidgets import (
     QDialog,
     QFrame,
@@ -64,7 +57,6 @@ from .components import (
     SettingsHeader,
     SettingsSidebar,
 )
-from application.services.ui.settings import SettingsServices
 from .coordinator import SettingsCoordinator
 from .tabs.background_tab import BackgroundTab
 from .tabs.beat_layout_tab import BeatLayoutTab

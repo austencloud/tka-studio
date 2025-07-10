@@ -19,7 +19,7 @@ import pandas as pd
 from domain.models import BeatData, Location, MotionData, MotionType, RotationDirection
 
 
-class ICSVDataService(ABC):
+class ICSVReader(ABC):
     """Interface for CSV data operations."""
 
     @abstractmethod
@@ -35,7 +35,7 @@ class ICSVDataService(ABC):
         """Get all pictographs for a specific letter."""
 
 
-class CSVDataService(ICSVDataService):
+class CSVReader(ICSVReader):
     def __init__(self, data_path: Optional[Path] = None):
         if data_path is None:
             # Find project root by searching for a 'data' folder upwards from this file

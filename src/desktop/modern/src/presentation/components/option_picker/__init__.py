@@ -19,13 +19,14 @@ from application.services.option_picker.option_service import OptionService
 from .core.option_picker import OptionPicker
 from .core.option_picker_widget import OptionPickerWidget
 
+# Types
+from .types.letter_types import LetterType
+
 # Services (for advanced usage)
 # Note: PictographPoolManager has been moved to application.services.option_picker.data.pool_manager
 # Import it directly from there to avoid circular imports
 # from application.services.option_picker.data.pool_manager import PictographPoolManager
 
-# Types
-from .types.letter_types import LetterType
 
 # Backward compatibility exports (maintain old interface)
 __all__ = [

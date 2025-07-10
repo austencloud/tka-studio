@@ -5,42 +5,42 @@ Defines interfaces for session state management in TKA applications.
 Provides auto-save/restore functionality for user workflow continuity.
 """
 
-from abc import ABC, abstractmethod
-from typing import Optional, Dict, Any
-from datetime import datetime
-from dataclasses import dataclass, field
 import uuid
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Dict, Optional
 
 
 @dataclass
 class SessionState:
     """Complete session state representation for TKA application."""
-    
+
     # Current sequence data
     current_sequence_id: Optional[str] = None
     current_sequence_data: Optional[Dict[str, Any]] = None
-    
-    # Workbench state  
+
+    # Workbench state
     selected_beat_index: Optional[int] = None
     selected_beat_data: Optional[Dict[str, Any]] = None
     start_position_data: Optional[Dict[str, Any]] = None
-    
+
     # Graph editor state
     graph_editor_visible: bool = False
     graph_editor_selected_beat_index: Optional[int] = None
     graph_editor_selected_arrow: Optional[str] = None
     graph_editor_height: int = 300
-    
+
     # Active tab and workbench configuration
     active_tab: str = "sequence_builder"
     beat_layout: Dict[str, Any] = field(default_factory=dict)
-    
+
     # Component visibility states
     component_visibility: Dict[str, bool] = field(default_factory=dict)
-    
+
     # Last interaction timestamp for staleness detection
     last_interaction: datetime = field(default_factory=datetime.now)
-    
+
     # Session metadata
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     created_at: datetime = field(default_factory=datetime.now)
@@ -50,7 +50,7 @@ class SessionState:
 @dataclass
 class SessionRestoreResult:
     """Result of session restoration attempt."""
-    
+
     success: bool
     session_restored: bool = False
     session_data: Optional[SessionState] = None
@@ -58,126 +58,135 @@ class SessionRestoreResult:
     warnings: list = field(default_factory=list)
 
 
-class ISessionStateService(ABC):
+class ISessionStateTracker(ABC):
     """Interface for session state management in TKA applications."""
-    
+
     @abstractmethod
     def save_session_state(self) -> bool:
         """
         Save current session state to persistent storage.
-        
+
         Returns:
             bool: True if save was successful, False otherwise
         """
-    
+
     @abstractmethod
     def load_session_state(self) -> SessionRestoreResult:
         """
         Load session state from persistent storage.
-        
+
         Returns:
             SessionRestoreResult: Result of restoration attempt
         """
-    
+
     @abstractmethod
     def update_current_sequence(self, sequence_data: Any, sequence_id: str) -> None:
         """
         Update current sequence in session state.
-        
+
         Args:
             sequence_data: The sequence data to store
             sequence_id: Unique identifier for the sequence
         """
-    
+
     @abstractmethod
-    def update_workbench_state(self, beat_index: Optional[int], 
-                             beat_data: Optional[Any], 
-                             start_position: Optional[Any]) -> None:
+    def update_workbench_state(
+        self,
+        beat_index: Optional[int],
+        beat_data: Optional[Any],
+        start_position: Optional[Any],
+    ) -> None:
         """
         Update workbench selection state.
-        
+
         Args:
             beat_index: Currently selected beat index
             beat_data: Currently selected beat data
             start_position: Current start position data
         """
-    
+
     @abstractmethod
-    def update_graph_editor_state(self, visible: bool, 
-                                beat_index: Optional[int], 
-                                selected_arrow: Optional[str],
-                                height: Optional[int] = None) -> None:
+    def update_graph_editor_state(
+        self,
+        visible: bool,
+        beat_index: Optional[int],
+        selected_arrow: Optional[str],
+        height: Optional[int] = None,
+    ) -> None:
         """
         Update graph editor state.
-        
+
         Args:
             visible: Whether graph editor is visible
             beat_index: Selected beat index in graph editor
             selected_arrow: Selected arrow identifier
             height: Graph editor height (optional)
         """
-    
+
     @abstractmethod
-    def update_ui_state(self, active_tab: str, 
-                       beat_layout: Optional[Dict[str, Any]] = None,
-                       component_visibility: Optional[Dict[str, bool]] = None) -> None:
+    def update_ui_state(
+        self,
+        active_tab: str,
+        beat_layout: Optional[Dict[str, Any]] = None,
+        component_visibility: Optional[Dict[str, bool]] = None,
+    ) -> None:
         """
         Update UI state information.
-        
+
         Args:
             active_tab: Currently active tab
             beat_layout: Beat layout configuration
             component_visibility: Component visibility states
         """
-    
+
     @abstractmethod
     def should_restore_session(self) -> bool:
         """
         Determine if session should be restored (not too stale).
-        
+
         Returns:
             bool: True if session should be restored, False if too stale
         """
-    
+
     @abstractmethod
     def mark_interaction(self) -> None:
         """
         Mark user interaction to trigger debounced auto-save.
         This method should be called after any meaningful user interaction.
         """
-    
+
     @abstractmethod
     def clear_session(self) -> bool:
         """
         Clear current session state and remove session file.
-        
+
         Returns:
             bool: True if clear was successful, False otherwise
         """
-    
+
     @abstractmethod
     def get_current_session_state(self) -> Optional[SessionState]:
         """
         Get current session state without loading from file.
-        
+
         Returns:
             Optional[SessionState]: Current session state or None
         """
-    
+
     @abstractmethod
     def is_auto_save_enabled(self) -> bool:
         """
         Check if auto-save is currently enabled.
-        
+
         Returns:
             bool: True if auto-save is enabled, False otherwise
         """
-    
+
     @abstractmethod
     def set_auto_save_enabled(self, enabled: bool) -> None:
         """
         Enable or disable auto-save functionality.
-        
+
         Args:
             enabled: Whether to enable auto-save
         """

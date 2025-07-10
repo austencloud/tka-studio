@@ -183,32 +183,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IPictographContextService,
         )
 
-        # Register service types, not instances - pure DI
         container.register_singleton(IPictographDataService, PictographDataService)
         container.register_singleton(
             PictographManagementService, PictographManagementService
         )
-
-        # Register border service for pictograph border management
         container.register_singleton(IPictographBorderService, PictographBorderService)
-        print("🔧 [SERVICE_REGISTRATION] Registered IPictographBorderService")
-
-        # Register pictograph context service for robust context detection
         container.register_singleton(
             IPictographContextService, PictographContextService
         )
-        print("🔧 [SERVICE_REGISTRATION] Registered IPictographContextService")
-
-        # Debug: Verify service can be resolved immediately after registration
-        try:
-            test_service = container.resolve(IPictographContextService)
-            print(
-                f"✅ [SERVICE_REGISTRATION] IPictographContextService resolved successfully: {type(test_service).__name__}"
-            )
-        except Exception as e:
-            print(
-                f"❌ [SERVICE_REGISTRATION] Failed to resolve IPictographContextService: {e}"
-            )
 
     def register_workbench_services(self, container: "DIContainer") -> None:
         """Register workbench services."""
@@ -363,17 +345,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
     def register_data_services(self, container: "DIContainer") -> None:
         """Register the new refactored data services."""
         # Import the new data services
-        from application.services.data.csv_data_service import (
-            CSVDataService,
-            ICSVDataService,
-        )
+        from application.services.data.csv_reader import CSVReader, ICSVReader
         from application.services.positioning.props.configuration.json_configuration_service import (
             IJSONConfigurationService,
             JSONConfigurationService,
         )
 
         # Register the data services
-        container.register_singleton(ICSVDataService, CSVDataService)
+        container.register_singleton(ICSVReader, CSVReader)
         container.register_singleton(
             IJSONConfigurationService, JSONConfigurationService
         )

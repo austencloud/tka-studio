@@ -80,9 +80,9 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             session_service = None
             if container:
                 try:
-                    from core.interfaces.session_services import ISessionStateService
+                    from core.interfaces.session_services import ISessionStateTracker
 
-                    session_service = container.resolve(ISessionStateService)
+                    session_service = container.resolve(ISessionStateTracker)
                     print(
                         f"✅ [ORCHESTRATOR] Session service resolved for lifecycle manager"
                     )

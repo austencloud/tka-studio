@@ -13,19 +13,15 @@ This service provides a clean, unified interface for all UI state operations
 while maintaining the proven algorithms from the individual services.
 """
 
-from typing import Dict, Any, Optional, Callable
-from enum import Enum
-from dataclasses import dataclass, field
 import json
+from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
+from typing import Any, Callable, Dict, Optional
 
-from core.events.event_bus import (
-    get_event_bus,
-    UIEvent,
-    EventPriority,
-)
+from core.events.event_bus import EventPriority, UIEvent, get_event_bus
 from core.interfaces.core_services import IUIStateManagementService
-from core.interfaces.session_services import ISessionStateService
+from core.interfaces.session_services import ISessionStateTracker
 
 
 class UIComponent(Enum):
@@ -90,7 +86,7 @@ class UIStateManagementService(IUIStateManagementService):
     - Event-driven state synchronization
     """
 
-    def __init__(self, session_service: Optional[ISessionStateService] = None):
+    def __init__(self, session_service: Optional[ISessionStateTracker] = None):
         # Core state
         self._ui_state = UIState()
 
@@ -598,6 +594,6 @@ class UIStateManagementService(IUIStateManagementService):
             print(f"Failed to restore session: {e}")
             return False
 
-    def set_session_service(self, session_service: ISessionStateService) -> None:
+    def set_session_service(self, session_service: ISessionStateTracker) -> None:
         """Set the session service for integration (used by DI container)."""
         self._session_service = session_service

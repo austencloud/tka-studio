@@ -22,7 +22,7 @@ from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
 from core.application.application_factory import ApplicationFactory
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QPushButton
 
@@ -114,22 +114,39 @@ class CompleteUserWorkflowTester:
             ):
                 start_pos_picker = self.layout_manager.start_position_picker
 
-                # Try to find alpha1 button and click it
-                if hasattr(start_pos_picker, "position_buttons"):
-                    alpha1_button = start_pos_picker.position_buttons.get("alpha1")
-                    if alpha1_button:
-                        print("🖱️ [WORKFLOW] Clicking alpha1 start position...")
-                        QTest.mouseClick(alpha1_button, 1)  # Left click
+                # Try to find alpha1 option and click it
+                if hasattr(start_pos_picker, "position_options"):
+                    # Look for alpha1_alpha1 position option
+                    alpha1_option = None
+                    for option in start_pos_picker.position_options:
+                        if (
+                            hasattr(option, "position_key")
+                            and option.position_key == "alpha1_alpha1"
+                        ):
+                            alpha1_option = option
+                            break
+
+                    if alpha1_option:
+                        print("🖱️ [WORKFLOW] Clicking alpha1_alpha1 start position...")
+                        QTest.mouseClick(alpha1_option, Qt.MouseButton.LeftButton)
                         QTest.qWait(1000)  # Wait for processing
 
                         self.log_workflow_state("AFTER_START_POSITION_SELECT")
                         print("✅ [WORKFLOW] Step 2: Start position selected")
                         return True
                     else:
-                        print("❌ [WORKFLOW] Could not find alpha1 button")
+                        print("❌ [WORKFLOW] Could not find alpha1_alpha1 option")
+                        available_keys = [
+                            opt.position_key
+                            for opt in start_pos_picker.position_options
+                            if hasattr(opt, "position_key")
+                        ]
+                        print(
+                            f"🔍 [WORKFLOW] Available position keys: {available_keys}"
+                        )
                         return False
                 else:
-                    print("❌ [WORKFLOW] Start position picker has no position_buttons")
+                    print("❌ [WORKFLOW] Start position picker has no position_options")
                     return False
             else:
                 print("❌ [WORKFLOW] Could not find start position picker")
@@ -157,26 +174,42 @@ class CompleteUserWorkflowTester:
             if self.layout_manager and hasattr(self.layout_manager, "option_picker"):
                 option_picker = self.layout_manager.option_picker
 
-                # Try to find and click the first available option
-                if hasattr(option_picker, "option_buttons"):
-                    # Get first available option button
-                    option_buttons = option_picker.option_buttons
-                    if option_buttons:
-                        first_option_key = list(option_buttons.keys())[0]
-                        first_option_button = option_buttons[first_option_key]
+                # Try to access the orchestrator and pool manager
+                if hasattr(option_picker, "orchestrator"):
+                    orchestrator = option_picker.orchestrator
 
-                        print(f"🖱️ [WORKFLOW] Clicking option: {first_option_key}")
-                        QTest.mouseClick(first_option_button, 1)  # Left click
-                        QTest.qWait(1000)  # Wait for processing
+                    # Check if orchestrator has pool manager
+                    if (
+                        hasattr(orchestrator, "pool_manager")
+                        and orchestrator.pool_manager
+                    ):
+                        pool_manager = orchestrator.pool_manager
 
-                        self.log_workflow_state("AFTER_OPTION_SELECT")
-                        print("✅ [WORKFLOW] Step 3: Option selected")
-                        return True
+                        # Get the first available pictograph frame from the pool
+                        if hasattr(pool_manager, "get_pictograph_from_pool"):
+                            first_frame = pool_manager.get_pictograph_from_pool(0)
+
+                            if first_frame and hasattr(first_frame, "clicked"):
+                                print(f"🖱️ [WORKFLOW] Clicking first option frame")
+                                QTest.mouseClick(first_frame, Qt.MouseButton.LeftButton)
+                                QTest.qWait(1000)  # Wait for processing
+
+                                self.log_workflow_state("AFTER_OPTION_SELECT")
+                                print("✅ [WORKFLOW] Step 3: Option selected")
+                                return True
+                            else:
+                                print("❌ [WORKFLOW] No clickable frame found in pool")
+                                return False
+                        else:
+                            print(
+                                "❌ [WORKFLOW] Pool manager has no get_pictograph_from_pool method"
+                            )
+                            return False
                     else:
-                        print("❌ [WORKFLOW] No option buttons available")
+                        print("❌ [WORKFLOW] Orchestrator has no pool_manager")
                         return False
                 else:
-                    print("❌ [WORKFLOW] Option picker has no option_buttons")
+                    print("❌ [WORKFLOW] Option picker has no orchestrator")
                     return False
             else:
                 print("❌ [WORKFLOW] Could not find option picker")
@@ -201,7 +234,7 @@ class CompleteUserWorkflowTester:
             clear_button = self.find_clear_sequence_button()
             if clear_button:
                 print("🖱️ [WORKFLOW] Clicking Clear Sequence button...")
-                QTest.mouseClick(clear_button, 1)  # Left click
+                QTest.mouseClick(clear_button, Qt.MouseButton.LeftButton)
 
                 # Monitor transitions after clear
                 intervals = [100, 250, 500, 1000, 2000]

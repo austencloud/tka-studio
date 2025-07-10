@@ -3,7 +3,7 @@
 
 QT_SERVICES_AVAILABLE = False  # Set to False to avoid Qt dependencies in tests
 
-from .core.object_pool_service import ObjectPoolService
+from .core.object_pool_manager import ObjectPoolManager
 
 # Core services
 from .core.sequence_manager import SequenceManager
@@ -16,5 +16,5 @@ __all__ = [
     "MotionOrientationService",
     "IMotionOrientationService",
     "SequenceManager",
-    "ObjectPoolService",
+    "ObjectPoolManager",
 ]

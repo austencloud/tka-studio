@@ -16,7 +16,7 @@ from core.dependency_injection.di_container import DIContainer
 
 logger = logging.getLogger(__name__)
 
-from application.services.core.session_state_service import SessionStateService
+from application.services.core.session_state_tracker import SessionStateTracker
 
 # Import production services
 from application.services.layout.layout_management_service import (
@@ -44,7 +44,7 @@ from core.interfaces.core_services import (
 
 # Import file system services
 from core.interfaces.organization_services import IFileSystemService
-from core.interfaces.session_services import ISessionStateService
+from core.interfaces.session_services import ISessionStateTracker
 from infrastructure.file_system.file_system_service import FileSystemService
 
 # Import file-based storage services
@@ -122,34 +122,15 @@ class ApplicationFactory:
         )
 
         # Register session service
-        container.register_singleton(ISessionStateService, SessionStateService)
+        container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
-        # Register visibility service
-        from application.services.settings.visibility_service import VisibilityService
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
-
-        container.register_singleton(IVisibilityService, VisibilityService)
-
-        # Register pictograph context service
-        from application.services.ui.pictograph_context_service import (
-            PictographContextService,
-        )
-        from core.interfaces.core_services import (
-            IPictographBorderService,
-            IPictographContextService,
+        # Register all services using ServiceRegistrationManager
+        from application.services.core.service_registration_manager import (
+            ServiceRegistrationManager,
         )
 
-        container.register_singleton(
-            IPictographContextService, PictographContextService
-        )
-
-        # Register pictograph border service
-        from application.services.pictographs.border_service import (
-            PictographBorderService,
-        )
-
-        container.register_singleton(IPictographBorderService, PictographBorderService)
-        logger.info("Registered IPictographBorderService in ApplicationFactory")
+        service_manager = ServiceRegistrationManager()
+        service_manager.register_all_services(container)
 
         # Register extracted services
         from core.dependency_injection.config_registration import (
@@ -207,7 +188,7 @@ class ApplicationFactory:
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Register session service
-        container.register_singleton(ISessionStateService, SessionStateService)
+        container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
         from application.services.settings.visibility_service import VisibilityService
@@ -291,7 +272,7 @@ class ApplicationFactory:
         )
 
         # Register session service
-        container.register_singleton(ISessionStateService, SessionStateService)
+        container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
         from application.services.settings.visibility_service import VisibilityService

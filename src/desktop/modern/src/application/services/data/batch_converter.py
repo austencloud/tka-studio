@@ -20,11 +20,13 @@ except ImportError:
     def handle_service_errors(*args, **kwargs):
         def decorator(func):
             return func
+
         return decorator
 
     def monitor_performance(*args, **kwargs):
         def decorator(func):
             return func
+
         return decorator
 
     class DataProcessingError(Exception):
@@ -33,13 +35,14 @@ except ImportError:
     class ValidationError(Exception):
         pass
 
+
 logger = logging.getLogger(__name__)
 
 
-class BatchConversionService:
+class BatchConverter:
     """
     Handles batch conversion operations for multiple pictographs.
-    
+
     Provides optimized processing with error handling, progress tracking,
     and detailed reporting for large dataset conversions.
     """
@@ -119,13 +122,15 @@ class BatchConversionService:
             "converted_pictographs": [],
             "validation_results": [],
             "conversion_errors": [],
-            "summary": {}
+            "summary": {},
         }
 
         for i, external_data in enumerate(external_pictographs):
             try:
                 # Validate structure first
-                validation_result = self.validator.validate_external_data_structure(external_data)
+                validation_result = self.validator.validate_external_data_structure(
+                    external_data
+                )
                 validation_result["index"] = i
                 results["validation_results"].append(validation_result)
 
@@ -136,26 +141,26 @@ class BatchConversionService:
                     )
                     results["converted_pictographs"].append(pictograph_data)
                 else:
-                    logger.warning(f"Skipping pictograph {i} due to validation errors: {validation_result['issues']}")
+                    logger.warning(
+                        f"Skipping pictograph {i} due to validation errors: {validation_result['issues']}"
+                    )
 
             except Exception as e:
                 error_info = {
                     "index": i,
                     "error": str(e),
-                    "external_data": external_data
+                    "external_data": external_data,
                 }
                 results["conversion_errors"].append(error_info)
                 logger.error(f"Conversion error for pictograph {i}: {e}")
 
         # Generate summary
         results["summary"] = self._generate_batch_summary(results)
-        
+
         return results
 
     def convert_with_progress_callback(
-        self, 
-        external_pictographs: List[Dict[str, Any]], 
-        progress_callback=None
+        self, external_pictographs: List[Dict[str, Any]], progress_callback=None
     ) -> List[PictographData]:
         """
         Convert multiple pictographs with progress reporting.
@@ -187,7 +192,7 @@ class BatchConversionService:
 
             except Exception as e:
                 logger.warning(f"Conversion error for pictograph {i}: {e}")
-                
+
                 # Report progress even on error
                 if progress_callback:
                     progress = (i + 1) / total_count
@@ -199,7 +204,9 @@ class BatchConversionService:
         """Generate summary statistics for batch conversion."""
         total_input = len(results["validation_results"])
         successful_conversions = len(results["converted_pictographs"])
-        validation_errors = sum(1 for v in results["validation_results"] if not v["valid"])
+        validation_errors = sum(
+            1 for v in results["validation_results"] if not v["valid"]
+        )
         conversion_errors = len(results["conversion_errors"])
 
         return {
@@ -207,7 +214,9 @@ class BatchConversionService:
             "successful_conversions": successful_conversions,
             "validation_errors": validation_errors,
             "conversion_errors": conversion_errors,
-            "success_rate": successful_conversions / total_input if total_input > 0 else 0,
+            "success_rate": (
+                successful_conversions / total_input if total_input > 0 else 0
+            ),
             "total_errors": validation_errors + conversion_errors,
         }
 
@@ -220,7 +229,7 @@ class BatchConversionService:
                 "validation",
                 "error_handling",
                 "progress_tracking",
-                "detailed_reporting"
+                "detailed_reporting",
             ],
-            "conversion_statistics": self.validator.get_conversion_statistics()
+            "conversion_statistics": self.validator.get_conversion_statistics(),
         }

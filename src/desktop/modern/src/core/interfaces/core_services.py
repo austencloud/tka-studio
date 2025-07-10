@@ -308,7 +308,7 @@ class IPictographBorderService(ABC):
 # - Various specialized services for specific beat operations
 
 
-class IObjectPoolService(ABC):
+class IObjectPoolManager(ABC):
     """Interface for object pool management."""
 
     @abstractmethod

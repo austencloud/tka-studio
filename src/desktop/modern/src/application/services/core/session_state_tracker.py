@@ -8,10 +8,10 @@ Automatically saves user state after interactions and restores exactly where the
 import json
 import logging
 import uuid
+from dataclasses import asdict
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional, Dict, Any
-from dataclasses import asdict
+from typing import Any, Dict, Optional
 
 # Conditional PyQt6 imports for testing compatibility
 try:
@@ -36,19 +36,19 @@ except ImportError:
 
     QT_AVAILABLE = False
 
-from core.interfaces.session_services import (
-    ISessionStateService,
-    SessionState,
-    SessionRestoreResult,
-)
+from core.events.event_bus import get_event_bus
 from core.interfaces.core_services import IUIStateManagementService
 from core.interfaces.organization_services import IFileSystemService
-from core.events.event_bus import get_event_bus
+from core.interfaces.session_services import (
+    ISessionStateTracker,
+    SessionRestoreResult,
+    SessionState,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class SessionStateService(ISessionStateService):
+class SessionStateTracker(ISessionStateTracker):
     """
     Production implementation of session state management.
 

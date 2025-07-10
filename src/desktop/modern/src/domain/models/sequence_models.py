@@ -102,7 +102,13 @@ class SequenceData:
 
     def add_beat(self, beat_data: BeatData) -> "SequenceData":
         """Create a new sequence with an additional beat."""
-        new_beat = beat_data.update(beat_number=len(self.beats) + 1)
+        # Calculate the correct beat number (excluding start position beat)
+        non_start_beats = [
+            b for b in self.beats if not b.metadata.get("is_start_position", False)
+        ]
+        next_beat_number = len(non_start_beats) + 1
+
+        new_beat = beat_data.update(beat_number=next_beat_number)
         new_beats = list(self.beats) + [new_beat]
 
         from dataclasses import replace

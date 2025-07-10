@@ -12,13 +12,13 @@ PROVIDES:
 - API server startup coordination
 """
 
-from typing import Optional, Tuple, Callable
 from abc import ABC, abstractmethod
-from PyQt6.QtWidgets import QMainWindow
-from PyQt6.QtGui import QGuiApplication
+from typing import Callable, Optional, Tuple
 
 # Import session service interface
-from core.interfaces.session_services import ISessionStateService
+from core.interfaces.session_services import ISessionStateTracker
+from PyQt6.QtGui import QGuiApplication
+from PyQt6.QtWidgets import QMainWindow
 
 
 class IApplicationLifecycleManager(ABC):
@@ -58,7 +58,7 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
     without business logic dependencies. Uses clean separation of concerns.
     """
 
-    def __init__(self, session_service: Optional[ISessionStateService] = None):
+    def __init__(self, session_service: Optional[ISessionStateTracker] = None):
         """Initialize application lifecycle manager."""
         self.api_enabled = True
         self._session_service = session_service
@@ -151,7 +151,7 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
         """Apply restored session data to UI components."""
         print("🔍 [LIFECYCLE] Starting UI restoration process...")
         try:
-            from core.events.event_bus import get_event_bus, UIEvent, EventPriority
+            from core.events.event_bus import EventPriority, UIEvent, get_event_bus
 
             # Get event bus for publishing restoration events
             event_bus = get_event_bus()
@@ -402,8 +402,9 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
             return False
 
         try:
-            from infrastructure.api.integration import start_api_server
             import platform
+
+            from infrastructure.api.integration import start_api_server
 
             # Enhanced logging for Windows
             if platform.system() == "Windows":
@@ -501,7 +502,7 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
         # Additional cleanup can be added here as needed
         print("🧹 Application cleanup completed")
 
-    def set_session_service(self, session_service: ISessionStateService) -> None:
+    def set_session_service(self, session_service: ISessionStateTracker) -> None:
         """Set the session service for lifecycle integration."""
         self._session_service = session_service
 

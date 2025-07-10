@@ -65,8 +65,16 @@ class SequenceManager(SequenceManagerQtAdapter):
                 )
                 beat_data = updated_beats[0]
 
+            # Calculate the correct beat number (excluding start position beat)
+            non_start_beats = [
+                b
+                for b in current_sequence.beats
+                if not b.metadata.get("is_start_position", False)
+            ]
+            next_beat_number = len(non_start_beats) + 1
+
             new_beat = beat_data.update(
-                beat_number=current_sequence.length + 1,
+                beat_number=next_beat_number,
                 duration=1.0,
             )
 

@@ -1,6 +1,7 @@
 # Services Reorganization Summary
 
 ## Overview
+
 This document summarizes the reorganization of erroneously placed services from the components directory to their proper locations in the application services directory.
 
 ## Major Changes
@@ -11,10 +12,12 @@ This document summarizes the reorganization of erroneously placed services from 
 **To:** `src/application/services/option_picker/data/`
 
 #### Files Moved:
+
 - `pool_manager.py` → `application/services/option_picker/data/pool_manager.py`
 - `position_matcher.py` → `application/services/option_picker/data/position_matcher.py`
 
 #### Reasoning:
+
 These classes contain business logic and UI adapter functionality that should be in the application services layer, not in the presentation components layer. They are UI adapters that delegate to business services while maintaining Qt-specific functionality.
 
 ### 2. Settings Service Factory Moved
@@ -23,11 +26,13 @@ These classes contain business logic and UI adapter functionality that should be
 **To:** `src/application/services/ui/settings/settings_services.py`
 
 #### Reasoning:
+
 The `SettingsServices` class is a service factory/manager that coordinates multiple settings-related services. While it's used by UI components, it belongs in the application services layer to maintain proper separation of concerns.
 
 ## Updated Import Statements
 
 ### Files Updated:
+
 1. `src/presentation/components/option_picker/__init__.py`
 2. `src/presentation/components/option_picker/services/__init__.py`
 3. `src/application/services/option_picker/initialization_service.py`
@@ -38,6 +43,7 @@ The `SettingsServices` class is a service factory/manager that coordinates multi
 8. `src/presentation/components/ui/settings/components/__init__.py`
 
 ### New Import Patterns:
+
 ```python
 # Old imports (no longer valid)
 from presentation.components.option_picker.services.data.pool_manager import PictographPoolManager
@@ -53,10 +59,12 @@ from application.services.ui.settings import SettingsServices
 ## Directory Structure Changes
 
 ### New Directories Created:
+
 - `src/application/services/option_picker/data/`
 - `src/application/services/ui/settings/`
 
 ### Old Directories Removed:
+
 - `src/presentation/components/option_picker/services/data/`
 
 ## Benefits of This Reorganization
@@ -74,8 +82,9 @@ The classes maintain the same public interfaces, so existing code that uses thes
 ## Verification
 
 All moved services have been verified to import correctly and maintain their functionality:
+
 - ✓ `PictographPoolManager` imports successfully
-- ✓ `PositionMatcher` imports successfully  
+- ✓ `PositionMatcher` imports successfully
 - ✓ `SettingsServices` imports successfully
 
 ## Next Steps

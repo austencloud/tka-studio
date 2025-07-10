@@ -1,5 +1,6 @@
 from typing import Optional
 
+from application.services.layout.component_sizer import ComponentSizer, SizeConstraints
 from domain.models.pictograph_models import PictographData
 from presentation.components.pictograph.pictograph_component import (
     PictographComponent,

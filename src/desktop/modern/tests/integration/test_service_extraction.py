@@ -66,7 +66,9 @@ class TestServiceExtractionIntegration:
         """Test option picker data service integration (replacement for beat loading)."""
         try:
             # Test the new OptionPickerDataService that replaced BeatLoadingService
-            from application.services.option_picker.data_service import OptionPickerDataService
+            from application.services.option_picker.data_service import (
+                OptionPickerDataService,
+            )
 
             service = OptionPickerDataService()
 
@@ -117,14 +119,14 @@ class TestServiceExtractionIntegration:
     def test_presentation_layer_adapter_compatibility(self):
         """Test that presentation layer adapters maintain compatibility."""
         try:
-            from presentation.components.option_picker.services.data.option_service import (
-                OptionService,
-            )
             from application.services.option_picker.data.pool_manager import (
                 PictographPoolManager,
             )
             from application.services.option_picker.data.position_matcher import (
                 PositionMatcher,
+            )
+            from presentation.components.option_picker.services.data.option_service import (
+                OptionService,
             )
 
             # Test position matcher adapter
@@ -179,7 +181,10 @@ class TestServiceExtractionIntegration:
             assert result is None  # Should handle gracefully and return None on error
 
             # Test option picker data service error handling (replacement for beat loading)
-            from application.services.option_picker.data_service import OptionPickerDataService
+            from application.services.option_picker.data_service import (
+                OptionPickerDataService,
+            )
+
             option_service = OptionPickerDataService()
             result = option_service.refresh_pictographs_from_sequence_data([])
             assert isinstance(result, list)  # Should return empty list
@@ -247,7 +252,10 @@ class TestServiceExtractionIntegration:
             container = ApplicationFactory.create_test_app()
 
             # Test that option picker data service can work with position service
-            from application.services.option_picker.data_service import OptionPickerDataService
+            from application.services.option_picker.data_service import (
+                OptionPickerDataService,
+            )
+
             option_service = OptionPickerDataService()
             position_service = container.resolve(IPositionMatchingService)
 
@@ -256,7 +264,9 @@ class TestServiceExtractionIntegration:
             position_result = position_service.extract_end_position(test_data)
 
             sequence_data = [test_data, {"letter": "B"}]
-            option_result = option_service.refresh_pictographs_from_sequence_data(sequence_data)
+            option_result = option_service.refresh_pictographs_from_sequence_data(
+                sequence_data
+            )
 
             assert position_result is not None
             assert isinstance(option_result, list)

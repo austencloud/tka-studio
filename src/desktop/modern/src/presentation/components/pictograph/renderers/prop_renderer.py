@@ -1,25 +1,26 @@
+import logging
 import os
 import re
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any
-from PyQt6.QtCore import QPointF
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtSvg import QSvgRenderer
 
-from domain.models import MotionData, Location
-
-from presentation.components.pictograph.asset_utils import (
-    get_image_path,
-)
-
-from domain.models import Orientation
+from application.services.assets.asset_manager import AssetManager
 from application.services.positioning.props.orchestration.prop_management_service import (
     PropManagementService,
 )
+from core.dependency_injection.di_container import get_container
+from core.interfaces.positioning_services import IArrowCoordinateSystemService
+from domain.models import Location, MotionData, MotionType, Orientation
+from presentation.components.pictograph.asset_utils import get_image_path
+from PyQt6.QtCore import QPointF
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from ui.adapters.qt_geometry_adapter import QtGeometryAdapter
 
 if TYPE_CHECKING:
     from presentation.components.pictograph.pictograph_scene import PictographScene
+
+logger = logging.getLogger(__name__)
 
 
 class PropRenderer:
@@ -29,10 +30,23 @@ class PropRenderer:
         self.CENTER_Y = 475
         self.HAND_RADIUS = 143.1
 
+        # Initialize asset manager service
+        self.asset_manager = AssetManager()
+
+        # Initialize prop management service
         self.prop_management_service = PropManagementService()
         self.rendered_props: dict[str, QGraphicsSvgItem] = {}
 
-        self.location_coordinates = {
+        # Get coordinate system service from DI container
+        try:
+            container = get_container()
+            self.coordinate_system = container.resolve(IArrowCoordinateSystemService)
+        except Exception as e:
+            logger.warning(f"Failed to resolve coordinate system service: {e}")
+            self.coordinate_system = None
+
+        # Fallback coordinates for when coordinate system service is not available
+        self._fallback_location_coordinates = {
             Location.NORTH.value: (0, -self.HAND_RADIUS),
             Location.EAST.value: (self.HAND_RADIUS, 0),
             Location.SOUTH.value: (0, self.HAND_RADIUS),
@@ -56,29 +70,33 @@ class PropRenderer:
         }
 
     def render_prop(self, color: str, motion_data: MotionData) -> None:
-        prop_svg_path = get_image_path("props/staff.svg")
+        # Use asset manager to get prop SVG path
+        prop_svg_path = self.asset_manager.get_prop_asset_path("staff", color)
 
         if not os.path.exists(prop_svg_path):
-            print(f"Warning: Prop asset not found: {prop_svg_path}")
+            logger.warning(f"Prop asset not found: {prop_svg_path}")
             return
 
         prop_item = QGraphicsSvgItem()
-        svg_data = self._load_svg_file(prop_svg_path)
-        colored_svg_data = self._apply_color_transformation(svg_data, color)
+        # Use asset manager to load and transform SVG
+        svg_data = self.asset_manager.load_and_cache_asset(prop_svg_path)
+        colored_svg_data = self.asset_manager.apply_color_transformation(
+            svg_data, color
+        )
 
         renderer = QSvgRenderer(bytearray(colored_svg_data, encoding="utf-8"))
         if not renderer.isValid():
-            print(f"Warning: Invalid SVG renderer for {prop_svg_path}")
+            logger.warning(f"Invalid SVG renderer for {prop_svg_path}")
             return
 
         prop_item.setSharedRenderer(renderer)
 
         end_pos = self._get_location_position(motion_data.end_loc)
         if end_pos == (0, 0) and motion_data.end_loc != Location.NORTH:
-            print(
-                f"Warning: Invalid location {motion_data.end_loc}, using default position"
+            logger.warning(
+                f"Invalid location {motion_data.end_loc}, using default position"
             )
-            end_pos = self.location_coordinates[Location.NORTH.value]
+            end_pos = self._fallback_location_coordinates[Location.NORTH.value]
 
         target_hand_point_x = self.CENTER_X + end_pos[0]
         target_hand_point_y = self.CENTER_Y + end_pos[1]
@@ -108,21 +126,40 @@ class PropRenderer:
         prop_item.setPos(new_position)
 
     def _get_location_position(self, location) -> tuple[float, float]:
-        # Handle both enum and string location values
-        if hasattr(location, 'value'):
-            # It's an enum, use .value
-            location_key = location.value
+        """Get the coordinate position for a location using the coordinate system service."""
+        if self.coordinate_system:
+            # Use the coordinate system service to get proper coordinates
+            # Since we don't have motion data context, create a dummy static motion
+            # for coordinate calculation
+            from domain.models import RotationDirection
+
+            dummy_motion = MotionData(
+                motion_type=MotionType.STATIC,
+                prop_rot_dir=RotationDirection.CLOCKWISE,
+                turns=0.0,
+                start_loc=location,
+                end_loc=location,
+                start_ori=Orientation.IN,
+                end_ori=Orientation.IN,
+            )
+            point = self.coordinate_system.get_initial_position(dummy_motion, location)
+            return (point.x(), point.y())
         else:
-            # It's already a string
-            location_key = str(location)
-        
-        position = self.location_coordinates.get(location_key)
-        if position is None:
-            print(f"Warning: Unknown location {location}, using NORTH as fallback")
-            # Use fallback for NORTH location
-            fallback_key = 'n'  # NORTH in string format
-            return self.location_coordinates.get(fallback_key, (0, -143.1))
-        return position
+            # Fallback to manual calculation if service is not available
+            # Handle both enum and string location values
+            if hasattr(location, "value"):
+                location_key = location.value
+            else:
+                location_key = str(location)
+
+            position = self._fallback_location_coordinates.get(location_key)
+            if position is None:
+                logger.warning(f"Unknown location {location}, using NORTH as fallback")
+                return self._fallback_location_coordinates.get(
+                    Location.NORTH.value, (0, -143.1)
+                )
+            return position
+            return position
 
     def _calculate_prop_rotation(self, motion_data: MotionData) -> float:
         # Use the actual start orientation from motion data instead of hardcoded IN
@@ -153,42 +190,6 @@ class PropRenderer:
 
         # Fallback to IN if no valid orientation found
         return Orientation.IN
-
-    def _load_svg_file(self, file_path: str) -> str:
-        return self._load_svg_file_cached(file_path)
-
-    @lru_cache(maxsize=64)
-    def _load_svg_file_cached(self, file_path: str) -> str:
-        try:
-            with open(file_path, "r", encoding="utf-8") as file:
-                content = file.read()
-                return content
-        except Exception:
-            return ""
-
-    def _apply_color_transformation(self, svg_data: str, color: str) -> str:
-        if not svg_data:
-            return svg_data
-
-        COLOR_MAP = {
-            "blue": "#2E3192",
-            "red": "#ED1C24",
-        }
-
-        target_color = COLOR_MAP.get(color.lower(), "#2E3192")
-
-        patterns = [
-            re.compile(r'(fill=")([^"]*)(")'),
-            re.compile(r"(fill:\s*)([^;]*)(;)"),
-            re.compile(r"(\.(st0|cls-1)\s*\{[^}]*?fill:\s*)([^;}]*)([^}]*?\})"),
-        ]
-
-        for pattern in patterns:
-            svg_data = pattern.sub(
-                lambda m: m.group(1) + target_color + m.group(len(m.groups())), svg_data
-            )
-
-        return svg_data
 
     def apply_beta_positioning(self, beat_data: Any) -> None:
         from domain.models import BeatData

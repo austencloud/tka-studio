@@ -1,4 +1,4 @@
-from application.services.data.dataset_query_service import DatasetQueryService
+from application.services.data.dataset_quiry import DatasetQuery
 from presentation.components.pictograph.pictograph_component import (
     create_pictograph_component,
 )
@@ -24,7 +24,7 @@ class StartPositionOption(QWidget):
         super().__init__()
         self.position_key = position_key
         self.grid_mode = grid_mode
-        self.dataset_service = DatasetQueryService()
+        self.dataset_service = DatasetQuery()
 
         # Initialize selection overlay components
         self._pictograph_component = None
