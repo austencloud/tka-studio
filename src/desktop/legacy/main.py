@@ -10,6 +10,7 @@ sys.path.insert(0, str(project_root))
 # Set up all TKA paths for clean imports
 try:
     from setup_paths import setup_tka_paths
+
     paths_added = setup_tka_paths()
     print(f"✅ TKA paths setup complete - {paths_added} paths added")
 except Exception as e:
@@ -220,9 +221,7 @@ def detect_parallel_testing_mode():
 def main():
     configure_import_paths()
 
-    from legacy_settings_manager.legacy_settings_manager import (
-        LegacySettingsManager,
-    )
+    from legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
     from PyQt6.QtCore import QTimer
     from src.profiler import Profiler
     from src.splash_screen.splash_screen import SplashScreen

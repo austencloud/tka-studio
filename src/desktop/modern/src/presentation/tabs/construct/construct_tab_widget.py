@@ -62,12 +62,31 @@ class ConstructTabWidget(QWidget):
         self.progress_callback = progress_callback
         self.state_service = UIStateManagementService()
 
+        # Report initialization start
+        if self.progress_callback:
+            self.progress_callback("Initializing construct tab services", 0.1)
+
         # Initialize component services
         self._initialize_components()
 
+        # Report UI setup start
+        if self.progress_callback:
+            self.progress_callback("Setting up construct tab UI", 0.5)
+
         # Setup UI and connect signals
         self._setup_ui_with_progress()
+
+        # Report signal connection
+        if self.progress_callback:
+            self.progress_callback("Connecting component signals", 0.9)
+
         self._connect_external_signals()
+
+        # Report completion
+        if self.progress_callback:
+            self.progress_callback("Construct tab ready", 1.0)
+
+        print("✅ ConstructTabWidget initialization completed")
 
     def _initialize_components(self):
         """Initialize all services directly via dependency injection"""

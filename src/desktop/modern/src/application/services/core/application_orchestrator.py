@@ -11,21 +11,22 @@ PROVIDES:
 - Progress tracking and error handling
 """
 
-from typing import Optional, Callable
 from abc import ABC, abstractmethod
-from PyQt6.QtWidgets import QMainWindow, QTabWidget
-from PyQt6.QtCore import QTimer
+from typing import Callable, Optional
 
 from core.dependency_injection.di_container import DIContainer
-from .service_registration_manager import (
-    ServiceRegistrationManager,
-    IServiceRegistrationManager,
-)
-from ..ui.ui_setup_manager import UISetupManager, IUISetupManager
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QMainWindow, QTabWidget
+
 from ..ui.background_manager import BackgroundManager, IBackgroundManager
+from ..ui.ui_setup_manager import IUISetupManager, UISetupManager
 from .application_lifecycle_manager import (
     ApplicationLifecycleManager,
     IApplicationLifecycleManager,
+)
+from .service_registration_manager import (
+    IServiceRegistrationManager,
+    ServiceRegistrationManager,
 )
 
 
@@ -176,6 +177,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
     def _start_api_server_background(self) -> None:
         """Start API server in background to avoid blocking startup."""
+
         def start_api():
             try:
                 print("🌐 Starting API server in background...")

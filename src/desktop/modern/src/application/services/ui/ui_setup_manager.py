@@ -105,11 +105,11 @@ class UISetupManager(IUISetupManager):
         if progress_callback:
             progress_callback(75, "Loading construct tab...")
 
-        # Load construct tab with auto-loading (no button click required)
-        self._create_auto_loading_construct_tab(container, session_service)
+        # Load construct tab completely during splash screen phase
+        self._load_construct_tab(container, progress_callback, session_service)
 
         if progress_callback:
-            progress_callback(80, "Finalizing interface...")
+            progress_callback(95, "Finalizing interface...")
 
         # Note: Only Construct tab is needed - placeholder tabs removed for cleaner UI
 
@@ -180,14 +180,10 @@ class UISetupManager(IUISetupManager):
         try:
             # Step 1: Initialize container (76-78%)
             if progress_callback:
-                progress_callback(76, "Creating construct tab container...")
+                progress_callback(76, "Preparing construct tab dependencies...")
 
             if progress_callback:
-                progress_callback(78, "Setting up dependency injection...")
-
-            # Step 2: Initialize core services (78-82%)
-            if progress_callback:
-                progress_callback(79, "Loading pictograph dataset...")
+                progress_callback(78, "Loading pictograph dataset...")
 
             # Lazy import construct tab only when loading
             from presentation.tabs.construct.construct_tab_widget import (
@@ -195,21 +191,27 @@ class UISetupManager(IUISetupManager):
             )
 
             if progress_callback:
-                progress_callback(81, "Initializing position matching...")
+                progress_callback(80, "Initializing construct tab services...")
 
-            # Step 3: Create widget with progress callback (82-88%)
             if progress_callback:
-                progress_callback(83, "Creating option picker pool...")
+                progress_callback(82, "Setting up option picker components...")
 
-            # Create internal progress callback
+            # Step 3: Create widget with progress callback (84-90%)
+            if progress_callback:
+                progress_callback(84, "Creating construct tab widget...")
+
+            # Create internal progress callback with enhanced feedback
             def internal_progress_callback(step: str, progress: float):
                 if progress_callback:
-                    # Map internal progress (0.0-1.0) to our range (83-88%)
-                    mapped_progress = 83 + (progress * 5)  # 5% range for internal steps
-                    progress_callback(int(mapped_progress), step)
+                    # Map internal progress (0.0-1.0) to our range (84-90%)
+                    mapped_progress = 84 + (progress * 6)  # 6% range for internal steps
+                    progress_callback(int(mapped_progress), f"🔧 {step}")
+
+                # Also print detailed progress for debugging
+                print(f"🔍 [CONSTRUCT_TAB] {step} ({progress:.1%})")
 
             if progress_callback:
-                progress_callback(85, "Setting up component layout...")
+                progress_callback(86, "Initializing UI components...")
 
             # Create construct tab
             construct_tab = ConstructTabWidget(
@@ -247,7 +249,7 @@ class UISetupManager(IUISetupManager):
             )
 
             if progress_callback:
-                progress_callback(92, "Construct tab loaded successfully!")
+                progress_callback(92, "Construct tab fully loaded and ready!")
 
         except Exception as e:
             import traceback

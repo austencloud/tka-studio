@@ -6,19 +6,20 @@ Modified to support different application modes via Application Factory.
 Modern modular architecture with dependency injection and clean separation of concerns.
 """
 
-import sys
+import argparse
 import logging
 import os
-import argparse
+import sys
 from pathlib import Path
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from presentation.components.ui.splash_screen import SplashScreen
     from core.application.application_factory import ApplicationMode
-from PyQt6.QtWidgets import QApplication, QMainWindow
+
 from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QIcon, QGuiApplication
+from PyQt6.QtGui import QGuiApplication, QIcon
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
@@ -178,15 +179,18 @@ def main():
         logger.info("Starting TKA in TEST mode")
         # For test mode, just create container and return it
         container = ApplicationFactory.create_app(app_mode)
-        
+
         # Initialize services for test mode too
         try:
             from core.service_locator import initialize_services
+
             initialize_services()
             logger.info("✅ Event-driven services initialized for test mode")
         except Exception as e:
-            logger.warning(f"⚠️ Could not initialize event-driven services in test mode: {e}")
-            
+            logger.warning(
+                f"⚠️ Could not initialize event-driven services in test mode: {e}"
+            )
+
         logger.info(f"Test mode - application ready for automated testing")
         logger.info(f"Available services: {list(container.get_registrations().keys())}")
         return container
@@ -195,15 +199,18 @@ def main():
         logger.info("Starting TKA in HEADLESS mode")
         # For headless mode, create container but no UI
         container = ApplicationFactory.create_app(app_mode)
-        
+
         # Initialize services for headless mode too
         try:
             from core.service_locator import initialize_services
+
             initialize_services()
             logger.info("✅ Event-driven services initialized for headless mode")
         except Exception as e:
-            logger.warning(f"⚠️ Could not initialize event-driven services in headless mode: {e}")
-            
+            logger.warning(
+                f"⚠️ Could not initialize event-driven services in headless mode: {e}"
+            )
+
         logger.info("Headless mode - application ready for server-side processing")
         return container
     elif "--record" in sys.argv:
@@ -222,14 +229,19 @@ def main():
         logger.info(
             f"TKA application container created successfully in {app_mode} mode"
         )
-        
+
         # Initialize event-driven architecture services
         try:
             from core.service_locator import initialize_services
+
             if initialize_services():
-                logger.info("✅ Event-driven architecture services initialized successfully")
+                logger.info(
+                    "✅ Event-driven architecture services initialized successfully"
+                )
             else:
-                logger.warning("⚠️ Failed to initialize event-driven services - falling back to legacy architecture")
+                logger.warning(
+                    "⚠️ Failed to initialize event-driven services - falling back to legacy architecture"
+                )
         except Exception as e:
             logger.error(f"❌ Error initializing event-driven services: {e}")
             logger.warning("⚠️ Continuing with legacy architecture")
@@ -282,6 +294,7 @@ def main():
 
             except Exception:
                 import traceback
+
                 traceback.print_exc()
                 return
 
@@ -294,10 +307,13 @@ def main():
                 if icon_path.exists():
                     app.setWindowIcon(QIcon(str(icon_path)))
 
-                splash.update_progress(15, "Creating main window...")
+                splash.update_progress(
+                    15, "Creating main window and loading all components..."
+                )
                 app.processEvents()
 
-                # Create window but ensure it stays hidden during initialization
+                # Create window with full initialization (including construct tab loading)
+                # This happens during splash screen phase so everything is ready when window appears
                 window = TKAMainWindow(
                     container=container,
                     splash_screen=splash,
@@ -305,30 +321,32 @@ def main():
                     parallel_mode=parallel_mode,
                     parallel_geometry=geometry,
                 )
-                # Double-ensure window is hidden during initialization
+                # Ensure window stays hidden until everything is fully loaded
                 window.hide()
 
                 complete_startup()
             except Exception:
                 import traceback
+
                 traceback.print_exc()
                 return
 
         def complete_startup():
             if window is None:
                 return
-            splash.update_progress(100, "Ready!")
+            splash.update_progress(100, "Application ready!")
             app.processEvents()
 
-            # Show window immediately after UI setup
+            # Show window - everything is already fully loaded
             window.show()
             window.raise_()
+            window.activateWindow()
             print(f"✅ TKA application startup completed successfully!")
-            print(f"🔧 Construct tab will load when accessed for optimal performance")
+            print(f"🔧 Construct tab fully loaded and ready for use")
             print(f"🔍 [MAIN] Main window shown: visible={window.isVisible()}")
 
-            # Hide splash screen after window is visible
-            QTimer.singleShot(200, lambda: splash.hide_animated())
+            # Hide splash screen immediately since main window is now visible with everything loaded
+            splash.hide_animated()
 
         fade_in_animation.finished.connect(start_initialization)
         return app.exec()

@@ -5,7 +5,7 @@
   "python.terminal.activateEnvInCurrentTerminal": true,
   "python.analysis.extraPaths": [
     "./src",
-    "./launcher", 
+    "./launcher",
     "./packages",
     "./packages/shared-types/python",
     "./packages/constants/python"
@@ -48,5 +48,18 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
+
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+
   "cSpell.enabled": false
 }

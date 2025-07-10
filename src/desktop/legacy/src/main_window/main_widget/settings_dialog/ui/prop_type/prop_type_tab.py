@@ -1,17 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QGridLayout,
-    QApplication,
-)
-from PyQt6.QtCore import Qt
+
 from enums.prop_type import PropType
 from main_window.main_widget.settings_dialog.ui.prop_type.prop_button import PropButton
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QGridLayout, QLabel, QVBoxLayout, QWidget
 from utils.path_helpers import get_image_path
-from ...core.glassmorphism_styler import GlassmorphismStyler
 
+from ...core.glassmorphism_styler import GlassmorphismStyler
 
 if TYPE_CHECKING:
     from ...legacy_settings_dialog import LegacySettingsDialog

@@ -18,12 +18,14 @@ print(f"Added {count} paths to sys.path")
 # Test core imports
 try:
     from core.application_context import ApplicationContext
+
     print("✅ ApplicationContext import successful!")
 except ImportError as e:
     print(f"❌ ApplicationContext import failed: {e}")
 
 try:
     from core.glassmorphism_styler import GlassmorphismStyler
+
     print("✅ GlassmorphismStyler import successful!")
 except ImportError as e:
     print(f"❌ GlassmorphismStyler import failed: {e}")
