@@ -6,7 +6,7 @@ Provides all service dependencies for FastAPI endpoints.
 import logging
 from typing import Optional
 
-from application.services.core.sequence_management_service import (
+from application.services.sequences.sequence_management_service import (
     SequenceManagementService,
     ISequenceManagementService,
 )

@@ -7,16 +7,16 @@ Responsible for adding, removing, and modifying beats within sequences.
 
 from typing import Callable, Optional
 
-from application.services.core.sequence_persistence_service import (
-    SequencePersistenceService,
-)
 from application.services.option_picker.orientation_update_service import (
     OptionOrientationUpdateService,
 )
-from PyQt6.QtCore import QObject, pyqtSignal
-
+from application.services.sequences.sequence_persistence_service import (
+    SequencePersistenceService,
+)
 from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class SequenceBeatOperations(QObject):
@@ -47,39 +47,58 @@ class SequenceBeatOperations(QObject):
         self.orientation_update_service = OptionOrientationUpdateService()
         self.persistence_service = SequencePersistenceService()
 
+    def add_pictograph_to_sequence(self, pictograph_data: PictographData):
+        """Add pictograph to sequence by converting to beat data first."""
+        try:
+            # Convert PictographData to BeatData
+            beat_data = self._convert_pictograph_to_beat_data(pictograph_data)
+            # Use existing beat addition logic
+            self.add_beat_to_sequence(beat_data)
+        except Exception as e:
+            print(f"❌ Error adding pictograph to sequence: {e}")
+            import traceback
+
+            traceback.print_exc()
+
     def add_beat_to_sequence(self, beat_data: BeatData):
         """Add beat via command pattern instead of direct manipulation"""
         try:
             # Import command system
             from core.commands.sequence_commands import AddBeatCommand
-            from core.service_locator import get_command_processor, get_event_bus, get_sequence_state_manager
-            
+            from core.service_locator import (
+                get_command_processor,
+                get_event_bus,
+                get_sequence_state_manager,
+            )
+
             # Get services
             command_processor = get_command_processor()
             event_bus = get_event_bus()
             state_manager = get_sequence_state_manager()
-            
+
             if not command_processor or not event_bus:
-                print("⚠️ Command system not available, falling back to direct manipulation")
+                print(
+                    "⚠️ Command system not available, falling back to direct manipulation"
+                )
                 self._add_beat_direct(beat_data)
                 return
-                
+
             # Get current sequence from state manager
             current_sequence = state_manager.get_sequence() if state_manager else None
             if not current_sequence:
                 current_sequence = SequenceData.empty()
                 print("📝 Creating new empty sequence for first beat")
-            
+
             # Create and execute command
             command = AddBeatCommand(
                 sequence=current_sequence,
                 beat=beat_data,
                 position=len(current_sequence.beats),
-                event_bus=event_bus
+                event_bus=event_bus,
             )
-            
+
             result = command_processor.execute(command)
-            
+
             if result.success:
                 print(f"✅ Beat added via command: {beat_data.letter}")
                 # Emit legacy signal for backward compatibility
@@ -89,12 +108,12 @@ class SequenceBeatOperations(QObject):
                 print(f"❌ Failed to add beat via command: {result.error_message}")
                 # Fallback to direct manipulation
                 self._add_beat_direct(beat_data)
-                
+
         except Exception as e:
             print(f"❌ Error in command-based beat addition: {e}")
             # Fallback to direct manipulation
             self._add_beat_direct(beat_data)
-            
+
     def _add_beat_direct(self, beat_data: BeatData):
         """Fallback method: Add beat via direct manipulation (original logic)"""
         current_sequence = self._get_current_sequence()
@@ -117,11 +136,14 @@ class SequenceBeatOperations(QObject):
             position = len(new_sequence.beats) - 1
             self.beat_added.emit(beat_data, position)
 
-            print(f"✅ [BEAT_OPERATIONS] Added beat {beat_data.letter} to sequence (direct, position {position})")
+            print(
+                f"✅ [BEAT_OPERATIONS] Added beat {beat_data.letter} to sequence (direct, position {position})"
+            )
 
         except Exception as e:
             print(f"❌ [BEAT_OPERATIONS] Error adding beat to sequence (direct): {e}")
             import traceback
+
             traceback.print_exc()
 
     def remove_beat(self, beat_index: int):
@@ -361,3 +383,50 @@ class SequenceBeatOperations(QObject):
             if n % i == 0 and can_form_by_repeating(word, pattern):
                 return pattern
         return word
+
+    def _convert_pictograph_to_beat_data(
+        self, pictograph_data: PictographData
+    ) -> BeatData:
+        """Convert PictographData to BeatData for sequence operations."""
+        try:
+            # Extract motion data from arrows
+            blue_motion = None
+            red_motion = None
+
+            if hasattr(pictograph_data, "arrows") and pictograph_data.arrows:
+                if "blue" in pictograph_data.arrows:
+                    blue_motion = pictograph_data.arrows["blue"].motion_data
+                if "red" in pictograph_data.arrows:
+                    red_motion = pictograph_data.arrows["red"].motion_data
+
+            # Get current sequence to determine beat number
+            current_sequence = self._get_current_sequence()
+            beat_number = len(current_sequence.beats) + 1 if current_sequence else 1
+
+            # Create BeatData from PictographData
+            beat_data = BeatData(
+                beat_number=beat_number,
+                letter=pictograph_data.letter or "?",
+                blue_motion=blue_motion,
+                red_motion=red_motion,
+                glyph_data=pictograph_data.glyph_data,
+                is_blank=pictograph_data.is_blank,
+                metadata={
+                    "start_position": pictograph_data.start_position,
+                    "end_position": pictograph_data.end_position,
+                    "converted_from_pictograph": True,
+                    **pictograph_data.metadata,
+                },
+            )
+
+            return beat_data
+
+        except Exception as e:
+            print(f"❌ Error converting pictograph to beat data: {e}")
+            # Return a minimal beat data as fallback
+            return BeatData(
+                beat_number=1,
+                letter="?",
+                is_blank=True,
+                metadata={"conversion_error": str(e)},
+            )

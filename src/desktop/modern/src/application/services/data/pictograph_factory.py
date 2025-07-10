@@ -9,6 +9,7 @@ import logging
 from typing import Optional
 
 import pandas as pd
+from application.services.glyphs.glyph_data_service import GlyphDataService
 from domain.models.beat_data import BeatData
 from domain.models.enums import Location, MotionType, Orientation, RotationDirection
 from domain.models.motion_models import MotionData
@@ -18,8 +19,6 @@ from domain.models.pictograph_models import (
     GridMode,
     PictographData,
 )
-
-from .glyph_data_service import GlyphDataService
 
 logger = logging.getLogger(__name__)
 

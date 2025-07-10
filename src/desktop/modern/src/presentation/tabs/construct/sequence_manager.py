@@ -1,24 +1,23 @@
 """
-SequenceManager
+SequenceManager - Legacy Compatibility Wrapper
 
-Manages sequence operations, workbench interactions, and sequence state for the construct tab.
-Responsible for handling beat additions, sequence modifications, and workbench coordination.
+This file maintains backward compatibility for existing code while delegating
+to the new SequenceManagerQtAdapter. This ensures existing imports continue to work
+while the business logic has been moved to the application layer.
+
+DEPRECATED: Use SequenceManagerQtAdapter directly for new code.
 """
 
 from typing import Callable, Optional
 
-from application.services.core.sequence_persistence_service import (
-    SequencePersistenceService,
-)
-from application.services.option_picker.orientation_update_service import (
-    OptionOrientationUpdateService,
-)
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
+from presentation.tabs.construct.adapters.sequence_manager_adapter import (
+    SequenceManagerQtAdapter,
+)
 
 
-class SequenceManager(QObject):
+class SequenceManager(SequenceManagerQtAdapter):
     """
     Manages sequence operations and workbench interactions.
 
@@ -92,7 +91,7 @@ class SequenceManager(QObject):
         self, beat_dict: dict, beat_number: int
     ) -> BeatData:
         """Convert legacy JSON format back to modern BeatData with full pictograph data"""
-        from domain.models import (
+        from domain.models import (  # Extract basic beat info
             BeatData,
             GlyphData,
             Location,
@@ -100,9 +99,8 @@ class SequenceManager(QObject):
             MotionType,
             Orientation,
             RotationDirection,
-)
+        )
 
-        # Extract basic beat info
         letter = beat_dict.get("letter", "?")
         duration = beat_dict.get("duration", 1.0)
         start_pos = beat_dict.get("start_pos", "")
@@ -193,16 +191,15 @@ class SequenceManager(QObject):
         self, start_pos_dict: dict
     ) -> BeatData:
         """Convert legacy start position JSON back to modern BeatData with full data"""
-        from domain.models import (
+        from domain.models import (  # Extract basic start position info
             BeatData,
             GlyphData,
             Location,
             MotionData,
             MotionType,
             RotationDirection,
-)
+        )
 
-        # Extract basic start position info
         letter = start_pos_dict.get("letter", "α")
         sequence_start_position = start_pos_dict.get("sequence_start_position", "alpha")
         end_pos = start_pos_dict.get("end_pos", "alpha1")

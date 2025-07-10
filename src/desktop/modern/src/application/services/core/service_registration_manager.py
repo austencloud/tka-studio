@@ -81,6 +81,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         self.register_pictograph_services(container)
         self.register_positioning_services(container)
         self.register_option_picker_services(container)
+        self.register_graph_editor_services(container)
         self.register_workbench_services(container)
 
         self._update_progress("Services configured")
@@ -107,6 +108,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_core_services(self, container: "DIContainer") -> None:
         """Register core services using pure dependency injection."""
+        from application.services.core.sequence_manager import SequenceManager
         from application.services.layout.layout_management_service import (
             LayoutManagementService,
         )
@@ -138,6 +140,9 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IUIStateManagementService, UIStateManagementService
         )
 
+        # Register SequenceManager as singleton for centralized sequence management
+        container.register_singleton(SequenceManager, SequenceManager)
+
     def register_motion_services(self, container: "DIContainer") -> None:
         """Register motion services using pure dependency injection."""
         from application.services.motion.motion_orientation_service import (
@@ -163,13 +168,13 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IPictographDataService,
             PictographDataService,
         )
-        from application.services.core.pictograph_management_service import (
+        from application.services.pictographs.pictograph_management_service import (
             PictographManagementService,
         )
-        from core.interfaces.core_services import IPictographContextService
         from application.services.ui.pictograph_context_service import (
             PictographContextService,
         )
+        from core.interfaces.core_services import IPictographContextService
 
         # Register service types, not instances - pure DI
         container.register_singleton(IPictographDataService, PictographDataService)
@@ -196,27 +201,34 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_workbench_services(self, container: "DIContainer") -> None:
         """Register workbench services."""
+        from application.services.workbench.beat_selection_service import (
+            BeatSelectionService,
+        )
         from presentation.factories.workbench_factory import (
             configure_workbench_services,
         )
 
+        # Register pure business services
+        container.register_singleton(BeatSelectionService, BeatSelectionService)
+
+        # Register presentation services
         configure_workbench_services(container)
 
     def register_positioning_services(self, container: "DIContainer") -> None:
         """Register microservices-based positioning services."""
         try:
             # Import the individual calculator services with correct class names
-            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
-                ArrowAdjustmentCalculatorService,
-            )
-            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
-                ArrowCoordinateSystemService,
-            )
             from application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
             from application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
                 ArrowRotationCalculatorService,
+            )
+            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+                ArrowCoordinateSystemService,
+            )
+            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
+                ArrowAdjustmentCalculatorService,
             )
             from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
@@ -225,8 +237,8 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
                 IArrowAdjustmentCalculator,
                 IArrowCoordinateSystemService,
                 IArrowLocationCalculator,
-                IArrowRotationCalculator,
                 IArrowPositioningOrchestrator,
+                IArrowRotationCalculator,
             )
 
             # Register calculator microservices
@@ -268,8 +280,8 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         try:
             # Register prop management services
             from application.services.positioning.props.orchestration.prop_management_service import (
-                PropManagementService,
                 IPropManagementService,
+                PropManagementService,
             )
 
             container.register_singleton(IPropManagementService, PropManagementService)
@@ -279,14 +291,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         try:
             # Import existing prop orchestrator (keep if still needed)
-            from application.services.core.pictograph_orchestrator import (
+            from application.services.pictographs.pictograph_orchestrator import (
                 IPictographOrchestrator,
                 PictographOrchestrator,
             )
-            from application.services.positioning.props.orchestration.prop_orchestrator import (
+            from application.services.positioning.props.orchestration.prop_orchestrator import (  # Register remaining orchestrators
                 IPropOrchestrator,
                 PropOrchestrator,
-            )  # Register remaining orchestrators
+            )
 
             container.register_singleton(IPropOrchestrator, PropOrchestrator)
             container.register_singleton(
@@ -354,6 +366,15 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         container.register_singleton(
             IJSONConfigurationService, JSONConfigurationService
         )
+
+    def register_graph_editor_services(self, container: "DIContainer") -> None:
+        """Register graph editor services using pure dependency injection."""
+        from application.services.graph_editor.graph_editor_state_service import (
+            GraphEditorStateService,
+        )
+
+        # Register graph editor state service as singleton for centralized state management
+        container.register_singleton(GraphEditorStateService, GraphEditorStateService)
 
     def get_registration_status(self) -> dict:
         """Get status of service registration."""

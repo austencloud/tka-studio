@@ -1,11 +1,11 @@
 from typing import Any, Callable, Dict, List, Optional
 
 from core.dependency_injection.di_container import DIContainer
-from domain.models import BeatData, SequenceData
+from domain.models import SequenceData
+from domain.models.pictograph_models import PictographData
+from presentation.components.component_base import ViewableComponentBase
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
-
-from presentation.components.component_base import ViewableComponentBase
 
 # Import the new base class
 
@@ -25,7 +25,7 @@ class OptionPicker(ViewableComponentBase):
     """
 
     option_selected = pyqtSignal(str)
-    beat_data_selected = pyqtSignal(object)  # New signal for actual BeatData
+    pictograph_selected = pyqtSignal(object)  # PictographData object
 
     def __init__(
         self,
@@ -57,7 +57,7 @@ class OptionPicker(ViewableComponentBase):
 
         # Connect orchestrator signals to our signals
         self.orchestrator.option_selected.connect(self.option_selected.emit)
-        self.orchestrator.beat_data_selected.connect(self.beat_data_selected.emit)
+        self.orchestrator.pictograph_selected.connect(self.pictograph_selected.emit)
 
     def initialize(self) -> None:
         """Initialize the option picker using orchestrator pattern."""
@@ -101,10 +101,10 @@ class OptionPicker(ViewableComponentBase):
         if self.orchestrator:
             self.orchestrator.load_motion_combinations(sequence_data)
 
-    def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
-        """Get BeatData for a specific option ID using orchestrator."""
+    def get_pictograph_for_option(self, option_id: str) -> Optional["PictographData"]:
+        """Get PictographData for a specific option ID using orchestrator."""
         if self.orchestrator:
-            return self.orchestrator.get_beat_data_for_option(option_id)
+            return self.orchestrator.get_pictograph_for_option(option_id)
         return None
 
     def refresh_options(self) -> None:

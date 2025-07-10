@@ -62,7 +62,7 @@ class TestSequenceCreationWorkflowContract:
         """
         try:
             from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
+            from domain.models.sequence_models import SequenceData
 
             # Create beats
             beat1 = BeatData(beat_number=1, letter="A")
@@ -102,7 +102,7 @@ from domain.models.sequence_models import SequenceData
         - Service handles creation parameters correctly
         """
         try:
-            from application.services.core.sequence_management_service import (
+            from application.services.sequences.sequence_management_service import (
                 SequenceManagementService,
             )
 
@@ -132,7 +132,7 @@ from domain.models.sequence_models import SequenceData
         """
         try:
             from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
+            from domain.models.sequence_models import SequenceData
 
             # Test valid sequence
             valid_beat = BeatData(beat_number=1, letter="A")
@@ -174,8 +174,8 @@ from domain.models.sequence_models import SequenceData
         """
         try:
             from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
-            from application.services.core.sequence_management_service import (
+            from domain.models.sequence_models import SequenceData
+            from application.services.sequences.sequence_management_service import (
                 SequenceManagementService,
             )
 
@@ -217,7 +217,7 @@ from domain.models.sequence_models import SequenceData
         """
         try:
             from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
+            from domain.models.sequence_models import SequenceData
 
             # Start with empty sequence
             sequence = SequenceData.empty()
@@ -259,7 +259,7 @@ from domain.models.sequence_models import SequenceData
         """
         try:
             from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
+            from domain.models.sequence_models import SequenceData
 
             # Test creating sequence with invalid data
             try:

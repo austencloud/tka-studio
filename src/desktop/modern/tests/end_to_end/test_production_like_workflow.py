@@ -19,26 +19,26 @@ PERMANENT: Production workflow validation for TKA application
 AUTHOR: AI Agent
 """
 
-import sys
 import json
-from pathlib import Path
+import sys
 from datetime import datetime
-from typing import Dict, Any, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 # Add the modern src directory to Python path
 modern_src = Path(__file__).parent.parent.parent / "src"
 if str(modern_src) not in sys.path:
     sys.path.insert(0, str(modern_src))
 
-from PyQt6.QtWidgets import QApplication, QMainWindow
-from PyQt6.QtTest import QTest
-from PyQt6.QtCore import QTimer, QRect, Qt
-from PyQt6.QtGui import QGuiApplication
 import time
 
 # Import TKA application components
 from core.application.application_factory import ApplicationFactory
 from core.testing.ai_agent_helpers import TKAAITestHelper
+from PyQt6.QtCore import QRect, Qt, QTimer
+from PyQt6.QtGui import QGuiApplication
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 
 class ProductionLikeTKATest:
@@ -708,7 +708,7 @@ class ProductionLikeTKATest:
         )
 
         # Initialize application orchestrator for full UI setup
-        from application.services.core.application_orchestrator import (
+        from application.services.pictographs.application_orchestrator import (
             ApplicationOrchestrator,
         )
 

@@ -5,19 +5,23 @@ Manages signal connections, emissions, and coordination between construct tab co
 Responsible for connecting signals between components and handling signal routing.
 """
 
-from PyQt6.QtCore import QObject, pyqtSignal
-
-from domain.models import SequenceData
-from .start_position_handler import StartPositionHandler
-from .option_picker_manager import OptionPickerManager
-from .layout_manager import ConstructTabLayoutManager
+from application.services.sequences.sequence_beat_operations import (
+    SequenceBeatOperations,
+)
 
 # Import services from application layer (moved from presentation)
-from application.services.core.sequence_loading_service import SequenceLoadingService
-from application.services.core.sequence_beat_operations import SequenceBeatOperations
-from application.services.core.sequence_start_position_manager import (
+from application.services.sequences.sequence_loading_service import (
+    SequenceLoadingService,
+)
+from application.services.sequences.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
+from domain.models import SequenceData
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from .layout_manager import ConstructTabLayoutManager
+from .option_picker_manager import OptionPickerManager
+from .start_position_handler import StartPositionHandler
 
 
 class SignalCoordinator(QObject):
@@ -80,8 +84,8 @@ class SignalCoordinator(QObject):
         )
 
         # Option picker manager signals
-        self.option_picker_manager.beat_data_selected.connect(
-            self.beat_operations.add_beat_to_sequence
+        self.option_picker_manager.pictograph_selected.connect(
+            self.beat_operations.add_pictograph_to_sequence
         )
 
         # Loading service signals
@@ -283,7 +287,7 @@ class SignalCoordinator(QObject):
             print("🔄 [SIGNAL_COORDINATOR] Clearing sequence...")
 
             # Clear persistence FIRST
-            from application.services.core.sequence_persistence_service import (
+            from application.services.sequences.sequence_persistence_service import (
                 SequencePersistenceService,
             )
 

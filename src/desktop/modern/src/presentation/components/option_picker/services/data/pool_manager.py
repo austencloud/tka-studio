@@ -51,7 +51,7 @@ class PictographPoolManager(QObject):
         self._pictograph_pool: List[ClickablePictographFrame] = []
         self._pool_initialized = False
         self._click_handler: Optional[Callable] = None
-        self._beat_data_click_handler: Optional[Callable] = None
+        self._pictograph_click_handler: Optional[Callable] = None
         self._pool_service = pool_service
 
         # Fallback for legacy compatibility - will be removed in future versions
@@ -73,9 +73,9 @@ class PictographPoolManager(QObject):
         """Set the click handler for all pool objects"""
         self._click_handler = handler
 
-    def set_beat_data_click_handler(self, beat_data_handler: Callable) -> None:
-        """Set the beat data click handler for all pool objects"""
-        self._beat_data_click_handler = beat_data_handler
+    def set_pictograph_click_handler(self, pictograph_handler: Callable) -> None:
+        """Set the pictograph click handler for all pool objects"""
+        self._pictograph_click_handler = pictograph_handler
 
     def initialize_pool(self, progress_callback: Optional[Callable] = None) -> None:
         """
@@ -150,16 +150,16 @@ class PictographPoolManager(QObject):
                 # Fallback to creating minimal pictograph data
                 real_pictograph_data = self._create_minimal_pictograph_data()
 
-            # Convert pictograph to beat data for the frame (temporary compatibility)
-            # TODO: Update ClickablePictographFrame to work directly with PictographData
-            beat_data = self._pictograph_data_to_beat_data(real_pictograph_data)
-            frame = ClickablePictographFrame(beat_data, parent=self.parent_widget)
+            # Create frame directly with PictographData
+            frame = ClickablePictographFrame(
+                real_pictograph_data, parent=self.parent_widget
+            )
 
             # Set up event handlers
             if self._click_handler:
                 frame.clicked.connect(self._click_handler)
-            if self._beat_data_click_handler:
-                frame.beat_data_clicked.connect(self._beat_data_click_handler)
+            if self._pictograph_click_handler:
+                frame.pictograph_clicked.connect(self._pictograph_click_handler)
 
             frame.setVisible(False)
             frame.set_container_widget(self.parent_widget)
@@ -237,24 +237,4 @@ class PictographPoolManager(QObject):
             props={},
             letter="A",
             metadata={"source": "fallback"},
-        )
-
-    def _pictograph_data_to_beat_data(self, pictograph_data):
-        """Convert PictographData to BeatData for backward compatibility."""
-        from domain.models import BeatData
-
-        # Extract motion data from arrows
-        blue_motion = None
-        red_motion = None
-
-        if "blue" in pictograph_data.arrows:
-            blue_motion = pictograph_data.arrows["blue"].motion_data
-        if "red" in pictograph_data.arrows:
-            red_motion = pictograph_data.arrows["red"].motion_data
-
-        return BeatData(
-            beat_number=1,
-            letter=pictograph_data.letter or "A",
-            blue_motion=blue_motion,
-            red_motion=red_motion,
         )

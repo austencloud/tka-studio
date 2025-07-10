@@ -11,6 +11,9 @@ the principle that pictographs should be standalone without beat-specific fields
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
+from application.services.pictographs.pictograph_management_service import (
+    PictographManagementService,
+)
 from domain.models import (
     GlyphData,
     Location,
@@ -20,8 +23,6 @@ from domain.models import (
     RotationDirection,
 )
 from domain.models.pictograph_models import ArrowData, GridData, GridMode
-
-from ....core.pictograph_management_service import PictographManagementService
 
 
 class PositionMatchingService:
@@ -244,7 +245,7 @@ class PositionMatchingService:
         self, pictograph_data: PictographData
     ) -> Optional[GlyphData]:
         """Generate glyph data for pictograph data using the glyph data service."""
-        from application.services.data.glyph_data_service import GlyphDataService
+        from application.services.glyphs.glyph_data_service import GlyphDataService
 
         glyph_service = GlyphDataService()
         return glyph_service.determine_glyph_data(pictograph_data)

@@ -7,6 +7,9 @@ providing all the complex dash location maps and calculations with high precisio
 
 from typing import Optional
 
+from application.services.pictographs.pictograph_analysis_service import (
+    PictographAnalysisService,
+)
 from domain.models import (
     ArrowColor,
     LetterType,
@@ -16,8 +19,6 @@ from domain.models import (
     RotationDirection,
 )
 from domain.models.pictograph_models import GridMode, PictographData
-
-from ....data.pictograph_analysis_service import PictographAnalysisService
 
 
 class DashLocationCalculator:

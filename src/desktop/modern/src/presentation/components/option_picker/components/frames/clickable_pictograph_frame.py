@@ -1,22 +1,22 @@
-from PyQt6.QtWidgets import QFrame, QVBoxLayout, QSizePolicy, QWidget, QLabel
-from PyQt6.QtCore import pyqtSignal, Qt, QEvent
-from PyQt6.QtGui import QCloseEvent, QMouseEvent, QEnterEvent
 from typing import Optional
 
-from domain.models import BeatData
-from presentation.components.pictograph.pictograph_component import (
-    PictographComponent,
-)
+from domain.models.pictograph_models import PictographData
+from presentation.components.pictograph.pictograph_component import PictographComponent
 from presentation.components.workbench.sequence_beat_frame.selection_overlay import (
     SelectionOverlay,
 )
+from PyQt6.QtCore import QEvent, Qt, pyqtSignal
+from PyQt6.QtGui import QCloseEvent, QEnterEvent, QMouseEvent
+from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 
 class ClickablePictographFrame(QFrame):
     clicked = pyqtSignal(str)
-    beat_data_clicked = pyqtSignal(object)
+    pictograph_clicked = pyqtSignal(object)
 
-    def __init__(self, beat_data: BeatData, parent: Optional[QWidget] = None) -> None:
+    def __init__(
+        self, pictograph_data: PictographData, parent: Optional[QWidget] = None
+    ) -> None:
         if parent is not None:
             try:
                 _ = parent.isVisible()
@@ -24,7 +24,7 @@ class ClickablePictographFrame(QFrame):
                 raise RuntimeError("Parent widget has been deleted") from exc
 
         super().__init__(parent)
-        self.beat_data: BeatData = beat_data
+        self.pictograph_data: PictographData = pictograph_data
         self.setFrameStyle(QFrame.Shape.NoFrame)
         self.setLineWidth(0)
 
@@ -51,16 +51,16 @@ class ClickablePictographFrame(QFrame):
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
 
-            self._configure_option_picker_context(beat_data)
+            self._configure_option_picker_context(pictograph_data)
 
-            self._pictograph_component.update_from_beat(beat_data)
+            self._pictograph_component.update_from_pictograph_data(pictograph_data)
             layout.addWidget(self._pictograph_component)
 
             # Initialize selection overlay after pictograph component is set up
             self._selection_overlay = SelectionOverlay(self)
 
         except RuntimeError:
-            fallback_label = QLabel(f"Beat {beat_data.letter}")
+            fallback_label = QLabel(f"Option {pictograph_data.letter}")
             fallback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             layout.addWidget(fallback_label)
             self._pictograph_component = None
@@ -82,7 +82,7 @@ class ClickablePictographFrame(QFrame):
         if self.pictograph_component:
             self.pictograph_component.show()
 
-    def _configure_option_picker_context(self, beat_data: BeatData) -> None:
+    def _configure_option_picker_context(self, pictograph_data: PictographData) -> None:
         if not self.pictograph_component:
             return
 
@@ -93,10 +93,10 @@ class ClickablePictographFrame(QFrame):
 
             self.pictograph_component.set_scaling_context(ScalingContext.OPTION_VIEW)
 
-            if beat_data.glyph_data and beat_data.glyph_data.letter_type:
+            if pictograph_data.glyph_data and pictograph_data.glyph_data.letter_type:
                 self.pictograph_component.enable_borders()
                 self.pictograph_component.update_border_colors_for_letter_type(
-                    beat_data.glyph_data.letter_type
+                    pictograph_data.glyph_data.letter_type
                 )
         except Exception:
             from application.services.ui.context_aware_scaling_service import (
@@ -104,10 +104,10 @@ class ClickablePictographFrame(QFrame):
             )
 
             self.pictograph_component.set_scaling_context(ScalingContext.OPTION_VIEW)
-            if beat_data.glyph_data and beat_data.glyph_data.letter_type:
+            if pictograph_data.glyph_data and pictograph_data.glyph_data.letter_type:
                 self.pictograph_component.enable_borders()
                 self.pictograph_component.update_border_colors_for_letter_type(
-                    beat_data.glyph_data.letter_type
+                    pictograph_data.glyph_data.letter_type
                 )
 
     def set_container_widget(self, container_widget: QWidget) -> None:
@@ -136,11 +136,11 @@ class ClickablePictographFrame(QFrame):
         self._option_picker_width = option_picker_width
         self.resize_frame()
 
-    def update_beat_data(self, beat_data: BeatData) -> None:
-        self.beat_data = beat_data
+    def update_pictograph_data(self, pictograph_data: PictographData) -> None:
+        self.pictograph_data = pictograph_data
         if self.pictograph_component:
-            self._configure_option_picker_context(beat_data)
-            self.pictograph_component.update_from_beat(beat_data)
+            self._configure_option_picker_context(pictograph_data)
+            self.pictograph_component.update_from_pictograph_data(pictograph_data)
 
     def cleanup(self) -> None:
         if self._selection_overlay:
@@ -159,8 +159,8 @@ class ClickablePictographFrame(QFrame):
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            self.clicked.emit(f"beat_{self.beat_data.letter}")
-            self.beat_data_clicked.emit(self.beat_data)
+            self.clicked.emit(f"option_{self.pictograph_data.letter}")
+            self.pictograph_clicked.emit(self.pictograph_data)
         super().mousePressEvent(event)
 
     def set_highlighted(self, highlighted: bool) -> None:

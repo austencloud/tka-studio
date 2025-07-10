@@ -7,7 +7,8 @@ Responsible for setting, updating, and managing start positions in sequences.
 
 from typing import Callable, Optional
 
-from application.services.core.sequence_persistence_service import (
+from application.services.data.sequence_data_converter import SequenceDataConverter
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
 from domain.models.beat_data import BeatData
@@ -33,7 +34,7 @@ class SequenceStartPositionManager(QObject):
         self,
         workbench_getter: Optional[Callable[[], object]] = None,
         workbench_setter: Optional[Callable[[SequenceData], None]] = None,
-        data_converter: Optional[object] = None,
+        data_converter: SequenceDataConverter = None,
     ):
         super().__init__()
         self.workbench_getter = workbench_getter

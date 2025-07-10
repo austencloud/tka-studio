@@ -11,25 +11,24 @@ PERMANENT: Core testing framework for all TKA workflow tests
 AUTHOR: AI Agent
 """
 
-import sys
 import os
+import sys
 import time
-from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtTest import QTest
-
-from core.application.application_factory import ApplicationFactory
-from core.testing.ai_agent_helpers import TKAAITestHelper, AITestResult
-from domain.models import BeatData, SequenceData
-from application.services.core.sequence_persistence_service import (
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
+from core.application.application_factory import ApplicationFactory
+from core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
+from domain.models import BeatData, SequenceData
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication
 
 
 class TestMode(Enum):
@@ -142,11 +141,11 @@ class TKAWorkflowTester:
 
         # Ensure arrow positioning orchestrator is registered
         try:
-            from core.interfaces.positioning_services import (
-                IArrowPositioningOrchestrator,
-            )
             from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
+            )
+            from core.interfaces.positioning_services import (
+                IArrowPositioningOrchestrator,
             )
 
             # Check if already registered
@@ -172,27 +171,27 @@ class TKAWorkflowTester:
         """Register arrow positioning orchestrator and its dependencies."""
         try:
             # Import all required services
-            from core.interfaces.positioning_services import (
-                IArrowLocationCalculator,
-                IArrowRotationCalculator,
-                IArrowAdjustmentCalculator,
-                IArrowCoordinateSystemService,
-                IArrowPositioningOrchestrator,
-            )
-            from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
-                ArrowPositioningOrchestrator,
-            )
             from application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
             from application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
                 ArrowRotationCalculatorService,
             )
+            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+                ArrowCoordinateSystemService,
+            )
             from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
                 ArrowAdjustmentCalculatorService,
             )
-            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
-                ArrowCoordinateSystemService,
+            from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+                ArrowPositioningOrchestrator,
+            )
+            from core.interfaces.positioning_services import (
+                IArrowAdjustmentCalculator,
+                IArrowCoordinateSystemService,
+                IArrowLocationCalculator,
+                IArrowPositioningOrchestrator,
+                IArrowRotationCalculator,
             )
 
             # Register calculator microservices

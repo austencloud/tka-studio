@@ -58,11 +58,11 @@ def test_service_imports():
     print("🔧 Testing service imports...")
 
     try:
-        from application.services.core.sequence_management_service import (
-            SequenceManagementService,
-        )
         from application.services.data.pictograph_dataset_service import (
             PictographDatasetService,
+        )
+        from application.services.sequences.sequence_management_service import (
+            SequenceManagementService,
         )
         from presentation.components.workbench.workbench import SequenceWorkbench
 

@@ -10,24 +10,23 @@ This test validates the complete clear sequence workflow by:
 4. Confirming the exact user experience works correctly
 """
 
-import sys
-import os
 import json
+import os
+import sys
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton
-from PyQt6.QtCore import QTimer, QObject, pyqtSignal
-from PyQt6.QtTest import QTest
-
-from core.application.application_factory import ApplicationFactory
-from application.services.core.sequence_persistence_service import (
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
+from core.application.application_factory import ApplicationFactory
+from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication, QPushButton, QWidget
 
 
 class TKAUIAutomation:
@@ -214,11 +213,11 @@ class ClearSequenceE2ETest:
 
             # Create the main UI components directly
             try:
-                from presentation.tabs.construct.construct_tab_widget import (
-                    ConstructTabWidget,
-                )
                 from presentation.components.workbench.workbench import (
                     SequenceWorkbench,
+                )
+                from presentation.tabs.construct.construct_tab_widget import (
+                    ConstructTabWidget,
                 )
 
                 # Create construct tab with container

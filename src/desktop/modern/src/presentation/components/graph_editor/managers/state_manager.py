@@ -1,14 +1,16 @@
 """
-Graph Editor State Manager - Simplified
-=======================================
+Graph Editor State Manager - Qt Presentation Adapter
 
-Manages state for the graph editor component with simple, direct state management.
-Removed over-engineered immutable patterns in favor of straightforward state tracking.
+Thin adapter that delegates business logic to GraphEditorStateService
+while handling Qt-specific concerns (signals, UI state).
 """
 
 import logging
 from typing import TYPE_CHECKING, Optional
 
+from application.services.graph_editor.graph_editor_state_service import (
+    GraphEditorStateService,
+)
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -21,37 +23,36 @@ logger = logging.getLogger(__name__)
 
 class GraphEditorStateManager(QObject):
     """
-    Simple state manager for the graph editor.
+    Qt presentation adapter for graph editor state management.
 
-    Manages core state variables with straightforward getters/setters and
-    signal emissions. No over-engineering, just clean state management.
-
-    Responsibilities:
-    - Track current sequence and selected beat data
-    - Emit signals when state changes
-    - Provide simple state access methods
+    Handles Qt signals and UI state while delegating all business logic
+    to the GraphEditorStateService.
     """
 
-    # Signals for state changes
+    # Qt signals for state changes
     visibility_changed = pyqtSignal(bool)  # is_visible
     sequence_changed = pyqtSignal(object)  # SequenceData or None
     selected_beat_changed = pyqtSignal(object, int)  # BeatData or None, beat_index
     selected_arrow_changed = pyqtSignal(str)  # arrow_id
 
-    def __init__(self, graph_editor: "GraphEditor", parent: Optional[QObject] = None):
+    def __init__(
+        self,
+        graph_editor: "GraphEditor",
+        state_service: Optional[GraphEditorStateService] = None,
+        parent: Optional[QObject] = None,
+    ):
         super().__init__(parent)
         self._graph_editor = graph_editor
 
-        # Core state variables - simple and direct
+        # Use injected service or create fallback for backward compatibility
+        self._state_service = state_service or GraphEditorStateService()
+
+        # Qt-specific state (presentation only)
         self._is_visible = False
-        self._current_sequence: Optional[SequenceData] = None
-        self._selected_beat: Optional[BeatData] = None
-        self._selected_beat_index: Optional[int] = None
-        self._selected_arrow_id: Optional[str] = None
 
-        logger.info("Simple StateManager initialized")
+        logger.info("Graph Editor State Manager initialized with service delegation")
 
-    # Visibility State
+    # Visibility management (pure Qt presentation concern)
     def set_visibility(self, is_visible: bool, emit_signal: bool = True) -> None:
         """Set visibility state with optional signal emission."""
         if self._is_visible != is_visible:
@@ -64,22 +65,21 @@ class GraphEditorStateManager(QObject):
         """Get current visibility state."""
         return self._is_visible
 
-    # Sequence State
+    # Sequence management (delegate to service)
     def set_sequence(
         self, sequence: Optional[SequenceData], emit_signal: bool = True
     ) -> None:
         """Set current sequence with optional signal emission."""
-        if self._current_sequence != sequence:
-            self._current_sequence = sequence
+        if self._state_service.set_sequence(sequence):
             if emit_signal:
                 self.sequence_changed.emit(sequence)
             logger.debug(f"Sequence set: {sequence.name if sequence else 'None'}")
 
     def get_sequence(self) -> Optional[SequenceData]:
         """Get current sequence."""
-        return self._current_sequence
+        return self._state_service.get_sequence()
 
-    # Selected Beat State
+    # Beat selection management (delegate to service)
     def set_selected_beat(
         self,
         beat: Optional[BeatData],
@@ -87,11 +87,7 @@ class GraphEditorStateManager(QObject):
         emit_signal: bool = True,
     ) -> None:
         """Set selected beat data with optional signal emission."""
-        changed = self._selected_beat != beat or self._selected_beat_index != beat_index
-
-        if changed:
-            self._selected_beat = beat
-            self._selected_beat_index = beat_index
+        if self._state_service.set_selected_beat(beat, beat_index):
             if emit_signal:
                 self.selected_beat_changed.emit(beat, beat_index or -1)
             logger.debug(
@@ -100,67 +96,56 @@ class GraphEditorStateManager(QObject):
 
     def get_selected_beat(self) -> Optional[BeatData]:
         """Get currently selected beat."""
-        return self._selected_beat
+        return self._state_service.get_selected_beat()
 
     def get_selected_beat_index(self) -> Optional[int]:
         """Get currently selected beat index."""
-        return self._selected_beat_index
+        return self._state_service.get_selected_beat_index()
 
-    # Selected Arrow State
+    # Arrow selection management (delegate to service)
     def set_selected_arrow(
         self, arrow_id: Optional[str], emit_signal: bool = True
     ) -> None:
         """Set selected arrow ID with optional signal emission."""
-        if self._selected_arrow_id != arrow_id:
-            self._selected_arrow_id = arrow_id
+        if self._state_service.set_selected_arrow(arrow_id):
             if emit_signal and arrow_id:
                 self.selected_arrow_changed.emit(arrow_id)
             logger.debug(f"Selected arrow set: {arrow_id}")
 
     def get_selected_arrow(self) -> Optional[str]:
         """Get currently selected arrow ID."""
-        return self._selected_arrow_id
+        return self._state_service.get_selected_arrow()
 
-    # Utility Methods
+    # Utility methods (delegate to service)
     def clear_selection(self, emit_signals: bool = True) -> None:
         """Clear all selection state."""
-        self.set_selected_beat(None, None, emit_signals)
-        self.set_selected_arrow(None, emit_signals)
-        logger.debug("Selection cleared")
+        if self._state_service.clear_selection():
+            if emit_signals:
+                self.selected_beat_changed.emit(None, -1)
+                self.selected_arrow_changed.emit("")
+            logger.debug("Selection cleared")
 
     def get_state_summary(self) -> str:
         """Get a human-readable summary of current state."""
-        sequence_name = (
-            self._current_sequence.name if self._current_sequence else "None"
-        )
-        beat_info = (
-            f"beat {self._selected_beat_index}"
-            if self._selected_beat_index is not None
-            else "no beat"
-        )
-        arrow_info = self._selected_arrow_id if self._selected_arrow_id else "no arrow"
-
-        return f"Sequence: {sequence_name}, Selected: {beat_info}, Arrow: {arrow_info}, Visible: {self._is_visible}"
+        state = self._state_service.get_state_summary()
+        return f"Sequence: {state['sequence_name']}, Selected: beat {state['selected_beat_index']}, Arrow: {state['selected_arrow']}, Visible: {self._is_visible}"
 
     def is_beat_selected(self) -> bool:
         """Check if a beat is currently selected."""
-        return self._selected_beat is not None and self._selected_beat_index is not None
+        return self._state_service.is_beat_selected()
 
     def is_arrow_selected(self) -> bool:
         """Check if an arrow is currently selected."""
-        return self._selected_arrow_id is not None
+        return self._state_service.is_arrow_selected()
 
     def has_sequence(self) -> bool:
         """Check if a sequence is currently loaded."""
-        return self._current_sequence is not None
+        return self._state_service.has_sequence()
 
-    # Simple validation - no over-engineering
     def validate_beat_index(self, beat_index: int) -> bool:
-        """Simple validation for beat index."""
-        if not self._current_sequence:
-            return False
-        return 0 <= beat_index < len(self._current_sequence.beats)
+        """Validate beat index using service."""
+        return self._state_service.validate_beat_index(beat_index)
 
     def get_beat_count(self) -> int:
         """Get the number of beats in current sequence."""
-        return len(self._current_sequence.beats) if self._current_sequence else 0
+        return self._state_service.get_beat_count()

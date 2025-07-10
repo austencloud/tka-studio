@@ -2,34 +2,74 @@
 Graph Editor Hotkey Service Implementation
 
 Real hotkey service implementation for graph editor with WASD movement,
-Shift/Ctrl modifiers, and X/Z/C special commands, replacing the placeholder implementation.
+Shift/Ctrl modifiers, and X/Z/C special commands.
+
+This is a pure service implementation that follows TKA testing patterns.
 """
 
-from typing import Optional, TYPE_CHECKING
-from PyQt6.QtCore import Qt, QObject, pyqtSignal
-from PyQt6.QtGui import QKeyEvent
+from typing import TYPE_CHECKING, Optional
+
+# Conditional Qt imports for testing compatibility
+try:
+    from PyQt6.QtCore import Qt
+    from PyQt6.QtGui import QKeyEvent
+
+    QT_AVAILABLE = True
+except ImportError:
+    # Mock Qt classes for testing
+    class Qt:
+        class Key:
+            Key_W = "w"
+            Key_A = "a"
+            Key_S = "s"
+            Key_D = "d"
+            Key_X = "x"
+            Key_Z = "z"
+            Key_C = "c"
+
+        class KeyboardModifier:
+            NoModifier = 0
+            ShiftModifier = 1
+            ControlModifier = 2
+
+    class QKeyEvent:
+        def __init__(self, key, modifiers=0):
+            self._key = key
+            self._modifiers = modifiers
+
+        def key(self):
+            return self._key
+
+        def modifiers(self):
+            return self._modifiers
+
+    QT_AVAILABLE = False
 
 if TYPE_CHECKING:
     from core.interfaces.workbench_services import IGraphEditorService
 
 
-class GraphEditorHotkeyService(QObject):
-    """Real hotkey service implementation for graph editor"""
+class GraphEditorHotkeyService:
+    """
+    Graph editor hotkey service with reliable testing support.
 
-    # Signals for hotkey actions
-    arrow_moved = pyqtSignal(str, int, int)  # arrow_id, delta_x, delta_y
-    rotation_override_requested = pyqtSignal(str)  # arrow_id
-    special_placement_removal_requested = pyqtSignal(str)  # arrow_id
-    prop_placement_override_requested = pyqtSignal(str)  # arrow_id
+    Uses callback pattern for communication instead of Qt signals,
+    making it easier to test and more service-layer appropriate.
+    """
 
-    def __init__(self, graph_service: "IGraphEditorService", parent=None):
-        super().__init__(parent)
+    def __init__(self, graph_service: "IGraphEditorService"):
         self.graph_service = graph_service
 
-        # Movement increment settings (from legacy)
+        # Movement increment settings
         self.base_increment = 5
         self.shift_increment = 20
         self.ctrl_shift_increment = 200
+
+        # Callback handlers (set externally)
+        self.on_arrow_moved = None
+        self.on_rotation_override = None
+        self.on_special_placement_removal = None
+        self.on_prop_placement_override = None
 
     def handle_key_event(self, event: QKeyEvent) -> bool:
         """Handle keyboard events and return True if handled"""
@@ -47,13 +87,16 @@ class GraphEditorHotkeyService(QObject):
 
         # Special commands
         elif key == Qt.Key.Key_X:
-            self.rotation_override_requested.emit(selected_arrow)
+            if self.on_rotation_override:
+                self.on_rotation_override(selected_arrow)
             return True
         elif key == Qt.Key.Key_Z:
-            self.special_placement_removal_requested.emit(selected_arrow)
+            if self.on_special_placement_removal:
+                self.on_special_placement_removal(selected_arrow)
             return True
         elif key == Qt.Key.Key_C:
-            self.prop_placement_override_requested.emit(selected_arrow)
+            if self.on_prop_placement_override:
+                self.on_prop_placement_override(selected_arrow)
             return True
 
         return False
@@ -69,9 +112,7 @@ class GraphEditorHotkeyService(QObject):
                 return "blue"
         return None
 
-    def _handle_arrow_movement(
-        self, key: Qt.Key, modifiers: Qt.KeyboardModifier, arrow_id: str
-    ) -> bool:
+    def _handle_arrow_movement(self, key, modifiers, arrow_id: str) -> bool:
         """Handle WASD arrow movement with modifier support"""
         # Calculate increment based on modifiers
         increment = self.base_increment
@@ -85,12 +126,13 @@ class GraphEditorHotkeyService(QObject):
         delta_x, delta_y = self._get_movement_delta(key, increment)
 
         if delta_x != 0 or delta_y != 0:
-            self.arrow_moved.emit(arrow_id, delta_x, delta_y)
+            if self.on_arrow_moved:
+                self.on_arrow_moved(arrow_id, delta_x, delta_y)
             return True
 
         return False
 
-    def _get_movement_delta(self, key: Qt.Key, increment: int) -> tuple[int, int]:
+    def _get_movement_delta(self, key, increment: int) -> tuple[int, int]:
         """Convert key to movement delta"""
         movement_map = {
             Qt.Key.Key_W: (0, -increment),  # Up

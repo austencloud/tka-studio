@@ -1,19 +1,28 @@
 """
-DataConversionService
+Data Conversion Service
 
-Handles data conversions, position calculations, and caching utilities for the construct tab.
-Responsible for converting between different data formats and optimizing performance through caching.
+Pure business service for data conversions, position calculations, and caching utilities.
+Moved from presentation layer to follow clean architecture principles.
+
+This service handles:
+- Position key extraction and parsing
+- End position calculations with caching
+- Sequence format conversions (Modern to Legacy)
+- Cache management for performance optimization
+
+No UI dependencies - completely testable in isolation.
 """
 
 from typing import Any, Dict, List
 
 from domain.models.beat_data import BeatData
+from domain.models.enums import GridPosition, Location
 from domain.models.sequence_models import SequenceData
 
 
 class DataConversionService:
     """
-    Handles data conversion operations and caching for the construct tab.
+    Pure business service for data conversion operations and caching.
 
     Responsibilities:
     - Position key extraction and parsing
@@ -58,27 +67,54 @@ class DataConversionService:
         if cache_key in self._position_cache:
             return self._position_cache[cache_key]
 
-        # Calculate and cache the result
+        # Calculate and cache the result using canonical positions map with proper enums
+        # Based on f:\CODE\TKA\src\desktop\data\positions_maps.py
         position_map = {
-            ("n", "n"): "alpha1",
-            ("n", "e"): "alpha2",
-            ("n", "s"): "alpha3",
-            ("n", "w"): "alpha4",
-            ("e", "n"): "alpha5",
-            ("e", "e"): "alpha6",
-            ("e", "s"): "alpha7",
-            ("e", "w"): "alpha8",
-            ("s", "n"): "beta1",
-            ("s", "e"): "beta2",
-            ("s", "s"): "beta3",
-            ("s", "w"): "beta4",
-            ("w", "n"): "beta5",
-            ("w", "e"): "beta6",
-            ("w", "s"): "beta7",
-            ("w", "w"): "beta8",
+            (Location.SOUTH, Location.NORTH): GridPosition.ALPHA1,
+            (Location.SOUTHWEST, Location.NORTHEAST): GridPosition.ALPHA2,
+            (Location.WEST, Location.EAST): GridPosition.ALPHA3,
+            (Location.NORTHWEST, Location.SOUTHEAST): GridPosition.ALPHA4,
+            (Location.NORTH, Location.SOUTH): GridPosition.ALPHA5,
+            (Location.NORTHEAST, Location.SOUTHWEST): GridPosition.ALPHA6,
+            (Location.EAST, Location.WEST): GridPosition.ALPHA7,
+            (Location.SOUTHEAST, Location.NORTHWEST): GridPosition.ALPHA8,
+            (Location.NORTH, Location.NORTH): GridPosition.BETA1,
+            (Location.NORTHEAST, Location.NORTHEAST): GridPosition.BETA2,
+            (Location.EAST, Location.EAST): GridPosition.BETA3,
+            (Location.SOUTHEAST, Location.SOUTHEAST): GridPosition.BETA4,
+            (Location.SOUTH, Location.SOUTH): GridPosition.BETA5,
+            (Location.SOUTHWEST, Location.SOUTHWEST): GridPosition.BETA6,
+            (Location.WEST, Location.WEST): GridPosition.BETA7,
+            (Location.NORTHWEST, Location.NORTHWEST): GridPosition.BETA8,
+            (Location.WEST, Location.NORTH): GridPosition.GAMMA1,
+            (Location.NORTHWEST, Location.NORTHEAST): GridPosition.GAMMA2,
+            (Location.NORTH, Location.EAST): GridPosition.GAMMA3,
+            (Location.NORTHEAST, Location.SOUTHEAST): GridPosition.GAMMA4,
+            (Location.EAST, Location.SOUTH): GridPosition.GAMMA5,
+            (Location.SOUTHEAST, Location.SOUTHWEST): GridPosition.GAMMA6,
+            (Location.SOUTH, Location.WEST): GridPosition.GAMMA7,
+            (Location.SOUTHWEST, Location.NORTHWEST): GridPosition.GAMMA8,
+            (Location.EAST, Location.NORTH): GridPosition.GAMMA9,
+            (Location.SOUTHEAST, Location.NORTHEAST): GridPosition.GAMMA10,
+            (Location.SOUTH, Location.EAST): GridPosition.GAMMA11,
+            (Location.SOUTHWEST, Location.SOUTHEAST): GridPosition.GAMMA12,
+            (Location.WEST, Location.SOUTH): GridPosition.GAMMA13,
+            (Location.NORTHWEST, Location.SOUTHWEST): GridPosition.GAMMA14,
+            (Location.NORTH, Location.WEST): GridPosition.GAMMA15,
+            (Location.NORTHEAST, Location.NORTHWEST): GridPosition.GAMMA16,
         }
 
-        end_pos = position_map.get((blue_end, red_end), "beta5")
+        # Convert string locations to Location enums for lookup
+        try:
+            blue_location = Location(blue_end)
+            red_location = Location(red_end)
+            position_enum = position_map.get(
+                (blue_location, red_location), GridPosition.BETA5
+            )
+            end_pos = position_enum.value
+        except ValueError:
+            # Fallback if location strings don't match enum values
+            end_pos = GridPosition.BETA5.value
         self._position_cache[cache_key] = end_pos
         return end_pos
 

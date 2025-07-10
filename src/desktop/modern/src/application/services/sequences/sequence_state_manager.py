@@ -139,8 +139,8 @@ class SequenceStateManager(QObject):
         """Refresh state from persistence (for undo/redo scenarios)"""
         try:
             # Load current state from persistence
-            from application.services.core.sequence_persistence_service import SequencePersistenceService
-            from application.services.core.sequence_start_position_manager import SequenceStartPositionManager
+            from application.services.sequences.sequence_persistence_service import SequencePersistenceService
+            from application.services.sequences.sequence_start_position_manager import SequenceStartPositionManager
             
             persistence_service = SequencePersistenceService()
             start_position_manager = SequenceStartPositionManager()

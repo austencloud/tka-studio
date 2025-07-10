@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from PyQt6.QtWidgets import QWidget
@@ -15,27 +15,21 @@ except ImportError:
             self.parent = parent
 
     QT_AVAILABLE = False
-from application.services.ui.graph_editor.graph_editor_service import GraphEditorService
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.core_services import (
-    ILayoutService,
-    IUIStateManagementService,
-)
-from core.interfaces.workbench_services import (
-    ISequenceWorkbenchService,
-    IFullScreenService,
-    IBeatDeletionService,
-    IGraphEditorService,
-    IDictionaryService,
-)
-from application.services.core.sequence_management_service import (
+from application.services.graph_editor.graph_editor_service import GraphEditorService
+from application.services.sequences.sequence_management_service import (
     SequenceManagementService,
 )
-from application.services.ui.full_screen_service import (
-    FullScreenService,
+from application.services.ui.full_screen_service import FullScreenService
+from application.services.workbench.beat_selection_service import BeatSelectionService
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import ILayoutService, IUIStateManagementService
+from core.interfaces.workbench_services import (
+    IBeatDeletionService,
+    IDictionaryService,
+    IFullScreenService,
+    IGraphEditorService,
+    ISequenceWorkbenchService,
 )
-
-
 from presentation.components.workbench import SequenceWorkbench
 
 
@@ -49,6 +43,7 @@ def create_modern_workbench(
 
     # Get services from container
     layout_service = container.resolve(ILayoutService)
+    beat_selection_service = container.resolve(BeatSelectionService)
     workbench_service = container.resolve(ISequenceWorkbenchService)
     fullscreen_service = container.resolve(IFullScreenService)
     deletion_service = container.resolve(IBeatDeletionService)
@@ -58,6 +53,7 @@ def create_modern_workbench(
     # Create and return configured workbench
     return SequenceWorkbench(
         layout_service=layout_service,
+        beat_selection_service=beat_selection_service,
         workbench_service=workbench_service,
         fullscreen_service=fullscreen_service,
         deletion_service=deletion_service,

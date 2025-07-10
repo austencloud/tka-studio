@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, List
+from typing import TYPE_CHECKING, List, Optional
 
 from core.interfaces.core_services import ILayoutService
 from core.interfaces.workbench_services import (
@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 # Import event system for session restoration
 try:
-    from core.events.event_bus import get_event_bus, EventPriority
+    from core.events.event_bus import EventPriority, get_event_bus
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
@@ -23,11 +23,12 @@ except ImportError:
 from .beat_frame_section import WorkbenchBeatFrameSection
 from .button_interface import WorkbenchButtonInterfaceAdapter
 from .event_controller import WorkbenchEventController
-
 from .indicator_section import WorkbenchIndicatorSection
 
 if TYPE_CHECKING:
-    pass
+    from application.services.workbench.beat_selection_service import (
+        BeatSelectionService,
+    )
 
 
 class SequenceWorkbench(QWidget):
@@ -41,6 +42,7 @@ class SequenceWorkbench(QWidget):
     def __init__(
         self,
         layout_service: ILayoutService,
+        beat_selection_service: "BeatSelectionService",
         workbench_service: ISequenceWorkbenchService,
         fullscreen_service: IFullScreenService,
         deletion_service: IBeatDeletionService,
@@ -50,6 +52,7 @@ class SequenceWorkbench(QWidget):
     ):
         super().__init__(parent)
         self._layout_service = layout_service
+        self._beat_selection_service = beat_selection_service
         self._graph_service = graph_service
         self._dictionary_service = dictionary_service
         self._current_sequence: Optional[SequenceData] = None
@@ -100,7 +103,9 @@ class SequenceWorkbench(QWidget):
         )
         main_layout.addWidget(self._indicator_section, 0)
         self._beat_frame_section = WorkbenchBeatFrameSection(
-            layout_service=self._layout_service, parent=self
+            layout_service=self._layout_service,
+            beat_selection_service=self._beat_selection_service,
+            parent=self,
         )
         main_layout.addWidget(self._beat_frame_section, 1)
 

@@ -7,7 +7,7 @@ Responsible for loading sequences from current_sequence.json and managing startu
 
 from typing import Callable, Optional
 
-from application.services.core.sequence_persistence_service import (
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
 from domain.models.beat_data import BeatData

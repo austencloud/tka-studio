@@ -11,23 +11,22 @@ This test validates:
 5. Confirms persistence layer changes
 """
 
-import sys
-import os
 import json
+import os
+import sys
 import time
 from pathlib import Path
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QTimer
-from PyQt6.QtTest import QTest
-
-from core.application.application_factory import ApplicationFactory
-from application.services.core.sequence_persistence_service import (
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
+from core.application.application_factory import ApplicationFactory
+from PyQt6.QtCore import QTimer
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication
 
 
 class ClearSequenceUITest:

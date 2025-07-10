@@ -11,21 +11,14 @@ PROVIDES:
 - Dataset indexing
 """
 
-from typing import List, Dict, Any, Optional, TypedDict
-from abc import ABC, abstractmethod
 import uuid
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Optional, TypedDict
 
+from application.services.pictographs.pictograph_management_service import (
+    PictographSearchQuery,
+)
 from domain.models.pictograph_models import PictographData
-
-
-class PictographSearchQuery(TypedDict, total=False):
-    """Type definition for pictograph search queries."""
-
-    letter: Optional[str]
-    motion_type: Optional[str]
-    start_position: Optional[str]
-    max_results: Optional[int]
-    categories: Optional[List[str]]
 
 
 class IDatasetManagementService(ABC):

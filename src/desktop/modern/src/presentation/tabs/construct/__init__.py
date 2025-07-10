@@ -9,26 +9,31 @@ Presentation Components (in this package):
 - StartPositionHandler: Manages start position UI interactions
 - OptionPickerManager: Handles option picker UI management
 - SignalCoordinator: Coordinates signals between UI components
-- DataConversionService: Handles UI-specific data conversions
 
 Business Logic Services (moved to application layer):
 - SequenceLoadingService: Handles sequence loading from persistence
 - SequenceBeatOperations: Manages beat-level operations
 - SequenceStartPositionManager: Manages start position operations
-- SequenceDataConverter: Handles data conversion between formats
+- SequenceDataConverter: Handles data conversion between formats (enhanced with caching)
 """
 
-from .layout_manager import ConstructTabLayoutManager
-from .start_position_handler import StartPositionHandler
-from .option_picker_manager import OptionPickerManager
-from .signal_coordinator import SignalCoordinator
-from .data_conversion_service import DataConversionService
+from application.services.data.sequence_data_converter import SequenceDataConverter
+from application.services.sequences.sequence_beat_operations import (
+    SequenceBeatOperations,
+)
 
 # Services moved to application layer
-from application.services.core.sequence_loading_service import SequenceLoadingService
-from application.services.core.sequence_beat_operations import SequenceBeatOperations
-from application.services.core.sequence_start_position_manager import SequenceStartPositionManager
-from application.services.data.sequence_data_converter import SequenceDataConverter
+from application.services.sequences.sequence_loading_service import (
+    SequenceLoadingService,
+)
+from application.services.sequences.sequence_start_position_manager import (
+    SequenceStartPositionManager,
+)
+
+from .layout_manager import ConstructTabLayoutManager
+from .option_picker_manager import OptionPickerManager
+from .signal_coordinator import SignalCoordinator
+from .start_position_handler import StartPositionHandler
 
 __all__ = [
     # Presentation components (local)
@@ -36,7 +41,6 @@ __all__ = [
     "StartPositionHandler",
     "OptionPickerManager",
     "SignalCoordinator",
-    "DataConversionService",
     # Business services (re-exported from application layer)
     "SequenceLoadingService",
     "SequenceBeatOperations",

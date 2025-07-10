@@ -8,12 +8,11 @@ Responsible for coordinating between the option picker component and sequence ma
 import time
 from typing import Optional
 
-from domain.models.beat_data import BeatData
+from application.services.data.data_conversion_service import DataConversionService
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from presentation.components.option_picker.core.option_picker import OptionPicker
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from .data_conversion_service import DataConversionService
 
 
 class OptionPickerManager(QObject):
@@ -24,13 +23,13 @@ class OptionPickerManager(QObject):
     - Handling option picker population from start positions
     - Managing option selection events
     - Refreshing options based on sequence state
-    - Converting data formats for option picker compatibility
+    - Working exclusively with PictographData
 
     Signals:
-    - beat_data_selected: Emitted when a beat option is selected
+    - pictograph_selected: Emitted when a pictograph option is selected
     """
 
-    beat_data_selected = pyqtSignal(object)  # BeatData object
+    pictograph_selected = pyqtSignal(object)  # PictographData object
 
     def __init__(
         self,
@@ -45,19 +44,26 @@ class OptionPickerManager(QObject):
         self._last_refresh_length = None
 
         if self.option_picker:
-            self.option_picker.beat_data_selected.connect(
-                self._handle_beat_data_selected
+            self.option_picker.pictograph_selected.connect(
+                self._handle_pictograph_selected
             )
 
     def populate_from_start_position(
-        self, position_key: str, start_position_data: BeatData
+        self, position_key: str, start_position_data: PictographData
     ):
-        """Populate option picker with valid motion combinations based on start position (Legacy behavior)"""
+        """Populate option picker with valid motion combinations based on start position"""
         if self.option_picker is None:
             return
 
         try:
-            start_position_dict = start_position_data.to_dict()
+            # Convert PictographData to legacy format for compatibility
+            start_position_dict = {
+                "letter": start_position_data.letter,
+                "start_pos": start_position_data.start_position,
+                "end_pos": start_position_data.end_position,
+                # Add other necessary fields from pictograph data
+            }
+
             extracted_end_pos = (
                 self.data_conversion_service.extract_end_position_from_position_key(
                     position_key
@@ -96,9 +102,9 @@ class OptionPickerManager(QObject):
 
             traceback.print_exc()
 
-    def _handle_beat_data_selected(self, beat_data: BeatData):
-        """Handle beat data selection from option picker and forward the signal"""
-        self.beat_data_selected.emit(beat_data)
+    def _handle_pictograph_selected(self, pictograph_data: PictographData):
+        """Handle pictograph data selection from option picker and forward the signal"""
+        self.pictograph_selected.emit(pictograph_data)
 
     def is_available(self) -> bool:
         """Check if option picker is available and functional"""

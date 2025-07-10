@@ -130,7 +130,7 @@ class WorkbenchEventController(QObject):
     def handle_clear(self) -> tuple[bool, str, Optional[SequenceData]]:
         try:
             # Clear persistence FIRST - this ensures current_sequence.json is cleared
-            from application.services.core.sequence_persistence_service import (
+            from application.services.sequences.sequence_persistence_service import (
                 SequencePersistenceService,
             )
 

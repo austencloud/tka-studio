@@ -20,6 +20,9 @@ from .start_position_view import StartPositionView
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
+    from application.services.workbench.beat_selection_service import (
+        BeatSelectionService,
+    )
     from core.events import IEventBus
 
 try:
@@ -76,11 +79,13 @@ class SequenceBeatFrame(QScrollArea):
     def __init__(
         self,
         layout_service: ILayoutService,
+        beat_selection_service: "BeatSelectionService",
         event_bus: Optional["IEventBus"] = None,
         parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)  # Injected dependencies
         self._layout_service = layout_service
+        self._beat_selection_service = beat_selection_service
         self._resizer_service = BeatResizerService()
 
         # Event system integration
@@ -129,8 +134,10 @@ class SequenceBeatFrame(QScrollArea):
         # Initialize beat views (pre-allocate for performance)
         self._initialize_beat_views()
 
-        # Create selection manager
-        self._selection_manager = BeatSelectionManager(self._container_widget)
+        # Create selection manager with injected service
+        self._selection_manager = BeatSelectionManager(
+            self._beat_selection_service, self._container_widget
+        )
         self._selection_manager.selection_changed.connect(self._on_selection_changed)
 
         # CRITICAL: Register beat views with selection manager for click handling
@@ -141,15 +148,19 @@ class SequenceBeatFrame(QScrollArea):
 
         # Setup start position view
         self._setup_start_position()
-        
+
     def _on_state_sequence_updated(self, sequence: Optional[SequenceData]):
         """Handle sequence updates from state manager"""
-        print(f"📊 SequenceBeatFrame: Sequence updated from state manager: {sequence.length if sequence else 0} beats")
+        print(
+            f"📊 SequenceBeatFrame: Sequence updated from state manager: {sequence.length if sequence else 0} beats"
+        )
         self.set_sequence(sequence)
-        
+
     def _on_state_start_position_updated(self, start_position: Optional[BeatData]):
         """Handle start position updates from state manager"""
-        print(f"🎯 SequenceBeatFrame: Start position updated from state manager: {start_position.letter if start_position else 'None'}")
+        print(
+            f"🎯 SequenceBeatFrame: Start position updated from state manager: {start_position.letter if start_position else 'None'}"
+        )
         self.set_start_position(start_position)
 
     def _setup_styling(self):
@@ -198,19 +209,22 @@ class SequenceBeatFrame(QScrollArea):
         # Subscribe to state manager for state updates (primary)
         try:
             from core.service_locator import get_sequence_state_manager
+
             state_manager = get_sequence_state_manager()
-            
+
             if state_manager:
                 # Subscribe to state manager Qt signals for UI updates
                 state_manager.sequence_updated.connect(self._on_state_sequence_updated)
-                state_manager.start_position_updated.connect(self._on_state_start_position_updated)
+                state_manager.start_position_updated.connect(
+                    self._on_state_start_position_updated
+                )
                 print("✅ SequenceBeatFrame subscribed to SequenceStateManager")
             else:
                 print("⚠️ SequenceStateManager not available")
-                
+
         except Exception as e:
             print(f"❌ Error subscribing to SequenceStateManager: {e}")
-        
+
         # Keep existing event bus subscriptions for backward compatibility
         if not self.event_bus or not EVENT_SYSTEM_AVAILABLE:
             return

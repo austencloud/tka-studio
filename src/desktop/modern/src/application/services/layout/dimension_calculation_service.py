@@ -3,9 +3,10 @@ Dimension Calculator - Pure Calculation Functions
 Merged from responsive_sizing_manager.py and dimension_analyzer.py
 """
 
-from typing import Tuple, Dict
-from PyQt6.QtWidgets import QWidget, QApplication
+from typing import Dict, Tuple
+
 from PyQt6.QtCore import QSize
+from PyQt6.QtWidgets import QApplication, QWidget
 
 
 class DimensionCalculator:
@@ -19,7 +20,7 @@ class DimensionCalculator:
         self.max_pictograph_size = 120
         self.section_margins = 5
         self.header_margins = 10
-        
+
         # Grid parameters
         self.default_pictograph_size = 160
         self.min_pictograph_size = 60
@@ -54,15 +55,22 @@ class DimensionCalculator:
         return QSize(container_width, container_height)
 
     def calculate_component_sizing(
-        self, container_width: int, container_height: int, 
-        section_count: int, filter_height: int
+        self,
+        container_width: int,
+        container_height: int,
+        section_count: int,
+        filter_height: int,
     ) -> Dict:
         """Calculate sizing for all components."""
         total_margins = self.section_margins * 2 * section_count
         header_space_needed = self.header_margins * section_count
-        available_height = container_height - filter_height - total_margins - header_space_needed
+        available_height = (
+            container_height - filter_height - total_margins - header_space_needed
+        )
 
-        header_height = self._calculate_optimal_header_height(available_height, section_count)
+        header_height = self._calculate_optimal_header_height(
+            available_height, section_count
+        )
         total_header_height = header_height * section_count
         pictograph_space = available_height - total_header_height
         pictograph_height_per_section = pictograph_space // section_count
@@ -72,7 +80,9 @@ class DimensionCalculator:
 
         shared_width_sections = max(0, section_count - 3)
         individual_section_width = container_width
-        shared_section_width = container_width // 3 if shared_width_sections > 0 else container_width
+        shared_section_width = (
+            container_width // 3 if shared_width_sections > 0 else container_width
+        )
 
         return {
             "container_width": container_width,
@@ -90,13 +100,17 @@ class DimensionCalculator:
             "columns_per_section": 8,
         }
 
-    def _calculate_optimal_header_height(self, available_height: int, section_count: int) -> int:
+    def _calculate_optimal_header_height(
+        self, available_height: int, section_count: int
+    ) -> int:
         """Calculate header height that fits proportionally."""
         ideal_header_space = available_height * 0.15
         header_height = int(ideal_header_space / section_count)
         return max(self.min_header_height, min(self.max_header_height, header_height))
 
-    def _calculate_optimal_pictograph_size(self, container_width: int, height_per_section: int) -> int:
+    def _calculate_optimal_pictograph_size(
+        self, container_width: int, height_per_section: int
+    ) -> int:
         """Calculate pictograph size that maximizes space usage."""
         columns = 8
         available_width = container_width - (self.section_margins * 2)
@@ -104,7 +118,9 @@ class DimensionCalculator:
         max_rows = 3
         height_based_size = height_per_section // max_rows
         optimal_size = min(width_based_size, height_based_size)
-        return max(self.min_pictograph_size, min(self.max_pictograph_size, optimal_size))
+        return max(
+            self.min_pictograph_size, min(self.max_pictograph_size, optimal_size)
+        )
 
     def _calculate_max_rows(self, height_per_section: int, pictograph_size: int) -> int:
         """Calculate maximum rows that can fit."""
@@ -121,7 +137,9 @@ class DimensionCalculator:
             available_width - (2 * self.container_margins) - total_spacing
         )
         optimal_size = available_for_pictographs // column_count
-        return max(self.min_pictograph_size, min(self.max_pictograph_size, optimal_size))
+        return max(
+            self.min_pictograph_size, min(self.max_pictograph_size, optimal_size)
+        )
 
     def calculate_container_dimensions(
         self, pictograph_count: int, pictograph_size: int, column_count: int = 8
@@ -142,16 +160,22 @@ class DimensionCalculator:
 
         return width, height
 
-    def analyze_layout_efficiency(self, available_width: int, pictograph_count: int) -> dict:
+    def analyze_layout_efficiency(
+        self, available_width: int, pictograph_count: int
+    ) -> dict:
         """Analyze layout efficiency for different configurations."""
         results = {}
         for columns in [6, 7, 8, 9, 10]:
-            pictograph_size = self.calculate_optimal_pictograph_size_for_width(available_width, columns)
+            pictograph_size = self.calculate_optimal_pictograph_size_for_width(
+                available_width, columns
+            )
             container_width, container_height = self.calculate_container_dimensions(
                 pictograph_count, pictograph_size, columns
             )
             used_width = container_width
-            width_efficiency = used_width / available_width if available_width > 0 else 0
+            width_efficiency = (
+                used_width / available_width if available_width > 0 else 0
+            )
 
             results[columns] = {
                 "pictograph_size": pictograph_size,

@@ -17,18 +17,18 @@ Usage:
     python test_clear_sequence_and_startup.py
 """
 
-import sys
-import os
 import json
+import os
+import sys
 from pathlib import Path
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from core.testing.ai_agent_helpers import TKAAITestHelper, ai_test_tka_comprehensive
-from application.services.core.sequence_persistence_service import (
+from application.services.sequences.sequence_persistence_service import (
     SequencePersistenceService,
 )
+from core.testing.ai_agent_helpers import TKAAITestHelper, ai_test_tka_comprehensive
 
 
 class ClearSequenceAndStartupTester:
@@ -159,7 +159,7 @@ class ClearSequenceAndStartupTester:
 
             # Step 2: Test loading the minimal sequence
             print("📝 Step 2: Testing sequence loading...")
-            from application.services.core.sequence_loading_service import (
+            from application.services.sequences.sequence_loading_service import (
                 SequenceLoadingService,
             )
 

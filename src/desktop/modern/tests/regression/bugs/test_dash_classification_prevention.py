@@ -9,12 +9,13 @@ AUTHOR: @austencloud
 
 # Setup project imports using proper path resolution
 
-import pytest
 from pathlib import Path
-from application.services.core.pictograph_management_service import (
+
+import pytest
+from application.services.pictographs.pictograph_management_service import (
     PictographManagementService,
 )
-from domain.models import LetterType, BeatData
+from domain.models import BeatData, LetterType
 
 
 class TestDashClassificationPrevention:

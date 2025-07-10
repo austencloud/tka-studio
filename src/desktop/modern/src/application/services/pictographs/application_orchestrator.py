@@ -14,20 +14,20 @@ PROVIDES:
 from abc import ABC, abstractmethod
 from typing import Callable, Optional
 
+from application.services.core.application_lifecycle_manager import (
+    ApplicationLifecycleManager,
+    IApplicationLifecycleManager,
+)
+from application.services.core.service_registration_manager import (
+    IServiceRegistrationManager,
+    ServiceRegistrationManager,
+)
 from core.dependency_injection.di_container import DIContainer
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
 
 from ..ui.background_manager import BackgroundManager, IBackgroundManager
 from ..ui.ui_setup_manager import IUISetupManager, UISetupManager
-from .application_lifecycle_manager import (
-    ApplicationLifecycleManager,
-    IApplicationLifecycleManager,
-)
-from .service_registration_manager import (
-    IServiceRegistrationManager,
-    ServiceRegistrationManager,
-)
 
 
 class IApplicationOrchestrator(ABC):

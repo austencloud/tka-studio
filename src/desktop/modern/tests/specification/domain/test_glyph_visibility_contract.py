@@ -29,7 +29,7 @@ class TestGlyphVisibilityContract:
     def test_pictograph_management_service_import(self):
         """Test that pictograph management service can be imported."""
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
 
@@ -58,7 +58,7 @@ class TestGlyphVisibilityContract:
         - Type 2 letters have show_elemental = False
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import BeatData, LetterType
@@ -108,7 +108,7 @@ class TestGlyphVisibilityContract:
         - Type 1 letters have show_elemental = True
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import BeatData, LetterType
@@ -158,7 +158,7 @@ class TestGlyphVisibilityContract:
         - Type 1 and Type 2 are properly distinguished
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import LetterType
@@ -205,7 +205,7 @@ class TestGlyphVisibilityContract:
         - Glyph data generation is consistent
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import BeatData
@@ -255,7 +255,7 @@ class TestGlyphVisibilityContract:
         - No exceptions or edge cases
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import BeatData, LetterType

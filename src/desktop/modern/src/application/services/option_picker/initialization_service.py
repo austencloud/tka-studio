@@ -81,9 +81,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 progress_callback("Initializing option service", 0.35)
 
             # Create option service
-            from presentation.components.option_picker.services.data.option_service import (
-                OptionService,
-            )
+            from application.services.option_picker.option_service import OptionService
 
             option_service = OptionService()
             components["option_service"] = option_service
@@ -147,7 +145,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
 
             pool_manager = PictographPoolManager(main_widget)
             pool_manager.set_click_handler(beat_click_handler)
-            pool_manager.set_beat_data_click_handler(beat_data_click_handler)
+            pool_manager.set_pictograph_click_handler(beat_data_click_handler)
 
             return pool_manager
 
@@ -155,7 +153,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             logger.error(f"Error creating pool manager: {e}")
             raise
 
-    def create_dimension_analyzer(
+    def create_dimension_calculator(
         self,
         main_widget: QWidget,
         sections_container: QWidget,
@@ -163,7 +161,7 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
         display_manager: Any,
     ) -> Any:
         """
-        Create and configure the dimension analyzer.
+        Create and configure the dimension calculator.
 
         Args:
             main_widget: Main widget
@@ -172,19 +170,19 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             display_manager: Display manager
 
         Returns:
-            Configured dimension analyzer
+            Configured dimension calculator
         """
         try:
-            from presentation.components.option_picker.services.layout.dimension_calculator import (
+            from application.services.layout.dimension_calculation_service import (
                 DimensionCalculator,
             )
 
-            dimension_analyzer = DimensionCalculator()
+            dimension_calculator = DimensionCalculator()
 
-            return dimension_analyzer
+            return dimension_calculator
 
         except Exception as e:
-            logger.error(f"Error creating dimension analyzer: {e}")
+            logger.error(f"Error creating dimension calculator: {e}")
             raise
 
     def initialize_pool(

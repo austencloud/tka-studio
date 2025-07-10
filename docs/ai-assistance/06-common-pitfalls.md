@@ -7,6 +7,7 @@ TKA's sophisticated architecture can be easily broken by AI agents who don't und
 ## 🏗️ ARCHITECTURAL VIOLATIONS
 
 ### CRITICAL ERROR: Recreating Existing Systems
+
 ```python
 # ❌ WRONG: Creating competing command pattern
 class AICommandExecutor:  # DON'T DO THIS
@@ -22,6 +23,7 @@ updated_sequence = service.add_beat_with_undo(beat_data, position)
 ```
 
 ### CRITICAL ERROR: Ignoring Dependency Injection
+
 ```python
 # ❌ WRONG: Direct service instantiation
 from application.services.core.sequence_management_service import SequenceManagementService
@@ -36,6 +38,7 @@ sequence = service.create_sequence("Test", 8)  # Works perfectly
 ```
 
 ### CRITICAL ERROR: Violating Immutability
+
 ```python
 # ❌ WRONG: Trying to mutate frozen dataclasses
 beat = BeatData(beat_number=1, letter="A")
@@ -53,6 +56,7 @@ sequence = sequence.add_beat(beat3)  # Returns new instance
 ```
 
 ### CRITICAL ERROR: Business Logic in UI
+
 ```python
 # ❌ WRONG: Business logic in UI components
 class BadSequenceWidget(QWidget):
@@ -69,7 +73,7 @@ class GoodSequenceWidget(QWidget):
     def __init__(self, sequence_service: ISequenceManagementService):
         super().__init__()
         self._sequence_service = sequence_service
-    
+
     def create_sequence_button_clicked(self):
         # Delegate to service
         sequence = self._sequence_service.create_sequence("New", 16)
@@ -79,6 +83,7 @@ class GoodSequenceWidget(QWidget):
 ## 🧪 TESTING VIOLATIONS
 
 ### CRITICAL ERROR: Creating Unnecessary Mocks
+
 ```python
 # ❌ WRONG: Mocking complex domain objects
 from unittest.mock import Mock
@@ -101,6 +106,7 @@ assert isinstance(sequence, SequenceData)  # Real validation
 ```
 
 ### CRITICAL ERROR: Ignoring Test Infrastructure
+
 ```python
 # ❌ WRONG: Manual test setup
 def test_sequence_creation():
@@ -119,12 +125,13 @@ def test_sequence_creation():
 ```
 
 ### CRITICAL ERROR: Testing Implementation Details
+
 ```python
 # ❌ WRONG: Testing internal implementation
 def test_sequence_service_internals():
     service = container.resolve(ISequenceManagementService)
     sequence = service.create_sequence("Test", 8)
-    
+
     # DON'T TEST PRIVATE STATE
     assert service._current_sequence == sequence  # Implementation detail!
     assert len(service._cleanup_handlers) == 1   # Implementation detail!
@@ -133,7 +140,7 @@ def test_sequence_service_internals():
 def test_sequence_service_contract():
     service = container.resolve(ISequenceManagementService)
     sequence = service.create_sequence("Test", 8)
-    
+
     # TEST PUBLIC CONTRACTS
     assert sequence.name == "Test"
     assert sequence.length == 8
@@ -143,6 +150,7 @@ def test_sequence_service_contract():
 ## 📊 DOMAIN MODEL VIOLATIONS
 
 ### CRITICAL ERROR: Incomplete Domain Objects
+
 ```python
 # ❌ WRONG: Creating incomplete domain objects
 beat = BeatData()  # Missing required data
@@ -178,6 +186,7 @@ beat = BeatData(
 ```
 
 ### CRITICAL ERROR: Ignoring Validation
+
 ```python
 # ❌ WRONG: Skipping validation
 def create_sequence_without_validation(name, length):
@@ -189,7 +198,7 @@ def create_sequence_without_validation(name, length):
 def create_sequence_safely(name, length):
     container = ApplicationFactory.create_test_app()
     service = container.resolve(ISequenceManagementService)
-    
+
     try:
         sequence = service.create_sequence(name, length)
         # Service validates automatically
@@ -202,6 +211,7 @@ def create_sequence_safely(name, length):
 ## 🔧 SERVICE LAYER VIOLATIONS
 
 ### CRITICAL ERROR: Layer Boundary Violations
+
 ```python
 # ❌ WRONG: Domain calling Infrastructure
 from domain.models.core_models import SequenceData
@@ -216,7 +226,7 @@ class BadSequenceData(SequenceData):  # DON'T EXTEND DOMAIN MODELS
 class SequenceService:
     def __init__(self, repository: ISequenceRepository):
         self._repository = repository
-    
+
     def save_sequence(self, sequence: SequenceData) -> bool:
         # SERVICE orchestrates domain and infrastructure
         if sequence.is_valid:
@@ -225,14 +235,15 @@ class SequenceService:
 ```
 
 ### CRITICAL ERROR: Bypassing Service Interfaces
+
 ```python
 # ❌ WRONG: Using concrete implementations directly
-from application.services.core.sequence_management_service import SequenceManagementService
+from application.services.sequences.sequence_management_service import SequenceManagementService
 
 service = SequenceManagementService()  # Bypasses DI and interfaces!
 
 # ❌ WRONG: Importing implementation in tests
-from application.services.core.pictograph_management_service import PictographManagementService
+from application.services.pictographs.pictograph_management_service import PictographManagementService
 
 def test_pictograph_creation():
     service = PictographManagementService()  # Wrong!
@@ -244,9 +255,34 @@ container = ApplicationFactory.create_test_app()
 service = container.resolve(ISequenceManagementService)  # Interface-based!
 ```
 
+### CRITICAL ERROR: Using Old Service Import Paths
+
+```python
+# ❌ WRONG: Using old import paths after reorganization
+from application.services.core.sequence_loading_service import SequenceLoadingService
+from application.services.core.pictograph_management_service import PictographManagementService
+from application.services.data.glyph_data_service import GlyphDataService
+from application.services.ui.graph_editor.graph_editor_service import GraphEditorService
+
+# ✅ CORRECT: Use new domain-organized paths
+from application.services.sequences.sequence_loading_service import SequenceLoadingService
+from application.services.pictographs.pictograph_management_service import PictographManagementService
+from application.services.glyphs.glyph_data_service import GlyphDataService
+from application.services.graph_editor.graph_editor_service import GraphEditorService
+```
+
+**NEW SERVICE ORGANIZATION (2025-07-10):**
+
+- `sequences/` - All sequence-related services
+- `pictographs/` - All pictograph-related services
+- `glyphs/` - Glyph-specific services
+- `graph_editor/` - Graph editor domain services
+- `core/` - Only infrastructure services (object pool, session state, etc.)
+
 ## 📥 IMPORT VIOLATIONS
 
 ### CRITICAL ERROR: Wrong Import Patterns
+
 ```python
 # ❌ WRONG: Incorrect path structure
 from src.desktop.modern.src.domain.models.core_models import BeatData  # Too long!
@@ -262,6 +298,7 @@ from desktop.domain.models.core_models import BeatData
 ```
 
 ### CRITICAL ERROR: Circular Import Dependencies
+
 ```python
 # ❌ WRONG: Circular imports
 # In sequence_service.py:
@@ -282,13 +319,14 @@ class SequenceService:
 ## 🚀 PERFORMANCE VIOLATIONS
 
 ### CRITICAL ERROR: Inefficient Service Resolution
+
 ```python
 # ❌ WRONG: Resolving services repeatedly
 class BadController:
     def handle_request(self):
         service = container.resolve(ISequenceManagementService)  # Expensive!
         service.create_sequence("Test", 8)
-    
+
     def handle_another_request(self):
         service = container.resolve(ISequenceManagementService)  # Expensive again!
         service.create_sequence("Another", 16)
@@ -297,15 +335,16 @@ class BadController:
 class GoodController:
     def __init__(self, container: DIContainer):
         self._sequence_service = container.resolve(ISequenceManagementService)
-    
+
     def handle_request(self):
         self._sequence_service.create_sequence("Test", 8)  # Fast!
-    
+
     def handle_another_request(self):
         self._sequence_service.create_sequence("Another", 16)  # Fast!
 ```
 
 ### CRITICAL ERROR: Creating Expensive Objects in Tests
+
 ```python
 # ❌ WRONG: Complex setup in every test
 def test_sequence_operation_1():
@@ -326,7 +365,7 @@ def sequence_service():
 
 def test_sequence_operation_1(sequence_service):
     # Uses cached, fast service
-    
+
 def test_sequence_operation_2(sequence_service):
     # Uses cached, fast service
 ```
@@ -334,6 +373,7 @@ def test_sequence_operation_2(sequence_service):
 ## 🎯 EVENT SYSTEM VIOLATIONS
 
 ### CRITICAL ERROR: Synchronous Event Handling
+
 ```python
 # ❌ WRONG: Blocking event handlers
 def slow_event_handler(event: SequenceCreatedEvent):
@@ -346,6 +386,7 @@ async def fast_event_handler(event: SequenceCreatedEvent):
 ```
 
 ### CRITICAL ERROR: Event Handler Side Effects
+
 ```python
 # ❌ WRONG: Modifying event data
 def bad_event_handler(event: SequenceCreatedEvent):
@@ -362,6 +403,7 @@ def good_event_handler(event: SequenceCreatedEvent):
 ## 📝 DOCUMENTATION VIOLATIONS
 
 ### CRITICAL ERROR: Missing Test Lifecycle Metadata
+
 ```python
 # ❌ WRONG: Unlabeled test without lifecycle
 def test_sequence_creation():
@@ -386,6 +428,7 @@ def test_sequence_immutability_contract():
 ## 🔒 SECURITY AND SAFETY VIOLATIONS
 
 ### CRITICAL ERROR: Unsafe Type Casting
+
 ```python
 # ❌ WRONG: Unsafe casting without validation
 def unsafe_conversion(data: Dict) -> BeatData:
@@ -405,6 +448,7 @@ def safe_conversion(data: Dict) -> BeatData:
 ## 🎯 QUICK REFERENCE: MAJOR PITFALLS
 
 ### ❌ ARCHITECTURAL VIOLATIONS:
+
 1. Recreating existing command patterns
 2. Bypassing dependency injection
 3. Violating immutability contracts
@@ -412,6 +456,7 @@ def safe_conversion(data: Dict) -> BeatData:
 5. Violating layer boundaries
 
 ### ❌ TESTING VIOLATIONS:
+
 1. Creating unnecessary mocks
 2. Ignoring test infrastructure
 3. Testing implementation details
@@ -419,6 +464,7 @@ def safe_conversion(data: Dict) -> BeatData:
 5. Using production services in tests
 
 ### ❌ DOMAIN VIOLATIONS:
+
 1. Creating incomplete domain objects
 2. Using invalid enum values
 3. Ignoring validation rules
@@ -426,6 +472,7 @@ def safe_conversion(data: Dict) -> BeatData:
 5. Bypassing business rules
 
 ### ❌ SERVICE VIOLATIONS:
+
 1. Direct service instantiation
 2. Circular import dependencies
 3. Inefficient service resolution
@@ -433,6 +480,7 @@ def safe_conversion(data: Dict) -> BeatData:
 5. Layer boundary violations
 
 ### ❌ PERFORMANCE VIOLATIONS:
+
 1. Repeated expensive operations
 2. Synchronous event handling
 3. Memory leaks in tests

@@ -8,40 +8,44 @@ This factory creates different "flavors" of the application:
 - Recording: Production services with recording layer
 """
 
-from typing import Optional
-import sys
 import logging
-from core.dependency_injection.di_container import (
-    DIContainer,
-)
+import sys
+from typing import Optional
+
+from core.dependency_injection.di_container import DIContainer
 
 logger = logging.getLogger(__name__)
 
-# Import existing service interfaces
-from core.interfaces.core_services import (
-    ILayoutService,
-    ISettingsService,
-    ISequenceDataService,
-    IValidationService,
-    IArrowManagementService,
-    ISequenceManagementService,
-    IPictographManagementService,
-    IUIStateManagementService,
-)
-from core.interfaces.session_services import ISessionStateService
+from application.services.core.session_state_service import SessionStateService
 
 # Import production services
 from application.services.layout.layout_management_service import (
     LayoutManagementService,
 )
-from application.services.ui.ui_state_management_service import UIStateManagementService
-from application.services.core.sequence_management_service import (
-    SequenceManagementService,
-)
-from application.services.core.pictograph_management_service import (
+from application.services.pictographs.pictograph_management_service import (
     PictographManagementService,
 )
-from application.services.core.session_state_service import SessionStateService
+from application.services.sequences.sequence_management_service import (
+    SequenceManagementService,
+)
+from application.services.ui.ui_state_management_service import UIStateManagementService
+
+# Import existing service interfaces
+from core.interfaces.core_services import (
+    IArrowManagementService,
+    ILayoutService,
+    IPictographManagementService,
+    ISequenceDataService,
+    ISequenceManagementService,
+    ISettingsService,
+    IUIStateManagementService,
+    IValidationService,
+)
+
+# Import file system services
+from core.interfaces.organization_services import IFileSystemService
+from core.interfaces.session_services import ISessionStateService
+from infrastructure.file_system.file_system_service import FileSystemService
 
 # Import file-based storage services
 from infrastructure.storage.file_based_sequence_data_service import (
@@ -49,27 +53,22 @@ from infrastructure.storage.file_based_sequence_data_service import (
 )
 from infrastructure.storage.file_based_settings_service import FileBasedSettingsService
 
-# Import file system services
-from core.interfaces.organization_services import IFileSystemService
-from infrastructure.file_system.file_system_service import FileSystemService
-
 logger = logging.getLogger(__name__)
 # Import test doubles (to be created) - using try/except for graceful fallback
 try:
-    from infrastructure.test_doubles.mock_services import (
-        InMemorySequenceDataService,
-        MockLayoutService,
-        InMemorySettingsService,
-        MockValidationService,
-        MockArrowManagementService,
-        MockSequenceManagementService,
-        MockPictographManagementService,
-        MockUIStateManagementService,
-    )
-
     from infrastructure.test_doubles.headless_services import (
         HeadlessLayoutService,
         HeadlessUIStateManagementService,
+    )
+    from infrastructure.test_doubles.mock_services import (
+        InMemorySequenceDataService,
+        InMemorySettingsService,
+        MockArrowManagementService,
+        MockLayoutService,
+        MockPictographManagementService,
+        MockSequenceManagementService,
+        MockUIStateManagementService,
+        MockValidationService,
     )
 
     TEST_DOUBLES_AVAILABLE = True
@@ -126,16 +125,16 @@ class ApplicationFactory:
         container.register_singleton(ISessionStateService, SessionStateService)
 
         # Register visibility service
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
         from application.services.settings.visibility_service import VisibilityService
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
 
         container.register_singleton(IVisibilityService, VisibilityService)
 
         # Register pictograph context service
-        from core.interfaces.core_services import IPictographContextService
         from application.services.ui.pictograph_context_service import (
             PictographContextService,
         )
+        from core.interfaces.core_services import IPictographContextService
 
         container.register_singleton(
             IPictographContextService, PictographContextService
@@ -153,11 +152,12 @@ class ApplicationFactory:
             )
 
         # Removed repetitive log statement
-        
+
         # Set this container as the global container so get_container() returns it
         from core.dependency_injection.di_container import set_container
+
         set_container(container)
-        
+
         return container
 
     @staticmethod
@@ -199,16 +199,16 @@ class ApplicationFactory:
         container.register_singleton(ISessionStateService, SessionStateService)
 
         # Register visibility service
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
         from application.services.settings.visibility_service import VisibilityService
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
 
         container.register_singleton(IVisibilityService, VisibilityService)
 
         # Register pictograph context service
-        from core.interfaces.core_services import IPictographContextService
         from application.services.ui.pictograph_context_service import (
             PictographContextService,
         )
+        from core.interfaces.core_services import IPictographContextService
 
         container.register_singleton(
             IPictographContextService, PictographContextService
@@ -227,6 +227,7 @@ class ApplicationFactory:
 
         # Set this container as the global container so get_container() returns it
         from core.dependency_injection.di_container import set_container
+
         set_container(container)
 
         logger.info("Created test application container")
@@ -271,16 +272,16 @@ class ApplicationFactory:
         container.register_singleton(ISessionStateService, SessionStateService)
 
         # Register visibility service
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
         from application.services.settings.visibility_service import VisibilityService
+        from core.interfaces.tab_settings_interfaces import IVisibilityService
 
         container.register_singleton(IVisibilityService, VisibilityService)
 
         # Register pictograph context service
-        from core.interfaces.core_services import IPictographContextService
         from application.services.ui.pictograph_context_service import (
             PictographContextService,
         )
+        from core.interfaces.core_services import IPictographContextService
 
         container.register_singleton(
             IPictographContextService, PictographContextService
@@ -299,6 +300,7 @@ class ApplicationFactory:
 
         # Set this container as the global container so get_container() returns it
         from core.dependency_injection.di_container import set_container
+
         set_container(container)
 
         logger.info("Created headless application container")

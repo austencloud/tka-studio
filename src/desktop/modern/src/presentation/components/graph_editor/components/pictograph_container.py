@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from application.services.core.pictograph_management_service import (
+from application.services.pictographs.pictograph_management_service import (
     PictographManagementService,
 )
 from domain.models.beat_data import BeatData

@@ -7,10 +7,10 @@ Responsible for handling start position picker interactions and creating start p
 
 from typing import Callable, Optional
 
+from application.services.data.data_conversion_service import DataConversionService
+from application.services.data.sequence_data_converter import SequenceDataConverter
 from domain.models import BeatData
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from .data_conversion_service import DataConversionService
 
 
 class StartPositionHandler(QObject):

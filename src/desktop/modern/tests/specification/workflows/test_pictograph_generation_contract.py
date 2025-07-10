@@ -66,7 +66,7 @@ class TestPictographGenerationWorkflowContract:
         - Service handles beat data correctly
         """
         try:
-            from application.services.core.pictograph_management_service import (
+            from application.services.pictographs.pictograph_management_service import (
                 PictographManagementService,
             )
             from domain.models import BeatData

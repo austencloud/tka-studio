@@ -10,7 +10,25 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from core.dependency_injection.di_container import DIContainer
 from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
+
+
+class IOptionServiceSignals(ABC):
+    """Interface for option service signal emission."""
+
+    @abstractmethod
+    def emit_options_loaded(self, options: List[PictographData]) -> None:
+        """
+        Emit signal when options are loaded.
+
+        Args:
+            options: List of loaded pictograph options
+        """
+
+    @abstractmethod
+    def emit_options_cleared(self) -> None:
+        """Emit signal when options are cleared."""
 
 
 class IOptionPickerInitializationService(ABC):
@@ -69,30 +87,30 @@ class IOptionPickerInitializationService(ABC):
 
 
 class IOptionPickerDataService(ABC):
-    """Interface for option picker data management."""
+    """Interface for option picker data management. Works exclusively with PictographData."""
 
     @abstractmethod
-    def load_beat_options(self) -> List[BeatData]:
+    def load_pictograph_options(self) -> List[PictographData]:
         """
-        Load initial beat options.
+        Load initial pictograph options.
 
         Returns:
-            List of available beat data options
+            List of available pictograph data options
         """
 
     @abstractmethod
-    def refresh_options(self) -> List[BeatData]:
+    def refresh_pictograph_options(self) -> List[PictographData]:
         """
-        Refresh beat options.
+        Refresh pictograph options.
 
         Returns:
-            Updated list of beat data options
+            Updated list of pictograph data options
         """
 
     @abstractmethod
-    def refresh_from_sequence_data(
+    def refresh_pictographs_from_sequence_data(
         self, sequence_data: List[Dict[str, Any]]
-    ) -> List[BeatData]:
+    ) -> List[PictographData]:
         """
         Refresh options based on legacy sequence data.
 
@@ -100,11 +118,13 @@ class IOptionPickerDataService(ABC):
             sequence_data: Legacy sequence data format
 
         Returns:
-            Updated list of beat data options
+            Updated list of pictograph data options
         """
 
     @abstractmethod
-    def refresh_from_sequence(self, sequence: SequenceData) -> List[BeatData]:
+    def refresh_pictographs_from_sequence(
+        self, sequence: SequenceData
+    ) -> List[PictographData]:
         """
         Refresh options based on modern sequence data.
 
@@ -112,28 +132,28 @@ class IOptionPickerDataService(ABC):
             sequence: Modern sequence data
 
         Returns:
-            Updated list of beat data options
+            Updated list of pictograph data options
         """
 
     @abstractmethod
-    def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
+    def get_pictograph_for_option(self, option_id: str) -> Optional[PictographData]:
         """
-        Get beat data for a specific option ID.
+        Get pictograph data for a specific option ID.
 
         Args:
-            option_id: Option identifier (e.g., 'beat_J')
+            option_id: Option identifier (e.g., 'option_0', 'option_J')
 
         Returns:
-            BeatData if found, None otherwise
+            PictographData if found, None otherwise
         """
 
     @abstractmethod
-    def get_current_options(self) -> List[BeatData]:
+    def get_current_pictographs(self) -> List[PictographData]:
         """
-        Get currently loaded beat options.
+        Get currently loaded pictograph options.
 
         Returns:
-            Current list of beat data options
+            Current list of pictograph data options
         """
 
     @abstractmethod
@@ -167,12 +187,14 @@ class IOptionPickerDisplayService(ABC):
         """Create display sections for beat options."""
 
     @abstractmethod
-    def update_beat_display(self, beat_options: List[BeatData]) -> None:
+    def update_pictograph_display(
+        self, pictograph_options: List[PictographData]
+    ) -> None:
         """
-        Update the display with new beat options.
+        Update the display with new pictograph options.
 
         Args:
-            beat_options: List of beat data to display
+            pictograph_options: List of pictograph data to display
         """
 
     @abstractmethod
@@ -205,8 +227,8 @@ class IOptionPickerEventService(ABC):
         self,
         pool_manager: Any,
         filter_widget: Any,
-        beat_click_handler: Callable[[str], None],
-        beat_data_click_handler: Callable[[BeatData], None],
+        option_click_handler: Callable[[str], None],
+        pictograph_click_handler: Callable[[PictographData], None],
         filter_change_handler: Callable[[str], None],
     ) -> None:
         """
@@ -215,8 +237,8 @@ class IOptionPickerEventService(ABC):
         Args:
             pool_manager: Pictograph pool manager
             filter_widget: Filter widget
-            beat_click_handler: Handler for beat clicks
-            beat_data_click_handler: Handler for beat data clicks
+            option_click_handler: Handler for option clicks
+            pictograph_click_handler: Handler for pictograph data clicks
             filter_change_handler: Handler for filter changes
         """
 
@@ -251,6 +273,93 @@ class IOptionPickerEventService(ABC):
     @abstractmethod
     def cleanup(self) -> None:
         """Clean up event service resources."""
+
+
+class IOptionService(ABC):
+    """Interface for pictograph option management."""
+
+    @abstractmethod
+    def load_options_from_sequence(
+        self, sequence_data: List[Dict[str, Any]]
+    ) -> List[PictographData]:
+        """
+        Load pictograph options based on legacy sequence data.
+
+        Args:
+            sequence_data: Legacy sequence data format
+
+        Returns:
+            List of pictograph options
+        """
+
+    @abstractmethod
+    def load_options_from_modern_sequence(
+        self, sequence: SequenceData
+    ) -> List[PictographData]:
+        """
+        Load pictograph options based on modern sequence data.
+
+        Args:
+            sequence: Modern SequenceData object
+
+        Returns:
+            List of pictograph options
+        """
+
+    @abstractmethod
+    def get_current_options(self) -> List[PictographData]:
+        """
+        Get the currently loaded pictograph options.
+
+        Returns:
+            Copy of current pictograph options
+        """
+
+    @abstractmethod
+    def clear_options(self) -> None:
+        """Clear all loaded options."""
+
+    @abstractmethod
+    def get_option_count(self) -> int:
+        """
+        Get the number of currently loaded options.
+
+        Returns:
+            Count of loaded options
+        """
+
+    @abstractmethod
+    def get_option_by_index(self, index: int) -> Optional[PictographData]:
+        """
+        Get option by index.
+
+        Args:
+            index: Index of the option to retrieve
+
+        Returns:
+            PictographData if found, None otherwise
+        """
+
+    @abstractmethod
+    def filter_options_by_letter(self, letter: str) -> List[PictographData]:
+        """
+        Filter current options by letter.
+
+        Args:
+            letter: Letter to filter by
+
+        Returns:
+            List of options matching the letter
+        """
+
+    @abstractmethod
+    def get_available_letters(self) -> List[str]:
+        """
+        Get list of available letters in current options.
+
+        Returns:
+            Sorted list of unique letters
+        """
 
 
 class IOptionPickerOrchestrator(ABC):
@@ -299,15 +408,15 @@ class IOptionPickerOrchestrator(ABC):
         """
 
     @abstractmethod
-    def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
+    def get_pictograph_for_option(self, option_id: str) -> Optional[PictographData]:
         """
-        Get beat data for a specific option ID.
+        Get pictograph data for a specific option ID.
 
         Args:
             option_id: Option identifier
 
         Returns:
-            BeatData if found, None otherwise
+            PictographData if found, None otherwise
         """
 
     @abstractmethod

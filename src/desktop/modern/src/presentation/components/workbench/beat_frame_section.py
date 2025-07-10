@@ -10,7 +10,9 @@ from .button_panel import SequenceWorkbenchButtonPanel
 from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
 
 if TYPE_CHECKING:
-    pass
+    from application.services.workbench.beat_selection_service import (
+        BeatSelectionService,
+    )
 
 
 class WorkbenchBeatFrameSection(QWidget):
@@ -35,10 +37,14 @@ class WorkbenchBeatFrameSection(QWidget):
     edit_construct_toggle_requested = pyqtSignal(bool)
 
     def __init__(
-        self, layout_service: ILayoutService, parent: Optional[QWidget] = None
+        self,
+        layout_service: ILayoutService,
+        beat_selection_service: "BeatSelectionService",
+        parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)
         self._layout_service = layout_service
+        self._beat_selection_service = beat_selection_service
         self._current_sequence: Optional[SequenceData] = None
         self._start_position_data: Optional[BeatData] = None
 
@@ -57,7 +63,9 @@ class WorkbenchBeatFrameSection(QWidget):
 
         # Create beat frame (left side)
         self._beat_frame = SequenceBeatFrame(
-            layout_service=self._layout_service, parent=self
+            layout_service=self._layout_service,
+            beat_selection_service=self._beat_selection_service,
+            parent=self,
         )
         self._beat_frame.setMinimumHeight(400)
 

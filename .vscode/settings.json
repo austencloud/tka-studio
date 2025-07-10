@@ -3,13 +3,6 @@
   "python.terminal.activateEnvironment": true,
   "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
   "python.terminal.activateEnvInCurrentTerminal": true,
-  "python.analysis.extraPaths": [
-    "./src",
-    "./launcher",
-    "./packages",
-    "./packages/shared-types/python",
-    "./packages/constants/python"
-  ],
   "python.debugging.noDebugAdapterPath": false,
   "python.experiments.enabled": false,
   "python.envFile": "${workspaceFolder}/.env",

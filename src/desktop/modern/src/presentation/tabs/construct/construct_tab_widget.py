@@ -1,13 +1,17 @@
 from typing import TYPE_CHECKING, Optional
 
-from application.services.core.sequence_beat_operations import SequenceBeatOperations
+from application.services.data.sequence_data_converter import SequenceDataConverter
+from application.services.sequences.sequence_beat_operations import (
+    SequenceBeatOperations,
+)
 
 # Import services from application layer (moved from presentation)
-from application.services.core.sequence_loading_service import SequenceLoadingService
-from application.services.core.sequence_start_position_manager import (
+from application.services.sequences.sequence_loading_service import (
+    SequenceLoadingService,
+)
+from application.services.sequences.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
-from application.services.data.sequence_data_converter import SequenceDataConverter
 from application.services.ui.ui_state_management_service import UIStateManagementService
 from core.dependency_injection.di_container import DIContainer
 from domain.models.beat_data import BeatData
@@ -15,13 +19,14 @@ from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
-from .data_conversion_service import DataConversionService
-
 # Import refactored components
 from .layout_manager import ConstructTabLayoutManager
 from .option_picker_manager import OptionPickerManager
 from .signal_coordinator import SignalCoordinator
 from .start_position_handler import StartPositionHandler
+
+# DataConversionService moved to application layer and imported above
+
 
 if TYPE_CHECKING:
     from presentation.components.workbench.workbench import SequenceWorkbench
@@ -95,9 +100,10 @@ class ConstructTabWidget(QWidget):
         workbench_getter = self._get_workbench_getter()
         workbench_setter = self._get_workbench_setter()
 
-        # Initialize core services
-        self.data_conversion_service = DataConversionService()
+        # Initialize core services - use enhanced SequenceDataConverter with caching
         self.data_converter = SequenceDataConverter()
+        # For backward compatibility, alias the enhanced service
+        self.data_conversion_service = self.data_converter
 
         # Initialize sequence services directly
         self.loading_service = SequenceLoadingService(
@@ -279,7 +285,7 @@ class ConstructTabWidget(QWidget):
             print("🔄 [CONSTRUCT_TAB] Clearing sequence...")
 
             # Clear persistence FIRST
-            from application.services.core.sequence_persistence_service import (
+            from application.services.sequences.sequence_persistence_service import (
                 SequencePersistenceService,
             )
 

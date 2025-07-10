@@ -52,7 +52,7 @@ class TKAMainWindow(QMainWindow):
 
         # Only initialize orchestrator if we have a container (production mode)
         if self.container:
-            from application.services.core.application_orchestrator import (
+            from application.services.pictographs.application_orchestrator import (
                 ApplicationOrchestrator,
             )
 

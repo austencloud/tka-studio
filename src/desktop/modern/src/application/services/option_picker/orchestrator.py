@@ -23,7 +23,7 @@ from core.interfaces.option_picker_services import (
     IOptionPickerEventService,
     IOptionPickerInitializationService,
 )
-from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -37,16 +37,17 @@ class OptionPickerOrchestrator(QObject):
 
     This is a thin coordination layer that delegates to specialized services:
     - Initialization service for component setup
-    - Data service for beat data management
+    - Data service for pictograph data management
     - Display service for UI updates
     - Event service for interaction handling
 
     Follows TKA's clean architecture and dependency injection patterns.
+    Works exclusively with PictographData.
     """
 
     # Signals for external communication
     option_selected = pyqtSignal(str)
-    beat_data_selected = pyqtSignal(object)
+    pictograph_selected = pyqtSignal(object)  # PictographData object
 
     def __init__(
         self,
@@ -154,8 +155,8 @@ class OptionPickerOrchestrator(QObject):
             # Step 3: Create pool manager
             self.pool_manager = self.initialization_service.create_pool_manager(
                 self.option_picker_widget,
-                self._handle_beat_click,
-                self._handle_beat_data_click,
+                self._handle_option_click,
+                self._handle_pictograph_click,
             )
 
             if self.progress_callback:
@@ -180,7 +181,7 @@ class OptionPickerOrchestrator(QObject):
 
             # Step 6: Create dimension analyzer
             self.dimension_analyzer = (
-                self.initialization_service.create_dimension_analyzer(
+                self.initialization_service.create_dimension_calculator(
                     self.option_picker_widget,
                     self.sections_container,
                     self.sections_layout,
@@ -209,8 +210,8 @@ class OptionPickerOrchestrator(QObject):
             self.event_service.setup_event_handlers(
                 self.pool_manager,
                 self.filter_widget,
-                self._handle_beat_click,
-                self._handle_beat_data_click,
+                self._handle_option_click,
+                self._handle_pictograph_click,
                 self._on_filter_changed,
             )
 
@@ -224,9 +225,7 @@ class OptionPickerOrchestrator(QObject):
 
             # Step 11: Load initial pictograph options
             pictograph_options = self.option_service.get_current_options()
-            # Convert to BeatData for display compatibility (temporary)
-            beat_options = self._convert_pictographs_to_beats(pictograph_options)
-            self.display_service.update_beat_display(beat_options)
+            self.display_service.update_pictograph_display(pictograph_options)
 
             if self.progress_callback:
                 self.progress_callback("Initialization complete", 1.0)
@@ -266,27 +265,27 @@ class OptionPickerOrchestrator(QObject):
             pictograph_options = self.option_service.load_options_from_sequence(
                 sequence_data
             )
-            beat_options = self._convert_pictographs_to_beats(pictograph_options)
-            self.display_service.update_beat_display(beat_options)
+            self.display_service.update_pictograph_display(pictograph_options)
             self.display_service.ensure_sections_visible()
 
-            logger.debug(f"Loaded motion combinations: {len(beat_options)} options")
+            logger.debug(
+                f"Loaded motion combinations: {len(pictograph_options)} options"
+            )
 
         except Exception as e:
             logger.error(f"Error loading motion combinations: {e}")
 
     def refresh_options(self) -> None:
-        """Refresh the option picker with latest beat options."""
+        """Refresh the option picker with latest pictograph options."""
         try:
             if not self._initialized:
                 logger.warning("Orchestrator not initialized")
                 return
 
             pictograph_options = self.option_service.get_current_options()
-            beat_options = self._convert_pictographs_to_beats(pictograph_options)
-            self.display_service.update_beat_display(beat_options)
+            self.display_service.update_pictograph_display(pictograph_options)
 
-            logger.debug(f"Refreshed options: {len(beat_options)} options")
+            logger.debug(f"Refreshed options: {len(pictograph_options)} options")
 
         except Exception as e:
             logger.error(f"Error refreshing options: {e}")
@@ -306,43 +305,42 @@ class OptionPickerOrchestrator(QObject):
             pictograph_options = self.option_service.load_options_from_modern_sequence(
                 sequence
             )
-            beat_options = self._convert_pictographs_to_beats(pictograph_options)
-            self.display_service.update_beat_display(beat_options)
+            self.display_service.update_pictograph_display(pictograph_options)
 
-            logger.debug(f"Refreshed from modern sequence: {len(beat_options)} options")
+            logger.debug(
+                f"Refreshed from modern sequence: {len(pictograph_options)} options"
+            )
 
         except Exception as e:
             logger.error(f"Error refreshing from modern sequence: {e}")
 
-    def get_beat_data_for_option(self, option_id: str) -> Optional[BeatData]:
+    def get_pictograph_for_option(self, option_id: str) -> Optional[PictographData]:
         """
-        Get beat data for a specific option ID.
+        Get pictograph data for a specific option ID.
 
         Args:
             option_id: Option identifier
 
         Returns:
-            BeatData if found, None otherwise
+            PictographData if found, None otherwise
         """
         try:
             if not self._initialized:
                 logger.warning("Orchestrator not initialized")
                 return None
 
-            # Extract index from option_id (e.g., "beat_0" -> 0)
+            # Extract index from option_id (e.g., "option_0" -> 0)
             try:
                 index = int(option_id.split("_")[-1])
                 pictograph_options = self.option_service.get_current_options()
                 if 0 <= index < len(pictograph_options):
-                    pictograph = pictograph_options[index]
-                    beat_options = self._convert_pictographs_to_beats([pictograph])
-                    return beat_options[0] if beat_options else None
+                    return pictograph_options[index]
             except (ValueError, IndexError):
                 logger.warning(f"Invalid option_id format: {option_id}")
             return None
 
         except Exception as e:
-            logger.error(f"Error getting beat data for option: {e}")
+            logger.error(f"Error getting pictograph for option: {e}")
             return None
 
     def cleanup(self) -> None:
@@ -386,13 +384,13 @@ class OptionPickerOrchestrator(QObject):
 
         return size_provider
 
-    def _handle_beat_click(self, beat_id: str) -> None:
-        """Handle beat selection clicks (legacy compatibility)."""
-        self.event_service.emit_option_selected(beat_id, self)
+    def _handle_option_click(self, option_id: str) -> None:
+        """Handle option selection clicks."""
+        self.option_selected.emit(option_id)
 
-    def _handle_beat_data_click(self, beat_data: BeatData) -> None:
-        """Handle beat data selection clicks (modern method)."""
-        self.event_service.emit_beat_data_selected(beat_data, self)
+    def _handle_pictograph_click(self, pictograph_data: PictographData) -> None:
+        """Handle pictograph data selection clicks."""
+        self.pictograph_selected.emit(pictograph_data)
 
     def _on_widget_resize(self) -> None:
         """Handle widget resize events."""
@@ -408,55 +406,3 @@ class OptionPickerOrchestrator(QObject):
             self.event_service.handle_filter_change(
                 filter_text, self.data_service, self.display_service
             )
-
-    def _convert_pictographs_to_beats(self, pictograph_options: List) -> List:
-        """
-        Convert PictographData to BeatData for display compatibility.
-
-        This is a temporary method until the display service is updated
-        to work directly with PictographData.
-
-        Args:
-            pictograph_options: List of PictographData objects
-
-        Returns:
-            List of BeatData objects
-        """
-        from domain.models import BeatData
-
-        beat_options = []
-        for i, pictograph in enumerate(pictograph_options):
-            try:
-                # Extract motion data from arrows
-                blue_motion = None
-                red_motion = None
-
-                if hasattr(pictograph, "arrows") and pictograph.arrows:
-                    if "blue" in pictograph.arrows:
-                        blue_motion = pictograph.arrows["blue"].motion_data
-                    if "red" in pictograph.arrows:
-                        red_motion = pictograph.arrows["red"].motion_data
-
-                # Create BeatData from PictographData
-                beat_data = BeatData(
-                    beat_number=i + 1,
-                    letter=pictograph.letter,
-                    blue_motion=blue_motion,
-                    red_motion=red_motion,
-                    glyph_data=pictograph.glyph_data,
-                    is_blank=pictograph.is_blank,
-                    metadata={
-                        "start_position": pictograph.start_position,
-                        "end_position": pictograph.end_position,
-                        "converted_from_pictograph": True,
-                        **pictograph.metadata,
-                    },
-                )
-
-                beat_options.append(beat_data)
-
-            except Exception as e:
-                logger.error(f"Error converting pictograph to beat data: {e}")
-                continue
-
-        return beat_options

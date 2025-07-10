@@ -1,57 +1,59 @@
-# TODO: Rewrite this to remove all the hallucinated graph and make it match the legacy version
+"""
+Beat Selection Manager - Qt Presentation Layer
 
+Handles Qt-specific events and visual updates for beat selection.
+Delegates all business logic to BeatSelectionService.
+"""
 
-from typing import Optional, List
+from typing import List, Optional
+
+from application.services.workbench.beat_selection_service import (
+    BeatSelectionService,
+    SelectionChangeResult,
+    SelectionType,
+)
+from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QObject, pyqtSignal, Qt
 
 from .beat_view import BeatView
 
 
 class BeatSelectionManager(QObject):
     """
-    Manages beat selection state and keyboard navigation.
+    Qt presentation manager for beat selection.
 
-    Replaces Legacy's BeatSelectionOverlay with:
-    - Clean state management
-    - Keyboard navigation support
-    - Multi-selection capabilities (future)
-    - Accessibility features
+    Handles Qt events and visual updates while delegating business logic
+    to BeatSelectionService.
     """
 
-    # Signals
+    # Qt Signals
     selection_changed = pyqtSignal(object)  # Optional[int] - beat index or None
     selection_cleared = pyqtSignal()
     multiple_selection_changed = pyqtSignal(list)  # List[int] - beat indices
 
-    def __init__(self, parent_widget: QWidget):
+    def __init__(self, selection_service: BeatSelectionService, parent_widget: QWidget):
         super().__init__(parent_widget)
 
+        self._selection_service = selection_service
         self._parent_widget = parent_widget
         self._beat_views: List[BeatView] = []
-        self._start_position_view = None  # Reference to start position view
-        self._selected_index: Optional[int] = None
-        self._selected_indices: List[int] = []  # For future multi-selection
-        self._multi_selection_enabled = False
-        self._start_position_selected = False  # Track start position selection
+        self._start_position_view = None
 
-        # Special index for start position (-1)
-        self.START_POSITION_INDEX = -1
-
-        # Keyboard navigation
-        self._keyboard_navigation_enabled = True
+        # Configure parent widget for keyboard navigation
         self._parent_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
+    # Configuration Methods
     def register_beat_views(self, beat_views: List[BeatView]):
-        """Register beat views for selection management"""
+        """Register beat views and update service."""
         self._beat_views = beat_views
+        self._selection_service.set_beat_count(len(beat_views))
 
         # Connect signals from beat views
         for i, beat_view in enumerate(beat_views):
             beat_view.beat_clicked.connect(lambda idx=i: self.select_beat(idx))
 
     def register_start_position_view(self, start_position_view):
-        """Register start position view for unified selection management"""
+        """Register start position view."""
         self._start_position_view = start_position_view
 
         # Connect start position click signal
@@ -60,167 +62,119 @@ class BeatSelectionManager(QObject):
                 lambda: self.select_start_position()
             )
 
-    def select_beat(self, beat_index: int):
-        """Select a specific beat - unified selection management"""
-        if not self._is_valid_index(beat_index):
-            return
-
-        # Clear ALL previous selections (beats AND start position)
-        self._clear_all_selections()
-
-        # Set new selection
-        self._selected_index = beat_index
-        self._selected_indices = [beat_index]
-        self._start_position_selected = False
-
-        # Update visual state
-        self._update_visual_selection()
-
-        # Emit signals
-        self.selection_changed.emit(beat_index)
-
-    def select_start_position(self):
-        """Select the start position - unified selection management"""
-        if not self._start_position_view:
-            return
-
-        # Clear ALL previous selections (beats AND start position)
-        self._clear_all_selections()
-
-        # Set start position as selected
-        self._selected_index = self.START_POSITION_INDEX
-        self._selected_indices = []
-        self._start_position_selected = True
-
-        # Update visual state
-        self._start_position_view.set_selected(True)
-
-        # Emit signals
-        self.selection_changed.emit(self.START_POSITION_INDEX)
-
-    def clear_selection(self):
-        """Clear all selections - unified management"""
-        self._clear_all_selections()
-
-        self._selected_index = None
-        self._selected_indices = []
-        self._start_position_selected = False
-
-        self.selection_cleared.emit()
-        self.selection_changed.emit(None)
-
-    def get_selected_index(self) -> Optional[int]:
-        """Get the currently selected beat index"""
-        return self._selected_index
-
-    def get_selected_indices(self) -> List[int]:
-        """Get all selected beat indices (for multi-selection)"""
-        return self._selected_indices.copy()
-
-    def is_beat_selected(self, beat_index: int) -> bool:
-        """Check if a specific beat is selected"""
-        return beat_index in self._selected_indices
-
     def set_multi_selection_enabled(self, enabled: bool):
-        """Enable or disable multi-selection mode"""
-        self._multi_selection_enabled = enabled
-        if not enabled and len(self._selected_indices) > 1:
-            # Keep only the first selection
-            if self._selected_indices:
-                self.select_beat(self._selected_indices[0])
-            else:
-                self.clear_selection()
-
-    def add_to_selection(self, beat_index: int):
-        """Add a beat to the current selection (multi-selection mode)"""
-        if not self._multi_selection_enabled or not self._is_valid_index(beat_index):
-            return
-
-        if beat_index not in self._selected_indices:
-            self._selected_indices.append(beat_index)
-
-            # Update visual state
-            if beat_index < len(self._beat_views):
-                self._beat_views[beat_index].set_selected(True)
-
-            # Update primary selection if this is the first
-            if self._selected_index is None:
-                self._selected_index = beat_index
-
-            self.multiple_selection_changed.emit(self._selected_indices)
-            self.selection_changed.emit(self._selected_index)
-
-    def remove_from_selection(self, beat_index: int):
-        """Remove a beat from the current selection"""
-        if beat_index in self._selected_indices:
-            self._selected_indices.remove(beat_index)
-
-            # Update visual state
-            if beat_index < len(self._beat_views):
-                self._beat_views[beat_index].set_selected(False)
-
-            # Update primary selection
-            if self._selected_index == beat_index:
-                self._selected_index = (
-                    self._selected_indices[0] if self._selected_indices else None
-                )
-
-            self.multiple_selection_changed.emit(self._selected_indices)
-            self.selection_changed.emit(self._selected_index)
-
-    def select_next_beat(self):
-        """Select the next beat (keyboard navigation)"""
-        if not self._keyboard_navigation_enabled:
-            return
-
-        if self._selected_index is None:
-            # Select first beat
-            if self._beat_views:
-                self.select_beat(0)
-        else:
-            # Select next beat
-            next_index = self._selected_index + 1
-            if next_index < len(self._beat_views):
-                self.select_beat(next_index)
-
-    def select_previous_beat(self):
-        """Select the previous beat (keyboard navigation)"""
-        if not self._keyboard_navigation_enabled:
-            return
-
-        if self._selected_index is None:
-            # Select last beat
-            if self._beat_views:
-                self.select_beat(len(self._beat_views) - 1)
-        else:
-            # Select previous beat
-            prev_index = self._selected_index - 1
-            if prev_index >= 0:
-                self.select_beat(prev_index)
+        """Enable or disable multi-selection mode."""
+        result = self._selection_service.set_multi_selection_enabled(enabled)
+        self._handle_selection_change(result)
 
     def set_keyboard_navigation_enabled(self, enabled: bool):
-        """Enable or disable keyboard navigation"""
-        self._keyboard_navigation_enabled = enabled
+        """Enable or disable keyboard navigation."""
+        self._selection_service.set_keyboard_navigation_enabled(enabled)
+
+    # Selection Methods
+    def select_beat(self, beat_index: int):
+        """Select a specific beat."""
+        result = self._selection_service.select_beat(beat_index)
+        self._handle_selection_change(result)
+
+    def select_start_position(self):
+        """Select the start position."""
+        result = self._selection_service.select_start_position()
+        self._handle_selection_change(result)
+
+    def add_to_selection(self, beat_index: int):
+        """Add a beat to the current selection (multi-selection mode)."""
+        result = self._selection_service.add_to_selection(beat_index)
+        self._handle_selection_change(result)
+
+    def remove_from_selection(self, beat_index: int):
+        """Remove a beat from the current selection."""
+        result = self._selection_service.remove_from_selection(beat_index)
+        self._handle_selection_change(result)
+
+    def clear_selection(self):
+        """Clear all selections."""
+        result = self._selection_service.clear_selection()
+        self._handle_selection_change(result)
+        if result.changed:
+            self.selection_cleared.emit()
+
+    # Keyboard Navigation
+    def select_next_beat(self):
+        """Select the next beat (keyboard navigation)."""
+        result = self._selection_service.select_next_beat()
+        self._handle_selection_change(result)
+
+    def select_previous_beat(self):
+        """Select the previous beat (keyboard navigation)."""
+        result = self._selection_service.select_previous_beat()
+        self._handle_selection_change(result)
 
     def focus_selected_beat(self):
-        """Set focus to the currently selected beat"""
-        if self._selected_index is not None and self._selected_index < len(
-            self._beat_views
+        """Set focus to the currently selected beat."""
+        selected_index = self._selection_service.get_selected_index()
+        if selected_index is not None and selected_index < len(self._beat_views):
+            self._beat_views[selected_index].setFocus()
+
+    # Query Methods
+    def get_selected_index(self) -> Optional[int]:
+        """Get the currently selected beat index."""
+        return self._selection_service.get_selected_index()
+
+    def get_selected_indices(self) -> List[int]:
+        """Get all selected beat indices."""
+        return self._selection_service.get_selected_indices()
+
+    def is_beat_selected(self, beat_index: int) -> bool:
+        """Check if a specific beat is selected."""
+        return self._selection_service.is_beat_selected(beat_index)
+
+    def is_start_position_selected(self) -> bool:
+        """Check if the start position is selected."""
+        return self._selection_service.is_start_position_selected()
+
+    # Visual Update Methods
+    def _handle_selection_change(self, result: SelectionChangeResult):
+        """Handle selection change result and update visuals."""
+        if not result.changed:
+            return
+
+        # Update visual state based on the change
+        self._update_visual_selection(result)
+
+        # Emit appropriate signals
+        if result.selection_type == SelectionType.BEAT:
+            self.selection_changed.emit(result.selected_index)
+            if len(result.current_indices) > 1:
+                self.multiple_selection_changed.emit(result.current_indices)
+        elif result.selection_type == SelectionType.START_POSITION:
+            self.selection_changed.emit(self._selection_service.START_POSITION_INDEX)
+
+    def _update_visual_selection(self, result: SelectionChangeResult):
+        """Update Qt visual state based on selection change."""
+        # Clear previous visual selections from beats
+        for idx in result.previous_indices:
+            if idx < len(self._beat_views):
+                self._beat_views[idx].set_selected(False)
+
+        # Clear start position if it was previously selected
+        if (
+            self._start_position_view
+            and result.selection_type != SelectionType.START_POSITION
         ):
-            self._beat_views[self._selected_index].setFocus()
+            self._start_position_view.set_selected(False)
 
-    # Private methods
-    def _is_valid_index(self, beat_index: int) -> bool:
-        """Check if beat index is valid"""
-        return 0 <= beat_index < len(self._beat_views)
+        # Set new visual selections
+        if result.selection_type == SelectionType.BEAT:
+            for idx in result.current_indices:
+                if idx < len(self._beat_views):
+                    self._beat_views[idx].set_selected(True)
+        elif result.selection_type == SelectionType.START_POSITION:
+            if self._start_position_view:
+                self._start_position_view.set_selected(True)
 
-    def _clear_visual_selection(self):
-        """Clear visual selection from all beat views"""
-        for beat_view in self._beat_views:
-            beat_view.set_selected(False)
-
-    def _clear_all_selections(self):
-        """Clear visual selection from ALL components (beats AND start position)"""
+    def _clear_all_visual_selections(self):
+        """Clear visual selection from all components."""
         # Clear beat views
         for beat_view in self._beat_views:
             beat_view.set_selected(False)
@@ -228,8 +182,3 @@ class BeatSelectionManager(QObject):
         # Clear start position view
         if self._start_position_view:
             self._start_position_view.set_selected(False)
-
-    def _update_visual_selection(self):
-        """Update visual selection state"""
-        for i, beat_view in enumerate(self._beat_views):
-            beat_view.set_selected(i in self._selected_indices)

@@ -63,7 +63,7 @@ class TestBeatManipulationWorkflowContract:
         try:
             from domain.models.beat_models import BeatData
 from domain.models.sequence_models import SequenceData
-            from application.services.core.sequence_management_service import (
+            from application.services.sequences.sequence_management_service import (
                 SequenceManagementService,
             )
 
@@ -103,7 +103,7 @@ from domain.models.sequence_models import SequenceData
         try:
             from domain.models.beat_models import BeatData
 from domain.models.sequence_models import SequenceData
-            from application.services.core.sequence_management_service import (
+            from application.services.sequences.sequence_management_service import (
                 SequenceManagementService,
             )
 

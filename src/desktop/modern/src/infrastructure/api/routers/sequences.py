@@ -11,7 +11,7 @@ from core.monitoring import monitor_performance
 from ..models import SequenceAPI, CreateSequenceRequest
 from ..dependencies import get_sequence_service
 from ..converters import domain_to_api_sequence, api_to_domain_sequence
-from application.services.core.sequence_management_service import (
+from application.services.sequences.sequence_management_service import (
     SequenceManagementService,
 )
 
