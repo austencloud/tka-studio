@@ -21,7 +21,7 @@ from core.interfaces.option_picker_services import (
     IOptionPickerDisplayService,
     IOptionPickerEventService,
 )
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from PyQt6.QtWidgets import QWidget
 
 logger = logging.getLogger(__name__)

@@ -2,18 +2,20 @@
 Glyph Data Service for Kinetic Constructor
 
 This service determines glyph information (VTG mode, elemental type, letter type, etc.)
-from beat data and motion information, following validated glyph classification logic.
+from pictograph data and motion information, following validated glyph classification logic.
 """
 
 from typing import Optional
+
 from domain.models import (
     BeatData,
-    GlyphData,
-    VTGMode,
     ElementalType,
+    GlyphData,
     LetterType,
-    MotionData,
     Location,
+    MotionData,
+    PictographData,
+    VTGMode,
 )
 
 
@@ -77,30 +79,32 @@ class GlyphDataService:
         "Γ": LetterType.TYPE6,
     }
 
-    def determine_glyph_data(self, beat_data: BeatData) -> Optional[GlyphData]:
+    def determine_glyph_data(
+        self, pictograph_data: PictographData
+    ) -> Optional[GlyphData]:
         """
-        Determine glyph data from beat information.
+        Determine glyph data from pictograph information.
 
         Args:
-            beat_data: The beat data to analyze
+            pictograph_data: The pictograph data to analyze
 
         Returns:
             GlyphData with determined glyph information, or None if no glyphs needed
         """
-        if beat_data.is_blank or not beat_data.letter:
+        if pictograph_data.is_blank or not pictograph_data.letter:
             return None
 
         # Determine letter type
-        letter_type = self._determine_letter_type(beat_data.letter)
+        letter_type = self._determine_letter_type(pictograph_data.letter)
 
         # Determine VTG mode
-        vtg_mode = self._determine_vtg_mode(beat_data)
+        vtg_mode = self._determine_vtg_mode(pictograph_data)
 
         # Determine if letter has dash
-        has_dash = "-" in beat_data.letter if beat_data.letter else False
+        has_dash = "-" in pictograph_data.letter if pictograph_data.letter else False
 
         # Determine start and end positions
-        start_position, end_position = self._determine_positions(beat_data)
+        start_position, end_position = self._determine_positions(pictograph_data)
 
         return GlyphData(
             vtg_mode=vtg_mode,
@@ -116,23 +120,61 @@ class GlyphDataService:
             show_positions=letter_type != LetterType.TYPE6,  # Don't show for α, β, Γ
         )
 
+    def determine_glyph_data_from_beat(
+        self, beat_data: BeatData
+    ) -> Optional[GlyphData]:
+        """
+        Backward compatibility method to determine glyph data from beat data.
+
+        Args:
+            beat_data: The beat data to analyze
+
+        Returns:
+            GlyphData with determined glyph information, or None if no glyphs needed
+        """
+        # Convert BeatData to PictographData for processing
+        pictograph_data = self._beat_data_to_pictograph_data(beat_data)
+        return self.determine_glyph_data(pictograph_data)
+
+    def _beat_data_to_pictograph_data(self, beat_data: BeatData) -> PictographData:
+        """Convert BeatData to PictographData for glyph processing."""
+        from domain.models.pictograph_models import ArrowData, GridData
+
+        # Create arrows from motion data
+        arrows = {}
+        if beat_data.blue_motion:
+            arrows["blue"] = ArrowData(motion_data=beat_data.blue_motion, color="blue")
+        if beat_data.red_motion:
+            arrows["red"] = ArrowData(motion_data=beat_data.red_motion, color="red")
+
+        return PictographData(
+            grid_data=GridData(),  # Default grid data
+            arrows=arrows,
+            letter=beat_data.letter,
+            start_position=beat_data.start_position,
+            end_position=beat_data.end_position,
+            is_blank=beat_data.is_blank,
+        )
+
     def _determine_letter_type(self, letter: str) -> Optional[LetterType]:
         """Determine the letter type from the letter string."""
         # Use the full letter string (not just first character) for compound letters like "W-"
         return self.LETTER_TYPE_MAP.get(letter)
 
-    def _determine_vtg_mode(self, beat_data: BeatData) -> Optional[VTGMode]:
+    def _determine_vtg_mode(self, pictograph_data: PictographData) -> Optional[VTGMode]:
         """
         Determine VTG mode from motion data.
 
         This is a simplified implementation. The full logic is quite complex
         and involves grid mode checking, position analysis, etc.
         """
-        if not beat_data.blue_motion or not beat_data.red_motion:
+        if not pictograph_data.arrows.get("blue") or not pictograph_data.arrows.get(
+            "red"
+        ):
             return None
 
-        blue_motion = beat_data.blue_motion
-        red_motion = beat_data.red_motion
+        blue_motion = pictograph_data.arrows["blue"].motion_data
+        red_motion = pictograph_data.arrows["red"].motion_data
 
         # Simplified VTG determination based on motion patterns
         # This would need to be expanded with the full classification logic
@@ -198,15 +240,20 @@ class GlyphDataService:
         return mapping.get(vtg_mode)
 
     def _determine_positions(
-        self, beat_data: BeatData
+        self, pictograph_data: PictographData
     ) -> tuple[Optional[str], Optional[str]]:
-        """Determine start and end positions from motion data."""
-        if not beat_data.blue_motion or not beat_data.red_motion:
+        """Determine start and end positions from pictograph data."""
+        # First try to use the explicit start/end positions from pictograph data
+        if pictograph_data.start_position and pictograph_data.end_position:
+            return pictograph_data.start_position, pictograph_data.end_position
+
+        # Fallback to deriving from motion data if available
+        if not pictograph_data.arrows.get("blue"):
             return None, None
 
         # For now, use blue motion's start and end locations
         # This would need more sophisticated logic in the full implementation
-        blue_motion = beat_data.blue_motion
+        blue_motion = pictograph_data.arrows["blue"].motion_data
 
         # Map locations to position names
         location_to_position = {

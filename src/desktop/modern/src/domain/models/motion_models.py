@@ -34,9 +34,28 @@ class MotionData:
     end_ori: Orientation = Orientation.IN
 
     def __post_init__(self):
-        """Validate motion data."""
+        """Validate and convert motion data fields to proper enum types."""
         if self.turns < 0:
             raise ValueError("Turns must be non-negative")
+
+        # Convert string values to enums if needed
+        if isinstance(self.motion_type, str):
+            object.__setattr__(self, 'motion_type', self._convert_motion_type(self.motion_type))
+
+        if isinstance(self.prop_rot_dir, str):
+            object.__setattr__(self, 'prop_rot_dir', self._convert_rotation_direction(self.prop_rot_dir))
+
+        if isinstance(self.start_loc, str):
+            object.__setattr__(self, 'start_loc', self._convert_location(self.start_loc))
+
+        if isinstance(self.end_loc, str):
+            object.__setattr__(self, 'end_loc', self._convert_location(self.end_loc))
+
+        if isinstance(self.start_ori, str):
+            object.__setattr__(self, 'start_ori', self._convert_orientation(self.start_ori))
+
+        if isinstance(self.end_ori, str):
+            object.__setattr__(self, 'end_ori', self._convert_orientation(self.end_ori))
 
     @staticmethod
     def _convert_orientation(value) -> Orientation:
@@ -66,6 +85,59 @@ class MotionData:
 
         # Default fallback
         return Orientation.IN
+
+    @staticmethod
+    def _convert_motion_type(value) -> MotionType:
+        """Convert string to MotionType enum."""
+        if isinstance(value, MotionType):
+            return value
+        if isinstance(value, str):
+            value_lower = value.lower()
+            motion_type_map = {
+                "pro": MotionType.PRO,
+                "anti": MotionType.ANTI,
+                "float": MotionType.FLOAT,
+                "dash": MotionType.DASH,
+                "static": MotionType.STATIC,
+            }
+            return motion_type_map.get(value_lower, MotionType.STATIC)
+        return MotionType.STATIC
+
+    @staticmethod
+    def _convert_rotation_direction(value) -> RotationDirection:
+        """Convert string to RotationDirection enum."""
+        if isinstance(value, RotationDirection):
+            return value
+        if isinstance(value, str):
+            value_lower = value.lower()
+            rotation_map = {
+                "cw": RotationDirection.CLOCKWISE,
+                "ccw": RotationDirection.COUNTER_CLOCKWISE,
+                "no_rot": RotationDirection.NO_ROTATION,
+                "no_rotation": RotationDirection.NO_ROTATION,
+            }
+            return rotation_map.get(value_lower, RotationDirection.NO_ROTATION)
+        return RotationDirection.NO_ROTATION
+
+    @staticmethod
+    def _convert_location(value) -> Location:
+        """Convert string to Location enum."""
+        if isinstance(value, Location):
+            return value
+        if isinstance(value, str):
+            value_lower = value.lower()
+            location_map = {
+                "n": Location.NORTH,
+                "e": Location.EAST,
+                "s": Location.SOUTH,
+                "w": Location.WEST,
+                "ne": Location.NORTHEAST,
+                "se": Location.SOUTHEAST,
+                "sw": Location.SOUTHWEST,
+                "nw": Location.NORTHWEST,
+            }
+            return location_map.get(value_lower, Location.NORTH)
+        return Location.NORTH
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary with snake_case keys."""

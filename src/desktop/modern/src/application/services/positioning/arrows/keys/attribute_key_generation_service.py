@@ -6,8 +6,9 @@ Legacy source: src/desktop/legacy/src/placement_managers/attr_key_generator.py
 """
 
 import logging
-from domain.models.pictograph_models import ArrowData, PictographData
+
 from domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.pictograph_models import ArrowData, PictographData
 
 logger = logging.getLogger(__name__)
 

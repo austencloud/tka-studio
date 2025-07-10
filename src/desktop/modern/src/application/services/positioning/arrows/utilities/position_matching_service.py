@@ -3,19 +3,25 @@ Position Matching Service - Data-Driven Motion Generation
 
 This service implements a data-driven position matching algorithm for motion generation.
 The algorithm is simple: find all pictographs where start_pos matches the target position.
+
+REFACTORED: Now works with PictographData directly instead of BeatData, following
+the principle that pictographs should be standalone without beat-specific fields.
 """
 
-import pandas as pd
-from typing import Dict, List, Any, Optional
-from ....core.pictograph_management_service import PictographManagementService
+from typing import Any, Dict, List, Optional
 
+import pandas as pd
 from domain.models import (
-    BeatData,
     GlyphData,
     Location,
+    MotionData,
     MotionType,
+    PictographData,
     RotationDirection,
 )
+from domain.models.pictograph_models import ArrowData, GridData, GridMode
+
+from ....core.pictograph_management_service import PictographManagementService
 
 
 class PositionMatchingService:
@@ -107,7 +113,7 @@ class PositionMatchingService:
 
         return grouped_dict
 
-    def get_next_options(self, last_beat_end_pos: str) -> List[BeatData]:
+    def get_next_options(self, last_beat_end_pos: str) -> List[PictographData]:
         """
         Validated algorithm: find all pictographs where start_pos matches.
 
@@ -123,7 +129,7 @@ class PositionMatchingService:
             last_beat_end_pos: The end position of the last beat
 
         Returns:
-            List of BeatData objects that can follow the given position
+            List of PictographData objects that can follow the given position
         """
 
         if not self.pictograph_dataset:
@@ -145,24 +151,17 @@ class PositionMatchingService:
                     end_pos = item.get("end_pos", "N/A")
                     matches_found += 1
 
-                    # Convert dictionary to BeatData object
                     try:
-                        # Convert dictionary to BeatData using native Modern methods
-                        beat_data = self._convert_dict_to_beat_data(item)
-                        next_opts.append(beat_data)  # ← ADD TO VALID OPTIONS
+                        pictograph_data = self._convert_dict_to_pictograph_data(item)
+                        next_opts.append(pictograph_data)  # ← ADD TO VALID OPTIONS
                     except Exception as e:
                         print(f"   ❌ Failed to convert match {matches_found}: {e}")
                         continue
 
         return next_opts
 
-    def _convert_dict_to_beat_data(self, item: Dict[str, Any]) -> BeatData:
-        """Convert dictionary item to BeatData using actual motion data from the dictionary."""
-        from domain.models import (
-            MotionData,
-)
-
-        # Extract basic data
+    def _convert_dict_to_pictograph_data(self, item: Dict[str, Any]) -> PictographData:
+        """Convert dictionary item to PictographData using actual motion data from the dictionary."""
         letter = item.get("letter", "")
 
         # Extract actual motion data from the dictionary
@@ -197,42 +196,58 @@ class PositionMatchingService:
             end_ori=red_attrs.get("end_ori", "in"),
         )
 
-        # Create initial BeatData object with position info in metadata
-        beat_data = BeatData(
-            beat_number=1,
+        # Create arrows from motion data
+        arrows = {}
+        if blue_motion:
+            arrows["blue"] = ArrowData(
+                motion_data=blue_motion,
+                color="blue",
+                is_visible=True,
+            )
+        if red_motion:
+            arrows["red"] = ArrowData(
+                motion_data=red_motion,
+                color="red",
+                is_visible=True,
+            )
+
+        # Create grid data
+        grid_data = GridData(
+            grid_mode=GridMode.DIAMOND,
+            center_x=200.0,
+            center_y=200.0,
+            radius=100.0,
+        )
+
+        # Create initial PictographData object
+        pictograph_data = PictographData(
+            grid_data=grid_data,
+            arrows=arrows,
+            props={},  # Props will be generated during rendering
             letter=letter,
-            blue_motion=blue_motion,
-            red_motion=red_motion,
+            start_position=item.get("start_pos", "unknown"),
+            end_position=item.get("end_pos", "unknown"),
+            is_blank=len(arrows) == 0,
             metadata={
-                "start_pos": item.get("start_pos", "unknown"),
-                "end_pos": item.get("end_pos", "unknown"),
+                "source": "position_matching_service",
+                "original_data": item,
             },
         )
 
         # Generate glyph data using the glyph data service
-        glyph_data = self._generate_glyph_data(beat_data)
+        glyph_data = self._generate_glyph_data(pictograph_data)
 
-        # Return final BeatData object with glyph data
-        return BeatData(
-            beat_number=1,
-            letter=letter,
-            blue_motion=blue_motion,
-            red_motion=red_motion,
-            glyph_data=glyph_data,
-            metadata={
-                "start_pos": item.get("start_pos", "unknown"),
-                "end_pos": item.get("end_pos", "unknown"),
-            },
-        )
+        # Return final PictographData object with glyph data
+        return pictograph_data.update(glyph_data=glyph_data)
 
-    def _generate_glyph_data(self, beat_data: "BeatData") -> Optional["GlyphData"]:
-        """Generate glyph data for beat data using the consolidated pictograph management service."""
-        from application.services.core.pictograph_management_service import (
-            PictographManagementService,
-        )
+    def _generate_glyph_data(
+        self, pictograph_data: PictographData
+    ) -> Optional[GlyphData]:
+        """Generate glyph data for pictograph data using the glyph data service."""
+        from application.services.data.glyph_data_service import GlyphDataService
 
-        pictograph_service = PictographManagementService()
-        return pictograph_service._generate_glyph_data(beat_data)
+        glyph_service = GlyphDataService()
+        return glyph_service.determine_glyph_data(pictograph_data)
 
     def _parse_motion_type(self, motion_type_str: str) -> "MotionType":
         """Parse motion type string to MotionType enum."""
@@ -274,12 +289,12 @@ class PositionMatchingService:
         }
         return location_map.get(location_str.lower(), Location.SOUTH)
 
-    def get_alpha1_options(self) -> List[BeatData]:
+    def get_alpha1_options(self) -> List[PictographData]:
         """
         Convenience method to get Alpha 1 options (the canonical test case).
 
         Returns:
-            List of BeatData objects that start from alpha1 position
+            List of PictographData objects that start from alpha1 position
         """
         return self.get_next_options("alpha1")
 

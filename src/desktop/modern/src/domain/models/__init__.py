@@ -14,7 +14,7 @@ from ..serialization import (
     domain_model_from_json,
     domain_model_to_json,
 )
-from .beat_models import BeatData
+from .beat_data import BeatData
 
 # Export core models from their new organized locations
 # Import enums from their new location

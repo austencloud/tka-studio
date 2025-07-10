@@ -18,9 +18,9 @@ from .core.option_picker import OptionPicker
 from .core.option_picker_widget import OptionPickerWidget
 
 # Services (for advanced usage)
-from .services.data.beat_loader import BeatDataLoader
-from .services.layout.display_service import OptionPickerDisplayManager
+from .services.data.option_service import OptionService
 from .services.data.pool_manager import PictographPoolManager
+from .services.layout.display_service import OptionPickerDisplayManager
 
 # Types
 from .types.letter_types import LetterType
@@ -29,7 +29,7 @@ from .types.letter_types import LetterType
 __all__ = [
     "OptionPicker",
     "OptionPickerWidget",
-    "BeatDataLoader",
+    "OptionService",
     "OptionPickerDisplayManager",
     "PictographPoolManager",
     "LetterType",

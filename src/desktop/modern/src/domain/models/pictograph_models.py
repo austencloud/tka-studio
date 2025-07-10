@@ -24,7 +24,9 @@ from dataclasses import dataclass, field, fields, is_dataclass
 from enum import Enum
 from typing import Any, Dict, Optional, Tuple, Union
 
-from .glyph_models import GlyphData
+from domain.models.enums import ArrowType, GridMode, PropType
+from domain.models.glyph_models import GlyphData
+
 from .motion_models import MotionData
 
 
@@ -54,63 +56,6 @@ def _process_field_value(value: Any, field_type: Any) -> Any:
             return [_process_field_value(item, list_type) for item in value]
 
     return value
-
-
-class GridMode(Enum):
-    """Grid modes for pictograph rendering."""
-
-    DIAMOND = "diamond"
-    BOX = "box"
-
-
-class ArrowType(Enum):
-    """Types of arrows in pictographs."""
-
-    BLUE = "blue"
-    RED = "red"
-
-
-class PropType(Enum):
-    """Types of props in pictographs."""
-
-    # Hand props
-    HAND = "hand"
-
-    # Staff variants
-    STAFF = "staff"
-    SIMPLESTAFF = "simplestaff"
-    BIGSTAFF = "bigstaff"
-
-    # Club variants
-    CLUB = "club"
-
-    # Buugeng variants
-    BUUGENG = "buugeng"
-    BIGBUUGENG = "bigbuugeng"
-    FRACTALGENG = "fractalgeng"
-
-    # Ring variants
-    EIGHTRINGS = "eightrings"
-    BIG_EIGHT_RINGS = "bigeightrings"
-
-    # Hoop variants
-    MINIHOOP = "minihoop"
-    BIGHOOP = "bighoop"
-
-    # Star variants
-    DOUBLESTAR = "doublestar"
-    BIGDOUBLESTAR = "bigdoublestar"
-
-    # Other props
-    FAN = "fan"
-    TRIAD = "triad"
-    QUIAD = "quiad"
-    SWORD = "sword"
-    GUITAR = "guitar"
-    UKULELE = "ukulele"
-    CHICKEN = "chicken"
-    TRIQUETRA = "triquetra"
-    TRIQUETRA2 = "triquetra2"
 
 
 @dataclass(frozen=True)

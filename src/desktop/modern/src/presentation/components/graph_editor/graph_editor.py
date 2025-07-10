@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Optional
 
 from core.interfaces.session_services import ISessionStateService
 from core.interfaces.workbench_services import IGraphEditorService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout

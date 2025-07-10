@@ -15,7 +15,7 @@ from application.services.option_picker.orientation_update_service import (
 )
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 
 
@@ -48,43 +48,80 @@ class SequenceBeatOperations(QObject):
         self.persistence_service = SequencePersistenceService()
 
     def add_beat_to_sequence(self, beat_data: BeatData):
-        """Add a beat to the current sequence"""
-        # Removed repetitive debug logs
-
+        """Add beat via command pattern instead of direct manipulation"""
+        try:
+            # Import command system
+            from core.commands.sequence_commands import AddBeatCommand
+            from core.service_locator import get_command_processor, get_event_bus, get_sequence_state_manager
+            
+            # Get services
+            command_processor = get_command_processor()
+            event_bus = get_event_bus()
+            state_manager = get_sequence_state_manager()
+            
+            if not command_processor or not event_bus:
+                print("⚠️ Command system not available, falling back to direct manipulation")
+                self._add_beat_direct(beat_data)
+                return
+                
+            # Get current sequence from state manager
+            current_sequence = state_manager.get_sequence() if state_manager else None
+            if not current_sequence:
+                current_sequence = SequenceData.empty()
+                print("📝 Creating new empty sequence for first beat")
+            
+            # Create and execute command
+            command = AddBeatCommand(
+                sequence=current_sequence,
+                beat=beat_data,
+                position=len(current_sequence.beats),
+                event_bus=event_bus
+            )
+            
+            result = command_processor.execute(command)
+            
+            if result.success:
+                print(f"✅ Beat added via command: {beat_data.letter}")
+                # Emit legacy signal for backward compatibility
+                position = len(current_sequence.beats)
+                self.beat_added.emit(beat_data, position)
+            else:
+                print(f"❌ Failed to add beat via command: {result.error_message}")
+                # Fallback to direct manipulation
+                self._add_beat_direct(beat_data)
+                
+        except Exception as e:
+            print(f"❌ Error in command-based beat addition: {e}")
+            # Fallback to direct manipulation
+            self._add_beat_direct(beat_data)
+            
+    def _add_beat_direct(self, beat_data: BeatData):
+        """Fallback method: Add beat via direct manipulation (original logic)"""
         current_sequence = self._get_current_sequence()
         if current_sequence is None:
             current_sequence = SequenceData.empty()
-            # Removed repetitive debug logs
-        else:
-            # Removed repetitive debug logs
-            pass
 
         try:
             # Add beat to sequence
             new_sequence = current_sequence.add_beat(beat_data)
-            # Removed repetitive debug logs
 
             # Update workbench
             if self.workbench_setter:
                 self.workbench_setter(new_sequence)
-                print(f"✅ [BEAT_OPERATIONS] Updated workbench")
+                print(f"✅ [BEAT_OPERATIONS] Updated workbench (direct)")
 
             # Save to persistence
-            # Removed repetitive debug logs
             self._save_sequence_to_persistence(new_sequence)
 
             # Emit signal
             position = len(new_sequence.beats) - 1
             self.beat_added.emit(beat_data, position)
 
-            print(
-                f"✅ [BEAT_OPERATIONS] Added beat {beat_data.letter} to sequence (position {position})"
-            )
+            print(f"✅ [BEAT_OPERATIONS] Added beat {beat_data.letter} to sequence (direct, position {position})")
 
         except Exception as e:
-            print(f"❌ [BEAT_OPERATIONS] Error adding beat to sequence: {e}")
+            print(f"❌ [BEAT_OPERATIONS] Error adding beat to sequence (direct): {e}")
             import traceback
-
             traceback.print_exc()
 
     def remove_beat(self, beat_index: int):

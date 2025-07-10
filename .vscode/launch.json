@@ -9,11 +9,35 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
-        "PYTHONUNBUFFERED": "1"
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
+        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
+        "PYTHONNOUSERSITE": "1"
       },
       "stopOnEntry": false,
-      "showReturnValue": true
+      "showReturnValue": true,
+      "subProcess": true
+    },
+    {
+      "name": "🚀 TKA Launcher (Just My Code)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/launcher/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
+        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
+        "PYTHONNOUSERSITE": "1"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "subProcess": true
     }
   ]
 }

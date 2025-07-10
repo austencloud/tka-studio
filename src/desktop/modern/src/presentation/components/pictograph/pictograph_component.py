@@ -15,7 +15,6 @@ from PyQt6.QtWidgets import QGraphicsView
 
 
 class PictographComponent(QGraphicsView, BorderedPictographMixin):
-    pictograph_updated = pyqtSignal(object)
 
     def __init__(self, parent: Optional[QGraphicsView] = None):
         if parent is not None:
@@ -70,47 +69,20 @@ class PictographComponent(QGraphicsView, BorderedPictographMixin):
         if beat_data.glyph_data and beat_data.glyph_data.letter_type:
             self.update_border_colors_for_letter_type(beat_data.glyph_data.letter_type)
 
-        self.pictograph_updated.emit(beat_data)
-
-    def update_from_pictograph(self, pictograph_data: "PictographData") -> None:
+    def update_from_pictograph_data(self, pictograph_data: "PictographData") -> None:
         """
         Update component from PictographData (for pickers and non-sequence contexts).
 
         This is the preferred method for pickers since they work with pictographs,
         not beats. Only sequence beat frames should use update_from_beat().
         """
-        # Create a minimal BeatData wrapper for internal compatibility
-        # TODO: Refactor PictographScene to work directly with PictographData
-        from domain.models import BeatData, MotionData
-
-        # Extract motion data from pictograph arrows
-        blue_motion = None
-        red_motion = None
-
-        if "blue" in pictograph_data.arrows:
-            blue_motion = pictograph_data.arrows["blue"].motion_data
-        if "red" in pictograph_data.arrows:
-            red_motion = pictograph_data.arrows["red"].motion_data
-
-        # Create minimal BeatData for internal use (wrapper around pictograph data)
-        temp_beat_data = BeatData(
-            beat_number=0,  # Not relevant for pictograph display
-            letter=pictograph_data.letter or "",
-            blue_motion=blue_motion,
-            red_motion=red_motion,
-            glyph_data=(
-                pictograph_data.glyph_data
-                if hasattr(pictograph_data, "glyph_data")
-                else None
-            ),
-        )
-
-        # Render directly without storing data
+        # FIXED: Use scene's direct pictograph rendering method
+        # No more unnecessary BeatData conversion!
         if self.scene:
-            self.scene.update_beat(temp_beat_data)
+            self.scene.render_pictograph(pictograph_data)
             self._fit_view()
 
-        self.pictograph_updated.emit(temp_beat_data)
+        # Emit the actual data we're working with - no unnecessary conversion!
 
     def get_current_beat(self) -> Optional[BeatData]:
         """Get current beat - component is now stateless, returns None."""

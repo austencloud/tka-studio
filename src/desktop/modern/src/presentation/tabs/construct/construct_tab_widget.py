@@ -1,28 +1,27 @@
-from typing import Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import pyqtSignal
+from typing import TYPE_CHECKING, Optional
 
-from core.dependency_injection.di_container import DIContainer
-from domain.models.sequence_models import SequenceData
-from domain.models.beat_models import BeatData
-from application.services.ui.ui_state_management_service import (
-    UIStateManagementService,
-)
-
-# Import refactored components
-from .layout_manager import ConstructTabLayoutManager
-from .start_position_handler import StartPositionHandler
-from .option_picker_manager import OptionPickerManager
-from .signal_coordinator import SignalCoordinator
-from .data_conversion_service import DataConversionService
+from application.services.core.sequence_beat_operations import SequenceBeatOperations
 
 # Import services from application layer (moved from presentation)
 from application.services.core.sequence_loading_service import SequenceLoadingService
-from application.services.core.sequence_beat_operations import SequenceBeatOperations
 from application.services.core.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
 from application.services.data.sequence_data_converter import SequenceDataConverter
+from application.services.ui.ui_state_management_service import UIStateManagementService
+from core.dependency_injection.di_container import DIContainer
+from domain.models.beat_data import BeatData
+from domain.models.sequence_models import SequenceData
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QWidget
+
+from .data_conversion_service import DataConversionService
+
+# Import refactored components
+from .layout_manager import ConstructTabLayoutManager
+from .option_picker_manager import OptionPickerManager
+from .signal_coordinator import SignalCoordinator
+from .start_position_handler import StartPositionHandler
 
 if TYPE_CHECKING:
     from presentation.components.workbench.workbench import SequenceWorkbench

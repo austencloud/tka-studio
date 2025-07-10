@@ -11,7 +11,11 @@ import logging
 import os
 import argparse
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from presentation.components.ui.splash_screen import SplashScreen
+    from core.application.application_factory import ApplicationMode
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QIcon, QGuiApplication
@@ -19,22 +23,25 @@ from PyQt6.QtGui import QIcon, QGuiApplication
 modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-# Import the new Application Factory
-from core.application.application_factory import ApplicationFactory, ApplicationMode
-from presentation.components.ui.splash_screen import SplashScreen
+# Lazy imports for performance optimization
+# These will be imported when needed to reduce startup time
 
 
 class TKAMainWindow(QMainWindow):
     def __init__(
         self,
         container=None,
-        splash_screen: Optional[SplashScreen] = None,
+        splash_screen: Optional["SplashScreen"] = None,
         target_screen=None,
         parallel_mode=False,
         parallel_geometry=None,
         enable_api=True,
     ):
         super().__init__()
+
+        # Hide window immediately to prevent temporary flash
+        self.hide()
+
         self.container = container
         self.splash = splash_screen
         self.target_screen = target_screen
@@ -139,6 +146,9 @@ def main():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
+    # Import ApplicationMode when needed
+    from core.application.application_factory import ApplicationMode
+
     # INSTANT FIX: Suppress verbose arrow positioning logs
     try:
         from core.logging.instant_fix import apply_instant_fix
@@ -168,6 +178,15 @@ def main():
         logger.info("Starting TKA in TEST mode")
         # For test mode, just create container and return it
         container = ApplicationFactory.create_app(app_mode)
+        
+        # Initialize services for test mode too
+        try:
+            from core.service_locator import initialize_services
+            initialize_services()
+            logger.info("✅ Event-driven services initialized for test mode")
+        except Exception as e:
+            logger.warning(f"⚠️ Could not initialize event-driven services in test mode: {e}")
+            
         logger.info(f"Test mode - application ready for automated testing")
         logger.info(f"Available services: {list(container.get_registrations().keys())}")
         return container
@@ -176,6 +195,15 @@ def main():
         logger.info("Starting TKA in HEADLESS mode")
         # For headless mode, create container but no UI
         container = ApplicationFactory.create_app(app_mode)
+        
+        # Initialize services for headless mode too
+        try:
+            from core.service_locator import initialize_services
+            initialize_services()
+            logger.info("✅ Event-driven services initialized for headless mode")
+        except Exception as e:
+            logger.warning(f"⚠️ Could not initialize event-driven services in headless mode: {e}")
+            
         logger.info("Headless mode - application ready for server-side processing")
         return container
     elif "--record" in sys.argv:
@@ -186,11 +214,25 @@ def main():
 
     # For production and recording modes, continue with UI setup
     try:
+        # Lazy import ApplicationFactory when needed
+        from core.application.application_factory import ApplicationFactory
+
         # Create application using factory
         container = ApplicationFactory.create_app(app_mode)
         logger.info(
             f"TKA application container created successfully in {app_mode} mode"
         )
+        
+        # Initialize event-driven architecture services
+        try:
+            from core.service_locator import initialize_services
+            if initialize_services():
+                logger.info("✅ Event-driven architecture services initialized successfully")
+            else:
+                logger.warning("⚠️ Failed to initialize event-driven services - falling back to legacy architecture")
+        except Exception as e:
+            logger.error(f"❌ Error initializing event-driven services: {e}")
+            logger.warning("⚠️ Continuing with legacy architecture")
 
         # Continue with existing UI setup for production mode
         parallel_mode, monitor, geometry = detect_parallel_testing_mode()
@@ -220,6 +262,9 @@ def main():
                 screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
             )
 
+        # Lazy import splash screen when needed
+        from presentation.components.ui.splash_screen import SplashScreen
+
         # UI setup with splash screen
         splash = SplashScreen(target_screen=target_screen)
         fade_in_animation = splash.show_animated()
@@ -228,12 +273,31 @@ def main():
         def start_initialization():
             nonlocal window
             try:
+                # Give splash screen time to fully appear
                 splash.update_progress(5, "Initializing application...")
+                app.processEvents()
+
+                # Small delay to ensure splash is visible before heavy operations
+                QTimer.singleShot(50, lambda: continue_initialization())
+
+            except Exception:
+                import traceback
+                traceback.print_exc()
+                return
+
+        def continue_initialization():
+            nonlocal window
+            try:
+                splash.update_progress(10, "Loading application icon...")
                 app.processEvents()
                 icon_path = Path(__file__).parent / "images" / "icons" / "app_icon.png"
                 if icon_path.exists():
                     app.setWindowIcon(QIcon(str(icon_path)))
+
                 splash.update_progress(15, "Creating main window...")
+                app.processEvents()
+
+                # Create window but ensure it stays hidden during initialization
                 window = TKAMainWindow(
                     container=container,
                     splash_screen=splash,
@@ -241,10 +305,12 @@ def main():
                     parallel_mode=parallel_mode,
                     parallel_geometry=geometry,
                 )
+                # Double-ensure window is hidden during initialization
+                window.hide()
+
                 complete_startup()
             except Exception:
                 import traceback
-
                 traceback.print_exc()
                 return
 
@@ -257,6 +323,8 @@ def main():
             # Show window immediately after UI setup
             window.show()
             window.raise_()
+            print(f"✅ TKA application startup completed successfully!")
+            print(f"🔧 Construct tab will load when accessed for optimal performance")
             print(f"🔍 [MAIN] Main window shown: visible={window.isVisible()}")
 
             # Hide splash screen after window is visible

@@ -19,61 +19,20 @@ if TYPE_CHECKING:
         GenerationMetadata,
         ValidationResult,
     )
-else:
-    # Import at runtime or use simple types for now
-    try:
-        from core.interfaces.generation_services import (
-            GenerationMode,
-            PropContinuity,
-            LetterType,
-            SliceSize,
-            CAPType,
-            GenerationMetadata,
-            ValidationResult,
-        )
-    except ImportError:
-        # Define minimal enums if core interfaces not available
-        from enum import Enum
-        
-        class GenerationMode(Enum):
-            FREEFORM = "freeform"
-            CIRCULAR = "circular"
-        
-        class PropContinuity(Enum):
-            CONTINUOUS = "continuous"
-            RANDOM = "random"
-        
-        class LetterType(Enum):
-            TYPE1 = "Type1"
-            TYPE2 = "Type2" 
-            TYPE3 = "Type3"
-            TYPE4 = "Type4"
-            TYPE5 = "Type5"
-            TYPE6 = "Type6"
-        
-        class SliceSize(Enum):
-            QUARTERED = "quartered"
-            HALVED = "halved"
-        
-        class CAPType(Enum):
-            STRICT_ROTATED = "strict_rotated"
-        
-        GenerationMetadata = dict
-        ValidationResult = dict
 
 
 @dataclass(frozen=True)
 class GenerationConfig:
     """Immutable configuration for sequence generation"""
 
-    mode: 'GenerationMode' = None
+    mode: "GenerationMode" = None
     length: int = 16
     level: int = 1
     turn_intensity: float = 1.0
-    prop_continuity: 'PropContinuity' = None
-    letter_types: Optional[Set['LetterType']] = None
-    slice_size: 'SliceSize' = None
-    cap_type: Optional['CAPType'] = None
+    prop_continuity: "PropContinuity" = None
+    letter_types: Optional[Set["LetterType"]] = None
+    slice_size: "SliceSize" = None
+    cap_type: Optional["CAPType"] = None
     start_position_key: Optional[str] = None
 
     def __post_init__(self):
@@ -122,7 +81,7 @@ class GenerationResult:
     success: bool
     sequence_data: Optional[List[dict]] = None
     start_position_data: Optional[dict] = None
-    metadata: Optional['GenerationMetadata'] = None
+    metadata: Optional["GenerationMetadata"] = None
     error_message: Optional[str] = None
     warnings: Optional[List[str]] = None
 

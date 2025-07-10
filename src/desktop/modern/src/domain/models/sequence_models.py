@@ -12,7 +12,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
 from ._shared_utils import process_field_value
-from .beat_models import BeatData
+from .beat_data import BeatData
 
 
 @dataclass(frozen=True)

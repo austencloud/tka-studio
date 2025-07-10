@@ -181,12 +181,10 @@ class TestPictographDatasetServiceContract:
 
     def setup_method(self):
         """Setup for each test method."""
-        from application.services.data.pictograph_dataset_service import (
-            PictographDatasetService,
-        )
+        from application.services.data.dataset_query_service import DatasetQueryService
         from domain.models.beat_models import BeatData
 
-        self.service = PictographDatasetService()
+        self.service = DatasetQueryService()
         self.BeatData = BeatData
 
     def test_get_start_position_contract(self):

@@ -3,8 +3,8 @@ Sequence Repository for TKA Modern API
 Provides in-memory storage for sequences with CRUD operations.
 """
 
-from typing import Dict, List, Optional
 import logging
+from typing import Dict, List, Optional
 
 from domain.models.sequence_models import SequenceData
 

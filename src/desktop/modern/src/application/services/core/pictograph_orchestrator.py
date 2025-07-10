@@ -135,11 +135,11 @@ class PictographOrchestrator(IPictographOrchestrator):
 
         return pictograph.update(
             arrows=arrows,
+            glyph_data=glyph_data,  # Store as proper GlyphData object, not dict
             is_blank=len(arrows) == 0,
             metadata={
                 "created_from_beat": beat_data.beat_number,
                 "letter": beat_data.letter,
-                "glyph_data": glyph_data.to_dict() if glyph_data else None,
             },
         )
 

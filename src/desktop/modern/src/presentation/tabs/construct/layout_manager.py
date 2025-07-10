@@ -139,7 +139,8 @@ class ConstructTabLayoutManager:
 
             def option_picker_progress(step: str, progress: float):
                 if self.progress_callback:
-                    mapped_progress = 0.8 + (progress * 0.1)
+                    # Map option picker progress to 76-82% range
+                    mapped_progress = 76 + (progress * 6)
                     self.progress_callback(f"Option picker: {step}", mapped_progress)
 
             self.option_picker = OptionPicker(

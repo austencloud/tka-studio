@@ -5,13 +5,13 @@ Handles the complete beat selection → modification → propagation flow for th
 This service bridges graph editor changes to beat repository and UI components with real-time propagation.
 """
 
-from typing import Optional, TYPE_CHECKING
 from dataclasses import replace
-from PyQt6.QtCore import QObject, pyqtSignal
+from typing import TYPE_CHECKING, Optional
 
-from domain.models.beat_models import BeatData
-from domain.models.sequence_models import SequenceData
+from domain.models.beat_data import BeatData
 from domain.models.enums import MotionType
+from domain.models.sequence_models import SequenceData
+from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
     from core.interfaces.core_services import ISequenceManagementService

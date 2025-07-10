@@ -9,8 +9,8 @@ Faithful port of the turns tuple generation logic from legacy special placement 
 
 import logging
 
-from domain.models.motion_models import MotionData
 from domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.motion_models import MotionData
 from domain.models.pictograph_models import PictographData
 
 logger = logging.getLogger(__name__)

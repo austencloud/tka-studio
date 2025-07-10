@@ -21,7 +21,7 @@ import logging
 from typing import Any, Dict, Optional
 
 from core.interfaces.positioning_services import IPositionMatchingService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 
 logger = logging.getLogger(__name__)
 

@@ -5,13 +5,13 @@ Manages option picker initialization, population, and option selection for the c
 Responsible for coordinating between the option picker component and sequence management.
 """
 
-from typing import Optional
-from PyQt6.QtCore import QObject, pyqtSignal
 import time
+from typing import Optional
 
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
-from domain.models.beat_models import BeatData
 from presentation.components.option_picker.core.option_picker import OptionPicker
+from PyQt6.QtCore import QObject, pyqtSignal
 
 from .data_conversion_service import DataConversionService
 
@@ -93,6 +93,7 @@ class OptionPickerManager(QObject):
             print(f"⚡ PURE Modern OPTION REFRESH: {total_time:.1f}ms")
         except Exception as e:
             import traceback
+
             traceback.print_exc()
 
     def _handle_beat_data_selected(self, beat_data: BeatData):

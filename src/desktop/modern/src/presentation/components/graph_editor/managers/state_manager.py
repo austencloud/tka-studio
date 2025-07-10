@@ -9,7 +9,7 @@ Removed over-engineered immutable patterns in favor of straightforward state tra
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 

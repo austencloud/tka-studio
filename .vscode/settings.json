@@ -1,10 +1,26 @@
 {
-  "python.defaultInterpreterPath": "C:/Python313/python.exe",
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "python.terminal.activateEnvironment": true,
+  "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.analysis.extraPaths": [
+    "./src",
+    "./launcher", 
+    "./packages",
+    "./packages/shared-types/python",
+    "./packages/constants/python"
+  ],
+  "python.debugging.noDebugAdapterPath": false,
+  "python.experiments.enabled": false,
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.pythonPath": "./.venv/Scripts/python.exe",
+
+  "debug.terminal.clearBeforeReusing": true,
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
-  "python.formatting.provider": "none",
+
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,

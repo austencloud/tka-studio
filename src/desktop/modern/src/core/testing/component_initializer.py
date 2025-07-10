@@ -4,8 +4,9 @@ Simple UI Testing Framework - Chunk 2: Component Initialization
 Initializes workbench and graph editor with real data.
 """
 
-from typing import List, Optional, Any
-from domain.models.beat_models import BeatData
+from typing import Any, List, Optional
+
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 
 
@@ -19,14 +20,14 @@ class ComponentInitializer:
 
         try:
             # Get services from container
-            from core.interfaces.workbench_services import (
-                ISequenceWorkbenchService,
-                IFullScreenService,
-                IBeatDeletionService,
-                IGraphEditorService,
-                IDictionaryService,
-            )
             from core.interfaces.core_services import ILayoutService
+            from core.interfaces.workbench_services import (
+                IBeatDeletionService,
+                IDictionaryService,
+                IFullScreenService,
+                IGraphEditorService,
+                ISequenceWorkbenchService,
+            )
 
             layout_service = container.resolve(ILayoutService)
             workbench_service = container.resolve(ISequenceWorkbenchService)

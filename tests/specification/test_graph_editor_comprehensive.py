@@ -18,7 +18,7 @@ from core.testing.ai_agent_helpers import (
     ai_test_sequence_workflow,
     ai_test_tka_comprehensive,
 )
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.enums import Location, MotionType, RotationDirection
 from domain.models.motion_models import MotionData
 from presentation.components.graph_editor.graph_editor import GraphEditor

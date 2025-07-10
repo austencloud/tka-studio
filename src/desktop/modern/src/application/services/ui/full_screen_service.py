@@ -1,5 +1,5 @@
-from domain.models.sequence_models import SequenceData
 from core.interfaces.workbench_services import IFullScreenService
+from domain.models.sequence_models import SequenceData
 
 
 class FullScreenService(IFullScreenService):

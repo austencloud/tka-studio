@@ -5,10 +5,11 @@ Manages start position selection, data creation, and related operations for the 
 Responsible for handling start position picker interactions and creating start position data.
 """
 
-from typing import Optional, Callable
-from PyQt6.QtCore import QObject, pyqtSignal
+from typing import Callable, Optional
 
 from domain.models import BeatData
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from .data_conversion_service import DataConversionService
 
 
@@ -72,12 +73,12 @@ class StartPositionHandler(QObject):
     def _create_start_position_data(self, position_key: str) -> BeatData:
         """Create start position data from position key using real dataset (separate from sequence beats)"""
         try:
-            from application.services.data.pictograph_dataset_service import (
-                PictographDatasetService,
+            from application.services.data.dataset_query_service import (
+                DatasetQueryService,
             )
             from domain.models import GlyphData
 
-            dataset_service = PictographDatasetService()
+            dataset_service = DatasetQueryService()
             # Get real start position data from dataset
             real_start_position = dataset_service.get_start_position_pictograph(
                 position_key, "diamond"

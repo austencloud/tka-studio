@@ -11,10 +11,10 @@ This service provides a clean, focused interface for motion orientation
 while maintaining the proven orientation calculation algorithms.
 """
 
-from typing import Dict, Any
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 
-from domain.models.enums import Orientation, Location, MotionType
+from domain.models.enums import Location, MotionType, Orientation
 from domain.models.motion_models import MotionData
 
 

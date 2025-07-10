@@ -10,7 +10,7 @@ import logging
 from typing import TYPE_CHECKING, Callable, List, Optional
 
 from core.interfaces.core_services import IObjectPoolService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.enums import Location, MotionType, RotationDirection
 from domain.models.motion_models import MotionData
 from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
@@ -20,9 +20,7 @@ from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
-    from application.services.data.pictograph_dataset_service import (
-        PictographDatasetService,
-    )
+    from application.services.data.dataset_query_service import DatasetQueryService
 
 logger = logging.getLogger(__name__)
 
@@ -130,12 +128,14 @@ class PictographPoolManager(QObject):
             ClickablePictographFrame if successful, None otherwise
         """
         try:
-            from application.services.data.pictograph_dataset_service import (
-                PictographDatasetService,
+            from application.services.data.dataset_query_service import (
+                DatasetQueryService,
             )
+            from application.services.data.position_resolver import PositionResolver
 
-            dataset_service = PictographDatasetService()
-            start_positions = ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"]
+            dataset_service = DatasetQueryService()
+            position_resolver = PositionResolver()
+            start_positions = position_resolver.get_start_positions("diamond")
 
             # Cycle through start positions
             position_key = start_positions[

@@ -64,8 +64,7 @@ class BackgroundManager(IBackgroundManager):
         progress_callback: Optional[callable] = None,
     ) -> "MainBackgroundWidget":
         """Setup background widget for the main window."""
-        if progress_callback:
-            progress_callback(95, "Setting up background...")
+        # Don't override progress - let orchestrator handle it
 
         # Get background type from UI state service
         from core.interfaces.core_services import (

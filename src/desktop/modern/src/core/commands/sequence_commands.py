@@ -343,3 +343,79 @@ class UpdateBeatCommand(ICommand[Any]):  # ICommand[SequenceData]
     def can_undo(self) -> bool:
         """Check if command can be undone."""
         return self._old_value is not None
+
+
+@dataclass
+class ClearSequenceCommand(ICommand[Any]):  # ICommand[SequenceData]
+    """Command to clear the entire sequence."""
+
+    sequence: Any  # SequenceData
+    event_bus: Any  # IEventBus
+    _command_id: str = ""
+    _original_sequence: Optional[Any] = None  # Optional[SequenceData]
+
+    def __post_init__(self):
+        if not self._command_id:
+            self._command_id = str(uuid.uuid4())
+
+    @property
+    def command_id(self) -> str:
+        return self._command_id
+
+    @property
+    def description(self) -> str:
+        return f"Clear sequence ({len(self.sequence.beats)} beats)"
+
+    def execute(self) -> Any:  # SequenceData
+        """Execute: Clear all beats from sequence."""
+        # Store original sequence for undo
+        self._original_sequence = self.sequence
+
+        # Create empty sequence
+        from domain.models.sequence_models import SequenceData
+        result_sequence = SequenceData.empty()
+
+        # Publish events for each removed beat
+        for i, beat in enumerate(self.sequence.beats):
+            self.event_bus.publish(
+                BeatRemovedEvent(
+                    event_id=str(uuid.uuid4()),
+                    timestamp=datetime.now(),
+                    source="ClearSequenceCommand",
+                    sequence_id=self.sequence.id,
+                    removed_beat_data=beat.to_dict(),
+                    old_position=i,
+                    remaining_beats=0,
+                )
+            )
+
+        return result_sequence
+
+    def undo(self) -> Any:  # SequenceData
+        """Undo: Restore the original sequence."""
+        if not self.can_undo():
+            raise ValueError("Cannot undo - no original sequence stored")
+
+        # Publish events for each restored beat
+        for i, beat in enumerate(self._original_sequence.beats):
+            self.event_bus.publish(
+                BeatAddedEvent(
+                    event_id=str(uuid.uuid4()),
+                    timestamp=datetime.now(),
+                    source="ClearSequenceCommand.undo",
+                    sequence_id=self._original_sequence.id,
+                    beat_data=beat.to_dict(),
+                    beat_position=i,
+                    total_beats=len(self._original_sequence.beats),
+                )
+            )
+
+        return self._original_sequence
+
+    def can_execute(self) -> bool:
+        """Check if sequence can be cleared."""
+        return len(self.sequence.beats) > 0
+
+    def can_undo(self) -> bool:
+        """Check if command can be undone."""
+        return self._original_sequence is not None

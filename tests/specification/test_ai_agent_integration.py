@@ -56,7 +56,7 @@ class TestAIAgentIntegrationContract:
         assert result.metadata["has_red_motion"] == True
 
         # Contract: Result must contain actual BeatData
-        from domain.models.beat_models import BeatData
+        from domain.models.beat_data import BeatData
 
         assert isinstance(result.data, BeatData)
 

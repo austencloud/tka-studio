@@ -5,9 +5,10 @@ Handles data conversions, position calculations, and caching utilities for the c
 Responsible for converting between different data formats and optimizing performance through caching.
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
-from domain.models.beat_models import BeatData
 
 
 class DataConversionService:

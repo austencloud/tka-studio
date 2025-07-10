@@ -18,14 +18,13 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QTimer
-from PyQt6.QtTest import QTest
-
-from core.application.application_factory import ApplicationFactory
 from application.services.core.sequence_persistence_service import (
     SequencePersistenceService,
 )
+from core.application.application_factory import ApplicationFactory
+from PyQt6.QtCore import QTimer
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication
 
 
 class SignalBasedWorkflowTester:
@@ -67,6 +66,14 @@ class SignalBasedWorkflowTester:
         print("🔄 [SIGNAL_TEST] Step 1: Starting up the program...")
 
         try:
+            # Initialize core services first (like the real application does)
+            from core.service_locator import initialize_services
+
+            if not initialize_services():
+                print("❌ [SIGNAL_TEST] Failed to initialize core services")
+                return False
+            print("✅ [SIGNAL_TEST] Core services initialized")
+
             from presentation.tabs.construct.construct_tab_widget import (
                 ConstructTabWidget,
             )
@@ -102,33 +109,45 @@ class SignalBasedWorkflowTester:
             return False
 
     def select_start_position_via_signal(self) -> bool:
-        """Step 2: Select start position using signal approach"""
-        print("🎯 [SIGNAL_TEST] Step 2: Selecting start position via signal...")
+        """Step 2: Select start position using command system"""
+        print("🎯 [SIGNAL_TEST] Step 2: Selecting start position via command...")
 
         try:
             # Log state before selecting start position
             self.log_workflow_state("BEFORE_START_POSITION_SELECT")
 
-            # Use the start position picker to emit a signal
-            if self.layout_manager and hasattr(
-                self.layout_manager, "start_position_picker"
-            ):
-                start_pos_picker = self.layout_manager.start_position_picker
+            # Use the command system to select start position
+            from core.commands.start_position_commands import SetStartPositionCommand
+            from core.service_locator import get_command_processor, get_event_bus
 
-                # Simulate selecting alpha1 start position by emitting the signal
-                print(
-                    "🎯 [SIGNAL_TEST] Emitting start position selected signal for alpha1..."
-                )
-                start_pos_picker.start_position_selected.emit("alpha1_alpha1")
+            command_processor = get_command_processor()
+            event_bus = get_event_bus()
+
+            if not command_processor:
+                print("❌ [SIGNAL_TEST] Command processor not available")
+                return False
+            if not event_bus:
+                print("❌ [SIGNAL_TEST] Event bus not available")
+                return False
+
+            # Execute start position command for alpha1
+            print("🎯 [SIGNAL_TEST] Executing start position command for alpha1...")
+            command = SetStartPositionCommand(
+                position_key="alpha1_alpha1", event_bus=event_bus
+            )
+            result = command_processor.execute(command)
+
+            if result and result.success:
+                print("✅ [SIGNAL_TEST] Start position command executed successfully")
 
                 # Wait for processing
                 QTest.qWait(1000)
 
                 self.log_workflow_state("AFTER_START_POSITION_SELECT")
-                print("✅ [SIGNAL_TEST] Step 2: Start position selected via signal")
+                print("✅ [SIGNAL_TEST] Step 2: Start position selected via command")
                 return True
             else:
-                print("❌ [SIGNAL_TEST] Could not find start position picker")
+                print("❌ [SIGNAL_TEST] Start position command failed")
                 return False
 
         except Exception as e:
@@ -384,7 +403,7 @@ class SignalBasedWorkflowTester:
             if not self.select_start_position_via_signal():
                 return False
 
-            # Add multiple beats
+            # Add multiple beats using the correct signal approach
             beat_letters = ["A", "B", "C", "D"]
             for i, letter in enumerate(beat_letters):
                 print(f"⚙️ [MULTI_BEAT] Adding beat {i+1}: {letter}")
@@ -394,11 +413,25 @@ class SignalBasedWorkflowTester:
 
                 beat = BeatData(beat_number=i + 1, letter=letter, duration=1.0)
 
-                if self.workbench and hasattr(self.workbench, "add_beat"):
-                    self.workbench.add_beat(beat)
-                    QTest.qWait(500)  # Wait for processing
+                # Use the option picker signal approach (same as working test)
+                if (
+                    self.layout_manager
+                    and hasattr(self.layout_manager, "option_picker")
+                    and self.layout_manager.option_picker
+                ):
+                    option_picker = self.layout_manager.option_picker
+                    if hasattr(option_picker, "beat_data_selected"):
+                        option_picker.beat_data_selected.emit(beat)
+                        QTest.qWait(500)  # Wait for processing
+                    else:
+                        print(
+                            f"❌ [MULTI_BEAT] Option picker missing beat_data_selected signal"
+                        )
+                        return False
                 else:
-                    print(f"❌ [MULTI_BEAT] Could not add beat {letter}")
+                    print(
+                        f"❌ [MULTI_BEAT] Could not find option picker for beat {letter}"
+                    )
                     return False
 
             # Verify sequence length
@@ -441,14 +474,36 @@ class SignalBasedWorkflowTester:
                     print(f"❌ [START_POS_VAR] Could not reset for {position}")
                     return False
 
-                # Select specific start position
-                if self.layout_manager and hasattr(
-                    self.layout_manager, "start_position_picker"
-                ):
-                    picker = self.layout_manager.start_position_picker
-                    if hasattr(picker, "start_position_selected"):
-                        print(f"🎯 [START_POS_VAR] Emitting signal for: {position}")
-                        picker.start_position_selected.emit(position)
+                # Select specific start position using command system
+                try:
+                    from core.commands.start_position_commands import (
+                        SetStartPositionCommand,
+                    )
+                    from core.service_locator import (
+                        get_command_processor,
+                        get_event_bus,
+                    )
+
+                    command_processor = get_command_processor()
+                    event_bus = get_event_bus()
+
+                    if not command_processor:
+                        print(f"❌ [START_POS_VAR] Command processor not available")
+                        return False
+                    if not event_bus:
+                        print(f"❌ [START_POS_VAR] Event bus not available")
+                        return False
+
+                    print(f"🎯 [START_POS_VAR] Executing command for: {position}")
+                    command = SetStartPositionCommand(
+                        position_key=position, event_bus=event_bus
+                    )
+                    result = command_processor.execute(command)
+
+                    if result and result.success:
+                        print(
+                            f"✅ [START_POS_VAR] Command executed successfully for {position}"
+                        )
                         QTest.qWait(1000)
 
                         # Verify transition to option picker
@@ -459,10 +514,13 @@ class SignalBasedWorkflowTester:
                             print(f"❌ [START_POS_VAR] {position} failed to transition")
                             return False
                     else:
-                        print(f"❌ [START_POS_VAR] No start_position_selected signal")
+                        print(f"❌ [START_POS_VAR] Command failed for {position}")
                         return False
-                else:
-                    print(f"❌ [START_POS_VAR] No start position picker")
+
+                except Exception as e:
+                    print(
+                        f"❌ [START_POS_VAR] Error executing command for {position}: {e}"
+                    )
                     return False
 
             except Exception as e:
@@ -639,20 +697,39 @@ class SignalBasedWorkflowTester:
             if not self.select_start_position_via_signal():
                 return False
 
-            # Select different start position
-            if self.layout_manager and hasattr(
-                self.layout_manager, "start_position_picker"
-            ):
-                picker = self.layout_manager.start_position_picker
-                if hasattr(picker, "start_position_selected"):
-                    picker.start_position_selected.emit("beta1_beta1")
-                    QTest.qWait(500)
+            # Select different start position using command system
+            try:
+                from core.commands.start_position_commands import (
+                    SetStartPositionCommand,
+                )
+                from core.service_locator import get_command_processor, get_event_bus
 
-                    # Should still be on option picker
-                    state = self.log_workflow_state("AFTER_SECOND_START_POS")
-                    if "OPTION_PICKER" not in state:
-                        print("❌ [EDGE] Second start position selection failed")
+                command_processor = get_command_processor()
+                event_bus = get_event_bus()
+
+                if command_processor and event_bus:
+                    command = SetStartPositionCommand(
+                        position_key="beta1_beta1", event_bus=event_bus
+                    )
+                    result = command_processor.execute(command)
+
+                    if result and result.success:
+                        QTest.qWait(500)
+
+                        # Should still be on option picker
+                        state = self.log_workflow_state("AFTER_SECOND_START_POS")
+                        if "OPTION_PICKER" not in state:
+                            print("❌ [EDGE] Second start position selection failed")
+                            return False
+                    else:
+                        print("❌ [EDGE] Second start position command failed")
                         return False
+                else:
+                    print("❌ [EDGE] Command processor not available")
+                    return False
+            except Exception as e:
+                print(f"❌ [EDGE] Error in second start position selection: {e}")
+                return False
 
             print("✅ [EDGE] Edge cases handled correctly")
             return True

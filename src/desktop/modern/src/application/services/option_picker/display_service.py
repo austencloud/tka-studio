@@ -17,7 +17,7 @@ import logging
 from typing import Any, Callable, Dict, List
 
 from core.interfaces.option_picker_services import IOptionPickerDisplayService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)

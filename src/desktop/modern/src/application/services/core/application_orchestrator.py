@@ -14,6 +14,7 @@ PROVIDES:
 from typing import Optional, Callable
 from abc import ABC, abstractmethod
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
+from PyQt6.QtCore import QTimer
 
 from core.dependency_injection.di_container import DIContainer
 from .service_registration_manager import (
@@ -121,13 +122,23 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         # Step 2: Configure services
         from core.dependency_injection.di_container import get_container
 
+        if progress_callback:
+            progress_callback(45, "Configuring dependency injection...")
+
         self.container = get_container()
+
+        if progress_callback:
+            progress_callback(50, "Registering application services...")
+
         self.service_manager.register_all_services(self.container)
 
         if progress_callback:
-            progress_callback(40, "Services configured")
+            progress_callback(55, "Services configured")
 
         # Step 3: Setup UI
+        if progress_callback:
+            progress_callback(60, "Initializing user interface...")
+
         self.tab_widget = self.ui_manager.setup_main_ui(
             main_window,
             self.container,
@@ -136,26 +147,45 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         )
 
         # Step 3.5: Trigger deferred session restoration (after UI is ready)
+        if progress_callback:
+            progress_callback(85, "Restoring session state...")
+
         print(
             "🔍 [ORCHESTRATOR] UI setup complete, triggering deferred session restoration..."
         )
         self.lifecycle_manager.trigger_deferred_session_restoration()
 
         # Step 4: Setup background
+        if progress_callback:
+            progress_callback(90, "Setting up background...")
+
         self.background_widget = self.background_manager.setup_background(
             main_window, self.container, progress_callback
         )
 
-        # Step 5: Start API server if enabled
+        # Step 5: Start API server in background if enabled
         if enable_api:
             if progress_callback:
-                progress_callback(98, "Starting API server...")
-            self.lifecycle_manager.start_api_server(enable_api)
+                progress_callback(95, "Initializing API server...")
+            self._start_api_server_background()
 
         if progress_callback:
             progress_callback(100, "Application ready!")
 
         return self.tab_widget
+
+    def _start_api_server_background(self) -> None:
+        """Start API server in background to avoid blocking startup."""
+        def start_api():
+            try:
+                print("🌐 Starting API server in background...")
+                self.lifecycle_manager.start_api_server(True)
+                print("✅ API server started successfully in background")
+            except Exception as e:
+                print(f"⚠️ Failed to start API server in background: {e}")
+
+        # Start API server after a short delay to allow UI to complete
+        QTimer.singleShot(100, start_api)
 
     def handle_window_resize(self, main_window: QMainWindow) -> None:
         """Handle main window resize events."""

@@ -1,0 +1,44 @@
+"""
+Core Import Path Initialization for TKA Legacy Application
+
+This module sets up intelligent import path resolution for 'core.*' modules.
+Import this module early in your application to enable automatic core module resolution.
+"""
+
+import sys
+import os
+from pathlib import Path
+
+# Add the legacy src directory to Python path if not already present
+legacy_src_path = Path(__file__).parent.parent
+if str(legacy_src_path) not in sys.path:
+    sys.path.insert(0, str(legacy_src_path))
+
+# Import and initialize the core import resolver
+try:
+    from core.import_path_resolver import install_core_import_resolver, get_core_mappings
+    
+    # Install the resolver
+    resolver = install_core_import_resolver()
+    
+    # Debug info
+    mappings = get_core_mappings()
+    print(f"🔍 Core import resolver initialized with {len(mappings)} mappings")
+    
+    # Print key mappings for debugging
+    key_modules = [name for name in mappings.keys() if 'glassmorphism' in name]
+    if key_modules:
+        print(f"✅ Found glassmorphism modules: {key_modules}")
+    
+except Exception as e:
+    print(f"⚠️ Failed to initialize core import resolver: {e}")
+    import traceback
+    traceback.print_exc()
+
+
+def enable_core_imports():
+    """
+    Enable core import resolution - call this function early in your application.
+    """
+    # The resolver is already installed on module import
+    pass

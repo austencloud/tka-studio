@@ -161,7 +161,67 @@ class ArrowColor(Enum):
 
 
 class GridMode(Enum):
-    """Grid modes matching legacy constants."""
+    """Grid modes for pictograph rendering."""
 
     DIAMOND = "diamond"
     BOX = "box"
+
+
+class ArrowType(Enum):
+    """Types of arrows in pictographs."""
+
+    BLUE = "blue"
+    RED = "red"
+
+
+class PropType(Enum):
+    """Types of props in pictographs."""
+
+    # Hand props
+    HAND = "hand"
+
+    # Staff variants
+    STAFF = "staff"
+    SIMPLESTAFF = "simplestaff"
+    BIGSTAFF = "bigstaff"
+
+    # Club variants
+    CLUB = "club"
+
+    # Buugeng variants
+    BUUGENG = "buugeng"
+    BIGBUUGENG = "bigbuugeng"
+    FRACTALGENG = "fractalgeng"
+
+    # Ring variants
+    EIGHTRINGS = "eightrings"
+    BIG_EIGHT_RINGS = "bigeightrings"
+
+    # Hoop variants
+    MINIHOOP = "minihoop"
+    BIGHOOP = "bighoop"
+
+    # Star variants
+    DOUBLESTAR = "doublestar"
+    BIGDOUBLESTAR = "bigdoublestar"
+
+    # Other props
+    FAN = "fan"
+    TRIAD = "triad"
+    QUIAD = "quiad"
+    SWORD = "sword"
+    GUITAR = "guitar"
+    UKULELE = "ukulele"
+    CHICKEN = "chicken"
+    TRIQUETRA = "triquetra"
+    TRIQUETRA2 = "triquetra2"
+
+
+class BackgroundType(Enum):
+    """Available background types."""
+
+    AURORA = "Aurora"
+    AURORA_BOREALIS = "AuroraBorealis"
+    BUBBLES = "Bubbles"
+    SNOWFALL = "Snowfall"
+    STARFIELD = "Starfield"

@@ -5,12 +5,12 @@ This module tests the integration between extracted services and the dependency
 injection container to ensure the refactoring maintains functionality.
 """
 
-import pytest
 from unittest.mock import Mock, patch
 
+import pytest
 from core.application.application_factory import ApplicationFactory
+from core.interfaces.core_services import IObjectPoolService
 from core.interfaces.positioning_services import IPositionMatchingService
-from core.interfaces.core_services import IBeatLoadingService, IObjectPoolService
 from core.testing.ai_agent_helpers import TKAAITestHelper
 
 
@@ -29,17 +29,17 @@ class TestServiceExtractionIntegration:
 
             # Test that services can be resolved
             position_service = container.resolve(IPositionMatchingService)
-            beat_loading_service = container.resolve(IBeatLoadingService)
             object_pool_service = container.resolve(IObjectPoolService)
 
             assert position_service is not None
-            assert beat_loading_service is not None
             assert object_pool_service is not None
 
             # Test that they implement the correct interfaces
             assert isinstance(position_service, IPositionMatchingService)
-            assert isinstance(beat_loading_service, IBeatLoadingService)
             assert isinstance(object_pool_service, IObjectPoolService)
+
+            # Note: IBeatLoadingService was removed during SRP refactoring
+            # Its functionality was split into focused microservices
 
         except ImportError as e:
             pytest.skip(f"Services not yet registered in DI container: {e}")
@@ -62,31 +62,25 @@ class TestServiceExtractionIntegration:
         except ImportError as e:
             pytest.skip(f"Position matching service not available: {e}")
 
-    def test_beat_loading_service_integration(self):
-        """Test beat loading service integration."""
+    def test_option_picker_data_service_integration(self):
+        """Test option picker data service integration (replacement for beat loading)."""
         try:
-            container = ApplicationFactory.create_test_app()
-            service = container.resolve(IBeatLoadingService)
+            # Test the new OptionPickerDataService that replaced BeatLoadingService
+            from application.services.option_picker.data_service import OptionPickerDataService
+
+            service = OptionPickerDataService()
 
             # Test basic functionality
-            sequence_data = [
-                {"letter": "A", "end_pos": "alpha1"},
-                {"letter": "B", "end_pos": "beta5"},
-            ]
+            pictographs = service.load_pictograph_options()
+            assert isinstance(pictographs, list)
 
-            result = service.load_motion_combinations(sequence_data)
-            assert isinstance(result, list)
-
-            # Test filtering
-            mock_options = [
-                Mock(metadata={"start_pos": "alpha1"}),
-                Mock(metadata={"start_pos": "beta5"}),
-            ]
-            filtered = service.filter_valid_options(mock_options, "alpha1")
-            assert len(filtered) == 1
+            # Test filtering by letter
+            if pictographs:
+                filtered = service.filter_pictographs_by_letter("A")
+                assert isinstance(filtered, list)
 
         except ImportError as e:
-            pytest.skip(f"Beat loading service not available: {e}")
+            pytest.skip(f"Option picker data service not available: {e}")
 
     def test_object_pool_service_integration(self):
         """Test object pool service integration."""
@@ -123,14 +117,14 @@ class TestServiceExtractionIntegration:
     def test_presentation_layer_adapter_compatibility(self):
         """Test that presentation layer adapters maintain compatibility."""
         try:
-            from presentation.components.option_picker.services.data.position_matcher import (
-                PositionMatcher,
-            )
-            from presentation.components.option_picker.services.data.beat_loader import (
-                BeatDataLoader,
+            from presentation.components.option_picker.services.data.option_service import (
+                OptionService,
             )
             from presentation.components.option_picker.services.data.pool_manager import (
                 PictographPoolManager,
+            )
+            from presentation.components.option_picker.services.data.position_matcher import (
+                PositionMatcher,
             )
 
             # Test position matcher adapter
@@ -139,9 +133,9 @@ class TestServiceExtractionIntegration:
             result = position_matcher.extract_end_position(test_beat, None)
             assert result == "alpha1"
 
-            # Test beat loader adapter
-            beat_loader = BeatDataLoader()
-            assert beat_loader is not None
+            # Test option service adapter
+            option_service = OptionService()
+            assert option_service is not None
 
             # Test pool manager adapter (requires Qt widget)
             # This would need a Qt application context to test fully
@@ -184,9 +178,10 @@ class TestServiceExtractionIntegration:
             result = position_service.extract_end_position(None)
             assert result is None  # Should handle gracefully and return None on error
 
-            # Test beat loading service error handling
-            beat_service = container.resolve(IBeatLoadingService)
-            result = beat_service.load_motion_combinations([])
+            # Test option picker data service error handling (replacement for beat loading)
+            from application.services.option_picker.data_service import OptionPickerDataService
+            option_service = OptionPickerDataService()
+            result = option_service.refresh_pictographs_from_sequence_data([])
             assert isinstance(result, list)  # Should return empty list
 
             # Test object pool service error handling
@@ -251,8 +246,9 @@ class TestServiceExtractionIntegration:
         try:
             container = ApplicationFactory.create_test_app()
 
-            # Test that beat loading service can work with position service
-            beat_service = container.resolve(IBeatLoadingService)
+            # Test that option picker data service can work with position service
+            from application.services.option_picker.data_service import OptionPickerDataService
+            option_service = OptionPickerDataService()
             position_service = container.resolve(IPositionMatchingService)
 
             # Services should be able to work together
@@ -260,10 +256,10 @@ class TestServiceExtractionIntegration:
             position_result = position_service.extract_end_position(test_data)
 
             sequence_data = [test_data, {"letter": "B"}]
-            beat_result = beat_service.load_motion_combinations(sequence_data)
+            option_result = option_service.refresh_pictographs_from_sequence_data(sequence_data)
 
             assert position_result is not None
-            assert isinstance(beat_result, list)
+            assert isinstance(option_result, list)
 
         except ImportError as e:
             pytest.skip(f"Service dependencies test failed: {e}")

@@ -9,34 +9,7 @@ from dataclasses import dataclass, field, replace
 from typing import Dict, Optional, Any
 from enum import Enum
 
-
-class PropType(Enum):
-    """Available prop types."""
-
-    STAFF = "Staff"
-    FAN = "Fan"
-    BUUGENG = "Buugeng"
-    CLUB = "Club"
-    SWORD = "Sword"
-    GUITAR = "Guitar"
-    UKULELE = "Ukulele"
-
-
-class GridMode(Enum):
-    """Grid display modes."""
-
-    DIAMOND = "diamond"
-    BOX = "box"
-
-
-class BackgroundType(Enum):
-    """Available background types."""
-
-    AURORA = "Aurora"
-    AURORA_BOREALIS = "AuroraBorealis"
-    BUBBLES = "Bubbles"
-    SNOWFALL = "Snowfall"
-    STARFIELD = "Starfield"
+from domain.models.enums import BackgroundType, GridMode, PropType
 
 
 @dataclass(frozen=True)

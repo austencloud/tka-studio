@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, TypedDict, Union
 
 import pandas as pd
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.enums import (
     ElementalType,
     LetterType,
@@ -383,44 +383,41 @@ class PictographManagementService(IPictographManagementService):
             red_motion=red_motion,
         )
 
+        # Convert to pictograph data for glyph generation
+        from domain.models.pictograph_models import ArrowData, GridData
+
+        arrows = {}
+        if blue_motion:
+            arrows["blue"] = ArrowData(motion_data=blue_motion, color="blue")
+        if red_motion:
+            arrows["red"] = ArrowData(motion_data=red_motion, color="red")
+
+        pictograph_data = PictographData(
+            grid_data=GridData(),
+            arrows=arrows,
+            letter=row["letter"],
+        )
+
         # Generate glyph data
-        glyph_data = self._generate_glyph_data(beat_data)
+        glyph_data = self._generate_glyph_data(pictograph_data)
 
         # Return beat data with glyph data
         return beat_data.update(glyph_data=glyph_data)
 
     # Private helper methods
 
-    def _generate_glyph_data(self, beat_data: BeatData) -> Optional[GlyphData]:
-        """Generate glyph data for beat data."""
-        if beat_data.is_blank or not beat_data.letter:
+    def _generate_glyph_data(
+        self, pictograph_data: PictographData
+    ) -> Optional[GlyphData]:
+        """Generate glyph data for pictograph data."""
+        if pictograph_data.is_blank or not pictograph_data.letter:
             return None
 
-        # Determine letter type
-        letter_type = self._determine_letter_type(beat_data.letter)
+        # Use the dedicated glyph data service instead of duplicating logic
+        from ..data.glyph_data_service import GlyphDataService
 
-        # Determine VTG mode
-        vtg_mode = self._determine_vtg_mode(beat_data)
-
-        # Determine if letter has dash
-        has_dash = "-" in beat_data.letter if beat_data.letter else False
-
-        # Determine start and end positions
-        start_position, end_position = self._determine_positions(beat_data)
-
-        return GlyphData(
-            vtg_mode=vtg_mode,
-            elemental_type=self._vtg_to_elemental(vtg_mode),
-            letter_type=letter_type,
-            has_dash=has_dash,
-            turns_data=None,  # TODO: Implement turns data parsing
-            start_position=start_position,
-            end_position=end_position,
-            show_elemental=letter_type == LetterType.TYPE1 if letter_type else False,
-            show_vtg=letter_type == LetterType.TYPE1 if letter_type else False,
-            show_tka=True,
-            show_positions=letter_type != LetterType.TYPE6 if letter_type else True,
-        )
+        glyph_service = GlyphDataService()
+        return glyph_service.determine_glyph_data(pictograph_data)
 
     def _matches_query(
         self, pictograph: PictographData, query: PictographSearchQuery

@@ -243,9 +243,22 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
                 IArrowCoordinateSystemService, ArrowCoordinateSystemService
             )
 
-            # Register orchestrator (replaces monolith)
-            container.register_singleton(
-                IArrowPositioningOrchestrator, ArrowPositioningOrchestrator
+            # Register orchestrator (replaces monolith) with dependency injection
+            def create_arrow_positioning_orchestrator():
+                location_calculator = container.resolve(IArrowLocationCalculator)
+                rotation_calculator = container.resolve(IArrowRotationCalculator)
+                adjustment_calculator = container.resolve(IArrowAdjustmentCalculator)
+                coordinate_system = container.resolve(IArrowCoordinateSystemService)
+
+                return ArrowPositioningOrchestrator(
+                    location_calculator=location_calculator,
+                    rotation_calculator=rotation_calculator,
+                    adjustment_calculator=adjustment_calculator,
+                    coordinate_system=coordinate_system,
+                )
+
+            container.register_factory(
+                IArrowPositioningOrchestrator, create_arrow_positioning_orchestrator
             )
         except ImportError as e:
             # Some positioning services not available - continue

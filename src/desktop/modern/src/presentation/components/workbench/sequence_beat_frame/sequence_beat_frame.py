@@ -7,11 +7,9 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from typing import TYPE_CHECKING, Dict, List, Optional
 
-from application.services.layout.beat_resizer_service import (
-    BeatResizerService,
-)
+from application.services.layout.beat_resizer_service import BeatResizerService
 from core.interfaces.core_services import ILayoutService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
@@ -143,6 +141,16 @@ class SequenceBeatFrame(QScrollArea):
 
         # Setup start position view
         self._setup_start_position()
+        
+    def _on_state_sequence_updated(self, sequence: Optional[SequenceData]):
+        """Handle sequence updates from state manager"""
+        print(f"📊 SequenceBeatFrame: Sequence updated from state manager: {sequence.length if sequence else 0} beats")
+        self.set_sequence(sequence)
+        
+    def _on_state_start_position_updated(self, start_position: Optional[BeatData]):
+        """Handle start position updates from state manager"""
+        print(f"🎯 SequenceBeatFrame: Start position updated from state manager: {start_position.letter if start_position else 'None'}")
+        self.set_start_position(start_position)
 
     def _setup_styling(self):
         """Apply modern styling to the beat frame"""
@@ -187,10 +195,27 @@ class SequenceBeatFrame(QScrollArea):
 
     def _setup_event_subscriptions(self):
         """Setup event subscriptions for reactive UI updates."""
+        # Subscribe to state manager for state updates (primary)
+        try:
+            from core.service_locator import get_sequence_state_manager
+            state_manager = get_sequence_state_manager()
+            
+            if state_manager:
+                # Subscribe to state manager Qt signals for UI updates
+                state_manager.sequence_updated.connect(self._on_state_sequence_updated)
+                state_manager.start_position_updated.connect(self._on_state_start_position_updated)
+                print("✅ SequenceBeatFrame subscribed to SequenceStateManager")
+            else:
+                print("⚠️ SequenceStateManager not available")
+                
+        except Exception as e:
+            print(f"❌ Error subscribing to SequenceStateManager: {e}")
+        
+        # Keep existing event bus subscriptions for backward compatibility
         if not self.event_bus or not EVENT_SYSTEM_AVAILABLE:
             return
 
-        # Subscribe to sequence events
+        # Subscribe to sequence events (legacy support)
         sub_id = self.event_bus.subscribe(
             "sequence.created", self._on_sequence_created, priority=EventPriority.NORMAL
         )

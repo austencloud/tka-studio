@@ -1,6 +1,23 @@
 import logging
 import os
 import sys
+from pathlib import Path
+
+# Simple path setup - add project root and run setup_paths
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+# Set up all TKA paths for clean imports
+try:
+    from setup_paths import setup_tka_paths
+    paths_added = setup_tka_paths()
+    print(f"✅ TKA paths setup complete - {paths_added} paths added")
+except Exception as e:
+    print(f"⚠️ Failed to setup TKA paths: {e}")
+    # Fallback - just add the legacy src directory
+    legacy_src = Path(__file__).parent / "src"
+    if str(legacy_src) not in sys.path:
+        sys.path.insert(0, str(legacy_src))
 
 
 def configure_import_paths():

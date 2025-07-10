@@ -15,6 +15,7 @@ except ImportError:
             self.parent = parent
 
     QT_AVAILABLE = False
+from application.services.ui.graph_editor.graph_editor_service import GraphEditorService
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.core_services import (
     ILayoutService,
@@ -33,9 +34,7 @@ from application.services.core.sequence_management_service import (
 from application.services.ui.full_screen_service import (
     FullScreenService,
 )
-from application.services.graph_editor_service import (
-    GraphEditorService,
-)
+
 
 from presentation.components.workbench import SequenceWorkbench
 

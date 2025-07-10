@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 
 

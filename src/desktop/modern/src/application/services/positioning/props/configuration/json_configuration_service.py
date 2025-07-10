@@ -18,7 +18,7 @@ import time
 import logging
 from pathlib import Path
 
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 
 
 class IJSONConfigurationService(ABC):

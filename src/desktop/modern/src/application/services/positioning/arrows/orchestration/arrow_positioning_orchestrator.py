@@ -10,14 +10,14 @@ of focused services.
 
 from typing import Tuple
 
-from domain.models.pictograph_models import ArrowData, PictographData
 from core.interfaces.positioning_services import (
-    IArrowLocationCalculator,
-    IArrowRotationCalculator,
     IArrowAdjustmentCalculator,
     IArrowCoordinateSystemService,
+    IArrowLocationCalculator,
     IArrowPositioningOrchestrator,
+    IArrowRotationCalculator,
 )
+from domain.models.pictograph_models import ArrowData, PictographData
 
 
 class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):

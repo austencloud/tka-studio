@@ -244,24 +244,11 @@ class IPictographContextService(ABC):
 # This removes the duplicate interface definition to reduce complexity
 
 
-class IBeatLoadingService(ABC):
-    """Interface for beat data loading orchestration."""
-
-    @abstractmethod
-    def load_motion_combinations(
-        self, sequence_data: List[Dict[str, Any]]
-    ) -> List[Any]:
-        """Load motion combinations with position matching."""
-
-    @abstractmethod
-    def filter_valid_options(
-        self, beat_options: List[Any], end_position: str
-    ) -> List[Any]:
-        """Filter beat options based on end position."""
-
-    @abstractmethod
-    def get_sample_beat_options(self) -> List[Any]:
-        """Get fallback sample options."""
+# Note: IBeatLoadingService was removed during SRP refactoring
+# Its functionality was split into focused microservices:
+# - OptionPickerDataService for option loading
+# - PositionMatchingService for position-based filtering
+# - Various specialized services for specific beat operations
 
 
 class IObjectPoolService(ABC):

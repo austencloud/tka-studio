@@ -10,7 +10,7 @@ from typing import Callable, Optional
 from application.services.core.sequence_persistence_service import (
     SequencePersistenceService,
 )
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 

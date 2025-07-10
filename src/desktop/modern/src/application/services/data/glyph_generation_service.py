@@ -12,17 +12,17 @@ PROVIDES:
 - Position determination
 """
 
-from typing import Optional, Tuple, Dict
 from abc import ABC, abstractmethod
+from typing import Dict, Optional, Tuple
 
 from domain.models import (
     BeatData,
-    MotionData,
-    GlyphData,
-    VTGMode,
     ElementalType,
+    GlyphData,
     LetterType,
     Location,
+    MotionData,
+    VTGMode,
 )
 
 

@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from core.interfaces.core_services import IUIStateManagementService
 from core.interfaces.workbench_services import IGraphEditorService
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.enums import MotionType
 from domain.models.sequence_models import SequenceData
 

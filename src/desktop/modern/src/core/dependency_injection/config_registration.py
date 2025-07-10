@@ -21,25 +21,19 @@ USAGE:
 import logging
 from typing import Optional
 
-from core.types.result import (
-    Result,
-    AppError,
-    ErrorType,
-    success,
-    failure,
-    app_error,
-)
+from application.services.data.data_service import DataService
 from core.config.app_config import (
     AppConfig,
+    LoggingConfig,
     PositioningConfig,
     UIConfig,
-    LoggingConfig,
     create_app_config,
 )
 from core.config.data_config import DataConfig, create_data_config
-from application.services.data.data_service import DataService
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import IObjectPoolService
 from core.interfaces.positioning_services import IPositionMatchingService
-from core.interfaces.core_services import IBeatLoadingService, IObjectPoolService
+from core.types.result import AppError, ErrorType, Result, app_error, failure, success
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +131,7 @@ def register_data_config_only(
 
 
 def register_positioning_services_with_config(
-    container, positioning_config: Optional[PositioningConfig] = None
+container: "DIContainer", positioning_config: Optional[PositioningConfig] = None
 ) -> Result[bool, AppError]:
     """
     Register positioning services with configuration injection.
@@ -160,14 +154,14 @@ def register_positioning_services_with_config(
         container.register_instance(PositioningConfig, config)
 
         # Register the new focused arrow adjustment services
+        from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
+            ArrowAdjustmentCalculatorService,
+        )
         from application.services.positioning.arrows.orchestration.arrow_adjustment_lookup_service import (
             ArrowAdjustmentLookupService,
         )
         from application.services.positioning.arrows.orchestration.directional_tuple_processor import (
             DirectionalTupleProcessor,
-        )
-        from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
-            ArrowAdjustmentCalculatorService,
         )
 
         # Register the focused services
@@ -316,35 +310,8 @@ def register_extracted_services(container) -> Result[bool, AppError]:
 
         container.register_singleton(IPositionMatchingService, PositionMatchingService)
 
-        # Register beat loading service with proper dependencies
-        from application.services.data.beat_loading_service import BeatLoadingService
-        
-        # Register with factory function to inject dependencies
-        def beat_loading_service_factory():
-            position_service = None
-            conversion_service = None
-            orientation_service = None
-            
-            try:
-                position_service = container.resolve(IPositionMatchingService)
-            except:
-                pass  # Will use fallback
-                
-            try:
-                from application.services.data.data_conversion_service import DataConversionService
-                conversion_service = DataConversionService()
-            except:
-                pass  # Will use fallback
-                
-            try:
-                from application.services.option_picker.orientation_update_service import OptionOrientationUpdateService
-                orientation_service = OptionOrientationUpdateService()
-            except:
-                pass  # Will use fallback
-                
-            return BeatLoadingService(position_service, conversion_service, orientation_service)
-        
-        container.register_factory(IBeatLoadingService, beat_loading_service_factory)
+        # Note: BeatLoadingService was removed during SRP refactoring
+        # Its functionality was split into focused microservices
 
         # Register object pool service
         from application.services.core.object_pool_service import ObjectPoolService
@@ -356,7 +323,7 @@ def register_extracted_services(container) -> Result[bool, AppError]:
             from application.services.core.service_registration_manager import (
                 ServiceRegistrationManager,
             )
-            
+
             registration_manager = ServiceRegistrationManager()
             registration_manager.register_positioning_services(container)
             logger.debug("Successfully registered positioning services")

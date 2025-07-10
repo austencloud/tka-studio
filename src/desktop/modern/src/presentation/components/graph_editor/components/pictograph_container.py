@@ -4,7 +4,7 @@ from typing import Optional
 from application.services.core.pictograph_management_service import (
     PictographManagementService,
 )
-from domain.models.beat_models import BeatData
+from domain.models.beat_data import BeatData
 from domain.models.pictograph_models import PictographData
 from presentation.components.pictograph.pictograph_scene import PictographScene
 from PyQt6.QtCore import Qt, pyqtSignal

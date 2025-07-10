@@ -50,7 +50,7 @@ class TKAModernLauncherApp:
 
         self.app = QApplication(argv)
         print("✅ QApplication created")
-        
+
         self.app.setApplicationName("TKA Modern Launcher")
         self.app.setApplicationVersion("4.0.0")
         self.app.setOrganizationName("The Kinetic Constructor")
@@ -62,11 +62,11 @@ class TKAModernLauncherApp:
         print("🎨 Setting up modern theme...")
         self._setup_modern_theme()
         print("✅ Modern theme setup complete")
-        
+
         print("⚠️ Setting up error handling...")
         self._setup_error_handling()
         print("✅ Error handling setup complete")
-        
+
         print("🎉 TKA Modern Launcher initialization complete")
 
     def debug_window_state(self, label="Window State"):
@@ -126,20 +126,21 @@ class TKAModernLauncherApp:
             print("📦 Importing launcher components...")
             from ui.windows.launcher_window import TKALauncherWindow
             from integration.tka_integration import TKAIntegrationService
+
             print("✅ Launcher components imported successfully")
 
             print("🔗 Creating TKA integration service...")
             self.tka_integration = TKAIntegrationService()
             print("✅ TKA integration service created")
-            
+
             print("📺 Creating main launcher window...")
             self.main_window = TKALauncherWindow(self.tka_integration)
             print("✅ Main launcher window created")
-            
+
             print("🗗️ Setting up cleanup handler...")
             self.app.aboutToQuit.connect(self._cleanup)
             print("✅ Cleanup handler connected")
-            
+
             print("🎉 Launcher initialization successful!")
             return True
 
@@ -147,12 +148,14 @@ class TKAModernLauncherApp:
             print(f"❌ Failed to import launcher components: {e}")
             logger.error(f"Failed to import launcher components: {e}")
             import traceback
+
             traceback.print_exc()
             return False
         except Exception as e:
             print(f"❌ Failed to initialize launcher: {e}")
             logger.error(f"Failed to initialize launcher: {e}")
             import traceback
+
             traceback.print_exc()
             return False
 
@@ -165,21 +168,22 @@ class TKAModernLauncherApp:
                 print("❌ Launcher initialization failed")
                 logger.error("Launcher initialization failed")
                 return 1
-            
+
             print("✅ Launcher initialized successfully")
             print("🎨 Setting up initial display mode...")
             self._setup_initial_mode()
             print("✅ Initial mode setup complete")
-            
+
             print("📋 Starting Qt event loop...")
             result = self.app.exec()
             print(f"🏁 Qt event loop finished with result: {result}")
             return result
-            
+
         except Exception as e:
             print(f"❌ Fatal error in launcher run: {e}")
             logger.error(f"Fatal error in launcher: {e}")
             import traceback
+
             traceback.print_exc()
             return 1
 
@@ -230,33 +234,34 @@ class TKAModernLauncherApp:
 def main():
     """Main entry point for TKA Modern Launcher."""
     try:
-        print("="*60)
+        print("=" * 60)
         print("🚀 TKA MODERN LAUNCHER MAIN.PY STARTING")
-        print("="*60)
+        print("=" * 60)
         print(f"📁 Working directory: {os.getcwd()}")
         print(f"🐍 Python version: {sys.version}")
         print(f"📦 Python path: {sys.path[:3]}...")  # First 3 entries
         print(f"📄 Script file: {__file__}")
-        
+
         logger.info("🚀 TKA Modern Launcher starting...")
-        
+
         # Test PyQt6 import first
         print("🧪 Testing PyQt6 import...")
         from PyQt6.QtWidgets import QApplication
+
         print("✅ PyQt6 imported successfully")
-        
+
         launcher = TKAModernLauncherApp(sys.argv)
         print("📱 Launcher app created")
-        
+
         logger.info("📱 Launcher app created, running...")
         print("🏃 Starting launcher app.run()...")
-        
+
         exit_code = launcher.run()
-        
+
         print(f"🏁 Launcher finished with exit code: {exit_code}")
         logger.info(f"🏁 Launcher finished with exit code: {exit_code}")
         return exit_code
-        
+
     except KeyboardInterrupt:
         print("⚠️ Launcher interrupted by user")
         logger.info("Launcher interrupted by user")
@@ -265,6 +270,7 @@ def main():
         print(f"❌ Fatal launcher error: {e}")
         logger.error(f"Fatal launcher error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

@@ -9,7 +9,7 @@ from typing import Optional
 import logging
 
 # Import API models
-from .api_models import (
+from .models import (
     BeatAPI,
     SequenceAPI,
     CreateSequenceRequest,

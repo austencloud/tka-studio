@@ -14,14 +14,12 @@ Uses dependency injection and follows TKA's clean architecture.
 """
 
 import logging
-from typing import Dict, Any, Optional, Callable, Tuple
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
+from typing import Any, Callable, Dict, Optional, Tuple
 
-from core.interfaces.option_picker_services import (
-    IOptionPickerInitializationService,
-)
-from core.interfaces.core_services import ILayoutService
 from core.dependency_injection.di_container import DIContainer
+from core.interfaces.core_services import ILayoutService
+from core.interfaces.option_picker_services import IOptionPickerInitializationService
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +64,9 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
                 progress_callback("Creating widget factory", 0.15)
 
             # Create widget factory
-            from application.services.option_picker.option_picker_widget_factory import OptionPickerWidgetFactory
+            from application.services.option_picker.option_picker_widget_factory import (
+                OptionPickerWidgetFactory,
+            )
 
             widget_factory = OptionPickerWidgetFactory(container)
             components["widget_factory"] = widget_factory
@@ -78,15 +78,15 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             components["pool_manager"] = None
 
             if progress_callback:
-                progress_callback("Initializing beat data loader", 0.35)
+                progress_callback("Initializing option service", 0.35)
 
-            # Create beat data loader
-            from presentation.components.option_picker.services.data.beat_loader import (
-                BeatDataLoader,
+            # Create option service
+            from presentation.components.option_picker.services.data.option_service import (
+                OptionService,
             )
 
-            beat_loader = BeatDataLoader()
-            components["beat_loader"] = beat_loader
+            option_service = OptionService()
+            components["option_service"] = option_service
 
             if progress_callback:
                 progress_callback("Components initialized", 0.4)
@@ -111,7 +111,9 @@ class OptionPickerInitializationService(IOptionPickerInitializationService):
             Tuple of (main_widget, sections_container, sections_layout, filter_widget)
         """
         try:
-            from application.services.option_picker.option_picker_widget_factory import OptionPickerWidgetFactory
+            from application.services.option_picker.option_picker_widget_factory import (
+                OptionPickerWidgetFactory,
+            )
 
             widget_factory = OptionPickerWidgetFactory(container)
 
