@@ -12,8 +12,8 @@ from typing import Any, Dict, List, Optional
 # Import your existing architecture
 from core.application.application_factory import ApplicationFactory
 from core.interfaces.core_services import (
-    IPictographManagementService,
-    ISequenceManagementService,
+    IPictographManager,
+    ISequenceManager,
     IValidationService,
 )
 from domain.models import BeatData, Location, MotionData, MotionType, RotationDirection
@@ -65,15 +65,13 @@ class TKAAITestHelper:
     @property
     def sequence_service(self):
         if self._sequence_service is None:
-            self._sequence_service = self.container.resolve(ISequenceManagementService)
+            self._sequence_service = self.container.resolve(ISequenceManager)
         return self._sequence_service
 
     @property
     def pictograph_service(self):
         if self._pictograph_service is None:
-            self._pictograph_service = self.container.resolve(
-                IPictographManagementService
-            )
+            self._pictograph_service = self.container.resolve(IPictographManager)
         return self._pictograph_service
 
     @property
@@ -84,7 +82,7 @@ class TKAAITestHelper:
 
     def create_sequence(self, name: str, length: int = 8) -> AITestResult:
         """
-        Create a sequence using your existing SequenceManagementService.
+        Create a sequence using your existing SequenceManager.
 
         Returns simple result format for AI agents.
         """
@@ -222,7 +220,7 @@ class TKAAITestHelper:
         """
         Test your existing command pattern with undo/redo.
 
-        Uses your SequenceManagementService's add_beat_with_undo method.
+        Uses your SequenceManager's add_beat_with_undo method.
         """
         import time
 

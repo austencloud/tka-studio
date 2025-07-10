@@ -8,8 +8,8 @@ while handling Qt-specific concerns (signals, UI state).
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from application.services.graph_editor.graph_editor_state_service import (
-    GraphEditorStateService,
+from application.services.graph_editor.graph_editor_state_manager import (
+    GraphEditorStateManager as GraphEditorStateService,
 )
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData

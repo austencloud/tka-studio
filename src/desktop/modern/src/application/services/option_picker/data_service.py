@@ -42,9 +42,11 @@ class OptionPickerDataService(IOptionPickerDataService):
     def _initialize_dependencies(self):
         """Initialize required dependencies."""
         try:
-            from application.services.option_picker.option_service import OptionService
+            from application.services.option_picker.option_provider import (
+                OptionProvider,
+            )
 
-            self._option_service = OptionService()
+            self._option_service = OptionProvider()
             logger.debug("Option service initialized")
         except Exception as e:
             logger.error(f"Failed to initialize option service: {e}")

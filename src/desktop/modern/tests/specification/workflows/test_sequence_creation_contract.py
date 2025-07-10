@@ -13,8 +13,9 @@ Defines behavioral contracts for sequence creation workflows.
 """
 
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -103,11 +104,11 @@ class TestSequenceCreationWorkflowContract:
         """
         try:
             from application.services.sequences.sequence_management_service import (
-                SequenceManagementService,
+                SequenceManager,
             )
 
             # Create service
-            service = SequenceManagementService()
+            service = SequenceManager()
 
             # Test sequence creation through service
             sequence = service.create_sequence("Service Test", 2)
@@ -173,11 +174,11 @@ class TestSequenceCreationWorkflowContract:
         - Modifications preserve sequence integrity
         """
         try:
+            from application.services.sequences.sequence_management_service import (
+                SequenceManager,
+            )
             from domain.models.beat_models import BeatData
             from domain.models.sequence_models import SequenceData
-            from application.services.sequences.sequence_management_service import (
-                SequenceManagementService,
-            )
 
             # Create initial sequence
             initial_beat = BeatData(beat_number=1, letter="A")
@@ -193,7 +194,7 @@ class TestSequenceCreationWorkflowContract:
             assert sequence.word == "A"
 
             # Test adding beat through service
-            service = SequenceManagementService()
+            service = SequenceManager()
             new_beat = BeatData(beat_number=2, letter="B")
 
             # Add beat to sequence

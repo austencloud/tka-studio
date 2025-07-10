@@ -7,7 +7,9 @@ TKA is NOT a simple application. It follows enterprise-grade Clean Architecture 
 ## 📐 CLEAN ARCHITECTURE LAYERS
 
 ### Core Layer (`src/desktop/modern/src/core/`)
+
 **Purpose**: Framework-agnostic business rules and contracts
+
 - **Dependency Injection**: `di_container.py` - Sophisticated DI with lifecycle management
 - **Service Interfaces**: `interfaces/` - Abstract contracts for all services
 - **Types**: `types/` - Framework-agnostic geometry and data types
@@ -15,7 +17,9 @@ TKA is NOT a simple application. It follows enterprise-grade Clean Architecture 
 - **Exceptions**: Structured error handling
 
 ### Domain Layer (`src/desktop/modern/src/domain/`)
+
 **Purpose**: Pure business logic with immutable data models
+
 - **Models**: `models/` - Complex immutable dataclasses
   - `BeatData` - Motion data with validation
   - `SequenceData` - Immutable sequence with functional operations
@@ -25,35 +29,44 @@ TKA is NOT a simple application. It follows enterprise-grade Clean Architecture 
 - **Repositories**: Data access contracts
 
 ### Application Layer (`src/desktop/modern/src/application/`)
+
 **Purpose**: Use case orchestration and service implementations
+
 - **Services**: Sophisticated service implementations
-  - `SequenceManagementService` - Command pattern with undo/redo
+  - `SequenceManager` - Command pattern with undo/redo
   - `PictographManagementService` - Dataset management and CSV integration
   - Layout, positioning, validation services
 - **Orchestrators**: Complex workflow coordination
 
 ### Infrastructure Layer (`src/desktop/modern/src/infrastructure/`)
+
 **Purpose**: External concerns and framework integration
+
 - **Storage**: File system and data persistence
 - **API**: External service integration
 - **Configuration**: Environment-specific settings
 - **Test Doubles**: Mock implementations for testing
 
 ### Presentation Layer (`src/desktop/modern/src/presentation/`)
+
 **Purpose**: UI components with clean separation
+
 - **Components**: PyQt6 widgets with dependency injection
 - **Factories**: UI construction and service wiring
 
 ## 🔧 DEPENDENCY INJECTION ARCHITECTURE
 
 ### Container System
+
 The DI container is sophisticated with:
+
 - **Service Resolution**: Automatic constructor injection
 - **Lifecycle Management**: Singleton and transient scopes
 - **Validation**: Interface compliance checking
 - **Performance Monitoring**: Resolution time tracking
 
 ### Application Factory Pattern
+
 ```python
 from core.application.application_factory import ApplicationFactory
 
@@ -64,21 +77,24 @@ production_app = ApplicationFactory.create_production_app() # Full application
 ```
 
 ### Service Registration
+
 ```python
 # Services are registered with interfaces
-container.register_singleton(ISequenceManagementService, SequenceManagementService)
+container.register_singleton(ISequenceManager, SequenceManager)
 container.register_transient(IPictographFactory, PictographFactory)
 
 # Resolution is automatic with dependency injection
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 ```
 
 ## 📊 IMMUTABLE DATA MODEL PHILOSOPHY
 
 ### Core Principle
+
 ALL data models are immutable frozen dataclasses that return new instances on modification.
 
 ### Example Pattern
+
 ```python
 # CORRECT: Immutable operations
 beat = BeatData(letter="A", duration=1.0)
@@ -92,6 +108,7 @@ beat.duration = 2.0  # Error - frozen dataclass
 ```
 
 ### Why Immutability?
+
 - **Thread Safety**: No race conditions
 - **Predictable State**: No unexpected mutations
 - **Undo/Redo**: Easy state restoration
@@ -100,11 +117,12 @@ beat.duration = 2.0  # Error - frozen dataclass
 ## 🎯 COMMAND PATTERN INTEGRATION
 
 ### Existing Command System
-TKA already has a sophisticated command pattern in `SequenceManagementService`:
+
+TKA already has a sophisticated command pattern in `SequenceManager`:
 
 ```python
 # AI agents should use existing commands, not create new ones
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 
 # Commands with undo/redo
 updated_sequence = service.add_beat_with_undo(beat_data, position)
@@ -113,34 +131,38 @@ service.undo_last_operation()
 ```
 
 ### Event-Driven Architecture
+
 Commands publish events:
+
 ```python
 # Events are automatically published
 service.create_sequence_with_events(name, length)
 # Publishes: SequenceCreatedEvent
 
-service.add_beat_with_undo(beat, position)  
+service.add_beat_with_undo(beat, position)
 # Publishes: BeatAddedEvent
 ```
 
 ## 🧪 TESTING ARCHITECTURE
 
 ### Test Lifecycle Categories
+
 - **Specification**: Permanent behavioral contracts (NEVER DELETE)
 - **Regression**: Bug prevention tests (keep until feature removed)
 - **Scaffolding**: Temporary development aids (DELETE after purpose achieved)
 
 ### Test Fixtures
+
 ```python
 # Sophisticated fixtures available
 @pytest.fixture
 def configured_di_container():
     """DI container with services configured"""
-    
+
 @pytest.fixture
 def sample_sequence_data():
     """Real SequenceData with BeatData"""
-    
+
 @pytest.fixture
 def sample_pictograph_data():
     """PictographData with ArrowData and MotionData"""
@@ -149,6 +171,7 @@ def sample_pictograph_data():
 ## 🔄 DATA FLOW ARCHITECTURE
 
 ### Request Flow
+
 1. **UI Component** (Presentation) receives user input
 2. **Service Interface** (Core) defines contract
 3. **Service Implementation** (Application) executes business logic
@@ -157,10 +180,11 @@ def sample_pictograph_data():
 6. **Events** (Core) notify interested parties
 
 ### Example Flow
+
 ```
-User clicks "Create Sequence" 
+User clicks "Create Sequence"
 → UI Component calls service
-→ SequenceManagementService.create_sequence()
+→ SequenceManager.create_sequence()
 → Creates SequenceData domain model
 → Validates with domain rules
 → Persists via repository
@@ -171,17 +195,19 @@ User clicks "Create Sequence"
 ## 📋 INTEGRATION PATTERNS
 
 ### Service Communication
+
 ```python
 # Services communicate through interfaces, not implementations
 class MyService:
-    def __init__(self, 
-                 sequence_service: ISequenceManagementService,
+    def __init__(self,
+                 sequence_service: ISequenceManager,
                  pictograph_service: IPictographManagementService):
         self._sequence_service = sequence_service
         self._pictograph_service = pictograph_service
 ```
 
 ### Cross-Platform Sharing
+
 ```python
 # Shared types between desktop and web
 from tka_types import MotionType, SharedSequenceType
@@ -191,6 +217,7 @@ from tka_constants import ENDPOINTS, API_BASE_URL
 ## 🚨 ARCHITECTURE VIOLATIONS TO AVOID
 
 ### NEVER:
+
 - Create services directly (use DI container)
 - Mutate domain objects (use .update() methods)
 - Put business logic in UI components
@@ -199,6 +226,7 @@ from tka_constants import ENDPOINTS, API_BASE_URL
 - Violate layer boundaries (e.g., Domain calling Infrastructure)
 
 ### ALWAYS:
+
 - Use dependency injection for service creation
 - Work with immutable domain models
 - Delegate business logic to services
@@ -209,16 +237,19 @@ from tka_constants import ENDPOINTS, API_BASE_URL
 ## 📈 PERFORMANCE CONSIDERATIONS
 
 ### DI Container
+
 - Services are lazily resolved
 - Singletons are cached efficiently
 - Resolution performance is monitored
 
 ### Domain Models
+
 - Immutable operations are optimized
 - Structural sharing where possible
 - Validation is cached
 
 ### Testing
+
 - Test services execute in microseconds
 - Complex setup is handled by fixtures
 - Parallel test execution supported
@@ -228,6 +259,7 @@ from tka_constants import ENDPOINTS, API_BASE_URL
 ## 🎯 KEY TAKEAWAY FOR AI AGENTS
 
 TKA is a sophisticated, enterprise-grade application with:
+
 - Clean Architecture boundaries
 - Immutable domain models
 - Sophisticated dependency injection

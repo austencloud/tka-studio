@@ -185,9 +185,6 @@ class ConstructTabLayoutManager:
             logger.error(f"Failed to create graph editor: {e}", exc_info=True)
         return widget
 
-    def _on_graph_beat_modified(self, beat_index: int, beat_data):
-        print(f"🎵 Graph editor: Beat {beat_index} modified: {beat_data}")
-
     def transition_to_option_picker(self):
         if self.picker_stack:
             self.picker_stack.setCurrentIndex(1)

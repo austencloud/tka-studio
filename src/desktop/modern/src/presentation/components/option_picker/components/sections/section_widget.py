@@ -16,7 +16,9 @@ from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtWidgets import QGroupBox, QVBoxLayout
 
 if TYPE_CHECKING:
-    from application.services.layout.section_layout_service import SectionLayoutService
+    from application.services.option_picker.section_layout_manager import (
+        SectionLayoutManager,
+    )
 
 
 class OptionPickerSection(QGroupBox):
@@ -28,7 +30,7 @@ class OptionPickerSection(QGroupBox):
     def __init__(
         self,
         letter_type: str,
-        layout_service: "SectionLayoutService" = None,
+        layout_service: "SectionLayoutManager" = None,
         parent=None,
         option_picker_size_provider: Callable[[], QSize] = None,
     ):
@@ -42,8 +44,8 @@ class OptionPickerSection(QGroupBox):
         ]
 
         # Initialize layout manager with service
-        from application.services.layout.section_layout_service import (
-            SectionLayoutService,
+        from application.services.option_picker.section_layout_manager import (
+            SectionLayoutManager,
         )
         from presentation.components.option_picker.components.sections.section_layout_manager import (
             SectionLayoutManager,
@@ -51,7 +53,7 @@ class OptionPickerSection(QGroupBox):
 
         # Use provided service or create default instance
         if layout_service is None:
-            layout_service = SectionLayoutService()
+            layout_service = SectionLayoutManager()
 
         self.layout_manager = SectionLayoutManager(self, layout_service)
 

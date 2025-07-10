@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List
 from enum import Enum
+from typing import Any, Dict, List
 
 
 class PropType(Enum):
@@ -27,7 +27,7 @@ class IUserProfileService(ABC):
         pass
 
 
-class IPropTypeService(ABC):
+class IPropTypeSettingsManager(ABC):
     @abstractmethod
     def get_current_prop_type(self) -> PropType:
         pass
@@ -41,7 +41,7 @@ class IPropTypeService(ABC):
         pass
 
 
-class IVisibilityService(ABC):
+class IVisibilitySettingsManager(ABC):
     @abstractmethod
     def get_glyph_visibility(self, glyph_name: str) -> bool:
         pass
@@ -69,7 +69,7 @@ class IBeatLayoutService(ABC):
         pass
 
 
-class IImageExportService(ABC):
+class IImageExporter(ABC):
     @abstractmethod
     def get_export_option(self, option: str) -> Any:
         pass

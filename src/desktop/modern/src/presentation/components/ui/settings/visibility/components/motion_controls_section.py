@@ -8,15 +8,14 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 import logging
 from typing import Dict
 
+from application.services.pictograph.visibility_state_manager import (
+    VisibilityStateManager,
+)
+from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+from presentation.components.ui.settings.components.motion_toggle import MotionToggle
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel
-
-from core.interfaces.tab_settings_interfaces import IVisibilityService
-from application.services.settings.visibility_state_manager import (
-    ModernVisibilityStateManager,
-)
-from presentation.components.ui.settings.components.motion_toggle import MotionToggle
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ logger = logging.getLogger(__name__)
 class MotionControlsSection(QFrame):
     """
     Motion controls section with validation and glassmorphism styling.
-    
+
     Handles motion visibility toggles, validation logic, and user feedback.
     Follows TKA single-responsibility principle and dependency injection patterns.
     """
@@ -33,27 +32,27 @@ class MotionControlsSection(QFrame):
 
     def __init__(
         self,
-        visibility_service: IVisibilityService,
-        state_manager: ModernVisibilityStateManager,
+        visibility_service: IVisibilitySettingsManager,
+        state_manager: VisibilityStateManager,
         parent=None,
     ):
         """
         Initialize motion controls section.
-        
+
         Args:
             visibility_service: Service for visibility state management
             state_manager: State manager for validation and updates
             parent: Parent widget
         """
         super().__init__(parent)
-        
+
         # Service dependencies
         self.visibility_service = visibility_service
         self.state_manager = state_manager
-        
+
         # UI components
         self.motion_toggles: Dict[str, MotionToggle] = {}
-        
+
         self._setup_ui()
         self._setup_connections()
         self._load_initial_settings()
@@ -106,7 +105,7 @@ class MotionControlsSection(QFrame):
     def _on_motion_visibility_changed(self, color: str, visible: bool):
         """
         Handle motion visibility changes with validation.
-        
+
         Args:
             color: Motion color ("blue" or "red")
             visible: Whether the motion should be visible
@@ -137,12 +136,12 @@ class MotionControlsSection(QFrame):
     def get_motion_states(self) -> Dict[str, bool]:
         """
         Get current motion visibility states.
-        
+
         Returns:
             Dictionary mapping motion colors to visibility states
         """
         return {
-            color: toggle.get_is_active() 
+            color: toggle.get_is_active()
             for color, toggle in self.motion_toggles.items()
         }
 

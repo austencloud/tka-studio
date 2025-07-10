@@ -17,9 +17,7 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 from core.application.application_factory import ApplicationFactory
 from PyQt6.QtCore import QTimer
 from PyQt6.QtTest import QTest
@@ -51,7 +49,7 @@ class UITransitionDebugger:
 
             # Create production container and services
             self.container = ApplicationFactory.create_production_app()
-            self.persistence_service = SequencePersistenceService()
+            self.persistence_service = SequencePersister()
 
             print("✅ [DEBUG] Test environment setup complete")
             return True

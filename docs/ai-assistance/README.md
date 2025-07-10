@@ -13,6 +13,7 @@
 Read these documents IN ORDER for complete understanding:
 
 ### Core Understanding (REQUIRED)
+
 1. **[Quick Start Guide](./00-quick-start.md)** - **START HERE FIRST**
    - 60-second TKA overview
    - Critical do's and don'ts
@@ -32,9 +33,10 @@ Read these documents IN ORDER for complete understanding:
    - Model relationships and interactions
 
 ### Service Layer (CRITICAL)
+
 4. **[Service Layer Guide](./03-service-layer.md)** - **MUST READ**
    - Existing service interfaces and implementations
-   - `SequenceManagementService` with command pattern
+   - `SequenceManager` with command pattern
    - `PictographManagementService` with dataset integration
    - Dependency injection container usage
 
@@ -45,6 +47,7 @@ Read these documents IN ORDER for complete understanding:
    - Performance testing guidelines
 
 ### Best Practices (IMPORTANT)
+
 6. **[Development Patterns](./05-development-patterns.md)** - **FOLLOW THESE**
    - Code organization standards
    - Import patterns and conventions
@@ -58,6 +61,7 @@ Read these documents IN ORDER for complete understanding:
    - Integration mistakes
 
 ### Practical Tools
+
 8. **[Validation Scripts](./scripts/)** - **TEST YOUR UNDERSTANDING**
    - Architecture validation script
    - Service integration test
@@ -73,6 +77,7 @@ Read these documents IN ORDER for complete understanding:
 ## 🚨 CRITICAL WARNINGS
 
 ### NEVER DO:
+
 - ❌ Recreate existing command patterns
 - ❌ Create competing service implementations
 - ❌ Ignore immutable domain model patterns
@@ -81,6 +86,7 @@ Read these documents IN ORDER for complete understanding:
 - ❌ Create UI dependencies in business logic
 
 ### ALWAYS DO:
+
 - ✅ Use `ApplicationFactory` for different app modes
 - ✅ Leverage existing service interfaces
 - ✅ Work with immutable domain models correctly
@@ -104,11 +110,13 @@ assert result['respects_immutability'] == True
 ## 🔗 INTEGRATION WITH YOUR WORKFLOW
 
 ### For AI Agent Sessions:
+
 ```
 PROMPT: "Before we start, please read the TKA AI assistance documentation at docs/ai-assistance/00-quick-start.md to understand the sophisticated architecture."
 ```
 
 ### For Development Tasks:
+
 ```python
 # Always start with this pattern
 from core.application.application_factory import ApplicationFactory
@@ -123,6 +131,7 @@ assert result.success, "TKA system not working correctly"
 ## 📋 DOCUMENTATION MAINTENANCE
 
 This documentation is actively maintained and should be:
+
 - ✅ Updated when architecture changes
 - ✅ Referenced in all AI agent interactions
 - ✅ Used as the source of truth for TKA patterns
@@ -131,6 +140,7 @@ This documentation is actively maintained and should be:
 ## 🎯 SUCCESS METRICS
 
 After reading this documentation, you should be able to:
+
 - ✅ Use `ApplicationFactory` to create test applications
 - ✅ Resolve services via dependency injection
 - ✅ Work with immutable domain models (`BeatData`, `SequenceData`)

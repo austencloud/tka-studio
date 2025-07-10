@@ -15,11 +15,9 @@ def test_imports():
         print("🔧 Testing new service import paths...")
 
         # Test sequence services
-        from application.services.sequences.sequence_persistence_service import (
-            SequencePersistenceService,
-        )
+        from application.services.sequences.persister import SequencePersister
 
-        print("✅ SequencePersistenceService import OK")
+        print("✅ SequencePersister import OK")
 
         from application.services.sequences.sequence_loading_service import (
             SequenceLoadingService,
@@ -34,7 +32,7 @@ def test_imports():
 
         print("✅ PictographManagementService import OK")
 
-        from application.services.pictographs.application_orchestrator import (
+        from application.services.core.application_orchestrator import (
             ApplicationOrchestrator,
         )
 

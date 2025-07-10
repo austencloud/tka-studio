@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional
 
 from core.interfaces.core_services import ILayoutService
 from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QWidget
@@ -151,11 +152,22 @@ class WorkbenchBeatFrameSection(QWidget):
         self._update_button_states()
         print("✅ [BEAT_FRAME_SECTION] set_sequence() completed")
 
-    def set_start_position(self, start_position_data: BeatData):
-        """Set the start position"""
+    def set_start_position(
+        self,
+        start_position_data: BeatData,
+        pictograph_data: Optional["PictographData"] = None,
+    ):
+        """
+        Set the start position with optional separate pictograph data.
+
+        Args:
+            start_position_data: Beat context data (beat number, duration, metadata)
+            pictograph_data: Optional pictograph data for direct rendering.
+                           If None, will be reconstructed from beat_data (legacy mode)
+        """
         self._start_position_data = start_position_data
         if self._beat_frame:
-            self._beat_frame.set_start_position(start_position_data)
+            self._beat_frame.set_start_position(start_position_data, pictograph_data)
 
     def initialize_cleared_start_position(self):
         """Initialize start position view in cleared state (shows START text only)"""

@@ -11,9 +11,7 @@ the principle that pictographs should be standalone without beat-specific fields
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
-from application.services.pictographs.pictograph_management_service import (
-    PictographManagementService,
-)
+from application.services.pictograph.pictograph_manager import PictographManager
 from domain.models import (
     GlyphData,
     Location,
@@ -37,7 +35,7 @@ class PositionMatchingService:
 
     def __init__(self):
         """Initialize position matching service with Modern's native dataset."""
-        self.pictograph_management_service = PictographManagementService()
+        self.pictograph_management_service = PictographManager()
 
         self.pictograph_dataset: Optional[Dict[str, List[Dict[str, Any]]]] = None
         self._load_dataset()

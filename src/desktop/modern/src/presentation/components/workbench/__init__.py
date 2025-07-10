@@ -5,37 +5,29 @@ Modern sequence workbench with modern architecture.
 """
 
 from presentation.components.workbench.sequence_beat_frame import (
-    SequenceBeatFrame,
+    BeatSelector,
     BeatView,
+    SequenceBeatFrame,
     StartPositionView,
-    BeatSelectionManager,
 )
 
-from .workbench import (
-    SequenceWorkbench,
-)
-
-from .indicator_section import WorkbenchIndicatorSection
 from .beat_frame_section import WorkbenchBeatFrameSection
-from .event_controller import WorkbenchEventController
-from .button_interface import (
-    WorkbenchButtonInterfaceAdapter,
-    IWorkbenchButtonInterface,
-    WorkbenchButtonSignals,
-    ButtonOperationResult,
-)
 
 # Legacy compatibility
-from .button_interface import (
-    WorkbenchButtonInterfaceAdapter as ButtonInterface,
-)
+from .button_interface import ButtonOperationResult, IWorkbenchButtonInterface
+from .button_interface import WorkbenchButtonInterfaceAdapter
+from .button_interface import WorkbenchButtonInterfaceAdapter as ButtonInterface
+from .button_interface import WorkbenchButtonSignals
+from .event_controller import WorkbenchEventController
+from .indicator_section import WorkbenchIndicatorSection
+from .workbench import SequenceWorkbench
 
 __all__ = [
     "SequenceWorkbench",
     "SequenceBeatFrame",
     "BeatView",
     "StartPositionView",
-    "BeatSelectionManager",
+    "BeatSelector",
     # Core components
     "WorkbenchIndicatorSection",
     "WorkbenchBeatFrameSection",

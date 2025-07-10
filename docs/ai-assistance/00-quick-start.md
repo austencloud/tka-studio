@@ -18,20 +18,22 @@ TKA is **NOT** a simple application. It's a sophisticated system with:
 ## 🚨 CRITICAL UNDERSTANDING
 
 ### YOU MUST NOT:
+
 ❌ Recreate existing command patterns  
 ❌ Create competing service implementations  
 ❌ Mock complex domain objects  
 ❌ Violate immutability contracts  
 ❌ Put business logic in UI components  
-❌ Bypass dependency injection  
+❌ Bypass dependency injection
 
 ### YOU MUST:
+
 ✅ Use `ApplicationFactory` for different app modes  
 ✅ Leverage existing sophisticated services  
 ✅ Work with immutable domain models correctly  
 ✅ Use `TKAAITestHelper` for testing  
 ✅ Follow existing architectural patterns  
-✅ Respect clean architecture boundaries  
+✅ Respect clean architecture boundaries
 
 ## ⚡ INSTANT START PATTERN
 
@@ -42,7 +44,7 @@ container = ApplicationFactory.create_test_app()
 print(f"Available services: {list(container.get_registrations().keys())}")
 
 # 2. Use existing sophisticated services
-sequence_service = container.resolve(ISequenceManagementService)
+sequence_service = container.resolve(ISequenceManager)
 pictograph_service = container.resolve(IPictographManagementService)
 
 # 3. Work with real domain models
@@ -66,7 +68,7 @@ assert result.success
                       │ Depends on
 ┌─────────────────────▼───────────────────────────────────┐
 │                   APPLICATION                            │
-│  (SequenceManagementService, PictographManagementService)│
+│  (SequenceManager, PictographManagementService)│
 └─────────────────────┬───────────────────────────────────┘
                       │ Uses
 ┌─────────────────────▼───────────────────────────────────┐
@@ -82,10 +84,11 @@ assert result.success
 
 ## 🎯 ESSENTIAL SERVICES YOU MUST KNOW
 
-### `ISequenceManagementService` - Already Has Command Pattern!
+### `ISequenceManager` - Already Has Command Pattern!
+
 ```python
 # Don't recreate this - it exists!
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 
 # Create sequences
 sequence = service.create_sequence("Test", 8)
@@ -97,6 +100,7 @@ service.undo_last_operation()
 ```
 
 ### `IPictographManagementService` - CSV Dataset Integration!
+
 ```python
 # Sophisticated dataset management exists
 service = container.resolve(IPictographManagementService)
@@ -112,6 +116,7 @@ pictograph = service.create_from_beat(beat_data)
 ## 🧪 ESSENTIAL TESTING PATTERNS
 
 ### Primary Testing Interface
+
 ```python
 # USE THIS - don't create manual test setup
 from core.testing.ai_agent_helpers import TKAAITestHelper
@@ -129,6 +134,7 @@ assert result.metadata['success_rate'] > 0.8
 ```
 
 ### One-Line Testing Functions
+
 ```python
 # For quick validation
 from core.testing.ai_agent_helpers import (
@@ -145,6 +151,7 @@ assert result['overall_success']
 ## 📊 ESSENTIAL DOMAIN MODEL PATTERNS
 
 ### Immutable Operations (CRITICAL)
+
 ```python
 # CORRECT: Returns new instances
 beat = BeatData(beat_number=1, letter="A")
@@ -158,6 +165,7 @@ beat.letter = "B"  # Exception - frozen dataclass
 ```
 
 ### Real Domain Objects
+
 ```python
 # CORRECT: Complete, valid objects
 from domain.models.core_models import MotionType, Location, RotationDirection
@@ -180,18 +188,19 @@ beat = BeatData(
 ## 🎯 TESTING LIFECYCLE ESSENTIALS
 
 ### Test Categories (CRITICAL)
+
 ```python
 # SPECIFICATION: Permanent contracts (NEVER DELETE)
 @pytest.mark.specification
 @pytest.mark.critical
 def test_sequence_immutability_contract():
     """PERMANENT: Sequence operations must return new instances"""
-    
+
 # REGRESSION: Bug prevention (keep until feature removed)
 @pytest.mark.regression
 def test_bug_fix_123():
     """REGRESSION: Prevent specific bug from reoccurring"""
-    
+
 # SCAFFOLDING: Temporary debugging (DELETE after purpose)
 @pytest.mark.scaffolding
 def test_debug_performance():
@@ -204,6 +213,7 @@ def test_debug_performance():
 ## 🚀 PERFORMANCE ESSENTIALS
 
 ### Fast Testing Pattern
+
 ```python
 # Fast test services (microsecond execution)
 container = ApplicationFactory.create_test_app()
@@ -213,12 +223,13 @@ container = ApplicationFactory.create_production_app()
 ```
 
 ### Service Caching
+
 ```python
 # Cache services, don't resolve repeatedly
 class Controller:
     def __init__(self, container: DIContainer):
-        self._sequence_service = container.resolve(ISequenceManagementService)
-    
+        self._sequence_service = container.resolve(ISequenceManager)
+
     def handle_request(self):
         self._sequence_service.create_sequence("Fast", 8)  # Cached!
 ```
@@ -228,24 +239,28 @@ class Controller:
 Before writing ANY code, verify:
 
 ### ✅ ARCHITECTURE CHECK:
+
 - [ ] Am I using `ApplicationFactory.create_test_app()`?
 - [ ] Am I resolving services via DI container?
 - [ ] Am I working with immutable domain models?
 - [ ] Am I leveraging existing command pattern?
 
 ### ✅ TESTING CHECK:
+
 - [ ] Am I using `TKAAITestHelper`?
 - [ ] Am I using existing fixtures?
 - [ ] Am I testing contracts, not implementation?
 - [ ] Am I using appropriate test lifecycle?
 
 ### ✅ DOMAIN CHECK:
+
 - [ ] Am I creating complete domain objects?
 - [ ] Am I using proper enum values?
 - [ ] Am I respecting immutability?
 - [ ] Am I using validation?
 
 ### ✅ AVOID CHECK:
+
 - [ ] Am I NOT recreating existing functionality?
 - [ ] Am I NOT mocking complex domain objects?
 - [ ] Am I NOT violating layer boundaries?
@@ -264,7 +279,7 @@ Before writing ANY code, verify:
 After reading this guide, explore:
 
 1. **[Architecture Overview](./01-architecture-overview.md)** - Clean architecture layers
-2. **[Domain Models Guide](./02-domain-models.md)** - Immutable dataclass patterns  
+2. **[Domain Models Guide](./02-domain-models.md)** - Immutable dataclass patterns
 3. **[Service Layer Guide](./03-service-layer.md)** - Existing sophisticated services
 4. **[Testing Protocols](./04-testing-protocols.md)** - Testing infrastructure
 5. **[Development Patterns](./05-development-patterns.md)** - Coding conventions

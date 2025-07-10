@@ -69,7 +69,7 @@ class ILayoutService(ABC):
         """Calculate positions for UI components."""
 
 
-class ISettingsService(ABC):
+class ISettingsCoordinator(ABC):
     """Interface for settings management."""
 
     @abstractmethod
@@ -161,7 +161,7 @@ class IArrowManagementService(ABC):
 # - IMotionOrientationService for orientation
 
 
-class ISequenceManagementService(ABC):
+class ISequenceManager(ABC):
     """Interface for unified sequence management operations."""
 
     @abstractmethod
@@ -185,7 +185,7 @@ class ISequenceManagementService(ABC):
         """Apply workbench transformation to sequence."""
 
 
-class IPictographManagementService(ABC):
+class IPictographManager(ABC):
     """Interface for unified pictograph management operations."""
 
     @abstractmethod
@@ -201,7 +201,7 @@ class IPictographManagementService(ABC):
         """Search pictograph dataset with query."""
 
 
-class IUIStateManagementService(ABC):
+class IUIStateManager(ABC):
     """Interface for unified UI state management operations."""
 
     @abstractmethod
@@ -221,7 +221,7 @@ class IUIStateManagementService(ABC):
         """Toggle graph editor visibility."""
 
 
-class IPictographContextService(ABC):
+class IPictographContextDetector(ABC):
     """Interface for pictograph context detection and management."""
 
     @abstractmethod
@@ -241,7 +241,7 @@ class IPictographContextService(ABC):
         """Determine context from a pictograph scene."""
 
 
-class IPictographBorderService(ABC):
+class IPictographBorderManager(ABC):
     """Interface for pictograph border management operations."""
 
     @abstractmethod

@@ -5,23 +5,22 @@ This tab provides functionality to export pictographs with turn configurations,
 following TKA's modern clean architecture and glassmorphism design.
 """
 
+from core.interfaces.core_services import IUIStateManager
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QCheckBox,
+    QComboBox,
+    QDoubleSpinBox,
+    QGridLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QCheckBox,
-    QComboBox,
     QSpinBox,
-    QDoubleSpinBox,
-    QGroupBox,
-    QGridLayout,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont, QCursor
-
-from core.interfaces.core_services import IUIStateManagementService
 
 
 class CodexExporterTab(QWidget):
@@ -29,7 +28,7 @@ class CodexExporterTab(QWidget):
 
     export_requested = pyqtSignal(dict)  # Emits export configuration
 
-    def __init__(self, ui_state_service: IUIStateManagementService, parent=None):
+    def __init__(self, ui_state_service: IUIStateManager, parent=None):
         super().__init__(parent)
         self.ui_state_service = ui_state_service
         self._setup_ui()

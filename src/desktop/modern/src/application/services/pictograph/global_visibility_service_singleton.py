@@ -3,15 +3,16 @@ Global singleton for the GlobalVisibilityService to ensure all components use th
 """
 
 from typing import Optional
+
 from application.services.pictograph.global_visibility_service import (
-    GlobalVisibilityService,
+    PictographVisibilityManager,
 )
 
 # Global singleton instance
-_global_visibility_service_instance: Optional[GlobalVisibilityService] = None
+_global_visibility_service_instance: Optional[PictographVisibilityManager] = None
 
 
-def get_global_visibility_service() -> GlobalVisibilityService:
+def get_global_visibility_service() -> PictographVisibilityManager:
     """
     Get the global singleton instance of GlobalVisibilityService.
 
@@ -24,7 +25,7 @@ def get_global_visibility_service() -> GlobalVisibilityService:
     global _global_visibility_service_instance
 
     if _global_visibility_service_instance is None:
-        _global_visibility_service_instance = GlobalVisibilityService()
+        _global_visibility_service_instance = PictographVisibilityManager()
 
     return _global_visibility_service_instance
 

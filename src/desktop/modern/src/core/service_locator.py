@@ -48,7 +48,7 @@ def initialize_services():
         logger.info("✅ Command processor initialized")
 
         # Initialize sequence state manager (import here to avoid circular imports)
-        from application.services.sequences.sequence_state_manager import (
+        from application.services.sequence.sequence_state_manager import (
             SequenceStateManager,
         )
 
@@ -108,11 +108,9 @@ def get_data_conversion_service():
     if _data_conversion_service is None:
         # Lazy initialize data conversion service
         try:
-            from application.services.data.data_conversion_service import (
-                DataConversionService,
-            )
+            from application.services.data.data_converter import DataConverter
 
-            _data_conversion_service = DataConversionService()
+            _data_conversion_service = DataConverter()
             logger.info("✅ Data conversion service initialized")
         except Exception as e:
             logger.error(f"❌ Failed to initialize data conversion service: {e}")

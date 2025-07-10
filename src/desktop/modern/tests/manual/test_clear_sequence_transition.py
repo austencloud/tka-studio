@@ -103,11 +103,9 @@ def test_persistence_consistency():
     print("\n🧪 Testing persistence consistency...")
 
     try:
-        from application.services.sequences.sequence_persistence_service import (
-            SequencePersistenceService,
-        )
+        from application.services.sequences.persister import SequencePersister
 
-        service = SequencePersistenceService()
+        service = SequencePersister()
 
         # Get default sequence
         default_seq = service.get_default_sequence()

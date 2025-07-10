@@ -45,8 +45,8 @@ This strategic plan provides a detailed roadmap to elevate the TKA Desktop moder
 ```python
 # Standard TKA pattern to enforce:
 from domain.models.core_models import BeatData
-from application.services.core.sequence_management_service import SequenceManagementService
-from core.interfaces.core_services import ISequenceManagementService
+from application.services.core.sequence_management_service import SequenceManager
+from core.interfaces.core_services import ISequenceManager
 
 # Internal module imports (allowed):
 from .component_base import ViewableComponentBase

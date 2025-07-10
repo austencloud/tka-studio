@@ -5,34 +5,28 @@ Streamlined coordinator that manages decomposed visibility components following
 TKA clean architecture principles. Reduced from 631 lines to focused coordination.
 """
 
-from typing import Dict, Optional, Any
 import logging
+from typing import Any, Dict, Optional
 
-from core.interfaces.tab_settings_interfaces import IVisibilityService
-from PyQt6.QtCore import pyqtSignal, QTimer
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QHBoxLayout,
-)
-
-from application.services.settings.visibility_state_manager import (
-    ModernVisibilityStateManager,
-)
 from application.services.pictograph.global_visibility_service import (
-    GlobalVisibilityService,
+    PictographVisibilityManager,
 )
 from application.services.pictograph.global_visibility_service_singleton import (
     get_global_visibility_service,
 )
-from presentation.components.ui.settings.visibility.components import (
-    MotionControlsSection,
-    ElementVisibilitySection,
-    VisibilityPreviewSection,
-    DependencyWarning,
+from application.services.pictograph.visibility_state_manager import (
+    VisibilityStateManager,
 )
+from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+from presentation.components.ui.settings.visibility.components import (
+    DependencyWarning,
+    ElementVisibilitySection,
+    MotionControlsSection,
+    VisibilityPreviewSection,
+)
+from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +50,8 @@ class VisibilityTab(QWidget):
 
     def __init__(
         self,
-        visibility_service: IVisibilityService,
-        global_visibility_service: Optional[GlobalVisibilityService] = None,
+        visibility_service: IVisibilitySettingsManager,
+        global_visibility_service: Optional[PictographVisibilityManager] = None,
         parent=None,
     ):
         """
@@ -72,7 +66,7 @@ class VisibilityTab(QWidget):
 
         # Services
         self.visibility_service = visibility_service
-        self.state_manager = ModernVisibilityStateManager(visibility_service)
+        self.state_manager = VisibilityStateManager(visibility_service)
         self.global_visibility_service = (
             global_visibility_service or get_global_visibility_service()
         )

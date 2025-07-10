@@ -7,7 +7,7 @@ Responsible for handling start position picker interactions and creating start p
 
 from typing import Callable, Optional
 
-from application.services.data.data_conversion_service import DataConversionService
+from application.services.data.data_converter import DataConverter
 from application.services.data.sequence_data_converter import SequenceDataConverter
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_models import PictographData
@@ -34,7 +34,7 @@ class StartPositionHandler(QObject):
 
     def __init__(
         self,
-        data_conversion_service: DataConversionService,
+        data_conversion_service: DataConverter,
         workbench_setter: Optional[Callable[[PictographData], None]] = None,
     ):
         super().__init__()
@@ -57,8 +57,13 @@ class StartPositionHandler(QObject):
         if self.workbench_setter:
             # Convert PictographData to BeatData for sequence workbench context
             beat_data = self._convert_pictograph_to_beat_data(start_position_data)
-            self.workbench_setter(beat_data)
-            print(f"✅ [START_POS_HANDLER] Set in workbench as BeatData")
+
+            # NEW APPROACH: Pass both BeatData and original PictographData
+            print(
+                f"🎯 [START_POS_HANDLER] Setting workbench with both BeatData and PictographData"
+            )
+            self.workbench_setter(beat_data, start_position_data)  # Pass both!
+            print(f"✅ [START_POS_HANDLER] Set in workbench with separate data types")
         else:
             print(f"⚠️ [START_POS_HANDLER] No workbench setter available")
 
@@ -203,10 +208,15 @@ class StartPositionHandler(QObject):
                     turns=0.0,  # Start positions have no turns
                 )
 
-        # Create glyph data
+        # Create glyph data for start position - always show all elements for start positions
         glyph_data = GlyphData(
             start_position=pictograph_data.start_position,
             end_position=pictograph_data.end_position,
+            # For start positions, always show key elements regardless of letter type
+            show_tka=True,  # Always show the letter
+            show_positions=True,  # Always show position indicators for start positions
+            show_vtg=True,  # Show VTG if available
+            show_elemental=True,  # Show elemental if available
         )
 
         # Ensure metadata includes start position flag

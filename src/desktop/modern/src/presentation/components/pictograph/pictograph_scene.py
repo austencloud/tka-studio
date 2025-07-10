@@ -86,7 +86,7 @@ class PictographScene(QGraphicsScene):
         try:
             # Try to get the global visibility service from the DI container
             from application.services.pictograph.global_visibility_service import (
-                GlobalVisibilityService,
+                PictographVisibilityManager,
             )
             from application.services.pictograph.global_visibility_service_singleton import (
                 get_global_visibility_service,
@@ -99,7 +99,7 @@ class PictographScene(QGraphicsScene):
                 container = get_container()
                 if container:
                     # Try to resolve from container (if registered)
-                    global_service = container.resolve(GlobalVisibilityService)
+                    global_service = container.resolve(PictographVisibilityManager)
                 else:
                     # Fallback to singleton pattern
                     global_service = get_global_visibility_service()
@@ -145,16 +145,14 @@ class PictographScene(QGraphicsScene):
         """
         try:
             # Try to get context service from DI container
-            from application.services.ui.context_aware_scaling_service import (
-                RenderingContext,
-            )
+            from application.services.ui.pictograph_scaler import RenderingContext
             from core.application.application_factory import ApplicationFactory
-            from core.interfaces.core_services import IPictographContextService
+            from core.interfaces.core_services import IPictographContextDetector
 
             # Use proper application factory method
             container = ApplicationFactory.create_app_from_args()
             if container:
-                context_service = container.resolve(IPictographContextService)
+                context_service = container.resolve(IPictographContextDetector)
                 # Removed repetitive log statement
                 context = context_service.determine_context_from_scene(self)
 
@@ -295,10 +293,21 @@ class PictographScene(QGraphicsScene):
         if beat_data.red_motion:
             arrows["red"] = ArrowData(motion_data=beat_data.red_motion, color="red")
 
+        # Extract position data from glyph_data if available
+        start_position = None
+        end_position = None
+        if beat_data.glyph_data:
+            start_position = beat_data.glyph_data.start_position
+            end_position = beat_data.glyph_data.end_position
+
         return PictographData(
             arrows=arrows,
             letter=beat_data.letter or "",
+            start_position=start_position,
+            end_position=end_position,
             glyph_data=beat_data.glyph_data,
+            is_blank=beat_data.is_blank,
+            metadata=beat_data.metadata or {},
         )
 
     def _render_pictograph_data(self, pictograph_data: PictographData) -> None:

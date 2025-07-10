@@ -6,17 +6,14 @@ Provides all service dependencies for FastAPI endpoints.
 import logging
 from typing import Optional
 
-from application.services.sequences.sequence_management_service import (
-    SequenceManagementService,
-    ISequenceManagementService,
+from application.services.sequence.sequence_manager import (
+    ISequenceManager,
+    SequenceManager,
 )
-from core.interfaces.positioning_services import IArrowPositioningOrchestrator
 from core.commands import CommandProcessor
-from core.dependency_injection.di_container import (
-    DIContainer,
-    get_container,
-)
+from core.dependency_injection.di_container import DIContainer, get_container
 from core.events import IEventBus, get_event_bus
+from core.interfaces.positioning_services import IArrowPositioningOrchestrator
 from fastapi import HTTPException, status
 
 logger = logging.getLogger(__name__)
@@ -25,7 +22,7 @@ logger = logging.getLogger(__name__)
 _container: Optional[DIContainer] = None
 _event_bus: Optional[IEventBus] = None
 _command_processor: Optional[CommandProcessor] = None
-_sequence_service: Optional[SequenceManagementService] = None
+_sequence_service: Optional[SequenceManager] = None
 _arrow_service: Optional[IArrowPositioningOrchestrator] = None
 
 
@@ -52,7 +49,7 @@ def initialize_services():
         _command_processor = CommandProcessor(_event_bus)
 
         # Resolve services from DI container instead of direct instantiation
-        _sequence_service = _container.resolve(ISequenceManagementService)
+        _sequence_service = _container.resolve(ISequenceManager)
         _arrow_service = _container.resolve(IArrowPositioningOrchestrator)
 
         logger.info("All API services initialized successfully")
@@ -87,12 +84,12 @@ def cleanup_services():
 # Dependency injection functions for FastAPI
 
 
-def get_sequence_service() -> SequenceManagementService:
+def get_sequence_service() -> SequenceManager:
     """
     Get sequence management service dependency.
 
     Returns:
-        SequenceManagementService: The sequence management service
+        SequenceManager: The sequence management service
 
     Raises:
         HTTPException: If service is not available (503)

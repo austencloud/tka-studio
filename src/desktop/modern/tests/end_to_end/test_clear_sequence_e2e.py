@@ -20,9 +20,7 @@ from typing import Any, Dict, Optional
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 from core.application.application_factory import ApplicationFactory
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtTest import QTest
@@ -186,7 +184,7 @@ class ClearSequenceE2ETest:
             print("✅ [E2E_TEST] QApplication created")
 
             # Initialize persistence service
-            self.persistence_service = SequencePersistenceService()
+            self.persistence_service = SequencePersister()
             print("✅ [E2E_TEST] Persistence service initialized")
 
             # Create UI automation framework

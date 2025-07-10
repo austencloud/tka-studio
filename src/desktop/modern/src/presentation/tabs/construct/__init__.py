@@ -18,15 +18,13 @@ Business Logic Services (moved to application layer):
 """
 
 from application.services.data.sequence_data_converter import SequenceDataConverter
-from application.services.sequences.sequence_beat_operations import (
+from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
 
 # Services moved to application layer
-from application.services.sequences.sequence_loading_service import (
-    SequenceLoadingService,
-)
-from application.services.sequences.sequence_start_position_manager import (
+from application.services.sequence.loader import SequenceLoader
+from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
 
@@ -42,7 +40,7 @@ __all__ = [
     "OptionPickerManager",
     "SignalCoordinator",
     # Business services (re-exported from application layer)
-    "SequenceLoadingService",
+    "SequenceLoader",
     "SequenceBeatOperations",
     "SequenceStartPositionManager",
     "SequenceDataConverter",

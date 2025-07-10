@@ -1,13 +1,14 @@
 from typing import Optional
-from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import QApplication
-from domain.models import SequenceData
+
 from core.interfaces.workbench_services import (
-    ISequenceWorkbenchService,
-    IFullScreenService,
     IBeatDeletionService,
     IDictionaryService,
+    IFullScreenService,
+    ISequenceWorkbenchService,
 )
+from domain.models import SequenceData
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QApplication
 
 
 class WorkbenchEventController(QObject):
@@ -130,11 +131,11 @@ class WorkbenchEventController(QObject):
     def handle_clear(self) -> tuple[bool, str, Optional[SequenceData]]:
         try:
             # Clear persistence FIRST - this ensures current_sequence.json is cleared
-            from application.services.sequences.sequence_persistence_service import (
-                SequencePersistenceService,
+            from application.services.sequence.sequence_persister import (
+                SequencePersister,
             )
 
-            persistence_service = SequencePersistenceService()
+            persistence_service = SequencePersister()
             persistence_service.clear_current_sequence()
             print("✅ [EVENT_CONTROLLER] Cleared sequence persistence")
 

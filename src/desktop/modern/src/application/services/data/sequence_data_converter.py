@@ -130,12 +130,13 @@ class SequenceDataConverter:
             red_end = parts[1]
 
             # Logic to determine combined end position
-            # This is a simplified version - can be enhanced with more complex mapping
+            # For start positions where both props end at the same location,
+            # the end position is just that location (e.g., "alpha1_alpha1" -> "alpha1")
             if blue_end == red_end:
-                return f"{blue_end}1"  # Same position
+                return blue_end  # Same position - just return the position itself
             else:
                 # For different positions, use a mapping or algorithm
-                # This is placeholder logic
+                # This is placeholder logic that can be enhanced
                 return f"beta{min(5, max(1, ord(blue_end[0]) - ord('a') + 1))}"
 
         except Exception as e:

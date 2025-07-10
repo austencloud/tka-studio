@@ -21,9 +21,7 @@ from typing import Any, Dict, List, Optional, Tuple
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 from core.application.application_factory import ApplicationFactory
 from core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
 from domain.models import BeatData, SequenceData
@@ -121,7 +119,7 @@ class TKAWorkflowTester:
             self.ai_helper = TKAAITestHelper(use_test_mode=True)
 
             # Initialize persistence service
-            self.persistence_service = SequencePersistenceService()
+            self.persistence_service = SequencePersister()
 
             if self.config.debug_logging:
                 print("✅ [FRAMEWORK] TKA Workflow Tester initialized successfully")

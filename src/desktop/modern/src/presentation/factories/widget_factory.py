@@ -55,12 +55,12 @@ class WidgetFactory:
 
     def create_pictograph_component(self, parent: Optional[QGraphicsView] = None):
         """Create a pictograph component with injected dependencies."""
-        from core.interfaces.core_services import IPictographBorderService
+        from core.interfaces.core_services import IPictographBorderManager
         from presentation.components.pictograph.pictograph_component import (
             PictographComponent,
         )
 
-        border_service = self.container.resolve(IPictographBorderService)
+        border_service = self.container.resolve(IPictographBorderManager)
         return PictographComponent(border_service, parent)
 
 

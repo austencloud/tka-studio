@@ -186,7 +186,7 @@ def profile_complete_startup():
 
         # Phase 5: Main Window Setup
         with profiler.time_operation("6. Main window imports"):
-            from application.services.pictographs.application_orchestrator import (
+            from application.services.core.application_orchestrator import (
                 ApplicationOrchestrator,
             )
 

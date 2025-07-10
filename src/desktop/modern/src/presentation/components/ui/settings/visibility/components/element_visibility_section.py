@@ -8,15 +8,14 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 import logging
 from typing import Dict
 
+from application.services.pictograph.visibility_state_manager import (
+    VisibilityStateManager,
+)
+from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+from presentation.components.ui.settings.components.element_toggle import ElementToggle
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QFrame, QVBoxLayout, QGridLayout, QLabel
-
-from core.interfaces.tab_settings_interfaces import IVisibilityService
-from application.services.settings.visibility_state_manager import (
-    ModernVisibilityStateManager,
-)
-from presentation.components.ui.settings.components.element_toggle import ElementToggle
+from PyQt6.QtWidgets import QFrame, QGridLayout, QLabel, QVBoxLayout
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ logger = logging.getLogger(__name__)
 class ElementVisibilitySection(QFrame):
     """
     Element visibility controls section with dependency management.
-    
+
     Handles element visibility toggles, motion dependency logic, and organized grid layout.
     Follows TKA single-responsibility principle and dependency injection patterns.
     """
@@ -33,27 +32,27 @@ class ElementVisibilitySection(QFrame):
 
     def __init__(
         self,
-        visibility_service: IVisibilityService,
-        state_manager: ModernVisibilityStateManager,
+        visibility_service: IVisibilitySettingsManager,
+        state_manager: VisibilityStateManager,
         parent=None,
     ):
         """
         Initialize element visibility section.
-        
+
         Args:
             visibility_service: Service for visibility state management
             state_manager: State manager for validation and updates
             parent: Parent widget
         """
         super().__init__(parent)
-        
+
         # Service dependencies
         self.visibility_service = visibility_service
         self.state_manager = state_manager
-        
+
         # UI components
         self.element_toggles: Dict[str, ElementToggle] = {}
-        
+
         self._setup_ui()
         self._setup_connections()
         self._load_initial_settings()
@@ -86,9 +85,7 @@ class ElementVisibilitySection(QFrame):
         ]
 
         for name, tooltip, is_dependent, row, col in element_groups:
-            toggle = ElementToggle(
-                name.replace("_", " ").replace("-", " "), tooltip
-            )
+            toggle = ElementToggle(name.replace("_", " ").replace("-", " "), tooltip)
             toggle.set_dependent(is_dependent)
             self.element_toggles[name] = toggle
             grid_layout.addWidget(toggle, row, col)
@@ -112,7 +109,7 @@ class ElementVisibilitySection(QFrame):
     def _on_element_visibility_changed(self, name: str, visible: bool):
         """
         Handle element visibility changes.
-        
+
         Args:
             name: Element name
             visible: Whether the element should be visible
@@ -136,7 +133,7 @@ class ElementVisibilitySection(QFrame):
     def update_motion_dependency(self, all_motions_visible: bool):
         """
         Update element toggles based on motion dependency states.
-        
+
         Args:
             all_motions_visible: Whether all motions are currently visible
         """
@@ -147,19 +144,18 @@ class ElementVisibilitySection(QFrame):
     def get_element_states(self) -> Dict[str, bool]:
         """
         Get current element visibility states.
-        
+
         Returns:
             Dictionary mapping element names to visibility states
         """
         return {
-            name: toggle.isChecked() 
-            for name, toggle in self.element_toggles.items()
+            name: toggle.isChecked() for name, toggle in self.element_toggles.items()
         }
 
     def get_dependent_elements(self) -> Dict[str, bool]:
         """
         Get elements that depend on motion visibility.
-        
+
         Returns:
             Dictionary mapping dependent element names to their dependency status
         """

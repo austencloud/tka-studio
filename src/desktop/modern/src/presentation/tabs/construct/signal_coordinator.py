@@ -5,15 +5,13 @@ Manages signal connections, emissions, and coordination between construct tab co
 Responsible for connecting signals between components and handling signal routing.
 """
 
-from application.services.sequences.sequence_beat_operations import (
+from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
 
 # Import services from application layer (moved from presentation)
-from application.services.sequences.sequence_loading_service import (
-    SequenceLoadingService,
-)
-from application.services.sequences.sequence_start_position_manager import (
+from application.services.sequence.loader import SequenceLoader
+from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
 from domain.models import SequenceData
@@ -49,7 +47,7 @@ class SignalCoordinator(QObject):
         layout_manager: ConstructTabLayoutManager,
         start_position_handler: StartPositionHandler,
         option_picker_manager: OptionPickerManager,
-        loading_service: SequenceLoadingService,
+        loading_service: SequenceLoader,
         beat_operations: SequenceBeatOperations,
         start_position_manager: SequenceStartPositionManager,
     ):
@@ -287,11 +285,11 @@ class SignalCoordinator(QObject):
             print("🔄 [SIGNAL_COORDINATOR] Clearing sequence...")
 
             # Clear persistence FIRST
-            from application.services.sequences.sequence_persistence_service import (
-                SequencePersistenceService,
+            from application.services.sequence.sequence_persister import (
+                SequencePersister,
             )
 
-            persistence_service = SequencePersistenceService()
+            persistence_service = SequencePersister()
             persistence_service.clear_current_sequence()
             print("✅ [SIGNAL_COORDINATOR] Cleared sequence persistence")
 

@@ -114,7 +114,7 @@ class BeatView(QFrame):
     def _configure_pictograph_component(self):
         """Configure the pictograph component for beat view context"""
         # CRITICAL FIX: Set proper scaling context for beat frame
-        from application.services.ui.context_aware_scaling_service import ScalingContext
+        from application.services.ui.pictograph_scaler import ScalingContext
 
         self._pictograph_component.set_scaling_context(ScalingContext.BEAT_VIEW)
 

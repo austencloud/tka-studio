@@ -9,10 +9,11 @@ and the pure service layer, maintaining proper service separation.
 """
 
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 
-from .graph_editor_hotkey_service import GraphEditorHotkeyService, IHotkeyCallbacks
+from .graph_editor_hotkey_manager import GraphEditorHotkeyManager, IHotkeyCallbacks
 
 if TYPE_CHECKING:
     from core.interfaces.workbench_services import IGraphEditorService
@@ -39,7 +40,7 @@ class GraphEditorHotkeyAdapter(QObject):
         callback_handler = HotkeyCallbackHandler(self)
 
         # Initialize the pure service with callbacks
-        self.service = GraphEditorHotkeyService(graph_service, callback_handler)
+        self.service = GraphEditorHotkeyManager(graph_service, callback_handler)
 
     def handle_key_event(self, event: QKeyEvent) -> bool:
         """Handle keyboard events by delegating to service"""

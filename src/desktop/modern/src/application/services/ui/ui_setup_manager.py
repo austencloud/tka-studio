@@ -522,14 +522,14 @@ class UISetupManager(IUISetupManager):
         """Open the settings dialog using dependency injection."""
         try:
             from core.dependency_injection.di_container import get_container
-            from core.interfaces.core_services import IUIStateManagementService
+            from core.interfaces.core_services import IUIStateManager
             from presentation.components.ui.settings.settings_dialog import (
                 SettingsDialog,
             )
 
             # Get UI state service from container
             container = get_container()
-            ui_state_service = container.resolve(IUIStateManagementService)
+            ui_state_service = container.resolve(IUIStateManager)
             dialog = SettingsDialog(ui_state_service, main_window)
 
             # Connect to settings changes if needed

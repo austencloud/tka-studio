@@ -9,6 +9,7 @@ from core.interfaces.workbench_services import (
     ISequenceWorkbenchService,
 )
 from domain.models import BeatData, SequenceData
+from domain.models.pictograph_models import PictographData
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
@@ -176,11 +177,24 @@ class SequenceWorkbench(QWidget):
         """Get the current sequence"""
         return self._current_sequence
 
-    def set_start_position(self, start_position_data: BeatData):
-        """Set the start position"""
+    def set_start_position(
+        self,
+        start_position_data: BeatData,
+        pictograph_data: Optional["PictographData"] = None,
+    ):
+        """
+        Set the start position with optional separate pictograph data.
+
+        Args:
+            start_position_data: Beat context data (beat number, duration, metadata)
+            pictograph_data: Optional pictograph data for direct rendering.
+                           If None, will be reconstructed from beat_data (legacy mode)
+        """
         self._start_position_data = start_position_data
         if self._beat_frame_section:
-            self._beat_frame_section.set_start_position(start_position_data)
+            self._beat_frame_section.set_start_position(
+                start_position_data, pictograph_data
+            )
 
         # Emit sequence_modified with updated start position (unless restoring)
         if not getattr(self, "_restoring_sequence", False) and self._current_sequence:

@@ -5,15 +5,14 @@ Handles CRUD operations for sequences.
 
 import logging
 from typing import Optional
+
+from application.services.sequence.sequence_manager import SequenceManager
+from core.monitoring import monitor_performance
 from fastapi import APIRouter, Depends, HTTPException
 
-from core.monitoring import monitor_performance
-from ..models import SequenceAPI, CreateSequenceRequest
+from ..converters import api_to_domain_sequence, domain_to_api_sequence
 from ..dependencies import get_sequence_service
-from ..converters import domain_to_api_sequence, api_to_domain_sequence
-from application.services.sequences.sequence_management_service import (
-    SequenceManagementService,
-)
+from ..models import CreateSequenceRequest, SequenceAPI
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +79,7 @@ router = APIRouter(prefix="/api", tags=["Sequences"])
 )
 @monitor_performance("api_get_current_sequence")
 def get_current_sequence(
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """
     Get Currently Active Sequence
@@ -138,7 +137,7 @@ def get_current_sequence(
 @monitor_performance("api_create_sequence")
 def create_sequence(
     request: CreateSequenceRequest,
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Create a new sequence."""
     try:
@@ -180,7 +179,7 @@ def create_sequence(
 @monitor_performance("api_get_sequence")
 def get_sequence(
     sequence_id: str,
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Get a specific sequence by ID."""
     try:
@@ -215,7 +214,7 @@ def get_sequence(
 def update_sequence(
     sequence_id: str,
     sequence_update: SequenceAPI,
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Update an existing sequence."""
     try:

@@ -62,7 +62,7 @@ def test_service_imports():
             PictographDatasetService,
         )
         from application.services.sequences.sequence_management_service import (
-            SequenceManagementService,
+            SequenceManager,
         )
         from presentation.components.workbench.workbench import SequenceWorkbench
 

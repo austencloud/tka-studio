@@ -7,9 +7,7 @@ providing all the complex dash location maps and calculations with high precisio
 
 from typing import Optional
 
-from application.services.pictographs.pictograph_analysis_service import (
-    PictographAnalysisService,
-)
+from application.services.pictograph.analyzer import PictographAnalyzer
 from domain.models import (
     ArrowColor,
     LetterType,
@@ -35,7 +33,7 @@ class DashLocationCalculator:
 
     def __init__(self):
         """Initialize the dash location service with pictograph analysis."""
-        self.analysis_service = PictographAnalysisService()
+        self.analysis_service = PictographAnalyzer()
 
     def calculate_dash_location_from_beat(
         self, pictograph_data: PictographData, is_blue_arrow: bool

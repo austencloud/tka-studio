@@ -12,12 +12,12 @@ TKA's sophisticated architecture can be easily broken by AI agents who don't und
 # ❌ WRONG: Creating competing command pattern
 class AICommandExecutor:  # DON'T DO THIS
     def execute_sequence_command(self, command):
-        # TKA already has SequenceManagementService with commands!
+        # TKA already has SequenceManager with commands!
         pass
 
 # ✅ CORRECT: Use existing sophisticated system
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 # Service already has add_beat_with_undo, undo_last_operation, etc.
 updated_sequence = service.add_beat_with_undo(beat_data, position)
 ```
@@ -26,14 +26,14 @@ updated_sequence = service.add_beat_with_undo(beat_data, position)
 
 ```python
 # ❌ WRONG: Direct service instantiation
-from application.services.core.sequence_management_service import SequenceManagementService
+from application.services.core.sequence_management_service import SequenceManager
 
-service = SequenceManagementService()  # Missing dependencies!
+service = SequenceManager()  # Missing dependencies!
 sequence = service.create_sequence("Test", 8)  # Will fail
 
 # ✅ CORRECT: Use DI container
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)  # All dependencies injected
+service = container.resolve(ISequenceManager)  # All dependencies injected
 sequence = service.create_sequence("Test", 8)  # Works perfectly
 ```
 
@@ -70,7 +70,7 @@ class BadSequenceWidget(QWidget):
 
 # ✅ CORRECT: Delegate to services
 class GoodSequenceWidget(QWidget):
-    def __init__(self, sequence_service: ISequenceManagementService):
+    def __init__(self, sequence_service: ISequenceManager):
         super().__init__()
         self._sequence_service = sequence_service
 
@@ -94,13 +94,13 @@ mock_sequence.length = 8
 # This loses all domain validation and behavior!
 
 # ❌ WRONG: Mocking sophisticated services
-mock_service = Mock(spec=ISequenceManagementService)
+mock_service = Mock(spec=ISequenceManager)
 mock_service.create_sequence.return_value = mock_sequence
 # TKA has real test implementations!
 
 # ✅ CORRECT: Use real test objects and services
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)  # Real service with mock backend
+service = container.resolve(ISequenceManager)  # Real service with mock backend
 sequence = service.create_sequence("Test", 8)  # Real SequenceData object
 assert isinstance(sequence, SequenceData)  # Real validation
 ```
@@ -129,7 +129,7 @@ def test_sequence_creation():
 ```python
 # ❌ WRONG: Testing internal implementation
 def test_sequence_service_internals():
-    service = container.resolve(ISequenceManagementService)
+    service = container.resolve(ISequenceManager)
     sequence = service.create_sequence("Test", 8)
 
     # DON'T TEST PRIVATE STATE
@@ -138,7 +138,7 @@ def test_sequence_service_internals():
 
 # ✅ CORRECT: Testing behavioral contracts
 def test_sequence_service_contract():
-    service = container.resolve(ISequenceManagementService)
+    service = container.resolve(ISequenceManager)
     sequence = service.create_sequence("Test", 8)
 
     # TEST PUBLIC CONTRACTS
@@ -197,7 +197,7 @@ def create_sequence_without_validation(name, length):
 # ✅ CORRECT: Use built-in validation
 def create_sequence_safely(name, length):
     container = ApplicationFactory.create_test_app()
-    service = container.resolve(ISequenceManagementService)
+    service = container.resolve(ISequenceManager)
 
     try:
         sequence = service.create_sequence(name, length)
@@ -238,9 +238,9 @@ class SequenceService:
 
 ```python
 # ❌ WRONG: Using concrete implementations directly
-from application.services.sequences.sequence_management_service import SequenceManagementService
+from application.services.sequences.sequence_management_service import SequenceManager
 
-service = SequenceManagementService()  # Bypasses DI and interfaces!
+service = SequenceManager()  # Bypasses DI and interfaces!
 
 # ❌ WRONG: Importing implementation in tests
 from application.services.pictographs.pictograph_management_service import PictographManagementService
@@ -249,10 +249,10 @@ def test_pictograph_creation():
     service = PictographManagementService()  # Wrong!
 
 # ✅ CORRECT: Use interfaces through DI
-from core.interfaces.core_services import ISequenceManagementService
+from core.interfaces.core_services import ISequenceManager
 
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)  # Interface-based!
+service = container.resolve(ISequenceManager)  # Interface-based!
 ```
 
 ### CRITICAL ERROR: Using Old Service Import Paths
@@ -324,17 +324,17 @@ class SequenceService:
 # ❌ WRONG: Resolving services repeatedly
 class BadController:
     def handle_request(self):
-        service = container.resolve(ISequenceManagementService)  # Expensive!
+        service = container.resolve(ISequenceManager)  # Expensive!
         service.create_sequence("Test", 8)
 
     def handle_another_request(self):
-        service = container.resolve(ISequenceManagementService)  # Expensive again!
+        service = container.resolve(ISequenceManager)  # Expensive again!
         service.create_sequence("Another", 16)
 
 # ✅ CORRECT: Cache resolved services
 class GoodController:
     def __init__(self, container: DIContainer):
-        self._sequence_service = container.resolve(ISequenceManagementService)
+        self._sequence_service = container.resolve(ISequenceManager)
 
     def handle_request(self):
         self._sequence_service.create_sequence("Test", 8)  # Fast!
@@ -350,18 +350,18 @@ class GoodController:
 def test_sequence_operation_1():
     # Expensive setup repeated
     container = ApplicationFactory.create_production_app()  # Slow!
-    service = container.resolve(ISequenceManagementService)
+    service = container.resolve(ISequenceManager)
 
 def test_sequence_operation_2():
     # Expensive setup repeated again
     container = ApplicationFactory.create_production_app()  # Slow!
-    service = container.resolve(ISequenceManagementService)
+    service = container.resolve(ISequenceManager)
 
 # ✅ CORRECT: Use test mode and fixtures
 @pytest.fixture
 def sequence_service():
     container = ApplicationFactory.create_test_app()  # Fast test services!
-    return container.resolve(ISequenceManagementService)
+    return container.resolve(ISequenceManager)
 
 def test_sequence_operation_1(sequence_service):
     # Uses cached, fast service

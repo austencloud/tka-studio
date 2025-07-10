@@ -6,7 +6,8 @@ TKA has enterprise-grade service implementations with command patterns, event pu
 
 ## 🎯 CORE SERVICE INTERFACES
 
-### `ISequenceManagementService` - Sequence Operations
+### `ISequenceManager` - Sequence Operations
+
 **Location**: `core/interfaces/core_services.py`
 **Implementation**: `application/services/core/sequence_management_service.py`
 
@@ -40,10 +41,11 @@ def get_current_sequence(self) -> Optional[SequenceData]
 ```
 
 **Usage Example**:
+
 ```python
 # Get service via DI
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 
 # Use existing command pattern
 sequence = service.create_sequence("Test Sequence", 8)
@@ -60,6 +62,7 @@ if service.can_undo():
 ```
 
 ### `IPictographManagementService` - Pictograph Operations
+
 **Location**: `core/interfaces/core_services.py`
 **Implementation**: `application/services/core/pictograph_management_service.py`
 
@@ -85,6 +88,7 @@ def add_to_dataset(self, pictograph: PictographData, category: str = "user_creat
 ```
 
 **Advanced Usage**:
+
 ```python
 # CSV dataset integration (ALREADY WORKING)
 service = container.resolve(IPictographManagementService)
@@ -103,6 +107,7 @@ results = service.search_dataset(query)
 ```
 
 ### `ILayoutService` - Layout Management
+
 **Location**: `core/interfaces/core_services.py`
 **Implementation**: `application/services/layout/layout_management_service.py`
 
@@ -127,6 +132,7 @@ def calculate_component_positions(self, layout_config: Dict[str, Any]) -> Dict[s
 ### Other Important Services
 
 #### `IValidationService`
+
 ```python
 def validate_sequence(self, sequence_data: Dict[str, Any]) -> bool
 def validate_beat(self, beat_data: Dict[str, Any]) -> bool
@@ -135,6 +141,7 @@ def get_validation_errors(self, data: Dict[str, Any]) -> List[str]
 ```
 
 #### `IArrowManagementService`
+
 ```python
 def calculate_arrow_position(self, arrow_data: Any, pictograph_data: Any) -> Tuple[float, float, float]
 def should_mirror_arrow(self, arrow_data: Any) -> bool
@@ -145,13 +152,14 @@ def calculate_all_arrow_positions(self, pictograph_data: Any) -> Any
 ## 🏭 APPLICATION FACTORY INTEGRATION
 
 ### Service Resolution Pattern
+
 ```python
 # CORRECT: Use ApplicationFactory
 from core.application.application_factory import ApplicationFactory
 
 # For AI testing
 container = ApplicationFactory.create_test_app()
-sequence_service = container.resolve(ISequenceManagementService)
+sequence_service = container.resolve(ISequenceManager)
 pictograph_service = container.resolve(IPictographManagementService)
 
 # For production
@@ -166,6 +174,7 @@ validation_service = container.resolve(IValidationService)
 ### Available Service Configurations
 
 #### Test Mode Services
+
 - Mock implementations for fast testing
 - In-memory storage
 - Predictable behavior
@@ -177,6 +186,7 @@ test_container = ApplicationFactory.create_test_app()
 ```
 
 #### Production Mode Services
+
 - Full implementations with PyQt UI
 - File-based persistence
 - Real CSV dataset integration
@@ -188,6 +198,7 @@ prod_container = ApplicationFactory.create_production_app()
 ```
 
 #### Headless Mode Services
+
 - Real business logic
 - No UI dependencies
 - Server-side processing capable
@@ -201,6 +212,7 @@ headless_container = ApplicationFactory.create_headless_app()
 ## 🎯 ADVANCED SERVICE PATTERNS
 
 ### Event-Driven Architecture
+
 Services publish events automatically:
 
 ```python
@@ -217,6 +229,7 @@ if hasattr(service, 'event_bus'):
 ```
 
 ### Repository Pattern Integration
+
 Services use repositories for persistence:
 
 ```python
@@ -230,16 +243,17 @@ service.set_current_sequence_in_storage(sequence.id)
 ```
 
 ### Workbench Operations
+
 Sophisticated transformation operations:
 
 ```python
 # Available workbench operations
 operations = [
     "color_swap",
-    "horizontal_reflection", 
+    "horizontal_reflection",
     "vertical_reflection",
     "rotation_90",
-    "rotation_180", 
+    "rotation_180",
     "rotation_270",
     "reverse_sequence"
 ]
@@ -250,6 +264,7 @@ rotated = service.apply_workbench_operation(sequence, "rotation_90")
 ```
 
 ### Sequence Generation Algorithms
+
 Multiple generation strategies available:
 
 ```python
@@ -270,6 +285,7 @@ circular_seq = service.generate_sequence("circular", 12)
 ## 🧪 SERVICE TESTING PATTERNS
 
 ### AI Agent Testing
+
 ```python
 # Use TKAAITestHelper for simplified access
 from core.testing.ai_agent_helpers import TKAAITestHelper
@@ -284,16 +300,17 @@ assert result.success
 cmd_result = helper.test_existing_command_pattern()
 assert cmd_result.metadata['command_pattern_available']
 
-# Test pictograph operations  
+# Test pictograph operations
 picto_result = helper.test_pictograph_from_beat()
 assert picto_result.success
 ```
 
 ### Direct Service Testing
+
 ```python
 # For more control, use services directly
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 
 # Test with real domain models
 sequence = service.create_sequence("Direct Test", 4)
@@ -310,12 +327,13 @@ if hasattr(service, 'add_beat_with_undo'):
 ## 🚨 SERVICE USAGE WARNINGS
 
 ### DON'T:
+
 ```python
 # ❌ Create service instances directly
-service = SequenceManagementService()  # Missing dependencies
+service = SequenceManager()  # Missing dependencies
 
 # ❌ Mock complex services unnecessarily
-mock_service = Mock(spec=ISequenceManagementService)  # Use real test services
+mock_service = Mock(spec=ISequenceManager)  # Use real test services
 
 # ❌ Ignore existing command pattern
 service.add_beat(sequence, beat, 0)  # When add_beat_with_undo exists
@@ -325,10 +343,11 @@ service.save_invalid_sequence(bad_data)  # Services validate automatically
 ```
 
 ### DO:
+
 ```python
 # ✅ Use dependency injection
 container = ApplicationFactory.create_test_app()
-service = container.resolve(ISequenceManagementService)
+service = container.resolve(ISequenceManager)
 
 # ✅ Use existing sophisticated features
 service.add_beat_with_undo(beat, position)  # Uses command pattern
@@ -345,18 +364,21 @@ prod_container = ApplicationFactory.create_production_app()  # For real usage
 ## 📊 SERVICE PERFORMANCE
 
 ### Test Services
+
 - Execute in microseconds
 - In-memory operations
 - Predictable performance
 - No I/O overhead
 
-### Production Services  
+### Production Services
+
 - File system integration
 - CSV dataset loading
 - UI component interaction
 - Event publishing overhead
 
 ### Headless Services
+
 - Real business logic
 - Optimized for batch processing
 - No UI rendering overhead

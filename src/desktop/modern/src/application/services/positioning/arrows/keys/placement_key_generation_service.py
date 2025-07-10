@@ -16,9 +16,7 @@ Ported from legacy placement logic for exact parity.
 import logging
 from typing import Optional
 
-from application.services.validation.pictograph_checker_service import (
-    PictographCheckerService,
-)
+from application.services.pictograph.pictograph_validator import PictographValidator
 from domain.models.enums import Orientation
 from domain.models.letter_type_classifier import LetterTypeClassifier
 from domain.models.motion_models import MotionData
@@ -136,7 +134,7 @@ class PlacementKeyGenerationService:
         Returns:
             Placement key string
         """  # Use the pictograph checker to determine properties (like legacy check_manager)
-        pictograph_checker = PictographCheckerService(pictograph_data)
+        pictograph_checker = PictographValidator(pictograph_data)
         has_beta_props = pictograph_checker.ends_with_beta()
         has_alpha_props = pictograph_checker.ends_with_alpha()
         has_gamma_props = pictograph_checker.ends_with_gamma()

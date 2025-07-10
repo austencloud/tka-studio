@@ -31,7 +31,7 @@ class IOptionServiceSignals(ABC):
         """Emit signal when options are cleared."""
 
 
-class IOptionPickerInitializationService(ABC):
+class IOptionPickerInitializer(ABC):
     """Interface for option picker initialization logic."""
 
     @abstractmethod
@@ -275,7 +275,7 @@ class IOptionPickerEventService(ABC):
         """Clean up event service resources."""
 
 
-class IOptionService(ABC):
+class IOptionProvider(ABC):
     """Interface for pictograph option management."""
 
     @abstractmethod

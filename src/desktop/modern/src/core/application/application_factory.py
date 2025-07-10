@@ -19,26 +19,20 @@ logger = logging.getLogger(__name__)
 from application.services.core.session_state_tracker import SessionStateTracker
 
 # Import production services
-from application.services.layout.layout_management_service import (
-    LayoutManagementService,
-)
-from application.services.pictographs.pictograph_management_service import (
-    PictographManagementService,
-)
-from application.services.sequences.sequence_management_service import (
-    SequenceManagementService,
-)
-from application.services.ui.ui_state_management_service import UIStateManagementService
+from application.services.layout.layout_manager import LayoutManager
+from application.services.pictograph.pictograph_manager import PictographManager
+from application.services.sequence.sequence_manager import SequenceManager
+from application.services.ui.ui_state_manager import UIStateManager
 
 # Import existing service interfaces
 from core.interfaces.core_services import (
     IArrowManagementService,
     ILayoutService,
-    IPictographManagementService,
+    IPictographManager,
     ISequenceDataService,
-    ISequenceManagementService,
-    ISettingsService,
-    IUIStateManagementService,
+    ISequenceManager,
+    ISettingsCoordinator,
+    IUIStateManager,
     IValidationService,
 )
 
@@ -66,7 +60,7 @@ try:
         MockArrowManagementService,
         MockLayoutService,
         MockPictographManagementService,
-        MockSequenceManagementService,
+        MockSequenceManager,
         MockUIStateManagementService,
         MockValidationService,
     )
@@ -106,20 +100,14 @@ class ApplicationFactory:
 
         # Register file-based data services
         container.register_singleton(ISequenceDataService, FileBasedSequenceDataService)
-        container.register_singleton(ISettingsService, FileBasedSettingsService)
+        container.register_singleton(ISettingsCoordinator, FileBasedSettingsService)
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Register production services
-        container.register_singleton(ILayoutService, LayoutManagementService)
-        container.register_singleton(
-            IUIStateManagementService, UIStateManagementService
-        )
-        container.register_singleton(
-            ISequenceManagementService, SequenceManagementService
-        )
-        container.register_singleton(
-            IPictographManagementService, PictographManagementService
-        )
+        container.register_singleton(ILayoutService, LayoutManager)
+        container.register_singleton(IUIStateManager, UIStateManager)
+        container.register_singleton(ISequenceManager, SequenceManager)
+        container.register_singleton(IPictographManager, PictographManager)
 
         # Register session service
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
@@ -171,50 +159,50 @@ class ApplicationFactory:
         # Register test doubles
         container.register_singleton(ISequenceDataService, InMemorySequenceDataService)
         container.register_singleton(ILayoutService, MockLayoutService)
-        container.register_singleton(ISettingsService, InMemorySettingsService)
+        container.register_singleton(ISettingsCoordinator, InMemorySettingsService)
         container.register_singleton(IValidationService, MockValidationService)
         container.register_singleton(
             IArrowManagementService, MockArrowManagementService
         )
+        container.register_singleton(ISequenceManager, MockSequenceManager)
         container.register_singleton(
-            ISequenceManagementService, MockSequenceManagementService
+            IPictographManager, MockPictographManagementService
         )
-        container.register_singleton(
-            IPictographManagementService, MockPictographManagementService
-        )
-        container.register_singleton(
-            IUIStateManagementService, MockUIStateManagementService
-        )
+        container.register_singleton(IUIStateManager, MockUIStateManagementService)
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Register session service
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
-        from application.services.settings.visibility_service import VisibilityService
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
+        from application.services.settings.visibility_settings_manager import (
+            VisibilitySettingsManager,
+        )
+        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 
-        container.register_singleton(IVisibilityService, VisibilityService)
+        container.register_singleton(
+            IVisibilitySettingsManager, VisibilitySettingsManager
+        )
 
         # Register pictograph context service
         from application.services.ui.pictograph_context_service import (
-            PictographContextService,
+            PictographContextDetector,
         )
         from core.interfaces.core_services import (
-            IPictographBorderService,
-            IPictographContextService,
+            IPictographBorderManager,
+            IPictographContextDetector,
         )
 
         container.register_singleton(
-            IPictographContextService, PictographContextService
+            IPictographContextDetector, PictographContextDetector
         )
 
         # Register pictograph border service
-        from application.services.pictographs.border_service import (
-            PictographBorderService,
+        from application.services.pictograph.border_manager import (
+            PictographBorderManager,
         )
 
-        container.register_singleton(IPictographBorderService, PictographBorderService)
+        container.register_singleton(IPictographBorderManager, PictographBorderManager)
         logger.info("Registered IPictographBorderService in test mode")
 
         # Register extracted services
@@ -254,51 +242,49 @@ class ApplicationFactory:
 
         # Register file-based data services (same as production)
         container.register_singleton(ISequenceDataService, FileBasedSequenceDataService)
-        container.register_singleton(ISettingsService, FileBasedSettingsService)
+        container.register_singleton(ISettingsCoordinator, FileBasedSettingsService)
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Real business logic services
-        container.register_singleton(
-            ISequenceManagementService, SequenceManagementService
-        )
-        container.register_singleton(
-            IPictographManagementService, PictographManagementService
-        )
+        container.register_singleton(ISequenceManager, SequenceManager)
+        container.register_singleton(IPictographManager, PictographManager)
 
         # Headless UI services
         container.register_singleton(ILayoutService, HeadlessLayoutService)
-        container.register_singleton(
-            IUIStateManagementService, HeadlessUIStateManagementService
-        )
+        container.register_singleton(IUIStateManager, HeadlessUIStateManagementService)
 
         # Register session service
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
-        from application.services.settings.visibility_service import VisibilityService
-        from core.interfaces.tab_settings_interfaces import IVisibilityService
+        from application.services.settings.visibility_settings_manager import (
+            VisibilitySettingsManager,
+        )
+        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 
-        container.register_singleton(IVisibilityService, VisibilityService)
+        container.register_singleton(
+            IVisibilitySettingsManager, VisibilitySettingsManager
+        )
 
         # Register pictograph context service
         from application.services.ui.pictograph_context_service import (
-            PictographContextService,
+            PictographContextDetector,
         )
         from core.interfaces.core_services import (
-            IPictographBorderService,
-            IPictographContextService,
+            IPictographBorderManager,
+            IPictographContextDetector,
         )
 
         container.register_singleton(
-            IPictographContextService, PictographContextService
+            IPictographContextDetector, PictographContextDetector
         )
 
         # Register pictograph border service
-        from application.services.pictographs.border_service import (
-            PictographBorderService,
+        from application.services.pictograph.border_manager import (
+            PictographBorderManager,
         )
 
-        container.register_singleton(IPictographBorderService, PictographBorderService)
+        container.register_singleton(IPictographBorderManager, PictographBorderManager)
         logger.info("Registered IPictographBorderService in headless mode")
 
         # Register extracted services

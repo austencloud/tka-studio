@@ -34,8 +34,8 @@ and tabs exist and will resolve correctly at runtime.
 
 from typing import Any, Dict
 
-from application.services.ui.settings import SettingsServices
-from core.interfaces.core_services import IUIStateManagementService
+from application.services.ui.settings import UISettingsManager
+from core.interfaces.core_services import IUIStateManager
 from PyQt6.QtCore import QRectF, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QRegion
 from PyQt6.QtWidgets import (
@@ -72,7 +72,7 @@ class SettingsDialog(QDialog):
 
     settings_changed = pyqtSignal(str, object)
 
-    def __init__(self, ui_state_service: IUIStateManagementService, parent=None):
+    def __init__(self, ui_state_service: IUIStateManager, parent=None):
         super().__init__(parent)
         self.ui_state_service = ui_state_service
 
@@ -92,7 +92,7 @@ class SettingsDialog(QDialog):
         self.current_tab_index = 0
 
         # Initialize components
-        self.services = SettingsServices(ui_state_service)
+        self.services = UISettingsManager(ui_state_service)
         self.animations = SettingsAnimations(self)
 
         self._setup_coordinator()
@@ -166,9 +166,11 @@ class SettingsDialog(QDialog):
 
     def _setup_coordinator(self):
         """Setup the settings coordinator for managing state."""
-        from application.services.settings.settings_service import SettingsService
+        from application.services.settings.settings_coordinator import (
+            SettingsCoordinator,
+        )
 
-        settings_service = SettingsService(self.ui_state_service)
+        settings_service = SettingsCoordinator(self.ui_state_service)
         self.coordinator = SettingsCoordinator(settings_service)
         self.coordinator.settings_changed.connect(self.settings_changed.emit)
 

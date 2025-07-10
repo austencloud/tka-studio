@@ -5,18 +5,18 @@ These services provide the same interface as production services
 but use in-memory storage and simplified logic for fast testing.
 """
 
-from typing import List, Optional, Dict, Any, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 # Import service interfaces
 from core.interfaces.core_services import (
-    ILayoutService,
-    ISettingsService,
-    ISequenceDataService,
-    IValidationService,
     IArrowManagementService,
-    ISequenceManagementService,
-    IPictographManagementService,
-    IUIStateManagementService,
+    ILayoutService,
+    IPictographManager,
+    ISequenceDataService,
+    ISequenceManager,
+    ISettingsCoordinator,
+    IUIStateManager,
+    IValidationService,
 )
 
 # Import types
@@ -131,7 +131,7 @@ class MockLayoutService(ILayoutService):
         return {"component_1": (0, 0), "component_2": (200, 0), "component_3": (0, 200)}
 
 
-class InMemorySettingsService(ISettingsService):
+class InMemorySettingsService(ISettingsCoordinator):
     """In-memory settings service for testing."""
 
     def __init__(self):
@@ -200,7 +200,7 @@ class MockArrowManagementService(IArrowManagementService):
         return pictograph_data
 
 
-class MockSequenceManagementService(ISequenceManagementService):
+class MockSequenceManager(ISequenceManager):
     """Mock sequence management service."""
 
     def __init__(self):
@@ -247,7 +247,7 @@ class MockSequenceManagementService(ISequenceManagementService):
         return sequence
 
 
-class MockPictographManagementService(IPictographManagementService):
+class MockPictographManagementService(IPictographManager):
     """Mock pictograph management service."""
 
     def __init__(self):
@@ -285,7 +285,7 @@ class MockPictographManagementService(IPictographManagementService):
         ]
 
 
-class MockUIStateManagementService(IUIStateManagementService):
+class MockUIStateManagementService(IUIStateManager):
     """Mock UI state management service."""
 
     def __init__(self):

@@ -13,7 +13,7 @@ Architecture follows clean separation:
 All domain/application/presentation absolute imports are preserved.
 """
 
-from application.services.option_picker.option_service import OptionService
+from application.services.option_picker.option_provider import OptionProvider
 
 # Core components (primary public API)
 from .core.option_picker import OptionPicker
@@ -32,7 +32,7 @@ from .types.letter_types import LetterType
 __all__ = [
     "OptionPicker",
     "OptionPickerWidget",
-    "OptionService",
+    "OptionProvider",
     # "PictographPoolManager", # Moved to application.services.option_picker.data.pool_manager
     "LetterType",
 ]

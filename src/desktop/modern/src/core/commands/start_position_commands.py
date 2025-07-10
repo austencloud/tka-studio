@@ -176,7 +176,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
     def _save_to_persistence(self, start_position_data: BeatData):
         """Save start position to persistence"""
         try:
-            from application.services.sequences.sequence_start_position_manager import (
+            from application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
 
@@ -194,7 +194,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
     def _clear_from_persistence(self):
         """Clear start position from persistence"""
         try:
-            from application.services.sequences.sequence_start_position_manager import (
+            from application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
 
@@ -247,7 +247,7 @@ class ClearStartPositionCommand(ICommand[None]):
                 self._previous_position = state_manager.get_start_position()
 
             # Clear from persistence
-            from application.services.sequences.sequence_start_position_manager import (
+            from application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
 
@@ -266,7 +266,7 @@ class ClearStartPositionCommand(ICommand[None]):
         try:
             if self._previous_position:
                 # Restore previous position
-                from application.services.sequences.sequence_start_position_manager import (
+                from application.services.sequence.sequence_start_position_manager import (
                     SequenceStartPositionManager,
                 )
 

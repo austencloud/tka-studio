@@ -102,17 +102,10 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_core_services(self, container: "DIContainer") -> None:
         """Register core services using pure dependency injection."""
-        from application.services.core.sequence_manager import SequenceManager
-        from application.services.layout.layout_management_service import (
-            LayoutManagementService,
-        )
-        from application.services.ui.ui_state_management_service import (
-            UIStateManagementService,
-        )
-        from core.interfaces.core_services import (
-            ILayoutService,
-            IUIStateManagementService,
-        )
+        from application.services.layout.layout_manager import LayoutManager
+        from application.services.sequence.sequence_manager import SequenceManager
+        from application.services.ui.ui_state_manager import UIStateManager
+        from core.interfaces.core_services import ILayoutService, IUIStateManager
 
         # Register service types with factory functions for proper DI
         def create_layout_service():
@@ -124,15 +117,13 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             except Exception:
                 # Event bus not available, continue without it
                 pass
-            return LayoutManagementService(event_bus=event_bus)
+            return LayoutManager(event_bus=event_bus)
 
         # Register with factory functions for proper dependency resolution
         container.register_factory(ILayoutService, create_layout_service)
 
         # Register UI state service as singleton since it has no dependencies
-        container.register_singleton(
-            IUIStateManagementService, UIStateManagementService
-        )
+        container.register_singleton(IUIStateManager, UIStateManager)
 
         # Register SequenceManager as singleton for centralized sequence management
         container.register_singleton(SequenceManager, SequenceManager)
@@ -150,11 +141,11 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_layout_services(self, container: "DIContainer") -> None:
         """Register layout services."""
-        from application.services.layout.section_layout_service import (
-            SectionLayoutService,
+        from application.services.option_picker.section_layout_manager import (
+            SectionLayoutManager,
         )
 
-        container.register_singleton(SectionLayoutService, SectionLayoutService)
+        container.register_singleton(SectionLayoutManager, SectionLayoutManager)
         logger.info("Layout services registered")
 
         # Note: Layout services have been consolidated into LayoutManagementService
@@ -169,27 +160,23 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IPictographDataService,
             PictographDataService,
         )
-        from application.services.pictographs.border_service import (
-            PictographBorderService,
+        from application.services.pictograph.border_manager import (
+            PictographBorderManager,
         )
-        from application.services.pictographs.pictograph_management_service import (
-            PictographManagementService,
-        )
+        from application.services.pictograph.pictograph_manager import PictographManager
         from application.services.ui.pictograph_context_service import (
-            PictographContextService,
+            PictographContextDetector,
         )
         from core.interfaces.core_services import (
-            IPictographBorderService,
-            IPictographContextService,
+            IPictographBorderManager,
+            IPictographContextDetector,
         )
 
         container.register_singleton(IPictographDataService, PictographDataService)
+        container.register_singleton(PictographManager, PictographManager)
+        container.register_singleton(IPictographBorderManager, PictographBorderManager)
         container.register_singleton(
-            PictographManagementService, PictographManagementService
-        )
-        container.register_singleton(IPictographBorderService, PictographBorderService)
-        container.register_singleton(
-            IPictographContextService, PictographContextService
+            IPictographContextDetector, PictographContextDetector
         )
 
     def register_workbench_services(self, container: "DIContainer") -> None:
@@ -284,7 +271,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         try:
             # Import existing prop orchestrator (keep if still needed)
-            from application.services.pictographs.pictograph_orchestrator import (
+            from application.services.pictograph.pictograph_orchestrator import (
                 IPictographOrchestrator,
                 PictographOrchestrator,
             )
@@ -307,14 +294,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         from application.services.option_picker.data_service import (
             OptionPickerDataService,
         )
-        from application.services.option_picker.display_service import (
-            OptionPickerDisplayService,
+        from application.services.option_picker.display_manager import (
+            OptionPickerDisplayManager,
         )
         from application.services.option_picker.event_service import (
             OptionPickerEventService,
         )
-        from application.services.option_picker.initialization_service import (
-            OptionPickerInitializationService,
+        from application.services.option_picker.initializer import (
+            OptionPickerInitializer,
         )
         from application.services.option_picker.orchestrator import (
             OptionPickerOrchestrator,
@@ -323,17 +310,15 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             IOptionPickerDataService,
             IOptionPickerDisplayService,
             IOptionPickerEventService,
-            IOptionPickerInitializationService,
+            IOptionPickerInitializer,
             IOptionPickerOrchestrator,
         )
 
         # Register the refactored option picker services
-        container.register_singleton(
-            IOptionPickerInitializationService, OptionPickerInitializationService
-        )
+        container.register_singleton(IOptionPickerInitializer, OptionPickerInitializer)
         container.register_singleton(IOptionPickerDataService, OptionPickerDataService)
         container.register_singleton(
-            IOptionPickerDisplayService, OptionPickerDisplayService
+            IOptionPickerDisplayService, OptionPickerDisplayManager
         )
         container.register_singleton(
             IOptionPickerEventService, OptionPickerEventService
@@ -359,12 +344,12 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_graph_editor_services(self, container: "DIContainer") -> None:
         """Register graph editor services using pure dependency injection."""
-        from application.services.graph_editor.graph_editor_state_service import (
-            GraphEditorStateService,
+        from application.services.graph_editor.graph_editor_state_manager import (
+            GraphEditorStateManager,
         )
 
         # Register graph editor state service as singleton for centralized state management
-        container.register_singleton(GraphEditorStateService, GraphEditorStateService)
+        container.register_singleton(GraphEditorStateManager, GraphEditorStateManager)
 
     def get_registration_status(self) -> dict:
         """Get status of service registration."""

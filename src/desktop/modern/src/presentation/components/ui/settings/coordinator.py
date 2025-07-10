@@ -4,9 +4,7 @@ Settings dialog coordinator for managing settings state and updates.
 
 from typing import Any, Callable, Dict
 
-from application.services.settings.settings_service import (
-    SettingsService,
-)
+from application.services.settings.settings_coordinator import SettingsCoordinator
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
@@ -15,7 +13,7 @@ class SettingsCoordinator(QObject):
 
     settings_changed = pyqtSignal(str, object)  # setting_key, new_value
 
-    def __init__(self, settings_service: SettingsService):
+    def __init__(self, settings_service: SettingsCoordinator):
         super().__init__()
         self.settings_service = settings_service
         self._callbacks: Dict[str, list[Callable]] = {}

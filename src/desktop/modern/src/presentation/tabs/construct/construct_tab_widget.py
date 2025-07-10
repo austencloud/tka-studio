@@ -1,18 +1,16 @@
 from typing import TYPE_CHECKING, Optional
 
 from application.services.data.sequence_data_converter import SequenceDataConverter
-from application.services.sequences.sequence_beat_operations import (
+from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
 
 # Import services from application layer (moved from presentation)
-from application.services.sequences.sequence_loading_service import (
-    SequenceLoadingService,
-)
-from application.services.sequences.sequence_start_position_manager import (
+from application.services.sequence.loader import SequenceLoader
+from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
-from application.services.ui.ui_state_management_service import UIStateManagementService
+from application.services.ui.ui_state_manager import UIStateManager
 from core.dependency_injection.di_container import DIContainer
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
@@ -65,7 +63,7 @@ class ConstructTabWidget(QWidget):
         super().__init__(parent)
         self.container = container
         self.progress_callback = progress_callback
-        self.state_service = UIStateManagementService()
+        self.state_service = UIStateManager()
 
         # Report initialization start
         if self.progress_callback:
@@ -106,7 +104,7 @@ class ConstructTabWidget(QWidget):
         self.data_conversion_service = self.data_converter
 
         # Initialize sequence services directly
-        self.loading_service = SequenceLoadingService(
+        self.loading_service = SequenceLoader(
             workbench_getter=workbench_getter,
             workbench_setter=workbench_setter,
             data_converter=self.data_converter,
@@ -266,7 +264,7 @@ class ConstructTabWidget(QWidget):
     def _get_workbench_setter(self):
         """Get a function that can set data on the workbench"""
 
-        def set_workbench_data(data):
+        def set_workbench_data(data, pictograph_data=None):
             workbench: Optional[SequenceWorkbench] = getattr(
                 self.layout_manager, "workbench", None
             )
@@ -274,7 +272,8 @@ class ConstructTabWidget(QWidget):
                 if hasattr(data, "beats"):  # SequenceData
                     workbench.set_sequence(data)
                 else:  # BeatData (start position)
-                    workbench.set_start_position(data)
+                    # NEW: Pass both BeatData and optional PictographData
+                    workbench.set_start_position(data, pictograph_data)
 
         return set_workbench_data
 
@@ -285,11 +284,11 @@ class ConstructTabWidget(QWidget):
             print("🔄 [CONSTRUCT_TAB] Clearing sequence...")
 
             # Clear persistence FIRST
-            from application.services.sequences.sequence_persistence_service import (
-                SequencePersistenceService,
+            from application.services.sequence.sequence_persister import (
+                SequencePersister,
             )
 
-            persistence_service = SequencePersistenceService()
+            persistence_service = SequencePersister()
             persistence_service.clear_current_sequence()
             print("✅ [CONSTRUCT_TAB] Cleared sequence persistence")
 

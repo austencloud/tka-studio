@@ -15,14 +15,14 @@ except ImportError:
             self.parent = parent
 
     QT_AVAILABLE = False
-from application.services.graph_editor.graph_editor_service import GraphEditorService
-from application.services.sequences.sequence_management_service import (
-    SequenceManagementService,
+from application.services.graph_editor.graph_editor_coordinator import (
+    GraphEditorCoordinator,
 )
-from application.services.ui.full_screen_service import FullScreenService
+from application.services.sequence.sequence_manager import SequenceManager
+from application.services.ui.full_screen_viewer import FullScreenViewer
 from application.services.workbench.beat_selection_service import BeatSelectionService
 from core.dependency_injection.di_container import DIContainer
-from core.interfaces.core_services import ILayoutService, IUIStateManagementService
+from core.interfaces.core_services import ILayoutService, IUIStateManager
 from core.interfaces.workbench_services import (
     IBeatDeletionService,
     IDictionaryService,
@@ -67,29 +67,17 @@ def configure_workbench_services(container: DIContainer) -> None:
     """Configure workbench services in the dependency injection container"""
 
     # Get UI state service for services that need it
-    ui_state_service = container.resolve(IUIStateManagementService)
+    ui_state_service = container.resolve(IUIStateManager)
 
-    # Register consolidated services directly with event bus support
-    try:
-        from core.events import IEventBus
-
-        event_bus = (
-            container.resolve(IEventBus)
-            if hasattr(container, "_singletons") and IEventBus in container._singletons
-            else None
-        )
-    except ImportError:
-        event_bus = None
-
-    # Create sequence management service with event bus
-    sequence_service = SequenceManagementService(event_bus=event_bus)
+    # Create sequence management service
+    sequence_service = SequenceManager()
     container.register_instance(ISequenceWorkbenchService, sequence_service)
     container.register_instance(IBeatDeletionService, sequence_service)
     container.register_instance(IDictionaryService, sequence_service)
     container.register_singleton(
-        IFullScreenService, FullScreenService
+        IFullScreenService, FullScreenViewer
     )  # Register GraphEditorService with UI state service dependency
-    graph_editor_service = GraphEditorService(ui_state_service)
+    graph_editor_service = GraphEditorCoordinator(ui_state_service)
     container.register_instance(IGraphEditorService, graph_editor_service)
 
     # ILayoutService should already be registered in main.py

@@ -48,7 +48,7 @@ class SequenceManager(SequenceManagerQtAdapter):
         self._emitting_signal = False
         self.orientation_update_service = OptionOrientationUpdateService()
         # Initialize sequence persistence service - exactly like legacy
-        self.persistence_service = SequencePersistenceService()
+        self.persistence_service = SequencePersister()
 
     def add_beat_to_sequence(self, beat_data: BeatData):
         """Add a beat to the current sequence"""

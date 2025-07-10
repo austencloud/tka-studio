@@ -7,11 +7,11 @@ to PictographBorderService.
 
 from typing import Tuple
 
-from application.services.pictographs.border_service import (
+from application.services.pictograph.border_manager import (
     BorderConfiguration,
     BorderDimensions,
 )
-from core.interfaces.core_services import IPictographBorderService
+from core.interfaces.core_services import IPictographBorderManager
 from domain.models import LetterType
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen
@@ -25,7 +25,7 @@ class PictographBorderManager:
     to PictographBorderService.
     """
 
-    def __init__(self, border_service: IPictographBorderService):
+    def __init__(self, border_service: IPictographBorderManager):
         """Initialize with border service."""
         self._border_service = border_service
 
@@ -146,7 +146,7 @@ class BorderedPictographMixin:
     Updated to use the border service through the manager.
     """
 
-    def __init__(self, border_service: IPictographBorderService):
+    def __init__(self, border_service: IPictographBorderManager):
         self._border_manager = PictographBorderManager(border_service)
 
     def update_border_colors_for_letter_type(self, letter_type: LetterType) -> None:

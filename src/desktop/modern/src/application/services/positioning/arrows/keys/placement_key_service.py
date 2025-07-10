@@ -15,12 +15,10 @@ This achieves 100% functional parity with the legacy PlacementKeyGenerator.
 import logging
 from typing import Optional
 
+from application.services.pictograph.pictograph_validator import PictographValidator
 from domain.models import MotionData, Orientation
-from domain.models.pictograph_models import PictographData
 from domain.models.letter_type_classifier import LetterTypeClassifier
-from application.services.validation.pictograph_checker_service import (
-    PictographCheckerService,
-)
+from domain.models.pictograph_models import PictographData
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +57,7 @@ class PlacementKeyService:
             Placement key string (e.g., "pro_to_layer1_alpha_A" or "pro_to_RADIAL_layer3_beta")
         """
         # Use the pictograph checker to determine properties (like legacy check_manager)
-        pictograph_checker = PictographCheckerService(pictograph_data)
+        pictograph_checker = PictographValidator(pictograph_data)
         has_beta_props = pictograph_checker.ends_with_beta()
         has_alpha_props = pictograph_checker.ends_with_alpha()
         has_gamma_props = pictograph_checker.ends_with_gamma()
@@ -220,4 +218,3 @@ class PlacementKeyService:
             return "static"  # Default fallback
 
         return motion_data.motion_type.value
-

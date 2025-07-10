@@ -34,6 +34,9 @@ class ClickablePictographFrame(QFrame):
 
         self.container_widget: Optional[QWidget] = None
         self._option_picker_width: int = 0
+        
+        # Initialize component sizer service
+        self.component_sizer = ComponentSizer()
 
         # Initialize selection overlay
         self._selection_overlay: Optional[SelectionOverlay] = None
@@ -91,7 +94,7 @@ class ClickablePictographFrame(QFrame):
             return
 
         try:
-            from application.services.ui.context_aware_scaling_service import (
+            from application.services.ui.pictograph_scaler import (
                 ScalingContext,
             )
 
@@ -103,7 +106,7 @@ class ClickablePictographFrame(QFrame):
                     pictograph_data.glyph_data.letter_type
                 )
         except Exception:
-            from application.services.ui.context_aware_scaling_service import (
+            from application.services.ui.pictograph_scaler import (
                 ScalingContext,
             )
 
@@ -118,6 +121,7 @@ class ClickablePictographFrame(QFrame):
         self.container_widget = container_widget
 
     def resize_frame(self) -> None:
+        """Resize the frame using the ComponentSizer service."""
         try:
             if self._option_picker_width > 0:
                 container_width = self._option_picker_width
@@ -126,15 +130,22 @@ class ClickablePictographFrame(QFrame):
             else:
                 return
 
-            container_based_size = container_width // 8
-            size = container_based_size
-            border_width = max(1, int(size * 0.015))
-            spacing = 3
-            final_size = size - (2 * border_width) - spacing
-            final_size = max(60, min(final_size, 200))
+            # Use ComponentSizer service to calculate optimal size
+            constraints = SizeConstraints(
+                min_size=60,
+                max_size=200,
+                border_width_ratio=0.015,
+                spacing=3
+            )
+            
+            final_size = self.component_sizer.calculate_pictograph_frame_size(
+                container_width, constraints
+            )
+            
             self.setFixedSize(final_size, final_size)
         except Exception:
-            pass
+            # Fallback to minimum size if calculation fails
+            self.setFixedSize(60, 60)
 
     def update_sizing_reference(self, option_picker_width: int):
         self._option_picker_width = option_picker_width

@@ -7,10 +7,10 @@ beat added/removed events, sequence creation events, and component
 resize events with automatic layout recalculation.
 """
 
-from typing import Dict, Any, Tuple, List
 import logging
 import uuid
 from datetime import datetime
+from typing import Any, Dict, List, Tuple
 
 from core.types import Size
 
@@ -19,12 +19,12 @@ from .beat_layout_calculator import BeatLayoutCalculator
 # Event-driven architecture imports
 try:
     from core.events import (
-        EventPriority,
         BeatAddedEvent,
         BeatRemovedEvent,
-        SequenceCreatedEvent,
-        LayoutRecalculatedEvent,
         ComponentResizedEvent,
+        EventPriority,
+        LayoutRecalculatedEvent,
+        SequenceCreatedEvent,
     )
 
     EVENT_SYSTEM_AVAILABLE = True
@@ -109,7 +109,7 @@ class LayoutEventHandler:
 
         try:
             # Recalculate layout for the updated sequence
-            # This replaces the direct call that used to happen in SequenceManagementService
+            # This replaces the direct call that used to happen in SequenceManager
             container_size = (
                 self._main_window_size.width(),
                 self._main_window_size.height(),

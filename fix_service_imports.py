@@ -23,7 +23,7 @@ IMPORT_MAPPINGS = {
     # Sequence services moved from core/ to sequences/
     "from application.services.sequences.sequence_loading_service": "from application.services.sequences.sequence_loading_service",
     "from application.services.sequences.sequence_management_service": "from application.services.sequences.sequence_management_service",
-    "from application.services.sequences.sequence_persistence_service": "from application.services.sequences.sequence_persistence_service",
+    "from application.services.sequences.persister": "from application.services.sequences.persister",
     "from application.services.sequences.sequence_beat_operations": "from application.services.sequences.sequence_beat_operations",
     "from application.services.sequences.sequence_state_manager": "from application.services.sequences.sequence_state_manager",
     "from application.services.sequences.sequence_start_position_manager": "from application.services.sequences.sequence_start_position_manager",

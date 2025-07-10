@@ -8,7 +8,7 @@ It implements the adapter pattern to maintain separation between presentation an
 import logging
 from typing import Callable, Optional
 
-from application.services.core.sequence_manager import (
+from application.services.sequence.sequence_manager import (
     ISequenceManagerSignals,
     SequenceManager,
 )

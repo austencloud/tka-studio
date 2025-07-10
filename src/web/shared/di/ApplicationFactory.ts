@@ -42,8 +42,8 @@ export const ILayoutService = createServiceInterface(
 );
 
 // Management Services
-export const ISequenceManagementService = createServiceInterface(
-  "ISequenceManagementService",
+export const ISequenceManager = createServiceInterface(
+  "ISequenceManager",
   class {}
 );
 export const IPictographManagementService = createServiceInterface(
@@ -317,8 +317,8 @@ export class ApplicationFactory {
 
   private static _registerCoreServices(container: ServiceContainer): void {
     container.registerSingleton(
-      ISequenceManagementService,
-      class SequenceManagementService {
+      ISequenceManager,
+      class SequenceManager {
         // Implementation would go here
       }
     );

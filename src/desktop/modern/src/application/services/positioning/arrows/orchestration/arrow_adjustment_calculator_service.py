@@ -21,38 +21,31 @@ USAGE:
 import logging
 
 from core.interfaces.positioning_services import IArrowAdjustmentCalculator
-from core.types.result import (
-    ErrorType,
-    success,
-    failure,
-    app_error,
-)
-from core.types.coordinates import (
-    PositionResult,
-    get_default_point,
-)
+from core.types.coordinates import PositionResult, get_default_point
 from core.types.geometry import Point
+from core.types.result import ErrorType, app_error, failure, success
 from domain.models.pictograph_models import ArrowData, PictographData
 
-# Import the focused services
-from .arrow_adjustment_lookup_service import ArrowAdjustmentLookupService
-from .directional_tuple_processor import DirectionalTupleProcessor
-
-# Legacy service imports for backward compatibility
-from ...arrows.placement.default_placement_service import DefaultPlacementService
-from ...arrows.placement.special_placement_service import SpecialPlacementService
-from ...arrows.placement.special_placement_orientation_service import (
-    SpecialPlacementOrientationService,
-)
-from ...arrows.keys.placement_key_service import PlacementKeyService
-from ...arrows.keys.turns_tuple_generation_service import TurnsTupleGenerationService
-from ...arrows.keys.attribute_key_generation_service import (
-    AttributeKeyGenerationService,
-)
 from ...arrows.calculation.directional_tuple_calculator import (
     DirectionalTupleCalculator,
 )
 from ...arrows.calculation.quadrant_index_service import QuadrantIndexService
+from ...arrows.keys.attribute_key_generation_service import (
+    AttributeKeyGenerationService,
+)
+from ...arrows.keys.placement_key_service import PlacementKeyService
+from ...arrows.keys.turns_tuple_generation_service import TurnsTupleGenerationService
+
+# Legacy service imports for backward compatibility
+from ...arrows.placement.default_placement_service import DefaultPlacementService
+from ..placement.special_placement_ori_key_generator import (
+    SpecialPlacementOriKeyGenerator,
+)
+from ...arrows.placement.special_placement_service import SpecialPlacementService
+
+# Import the focused services
+from .arrow_adjustment_lookup_service import ArrowAdjustmentLookupService
+from .directional_tuple_processor import DirectionalTupleProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +87,7 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         return ArrowAdjustmentLookupService(
             special_placement_service=SpecialPlacementService(),
             default_placement_service=DefaultPlacementService(),
-            orientation_key_service=SpecialPlacementOrientationService(),
+            orientation_key_service=SpecialPlacementOriKeyGenerator(),
             placement_key_service=PlacementKeyService(),
             turns_tuple_service=TurnsTupleGenerationService(),
             attribute_key_service=AttributeKeyGenerationService(),

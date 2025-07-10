@@ -16,9 +16,7 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 from core.testing.ai_agent_helpers import TKAAITestHelper, ai_test_tka_comprehensive
 
 
@@ -29,7 +27,7 @@ def test_clear_sequence_fix():
     try:
         # Use TKA testing infrastructure
         helper = TKAAITestHelper(use_test_mode=True)
-        persistence_service = SequencePersistenceService()
+        persistence_service = SequencePersister()
 
         # Step 1: Create a test sequence
         print("📝 Creating test sequence...")
@@ -85,7 +83,7 @@ def test_minimal_sequence_startup():
     print("\n🧪 Testing minimal sequence startup...")
 
     try:
-        persistence_service = SequencePersistenceService()
+        persistence_service = SequencePersister()
 
         # Create a minimal sequence (metadata + start position only)
         print("📝 Creating minimal sequence...")

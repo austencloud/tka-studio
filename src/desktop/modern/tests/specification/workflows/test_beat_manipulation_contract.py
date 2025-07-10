@@ -64,7 +64,7 @@ class TestBeatManipulationWorkflowContract:
             from domain.models.beat_models import BeatData
 from domain.models.sequence_models import SequenceData
             from application.services.sequences.sequence_management_service import (
-                SequenceManagementService,
+                SequenceManager,
             )
 
             # Create initial sequence
@@ -77,7 +77,7 @@ from domain.models.sequence_models import SequenceData
             )
 
             # Create service
-            service = SequenceManagementService()
+            service = SequenceManager()
 
             # Add beat at end
             beat2 = BeatData(beat_number=2, letter="B")
@@ -104,7 +104,7 @@ from domain.models.sequence_models import SequenceData
             from domain.models.beat_models import BeatData
 from domain.models.sequence_models import SequenceData
             from application.services.sequences.sequence_management_service import (
-                SequenceManagementService,
+                SequenceManager,
             )
 
             # Create sequence with multiple beats
@@ -121,7 +121,7 @@ from domain.models.sequence_models import SequenceData
             )
 
             # Create service
-            service = SequenceManagementService()
+            service = SequenceManager()
 
             # Delete middle beat
             updated_sequence = service.remove_beat(sequence, 1)  # Delete "B"

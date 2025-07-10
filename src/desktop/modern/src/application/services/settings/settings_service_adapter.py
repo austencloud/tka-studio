@@ -3,14 +3,14 @@ Settings service implementation that adapts UIStateManagementService.
 """
 
 from typing import Any, Dict
-from core.interfaces.core_services import ISettingsService
-from core.interfaces.core_services import IUIStateManagementService
+
+from core.interfaces.core_services import ISettingsCoordinator, IUIStateManager
 
 
-class SettingsServiceAdapter(ISettingsService):
-    """Adapter that makes UIStateManagementService work as ISettingsService."""
+class SettingsServiceAdapter(ISettingsCoordinator):
+    """Adapter that makes UIStateManager work as ISettingsService."""
 
-    def __init__(self, ui_state_service: IUIStateManagementService):
+    def __init__(self, ui_state_service: IUIStateManager):
         self.ui_state_service = ui_state_service
 
     def get_setting(self, key: str, default: Any = None) -> Any:

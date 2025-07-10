@@ -19,16 +19,14 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 
 
 class SimpleClearSequenceTest:
     """Simplified test for clear sequence functionality using REAL data"""
 
     def __init__(self):
-        self.persistence_service = SequencePersistenceService()
+        self.persistence_service = SequencePersister()
 
     def create_real_test_sequence(self) -> bool:
         """Create test sequence with REAL data that will actually be used"""

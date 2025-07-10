@@ -5,11 +5,11 @@ Provides robust, explicit context detection for pictograph rendering components.
 Replaces brittle string matching with explicit context declaration and service-based resolution.
 """
 
-from typing import Optional, Dict, Any, Protocol, runtime_checkable
 import logging
+from typing import Any, Dict, Optional, Protocol, runtime_checkable
 
-from application.services.ui.context_aware_scaling_service import RenderingContext
-from core.interfaces.core_services import IPictographContextService
+from application.services.ui.pictograph_scaler import RenderingContext
+from core.interfaces.core_services import IPictographContextDetector
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class IPictographContextProvider(Protocol):
         """Return the rendering context for this component."""
 
 
-class PictographContextService(IPictographContextService):
+class PictographContextDetector(IPictographContextDetector):
     """
     Service for robust pictograph context detection.
 

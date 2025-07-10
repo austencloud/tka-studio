@@ -268,7 +268,7 @@ def time_function_calls():
                                 "ApplicationOrchestrator import",
                                 "TKAMainWindow.__init__",
                             ):
-                                from application.services.pictographs.application_orchestrator import (
+                                from application.services.core.application_orchestrator import (
                                     ApplicationOrchestrator,
                                 )
 

@@ -7,9 +7,9 @@ to SectionLayoutService.
 
 from typing import Optional
 
-from application.services.layout.section_layout_service import (
+from application.services.option_picker.section_layout_manager import (
     LayoutDimensions,
-    SectionLayoutService,
+    SectionLayoutManager,
     SizingConstraints,
 )
 from presentation.components.option_picker.components.sections.section_widget import (
@@ -29,7 +29,7 @@ class SectionLayoutManager:
     def __init__(
         self,
         section_widget: "OptionPickerSection",
-        layout_service: SectionLayoutService,
+        layout_service: SectionLayoutManager,
     ):
         self.section = section_widget
         self._layout_service = layout_service

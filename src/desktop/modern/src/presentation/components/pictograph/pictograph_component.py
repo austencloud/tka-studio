@@ -4,9 +4,9 @@ Direct pictograph view for Kinetic Constructor - matches legacy container hierar
 
 from typing import Any, Optional
 
-from application.services.ui.context_aware_scaling_service import ScalingContext
+from application.services.ui.pictograph_scaler import ScalingContext
 from core.dependency_injection import get_container
-from core.interfaces.core_services import IPictographBorderService
+from core.interfaces.core_services import IPictographBorderManager
 from domain.models import BeatData
 from domain.models.pictograph_models import PictographData
 from presentation.components.pictograph.border_manager import BorderedPictographMixin
@@ -20,7 +20,7 @@ class PictographComponent(BorderedPictographMixin, QGraphicsView):
 
     def __init__(
         self,
-        border_service: IPictographBorderService,
+        border_service: IPictographBorderManager,
         parent: Optional[QGraphicsView] = None,
     ):
         if parent is not None:
@@ -307,14 +307,14 @@ def create_pictograph_component(
         container = get_container()
 
     try:
-        border_service = container.resolve(IPictographBorderService)
+        border_service = container.resolve(IPictographBorderManager)
     except Exception as e:
         # Fallback: create service directly if DI fails
         print(f"⚠️ DI resolution failed, creating border service directly: {e}")
-        from application.services.pictographs.border_service import (
-            PictographBorderService,
+        from application.services.pictograph.border_manager import (
+            PictographBorderManager,
         )
 
-        border_service = PictographBorderService()
+        border_service = PictographBorderManager()
 
     return PictographComponent(border_service, parent)

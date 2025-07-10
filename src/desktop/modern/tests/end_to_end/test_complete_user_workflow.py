@@ -18,9 +18,7 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequence.sequence_persister import SequencePersister
 from core.application.application_factory import ApplicationFactory
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtTest import QTest
@@ -51,7 +49,7 @@ class CompleteUserWorkflowTester:
                 self.app = QApplication.instance()
 
             # Clear any existing sequence to start fresh
-            self.persistence_service = SequencePersistenceService()
+            self.persistence_service = SequencePersister()
             self.persistence_service.clear_current_sequence()
 
             print("✅ [WORKFLOW] Fresh environment setup complete")
@@ -133,6 +131,10 @@ class CompleteUserWorkflowTester:
 
                         self.log_workflow_state("AFTER_START_POSITION_SELECT")
                         print("✅ [WORKFLOW] Step 2: Start position selected")
+
+                        # CRITICAL: Verify data integrity between selection and display
+                        self.verify_start_position_data_integrity()
+
                         return True
                     else:
                         print("❌ [WORKFLOW] Could not find alpha1_alpha1 option")
@@ -273,6 +275,143 @@ class CompleteUserWorkflowTester:
                 ):
                     return widget
         return None
+
+    def verify_start_position_data_integrity(self):
+        """Verify that the selected start position data matches what's displayed."""
+        try:
+            print("🔍 [DATA_INTEGRITY] Verifying start position data integrity...")
+
+            # Get the start position view from the beat frame
+            if (
+                self.layout_manager
+                and hasattr(self.layout_manager, "beat_frame_section")
+                and self.layout_manager.beat_frame_section
+                and hasattr(self.layout_manager.beat_frame_section, "beat_frame")
+                and self.layout_manager.beat_frame_section.beat_frame
+                and hasattr(
+                    self.layout_manager.beat_frame_section.beat_frame,
+                    "start_position_view",
+                )
+            ):
+
+                start_position_view = (
+                    self.layout_manager.beat_frame_section.beat_frame.start_position_view
+                )
+
+                # Get the beat data that was set in the view
+                beat_data = start_position_view.get_beat_data()
+
+                if beat_data:
+                    print(f"📊 [DATA_INTEGRITY] StartPositionView BeatData:")
+                    print(f"   Letter: {beat_data.letter}")
+                    print(f"   Beat Number: {beat_data.beat_number}")
+                    print(f"   Duration: {beat_data.duration}")
+                    if beat_data.glyph_data:
+                        print(
+                            f"   Start Position: {beat_data.glyph_data.start_position}"
+                        )
+                        print(f"   End Position: {beat_data.glyph_data.end_position}")
+                    print(
+                        f"   Is Start Position: {beat_data.metadata.get('is_start_position', False)}"
+                    )
+
+                    # Verify expected values
+                    expected_letter = "α"
+                    expected_start_pos = "alpha1_alpha1"
+                    expected_beat_number = 0
+                    expected_is_start = True
+
+                    letter_match = beat_data.letter == expected_letter
+                    beat_num_match = beat_data.beat_number == expected_beat_number
+                    is_start_match = (
+                        beat_data.metadata.get("is_start_position", False)
+                        == expected_is_start
+                    )
+
+                    if beat_data.glyph_data:
+                        start_pos_match = (
+                            beat_data.glyph_data.start_position == expected_start_pos
+                        )
+                    else:
+                        start_pos_match = False
+                        print("❌ [DATA_INTEGRITY] No glyph_data found in BeatData")
+
+                    print(f"🔍 [DATA_INTEGRITY] Verification results:")
+                    print(
+                        f"   Letter match: {letter_match} (expected: {expected_letter}, actual: {beat_data.letter})"
+                    )
+                    print(
+                        f"   Beat number match: {beat_num_match} (expected: {expected_beat_number}, actual: {beat_data.beat_number})"
+                    )
+                    print(
+                        f"   Start position match: {start_pos_match} (expected: {expected_start_pos}, actual: {beat_data.glyph_data.start_position if beat_data.glyph_data else 'None'})"
+                    )
+                    print(
+                        f"   Is start position match: {is_start_match} (expected: {expected_is_start}, actual: {beat_data.metadata.get('is_start_position', False)})"
+                    )
+
+                    # NEW: Also check separate PictographData if available
+                    pictograph_data = start_position_view.get_pictograph_data()
+                    if pictograph_data:
+                        print(f"🎯 [DATA_INTEGRITY] Separate PictographData found!")
+                        print(f"   Letter: {pictograph_data.letter}")
+                        print(f"   Start Position: {pictograph_data.start_position}")
+                        print(f"   End Position: {pictograph_data.end_position}")
+
+                        pictograph_letter_match = (
+                            pictograph_data.letter == expected_letter
+                        )
+                        pictograph_start_pos_match = (
+                            pictograph_data.start_position == expected_start_pos
+                        )
+
+                        print(
+                            f"🔍 [DATA_INTEGRITY] PictographData verification results:"
+                        )
+                        print(
+                            f"   Letter match: {pictograph_letter_match} (expected: {expected_letter}, actual: {pictograph_data.letter})"
+                        )
+                        print(
+                            f"   Start position match: {pictograph_start_pos_match} (expected: {expected_start_pos}, actual: {pictograph_data.start_position})"
+                        )
+
+                        if pictograph_letter_match and pictograph_start_pos_match:
+                            print(
+                                "✅ [DATA_INTEGRITY] Separate PictographData is correct!"
+                            )
+                        else:
+                            print(
+                                "❌ [DATA_INTEGRITY] Separate PictographData has issues!"
+                            )
+                    else:
+                        print(
+                            "⚠️ [DATA_INTEGRITY] No separate PictographData found - using legacy conversion mode"
+                        )
+
+                    if (
+                        letter_match
+                        and beat_num_match
+                        and start_pos_match
+                        and is_start_match
+                    ):
+                        print(
+                            "✅ [DATA_INTEGRITY] All BeatData matches - StartPositionView should display correct data!"
+                        )
+                    else:
+                        print(
+                            "❌ [DATA_INTEGRITY] BeatData mismatch detected - StartPositionView may not be displaying the correct pictograph!"
+                        )
+
+                else:
+                    print("❌ [DATA_INTEGRITY] No beat data found in StartPositionView")
+            else:
+                print("❌ [DATA_INTEGRITY] Could not access StartPositionView")
+
+        except Exception as e:
+            print(f"❌ [DATA_INTEGRITY] Error verifying data integrity: {e}")
+            import traceback
+
+            traceback.print_exc()
 
     def log_workflow_state(self, event: str):
         """Log the current workflow state"""

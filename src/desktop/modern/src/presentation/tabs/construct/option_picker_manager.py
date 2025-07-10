@@ -8,7 +8,7 @@ Responsible for coordinating between the option picker component and sequence ma
 import time
 from typing import Optional
 
-from application.services.data.data_conversion_service import DataConversionService
+from application.services.data.data_converter import DataConverter
 from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from presentation.components.option_picker.core.option_picker import OptionPicker
@@ -34,7 +34,7 @@ class OptionPickerManager(QObject):
     def __init__(
         self,
         option_picker: Optional[OptionPicker],
-        data_conversion_service: DataConversionService,
+        data_conversion_service: DataConverter,
     ):
         super().__init__()
         self.option_picker = option_picker

@@ -37,7 +37,7 @@ except ImportError:
     QT_AVAILABLE = False
 
 from core.events.event_bus import get_event_bus
-from core.interfaces.core_services import IUIStateManagementService
+from core.interfaces.core_services import IUIStateManager
 from core.interfaces.organization_services import IFileSystemService
 from core.interfaces.session_services import (
     ISessionStateTracker,
@@ -61,7 +61,7 @@ class SessionStateTracker(ISessionStateTracker):
 
     def __init__(
         self,
-        ui_state_service: IUIStateManagementService,
+        ui_state_service: IUIStateManager,
         file_system_service: IFileSystemService,
         event_bus: Optional[Any] = None,
     ):

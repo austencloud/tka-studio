@@ -8,9 +8,7 @@ clean architecture and glassmorphism design.
 
 from typing import Dict, Union
 
-from core.interfaces.tab_settings_interfaces import (
-    IImageExportService,
-)
+from core.interfaces.tab_settings_interfaces import IImageExporter
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
 from PyQt6.QtWidgets import (
@@ -142,7 +140,7 @@ class ImageExportTab(QWidget):
     export_option_changed = pyqtSignal(str, object)
     setting_changed = pyqtSignal(str, object)
 
-    def __init__(self, export_service: IImageExportService, parent=None):
+    def __init__(self, export_service: IImageExporter, parent=None):
         super().__init__(parent)
         self.export_service = export_service
         self.option_toggles: Dict[str, ExportToggle] = {}

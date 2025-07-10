@@ -6,9 +6,7 @@ Handles all beat-related operations including adding, updating, and removing bea
 
 import logging
 
-from application.services.sequences.sequence_management_service import (
-    SequenceManagementService,
-)
+from application.services.sequence.sequence_manager import SequenceManager
 from core.commands import CommandProcessor
 from core.monitoring import monitor_performance
 from fastapi import APIRouter, Depends, HTTPException
@@ -29,7 +27,7 @@ async def add_beat(
     beat: BeatAPI,
     position: int,
     command_processor: CommandProcessor = Depends(get_command_processor),
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Add a beat to a sequence at the specified position."""
     try:
@@ -72,7 +70,7 @@ async def update_beat(
     sequence_id: str,
     beat_id: str,
     beat_update: BeatAPI,
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Update an existing beat in a sequence."""
     try:
@@ -125,7 +123,7 @@ async def update_beat(
 async def remove_beat(
     sequence_id: str,
     beat_id: str,
-    sequence_service: SequenceManagementService = Depends(get_sequence_service),
+    sequence_service: SequenceManager = Depends(get_sequence_service),
 ):
     """Remove a beat from a sequence."""
     try:

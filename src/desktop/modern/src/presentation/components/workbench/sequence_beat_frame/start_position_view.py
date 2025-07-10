@@ -35,6 +35,9 @@ class StartPositionView(QFrame):
 
         # Common state (previously from PictographViewBase)
         self._beat_data: Optional[BeatData] = None
+        self._pictograph_data: Optional[PictographData] = (
+            None  # NEW: Separate pictograph data
+        )
         self._is_selected = False
         self._is_highlighted = False
 
@@ -94,16 +97,13 @@ class StartPositionView(QFrame):
         self._selection_overlay.hide()
 
     def _update_display(self):
-        """Update the pictograph display with current beat data"""
-        if self._pictograph_component and self._beat_data:
-            self._pictograph_component.update_from_beat(self._beat_data)
-        elif self._pictograph_component:
-            self._pictograph_component.clear_pictograph()
+        """Update the pictograph display - delegates to the new separate data approach"""
+        self._update_pictograph()
 
     def _configure_pictograph_component(self):
         """Configure the pictograph component for start position context"""
         if hasattr(self._pictograph_component, "set_scaling_context"):
-            from application.services.ui.context_aware_scaling_service import (
+            from application.services.ui.pictograph_scaler import (
                 ScalingContext,
             )
 
@@ -150,6 +150,16 @@ class StartPositionView(QFrame):
         """Get current beat data"""
         return self._beat_data
 
+    def set_pictograph_data(self, pictograph_data: Optional["PictographData"]):
+        """Set pictograph data for direct rendering (separate approach)"""
+        if self._pictograph_data != pictograph_data:
+            self._pictograph_data = pictograph_data
+            self._update_display()
+
+    def get_pictograph_data(self) -> Optional["PictographData"]:
+        """Get current pictograph data"""
+        return getattr(self, "_pictograph_data", None)
+
     def set_selected(self, selected: bool):
         """Set selection state"""
         if self._is_selected != selected:
@@ -166,9 +176,23 @@ class StartPositionView(QFrame):
         """Check if view is selected"""
         return self._is_selected
 
-    def set_position_data(self, beat_data: BeatData):
-        """Set the start position data and update display"""
+    def set_position_data(
+        self, beat_data: BeatData, pictograph_data: Optional["PictographData"] = None
+    ):
+        """
+        Set the start position data and update display.
+
+        Args:
+            beat_data: Beat context data (beat number, duration, metadata)
+            pictograph_data: Optional pictograph data for direct rendering.
+                           If None, will be reconstructed from beat_data (legacy mode)
+        """
         self.set_beat_data(beat_data)
+        if pictograph_data is not None:
+            self.set_pictograph_data(pictograph_data)
+        else:
+            # Legacy mode: clear pictograph data to force reconstruction
+            self._pictograph_data = None
 
     def set_position_key(self, position_key: str):
         """Set the position key (e.g., 'alpha1', 'beta3')"""
@@ -274,6 +298,7 @@ class StartPositionView(QFrame):
     def clear_position_data(self):
         """Clear position data and show only START text (V1-style clear behavior)"""
         self._beat_data = None
+        self._pictograph_data = None  # NEW: Also clear separate pictograph data
         self._position_key = None
         self._show_cleared_state()
 
@@ -302,11 +327,19 @@ class StartPositionView(QFrame):
 
         self._mark_overlay_invalid()
 
-        if self._beat_data:
-
+        # NEW APPROACH: Use separate pictograph data if available
+        if hasattr(self, "_pictograph_data") and self._pictograph_data is not None:
+            print(
+                "🎯 [START_POSITION_VIEW] Using separate PictographData for rendering"
+            )
+            self._pictograph_component.update_from_pictograph_data(
+                self._pictograph_data
+            )
+        elif self._beat_data:
+            print("🔄 [START_POSITION_VIEW] Falling back to BeatData conversion")
             self._pictograph_component.update_from_beat(self._beat_data)
         else:
-
+            print("🔍 [START_POSITION_VIEW] No data available, clearing pictograph")
             self._pictograph_component.clear_pictograph()
 
         self._add_start_text_overlay()

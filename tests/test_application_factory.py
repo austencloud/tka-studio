@@ -6,13 +6,13 @@ AUTHOR: @ai-agent
 """
 
 import pytest
+from core.application.application_factory import ApplicationFactory, ApplicationMode
 from core.interfaces.core_services import (
     ILayoutService,
     ISequenceDataService,
-    ISettingsService,
+    ISettingsCoordinator,
 )
 from core.testing.ai_agent_helpers import TKAAITestHelper
-from core.application.application_factory import ApplicationFactory, ApplicationMode
 
 
 @pytest.mark.specification
@@ -113,7 +113,7 @@ class TestMockServices:
     def test_settings_service(self):
         """Test in-memory settings service."""
         container = ApplicationFactory.create_test_app()
-        service = container.resolve(ISettingsService)
+        service = container.resolve(ISettingsCoordinator)
 
         # Test setting and getting values
         service.set_setting("test_key", "test_value")

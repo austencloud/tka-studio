@@ -21,7 +21,7 @@ from core.interfaces.option_picker_services import (
     IOptionPickerDataService,
     IOptionPickerDisplayService,
     IOptionPickerEventService,
-    IOptionPickerInitializationService,
+    IOptionPickerInitializer,
 )
 from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
@@ -52,7 +52,7 @@ class OptionPickerOrchestrator(QObject):
     def __init__(
         self,
         container: DIContainer,
-        initialization_service: Optional[IOptionPickerInitializationService] = None,
+        initialization_service: Optional[IOptionPickerInitializer] = None,
         data_service: Optional[IOptionPickerDataService] = None,
         display_service: Optional[IOptionPickerDisplayService] = None,
         event_service: Optional[IOptionPickerEventService] = None,
@@ -76,18 +76,18 @@ class OptionPickerOrchestrator(QObject):
 
         # Initialize services with dependency injection
         if initialization_service is None:
-            from application.services.option_picker.initialization_service import (
-                OptionPickerInitializationService,
+            from application.services.option_picker.initializer import (
+                OptionPickerInitializer,
             )
 
-            initialization_service = OptionPickerInitializationService()
+            initialization_service = OptionPickerInitializer()
 
         if display_service is None:
-            from application.services.option_picker.display_service import (
-                OptionPickerDisplayService,
+            from application.services.option_picker.display_manager import (
+                OptionPickerDisplayManager,
             )
 
-            display_service = OptionPickerDisplayService()
+            display_service = OptionPickerDisplayManager()
 
         if event_service is None:
             from application.services.option_picker.event_service import (
@@ -265,7 +265,14 @@ class OptionPickerOrchestrator(QObject):
             pictograph_options = self.option_service.load_options_from_sequence(
                 sequence_data
             )
-            self.display_service.update_pictograph_display(pictograph_options)
+            display_result = self.display_service.update_pictograph_display(
+                pictograph_options
+            )
+
+            # Apply the display strategy to actually show the options
+            if display_result.get("success", False):
+                self._apply_display_strategy(display_result["display_strategy"])
+
             self.display_service.ensure_sections_visible()
 
             logger.debug(
@@ -274,6 +281,77 @@ class OptionPickerOrchestrator(QObject):
 
         except Exception as e:
             logger.error(f"Error loading motion combinations: {e}")
+
+    def _apply_display_strategy(self, display_strategy: dict) -> None:
+        """
+        Apply the display strategy to actually show the options in the UI.
+
+        Args:
+            display_strategy: The calculated display strategy from DisplayManager
+        """
+        try:
+            if not self.sections_container or not self.pool_manager:
+                logger.warning(
+                    "UI components not available for display strategy application"
+                )
+                return
+
+            # Get the pictograph assignments from the strategy
+            pictograph_assignments = display_strategy.get("pictograph_assignments", {})
+            organized_pictographs = display_strategy.get("organized_pictographs", {})
+
+            logger.debug(
+                f"Applying display strategy for {len(organized_pictographs)} letter types"
+            )
+
+            # Apply assignments for each letter type section
+            for letter_type, assignments in pictograph_assignments.items():
+                if letter_type not in organized_pictographs:
+                    continue
+
+                pictographs_for_type = organized_pictographs[letter_type]
+                if not pictographs_for_type:
+                    continue
+
+                # Get or create section for this letter type
+                section = self._get_or_create_section(letter_type)
+                if not section:
+                    continue
+
+                # Clear existing pictographs in this section
+                section.clear_pictographs()
+
+                # Add new pictographs to the section
+                frames_to_add = []
+                for pool_index, pictograph_data in pictographs_for_type:
+                    # Get frame from pool
+                    frame = self.pool_manager.get_pictograph_from_pool(pool_index)
+                    if frame:
+                        # Update frame with new pictograph data
+                        frame.update_pictograph_data(pictograph_data)
+                        frames_to_add.append(frame)
+
+                # Add all frames to the section at once (batch operation)
+                if frames_to_add:
+                    section.add_multiple_pictographs_from_pool(frames_to_add)
+                    logger.debug(
+                        f"Added {len(frames_to_add)} options to {letter_type} section"
+                    )
+
+            logger.debug("Display strategy applied successfully")
+
+        except Exception as e:
+            logger.error(f"Error applying display strategy: {e}")
+            import traceback
+
+            traceback.print_exc()
+
+    def _get_or_create_section(self, letter_type: str):
+        """Get existing section or create new one for the letter type."""
+        # This would need to be implemented based on how sections are managed
+        # For now, return None and log
+        logger.debug(f"Section management for {letter_type} not yet implemented")
+        return None
 
     def refresh_options(self) -> None:
         """Refresh the option picker with latest pictograph options."""

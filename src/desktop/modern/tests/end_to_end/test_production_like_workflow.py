@@ -708,7 +708,7 @@ class ProductionLikeTKATest:
         )
 
         # Initialize application orchestrator for full UI setup
-        from application.services.pictographs.application_orchestrator import (
+        from application.services.core.application_orchestrator import (
             ApplicationOrchestrator,
         )
 

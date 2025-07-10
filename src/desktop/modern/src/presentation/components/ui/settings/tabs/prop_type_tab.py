@@ -1,9 +1,6 @@
 from typing import Dict
 
-from core.interfaces.tab_settings_interfaces import (
-    IPropTypeService,
-    PropType,
-)
+from core.interfaces.tab_settings_interfaces import IPropTypeSettingsManager, PropType
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QIcon
 from PyQt6.QtWidgets import QGridLayout, QLabel, QPushButton, QVBoxLayout, QWidget
@@ -94,7 +91,7 @@ class PropTypeTab(QWidget):
 
     prop_type_changed = pyqtSignal(str)  # Changed to str to match legacy
 
-    def __init__(self, prop_service: IPropTypeService, parent=None):
+    def __init__(self, prop_service: IPropTypeSettingsManager, parent=None):
         super().__init__(parent)
         self.prop_service = prop_service
         self.buttons: Dict[str, PropButton] = {}

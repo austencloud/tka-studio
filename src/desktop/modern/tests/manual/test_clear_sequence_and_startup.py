@@ -25,9 +25,7 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from application.services.sequences.sequence_persistence_service import (
-    SequencePersistenceService,
-)
+from application.services.sequences.persister import SequencePersister
 from core.testing.ai_agent_helpers import TKAAITestHelper, ai_test_tka_comprehensive
 
 
@@ -44,7 +42,7 @@ class ClearSequenceAndStartupTester:
 
         # Use TKA testing infrastructure
         self.helper = TKAAITestHelper(use_test_mode=True)
-        self.persistence_service = SequencePersistenceService()
+        self.persistence_service = SequencePersister()
 
         print("✅ Test environment setup complete")
 

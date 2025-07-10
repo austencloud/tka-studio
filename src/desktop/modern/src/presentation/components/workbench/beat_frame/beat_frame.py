@@ -7,29 +7,18 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from typing import Dict, List, Optional
 
-from application.services.layout.beat_resizer_service import (
-    BeatResizerService,
+from application.services.layout.beat_resizer import BeatResizer
+from application.services.layout.layout_manager import LayoutManager
+from domain.models import BeatData, SequenceData
+from presentation.components.workbench.sequence_beat_frame.beat_selector import (
+    BeatSelector,
 )
-from application.services.layout.layout_management_service import (
-    LayoutManagementService,
-)
-from presentation.components.workbench.sequence_beat_frame.beat_selection_manager import (
-    BeatSelectionManager,
-)
-from presentation.components.workbench.sequence_beat_frame.beat_view import (
-    BeatView,
-)
+from presentation.components.workbench.sequence_beat_frame.beat_view import BeatView
 from presentation.components.workbench.sequence_beat_frame.start_position_view import (
     StartPositionView,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import (
-    QFrame,
-    QGridLayout,
-    QScrollArea,
-    QWidget,
-)
-from domain.models import BeatData, SequenceData
+from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
 
 
 class BeatFrame(QScrollArea):
@@ -49,12 +38,10 @@ class BeatFrame(QScrollArea):
     sequence_modified = pyqtSignal(object)  # SequenceData object
     layout_changed = pyqtSignal(int, int)  # rows, columns
 
-    def __init__(
-        self, layout_service: LayoutManagementService, parent: Optional[QWidget] = None
-    ):
+    def __init__(self, layout_service: LayoutManager, parent: Optional[QWidget] = None):
         super().__init__(parent)  # Injected dependencies
         self._layout_service = layout_service
-        self._resizer_service = BeatResizerService()
+        self._resizer_service = BeatResizer()
 
         # Current state
         self._current_sequence: Optional[SequenceData] = None
@@ -65,7 +52,7 @@ class BeatFrame(QScrollArea):
         self._container_widget: QWidget
         self._grid_layout: QGridLayout
         self._start_position_view: StartPositionView
-        self._selection_manager: BeatSelectionManager
+        self._selection_manager: BeatSelector
 
         self._setup_ui()
         self._setup_styling()
@@ -92,7 +79,7 @@ class BeatFrame(QScrollArea):
         self._initialize_beat_views()
 
         # Create selection manager
-        self._selection_manager = BeatSelectionManager(self._container_widget)
+        self._selection_manager = BeatSelector(self._container_widget)
         self._selection_manager.selection_changed.connect(self._on_selection_changed)
 
         # CRITICAL: Register beat views with selection manager for click handling

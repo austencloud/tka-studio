@@ -5,14 +5,14 @@ Custom QGraphicsSvgItem that supports selection highlighting for the graph edito
 Context-aware behavior: only clickable in graph editor, transparent elsewhere.
 """
 
-from typing import Optional
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtCore import Qt, pyqtSignal, QObject
-from PyQt6.QtGui import QPen, QColor, QPainter
 import logging
+from typing import Optional
 
-from application.services.ui.context_aware_scaling_service import RenderingContext
-from core.interfaces.core_services import IPictographContextService
+from application.services.ui.pictograph_scaler import RenderingContext
+from core.interfaces.core_services import IPictographContextDetector
+from PyQt6.QtCore import QObject, Qt, pyqtSignal
+from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,9 @@ class ArrowItem(QGraphicsSvgItem):
 
                 container = get_container()
                 if container:
-                    self._context_service = container.resolve(IPictographContextService)
+                    self._context_service = container.resolve(
+                        IPictographContextDetector
+                    )
                     print(
                         f"✅ [ARROW_ITEM] Successfully resolved IPictographContextService: {type(self._context_service).__name__}"
                     )

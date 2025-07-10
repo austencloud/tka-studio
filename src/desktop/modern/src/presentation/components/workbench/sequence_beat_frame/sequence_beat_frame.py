@@ -7,14 +7,15 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from typing import TYPE_CHECKING, Dict, List, Optional
 
-from application.services.layout.beat_resizer_service import BeatResizerService
+from application.services.layout.beat_resizer import BeatResizer
 from core.interfaces.core_services import ILayoutService
 from domain.models.beat_data import BeatData
+from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
 
-from .beat_selection_manager import BeatSelectionManager
+from .beat_selector import BeatSelector
 from .beat_view import BeatView
 from .start_position_view import StartPositionView
 
@@ -86,7 +87,7 @@ class SequenceBeatFrame(QScrollArea):
         super().__init__(parent)  # Injected dependencies
         self._layout_service = layout_service
         self._beat_selection_service = beat_selection_service
-        self._resizer_service = BeatResizerService()
+        self._resizer_service = BeatResizer()
 
         # Event system integration
         self.event_bus = event_bus or (
@@ -103,7 +104,7 @@ class SequenceBeatFrame(QScrollArea):
         self._container_widget: QWidget
         self._grid_layout: QGridLayout
         self._start_position_view: StartPositionView
-        self._selection_manager: BeatSelectionManager
+        self._selection_manager: BeatSelector
 
         self._setup_ui()
         self._setup_styling()
@@ -135,7 +136,7 @@ class SequenceBeatFrame(QScrollArea):
         self._initialize_beat_views()
 
         # Create selection manager with injected service
-        self._selection_manager = BeatSelectionManager(
+        self._selection_manager = BeatSelector(
             self._beat_selection_service, self._container_widget
         )
         self._selection_manager.selection_changed.connect(self._on_selection_changed)
@@ -290,10 +291,23 @@ class SequenceBeatFrame(QScrollArea):
         """Get the current sequence"""
         return self._current_sequence
 
-    def set_start_position(self, start_position_data: BeatData):
-        """Set the start position data (separate from sequence beats like legacy)"""
+    def set_start_position(
+        self,
+        start_position_data: BeatData,
+        pictograph_data: Optional["PictographData"] = None,
+    ):
+        """
+        Set the start position data (separate from sequence beats like legacy).
+
+        Args:
+            start_position_data: Beat context data (beat number, duration, metadata)
+            pictograph_data: Optional pictograph data for direct rendering.
+                           If None, will be reconstructed from beat_data (legacy mode)
+        """
         if self._start_position_view:
-            self._start_position_view.set_position_data(start_position_data)
+            self._start_position_view.set_position_data(
+                start_position_data, pictograph_data
+            )
 
     def initialize_cleared_start_position(self):
         """Initialize start position view in cleared state (shows START text only)"""

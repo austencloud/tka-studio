@@ -11,8 +11,9 @@ PROVIDES:
 - Background positioning and resizing
 """
 
-from typing import Optional, TYPE_CHECKING
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Optional
+
 from PyQt6.QtWidgets import QMainWindow
 
 if TYPE_CHECKING:
@@ -67,11 +68,9 @@ class BackgroundManager(IBackgroundManager):
         # Don't override progress - let orchestrator handle it
 
         # Get background type from UI state service
-        from core.interfaces.core_services import (
-            IUIStateManagementService,
-        )
+        from core.interfaces.core_services import IUIStateManager
 
-        ui_state_service = container.resolve(IUIStateManagementService)
+        ui_state_service = container.resolve(IUIStateManager)
         background_type = ui_state_service.get_setting("background_type", "Aurora")
 
         # Create background widget

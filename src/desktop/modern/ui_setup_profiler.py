@@ -108,7 +108,7 @@ def profile_ui_setup():
         target_screen = screens[0] if screens else None
         splash = SplashScreen(target_screen=target_screen)
 
-        from application.services.pictographs.application_orchestrator import (
+        from application.services.core.application_orchestrator import (
             ApplicationOrchestrator,
         )
 
