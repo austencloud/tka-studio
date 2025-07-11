@@ -48,11 +48,11 @@ def initialize_services():
         logger.info("✅ Command processor initialized")
 
         # Initialize sequence state manager (import here to avoid circular imports)
-        from application.services.sequence.sequence_state_manager import (
-            SequenceStateManager,
+        from application.services.sequence.sequence_state_tracker import (
+            SequenceStateTracker,
         )
 
-        _sequence_state_manager = SequenceStateManager(_event_bus, _command_processor)
+        _sequence_state_manager = SequenceStateTracker(_event_bus, _command_processor)
         logger.info("✅ Sequence state manager initialized")
 
         # Initialize event logger for debugging

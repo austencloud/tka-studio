@@ -103,9 +103,7 @@ class StartPositionView(QFrame):
     def _configure_pictograph_component(self):
         """Configure the pictograph component for start position context"""
         if hasattr(self._pictograph_component, "set_scaling_context"):
-            from application.services.ui.pictograph_scaler import (
-                ScalingContext,
-            )
+            from application.services.pictograph.scaling_service import ScalingContext
 
             self._pictograph_component.set_scaling_context(
                 ScalingContext.START_POS_PICKER

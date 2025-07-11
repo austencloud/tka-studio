@@ -5,13 +5,16 @@ Handles sequence loading from persistence and startup restoration.
 Responsible for loading sequences from current_sequence.json and managing startup workflows.
 """
 
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from application.services.sequence.sequence_persister import SequencePersister
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
 from presentation.components.workbench.workbench import SequenceWorkbench
 from PyQt6.QtCore import QObject, pyqtSignal
+
+if TYPE_CHECKING:
+    from domain.models.pictograph_models import PictographData
 
 
 class SequenceLoader(QObject):
@@ -117,10 +120,18 @@ class SequenceLoader(QObject):
                         f"🎯 [SEQUENCE_LOADING] Loading start position: {position_key} -> {end_pos}"
                     )
 
-                    # Create start position BeatData from the saved data
+                    # Create start position data in both formats
                     if self.data_converter:
+                        # Create BeatData for workbench
                         start_position_beat = self.data_converter.convert_legacy_start_position_to_beat_data(
                             start_position_data
+                        )
+
+                        # Create PictographData for option picker using dataset service
+                        start_position_pictograph = (
+                            self._create_start_position_pictograph_data(
+                                position_key, end_pos
+                            )
                         )
 
                         # Set start position directly in workbench (don't trigger selection flow)
@@ -131,9 +142,9 @@ class SequenceLoader(QObject):
                                 f"✅ [SEQUENCE_LOADING] Start position loaded into workbench: {end_pos}"
                             )
 
-                            # Emit signal for UI coordination with position key
+                            # Emit signal for UI coordination with PictographData for option picker
                             self.start_position_loaded.emit(
-                                start_position_beat, position_key
+                                start_position_pictograph, position_key
                             )
                         else:
                             print(
@@ -178,6 +189,65 @@ class SequenceLoader(QObject):
             import traceback
 
             traceback.print_exc()
+
+    def _create_start_position_pictograph_data(
+        self, position_key: str, end_pos: str
+    ) -> "PictographData":
+        """Create PictographData for start position using dataset service."""
+        try:
+            from application.services.data.dataset_quiry import DatasetQuery
+            from domain.models.pictograph_models import GridData, PictographData
+
+            dataset_service = DatasetQuery()
+            # Get real start position data from dataset as PictographData
+            real_start_position_pictograph = (
+                dataset_service.get_start_position_pictograph_data(
+                    position_key, "diamond"
+                )
+            )
+
+            if real_start_position_pictograph:
+                # Update the pictograph data with correct position information
+                pictograph_data = real_start_position_pictograph.update(
+                    start_position=position_key,
+                    end_position=end_pos,
+                    metadata={"source": "sequence_loading"},
+                )
+                print(
+                    f"✅ [SEQUENCE_LOADING] Created PictographData for position: {position_key}"
+                )
+                return pictograph_data
+            else:
+                print(
+                    f"⚠️ [SEQUENCE_LOADING] No real data found for position {position_key}, using fallback"
+                )
+                # Fallback PictographData
+                return PictographData(
+                    letter=position_key,
+                    start_position=position_key,
+                    end_position=end_pos,
+                    grid_data=GridData(),
+                    arrows={},
+                    props={},
+                    is_blank=False,
+                    metadata={"source": "fallback_sequence_loading"},
+                )
+
+        except Exception as e:
+            print(f"❌ [SEQUENCE_LOADING] Error creating PictographData: {e}")
+            # Last resort fallback
+            from domain.models.pictograph_models import GridData, PictographData
+
+            return PictographData(
+                letter=position_key,
+                start_position=position_key,
+                end_position=end_pos,
+                grid_data=GridData(),
+                arrows={},
+                props={},
+                is_blank=False,
+                metadata={"source": "error_fallback"},
+            )
 
     def _initialize_empty_sequence_start_position(self):
         """Initialize start position component for empty sequences"""

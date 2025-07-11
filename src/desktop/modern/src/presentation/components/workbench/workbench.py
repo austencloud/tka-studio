@@ -222,7 +222,6 @@ class SequenceWorkbench(QWidget):
 
         # If we have start position data, include it in the sequence
         if self._start_position_data:
-            # Update the sequence to include start position
             return self._current_sequence.update(
                 start_position=self._start_position_data
             )

@@ -130,25 +130,38 @@ class OptionProvider(IOptionProvider):
 
             # Get the last beat
             last_beat = sequence.beats[-1]
-            if not last_beat or not hasattr(last_beat, "end_pos"):
-                logger.debug("No valid end position found in modern sequence")
+            if not last_beat:
+                logger.debug("No last beat found in modern sequence")
                 return self._clear_and_return_empty()
 
-            end_position = last_beat.end_pos
+            # Extract end position from glyph_data
+            end_position = None
+            if last_beat.glyph_data and hasattr(last_beat.glyph_data, "end_position"):
+                end_position = last_beat.glyph_data.end_position
+            elif last_beat.metadata and "end_position" in last_beat.metadata:
+                end_position = last_beat.metadata["end_position"]
+
+            if not end_position:
+                logger.debug("No valid end position found in modern sequence beat")
+                return self._clear_and_return_empty()
+
             logger.debug(f"Extracted end position from modern sequence: {end_position}")
 
             # Get options from position service
             options = self._position_service.get_next_options(end_position)
 
+            # Apply orientation updates to match sequence context
+            updated_options = self._apply_orientation_updates(sequence, options)
+
             # Cache and emit
-            self._pictograph_options = options
+            self._pictograph_options = updated_options
             if self._signal_emitter:
-                self._signal_emitter.emit_options_loaded(options)
+                self._signal_emitter.emit_options_loaded(updated_options)
 
             logger.debug(
-                f"Loaded {len(options)} pictograph options from modern sequence"
+                f"Loaded {len(updated_options)} pictograph options from modern sequence"
             )
-            return options
+            return updated_options
 
         except Exception as e:
             logger.error(f"Error loading options from modern sequence: {e}")

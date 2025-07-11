@@ -1,16 +1,16 @@
 from typing import TYPE_CHECKING, Optional
 
 from application.services.data.sequence_data_converter import SequenceDataConverter
-from application.services.sequence.sequence_beat_operations import (
-    SequenceBeatOperations,
-)
 
 # Import services from application layer (moved from presentation)
 from application.services.sequence.loader import SequenceLoader
+from application.services.sequence.sequence_beat_operations import (
+    SequenceBeatOperations,
+)
 from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
-from application.services.ui.ui_state_manager import UIStateManager
+from application.services.ui.coordination.ui_coordinator import UICoordinator
 from core.dependency_injection.di_container import DIContainer
 from domain.models.beat_data import BeatData
 from domain.models.sequence_models import SequenceData
@@ -63,7 +63,7 @@ class ConstructTabWidget(QWidget):
         super().__init__(parent)
         self.container = container
         self.progress_callback = progress_callback
-        self.state_service = UIStateManager()
+        self.ui_coordinator = UICoordinator()
 
         # Report initialization start
         if self.progress_callback:

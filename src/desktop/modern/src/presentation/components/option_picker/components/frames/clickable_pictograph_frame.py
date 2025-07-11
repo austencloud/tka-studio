@@ -94,7 +94,7 @@ class ClickablePictographFrame(QFrame):
             return
 
         try:
-            from application.services.ui.pictograph_scaler import ScalingContext
+            from application.services.pictograph.scaling_service import ScalingContext
 
             self.pictograph_component.set_scaling_context(ScalingContext.OPTION_VIEW)
 
@@ -104,7 +104,7 @@ class ClickablePictographFrame(QFrame):
                     pictograph_data.glyph_data.letter_type
                 )
         except Exception:
-            from application.services.ui.pictograph_scaler import ScalingContext
+            from application.services.pictograph.scaling_service import ScalingContext
 
             self.pictograph_component.set_scaling_context(ScalingContext.OPTION_VIEW)
             if pictograph_data.glyph_data and pictograph_data.glyph_data.letter_type:

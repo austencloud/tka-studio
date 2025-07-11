@@ -45,9 +45,25 @@ class AssetPathResolver:
     def _find_asset_root(self) -> str:
         """Find the root images directory"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        for _ in range(6):  # Go up directories to find images
+        
+        # Try to find images directory by going up the directory tree
+        for _ in range(10):  # Go up directories to find images
             images_path = os.path.join(current_dir, "images")
             if os.path.exists(images_path):
                 return images_path
             current_dir = os.path.dirname(current_dir)
+        
+        # If not found, try common locations
+        common_paths = [
+            os.path.join(os.path.dirname(current_dir), "desktop", "images"),
+            os.path.join(os.path.dirname(current_dir), "..", "desktop", "images"),
+            os.path.join(os.path.dirname(current_dir), "..", "..", "desktop", "images"),
+            os.path.join(os.path.dirname(current_dir), "..", "..", "..", "desktop", "images")
+        ]
+        
+        for path in common_paths:
+            normalized_path = os.path.normpath(path)
+            if os.path.exists(normalized_path):
+                return normalized_path
+        
         return ""

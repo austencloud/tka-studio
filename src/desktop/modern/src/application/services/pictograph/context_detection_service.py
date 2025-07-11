@@ -8,7 +8,7 @@ Replaces brittle string matching with explicit context declaration and service-b
 import logging
 from typing import Any, Dict, Optional, Protocol, runtime_checkable
 
-from application.services.ui.pictograph_scaler import RenderingContext
+from application.services.pictograph.scaling_service import RenderingContext
 from core.interfaces.core_services import IPictographContextDetector
 
 logger = logging.getLogger(__name__)

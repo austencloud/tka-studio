@@ -38,7 +38,6 @@ def domain_to_api_sequence(sequence: SequenceData) -> SequenceAPI:
             name=sequence.name,
             word=sequence.word,
             beats=api_beats,
-            start_position=sequence.start_position,
             metadata=sequence.metadata,
         )
     except Exception as e:
@@ -70,7 +69,6 @@ def api_to_domain_sequence(api_seq: SequenceAPI) -> SequenceData:
             name=api_seq.name,
             word=api_seq.word,
             beats=domain_beats,
-            start_position=api_seq.start_position,
             metadata=api_seq.metadata or {},
         )
     except Exception as e:

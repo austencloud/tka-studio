@@ -145,7 +145,7 @@ class PictographScene(QGraphicsScene):
         """
         try:
             # Try to get context service from DI container
-            from application.services.ui.pictograph_scaler import RenderingContext
+            from application.services.pictograph.scaling_service import RenderingContext
             from core.application.application_factory import ApplicationFactory
             from core.interfaces.core_services import IPictographContextDetector
 

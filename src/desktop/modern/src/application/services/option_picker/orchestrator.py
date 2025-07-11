@@ -25,6 +25,9 @@ from core.interfaces.option_picker_interfaces import (
 )
 from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
+from presentation.components.option_picker.components.sections.section_widget import (
+    OptionPickerSection,
+)
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 

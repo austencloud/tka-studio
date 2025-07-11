@@ -104,7 +104,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         """Register core services using pure dependency injection."""
         from application.services.layout.layout_manager import LayoutManager
         from application.services.sequence.sequence_manager import SequenceManager
-        from application.services.ui.ui_state_manager import UIStateManager
+        from application.services.ui.coordination.ui_coordinator import UICoordinator
         from core.interfaces.core_services import ILayoutService, IUIStateManager
 
         # Register service types with factory functions for proper DI
@@ -123,7 +123,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         container.register_factory(ILayoutService, create_layout_service)
 
         # Register UI state service as singleton since it has no dependencies
-        container.register_singleton(IUIStateManager, UIStateManager)
+        container.register_singleton(IUIStateManager, UICoordinator)
 
         # Register SequenceManager as singleton for centralized sequence management
         container.register_singleton(SequenceManager, SequenceManager)
@@ -161,10 +161,10 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         from application.services.pictograph.border_manager import (
             PictographBorderManager,
         )
-        from application.services.pictograph.pictograph_manager import PictographManager
-        from application.services.ui.pictograph_context_service import (
+        from application.services.pictograph.context_detection_service import (
             PictographContextDetector,
         )
+        from application.services.pictograph.pictograph_manager import PictographManager
         from core.interfaces.core_services import (
             IPictographBorderManager,
             IPictographContextDetector,

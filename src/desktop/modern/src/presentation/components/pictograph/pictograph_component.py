@@ -4,7 +4,7 @@ Direct pictograph view for Kinetic Constructor - matches legacy container hierar
 
 from typing import Any, Optional
 
-from application.services.ui.pictograph_scaler import ScalingContext
+from application.services.pictograph.scaling_service import ScalingContext
 from core.dependency_injection import get_container
 from core.interfaces.core_services import IPictographBorderManager
 from domain.models import BeatData

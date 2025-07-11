@@ -122,7 +122,7 @@ class OptionPickerManager(QObject):
         try:
             self.option_picker.refresh_options_from_modern_sequence(sequence)
             total_time = (time.perf_counter() - start_time) * 1000
-            print(f"⚡ PURE Modern OPTION REFRESH: {total_time:.1f}ms")
+            print(f"⚡ Option picker refreshed: {total_time:.1f}ms")
         except Exception as e:
             import traceback
 

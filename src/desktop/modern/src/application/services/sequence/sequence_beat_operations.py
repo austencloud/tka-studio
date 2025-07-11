@@ -10,9 +10,7 @@ from typing import Callable, Optional
 from application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
-from application.services.sequence.sequence_persister import (
-    SequencePersister,
-)
+from application.services.sequence.sequence_persister import SequencePersister
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_models import PictographData
 from domain.models.sequence_models import SequenceData
@@ -61,8 +59,15 @@ class SequenceBeatOperations(QObject):
             traceback.print_exc()
 
     def add_beat_to_sequence(self, beat_data: BeatData):
-        """Add beat via command pattern instead of direct manipulation"""
+        """Add beat to sequence using the most appropriate method"""
         try:
+            # If we have a workbench setter, use direct manipulation for immediate UI updates
+            if self.workbench_setter:
+                print(f"🎯 Using direct manipulation (workbench setter available)")
+                self._add_beat_direct(beat_data)
+                return
+
+            # Otherwise, try command system for undo/redo support
             # Import command system
             from core.commands.sequence_commands import AddBeatCommand
             from core.service_locator import (

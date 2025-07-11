@@ -5,12 +5,11 @@ Manages signal connections, emissions, and coordination between construct tab co
 Responsible for connecting signals between components and handling signal routing.
 """
 
+# Import services from application layer (moved from presentation)
+from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
-
-# Import services from application layer (moved from presentation)
-from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )

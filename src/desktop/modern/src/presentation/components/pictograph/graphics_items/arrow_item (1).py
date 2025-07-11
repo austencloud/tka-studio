@@ -8,7 +8,7 @@ Context-aware behavior: only clickable in graph editor, transparent elsewhere.
 import logging
 from typing import Optional
 
-from application.services.ui.pictograph_scaler import RenderingContext
+from application.services.pictograph.scaling_service import RenderingContext
 from core.interfaces.core_services import IPictographContextDetector
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtGui import QColor, QPainter, QPen

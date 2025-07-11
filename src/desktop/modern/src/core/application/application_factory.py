@@ -22,7 +22,6 @@ from application.services.core.session_state_tracker import SessionStateTracker
 from application.services.layout.layout_manager import LayoutManager
 from application.services.pictograph.pictograph_manager import PictographManager
 from application.services.sequence.sequence_manager import SequenceManager
-from application.services.ui.ui_state_manager import UIStateManager
 
 # Import existing service interfaces
 from core.interfaces.core_services import (
@@ -105,7 +104,9 @@ class ApplicationFactory:
 
         # Register production services
         container.register_singleton(ILayoutService, LayoutManager)
-        container.register_singleton(IUIStateManager, UIStateManager)
+        from application.services.ui.coordination.ui_coordinator import UICoordinator
+
+        container.register_singleton(IUIStateManager, UICoordinator)
         container.register_singleton(ISequenceManager, SequenceManager)
         container.register_singleton(IPictographManager, PictographManager)
 
@@ -185,7 +186,7 @@ class ApplicationFactory:
         )
 
         # Register pictograph context service
-        from application.services.ui.pictograph_context_service import (
+        from application.services.pictograph.context_detection_service import (
             PictographContextDetector,
         )
         from core.interfaces.core_services import (
@@ -267,7 +268,7 @@ class ApplicationFactory:
         )
 
         # Register pictograph context service
-        from application.services.ui.pictograph_context_service import (
+        from application.services.pictograph.context_detection_service import (
             PictographContextDetector,
         )
         from core.interfaces.core_services import (

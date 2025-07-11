@@ -31,7 +31,7 @@ class SequenceData:
 
     # Business data
     beats: List[BeatData] = field(default_factory=list)
-    start_position: Optional[str] = None  # Simplified for now
+    start_position: Optional[BeatData] = None
 
     # Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)
@@ -154,7 +154,6 @@ class SequenceData:
             "name": self.name,
             "word": self.word,
             "beats": [beat.to_dict() for beat in self.beats],
-            "start_position": self.start_position,
             "metadata": self.metadata,
         }
 

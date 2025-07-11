@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QThread, pyqtSlot, Qt
 from PyQt6.QtGui import QPainter, QPixmap, QColor, QLinearGradient
 from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import Qt
 
 from .base_background import BaseBackground
 from .asset_utils import get_image_path
 
-from .snowfall.snowflake_worker import SnowflakeWorker
-from .snowfall.shooting_star_manager import ShootingStarManager
-from .snowfall.santa_manager import SantaManager
+from application.services.backgrounds.snowfall.snowflake_physics import SnowflakePhysics
+from application.services.backgrounds.snowfall.shooting_star import ShootingStar
+from application.services.backgrounds.snowfall.santa_movement import SantaMovement
 
 if TYPE_CHECKING:
     pass
@@ -32,26 +32,16 @@ class SnowfallBackground(BaseBackground):
             QPixmap(get_image_path(f"snowflakes/snowflake{i}.png"))
             for i in range(1, 21)
         ]
-        self.snowflakes = []
 
-        self.worker_thread = QThread()
-        self.worker = SnowflakeWorker(
+        # Use services instead of managers and workers
+        self.snowflake_physics = SnowflakePhysics(
             self.snowflake_count,
             self.widget_width,
             self.widget_height,
-            len(self.snowflake_images),
+            len(self.snowflake_images)
         )
-        self.worker.moveToThread(self.worker_thread)
-        self.worker.update_snowflakes.connect(self._update_snowflakes_from_worker)
-        self.worker_thread.started.connect(
-            self.worker.start
-        )  # Call start() instead of process()
-
-        self.shooting_star_manager = ShootingStarManager()
-        self.santa_manager = SantaManager()
-
-        # Start the worker thread
-        self.worker_thread.start()
+        self.shooting_star = ShootingStar()
+        self.santa_movement = SantaMovement()
 
     def paint_background(self, widget: QWidget, painter: QPainter):
         gradient = QLinearGradient(0, 0, 0, widget.height())
@@ -59,11 +49,11 @@ class SnowfallBackground(BaseBackground):
         gradient.setColorAt(1, QColor(50, 80, 120))
         painter.fillRect(widget.rect(), gradient)
 
-        # Draw snowflakes
-        for snowflake in self.snowflakes:
-            if 0 <= snowflake["image_index"] < len(self.snowflake_images):
-                image = self.snowflake_images[snowflake["image_index"]]
-                size = snowflake["size"]
+        # Draw snowflakes using service data
+        for snowflake in self.snowflake_physics.get_snowflake_states():
+            if 0 <= snowflake.image_index < len(self.snowflake_images):
+                image = self.snowflake_images[snowflake.image_index]
+                size = snowflake.size
                 scaled_image = image.scaled(
                     size,
                     size,
@@ -71,38 +61,59 @@ class SnowfallBackground(BaseBackground):
                     Qt.TransformationMode.SmoothTransformation,
                 )
                 painter.drawPixmap(
-                    int(snowflake["x"]), int(snowflake["y"]), scaled_image
+                    int(snowflake.x), int(snowflake.y), scaled_image
                 )
 
-        # Draw shooting stars and Santa
-        self.shooting_star_manager.draw_shooting_star(painter, widget)
-        if self.santa_manager.santa["active"]:
-            self.santa_manager.draw_santa(painter, widget)
-
-    @pyqtSlot(list)
-    def _update_snowflakes_from_worker(self, snowflakes):
-        """Slot to receive updated snowflake positions from the worker."""
-        self.snowflakes = snowflakes
-        self.update_required.emit()
+        # Draw shooting stars and Santa using service data
+        self._draw_shooting_star(painter, widget)
+        self._draw_santa(painter, widget)
+    
+    def _draw_shooting_star(self, painter: QPainter, widget: QWidget):
+        """Draw shooting star using service data"""
+        shooting_star = self.shooting_star.get_shooting_star_state()
+        if shooting_star:
+            # Draw shooting star tail
+            painter.setBrush(QColor(255, 255, 255, int(shooting_star.tail_opacity * 255)))
+            painter.setPen(Qt.PenStyle.NoPen)
+            
+            for i, (x, y, size) in enumerate(shooting_star.tail):
+                tail_x = x * widget.width()
+                tail_y = y * widget.height()
+                alpha = int((shooting_star.tail_opacity * (i + 1) / len(shooting_star.tail)) * 255)
+                painter.setBrush(QColor(255, 255, 255, alpha))
+                painter.drawEllipse(int(tail_x), int(tail_y), int(size), int(size))
+            
+            # Draw shooting star head
+            head_x = shooting_star.position.x * widget.width()
+            head_y = shooting_star.position.y * widget.height()
+            painter.setBrush(QColor(255, 255, 255, int(shooting_star.tail_opacity * 255)))
+            painter.drawEllipse(int(head_x), int(head_y), int(shooting_star.size), int(shooting_star.size))
+    
+    def _draw_santa(self, painter: QPainter, widget: QWidget):
+        """Draw Santa using service data"""
+        santa = self.santa_movement.get_santa_state()
+        if santa:
+            # Simple Santa representation - you can replace with actual Santa image
+            painter.setBrush(QColor(255, 0, 0, int(santa.opacity * 255)))
+            painter.setPen(Qt.PenStyle.NoPen)
+            
+            santa_x = santa.x * widget.width()
+            santa_y = santa.y * widget.height()
+            painter.drawEllipse(int(santa_x), int(santa_y), 40, 40)
 
     def animate_background(self):
-        """Animate additional background effects."""
-        self.shooting_star_manager.animate_shooting_star()
-        self.shooting_star_manager.manage_shooting_star(self.parent_widget or self)
-        self.santa_manager.animate_santa()
+        """Animate background effects using services"""
+        self.snowflake_physics.update_snowflakes()
+        self.shooting_star.update_shooting_star()
+        self.santa_movement.update_santa()
         self.update_required.emit()
 
     def update_bounds(self, width, height):
-        """Handle resizing of the widget and update worker bounds."""
+        """Handle resizing of the widget and update service bounds"""
         self.widget_width = width
         self.widget_height = height
-        if hasattr(self, "worker"):
-            self.worker.update_bounds(width, height)
+        self.snowflake_physics.update_bounds(width, height)
 
     def cleanup(self):
-        """Clean up the worker thread when background is destroyed."""
-        if hasattr(self, "worker"):
-            self.worker.stop()
-        if hasattr(self, "worker_thread"):
-            self.worker_thread.quit()
-            self.worker_thread.wait(1000)  # Wait up to 1 second for thread to finish
+        """Clean up resources - no longer needed with services"""
+        pass
