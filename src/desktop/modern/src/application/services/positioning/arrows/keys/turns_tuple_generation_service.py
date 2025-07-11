@@ -48,8 +48,8 @@ class TurnsTupleGenerationService:
             logger.warning("Missing required data for turns tuple generation")
             return "(0, 0)"
 
-        blue_motion = blue_arrow.motion_data
-        red_motion = red_arrow.motion_data
+        blue_motion = pictograph_data.motions.get("blue")
+        red_motion = pictograph_data.motions.get("red")
 
         if not blue_motion or not red_motion:
             logger.warning("Missing motion data for turns tuple generation")

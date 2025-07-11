@@ -21,7 +21,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from domain.models import MotionData, Orientation
 from domain.models.arrow_data import ArrowData
@@ -72,11 +72,11 @@ class SpecialPlacementService:
         Returns:
             QPointF with special adjustment or None if no special placement found
         """
-
-        if not arrow_data.motion_data or not pictograph_data.letter:
+        motion_data = pictograph_data.motions[arrow_data.color]
+        if not motion_data or not pictograph_data.letter:
             return None
 
-        motion = arrow_data.motion_data
+        motion = motion_data
         letter = pictograph_data.letter
 
         # Generate orientation key using validated logic
@@ -89,7 +89,7 @@ class SpecialPlacementService:
         turns_tuple = self._generate_turns_tuple(pictograph_data)
 
         # Look up special placement data
-        letter_data = (
+        letter_data: Dict[str, Dict[Tuple[int], Dict[str, float]]] = (
             self.special_placements.get(grid_mode, {}).get(ori_key, {}).get(letter, {})
         )
 
@@ -187,16 +187,10 @@ class SpecialPlacementService:
         try:
             blue_arrow = pictograph_data.arrows.get("blue")
             red_arrow = pictograph_data.arrows.get("red")
+            blue_motion = pictograph_data.motions.get("blue")
+            red_motion = pictograph_data.motions.get("red")
 
-            if (
-                blue_arrow
-                and red_arrow
-                and blue_arrow.motion_data
-                and red_arrow.motion_data
-            ):
-                blue_motion = blue_arrow.motion_data
-                red_motion = red_arrow.motion_data
-
+            if blue_arrow and red_arrow and blue_motion and red_motion:
                 blue_end_ori = getattr(blue_motion, "end_ori", Orientation.IN)
                 red_end_ori = getattr(red_motion, "end_ori", Orientation.IN)
 
@@ -232,14 +226,10 @@ class SpecialPlacementService:
             blue_arrow = pictograph_data.arrows.get("blue")
             red_arrow = pictograph_data.arrows.get("red")
 
-            if (
-                blue_arrow
-                and red_arrow
-                and blue_arrow.motion_data
-                and red_arrow.motion_data
-            ):
-                blue_motion = blue_arrow.motion_data
-                red_motion = red_arrow.motion_data
+            blue_motion = pictograph_data.motions.get("blue")
+            red_motion = pictograph_data.motions.get("red")
+
+            if blue_motion and red_motion:
 
                 blue_turns = getattr(blue_motion, "turns", 0)
                 red_turns = getattr(red_motion, "turns", 0)

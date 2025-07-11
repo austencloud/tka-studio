@@ -7,20 +7,20 @@ comprehensive tests and benchmarks to ensure all components work
 correctly and meet performance targets.
 """
 
+import logging
 import sys
 import time
-import logging
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Any, Dict, List, Tuple
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from core.performance import (
-    get_profiler,
-    get_qt_profiler,
     get_memory_tracker,
     get_performance_config,
+    get_profiler,
+    get_qt_profiler,
     profile,
     profile_block,
 )
@@ -29,7 +29,6 @@ from core.performance.integration import (
     initialize_performance_framework,
 )
 from infrastructure.performance.storage import get_performance_storage
-from infrastructure.performance.api import get_performance_api
 
 # Setup logging
 logging.basicConfig(
@@ -48,7 +47,6 @@ class PerformanceFrameworkValidator:
         self.memory_tracker = get_memory_tracker()
         self.integration = get_performance_integration()
         self.storage = get_performance_storage()
-        self.api = get_performance_api()
 
         self.validation_results: Dict[str, Dict[str, Any]] = {}
 
@@ -67,7 +65,6 @@ class PerformanceFrameworkValidator:
             ("Memory Tracker", self._validate_memory_tracker),
             ("Qt Profiler", self._validate_qt_profiler),
             ("Storage System", self._validate_storage_system),
-            ("API Endpoints", self._validate_api_endpoints),
             ("Integration", self._validate_integration),
             ("Performance Targets", self._validate_performance_targets),
             ("Error Handling", self._validate_error_handling),
@@ -257,9 +254,10 @@ class PerformanceFrameworkValidator:
     def _validate_storage_system(self) -> Dict[str, Any]:
         """Validate storage system functionality."""
         try:
-            from core.performance.profiler import ProfilerSession
-            from core.performance.metrics import FunctionMetrics
             from datetime import datetime
+
+            from core.performance.metrics import FunctionMetrics
+            from core.performance.profiler import ProfilerSession
 
             # Create test session
             session = ProfilerSession(
@@ -303,30 +301,6 @@ class PerformanceFrameworkValidator:
                     "session_saved": True,
                     "session_retrieved": True,
                     "recent_sessions_count": len(sessions),
-                },
-            }
-
-        except Exception as e:
-            return {"passed": False, "error": str(e)}
-
-    def _validate_api_endpoints(self) -> Dict[str, Any]:
-        """Validate API endpoints functionality."""
-        try:
-            # Test API initialization
-            assert self.api is not None
-
-            # Test router creation (if FastAPI available)
-            try:
-                router = self.api.get_router()
-                router_available = True
-            except RuntimeError:
-                router_available = False  # FastAPI not available
-
-            return {
-                "passed": True,
-                "details": {
-                    "api_initialized": True,
-                    "router_available": router_available,
                 },
             }
 
@@ -459,8 +433,8 @@ class PerformanceFrameworkValidator:
     def _validate_thread_safety(self) -> Dict[str, Any]:
         """Validate thread safety."""
         try:
-            import threading
             import queue
+            import threading
 
             self.profiler.start_session("thread_safety_test")
 

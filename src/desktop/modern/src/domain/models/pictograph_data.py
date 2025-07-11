@@ -144,6 +144,7 @@ class PictographData:
             "grid_data": self.grid_data.to_dict(),
             "arrows": {k: v.to_dict() for k, v in self.arrows.items()},
             "props": {k: v.to_dict() for k, v in self.props.items()},
+            "motions": {k: v.to_dict() for k, v in self.motions.items()},
             "letter": self.letter,
             "start_position": self.start_position,
             "end_position": self.end_position,
@@ -165,11 +166,16 @@ class PictographData:
         for color, prop_data in data.get("props", {}).items():
             props[color] = PropData.from_dict(prop_data)
 
+        motions = {}
+        for color, motion_data in data.get("motions", {}).items():
+            motions[color] = MotionData.from_dict(motion_data)
+
         return cls(
             id=data.get("id", str(uuid.uuid4())),
             grid_data=grid_data,
             arrows=arrows,
             props=props,
+            motions=motions,
             letter=data.get("letter"),
             start_position=data.get("start_position"),
             end_position=data.get("end_position"),

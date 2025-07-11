@@ -5,26 +5,25 @@ Comprehensive test suite for the TKA performance framework including
 profiler functionality, metrics collection, Qt integration, and regression detection.
 """
 
-import pytest
-import time
 import threading
-from unittest.mock import Mock, patch, MagicMock
+import time
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from typing import Any, Dict
+from unittest.mock import MagicMock, Mock, patch
 
+import pytest
 from core.performance import (
     AdvancedProfiler,
+    FunctionMetrics,
+    MemoryTracker,
+    PerformanceMetrics,
+    QtProfiler,
     get_profiler,
     profile,
     profile_block,
-    PerformanceMetrics,
-    FunctionMetrics,
-    QtProfiler,
-    MemoryTracker,
 )
 from core.performance.config import PerformanceConfig, get_performance_config
 from infrastructure.performance.storage import PerformanceStorage
-from infrastructure.performance.api import PerformanceAPI
 
 
 class TestAdvancedProfiler:
@@ -354,8 +353,8 @@ class TestPerformanceStorage:
     def setup_method(self):
         """Setup test environment."""
         # Use temporary database for testing
-        import tempfile
         import os
+        import tempfile
 
         config = PerformanceConfig.create_default()
 
@@ -431,27 +430,6 @@ class TestPerformanceStorage:
 
         sessions = result.value
         assert isinstance(sessions, list)
-
-
-class TestPerformanceAPI:
-    """Test performance API functionality."""
-
-    def setup_method(self):
-        """Setup test environment."""
-        self.api = PerformanceAPI()
-
-    def test_api_initialization(self):
-        """Test API initialization."""
-        assert self.api.profiler is not None
-        assert self.api.storage is not None
-
-    @pytest.mark.skipif(
-        not hasattr(PerformanceAPI, "router"), reason="FastAPI not available"
-    )
-    def test_api_router_creation(self):
-        """Test API router creation."""
-        router = self.api.get_router()
-        assert router is not None
 
 
 class TestPerformanceIntegration:

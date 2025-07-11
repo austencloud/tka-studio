@@ -49,14 +49,6 @@ class IArrowRenderingService(ABC):
     ) -> Tuple[float, float, float]:
         """Calculate arrow position using available positioning services."""
 
-    @abstractmethod
-    def get_location_position(
-        self, 
-        location: Location, 
-        coordinate_system=None
-    ) -> Tuple[float, float]:
-        """Get the coordinate position for a location."""
-
     # Cache Management
     @abstractmethod
     def get_cache_statistics(self) -> Dict[str, int]:

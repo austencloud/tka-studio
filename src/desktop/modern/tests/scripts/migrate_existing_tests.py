@@ -61,7 +61,6 @@ class TestMigrator:
             r"specification",
             r"requirement",
             r"interface",
-            r"api",
             r"workflow",
             r"immutability",
         ]

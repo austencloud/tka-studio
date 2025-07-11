@@ -11,8 +11,10 @@ from typing import TYPE_CHECKING, Callable, List, Optional
 
 from core.interfaces.core_services import IObjectPoolManager
 from domain.models.beat_data import BeatData
-from domain.models.enums import Location, MotionType, RotationDirection
+from domain.models.enums import GridMode, Location, MotionType, RotationDirection
+from domain.models.grid_data import GridData
 from domain.models.motion_models import MotionData
+from domain.models.pictograph_data import PictographData
 from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
     ClickablePictographFrame,
 )
@@ -200,48 +202,44 @@ class PictographPoolManager(QObject):
 
     def _create_minimal_pictograph_data(self):
         """Create minimal pictograph data as fallback."""
+        from domain.models.arrow_data import ArrowData
         from domain.models.enums import Location, MotionType, RotationDirection
         from domain.models.motion_models import MotionData
-        from domain.models.arrow_data import (
-            ArrowData,
-            GridData,
-            GridMode,
-            PictographData,
-        )
 
         # Create motion data
         blue_motion = MotionData(
             motion_type=MotionType.PRO,
             prop_rot_dir=RotationDirection.CLOCKWISE,
             start_loc=Location.NORTH,
-            end_loc=Location.SOUTH,
-            turns=1.0,
+            end_loc=Location.EAST,
+            turns=0.0,
             start_ori="in",
-            end_ori="out",
+            end_ori="in",
         )
 
         red_motion = MotionData(
-            motion_type=MotionType.ANTI,
+            motion_type=MotionType.PRO,
             prop_rot_dir=RotationDirection.COUNTER_CLOCKWISE,
             start_loc=Location.SOUTH,
-            end_loc=Location.NORTH,
-            turns=1.0,
+            end_loc=Location.WEST,
+            turns=0.0,
             start_ori="in",
-            end_ori="out",
+            end_ori="in",
         )
 
-        # Create arrow data
-        blue_arrow = ArrowData(motion_data=blue_motion, color="blue")
-        red_arrow = ArrowData(motion_data=red_motion, color="red")
+        # Create arrow data (without motion_data - motion data now in motions dictionary)
+        blue_arrow = ArrowData(color="blue", is_visible=True)
+        red_arrow = ArrowData(color="red", is_visible=True)
 
         # Create grid data
         grid_data = GridData(grid_mode=GridMode.DIAMOND)
 
-        # Create pictograph data
+        # Create pictograph data with motions dictionary
         return PictographData(
             grid_data=grid_data,
             arrows={"blue": blue_arrow, "red": red_arrow},
             props={},
+            motions={"blue": blue_motion, "red": red_motion},  # Add motions dictionary
             letter="A",
             metadata={"source": "fallback"},
         )

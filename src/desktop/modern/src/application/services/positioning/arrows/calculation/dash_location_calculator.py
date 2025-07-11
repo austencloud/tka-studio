@@ -54,9 +54,9 @@ class DashLocationCalculator:
         """
         # Extract motion data for the specified arrow
         motion = (
-            pictograph_data.arrows["blue"].motion_data
+            pictograph_data.motions.get("blue")
             if is_blue_arrow
-            else pictograph_data.arrows["red"].motion_data
+            else pictograph_data.motions.get("red")
         )
         other_motion = (
             pictograph_data.motions.get("red")

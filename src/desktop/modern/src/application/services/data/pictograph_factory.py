@@ -226,20 +226,17 @@ class PictographFactory:
         Returns:
             PictographData object
         """
-        # Create arrow data from motion data
+        # Create arrow data (without motion_data - motion data now in motions dictionary)
         arrows = {}
+        motions = {}
 
         if beat_data.blue_motion:
-            arrows["blue"] = ArrowData(
-                motion_data=beat_data.blue_motion,
-                color="blue",
-            )
+            arrows["blue"] = ArrowData(color="blue", is_visible=True)
+            motions["blue"] = beat_data.blue_motion
 
         if beat_data.red_motion:
-            arrows["red"] = ArrowData(
-                motion_data=beat_data.red_motion,
-                color="red",
-            )
+            arrows["red"] = ArrowData(color="red", is_visible=True)
+            motions["red"] = beat_data.red_motion
 
         # Create grid data
         grid_data = GridData(
@@ -251,6 +248,7 @@ class PictographFactory:
             grid_data=grid_data,
             arrows=arrows,
             props={},  # Props will be generated during rendering
+            motions=motions,  # NEW: Motion dictionary
             letter=beat_data.letter,
             start_position=beat_data.start_position,
             end_position=beat_data.end_position,

@@ -202,7 +202,6 @@ def profile_complete_startup():
             window.target_screen = target_screen
             window.parallel_mode = False
             window.parallel_geometry = None
-            window.enable_api = True
 
         # Phase 6: Orchestrator Initialization
         with profiler.time_operation("8. Orchestrator creation"):

@@ -74,7 +74,7 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
     ) -> None:
         """Initialize application with proper lifecycle management."""
         if progress_callback:
-            progress_callback(20, "Initializing application lifecycle...")
+            progress_callback(10, "Initializing application lifecycle...")
 
         # Set window title based on mode
         if parallel_mode:
@@ -82,16 +82,13 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
         else:
             main_window.setWindowTitle("🚀 Kinetic Constructor")
 
-        if progress_callback:
-            progress_callback(25, "Configuring window properties...")
-
         # Set window dimensions
         self.set_window_dimensions(
             main_window, target_screen, parallel_mode, parallel_geometry
         )
 
         if progress_callback:
-            progress_callback(30, "Loading session data...")
+            progress_callback(85, "Restoring previous session...")
 
         # NEW: Restore session state if available
         if self._session_service:
@@ -132,10 +129,10 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
             print("⚠️ [LIFECYCLE] No session service available for restoration")
 
         if progress_callback:
-            progress_callback(35, "Session restoration complete")
+            progress_callback(90, "Session restoration complete")
 
         if progress_callback:
-            progress_callback(40, "Application lifecycle initialized")
+            progress_callback(95, "Application lifecycle initialized")
 
     def trigger_deferred_session_restoration(self):
         """Trigger session restoration after UI components are ready."""
@@ -170,8 +167,8 @@ class ApplicationLifecycleManager(IApplicationLifecycleManager):
                 sequence_data = session_data.current_sequence_data
                 if isinstance(sequence_data, dict):
                     print("🔍 [LIFECYCLE] Converting dict to SequenceData object...")
-                    from domain.models.beat_data import BeatData
-                    from domain.models.sequence_data import SequenceData
+                    from domain.models.beat_models import BeatData
+                    from domain.models.sequence_models import SequenceData
 
                     beats_data = sequence_data.get("beats", [])
                     print(f"🔍 [LIFECYCLE] Sequence has {len(beats_data)} beats")

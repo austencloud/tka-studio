@@ -18,7 +18,6 @@ tests/
 │   ├── presentation/       # UI component tests
 │   └── services/           # Legacy service tests
 ├── integration/            # Multi-component tests
-│   ├── api/               # API integration tests
 │   ├── components/        # Component integration
 │   ├── services/          # Service integration
 │   └── workflows/         # End-to-end workflows

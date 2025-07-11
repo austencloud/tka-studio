@@ -151,7 +151,7 @@ class StartupTimingAnalyzer:
                 "Option picker",
                 "Pictograph pool",
             ],
-            "Session & API": ["Session restoration", "API server", "Background setup"],
+            "Session & Background": ["Session restoration", "Background setup"],
         }
 
         print("\n📈 PHASE ANALYSIS:")

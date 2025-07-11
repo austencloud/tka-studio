@@ -78,6 +78,10 @@ class PictographComponent(BorderedPictographMixin, QGraphicsView):
         if beat_data.glyph_data and beat_data.glyph_data.letter_type:
             self.update_border_colors_for_letter_type(beat_data.glyph_data.letter_type)
 
+        # VISIBILITY FIX: Show component when updated with data
+        if not self.isVisible():
+            self.show()
+
     def update_from_pictograph_data(self, pictograph_data: "PictographData") -> None:
         """
         Update component from PictographData (for pickers and non-sequence contexts).
@@ -90,6 +94,10 @@ class PictographComponent(BorderedPictographMixin, QGraphicsView):
         if self.scene:
             self.scene.render_pictograph(pictograph_data)
             self._fit_view()
+
+        # VISIBILITY FIX: Show component when updated with data
+        if not self.isVisible():
+            self.show()
 
         # Emit the actual data we're working with - no unnecessary conversion!
 

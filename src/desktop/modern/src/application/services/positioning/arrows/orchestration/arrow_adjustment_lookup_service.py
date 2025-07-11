@@ -107,7 +107,7 @@ class ArrowAdjustmentLookupService:
         Returns:
             Result containing Point adjustment or AppError
         """
-        motion = arrow_data.motion_data
+        motion = pictograph_data.motions[arrow_data.color]
         letter = pictograph_data.letter
 
         if not motion or not letter:
@@ -172,7 +172,7 @@ class ArrowAdjustmentLookupService:
     ) -> Result[tuple[str, str, str], AppError]:
         """Generate all required keys for special placement lookup."""
         try:
-            motion = arrow_data.motion_data
+            motion = pictograph_data.motions[arrow_data.color]
 
             ori_key = self.orientation_key_service.generate_orientation_key(
                 motion, pictograph_data
@@ -259,7 +259,7 @@ class ArrowAdjustmentLookupService:
 
         Returns Result[Point, AppError] instead of QPointF.
         """
-        motion = arrow_data.motion_data
+        motion = pictograph_data.motions[arrow_data.color]
 
         if not motion:
             return failure(

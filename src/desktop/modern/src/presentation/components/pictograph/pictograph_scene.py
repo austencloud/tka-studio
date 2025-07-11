@@ -376,6 +376,7 @@ class PictographScene(QGraphicsScene):
                 "blue": pictograph_data.arrows.get("blue", ArrowData(color="blue")),
                 "red": pictograph_data.arrows.get("red", ArrowData(color="red")),
             },
+            motions=pictograph_data.motions,  # CRITICAL: Include motions for arrow positioning
             letter=pictograph_data.letter,  # Essential for special placement lookup
             glyph_data=pictograph_data.glyph_data,
         )

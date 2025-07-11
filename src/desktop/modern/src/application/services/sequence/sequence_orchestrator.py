@@ -765,9 +765,9 @@ class SequenceOrchestrator:
 
             if hasattr(pictograph_data, "arrows") and pictograph_data.arrows:
                 if "blue" in pictograph_data.arrows:
-                    blue_motion = pictograph_data.arrows["blue"].motion_data
+                    blue_motion = pictograph_data.motions["blue"]
                 if "red" in pictograph_data.arrows:
-                    red_motion = pictograph_data.arrows["red"].motion_data
+                    red_motion = pictograph_data.motions["red"]
 
             # Get current sequence to determine beat number
             current_sequence = self._get_current_sequence()

@@ -225,6 +225,12 @@ class PositionMatchingService:
         if red_motion:
             motions["red"] = red_motion
 
+        # DEBUG: Log motion data creation
+        print(f"🔍 [POSITION_MATCHING] Creating motions for letter {letter}:")
+        print(f"   Blue motion: {blue_motion.motion_type if blue_motion else 'None'}")
+        print(f"   Red motion: {red_motion.motion_type if red_motion else 'None'}")
+        print(f"   Motions dict keys: {list(motions.keys())}")
+
         # Create initial PictographData object with motion dictionary
         pictograph_data = PictographData(
             grid_data=grid_data,

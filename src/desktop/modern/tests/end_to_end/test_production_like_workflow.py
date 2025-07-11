@@ -721,7 +721,6 @@ class ProductionLikeTKATest:
             target_screen=None,
             parallel_mode=False,
             parallel_geometry=None,
-            enable_api=False,  # Disable API for testing
         )
 
         # Set the tab widget as central widget

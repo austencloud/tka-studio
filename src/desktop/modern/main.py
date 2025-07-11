@@ -36,7 +36,6 @@ class TKAMainWindow(QMainWindow):
         target_screen=None,
         parallel_mode=False,
         parallel_geometry=None,
-        enable_api=True,
     ):
         super().__init__()
 
@@ -48,7 +47,6 @@ class TKAMainWindow(QMainWindow):
         self.target_screen = target_screen
         self.parallel_mode = parallel_mode
         self.parallel_geometry = parallel_geometry
-        self.enable_api = enable_api
 
         # Only initialize orchestrator if we have a container (production mode)
         if self.container:
@@ -67,7 +65,6 @@ class TKAMainWindow(QMainWindow):
                 target_screen,
                 parallel_mode,
                 parallel_geometry,
-                enable_api,
             )
 
     def _attach_production_debugger(self) -> None:

@@ -8,6 +8,7 @@ Legacy source: src/desktop/legacy/src/placement_managers/attr_key_generator.py
 import logging
 
 from domain.models.arrow_data import ArrowData
+from domain.models.enums import Orientation
 from domain.models.letter_type_classifier import LetterTypeClassifier
 from domain.models.pictograph_data import PictographData
 
@@ -24,12 +25,11 @@ class AttributeKeyGenerationService:
         self, arrow_data: ArrowData, pictograph_data: PictographData
     ) -> str:
         """Original method for getting key from Arrow data (faithful port)."""
-        if not arrow_data.motion_data:
-            return "static"
 
-        motion_type = arrow_data.motion_data.motion_type.value
+        motion_data = pictograph_data.motions[arrow_data.color]
+        motion_type = motion_data.motion_type
         letter = pictograph_data.letter or ""
-        start_ori = getattr(arrow_data.motion_data, "start_ori", "in")
+        start_ori = getattr(motion_data, "start_ori", Orientation.IN)
         color = arrow_data.color
         lead_state = self._determine_lead_state(arrow_data, pictograph_data)
 
@@ -107,11 +107,11 @@ class AttributeKeyGenerationService:
         arrows = list(pictograph_data.arrows.values())
         if len(arrows) < 2:
             return False
-
+        motions = pictograph_data.motions
         motion_types = set()
-        for arrow in arrows:
-            if arrow.motion_data:
-                motion_types.add(arrow.motion_data.motion_type.value)
+        for motion in motions.values():
+            if motion:
+                motion_types.add(motion.motion_type.value)
 
         return len(motion_types) > 1
 
@@ -120,11 +120,12 @@ class AttributeKeyGenerationService:
         arrows = list(pictograph_data.arrows.values())
         if len(arrows) < 2:
             return False
+        motions = pictograph_data.motions
 
         start_oris = set()
-        for arrow in arrows:
-            if arrow.motion_data:
-                start_ori = getattr(arrow.motion_data, "start_ori", "in")
+        for motion in motions:
+            if motion:
+                start_ori = getattr(motion, "start_ori", Orientation.IN)
                 start_oris.add(start_ori)
 
         return len(start_oris) > 1
@@ -162,11 +163,14 @@ class AttributeKeyGenerationService:
         # The arrow that "leads" is typically determined by position/motion order
 
         # If one motion ends where the other starts, the one that starts there is leading
-        if blue_arrow.motion_data and red_arrow.motion_data:
-            blue_start = blue_arrow.motion_data.start_loc
-            blue_end = blue_arrow.motion_data.end_loc
-            red_start = red_arrow.motion_data.start_loc
-            red_end = red_arrow.motion_data.end_loc
+        blue_motion = pictograph_data.motions.get("blue")
+        red_motion = pictograph_data.motions.get("red")
+
+        if blue_motion and red_motion:
+            blue_start = blue_motion.start_loc
+            blue_end = blue_motion.end_loc
+            red_start = red_motion.start_loc
+            red_end = red_motion.end_loc
 
             # Check if blue ends where red starts
             if blue_end == red_start:

@@ -55,9 +55,9 @@ class BeatDataConverter:
         red_motion = None
 
         if "blue" in pictograph_data.arrows:
-            blue_motion = pictograph_data.arrows["blue"].motion_data
+            blue_motion = pictograph_data.motions["blue"]
         if "red" in pictograph_data.arrows:
-            red_motion = pictograph_data.arrows["red"].motion_data
+            red_motion = pictograph_data.motions["red"]
 
         # Create BeatData with extracted information
         return BeatData(

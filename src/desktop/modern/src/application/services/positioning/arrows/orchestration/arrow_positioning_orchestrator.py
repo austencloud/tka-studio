@@ -3,11 +3,9 @@ Arrow Positioning Orchestrator
 
 Coordinates microservices to provide the same interface as the monolith.
 Uses dependency injection to compose positioning pipeline.
-
-Replaces the 700-line ArrowManagementService with clean composition
-of focused services.
 """
 
+import logging
 from typing import Tuple
 
 from core.interfaces.positioning_services import (
@@ -18,16 +16,15 @@ from core.interfaces.positioning_services import (
     IArrowRotationCalculator,
 )
 from domain.models.arrow_data import ArrowData
+from domain.models.motion_models import MotionData
 from domain.models.pictograph_data import PictographData
+from presentation.components.pictograph.graphics_items.arrow_item import ArrowItem
+
+logger = logging.getLogger(__name__)
 
 
 class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
-    """
-    Orchestrates microservices to handle arrow positioning.
-
-    Replaces the 700-line ArrowManagementService monolith with clean
-    composition of focused services.
-    """
+    """Orchestrates microservices to handle arrow positioning."""
 
     def __init__(
         self,
@@ -36,67 +33,45 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         adjustment_calculator: IArrowAdjustmentCalculator,
         coordinate_system: IArrowCoordinateSystemService,
     ):
-        """Initialize with dependency injection."""
         self.location_calculator = location_calculator
         self.rotation_calculator = rotation_calculator
         self.adjustment_calculator = adjustment_calculator
         self.coordinate_system = coordinate_system
 
-        # Mirror conditions (extracted from monolith)
         self.mirror_conditions = {
             "anti": {"cw": True, "ccw": False},
             "other": {"cw": False, "ccw": True},
         }
 
     def calculate_arrow_position(
-        self, arrow_data: ArrowData, pictograph_data: PictographData
+        self,
+        arrow_data: ArrowData,
+        pictograph_data: PictographData,
+        motion_data: MotionData,
     ) -> Tuple[float, float, float]:
-        """
-        Calculate arrow position using microservices pipeline.
-
-        PIPELINE:
-        1. Calculate location (microservice)
-        2. Get initial position (microservice)
-        3. Calculate rotation (microservice)
-        4. Calculate adjustment (microservice)
-        5. Compose final position
-        """
-        # Get motion data from pictograph_data instead of arrow_data
-        motion = None
-        if pictograph_data and pictograph_data.motions:
-            motion = pictograph_data.motions.get(arrow_data.color)
+        """Calculate arrow position using microservices pipeline."""
+        motion = motion_data or self._get_motion_from_pictograph(
+            arrow_data, pictograph_data
+        )
 
         if not motion:
+            logger.warning(
+                f"No motion data for {arrow_data.color}, returning center position"
+            )
             center = self.coordinate_system.get_scene_center()
-            return center.x, center.y, 0.0
+            return center.x(), center.y(), 0.0
 
-        # Step 1: Calculate arrow location
         location = self.location_calculator.calculate_location(motion, pictograph_data)
-
-        # Step 2: Get initial position
         initial_position = self.coordinate_system.get_initial_position(motion, location)
 
-        # Step 3: Calculate rotation
-        rotation = self.rotation_calculator.calculate_rotation(motion, location)
+        initial_position = self._ensure_valid_position(initial_position)
 
-        # Step 4: Calculate adjustment
+        rotation = self.rotation_calculator.calculate_rotation(motion, location)
         adjustment = self.adjustment_calculator.calculate_adjustment(
             arrow_data, pictograph_data
         )
 
-        # Step 5: Compose final position
-        # Handle adjustment as float, QPointF, or Point object
-        if isinstance(adjustment, (int, float)):
-            adjustment_x = adjustment
-            adjustment_y = adjustment
-        elif hasattr(adjustment, "x") and hasattr(adjustment, "y"):
-            x_attr = adjustment.x
-            y_attr = adjustment.y
-            adjustment_x = x_attr() if callable(x_attr) else x_attr
-            adjustment_y = y_attr() if callable(y_attr) else y_attr
-        else:
-            adjustment_x = 0.0
-            adjustment_y = 0.0
+        adjustment_x, adjustment_y = self._extract_adjustment_values(adjustment)
 
         final_x = initial_position.x + adjustment_x
         final_y = initial_position.y + adjustment_y
@@ -110,9 +85,11 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         updated_pictograph = pictograph_data
 
         for color, arrow_data in pictograph_data.arrows.items():
-            if arrow_data.is_visible and arrow_data.motion_data:
+            motion_data = pictograph_data.motions.get(color)
+
+            if arrow_data.is_visible and motion_data:
                 x, y, rotation = self.calculate_arrow_position(
-                    arrow_data, pictograph_data
+                    arrow_data, pictograph_data, motion_data
                 )
 
                 updated_pictograph = updated_pictograph.update_arrow(
@@ -124,8 +101,7 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
     def should_mirror_arrow(
         self, arrow_data: ArrowData, pictograph_data: "PictographData" = None
     ) -> bool:
-        """Determine if arrow should be mirrored (extracted from monolith)."""
-        # Get motion data from pictograph_data instead of arrow_data
+        """Determine if arrow should be mirrored."""
         motion = None
         if pictograph_data and pictograph_data.motions:
             motion = pictograph_data.motions.get(arrow_data.color)
@@ -141,8 +117,10 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         else:
             return self.mirror_conditions["other"].get(prop_rot_dir, False)
 
-    def apply_mirror_transform(self, arrow_item, should_mirror: bool) -> None:
-        """Apply mirror transformation (extracted from monolith)."""
+    def apply_mirror_transform(
+        self, arrow_item: ArrowItem, should_mirror: bool
+    ) -> None:
+        """Apply mirror transformation."""
         try:
             from PyQt6.QtGui import QTransform
 
@@ -155,9 +133,40 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
             transform.translate(-center_x, -center_y)
 
             arrow_item.setTransform(transform)
-        except ImportError:
-            # Handle case where PyQt6 is not available (testing scenarios)
+        except (ImportError, AttributeError):
             pass
-        except AttributeError:
-            # Handle case where arrow_item doesn't have expected methods
-            pass
+
+    def _get_motion_from_pictograph(
+        self, arrow_data: ArrowData, pictograph_data: PictographData
+    ) -> MotionData:
+        """Extract motion data from pictograph data."""
+        if (
+            not pictograph_data
+            or not hasattr(pictograph_data, "motions")
+            or not pictograph_data.motions
+        ):
+            return None
+        return pictograph_data.motions.get(arrow_data.color)
+
+    def _ensure_valid_position(self, initial_position):
+        """Ensure position object has valid x and y attributes."""
+        if hasattr(initial_position, "x") and hasattr(initial_position, "y"):
+            return initial_position
+
+        from core.types.geometry import Point
+
+        return Point(475.0, 475.0)
+
+    def _extract_adjustment_values(self, adjustment) -> Tuple[float, float]:
+        """Extract x and y values from adjustment object."""
+        if isinstance(adjustment, (int, float)):
+            return adjustment, adjustment
+
+        if hasattr(adjustment, "x") and hasattr(adjustment, "y"):
+            x_attr = adjustment.x
+            y_attr = adjustment.y
+            adjustment_x = x_attr() if callable(x_attr) else x_attr
+            adjustment_y = y_attr() if callable(y_attr) else y_attr
+            return adjustment_x, adjustment_y
+
+        return 0.0, 0.0

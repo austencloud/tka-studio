@@ -17,7 +17,6 @@ from core.performance.profiler import reset_profiler
 from core.performance.qt_profiler import reset_qt_profiler
 from core.performance.memory_tracker import reset_memory_tracker
 from infrastructure.performance.storage import reset_performance_storage
-from infrastructure.performance.api import reset_performance_api
 
 
 @pytest.fixture(scope="function")
@@ -180,7 +179,6 @@ def performance_test_session_setup():
     reset_qt_profiler()
     reset_memory_tracker()
     reset_performance_storage()
-    reset_performance_api()
 
 
 @pytest.fixture(scope="function", autouse=True)

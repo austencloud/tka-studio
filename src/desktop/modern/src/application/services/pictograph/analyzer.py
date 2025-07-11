@@ -23,7 +23,7 @@ class PictographAnalyzer:
     - Arrow colors and motion relationships
 
     IMPORTANT DATA ACCESS PATTERNS:
-    - PictographData: Access motion via pictograph_data.arrows["blue"].motion_data
+    - PictographData
     - BeatData: Access motion via beat_data.blue_motion
     - Never access pictograph_data.blue_motion (doesn't exist!)
     """
@@ -84,7 +84,6 @@ class PictographAnalyzer:
 
         Args:
             pictograph_data: PictographData object with arrows dictionary containing
-                           motion data accessible via pictograph_data.arrows["blue"].motion_data
 
         Returns:
             LetterType enum value (TYPE1, TYPE3, etc.)
@@ -93,16 +92,8 @@ class PictographAnalyzer:
             Motion data must be accessed via pictograph_data.arrows["color"].motion_data,
             NOT pictograph_data.blue_motion (which doesn't exist on PictographData).
         """
-        blue_motion = (
-            pictograph_data.arrows["blue"].motion_data
-            if "blue" in pictograph_data.arrows
-            else None
-        )
-        red_motion = (
-            pictograph_data.arrows["red"].motion_data
-            if "red" in pictograph_data.arrows
-            else None
-        )
+        blue_motion = pictograph_data.motions.get("blue")
+        red_motion = pictograph_data.motions.get("red")
 
         if not blue_motion or not red_motion:
             return LetterType.TYPE1  # Default fallback

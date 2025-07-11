@@ -125,7 +125,6 @@ def profile_startup():
             window.target_screen = target_screen
             window.parallel_mode = False
             window.parallel_geometry = None
-            window.enable_api = True
 
         with profiler.time_operation("QMainWindow.__init__"):
             super(TKAMainWindow, window).__init__()
@@ -195,10 +194,6 @@ def profile_startup():
                             window, window.orchestrator.container, None
                         )
                     )
-
-                # Step 6: API server
-                with profiler.time_operation("  6. API server"):
-                    window.orchestrator.lifecycle_manager.start_api_server(True)
 
         print("\n✅ Startup profiling complete!")
 

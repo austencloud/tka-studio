@@ -30,6 +30,7 @@ from core.types.coordinates import PositionResult, point_to_qpoint
 from core.types.geometry import Point
 from core.types.result import AppError, ErrorType, Result, app_error, failure, success
 from domain.models.arrow_data import ArrowData
+from domain.models.motion_models import MotionData
 from domain.models.pictograph_data import PictographData
 
 # Conditional PyQt6 imports for testing compatibility
@@ -98,7 +99,7 @@ class DirectionalTupleProcessor:
         Returns:
             Result containing final Point adjustment or AppError
         """
-        motion = arrow_data.motion_data
+        motion = pictograph_data.motions[arrow_data.color]
         if not motion:
             return failure(
                 app_error(
@@ -154,7 +155,7 @@ class DirectionalTupleProcessor:
             )
 
     def _generate_directional_tuples(
-        self, motion, base_adjustment: Point
+        self, motion: MotionData, base_adjustment: Point
     ) -> Result[List[Tuple[int, int]], AppError]:
         """
         Generate directional tuples using rotation matrices.
@@ -216,14 +217,15 @@ class DirectionalTupleProcessor:
                 ArrowLocationCalculatorService,
             )
 
+            motion_data = pictograph_data.motions[arrow_data.color]
             location_calculator = ArrowLocationCalculatorService()
             arrow_location = location_calculator.calculate_location(
-                arrow_data.motion_data, pictograph_data
+                motion_data, pictograph_data
             )
 
             # Get quadrant index
             quadrant_index = self.quadrant_index_service.get_quadrant_index(
-                arrow_data.motion_data, arrow_location
+                motion_data, arrow_location
             )
 
             # Validate quadrant index

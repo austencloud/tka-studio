@@ -144,7 +144,11 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
             f"🎯 Calculating adjustment for {arrow_data.color} arrow in letter {pictograph_data.letter}"
         )
 
-        motion = arrow_data.motion_data
+        # Get motion data from the motions dictionary
+        motion = None
+        if hasattr(pictograph_data, "motions") and pictograph_data.motions:
+            motion = pictograph_data.motions.get(arrow_data.color)
+
         if not motion:
             return failure(
                 app_error(

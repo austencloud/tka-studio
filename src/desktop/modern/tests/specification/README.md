@@ -29,7 +29,7 @@ Specification tests define and enforce the **permanent behavioral contracts** of
 ### ✅ Specification Test Criteria
 
 - **Business rules**: Core domain logic that must never change
-- **API contracts**: Service interfaces that other components depend on
+- **Service contracts**: Service interfaces that other components depend on
 - **User workflows**: Critical user interactions that must be preserved
 - **Data integrity**: Immutability, validation, and consistency rules
 - **Performance contracts**: Critical performance requirements

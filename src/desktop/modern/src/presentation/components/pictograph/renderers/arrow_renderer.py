@@ -8,7 +8,9 @@ to ArrowRenderingService.
 import logging
 from typing import TYPE_CHECKING, Dict, Optional
 
-from application.services.pictograph.arrow_rendering_service import ArrowRenderingService
+from application.services.pictograph.arrow_rendering_service import (
+    ArrowRenderingService,
+)
 from core.dependency_injection.di_container import get_container
 from core.interfaces.positioning_services import (
     IArrowCoordinateSystemService,
@@ -30,7 +32,7 @@ logger = logging.getLogger(__name__)
 class ArrowRenderer:
     """
     Qt presentation layer for arrow rendering.
-    
+
     Handles Qt-specific operations (QSvgRenderer, QPainter, QGraphicsItems)
     while delegating business logic to ArrowRenderingService.
     """
@@ -51,11 +53,9 @@ class ArrowRenderer:
             )
             self.coordinate_system = container.resolve(IArrowCoordinateSystemService)
         except Exception as e:
-            logger.warning(f"Failed to resolve positioning services: {e}")
+            logger.error(f"Failed to resolve positioning services: {e}")
             self.positioning_orchestrator = None
             self.coordinate_system = None
-
-        logger.debug("ArrowRenderer initialized with service delegation")
 
     def render_arrow(
         self,
@@ -76,25 +76,24 @@ class ArrowRenderer:
         if self._rendering_service.svg_path_exists(arrow_svg_path):
             # Load pre-colored SVG directly (no color transformation needed)
             renderer = QSvgRenderer(arrow_svg_path)
-            logger.debug(f"Using pre-colored SVG: {arrow_svg_path}")
         else:
             # Fallback to original method if pre-colored SVG doesn't exist
-            logger.warning(
-                f"Pre-colored SVG not found: {arrow_svg_path}, falling back to original method"
-            )
             original_svg_path = self._rendering_service.get_fallback_arrow_svg_path(
                 motion_data
             )
             if self._rendering_service.svg_path_exists(original_svg_path):
                 # Apply color transformation to SVG data using service
-                svg_data = self._rendering_service.load_cached_svg_data(original_svg_path)
+                svg_data = self._rendering_service.load_cached_svg_data(
+                    original_svg_path
+                )
                 if svg_data:
-                    colored_svg_data = self._rendering_service.apply_color_transformation(
-                        svg_data, color
+                    colored_svg_data = (
+                        self._rendering_service.apply_color_transformation(
+                            svg_data, color
+                        )
                     )
-                    renderer = QSvgRenderer(bytearray(colored_svg_data, encoding="utf-8"))
-                    logger.debug(
-                        f"Using original SVG with color transformation: {original_svg_path}"
+                    renderer = QSvgRenderer(
+                        bytearray(colored_svg_data, encoding="utf-8")
                     )
             else:
                 logger.error(
@@ -112,7 +111,7 @@ class ArrowRenderer:
                 turns=motion_data.turns,
                 is_visible=True,
             )
-            
+
             (
                 position_x,
                 position_y,
@@ -126,7 +125,7 @@ class ArrowRenderer:
 
             # Qt-specific rendering operations
             self._apply_arrow_transforms(arrow_item, position_x, position_y, rotation)
-            
+
             # Apply mirror transform if positioning orchestrator is available
             if self.positioning_orchestrator:
                 arrow_data_with_position = ArrowData(
@@ -151,7 +150,11 @@ class ArrowRenderer:
             logger.error(f"Invalid SVG renderer for motion: {motion_data}")
 
     def _apply_arrow_transforms(
-        self, arrow_item: ArrowItem, position_x: float, position_y: float, rotation: float
+        self,
+        arrow_item: ArrowItem,
+        position_x: float,
+        position_y: float,
+        rotation: float,
     ) -> None:
         """Apply Qt-specific transforms to arrow item."""
         # CRITICAL: Set transform origin to arrow's visual center BEFORE rotation
@@ -204,7 +207,6 @@ class ArrowRenderer:
     def clear_cache(cls) -> None:
         """Clear the SVG file cache and reset statistics."""
         ArrowRenderingService.clear_cache()
-        logger.info("Arrow rendering cache cleared via service")
 
     @classmethod
     def get_cache_info(cls) -> str:

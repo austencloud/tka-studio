@@ -124,7 +124,6 @@ def profile_ui_setup():
         window.target_screen = target_screen
         window.parallel_mode = False
         window.parallel_geometry = None
-        window.enable_api = True
 
         # Create orchestrator
         window.orchestrator = ApplicationOrchestrator(container=window.container)
