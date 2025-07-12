@@ -6,12 +6,8 @@ from presentation.components.workbench.sequence_beat_frame.selection_overlay imp
     SelectionOverlay,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont, QMouseEvent
+from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import (
-    QGridLayout,
-    QLabel,
-    QPushButton,
-    QScrollArea,
     QVBoxLayout,
     QWidget,
 )

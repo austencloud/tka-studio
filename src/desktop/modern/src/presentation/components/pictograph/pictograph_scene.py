@@ -6,7 +6,6 @@ This scene coordinates multiple specialized renderers to create the complete pic
 
 import logging
 import uuid
-from typing import Optional
 
 from domain.models import BeatData
 from domain.models.arrow_data import ArrowData

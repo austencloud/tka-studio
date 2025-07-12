@@ -308,24 +308,6 @@ class IPictographBorderManager(ABC):
 # - Various specialized services for specific beat operations
 
 
-class IObjectPoolManager(ABC):
-    """Interface for object pool management."""
-
-    @abstractmethod
-    def initialize_pool(
-        self,
-        pool_name: str,
-        max_objects: int,
-        object_factory: Callable[[], Any],
-        progress_callback: Optional[Callable] = None,
-    ) -> None:
-        """Initialize object pool with progress tracking."""
-
-    @abstractmethod
-    def get_pooled_object(self, pool_name: str, index: int) -> Optional[Any]:
-        """Get object from pool by index."""
-
-
 class IObjectPoolService(ABC):
     """Alias for IObjectPoolManager for backward compatibility."""
 

@@ -74,7 +74,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         self.register_data_services(container)
         self.register_sequence_services(container)  # ✅ NEW - Sequence orchestration
         self.register_motion_services(container)
-        self.register_layout_services(container)
         self.register_pictograph_services(container)
         self.register_positioning_services(container)
         self.register_option_picker_services(container)
@@ -242,11 +241,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_layout_services(self, container: "DIContainer") -> None:
         """Register layout services."""
-        from application.services.option_picker.section_layout_manager import (
-            SectionLayoutManager,
-        )
-
-        container.register_singleton(SectionLayoutManager, SectionLayoutManager)
 
         # Note: Layout services have been consolidated into LayoutManagementService
         # which is already registered in register_core_services() as ILayoutService
@@ -376,6 +370,22 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             )
 
         try:
+            # Register position matching service for option picker
+            from application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+                PictographPositionMatcher,
+            )
+
+            container.register_singleton(
+                PictographPositionMatcher, PictographPositionMatcher
+            )
+            self._service_availability["position_matching"] = True
+        except ImportError as e:
+            # GRACEFUL DEGRADATION: Position matching service not available - continue
+            self._handle_service_unavailable(
+                "Position matching service", e, "Option picker position matching"
+            )
+
+        try:
             # Register prop management services
             from application.services.positioning.props.orchestration.prop_management_service import (
                 IPropManagementService,
@@ -411,41 +421,10 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
     def register_option_picker_services(self, container: "DIContainer") -> None:
         """Register the refactored option picker services."""
-        # Import the refactored option picker services
-
-        from application.services.option_picker.option_picker_display_manager import (
-            OptionPickerDisplayManager,
-        )
-        from application.services.option_picker.option_picker_event_service import (
-            OptionPickerEventService,
-        )
-        from application.services.option_picker.option_picker_initializer import (
-            OptionPickerInitializer,
-        )
-        from application.services.option_picker.option_picker_orchestrator import (
-            OptionPickerOrchestrator,
-        )
         from application.services.option_picker.option_provider import OptionProvider
-        from core.interfaces.option_picker_interfaces import (
-            IOptionPickerDisplayService,
-            IOptionPickerEventService,
-            IOptionPickerInitializer,
-            IOptionPickerOrchestrator,
-            IOptionProvider,
-        )
+        from core.interfaces.option_picker_interfaces import IOptionProvider
 
-        # Register the refactored option picker services
         container.register_singleton(IOptionProvider, OptionProvider)
-        container.register_singleton(IOptionPickerInitializer, OptionPickerInitializer)
-        container.register_singleton(
-            IOptionPickerDisplayService, OptionPickerDisplayManager
-        )
-        container.register_singleton(
-            IOptionPickerEventService, OptionPickerEventService
-        )
-        container.register_singleton(
-            IOptionPickerOrchestrator, OptionPickerOrchestrator
-        )
 
     def register_data_services(self, container: "DIContainer") -> None:
         """Register the new refactored data services."""

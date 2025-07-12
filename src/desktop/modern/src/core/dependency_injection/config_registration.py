@@ -31,7 +31,6 @@ from core.config.app_config import (
 )
 from core.config.data_config import DataConfig, create_data_config
 from core.dependency_injection.di_container import DIContainer
-from core.interfaces.core_services import IObjectPoolManager
 from core.interfaces.positioning_services import IPositionMapper
 
 # Removed Result pattern imports - using simple exceptions
@@ -256,7 +255,7 @@ def validate_configuration_registration(container) -> bool:
         raise
 
 
-def register_extracted_services(container) -> None:
+def register_extracted_services(container: DIContainer) -> None:
     """
     Register extracted business logic services.
 
@@ -274,11 +273,6 @@ def register_extracted_services(container) -> None:
 
         # Note: BeatLoadingService was removed during SRP refactoring
         # Its functionality was split into focused microservices
-
-        # Register object pool service
-        from application.services.core.object_pool_manager import ObjectPoolManager
-
-        container.register_singleton(IObjectPoolManager, ObjectPoolManager)
 
         # Register positioning services using ServiceRegistrationManager
         try:

@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QLabel,
     QScrollArea,
-    QPushButton,
 )
 from PyQt6.QtCore import pyqtSignal, Qt, QSize
 from PyQt6.QtGui import QFont
@@ -13,12 +12,8 @@ from PyQt6.QtGui import QFont
 # from application.services.data.pictograph_dataset_service import (
 #     PictographDatasetService,
 # )
-from presentation.components.pictograph.pictograph_component import PictographComponent
 from presentation.components.start_position_picker.start_position_option import (
     StartPositionOption,
-)
-from presentation.components.workbench.sequence_beat_frame.selection_overlay import (
-    SelectionOverlay,
 )
 
 # Import for command-based architecture

@@ -11,7 +11,6 @@ from .background_interfaces import *
 from .core_services import (
     IArrowManagementService,
     ILayoutService,
-    IObjectPoolManager,
     IObjectPoolService,
     IPictographBorderManager,
     IPictographContextDetector,

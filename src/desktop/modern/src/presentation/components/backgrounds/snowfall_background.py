@@ -127,4 +127,3 @@ class SnowfallBackground(BaseBackground):
 
     def cleanup(self):
         """Clean up resources - no longer needed with services"""
-        pass

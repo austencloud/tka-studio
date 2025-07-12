@@ -49,11 +49,9 @@ class SelectionOverlay(QWidget):
     # Legacy compatibility methods (do nothing - no hover effects)
     def show_hover(self):
         """Legacy compatibility - no hover effects in simple mode"""
-        pass
 
     def hide_hover_only(self):
         """Legacy compatibility - no hover effects in simple mode"""
-        pass
 
     def hide_all(self):
         """Hide selection overlay"""

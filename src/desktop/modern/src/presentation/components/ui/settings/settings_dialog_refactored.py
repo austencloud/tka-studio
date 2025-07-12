@@ -57,7 +57,6 @@ from .components import (
     SettingsHeader,
     SettingsSidebar,
 )
-from .coordinator import SettingsCoordinator
 from .tabs.background_tab import BackgroundTab
 from .tabs.beat_layout_tab import BeatLayoutTab
 from .tabs.codex_exporter_tab import CodexExporterTab
@@ -170,8 +169,8 @@ class SettingsDialog(QDialog):
             SettingsCoordinator,
         )
 
-        settings_service = SettingsCoordinator(self.ui_state_service)
-        self.coordinator = SettingsCoordinator(settings_service)
+        # Fix: Create coordinator directly with ui_state_service, no double wrapping
+        self.coordinator = SettingsCoordinator(self.ui_state_service)
         self.coordinator.settings_changed.connect(self.settings_changed.emit)
 
     def _setup_dialog(self):

@@ -18,12 +18,11 @@ from pathlib import Path
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
+from application.services.sequence.sequence_persister import SequencePersister
 from core.application.application_factory import ApplicationFactory
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QPushButton
-
-from application.services.sequence.sequence_persister import SequencePersister
 
 
 class CompleteUserWorkflowTester:
@@ -71,6 +70,18 @@ class CompleteUserWorkflowTester:
 
             # Create fresh container and construct tab
             self.container = ApplicationFactory.create_production_app()
+
+            # Initialize pictograph pool for high-performance option picker
+            try:
+                from application.services.pictograph_pool_manager import (
+                    initialize_pictograph_pool,
+                )
+
+                initialize_pictograph_pool(self.container)
+                print("✅ [WORKFLOW] Pictograph pool initialized")
+            except Exception as e:
+                print(f"⚠️ [WORKFLOW] Pool initialization failed: {e}")
+
             self.construct_tab = ConstructTabWidget(self.container)
 
             # Get references
@@ -177,23 +188,48 @@ class CompleteUserWorkflowTester:
             if self.layout_manager and hasattr(self.layout_manager, "option_picker"):
                 option_picker = self.layout_manager.option_picker
 
-                # Try to access the orchestrator and pool manager
-                if hasattr(option_picker, "orchestrator"):
-                    orchestrator = option_picker.orchestrator
+                # NEW CONSOLIDATED ARCHITECTURE: Access sections directly
+                print(f"🔍 [DEBUG] Option picker type: {type(option_picker)}")
+                print(f"🔍 [DEBUG] Option picker attributes: {dir(option_picker)}")
 
-                    # Check if orchestrator has pool manager
-                    if (
-                        hasattr(orchestrator, "pool_manager")
-                        and orchestrator.pool_manager
-                    ):
-                        pool_manager = orchestrator.pool_manager
+                if hasattr(option_picker, "option_picker_widget"):
+                    widget = option_picker.option_picker_widget
+                    print(f"🔍 [DEBUG] option_picker_widget type: {type(widget)}")
 
-                        # Get the first available pictograph frame from the pool
-                        if hasattr(pool_manager, "get_pictograph_from_pool"):
-                            first_frame = pool_manager.get_pictograph_from_pool(0)
+                    # The sections are in the scroll widget, which is the option_picker_widget of the OptionPickerWidget
+                    if hasattr(widget, "option_picker_widget"):
+                        scroll_widget = widget.option_picker_widget
+                        print(f"🔍 [DEBUG] scroll_widget type: {type(scroll_widget)}")
 
-                            if first_frame and hasattr(first_frame, "clicked"):
+                        if hasattr(scroll_widget, "sections"):
+                            sections = scroll_widget.sections
+                            print(f"🔍 [DEBUG] Found sections: {list(sections.keys())}")
+
+                            # Find the first section with pictographs
+                            first_frame = None
+                            for letter_type, section in sections.items():
+                                print(
+                                    f"🔍 [DEBUG] Section {letter_type}: {type(section)}"
+                                )
+                                if hasattr(section, "pictograph_frames"):
+                                    frames = section.pictograph_frames
+                                    print(
+                                        f"🔍 [DEBUG] Section {letter_type} has {len(frames)} frames"
+                                    )
+                                    if frames:
+                                        first_frame = frames[0]
+                                        print(
+                                            f"🔍 [DEBUG] Found first frame: {type(first_frame)}"
+                                        )
+                                        break
+                                else:
+                                    print(
+                                        f"🔍 [DEBUG] Section {letter_type} has no pictograph_frames attribute"
+                                    )
+
+                            if first_frame:
                                 print(f"🖱️ [WORKFLOW] Clicking first option frame")
+                                # Use QTest.mouseClick to simulate a mouse click
                                 QTest.mouseClick(first_frame, Qt.MouseButton.LeftButton)
                                 QTest.qWait(1000)  # Wait for processing
 
@@ -201,18 +237,24 @@ class CompleteUserWorkflowTester:
                                 print("✅ [WORKFLOW] Step 3: Option selected")
                                 return True
                             else:
-                                print("❌ [WORKFLOW] No clickable frame found in pool")
+                                print(
+                                    "❌ [WORKFLOW] No frames available in any section"
+                                )
                                 return False
                         else:
                             print(
-                                "❌ [WORKFLOW] Pool manager has no get_pictograph_from_pool method"
+                                "❌ [WORKFLOW] scroll_widget has no sections attribute"
                             )
                             return False
                     else:
-                        print("❌ [WORKFLOW] Orchestrator has no pool_manager")
+                        print(
+                            "❌ [WORKFLOW] option_picker_widget has no option_picker_widget attribute"
+                        )
                         return False
                 else:
-                    print("❌ [WORKFLOW] Option picker has no orchestrator")
+                    print(
+                        "❌ [WORKFLOW] Option picker has no option_picker_widget attribute"
+                    )
                     return False
             else:
                 print("❌ [WORKFLOW] Could not find option picker")

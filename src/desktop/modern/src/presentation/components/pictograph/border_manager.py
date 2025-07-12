@@ -7,10 +7,6 @@ to PictographBorderService.
 
 from typing import Tuple
 
-from application.services.pictograph.border_manager import (
-    BorderConfiguration,
-    BorderDimensions,
-)
 from core.interfaces.core_services import IPictographBorderManager
 from domain.models import LetterType
 from PyQt6.QtCore import QRectF, Qt

@@ -1,38 +1,108 @@
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QResizeEvent
-from typing import Callable, List
+"""
+Simplified Option Picker - Direct Copy of Legacy Success Pattern
+
+This is the main simplified option picker that directly copies the successful Legacy pattern,
+replacing the complex Modern approach with simple Qt widget management.
+
+Key principles from Legacy:
+- Simple widget composition without complex orchestration
+- Direct factory-based object pool creation
+- Natural Qt layout management without business logic interference
+- Minimal dependency injection and service complexity
+"""
+
+from typing import Callable, Optional
+
+from core.dependency_injection.di_container import DIContainer
+from presentation.components.option_picker.core.option_picker_scroll import (
+    OptionPickerScroll,
+)
+from PyQt6.QtCore import QSize, pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 
 class OptionPickerWidget(QWidget):
-    def __init__(self, parent=None):
+    """
+    Simplified option picker using Legacy success pattern.
+
+    Direct replacement for complex Modern OptionPicker with minimal orchestration.
+    """
+
+    # Signal emitted when a pictograph is selected
+    pictograph_selected = pyqtSignal(object)  # PictographData
+
+    def __init__(
+        self,
+        parent=None,
+        mw_size_provider: Callable[[], QSize] = None,
+        progress_callback: Optional[Callable[[str, float], None]] = None,
+        container: Optional[DIContainer] = None,
+    ):
         super().__init__(parent)
-        self._resize_callback = None
-        self._sizing_callbacks: List[Callable[[int], None]] = []
+        self.mw_size_provider = mw_size_provider or self._default_size_provider
+        self.progress_callback = progress_callback
+        self.container = container
 
-    def set_resize_callback(self, callback):
-        self._resize_callback = callback
+        # Note: Factory no longer needed - sections create their own pictographs
 
-    def add_sizing_callback(self, callback: Callable[[int], None]):
-        """Add a callback that receives the option picker width when it changes"""
-        self._sizing_callbacks.append(callback)
+        # Create the main widget
+        self.option_picker_widget = OptionPickerScroll(
+            parent=self, mw_size_provider=self.mw_size_provider, container=container
+        )
 
-    def remove_sizing_callback(self, callback: Callable[[int], None]):
-        """Remove a sizing callback"""
-        if callback in self._sizing_callbacks:
-            self._sizing_callbacks.remove(callback)
+        # Connect scroll widget's pictograph selection signal to our signal
+        self.option_picker_widget.pictograph_selected.connect(
+            self.pictograph_selected.emit
+        )
 
-    def get_usable_width(self) -> int:
-        """Get the usable width for pictograph sizing (excluding margins/padding)"""
-        return max(0, self.width() - 10)  
-    def resizeEvent(self, event: QResizeEvent):
-        super().resizeEvent(event)
+        # Setup layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.addWidget(self.option_picker_widget)
 
-        if self._resize_callback:
-            self._resize_callback()
+        # Note: Sections now handle their own pictograph loading via _load_pictographs method
 
-        usable_width = self.get_usable_width()
-        for callback in self._sizing_callbacks:
-            try:
-                callback(usable_width)
-            except Exception as e:
-                print(f"❌ Error in sizing callback: {e}")
+        # Report progress if callback provided
+        if self.progress_callback:
+            self.progress_callback("Option picker initialized", 1.0)
+
+    def _default_size_provider(self) -> QSize:
+        """Default size provider if none provided."""
+        return QSize(800, 600)
+
+    def refresh_options(self) -> None:
+        """Refresh options - simplified version."""
+        # Clear all sections
+        self.option_picker_widget.clear_all_sections()
+
+        # Sections will reload their own pictographs automatically
+        # No factory needed - sections handle their own data loading
+
+    def clear_options(self) -> None:
+        """Clear all options."""
+        self.option_picker_widget.clear_all_sections()
+
+    def get_widget(self) -> QWidget:
+        """Get the main widget for integration."""
+        return self.option_picker_widget
+
+    # Compatibility methods for existing integration points
+    def load_motion_combinations(self, sequence_data) -> None:
+        """Load motion combinations based on actual sequence data."""
+        # Load real options based on sequence state
+        self.option_picker_widget.load_options_from_sequence(sequence_data)
+
+    def refresh_from_sequence(self, sequence) -> None:
+        """Refresh from sequence with actual data."""
+        # Load real options based on sequence state
+        self.option_picker_widget.load_options_from_sequence(sequence)
+
+    def initialize(self) -> None:
+        """Initialize - already done in constructor."""
+
+    def cleanup(self) -> None:
+        """Cleanup resources."""
+        # Clear all sections - they handle their own cleanup
+        if hasattr(self, "option_picker_widget") and self.option_picker_widget:
+            self.option_picker_widget.clear_all_sections()

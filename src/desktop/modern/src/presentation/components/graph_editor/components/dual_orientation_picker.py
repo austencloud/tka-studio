@@ -29,7 +29,6 @@ from presentation.components.graph_editor.components.turn_adjustment_controls.st
     apply_turn_button_styling,
     UNIFIED_BUTTON_WIDTH,
     UNIFIED_BUTTON_HEIGHT,
-    UNIFIED_BUTTON_SPACING,
 )
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import (

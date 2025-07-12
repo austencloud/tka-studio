@@ -11,7 +11,7 @@ from domain.models import BeatData
 from domain.models.pictograph_data import PictographData
 from presentation.components.pictograph.border_manager import BorderedPictographMixin
 from presentation.components.pictograph.pictograph_scene import PictographScene
-from PyQt6.QtCore import QEvent, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QEvent, Qt, QTimer
 from PyQt6.QtGui import QEnterEvent, QKeyEvent, QPainter, QResizeEvent
 from PyQt6.QtWidgets import QGraphicsView
 

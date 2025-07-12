@@ -11,8 +11,11 @@ PROVIDES:
 - Progress tracking and error handling
 """
 
+import logging
 from abc import ABC, abstractmethod
 from typing import Callable, Optional
+
+logger = logging.getLogger(__name__)
 
 from application.services.core.application_initialization_orchestrator import (
     ApplicationInitializationOrchestrator,
@@ -160,6 +163,23 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
         if progress_callback:
             progress_callback(55, "Services configured")
+
+        # Initialize pictograph pool for high-performance option picker
+        if progress_callback:
+            progress_callback(57, "Initializing pictograph pool...")
+
+        try:
+            from application.services.pictograph_pool_manager import (
+                initialize_pictograph_pool,
+            )
+
+            initialize_pictograph_pool(self.container)
+            if progress_callback:
+                progress_callback(59, "Pictograph pool initialized")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize pictograph pool: {e}")
+            if progress_callback:
+                progress_callback(59, "Pictograph pool initialization failed")
 
         # Step 3: Setup UI
         if progress_callback:

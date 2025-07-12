@@ -2,7 +2,6 @@ from typing import Any, Dict
 
 from application.services.ui.ui_settings_manager import UISettingsManager
 from core.interfaces.core_services import IUIStateManager
-from presentation.components.ui.settings.coordinator import SettingsCoordinator
 from presentation.components.ui.settings.tabs.background_tab import BackgroundTab
 from presentation.components.ui.settings.tabs.beat_layout_tab import BeatLayoutTab
 from presentation.components.ui.settings.tabs.codex_exporter_tab import CodexExporterTab

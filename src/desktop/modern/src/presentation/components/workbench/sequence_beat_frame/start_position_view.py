@@ -10,8 +10,7 @@ from typing import Optional
 from domain.models import BeatData
 from domain.models.pictograph_data import PictographData
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtGui import QMouseEvent
-from PyQt6.QtWidgets import QFrame, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
 from ...pictograph.pictograph_component import (
     PictographComponent,
@@ -51,6 +50,7 @@ class StartPositionView(QFrame):
         # Additional state specific to start position
         self._position_key: Optional[str] = None
         self._start_text_overlay: Optional[StartTextOverlay] = None
+        self._text_overlays = []  # Initialize text overlays list
 
         # Initialize UI
         self._setup_ui()
@@ -114,27 +114,6 @@ class StartPositionView(QFrame):
 
         # Disable borders for start position view
         self._pictograph_component.disable_borders()
-
-    def _setup_styling(self):
-        """Apply start position specific styling"""
-        # Apply the same styling as beat views for consistency
-        self.setStyleSheet(
-            """
-            QFrame {
-                background: transparent;
-                border: none;
-            }
-            QFrame:hover {
-                background: rgba(255, 255, 255, 0.05);
-            }
-            QLabel {
-                color: rgba(255, 255, 255, 0.9);
-                background: transparent;
-                border: none;
-            }
-        """
-        )
-        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def _initialize_start_text_widget(self):
         """Initialize START text widget overlay after component is ready"""
@@ -227,7 +206,8 @@ class StartPositionView(QFrame):
             print(f"Error cleaning up start text overlay: {e}")
         finally:
             self._start_text_overlay = None
-            self._text_overlays.clear()
+            if hasattr(self, '_text_overlays'):
+                self._text_overlays.clear()
 
     # Override mouse press to emit specific signals
     def mousePressEvent(self, event):
@@ -272,22 +252,6 @@ class StartPositionView(QFrame):
         """Provide minimum size hint"""
         return QSize(100, 100)
 
-    def cleanup(self):
-        """Cleanup resources when the view is being destroyed"""
-        # Clean up selection overlay
-        if self._selection_overlay:
-            try:
-                self._selection_overlay.deleteLater()
-            except (RuntimeError, AttributeError):
-                pass
-            self._selection_overlay = None
-
-        # Cleanup pictograph component
-        if self._pictograph_component:
-            self._pictograph_component.cleanup()
-            self._pictograph_component = None
-        self._update_display()
-
     def get_position_data(self) -> Optional[BeatData]:
         """Get the current position data"""
         return self._beat_data
@@ -326,7 +290,6 @@ class StartPositionView(QFrame):
 
         # NEW APPROACH: Use separate pictograph data if available
         if hasattr(self, "_pictograph_data") and self._pictograph_data is not None:
-
             self._pictograph_component.update_from_pictograph_data(
                 self._pictograph_data
             )
@@ -339,7 +302,6 @@ class StartPositionView(QFrame):
 
     def _show_empty_state(self):
         """Show empty state when no position data"""
-
         self._mark_overlay_invalid()
 
         if self._pictograph_component:
@@ -349,7 +311,6 @@ class StartPositionView(QFrame):
 
     def _show_cleared_state(self):
         """Show cleared state - ONLY START text, no pictograph content (V1 behavior)"""
-
         self._mark_overlay_invalid()
 
         if self._pictograph_component:
@@ -359,49 +320,18 @@ class StartPositionView(QFrame):
                 hasattr(self._pictograph_component, "scene")
                 and self._pictograph_component.scene
             ):
-
                 self._pictograph_component.scene.clear()
 
         self._add_start_text_overlay()
-
-    def _initialize_start_text_widget(self):
-        """Initialize START text widget overlay after component is ready"""
-
-        self._add_start_text_overlay()
-
-    def _add_start_text_overlay(self):
-        """Add START text overlay using the unified widget approach"""
-
-        self._cleanup_existing_overlay()
-
-        try:
-            self._start_text_overlay = add_start_text_to_view(self)
-        except Exception as e:
-            print(f"Failed to create start text overlay: {e}")
-            self._start_text_overlay = None
 
     def _mark_overlay_invalid(self):
         """Mark the existing overlay as invalid before scene operations"""
         # No longer needed with unified widget approach - just cleanup
         self._cleanup_existing_overlay()
 
-    def _cleanup_existing_overlay(self):
-        """Safely cleanup existing overlay"""
-        if not self._start_text_overlay:
-            return
-
-        try:
-            self._start_text_overlay.hide_overlay()
-            self._start_text_overlay.deleteLater()
-        except Exception as e:
-            print(f"Error cleaning up start text overlay: {e}")
-        finally:
-            self._start_text_overlay = None
-
     def resizeEvent(self, event):
         """Handle resize events and update overlay scaling"""
         super().resizeEvent(event)
-
         self._update_overlay_scaling()
 
     def _update_overlay_scaling(self):
@@ -432,8 +362,21 @@ class StartPositionView(QFrame):
 
     def cleanup(self):
         """Cleanup resources when the view is being destroyed"""
+        # Clean up overlays
         self._cleanup_existing_overlay()
-        super().cleanup()
+        
+        # Clean up selection overlay
+        if self._selection_overlay:
+            try:
+                self._selection_overlay.deleteLater()
+            except (RuntimeError, AttributeError):
+                pass
+            self._selection_overlay = None
+
+        # Cleanup pictograph component
+        if self._pictograph_component:
+            self._pictograph_component.cleanup()
+            self._pictograph_component = None
 
     def closeEvent(self, event):
         """Handle close event to cleanup resources"""
@@ -445,16 +388,15 @@ class StartPositionView(QFrame):
         try:
             self.cleanup()
         except Exception:
-
             pass
 
     def pulse_animation(self):
         """Pulse animation to draw attention to start position"""
+        pass
 
     def set_loading_state(self, loading: bool):
         """Set loading state while position is being processed"""
         if loading:
-
             pass
         else:
             self._update_display()
