@@ -23,6 +23,7 @@ from application.services.core.service_registration_manager import (
     ServiceRegistrationManager,
 )
 from core.dependency_injection.di_container import DIContainer
+from presentation.components.ui.splash_screen import SplashScreen
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
 
@@ -48,10 +49,6 @@ class IApplicationOrchestrator(ABC):
     @abstractmethod
     def handle_window_resize(self, main_window: QMainWindow) -> None:
         """Handle main window resize events."""
-
-    @abstractmethod
-    def cleanup_application(self) -> None:
-        """Clean up application resources."""
 
 
 class ApplicationOrchestrator(IApplicationOrchestrator):
@@ -201,66 +198,9 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
                 main_window, self.background_widget
             )
 
-    def cleanup_application(self) -> None:
-        """Clean up application resources."""
-        if self.background_widget:
-            self.background_manager.cleanup_background(self.background_widget)
-            self.background_widget = None
-
-    def get_application_status(self) -> dict:
-        """Get current application status."""
-        return {
-            "services_registered": self.container is not None,
-            "ui_initialized": self.tab_widget is not None,
-            "background_active": self.background_widget is not None,
-            "lifecycle_manager_active": True,
-        }
-
-    def handle_setting_change(self, key: str, value, main_window: QMainWindow) -> None:
-        """Handle settings changes from UI components."""
-        print(f"🔧 Setting changed: {key} = {value}")
-
-        # Handle background changes
-        if key == "background_type":
-            self.background_manager.apply_background_change(main_window, value)
-
-    def get_available_screens(self) -> list:
-        """Get available screens for application placement."""
-        screen_config = self.lifecycle_manager.validate_screen_configuration()
-        if screen_config.get("valid") and "screens" in screen_config:
-            return [screen["geometry"] for screen in screen_config["screens"]]
-        return []
-
-    def switch_to_screen(self, main_window: QMainWindow, screen_index: int) -> bool:
-        """Switch application to different screen."""
-        try:
-            from PyQt6.QtGui import QGuiApplication
-
-            screens = QGuiApplication.screens()
-            if 0 <= screen_index < len(screens):
-                target_screen = screens[screen_index]
-                self.lifecycle_manager.set_window_dimensions(
-                    main_window, target_screen=target_screen
-                )
-                return True
-            return False
-        except Exception as e:
-            print(f"⚠️ Failed to switch to screen {screen_index}: {e}")
-            return False
-
-    def get_service_status(self) -> dict:
-        """Get status of all managed services."""
-        return {
-            "service_registration": (
-                self.service_manager.get_registration_status()
-                if hasattr(self.service_manager, "get_registration_status")
-                else {"status": "unknown"}
-            ),
-            "background_settings": self.background_manager.get_background_settings(),
-            "application_info": self.lifecycle_manager.get_application_info(),
-        }
-
-    def _create_progress_callback(self, splash_screen) -> Optional[Callable]:
+    def _create_progress_callback(
+        self, splash_screen: "SplashScreen"
+    ) -> Optional[Callable]:
         """Create progress callback for splash screen updates."""
         if splash_screen:
 
@@ -269,14 +209,3 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
             return progress_callback
         return None
-
-    def get_orchestrator_info(self) -> dict:
-        """Get information about the orchestrator and its services."""
-        return {
-            "orchestrator_version": "1.0.0",
-            "service_manager": type(self.service_manager).__name__,
-            "ui_manager": type(self.ui_manager).__name__,
-            "background_manager": type(self.background_manager).__name__,
-            "lifecycle_manager": type(self.lifecycle_manager).__name__,
-            "container_available": self.container is not None,
-        }

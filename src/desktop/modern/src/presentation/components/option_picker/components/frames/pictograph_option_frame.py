@@ -14,7 +14,7 @@ from PyQt6.QtGui import QCloseEvent, QEnterEvent, QMouseEvent
 from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 
-class ClickablePictographFrame(QFrame):
+class PictographOptionFrame(QFrame):
     clicked = pyqtSignal(str)
     pictograph_clicked = pyqtSignal(object)
 

@@ -134,9 +134,3 @@ class SessionRestorationCoordinator(ISessionRestorationCoordinator):
 
         except Exception as e:
             print(f"⚠️ Failed to apply restored session to UI: {e}")
-
-    def set_sequence_restoration_service(
-        self, service: ISequenceRestorationService
-    ) -> None:
-        """Set the sequence restoration service."""
-        self.sequence_restoration_service = service

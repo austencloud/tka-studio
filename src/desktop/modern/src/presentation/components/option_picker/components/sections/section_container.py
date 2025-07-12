@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
-    ClickablePictographFrame,
+from presentation.components.option_picker.components.frames.pictograph_option_frame import (
+    PictographOptionFrame,
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFrame, QGridLayout
@@ -89,7 +89,7 @@ class OptionPickerSectionPictographContainer(QFrame):
                     pass
         self.pictographs.clear()
 
-    def add_pictograph(self, pictograph_frame: "ClickablePictographFrame"):
+    def add_pictograph(self, pictograph_frame: "PictographOptionFrame"):
         """Add pictograph from pool."""
         import logging
 

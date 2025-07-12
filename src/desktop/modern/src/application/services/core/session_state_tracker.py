@@ -239,17 +239,24 @@ class SessionStateTracker(ISessionStateTracker):
         try:
             self._current_session.selected_beat_index = beat_index
 
-            # Convert beat data to serializable format
+            # SERIALIZATION PATH SELECTION: Convert beat data to serializable format
+            # Multiple paths are necessary due to diverse object types with different capabilities:
+            # 1. to_dict() - Preferred: Domain models with proper enum serialization
+            # 2. dict check - Already serialized data
+            # 3. asdict() - Dataclass fallback (may have enum issues)
+            # 4. direct assignment - Primitive types or pre-serialized data
             if beat_data:
                 if hasattr(beat_data, "to_dict"):
-                    # Use custom to_dict() method which properly handles enum serialization
+                    # PREFERRED: Custom to_dict() method handles enum serialization correctly
                     self._current_session.selected_beat_data = beat_data.to_dict()
                 elif isinstance(beat_data, dict):
+                    # ALREADY SERIALIZED: Use as-is
                     self._current_session.selected_beat_data = beat_data
                 elif hasattr(beat_data, "__dataclass_fields__"):
-                    # Fallback to asdict() but this may cause enum serialization issues
+                    # FALLBACK: asdict() for dataclasses (may cause enum serialization issues)
                     self._current_session.selected_beat_data = asdict(beat_data)
                 else:
+                    # PRIMITIVE: Direct assignment for basic types
                     self._current_session.selected_beat_data = beat_data
             else:
                 self._current_session.selected_beat_data = None

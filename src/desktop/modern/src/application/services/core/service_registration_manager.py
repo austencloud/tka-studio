@@ -22,11 +22,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-try:
-    from core.events import IEventBus
-except ImportError:
-    IEventBus = None
-
 
 class IServiceRegistrationManager(ABC):
     """Interface for service registration operations."""
@@ -59,6 +54,13 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
     def __init__(self, progress_callback: Optional[callable] = None):
         """Initialize with optional progress callback."""
         self.progress_callback = progress_callback
+        # Service availability tracking for better debugging and monitoring
+        self._service_availability = {
+            "event_system": False,
+            "arrow_positioning": False,
+            "prop_management": False,
+            "prop_orchestration": False,
+        }
 
     def register_all_services(self, container: "DIContainer") -> None:
         """Register all application services in the DI container."""
@@ -82,7 +84,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         self._update_progress("Services configured")
 
     def register_event_system(self, container: "DIContainer") -> None:
-        """Register event system and command infrastructure."""
+        """
+        Register event system and command infrastructure.
+
+        SERVICE CRITICALITY: OPTIONAL
+        - Application can run without event system for backward compatibility
+        - Graceful degradation: reduced functionality but no crashes
+        - Used for: inter-component communication, command processing
+        """
         try:
             from core.commands import CommandProcessor
             from core.events import IEventBus, get_event_bus
@@ -95,14 +104,23 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             command_processor = CommandProcessor(event_bus)
             container.register_instance(CommandProcessor, command_processor)
 
+            self._service_availability["event_system"] = True
             self._update_progress("Event system registered")
 
         except ImportError as e:
             print(f"⚠️ Event system not available: {e}")
-            # Continue without event system for backward compatibility
+            # GRACEFUL DEGRADATION: Continue without event system for backward compatibility
+            # Impact: Reduced inter-component communication, but core functionality preserved
 
     def register_core_services(self, container: "DIContainer") -> None:
-        """Register core services using pure dependency injection."""
+        """
+        Register core services using pure dependency injection.
+
+        SERVICE CRITICALITY: CRITICAL
+        - These services are required for basic application functionality
+        - No try-catch blocks: failures should cause application startup to fail
+        - Used for: layout management, UI state coordination, lifecycle management
+        """
 
         from application.services.layout.layout_manager import LayoutManager
         from application.services.ui.coordination.ui_coordinator import UICoordinator
@@ -284,7 +302,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         configure_workbench_services(container)
 
     def register_positioning_services(self, container: "DIContainer") -> None:
-        """Register microservices-based positioning services."""
+        """
+        Register microservices-based positioning services.
+
+        SERVICE CRITICALITY: OPTIONAL (with specific impact warnings)
+        - Application can run without positioning services but with reduced functionality
+        - Graceful degradation: specific warnings about missing arrow positioning capabilities
+        - Used for: arrow positioning, prop management, pictograph orchestration
+        """
         try:
             # Import the individual calculator services with correct class names
             from application.services.positioning.arrows.calculation.arrow_location_calculator import (
@@ -341,10 +366,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             container.register_factory(
                 IArrowPositioningOrchestrator, create_arrow_positioning_orchestrator
             )
+            self._service_availability["arrow_positioning"] = True
         except ImportError as e:
-            # Some positioning services not available - continue
-            print(f"⚠️ Failed to import positioning services: {e}")
-            print(f"   This means IArrowPositioningOrchestrator will not be available")
+            # GRACEFUL DEGRADATION: Some positioning services not available - continue
+            self._handle_service_unavailable(
+                "Arrow positioning services",
+                e,
+                "Arrow positioning calculations in pictographs",
+            )
 
         try:
             # Register prop management services
@@ -354,9 +383,12 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             )
 
             container.register_singleton(IPropManagementService, PropManagementService)
-        except ImportError:
-            # Prop management service not available - continue
-            pass
+            self._service_availability["prop_management"] = True
+        except ImportError as e:
+            # GRACEFUL DEGRADATION: Prop management service not available - continue
+            self._handle_service_unavailable(
+                "Prop management service", e, "Prop positioning and management"
+            )
 
         try:
             # Import existing prop orchestrator (keep if still needed)
@@ -459,13 +491,76 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         container.register_singleton(GraphEditorStateManager, GraphEditorStateManager)
 
     def get_registration_status(self) -> dict:
-        """Get status of service registration."""
+        """
+        Get comprehensive status of service registration.
+
+        Returns detailed information about which services are available
+        and which have failed to register for better debugging.
+        """
         return {
-            "event_system_available": IEventBus is not None,
-            "services_registered": True,  # Could be enhanced to track actual registration
+            "event_system_available": self._service_availability["event_system"],
+            "arrow_positioning_available": self._service_availability[
+                "arrow_positioning"
+            ],
+            "prop_management_available": self._service_availability["prop_management"],
+            "prop_orchestration_available": self._service_availability[
+                "prop_orchestration"
+            ],
+            "services_registered": True,
+            "availability_summary": {
+                "total_optional_services": len(self._service_availability),
+                "available_services": sum(self._service_availability.values()),
+                "missing_services": [
+                    service
+                    for service, available in self._service_availability.items()
+                    if not available
+                ],
+            },
         }
 
     def _update_progress(self, message: str) -> None:
         """Update progress if callback is available."""
         if self.progress_callback:
             self.progress_callback(message)
+
+    def _handle_service_unavailable(
+        self, service_name: str, error: Exception, functionality_impact: str
+    ) -> None:
+        """
+        Standardized handling for unavailable optional services.
+
+        Args:
+            service_name: Name of the service that failed to register
+            error: The exception that occurred
+            functionality_impact: Description of what functionality is affected
+        """
+        logger.warning(f"{service_name} not available: {error}")
+        logger.warning(f"Impact: {service_name} will not be available")
+        logger.warning(f"Functionality affected: {functionality_impact}")
+
+        # Update availability tracking
+        service_key = service_name.lower().replace(" ", "_")
+        if service_key in self._service_availability:
+            self._service_availability[service_key] = False
+
+    def get_service_availability_summary(self) -> str:
+        """
+        Get a human-readable summary of service availability.
+
+        Useful for debugging and monitoring which optional services are available.
+        """
+        available = [
+            name for name, status in self._service_availability.items() if status
+        ]
+        missing = [
+            name for name, status in self._service_availability.items() if not status
+        ]
+
+        summary = f"Service Availability Summary:\n"
+        summary += f"  Available ({len(available)}): {', '.join(available) if available else 'None'}\n"
+        summary += (
+            f"  Missing ({len(missing)}): {', '.join(missing) if missing else 'None'}\n"
+        )
+        summary += f"  Total optional services: {len(self._service_availability)}"
+
+        return summary

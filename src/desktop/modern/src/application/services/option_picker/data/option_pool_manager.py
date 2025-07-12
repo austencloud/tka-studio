@@ -14,8 +14,8 @@ from core.interfaces.core_services import IObjectPoolManager
 from domain.models.enums import GridMode
 from domain.models.grid_data import GridData
 from domain.models.pictograph_data import PictographData
-from presentation.components.option_picker.components.frames.clickable_pictograph_frame import (
-    ClickablePictographFrame,
+from presentation.components.option_picker.components.frames.pictograph_option_frame import (
+    PictographOptionFrame,
 )
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
@@ -49,7 +49,7 @@ class OptionPoolManager(QObject):
         """
         super().__init__()
         self.parent_widget = parent_widget
-        self._pictograph_pool: List[ClickablePictographFrame] = []
+        self._pictograph_pool: List[PictographOptionFrame] = []
         self._pool_initialized = False
         self._click_handler: Optional[Callable] = None
         self._pictograph_click_handler: Optional[Callable] = None
@@ -96,13 +96,8 @@ class OptionPoolManager(QObject):
             from PyQt6.QtCore import Qt
             from PyQt6.QtWidgets import QApplication
 
-            # Temporarily disable all widget updates during pool creation
-            app = QApplication.instance()
-            if app:
-                app.setQuitOnLastWindowClosed(False)
-
             # Create factory function for pictograph frames
-            def pictograph_frame_factory() -> Optional[ClickablePictographFrame]:
+            def pictograph_frame_factory() -> Optional[PictographOptionFrame]:
                 frame = self._create_pictograph_frame()
                 # POOL CREATION FIX: Ensure frame is completely hidden during creation
                 if frame:
@@ -139,18 +134,12 @@ class OptionPoolManager(QObject):
 
             self._pool_initialized = True
 
-            # WINDOW MANAGEMENT FIX: Restore normal application behavior after pool creation
-            if app:
-                app.setQuitOnLastWindowClosed(True)
-
         except Exception as e:
             logger.error(f"Error initializing pool via service: {e}")
             # WINDOW MANAGEMENT FIX: Restore normal behavior even on error
             app = QApplication.instance()
-            if app:
-                app.setQuitOnLastWindowClosed(True)
 
-    def _create_pictograph_frame(self) -> Optional[ClickablePictographFrame]:
+    def _create_pictograph_frame(self) -> Optional[PictographOptionFrame]:
         """
         Create a single pictograph frame with real data.
 
@@ -184,7 +173,7 @@ class OptionPoolManager(QObject):
             # Create frame directly with PictographData
             # Use parent=None to avoid RuntimeError that causes pictograph_component to be None
             # The frame is designed to handle parent=None safely with proper cleanup
-            frame = ClickablePictographFrame(real_pictograph_data, parent=None)
+            frame = PictographOptionFrame(real_pictograph_data, parent=None)
 
             # Store reference to main widget for proper cleanup later
             frame._pool_manager_ref = weakref.ref(self)
@@ -214,9 +203,7 @@ class OptionPoolManager(QObject):
             logger.error(f"Error creating pictograph frame: {e}")
             return None
 
-    def get_pictograph_from_pool(
-        self, index: int
-    ) -> Optional[ClickablePictographFrame]:
+    def get_pictograph_from_pool(self, index: int) -> Optional[PictographOptionFrame]:
         """Get frame from pool at specified index"""
         if 0 <= index < len(self._pictograph_pool):
             return self._pictograph_pool[index]

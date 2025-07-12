@@ -325,10 +325,6 @@ class IObjectPoolManager(ABC):
     def get_pooled_object(self, pool_name: str, index: int) -> Optional[Any]:
         """Get object from pool by index."""
 
-    @abstractmethod
-    def reset_pool(self, pool_name: str) -> None:
-        """Reset pool state."""
-
 
 class IObjectPoolService(ABC):
     """Alias for IObjectPoolManager for backward compatibility."""
@@ -346,10 +342,6 @@ class IObjectPoolService(ABC):
     @abstractmethod
     def get_pooled_object(self, pool_name: str, index: int) -> Optional[Any]:
         """Get object from pool by index."""
-
-    @abstractmethod
-    def reset_pool(self, pool_name: str) -> None:
-        """Reset pool state."""
 
 
 class IUIStateManagementService(ABC):
