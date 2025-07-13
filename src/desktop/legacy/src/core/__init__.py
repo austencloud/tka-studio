@@ -12,35 +12,19 @@ except ImportError as e:
 
 # Import from settings dialog core directory
 try:
-    import os
-    import sys
-    from pathlib import Path
-
-    # Get the absolute path to the settings dialog core
-    current_dir = Path(__file__).parent
-    settings_core_path = (
-        current_dir.parent / "main_window" / "main_widget" / "settings_dialog" / "core"
-    )
-
-    if settings_core_path.exists():
-        # Add to path temporarily
-        settings_core_str = str(settings_core_path)
-        if settings_core_str not in sys.path:
-            sys.path.insert(0, settings_core_str)
-
+    # Try relative import first (when imported as a package)
+    from ..main_window.main_widget.settings_dialog.core import GlassmorphismStyler
+except ImportError:
+    try:
+        # Try absolute import from project root
+        from src.desktop.legacy.src.main_window.main_widget.settings_dialog.core import GlassmorphismStyler
+    except ImportError:
         try:
-            import glassmorphism_styler
-
-            GlassmorphismStyler = glassmorphism_styler.GlassmorphismStyler
-        finally:
-            # Remove the temporary path
-            if settings_core_str in sys.path:
-                sys.path.remove(settings_core_str)
-    else:
-        print(f"Warning: Settings core path not found: {settings_core_path}")
-
-except Exception as e:
-    print(f"Warning: Could not import glassmorphism_styler: {e}")
+            # Try direct import (when paths are set up)
+            from main_window.main_widget.settings_dialog.core import GlassmorphismStyler
+        except ImportError as e:
+            print(f"Warning: Could not import from settings dialog core: {e}")
+            GlassmorphismStyler = None
 
 # Make everything available at package level
 __all__ = [

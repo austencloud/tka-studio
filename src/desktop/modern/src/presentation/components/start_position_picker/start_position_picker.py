@@ -1,23 +1,12 @@
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QGridLayout,
-    QLabel,
-    QScrollArea,
-)
-from PyQt6.QtCore import pyqtSignal, Qt, QSize
-from PyQt6.QtGui import QFont
+# Import for command-based architecture
+import logging
 
-# Remove unused import that was causing the module error
-# from application.services.data.pictograph_dataset_service import (
-#     PictographDatasetService,
-# )
 from presentation.components.start_position_picker.start_position_option import (
     StartPositionOption,
 )
-
-# Import for command-based architecture
-import logging
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QGridLayout, QLabel, QScrollArea, QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)
 

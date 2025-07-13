@@ -57,7 +57,7 @@ class SequenceBeatOperations(QObject):
 
         try:
             # Calculate beat number
-            current_sequence = self._get_current_sequence()
+            current_sequence = self.get_current_sequence()
             beat_number = self._calculate_next_beat_number(current_sequence)
 
             # Create beat data with embedded pictograph using factory
@@ -176,7 +176,7 @@ class SequenceBeatOperations(QObject):
 
         self._adding_beat = True
         try:
-            current_sequence = self._get_current_sequence()
+            current_sequence = self.get_current_sequence()
             if current_sequence is None:
                 current_sequence = SequenceData.empty()
                 print(f"🎯 [BEAT_OPERATIONS] Creating empty sequence")
@@ -234,7 +234,7 @@ class SequenceBeatOperations(QObject):
     def update_beat_turns(self, beat_index: int, color: str, new_turns: int):
         """Update the number of turns for a specific beat - exactly like legacy"""
         try:
-            current_sequence = self._get_current_sequence()
+            current_sequence = self.get_current_sequence()
             if not current_sequence or beat_index >= len(current_sequence.beats):
                 return
 
@@ -286,7 +286,7 @@ class SequenceBeatOperations(QObject):
     ):
         """Update the orientation for a specific beat"""
         try:
-            current_sequence = self._get_current_sequence()
+            current_sequence = self.get_current_sequence()
             if not current_sequence or beat_index >= len(current_sequence.beats):
                 return
 
@@ -340,7 +340,7 @@ class SequenceBeatOperations(QObject):
     def remove_beat(self, beat_index: int):
         """Remove a beat from the sequence"""
         try:
-            current_sequence = self._get_current_sequence()
+            current_sequence = self.get_current_sequence()
             if not current_sequence or beat_index >= len(current_sequence.beats):
                 print(
                     f"⚠️ Cannot remove beat at index {beat_index}: invalid index or empty sequence"
@@ -382,7 +382,7 @@ class SequenceBeatOperations(QObject):
 
             traceback.print_exc()
 
-    def _get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence from workbench"""
         print(f"🔍 [BEAT_OPERATIONS] Getting current sequence...")
         print(f"   Workbench getter: {self.workbench_getter}")

@@ -6,6 +6,7 @@ Updated to work with the modern domain models and letter type classification sys
 """
 
 import logging
+from typing import Optional
 
 from domain.models.enums import Orientation
 from domain.models.letter_condition import LetterCondition
@@ -23,9 +24,22 @@ class PictographValidator:
     with the modern domain models and letter classification system.
     """
 
-    def __init__(self, pictograph_data: PictographData):
-        """Initialize with pictograph data."""
+    def __init__(
+        self,
+        pictograph_data: PictographData,
+        orientation_calculator=None,
+    ):
+        """Initialize with pictograph data and optional dependencies."""
         self.pictograph_data = pictograph_data
+        self.orientation_calculator = orientation_calculator
+
+    def validate_dependencies(self) -> bool:
+        """Validate that all required dependencies are available."""
+        # PictographData is required
+        if self.pictograph_data is None:
+            return False
+        # OrientationCalculator is optional (has fallback)
+        return True
 
     def ends_with_beta(self) -> bool:
         """
@@ -284,11 +298,14 @@ class PictographValidator:
             return Orientation.IN  # Default
 
         # Use the orientation calculator to get end orientation
-        from application.services.positioning.arrows.calculation.orientation_calculator import (
-            OrientationCalculator,
-        )
+        if self.orientation_calculator is None:
+            from application.services.positioning.arrows.calculation.orientation_calculator import (
+                OrientationCalculator,
+            )
 
-        orientation_service = OrientationCalculator()
+            orientation_service = OrientationCalculator()
+        else:
+            orientation_service = self.orientation_calculator
 
         start_ori = getattr(motion_data, "start_ori", Orientation.IN)
         if isinstance(start_ori, str):

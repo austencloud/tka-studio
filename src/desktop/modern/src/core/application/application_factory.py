@@ -21,7 +21,9 @@ from application.services.core.session_state_tracker import SessionStateTracker
 
 # Import production services
 from application.services.layout.layout_manager import LayoutManager
-from application.services.pictograph.pictograph_manager import PictographManager
+from application.services.pictograph.pictograph_position_matcher import (
+    PictographCSVManager,
+)
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -111,7 +113,7 @@ class ApplicationFactory:
 
         container.register_singleton(IUIStateManager, UICoordinator)
         container.register_singleton(ISequenceManager, SequenceBeatOperations)
-        container.register_singleton(IPictographManager, PictographManager)
+        container.register_singleton(IPictographManager, PictographCSVManager)
 
         # Register session service
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
@@ -250,7 +252,7 @@ class ApplicationFactory:
 
         # Real business logic services
         container.register_singleton(ISequenceManager, SequenceBeatOperations)
-        container.register_singleton(IPictographManager, PictographManager)
+        container.register_singleton(IPictographManager, PictographCSVManager)
 
         # Headless UI services
         container.register_singleton(ILayoutService, HeadlessLayoutService)

@@ -7,7 +7,7 @@ validation, and integration with existing IVisibilityService.
 
 import logging
 from threading import Lock
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 
@@ -22,12 +22,16 @@ class VisibilityStateManager:
     using modern architecture patterns.
     """
 
-    def __init__(self, visibility_service: IVisibilitySettingsManager):
+    def __init__(
+        self,
+        visibility_service: IVisibilitySettingsManager,
+        global_visibility_service=None,
+    ):
         self.visibility_service = visibility_service
         self._lock = Lock()  # Thread-safe operations
 
-        # Get or create global visibility service for cross-application updates
-        self._global_service = self._get_global_service()
+        # Use injected global service or create one
+        self._global_service = global_visibility_service or self._get_global_service()
 
         # Observer pattern for UI updates
         self._observers: Dict[str, List[Callable]] = {
@@ -46,6 +50,12 @@ class VisibilityStateManager:
 
         # Motion colors
         self.motion_colors = ["red", "blue"]
+
+    def validate_dependencies(self) -> bool:
+        """Validate that all required dependencies are available."""
+        return self._validate_required_dependency(
+            self.visibility_service, "visibility_service"
+        )
 
     def _get_global_service(self):
         """Get or create global visibility service."""
@@ -208,77 +218,3 @@ class VisibilityStateManager:
     def are_all_motions_visible(self) -> bool:
         """Check if both motion types are currently visible."""
         return all(self.get_motion_visibility(color) for color in self.motion_colors)
-
-    def get_non_radial_visibility(self) -> bool:
-        """Get visibility state for non-radial points."""
-        return self.visibility_service.get_non_radial_visibility()
-
-    def set_non_radial_visibility(self, visible: bool) -> None:
-        """Set visibility state for non-radial points."""
-        self.visibility_service.set_non_radial_visibility(visible)
-
-        # Propagate to all registered pictographs via global service
-        if self._global_service:
-            self._global_service.apply_visibility_change(
-                "glyph", "Non-radial_points", visible
-            )
-
-        self._notify_observers(["non_radial", "all"])
-        logger.debug(f"Set non-radial visibility to {visible}")
-
-    def get_all_visibility_states(self) -> Dict[str, Any]:
-        """Get comprehensive visibility state information."""
-        return {
-            "glyphs": {
-                glyph_type: {
-                    "base_visible": self.visibility_service.get_glyph_visibility(
-                        glyph_type
-                    ),
-                    "effective_visible": self.get_glyph_visibility(glyph_type),
-                    "is_dependent": glyph_type in self.dependent_glyphs,
-                }
-                for glyph_type in self.all_glyph_types
-            },
-            "motions": {
-                color: self.get_motion_visibility(color) for color in self.motion_colors
-            },
-            "non_radial": self.get_non_radial_visibility(),
-            "all_motions_visible": self.are_all_motions_visible(),
-        }
-
-    def validate_state(self) -> Dict[str, Any]:
-        """Validate current visibility state and return validation results."""
-        issues = []
-        warnings = []
-
-        # Check if at least one motion is visible
-        if not any(self.get_motion_visibility(color) for color in self.motion_colors):
-            issues.append("No motions are visible - this should not be possible")
-
-        # Check dependent glyph consistency
-        all_motions_visible = self.are_all_motions_visible()
-        for glyph_type in self.dependent_glyphs:
-            base_visible = self.visibility_service.get_glyph_visibility(glyph_type)
-            effective_visible = self.get_glyph_visibility(glyph_type)
-
-            if base_visible and not effective_visible and not all_motions_visible:
-                warnings.append(
-                    f"{glyph_type} is enabled but hidden due to motion dependencies"
-                )
-
-        return {
-            "valid": len(issues) == 0,
-            "issues": issues,
-            "warnings": warnings,
-            "state_summary": self.get_all_visibility_states(),
-        }
-
-    def apply_to_all_pictographs(self) -> None:
-        """
-        Trigger global application of visibility changes to all pictographs.
-        This will be implemented by the GlobalVisibilityService.
-        """
-        # This method serves as a hook for the global visibility service
-        # The actual implementation will be in GlobalVisibilityService
-        self._notify_observers(["all"])
-        logger.debug("Triggered global pictograph visibility update")

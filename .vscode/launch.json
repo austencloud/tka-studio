@@ -119,7 +119,7 @@
       "name": "🏛️ TKA Legacy Desktop App",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/run_legacy.py",
+      "program": "${workspaceFolder}/src/desktop/legacy/main.py",
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
@@ -134,25 +134,7 @@
       "showReturnValue": true,
       "subProcess": true
     },
-    {
-      "name": "🏛️ TKA Legacy Desktop App (Just My Code)",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/run_legacy.py",
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "env": {
-        "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
-      },
-      "stopOnEntry": false,
-      "showReturnValue": true,
-      "subProcess": true
-    },
+
     {
       "name": "🌐 TKA Web App (Main)",
       "type": "node",

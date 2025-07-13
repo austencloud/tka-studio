@@ -110,22 +110,24 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             )
             self._mark_service_available("ArrowCoordinateSystemService")
 
-            # Register orchestrator with dependency injection
-            def create_arrow_positioning_orchestrator():
-                location_calculator = container.resolve(IArrowLocationCalculator)
-                rotation_calculator = container.resolve(IArrowRotationCalculator)
-                adjustment_calculator = container.resolve(IArrowAdjustmentCalculator)
-                coordinate_system = container.resolve(IArrowCoordinateSystemService)
+            # Register orchestrator as singleton using direct registration
+            # First resolve all dependencies
+            location_calculator = container.resolve(IArrowLocationCalculator)
+            rotation_calculator = container.resolve(IArrowRotationCalculator)
+            adjustment_calculator = container.resolve(IArrowAdjustmentCalculator)
+            coordinate_system = container.resolve(IArrowCoordinateSystemService)
 
-                return ArrowPositioningOrchestrator(
-                    location_calculator=location_calculator,
-                    rotation_calculator=rotation_calculator,
-                    adjustment_calculator=adjustment_calculator,
-                    coordinate_system=coordinate_system,
-                )
+            # Create the orchestrator instance
+            orchestrator_instance = ArrowPositioningOrchestrator(
+                location_calculator=location_calculator,
+                rotation_calculator=rotation_calculator,
+                adjustment_calculator=adjustment_calculator,
+                coordinate_system=coordinate_system,
+            )
 
-            container.register_factory(
-                IArrowPositioningOrchestrator, create_arrow_positioning_orchestrator
+            # Register the instance directly as singleton
+            container.register_instance(
+                IArrowPositioningOrchestrator, orchestrator_instance
             )
             self._mark_service_available("ArrowPositioningOrchestrator")
 
@@ -172,10 +174,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_orchestration_services(self, container: "DIContainer") -> None:
         """Register orchestration services."""
         try:
-            from application.services.pictograph.pictograph_orchestrator import (
-                IPictographOrchestrator,
-                PictographOrchestrator,
-            )
+
             from application.services.positioning.props.orchestration.prop_orchestrator import (
                 IPropOrchestrator,
                 PropOrchestrator,
@@ -184,9 +183,6 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             container.register_singleton(IPropOrchestrator, PropOrchestrator)
             self._mark_service_available("PropOrchestrator")
 
-            container.register_singleton(
-                IPictographOrchestrator, PictographOrchestrator
-            )
             self._mark_service_available("PictographOrchestrator")
 
         except ImportError as e:

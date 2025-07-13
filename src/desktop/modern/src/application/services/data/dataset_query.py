@@ -136,7 +136,7 @@ class DatasetQuery(IDatasetQuery):
             # Use BeatFactory to create start position beat with embedded pictograph
             from application.services.sequence.beat_factory import BeatFactory
 
-            beat_data = BeatFactory.create_start_position_beat(pictograph_data)
+            beat_data = BeatFactory.create_start_position_beat_data(pictograph_data)
             return beat_data
 
         except Exception as e:

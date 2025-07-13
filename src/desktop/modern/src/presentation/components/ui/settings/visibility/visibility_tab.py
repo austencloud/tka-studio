@@ -341,28 +341,6 @@ class VisibilityTab(QWidget):
         """Handle preview update notifications."""
         logger.debug("Preview updated")
 
-    def get_state_summary(self) -> Dict[str, Any]:
-        """Get comprehensive state summary for debugging."""
-        motion_states = {}
-        element_states = {}
-
-        if self.motion_section:
-            motion_states = self.motion_section.get_motion_states()
-
-        if self.element_section:
-            element_states = self.element_section.get_element_states()
-
-        return {
-            "motion_states": motion_states,
-            "element_states": element_states,
-            "dependency_warning_visible": (
-                self.dependency_warning.isVisible()
-                if self.dependency_warning
-                else False
-            ),
-            "state_manager_validation": self.state_manager.validate_state(),
-        }
-
     def refresh_all_settings(self):
         """Force refresh all settings from the service."""
         self._load_initial_settings()

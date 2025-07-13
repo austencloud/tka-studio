@@ -7,14 +7,15 @@ architecture that follows the Single Responsibility Principle.
 
 import logging
 from typing import Optional
-from PyQt6.QtWidgets import QWidget
+
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QWidget
 
 from .color_manager import ColorManager
-from .typography_manager import TypographyManager
 from .component_styler import ComponentStyler
 from .effect_manager import EffectManager
 from .layout_styler import LayoutStyler
+from .typography_manager import TypographyManager
 
 
 class GlassmorphismCoordinator:

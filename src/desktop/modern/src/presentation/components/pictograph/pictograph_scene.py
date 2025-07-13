@@ -18,7 +18,6 @@ from PyQt6.QtWidgets import QGraphicsScene
 
 logger = logging.getLogger(__name__)
 
-from presentation.components.pictograph.renderers.arrow_renderer import ArrowRenderer
 from presentation.components.pictograph.renderers.elemental_glyph_renderer import (
     ElementalGlyphRenderer,
 )
@@ -28,6 +27,9 @@ from presentation.components.pictograph.renderers.position_glyph_renderer import
     PositionGlyphRenderer,
 )
 from presentation.components.pictograph.renderers.prop_renderer import PropRenderer
+from presentation.components.pictograph.renderers.qt_arrow_renderer import (
+    QtArrowRenderer,
+)
 from presentation.components.pictograph.renderers.tka_glyph_renderer import (
     TKAGlyphRenderer,
 )
@@ -68,10 +70,21 @@ class PictographScene(QGraphicsScene):
         self.setSceneRect(0, 0, self.SCENE_SIZE, self.SCENE_SIZE)
         self.setBackgroundBrush(QBrush(QColor(255, 255, 255)))
 
-        # Initialize renderers
+        # Get shared positioning services for efficient arrow rendering
+        self._positioning_orchestrator = None
+        self._coordinate_system = None
+        self._arrow_rendering_service = None
+        self._initialize_shared_services()
+
+        # Initialize renderers with shared services
         self.grid_renderer = GridRenderer(self)
         self.prop_renderer = PropRenderer(self)
-        self.arrow_renderer = ArrowRenderer(self)
+        self.arrow_renderer = QtArrowRenderer(
+            self,
+            positioning_orchestrator=self._positioning_orchestrator,
+            coordinate_system=self._coordinate_system,
+            rendering_service=self._arrow_rendering_service,
+        )
         self.letter_renderer = LetterRenderer(self)  # Initialize glyph renderers
         self.elemental_glyph_renderer = ElementalGlyphRenderer(self)
         self.vtg_glyph_renderer = VTGGlyphRenderer(self)
@@ -80,6 +93,50 @@ class PictographScene(QGraphicsScene):
 
         # Register with global visibility service
         self._register_with_global_service()
+
+    def _initialize_shared_services(self):
+        """Initialize shared services that will be injected into renderers."""
+        try:
+            from application.services.pictograph.arrow_rendering_service import (
+                ArrowRenderingService,
+            )
+            from core.dependency_injection.container_utils import (
+                ensure_container_initialized,
+            )
+            from core.dependency_injection.di_container import get_container
+            from core.interfaces.positioning_services import (
+                IArrowCoordinateSystemService,
+                IArrowPositioningOrchestrator,
+            )
+
+            # Ensure container is properly initialized
+            if ensure_container_initialized():
+                container = get_container()
+
+                # Resolve shared positioning services (singletons)
+                self._positioning_orchestrator = container.resolve(
+                    IArrowPositioningOrchestrator
+                )
+                self._coordinate_system = container.resolve(
+                    IArrowCoordinateSystemService
+                )
+
+                # Create shared arrow rendering service
+                self._arrow_rendering_service = ArrowRenderingService()
+
+                logger.debug(
+                    f"Scene {self.scene_id}: Successfully initialized shared services"
+                )
+            else:
+                logger.warning(
+                    f"Scene {self.scene_id}: Failed to initialize DI container"
+                )
+
+        except Exception as e:
+            logger.warning(
+                f"Scene {self.scene_id}: Failed to initialize shared services: {e}"
+            )
+            # Services will remain None, renderers will fall back to their own resolution
 
     def _register_with_global_service(self):
         """Register this scene with the global visibility service."""
@@ -270,6 +327,9 @@ class PictographScene(QGraphicsScene):
         """Render a complete pictograph from pictograph data."""
         self.clear()
         self.prop_renderer.clear_rendered_props()
+        # Return arrow items to pool for reuse
+        if hasattr(self.arrow_renderer, "_return_arrow_items_to_pool"):
+            self.arrow_renderer._return_arrow_items_to_pool()
         self._render_pictograph_data(pictograph_data)
 
     def update_beat(self, beat_data: BeatData) -> None:

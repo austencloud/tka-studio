@@ -32,8 +32,14 @@ class PictographPoolManager:
         self._initialized = False
 
     def initialize_pool(self) -> None:
-        """Pre-create pictograph components for the pool."""
+        """Initialize the pictograph pool with pre-created components (public method)."""
+        with self._lock:
+            self._initialize_pool_internal()
+
+    def _initialize_pool_internal(self) -> None:
+        """Internal pool initialization method (called with lock held)."""
         if self._initialized:
+            logger.debug("🏊 [POOL] Pool already initialized")
             return
 
         logger.info(
@@ -69,11 +75,23 @@ class PictographPoolManager:
         self._initialized = True
 
     def checkout_pictograph(self, parent=None) -> Optional[PictographComponent]:
-        """Get an available pictograph component from the pool."""
+        """
+        Get an available pictograph component from the pool.
+
+        Args:
+            parent: Optional parent widget for the component
+
+        Returns:
+            PictographComponent or None if pool is exhausted
+        """
         with self._lock:
             if not self._initialized:
+                logger.info("🔧 [POOL] Auto-initializing pool on first use...")
+                self._initialize_pool_internal()
+
+            if not self._initialized:
                 logger.warning(
-                    "⚠️ [POOL] Pool not initialized, creating component on-demand"
+                    "⚠️ [POOL] Pool initialization failed, creating component on-demand"
                 )
                 return create_pictograph_component(
                     parent=parent, container=self.container
@@ -92,12 +110,15 @@ class PictographPoolManager:
             if parent:
                 component.setParent(parent)
 
-            # Make visible and reset state
+            # Make component visible (components are hidden during pool initialization)
+            # This is necessary but much faster than calling show()
             component.setVisible(True)
 
-            logger.debug(
-                f"🔄 [POOL] Checked out component (pool: {self._pool.qsize()}, out: {len(self._checked_out)})"
-            )
+            # Only log in debug mode to avoid string formatting overhead
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(
+                    f"🔄 [POOL] Checked out component (pool: {self._pool.qsize()}, out: {len(self._checked_out)})"
+                )
             return component
 
     def checkin_pictograph(self, component: PictographComponent) -> None:
@@ -109,7 +130,7 @@ class PictographPoolManager:
                 )
                 return
 
-            # Reset component state
+            # Reset component state (minimal operations for performance)
             component.setParent(None)
             component.setVisible(False)
             # Clear any pictograph data
@@ -119,9 +140,11 @@ class PictographPoolManager:
             self._checked_out.remove(component)
             self._pool.put(component)
 
-            logger.debug(
-                f"🔄 [POOL] Checked in component (pool: {self._pool.qsize()}, out: {len(self._checked_out)})"
-            )
+            # Only log in debug mode to avoid overhead
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(
+                    f"🔄 [POOL] Checked in component (pool: {self._pool.qsize()}, out: {len(self._checked_out)})"
+                )
 
     def get_pool_stats(self) -> Dict[str, int]:
         """Get current pool statistics."""

@@ -130,19 +130,19 @@ class PropTypeTab(QWidget):
 
         # Define props with their icon paths (like legacy)
         props = {
-            "Staff": "assets/images/props/staff.svg",
-            "Simplestaff": "assets/images/props/simple_staff.svg",
-            "Club": "assets/images/props/club.svg",
-            "Fan": "assets/images/props/fan.svg",
-            "Triad": "assets/images/props/triad.svg",
-            "Minihoop": "assets/images/props/minihoop.svg",
-            "Buugeng": "assets/images/props/buugeng.svg",
-            "Triquetra": "assets/images/props/triquetra.svg",
-            "Sword": "assets/images/props/sword.svg",
-            "Chicken": "assets/images/props/chicken.png",
-            "Hand": "assets/images/props/hand.svg",
-            "Guitar": "assets/images/props/guitar.svg",
-            "Ukulele": "assets/images/props/ukulele.svg",
+            "Staff": "images/props/staff.svg",
+            "Simplestaff": "images/props/simple_staff.svg",
+            "Club": "images/props/club.svg",
+            "Fan": "images/props/fan.svg",
+            "Triad": "images/props/triad.svg",
+            "Minihoop": "images/props/minihoop.svg",
+            "Buugeng": "images/props/buugeng.svg",
+            "Triquetra": "images/props/triquetra.svg",
+            "Sword": "images/props/sword.svg",
+            "Chicken": "images/props/chicken.png",
+            "Hand": "images/props/hand.svg",
+            "Guitar": "images/props/guitar.svg",
+            "Ukulele": "images/props/ukulele.svg",
         }
 
         # Create prop buttons in a 4-column grid for better layout

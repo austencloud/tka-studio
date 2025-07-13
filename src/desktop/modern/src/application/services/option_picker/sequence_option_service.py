@@ -72,10 +72,7 @@ class SequenceOptionService:
                     sequence_data, updated_options
                 )
             else:
-                # For legacy format, we handle prop orientations manually in _update_option_orientations
-                print(
-                    "🔍 [SEQUENCE_OPTION] Using legacy format - prop orientations handled manually"
-                )
+                print("Using legacy format - prop orientations handled manually")
 
             # Group by letter type
             return self._group_options_by_type(updated_options)
@@ -84,9 +81,7 @@ class SequenceOptionService:
             print(f"❌ [SEQUENCE_OPTION] Error getting options for sequence: {e}")
             return {}
 
-    def _extract_end_position(
-        self, sequence_data: Union[SequenceData, List[dict]]
-    ) -> str:
+    def _extract_end_position(self, sequence_data: SequenceData) -> str:
         """
         Extract end position from sequence data.
 
@@ -97,23 +92,7 @@ class SequenceOptionService:
         try:
             # If sequence has no data, use alpha1
             if not sequence_data:
-                return "alpha1"  # Default start position
-
-            # Handle legacy format (list of dictionaries)
-            if isinstance(sequence_data, list):
-                if len(sequence_data) <= 1:
-                    return "alpha1"  # Only metadata, no beats
-
-                # Get the last beat (skip metadata at index 0)
-                last_beat = sequence_data[-1]
-                if isinstance(last_beat, dict):
-                    end_pos = last_beat.get("end_pos") or last_beat.get("end_position")
-                    if end_pos:
-                        print(
-                            f"🔍 [SEQUENCE_OPTION] Extracted end position: {end_pos} from legacy beat"
-                        )
-                        return end_pos
-                return "alpha1"
+                raise ValueError("Sequence data is empty")
 
             # Handle modern SequenceData format
             if hasattr(sequence_data, "length") and sequence_data.length == 0:
@@ -132,9 +111,6 @@ class SequenceOptionService:
             # BeatData objects have pictograph_data with end_pos
             if hasattr(last_beat, "pictograph_data") and last_beat.pictograph_data:
                 end_pos = last_beat.pictograph_data.end_position
-                print(
-                    f"🔍 [SEQUENCE_OPTION] Extracted end position: {end_pos} from beat {last_beat.beat_number}"
-                )
                 return end_pos or "alpha1"
             # Fallback for dict-based data
             elif isinstance(last_beat, dict) and "end_pos" in last_beat:
@@ -160,17 +136,11 @@ class SequenceOptionService:
             default_orientations = {"blue": "in", "red": "out"}
 
             if not sequence_data:
-                print(
-                    f"🔍 [SEQUENCE_OPTION] No sequence data, using default orientations: {default_orientations}"
-                )
                 return default_orientations
 
             # Handle legacy format (list of dictionaries)
             if isinstance(sequence_data, list):
                 if len(sequence_data) <= 1:
-                    print(
-                        f"🔍 [SEQUENCE_OPTION] Legacy format: No beats, using default orientations: {default_orientations}"
-                    )
                     return default_orientations
 
                 # Get the last beat (skip metadata at index 0)
@@ -204,9 +174,6 @@ class SequenceOptionService:
                         else:
                             end_orientations[color] = default_orientations[color]
 
-                    print(
-                        f"🔍 [SEQUENCE_OPTION] Extracted end orientations from legacy format: {end_orientations}"
-                    )
                     return end_orientations
 
                 return default_orientations
@@ -217,9 +184,6 @@ class SequenceOptionService:
                 or not sequence_data.beats
                 or len(sequence_data.beats) == 0
             ):
-                print(
-                    f"🔍 [SEQUENCE_OPTION] Modern format: No beats, using default orientations: {default_orientations}"
-                )
                 return default_orientations
 
             last_beat = sequence_data.beats[-1]
@@ -244,14 +208,8 @@ class SequenceOptionService:
                     else:
                         end_orientations[color] = default_orientations[color]
 
-                print(
-                    f"🔍 [SEQUENCE_OPTION] Extracted end orientations from modern format: {end_orientations} from beat {last_beat.beat_number}"
-                )
                 return end_orientations
 
-            print(
-                f"🔍 [SEQUENCE_OPTION] No pictograph data, using default orientations: {default_orientations}"
-            )
             return default_orientations
 
         except Exception as e:
@@ -292,10 +250,6 @@ class SequenceOptionService:
                         )
                         updated_motions[color] = updated_motion
 
-                        if len(updated_options) < 3:  # Debug first few
-                            print(
-                                f"🔧 [SEQUENCE_OPTION] Updated {color} motion for {option.letter}: {new_start_ori} → {new_end_ori}"
-                            )
                     else:
                         start_ori = end_orientations.get(
                             color, "in" if color == "blue" else "out"
@@ -340,9 +294,6 @@ class SequenceOptionService:
                 )
                 updated_options.append(updated_option)
 
-            print(
-                f"✅ [SEQUENCE_OPTION] Updated orientations for {len(updated_options)} options"
-            )
             return updated_options
 
         except Exception as e:

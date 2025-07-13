@@ -14,6 +14,7 @@ from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
 from domain.models import SequenceData
+from domain.models.beat_data import BeatData
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from .layout_manager import ConstructTabLayoutManager
@@ -135,13 +136,15 @@ class SignalCoordinator(QObject):
                     "✅ [SIGNAL_COORDINATOR] Connected workbench clear_sequence_requested signal"
                 )
 
-    def _handle_start_position_created(self, position_key: str, start_position_data):
+    def _handle_start_position_created(
+        self, position_key: str, start_position_beat_data: BeatData
+    ):
         """Handle start position creation"""
 
-        self.start_position_manager.set_start_position(start_position_data)
+        self.start_position_manager.set_start_position(start_position_beat_data)
 
         self.option_picker_manager.populate_from_start_position(
-            position_key, start_position_data
+            position_key, start_position_beat_data
         )
         self.layout_manager.transition_to_option_picker()
         self.start_position_set.emit(position_key)
@@ -209,8 +212,8 @@ class SignalCoordinator(QObject):
         else:
             # Switch back to appropriate picker based on sequence state
             sequence = None
-            if hasattr(self.sequence_manager, "_get_current_sequence"):
-                sequence = self.sequence_manager._get_current_sequence()
+            if hasattr(self.beat_operations, "get_current_sequence"):
+                sequence = self.beat_operations.get_current_sequence()
 
             # CRITICAL FIX: Use legacy-compatible logic for picker selection
             # Show start position picker ONLY when completely empty (no start position AND no beats)

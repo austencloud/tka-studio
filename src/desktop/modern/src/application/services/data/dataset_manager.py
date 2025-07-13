@@ -15,7 +15,7 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, TypedDict
 
-from application.services.pictograph.pictograph_manager import PictographSearchQuery
+from application.services.pictograph.pictograph_csv_manager import PictographSearchQuery
 from domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager

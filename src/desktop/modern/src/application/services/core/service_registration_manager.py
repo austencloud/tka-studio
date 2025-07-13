@@ -513,7 +513,9 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         from application.services.pictograph.global_visibility_service import (
             PictographVisibilityManager,
         )
-        from application.services.pictograph.pictograph_manager import PictographManager
+        from application.services.pictograph.pictograph_position_matcher import (
+            PictographCSVManager,
+        )
         from application.services.pictograph_pool_manager import PictographPoolManager
         from core.interfaces.core_services import (
             IPictographBorderManager,
@@ -521,7 +523,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         )
 
         container.register_singleton(IPictographDataManager, PictographDataManager)
-        container.register_singleton(PictographManager, PictographManager)
+        container.register_singleton(PictographCSVManager, PictographCSVManager)
         container.register_singleton(IPictographBorderManager, PictographBorderManager)
         container.register_singleton(
             IPictographContextDetector, PictographContextDetector
@@ -659,19 +661,14 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         try:
             # Import existing prop orchestrator (keep if still needed)
-            from application.services.pictograph.pictograph_orchestrator import (
-                IPictographOrchestrator,
-                PictographOrchestrator,
-            )
+
             from application.services.positioning.props.orchestration.prop_orchestrator import (  # Register remaining orchestrators
                 IPropOrchestrator,
                 PropOrchestrator,
             )
 
             container.register_singleton(IPropOrchestrator, PropOrchestrator)
-            container.register_singleton(
-                IPictographOrchestrator, PictographOrchestrator
-            )
+
         except ImportError:
             # Orchestrators not available - continue
             pass

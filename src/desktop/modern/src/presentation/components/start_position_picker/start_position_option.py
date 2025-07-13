@@ -1,16 +1,12 @@
 from application.services.data.dataset_query import DatasetQuery
-from presentation.components.pictograph.pictograph_component import (
-    create_pictograph_component,
-)
+from application.services.pictograph_pool_manager import get_pictograph_pool
+from core.dependency_injection.di_container import get_container
 from presentation.components.workbench.sequence_beat_frame.selection_overlay import (
     SelectionOverlay,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QMouseEvent
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 
 class StartPositionOption(QWidget):
@@ -25,6 +21,7 @@ class StartPositionOption(QWidget):
         # Initialize selection overlay components
         self._pictograph_component = None
         self._selection_overlay = None
+        self._pool_manager = None  # Store pool manager for cleanup
 
         self._setup_ui()
 
@@ -33,9 +30,14 @@ class StartPositionOption(QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
 
-        self._pictograph_component = create_pictograph_component()
+        # Use pool manager for consistent visibility management
+        container = get_container()
+        self._pool_manager = get_pictograph_pool(container)
+        self._pictograph_component = self._pool_manager.checkout_pictograph(parent=self)
         self.pictograph_component = self._pictograph_component  # Keep legacy reference
-        self._pictograph_component.setFixedSize(200, 200)
+
+        if self._pictograph_component:
+            self._pictograph_component.setFixedSize(200, 200)
 
         self._pictograph_component.setStyleSheet(
             """
@@ -47,12 +49,17 @@ class StartPositionOption(QWidget):
             """
         )
 
-        pictograph_data = self.dataset_service.get_start_position_pictograph_data(
-            self.position_key, self.grid_mode
-        )
-        if pictograph_data:
-            self._pictograph_component.update_from_pictograph_data(pictograph_data)
-        layout.addWidget(self._pictograph_component)
+        if self._pictograph_component:
+            pictograph_data = self.dataset_service.get_start_position_pictograph_data(
+                self.position_key, self.grid_mode
+            )
+            if pictograph_data:
+                self._pictograph_component.update_from_pictograph_data(pictograph_data)
+            layout.addWidget(self._pictograph_component)
+        else:
+            print(
+                f"⚠️ Failed to get pictograph component from pool for start position: {self.position_key}"
+            )
 
         self._selection_overlay = SelectionOverlay(self)
 
@@ -89,3 +96,21 @@ class StartPositionOption(QWidget):
         self.setCursor(Qt.CursorShape.ArrowCursor)
         self.set_highlighted(False)
         super().leaveEvent(event)
+
+    def closeEvent(self, event):
+        """Clean up pool resources when widget is closed."""
+        self._cleanup_pool_resources()
+        super().closeEvent(event)
+
+    def _cleanup_pool_resources(self):
+        """Return pictograph component to pool for reuse."""
+        if self._pictograph_component and self._pool_manager:
+            try:
+                self._pool_manager.checkin_pictograph(self._pictograph_component)
+                self._pictograph_component = None
+            except Exception as e:
+                print(f"⚠️ Failed to return start position component to pool: {e}")
+
+    def __del__(self):
+        """Ensure cleanup on deletion."""
+        self._cleanup_pool_resources()

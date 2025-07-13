@@ -48,28 +48,33 @@ class StartPositionHandler(QObject):
 
         # Create start position data (separate from sequence like Legacy)
         # Removed repetitive debug logs
-        start_position_data = self._create_start_position_data(position_key)
+        start_position_pictograph_data = self._create_start_position_pictograph_data(
+            position_key
+        )
 
         # Set start position in workbench (this does NOT create a sequence)
         if self.workbench_setter:
             # Create start position beat data using factory
-            beat_data = BeatFactory.create_start_position_beat(start_position_data)
-
-            # NEW APPROACH: Pass both BeatData and original PictographData
-
-            self.workbench_setter(beat_data, start_position_data)  # Pass both!
+            start_position_beat_data = BeatFactory.create_start_position_beat_data(
+                start_position_pictograph_data
+            )
+            self.workbench_setter(
+                start_position_beat_data, start_position_pictograph_data
+            )  # Pass both!
         else:
             print(f"⚠️ [START_POS_HANDLER] No workbench setter available")
 
         # Emit signal with the created data
         # Removed repetitive debug logs
-        self.start_position_created.emit(position_key, start_position_data)
+        self.start_position_created.emit(position_key, start_position_beat_data)
 
         # Request transition to option picker
         # Removed repetitive debug logs
         self.transition_requested.emit()
 
-    def _create_start_position_data(self, position_key: str) -> PictographData:
+    def _create_start_position_pictograph_data(
+        self, position_key: str
+    ) -> PictographData:
         """Create start position data from position key using real dataset (separate from sequence beats)"""
         try:
             # Use dependency injection to get shared services

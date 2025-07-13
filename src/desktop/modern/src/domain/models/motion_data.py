@@ -27,10 +27,9 @@ class MotionData:
     start_loc: Location
     end_loc: Location
     turns: float = 0.0
-
-    # Orientation fields now use enum types
     start_ori: Orientation = Orientation.IN
     end_ori: Orientation = Orientation.IN
+    is_visible: bool = True
 
     def __post_init__(self):
         """Validate and convert motion data fields to proper enum types."""

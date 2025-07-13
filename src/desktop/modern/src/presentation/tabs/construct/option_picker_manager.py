@@ -11,6 +11,7 @@ from typing import Optional
 from application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
+from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 from presentation.components.option_picker.components.option_picker import OptionPicker
@@ -49,7 +50,7 @@ class OptionPickerManager(QObject):
             )
 
     def populate_from_start_position(
-        self, position_key: str, start_position_data: PictographData
+        self, position_key: str, start_position_beat_data: BeatData
     ):
         """Populate option picker with valid motion combinations based on start position"""
         if self.option_picker is None:
@@ -61,18 +62,16 @@ class OptionPickerManager(QObject):
             from domain.models.sequence_data import SequenceData
 
             # Ensure we have a valid end position
-            end_position = start_position_data.end_position
+            pictograph_data = start_position_beat_data.pictograph_data
+            end_position = pictograph_data.end_position
             if not end_position:
-
                 end_position = extract_end_position_from_position_key(position_key)
                 # Update the pictograph data with the extracted end position
-                start_position_data = start_position_data.update(
-                    end_position=end_position
-                )
+                pictograph_data = pictograph_data.update(end_position=end_position)
 
             # Create beat data for the start position (beat 1)
             start_beat = BeatData(
-                beat_number=1, pictograph_data=start_position_data, is_blank=False
+                beat_number=1, pictograph_data=pictograph_data, is_blank=False
             )
 
             # Create modern sequence data

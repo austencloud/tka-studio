@@ -11,8 +11,8 @@ import re
 from functools import lru_cache
 from typing import Dict, Optional, Set
 
-from domain.models import MotionData, MotionType
 from application.services.assets.image_asset_utils import get_image_path
+from domain.models import MotionData, MotionType
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ class AssetManager:
         """Initialize the asset manager and warm the cache."""
         self._preload_common_assets()
 
-    def get_arrow_asset_path(self, motion_data: MotionData, color: str) -> str:
+    def get_arrow_svg_path(self, motion_data: MotionData, color: str) -> str:
         """
         Generate SVG file path for arrow assets based on motion type and color.
 
@@ -81,7 +81,7 @@ class AssetManager:
                 f"arrows_colored/static/{color}/from_radial/static_{turns_str}.svg"
             )
 
-    def get_fallback_arrow_asset_path(self, motion_data: MotionData) -> str:
+    def get_fallback_arrow_svg_path(self, motion_data: MotionData) -> str:
         """
         Generate fallback SVG file path for original (non-colored) arrow assets.
 
@@ -127,6 +127,10 @@ class AssetManager:
         else:
             logger.warning(f"Unknown prop type: {prop_type}, using staff fallback")
             return get_image_path("props/staff.svg")
+
+    def svg_path_exists(self, path: str) -> bool:
+        """Check if SVG file exists at the given path."""
+        return os.path.exists(path)
 
     def apply_color_transformation(self, svg_data: str, color: str) -> str:
         """

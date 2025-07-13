@@ -52,6 +52,9 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
         # Register pictograph pool manager (performance critical)
         self._register_pictograph_pool_manager(container)
 
+        # Register arrow item pool manager (performance critical)
+        self._register_arrow_item_pool_manager(container)
+
         self._update_progress("Pictograph services registered successfully")
 
     def _register_core_pictograph_services(self, container: "DIContainer") -> None:
@@ -70,8 +73,8 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from application.services.pictograph.global_visibility_service import (
                 PictographVisibilityManager,
             )
-            from application.services.pictograph.pictograph_manager import (
-                PictographManager,
+            from application.services.pictograph.pictograph_position_matcher import (
+                PictographCSVManager,
             )
             from core.interfaces.core_services import (
                 IPictographBorderManager,
@@ -83,7 +86,7 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             self._mark_service_available("PictographDataManager")
 
             # Register core pictograph manager
-            container.register_singleton(PictographManager, PictographManager)
+            container.register_singleton(PictographCSVManager, PictographCSVManager)
             self._mark_service_available("PictographManager")
 
             # Register border manager
@@ -136,4 +139,26 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             if self.is_critical():
                 raise ImportError(
                     f"Critical pictograph pool manager unavailable: {e}"
+                ) from e
+
+    def _register_arrow_item_pool_manager(self, container: "DIContainer") -> None:
+        """Register the global arrow item pool manager for performance optimization."""
+        try:
+            from application.services.arrow_item_pool_manager import (
+                ArrowItemPoolManager,
+            )
+
+            # Create and register the arrow item pool manager instance
+            arrow_pool_manager = ArrowItemPoolManager()
+            container.register_instance(ArrowItemPoolManager, arrow_pool_manager)
+            self._mark_service_available("ArrowItemPoolManager")
+
+        except ImportError as e:
+            error_msg = f"Failed to register arrow item pool manager: {e}"
+            logger.error(error_msg)
+
+            # Arrow pool manager is critical for performance, so re-raise the error
+            if self.is_critical():
+                raise ImportError(
+                    f"Critical arrow item pool manager unavailable: {e}"
                 ) from e

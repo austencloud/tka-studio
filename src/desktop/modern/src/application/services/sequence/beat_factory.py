@@ -32,7 +32,7 @@ class IBeatFactory(ABC):
         pass
 
     @abstractmethod
-    def create_start_position_beat(
+    def create_start_position_beat_data(
         self, pictograph_data: PictographData, sequence_start_position: str = "alpha"
     ) -> BeatData:
         """Create a start position beat with pictograph."""
@@ -99,7 +99,7 @@ class BeatFactory(IBeatFactory):
         )
 
     @staticmethod
-    def create_start_position_beat(
+    def create_start_position_beat_data(
         pictograph_data: PictographData, sequence_start_position: str = "alpha"
     ) -> BeatData:
         """Create a start position beat with pictograph."""

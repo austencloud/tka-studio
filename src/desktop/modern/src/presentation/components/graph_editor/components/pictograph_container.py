@@ -1,7 +1,9 @@
 import logging
 from typing import Optional
 
-from application.services.pictograph.pictograph_manager import PictographManager
+from application.services.pictograph.pictograph_position_matcher import (
+    PictographCSVManager,
+)
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from presentation.components.pictograph.pictograph_scene import PictographScene
@@ -29,7 +31,7 @@ class GraphEditorPictographContainer(QWidget):
         # Get layout service from parent's container
         container = getattr(parent, "container", None)
         if container:
-            self._pictograph_service = PictographManager()
+            self._pictograph_service = PictographCSVManager()
         else:
             self._pictograph_service = None
 

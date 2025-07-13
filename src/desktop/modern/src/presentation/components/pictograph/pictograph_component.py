@@ -4,7 +4,10 @@ Direct pictograph view for Kinetic Constructor - matches legacy container hierar
 
 from typing import Any, Optional
 
-from application.services.pictograph.scaling_service import ScalingContext
+from application.services.pictograph.scaling_service import (
+    RenderingContext,
+    ScalingContext,
+)
 from core.dependency_injection import get_container
 from core.interfaces.core_services import IPictographBorderManager
 from domain.models import BeatData
@@ -105,9 +108,8 @@ class PictographComponent(BorderedPictographMixin, QGraphicsView):
             self.scene.render_pictograph(pictograph_data)
             self._fit_view()
 
-        # VISIBILITY FIX: Show component when updated with data
-        if not self.isVisible():
-            self.show()
+        # PERFORMANCE: Don't call show() here - let parent container manage visibility
+        # The expensive show() call was causing 79ms delays in option picker refresh
 
         # Emit the actual data we're working with - no unnecessary conversion!
 
