@@ -3,7 +3,7 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
 
-from domain.models.enums import PropType
+from domain.models.enums import Orientation, PropType, RotationDirection
 
 from .motion_data import MotionData
 
@@ -20,13 +20,10 @@ class PropData:
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     prop_type: PropType = PropType.STAFF
 
-    # Motion reference
-    motion_data: Optional[MotionData] = None
-
     # Visual properties
     color: str = "blue"
-    orientation: str = "in"
-    rotation_direction: str = "cw"
+    orientation: Orientation = Orientation.IN
+    rotation_direction: RotationDirection = RotationDirection.NO_ROTATION
 
     # Position data (calculated by positioning system)
     location: Optional[str] = None

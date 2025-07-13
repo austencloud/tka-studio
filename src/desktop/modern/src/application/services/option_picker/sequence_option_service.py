@@ -5,12 +5,20 @@ Handles sequence state analysis and option generation without Qt dependencies.
 Extracted from option_picker_scroll.py to maintain clean architecture.
 """
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
+from application.services.option_picker.option_orientation_updater import (
+    OptionOrientationUpdater,
+)
+from application.services.positioning.arrows.calculation.orientation_calculator import (
+    OrientationCalculator,
+)
 from application.services.positioning.arrows.utilities.pictograph_position_matcher import (
     PictographPositionMatcher,
 )
+from domain.models.enums import Location, MotionType, Orientation, RotationDirection
 from domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 from presentation.components.option_picker.types.letter_types import LetterType
@@ -26,18 +34,24 @@ class SequenceOptionService:
     def __init__(self, position_matcher: PictographPositionMatcher):
         """Initialize with position matcher dependency."""
         self._position_matcher = position_matcher
+        self._orientation_updater = OptionOrientationUpdater()
+        self._orientation_calculator = OrientationCalculator()
 
     def get_options_for_sequence(
-        self, sequence_data: SequenceData
+        self, sequence_data: Union[SequenceData, List[dict]]
     ) -> Dict[LetterType, List[PictographData]]:
         """
         Get options organized by letter type for given sequence state.
 
+        Handles both modern SequenceData and legacy list format.
+
         Returns pure domain data - no Qt objects.
         """
         try:
-            # Extract end position from sequence
+            # Extract end position and orientations from sequence
             end_position = self._extract_end_position(sequence_data)
+            end_orientations = self._extract_end_orientations(sequence_data)
+
             if not end_position:
                 print(
                     "❌ [SEQUENCE_OPTION] Could not extract end position from sequence"
@@ -47,58 +61,330 @@ class SequenceOptionService:
             # Get all valid next options
             all_options = self._position_matcher.get_next_options(end_position)
 
+            # Update orientations for all options based on sequence state
+            updated_options = self._update_option_orientations(
+                all_options, end_orientations
+            )
+
+            # Also update prop orientations using the OptionOrientationUpdater (only for modern format)
+            if isinstance(sequence_data, SequenceData):
+                updated_options = self._orientation_updater.update_option_orientations(
+                    sequence_data, updated_options
+                )
+            else:
+                # For legacy format, we handle prop orientations manually in _update_option_orientations
+                print(
+                    "🔍 [SEQUENCE_OPTION] Using legacy format - prop orientations handled manually"
+                )
+
             # Group by letter type
-            return self._group_options_by_type(all_options)
+            return self._group_options_by_type(updated_options)
 
         except Exception as e:
             print(f"❌ [SEQUENCE_OPTION] Error getting options for sequence: {e}")
             return {}
 
-    def _extract_end_position(self, sequence_data: SequenceData) -> str:
+    def _extract_end_position(
+        self, sequence_data: Union[SequenceData, List[dict]]
+    ) -> str:
         """
         Extract end position from sequence data.
+
+        Handles both modern SequenceData and legacy list format.
 
         Pure data extraction logic - no Qt dependencies.
         """
         try:
-            # If sequence has no beats, use alpha1
+            # If sequence has no data, use alpha1
             if not sequence_data:
                 return "alpha1"  # Default start position
 
-            # Handle different sequence data types
-            if hasattr(sequence_data, "length"):
-                if sequence_data.length == 0:
-                    return "alpha1"
-            elif hasattr(sequence_data, "__len__"):
-                if len(sequence_data) == 0:
-                    return "alpha1"
+            # Handle legacy format (list of dictionaries)
+            if isinstance(sequence_data, list):
+                if len(sequence_data) <= 1:
+                    return "alpha1"  # Only metadata, no beats
 
-            # If sequence only has start position (no actual beats), use alpha1
-            if not sequence_data.beats or len(sequence_data.beats) == 0:
+                # Get the last beat (skip metadata at index 0)
+                last_beat = sequence_data[-1]
+                if isinstance(last_beat, dict):
+                    end_pos = last_beat.get("end_pos") or last_beat.get("end_position")
+                    if end_pos:
+                        print(
+                            f"🔍 [SEQUENCE_OPTION] Extracted end position: {end_pos} from legacy beat"
+                        )
+                        return end_pos
+                return "alpha1"
+
+            # Handle modern SequenceData format
+            if hasattr(sequence_data, "length") and sequence_data.length == 0:
+                return "alpha1"
+
+            if (
+                not hasattr(sequence_data, "beats")
+                or not sequence_data.beats
+                or len(sequence_data.beats) == 0
+            ):
                 return "alpha1"
 
             # Get the last beat from the beats list
-            if sequence_data.beats:
-                last_beat = sequence_data.beats[-1]
+            last_beat = sequence_data.beats[-1]
 
-                # BeatData objects have pictograph_data with end_pos
-                if hasattr(last_beat, "pictograph_data") and last_beat.pictograph_data:
-                    end_pos = last_beat.pictograph_data.end_position
-                    print(
-                        f"🔍 [SEQUENCE_OPTION] Extracted end position: {end_pos} from beat {last_beat.beat_number}"
-                    )
-                    return end_pos or "alpha1"
-                # Fallback for dict-based data
-                elif isinstance(last_beat, dict) and "end_pos" in last_beat:
-                    return last_beat["end_pos"]
-                elif isinstance(last_beat, dict) and "end_position" in last_beat:
-                    return last_beat["end_position"]
+            # BeatData objects have pictograph_data with end_pos
+            if hasattr(last_beat, "pictograph_data") and last_beat.pictograph_data:
+                end_pos = last_beat.pictograph_data.end_position
+                print(
+                    f"🔍 [SEQUENCE_OPTION] Extracted end position: {end_pos} from beat {last_beat.beat_number}"
+                )
+                return end_pos or "alpha1"
+            # Fallback for dict-based data
+            elif isinstance(last_beat, dict) and "end_pos" in last_beat:
+                return last_beat["end_pos"]
+            elif isinstance(last_beat, dict) and "end_position" in last_beat:
+                return last_beat["end_position"]
 
             return "alpha1"  # Default fallback
 
         except Exception as e:
             print(f"❌ [SEQUENCE_OPTION] Error extracting end position: {e}")
             return "alpha1"
+
+    def _extract_end_orientations(
+        self, sequence_data: Union[SequenceData, List[dict]]
+    ) -> dict:
+        """Extract the end orientations from the last beat in the sequence.
+
+        Handles both modern SequenceData and legacy list format.
+        """
+        try:
+            # Default orientations if no sequence
+            default_orientations = {"blue": "in", "red": "out"}
+
+            if not sequence_data:
+                print(
+                    f"🔍 [SEQUENCE_OPTION] No sequence data, using default orientations: {default_orientations}"
+                )
+                return default_orientations
+
+            # Handle legacy format (list of dictionaries)
+            if isinstance(sequence_data, list):
+                if len(sequence_data) <= 1:
+                    print(
+                        f"🔍 [SEQUENCE_OPTION] Legacy format: No beats, using default orientations: {default_orientations}"
+                    )
+                    return default_orientations
+
+                # Get the last beat (skip metadata at index 0)
+                last_beat = sequence_data[-1]
+                if isinstance(last_beat, dict):
+                    # Try to extract orientations from legacy format
+                    end_orientations = {}
+
+                    # Look for blue and red attributes in legacy format
+                    for color in ["blue", "red"]:
+                        color_attrs = last_beat.get(f"{color}_attributes", {})
+                        end_ori = color_attrs.get("end_ori") or color_attrs.get(
+                            "end_orientation"
+                        )
+
+                        if end_ori:
+                            # Convert numeric orientations to string if needed
+                            if isinstance(end_ori, (int, float)):
+                                # Legacy numeric orientations: 0=in, 180=out, 90=clock, 270=counter
+                                orientation_map = {
+                                    0: "in",
+                                    180: "out",
+                                    90: "clock",
+                                    270: "counter",
+                                }
+                                end_orientations[color] = orientation_map.get(
+                                    int(end_ori), default_orientations[color]
+                                )
+                            else:
+                                end_orientations[color] = str(end_ori).lower()
+                        else:
+                            end_orientations[color] = default_orientations[color]
+
+                    print(
+                        f"🔍 [SEQUENCE_OPTION] Extracted end orientations from legacy format: {end_orientations}"
+                    )
+                    return end_orientations
+
+                return default_orientations
+
+            # Handle modern SequenceData format
+            if (
+                not hasattr(sequence_data, "beats")
+                or not sequence_data.beats
+                or len(sequence_data.beats) == 0
+            ):
+                print(
+                    f"🔍 [SEQUENCE_OPTION] Modern format: No beats, using default orientations: {default_orientations}"
+                )
+                return default_orientations
+
+            last_beat = sequence_data.beats[-1]
+
+            if hasattr(last_beat, "pictograph_data") and last_beat.pictograph_data:
+                pictograph_data = last_beat.pictograph_data
+                end_orientations = {}
+
+                # Extract end orientations from motions
+                for color in ["blue", "red"]:
+                    if color in pictograph_data.motions:
+                        motion = pictograph_data.motions[color]
+                        end_ori = getattr(motion, "end_ori", None)
+                        if end_ori:
+                            end_orientations[color] = (
+                                end_ori.value
+                                if hasattr(end_ori, "value")
+                                else str(end_ori)
+                            )
+                        else:
+                            end_orientations[color] = default_orientations[color]
+                    else:
+                        end_orientations[color] = default_orientations[color]
+
+                print(
+                    f"🔍 [SEQUENCE_OPTION] Extracted end orientations from modern format: {end_orientations} from beat {last_beat.beat_number}"
+                )
+                return end_orientations
+
+            print(
+                f"🔍 [SEQUENCE_OPTION] No pictograph data, using default orientations: {default_orientations}"
+            )
+            return default_orientations
+
+        except Exception as e:
+            print(f"❌ [SEQUENCE_OPTION] Error extracting end orientations: {e}")
+            return {"blue": "in", "red": "out"}
+
+    def _update_option_orientations(
+        self, options: List[PictographData], end_orientations: dict
+    ) -> List[PictographData]:
+        """Update all option orientations to match the sequence's end state."""
+        try:
+            updated_options = []
+
+            for option in options:
+                # Create updated motions with correct start orientations
+                updated_motions = {}
+
+                for color in ["blue", "red"]:
+                    if color in option.motions:
+                        original_motion = option.motions[color]
+
+                        # The start orientation should match the end orientation from the sequence
+                        new_start_ori = end_orientations.get(
+                            color, "in" if color == "blue" else "out"
+                        )
+
+                        # Use motion orientation calculator to determine end orientation
+                        # based on the motion's turns and the new start orientation
+                        new_end_ori = self._calculate_end_orientation(
+                            new_start_ori,
+                            original_motion.turns,
+                            original_motion.motion_type,
+                        )
+
+                        # Update the motion with correct orientations
+                        updated_motion = original_motion.update(
+                            start_ori=new_start_ori, end_ori=new_end_ori
+                        )
+                        updated_motions[color] = updated_motion
+
+                        if len(updated_options) < 3:  # Debug first few
+                            print(
+                                f"🔧 [SEQUENCE_OPTION] Updated {color} motion for {option.letter}: {new_start_ori} → {new_end_ori}"
+                            )
+                    else:
+                        start_ori = end_orientations.get(
+                            color, "in" if color == "blue" else "out"
+                        )
+                        updated_motions[color] = MotionData(
+                            motion_type=MotionType.STATIC,
+                            prop_rot_dir=RotationDirection.NO_ROTATION,
+                            start_loc=Location.SOUTH,
+                            end_loc=Location.SOUTH,
+                            turns=0.0,
+                            start_ori=Orientation(start_ori),
+                            end_ori=Orientation(start_ori),
+                        )
+
+                # Also update prop orientations to match the sequence end orientations
+                updated_props = option.props.copy()
+
+                for color in ["blue", "red"]:
+                    if color in updated_props:
+                        prop = updated_props[color]
+                        # Update prop orientation to match sequence end orientation
+                        new_orientation_str = end_orientations.get(
+                            color, "in" if color == "blue" else "out"
+                        )
+
+                        # Convert string to Orientation enum
+                        from domain.models.enums import Orientation
+
+                        try:
+                            new_orientation = Orientation(new_orientation_str)
+                            from dataclasses import replace
+
+                            updated_prop = replace(prop, orientation=new_orientation)
+                            updated_props[color] = updated_prop
+                        except (ValueError, AttributeError):
+                            # Keep original prop if conversion fails
+                            pass
+
+                # Create updated pictograph with new motions and props
+                updated_option = option.update(
+                    motions=updated_motions, props=updated_props
+                )
+                updated_options.append(updated_option)
+
+            print(
+                f"✅ [SEQUENCE_OPTION] Updated orientations for {len(updated_options)} options"
+            )
+            return updated_options
+
+        except Exception as e:
+            print(f"❌ [SEQUENCE_OPTION] Error updating option orientations: {e}")
+            import traceback
+
+            traceback.print_exc()
+            return options  # Return original options if update fails
+
+    def _calculate_end_orientation(
+        self, start_ori: str, turns: float, motion_type
+    ) -> str:
+        """Calculate end orientation based on start orientation, turns, and motion type."""
+        try:
+            # Convert string to Orientation enum
+            start_orientation = Orientation(start_ori)
+
+            # Create a temporary MotionData object for calculation
+            from domain.models.enums import Location, RotationDirection
+            from domain.models.motion_data import MotionData
+
+            temp_motion = MotionData(
+                motion_type=motion_type,
+                turns=turns,
+                start_ori=start_orientation,
+                end_ori=start_orientation,  # Will be calculated
+                start_loc=Location.NORTH,  # Default values for calculation
+                end_loc=Location.SOUTH,
+                prop_rot_dir=RotationDirection.CLOCKWISE,
+            )
+
+            # Calculate end orientation using the correct orientation calculator
+            end_orientation = self._orientation_calculator.calculate_end_orientation(
+                temp_motion, start_orientation
+            )
+
+            return end_orientation.value
+
+        except Exception as e:
+            print(f"❌ [SEQUENCE_OPTION] Error calculating end orientation: {e}")
+            # Fallback: if we can't calculate, keep the same orientation
+            return start_ori
 
     def _group_options_by_type(
         self, options: List[PictographData]

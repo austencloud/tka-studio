@@ -285,12 +285,20 @@ class PictographScene(QGraphicsScene):
         if self._renderer_visibility.get("grid", True):
             self.grid_renderer.render_grid()
 
-        # Extract motion data from arrows
+        # Extract motion data from arrows and motions
         blue_motion = None
         red_motion = None
+
+        # For complete pictographs (with arrows and motions)
         if "blue" in pictograph_data.arrows and "blue" in pictograph_data.motions:
             blue_motion = pictograph_data.motions["blue"]
+        # For option pictographs (motions only, arrows generated later)
+        elif "blue" in pictograph_data.motions:
+            blue_motion = pictograph_data.motions["blue"]
+
         if "red" in pictograph_data.arrows and "red" in pictograph_data.motions:
+            red_motion = pictograph_data.motions["red"]
+        elif "red" in pictograph_data.motions:
             red_motion = pictograph_data.motions["red"]
 
         # Render props for blue and red motions (if visible)

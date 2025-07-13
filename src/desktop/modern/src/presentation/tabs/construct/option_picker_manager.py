@@ -8,6 +8,7 @@ Responsible for coordinating between the option picker component and sequence ma
 import time
 from typing import Optional
 
+
 from application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
@@ -56,24 +57,29 @@ class OptionPickerManager(QObject):
             return
 
         try:
+            # Create proper modern SequenceData with start position as beat 0
+            from domain.models.beat_data import BeatData
+            from domain.models.sequence_data import SequenceData
 
-            # Convert PictographData to legacy format for compatibility
-            start_position_dict = {
-                "letter": start_position_data.letter,
-                "start_pos": start_position_data.start_position,
-                "end_pos": start_position_data.end_position,
-                # Add other necessary fields from pictograph data
-            }
+            # Ensure we have a valid end position
+            end_position = start_position_data.end_position
+            if not end_position:
 
-            # Ensure we have a valid end position for option filtering
-            if not start_position_dict.get("end_pos"):
-                extracted_end_pos = extract_end_position_from_position_key(position_key)
-                start_position_dict["end_pos"] = extracted_end_pos
+                end_position = extract_end_position_from_position_key(position_key)
+                # Update the pictograph data with the extracted end position
+                start_position_data = start_position_data.update(
+                    end_position=end_position
+                )
 
-            sequence_data = [
-                {"metadata": "sequence_info"},
-                start_position_dict,
-            ]
+            # Create beat data for the start position (beat 1)
+            start_beat = BeatData(
+                beat_number=1, pictograph_data=start_position_data, is_blank=False
+            )
+
+            # Create modern sequence data
+            sequence_data = SequenceData(
+                beats=[start_beat], start_position=position_key
+            )
 
             self.option_picker.load_motion_combinations(sequence_data)
 

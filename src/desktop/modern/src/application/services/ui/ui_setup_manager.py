@@ -331,12 +331,15 @@ class UISetupManager(IUISetupManager):
 
     def _handle_settings_request(self):
         """Handle settings button click by opening the settings dialog."""
+        print("🔧 Settings button clicked - attempting to open dialog...")
         try:
             from core.dependency_injection.di_container import get_container
             from core.interfaces.core_services import IUIStateManager
             from presentation.components.ui.settings.settings_dialog import (
                 SettingsDialog,
             )
+
+            print("🔧 Imports successful, finding main window...")
 
             # Get main window reference
             main_window = None
@@ -350,9 +353,13 @@ class UISetupManager(IUISetupManager):
                 print("⚠️ Could not find main window for settings dialog")
                 return
 
+            print("🔧 Main window found, getting container...")
+
             # Get UI state service from container
             container = get_container()
             ui_state_service = container.resolve(IUIStateManager)
+            
+            print("🔧 Creating settings dialog...")
             dialog = SettingsDialog(ui_state_service, main_window, container)
 
             # Connect to settings changes if needed
@@ -360,8 +367,10 @@ class UISetupManager(IUISetupManager):
                 lambda key, value: self._on_setting_changed(key, value, main_window)
             )
 
+            print("🔧 Showing settings dialog...")
             # Show the dialog
-            _ = dialog.exec()
+            result = dialog.exec()
+            print(f"🔧 Settings dialog closed with result: {result}")
 
             # Clean up dialog resources after it closes
             dialog.deleteLater()

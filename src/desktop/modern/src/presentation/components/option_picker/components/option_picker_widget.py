@@ -41,7 +41,7 @@ class OptionPickerWidget(QWidget):
         """Initialize with service resolution from DI container."""
         super().__init__(parent)
 
-        self.mw_size_provider = mw_size_provider or self._default_size_provider
+        self.mw_size_provider = mw_size_provider
         self.progress_callback = progress_callback
         self.container = container
 
@@ -78,10 +78,6 @@ class OptionPickerWidget(QWidget):
         # Report progress
         if self.progress_callback:
             self.progress_callback("Option picker initialized", 1.0)
-
-    def _default_size_provider(self) -> QSize:
-        """Default size provider if none provided."""
-        return QSize(800, 600)
 
     def refresh_options(self) -> None:
         """Refresh options - clear all sections."""

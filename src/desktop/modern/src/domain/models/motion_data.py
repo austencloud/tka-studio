@@ -34,7 +34,8 @@ class MotionData:
 
     def __post_init__(self):
         """Validate and convert motion data fields to proper enum types."""
-        if self.turns < 0:
+        # Handle 'fl' turns for float motions
+        if self.turns != "fl" and self.turns < 0:
             raise ValueError("Turns must be non-negative")
 
         # Convert string values to enums if needed

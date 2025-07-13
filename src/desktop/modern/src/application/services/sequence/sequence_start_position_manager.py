@@ -5,7 +5,7 @@ Handles start position operations and management.
 Responsible for setting, updating, and managing start positions in sequences.
 """
 
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
 from application.services.sequence.beat_factory import BeatFactory
@@ -14,6 +14,9 @@ from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
+
+if TYPE_CHECKING:
+    from presentation.components.workbench.workbench import SequenceWorkbench
 
 
 class SequenceStartPositionManager(QObject):
@@ -41,19 +44,15 @@ class SequenceStartPositionManager(QObject):
         self.modern_to_legacy_converter = ModernToLegacyConverter()
         self.persistence_service = SequencePersister()
 
-    def set_start_position(self, start_position_data):
+    def set_start_position(self, start_position_beat_data: BeatData):
         """Set the start position - accepts both PictographData and BeatData"""
         # Create start position beat data using factory
-        if isinstance(start_position_data, PictographData):
-            beat_data = BeatFactory.create_start_position_beat(start_position_data)
-        else:
-            beat_data = start_position_data
 
         try:
             # Convert start position to legacy format and save as beat 0
-            start_pos_dict = (
+            start_pos_legacy_dict = (
                 self.modern_to_legacy_converter.convert_start_position_to_legacy_format(
-                    beat_data
+                    start_position_beat_data
                 )
             )
 
@@ -62,24 +61,26 @@ class SequenceStartPositionManager(QObject):
 
             # Find where to insert/replace start position
             if len(sequence) == 1:  # Only metadata
-                sequence.append(start_pos_dict)
+                sequence.append(start_pos_legacy_dict)
             elif len(sequence) > 1 and sequence[1].get("beat") == 0:
                 # Replace existing start position
-                sequence[1] = start_pos_dict
+                sequence[1] = start_pos_legacy_dict
             else:
                 # Insert start position, shifting existing beats
-                sequence.insert(1, start_pos_dict)
+                sequence.insert(1, start_pos_legacy_dict)
 
             # Save updated sequence (preserves existing beats)
             self.persistence_service.save_current_sequence(sequence)
 
             # Set start position in workbench
-            workbench = self.workbench_getter() if self.workbench_getter else None
+            workbench: SequenceWorkbench = (
+                self.workbench_getter() if self.workbench_getter else None
+            )
             if workbench and hasattr(workbench, "set_start_position"):
-                workbench.set_start_position(beat_data)
+                workbench.set_start_position(start_position_beat_data)
 
             # Emit signal
-            self.start_position_set.emit(beat_data)
+            self.start_position_set.emit(start_position_beat_data)
 
         except Exception as e:
             print(f"❌ [START_POS_MGR] Failed to set start position: {e}")

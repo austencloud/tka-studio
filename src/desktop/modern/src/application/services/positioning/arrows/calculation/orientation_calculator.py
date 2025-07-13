@@ -14,7 +14,8 @@ Ported from legacy MotionOriCalculator for accuracy.
 
 import logging
 
-from domain.models import Location, MotionData, MotionType, Orientation
+from domain.models import HandPath, Location, MotionData, MotionType, Orientation
+from domain.models.enums import RotationDirection
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ class OrientationCalculator:
         """
         motion_type = motion_data.motion_type
         turns = motion_data.turns
-        start_ori = start_orientation.value.lower()
+        start_ori = start_orientation
 
         logger.debug(
             f"Calculating end orientation - type: {motion_type}, turns: {turns}, start: {start_ori}"
@@ -94,63 +95,63 @@ class OrientationCalculator:
 
     def calculate_handpath_direction(
         self, start_loc: Location, end_loc: Location
-    ) -> str:
+    ) -> HandPath:
         """Calculate handpath direction using legacy logic."""
         # Simplified handpath calculation based on legacy HandpathCalculator
         direction_map = {
             # Clockwise pairs
-            (Location.NORTH, Location.EAST): "cw_handpath",
-            (Location.EAST, Location.SOUTH): "cw_handpath",
-            (Location.SOUTH, Location.WEST): "cw_handpath",
-            (Location.WEST, Location.NORTH): "cw_handpath",
-            (Location.NORTHEAST, Location.SOUTHEAST): "cw_handpath",
-            (Location.SOUTHEAST, Location.SOUTHWEST): "cw_handpath",
-            (Location.SOUTHWEST, Location.NORTHWEST): "cw_handpath",
-            (Location.NORTHWEST, Location.NORTHEAST): "cw_handpath",
+            (Location.NORTH, Location.EAST): HandPath.CLOCKWISE,
+            (Location.EAST, Location.SOUTH): HandPath.CLOCKWISE,
+            (Location.SOUTH, Location.WEST): HandPath.CLOCKWISE,
+            (Location.WEST, Location.NORTH): HandPath.CLOCKWISE,
+            (Location.NORTHEAST, Location.SOUTHEAST): HandPath.CLOCKWISE,
+            (Location.SOUTHEAST, Location.SOUTHWEST): HandPath.CLOCKWISE,
+            (Location.SOUTHWEST, Location.NORTHWEST): HandPath.CLOCKWISE,
+            (Location.NORTHWEST, Location.NORTHEAST): HandPath.CLOCKWISE,
             # Counter-clockwise pairs
-            (Location.NORTH, Location.WEST): "ccw_handpath",
-            (Location.WEST, Location.SOUTH): "ccw_handpath",
-            (Location.SOUTH, Location.EAST): "ccw_handpath",
-            (Location.EAST, Location.NORTH): "ccw_handpath",
-            (Location.NORTHEAST, Location.NORTHWEST): "ccw_handpath",
-            (Location.NORTHWEST, Location.SOUTHWEST): "ccw_handpath",
-            (Location.SOUTHWEST, Location.SOUTHEAST): "ccw_handpath",
-            (Location.SOUTHEAST, Location.NORTHEAST): "ccw_handpath",
+            (Location.NORTH, Location.WEST): HandPath.COUNTER_CLOCKWISE,
+            (Location.WEST, Location.SOUTH): HandPath.COUNTER_CLOCKWISE,
+            (Location.SOUTH, Location.EAST): HandPath.COUNTER_CLOCKWISE,
+            (Location.EAST, Location.NORTH): HandPath.COUNTER_CLOCKWISE,
+            (Location.NORTHEAST, Location.NORTHWEST): HandPath.COUNTER_CLOCKWISE,
+            (Location.NORTHWEST, Location.SOUTHWEST): HandPath.COUNTER_CLOCKWISE,
+            (Location.SOUTHWEST, Location.SOUTHEAST): HandPath.COUNTER_CLOCKWISE,
+            (Location.SOUTHEAST, Location.NORTHEAST): HandPath.COUNTER_CLOCKWISE,
             # Dash pairs
-            (Location.NORTH, Location.SOUTH): "dash",
-            (Location.SOUTH, Location.NORTH): "dash",
-            (Location.EAST, Location.WEST): "dash",
-            (Location.WEST, Location.EAST): "dash",
-            (Location.NORTHEAST, Location.SOUTHWEST): "dash",
-            (Location.SOUTHWEST, Location.NORTHEAST): "dash",
-            (Location.SOUTHEAST, Location.NORTHWEST): "dash",
-            (Location.NORTHWEST, Location.SOUTHEAST): "dash",
+            (Location.NORTH, Location.SOUTH): HandPath.DASH,
+            (Location.SOUTH, Location.NORTH): HandPath.DASH,
+            (Location.EAST, Location.WEST): HandPath.DASH,
+            (Location.WEST, Location.EAST): HandPath.DASH,
+            (Location.NORTHEAST, Location.SOUTHWEST): HandPath.DASH,
+            (Location.SOUTHWEST, Location.NORTHEAST): HandPath.DASH,
+            (Location.SOUTHEAST, Location.NORTHWEST): HandPath.DASH,
+            (Location.NORTHWEST, Location.SOUTHEAST): HandPath.DASH,
             # Static pairs (same location)
-            (Location.NORTH, Location.NORTH): "static",
-            (Location.EAST, Location.EAST): "static",
-            (Location.SOUTH, Location.SOUTH): "static",
-            (Location.WEST, Location.WEST): "static",
-            (Location.NORTHEAST, Location.NORTHEAST): "static",
-            (Location.SOUTHEAST, Location.SOUTHEAST): "static",
-            (Location.SOUTHWEST, Location.SOUTHWEST): "static",
-            (Location.NORTHWEST, Location.NORTHWEST): "static",
+            (Location.NORTH, Location.NORTH): HandPath.STATIC,
+            (Location.EAST, Location.EAST): HandPath.STATIC,
+            (Location.SOUTH, Location.SOUTH): HandPath.STATIC,
+            (Location.WEST, Location.WEST): HandPath.STATIC,
+            (Location.NORTHEAST, Location.NORTHEAST): HandPath.STATIC,
+            (Location.SOUTHEAST, Location.SOUTHEAST): HandPath.STATIC,
+            (Location.SOUTHWEST, Location.SOUTHWEST): HandPath.STATIC,
+            (Location.NORTHWEST, Location.NORTHWEST): HandPath.STATIC,
         }
 
-        return direction_map.get((start_loc, end_loc), "static")
+        return direction_map.get((start_loc, end_loc), HandPath.STATIC)
 
     def _calculate_float_orientation(
-        self, start_ori: str, handpath_direction: str
+        self, start_ori: Orientation, handpath_direction: HandPath
     ) -> Orientation:
         """Calculate orientation for float motions using legacy logic."""
         orientation_map = {
-            ("in", "cw_handpath"): "clock",
-            ("in", "ccw_handpath"): "counter",
-            ("out", "cw_handpath"): "counter",
-            ("out", "ccw_handpath"): "clock",
-            ("clock", "cw_handpath"): "out",
-            ("clock", "ccw_handpath"): "in",
-            ("counter", "cw_handpath"): "in",
-            ("counter", "ccw_handpath"): "out",
+            (Orientation.IN, HandPath.CLOCKWISE): Orientation.CLOCK,
+            (Orientation.IN, HandPath.COUNTER_CLOCKWISE): Orientation.COUNTER,
+            (Orientation.OUT, HandPath.CLOCKWISE): Orientation.COUNTER,
+            (Orientation.OUT, HandPath.COUNTER_CLOCKWISE): Orientation.CLOCK,
+            (Orientation.CLOCK, HandPath.CLOCKWISE): Orientation.OUT,
+            (Orientation.CLOCK, HandPath.COUNTER_CLOCKWISE): Orientation.IN,
+            (Orientation.COUNTER, HandPath.CLOCKWISE): Orientation.IN,
+            (Orientation.COUNTER, HandPath.COUNTER_CLOCKWISE): Orientation.OUT,
         }
 
         result_ori = orientation_map.get((start_ori, handpath_direction), start_ori)
@@ -158,26 +159,19 @@ class OrientationCalculator:
             f"Float orientation: {start_ori} + {handpath_direction} -> {result_ori}"
         )
 
-        # Convert back to Orientation enum
-        ori_map = {
-            "in": Orientation.IN,
-            "out": Orientation.OUT,
-            "clock": Orientation.CLOCK,
-            "counter": Orientation.COUNTER,
-        }
-        return ori_map.get(result_ori, Orientation.IN)
+        return result_ori
 
     def _calculate_whole_turn_orientation(
-        self, motion_type: MotionType, turns: int, start_ori: str
+        self, motion_type: MotionType, turns: int, start_ori: Orientation
     ) -> Orientation:
         """Calculate orientation for whole turn motions using legacy logic."""
         if motion_type in [MotionType.PRO, MotionType.STATIC]:
             result_ori = (
-                start_ori if turns % 2 == 0 else self._switch_orientation_str(start_ori)
+                start_ori if turns % 2 == 0 else self._switch_orientation(start_ori)
             )
         elif motion_type in [MotionType.ANTI, MotionType.DASH]:
             result_ori = (
-                self._switch_orientation_str(start_ori) if turns % 2 == 0 else start_ori
+                self._switch_orientation(start_ori) if turns % 2 == 0 else start_ori
             )
         else:
             result_ori = start_ori
@@ -186,58 +180,75 @@ class OrientationCalculator:
             f"Whole turn: {motion_type.value} {turns} turns, {start_ori} -> {result_ori}"
         )
 
-        # Convert back to Orientation enum
-        ori_map = {
-            "in": Orientation.IN,
-            "out": Orientation.OUT,
-            "clock": Orientation.CLOCK,
-            "counter": Orientation.COUNTER,
-        }
-        return ori_map.get(result_ori, Orientation.IN)
+        return result_ori
 
     def _calculate_half_turn_orientation(
         self,
         motion_type: MotionType,
         turns: float,
-        start_ori: str,
+        start_ori: Orientation,
         motion_data: MotionData,
     ) -> Orientation:
         """Calculate orientation for half turn motions using legacy logic."""
         prop_rot_dir = (
-            motion_data.prop_rot_dir.value.lower()
+            motion_data.prop_rot_dir
             if motion_data.prop_rot_dir
-            else "clockwise"
+            else RotationDirection.CLOCKWISE
         )
 
         if motion_type in [MotionType.ANTI, MotionType.DASH]:
             orientation_map = {
-                ("in", "clockwise"): ("clock" if turns % 2 == 0.5 else "counter"),
-                ("in", "counter_clockwise"): (
-                    "counter" if turns % 2 == 0.5 else "clock"
+                (Orientation.IN, RotationDirection.CLOCKWISE): (
+                    Orientation.CLOCK if turns % 2 == 0.5 else Orientation.COUNTER
                 ),
-                ("out", "clockwise"): ("counter" if turns % 2 == 0.5 else "clock"),
-                ("out", "counter_clockwise"): (
-                    "clock" if turns % 2 == 0.5 else "counter"
+                (Orientation.IN, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.COUNTER if turns % 2 == 0.5 else Orientation.CLOCK
                 ),
-                ("clock", "clockwise"): ("out" if turns % 2 == 0.5 else "in"),
-                ("clock", "counter_clockwise"): ("in" if turns % 2 == 0.5 else "out"),
-                ("counter", "clockwise"): ("in" if turns % 2 == 0.5 else "out"),
-                ("counter", "counter_clockwise"): ("out" if turns % 2 == 0.5 else "in"),
+                (Orientation.OUT, RotationDirection.CLOCKWISE): (
+                    Orientation.COUNTER if turns % 2 == 0.5 else Orientation.CLOCK
+                ),
+                (Orientation.OUT, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.CLOCK if turns % 2 == 0.5 else Orientation.COUNTER
+                ),
+                (Orientation.CLOCK, RotationDirection.CLOCKWISE): (
+                    Orientation.OUT if turns % 2 == 0.5 else Orientation.IN
+                ),
+                (Orientation.CLOCK, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.IN if turns % 2 == 0.5 else Orientation.OUT
+                ),
+                (Orientation.COUNTER, RotationDirection.CLOCKWISE): (
+                    Orientation.IN if turns % 2 == 0.5 else Orientation.OUT
+                ),
+                (Orientation.COUNTER, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.OUT if turns % 2 == 0.5 else Orientation.IN
+                ),
             }
         elif motion_type in [MotionType.PRO, MotionType.STATIC]:
             orientation_map = {
-                ("in", "clockwise"): ("counter" if turns % 2 == 0.5 else "clock"),
-                ("in", "counter_clockwise"): (
-                    "clock" if turns % 2 == 0.5 else "counter"
+                (Orientation.IN, RotationDirection.CLOCKWISE): (
+                    Orientation.COUNTER if turns % 2 == 0.5 else Orientation.CLOCK
                 ),
-                ("out", "clockwise"): ("clock" if turns % 2 == 0.5 else "counter"),
-                ("out", "counter_clockwise"): (
-                    "counter" if turns % 2 == 0.5 else "clock"
+                (Orientation.IN, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.CLOCK if turns % 2 == 0.5 else Orientation.COUNTER
                 ),
-                ("clock", "clockwise"): ("in" if turns % 2 == 0.5 else "out"),
-                ("clock", "counter_clockwise"): ("out" if turns % 2 == 0.5 else "in"),
-                ("counter", "clockwise"): ("out" if turns % 2 == 0.5 else "in"),
-                ("counter", "counter_clockwise"): ("in" if turns % 2 == 0.5 else "out"),
+                (Orientation.OUT, RotationDirection.CLOCKWISE): (
+                    Orientation.CLOCK if turns % 2 == 0.5 else Orientation.COUNTER
+                ),
+                (Orientation.OUT, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.COUNTER if turns % 2 == 0.5 else Orientation.CLOCK
+                ),
+                (Orientation.CLOCK, RotationDirection.CLOCKWISE): (
+                    Orientation.IN if turns % 2 == 0.5 else Orientation.OUT
+                ),
+                (Orientation.CLOCK, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.OUT if turns % 2 == 0.5 else Orientation.IN
+                ),
+                (Orientation.COUNTER, RotationDirection.CLOCKWISE): (
+                    Orientation.OUT if turns % 2 == 0.5 else Orientation.IN
+                ),
+                (Orientation.COUNTER, RotationDirection.COUNTER_CLOCKWISE): (
+                    Orientation.IN if turns % 2 == 0.5 else Orientation.OUT
+                ),
             }
         else:
             # Default fallback
@@ -248,18 +259,16 @@ class OrientationCalculator:
             f"Half turn: {motion_type.value} {turns} turns {prop_rot_dir}, {start_ori} -> {result_ori}"
         )
 
-        # Convert back to Orientation enum
-        ori_map = {
-            "in": Orientation.IN,
-            "out": Orientation.OUT,
-            "clock": Orientation.CLOCK,
-            "counter": Orientation.COUNTER,
-        }
-        return ori_map.get(result_ori, Orientation.IN)
+        return result_ori
 
-    def _switch_orientation_str(self, ori: str) -> str:
-        """Switch orientation string using legacy logic."""
-        switch_map = {"in": "out", "out": "in", "clock": "counter", "counter": "clock"}
+    def _switch_orientation(self, ori: Orientation) -> Orientation:
+        """Switch orientation using legacy logic."""
+        switch_map = {
+            Orientation.IN: Orientation.OUT,
+            Orientation.OUT: Orientation.IN,
+            Orientation.CLOCK: Orientation.COUNTER,
+            Orientation.COUNTER: Orientation.CLOCK,
+        }
         return switch_map.get(ori, ori)
 
     def switch_orientation(self, orientation: Orientation) -> Orientation:
