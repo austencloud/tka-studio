@@ -432,12 +432,14 @@ class SequenceBuildingTest(QMainWindow):
 
             self.log(f"🎯 SELECTED: {letter} pictograph ({start_pos} → {end_pos})")
 
-            # Add to current sequence
+            # Add to current sequence (SequenceData.add_beat returns a NEW sequence - immutable pattern!)
             beat = BeatData(
                 beat_number=len(self.current_sequence.beats) + 1,
                 pictograph_data=pictograph_data,
             )
-            self.current_sequence.add_beat(beat)
+            self.current_sequence = self.current_sequence.add_beat(
+                beat
+            )  # ← UPDATE REFERENCE!
 
             # Update sequence display
             self.update_sequence_display()
@@ -585,8 +587,22 @@ class SequenceBuildingTest(QMainWindow):
 
     def force_refresh_options(self):
         """Force refresh current options to test fade animation."""
-        self.log(f"🔄 Force refreshing options for {self.current_end_position}")
-        self.load_options_for_position(self.current_end_position)
+        self.log(f"🔄 Force refreshing options - this should show fade animation")
+
+        # Measure performance for the fade transition
+        start_time = time.perf_counter()
+
+        # Force refresh with current sequence - this should trigger visible fade
+        self.option_picker.refresh_options_from_modern_sequence(self.current_sequence)
+
+        # Record timing
+        transition_time = (time.perf_counter() - start_time) * 1000
+        self.transition_times.append(transition_time)
+        self.update_performance_display(transition_time)
+
+        self.log(
+            f"✅ Force refresh completed with fade animation - {transition_time:.1f}ms"
+        )
 
 
 def main():

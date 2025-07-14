@@ -49,6 +49,9 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
         """Register option picker services and components."""
         self._update_progress("Registering option picker services...")
 
+        # Register animation services first (required by option picker)
+        self._register_animation_services(container)
+
         # Register core option picker services
         self._register_core_option_services(container)
 
@@ -59,6 +62,20 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
         self._register_presentation_components(container)
 
         self._update_progress("Option picker services registered successfully")
+
+    def _register_animation_services(self, container: "DIContainer") -> None:
+        """Register modern animation services for option picker fade transitions."""
+        try:
+            from application.services.ui.animation.modern_service_registration import (
+                setup_modern_animation_services,
+            )
+
+            setup_modern_animation_services(container)
+            self._mark_service_available("ModernAnimationServices")
+
+        except Exception as e:
+            # Animation services are optional - option picker will fall back to direct updates
+            logger.warning(f"Animation services not available: {e}")
 
     def _register_core_option_services(self, container: "DIContainer") -> None:
         """Register core option picker services."""

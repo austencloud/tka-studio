@@ -95,7 +95,9 @@ class WorkbenchServiceRegistrar(BaseServiceRegistrar):
                 lambda c: WorkbenchOperationCoordinator(
                     workbench_state_manager=c.resolve(WorkbenchStateManager),
                     beat_operations=self._safe_resolve(c, "SequenceBeatOperations"),
-                    dictionary_service=self._safe_resolve(c, "SequenceDictionaryService"),
+                    dictionary_service=self._safe_resolve(
+                        c, "SequenceDictionaryService"
+                    ),
                     fullscreen_service=self._safe_resolve(c, "IFullScreenViewer"),
                     sequence_transformer=self._safe_resolve(c, "SequenceTransformer"),
                     sequence_persister=self._safe_resolve(c, "SequencePersister"),
@@ -108,7 +110,9 @@ class WorkbenchServiceRegistrar(BaseServiceRegistrar):
                 WorkbenchSessionManager,
                 lambda c: WorkbenchSessionManager(
                     workbench_state_manager=c.resolve(WorkbenchStateManager),
-                    session_restoration_coordinator=self._safe_resolve(c, "SessionRestorationCoordinator"),
+                    session_restoration_coordinator=self._safe_resolve(
+                        c, "SessionRestorationCoordinator"
+                    ),
                     event_bus=self._safe_resolve(c, "EventBus"),
                 ),
             )

@@ -47,8 +47,8 @@ class ConstructTabLayoutManager:
             self.progress_callback("Setting up construct tab layout...", 0.1)
 
         main_layout = QHBoxLayout(parent_widget)
-        main_layout.setSpacing(16)
-        main_layout.setContentsMargins(12, 12, 12, 12)
+        main_layout.setSpacing(8)  # Reduced spacing for more width
+        main_layout.setContentsMargins(4, 4, 4, 4)  # Minimal margins for more width
 
         if self.progress_callback:
             self.progress_callback("Creating sequence workbench panel...", 0.2)
@@ -70,8 +70,8 @@ class ConstructTabLayoutManager:
     def _create_workbench_panel(self) -> QWidget:
         panel = QWidget()
         layout = QVBoxLayout(panel)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(8)
+        layout.setContentsMargins(2, 2, 2, 2)  # Minimal margins for more space
+        layout.setSpacing(4)  # Reduced spacing
         self.workbench = create_modern_workbench(self.container, panel)
         layout.addWidget(self.workbench.get_widget())
         return panel
@@ -82,8 +82,8 @@ class ConstructTabLayoutManager:
 
         panel = QWidget()
         layout = QVBoxLayout(panel)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(8)
+        layout.setContentsMargins(0, 0, 0, 0)  # No margins for maximum width
+        layout.setSpacing(4)  # Reduced spacing
 
         self.picker_stack = QStackedWidget()
 

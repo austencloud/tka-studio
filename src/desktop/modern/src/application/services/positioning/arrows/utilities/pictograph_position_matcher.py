@@ -139,6 +139,10 @@ class PictographPositionMatcher:
             print("❌ No dataset loaded")
             return []
 
+        print(
+            f"🔍 [POSITION_MATCHER] Looking for pictographs with start_pos='{last_beat_end_pos}'"
+        )
+
         next_opts = []
         dataset_groups_checked = 0
         total_items_checked = 0
