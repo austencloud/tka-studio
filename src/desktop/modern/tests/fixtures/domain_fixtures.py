@@ -37,8 +37,8 @@ def sample_sequence_data():
         from domain.models import BeatData, SequenceData
 
         beats = [
-            BeatData(beat_number=1, letter="A", duration=1.0),
-            BeatData(beat_number=2, letter="B", duration=1.0),
+            BeatData(beat_number=1, duration=1.0),
+            BeatData(beat_number=2, duration=1.0),
         ]
 
         sequence = SequenceData(
