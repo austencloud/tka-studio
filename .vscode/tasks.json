@@ -96,7 +96,7 @@
       "label": "🏛️ Run TKA Legacy Desktop App",
       "type": "shell",
       "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "args": ["run_legacy.py"],
+      "args": ["scripts/run_legacy.py"],
       "options": {
         "cwd": "${workspaceFolder}",
         "env": {
