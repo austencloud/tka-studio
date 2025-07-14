@@ -26,29 +26,27 @@ from domain.models.enums import Location
 from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
 
-from ...arrows.calculation.directional_tuple_calculator import (
-    DirectionalTupleCalculator,
-)
-
-# Legacy service imports for backward compatibility
-from ...arrows.placement.default_placement_service import DefaultPlacementService
-from ...arrows.placement.special_placement_service import SpecialPlacementService
+from ..calculation.directional_tuple_calculator import DirectionalTupleCalculator
 from ..calculation.quadrant_index_calculator import QuadrantIndexCalculator
 from ..key_generators.attribute_key_generator import AttributeKeyGenerator
 from ..key_generators.placement_key_generator import PlacementKeyGenerator
 from ..key_generators.turns_tuple_key_generator import TurnsTupleKeyGenerator
+
+# Legacy service imports for backward compatibility
+from ..placement.default_placement_service import DefaultPlacementService
 from ..placement.special_placement_ori_key_generator import (
     SpecialPlacementOriKeyGenerator,
 )
+from ..placement.special_placement_service import SpecialPlacementService
 
 # Import the focused services
-from .arrow_adjustment_lookup_service import ArrowAdjustmentLookupService
+from .arrow_adjustment_lookup import ArrowAdjustmentLookup
 from .directional_tuple_processor import DirectionalTupleProcessor
 
 logger = logging.getLogger(__name__)
 
 
-class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
+class ArrowAdjustmentCalculator(IArrowAdjustmentCalculator):
     """
     Clean coordinator service for arrow positioning with proper error handling.
 
@@ -61,7 +59,7 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
 
     def __init__(
         self,
-        lookup_service: ArrowAdjustmentLookupService = None,
+        lookup_service: ArrowAdjustmentLookup = None,
         tuple_processor: DirectionalTupleProcessor = None,
     ):
         """
@@ -80,9 +78,9 @@ class ArrowAdjustmentCalculatorService(IArrowAdjustmentCalculator):
         self.lookup_service = lookup_service
         self.tuple_processor = tuple_processor
 
-    def _create_default_lookup_service(self) -> ArrowAdjustmentLookupService:
+    def _create_default_lookup_service(self) -> ArrowAdjustmentLookup:
         """Create lookup service with default dependencies."""
-        return ArrowAdjustmentLookupService(
+        return ArrowAdjustmentLookup(
             special_placement_service=SpecialPlacementService(),
             default_placement_service=DefaultPlacementService(),
             orientation_key_service=SpecialPlacementOriKeyGenerator(),

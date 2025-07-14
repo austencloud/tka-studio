@@ -49,8 +49,8 @@ except ImportError:
     QT_AVAILABLE = False
 
 # Import required services
-from ...arrows.placement.default_placement_service import DefaultPlacementService
-from ...arrows.placement.special_placement_service import SpecialPlacementService
+from ..placement.default_placement_service import DefaultPlacementService
+from ..placement.special_placement_service import SpecialPlacementService
 from ..key_generators.attribute_key_generator import AttributeKeyGenerator
 from ..key_generators.placement_key_generator import PlacementKeyGenerator
 from ..key_generators.turns_tuple_key_generator import TurnsTupleKeyGenerator
@@ -61,7 +61,7 @@ from ..placement.special_placement_ori_key_generator import (
 logger = logging.getLogger(__name__)
 
 
-class ArrowAdjustmentLookupService:
+class ArrowAdjustmentLookup:
     """
     Focused service for arrow adjustment lookups.
 

@@ -63,12 +63,7 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
 
         letter = pictograph_data.letter
 
-        # SINGLE LOCATION CALCULATION
-        # For now, pass None for beat_data since we're simplifying the interface
-        # The location calculator will fall back to start_loc for DASH motions
         location = self.location_calculator.calculate_location(motion, pictograph_data)
-
-        # PASS MINIMAL DATA TO EACH SERVICE
         initial_position = self.coordinate_system.get_initial_position(motion, location)
         initial_position = self._ensure_valid_position(initial_position)
 

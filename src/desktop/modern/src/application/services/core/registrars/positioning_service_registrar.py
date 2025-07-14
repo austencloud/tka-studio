@@ -75,8 +75,8 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
                 ArrowCoordinateSystemService,
             )
-            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
-                ArrowAdjustmentCalculatorService,
+            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+                ArrowAdjustmentCalculator,
             )
             from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
@@ -101,7 +101,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             self._mark_service_available("ArrowRotationCalculator")
 
             container.register_singleton(
-                IArrowAdjustmentCalculator, ArrowAdjustmentCalculatorService
+                IArrowAdjustmentCalculator, ArrowAdjustmentCalculator
             )
             self._mark_service_available("ArrowAdjustmentCalculator")
 

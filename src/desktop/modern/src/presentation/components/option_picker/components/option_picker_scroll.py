@@ -96,7 +96,7 @@ class OptionPickerScroll(QScrollArea):
         self._pending_fade_pictograph_frames = None
 
         # Set initial size
-        self._update_size()
+        # self._update_size()
 
     @property
     def mw_size_provider(self) -> Callable[[], QSize]:

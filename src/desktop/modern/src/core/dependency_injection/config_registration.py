@@ -144,25 +144,23 @@ def register_positioning_services_with_config(
         container.register_instance(PositioningConfig, config)
 
         # Register the new focused arrow adjustment services
-        from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
-            ArrowAdjustmentCalculatorService,
+        from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+            ArrowAdjustmentCalculator,
         )
-        from application.services.positioning.arrows.orchestration.arrow_adjustment_lookup_service import (
-            ArrowAdjustmentLookupService,
+        from application.services.positioning.arrows.orchestration.arrow_adjustment_lookup import (
+            ArrowAdjustmentLookup,
         )
         from application.services.positioning.arrows.orchestration.directional_tuple_processor import (
             DirectionalTupleProcessor,
         )
 
         # Register the focused services
-        container.register_singleton(
-            ArrowAdjustmentLookupService, ArrowAdjustmentLookupService
-        )
+        container.register_singleton(ArrowAdjustmentLookup, ArrowAdjustmentLookup)
         container.register_singleton(
             DirectionalTupleProcessor, DirectionalTupleProcessor
         )
         container.register_singleton(
-            ArrowAdjustmentCalculatorService, ArrowAdjustmentCalculatorService
+            ArrowAdjustmentCalculator, ArrowAdjustmentCalculator
         )
 
         logger.info("Successfully registered positioning services with configuration")
