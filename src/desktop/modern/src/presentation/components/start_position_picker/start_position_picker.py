@@ -50,7 +50,7 @@ class PickerMode(Enum):
     AUTO = "auto"  # Responsive mode switching
 
 
-class UnifiedStartPositionPicker(QWidget):
+class StartPositionPicker(QWidget):
     """
     Unified start position picker with intelligent mode switching.
 

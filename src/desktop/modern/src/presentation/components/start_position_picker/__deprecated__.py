@@ -25,12 +25,10 @@ This file will be removed in a future release.
 
 # Re-export the unified component for backward compatibility
 from .start_position_picker import PickerMode
-from .start_position_picker import UnifiedStartPositionPicker
-from .start_position_picker import (
-    UnifiedStartPositionPicker as EnhancedStartPositionPicker,
-)
+from .start_position_picker import StartPositionPicker
+from .start_position_picker import StartPositionPicker as EnhancedStartPositionPicker
 
 # Legacy alias
-AdvancedStartPositionPicker = UnifiedStartPositionPicker
+AdvancedStartPositionPicker = StartPositionPicker
 
 __all__ = ["EnhancedStartPositionPicker", "AdvancedStartPositionPicker", "PickerMode"]

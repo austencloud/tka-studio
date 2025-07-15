@@ -11,7 +11,7 @@ from core.dependency_injection.di_container import DIContainer
 from presentation.components.option_picker.components.option_picker import OptionPicker
 from presentation.components.start_position_picker.start_position_picker import (
     PickerMode,
-    UnifiedStartPositionPicker,
+    StartPositionPicker,
 )
 from presentation.factories.workbench_factory import create_modern_workbench
 from PyQt6.QtCore import Qt
@@ -135,7 +135,7 @@ class ConstructTabLayoutManager:
         ui_service = self.container.resolve(IStartPositionUIService)
         orchestrator = self.container.resolve(IStartPositionOrchestrator)
 
-        self.start_position_picker = UnifiedStartPositionPicker(
+        self.start_position_picker = StartPositionPicker(
             pool_manager,
             data_service,
             selection_service,
