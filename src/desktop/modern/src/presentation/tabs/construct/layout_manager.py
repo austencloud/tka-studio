@@ -119,30 +119,30 @@ class ConstructTabLayoutManager:
     def _create_start_position_widget(self) -> QWidget:
         widget = QWidget()
         layout = QVBoxLayout(widget)
+        
+        # Get only the 4 services we actually need
         from application.services.pictograph_pool_manager import PictographPoolManager
         from core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
-            IStartPositionSelectionService,
             IStartPositionUIService,
         )
 
-        # Using unified start position picker - import moved to top
-        # Get pool manager and services from DI container
+        # Resolve the 4 required services from DI container
         pool_manager = self.container.resolve(PictographPoolManager)
         data_service = self.container.resolve(IStartPositionDataService)
-        selection_service = self.container.resolve(IStartPositionSelectionService)
         ui_service = self.container.resolve(IStartPositionUIService)
         orchestrator = self.container.resolve(IStartPositionOrchestrator)
 
+        # Create the simplified start position picker with only 4 dependencies
         self.start_position_picker = StartPositionPicker(
-            pool_manager,
-            data_service,
-            selection_service,
-            ui_service,
-            orchestrator,
+            pool_manager=pool_manager,
+            data_service=data_service,
+            ui_service=ui_service,
+            orchestrator=orchestrator,
             initial_mode=PickerMode.AUTO,  # Start in auto mode for responsive behavior
         )
+        
         layout.addWidget(self.start_position_picker)
         return widget
 

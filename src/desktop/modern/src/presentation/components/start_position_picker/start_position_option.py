@@ -34,9 +34,9 @@ from PyQt6.QtWidgets import QGraphicsDropShadowEffect, QLabel, QVBoxLayout, QWid
 logger = logging.getLogger(__name__)
 
 
-class EnhancedStartPositionOption(QWidget):
+class StartPositionOption(QWidget):
     """
-    Enhanced start position option with modern glassmorphism design.
+    Start position option with modern glassmorphism design.
 
     Features:
     - Modern glassmorphism styling with transparency and blur effects

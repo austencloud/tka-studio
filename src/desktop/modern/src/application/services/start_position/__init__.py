@@ -12,13 +12,13 @@ Services:
 """
 
 from .start_position_data_service import StartPositionDataService
+from .start_position_orchestrator import StartPositionOrchestrator
 from .start_position_selection_service import StartPositionSelectionService
 from .start_position_ui_service import StartPositionUIService
-from .start_position_orchestrator import StartPositionOrchestrator
 
 __all__ = [
     "StartPositionDataService",
-    "StartPositionSelectionService", 
+    "StartPositionSelectionService",
     "StartPositionUIService",
-    "StartPositionOrchestrator"
+    "StartPositionOrchestrator",
 ]

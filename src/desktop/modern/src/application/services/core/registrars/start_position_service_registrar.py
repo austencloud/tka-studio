@@ -67,15 +67,15 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
         """Register core start position services with proper dependency injection."""
         try:
             # Import service interfaces and implementations
+
             from application.services.start_position.start_position_data_service import (
                 StartPositionDataService,
             )
+
             from application.services.start_position.start_position_orchestrator import (
                 StartPositionOrchestrator,
             )
-            from application.services.start_position.start_position_selection_service import (
-                StartPositionSelectionService,
-            )
+
             from application.services.start_position.start_position_ui_service import (
                 StartPositionUIService,
             )
@@ -92,17 +92,13 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
             )
             self._mark_service_available("StartPositionDataService")
 
-            # Register selection service (no dependencies)
-            container.register_singleton(
-                IStartPositionSelectionService, StartPositionSelectionService
-            )
-            self._mark_service_available("StartPositionSelectionService")
-
             # Register UI service (no dependencies)
             container.register_singleton(
                 IStartPositionUIService, StartPositionUIService
             )
             self._mark_service_available("StartPositionUIService")
+
+            # Register new UI-agnostic services (no dependencies)
 
             # Register orchestrator service with dependencies
             def create_orchestrator():

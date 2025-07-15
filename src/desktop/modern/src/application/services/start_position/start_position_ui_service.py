@@ -104,14 +104,14 @@ class StartPositionUIService(IStartPositionUIService):
             # Sizing formula as specified: 1/12th of main window size per pictograph
             if is_advanced:
                 # Advanced picker uses 1/12th of main window width per pictograph
-                size = container_width // 12
+                size = container_width // 10
                 min_size = 120  # Larger minimum for better visibility
-                max_size = 300  # Higher maximum for better detail
+                max_size = 400  # Higher maximum for better detail
             else:
                 # Regular picker uses legacy formula (main_window_width // 10)
                 size = container_width // 10
                 min_size = 80
-                max_size = 200
+                max_size = 400
 
             # Ensure reasonable size range
             size = max(size, min_size)
