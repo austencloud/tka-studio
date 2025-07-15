@@ -9,8 +9,9 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from presentation.components.option_picker.components.option_picker import OptionPicker
-from presentation.components.start_position_picker.unified_start_position_picker import (
-    UnifiedStartPositionPicker, PickerMode
+from presentation.components.start_position_picker.start_position_picker import (
+    PickerMode,
+    UnifiedStartPositionPicker,
 )
 from presentation.factories.workbench_factory import create_modern_workbench
 from PyQt6.QtCore import Qt
@@ -127,7 +128,6 @@ class ConstructTabLayoutManager:
         )
 
         # Using unified start position picker - import moved to top
-
         # Get pool manager and services from DI container
         pool_manager = self.container.resolve(PictographPoolManager)
         data_service = self.container.resolve(IStartPositionDataService)
@@ -136,8 +136,12 @@ class ConstructTabLayoutManager:
         orchestrator = self.container.resolve(IStartPositionOrchestrator)
 
         self.start_position_picker = UnifiedStartPositionPicker(
-            pool_manager, data_service, selection_service, ui_service, orchestrator,
-            initial_mode=PickerMode.AUTO  # Start in auto mode for responsive behavior
+            pool_manager,
+            data_service,
+            selection_service,
+            ui_service,
+            orchestrator,
+            initial_mode=PickerMode.AUTO,  # Start in auto mode for responsive behavior
         )
         layout.addWidget(self.start_position_picker)
         return widget

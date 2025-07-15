@@ -9,7 +9,7 @@ mode-aware component that's easier to maintain and port to web.
 Migration:
 - Use UnifiedStartPositionPicker instead
 - Set initial_mode parameter for desired behavior:
-  - PickerMode.BASIC: 3 positions (old basic behavior)  
+  - PickerMode.BASIC: 3 positions (old basic behavior)
   - PickerMode.ADVANCED: 16 positions (old advanced behavior)
   - PickerMode.AUTO: responsive switching (recommended)
 
@@ -24,8 +24,11 @@ This file will be removed in a future release.
 """
 
 # Re-export the unified component for backward compatibility
-from .unified_start_position_picker import UnifiedStartPositionPicker as EnhancedStartPositionPicker
-from .unified_start_position_picker import PickerMode
+from .start_position_picker import PickerMode
+from .start_position_picker import UnifiedStartPositionPicker
+from .start_position_picker import (
+    UnifiedStartPositionPicker as EnhancedStartPositionPicker,
+)
 
 # Legacy alias
 AdvancedStartPositionPicker = UnifiedStartPositionPicker
