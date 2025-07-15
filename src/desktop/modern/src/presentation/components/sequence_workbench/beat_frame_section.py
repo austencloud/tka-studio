@@ -35,7 +35,14 @@ class WorkbenchBeatFrameSection(QWidget):
     copy_json_requested = pyqtSignal()
     delete_beat_requested = pyqtSignal()
     clear_sequence_requested = pyqtSignal()
-    edit_construct_toggle_requested = pyqtSignal(bool)
+    picker_mode_requested = pyqtSignal()
+
+    # New 3-panel system signals
+    picker_mode_requested = pyqtSignal()
+    graph_editor_requested = pyqtSignal()
+    generate_requested = pyqtSignal()
+    graph_editor_requested = pyqtSignal()
+    generate_requested = pyqtSignal()
 
     def __init__(
         self,
@@ -120,9 +127,13 @@ class WorkbenchBeatFrameSection(QWidget):
             self._button_panel.clear_sequence_requested.connect(
                 self._handle_clear_sequence_request
             )
-            self._button_panel.edit_construct_toggle_requested.connect(
-                self.edit_construct_toggle_requested
+
+            # Connect 3-panel system signals
+            self._button_panel.picker_mode_requested.connect(self.picker_mode_requested)
+            self._button_panel.graph_editor_requested.connect(
+                self.graph_editor_requested
             )
+            self._button_panel.generate_requested.connect(self.generate_requested)
 
     def _handle_delete_beat_request(self):
         """Handle delete beat request from button panel"""

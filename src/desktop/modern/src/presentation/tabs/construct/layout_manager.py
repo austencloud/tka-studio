@@ -133,7 +133,13 @@ class ConstructTabLayoutManager:
         self.picker_stack.addWidget(graph_editor_widget)
 
         if self.progress_callback:
-            self.progress_callback("Configuring picker transitions...", 0.9)
+            self.progress_callback("Creating generate controls widget...", 0.9)
+
+        generate_widget = self._create_generate_controls_widget()
+        self.picker_stack.addWidget(generate_widget)
+
+        if self.progress_callback:
+            self.progress_callback("Configuring picker transitions...", 0.95)
 
         self.picker_stack.setCurrentIndex(0)
         layout.addWidget(self.picker_stack)
@@ -231,6 +237,42 @@ class ConstructTabLayoutManager:
             logger.error(f"Failed to create graph editor: {e}", exc_info=True)
         return widget
 
+    def _create_generate_controls_widget(self) -> QWidget:
+        """Create generate controls widget for sequence generation."""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        try:
+            from presentation.components.generate_tab.generate_panel import (
+                GeneratePanel,
+            )
+
+            self.generate_panel = GeneratePanel(parent=widget)
+            layout.addWidget(self.generate_panel)
+
+            # Connect generate panel signals if needed
+            if hasattr(self.generate_panel, "generate_requested"):
+                self.generate_panel.generate_requested.connect(
+                    self._on_generate_requested
+                )
+
+        except Exception as e:
+            fallback_label = QLabel(f"Generate controls unavailable: {e}")
+            fallback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            fallback_label.setStyleSheet(
+                "color: orange; font-size: 14px; padding: 20px;"
+            )
+            layout.addWidget(fallback_label)
+            self.generate_panel = None
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to create generate controls: {e}", exc_info=True)
+
+        return widget
+
     def transition_to_option_picker(self):
         """Transition to option picker with smooth fade animation."""
         if self.picker_stack and not self._is_transitioning:
@@ -246,12 +288,23 @@ class ConstructTabLayoutManager:
         if self.picker_stack and not self._is_transitioning:
             self._start_fade_to_graph_editor()
 
+    def transition_to_generate_controls(self):
+        """Transition to generate controls with smooth fade animation."""
+        if self.picker_stack and not self._is_transitioning:
+            self._start_fade_to_generate_controls()
+
     def _start_fade_to_option_picker(self):
         """Start smooth fade transition to option picker."""
         if self.picker_stack.currentIndex() == 1:
             return  # Already showing option picker
 
         self._is_transitioning = True
+
+        # Prevent start position picker from updating during transition
+        if self.start_position_picker and hasattr(
+            self.start_position_picker, "set_transition_mode"
+        ):
+            self.start_position_picker.set_transition_mode(True)
 
         # Pre-load option picker content while hidden to avoid redundant fades
         if self.option_picker and hasattr(self.option_picker, "prepare_for_transition"):
@@ -284,17 +337,26 @@ class ConstructTabLayoutManager:
         # Use the same Qt animation pattern as option picker sections
         self._fade_stack_transition(2, "graph editor")
 
+    def _start_fade_to_generate_controls(self):
+        """Start smooth fade transition to generate controls."""
+        if self.picker_stack.currentIndex() == 3:
+            return  # Already showing generate controls
+
+        self._is_transitioning = True
+        print("🎬 Starting Qt-based fade transition to generate controls...")
+
+        # Use the same Qt animation pattern as option picker sections
+        self._fade_stack_transition(3, "generate controls")
+
     def _fade_stack_transition(self, new_index: int, target_name: str):
         """
-        Perform proper stack widget fade transition based on legacy implementation.
-        Uses QPropertyAnimation with QGraphicsOpacityEffect like the legacy StackFader.
+        Perform stack widget fade transition using industry best practices.
+        Applies effects only to individual components to avoid QPainter conflicts.
+        Based on Qt Enterprise solution and option picker success pattern.
         """
         try:
             current_widget = self.picker_stack.currentWidget()
             next_widget = self.picker_stack.widget(new_index)
-
-            # Clear any existing graphics effects first (like legacy)
-            self._clear_graphics_effects([current_widget, next_widget])
 
             if (
                 not current_widget
@@ -307,15 +369,24 @@ class ConstructTabLayoutManager:
                 self._reset_transition_state()
                 return
 
-            print(f"🎭 [FADE] Starting proper fade transition to {target_name}")
+            print(f"🎭 [FADE] Starting whole-widget fade transition to {target_name}")
 
-            # Create fade out animation for current widget
+            # Clear any existing effects first (Qt Enterprise solution)
+            self._clear_graphics_effects([current_widget, next_widget])
+
+            # Temporarily disable pictograph updates during transition
+            self._disable_pictograph_updates(current_widget, True)
+
+            # Start fade out animation for current widget
             def on_fade_out_finished():
                 print(f"🎭 [FADE] Fade out complete, switching to {target_name}")
 
-                # Clear effects and switch stack (like legacy)
-                self._clear_graphics_effects([current_widget, next_widget])
+                # Clear effects and switch stack
+                self._clear_graphics_effects([current_widget])
                 self.picker_stack.setCurrentIndex(new_index)
+
+                # Re-enable pictograph updates
+                self._disable_pictograph_updates(current_widget, False)
 
                 # Start fade in animation for next widget
                 self._fade_in_widget(next_widget, target_name)
@@ -328,16 +399,16 @@ class ConstructTabLayoutManager:
             self._fallback_transition(new_index, target_name)
 
     def _fade_out_widget(self, widget, callback):
-        """Fade out a widget using QPropertyAnimation (legacy pattern)."""
+        """Fade out a widget using QPropertyAnimation with proper QPainter handling."""
         try:
             effect = self._ensure_opacity_effect(widget)
             effect.setOpacity(1.0)  # Ensure it starts visible
 
             animation = QPropertyAnimation(effect, b"opacity")
-            animation.setDuration(200)  # Match legacy timing
+            animation.setDuration(200)  # Match option picker timing
             animation.setStartValue(1.0)
             animation.setEndValue(0.0)
-            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)  # Match legacy easing
+            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
             # Store reference to prevent garbage collection
             self._current_animation = animation
@@ -350,20 +421,22 @@ class ConstructTabLayoutManager:
             callback()
 
     def _fade_in_widget(self, widget, target_name: str):
-        """Fade in a widget using QPropertyAnimation (legacy pattern)."""
+        """Fade in a widget using QPropertyAnimation with proper QPainter handling."""
         try:
             effect = self._ensure_opacity_effect(widget)
             effect.setOpacity(0.0)  # Start invisible
 
             animation = QPropertyAnimation(effect, b"opacity")
-            animation.setDuration(200)  # Match legacy timing
+            animation.setDuration(200)  # Match option picker timing
             animation.setStartValue(0.0)
             animation.setEndValue(1.0)
-            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)  # Match legacy easing
+            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
             def on_fade_in_complete():
-                print(f"✅ [FADE] Fade transition completed to {target_name}")
-                # Clear graphics effects after animation (like legacy)
+                print(
+                    f"✅ [FADE] Whole-widget fade transition completed to {target_name}"
+                )
+                # Clear graphics effects after animation (Qt Enterprise solution)
                 self._clear_graphics_effects([widget])
                 self._reset_transition_state()
 
@@ -380,7 +453,7 @@ class ConstructTabLayoutManager:
             self._reset_transition_state()
 
     def _ensure_opacity_effect(self, widget) -> QGraphicsOpacityEffect:
-        """Ensure widget has an opacity effect (legacy pattern)."""
+        """Ensure widget has an opacity effect."""
         effect = widget.graphicsEffect()
         if effect and isinstance(effect, QGraphicsOpacityEffect):
             return effect
@@ -390,13 +463,35 @@ class ConstructTabLayoutManager:
         return effect
 
     def _clear_graphics_effects(self, widgets):
-        """Clear graphics effects from widgets (legacy pattern)."""
+        """Clear graphics effects from widgets (Qt Enterprise solution)."""
         for widget in widgets:
             if widget and hasattr(widget, "setGraphicsEffect"):
                 try:
                     widget.setGraphicsEffect(None)
                 except (RuntimeError, AttributeError):
                     pass  # Silently ignore already-deleted widgets
+
+    def _disable_pictograph_updates(self, widget, disable: bool):
+        """Temporarily disable pictograph updates to prevent QPainter conflicts."""
+        try:
+            # For start position picker, disable sizing updates
+            if hasattr(widget, "content") and hasattr(widget.content, "apply_sizing"):
+                if disable:
+                    # Store original method and replace with no-op
+                    if not hasattr(widget.content, "_original_apply_sizing"):
+                        widget.content._original_apply_sizing = (
+                            widget.content.apply_sizing
+                        )
+                        widget.content.apply_sizing = lambda *args, **kwargs: None
+                else:
+                    # Restore original method
+                    if hasattr(widget.content, "_original_apply_sizing"):
+                        widget.content.apply_sizing = (
+                            widget.content._original_apply_sizing
+                        )
+                        delattr(widget.content, "_original_apply_sizing")
+        except Exception as e:
+            print(f"❌ [FADE] Error managing pictograph updates: {e}")
 
     def _fallback_transition(self, new_index: int, target_name: str):
         """Fallback to direct transition if animations fail."""
@@ -408,6 +503,13 @@ class ConstructTabLayoutManager:
     def _reset_transition_state(self):
         """Reset the transition state."""
         self._is_transitioning = False
+        self._current_animation = None
+
+        # Re-enable start position picker updates
+        if self.start_position_picker and hasattr(
+            self.start_position_picker, "set_transition_mode"
+        ):
+            self.start_position_picker.set_transition_mode(False)
 
     def _connect_beat_frame_to_graph_editor(self):
         if not self.workbench or not self.graph_editor:
@@ -449,6 +551,18 @@ class ConstructTabLayoutManager:
             print(
                 f"⚠️ Invalid beat index: {beat_index} (sequence has {len(current_sequence.beats)} beats)"
             )
+
+    def _on_generate_requested(self, generation_config):
+        """Handle generation request from generate panel."""
+        print(
+            f"🤖 [LAYOUT_MANAGER] Generation requested with config: {generation_config}"
+        )
+        # TODO: Implement sequence generation logic
+        # This would typically involve:
+        # 1. Calling a generation service with the config
+        # 2. Getting the generated sequence
+        # 3. Setting it in the workbench
+        # 4. Transitioning back to option picker to show the result
 
     def _on_graph_beat_modified(self, beat_index: int, beat_data):
         print(f"✅ Graph editor modified beat {beat_index}")

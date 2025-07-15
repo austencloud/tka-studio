@@ -108,10 +108,10 @@ class OptionPickerWidget(QWidget):
         title_layout.addWidget(subtitle_label)
 
         title_section.setObjectName("TitleSection")
-        
+
         # Apply the same styling as start position picker
         title_section.setStyleSheet(self._get_label_styles())
-        
+
         return title_section
 
     def _get_label_styles(self) -> str:

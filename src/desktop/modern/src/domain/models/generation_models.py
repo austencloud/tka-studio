@@ -5,19 +5,21 @@ These immutable data classes represent the core business entities
 for sequence generation, following Modern's clean architecture principles.
 """
 
-from typing import Optional, Set, List, TYPE_CHECKING
 from dataclasses import dataclass, replace
+from typing import TYPE_CHECKING, List, Optional, Set
 
-# Use TYPE_CHECKING to avoid circular imports
+# Import enums for runtime use
+from core.interfaces.generation_services import (
+    CAPType,
+    GenerationMode,
+    LetterType,
+    PropContinuity,
+    SliceSize,
+)
+
+# Use TYPE_CHECKING to avoid circular imports for complex types
 if TYPE_CHECKING:
-    from core.interfaces.generation_services import (
-        GenerationMode,
-        PropContinuity,
-        LetterType,
-        SliceSize,
-        CAPType,
-        GenerationMetadata,
-    )
+    from core.interfaces.generation_services import GenerationMetadata
 
 
 @dataclass(frozen=True)

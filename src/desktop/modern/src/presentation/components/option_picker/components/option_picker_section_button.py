@@ -37,7 +37,8 @@ class OptionPickerSectionButton(QPushButton):
     def __init__(self, section_widget: "OptionPickerSection"):
         super().__init__(section_widget)
         self.section_widget = section_widget
-        self._base_background_color = "rgba(255, 255, 255, 200)"
+        # Updated to match glassmorphism styling of main header
+        self._base_background_color = "rgba(255, 255, 255, 0.3)"
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # Create a label that will render HTML
@@ -66,43 +67,46 @@ class OptionPickerSectionButton(QPushButton):
         """Generate HTML text for letter type with colored styling."""
         # Get description from LetterType class
         description, type_name = LetterType.get_type_description(letter_type)
-        
+
         # Use LetterTypeTextPainter to generate colored HTML (matching legacy)
         styled_description = LetterTypeTextPainter.get_colored_text(description)
-        
+
         return f"{type_name}: {styled_description}"
 
     def _set_initial_styles(self) -> None:
-        """Set initial styles exactly like Legacy."""
+        """Set initial styles with glassmorphism effect and black text."""
         font = QFont()
         font.setBold(True)
         self.label.setFont(font)
+
+        # Ensure label text is black (unless modified by font color updater)
+        self.label.setStyleSheet("color: black; background: transparent;")
+
         self._update_style()
 
     def _update_style(self, background_color: str = None) -> None:
-        """Update button style exactly like Legacy."""
+        """Update button style with glassmorphism effect matching main header."""
         background_color = background_color or self._base_background_color
         style = (
             f"QPushButton {{"
-            f"  background-color: {background_color};"
-            f"  font-weight: bold;"
-            f"  border: none;"
+            f"  background: {background_color};"
+            f"  border: 1px solid rgba(255, 255, 255, 0.3);"
             f"  border-radius: {self.height() // 2}px;"
             f"  padding: 5px;"
+            f"  color: black;"
             f"}}"
             f"QPushButton:hover {{"
-            f"  border: 2px solid black;"
+            f"  background: rgba(255, 255, 255, 0.3);"
+            f"  border: 2px solid rgba(255, 255, 255, 0.5);"
             f"}}"
         )
         self.setStyleSheet(style)
 
     def enterEvent(self, event) -> None:
-        """Handle hover enter exactly like Legacy."""
-        gradient = (
-            "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
-            "stop:0 rgba(200, 200, 200, 1), stop:1 rgba(150, 150, 150, 1))"
-        )
-        self._update_style(background_color=gradient)
+        """Handle hover enter with glassmorphism effect."""
+        # Use a slightly more opaque glassmorphism effect on hover
+        hover_background = "rgba(255, 255, 255, 0.3)"
+        self._update_style(background_color=hover_background)
         super().enterEvent(event)
 
     def leaveEvent(self, event) -> None:
@@ -111,9 +115,11 @@ class OptionPickerSectionButton(QPushButton):
         super().leaveEvent(event)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
-        """Handle mouse press exactly like Legacy."""
+        """Handle mouse press with glassmorphism effect."""
         if event.button() == Qt.MouseButton.LeftButton:
-            self._update_style(background_color="#aaaaaa")
+            # Use a more opaque glassmorphism effect when pressed
+            press_background = "rgba(255, 255, 255, 0.4)"
+            self._update_style(background_color=press_background)
             self.clicked.emit()
         super().mousePressEvent(event)
 

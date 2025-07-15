@@ -33,7 +33,6 @@ class MenuBarNavigationWidget(QWidget):
         # Tab configuration
         self.tab_config = [
             {"name": "construct", "label": "Construct ⚒️"},
-            {"name": "generate", "label": "Generate 🤖"},
             {"name": "browse", "label": "Browse 🔍"},
             {"name": "learn", "label": "Learn 🧠"},
             {"name": "sequence_card", "label": "Sequence Card 📋"},

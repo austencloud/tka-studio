@@ -201,36 +201,20 @@ class OptionPickerSizeCalculator:
         try:
             main_window_width = main_window_size.width()
 
-            # Debug logging to track the calculation
-            print(f"📊 [CALC] Frame size calculation:")
-            print(f"   Main window width: {main_window_width}px")
-            print(f"   Option picker width: {option_picker_width}px")
-            print(f"   Spacing: {spacing}px")
-
             # SIMPLIFIED: Use the standard legacy formula without artificial compensation
             # Since option picker now uses full container width, no compensation needed
             size_option_1 = main_window_width // 16
             size_option_2 = option_picker_width // 8
-
-            print(f"   Size option 1 (MW/16): {size_option_1}px")
-            print(f"   Size option 2 (OP/8): {size_option_2}px")
-
             base_size = max(size_option_1, size_option_2)
-            print(f"   Base size (max): {base_size}px")
 
             # Calculate border width using existing method
             border_width = self.calculate_border_width(base_size)
-            print(f"   Border width: {border_width}px")
 
             # Adjust for border and spacing (Legacy: size -= 2 * bw + spacing)
             adjusted_size = base_size - (2 * border_width) - spacing
-            print(
-                f"   Adjusted size: {adjusted_size}px (after -{2 * border_width}-{spacing})"
-            )
 
             # Apply minimum size constraint
             final_size = max(adjusted_size, self._min_frame_size)
-            print(f"   Final size: {final_size}px (min {self._min_frame_size}px)")
 
             return final_size
 

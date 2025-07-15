@@ -123,10 +123,21 @@ class SignalCoordinator(QObject):
             self.layout_manager.workbench.operation_completed.connect(
                 self._handle_operation_completed
             )
-            # Edit/Construct toggle signal
-            self.layout_manager.workbench.edit_construct_toggle_requested.connect(
-                self._handle_edit_construct_toggle
-            )
+            
+            # Connect new 3-panel system signals
+            if hasattr(self.layout_manager.workbench, "picker_mode_requested"):
+                self.layout_manager.workbench.picker_mode_requested.connect(
+                    self._handle_picker_mode_request
+                )
+            if hasattr(self.layout_manager.workbench, "graph_editor_requested"):
+                self.layout_manager.workbench.graph_editor_requested.connect(
+                    self.layout_manager.transition_to_graph_editor
+                )
+            if hasattr(self.layout_manager.workbench, "generate_requested"):
+                self.layout_manager.workbench.generate_requested.connect(
+                    self.layout_manager.transition_to_generate_controls
+                )
+            
             # Clear sequence signal - connect to signal coordinator
             if hasattr(self.layout_manager.workbench, "clear_sequence_requested"):
                 self.layout_manager.workbench.clear_sequence_requested.connect(
@@ -204,42 +215,33 @@ class SignalCoordinator(QObject):
     def _handle_operation_completed(self, message: str):
         """Handle workbench operation completion"""
 
-    def _handle_edit_construct_toggle(self, edit_mode: bool):
-        """Handle Edit/Construct toggle from workbench button panel"""
+    def _handle_picker_mode_request(self):
+        """Handle picker mode request from workbench button panel with smart switching."""
+        # Get current sequence state
+        sequence = None
+        if hasattr(self.beat_operations, "get_current_sequence"):
+            sequence = self.beat_operations.get_current_sequence()
 
-        if edit_mode:
-            # Switch to graph editor (index 2)
-            self.layout_manager.transition_to_graph_editor()
+        # Check if start position is set in workbench
+        start_position_set = False
+        workbench = self.layout_manager.workbench
+        if workbench and hasattr(workbench, "_start_position_data"):
+            start_position_set = workbench._start_position_data is not None
+
+        has_beats = sequence and sequence.beats and len(sequence.beats) > 0
+
+        if start_position_set or has_beats:
+            # Start position is set OR beats exist → show option picker
+            print(
+                f"🎯 [SIGNAL_COORDINATOR] Smart switching to option picker (start_pos_set={start_position_set}, has_beats={has_beats})"
+            )
+            self.layout_manager.transition_to_option_picker()
         else:
-            # Switch back to appropriate picker based on sequence state
-            sequence = None
-            if hasattr(self.beat_operations, "get_current_sequence"):
-                sequence = self.beat_operations.get_current_sequence()
-
-            # CRITICAL FIX: Use legacy-compatible logic for picker selection
-            # Show start position picker ONLY when completely empty (no start position AND no beats)
-            # Show option picker when start position is set OR beats exist
-
-            # Check if start position is set in workbench (using direct access)
-            start_position_set = False
-            workbench = self.layout_manager.workbench
-            if workbench and hasattr(workbench, "_start_position_data"):
-                start_position_set = workbench._start_position_data is not None
-
-            has_beats = sequence and sequence.beats and len(sequence.beats) > 0
-
-            if start_position_set or has_beats:
-                # Start position is set OR beats exist → show option picker
-                print(
-                    f"🎯 [SIGNAL_COORDINATOR] Showing option picker (start_pos_set={start_position_set}, has_beats={has_beats})"
-                )
-                self.layout_manager.transition_to_option_picker()
-            else:
-                # Completely empty (no start position AND no beats) → show start position picker
-                print(
-                    f"🎯 [SIGNAL_COORDINATOR] Showing start position picker (completely empty)"
-                )
-                self.layout_manager.transition_to_start_position_picker()
+            # Completely empty (no start position AND no beats) → show start position picker
+            print(
+                f"🎯 [SIGNAL_COORDINATOR] Smart switching to start position picker (completely empty)"
+            )
+            self.layout_manager.transition_to_start_position_picker()
 
     def clear_sequence(self):
         """Clear the current sequence (public interface)"""
@@ -384,3 +386,11 @@ class SignalCoordinator(QObject):
             # Connect workbench to our handler (single signal path)
             workbench.sequence_modified.connect(self._handle_workbench_modified)
             workbench.operation_completed.connect(self._handle_operation_completed)
+            
+            # Connect new 3-panel system signals
+            if hasattr(workbench, "picker_mode_requested"):
+                workbench.picker_mode_requested.connect(self._handle_picker_mode_request)
+            if hasattr(workbench, "graph_editor_requested"):
+                workbench.graph_editor_requested.connect(self.layout_manager.transition_to_graph_editor)
+            if hasattr(workbench, "generate_requested"):
+                workbench.generate_requested.connect(self.layout_manager.transition_to_generate_controls)

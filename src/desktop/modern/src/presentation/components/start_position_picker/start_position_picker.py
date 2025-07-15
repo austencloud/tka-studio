@@ -82,6 +82,9 @@ class StartPositionPicker(QWidget):
         # State management
         self.current_mode = initial_mode
         self.grid_mode = "diamond"  # diamond/box
+        self._is_in_transition = (
+            False  # Track transition state to prevent sizing updates
+        )
 
         # Sub-components
         self.header = None
@@ -264,9 +267,19 @@ class StartPositionPicker(QWidget):
         """Get the current grid mode."""
         return self.grid_mode
 
+    def set_transition_mode(self, in_transition: bool):
+        """Set transition mode to prevent sizing updates during fade transitions."""
+        self._is_in_transition = in_transition
+        logger.debug(f"Start position picker transition mode: {in_transition}")
+
     def showEvent(self, event):
         """Handle show event with proper sizing - EXACT copy from original."""
         super().showEvent(event)
+
+        # Skip sizing updates during transitions to prevent pictograph flashing
+        if self._is_in_transition:
+            logger.debug("Skipping showEvent sizing during transition")
+            return
 
         # Ensure proper sizing when shown
         QTimer.singleShot(100, self._ensure_proper_sizing)
@@ -274,6 +287,11 @@ class StartPositionPicker(QWidget):
     def _ensure_proper_sizing(self):
         """Ensure all components are properly sized when the widget is shown."""
         try:
+            # Skip sizing updates during transitions to prevent pictograph flashing
+            if self._is_in_transition:
+                logger.debug("Skipping sizing update during transition")
+                return
+
             # Force layout update
             self.updateGeometry()
 

@@ -161,14 +161,6 @@ class OptionPictograph(QFrame):
         """Resize using OptionPickerSizeCalculator service - clean architecture."""
 
         try:
-            # Debug: Show the complete sizing chain
-            print(f"📏 [FRAME] Resizing option frame:")
-            print(
-                f"   Main window: {main_window_size.width()}x{main_window_size.height()}"
-            )
-            print(f"   Option picker width: {option_picker_width}px")
-            print(f"   Spacing: {spacing}px")
-
             # ✅ Use injected service for all sizing calculations
             dimensions = self._size_calculator.calculate_frame_dimensions(
                 main_window_size, option_picker_width, spacing
@@ -181,10 +173,6 @@ class OptionPictograph(QFrame):
             # Update frame size
             frame_size = dimensions["frame_size"]
             self.setFixedSize(frame_size, frame_size)
-
-            print(
-                f"   Final component: {component_size}x{component_size}px, frame: {frame_size}x{frame_size}px"
-            )
 
         except Exception as e:
             logger.error(f"Error resizing option view: {e}")

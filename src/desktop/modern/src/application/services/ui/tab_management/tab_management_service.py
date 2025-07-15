@@ -46,7 +46,6 @@ class TabManagementService(ITabManagementService):
         # Define available tabs
         self._available_tabs = [
             "construct",
-            "generate",
             "browse",
             "learn",
             "sequence_card",
@@ -99,7 +98,6 @@ class TabManagementService(ITabManagementService):
 
         # Get display name with emoji
         display_names = {
-            "generate": "🤖 Generate",
             "browse": "🔍 Browse",
             "learn": "🧠 Learn",
             "sequence_card": "📋 Sequence Card",

@@ -58,6 +58,11 @@ class SequenceWorkbench(ViewableComponentBase):
     sequence_modified = pyqtSignal(object)
     operation_completed = pyqtSignal(str)
     error_occurred = pyqtSignal(str)
+
+    # 3-panel system signals
+    picker_mode_requested = pyqtSignal()
+    graph_editor_requested = pyqtSignal()
+    generate_requested = pyqtSignal()
     edit_construct_toggle_requested = pyqtSignal(bool)
     clear_sequence_requested = pyqtSignal()
 
@@ -186,8 +191,16 @@ class SequenceWorkbench(ViewableComponentBase):
             self._beat_frame_section.clear_sequence_requested.connect(
                 self._handle_clear
             )
-            self._beat_frame_section.edit_construct_toggle_requested.connect(
-                self.edit_construct_toggle_requested
+
+            # Connect new 3-panel system signals
+            self._beat_frame_section.picker_mode_requested.connect(
+                self._handle_picker_mode_request
+            )
+            self._beat_frame_section.graph_editor_requested.connect(
+                self._handle_graph_editor_request
+            )
+            self._beat_frame_section.generate_requested.connect(
+                self._handle_generate_request
             )
 
     def _setup_button_interface(self):
@@ -226,6 +239,9 @@ class SequenceWorkbench(ViewableComponentBase):
         if result.changed:
             print(f"🎯 [WORKBENCH] Updating UI from state...")
             self._update_ui_from_state()
+
+            # Update button panel sequence state for smart picker button
+            self._update_button_panel_sequence_state()
 
             # Emit sequence_modified if not in restoration mode
             if not self._state_manager.should_prevent_auto_save():
@@ -272,6 +288,9 @@ class SequenceWorkbench(ViewableComponentBase):
                 self._beat_frame_section.set_start_position(
                     start_position_data, pictograph_data
                 )
+
+            # Update button panel sequence state for smart picker button
+            self._update_button_panel_sequence_state()
 
             # Emit sequence_modified if not in restoration mode
             if not self._state_manager.should_prevent_auto_save():
@@ -361,8 +380,17 @@ class SequenceWorkbench(ViewableComponentBase):
                 print(f"🧹 [WORKBENCH] Initializing cleared start position view...")
                 self._beat_frame_section.initialize_cleared_start_position()
 
+            # Update button panel state after clearing
+            self._update_button_panel_sequence_state()
+
         # Also emit the signal for any parent handlers
         self.clear_sequence_requested.emit()
+
+        # Reset button panel to picker mode
+        if self._beat_frame_section and hasattr(
+            self._beat_frame_section, "reset_to_picker_mode"
+        ):
+            self._beat_frame_section.reset_to_picker_mode()
 
     def _handle_operation_result(self, result: OperationResult):
         """Handle operation result from coordinator."""
@@ -417,6 +445,9 @@ class SequenceWorkbench(ViewableComponentBase):
         if self._beat_frame_section:
             self._beat_frame_section.set_sequence(sequence)
 
+        # Update button panel state
+        self._update_button_panel_sequence_state()
+
     def _on_beat_selected(self, beat_index: int):
         """Handle beat selection from UI."""
         # Update button states based on selection
@@ -447,6 +478,20 @@ class SequenceWorkbench(ViewableComponentBase):
         )
         self.set_sequence(sequence)
 
+    def _update_button_panel_sequence_state(self):
+        """Update button panel with current sequence state for smart picker button."""
+        if self._beat_frame_section and hasattr(
+            self._beat_frame_section, "set_sequence_state"
+        ):
+            current_sequence = self._state_manager.get_current_sequence()
+            start_position = self._state_manager.get_start_position()
+            has_sequence = current_sequence and len(current_sequence.beats) > 0
+            has_start_position = start_position is not None
+
+            self._beat_frame_section.set_sequence_state(
+                has_sequence, has_start_position
+            )
+
     # Cleanup
     def cleanup(self) -> None:
         """Clean up workbench resources."""
@@ -468,3 +513,51 @@ class SequenceWorkbench(ViewableComponentBase):
 
         except Exception as e:
             self.emit_error(f"Error during cleanup: {e}", e)
+
+    # New panel mode handlers
+    def _handle_picker_mode_request(self):
+        """Handle picker mode request with smart switching."""
+        current_sequence = self._state_manager.get_current_sequence()
+        start_position = self._state_manager.get_start_position()
+
+        # Smart switching logic
+        if not start_position:
+            print(
+                "📍 [WORKBENCH] No start position - transitioning to start position picker"
+            )
+        elif not current_sequence or len(current_sequence.beats) == 0:
+            print(
+                "⚡ [WORKBENCH] Has start position but no sequence - transitioning to option picker"
+            )
+        else:
+            print("⚡ [WORKBENCH] Has sequence - staying in option picker")
+
+        # Emit signal to parent to handle layout transition
+        self.picker_mode_requested.emit()
+
+    def _handle_graph_editor_request(self):
+        """Handle graph editor mode request."""
+        print("📊 [WORKBENCH] Graph editor mode requested")
+        self.graph_editor_requested.emit()
+
+    def _handle_generate_request(self):
+        """Handle generate controls mode request."""
+        print("🤖 [WORKBENCH] Generate controls mode requested")
+        self.generate_requested.emit()
+
+    def _handle_panel_mode_change(self, mode: str):
+        """Handle panel mode change notification."""
+        print(f"🔄 [WORKBENCH] Panel mode changed to: {mode}")
+        # Update internal state if needed
+
+        # Update button panel sequence state for smart picker button
+        if self._beat_frame_section:
+            current_sequence = self._state_manager.get_current_sequence()
+            start_position = self._state_manager.get_start_position()
+            has_sequence = current_sequence and len(current_sequence.beats) > 0
+            has_start_position = start_position is not None
+
+            if hasattr(self._beat_frame_section, "set_sequence_state"):
+                self._beat_frame_section.set_sequence_state(
+                    has_sequence, has_start_position
+                )

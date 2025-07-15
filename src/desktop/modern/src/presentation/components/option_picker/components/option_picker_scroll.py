@@ -224,13 +224,101 @@ class OptionPickerScroll(QScrollArea):
             # This allows the group to use the full available width
             self.layout.addWidget(group_widget)
 
+        # Add balanced spacing after all sections are created
+        # This creates equal spacing between header and sections, and between each section
+        print(
+            f"🔧 [INIT] Checking for header widget... hasattr: {hasattr(self, 'header_widget')}, widget: {getattr(self, 'header_widget', None)}"
+        )
+        if hasattr(self, "header_widget") and self.header_widget:
+            print("🔧 [INIT] Calling _add_balanced_spacing...")
+            self._add_balanced_spacing()
+        else:
+            print("🔧 [INIT] No header widget found, skipping balanced spacing")
+
     def add_header_label(self, header_widget: QWidget) -> None:
-        """Add a header label widget at the top of the scroll area."""
+        """Add a header label widget at the top of the scroll area with balanced spacing."""
+        # Store the header widget for later use in layout balancing
+        self.header_widget = header_widget
+
         # Insert the header at the very top of the layout
         self.layout.insertWidget(0, header_widget)
-        
-        # Add stretch after header to push sections down
-        self.layout.insertStretch(1)
+
+        # Don't add initial stretch here - let _add_balanced_spacing handle all stretches
+
+        # Call balanced spacing now that we have the header
+        print("🔧 [HEADER] Header added, calling _add_balanced_spacing...")
+        self._add_balanced_spacing()
+
+    def _add_balanced_spacing(self):
+        """Add balanced spacing between header-section pairs."""
+        # Create spacing between header-section PAIRS, not individual elements
+        # Each header should hug its section, with equal spacing between the pairs
+        print("🔧 [SPACING] Setting up header-section pair spacing...")
+
+        # Step 1: Remove all existing stretches
+        items_to_remove = []
+        for i in range(self.layout.count()):
+            item = self.layout.itemAt(i)
+            if item and item.spacerItem():
+                items_to_remove.append(item)
+
+        print(f"🔧 [SPACING] Removing {len(items_to_remove)} existing stretches...")
+        for item in items_to_remove:
+            self.layout.removeItem(item)
+
+        # Step 2: Identify all widgets in layout order
+        all_widgets = []
+        for i in range(self.layout.count()):
+            item = self.layout.itemAt(i)
+            if item and item.widget():
+                all_widgets.append((i, item.widget()))
+
+        print(f"🔧 [SPACING] Found {len(all_widgets)} total widgets in layout")
+
+        # Step 3: Find the last widget in each header-section pair
+        # This is where we'll add stretches to separate the pairs
+        pair_end_indices = []
+
+        for i, (index, widget) in enumerate(all_widgets):
+            # Skip the main header
+            if widget == self.header_widget:
+                continue
+
+            # Check if this is a section widget (end of a pair)
+            if (
+                hasattr(widget, "letter_type")
+                or "OptionPickerGroupWidget" in str(type(widget))
+                or "OptionPickerSection" in str(type(widget))
+            ):
+                pair_end_indices.append(index)
+
+        print(
+            f"🔧 [SPACING] Found {len(pair_end_indices)} header-section pairs ending at indices: {pair_end_indices}"
+        )
+
+        # Step 4: Add stretches after each pair (work backwards to preserve indices)
+        for pair_end_index in reversed(pair_end_indices):
+            self.layout.insertStretch(pair_end_index + 1)
+            print(
+                f"🔧 [SPACING] Added stretch after pair ending at index {pair_end_index}"
+            )
+
+        # Step 5: Add initial stretch after main header to push first pair down
+        header_index = -1
+        for i, (index, widget) in enumerate(all_widgets):
+            if widget == self.header_widget:
+                header_index = index
+                break
+
+        if header_index >= 0:
+            self.layout.insertStretch(header_index + 1)
+            print(
+                f"🔧 [SPACING] Added initial stretch after main header at index {header_index}"
+            )
+
+        print(
+            f"🔧 [SPACING] Header-section pair spacing complete! Final layout count: {self.layout.count()}"
+        )
 
     def clear_all_sections(self):
         """Clear all pictographs from all sections - Qt widget management."""

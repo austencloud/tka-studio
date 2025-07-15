@@ -5,28 +5,28 @@ These components provide clean, modern UI controls for sequence generation
 parameters, following Modern's architecture patterns.
 """
 
+from typing import Optional, Set
+
+from core.interfaces.generation_services import (
+    CAPType,
+    GenerationMode,
+    LetterType,
+    PropContinuity,
+    SliceSize,
+)
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QButtonGroup,
+    QCheckBox,
+    QComboBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QSlider,
     QSpinBox,
-    QButtonGroup,
-    QCheckBox,
-    QComboBox,
-)
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtGui import QFont
-from typing import Set, Optional
-
-from ....core.interfaces.generation_services import (
-    GenerationMode,
-    PropContinuity,
-    LetterType,
-    SliceSize,
-    CAPType,
+    QVBoxLayout,
+    QWidget,
 )
 
 
