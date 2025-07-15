@@ -45,6 +45,7 @@ class OptionPicker(ViewableComponentBase):
 
         # Component-specific properties
         self.progress_callback = progress_callback
+        self._is_preparing_for_transition = False
 
         # Create option picker widget directly
         self.option_picker_widget = OptionPickerWidget(
@@ -98,6 +99,22 @@ class OptionPicker(ViewableComponentBase):
         if self._initialized and self.option_picker_widget:
             # Simplified - just show the widget
             self._widget.show()
+
+    def prepare_for_transition(self) -> None:
+        """Prepare option picker for widget transition by pre-loading content without fades."""
+        self._is_preparing_for_transition = True
+        try:
+            # Pre-load content without fade animations
+            if self.option_picker_widget and hasattr(
+                self.option_picker_widget, "prepare_content_for_transition"
+            ):
+                self.option_picker_widget.prepare_content_for_transition()
+        finally:
+            self._is_preparing_for_transition = False
+
+    def is_preparing_for_transition(self) -> bool:
+        """Check if option picker is currently preparing for a widget transition."""
+        return self._is_preparing_for_transition
 
     def get_widget(self) -> QWidget:
         """Get the main widget for this component."""

@@ -14,14 +14,12 @@ from typing import Callable, Optional
 
 # Services are resolved via DI container - no direct imports needed
 from core.dependency_injection.di_container import DIContainer
-from presentation.components.option_picker.components.choose_your_next_option_label import (
-    ChooseYourNextOptionLabel,
-)
 from presentation.components.option_picker.components.option_picker_scroll import (
     OptionPickerScroll,
 )
-from PyQt6.QtCore import QSize, pyqtSignal
-from PyQt6.QtWidgets import QVBoxLayout, QWidget
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
 class OptionPickerWidget(QWidget):
@@ -48,11 +46,6 @@ class OptionPickerWidget(QWidget):
         self.progress_callback = progress_callback
         self.container = container
 
-        # ✅ Create the "Choose your next option" label (matching legacy)
-        self.choose_next_label = ChooseYourNextOptionLabel(
-            size_provider=self.mw_size_provider, parent=self
-        )
-
         # ✅ Use DI container to create OptionPickerScroll with injected services
         if not container:
             raise ValueError(
@@ -77,18 +70,71 @@ class OptionPickerWidget(QWidget):
             self.pictograph_selected.emit
         )
 
-        # ✅ Setup Qt layout with label and scroll area
+        # ✅ Add the label to the scroll area at the top
+        self.option_picker_scroll.add_header_label(self._create_option_label())
+
+        # ✅ Setup Qt layout with just the scroll area
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(5)  # Small spacing between label and scroll area
-        
-        # Add the label first, then the scroll area
-        layout.addWidget(self.choose_next_label)
+        layout.setSpacing(0)  # No spacing needed since label is inside scroll area
+
+        # Add only the scroll area
         layout.addWidget(self.option_picker_scroll)
 
         # Report progress
         if self.progress_callback:
             self.progress_callback("Option picker initialized", 1.0)
+
+    def _create_option_label(self) -> QWidget:
+        """Create the option label with start position picker styling."""
+        # Create title section with same styling as start position picker
+        title_section = QWidget()
+        title_layout = QVBoxLayout(title_section)
+        title_layout.setSpacing(8)
+        title_layout.setContentsMargins(16, 16, 16, 16)
+
+        # Title
+        title_label = QLabel("Choose Your Next Option")
+        title_label.setFont(QFont("Monotype Corsiva", 24, QFont.Weight.Bold))
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setObjectName("UnifiedTitle")
+        title_layout.addWidget(title_label)
+
+        # Subtitle
+        subtitle_label = QLabel("Select an option to continue building your sequence")
+        subtitle_label.setFont(QFont("Monotype Corsiva", 14))
+        subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        subtitle_label.setObjectName("UnifiedSubtitle")
+        title_layout.addWidget(subtitle_label)
+
+        title_section.setObjectName("TitleSection")
+        
+        # Apply the same styling as start position picker
+        title_section.setStyleSheet(self._get_label_styles())
+        
+        return title_section
+
+    def _get_label_styles(self) -> str:
+        """Get label styling matching start position picker."""
+        return """
+            QWidget#TitleSection {
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 16px;
+            }
+            
+            QLabel#UnifiedTitle {
+                color: black;
+                background: transparent;
+                font-weight: 700;
+            }
+            
+            QLabel#UnifiedSubtitle {
+                color: black;
+                background: transparent;
+                font-weight: 400;
+            }
+        """
 
     def refresh_options(self) -> None:
         """Refresh options - clear all sections."""
@@ -110,6 +156,11 @@ class OptionPickerWidget(QWidget):
         """Refresh from sequence data."""
         self.option_picker_scroll.load_options_from_sequence(sequence)
 
+    def prepare_content_for_transition(self) -> None:
+        """Prepare content for widget transition by loading without fade animations."""
+        if hasattr(self.option_picker_scroll, "prepare_for_transition"):
+            self.option_picker_scroll.prepare_for_transition()
+
     def initialize(self) -> None:
         """Initialize - already done in constructor."""
         pass
@@ -118,10 +169,6 @@ class OptionPickerWidget(QWidget):
         """Cleanup resources."""
         if hasattr(self, "option_picker_scroll") and self.option_picker_scroll:
             self.option_picker_scroll.clear_all_sections()
-        
-        # Clean up the label
-        if hasattr(self, "choose_next_label") and self.choose_next_label:
-            self.choose_next_label.setParent(None)
 
     def get_service_status(self) -> dict:
         """Get status of injected services (for debugging)."""

@@ -65,6 +65,18 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
 
     def _register_animation_services(self, container: "DIContainer") -> None:
         """Register modern animation services for option picker fade transitions."""
+        # Check if already registered to prevent duplicate registration
+        from core.interfaces.animation_core_interfaces import IAnimationOrchestrator
+
+        try:
+            container.resolve(IAnimationOrchestrator)
+            # Already registered, skip
+            self._mark_service_available("ModernAnimationServices")
+            return
+        except:
+            # Not registered yet, proceed
+            pass
+
         try:
             from application.services.ui.animation.modern_service_registration import (
                 setup_modern_animation_services,

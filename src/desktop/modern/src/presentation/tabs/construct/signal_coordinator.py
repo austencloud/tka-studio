@@ -139,13 +139,16 @@ class SignalCoordinator(QObject):
     def _handle_start_position_created(
         self, position_key: str, start_position_beat_data: BeatData
     ):
-        """Handle start position creation"""
+        """Handle start position creation with pre-loaded transition"""
 
         self.start_position_manager.set_start_position(start_position_beat_data)
 
+        # Pre-load option picker content before transition to avoid redundant fades
         self.option_picker_manager.populate_from_start_position(
             position_key, start_position_beat_data
         )
+
+        # Transition to option picker with content already loaded
         self.layout_manager.transition_to_option_picker()
         self.start_position_set.emit(position_key)
 
@@ -183,10 +186,10 @@ class SignalCoordinator(QObject):
 
         if start_position_set or has_beats:
 
+            # Pre-load option picker content before transition
+            self.option_picker_manager.refresh_from_sequence(sequence)
             # Ensure we're showing the option picker when start position is set OR beats exist
             self.layout_manager.transition_to_option_picker()
-            # Refresh option picker based on sequence state
-            self.option_picker_manager.refresh_from_sequence(sequence)
         else:
 
             self.layout_manager.transition_to_start_position_picker()

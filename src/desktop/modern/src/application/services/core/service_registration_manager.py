@@ -141,6 +141,7 @@ class ServiceRegistrationCoordinator:
     def _initialize_registrars(self) -> None:
         """Initialize all specialized registrars in dependency order."""
         from .registrars import (
+            AnimationServiceRegistrar,
             CoreServiceRegistrar,
             DataServiceRegistrar,
             EventSystemRegistrar,
@@ -174,6 +175,7 @@ class ServiceRegistrationCoordinator:
             # Phase 4: Optional services
             EventSystemRegistrar(self.progress_callback),
             GraphEditorServiceRegistrar(self.progress_callback),
+            AnimationServiceRegistrar(self.progress_callback),
         ]
 
     def register_all_services(self, container: "DIContainer") -> None:

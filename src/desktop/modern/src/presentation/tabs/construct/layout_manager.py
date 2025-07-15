@@ -8,14 +8,28 @@ Responsible for creating the main layout structure and organizing UI components.
 from typing import TYPE_CHECKING, Callable, Optional
 
 from core.dependency_injection.di_container import DIContainer
+from core.interfaces.animation_core_interfaces import IAnimationOrchestrator
 from presentation.components.option_picker.components.option_picker import OptionPicker
 from presentation.components.start_position_picker.start_position_picker import (
     PickerMode,
     StartPositionPicker,
 )
 from presentation.factories.workbench_factory import create_modern_workbench
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QHBoxLayout, QLabel, QStackedWidget, QVBoxLayout, QWidget
+from PyQt6.QtCore import (
+    QEasingCurve,
+    QParallelAnimationGroup,
+    QPropertyAnimation,
+    Qt,
+    QTimer,
+)
+from PyQt6.QtWidgets import (
+    QGraphicsOpacityEffect,
+    QHBoxLayout,
+    QLabel,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 if TYPE_CHECKING:
     from presentation.components.sequence_workbench.sequence_beat_frame.sequence_beat_frame import (
@@ -45,6 +59,15 @@ class ConstructTabLayoutManager:
         self.picker_stack = None
         self.start_position_picker = None
         self.option_picker = None
+
+        # Animation system for smooth widget transitions
+        try:
+            self.animation_orchestrator = container.resolve(IAnimationOrchestrator)
+        except Exception:
+            self.animation_orchestrator = None
+
+        # Transition state tracking
+        self._is_transitioning = False
 
     def setup_ui(self, parent_widget: QWidget) -> None:
         if self.progress_callback:
@@ -119,7 +142,7 @@ class ConstructTabLayoutManager:
     def _create_start_position_widget(self) -> QWidget:
         widget = QWidget()
         layout = QVBoxLayout(widget)
-        
+
         # Get only the 4 services we actually need
         from application.services.pictograph_pool_manager import PictographPoolManager
         from core.interfaces.start_position_services import (
@@ -142,7 +165,7 @@ class ConstructTabLayoutManager:
             orchestrator=orchestrator,
             initial_mode=PickerMode.AUTO,  # Start in auto mode for responsive behavior
         )
-        
+
         layout.addWidget(self.start_position_picker)
         return widget
 
@@ -209,16 +232,182 @@ class ConstructTabLayoutManager:
         return widget
 
     def transition_to_option_picker(self):
-        if self.picker_stack:
-            self.picker_stack.setCurrentIndex(1)
+        """Transition to option picker with smooth fade animation."""
+        if self.picker_stack and not self._is_transitioning:
+            self._start_fade_to_option_picker()
 
     def transition_to_start_position_picker(self):
-        if self.picker_stack:
-            self.picker_stack.setCurrentIndex(0)
+        """Transition to start position picker with smooth fade animation."""
+        if self.picker_stack and not self._is_transitioning:
+            self._start_fade_to_start_position_picker()
 
     def transition_to_graph_editor(self):
-        if self.picker_stack:
-            self.picker_stack.setCurrentIndex(2)
+        """Transition to graph editor with smooth fade animation."""
+        if self.picker_stack and not self._is_transitioning:
+            self._start_fade_to_graph_editor()
+
+    def _start_fade_to_option_picker(self):
+        """Start smooth fade transition to option picker."""
+        if self.picker_stack.currentIndex() == 1:
+            return  # Already showing option picker
+
+        self._is_transitioning = True
+
+        # Pre-load option picker content while hidden to avoid redundant fades
+        if self.option_picker and hasattr(self.option_picker, "prepare_for_transition"):
+            self.option_picker.prepare_for_transition()
+
+        print("🎬 Starting Qt-based fade transition to option picker...")
+
+        # Use the same Qt animation pattern as option picker sections
+        self._fade_stack_transition(1, "option picker")
+
+    def _start_fade_to_start_position_picker(self):
+        """Start smooth fade transition to start position picker."""
+        if self.picker_stack.currentIndex() == 0:
+            return  # Already showing start position picker
+
+        self._is_transitioning = True
+        print("🎬 Starting Qt-based fade transition to start position picker...")
+
+        # Use the same Qt animation pattern as option picker sections
+        self._fade_stack_transition(0, "start position picker")
+
+    def _start_fade_to_graph_editor(self):
+        """Start smooth fade transition to graph editor."""
+        if self.picker_stack.currentIndex() == 2:
+            return  # Already showing graph editor
+
+        self._is_transitioning = True
+        print("🎬 Starting Qt-based fade transition to graph editor...")
+
+        # Use the same Qt animation pattern as option picker sections
+        self._fade_stack_transition(2, "graph editor")
+
+    def _fade_stack_transition(self, new_index: int, target_name: str):
+        """
+        Perform proper stack widget fade transition based on legacy implementation.
+        Uses QPropertyAnimation with QGraphicsOpacityEffect like the legacy StackFader.
+        """
+        try:
+            current_widget = self.picker_stack.currentWidget()
+            next_widget = self.picker_stack.widget(new_index)
+
+            # Clear any existing graphics effects first (like legacy)
+            self._clear_graphics_effects([current_widget, next_widget])
+
+            if (
+                not current_widget
+                or not next_widget
+                or self.picker_stack.currentIndex() == new_index
+            ):
+                print(
+                    f"🎭 [FADE] Skipping transition to {target_name} - invalid widgets or already current"
+                )
+                self._reset_transition_state()
+                return
+
+            print(f"🎭 [FADE] Starting proper fade transition to {target_name}")
+
+            # Create fade out animation for current widget
+            def on_fade_out_finished():
+                print(f"🎭 [FADE] Fade out complete, switching to {target_name}")
+
+                # Clear effects and switch stack (like legacy)
+                self._clear_graphics_effects([current_widget, next_widget])
+                self.picker_stack.setCurrentIndex(new_index)
+
+                # Start fade in animation for next widget
+                self._fade_in_widget(next_widget, target_name)
+
+            # Start fade out animation
+            self._fade_out_widget(current_widget, on_fade_out_finished)
+
+        except Exception as e:
+            print(f"❌ [FADE] Stack transition failed for {target_name}: {e}")
+            self._fallback_transition(new_index, target_name)
+
+    def _fade_out_widget(self, widget, callback):
+        """Fade out a widget using QPropertyAnimation (legacy pattern)."""
+        try:
+            effect = self._ensure_opacity_effect(widget)
+            effect.setOpacity(1.0)  # Ensure it starts visible
+
+            animation = QPropertyAnimation(effect, b"opacity")
+            animation.setDuration(200)  # Match legacy timing
+            animation.setStartValue(1.0)
+            animation.setEndValue(0.0)
+            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)  # Match legacy easing
+
+            # Store reference to prevent garbage collection
+            self._current_animation = animation
+
+            animation.finished.connect(callback)
+            animation.start()
+
+        except Exception as e:
+            print(f"❌ [FADE] Fade out animation failed: {e}")
+            callback()
+
+    def _fade_in_widget(self, widget, target_name: str):
+        """Fade in a widget using QPropertyAnimation (legacy pattern)."""
+        try:
+            effect = self._ensure_opacity_effect(widget)
+            effect.setOpacity(0.0)  # Start invisible
+
+            animation = QPropertyAnimation(effect, b"opacity")
+            animation.setDuration(200)  # Match legacy timing
+            animation.setStartValue(0.0)
+            animation.setEndValue(1.0)
+            animation.setEasingCurve(QEasingCurve.Type.InOutQuad)  # Match legacy easing
+
+            def on_fade_in_complete():
+                print(f"✅ [FADE] Fade transition completed to {target_name}")
+                # Clear graphics effects after animation (like legacy)
+                self._clear_graphics_effects([widget])
+                self._reset_transition_state()
+
+            # Store reference to prevent garbage collection
+            self._current_animation = animation
+
+            animation.finished.connect(on_fade_in_complete)
+            animation.start()
+
+        except Exception as e:
+            print(f"❌ [FADE] Fade in animation failed for {target_name}: {e}")
+            # Clear effects even on failure
+            self._clear_graphics_effects([widget])
+            self._reset_transition_state()
+
+    def _ensure_opacity_effect(self, widget) -> QGraphicsOpacityEffect:
+        """Ensure widget has an opacity effect (legacy pattern)."""
+        effect = widget.graphicsEffect()
+        if effect and isinstance(effect, QGraphicsOpacityEffect):
+            return effect
+
+        effect = QGraphicsOpacityEffect(widget)
+        widget.setGraphicsEffect(effect)
+        return effect
+
+    def _clear_graphics_effects(self, widgets):
+        """Clear graphics effects from widgets (legacy pattern)."""
+        for widget in widgets:
+            if widget and hasattr(widget, "setGraphicsEffect"):
+                try:
+                    widget.setGraphicsEffect(None)
+                except (RuntimeError, AttributeError):
+                    pass  # Silently ignore already-deleted widgets
+
+    def _fallback_transition(self, new_index: int, target_name: str):
+        """Fallback to direct transition if animations fail."""
+        print(f"🔄 [FALLBACK] Using direct transition to {target_name}")
+        self.picker_stack.setCurrentIndex(new_index)
+        print(f"✅ [FALLBACK] Direct transition completed to {target_name}")
+        QTimer.singleShot(250, self._reset_transition_state)
+
+    def _reset_transition_state(self):
+        """Reset the transition state."""
+        self._is_transitioning = False
 
     def _connect_beat_frame_to_graph_editor(self):
         if not self.workbench or not self.graph_editor:

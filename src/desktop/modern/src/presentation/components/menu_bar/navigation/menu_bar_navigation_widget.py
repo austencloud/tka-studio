@@ -145,10 +145,13 @@ class MenuBarNavigationWidget(QWidget):
         font = QFont("Segoe UI", font_size, QFont.Weight.Medium)
 
         # Update all buttons
-        for button in self.tab_buttons.values():
-            button.setFixedSize(button_width, button_height)
-            button.setFont(font)
-            button.update_appearance()
+        try:
+            for button in self.tab_buttons.values():
+                button.setFixedSize(button_width, button_height)
+                button.setFont(font)
+                button.update_appearance()
+        except Exception as e:
+            print(f"Error updating button appearance: {e}")
 
         # Update spacing
         spacing = max(5, available_size.width() // 200)

@@ -77,6 +77,7 @@ class OptionPickerScroll(QScrollArea):
         # Qt widget management - presentation layer responsibility
         self._widget_pool: Dict[int, OptionPictograph] = {}
         self._loading_options = False
+        self._is_preparing_for_transition = False
 
         # UI setup
         self._setup_layout()
@@ -223,6 +224,14 @@ class OptionPickerScroll(QScrollArea):
             # This allows the group to use the full available width
             self.layout.addWidget(group_widget)
 
+    def add_header_label(self, header_widget: QWidget) -> None:
+        """Add a header label widget at the top of the scroll area."""
+        # Insert the header at the very top of the layout
+        self.layout.insertWidget(0, header_widget)
+        
+        # Add stretch after header to push sections down
+        self.layout.insertStretch(1)
+
     def clear_all_sections(self):
         """Clear all pictographs from all sections - Qt widget management."""
         for section in self.sections.values():
@@ -294,6 +303,18 @@ class OptionPickerScroll(QScrollArea):
         delay = self._option_config_service.get_debounce_delay()
         self._refresh_timer.start(delay)
 
+    def prepare_for_transition(self) -> None:
+        """Prepare content for widget transition by loading without fade animations."""
+        self._is_preparing_for_transition = True
+        try:
+            # If we have pending sequence data, load it directly without fades
+            if self._pending_sequence_data:
+                sequence_data = self._pending_sequence_data
+                self._pending_sequence_data = None
+                self._update_all_sections_directly(sequence_data)
+        finally:
+            self._is_preparing_for_transition = False
+
     def _perform_refresh(self) -> None:
         """Perform refresh with whole-picker fade transition (legacy approach)."""
         if self._pending_sequence_data is None:
@@ -305,6 +326,11 @@ class OptionPickerScroll(QScrollArea):
         try:
             # ✅ Set UI loading state
             self._set_loading_state(True)
+
+            # Skip fade animations if preparing for widget transition
+            if self._is_preparing_for_transition:
+                self._update_all_sections_directly(sequence_data)
+                return
 
             # Check if we have existing content to fade
             existing_sections = [

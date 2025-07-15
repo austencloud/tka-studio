@@ -16,6 +16,7 @@ Registrars:
 - WorkbenchServiceRegistrar: Workbench business and presentation services
 """
 
+from .animation_service_registrar import AnimationServiceRegistrar
 from .core_service_registrar import CoreServiceRegistrar
 from .data_service_registrar import DataServiceRegistrar
 from .event_system_registrar import EventSystemRegistrar
@@ -25,10 +26,11 @@ from .option_picker_service_registrar import OptionPickerServiceRegistrar
 from .pictograph_service_registrar import PictographServiceRegistrar
 from .positioning_service_registrar import PositioningServiceRegistrar
 from .sequence_service_registrar import SequenceServiceRegistrar
-from .workbench_service_registrar import WorkbenchServiceRegistrar
 from .start_position_service_registrar import StartPositionServiceRegistrar
+from .workbench_service_registrar import WorkbenchServiceRegistrar
 
 __all__ = [
+    "AnimationServiceRegistrar",
     "MotionServiceRegistrar",
     "GraphEditorServiceRegistrar",
     "DataServiceRegistrar",
