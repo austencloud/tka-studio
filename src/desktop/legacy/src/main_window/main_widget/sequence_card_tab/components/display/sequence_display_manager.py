@@ -30,7 +30,7 @@ class DisplayConfig:
 
 
 if TYPE_CHECKING:
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class SequenceDisplayManager:

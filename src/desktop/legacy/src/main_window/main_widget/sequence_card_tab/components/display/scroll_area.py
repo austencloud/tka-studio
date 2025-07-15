@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QWheelEvent
 
 if TYPE_CHECKING:
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class SequenceCardScrollArea(QScrollArea):

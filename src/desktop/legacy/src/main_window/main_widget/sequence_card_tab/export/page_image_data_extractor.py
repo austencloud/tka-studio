@@ -8,7 +8,7 @@ from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from utils.path_helpers import get_sequence_card_image_exporter_path
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class PageImageDataExtractor:

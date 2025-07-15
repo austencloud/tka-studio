@@ -12,7 +12,9 @@ from utils.path_helpers import (
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+    from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
+        SequenceCardTab,
+    )
 
 
 class SequenceCardResourceManager:

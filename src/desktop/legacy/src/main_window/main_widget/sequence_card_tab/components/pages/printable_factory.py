@@ -6,7 +6,7 @@ from PyQt6.QtCore import Qt, QSize
 from .printable_layout import PrintablePageLayout, PaperSize, PaperOrientation
 
 if TYPE_CHECKING:
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class PrintablePageFactory:

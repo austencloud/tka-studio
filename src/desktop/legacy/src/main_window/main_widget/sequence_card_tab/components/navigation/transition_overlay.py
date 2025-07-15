@@ -7,7 +7,9 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QTimer
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+    from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
+        SequenceCardTab,
+    )
 
 
 class TransitionOverlay(QLabel):

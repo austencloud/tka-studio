@@ -171,21 +171,11 @@ class UISetupManager(IUISetupManager):
 
             # Step 3: Create widget with progress callback (84-90%)
             if progress_callback:
-                progress_callback(84, "Creating construct tab widget...")
+                progress_callback(84, "🔧 Creating construct tab widget...")
 
-            # Create internal progress callback with enhanced feedback
-            def internal_progress_callback(step: str, progress: float):
-                if progress_callback:
-                    # Map internal progress (0.0-1.0) to our range (84-90%)
-                    mapped_progress = 84 + (progress * 6)  # 6% range for internal steps
-                    progress_callback(int(mapped_progress), f"🔧 {step}")
-
-            if progress_callback:
-                progress_callback(86, "Initializing UI components...")
-
-            # Create construct tab
+            # Create construct tab with direct progress callback
             construct_tab = ConstructTabWidget(
-                container, progress_callback=internal_progress_callback
+                container, progress_callback=progress_callback
             )
 
             # CRITICAL: Connect construct tab to session service for auto-save

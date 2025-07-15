@@ -9,7 +9,7 @@ from .sidebar_styler import SidebarStyler
 from .transition_overlay import TransitionOverlay
 
 if TYPE_CHECKING:
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class SequenceCardNavSidebar(QWidget):

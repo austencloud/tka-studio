@@ -49,25 +49,34 @@ class MenuBarWidget(QWidget):
         self.main_container = QWidget()
         main_layout.addWidget(self.main_container)
 
-        # Container layout - horizontal to hold navigation and settings side by side
+        # Container layout - horizontal with proper spacing management
         container_layout = QHBoxLayout(self.main_container)
         container_layout.setContentsMargins(10, 5, 10, 5)
         container_layout.setSpacing(0)
 
-        # Navigation section
+        # Left spacer to push navigation towards center
+        container_layout.addStretch()
+
+        # Navigation section - centered
         self.navigation_widget = MenuBarNavigationWidget(
             parent=self.main_container, size_provider=self._size_provider
         )
         container_layout.addWidget(self.navigation_widget)
 
-        # Settings button - positioned on the right
+        # Right spacer to balance the layout
+        container_layout.addStretch()
+
+        # Settings button - positioned absolutely on the right
         self.settings_button = StyledButton(
             label="⚙️ Settings",
             context=ButtonContext.SETTINGS,
             parent=self.main_container,
         )
         self.settings_button.clicked.connect(lambda: self.settings_requested.emit())
-        container_layout.addWidget(self.settings_button)
+        self.settings_button.show()  # Make sure it's visible
+
+        # Position settings button absolutely on the right
+        # This will be handled in the resize event
 
         # Style the main container with more transparency to show background
         self.main_container.setStyleSheet(
@@ -80,6 +89,9 @@ class MenuBarWidget(QWidget):
         """
         )
         self.main_container.setFixedHeight(60)
+
+        # Initial positioning of settings button
+        self._position_settings_button()
 
     def _setup_styling(self):
         """Apply styling to the menu bar."""
@@ -113,22 +125,42 @@ class MenuBarWidget(QWidget):
         """Update size provider for responsive design."""
         self._size_provider = size_provider
         self.navigation_widget.update_size_provider(size_provider)
+        self._position_settings_button()
+
+    def _position_settings_button(self):
+        """Position the settings button absolutely on the right side."""
+        if not hasattr(self, "settings_button") or not self.main_container.width():
+            return
+
+        # Update button sizing first
+        available_size = self._size_provider()
+        font_size = max(9, min(12, available_size.width() // 120))
+
+        from PyQt6.QtGui import QFont
+
+        font = QFont("Segoe UI", font_size, QFont.Weight.Medium)
+        self.settings_button.setFont(font)
+        self.settings_button.update_appearance()
+
+        # Set a reasonable fixed width for the settings button
+        settings_width = max(100, min(140, available_size.width() // 10))
+        self.settings_button.setFixedSize(settings_width, 40)
+
+        # Position settings button absolutely on the right side
+        container_width = self.main_container.width()
+        container_height = self.main_container.height()
+        button_width = self.settings_button.width()
+        button_height = self.settings_button.height()
+
+        # Position with some margin from the right edge
+        margin = 10
+        x_pos = container_width - button_width - margin
+        y_pos = (container_height - button_height) // 2  # Center vertically
+
+        self.settings_button.move(x_pos, y_pos)
+        self.settings_button.raise_()  # Ensure it's on top
 
     def resizeEvent(self, event):
         """Handle resize events."""
         super().resizeEvent(event)
-
-        # Update button sizing in settings button
-        if hasattr(self, "settings_button"):
-            available_size = self._size_provider()
-            font_size = max(9, min(12, available_size.width() // 120))
-
-            from PyQt6.QtGui import QFont
-
-            font = QFont("Segoe UI", font_size, QFont.Weight.Medium)
-            self.settings_button.setFont(font)
-            self.settings_button.update_appearance()
-
-            # Set a reasonable fixed width for the settings button
-            settings_width = max(100, min(140, available_size.width() // 10))
-            self.settings_button.setFixedSize(settings_width, 40)
+        self._position_settings_button()

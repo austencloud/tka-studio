@@ -37,9 +37,11 @@ class PictographPoolManager:
         self._lock = threading.Lock()
         self._initialized = False
         self._dummy_parent = None  # Will hold dummy parent widget
+        self._progress_callback = None  # Progress callback for initialization
 
-    def initialize_pool(self) -> None:
+    def initialize_pool(self, progress_callback=None) -> None:
         """Initialize the pictograph pool with pre-created components (public method)."""
+        self._progress_callback = progress_callback
         with self._lock:
             self._initialize_pool_internal()
 
@@ -56,6 +58,10 @@ class PictographPoolManager:
         import time
 
         start_time = time.perf_counter()
+
+        # Report initialization start
+        if self._progress_callback:
+            self._progress_callback(57, "Creating pictograph pool...")
 
         # Create a dummy parent widget to prevent components from becoming top-level windows
         from PyQt6.QtWidgets import QWidget
@@ -79,9 +85,20 @@ class PictographPoolManager:
                 component.setWindowFlags(Qt.WindowType.Widget)
                 self._pool.put(component)
 
-                if i % 10 == 0:  # Log progress every 10 components
+                # Enhanced progress reporting every 5 components for smoother feedback
+                if i % 5 == 0 or i == self._pool_size - 1:
+                    progress_percent = int(
+                        57 + (i + 1) / self._pool_size * 2
+                    )  # 57-59% range
+                    components_created = i + 1
+                    if self._progress_callback:
+                        self._progress_callback(
+                            progress_percent,
+                            f"Created {components_created}/{self._pool_size} components",
+                        )
+
                     logger.debug(
-                        f"🏊 [POOL] Created {i+1}/{self._pool_size} components"
+                        f"🏊 [POOL] Created {components_created}/{self._pool_size} components"
                     )
 
             except Exception as e:
@@ -91,6 +108,11 @@ class PictographPoolManager:
         self._dummy_parent = dummy_parent
 
         init_time = (time.perf_counter() - start_time) * 1000
+
+        # Report completion
+        if self._progress_callback:
+            self._progress_callback(59, "Pictograph pool ready")
+
         logger.info(
             f"✅ [POOL] Pool initialized in {init_time:.1f}ms with {self._pool.qsize()} components"
         )

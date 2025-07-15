@@ -12,7 +12,7 @@ from .export_grid_calculator import ExportGridCalculator
 from .export_page_renderer import ExportPageRenderer
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class SequenceCardPageExporter:

@@ -10,6 +10,9 @@ from typing import TYPE_CHECKING, Callable, Optional
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.animation_core_interfaces import IAnimationOrchestrator
 from presentation.components.option_picker.components.option_picker import OptionPicker
+from presentation.components.right_panel_tabs.right_panel_tab_widget import (
+    RightPanelTabWidget,
+)
 from presentation.components.start_position_picker.start_position_picker import (
     PickerMode,
     StartPositionPicker,
@@ -57,6 +60,7 @@ class ConstructTabLayoutManager:
         self.progress_callback = progress_callback
         self.workbench = None
         self.picker_stack = None
+        self.tab_widget = None  # Tab navigation widget
         self.start_position_picker = None
         self.option_picker = None
 
@@ -71,20 +75,20 @@ class ConstructTabLayoutManager:
 
     def setup_ui(self, parent_widget: QWidget) -> None:
         if self.progress_callback:
-            self.progress_callback("Setting up construct tab layout...", 0.1)
+            self.progress_callback(86, "Setting up layout...")
 
         main_layout = QHBoxLayout(parent_widget)
         main_layout.setSpacing(8)  # Reduced spacing for more width
         main_layout.setContentsMargins(4, 4, 4, 4)  # Minimal margins for more width
 
         if self.progress_callback:
-            self.progress_callback("Creating sequence workbench panel...", 0.2)
+            self.progress_callback(86, "Creating workbench...")
 
         workbench_panel = self._create_workbench_panel()
         main_layout.addWidget(workbench_panel, 1)
 
         if self.progress_callback:
-            self.progress_callback("Creating option picker panel...", 0.5)
+            self.progress_callback(87, "Creating option picker...")
 
         picker_panel = self._create_picker_panel_with_progress()
         main_layout.addWidget(picker_panel, 1)
@@ -92,7 +96,7 @@ class ConstructTabLayoutManager:
         self._connect_beat_frame_to_graph_editor()
 
         if self.progress_callback:
-            self.progress_callback("Construct tab layout complete!", 1.0)
+            self.progress_callback(89, "Layout complete")
 
     def _create_workbench_panel(self) -> QWidget:
         panel = QWidget()
@@ -105,44 +109,53 @@ class ConstructTabLayoutManager:
 
     def _create_picker_panel_with_progress(self) -> QWidget:
         if self.progress_callback:
-            self.progress_callback("Creating picker panel layout...", 0.6)
+            self.progress_callback(87, "Creating picker panel...")
 
         panel = QWidget()
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(0, 0, 0, 0)  # No margins for maximum width
-        layout.setSpacing(4)  # Reduced spacing
+        layout.setSpacing(0)  # No spacing for clean tab integration
+
+        # Create tab navigation widget at the top
+        self.tab_widget = RightPanelTabWidget()
+        layout.addWidget(self.tab_widget)
 
         self.picker_stack = QStackedWidget()
 
         if self.progress_callback:
-            self.progress_callback("Initializing start position picker...", 0.7)
+            self.progress_callback(87, "Loading start positions...")
 
         start_pos_widget = self._create_start_position_widget()
         self.picker_stack.addWidget(start_pos_widget)
 
         if self.progress_callback:
-            self.progress_callback("Loading option picker dataset...", 0.8)
+            self.progress_callback(88, "Loading option picker...")
 
         option_widget = self._create_option_picker_widget_with_progress()
         self.picker_stack.addWidget(option_widget)
 
         if self.progress_callback:
-            self.progress_callback("Creating graph editor widget...", 0.85)
+            self.progress_callback(88, "Creating graph editor...")
 
         graph_editor_widget = self._create_graph_editor_widget()
         self.picker_stack.addWidget(graph_editor_widget)
 
         if self.progress_callback:
-            self.progress_callback("Creating generate controls widget...", 0.9)
+            self.progress_callback(89, "Creating generate controls...")
 
         generate_widget = self._create_generate_controls_widget()
         self.picker_stack.addWidget(generate_widget)
 
         if self.progress_callback:
-            self.progress_callback("Configuring picker transitions...", 0.95)
+            self.progress_callback(89, "Configuring transitions...")
 
         self.picker_stack.setCurrentIndex(0)
         layout.addWidget(self.picker_stack)
+
+        # Connect tab widget to update active tab when transitions happen
+        if self.tab_widget:
+            self._update_tab_active_state(0)  # Start with picker tab active
+
         return panel
 
     def _create_start_position_widget(self) -> QWidget:
@@ -183,8 +196,8 @@ class ConstructTabLayoutManager:
             def option_picker_progress(step: str, progress: float):
                 if self.progress_callback:
                     # Map option picker progress to 76-82% range
-                    mapped_progress = 76 + (progress * 6)
-                    self.progress_callback(f"Option picker: {step}", mapped_progress)
+                    mapped_progress = int(76 + (progress * 6))
+                    self.progress_callback(mapped_progress, f"Option picker: {step}")
 
             # WINDOW MANAGEMENT FIX: Create option picker during splash screen
             # Pool creation happens during splash - no window flashing due to hidden widgets
@@ -276,21 +289,25 @@ class ConstructTabLayoutManager:
     def transition_to_option_picker(self):
         """Transition to option picker with smooth fade animation."""
         if self.picker_stack and not self._is_transitioning:
+            self._update_tab_active_state(1)  # Option picker
             self._start_fade_to_option_picker()
 
     def transition_to_start_position_picker(self):
         """Transition to start position picker with smooth fade animation."""
         if self.picker_stack and not self._is_transitioning:
+            self._update_tab_active_state(0)  # Start position picker
             self._start_fade_to_start_position_picker()
 
     def transition_to_graph_editor(self):
         """Transition to graph editor with smooth fade animation."""
         if self.picker_stack and not self._is_transitioning:
+            self._update_tab_active_state(2)  # Graph editor
             self._start_fade_to_graph_editor()
 
     def transition_to_generate_controls(self):
         """Transition to generate controls with smooth fade animation."""
         if self.picker_stack and not self._is_transitioning:
+            self._update_tab_active_state(3)  # Generate controls
             self._start_fade_to_generate_controls()
 
     def _start_fade_to_option_picker(self):
@@ -350,9 +367,9 @@ class ConstructTabLayoutManager:
 
     def _fade_stack_transition(self, new_index: int, target_name: str):
         """
-        Perform stack widget fade transition using industry best practices.
-        Applies effects only to individual components to avoid QPainter conflicts.
-        Based on Qt Enterprise solution and option picker success pattern.
+        Perform stack widget fade transition using legacy-based recursive cleanup.
+        Recursively clears graphics effects from all child widgets to prevent QPainter conflicts.
+        Based on legacy GraphicsEffectRemover approach that worked successfully.
         """
         try:
             current_widget = self.picker_stack.currentWidget()
@@ -369,9 +386,11 @@ class ConstructTabLayoutManager:
                 self._reset_transition_state()
                 return
 
-            print(f"🎭 [FADE] Starting whole-widget fade transition to {target_name}")
+            print(
+                f"🎭 [FADE] Starting fade transition to {target_name} with recursive cleanup"
+            )
 
-            # Clear any existing effects first (Qt Enterprise solution)
+            # Legacy approach: Clear graphics effects recursively BEFORE starting animation
             self._clear_graphics_effects([current_widget, next_widget])
 
             # Temporarily disable pictograph updates during transition
@@ -381,8 +400,10 @@ class ConstructTabLayoutManager:
             def on_fade_out_finished():
                 print(f"🎭 [FADE] Fade out complete, switching to {target_name}")
 
-                # Clear effects and switch stack
-                self._clear_graphics_effects([current_widget])
+                # Legacy approach: Clear effects again before switching (critical!)
+                self._clear_graphics_effects([current_widget, next_widget])
+
+                # Switch stack
                 self.picker_stack.setCurrentIndex(new_index)
 
                 # Re-enable pictograph updates
@@ -413,11 +434,18 @@ class ConstructTabLayoutManager:
             # Store reference to prevent garbage collection
             self._current_animation = animation
 
-            animation.finished.connect(callback)
+            def on_fade_out_finished():
+                # Legacy approach: Recursively clear graphics effects after animation finishes
+                self._clear_graphics_effects([widget])
+                callback()
+
+            animation.finished.connect(on_fade_out_finished)
             animation.start()
 
         except Exception as e:
             print(f"❌ [FADE] Fade out animation failed: {e}")
+            # Clear effects recursively even on failure
+            self._clear_graphics_effects([widget])
             callback()
 
     def _fade_in_widget(self, widget, target_name: str):
@@ -436,7 +464,7 @@ class ConstructTabLayoutManager:
                 print(
                     f"✅ [FADE] Whole-widget fade transition completed to {target_name}"
                 )
-                # Clear graphics effects after animation (Qt Enterprise solution)
+                # Legacy approach: Recursively clear graphics effects after animation finishes
                 self._clear_graphics_effects([widget])
                 self._reset_transition_state()
 
@@ -448,7 +476,7 @@ class ConstructTabLayoutManager:
 
         except Exception as e:
             print(f"❌ [FADE] Fade in animation failed for {target_name}: {e}")
-            # Clear effects even on failure
+            # Clear effects recursively even on failure
             self._clear_graphics_effects([widget])
             self._reset_transition_state()
 
@@ -463,13 +491,39 @@ class ConstructTabLayoutManager:
         return effect
 
     def _clear_graphics_effects(self, widgets):
-        """Clear graphics effects from widgets (Qt Enterprise solution)."""
+        """
+        Recursively clear graphics effects from widgets and all their children.
+        Based on legacy GraphicsEffectRemover approach to prevent QPainter conflicts.
+        """
         for widget in widgets:
             if widget and hasattr(widget, "setGraphicsEffect"):
-                try:
-                    widget.setGraphicsEffect(None)
-                except (RuntimeError, AttributeError):
-                    pass  # Silently ignore already-deleted widgets
+                self._remove_all_graphics_effects_recursive(widget)
+
+    def _remove_all_graphics_effects_recursive(self, widget):
+        """
+        Recursively remove graphics effects from widget and all child widgets.
+        This is the key to preventing QPainter conflicts with complex widgets.
+        Based on legacy GraphicsEffectRemover._remove_all_graphics_effects.
+        """
+        try:
+            # Safety check
+            if widget is None or not hasattr(widget, "setGraphicsEffect"):
+                return
+
+            # Clear effect from the widget itself
+            widget.setGraphicsEffect(None)
+
+            # Recursively clear effects from all child widgets
+            if hasattr(widget, "findChildren"):
+                for child in widget.findChildren(QWidget):
+                    if child and child.graphicsEffect():
+                        try:
+                            child.setGraphicsEffect(None)
+                        except (RuntimeError, AttributeError):
+                            pass  # Silently ignore already-deleted widgets
+
+        except (RuntimeError, AttributeError):
+            pass  # Silently ignore already-deleted widgets or attribute errors
 
     def _disable_pictograph_updates(self, widget, disable: bool):
         """Temporarily disable pictograph updates to prevent QPainter conflicts."""
@@ -566,3 +620,15 @@ class ConstructTabLayoutManager:
 
     def _on_graph_beat_modified(self, beat_index: int, beat_data):
         print(f"✅ Graph editor modified beat {beat_index}")
+
+    def _update_tab_active_state(self, panel_index: int):
+        """Update the tab widget to reflect the current panel."""
+        if self.tab_widget:
+            # Map panel indices to tab indices
+            # 0,1 = Picker tabs, 2 = Graph Editor, 3 = Generate Controls
+            if panel_index in [0, 1]:  # Start position picker or option picker
+                self.tab_widget.set_active_tab(0)  # Picker tab
+            elif panel_index == 2:  # Graph editor
+                self.tab_widget.set_active_tab(1)  # Graph editor tab
+            elif panel_index == 3:  # Generate controls
+                self.tab_widget.set_active_tab(2)  # Generate controls tab

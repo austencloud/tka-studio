@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.components.display.sequence_display_manager import (
         DisplayConfig,
     )
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class ScrollView:

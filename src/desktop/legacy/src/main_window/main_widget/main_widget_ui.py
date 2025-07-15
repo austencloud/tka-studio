@@ -139,7 +139,7 @@ class MainWidgetUI:
         try:
             mw.sequence_card_tab = SequenceCardTabFactory.create(mw, temp_app_context)
         except TypeError:
-            from .sequence_card_tab.tab import SequenceCardTab
+            from .sequence_card_tab.sequence_card_tab import SequenceCardTab
 
             mw.sequence_card_tab = SequenceCardTab(mw, settings_manager, json_manager)
         # mw.write_tab = WriteTab(mw)

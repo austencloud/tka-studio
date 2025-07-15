@@ -349,6 +349,17 @@ class OptionPickerScroll(QScrollArea):
             available_width = main_window_size.width() // 2
             print(f"🔍 [SIZING] No parent, using MW/2: {available_width}px")
 
+        # Validate that we have a reasonable width (not the default 640px)
+        if available_width <= 640:
+            print(
+                f"⚠️ [SIZING] Parent width {available_width}px seems too small, checking main window..."
+            )
+            main_window_size = self._mw_size_provider()
+            if main_window_size.width() > 1000:
+                # Use half the main window width as a better estimate
+                available_width = main_window_size.width() // 2
+                print(f"🔍 [SIZING] Using main window half-width: {available_width}px")
+
         # The scroll area should fit exactly within its parent's width
         picker_width = available_width
 

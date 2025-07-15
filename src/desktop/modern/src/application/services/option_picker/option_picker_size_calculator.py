@@ -22,37 +22,6 @@ class OptionPickerSizeCalculator:
         self._min_frame_size = 60
         self._border_ratio = 0.015
 
-    def calculate_option_size(
-        self,
-        main_window_width: int,
-        main_window_height: int,
-        option_picker_width: int,
-        spacing: int = 3,
-    ) -> int:
-        """
-        Calculate option frame size using pure math.
-
-        Returns size in pixels - presentation layer applies to Qt widgets.
-        """
-        try:
-            # Legacy formula: max(main_window_width // 16, option_picker_width // 8)
-            size_option_1 = main_window_width // 16
-            size_option_2 = option_picker_width // 8
-            base_size = max(size_option_1, size_option_2)
-
-            # Calculate border width (Legacy: max(1, int(size * 0.015)))
-            border_width = max(1, int(base_size * self._border_ratio))
-
-            # Adjust for border and spacing (Legacy: size -= 2 * bw + spacing)
-            adjusted_size = base_size - (2 * border_width) - spacing
-
-            # Apply minimum size constraint
-            return max(adjusted_size, self._min_frame_size)
-
-        except Exception as e:
-            print(f"❌ [OPTION_SIZING] Error calculating option size: {e}")
-            return self._min_frame_size
-
     def calculate_section_dimensions(
         self,
         letter_type: LetterType,
@@ -117,78 +86,7 @@ class OptionPickerSizeCalculator:
                 "section_type": "error",
             }
 
-    def calculate_picker_width(self, available_width: int) -> int:
-        """
-        Calculate option picker total width based on available container width.
-
-        SIMPLIFIED: Option picker takes full width of its parent container.
-        No padding/margins - let the parent handle spacing, and let internal
-        components scale appropriately to the full available width.
-        """
-        try:
-            # Use the full available width - no artificial margins
-            return max(300, available_width)  # Minimum 300px width for safety
-        except Exception as e:
-            print(f"❌ [OPTION_SIZING] Error calculating picker width: {e}")
-            return 400  # Fallback width
-
-    def calculate_grid_layout(
-        self, item_count: int, columns: int = 8
-    ) -> Dict[str, int]:
-        """
-        Calculate grid layout parameters for given item count.
-
-        Pure layout math - no Qt dependencies.
-        """
-        try:
-            rows = (item_count + columns - 1) // columns  # Ceiling division
-
-            return {
-                "rows": rows,
-                "columns": columns,
-                "total_cells": rows * columns,
-                "item_count": item_count,
-                "empty_cells": (rows * columns) - item_count,
-            }
-
-        except Exception as e:
-            print(f"❌ [OPTION_SIZING] Error calculating grid layout: {e}")
-            return {
-                "rows": 1,
-                "columns": columns,
-                "total_cells": columns,
-                "item_count": 0,
-                "empty_cells": columns,
-            }
-
-    def get_size_constraints(self) -> Dict[str, int]:
-        """Get sizing constraints and limits."""
-        return {
-            "min_frame_size": self._min_frame_size,
-            "border_ratio_percent": int(self._border_ratio * 100),
-            "default_columns": 8,
-            "default_spacing": 3,
-        }
-
-    def validate_dimensions(
-        self, width: int, height: int, min_width: int = 100, min_height: int = 100
-    ) -> bool:
-        """
-        Validate that dimensions are reasonable.
-
-        Pure validation logic - no Qt dependencies.
-        """
-        try:
-            return (
-                width >= min_width
-                and height >= min_height
-                and width <= 10000  # Sanity check for maximum
-                and height <= 10000
-            )
-        except Exception:
-            return False
-
-    def calculate_frame_size(
+    def calculate_option_frame_size(
         self, main_window_size, option_picker_width: int, spacing: int = 3
     ) -> int:
         """
@@ -255,7 +153,7 @@ class OptionPickerSizeCalculator:
         """
         try:
             # Calculate the component size
-            component_size = self.calculate_frame_size(
+            component_size = self.calculate_option_frame_size(
                 main_window_size, option_picker_width, spacing
             )
 

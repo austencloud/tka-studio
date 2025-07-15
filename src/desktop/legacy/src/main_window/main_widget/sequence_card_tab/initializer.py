@@ -5,7 +5,9 @@ from utils.path_helpers import get_sequence_card_image_exporter_path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+    from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
+        SequenceCardTab,
+    )
 
 USE_PRINTABLE_LAYOUT = True
 

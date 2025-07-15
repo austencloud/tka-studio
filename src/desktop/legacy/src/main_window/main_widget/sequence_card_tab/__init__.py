@@ -1,4 +1,4 @@
-from .tab import SequenceCardTab
+from .sequence_card_tab import SequenceCardTab
 from .utils.tab_factory import SequenceCardTabFactory
 
 # Core components

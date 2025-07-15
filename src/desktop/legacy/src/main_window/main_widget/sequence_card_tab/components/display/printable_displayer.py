@@ -10,7 +10,7 @@ from ..pages.printable_layout import PaperSize, PaperOrientation
 from .sequence_display_manager import SequenceDisplayManager
 
 if TYPE_CHECKING:
-    from ...tab import SequenceCardTab
+    from ...sequence_card_tab import SequenceCardTab
 
 
 class PrintableDisplayer:

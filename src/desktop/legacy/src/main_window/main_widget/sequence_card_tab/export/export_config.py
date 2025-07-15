@@ -4,7 +4,7 @@ from typing import Dict, Any, Tuple, Optional, TYPE_CHECKING
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class ExportConfig:

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class SequenceCardRefresher:

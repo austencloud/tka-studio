@@ -14,7 +14,7 @@ from PyQt6.QtCore import Qt
 from utils.path_helpers import get_user_editable_resource_path, get_win32_photos_path
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class ExportUIManager:

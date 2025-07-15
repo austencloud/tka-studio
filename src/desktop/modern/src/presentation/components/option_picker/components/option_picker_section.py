@@ -52,10 +52,12 @@ class OptionPickerSection(QGroupBox):
         self,
         letter_type: LetterType,
         scroll_area,  # Parent scroll area
-        mw_size_provider: Callable[[], QSize],
-        option_pool_service: OptionPoolService,
-        option_config_service: OptionConfigurationService,
-        size_calculator: OptionPickerSizeCalculator,
+        mw_size_provider: Optional[
+            Callable[[], QSize]
+        ] = None,  # Made optional since we use scroll area width
+        option_pool_service: OptionPoolService = None,
+        option_config_service: OptionConfigurationService = None,
+        size_calculator: OptionPickerSizeCalculator = None,
         animation_orchestrator: Optional[IAnimationOrchestrator] = None,
     ):
         """Initialize with injected services - no service location."""
@@ -74,15 +76,88 @@ class OptionPickerSection(QGroupBox):
 
         # UI state management
         self._loading_options = False
+        self._ui_initialized = False  # Track if UI components are ready
+        self._scroll_area_ready = False  # Track if scroll area has valid dimensions
         self.pictographs: Dict[str, OptionPictograph] = {}
 
     def update_option_picker_width(self, width: int) -> None:
         """Update the stored option picker width - called by parent scroll area."""
+        # Store the width (though we primarily use scroll area width now)
+        self.option_picker_width = width
 
         # ✅ Use service for business rule
         self.is_groupable = self._option_config_service.is_groupable_type(
             self.letter_type
         )
+
+        # Check if scroll area is now ready for sizing
+        self._check_scroll_area_readiness()
+
+    def _check_scroll_area_readiness(self) -> None:
+        """Check if scroll area has valid dimensions and mark as ready."""
+        if not self._ui_initialized:
+            return
+
+        if hasattr(self, "scroll_area") and self.scroll_area:
+            scroll_width = self.scroll_area.width()
+            parent_width = (
+                self.scroll_area.parent().width() if self.scroll_area.parent() else 0
+            )
+
+            # More robust validation - check if we have a reasonable width that's not the default
+            is_reasonable_width = (
+                scroll_width > 800
+            )  # Should be much larger than 640px default
+            is_not_default = scroll_width != 640  # Avoid the default fallback value
+            has_parent_width = (
+                parent_width > 800
+            )  # Parent should also be properly sized
+
+            print(
+                f"🔍 [SIZING] {self.letter_type} width check: scroll={scroll_width}px, parent={parent_width}px"
+            )
+            print(
+                f"🔍 [SIZING] {self.letter_type} validation: reasonable={is_reasonable_width}, not_default={is_not_default}, parent_ok={has_parent_width}"
+            )
+
+            if is_reasonable_width and is_not_default and has_parent_width:
+                if not self._scroll_area_ready:
+                    print(
+                        f"✅ [SIZING] {self.letter_type} scroll area ready: {scroll_width}px (parent: {parent_width}px)"
+                    )
+                    self._scroll_area_ready = True
+                    # Trigger a resize now that we're ready
+                    self._perform_delayed_resize()
+            else:
+                print(
+                    f"⏳ [SIZING] {self.letter_type} scroll area not ready: {scroll_width}px (waiting for proper layout)"
+                )
+
+    def _perform_delayed_resize(self) -> None:
+        """Perform resize calculation now that scroll area is ready."""
+        if not self._scroll_area_ready or not self._ui_initialized:
+            return
+
+        scroll_area_width = self.scroll_area.width()
+        print(
+            f"🔍 [RESIZE] {self.letter_type} performing delayed resize with width: {scroll_area_width}px"
+        )
+
+        # Calculate dimensions using only scroll area width
+        dimensions = self._option_sizing_service.calculate_section_dimensions(
+            letter_type=self.letter_type,
+            main_window_width=scroll_area_width,  # Use scroll area width directly
+        )
+
+        print(f"📊 [CALC] {self.letter_type} calculated width: {dimensions['width']}px")
+
+        # Apply the calculated width
+        self.setFixedWidth(dimensions["width"])
+
+        # Show actual dimensions after Qt applies them
+        from PyQt6.QtCore import QTimer
+
+        QTimer.singleShot(10, self._show_actual_dimensions)
 
     def setup_components(self) -> None:
         """Setup Qt components - pure UI logic."""
@@ -93,6 +168,10 @@ class OptionPickerSection(QGroupBox):
         self._setup_header()
         self._setup_layout()
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        # Mark UI as initialized
+        self._ui_initialized = True
+        self._check_scroll_area_readiness()
 
     def _setup_layout(self) -> None:
         """Setup Qt layout - pure UI logic."""
@@ -412,79 +491,55 @@ class OptionPickerSection(QGroupBox):
         self.pictograph_selected.emit(pictograph_data)
 
     def resizeEvent(self, event) -> None:
-        """Handle Qt resize events."""
+        """Handle Qt resize events with proper initialization checks."""
         # Skip resizing during option loading
         if self._loading_options:
             return
 
-        # FIXED: Use scroll area's actual width instead of main window width
-        scroll_area_width = self.scroll_area.width()
-        main_window_size = self.mw_size_provider()
-
-        print(f"🔍 [SECTION] {self.letter_type} resize event:")
-        print(f"   Scroll area width: {scroll_area_width}px")
-        print(f"   Main window width: {main_window_size.width()}px")
-
-        # 🔍 REGRESSION TEST: Ensure we're not using fallback size provider
-        if main_window_size.width() == 800 and main_window_size.height() == 600:
+        # NEW: Only proceed if UI is properly initialized and scroll area is ready
+        if not self._ui_initialized:
             print(
-                f"🚨 [REGRESSION] Section {self.letter_type} using FALLBACK 800x600 size provider!"
+                f"⏳ [SIZING] {self.letter_type} UI not ready for sizing, deferring..."
             )
-            print(f"🚨 This will cause incorrect section sizing in the real app!")
+            return
 
-        # FIXED: Use scroll area width for section dimension calculation
-        if scroll_area_width > 0:
-            # Use actual scroll area width for proper section sizing
-            dimensions = self._option_sizing_service.calculate_section_dimensions(
-                letter_type=self.letter_type,
-                main_window_width=scroll_area_width,  # Use scroll area width, not main window
-            )
-            print(
-                f"   Calculated section width: {dimensions['width']}px for {self.letter_type}"
-            )
-        else:
-            # Fallback if scroll area width is not available yet
-            dimensions = self._option_sizing_service.calculate_section_dimensions(
-                letter_type=self.letter_type,
-                main_window_width=main_window_size.width() // 2,  # Fallback calculation
-            )
-            print(f"   Using fallback calculation for {self.letter_type}")
+        # Check if scroll area is ready, and if not, try to make it ready
+        if not self._scroll_area_ready:
+            self._check_scroll_area_readiness()
+            if not self._scroll_area_ready:
+                print(
+                    f"⏳ [SIZING] {self.letter_type} scroll area not ready, deferring..."
+                )
+                return
 
-        # ✅ Apply to Qt widget
-        self.setFixedWidth(dimensions["width"])
+        # If we get here, everything is ready - perform the resize
+        self._perform_delayed_resize()
 
         # Call parent resize event
         super().resizeEvent(event)
 
-        # CRITICAL DEBUG: Show ACTUAL widget dimensions after Qt applies them
-        from PyQt6.QtCore import QTimer
+    def _show_actual_dimensions(self) -> None:
+        """Show actual widget dimensions after Qt applies them."""
+        actual_width = self.width()
+        actual_height = self.height()
+        print(
+            f"✅ [ACTUAL] {self.letter_type} final size: {actual_width}x{actual_height}px"
+        )
 
-        def show_actual_dimensions():
-            actual_width = self.width()
-            actual_height = self.height()
+        # Also show pictograph frame dimensions if available
+        if hasattr(self, "pictographs") and self.pictographs:
+            first_frame = next(iter(self.pictographs.values()))
+            frame_width = first_frame.width()
+            frame_height = first_frame.height()
+            print(f"✅ [ACTUAL] First pictograph frame: {frame_width}x{frame_height}px")
+
+            # Calculate if 8 frames + spacing fit within section width
+            spacing = 3  # From config
+            total_frames_width = 8 * frame_width + 7 * spacing
+            fits = total_frames_width <= actual_width
             print(
-                f"✅ [ACTUAL] {self.letter_type} final size: {actual_width}x{actual_height}px"
+                f"✅ [ACTUAL] 8 frames fit? {fits} (need {total_frames_width}px, have {actual_width}px)"
             )
-
-            # Also show pictograph frame dimensions if available
-            if hasattr(self, "pictographs") and self.pictographs:
-                first_frame = next(iter(self.pictographs.values()))
-                frame_width = first_frame.width()
-                frame_height = first_frame.height()
-                print(
-                    f"✅ [ACTUAL] First pictograph frame: {frame_width}x{frame_height}px"
-                )
-
-                # Calculate if 8 frames + spacing fit within section width
-                spacing = 3  # From config
-                total_frames_width = 8 * frame_width + 7 * spacing
-                fits = total_frames_width <= actual_width
-                print(
-                    f"✅ [ACTUAL] 8 frames fit? {fits} (need {total_frames_width}px, have {actual_width}px)"
-                )
-
-        # Use timer to ensure dimensions are applied
-        QTimer.singleShot(10, show_actual_dimensions)
 
     @property
     def pictograph_frames(self) -> List[OptionPictograph]:

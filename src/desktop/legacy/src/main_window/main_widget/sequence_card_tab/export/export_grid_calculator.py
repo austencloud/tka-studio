@@ -6,7 +6,7 @@ from typing import Tuple, Dict, Optional, TYPE_CHECKING
 from .export_config import ExportConfig
 
 if TYPE_CHECKING:
-    from ..tab import SequenceCardTab
+    from ..sequence_card_tab import SequenceCardTab
 
 
 class ExportGridCalculator:

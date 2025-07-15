@@ -56,6 +56,9 @@ class SequenceWorkbench(ViewableComponentBase):
 
     # Qt signals for parent coordination
     sequence_modified = pyqtSignal(object)
+    sequence_modified_with_operation = pyqtSignal(
+        object, str
+    )  # sequence, operation_type
     operation_completed = pyqtSignal(str)
     error_occurred = pyqtSignal(str)
 
@@ -190,17 +193,6 @@ class SequenceWorkbench(ViewableComponentBase):
             )
             self._beat_frame_section.clear_sequence_requested.connect(
                 self._handle_clear
-            )
-
-            # Connect new 3-panel system signals
-            self._beat_frame_section.picker_mode_requested.connect(
-                self._handle_picker_mode_request
-            )
-            self._beat_frame_section.graph_editor_requested.connect(
-                self._handle_graph_editor_request
-            )
-            self._beat_frame_section.generate_requested.connect(
-                self._handle_generate_request
             )
 
     def _setup_button_interface(self):
@@ -411,9 +403,15 @@ class SequenceWorkbench(ViewableComponentBase):
                 if state_result.changed:
                     print("🔄 [WORKBENCH] Updating UI from state...")
                     self._update_ui_from_state()
+
+                    # Emit both signals - new signal includes operation type
                     self.sequence_modified.emit(result.updated_sequence)
+                    self.sequence_modified_with_operation.emit(
+                        result.updated_sequence, result.operation_type.value
+                    )
+
                     print(
-                        "✅ [WORKBENCH] UI updated and sequence_modified signal emitted"
+                        f"✅ [WORKBENCH] UI updated and sequence_modified signals emitted (operation: {result.operation_type.value})"
                     )
             else:
                 print("⚠️ [WORKBENCH] No updated sequence in result")

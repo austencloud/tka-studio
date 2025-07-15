@@ -1,24 +1,23 @@
+from presentation.components.backgrounds.background_widget import MainBackgroundWidget
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
+from PyQt6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QGuiApplication,
+    QLinearGradient,
+    QPainter,
+    QPen,
+)
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
     QLabel,
     QProgressBar,
-    QGraphicsDropShadowEffect,
-    QSpacerItem,
     QSizePolicy,
-)
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QPropertyAnimation, QEasingCurve
-from PyQt6.QtGui import (
-    QFont,
-    QPainter,
-    QLinearGradient,
-    QColor,
-    QPen,
-    QBrush,
-    QGuiApplication,
-)
-from presentation.components.backgrounds.background_widget import (
-    MainBackgroundWidget,
+    QSpacerItem,
+    QVBoxLayout,
+    QWidget,
 )
 
 
@@ -100,7 +99,9 @@ class SplashScreen(QWidget):
             | Qt.WindowType.Tool
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(700, 500)
+        self.setFixedSize(
+            800, 550
+        )  # Increased size to accommodate longer progress messages
 
     def _setup_background(self):
         self.background_widget = MainBackgroundWidget(self, "Starfield")
@@ -171,15 +172,39 @@ class SplashScreen(QWidget):
         )
 
         progress_section = QWidget()
-        progress_section.setMinimumHeight(110)
+        progress_section.setMinimumHeight(
+            120
+        )  # Adequate height for single-line messages
         progress_layout = QVBoxLayout(progress_section)
         progress_layout.setSpacing(18)
+
+        # Create status section with animated loading indicator
+        status_section = QWidget()
+        status_layout = QHBoxLayout(status_section)
+        status_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        status_layout.setSpacing(10)
+
+        # Animated loading indicator
+        self.loading_indicator = QLabel("⚙️")
+        indicator_font = QFont("Arial", 16)
+        self.loading_indicator.setFont(indicator_font)
+        self.loading_indicator.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.loading_indicator.setFixedSize(24, 24)
+        self.loading_indicator.setStyleSheet(
+            """
+            QLabel {
+                color: rgba(255, 255, 255, 0.9);
+                background: transparent;
+                border: none;
+            }
+        """
+        )
 
         self.status_label = QLabel(self.current_message)
         status_font = QFont("Arial", 13)
         self.status_label.setFont(status_font)
-        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.status_label.setFixedHeight(30)
+        self.status_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.status_label.setFixedHeight(30)  # Single line height
         self.status_label.setStyleSheet(
             """
             QLabel {
@@ -189,6 +214,9 @@ class SplashScreen(QWidget):
             }
         """
         )
+
+        status_layout.addWidget(self.loading_indicator)
+        status_layout.addWidget(self.status_label)
 
         self.progress_bar = ModernProgressBar()
         self.progress_bar.setMinimum(0)
@@ -210,7 +238,7 @@ class SplashScreen(QWidget):
         """
         )
 
-        progress_layout.addWidget(self.status_label)
+        progress_layout.addWidget(status_section)
         progress_layout.addWidget(self.progress_bar)
         progress_layout.addWidget(self.percentage_label)
 
@@ -249,6 +277,13 @@ class SplashScreen(QWidget):
         self.pulse_scale = 1.0
         self.pulse_direction = 1
 
+        # Loading indicator animation
+        self.loading_timer = QTimer()
+        self.loading_timer.timeout.connect(self._animate_loading_indicator)
+        self.loading_timer.start(500)  # Update every 500ms
+        self.loading_icons = ["⚙️", "🔧", "🔄"]
+        self.loading_icon_index = 0
+
     def _pulse_logo(self):
         if self.is_closing:
             return
@@ -272,6 +307,17 @@ class SplashScreen(QWidget):
             }}
         """
         )
+
+    def _animate_loading_indicator(self):
+        """Animate the loading indicator by cycling through different icons."""
+        if self.is_closing:
+            return
+
+        self.loading_icon_index = (self.loading_icon_index + 1) % len(
+            self.loading_icons
+        )
+        new_icon = self.loading_icons[self.loading_icon_index]
+        self.loading_indicator.setText(new_icon)
 
     def _center_on_target_screen(self):
         if self.target_screen:
@@ -313,6 +359,8 @@ class SplashScreen(QWidget):
         self.is_closing = True
         if hasattr(self, "pulse_timer"):
             self.pulse_timer.stop()
+        if hasattr(self, "loading_timer"):
+            self.loading_timer.stop()
 
         fade_out = QPropertyAnimation(self, b"windowOpacity")
         fade_out.setDuration(600)
@@ -335,6 +383,8 @@ class SplashScreen(QWidget):
         self.is_closing = True
         if hasattr(self, "pulse_timer"):
             self.pulse_timer.stop()
+        if hasattr(self, "loading_timer"):
+            self.loading_timer.stop()
         super().close()
 
     def resizeEvent(self, event):

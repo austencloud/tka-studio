@@ -62,6 +62,9 @@ class SignalCoordinator(QObject):
         # Add signal emission protection to prevent cascade refreshes
         self._handling_sequence_modification = False
 
+        # Track current operation type to prevent unwanted tab switching
+        self._current_operation_type = None
+
         self._setup_signal_connections()
 
     def _setup_signal_connections(self):
@@ -119,12 +122,21 @@ class SignalCoordinator(QObject):
             self.layout_manager.workbench.sequence_modified.connect(
                 self._handle_workbench_modified
             )
+
+            # Connect to new signal that includes operation type
+            if hasattr(
+                self.layout_manager.workbench, "sequence_modified_with_operation"
+            ):
+                self.layout_manager.workbench.sequence_modified_with_operation.connect(
+                    self._handle_workbench_modified_with_operation
+                )
+
             # Operation completion events (non-sequence events)
             self.layout_manager.workbench.operation_completed.connect(
                 self._handle_operation_completed
             )
-            
-            # Connect new 3-panel system signals
+
+            # Connect new 3-panel system signals from workbench (legacy)
             if hasattr(self.layout_manager.workbench, "picker_mode_requested"):
                 self.layout_manager.workbench.picker_mode_requested.connect(
                     self._handle_picker_mode_request
@@ -137,7 +149,22 @@ class SignalCoordinator(QObject):
                 self.layout_manager.workbench.generate_requested.connect(
                     self.layout_manager.transition_to_generate_controls
                 )
-            
+
+            # Connect tab widget signals (new tab-based navigation)
+            if (
+                hasattr(self.layout_manager, "tab_widget")
+                and self.layout_manager.tab_widget
+            ):
+                self.layout_manager.tab_widget.picker_tab_clicked.connect(
+                    self._handle_picker_mode_request
+                )
+                self.layout_manager.tab_widget.graph_editor_tab_clicked.connect(
+                    self.layout_manager.transition_to_graph_editor
+                )
+                self.layout_manager.tab_widget.generate_controls_tab_clicked.connect(
+                    self.layout_manager.transition_to_generate_controls
+                )
+
             # Clear sequence signal - connect to signal coordinator
             if hasattr(self.layout_manager.workbench, "clear_sequence_requested"):
                 self.layout_manager.workbench.clear_sequence_requested.connect(
@@ -179,8 +206,12 @@ class SignalCoordinator(QObject):
         start_position_set = False
         workbench = self.layout_manager.workbench
 
-        if workbench and hasattr(workbench, "_start_position_data"):
-            start_position_set = workbench._start_position_data is not None
+        if workbench and hasattr(workbench, "_beat_frame_section"):
+            beat_frame_section = workbench._beat_frame_section
+            if beat_frame_section and hasattr(
+                beat_frame_section, "_start_position_data"
+            ):
+                start_position_set = beat_frame_section._start_position_data is not None
         else:
             pass
 
@@ -225,8 +256,12 @@ class SignalCoordinator(QObject):
         # Check if start position is set in workbench
         start_position_set = False
         workbench = self.layout_manager.workbench
-        if workbench and hasattr(workbench, "_start_position_data"):
-            start_position_set = workbench._start_position_data is not None
+        if workbench and hasattr(workbench, "_beat_frame_section"):
+            beat_frame_section = workbench._beat_frame_section
+            if beat_frame_section and hasattr(
+                beat_frame_section, "_start_position_data"
+            ):
+                start_position_set = beat_frame_section._start_position_data is not None
 
         has_beats = sequence and sequence.beats and len(sequence.beats) > 0
 
@@ -336,6 +371,46 @@ class SignalCoordinator(QObject):
             f"🎯 [SIGNAL_COORDINATOR] Start position updated: {start_position_data.letter}"
         )
 
+    def _handle_workbench_modified_with_operation(
+        self, sequence: SequenceData, operation_type: str
+    ):
+        """Handle workbench sequence modification with operation type information"""
+        print(
+            f"🔄 [SIGNAL_COORDINATOR] _handle_workbench_modified_with_operation called with sequence length: {len(sequence.beats)}, operation: {operation_type}"
+        )
+
+        if self._handling_sequence_modification:
+            print(
+                "🔄 [SIGNAL_COORDINATOR] Already handling sequence modification - skipping"
+            )
+            return
+
+        try:
+            self._handling_sequence_modification = True
+            self._current_operation_type = operation_type
+
+            # Save sequence to persistence
+            self._save_sequence_to_persistence(sequence)
+
+            # Only trigger tab switching for non-delete-beat operations
+            if operation_type != "delete_beat":
+                self._handle_sequence_modified(sequence)
+            else:
+                print(
+                    f"🎯 [SIGNAL_COORDINATOR] Skipping tab switch for delete_beat operation"
+                )
+                # Still emit the external signal for other listeners
+                self.sequence_modified.emit(sequence)
+
+        except Exception as e:
+            print(f"❌ Signal coordinator: Workbench modification failed: {e}")
+            import traceback
+
+            traceback.print_exc()
+        finally:
+            self._handling_sequence_modification = False
+            self._current_operation_type = None
+
     def _handle_workbench_modified(self, sequence: SequenceData):
         """Handle workbench sequence modification with circular emission protection"""
         print(
@@ -386,11 +461,17 @@ class SignalCoordinator(QObject):
             # Connect workbench to our handler (single signal path)
             workbench.sequence_modified.connect(self._handle_workbench_modified)
             workbench.operation_completed.connect(self._handle_operation_completed)
-            
+
             # Connect new 3-panel system signals
             if hasattr(workbench, "picker_mode_requested"):
-                workbench.picker_mode_requested.connect(self._handle_picker_mode_request)
+                workbench.picker_mode_requested.connect(
+                    self._handle_picker_mode_request
+                )
             if hasattr(workbench, "graph_editor_requested"):
-                workbench.graph_editor_requested.connect(self.layout_manager.transition_to_graph_editor)
+                workbench.graph_editor_requested.connect(
+                    self.layout_manager.transition_to_graph_editor
+                )
             if hasattr(workbench, "generate_requested"):
-                workbench.generate_requested.connect(self.layout_manager.transition_to_generate_controls)
+                workbench.generate_requested.connect(
+                    self.layout_manager.transition_to_generate_controls
+                )

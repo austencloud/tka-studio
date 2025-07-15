@@ -10,7 +10,9 @@ from core.application_context import ApplicationContext
 from main_window.main_widget.core.widget_manager import WidgetFactory
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+    from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
+        SequenceCardTab,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +34,9 @@ class SequenceCardTabFactory(WidgetFactory):
         """
         try:
             # Import here to avoid circular dependencies
-            from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+            from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
+                SequenceCardTab,
+            )
 
             # Get required services from app context
             settings_manager = app_context.settings_manager

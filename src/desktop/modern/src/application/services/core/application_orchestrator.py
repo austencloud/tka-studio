@@ -183,23 +183,18 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             progress_callback(55, "Services configured")
 
         # Initialize pictograph pool for high-performance option picker
-        if progress_callback:
-            progress_callback(57, "Initializing pictograph pool...")
-
         try:
             from application.services.pictograph_pool_manager import (
                 PictographPoolManager,
             )
 
-            # Initialize the pool using the DI container instance (not global function)
+            # Initialize the pool using the DI container instance with progress callback
             pool_manager = self.container.resolve(PictographPoolManager)
-            pool_manager.initialize_pool()
-            if progress_callback:
-                progress_callback(59, "Pictograph pool initialized")
+            pool_manager.initialize_pool(progress_callback=progress_callback)
         except Exception as e:
             logger.error(f"❌ Failed to initialize pictograph pool: {e}")
             if progress_callback:
-                progress_callback(59, "Pictograph pool initialization failed")
+                progress_callback(59, "❌ Pictograph pool initialization failed")
 
         # Step 3: Setup UI
         if progress_callback:
@@ -229,7 +224,68 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         if progress_callback:
             progress_callback(100, "Application ready!")
 
+        # CRITICAL: Force proper sizing after layout is fully established
+        self._trigger_post_layout_sizing(main_window)
+
         return self.tab_widget
+
+    def _trigger_post_layout_sizing(self, main_window: QMainWindow) -> None:
+        """Trigger proper sizing after main window layout is fully established."""
+        from PyQt6.QtCore import QTimer
+
+        def force_option_picker_resize():
+            """Force option picker to recalculate with proper dimensions."""
+            try:
+                # Find the construct tab and its option picker
+                if hasattr(self, "tab_widget") and self.tab_widget:
+                    construct_tab = None
+                    for i in range(self.tab_widget.count()):
+                        widget = self.tab_widget.widget(i)
+                        if hasattr(widget, "layout_manager"):
+                            construct_tab = widget
+                            break
+
+                    if construct_tab and hasattr(construct_tab, "layout_manager"):
+                        layout_manager = construct_tab.layout_manager
+                        if hasattr(layout_manager, "picker_stack"):
+                            # Get the option picker from the stack
+                            option_picker = None
+                            for i in range(layout_manager.picker_stack.count()):
+                                widget = layout_manager.picker_stack.widget(i)
+                                if hasattr(
+                                    widget, "sections"
+                                ):  # This is the option picker
+                                    option_picker = widget
+                                    break
+
+                            if option_picker:
+                                print(
+                                    f"🔄 [POST-LAYOUT] Forcing option picker resize with main window: {main_window.width()}x{main_window.height()}"
+                                )
+                                # Force the option picker to recalculate its size
+                                option_picker._update_size()
+                                print(
+                                    f"🔄 [POST-LAYOUT] Option picker resize completed"
+                                )
+                            else:
+                                print(
+                                    "⚠️ [POST-LAYOUT] Option picker not found in stack"
+                                )
+                        else:
+                            print(
+                                "⚠️ [POST-LAYOUT] Picker stack not found in layout manager"
+                            )
+                    else:
+                        print(
+                            "⚠️ [POST-LAYOUT] Construct tab or layout manager not found"
+                        )
+                else:
+                    print("⚠️ [POST-LAYOUT] Tab widget not available")
+            except Exception as e:
+                print(f"❌ [POST-LAYOUT] Error forcing option picker resize: {e}")
+
+        # Use a timer to ensure the main window layout is fully processed
+        QTimer.singleShot(100, force_option_picker_resize)
 
     def handle_window_resize(self, main_window: QMainWindow) -> None:
         """Handle main window resize events."""

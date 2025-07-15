@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from enums.letter.letter import Letter
 from enums.prop_type import PropType
 from main_window.main_widget.pictograph_collector import PictographCollector
-from main_window.main_widget.sequence_card_tab.tab import SequenceCardTab
+from main_window.main_widget.sequence_card_tab.sequence_card_tab import SequenceCardTab
 from main_window.main_widget.settings_dialog.legacy_settings_dialog import (
     LegacySettingsDialog,
 )
