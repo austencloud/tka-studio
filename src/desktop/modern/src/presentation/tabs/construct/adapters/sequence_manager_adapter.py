@@ -8,7 +8,6 @@ the specific microservices they need instead of going through adapters.
 import logging
 from typing import Optional
 
-from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -17,6 +16,7 @@ from application.services.sequence.sequence_start_position_manager import (
 )
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
+from presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
 from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ class ExampleSequenceComponent:
         self,
         beat_operations: SequenceBeatOperations,
         start_position_manager: Optional[SequenceStartPositionManager] = None,
-        sequence_loader: Optional[SequenceLoader] = None,
+        sequence_loader: Optional[QtSequenceLoaderAdapter] = None,
         signal_emitter: Optional[SequenceSignalEmitter] = None,
     ):
         """

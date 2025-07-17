@@ -12,12 +12,13 @@ from functools import lru_cache
 from typing import Dict, Optional, Set
 
 from application.services.assets.image_asset_utils import get_image_path
+from core.interfaces.core_services import IAssetManager
 from domain.models import MotionData, MotionType
 
 logger = logging.getLogger(__name__)
 
 
-class AssetManager:
+class AssetManager(IAssetManager):
     """
     Manages SVG assets, file paths, and color transformations.
 

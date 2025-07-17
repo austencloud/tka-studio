@@ -266,6 +266,7 @@ class IWorkbenchExportService(ABC):
 
 class SessionRestorationPhase(Enum):
     """Phases of session restoration."""
+
     NOT_STARTED = "not_started"
     PREPARING = "preparing"
     RESTORING_SEQUENCE = "restoring_sequence"
@@ -277,6 +278,7 @@ class SessionRestorationPhase(Enum):
 
 class SessionRestorationResult(NamedTuple):
     """Result of a session restoration operation."""
+
     success: bool
     phase: SessionRestorationPhase
     sequence_restored: bool
@@ -285,10 +287,10 @@ class SessionRestorationResult(NamedTuple):
 
     @classmethod
     def success_result(
-        cls, 
-        phase: SessionRestorationPhase, 
-        sequence_restored: bool = False, 
-        start_position_restored: bool = False
+        cls,
+        phase: SessionRestorationPhase,
+        sequence_restored: bool = False,
+        start_position_restored: bool = False,
     ):
         """Create a successful restoration result."""
         return cls(True, phase, sequence_restored, start_position_restored, [])
@@ -303,7 +305,9 @@ class IWorkbenchSessionManager(ABC):
     """Interface for workbench session management and restoration."""
 
     @abstractmethod
-    def begin_restoration_from_event(self, event_data: dict) -> SessionRestorationResult:
+    def begin_restoration_from_event(
+        self, event_data: dict
+    ) -> SessionRestorationResult:
         """
         Begin restoration from session restoration event.
 
@@ -606,4 +610,46 @@ class ISequenceWorkbenchService(ABC):
     @abstractmethod
     def set_current_sequence(self, sequence: Any) -> None:
         """Set the current active sequence."""
+        pass
+
+
+class IClipboardAdapter(ABC):
+    """
+    Interface for clipboard adapter implementations.
+
+    Provides framework-agnostic clipboard operations that can be implemented
+    for different platforms (Qt, web, etc.).
+    """
+
+    @abstractmethod
+    def set_text(self, text: str) -> bool:
+        """
+        Set text in the clipboard.
+
+        Args:
+            text: Text to set in clipboard
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        pass
+
+    @abstractmethod
+    def get_text(self) -> str:
+        """
+        Get text from the clipboard.
+
+        Returns:
+            str: Text from clipboard, empty string if none or error
+        """
+        pass
+
+    @abstractmethod
+    def is_available(self) -> bool:
+        """
+        Check if clipboard is available for operations.
+
+        Returns:
+            bool: True if clipboard is available
+        """
         pass

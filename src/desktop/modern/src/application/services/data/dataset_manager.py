@@ -16,31 +16,10 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, TypedDict
 
 from application.services.pictograph.pictograph_csv_manager import PictographSearchQuery
+from core.interfaces.data_services import IDatasetManager
 from domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager
-
-
-class IDatasetManager(ABC):
-    """Interface for dataset management operations."""
-
-    @abstractmethod
-    def add_to_dataset(
-        self, pictograph: PictographData, category: str = "user_created"
-    ) -> str:
-        """Add pictograph to dataset."""
-
-    @abstractmethod
-    def search_dataset(self, query: PictographSearchQuery) -> List[PictographData]:
-        """Search pictograph dataset with query."""
-
-    @abstractmethod
-    def get_dataset_categories(self) -> List[str]:
-        """Get all available dataset categories."""
-
-    @abstractmethod
-    def get_pictographs_by_category(self, category: str) -> List[PictographData]:
-        """Get all pictographs in a category."""
 
 
 class DatasetManager(IDatasetManager):

@@ -78,12 +78,6 @@ class SpecialPlacementService:
         motion = motion_data
         letter = pictograph_data.letter
 
-        # DEBUG: Track special placement calls for G pictographs
-        if letter == "G":
-            logger.info(
-                f"🔍 SPECIAL_PLACEMENT - G pictograph: motion={motion.motion_type.value if motion else 'None'}"
-            )
-
         # Generate orientation key using validated logic
         ori_key = self._generate_orientation_key(motion, pictograph_data)
 
@@ -93,34 +87,18 @@ class SpecialPlacementService:
         # Generate turns tuple for lookup
         turns_tuple = self._generate_turns_tuple(pictograph_data)
 
-        if letter == "G":
-            logger.info(
-                f"🔍 SPECIAL_PLACEMENT - G lookup: grid={grid_mode}, ori_key={ori_key}, turns={turns_tuple}"
-            )
-
         # Look up special placement data
         letter_data: Dict[str, Dict[Tuple[int], Dict[str, float]]] = (
             self.special_placements.get(grid_mode, {}).get(ori_key, {}).get(letter, {})
         )
 
         if not letter_data:
-            if letter == "G":
-                logger.warning(
-                    f"🚨 SPECIAL_PLACEMENT - G: No letter data found for {grid_mode}/{ori_key}"
-                )
             return None
 
         # Get turn-specific data
         turn_data = letter_data.get(turns_tuple, {})
 
         if not turn_data:
-            if letter == "G":
-                logger.warning(
-                    f"🚨 SPECIAL_PLACEMENT - G: No turn data found for {turns_tuple}"
-                )
-                logger.info(
-                    f"🔍 SPECIAL_PLACEMENT - G: Available turns: {list(letter_data.keys())}"
-                )
             return None
 
         # First, try direct color-based coordinate lookup (most common case)
@@ -144,19 +122,10 @@ class SpecialPlacementService:
             # Fallback: try to determine from motion data
             color_key = "blue"  # Default fallback
 
-        if letter == "G":
-            logger.info(
-                f"🔍 SPECIAL_PLACEMENT - G: color_key={color_key}, available_keys={list(turn_data.keys())}"
-            )
-
         if color_key in turn_data:
             adjustment_values = turn_data[color_key]
             if isinstance(adjustment_values, list) and len(adjustment_values) == 2:
                 result = QPointF(adjustment_values[0], adjustment_values[1])
-                if letter == "G":
-                    logger.info(
-                        f"✅ SPECIAL_PLACEMENT - G: Found {color_key} adjustment: {adjustment_values}"
-                    )
                 return result
 
         # Second, try motion-type-specific adjustment (for letters like I)

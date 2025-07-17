@@ -147,9 +147,7 @@ class IDatasetManager(ABC):
     """Interface for dataset management operations."""
 
     @abstractmethod
-    def add_to_dataset(
-        self, pictograph: Any, category: str = "user_created"
-    ) -> str:
+    def add_to_dataset(self, pictograph: Any, category: str = "user_created") -> str:
         """
         Add pictograph to dataset.
 
@@ -283,7 +281,9 @@ class ICsvReader(ABC):
         pass
 
     @abstractmethod
-    def validate_csv_structure(self, file_path: str, expected_columns: List[str]) -> bool:
+    def validate_csv_structure(
+        self, file_path: str, expected_columns: List[str]
+    ) -> bool:
         """
         Validate CSV file structure.
 
@@ -314,7 +314,9 @@ class IPositionResolver(ABC):
         pass
 
     @abstractmethod
-    def resolve_start_position(self, start_position_data: Dict[str, Any]) -> Optional[Any]:
+    def resolve_start_position(
+        self, start_position_data: Dict[str, Any]
+    ) -> Optional[Any]:
         """
         Resolve start position from data.
 
@@ -473,4 +475,43 @@ class IModernToLegacyConverter(ABC):
         Returns:
             Legacy pictograph data or None if conversion failed
         """
+        pass
+
+
+class IDataManager(ABC):
+    """Interface for core data operations."""
+
+    @abstractmethod
+    def load_diamond_dataset(self) -> Any:
+        """Load diamond pictograph dataset with error handling."""
+        pass
+
+    @abstractmethod
+    def load_box_dataset(self) -> Any:
+        """Load box pictograph dataset with error handling."""
+        pass
+
+    @abstractmethod
+    def load_combined_dataset(self) -> Any:
+        """Load and combine both diamond and box datasets."""
+        pass
+
+    @abstractmethod
+    def validate_data_files(self) -> Dict[str, Any]:
+        """Validate data files and return status information."""
+        pass
+
+    @abstractmethod
+    def get_data_config(self) -> Any:
+        """Get the current data configuration."""
+        pass
+
+    @abstractmethod
+    def reload_config(self, new_config: Any) -> None:
+        """Reload with new configuration."""
+        pass
+
+    @abstractmethod
+    def get_dataset_info(self) -> Dict[str, Any]:
+        """Get information about loaded datasets."""
         pass

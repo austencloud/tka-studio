@@ -14,7 +14,13 @@ from typing import Any, Dict, Optional
 
 @dataclass
 class SessionState:
-    """Complete session state representation for TKA application."""
+    """
+    Complete session state representation for TKA application.
+
+    Note:
+        Web implementation: Should be serializable to JSON for localStorage/IndexedDB.
+        All fields must be compatible with web storage and migration.
+    """
 
     # Current sequence data
     current_sequence_id: Optional[str] = None
@@ -49,7 +55,12 @@ class SessionState:
 
 @dataclass
 class SessionRestoreResult:
-    """Result of session restoration attempt."""
+    """
+    Result of session restoration attempt.
+
+    Note:
+        Web implementation: Used for async restoration and error reporting in web adapters.
+    """
 
     success: bool
     session_restored: bool = False
@@ -59,7 +70,11 @@ class SessionRestoreResult:
 
 
 class ISessionStateTracker(ABC):
-    """Interface for session state management in TKA applications."""
+    """
+    Interface for session state management in TKA applications.
+
+    Provides auto-save/restore, session migration, and cross-platform session export/import.
+    """
 
     @abstractmethod
     def save_session_state(self) -> bool:
@@ -68,6 +83,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             bool: True if save was successful, False otherwise
+
+        Note:
+            Web implementation: Persists to localStorage/IndexedDB, may be async.
         """
 
     @abstractmethod
@@ -77,6 +95,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             SessionRestoreResult: Result of restoration attempt
+
+        Note:
+            Web implementation: Loads from localStorage/IndexedDB, may be async.
         """
 
     @abstractmethod
@@ -87,6 +108,9 @@ class ISessionStateTracker(ABC):
         Args:
             sequence_data: The sequence data to store
             sequence_id: Unique identifier for the sequence
+
+        Note:
+            Web implementation: Triggers auto-save and may debounce updates for performance.
         """
 
     @abstractmethod
@@ -103,6 +127,9 @@ class ISessionStateTracker(ABC):
             beat_index: Currently selected beat index
             beat_data: Currently selected beat data
             start_position: Current start position data
+
+        Note:
+            Web implementation: Updates state and triggers UI refresh if needed.
         """
 
     @abstractmethod
@@ -121,6 +148,9 @@ class ISessionStateTracker(ABC):
             beat_index: Selected beat index in graph editor
             selected_arrow: Selected arrow identifier
             height: Graph editor height (optional)
+
+        Note:
+            Web implementation: Updates state and may trigger re-render.
         """
 
     @abstractmethod
@@ -137,6 +167,9 @@ class ISessionStateTracker(ABC):
             active_tab: Currently active tab
             beat_layout: Beat layout configuration
             component_visibility: Component visibility states
+
+        Note:
+            Web implementation: Updates state and may persist to localStorage.
         """
 
     @abstractmethod
@@ -146,6 +179,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             bool: True if session should be restored, False if too stale
+
+        Note:
+            Web implementation: May use timestamp and staleness policy for browser sessions.
         """
 
     @abstractmethod
@@ -153,6 +189,9 @@ class ISessionStateTracker(ABC):
         """
         Mark user interaction to trigger debounced auto-save.
         This method should be called after any meaningful user interaction.
+
+        Note:
+            Web implementation: Used to debounce auto-save and update last interaction timestamp.
         """
 
     @abstractmethod
@@ -162,6 +201,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             bool: True if clear was successful, False otherwise
+
+        Note:
+            Web implementation: Removes session from localStorage/IndexedDB.
         """
 
     @abstractmethod
@@ -171,6 +213,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             Optional[SessionState]: Current session state or None
+
+        Note:
+            Web implementation: Returns in-memory state, not from storage.
         """
 
     @abstractmethod
@@ -180,6 +225,9 @@ class ISessionStateTracker(ABC):
 
         Returns:
             bool: True if auto-save is enabled, False otherwise
+
+        Note:
+            Web implementation: May be user-configurable in browser settings.
         """
 
     @abstractmethod
@@ -189,6 +237,52 @@ class ISessionStateTracker(ABC):
 
         Args:
             enabled: Whether to enable auto-save
+
+        Note:
+            Web implementation: May update a flag in localStorage or user profile.
+        """
+
+    @abstractmethod
+    def export_session_state(self) -> str:
+        """
+        Export current session state as a JSON string for backup or sync.
+
+        Returns:
+            str: JSON-serialized session state
+
+        Note:
+            Web implementation: Used for download/export or cloud sync.
+        """
+
+    @abstractmethod
+    def import_session_state(self, session_json: str) -> bool:
+        """
+        Import session state from a JSON string.
+
+        Args:
+            session_json: JSON-serialized session state
+
+        Returns:
+            bool: True if import was successful, False otherwise
+
+        Note:
+            Web implementation: Used for upload/import or cloud sync.
+        """
+
+    @abstractmethod
+    def migrate_session_state(self, from_version: str, to_version: str) -> bool:
+        """
+        Migrate session state from one version to another for compatibility.
+
+        Args:
+            from_version: Source version string
+            to_version: Target version string
+
+        Returns:
+            bool: True if migration was successful, False otherwise
+
+        Note:
+            Web implementation: Used for forward/backward compatibility in browser storage.
         """
 
 

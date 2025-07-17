@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Dict, Any, List, Set, Optional, TYPE_CHECKING
+from typing import Dict, Any, List, Set, Optional, Tuple, TYPE_CHECKING
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
@@ -157,4 +157,92 @@ class IGenerationHistoryService(ABC):
 
     @abstractmethod
     def clear_history(self) -> None:
+        pass
+
+
+class ITurnIntensityManager(ABC):
+    """Interface for turn intensity management operations."""
+
+    @abstractmethod
+    def calculate_turn_intensity(
+        self, sequence_data: Any, level: int
+    ) -> float:
+        """
+        Calculate turn intensity for sequence.
+
+        Args:
+            sequence_data: Sequence data to analyze
+            level: Difficulty level
+
+        Returns:
+            Calculated turn intensity value
+
+        Note:
+            Web implementation: Client-side turn calculation
+        """
+        pass
+
+    @abstractmethod
+    def apply_turn_intensity(
+        self, sequence_data: Any, intensity: float
+    ) -> Any:
+        """
+        Apply turn intensity to sequence.
+
+        Args:
+            sequence_data: Sequence to modify
+            intensity: Turn intensity to apply
+
+        Returns:
+            Modified sequence with applied intensity
+
+        Note:
+            Web implementation: Updates sequence turn properties
+        """
+        pass
+
+    @abstractmethod
+    def get_intensity_range(self, level: int) -> Tuple[float, float]:
+        """
+        Get valid intensity range for level.
+
+        Args:
+            level: Difficulty level
+
+        Returns:
+            Tuple of (min_intensity, max_intensity)
+
+        Note:
+            Web implementation: Returns level-appropriate ranges
+        """
+        pass
+
+    @abstractmethod
+    def validate_intensity(self, intensity: float, level: int) -> bool:
+        """
+        Validate turn intensity for level.
+
+        Args:
+            intensity: Turn intensity to validate
+            level: Difficulty level
+
+        Returns:
+            True if intensity is valid for level
+        """
+        pass
+
+    @abstractmethod
+    def get_recommended_intensity(self, level: int) -> float:
+        """
+        Get recommended turn intensity for level.
+
+        Args:
+            level: Difficulty level
+
+        Returns:
+            Recommended turn intensity
+
+        Note:
+            Web implementation: Returns level-optimized intensity
+        """
         pass

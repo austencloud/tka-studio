@@ -18,6 +18,7 @@ Services Registered:
 import logging
 from typing import TYPE_CHECKING, List
 
+from core.interfaces.core_services import IDataServiceRegistrar
 from ..service_registration_manager import BaseServiceRegistrar
 
 if TYPE_CHECKING:
@@ -26,7 +27,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class DataServiceRegistrar(BaseServiceRegistrar):
+class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
     """
     Registrar for data management services.
 

@@ -15,6 +15,7 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 
+from core.interfaces.pictograph_services import IPictographDataManager
 from domain.models.arrow_data import ArrowData
 from domain.models.beat_data import BeatData
 from domain.models.enums import GridMode
@@ -22,6 +23,18 @@ from domain.models.grid_data import GridData
 from domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager
+
+
+class PictographDataManager(IPictographDataManager):
+    """
+    Handles all core pictograph data operations.
+
+    Provides a clean interface for creating, updating, and querying pictographs
+    while maintaining efficient caching and indexing.
+    """
+
+    def __init__(self, cache_manager: DataCacheManager):
+        self.cache_manager = cache_manager
 
 
 class IPictographDataManager(ABC):

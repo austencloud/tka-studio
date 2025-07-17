@@ -32,11 +32,13 @@ def initialize_services():
         _command_processor = CommandProcessor(_event_bus)
 
         # Initialize sequence state manager (import here to avoid circular imports)
-        from application.services.sequence.sequence_state_tracker import (
-            SequenceStateTracker,
+        from presentation.adapters.qt.sequence_state_tracker_adapter import (
+            QtSequenceStateTrackerAdapter,
         )
 
-        _sequence_state_manager = SequenceStateTracker(_event_bus, _command_processor)
+        _sequence_state_manager = QtSequenceStateTrackerAdapter(
+            _event_bus, _command_processor
+        )
 
         # Initialize event logger for debugging
         try:

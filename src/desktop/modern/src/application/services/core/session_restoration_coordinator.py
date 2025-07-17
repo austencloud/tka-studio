@@ -15,25 +15,8 @@ from typing import Optional
 
 from application.services.sequence.sequence_restorer import ISequenceRestorer
 from core.events.event_bus import EventPriority, UIEvent, get_event_bus
+from core.interfaces.core_services import ISessionRestorationCoordinator
 from core.interfaces.session_services import ISessionStateTracker, SessionState
-
-
-class ISessionRestorationCoordinator(ABC):
-    """Interface for session restoration coordination."""
-
-    @abstractmethod
-    def load_and_prepare_session(
-        self, session_service: ISessionStateTracker
-    ) -> Optional[SessionState]:
-        """Load and prepare session data for restoration."""
-
-    @abstractmethod
-    def trigger_deferred_restoration(self, session_data: SessionState) -> None:
-        """Trigger deferred session restoration after UI components are ready."""
-
-    @abstractmethod
-    def trigger_deferred_restoration_if_pending(self) -> None:
-        """Trigger deferred session restoration if there's pending data."""
 
 
 class SessionRestorationCoordinator(ISessionRestorationCoordinator):

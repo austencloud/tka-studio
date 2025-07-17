@@ -17,14 +17,15 @@ Business Logic Services (moved to application layer):
 - SequenceDataConverter: Handles data conversion between formats (enhanced with caching)
 """
 
-# Services moved to application layer
-from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
 from application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
+
+# Services moved to application layer
+from presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
 
 from .layout_manager import ConstructTabLayoutManager
 from .option_picker_manager import OptionPickerManager
@@ -38,7 +39,7 @@ __all__ = [
     "OptionPickerManager",
     "SignalCoordinator",
     # Business services (re-exported from application layer)
-    "SequenceLoader",
+    "QtSequenceLoaderAdapter",
     "SequenceBeatOperations",
     "SequenceStartPositionManager",
 ]

@@ -418,3 +418,46 @@ class IWindowStateManager(ABC):
             window_id: Unique identifier for window
         """
         pass
+
+
+class IUILayoutProvider(ABC):
+    """
+    Interface for UI layout provider operations.
+    
+    Provides basic UI layout information and component sizing.
+    """
+
+    @abstractmethod
+    def get_main_window_size(self) -> Any:
+        """Get the main window size."""
+        pass
+
+    @abstractmethod
+    def get_workbench_size(self) -> Any:
+        """Get the workbench area size."""
+        pass
+
+    @abstractmethod
+    def get_picker_size(self) -> Any:
+        """Get the option picker size."""
+        pass
+
+    @abstractmethod
+    def get_layout_ratio(self) -> Tuple[int, int]:
+        """Get the layout ratio (workbench:picker)."""
+        pass
+
+    @abstractmethod
+    def set_layout_ratio(self, ratio: Tuple[int, int]) -> None:
+        """Set the layout ratio."""
+        pass
+
+    @abstractmethod
+    def calculate_component_size(self, component_type: str, parent_size: Any) -> Any:
+        """Calculate component size based on parent and type."""
+        pass
+
+    @abstractmethod
+    def set_main_window_size(self, size: Any) -> None:
+        """Set the main window size."""
+        pass

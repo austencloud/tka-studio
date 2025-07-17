@@ -9,10 +9,11 @@ and component size calculations.
 
 from typing import Tuple
 
+from core.interfaces.ui_services import IUILayoutProvider
 from core.types import Size
 
 
-class UILayoutProvider:
+class UILayoutProvider(IUILayoutProvider):
     """
     Provides basic UI layout information and component sizing.
 

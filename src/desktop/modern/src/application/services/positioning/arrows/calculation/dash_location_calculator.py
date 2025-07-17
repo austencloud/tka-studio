@@ -8,6 +8,7 @@ providing all the complex dash location maps and calculations with high precisio
 from typing import Optional
 
 from application.services.pictograph.analyzer import PictographAnalyzer
+from core.interfaces.positioning_services import IDashLocationCalculator
 from domain.models import (
     ArrowColor,
     LetterType,
@@ -20,7 +21,7 @@ from domain.models.enums import GridMode
 from domain.models.pictograph_data import PictographData
 
 
-class DashLocationCalculator:
+class DashLocationCalculator(IDashLocationCalculator):
     """
     Dash location calculation service.
 

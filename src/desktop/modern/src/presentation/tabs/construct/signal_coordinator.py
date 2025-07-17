@@ -5,8 +5,6 @@ Manages signal connections, emissions, and coordination between construct tab co
 Responsible for connecting signals between components and handling signal routing.
 """
 
-# Import services from application layer (moved from presentation)
-from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -15,6 +13,9 @@ from application.services.sequence.sequence_start_position_manager import (
 )
 from domain.models import SequenceData
 from domain.models.beat_data import BeatData
+
+# Import services from application layer (moved from presentation)
+from presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from .layout_manager import ConstructTabLayoutManager
@@ -47,7 +48,7 @@ class SignalCoordinator(QObject):
         layout_manager: ConstructTabLayoutManager,
         start_position_handler: StartPositionHandler,
         option_picker_manager: OptionPickerManager,
-        loading_service: SequenceLoader,
+        loading_service: QtSequenceLoaderAdapter,
         beat_operations: SequenceBeatOperations,
         start_position_manager: SequenceStartPositionManager,
     ):

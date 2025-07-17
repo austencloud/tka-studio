@@ -7,11 +7,10 @@ These interfaces define contracts for validation, scaling, and pictograph manipu
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Tuple
-
-from PyQt6.QtCore import QSize
+from typing import Any, Dict, List, Optional, Tuple
 
 from domain.models.pictograph_data import PictographData
+from PyQt6.QtCore import QSize
 
 
 class ScalingContext(Enum):
@@ -191,3 +190,509 @@ class IScalingService(ABC):
         Returns:
             int: Minimum size for the context
         """
+
+
+class AnalysisType(Enum):
+    """Analysis type enumeration."""
+
+    STRUCTURE = "structure"
+    SIMILARITY = "similarity"
+    COMPLEXITY = "complexity"
+    FREQUENCY = "frequency"
+
+
+class IAnalyzer(ABC):
+    """Interface for pictograph analyzer operations."""
+
+    @abstractmethod
+    def analyze_pictograph(
+        self, pictograph_data: Dict[str, Any], analysis_type: AnalysisType
+    ) -> Dict[str, Any]:
+        """
+        Analyze pictograph data.
+
+        Args:
+            pictograph_data: Pictograph data to analyze
+            analysis_type: Type of analysis to perform
+
+        Returns:
+            Analysis results dictionary
+
+        Note:
+            Web implementation: Same analysis logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def compare_pictographs(
+        self, pictograph1: Dict[str, Any], pictograph2: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Compare two pictographs.
+
+        Args:
+            pictograph1: First pictograph data
+            pictograph2: Second pictograph data
+
+        Returns:
+            Comparison results dictionary
+
+        Note:
+            Web implementation: Same comparison logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def get_analysis_metrics(self, pictograph_data: Dict[str, Any]) -> Dict[str, float]:
+        """
+        Get analysis metrics for pictograph.
+
+        Args:
+            pictograph_data: Pictograph data to analyze
+
+        Returns:
+            Dictionary of metric names to values
+
+        Note:
+            Web implementation: Same metrics calculation across platforms
+        """
+        pass
+
+
+class IPictographContextProvider(ABC):
+    """Interface for pictograph context provider operations."""
+
+    @abstractmethod
+    def get_context(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get context for a pictograph.
+
+        Args:
+            pictograph_id: ID of pictograph to get context for
+
+        Returns:
+            Context dictionary or None if not found
+
+        Note:
+            Web implementation: Retrieved from browser storage or server
+        """
+        pass
+
+
+class IPictographVisibilityManager(ABC):
+    """Interface for pictograph visibility manager operations."""
+
+    @abstractmethod
+    def set_pictograph_visibility(self, pictograph_id: str, visible: bool) -> None:
+        """
+        Set visibility for a pictograph.
+
+        Args:
+            pictograph_id: ID of pictograph to set visibility for
+            visible: Visibility state
+
+        Note:
+            Web implementation: Updates CSS display/visibility properties
+        """
+        pass
+
+    @abstractmethod
+    def get_pictograph_visibility(self, pictograph_id: str) -> bool:
+        """
+        Get visibility state for a pictograph.
+
+        Args:
+            pictograph_id: ID of pictograph to check
+
+        Returns:
+            True if visible, False otherwise
+
+        Note:
+            Web implementation: Checks CSS display/visibility properties
+        """
+        pass
+
+    @abstractmethod
+    def toggle_pictograph_visibility(self, pictograph_id: str) -> bool:
+        """
+        Toggle visibility for a pictograph.
+
+        Args:
+            pictograph_id: ID of pictograph to toggle
+
+        Returns:
+            New visibility state
+
+        Note:
+            Web implementation: Toggles CSS display/visibility properties
+        """
+        pass
+
+    @abstractmethod
+    def set_category_visibility(self, category: str, visible: bool) -> None:
+        """
+        Set visibility for all pictographs in a category.
+
+        Args:
+            category: Category name
+            visible: Visibility state
+
+        Note:
+            Web implementation: Updates CSS for all pictographs in category
+        """
+        pass
+
+    @abstractmethod
+    def get_category_visibility(self, category: str) -> bool:
+        """
+        Get visibility state for a category.
+
+        Args:
+            category: Category name
+
+        Returns:
+            True if category is visible, False otherwise
+        """
+        pass
+
+    @abstractmethod
+    def get_all_visibility_states(self) -> Dict[str, bool]:
+        """
+        Get visibility states for all pictographs.
+
+        Returns:
+            Dictionary mapping pictograph IDs to visibility states
+
+        Note:
+            Web implementation: Retrieved from DOM or state management
+        """
+        pass
+
+    @abstractmethod
+    def save_visibility_configuration(self, config_name: str) -> bool:
+        """
+        Save current visibility configuration.
+
+        Args:
+            config_name: Name for saved configuration
+
+        Returns:
+            True if saved successfully, False otherwise
+
+        Note:
+            Web implementation: Saves to browser storage
+        """
+        pass
+
+    @abstractmethod
+    def load_visibility_configuration(self, config_name: str) -> bool:
+        """
+        Load a saved visibility configuration.
+
+        Args:
+            config_name: Name of configuration to load
+
+        Returns:
+            True if loaded successfully, False otherwise
+
+        Note:
+            Web implementation: Loads from browser storage
+        """
+        pass
+
+    @abstractmethod
+    def get_visibility_configurations(self) -> List[str]:
+        """
+        Get list of saved visibility configurations.
+
+        Returns:
+            List of configuration names
+
+        Note:
+            Web implementation: Retrieved from browser storage
+        """
+        pass
+
+    @abstractmethod
+    def reset_visibility_to_defaults(self) -> None:
+        """
+        Reset all visibility states to defaults.
+
+        Note:
+            Web implementation: Resets CSS and state to default values
+        """
+        pass
+
+
+class IPictographPositionMatcher(ABC):
+    """Interface for pictograph position matcher operations."""
+
+    @abstractmethod
+    def match_position(
+        self, pictograph_data: Dict[str, Any], position_criteria: Dict[str, Any]
+    ) -> Optional[str]:
+        """
+        Match pictograph position to criteria.
+
+        Args:
+            pictograph_data: Pictograph data to match
+            position_criteria: Position matching criteria
+
+        Returns:
+            Position ID or None if no match
+
+        Note:
+            Web implementation: Same matching logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def get_matching_positions(self, pictograph_data: Dict[str, Any]) -> List[str]:
+        """
+        Get all positions matching pictograph data.
+
+        Args:
+            pictograph_data: Pictograph data to match
+
+        Returns:
+            List of matching position IDs
+
+        Note:
+            Web implementation: Same matching logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def get_position_compatibility(
+        self, pictograph_data: Dict[str, Any], position_id: str
+    ) -> float:
+        """
+        Get compatibility score between pictograph and position.
+
+        Args:
+            pictograph_data: Pictograph data
+            position_id: Position ID to check compatibility with
+
+        Returns:
+            Compatibility score (0.0 to 1.0)
+
+        Note:
+            Web implementation: Same compatibility calculation across platforms
+        """
+        pass
+
+    @abstractmethod
+    def update_position_mappings(self, mappings: Dict[str, List[str]]) -> bool:
+        """
+        Update position mappings.
+
+        Args:
+            mappings: Dictionary mapping pictograph IDs to position IDs
+
+        Returns:
+            True if updated successfully, False otherwise
+
+        Note:
+            Web implementation: Updates in browser storage or server
+        """
+        pass
+
+    @abstractmethod
+    def get_position_mappings(self) -> Dict[str, List[str]]:
+        """
+        Get current position mappings.
+
+        Returns:
+            Dictionary mapping pictograph IDs to position IDs
+
+        Note:
+            Web implementation: Retrieved from browser storage or server
+        """
+        pass
+
+
+class IPictographFactory(ABC):
+    """Interface for pictograph factory operations."""
+
+    @abstractmethod
+    def create_pictograph(
+        self, pictograph_type: str, parameters: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Create a new pictograph.
+
+        Args:
+            pictograph_type: Type of pictograph to create
+            parameters: Creation parameters
+
+        Returns:
+            Created pictograph data or None if failed
+
+        Note:
+            Web implementation: Same creation logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def clone_pictograph(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Clone an existing pictograph.
+
+        Args:
+            pictograph_id: ID of pictograph to clone
+
+        Returns:
+            Cloned pictograph data or None if failed
+
+        Note:
+            Web implementation: Same cloning logic across platforms
+        """
+        pass
+
+    @abstractmethod
+    def get_supported_types(self) -> List[str]:
+        """
+        Get list of supported pictograph types.
+
+        Returns:
+            List of supported types
+        """
+        pass
+
+    @abstractmethod
+    def validate_parameters(
+        self, pictograph_type: str, parameters: Dict[str, Any]
+    ) -> Tuple[bool, List[str]]:
+        """
+        Validate creation parameters.
+
+        Args:
+            pictograph_type: Type of pictograph
+            parameters: Parameters to validate
+
+        Returns:
+            Tuple of (is_valid, error_messages)
+
+        Note:
+            Web implementation: Same validation logic across platforms
+        """
+        pass
+
+
+class IPictographPoolManager(ABC):
+    """Interface for pictograph pool manager operations."""
+
+    @abstractmethod
+    def get_pictograph_from_pool(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get pictograph from pool.
+
+        Args:
+            pictograph_id: ID of pictograph to get
+
+        Returns:
+            Pictograph data or None if not in pool
+
+        Note:
+            Web implementation: Retrieved from memory pool or cache
+        """
+        pass
+
+    @abstractmethod
+    def add_pictograph_to_pool(
+        self, pictograph_id: str, pictograph_data: Dict[str, Any]
+    ) -> bool:
+        """
+        Add pictograph to pool.
+
+        Args:
+            pictograph_id: ID of pictograph to add
+            pictograph_data: Pictograph data to add
+
+        Returns:
+            True if added successfully, False otherwise
+
+        Note:
+            Web implementation: Adds to memory pool or cache
+        """
+        pass
+
+    @abstractmethod
+    def remove_pictograph_from_pool(self, pictograph_id: str) -> bool:
+        """
+        Remove pictograph from pool.
+
+        Args:
+            pictograph_id: ID of pictograph to remove
+
+        Returns:
+            True if removed successfully, False otherwise
+
+        Note:
+            Web implementation: Removes from memory pool or cache
+        """
+        pass
+
+    @abstractmethod
+    def clear_pool(self) -> bool:
+        """
+        Clear all pictographs from pool.
+
+        Returns:
+            True if cleared successfully, False otherwise
+
+        Note:
+            Web implementation: Clears memory pool or cache
+        """
+        pass
+
+    @abstractmethod
+    def get_pool_size(self) -> int:
+        """
+        Get current pool size.
+
+        Returns:
+            Number of pictographs in pool
+        """
+        pass
+
+    @abstractmethod
+    def get_pool_statistics(self) -> Dict[str, Any]:
+        """
+        Get pool statistics.
+
+        Returns:
+            Dictionary of pool statistics
+
+        Note:
+            Web implementation: May include memory usage metrics
+        """
+        pass
+
+
+class IPictographDataManager(ABC):
+    """Interface for pictograph data operations."""
+
+    @abstractmethod
+    def create_pictograph(self, grid_mode: Any = None) -> Any:
+        """Create a new blank pictograph."""
+
+    @abstractmethod
+    def create_from_beat(self, beat_data: Any) -> Any:
+        """Create pictograph from beat data."""
+
+    @abstractmethod
+    def update_pictograph_arrows(self, pictograph: Any, arrows: Dict[str, Any]) -> Any:
+        """Update arrows in pictograph."""
+
+    @abstractmethod
+    def search_dataset(self, query: Dict[str, Any]) -> List[Any]:
+        """Search pictograph dataset with query."""
+
+    @abstractmethod
+    def get_dataset_categories(self) -> List[str]:
+        """Get all available dataset categories."""
+
+    @abstractmethod
+    def add_to_dataset(self, pictograph: Any, category: str = "user_created") -> str:
+        """Add pictograph to dataset."""

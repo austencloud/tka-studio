@@ -8,12 +8,13 @@ and difficulty assessment without unnecessary interface abstractions.
 import logging
 from typing import Optional
 
+from core.interfaces.sequence_data_services import ISequenceDictionaryManager
 from domain.models.sequence_data import SequenceData
 
 logger = logging.getLogger(__name__)
 
 
-class SequenceDictionaryManager:
+class SequenceDictionaryManager(ISequenceDictionaryManager):
     """
     Simple dictionary service for sequence operations.
 

@@ -11,12 +11,13 @@ missing from the modern arrow positioning system.
 import logging
 from typing import Literal
 
+from core.interfaces.positioning_services import IQuadrantIndexCalculator
 from domain.models import Location, MotionData, MotionType
 
 logger = logging.getLogger(__name__)
 
 
-class QuadrantIndexCalculator:
+class QuadrantIndexCalculator(IQuadrantIndexCalculator):
     """
     Service for determining quadrant index for directional tuple selection.
 
@@ -26,6 +27,30 @@ class QuadrantIndexCalculator:
 
     def __init__(self):
         """Initialize the quadrant index service."""
+
+    def calculate_quadrant_index(self, location: Location) -> int:
+        """
+        Calculate quadrant index for the given location.
+
+        Args:
+            location: Arrow location
+
+        Returns:
+            Quadrant index (0-3)
+        """
+        # Use the legacy method with minimal motion data
+        from domain.models import MotionData, MotionType
+
+        # Create a minimal motion data to maintain compatibility
+        motion = MotionData(
+            motion_type=MotionType.STATIC,
+            start_location=location,
+            end_location=location,
+            turns=0.0,
+            rotation_direction=None,
+        )
+
+        return self.get_quadrant_index(motion, location)
 
     def get_quadrant_index(
         self, motion: MotionData, arrow_location: Location

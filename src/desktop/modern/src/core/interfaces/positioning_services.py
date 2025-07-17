@@ -181,3 +181,161 @@ class IPositionMapper(ABC):
     @abstractmethod
     def extract_modern_end_position(self, beat_data: BeatData) -> Optional[str]:
         """Extract end position directly from Modern BeatData."""
+
+
+class IDashLocationCalculator(ABC):
+    """Interface for calculating dash arrow locations."""
+
+    @abstractmethod
+    def calculate_dash_location_from_pictograph_data(
+        self, pictograph_data: PictographData, is_blue_arrow: bool
+    ) -> Location:
+        """
+        Calculate dash location from pictograph data.
+
+        Args:
+            pictograph_data: The pictograph data containing motion information
+            is_blue_arrow: True if calculating for blue arrow, False for red arrow
+
+        Returns:
+            Location enum value representing the calculated dash arrow location
+        """
+
+    @abstractmethod
+    def calculate_dash_location(
+        self,
+        dash_motion: MotionData,
+        blue_motion: MotionData,
+        red_motion: MotionData,
+        is_blue_arrow: bool,
+        grid_mode: str = "diamond",
+    ) -> Location:
+        """
+        Calculate dash location based on motion data.
+
+        Args:
+            dash_motion: The dash motion data
+            blue_motion: The blue motion data
+            red_motion: The red motion data
+            is_blue_arrow: True if calculating for blue arrow, False for red arrow
+        Returns:
+            Location enum value representing the calculated dash arrow location
+        """
+
+
+class IDirectionalTupleCalculator(ABC):
+    """Interface for calculating directional tuples for arrow positioning."""
+
+    @abstractmethod
+    def calculate_directional_tuple(
+        self, motion: MotionData, location: Location
+    ) -> Tuple[float, float]:
+        """
+        Calculate directional tuple for arrow positioning.
+
+        Args:
+            motion: Motion data containing type and rotation direction
+            location: Arrow location
+
+        Returns:
+            Tuple of (x_offset, y_offset) directional adjustments
+        """
+
+
+class IQuadrantIndexCalculator(ABC):
+    """Interface for calculating quadrant indices for arrow positioning."""
+
+    @abstractmethod
+    def calculate_quadrant_index(self, location: Location) -> int:
+        """
+        Calculate quadrant index for the given location.
+
+        Args:
+            location: Arrow location
+
+        Returns:
+            Quadrant index (0-3)
+        """
+
+
+class IAttributeKeyGenerator(ABC):
+    """Interface for generating attribute keys for arrow positioning."""
+
+    @abstractmethod
+    def get_key_from_arrow(
+        self, arrow_data: "ArrowData", pictograph_data: PictographData
+    ) -> str:
+        """
+        Get attribute key from arrow data.
+
+        Args:
+            arrow_data: Arrow data containing color and other attributes
+            pictograph_data: Pictograph data for context
+
+        Returns:
+            Attribute key string for positioning lookups
+        """
+
+    @abstractmethod
+    def generate_key(
+        self,
+        motion_type: Any,
+        letter: str,
+        start_ori: Any,
+        color: str,
+        lead_state: str,
+        has_hybrid_motions: bool,
+        starts_from_mixed_orientation: bool,
+        starts_from_standard_orientation: bool,
+    ) -> str:
+        """
+        Generate attribute key from components.
+
+        Args:
+            motion_type: Motion type
+            letter: Letter string
+            start_ori: Start orientation
+            color: Arrow color
+            lead_state: Lead state
+            has_hybrid_motions: Whether there are hybrid motions
+            starts_from_mixed_orientation: Whether starts from mixed orientation
+            starts_from_standard_orientation: Whether starts from standard orientation
+
+        Returns:
+            Generated attribute key string
+        """
+
+
+class IPlacementKeyGenerator(ABC):
+    """Interface for generating placement keys for arrow positioning."""
+
+    @abstractmethod
+    def get_key_from_arrow(
+        self, arrow_data: "ArrowData", pictograph_data: PictographData
+    ) -> str:
+        """
+        Get placement key from arrow data.
+
+        Args:
+            arrow_data: Arrow data containing color and other attributes
+            pictograph_data: Pictograph data for context
+
+        Returns:
+            Placement key string for positioning lookups
+        """
+
+
+class ITurnsTupleKeyGenerator(ABC):
+    """Interface for generating turns tuple keys for arrow positioning."""
+
+    @abstractmethod
+    def get_key_from_motion(self, motion_data: MotionData) -> str:
+        """
+        Get turns tuple key from motion data.
+
+        Args:
+            motion_data: Motion data containing turns information
+
+        Returns:
+            Turns tuple key string for positioning lookups
+        """

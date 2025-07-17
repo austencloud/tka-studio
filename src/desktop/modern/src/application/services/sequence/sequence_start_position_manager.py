@@ -5,15 +5,22 @@ Handles start position operations and management.
 Responsible for setting, updating, and managing start positions in sequences.
 """
 
+from abc import ABCMeta
 from typing import TYPE_CHECKING, Callable, Optional
 
 from application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
 from application.services.sequence.beat_factory import BeatFactory
 from application.services.sequence.sequence_persister import SequencePersister
+from core.interfaces.sequence_data_services import ISequenceStartPositionManager
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
+
+
+class QObjectABCMeta(type(QObject), ABCMeta):
+    """Metaclass that combines QObject's metaclass with ABCMeta."""
+
 
 if TYPE_CHECKING:
     from presentation.components.sequence_workbench.sequence_workbench import (
@@ -21,7 +28,9 @@ if TYPE_CHECKING:
     )
 
 
-class SequenceStartPositionManager(QObject):
+class SequenceStartPositionManager(
+    QObject, ISequenceStartPositionManager, metaclass=QObjectABCMeta
+):
     """
     Service for managing start positions in sequences.
 

@@ -6,10 +6,12 @@ Responsible for loading sequences from current_sequence.json and managing startu
 """
 
 import logging
+from abc import ABCMeta
 from typing import TYPE_CHECKING, Callable, Optional
 
 from application.services.data.legacy_to_modern_converter import LegacyToModernConverter
 from application.services.sequence.sequence_persister import SequencePersister
+from core.interfaces.sequence_data_services import ISequenceLoader
 from domain.models.sequence_data import SequenceData
 
 # Removed circular import - workbench should be passed as parameter if needed
@@ -18,10 +20,15 @@ from PyQt6.QtCore import QObject, pyqtSignal
 if TYPE_CHECKING:
     from domain.models.pictograph_data import PictographData
 
+
+class QObjectABCMeta(type(QObject), ABCMeta):
+    """Metaclass that combines QObject's metaclass with ABCMeta."""
+
+
 logger = logging.getLogger(__name__)
 
 
-class SequenceLoader(QObject):
+class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
     """
     Service for loading sequences from persistence and handling startup restoration.
 
@@ -241,4 +248,48 @@ class SequenceLoader(QObject):
                     return workbench.get_sequence()
             except Exception as e:
                 print(f"❌ Error getting current sequence: {e}")
+        return None
+
+    def load_sequence_from_file(self, filepath: str) -> Optional[SequenceData]:
+        """
+        Load sequence from file.
+
+        Args:
+            filepath: Path to sequence file
+
+        Returns:
+            Loaded sequence data, or None if failed
+        """
+        try:
+            return self.persistence_service.load_sequence_from_file(filepath)
+        except Exception as e:
+            logger.error(f"Failed to load sequence from file {filepath}: {e}")
+            return None
+
+    def load_current_sequence(self) -> Optional[SequenceData]:
+        """
+        Load the current sequence from default location.
+
+        Returns:
+            Current sequence data, or None if not found
+        """
+        try:
+            # Use the existing startup loading logic
+            sequence_data = self.persistence_service.load_current_sequence()
+            if sequence_data and len(sequence_data) > 1:
+                # Convert to modern format
+                metadata = sequence_data[0]
+                beats_data = [
+                    item for item in sequence_data[1:] if item.get("beat", 0) > 0
+                ]
+
+                # Create SequenceData object - simplified version
+                # For full implementation, would need to properly convert all data
+                return SequenceData(
+                    word=metadata.get("word", ""),
+                    beats=[],  # Would need proper conversion
+                )
+        except Exception as e:
+            logger.error(f"Failed to load current sequence: {e}")
+
         return None

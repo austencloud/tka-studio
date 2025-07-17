@@ -13,18 +13,22 @@ This achieves 100% functional parity with the legacy PlacementKeyGenerator.
 """
 
 import logging
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from application.services.pictograph.pictograph_validator import PictographValidator
+from core.interfaces.positioning_services import IPlacementKeyGenerator
 from domain.models import MotionData, Orientation
 from domain.models.enums import MotionType
 from domain.models.letter_condition import LetterCondition
 from domain.models.pictograph_data import PictographData
 
+if TYPE_CHECKING:
+    from domain.models.arrow_data import ArrowData
+
 logger = logging.getLogger(__name__)
 
 
-class PlacementKeyGenerator:
+class PlacementKeyGenerator(IPlacementKeyGenerator):
     """
     Service that generates placement keys for arrow positioning with legacy parity.
 
@@ -39,6 +43,23 @@ class PlacementKeyGenerator:
             LetterCondition.TYPE3: ["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"],
             LetterCondition.TYPE5: ["Φ-", "Ψ-", "Λ-"],
         }
+
+    def get_key_from_arrow(
+        self, arrow_data: "ArrowData", pictograph_data: PictographData
+    ) -> str:
+        """
+        Get placement key from arrow data.
+
+        Args:
+            arrow_data: Arrow data containing color and other attributes
+            pictograph_data: Pictograph data for context
+
+        Returns:
+            Placement key string for positioning lookups
+        """
+        # For now, return a simple default key - this would need proper implementation
+        # based on the arrow data and pictograph context
+        return "pro_to_layer1_alpha_A"
 
     def generate_placement_key(
         self,

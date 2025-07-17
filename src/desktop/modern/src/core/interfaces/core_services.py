@@ -5,9 +5,12 @@ These interfaces define the contracts for core services, replacing tightly-coupl
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
 from core.types import Size
+
+if TYPE_CHECKING:
+    from core.dependency_injection.di_container import DIContainer
 
 
 class ILayoutService(ABC):
@@ -392,3 +395,91 @@ class IUIStateManagementService(ABC):
     @abstractmethod
     def load_state(self) -> None:
         """Load UI state from persistent storage."""
+
+
+class IDataServiceRegistrar(ABC):
+    """
+    Interface for data service registrars.
+
+    Handles registration of data management services following microservices architecture.
+    """
+
+    @abstractmethod
+    def register_services(self, container: "DIContainer") -> None:
+        """Register all data services in the DI container."""
+
+    @abstractmethod
+    def get_domain_name(self) -> str:
+        """Get the name of the service domain this registrar handles."""
+
+    @abstractmethod
+    def get_registered_services(self) -> List[str]:
+        """Get list of service names registered by this registrar."""
+
+    @abstractmethod
+    def is_critical(self) -> bool:
+        """Return True if this registrar's services are critical for application startup."""
+
+    @abstractmethod
+    def get_service_availability(self) -> Dict[str, bool]:
+        """Get availability status of services in this domain."""
+
+
+class IAssetManager(ABC):
+    """
+    Interface for asset management operations.
+
+    Manages SVG assets, file paths, and color transformations for pictograph rendering.
+    """
+
+    @abstractmethod
+    def get_arrow_svg_path(self, motion_data: Any, color: str) -> str:
+        """Generate SVG file path for arrow assets based on motion type and color."""
+
+    @abstractmethod
+    def get_fallback_arrow_svg_path(self, motion_data: Any) -> str:
+        """Generate fallback SVG file path for original (non-colored) arrow assets."""
+
+    @abstractmethod
+    def get_prop_asset_path(self, prop_type: str, color: Optional[str] = None) -> str:
+        """Get asset path for prop (hand) assets."""
+
+    @abstractmethod
+    def svg_path_exists(self, path: str) -> bool:
+        """Check if SVG file exists at the given path."""
+
+    @abstractmethod
+    def apply_color_transformation(self, svg_data: str, color: str) -> str:
+        """Apply color transformation to SVG data."""
+
+    @abstractmethod
+    def load_and_cache_asset(self, path: str) -> str:
+        """Load and cache SVG asset with proper error handling."""
+
+    @abstractmethod
+    def get_cache_stats(self) -> Dict[str, int]:
+        """Get cache statistics for monitoring."""
+
+    @abstractmethod
+    def clear_cache(self) -> None:
+        """Clear the SVG asset cache."""
+
+    @abstractmethod
+    def get_cache_info(self) -> str:
+        """Get comprehensive cache information."""
+
+
+class ISessionRestorationCoordinator(ABC):
+    """Interface for session restoration coordination."""
+
+    @abstractmethod
+    def load_and_prepare_session(self, session_service) -> Optional[Any]:
+        """Load and prepare session data for restoration."""
+
+    @abstractmethod
+    def trigger_deferred_restoration(self, session_data: Any) -> None:
+        """Trigger deferred session restoration after UI components are ready."""
+
+    @abstractmethod
+    def trigger_deferred_restoration_if_pending(self) -> None:
+        """Trigger deferred session restoration if there's pending data."""

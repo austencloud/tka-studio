@@ -10,6 +10,7 @@ import logging
 from enum import Enum
 from typing import Dict, Any
 
+from core.interfaces.sequence_data_services import ISequenceGenerator
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
 
@@ -26,7 +27,7 @@ class SequenceType(Enum):
     CONTINUOUS = "continuous"
 
 
-class SequenceGenerator:
+class SequenceGenerator(ISequenceGenerator):
     """
     Pure service for generating sequences using various algorithms.
 

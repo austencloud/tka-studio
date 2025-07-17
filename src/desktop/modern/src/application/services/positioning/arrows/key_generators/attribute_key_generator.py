@@ -7,6 +7,7 @@ Legacy source: src/desktop/legacy/src/placement_managers/attr_key_generator.py
 
 import logging
 
+from core.interfaces.positioning_services import IAttributeKeyGenerator
 from domain.models.arrow_data import ArrowData
 from domain.models.enums import Orientation
 from domain.models.letter_type_classifier import LetterTypeClassifier
@@ -15,7 +16,7 @@ from domain.models.pictograph_data import PictographData
 logger = logging.getLogger(__name__)
 
 
-class AttributeKeyGenerator:
+class AttributeKeyGenerator(IAttributeKeyGenerator):
     """Faithful port of legacy AttrKeyGenerator."""
 
     def __init__(self):

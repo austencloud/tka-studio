@@ -1,7 +1,5 @@
 from typing import TYPE_CHECKING, Optional
 
-# Import services from application layer (moved from presentation)
-from application.services.sequence.loader import SequenceLoader
 from application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -12,6 +10,9 @@ from application.services.ui.coordination.ui_coordinator import UICoordinator
 from core.dependency_injection.di_container import DIContainer
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
+
+# Import services from application layer (moved from presentation)
+from presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
@@ -97,7 +98,7 @@ class ConstructTabWidget(QWidget):
         workbench_setter = self._get_workbench_setter()
 
         # Initialize sequence services directly
-        self.loading_service = SequenceLoader(
+        self.loading_service = QtSequenceLoaderAdapter(
             workbench_getter=workbench_getter,
             workbench_setter=workbench_setter,
         )

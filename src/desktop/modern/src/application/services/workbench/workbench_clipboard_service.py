@@ -8,6 +8,8 @@ Provides clipboard functionality without direct Qt dependencies in the service l
 import logging
 from typing import Tuple
 
+from core.interfaces.workbench_services import IClipboardAdapter
+
 logger = logging.getLogger(__name__)
 
 
@@ -117,7 +119,7 @@ class WorkbenchClipboardService:
             }
 
 
-class QtClipboardAdapter:
+class QtClipboardAdapter(IClipboardAdapter):
     """
     Qt-specific clipboard adapter.
     
@@ -178,7 +180,7 @@ class QtClipboardAdapter:
         return self._clipboard is not None
 
 
-class MockClipboardAdapter:
+class MockClipboardAdapter(IClipboardAdapter):
     """
     Mock clipboard adapter for testing.
     
