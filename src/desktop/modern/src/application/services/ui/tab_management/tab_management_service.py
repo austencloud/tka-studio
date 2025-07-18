@@ -152,13 +152,14 @@ class TabManagementService(ITabManagementService):
     def _create_browse_tab(self) -> QWidget:
         """Create the actual browse tab widget."""
         from pathlib import Path
+
         from presentation.tabs.browse import ModernBrowseTab
-        
+
         # Create browse tab with default paths
         # In a real implementation, these paths would come from configuration
         sequences_dir = Path("data/sequences")  # Default sequences directory
-        settings_file = Path("settings.json")    # Default settings file
-        
+        settings_file = Path("settings.json")  # Default settings file
+
         browse_tab = ModernBrowseTab(sequences_dir, settings_file)
         return browse_tab
 

@@ -87,13 +87,11 @@ Components are organized by feature and follow a consistent pattern:
    cd the-kinetic-constructor-web
    ```
 
-````
-
 2. Install dependencies:
 
    ```bash
-npm install
-````
+   npm install
+   ```
 
 3. Start the development server:
 
@@ -101,23 +99,13 @@ npm install
    npm run dev
    ```
 
-```
-
-```
-
-`
-
 4. Open your browser and navigate to [http://localhost:5173](http://localhost:5173)
 
 ### Building for Production
 
-````bash
-npm run build
-`n
-
 ```bash
 npm run build
-````
+```
 
 The built application will be in the `build` directory.
 

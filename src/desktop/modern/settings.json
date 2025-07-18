@@ -1,0 +1,10 @@
+{
+  "browse_tab": {
+    "filter_type": "contains_letters",
+    "filter_values": null,
+    "selected_sequence": null,
+    "selected_variation": null,
+    "navigation_mode": "filter_selector",
+    "sort_method": "alphabetical"
+  }
+}

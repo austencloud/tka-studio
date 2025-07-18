@@ -258,7 +258,7 @@ class BrowseService:
     def _create_test_sequences(self) -> List[SequenceData]:
         """Create test sequences for demo purposes."""
         test_sequences = []
-        
+
         # Sample sequence data for testing
         sample_data = [
             ("ALPHA", 3, "beginner", "Demo Author", True),
@@ -270,8 +270,10 @@ class BrowseService:
             ("ETA", 4, "beginner", "Demo Author", False),
             ("THETA", 5, "intermediate", "Test User", True),
         ]
-        
-        for i, (word, length, difficulty, author, is_favorite) in enumerate(sample_data):
+
+        for i, (word, length, difficulty, author, is_favorite) in enumerate(
+            sample_data
+        ):
             sequence = SequenceData(
                 id=f"test_seq_{i}",
                 name=f"Test Sequence {word}",
@@ -284,8 +286,8 @@ class BrowseService:
                 difficulty_level=difficulty,
                 date_added="2024-01-01",
                 is_favorite=is_favorite,
-                metadata={"created_by": "test_data_generator"}
+                metadata={"created_by": "test_data_generator"},
             )
             test_sequences.append(sequence)
-        
+
         return test_sequences

@@ -29,12 +29,12 @@ from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QWidget
 class ModernBrowseTab(QWidget):
     """
     Modern Browse Tab matching Legacy layout structure exactly.
-    
+
     Layout:
     - Main horizontal layout (2:1 ratio)
     - Left: internal_left_stack (QStackedWidget)
       - Index 0: Filter selection panel
-      - Index 1: Sequence browser panel  
+      - Index 1: Sequence browser panel
     - Right: Sequence viewer panel
     """
 
@@ -68,17 +68,21 @@ class ModernBrowseTab(QWidget):
 
         # Left side - Internal stack for filter selection and sequence browsing
         self.internal_left_stack = QStackedWidget()
-        
+
         # Create panels
         self.filter_selection_panel = FilterSelectionPanel(self.browse_service)
         self.sequence_browser_panel = SequenceBrowserPanel(
             self.browse_service, self.state_service
         )
-        
+
         # Add panels to stack (matching Legacy indexes)
-        self.internal_left_stack.addWidget(self.filter_selection_panel)  # 0 - Filter selection
-        self.internal_left_stack.addWidget(self.sequence_browser_panel)  # 1 - Sequence list
-        
+        self.internal_left_stack.addWidget(
+            self.filter_selection_panel
+        )  # 0 - Filter selection
+        self.internal_left_stack.addWidget(
+            self.sequence_browser_panel
+        )  # 1 - Sequence list
+
         # Start with filter selection visible (matching Legacy)
         self.internal_left_stack.setCurrentIndex(0)
 
@@ -95,8 +99,12 @@ class ModernBrowseTab(QWidget):
         self.filter_selection_panel.filter_selected.connect(self._on_filter_selected)
 
         # Browser panel signals
-        self.sequence_browser_panel.sequence_selected.connect(self.sequence_selected.emit)
-        self.sequence_browser_panel.open_in_construct.connect(self.open_in_construct.emit)
+        self.sequence_browser_panel.sequence_selected.connect(
+            self.sequence_selected.emit
+        )
+        self.sequence_browser_panel.open_in_construct.connect(
+            self.open_in_construct.emit
+        )
         self.sequence_browser_panel.back_to_filters.connect(self._show_filter_selection)
 
     def _load_initial_state(self) -> None:
@@ -104,14 +112,14 @@ class ModernBrowseTab(QWidget):
         # Load sequences
         sequences = self.browse_service.load_sequences()
         print(f"📚 Loaded {len(sequences)} sequences in browse tab")
-        
+
         # Always start with filter selection visible
         self._show_filter_selection()
 
     def _on_filter_selected(self, filter_type: FilterType, filter_value) -> None:
         """Handle filter selection - switch to sequence browser."""
         print(f"🔍 Filter selected: {filter_type} = {filter_value}")
-        
+
         # Save filter state
         self.state_service.set_filter(filter_type, filter_value)
 

@@ -12,7 +12,7 @@ from typing import Optional
 
 from presentation.tabs.browse.models import FilterType
 from presentation.tabs.browse.services.browse_service import BrowseService
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont, QResizeEvent
 from PyQt6.QtWidgets import (
     QFrame,
@@ -20,9 +20,9 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
-    QSizePolicy,
 )
 
 
@@ -33,7 +33,7 @@ class FilterSelectionPanel(QWidget):
     Features:
     - Choose Filter Label header
     - Responsive 3-column grid layout
-    - Glass-morphism styling  
+    - Glass-morphism styling
     - Show All button separated at bottom
     """
 
@@ -71,7 +71,7 @@ class FilterSelectionPanel(QWidget):
         # Setup responsive grid layout
         self._setup_responsive_grid_layout()
 
-        # Setup filter buttons  
+        # Setup filter buttons
         self._setup_filter_buttons()
 
         # Modern layout with flexible stretches
@@ -127,13 +127,19 @@ class FilterSelectionPanel(QWidget):
             (FilterType.AUTHOR, "Author", "Sequences by author."),
             (FilterType.FAVORITES, "Favorites", "Your favorite sequences."),
             (FilterType.MOST_RECENT, "Most Recent", "Recently created sequences."),
-            (FilterType.GRID_MODE, "Grid Mode", "Sequences by grid mode (Box or Diamond)."),
+            (
+                FilterType.GRID_MODE,
+                "Grid Mode",
+                "Sequences by grid mode (Box or Diamond).",
+            ),
         ]
 
         # Create filter button groups
         self.filter_buttons = {}
         for i, (filter_type, title, description) in enumerate(filters):
-            button_group = self._create_filter_button_group(filter_type, title, description)
+            button_group = self._create_filter_button_group(
+                filter_type, title, description
+            )
             self.filter_buttons[filter_type] = button_group
 
             row = i // self._grid_columns
@@ -211,7 +217,9 @@ class FilterSelectionPanel(QWidget):
         """Create the Show All button matching Legacy layout."""
         button = QPushButton("Show All")
         button.setMinimumSize(150, 50)
-        button.clicked.connect(lambda: self._on_filter_button_clicked(FilterType.ALL_SEQUENCES))
+        button.clicked.connect(
+            lambda: self._on_filter_button_clicked(FilterType.ALL_SEQUENCES)
+        )
 
         # Special styling for Show All button
         button.setStyleSheet(
@@ -303,7 +311,7 @@ class FilterSelectionPanel(QWidget):
     def _on_filter_button_clicked(self, filter_type: FilterType) -> None:
         """Handle filter button click."""
         print(f"🔍 [BROWSE] Filter button clicked: {filter_type.value}")
-        
+
         if filter_type == FilterType.ALL_SEQUENCES:
             # All sequences - no additional configuration needed
             print("🔍 [BROWSE] Emitting all sequences filter")

@@ -897,6 +897,12 @@ class UISetupManager(IUISetupManager):
                 "construct", construct_tab, tab_index
             )
 
+            if progress_callback:
+                progress_callback(91, "Adding browse tab to interface...")
+
+            # Add Browse tab
+            self._add_browse_tab(container, progress_callback)
+
             # WINDOW MANAGEMENT FIX: Keep widgets hidden during splash screen
             # They will be shown when the main window is displayed
             self.tab_widget.hide()
@@ -908,7 +914,7 @@ class UISetupManager(IUISetupManager):
             self.tab_widget.setCurrentIndex(0)
 
             if progress_callback:
-                progress_callback(92, "Construct tab fully loaded and ready!")
+                progress_callback(94, "Construct tab fully loaded and ready!")
 
         except Exception as e:
             import traceback
@@ -926,6 +932,70 @@ class UISetupManager(IUISetupManager):
                 "color: white; font-size: 14px; background: transparent;"
             )
             self.tab_widget.addTab(fallback_placeholder, "🔧 Construct")
+
+    def _add_browse_tab(
+        self,
+        container: "DIContainer",
+        progress_callback: Optional[Callable] = None,
+    ) -> None:
+        """Add Browse tab to the interface."""
+        try:
+            if progress_callback:
+                progress_callback(91, "Loading browse tab...")
+
+            # Import browse tab
+            # Create browse tab with required paths
+            # Using TKA's standard directories
+            import os
+            from pathlib import Path
+
+            from presentation.tabs.browse.modern_browse_tab import ModernBrowseTab
+
+            # Get TKA root directory
+            tka_root = Path(
+                __file__
+            ).parent.parent.parent.parent.parent  # Navigate to TKA root
+            sequences_dir = tka_root / "data" / "sequences"
+            settings_file = tka_root / "settings.json"
+
+            # Ensure directories exist
+            sequences_dir.mkdir(parents=True, exist_ok=True)
+
+            # Create browse tab
+            browse_tab = ModernBrowseTab(
+                sequences_dir=sequences_dir, settings_file=settings_file
+            )
+
+            browse_tab.setStyleSheet("background: transparent;")
+
+            if progress_callback:
+                progress_callback(92, "Adding browse tab to interface...")
+
+            # Add to tab widget
+            browse_tab_index = self.tab_widget.addTab(browse_tab, "📚 Browse")
+
+            # Register with tab management service
+            self.tab_management_service.register_existing_tab(
+                "browse", browse_tab, browse_tab_index
+            )
+
+            # Keep hidden during splash screen
+            browse_tab.hide()
+            browse_tab.setVisible(False)
+
+            if progress_callback:
+                progress_callback(93, "Browse tab loaded successfully!")
+
+        except Exception as e:
+            import traceback
+
+            print(f"⚠️ Error loading browse tab: {e}")
+            print(f"🔍 Full traceback:")
+            traceback.print_exc()
+            if progress_callback:
+                progress_callback(
+                    92, "Browse tab load failed, continuing without it..."
+                )
 
     def _connect_construct_tab_to_session(
         self,

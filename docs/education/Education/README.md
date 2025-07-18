@@ -2,6 +2,10 @@
 
 This directory contains comprehensive documentation for the complete Kinetic Alphabet system spanning all 8 levels of complexity.
 
+## 🌟 Quick Start
+
+For a visual introduction to the Kinetic Alphabet system, see the **[Interactive HTML Introduction](../kinetic_alphabet_intro.html)** - a comprehensive beginner's guide with visual examples and interactive elements.
+
 ## 📁 Document Structure
 
 ### 🎯 System Overview
