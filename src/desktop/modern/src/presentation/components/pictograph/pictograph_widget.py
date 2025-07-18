@@ -28,6 +28,10 @@ class PictographWidget(QWidget):
         self._view = QGraphicsView(self)
         self._view.setScene(self._scene)
 
+        # Store scaling context for start position pickers
+        self._scaling_context = None
+        self._scaling_params = {}
+
         # Simple layout
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -92,11 +96,80 @@ class PictographWidget(QWidget):
         """Fit view to scene content."""
         if self._scene and self._view:
             try:
-                scene_rect = self._scene.sceneRect()
-                if not scene_rect.isEmpty():
-                    self._view.fitInView(scene_rect, Qt.AspectRatioMode.KeepAspectRatio)
+                # Check if we have a start position scaling context
+                if self._scaling_context and self._is_start_position_context():
+                    self._apply_start_position_scaling()
+                else:
+                    # Use standard fitInView for other contexts
+                    # CRITICAL FIX: Use items bounding rect like legacy system
+                    # This ensures we fit to actual content, not the full 950x950 scene
+                    items_rect = self._scene.itemsBoundingRect()
+                    if not items_rect.isEmpty():
+                        # Update scene rect to match items bounds (like legacy)
+                        self._scene.setSceneRect(items_rect)
+                        self._view.fitInView(
+                            items_rect, Qt.AspectRatioMode.KeepAspectRatio
+                        )
+                    else:
+                        # Fallback to scene rect if no items
+                        scene_rect = self._scene.sceneRect()
+                        if not scene_rect.isEmpty():
+                            self._view.fitInView(
+                                scene_rect, Qt.AspectRatioMode.KeepAspectRatio
+                            )
             except RuntimeError:
                 pass  # Handle deleted objects gracefully
+
+    def _is_start_position_context(self) -> bool:
+        """Check if current scaling context is for start position picker."""
+        from application.services.pictograph.scaling_service import ScalingContext
+
+        return self._scaling_context in [
+            ScalingContext.START_POS_PICKER,
+            ScalingContext.ADVANCED_START_POS,
+        ]
+
+    def _apply_start_position_scaling(self):
+        """Apply manual scaling for start position pickers like legacy system."""
+        try:
+            # Get scene dimensions
+            scene_rect = self._scene.sceneRect()
+            if scene_rect.width() <= 0 or scene_rect.height() <= 0:
+                return
+
+            # Get main window width for calculation
+            main_window = self.window()
+            main_window_width = main_window.width() if main_window else 1200
+
+            # Calculate target size based on context (like legacy)
+            from application.services.pictograph.scaling_service import ScalingContext
+
+            if self._scaling_context == ScalingContext.ADVANCED_START_POS:
+                # Advanced mode: main_window_width // 12
+                target_size = main_window_width // 12
+                min_size = 70
+            else:
+                # Basic mode: main_window_width // 10
+                target_size = main_window_width // 10
+                min_size = 80
+
+            # Apply border calculation like legacy
+            border_width = max(1, int(target_size * 0.015))
+            target_size = target_size - (2 * border_width)
+            target_size = max(target_size, min_size)
+
+            # Calculate scale factor like legacy
+            scale_factor = target_size / max(scene_rect.width(), scene_rect.height())
+
+            # Apply manual scaling like legacy
+            self._view.resetTransform()
+            self._view.scale(scale_factor, scale_factor)
+
+        except Exception as e:
+            # Fallback to fitInView if manual scaling fails
+            items_rect = self._scene.itemsBoundingRect()
+            if not items_rect.isEmpty():
+                self._view.fitInView(items_rect, Qt.AspectRatioMode.KeepAspectRatio)
 
     # === COMPATIBILITY METHODS ===
 
@@ -105,7 +178,11 @@ class PictographWidget(QWidget):
         pass
 
     def set_scaling_context(self, context, **params) -> None:
-        """Set scaling context - delegate to scene."""
+        """Set scaling context for start position pickers."""
+        self._scaling_context = context
+        self._scaling_params = params
+
+        # Also delegate to scene if it supports it
         if hasattr(self._scene, "set_scaling_context"):
             self._scene.set_scaling_context(context, **params)
 

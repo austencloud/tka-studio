@@ -8,7 +8,14 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from core.types import Widget, WidgetType
+from core.types import (
+    AnimationGroupType,
+    OpacityEffectType,
+    PropertyAnimationType,
+    StackWidget,
+    Widget,
+    WidgetType,
+)
 
 
 class EasingType(Enum):
@@ -43,9 +50,9 @@ class StackFadeOptions(FadeOptions):
 class ParallelStackOperation:
     """Configuration for parallel stack fade operations."""
 
-    left_stack: QStackedWidget
+    left_stack: StackWidget
     left_new_index: int
-    right_stack: QStackedWidget
+    right_stack: StackWidget
     right_new_index: int
     layout_ratio: tuple[int, int]
     options: StackFadeOptions
@@ -76,16 +83,16 @@ class IAnimationFactory(ABC):
     @abstractmethod
     def create_opacity_animation(
         self,
-        effect: QGraphicsOpacityEffect,
+        effect: OpacityEffectType,
         options: FadeOptions,
         start_value: float,
         end_value: float,
-    ) -> QPropertyAnimation:
+    ) -> PropertyAnimationType:
         """Create an opacity animation."""
         pass
 
     @abstractmethod
-    def create_parallel_group(self) -> QParallelAnimationGroup:
+    def create_parallel_group(self) -> AnimationGroupType:
         """Create a parallel animation group."""
         pass
 
@@ -160,7 +167,7 @@ class IStackAnimationService(ABC):
     @abstractmethod
     async def fade_stack(
         self,
-        stack: QStackedWidget,
+        stack: StackWidget,
         new_index: int,
         options: Optional[StackFadeOptions] = None,
     ) -> None:
@@ -189,7 +196,7 @@ class IFadeOrchestrator(ABC):
     @abstractmethod
     async def fade_stack_transition(
         self,
-        stack: QStackedWidget,
+        stack: StackWidget,
         new_index: int,
         options: Optional[StackFadeOptions] = None,
     ) -> None:

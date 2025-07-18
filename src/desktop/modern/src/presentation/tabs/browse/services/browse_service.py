@@ -76,25 +76,46 @@ class BrowseService:
         if filter_type == FilterType.ALL_SEQUENCES:
             return sequences
         elif filter_type == FilterType.STARTING_LETTER:
+            if filter_value is None:
+                # Return all sequences when no specific letter is chosen
+                return sequences
             return [
                 s
                 for s in sequences
                 if s.word and s.word[0].upper() == filter_value.upper()
             ]
         elif filter_type == FilterType.CONTAINS_LETTERS:
+            if filter_value is None:
+                return sequences
             return [s for s in sequences if filter_value.lower() in s.word.lower()]
         elif filter_type == FilterType.SEQUENCE_LENGTH:
+            if filter_value is None:
+                return sequences
             return [s for s in sequences if s.sequence_length == filter_value]
         elif filter_type == FilterType.DIFFICULTY_LEVEL:
+            if filter_value is None:
+                return sequences
             return [s for s in sequences if s.difficulty_level == filter_value]
         elif filter_type == FilterType.STARTING_POSITION:
+            if filter_value is None:
+                return sequences
             return [
                 s for s in sequences if self._matches_starting_position(s, filter_value)
             ]
         elif filter_type == FilterType.AUTHOR:
+            if filter_value is None:
+                return sequences
             return [s for s in sequences if s.author == filter_value]
         elif filter_type == FilterType.GRID_MODE:
+            if filter_value is None:
+                return sequences
             return [s for s in sequences if self._matches_grid_mode(s, filter_value)]
+        elif filter_type == FilterType.FAVORITES:
+            # For now, return all sequences as favorites
+            return sequences
+        elif filter_type == FilterType.MOST_RECENT:
+            # For now, return all sequences as most recent
+            return sequences
         else:
             return sequences
 

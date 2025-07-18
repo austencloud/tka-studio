@@ -2,6 +2,18 @@
 Core types module for framework-agnostic data structures.
 """
 
+from .animation import (
+    AnimationGroup,
+    AnimationGroupType,
+    DesktopImplementationHints,
+    OpacityEffect,
+    OpacityEffectType,
+    PropertyAnimation,
+    PropertyAnimationType,
+    StackContainer,
+    StackWidget,
+    WebImplementationHints,
+)
 from .geometry import (
     Point,
     PointType,
@@ -14,6 +26,7 @@ from .geometry import (
 )
 
 __all__ = [
+    # Geometry types
     "Size",
     "Point",
     "Rect",
@@ -22,4 +35,15 @@ __all__ = [
     "PointType",
     "RectType",
     "WidgetType",
+    # Animation types
+    "StackWidget",
+    "OpacityEffectType",
+    "PropertyAnimationType",
+    "AnimationGroupType",
+    "StackContainer",
+    "OpacityEffect",
+    "PropertyAnimation",
+    "AnimationGroup",
+    "WebImplementationHints",
+    "DesktopImplementationHints",
 ]

@@ -1,6 +1,6 @@
 {
   "browse_tab": {
-    "filter_type": "all_sequences",
+    "filter_type": "sequence_length",
     "filter_values": null,
     "selected_sequence": null,
     "selected_variation": null,

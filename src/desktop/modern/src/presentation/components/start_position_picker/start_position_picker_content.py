@@ -288,7 +288,7 @@ class StartPositionPickerContent(QWidget):
 
             # Update the pictograph size to match the container
             if hasattr(option, "update_pictograph_size"):
-                option.update_pictograph_size(size)
+                option.update_pictograph_size(size, is_advanced)
                 logger.debug(
                     f"Applied sizing: container={size}px, advanced={is_advanced}"
                 )
@@ -304,7 +304,7 @@ class StartPositionPickerContent(QWidget):
 
             # Apply fallback pictograph sizing too
             if hasattr(option, "update_pictograph_size"):
-                option.update_pictograph_size(default_size)
+                option.update_pictograph_size(default_size, is_advanced)
 
     def _apply_sizing_to_all_options(self, is_advanced: bool):
         """Apply sizing to all position options after layout is arranged - EXACT logic from original."""

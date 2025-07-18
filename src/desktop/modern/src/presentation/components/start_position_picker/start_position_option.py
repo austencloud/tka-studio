@@ -330,7 +330,7 @@ class StartPositionOption(QWidget):
 
         painter.end()
 
-    def update_pictograph_size(self, container_size: int):
+    def update_pictograph_size(self, container_size: int, is_advanced: bool = False):
         """Update the pictograph size to match the container."""
         if self._pictograph_component:
             # Calculate pictograph size to better fill the container
@@ -340,80 +340,22 @@ class StartPositionOption(QWidget):
             )  # Minimal margins for better centering
             self._pictograph_component.setFixedSize(pictograph_size, pictograph_size)
 
-            # CRITICAL FIX: Apply manual scaling like legacy system
-            self._apply_manual_scaling(pictograph_size)
+            # Set the appropriate scaling context based on mode
+            if hasattr(self._pictograph_component, "set_scaling_context"):
+                from application.services.pictograph.scaling_service import (
+                    ScalingContext,
+                )
+
+                context = (
+                    ScalingContext.ADVANCED_START_POS
+                    if is_advanced
+                    else ScalingContext.START_POS_PICKER
+                )
+                self._pictograph_component.set_scaling_context(context)
 
             logger.debug(
-                f"Updated pictograph size to {pictograph_size}px for position {self.position_key}"
+                f"Updated pictograph size to {pictograph_size}px for position {self.position_key}, advanced={is_advanced}"
             )
-
-    def _apply_manual_scaling(self, container_size: int):
-        """Apply manual scaling to pictograph like legacy system"""
-        if not self._pictograph_component or not hasattr(
-            self._pictograph_component, "view"
-        ):
-            return
-
-        try:
-            # Get the graphics view from the simplified pictograph widget
-            graphics_view = self._pictograph_component.view
-            if not graphics_view or not graphics_view.scene():
-                return
-
-            # Get scene dimensions (like legacy pictograph.width())
-            scene_rect = graphics_view.scene().sceneRect()
-            if scene_rect.width() <= 0 or scene_rect.height() <= 0:
-                return
-
-            # Calculate target size like legacy: container size minus borders
-            # For advanced mode, use container width / 12 like legacy
-            # For basic mode, use container width / 10 like legacy
-            main_window = self.window()
-            if main_window:
-                main_window_width = main_window.width()
-            else:
-                main_window_width = 1000  # Fallback
-
-            # Determine if we're in advanced mode by checking container size
-            # Advanced mode typically has smaller containers due to 4x4 grid
-            is_advanced = (
-                container_size < 150
-            )  # Heuristic: smaller containers = advanced mode
-
-            if is_advanced:
-                # Advanced mode: container width / 12 (like legacy)
-                target_size = main_window_width // 12
-            else:
-                # Basic mode: container width / 10 (like legacy)
-                target_size = main_window_width // 10
-
-            # Apply border calculation like legacy (responsive border width)
-            border_width = max(1, int(target_size * 0.015))
-            target_size = target_size - (2 * border_width)
-            target_size = max(target_size, 60)  # Minimum size
-
-            # Calculate scale factor like legacy: target_size / scene_width
-            scale_factor = target_size / max(scene_rect.width(), scene_rect.height())
-
-            # Apply manual scaling like legacy: resetTransform() then scale()
-            graphics_view.resetTransform()
-            graphics_view.scale(scale_factor, scale_factor)
-
-            logger.debug(
-                f"🔧 [START_POS_OPTION] Manual scaling applied: container={container_size}, target={target_size}, scale={scale_factor:.3f}, advanced={is_advanced}"
-            )
-
-        except Exception as e:
-            logger.warning(f"⚠️ [START_POS_OPTION] Error applying manual scaling: {e}")
-
-    def resizeEvent(self, event):
-        """Handle resize events and apply manual scaling"""
-        super().resizeEvent(event)
-
-        # Apply manual scaling when widget is resized
-        if self._pictograph_component:
-            container_size = min(self.width(), self.height())
-            self._apply_manual_scaling(container_size)
 
     def closeEvent(self, event):
         """Clean up pool resources when widget is closed."""
