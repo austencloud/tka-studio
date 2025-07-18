@@ -1,60 +1,14 @@
 """
-TKA Monorepo Global Pytest Configuration
-========================================
+TKA Test Configuration
+======================
 
-Optimized conftest.py for perfect test suite execution.
+Minimal conftest.py that relies on proper package installation
+instead of sys.path manipulation.
 """
 
-import sys
-import os
-from pathlib import Path
 import pytest
 import warnings
-
-
-def setup_tka_environment():
-    """Set up TKA environment with error handling."""
-    try:
-        tka_root = Path(__file__).parent.absolute()
-
-        essential_paths = [
-            str(tka_root),
-            str(tka_root / "src"),
-            str(tka_root / "src" / "desktop" / "modern" / "src"),
-            str(tka_root / "src" / "desktop" / "modern"),
-            str(tka_root / "src" / "desktop" / "legacy" / "src"),
-            str(tka_root / "src" / "desktop" / "legacy"),
-            str(tka_root / "launcher"),
-            str(tka_root / "packages"),
-        ]
-
-        # Add to sys.path safely
-        for path in essential_paths:
-            if Path(path).exists() and path not in sys.path:
-                sys.path.insert(0, path)
-
-        # Set PYTHONPATH
-        os.environ["PYTHONPATH"] = os.pathsep.join(essential_paths)
-
-        return True
-    except Exception as e:
-        warnings.warn(f"TKA environment setup failed: {e}")
-        return False
-
-
-# Set up environment immediately
-ENVIRONMENT_OK = setup_tka_environment()
-
-# Set up project root
-PROJECT_ROOT_OK = False
-try:
-    if ENVIRONMENT_OK:
-        from project_root import ensure_project_setup
-
-        ensure_project_setup()
-        PROJECT_ROOT_OK = True
-except Exception as e:
-    warnings.warn(f"Project root setup failed: {e}")
+from pathlib import Path
 
 
 def pytest_configure(config):
@@ -63,7 +17,7 @@ def pytest_configure(config):
         "unit: Unit tests (fast, isolated)",
         "integration: Integration tests",
         "modern: Modern codebase tests",
-        "legacy: Legacy codebase tests",
+        "legacy: Legacy codebase tests", 
         "launcher: Launcher tests",
         "slow: Tests taking >5 seconds",
         "broken: Known broken tests",
@@ -76,197 +30,62 @@ def pytest_configure(config):
 
 
 def pytest_sessionstart(session):
-    """Session start with diagnostics."""
+    """Session start with minimal diagnostics."""
     if session.config.option.verbose >= 1:
-        print(f"\n🚀 TKA Test Suite Starting")
-        if ENVIRONMENT_OK:
-            print("✅ Environment setup successful")
-        if PROJECT_ROOT_OK:
-            print("✅ Project root configured")
+        print("🚀 TKA Test Suite Starting")
+        print("✅ Using editable package installation")
 
 
-def pytest_collection_modifyitems(config, items):
-    """Smart test collection with error handling."""
-    print(f"📊 Collected {len(items)} test items")
-
-    # Check PyQt6 availability safely
-    pyqt6_available = False
-    try:
-        import PyQt6.QtCore
-
-        pyqt6_available = True
-        print("✅ PyQt6 available for GUI tests")
-    except ImportError:
-        print("⚠️  PyQt6 not available - will skip GUI tests")
-
-    # Process test items
-    skipped_count = 0
-    for item in items:
-        file_path = str(item.fspath)
-
-        # Skip GUI tests if PyQt6 not available
-        if not pyqt6_available and any(
-            gui_indicator in file_path.lower()
-            for gui_indicator in ["gui", "widget", "qt", "ui"]
-        ):
-            item.add_marker(pytest.mark.skip(reason="PyQt6 not available"))
-            skipped_count += 1
-
-        # Add location markers
-        if "legacy" in file_path:
-            item.add_marker(pytest.mark.legacy)
-        elif "modern" in file_path:
-            item.add_marker(pytest.mark.modern)
-        elif "launcher" in file_path:
-            item.add_marker(pytest.mark.launcher)
-
-        # Add type markers
-        if "unit" in file_path:
-            item.add_marker(pytest.mark.unit)
-        elif "integration" in file_path:
-            item.add_marker(pytest.mark.integration)
-
-    if skipped_count > 0:
-        print(f"⏭️  Will skip {skipped_count} tests (missing dependencies)")
-
-
-def pytest_runtest_setup(item):
-    """Pre-test setup with graceful handling."""
-    # Skip tests marked as broken
-    if item.get_closest_marker("broken"):
-        pytest.skip("Test marked as broken")
-
-    # Handle Qt errors gracefully - set up QApplication BEFORE any Qt imports
-    file_path = str(item.fspath).lower()
-    if any(
-        gui_word in file_path
-        for gui_word in ["gui", "widget", "qt", "ui", "end_to_end"]
-    ):
-        try:
-            # Import Qt and set up application immediately
-            from PyQt6.QtWidgets import QApplication
-            import sys
-
-            # Ensure QApplication exists before any Qt widgets are created
-            app = QApplication.instance()
-            if app is None:
-                # Create QApplication with minimal args to avoid conflicts
-                app = QApplication(sys.argv if sys.argv else ["pytest"])
-                app.setQuitOnLastWindowClosed(False)
-
-            # Set a flag so tests know QApplication is ready
-            import os
-
-            os.environ["PYTEST_QT_READY"] = "1"
-
-        except ImportError:
-            pytest.skip("PyQt6 not available for GUI test")
-        except Exception as e:
-            pytest.skip(f"Qt setup failed: {e}")
-
-
-def pytest_runtest_teardown(item, nextitem):
-    """Post-test cleanup."""
-    # Clean up Qt application state for GUI tests
-    file_path = str(item.fspath).lower()
-    if any(
-        gui_word in file_path
-        for gui_word in ["gui", "widget", "qt", "ui", "end_to_end"]
-    ):
-        try:
-            from PyQt6.QtWidgets import QApplication
-
-            app = QApplication.instance()
-            if app:
-                app.processEvents()
-                # Clear any widgets that might be lingering
-                for widget in app.allWidgets():
-                    if widget and not widget.parent():
-                        widget.close()
-                app.processEvents()
-        except:
-            pass  # Ignore cleanup errors
-
-        # Clear the Qt ready flag
-        import os
-
-        os.environ.pop("PYTEST_QT_READY", None)
-
-
-def pytest_exception_interact(node, call, report):
-    """Handle test exceptions gracefully."""
-    if report.failed and "QWidget: Must construct a QApplication" in str(
-        call.excinfo.value
-    ):
-        # This is a Qt error, mark as skipped instead of failed
-        report.outcome = "skipped"
-        report.wasxfail = "Qt application setup issue"
-
-
-# Essential fixtures
 @pytest.fixture(scope="session")
 def tka_root():
-    """TKA root directory."""
-    return Path(__file__).parent
+    """Provide the TKA project root directory."""
+    return Path(__file__).parent.absolute()
 
 
-@pytest.fixture
-def mock_container():
-    """Mock DI container for testing."""
-    from unittest.mock import Mock
-
-    container = Mock()
-    container.resolve = Mock()
-    return container
-
-
-# Safe PyQt6 handling
-@pytest.fixture(scope="session")
-def qapp():
-    """Create QApplication for GUI tests."""
-    app = None
+@pytest.fixture(scope="session") 
+def qt_app():
+    """Provide a QApplication instance for GUI tests."""
     try:
         from PyQt6.QtWidgets import QApplication
         import sys
-
-        # Check if QApplication already exists
+        
         app = QApplication.instance()
         if app is None:
-            # Create with minimal argv to avoid issues
-            app = QApplication(sys.argv if sys.argv else ["pytest"])
-            app.setQuitOnLastWindowClosed(False)
-
+            app = QApplication(sys.argv)
+        
+        yield app
+        
+        # Clean up
+        if app:
+            app.quit()
+            
     except ImportError:
-        # PyQt6 not available
-        app = None
-    except Exception as e:
-        # Any other Qt setup error
-        print(f"Warning: Qt setup failed: {e}")
-        app = None
-
-    yield app
-
-    # Cleanup
-    if app:
-        try:
-            app.processEvents()
-        except Exception:
-            pass
+        pytest.skip("PyQt6 not available")
 
 
-@pytest.fixture(autouse=True)
-def handle_pyqt6_safely(request, qapp):
-    """Handle PyQt6 tests safely."""
-    if request.node.get_closest_marker("skip_if_no_pyqt6"):
-        if qapp is None:
-            pytest.skip("PyQt6 not available")
+def pytest_collection_modifyitems(config, items):
+    """Modify test collection to add markers automatically."""
+    for item in items:
+        # Add markers based on test file location
+        test_path = str(item.fspath)
+        
+        if "launcher/tests" in test_path:
+            item.add_marker(pytest.mark.launcher)
+        elif "src/desktop/modern/tests" in test_path:
+            item.add_marker(pytest.mark.modern)
+        elif "src/desktop/legacy/tests" in test_path:
+            item.add_marker(pytest.mark.legacy)
+        elif "tests/unit" in test_path:
+            item.add_marker(pytest.mark.unit)
+        elif "tests/integration" in test_path:
+            item.add_marker(pytest.mark.integration)
+        
+        # Mark GUI tests
+        if any(gui_keyword in test_path.lower() for gui_keyword in ["gui", "widget", "window", "qt"]):
+            item.add_marker(pytest.mark.gui)
 
-    # Set up QApplication for any test that might need it
-    if qapp and hasattr(request.node, "fspath"):
-        file_path = str(request.node.fspath).lower()
-        if any(
-            gui_word in file_path
-            for gui_word in ["gui", "widget", "qt", "ui", "end_to_end"]
-        ):
-            # Ensure QApplication is active for GUI tests
-            pass
+
+# Suppress specific warnings that are not actionable
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="pkg_resources")
+warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+warnings.filterwarnings("ignore", message=".*distutils.*")

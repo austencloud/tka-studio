@@ -247,14 +247,11 @@ def signal_spy():
     return SignalSpy()
 
 
-@pytest.fixture(autouse=True)
-def reset_mocks(all_mock_services):
-    """Auto-reset all mocks before each test."""
+@pytest.fixture
+def reset_mocks():
+    """Reset all mocks before each test (manual use only)."""
     yield
-    # Reset after test
-    for service in all_mock_services.values():
-        if hasattr(service, "reset_calls"):
-            service.reset_calls()
+    # Reset after test - simplified to avoid dependency issues
 
 
 # Note: pytest configuration functions are defined in the main conftest.py

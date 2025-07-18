@@ -15,25 +15,61 @@ dependencies = [
     "requests>=2.31.0",
     "pydantic>=2.0.0",
     "sqlalchemy>=2.0.0",
+    "pytest>=7.4.0",
+    "pytest-qt>=4.2.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-html>=3.1.0",
+    "pytest-metadata>=3.0.0",
+    "pytest-xvfb>=3.0.0",
+    "hypothesis>=6.0.0",
+    "Faker>=18.0.0",
+    "anyio>=3.6.0",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=7.4.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "pylint>=2.17.0",
-    "mypy>=1.5.0",
-    "pytest-cov>=4.1.0",
-    "pytest-asyncio>=0.21.0",
-]
+dev = ["black>=23.0.0", "isort>=5.12.0", "pylint>=2.17.0", "mypy>=1.5.0"]
 test-automation = [
     "pre-commit>=3.0.0",
     "watchdog>=3.0.0",
     "schedule>=1.2.0",
     "pytest-xdist>=3.0.0",
-    "pytest-qt>=4.2.0",
     "plyer>=2.1.0",
+]
+
+# ===================================================================
+# PYTEST CONFIGURATION
+# ===================================================================
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = [
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--strict-config",
+    "--disable-warnings",
+    "-ra",
+]
+testpaths = [
+    "tests",
+    "src/desktop/modern/tests",
+    "src/desktop/legacy/tests",
+    "launcher/tests",
+]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "unit: Unit tests (fast, isolated)",
+    "integration: Integration tests",
+    "modern: Modern codebase tests",
+    "legacy: Legacy codebase tests",
+    "launcher: Launcher tests",
+    "slow: Tests taking >5 seconds",
+    "gui: GUI tests requiring display",
+    "skip_if_no_pyqt6: Skip if PyQt6 unavailable",
 ]
 
 # ===================================================================
@@ -264,10 +300,12 @@ reportSelfClsParameterName = "none"
 reportCallIssue = "none"
 
 # --- SETUPTOOLS CONFIGURATION ---
-[tool.setuptools]
-packages = ["tka.desktop.modern", "tka.desktop.legacy", "tka.launcher"]
+[tool.setuptools.packages.find]
+# Include all packages from the modern desktop source
+where = ["src/desktop/modern/src"]
+include = ["*"]
+exclude = ["tests*", "*tests*", "test_*"]
 
 [tool.setuptools.package-dir]
-"tka.desktop.modern" = "src/desktop/modern/src"
-"tka.desktop.legacy" = "src/desktop/legacy/src"
-"tka.launcher" = "launcher"
+# Map the root package to the modern desktop source
+"" = "src/desktop/modern/src"

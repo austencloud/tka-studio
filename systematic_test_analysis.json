@@ -1,0 +1,228 @@
+{
+  "results": [
+    {
+      "category": "core_services",
+      "path": "tests/unit/services/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.7450015544891357,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "cross_platform",
+      "path": "tests/cross_platform/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.2624175548553467,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "interface_coverage",
+      "path": "tests/interface_coverage/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.2296907901763916,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "integration",
+      "path": "tests/integration/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.2758662700653076,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "launcher_tests",
+      "path": "launcher/tests/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.407085657119751,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_unit_core",
+      "path": "src/desktop/modern/tests/unit/core/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.9748849868774414,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_unit_interfaces",
+      "path": "src/desktop/modern/tests/unit/interfaces/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.9242186546325684,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_unit_presentation",
+      "path": "src/desktop/modern/tests/unit/presentation/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.9924807548522949,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_integration",
+      "path": "src/desktop/modern/tests/integration/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.8762784004211426,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_specification_core",
+      "path": "src/desktop/modern/tests/specification/core/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.8661041259765625,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_specification_domain",
+      "path": "src/desktop/modern/tests/specification/domain/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.9075837135314941,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_application",
+      "path": "src/desktop/modern/tests/application/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.7570171356201172,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_framework",
+      "path": "src/desktop/modern/tests/framework/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.7239110469818115,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_improved_arch",
+      "path": "src/desktop/modern/tests/improved_architecture/",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.9612905979156494,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    },
+    {
+      "category": "modern_desktop_root",
+      "path": "src/desktop/modern/tests/*.py",
+      "total_tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 0.20937752723693848,
+      "status": "FAILED",
+      "error_details": [
+        "No tests found in this category"
+      ]
+    }
+  ],
+  "summary": {
+    "total_categories": 15,
+    "successful_categories": 0,
+    "partial_categories": 0,
+    "failed_categories": 15,
+    "total_tests": 0,
+    "total_passed": 0,
+    "total_failed": 0,
+    "total_errors": 0,
+    "total_skipped": 0,
+    "total_execution_time": 0,
+    "success_rate": 0
+  },
+  "timestamp": 1752863729.47019
+}

@@ -1,17 +1,25 @@
 """
-Filter Selection Panel - Legacy Layout Matching
+Filter Selection Panel - Modern Organized Layout
 
-Matches the Legacy InitialFilterChoiceWidget layout exactly:
-- Choose Filter Label header
-- Responsive 3-column grid layout
+Features:
+- Quick access section for common filters (Favorites, Recent, All)
+- Organized category sections in 2x3 grid layout
 - Glass-morphism styling with modern 2025 design
-- Show All button separated at bottom
+- Responsive design that adapts to container size
+- Maintains all existing filter functionality
 """
 
 from typing import Optional
 
+from presentation.tabs.browse.components.filter_sections import (
+    FilterCategorySection,
+    QuickAccessSection,
+)
 from presentation.tabs.browse.models import FilterType
 from presentation.tabs.browse.services.browse_service import BrowseService
+from presentation.tabs.browse.services.modern_dictionary_data_manager import (
+    ModernDictionaryDataManager,
+)
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont, QResizeEvent
 from PyQt6.QtWidgets import (
@@ -19,8 +27,7 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QLabel,
-    QPushButton,
-    QSizePolicy,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -28,234 +35,253 @@ from PyQt6.QtWidgets import (
 
 class FilterSelectionPanel(QWidget):
     """
-    Filter selection interface matching Legacy InitialFilterChoiceWidget layout.
+    Modern organized filter selection interface.
 
-    Features:
-    - Choose Filter Label header
-    - Responsive 3-column grid layout
-    - Glass-morphism styling
-    - Show All button separated at bottom
+    Replaces the overwhelming 3x3 grid with organized sections:
+    - Quick Access: Favorites, Recent, All (prominent)
+    - Categories: Name, Length, Difficulty, Position, Author, Grid Mode
     """
 
     # Signals
-    filter_selected = pyqtSignal(FilterType, object)  # filter_type, filter_value
+    filter_selected = pyqtSignal(FilterType, object)
 
-    def __init__(self, browse_service: BrowseService, parent: Optional[QWidget] = None):
-        """Initialize the filter selection panel."""
+    def __init__(
+        self,
+        browse_service: BrowseService,
+        dictionary_manager: ModernDictionaryDataManager,
+        parent: Optional[QWidget] = None,
+    ):
+        """Initialize the organized filter selection panel."""
         super().__init__(parent)
 
         self.browse_service = browse_service
-        self._grid_columns = 3  # Default columns like Legacy
+        self.dictionary_manager = dictionary_manager
+        self._category_columns = 2  # Default 2 columns for categories
         self._layout_initialized = False
 
-        self._setup_modern_ui()
+        self._setup_ui()
         self._connect_signals()
 
-        # Defer layout calculations until widget is shown
+        # Defer final layout initialization
         QTimer.singleShot(100, self._finalize_layout_initialization)
 
-    def _setup_modern_ui(self) -> None:
-        """Setup modern UI matching Legacy structure."""
-        # Main layout with proper spacing
-        self.main_layout = QVBoxLayout(self)
+    def _setup_ui(self) -> None:
+        """Setup the organized UI layout."""
+        # Create scroll area for responsive design
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+
+        # Main content widget
+        content_widget = QWidget()
+        scroll_area.setWidget(content_widget)
+
+        # Main layout
+        self.main_layout = QVBoxLayout(content_widget)
         self.main_layout.setContentsMargins(20, 20, 20, 20)
-        self.main_layout.setSpacing(16)
-        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.main_layout.setSpacing(24)
+        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        # Header label (matches Legacy ChooseFilterLabel)
-        self.header_label = QLabel("Choose Filter")
-        self.header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        header_font = QFont("Segoe UI", 18, QFont.Weight.Bold)
-        self.header_label.setFont(header_font)
+        # Header
+        self._setup_header()
 
-        # Setup responsive grid layout
-        self._setup_responsive_grid_layout()
+        # Quick Access Section
+        self._setup_quick_access()
 
-        # Setup filter buttons
-        self._setup_filter_buttons()
+        # Category Sections
+        self._setup_category_sections()
 
-        # Modern layout with flexible stretches
-        self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.header_label, 0, Qt.AlignmentFlag.AlignCenter)
-        self.main_layout.addSpacing(24)
-        self.main_layout.addLayout(self.grid_layout)
-        self.main_layout.addSpacing(16)
-        self.main_layout.addWidget(
-            self.show_all_button, 0, Qt.AlignmentFlag.AlignCenter
-        )
-        self.main_layout.addStretch(1)
+        # Set up scroll area in widget layout
+        widget_layout = QVBoxLayout(self)
+        widget_layout.setContentsMargins(0, 0, 0, 0)
+        widget_layout.addWidget(scroll_area)
 
         # Apply container styling
-        self._apply_modern_container_styling()
+        self._apply_container_styling()
 
-    def _setup_responsive_grid_layout(self) -> None:
-        """Setup responsive grid layout that adapts to container size."""
-        self.grid_layout = QGridLayout()
-        self.grid_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.grid_layout.setHorizontalSpacing(16)
-        self.grid_layout.setVerticalSpacing(16)
+    def _setup_header(self) -> None:
+        """Setup the header section."""
+        header_layout = QHBoxLayout()
 
-    def _setup_filter_buttons(self) -> None:
-        """Setup filter buttons matching Legacy configuration."""
-        # Filter button configurations (matching Legacy FILTER_OPTIONS)
-        filters = [
+        # Title
+        self.title_label = QLabel("TKA Sequence Library")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_font = QFont("Segoe UI", 20, QFont.Weight.Bold)
+        self.title_label.setFont(title_font)
+        self.title_label.setStyleSheet(
+            """
+            QLabel {
+                color: white;
+                background: transparent;
+                padding: 16px;
+            }
+        """
+        )
+
+        header_layout.addWidget(self.title_label)
+        self.main_layout.addLayout(header_layout)
+
+    def _setup_quick_access(self) -> None:
+        """Setup the quick access section."""
+        # Quick access title
+        quick_title = QLabel("Quick Access")
+        quick_title.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        quick_font = QFont("Segoe UI", 16, QFont.Weight.Bold)
+        quick_title.setFont(quick_font)
+        quick_title.setStyleSheet(
+            """
+            QLabel {
+                color: white;
+                background: transparent;
+                margin-bottom: 8px;
+            }
+        """
+        )
+        self.main_layout.addWidget(quick_title)
+
+        # Quick access section
+        self.quick_access = QuickAccessSection()
+        self.main_layout.addWidget(self.quick_access)
+
+    def _setup_category_sections(self) -> None:
+        """Setup the organized category sections."""
+        # Categories title
+        categories_title = QLabel("Browse by Category")
+        categories_title.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        categories_font = QFont("Segoe UI", 16, QFont.Weight.Bold)
+        categories_title.setFont(categories_font)
+        categories_title.setStyleSheet(
+            """
+            QLabel {
+                color: white;
+                background: transparent;
+                margin-bottom: 8px;
+                margin-top: 16px;
+            }
+        """
+        )
+        self.main_layout.addWidget(categories_title)
+
+        # Categories grid container
+        self.categories_container = QWidget()
+        self.categories_layout = QGridLayout(self.categories_container)
+        self.categories_layout.setSpacing(16)
+        self.categories_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        # Create category sections
+        self._create_category_sections()
+
+        self.main_layout.addWidget(self.categories_container)
+
+    def _create_category_sections(self) -> None:
+        """Create all the category sections."""
+        # Define categories with their configurations
+        categories = [
+            # Name-based filters
             (
+                "📝 By Sequence Name",
                 FilterType.STARTING_LETTER,
-                "Start Letter",
-                "Sequences starting with a specific letter.",
+                ["A-D", "E-H", "I-L", "M-P", "Q-T", "U-Z", "All Letters"],
+                3,  # 3 columns for name options
             ),
+            # Length-based filters
             (
-                FilterType.CONTAINS_LETTERS,
-                "Contains Letter",
-                "Sequences containing specific letters.",
+                "📏 By Length",
+                FilterType.LENGTH,
+                ["3", "4", "5", "6", "8", "10", "12", "16", "All"],
+                3,  # 3 columns for length options
             ),
+            # Difficulty-based filters (with colors)
             (
-                FilterType.SEQUENCE_LENGTH,
-                "Length",
-                "Sequences by length.",
+                "📊 By Difficulty",
+                FilterType.DIFFICULTY,
+                [
+                    ("🟢 Beginner", "beginner", "#4CAF50"),
+                    ("🟡 Intermediate", "intermediate", "#FF9800"),
+                    ("🔴 Advanced", "advanced", "#F44336"),
+                    ("All Levels", "all", None),
+                ],
+                2,  # 2 columns for difficulty
             ),
+            # Position-based filters
             (
-                FilterType.DIFFICULTY_LEVEL,
-                "Level",
-                "Sequences by difficulty level.",
-            ),
-            (
+                "🎯 By Start Position",
                 FilterType.STARTING_POSITION,
-                "Start Position",
-                "Sequences by starting position.",
+                ["Alpha", "Beta", "Gamma", "Delta", "All Positions"],
+                2,  # 2 columns for positions
             ),
-            (FilterType.AUTHOR, "Author", "Sequences by author."),
-            (FilterType.FAVORITES, "Favorites", "Your favorite sequences."),
-            (FilterType.MOST_RECENT, "Most Recent", "Recently created sequences."),
+            # Author-based filters (dynamic based on available data)
             (
+                "👤 By Author",
+                FilterType.AUTHOR,
+                self._get_available_authors(),
+                2,  # 2 columns for authors
+            ),
+            # Grid mode filters
+            (
+                "🎨 By Grid Style",
                 FilterType.GRID_MODE,
-                "Grid Mode",
-                "Sequences by grid mode (Box or Diamond).",
+                [
+                    ("💎 Diamond Grid", "diamond"),
+                    ("⬜ Box Grid", "box"),
+                    ("All Styles", "all"),
+                ],
+                3,  # 3 columns for grid styles
             ),
         ]
 
-        # Create filter button groups
-        self.filter_buttons = {}
-        for i, (filter_type, title, description) in enumerate(filters):
-            button_group = self._create_filter_button_group(
-                filter_type, title, description
-            )
-            self.filter_buttons[filter_type] = button_group
+        # Create and add category sections
+        self.category_sections = {}
+        for i, (title, filter_type, options, columns) in enumerate(categories):
+            section = FilterCategorySection(title, filter_type, options, columns)
+            self.category_sections[filter_type] = section
 
-            row = i // self._grid_columns
-            col = i % self._grid_columns
-            self.grid_layout.addWidget(button_group, row, col)
+            # Add to grid layout (2 columns of categories)
+            row = i // self._category_columns
+            col = i % self._category_columns
+            self.categories_layout.addWidget(section, row, col)
 
-        # Create Show All button separately (matching Legacy)
-        self.show_all_button = self._create_show_all_button()
+    def _get_available_authors(self) -> list:
+        """Get available authors from the dictionary manager."""
+        try:
+            authors = self.dictionary_manager.get_distinct_authors()
+            # Limit to top authors + "All"
+            result = authors[:4] if len(authors) > 4 else authors
+            result.append("All Authors")
+            return result
+        except Exception as e:
+            print(f"Error getting authors: {e}")
+            return ["Demo Author", "Test User", "All Authors"]
 
-    def _create_filter_button_group(
-        self, filter_type: FilterType, title: str, description: str
-    ) -> QWidget:
-        """Create a filter button group matching Legacy FilterButtonGroup."""
-        group = QWidget()
-        group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        group.setMinimumSize(120, 80)
-        group.setMaximumSize(200, 120)
+    def _connect_signals(self) -> None:
+        """Connect component signals."""
+        # Quick access signals
+        self.quick_access.filter_selected.connect(self._handle_filter_selection)
 
-        # Layout
-        layout = QVBoxLayout(group)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(8)
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Category section signals
+        for section in self.category_sections.values():
+            section.filter_selected.connect(self._handle_filter_selection)
 
-        # Main button
-        button = QPushButton(title)
-        button.setMinimumSize(100, 40)
-        button.clicked.connect(lambda: self._on_filter_button_clicked(filter_type))
-
-        # Description label
-        desc_label = QLabel(description)
-        desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        desc_label.setWordWrap(True)
-        desc_label.setFont(QFont("Segoe UI", 8))
-
-        layout.addWidget(button, 0, Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(desc_label, 0, Qt.AlignmentFlag.AlignCenter)
-
-        # Apply glass-morphism styling
-        group.setStyleSheet(
-            """
-            QWidget {
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                margin: 4px;
-                padding: 8px;
-            }
-            QPushButton {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 8px;
-                color: white;
-                padding: 8px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.2);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-            }
-            QPushButton:pressed {
-                background: rgba(255, 255, 255, 0.15);
-            }
-            QLabel {
-                color: rgba(255, 255, 255, 0.8);
-                background: transparent;
-                border: none;
-            }
-        """
+    def _handle_filter_selection(self, filter_type: FilterType, filter_value) -> None:
+        """Handle filter selection from any component."""
+        print(
+            f"🔍 [FILTER PANEL] Filter selected: {filter_type.value} = {filter_value}"
         )
+        self.filter_selected.emit(filter_type, filter_value)
 
-        return group
-
-    def _create_show_all_button(self) -> QPushButton:
-        """Create the Show All button matching Legacy layout."""
-        button = QPushButton("Show All")
-        button.setMinimumSize(150, 50)
-        button.clicked.connect(
-            lambda: self._on_filter_button_clicked(FilterType.ALL_SEQUENCES)
-        )
-
-        # Special styling for Show All button
-        button.setStyleSheet(
-            """
-            QPushButton {
-                background: rgba(255, 255, 255, 0.1);
-                border: 2px solid rgba(255, 255, 255, 0.3);
-                border-radius: 12px;
-                color: white;
-                padding: 12px;
-                font-weight: bold;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.2);
-                border: 2px solid rgba(255, 255, 255, 0.4);
-            }
-            QPushButton:pressed {
-                background: rgba(255, 255, 255, 0.15);
-            }
-        """
-        )
-
-        return button
-
-    def _apply_modern_container_styling(self) -> None:
+    def _apply_container_styling(self) -> None:
         """Apply modern container styling."""
         self.setStyleSheet(
             """
             FilterSelectionPanel {
                 background: rgba(255, 255, 255, 0.02);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.05);
             }
-            QLabel {
-                color: white;
+            QScrollArea {
                 background: transparent;
+                border: none;
             }
         """
         )
@@ -263,60 +289,64 @@ class FilterSelectionPanel(QWidget):
     def _finalize_layout_initialization(self) -> None:
         """Finalize layout initialization after widget is shown."""
         self._layout_initialized = True
-        self.update()
+        self._update_responsive_layout()
 
     def resizeEvent(self, event: QResizeEvent) -> None:
-        """Handle resize events for responsive grid layout."""
+        """Handle resize events for responsive layout."""
         super().resizeEvent(event)
-        if not self._layout_initialized:
+        if self._layout_initialized:
+            self._update_responsive_layout()
+
+    def _update_responsive_layout(self) -> None:
+        """Update layout based on current widget size."""
+        if not self.isVisible() or self.width() < 100:
             return
 
-        # Adjust grid columns based on width (matching Legacy responsiveness)
-        width = self.width()
-        if width < 600:
-            new_columns = 2
-        elif width < 900:
-            new_columns = 3
+        # Calculate optimal category columns based on width
+        widget_width = self.width()
+
+        if widget_width < 800:
+            new_columns = 1  # Stack categories vertically on narrow screens
+        elif widget_width < 1200:
+            new_columns = 2  # Standard 2-column layout
         else:
-            new_columns = 4
+            new_columns = 3  # Wide 3-column layout for large screens
 
-        if new_columns != self._grid_columns:
-            self._grid_columns = new_columns
-            self._reorganize_grid()
+        # Update layout if column count changed
+        if new_columns != self._category_columns:
+            self._category_columns = new_columns
+            self._reorganize_categories()
 
-    def _reorganize_grid(self) -> None:
-        """Reorganize the grid layout with new column count."""
-        # Remove all items from grid
-        items = []
-        for i in range(self.grid_layout.count()):
-            item = self.grid_layout.itemAt(i)
-            if item:
-                items.append(item.widget())
+    def _reorganize_categories(self) -> None:
+        """Reorganize category sections with new column count."""
+        # Remove all sections from layout
+        sections = []
+        for i in range(self.categories_layout.count()):
+            item = self.categories_layout.itemAt(i)
+            if item and item.widget():
+                sections.append(item.widget())
 
-        # Clear grid
-        for i in range(self.grid_layout.count()):
-            self.grid_layout.takeAt(0)
+        # Clear layout
+        for i in range(self.categories_layout.count()):
+            self.categories_layout.takeAt(0)
 
-        # Re-add items with new column count
-        for i, widget in enumerate(items):
-            if widget:
-                row = i // self._grid_columns
-                col = i % self._grid_columns
-                self.grid_layout.addWidget(widget, row, col)
+        # Re-add sections with new column count
+        for i, section in enumerate(sections):
+            if section:
+                row = i // self._category_columns
+                col = i % self._category_columns
+                self.categories_layout.addWidget(section, row, col)
 
-    def _connect_signals(self) -> None:
-        """Connect component signals."""
-        pass  # Individual buttons connected in creation methods
+    def set_active_filter(
+        self, filter_type: Optional[FilterType], filter_value=None
+    ) -> None:
+        """Highlight the active filter across all sections."""
+        # Update quick access
+        self.quick_access.set_active_filter(filter_type)
 
-    def _on_filter_button_clicked(self, filter_type: FilterType) -> None:
-        """Handle filter button click."""
-        print(f"🔍 [BROWSE] Filter button clicked: {filter_type.value}")
-
-        if filter_type == FilterType.ALL_SEQUENCES:
-            # All sequences - no additional configuration needed
-            print("🔍 [BROWSE] Emitting all sequences filter")
-            self.filter_selected.emit(filter_type, None)
-        else:
-            # For now, emit with None - specific filter UIs will be implemented next
-            print(f"🔍 [BROWSE] Filter selected: {filter_type.value}")
-            self.filter_selected.emit(filter_type, None)
+        # Update category sections
+        for section_filter_type, section in self.category_sections.items():
+            if section_filter_type == filter_type:
+                section.set_active_option(filter_value)
+            else:
+                section.set_active_option(None)

@@ -8,6 +8,7 @@ Handles sequence composition, beat management, and validation.
 import json
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from .beat_data import BeatData
@@ -32,12 +33,20 @@ class SequenceData:
     start_position: BeatData = None
 
     # Browse tab data (for sequence browsing and filtering)
-    thumbnail_paths: List[str] = field(default_factory=list)
-    sequence_length: int = 0  # Cached length for filtering (may differ from len(beats))
-    author: str = ""
-    difficulty_level: str = ""
-    date_added: str = ""
+    thumbnails: List[str] = field(default_factory=list)  # Changed from thumbnail_paths
+    sequence_length: Optional[int] = (
+        None  # Cached length for filtering (may differ from len(beats))
+    )
+    author: Optional[str] = None
+    level: Optional[int] = None
+    date_added: Optional[datetime] = None
+    grid_mode: Optional[str] = None
+    prop_type: Optional[str] = None
     is_favorite: bool = False
+    is_circular: bool = False
+    starting_position: Optional[str] = None
+    difficulty_level: Optional[str] = None
+    tags: List[str] = field(default_factory=list)
 
     # Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)

@@ -1,10 +1,10 @@
 {
   "browse_tab": {
-    "filter_type": "length",
-    "filter_values": "3",
+    "filter_type": "author",
+    "filter_values": "Demo Author",
     "selected_sequence": null,
     "selected_variation": null,
-    "navigation_mode": "sequence_picker",
+    "navigation_mode": "filter_selector",
     "sort_method": "alphabetical"
   }
 }

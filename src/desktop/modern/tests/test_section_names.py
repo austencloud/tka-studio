@@ -2,17 +2,9 @@
 Test to verify section names are correct and header clicking works.
 """
 
-import os
-import sys
-
-# Add the src directory to the path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-src_dir = os.path.join(current_dir, "..", "src")
-sys.path.insert(0, src_dir)
-
 from application.services.pictograph_pool_manager import initialize_pictograph_pool
 from core.application.application_factory import ApplicationFactory
-from presentation.tabs.construct.construct_tab_widget import ConstructTabWidget
+from presentation.tabs.construct.modern_construct_tab import ConstructTabWidget
 from PyQt6.QtWidgets import QApplication
 
 

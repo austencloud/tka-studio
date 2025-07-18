@@ -31,14 +31,14 @@ class FilterType(Enum):
 
     STARTING_LETTER = "starting_letter"
     CONTAINS_LETTERS = "contains_letters"
-    SEQUENCE_LENGTH = "sequence_length"
-    DIFFICULTY_LEVEL = "level"
+    LENGTH = "length"  # Changed from SEQUENCE_LENGTH
+    DIFFICULTY = "difficulty"  # Changed from DIFFICULTY_LEVEL
     STARTING_POSITION = "starting_position"
     AUTHOR = "author"
     GRID_MODE = "grid_mode"
     ALL_SEQUENCES = "all_sequences"
     FAVORITES = "favorites"
-    MOST_RECENT = "most_recent"
+    RECENT = "recent"  # Changed from MOST_RECENT
 
 
 class NavigationMode(Enum):
