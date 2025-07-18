@@ -272,10 +272,14 @@ class TestLayoutOrchestrator:
 
     def test_get_tab_for_panel(self, layout_orchestrator):
         """Test panel to tab mapping."""
-        assert layout_orchestrator.get_tab_for_panel(0) == 0  # start_position_picker
-        assert layout_orchestrator.get_tab_for_panel(1) == 0  # option_picker
-        assert layout_orchestrator.get_tab_for_panel(2) == 1  # graph_editor
-        assert layout_orchestrator.get_tab_for_panel(3) == 2  # generate_controls
+        assert (
+            layout_orchestrator.get_tab_for_panel(0) == 0
+        )  # start_position_picker -> Build
+        assert layout_orchestrator.get_tab_for_panel(1) == 0  # option_picker -> Build
+        assert layout_orchestrator.get_tab_for_panel(2) == 2  # graph_editor -> Edit
+        assert (
+            layout_orchestrator.get_tab_for_panel(3) == 1
+        )  # generate_controls -> Generate
 
     def test_should_allow_transition(self, layout_orchestrator):
         """Test transition allowance logic."""

@@ -69,6 +69,34 @@ class BeatData:
             return self.pictograph_data.letter
         return self.metadata.get("letter")
 
+    @property
+    def blue_motion(self) -> Optional["MotionData"]:
+        """Get blue motion from pictograph data if available."""
+        if self.has_pictograph and self.pictograph_data.motions:
+            return self.pictograph_data.motions.get("blue")
+        return None
+
+    @property
+    def red_motion(self) -> Optional["MotionData"]:
+        """Get red motion from pictograph data if available."""
+        if self.has_pictograph and self.pictograph_data.motions:
+            return self.pictograph_data.motions.get("red")
+        return None
+
+    @property
+    def blue_motion(self) -> Optional["MotionData"]:
+        """Get blue motion from pictograph data if available."""
+        if self.has_pictograph and self.pictograph_data.motions:
+            return self.pictograph_data.motions.get("blue")
+        return None
+
+    @property
+    def red_motion(self) -> Optional["MotionData"]:
+        """Get red motion from pictograph data if available."""
+        if self.has_pictograph and self.pictograph_data.motions:
+            return self.pictograph_data.motions.get("red")
+        return None
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         result = {

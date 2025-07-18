@@ -35,12 +35,11 @@ class StartPositionSelectionHandler(QObject):
     start_position_created = pyqtSignal(str, object)  # position_key, PictographData
     transition_requested = pyqtSignal()  # Request transition to option picker
 
-    def __init__(
-        self,
-        workbench_setter: Optional[Callable[[PictographData], None]] = None,
-    ):
+    def __init__(self):
+        """Initialize start position selection handler using modern state manager architecture."""
         super().__init__()
-        self.workbench_setter = workbench_setter
+        # Modern architecture: No direct workbench setter needed
+        # Signal flow: handler -> SignalCoordinator -> StartPositionManager -> WorkbenchStateManager
 
     def handle_start_position_selected(self, position_key: str):
         """Handle start position selection from the picker"""
@@ -52,24 +51,26 @@ class StartPositionSelectionHandler(QObject):
             position_key
         )
 
-        # Set start position in workbench (this does NOT create a sequence)
-        if self.workbench_setter:
-            # Create start position beat data using factory
-            start_position_beat_data = BeatFactory.create_start_position_beat_data(
-                start_position_pictograph_data
-            )
-            self.workbench_setter(
-                start_position_beat_data, start_position_pictograph_data
-            )  # Pass both!
-        else:
-            print(f"⚠️ [START_POS_HANDLER] No workbench setter available")
+        # Create start position beat data using factory (always create it)
+        start_position_beat_data = BeatFactory.create_start_position_beat_data(
+            start_position_pictograph_data
+        )
+
+        # MODERN ARCHITECTURE: No direct workbench setter needed
+        # The signal flow will handle workbench updates:
+        # start_position_created signal -> SignalCoordinator -> StartPositionManager -> WorkbenchStateManager
+        print(
+            f"🏗️ [START_POS_HANDLER] Using modern signal flow (no direct workbench setter)"
+        )
 
         # Emit signal with the created data
-        # Removed repetitive debug logs
+        print(
+            f"🎯 [START_POS_HANDLER] Emitting start_position_created signal with position: {position_key}"
+        )
         self.start_position_created.emit(position_key, start_position_beat_data)
 
         # Request transition to option picker
-        # Removed repetitive debug logs
+        print(f"🎯 [START_POS_HANDLER] Emitting transition_requested signal")
         self.transition_requested.emit()
 
     def _create_start_position_pictograph_data(

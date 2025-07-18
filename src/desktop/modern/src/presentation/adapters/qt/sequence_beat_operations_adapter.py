@@ -5,13 +5,14 @@ This adapter wraps the pure SequenceBeatOperationsService and provides Qt signal
 This maintains the separation between platform-agnostic services and Qt-specific presentation logic.
 """
 
-from typing import Callable, Optional
+from typing import Optional
 
 from application.services.sequence.beat_factory import BeatFactory
 from application.services.sequence.sequence_beat_operations_service import (
     SequenceBeatOperationsService,
 )
 from application.services.sequence.sequence_persister import SequencePersister
+from core.interfaces.workbench_services import IWorkbenchStateManager
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
@@ -20,10 +21,17 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 class QtSequenceBeatOperationsAdapter(QObject):
     """
-    Qt adapter for the SequenceBeatOperationsService that provides signal coordination.
+    Improved Qt adapter for the SequenceBeatOperationsService.
 
-    This class handles Qt-specific signal emissions while delegating actual
-    beat operations logic to the platform-agnostic service.
+    Uses WorkbenchStateService for clean dependency injection instead of
+    passing workbench_getter callable around.
+
+    Benefits:
+    - Type-safe dependencies
+    - Better error handling
+    - Easier testing
+    - Clear interface contracts
+    - Loose coupling
     """
 
     # Qt signals for UI coordination
@@ -33,15 +41,17 @@ class QtSequenceBeatOperationsAdapter(QObject):
 
     def __init__(
         self,
-        workbench_getter: Optional[Callable[[], object]] = None,
+        workbench_state_manager: IWorkbenchStateManager,
         beat_factory: Optional[BeatFactory] = None,
         persistence_service: Optional[SequencePersister] = None,
     ):
         super().__init__()
 
+        self._workbench_state_manager = workbench_state_manager
+
         # Create the pure service
         self._service = SequenceBeatOperationsService(
-            workbench_getter=workbench_getter,
+            workbench_state_manager=workbench_state_manager,
             beat_factory=beat_factory,
             persistence_service=persistence_service,
         )
@@ -108,3 +118,21 @@ class QtSequenceBeatOperationsAdapter(QObject):
     def get_beat_count(self, sequence_data: Optional[SequenceData] = None) -> int:
         """Get the number of beats in the sequence."""
         return self._service.get_beat_count(sequence_data)
+
+    def add_pictograph_to_sequence(self, pictograph_data: PictographData) -> None:
+        """Add pictograph to sequence (compatibility method for signal connections)."""
+        try:
+            # Get current sequence from workbench state manager
+            current_sequence = self._workbench_state_manager.get_current_sequence()
+
+            # Calculate next position
+            position = len(current_sequence.beats) if current_sequence else 0
+
+            # Use the add_beat method
+            self.add_beat(pictograph_data, position, current_sequence, persist=True)
+
+        except Exception as e:
+            print(f"❌ Error adding pictograph to sequence: {e}")
+            import traceback
+
+            traceback.print_exc()

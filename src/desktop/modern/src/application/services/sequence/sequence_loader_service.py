@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Callable, List, Optional
 from application.services.data.legacy_to_modern_converter import LegacyToModernConverter
 from application.services.sequence.sequence_persister import SequencePersister
 from core.interfaces.sequence_data_services import ISequenceLoader
+from core.interfaces.workbench_services import IWorkbenchStateManager
 from domain.models.sequence_data import SequenceData
 
 if TYPE_CHECKING:
@@ -35,12 +36,10 @@ class SequenceLoaderService(ISequenceLoader):
 
     def __init__(
         self,
-        workbench_getter: Optional[Callable[[], object]] = None,
-        workbench_setter: Optional[Callable[[SequenceData], None]] = None,
+        workbench_state_manager: Optional[IWorkbenchStateManager] = None,
         legacy_to_modern_converter: Optional[LegacyToModernConverter] = None,
     ):
-        self.workbench_getter = workbench_getter
-        self.workbench_setter = workbench_setter
+        self.workbench_state_manager = workbench_state_manager
         self.legacy_to_modern_converter = (
             legacy_to_modern_converter or LegacyToModernConverter()
         )
@@ -117,6 +116,10 @@ class SequenceLoaderService(ISequenceLoader):
                             start_position_data
                         )
 
+                        # Set start position in workbench via state manager
+                        if self.workbench_state_manager:
+                            self.workbench_state_manager.set_start_position(start_position_beat)
+
                         # Notify callbacks instead of emitting Qt signals
                         for callback in self._start_position_loaded_callbacks:
                             callback(start_position_beat, position_key)
@@ -133,8 +136,8 @@ class SequenceLoaderService(ISequenceLoader):
             )
 
             # Set sequence in workbench
-            if self.workbench_setter:
-                self.workbench_setter(loaded_sequence)
+            if self.workbench_state_manager:
+                self.workbench_state_manager.set_sequence(loaded_sequence)
 
             # Notify callbacks instead of emitting Qt signals
             for callback in self._sequence_loaded_callbacks:
@@ -209,37 +212,24 @@ class SequenceLoaderService(ISequenceLoader):
     def _initialize_empty_sequence_start_position(self):
         """Initialize start position component for empty sequences"""
         try:
-            # Get workbench to initialize start position component
-            if self.workbench_getter:
-                workbench = self.workbench_getter()
-                if workbench and hasattr(workbench, "_beat_frame_section"):
-                    beat_frame_section = workbench._beat_frame_section
-                    if beat_frame_section and hasattr(
-                        beat_frame_section, "initialize_cleared_start_position"
-                    ):
-                        beat_frame_section.initialize_cleared_start_position()
-                    else:
-                        logger.warning(
-                            "Beat frame section not available for start position initialization"
-                        )
-                else:
-                    logger.warning(
-                        "Workbench not available for start position initialization"
-                    )
+            # Clear start position through state manager
+            if self.workbench_state_manager:
+                # Setting None will properly clear the start position
+                # and trigger appropriate UI updates through the state manager
+                self.workbench_state_manager.set_start_position(None)
+                logger.info("Initialized empty sequence start position")
             else:
                 logger.warning(
-                    "No workbench getter available for start position initialization"
+                    "No workbench state manager available for start position initialization"
                 )
         except Exception as e:
             logger.error(f"Failed to initialize empty sequence start position: {e}")
 
     def get_current_sequence_from_workbench(self) -> Optional[SequenceData]:
-        """Get the current sequence from workbench"""
-        if self.workbench_getter:
+        """Get the current sequence from workbench via state manager"""
+        if self.workbench_state_manager:
             try:
-                workbench = self.workbench_getter()
-                if workbench and hasattr(workbench, "get_sequence"):
-                    return workbench.get_sequence()
+                return self.workbench_state_manager.get_current_sequence()
             except Exception as e:
                 logger.error(f"Error getting current sequence: {e}")
         return None

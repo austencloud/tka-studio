@@ -34,6 +34,7 @@ from application.services.ui.thumbnail_generation_service import (
     ThumbnailGenerationService,
 )
 from application.services.workbench.beat_selection_service import BeatSelectionService
+from application.services.workbench.workbench_state_manager import WorkbenchStateManager
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.core_services import ILayoutService, IUIStateManager
 from core.interfaces.workbench_services import (
@@ -42,6 +43,7 @@ from core.interfaces.workbench_services import (
     IFullScreenViewer,
     IGraphEditorService,
     ISequenceWorkbenchService,
+    IWorkbenchStateManager,
 )
 from presentation.components.sequence_workbench.sequence_workbench import (
     SequenceWorkbench,
@@ -81,10 +83,29 @@ def configure_workbench_services(container: DIContainer) -> None:
     # Get UI state service for services that need it
     ui_state_service = container.resolve(IUIStateManager)
 
+    # Create and register workbench state manager first (needed by other services)
+    # CRITICAL FIX: Inject SequenceStateTracker to ensure signal flow works
+    try:
+        from core.service_locator import get_sequence_state_manager
+
+        sequence_state_tracker = get_sequence_state_manager()
+        print(
+            f"🔧 [WORKBENCH_FACTORY] Got SequenceStateTracker: {sequence_state_tracker is not None}"
+        )
+        workbench_state_manager = WorkbenchStateManager(
+            sequence_state_tracker=sequence_state_tracker
+        )
+    except Exception as e:
+        print(f"⚠️ [WORKBENCH_FACTORY] Failed to get SequenceStateTracker: {e}")
+        workbench_state_manager = WorkbenchStateManager()
+
+    container.register_instance(IWorkbenchStateManager, workbench_state_manager)
+    container.register_instance(WorkbenchStateManager, workbench_state_manager)
+
     # Register microservices directly (CLEAN MICROSERVICES ARCHITECTURE)
     # Components should inject only the specific microservices they need
     beat_operations = SequenceBeatOperations()
-    start_position_manager = SequenceStartPositionManager()
+    start_position_manager = SequenceStartPositionManager(workbench_state_manager)
     sequence_loader = SequenceLoader()
     dictionary_service = SequenceDictionaryManager()
 

@@ -222,13 +222,20 @@ class ClearSequenceE2ETest:
         print("🚀 [E2E_TEST] Launching TKA application...")
 
         try:
+            # CRITICAL FIX: Initialize core services for SequenceStateManager
+            print("🔧 [E2E_TEST] Initializing core services...")
+            from core.service_locator import initialize_services
+
+            initialize_services()
+            print("✅ [E2E_TEST] Core services initialized")
+
             # Create production application container
             container = ApplicationFactory.create_production_app()
             print("✅ [E2E_TEST] Production application container created")
 
             # Create the main UI components directly
             try:
-                from presentation.components.workbench.workbench import (
+                from presentation.components.sequence_workbench.sequence_workbench import (
                     SequenceWorkbench,
                 )
                 from presentation.tabs.construct.construct_tab_widget import (

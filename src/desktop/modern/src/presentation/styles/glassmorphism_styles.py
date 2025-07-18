@@ -228,7 +228,6 @@ class GlassmorphismStyleGenerator:
             padding: {GlassmorphismEffects.PADDING_MEDIUM};
             margin: {GlassmorphismEffects.MARGIN_SMALL};
             text-align: center;
-            transition: {GlassmorphismEffects.TRANSITION_NORMAL};
             min-height: 48px;
             max-height: 48px;
         }}

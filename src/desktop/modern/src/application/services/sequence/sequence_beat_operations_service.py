@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Callable, List, Optional
 
 from application.services.sequence.beat_factory import BeatFactory
 from application.services.sequence.sequence_persister import SequencePersister
+from core.interfaces.workbench_services import IWorkbenchStateManager
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
@@ -38,11 +39,11 @@ class SequenceBeatOperationsService:
 
     def __init__(
         self,
-        workbench_getter: Optional[Callable[[], "SequenceWorkbench"]] = None,
+        workbench_state_manager: Optional[IWorkbenchStateManager] = None,
         beat_factory: Optional[BeatFactory] = None,
         persistence_service: Optional[SequencePersister] = None,
     ):
-        self.workbench_getter = workbench_getter
+        self.workbench_state_manager = workbench_state_manager
         self.beat_factory = beat_factory or BeatFactory()
         self.persistence_service = persistence_service or SequencePersister()
 
@@ -88,38 +89,46 @@ class SequenceBeatOperationsService:
         """
         try:
             # Get current sequence if not provided
-            if sequence_data is None and self.workbench_getter:
+            if sequence_data is None and self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "get_sequence"):
-                        sequence_data = workbench.get_sequence()
+                    sequence_data = self.workbench_state_manager.get_current_sequence()
                 except Exception as e:
                     logger.warning(f"Could not get sequence from workbench: {e}")
 
             # Create beat data from pictograph data
-            beat_data = self.beat_factory.create_beat_from_pictograph(
-                pictograph_data, beat_number=position
+            # Convert position (0-indexed) to beat_number (1-indexed)
+            beat_data = self.beat_factory.create_from_pictograph(
+                pictograph_data, beat_number=position + 1
             )
 
             # Add beat to sequence
             if sequence_data:
-                updated_sequence = sequence_data.add_beat(beat_data, position)
+                updated_sequence = sequence_data.add_beat(beat_data)
             else:
                 # Create new sequence with this beat
                 updated_sequence = SequenceData(name="New Sequence", beats=[beat_data])
 
             # Update workbench if available
-            if self.workbench_getter:
+            if self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "set_sequence"):
-                        workbench.set_sequence(updated_sequence)
+                    self.workbench_state_manager.set_sequence(updated_sequence)
                 except Exception as e:
                     logger.warning(f"Could not update workbench: {e}")
 
             # Persist if requested
             if persist:
-                self.persistence_service.save_sequence(updated_sequence)
+                try:
+                    # Convert SequenceData to the format expected by persistence service
+                    sequence_dict = (
+                        updated_sequence.to_dict()
+                        if hasattr(updated_sequence, "to_dict")
+                        else []
+                    )
+                    self.persistence_service.save_current_sequence(sequence_dict)
+                except Exception as e:
+                    # Log the error but don't fail the operation
+                    logger.warning(f"Failed to persist sequence: {e}")
+                    # Continue without persistence - the in-memory sequence is still valid
 
             # Notify callbacks instead of emitting Qt signals
             for callback in self._beat_added_callbacks:
@@ -151,11 +160,9 @@ class SequenceBeatOperationsService:
         """
         try:
             # Get current sequence if not provided
-            if sequence_data is None and self.workbench_getter:
+            if sequence_data is None and self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "get_sequence"):
-                        sequence_data = workbench.get_sequence()
+                    sequence_data = self.workbench_state_manager.get_current_sequence()
                 except Exception as e:
                     logger.warning(f"Could not get sequence from workbench: {e}")
 
@@ -166,11 +173,9 @@ class SequenceBeatOperationsService:
             updated_sequence = sequence_data.remove_beat(position)
 
             # Update workbench if available
-            if self.workbench_getter:
+            if self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "set_sequence"):
-                        workbench.set_sequence(updated_sequence)
+                    self.workbench_state_manager.set_current_sequence(updated_sequence)
                 except Exception as e:
                     logger.warning(f"Could not update workbench: {e}")
 
@@ -210,11 +215,9 @@ class SequenceBeatOperationsService:
         """
         try:
             # Get current sequence if not provided
-            if sequence_data is None and self.workbench_getter:
+            if sequence_data is None and self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "get_sequence"):
-                        sequence_data = workbench.get_sequence()
+                    sequence_data = self.workbench_state_manager.get_current_sequence()
                 except Exception as e:
                     logger.warning(f"Could not get sequence from workbench: {e}")
 
@@ -230,11 +233,9 @@ class SequenceBeatOperationsService:
             updated_sequence = sequence_data.update_beat(position, beat_data)
 
             # Update workbench if available
-            if self.workbench_getter:
+            if self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "set_sequence"):
-                        workbench.set_sequence(updated_sequence)
+                    self.workbench_state_manager.set_current_sequence(updated_sequence)
                 except Exception as e:
                     logger.warning(f"Could not update workbench: {e}")
 
@@ -272,11 +273,9 @@ class SequenceBeatOperationsService:
         """
         try:
             # Get current sequence if not provided
-            if sequence_data is None and self.workbench_getter:
+            if sequence_data is None and self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "get_sequence"):
-                        sequence_data = workbench.get_sequence()
+                    sequence_data = self.workbench_state_manager.get_current_sequence()
                 except Exception as e:
                     logger.warning(f"Could not get sequence from workbench: {e}")
 
@@ -302,11 +301,9 @@ class SequenceBeatOperationsService:
         """
         try:
             # Get current sequence if not provided
-            if sequence_data is None and self.workbench_getter:
+            if sequence_data is None and self.workbench_state_manager:
                 try:
-                    workbench = self.workbench_getter()
-                    if workbench and hasattr(workbench, "get_sequence"):
-                        sequence_data = workbench.get_sequence()
+                    sequence_data = self.workbench_state_manager.get_current_sequence()
                 except Exception as e:
                     logger.warning(f"Could not get sequence from workbench: {e}")
 

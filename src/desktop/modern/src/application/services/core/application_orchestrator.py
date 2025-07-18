@@ -182,6 +182,10 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         if progress_callback:
             progress_callback(55, "Services configured")
 
+        # Arrow pooling completely removed - using legacy direct arrow creation approach
+        if progress_callback:
+            progress_callback(56, "Direct arrow creation ready")
+
         # PERFORMANCE OPTIMIZATION: Initialize pictograph pool with lazy loading
         try:
             from application.services.pictograph_pool_manager import (

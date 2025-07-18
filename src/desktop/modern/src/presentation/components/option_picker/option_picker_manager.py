@@ -49,6 +49,31 @@ class OptionPickerManager(QObject):
                 self._handle_pictograph_selected
             )
 
+    def set_option_picker(self, option_picker: Optional[OptionPicker]):
+        """Set or update the option picker reference after deferred initialization."""
+        print(
+            f"🔧 [OPTION_PICKER_MANAGER] Setting option picker: {option_picker is not None}"
+        )
+
+        # Disconnect old signals if any
+        if self.option_picker:
+            try:
+                self.option_picker.pictograph_selected.disconnect(
+                    self._handle_pictograph_selected
+                )
+            except TypeError:
+                pass  # Signal was not connected
+
+        # Set new option picker
+        self.option_picker = option_picker
+
+        # Connect new signals
+        if self.option_picker:
+            self.option_picker.pictograph_selected.connect(
+                self._handle_pictograph_selected
+            )
+            print(f"✅ [OPTION_PICKER_MANAGER] Option picker connected successfully")
+
     def populate_from_start_position(
         self, position_key: str, start_position_beat_data: BeatData
     ):
@@ -124,7 +149,11 @@ class OptionPickerManager(QObject):
         self, position_key: str, start_position_beat_data: BeatData
     ):
         """Prepare option picker content WITHOUT animations for widget transitions"""
+        print(
+            f"🎯 [OPTION_PICKER_MANAGER] prepare_from_start_position called with position: {position_key}"
+        )
         if self.option_picker is None:
+            print(f"❌ [OPTION_PICKER_MANAGER] option_picker is None, cannot prepare")
             return
 
         try:

@@ -298,6 +298,34 @@ class SequenceWorkbench(ViewableComponentBase):
     def get_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence from state manager."""
         return self._state_manager.get_current_sequence()
+    
+    def get_start_position_data(self) -> Optional[BeatData]:
+        """Get the current start position from state manager."""
+        return self._state_manager.get_start_position()
+    
+    def set_start_position_data(self, start_position: BeatData, position_key: str) -> None:
+        """Set the start position via state manager."""
+        print(f"🎯 [WORKBENCH] set_start_position_data called with: {position_key}")
+        
+        result = self._state_manager.set_start_position(start_position)
+        
+        if result.changed:
+            print(f"🎯 [WORKBENCH] Start position changed, updating UI")
+            self._update_ui_from_state()
+            
+            # Update button panel sequence state for smart picker button
+            self._update_button_panel_sequence_state()
+            
+            # Emit signals if not in restoration mode
+            if not self._state_manager.should_prevent_auto_save():
+                # Emit appropriate signals for start position change
+                complete_sequence = self._state_manager.get_complete_sequence_with_start_position()
+                if complete_sequence:
+                    self.sequence_modified.emit(complete_sequence)
+                    
+                print(f"🔄 [WORKBENCH] Start position updated: {position_key}")
+        else:
+            print(f"🎯 [WORKBENCH] No start position change detected")
 
     def set_start_position(
         self,

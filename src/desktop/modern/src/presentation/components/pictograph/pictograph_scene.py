@@ -21,14 +21,9 @@ logger = logging.getLogger(__name__)
 from presentation.components.pictograph.renderers.elemental_glyph_renderer import (
     ElementalGlyphRenderer,
 )
-from presentation.components.pictograph.renderers.grid_renderer import GridRenderer
 from presentation.components.pictograph.renderers.letter_renderer import LetterRenderer
 from presentation.components.pictograph.renderers.position_glyph_renderer import (
     PositionGlyphRenderer,
-)
-from presentation.components.pictograph.renderers.prop_renderer import PropRenderer
-from presentation.components.pictograph.renderers.qt_arrow_renderer import (
-    QtArrowRenderer,
 )
 from presentation.components.pictograph.renderers.tka_glyph_renderer import (
     TKAGlyphRenderer,
@@ -45,23 +40,13 @@ class PictographScene(QGraphicsScene):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # Removed beat_data storage - scene is now stateless
 
         # Generate unique ID for this scene instance
         self.scene_id = f"pictograph_scene_{uuid.uuid4().hex[:8]}"
 
-        # Track visibility states for each renderer
-        self._renderer_visibility = {
-            "grid": True,
-            "props": True,
-            "arrows": True,
-            "tka": True,
-            "vtg": True,
-            "elemental": True,
-            "positions": True,
-            "reversals": True,
-            "non_radial": True,
-        }
+        # Get simple visibility service
+        from application.services.pictograph.simple_visibility_service import get_visibility_service
+        self._visibility_service = get_visibility_service()
 
         self.SCENE_SIZE = 950
         self.CENTER_X = 475
@@ -74,34 +59,79 @@ class PictographScene(QGraphicsScene):
         self._positioning_orchestrator = None
         self._coordinate_system = None
         self._arrow_rendering_service = None
-        self._initialize_shared_services()
+        self._services_initialized = False
 
-        # Initialize renderers with shared services
-        self.grid_renderer = GridRenderer(self)
-        self.prop_renderer = PropRenderer(self)
-        self.arrow_renderer = QtArrowRenderer(
-            self,
-            positioning_orchestrator=self._positioning_orchestrator,
-            coordinate_system=self._coordinate_system,
-            rendering_service=self._arrow_rendering_service,
+        # Use shared rendering service instead of per-scene renderers
+        self._shared_rendering_service = None
+
+        # Defer glyph renderer initialization until first render
+        self._glyph_renderers_initialized = False
+
+    @property
+    def rendering_service(self):
+        """Get shared rendering service for optimal performance."""
+        if self._shared_rendering_service is None:
+            try:
+                self._shared_rendering_service = self._get_shared_rendering_service()
+            except Exception as e:
+                logger.debug(f"[SCENE] Deferred rendering service resolution failed: {e}")
+                return None
+        return self._shared_rendering_service
+
+    def _get_shared_rendering_service(self):
+        """Get shared rendering service from DI container."""
+        try:
+            from core.dependency_injection.di_container import get_container
+            from core.interfaces.pictograph_rendering_services import (
+                IPictographRenderingService,
+            )
+
+            container = get_container()
+            service = container.resolve(IPictographRenderingService)
+            logger.debug(f"[SCENE] Connected to shared rendering service: {self.scene_id}")
+            return service
+
+        except Exception as e:
+            logger.error(f"[SCENE] Failed to get shared rendering service: {e}")
+            return None
+
+    def _create_arrow_directly(self, color: str, motion_data, full_pictograph_data):
+        """Create arrow directly without any renderer (legacy approach)."""
+        from presentation.components.pictograph.graphics_items.arrow_item import (
+            ArrowItem,
         )
-        self.letter_renderer = LetterRenderer(self)  # Initialize glyph renderers
+
+        arrow_item = ArrowItem()
+        arrow_item.arrow_color = color
+
+        arrow_item.update_arrow(
+            color=color, motion_data=motion_data, pictograph_data=full_pictograph_data
+        )
+
+        self.addItem(arrow_item)
+        logger.debug(f"[SCENE] Created {color} arrow directly for scene {self.scene_id}")
+
+    def _initialize_glyph_renderers(self):
+        """Initialize glyph renderers (lazy-loaded)."""
+        if self._glyph_renderers_initialized:
+            return
+
+        self.letter_renderer = LetterRenderer(self)
         self.elemental_glyph_renderer = ElementalGlyphRenderer(self)
         self.vtg_glyph_renderer = VTGGlyphRenderer(self)
         self.tka_glyph_renderer = TKAGlyphRenderer(self)
         self.position_glyph_renderer = PositionGlyphRenderer(self)
 
-        # Register with global visibility service
-        self._register_with_global_service()
+        self._glyph_renderers_initialized = True
 
     def _initialize_shared_services(self):
         """Initialize shared services that will be injected into renderers."""
+        if self._services_initialized:
+            return
+
         try:
             from application.services.pictograph.arrow_rendering_service import (
                 ArrowRenderingService,
-            )
-            from core.dependency_injection.container_utils import (
-                ensure_container_initialized,
             )
             from core.dependency_injection.di_container import get_container
             from core.interfaces.positioning_services import (
@@ -109,227 +139,44 @@ class PictographScene(QGraphicsScene):
                 IArrowPositioningOrchestrator,
             )
 
-            # Ensure container is properly initialized
-            if ensure_container_initialized():
-                container = get_container()
+            container = get_container()
 
-                # Resolve shared positioning services (singletons)
-                self._positioning_orchestrator = container.resolve(
-                    IArrowPositioningOrchestrator
-                )
-                self._coordinate_system = container.resolve(
-                    IArrowCoordinateSystemService
-                )
+            self._positioning_orchestrator = container.resolve(IArrowPositioningOrchestrator)
+            self._coordinate_system = container.resolve(IArrowCoordinateSystemService)
+            self._arrow_rendering_service = ArrowRenderingService()
 
-                # Create shared arrow rendering service
-                self._arrow_rendering_service = ArrowRenderingService()
-
-                logger.debug(
-                    f"Scene {self.scene_id}: Successfully initialized shared services"
-                )
-            else:
-                logger.warning(
-                    f"Scene {self.scene_id}: Failed to initialize DI container"
-                )
+            logger.debug(f"Scene {self.scene_id}: Successfully initialized shared services")
+            self._services_initialized = True
 
         except Exception as e:
-            logger.warning(
-                f"Scene {self.scene_id}: Failed to initialize shared services: {e}"
-            )
-            # Services will remain None, renderers will fall back to their own resolution
-
-    def _register_with_global_service(self):
-        """Register this scene with the global visibility service."""
-        try:
-            # Try to get the global visibility service from the DI container
-            from application.services.pictograph.global_visibility_service import (
-                PictographVisibilityManager,
-            )
-
-            # Get or create global service instance
-            try:
-                from core.dependency_injection.di_container import get_container
-
-                container = get_container()
-                if container:
-                    # Try to resolve from container (if registered)
-                    global_service = container.resolve(PictographVisibilityManager)
-                else:
-                    # Fallback to creating new instance
-                    global_service = PictographVisibilityManager()
-            except Exception:
-                # Fallback to creating new instance
-                global_service = PictographVisibilityManager()
-
-            if global_service:
-                # Determine component type from parent hierarchy
-                component_type = self._determine_component_type()
-
-                # Register this scene
-                success = global_service.register_pictograph(
-                    pictograph_id=self.scene_id,
-                    pictograph_instance=self,
-                    component_type=component_type,
-                    update_method="update_visibility",
-                    metadata={
-                        "scene_size": self.SCENE_SIZE,
-                        "has_renderers": True,
-                        "created_at": str(uuid.uuid4()),
-                    },
-                )
-
-                if success:
-                    logger.debug(
-                        f"Registered PictographScene {self.scene_id} with GlobalVisibilityService"
-                    )
-                else:
-                    logger.warning(
-                        f"Failed to register PictographScene {self.scene_id}"
-                    )
-
-        except Exception as e:
-            logger.warning(f"Could not register with GlobalVisibilityService: {e}")
-
-    def _determine_component_type(self) -> str:
-        """
-        Determine component type using the robust context service.
-
-        This method is deprecated and maintained for backward compatibility.
-        New code should use the context service directly.
-        """
-        try:
-            # Try to get context service from DI container
-            from application.services.pictograph.scaling_service import RenderingContext
-            from core.application.application_factory import ApplicationFactory
-            from core.interfaces.core_services import IPictographContextDetector
-
-            # Use proper application factory method
-            container = ApplicationFactory.create_app_from_args()
-            if container:
-                context_service = container.resolve(IPictographContextDetector)
-                # Removed repetitive log statement
-                context = context_service.determine_context_from_scene(self)
-
-                # Convert enum to string for backward compatibility
-                context_map = {
-                    RenderingContext.GRAPH_EDITOR: "graph_editor",
-                    RenderingContext.BEAT_FRAME: "beat_frame",
-                    RenderingContext.OPTION_PICKER: "option_picker",
-                    RenderingContext.PREVIEW: "preview",
-                    RenderingContext.SEQUENCE_VIEWER: "sequence_viewer",
-                    RenderingContext.UNKNOWN: "unknown",
-                }
-
-                result = context_map.get(context, "unknown")
-                # Removed repetitive log statement
-                return result
-
-        except Exception as e:
-            print(f"⚠️ [SCENE_CONTEXT] Context service failed, using fallback: {e}")
-
-        # Fallback to original logic for backward compatibility
-        return self._legacy_determine_component_type()
-
-    def _legacy_determine_component_type(self) -> str:
-        """Legacy context detection method (deprecated)."""
-        parent = self.parent()
-        hierarchy = []
-        while parent:
-            class_name = parent.__class__.__name__.lower()
-            hierarchy.append(class_name)
-            print(f"🔍 [SCENE_CONTEXT] Checking parent: {class_name}")
-
-            if "grapheditor" in class_name:
-                print(f"✅ [SCENE_CONTEXT] Found graph_editor context!")
-                return "graph_editor"
-            elif "beat" in class_name:
-                print(f"✅ [SCENE_CONTEXT] Found beat_frame context!")
-                return "beat_frame"
-            elif "option" in class_name or "clickable" in class_name:
-                print(f"✅ [SCENE_CONTEXT] Found option_picker context!")
-                return "option_picker"
-            elif "preview" in class_name:
-                print(f"✅ [SCENE_CONTEXT] Found preview context!")
-                return "preview"
-            elif "sequence" in class_name:
-                print(f"✅ [SCENE_CONTEXT] Found sequence_viewer context!")
-                return "sequence_viewer"
-            parent = parent.parent() if hasattr(parent, "parent") else None
-
-        print(f"⚠️ [SCENE_CONTEXT] Unknown context! Hierarchy: {' -> '.join(hierarchy)}")
-        return "unknown"
-
-    def is_in_graph_editor_context(self) -> bool:
-        """Check if this scene is being used in a graph editor context."""
-        return self._determine_component_type() == "graph_editor"
+            logger.debug(f"Scene {self.scene_id}: Deferred shared services initialization: {e}")
 
     def update_visibility(self, element_type: str, element_name: str, visible: bool):
-        """Update visibility of specific elements in this scene."""
+        """
+        Update visibility of specific elements in this scene.
+        
+        This method is called by external visibility controls to update what should be rendered.
+        """
         try:
-            logger.debug(
-                f"PictographScene {self.scene_id}: Updating {element_name} visibility to {visible}"
-            )
-
-            # Update internal visibility tracking
-            if element_name in self._renderer_visibility:
-                self._renderer_visibility[element_name] = visible
-
-            # Apply visibility changes to renderers
-            if element_name == "TKA":
-                self._set_renderer_visibility("tka", visible)
-            elif element_name == "VTG":
-                self._set_renderer_visibility("vtg", visible)
-            elif element_name == "Elemental":
-                self._set_renderer_visibility("elemental", visible)
-            elif element_name == "Positions":
-                self._set_renderer_visibility("positions", visible)
-            elif element_name == "Reversals":
-                self._set_renderer_visibility("reversals", visible)
-            elif element_name == "Non-radial_points":
-                self._set_renderer_visibility("non_radial", visible)
-            elif element_name in ["red_motion", "blue_motion"]:
-                # Motion visibility affects props and arrows
-                self._set_motion_visibility(element_name, visible)
-
-            # Note: Scene no longer auto-renders on visibility changes
-            # Parent component should call update_beat() to re-render with new visibility
+            logger.debug(f"PictographScene {self.scene_id}: Updating {element_name} visibility to {visible}")
+            
+            # Update the simple visibility service
+            self._visibility_service.set_element_visibility(element_type, element_name, visible)
+            
+            # No need to re-render here - parent component should call render_pictograph() when needed
 
         except Exception as e:
-            logger.error(
-                f"Error updating visibility in PictographScene {self.scene_id}: {e}"
-            )
-
-    def _set_renderer_visibility(self, renderer_type: str, visible: bool):
-        """Set visibility for a specific renderer type."""
-        self._renderer_visibility[renderer_type] = visible
-
-        # Note: Individual renderers don't have setVisible() methods
-        # Visibility is controlled by whether they render or not during _render_pictograph()
-
-    def _set_motion_visibility(self, motion_type: str, visible: bool):
-        """Set visibility for motion-related renderers."""
-        if motion_type == "red_motion":
-            self._renderer_visibility["props"] = (
-                visible or self._renderer_visibility.get("blue_motion", True)
-            )
-            self._renderer_visibility["arrows"] = (
-                visible or self._renderer_visibility.get("blue_motion", True)
-            )
-        elif motion_type == "blue_motion":
-            self._renderer_visibility["props"] = (
-                visible or self._renderer_visibility.get("red_motion", True)
-            )
-            self._renderer_visibility["arrows"] = (
-                visible or self._renderer_visibility.get("red_motion", True)
-            )
+            logger.error(f"Error updating visibility in PictographScene {self.scene_id}: {e}")
 
     def render_pictograph(self, pictograph_data: "PictographData") -> None:
         """Render a complete pictograph from pictograph data."""
+        self._initialize_shared_services()
+        self._initialize_glyph_renderers()
+
         self.clear()
-        self.prop_renderer.clear_rendered_props()
-        # Return arrow items to pool for reuse
-        if hasattr(self.arrow_renderer, "_return_arrow_items_to_pool"):
-            self.arrow_renderer._return_arrow_items_to_pool()
+        if self.rendering_service and hasattr(self.rendering_service, "clear_rendered_props"):
+            self.rendering_service.clear_rendered_props()
+            
         self._render_pictograph_data(pictograph_data)
 
     def update_beat(self, beat_data: BeatData) -> None:
@@ -341,62 +188,55 @@ class PictographScene(QGraphicsScene):
         if not pictograph_data:
             return
 
-        # Render grid (if visible)
-        if self._renderer_visibility.get("grid", True):
-            self.grid_renderer.render_grid()
+        # Render grid using shared service (if visible)
+        if self._visibility_service.get_element_visibility("other", "grid"):
+            if self.rendering_service:
+                grid_mode = (
+                    pictograph_data.grid_data.grid_mode.value
+                    if pictograph_data.grid_data
+                    else "diamond"
+                )
+                self.rendering_service.render_grid(self, grid_mode)
+            else:
+                logger.warning(f"[SCENE] No rendering service available for grid: {self.scene_id}")
 
-        # Extract motion data from arrows and motions
-        blue_motion = None
-        red_motion = None
+        # Extract motion data
+        blue_motion = pictograph_data.motions.get("blue")
+        red_motion = pictograph_data.motions.get("red")
 
-        # For complete pictographs (with arrows and motions)
-        if "blue" in pictograph_data.arrows and "blue" in pictograph_data.motions:
-            blue_motion = pictograph_data.motions["blue"]
-        # For option pictographs (motions only, arrows generated later)
-        elif "blue" in pictograph_data.motions:
-            blue_motion = pictograph_data.motions["blue"]
+        # Render props using shared service (if visible)
+        if self._visibility_service.get_element_visibility("other", "props"):
+            if blue_motion and self._visibility_service.get_motion_visibility("blue"):
+                if self.rendering_service:
+                    self.rendering_service.render_prop(self, "blue", blue_motion, pictograph_data)
+                else:
+                    logger.warning(f"[SCENE] No rendering service available for blue prop: {self.scene_id}")
+                    
+            if red_motion and self._visibility_service.get_motion_visibility("red"):
+                if self.rendering_service:
+                    self.rendering_service.render_prop(self, "red", red_motion, pictograph_data)
+                else:
+                    logger.warning(f"[SCENE] No rendering service available for red prop: {self.scene_id}")
 
-        if "red" in pictograph_data.arrows and "red" in pictograph_data.motions:
-            red_motion = pictograph_data.motions["red"]
-        elif "red" in pictograph_data.motions:
-            red_motion = pictograph_data.motions["red"]
-
-        # Render props for blue and red motions (if visible)
-        if self._renderer_visibility.get("props", True):
-            if blue_motion and self._renderer_visibility.get("blue_motion", True):
-                self.prop_renderer.render_prop("blue", blue_motion)
-            if red_motion and self._renderer_visibility.get("red_motion", True):
-                self.prop_renderer.render_prop("red", red_motion)
-
-        if blue_motion and red_motion:
-
-            self.prop_renderer.apply_beta_positioning(pictograph_data)
-
-        # Use the existing pictograph data for arrow rendering
-        # Ensure both blue and red arrows exist for special placement service
+        # Create full pictograph data for arrow rendering
         full_pictograph_data = PictographData(
             arrows={
                 "blue": pictograph_data.arrows.get("blue", ArrowData(color="blue")),
                 "red": pictograph_data.arrows.get("red", ArrowData(color="red")),
             },
-            motions=pictograph_data.motions,  # CRITICAL: Include motions for arrow positioning
-            letter=pictograph_data.letter,  # Essential for special placement lookup
+            motions=pictograph_data.motions,
+            letter=pictograph_data.letter,
             glyph_data=pictograph_data.glyph_data,
         )
 
-        # Render arrows using the full pictograph data (if visible)
-        if self._renderer_visibility.get("arrows", True):
-            if blue_motion and self._renderer_visibility.get("blue_motion", True):
-                self.arrow_renderer.render_arrow(
-                    "blue", blue_motion, full_pictograph_data
-                )
-            if red_motion and self._renderer_visibility.get("red_motion", True):
-                self.arrow_renderer.render_arrow(
-                    "red", red_motion, full_pictograph_data
-                )
+        # Render arrows directly (if visible)
+        if self._visibility_service.get_element_visibility("other", "arrows"):
+            if blue_motion and self._visibility_service.get_motion_visibility("blue"):
+                self._create_arrow_directly("blue", blue_motion, full_pictograph_data)
+            if red_motion and self._visibility_service.get_motion_visibility("red"):
+                self._create_arrow_directly("red", red_motion, full_pictograph_data)
 
         # Render glyphs if glyph data is available and visibility allows
-        # Note: Letters are rendered via TKA glyph, not simple letter renderer
         if pictograph_data.glyph_data:
             glyph_data = pictograph_data.glyph_data
 
@@ -404,7 +244,7 @@ class PictographScene(QGraphicsScene):
             if (
                 glyph_data.show_elemental
                 and glyph_data.vtg_mode
-                and self._renderer_visibility.get("elemental", True)
+                and self._visibility_service.get_glyph_visibility("Elemental")
             ):
                 self.elemental_glyph_renderer.render_elemental_glyph(
                     glyph_data.vtg_mode,
@@ -415,7 +255,7 @@ class PictographScene(QGraphicsScene):
             if (
                 glyph_data.show_vtg
                 and glyph_data.vtg_mode
-                and self._renderer_visibility.get("vtg", True)
+                and self._visibility_service.get_glyph_visibility("VTG")
             ):
                 self.vtg_glyph_renderer.render_vtg_glyph(
                     glyph_data.vtg_mode,
@@ -426,12 +266,9 @@ class PictographScene(QGraphicsScene):
             if (
                 glyph_data.show_tka
                 and pictograph_data.letter
-                and self._renderer_visibility.get("tka", True)
+                and self._visibility_service.get_glyph_visibility("TKA")
             ):
-                # Determine the correct letter type from the actual letter
-                letter_type_str = LetterTypeClassifier.get_letter_type(
-                    pictograph_data.letter
-                )
+                letter_type_str = LetterTypeClassifier.get_letter_type(pictograph_data.letter)
                 letter_type = LetterType(letter_type_str)
 
                 self.tka_glyph_renderer.render_tka_glyph(
@@ -446,7 +283,7 @@ class PictographScene(QGraphicsScene):
                 glyph_data.show_positions
                 and glyph_data.start_position
                 and glyph_data.end_position
-                and self._renderer_visibility.get("positions", True)
+                and self._visibility_service.get_glyph_visibility("Positions")
             ):
                 self.position_glyph_renderer.render_position_glyph(
                     glyph_data.start_position,

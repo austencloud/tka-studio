@@ -13,8 +13,8 @@ from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
 from ...pictograph.pictograph_component import (
-    PictographComponent,
-    create_pictograph_component,
+    PictographWidget,
+    create_pictograph_widget,
 )
 from .beat_number_overlay import BeatNumberOverlay, add_beat_number_to_view
 from .selection_overlay import SelectionOverlay
@@ -49,7 +49,7 @@ class BeatView(QFrame):
         self._is_highlighted = False
 
         # UI components
-        self._pictograph_component: Optional[PictographComponent] = None
+        self._pictograph_component: Optional[PictographWidget] = None
         self._selection_overlay: Optional[SelectionOverlay] = None
 
         # START text overlay for preserved start position beat
@@ -74,8 +74,8 @@ class BeatView(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # Create pictograph component
-        self._pictograph_component = create_pictograph_component(parent=self)
+        # Create pictograph widget
+        self._pictograph_component = create_pictograph_widget()
         self._configure_pictograph_component()
         layout.addWidget(self._pictograph_component)
 
@@ -222,7 +222,12 @@ class BeatView(QFrame):
 
     def _update_start_text_overlay(self):
         """Update START text overlay based on current state"""
-        if not self._pictograph_component or not self._pictograph_component.scene:
+        if not self._pictograph_component:
+            return
+
+        # Get the scene from the PictographWidget
+        scene = getattr(self._pictograph_component, "_pictograph_component", None)
+        if not scene:
             return
 
         # Clean up existing overlay
@@ -232,9 +237,7 @@ class BeatView(QFrame):
         if self._show_start_text:
             try:
                 # Create overlay with scene as parent for Qt lifecycle management
-                self._start_text_overlay = StartTextOverlay(
-                    self._pictograph_component.scene
-                )
+                self._start_text_overlay = StartTextOverlay(scene)
 
                 # Set the BeatView as the widget parent for proper cleanup
                 self._start_text_overlay.setParent(self)

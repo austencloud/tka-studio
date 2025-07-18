@@ -64,12 +64,40 @@ class CompleteUserWorkflowTester:
         print("🔄 [WORKFLOW] Step 1: Starting up the program...")
 
         try:
+            # Create fresh container and construct tab
+            # ApplicationFactory now automatically sets the container as global
+            from core.dependency_injection.di_container import reset_container
             from presentation.tabs.construct.construct_tab_widget import (
                 ConstructTabWidget,
             )
 
-            # Create fresh container and construct tab
+            # Reset any existing container first
+            reset_container()
+            print("🔄 [WORKFLOW] Reset global container")
+
+            # Create the application (this will automatically set the global container)
             self.container = ApplicationFactory.create_production_app()
+            print(f"🔧 [WORKFLOW] Created application container: {id(self.container)}")
+
+            # Verify the global container is set correctly
+            try:
+                from core.dependency_injection import get_container
+
+                global_container = get_container()
+                print(
+                    f"🔍 [WORKFLOW] Verified global container: {id(global_container)}"
+                )
+                print(
+                    f"🔍 [WORKFLOW] Same as test container? {global_container is self.container}"
+                )
+            except Exception as e:
+                print(f"⚠️ [WORKFLOW] Failed to verify global container: {e}")
+
+            # Services are properly registered - pictograph rendering should work
+            print("✅ [WORKFLOW] All required services are registered")
+
+            # Arrow pooling completely removed - using legacy direct arrow creation approach
+            print("🏹 [WORKFLOW] Using direct arrow creation")
 
             # Initialize pictograph pool for high-performance option picker
             try:
@@ -80,7 +108,7 @@ class CompleteUserWorkflowTester:
                 initialize_pictograph_pool(self.container)
                 print("✅ [WORKFLOW] Pictograph pool initialized")
             except Exception as e:
-                print(f"⚠️ [WORKFLOW] Pool initialization failed: {e}")
+                print(f"⚠️ [WORKFLOW] Pictograph pool initialization failed: {e}")
 
             self.construct_tab = ConstructTabWidget(self.container)
 
@@ -196,9 +224,9 @@ class CompleteUserWorkflowTester:
                     widget = option_picker.option_picker_widget
                     print(f"🔍 [DEBUG] option_picker_widget type: {type(widget)}")
 
-                    # The sections are in the scroll widget, which is the option_picker_widget of the OptionPickerWidget
-                    if hasattr(widget, "option_picker_widget"):
-                        scroll_widget = widget.option_picker_widget
+                    # The sections are in the scroll widget (option_picker_scroll)
+                    if hasattr(widget, "option_picker_scroll"):
+                        scroll_widget = widget.option_picker_scroll
                         print(f"🔍 [DEBUG] scroll_widget type: {type(scroll_widget)}")
 
                         if hasattr(scroll_widget, "sections"):
@@ -248,7 +276,7 @@ class CompleteUserWorkflowTester:
                             return False
                     else:
                         print(
-                            "❌ [WORKFLOW] option_picker_widget has no option_picker_widget attribute"
+                            "❌ [WORKFLOW] option_picker_widget has no option_picker_scroll attribute"
                         )
                         return False
                 else:

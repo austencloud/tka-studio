@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.animation_core_interfaces import IAnimationOrchestrator
+from core.interfaces.workbench_services import IWorkbenchStateManager
 from presentation.components.right_panel_tabs.right_panel_tab_widget import (
     RightPanelTabWidget,
 )
@@ -41,8 +42,10 @@ class ConstructTabLayoutManager:
         self,
         container: DIContainer,
         progress_callback: Optional[Callable[[int, str], None]] = None,
+        option_picker_ready_callback: Optional[Callable[[object], None]] = None,
     ):
         self.container = container
+        self.option_picker_ready_callback = option_picker_ready_callback
 
         # Initialize orchestrators (Qt-agnostic)
         self.layout_orchestrator = LayoutOrchestrator()
@@ -206,6 +209,12 @@ class ConstructTabLayoutManager:
 
     def _connect_components(self):
         """Connect all components through the component connector."""
+        # Note: WorkbenchStateManager is framework-agnostic and doesn't need direct workbench reference
+        # The workbench widget communicates with the state manager through method calls
+        if self.workbench:
+            print("✅ [LAYOUT_MANAGER] Workbench available for component connections")
+
+        # Connect components through component connector
         self.component_connector.set_workbench(self.workbench)
         self.component_connector.set_graph_editor(self.graph_editor)
         self.component_connector.set_generate_panel(self.generate_panel)
@@ -320,6 +329,13 @@ class ConstructTabLayoutManager:
                     print(
                         "✅ [LAYOUT_MANAGER] Option picker created and replaced placeholder"
                     )
+
+                    # Notify callback that option picker is ready
+                    if self.option_picker_ready_callback:
+                        print(
+                            "🔧 [LAYOUT_MANAGER] Notifying option picker ready callback..."
+                        )
+                        self.option_picker_ready_callback(self.option_picker)
 
         except Exception as e:
             print(f"❌ [LAYOUT_MANAGER] Error creating deferred option picker: {e}")

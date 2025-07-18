@@ -102,6 +102,12 @@ class ApplicationFactory:
         """
         container = DIContainer()
 
+        # CRITICAL: Set this container as the global container immediately
+        # This ensures all services registered below use the same container instance
+        from core.dependency_injection.di_container import set_container
+
+        set_container(container)
+
         # Register file-based data services
         container.register_singleton(ISequenceDataService, FileBasedSequenceDataService)
         container.register_singleton(ISettingsCoordinator, FileBasedSettingsService)
@@ -137,11 +143,6 @@ class ApplicationFactory:
             logger.warning(f"Failed to register extracted services: {e}")
 
         # Removed repetitive log statement
-
-        # Set this container as the global container so get_container() returns it
-        from core.dependency_injection.di_container import set_container
-
-        set_container(container)
 
         return container
 

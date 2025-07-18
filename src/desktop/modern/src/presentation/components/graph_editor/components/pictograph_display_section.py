@@ -24,8 +24,8 @@ from typing import Optional
 
 from domain.models import BeatData
 from presentation.components.pictograph.pictograph_component import (
-    PictographComponent,
-    create_pictograph_component,
+    PictographWidget,
+    create_pictograph_widget,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
@@ -84,7 +84,7 @@ class PictographDisplaySection(QWidget):
         self._resize_pending = False
 
         # Initialize components
-        self._pictograph_component: Optional[PictographComponent] = None
+        self._pictograph_component: Optional[PictographWidget] = None
         self._info_panel: Optional[DetailedInfoPanel] = None
 
         self._setup_ui()
@@ -188,8 +188,8 @@ class PictographDisplaySection(QWidget):
         )  # Small margin for glassmorphism border
         pictograph_layout.setSpacing(0)
 
-        # Create the TKA pictograph component with responsive sizing
-        self._pictograph_component = create_pictograph_component(parent=self)
+        # Create the TKA pictograph widget with responsive sizing
+        self._pictograph_component = create_pictograph_widget()
 
         # Calculate initial optimal size
         initial_size = self._calculate_optimal_pictograph_size()
@@ -301,12 +301,12 @@ class PictographDisplaySection(QWidget):
         """Clear both the pictograph and information panel"""
         self.update_display(-1, None)
 
-    def get_pictograph_component(self) -> Optional[PictographComponent]:
+    def get_pictograph_component(self) -> Optional[PictographWidget]:
         """
-        Get the pictograph component for direct access if needed.
+        Get the pictograph widget for direct access if needed.
 
         Returns:
-            PictographComponent: The pictograph component instance
+            PictographWidget: The pictograph widget instance
         """
         return self._pictograph_component
 

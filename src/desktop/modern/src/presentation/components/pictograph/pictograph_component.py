@@ -16,7 +16,7 @@ from presentation.components.pictograph.border_manager import BorderedPictograph
 from presentation.components.pictograph.pictograph_scene import PictographScene
 from PyQt6.QtCore import QEvent, Qt, QTimer
 from PyQt6.QtGui import QEnterEvent, QKeyEvent, QPainter, QResizeEvent
-from PyQt6.QtWidgets import QGraphicsView
+from PyQt6.QtWidgets import QGraphicsView, QVBoxLayout, QWidget
 
 
 class PictographComponent(PictographScene):
@@ -28,13 +28,13 @@ class PictographComponent(PictographScene):
     ):
         # Initialize scene first
         super().__init__(parent)
-        
+
         # Store border service and view management
         self._border_service = border_service
         self._current_view: Optional[QGraphicsView] = None
-        self._scaling_context = ScalingContext.MEDIUM
+        self._scaling_context = ScalingContext.DEFAULT
         self._context_params = {}
-        
+
         # Debug functionality
         self.debug_enabled = False
         self.debug_timer = QTimer()
@@ -44,19 +44,19 @@ class PictographComponent(PictographScene):
     def attach_view(self, view: QGraphicsView) -> None:
         """
         Attach this scene to a view for display.
-        
+
         This is called when the component needs to be displayed.
         The view is managed by the PictographViewPool.
         """
         if self._current_view:
             self.detach_view()
-            
+
         self._current_view = view
         view.setScene(self)
-        
+
         # Apply view configuration
         self._setup_view_properties(view)
-        
+
         # Fit view to scene
         self._fit_view_to_scene(view)
 
@@ -75,7 +75,7 @@ class PictographComponent(PictographScene):
         view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         view.setFrameStyle(0)
         view.setContentsMargins(0, 0, 0, 0)
-        
+
         viewport = view.viewport()
         if viewport:
             viewport.setContentsMargins(0, 0, 0, 0)
@@ -94,7 +94,7 @@ class PictographComponent(PictographScene):
     def update_from_beat(self, beat_data: BeatData) -> None:
         """Update the pictograph display with beat data."""
         self.render_pictograph(beat_data.pictograph_data)
-        
+
         # Update view if attached
         if self._current_view:
             self._fit_view_to_scene(self._current_view)
@@ -102,205 +102,99 @@ class PictographComponent(PictographScene):
     def update_from_pictograph_data(self, pictograph_data: PictographData) -> None:
         """Update component from PictographData."""
         self.render_pictograph(pictograph_data)
-        
+
         # Update view if attached
         if self._current_view:
             self._fit_view_to_scene(self._current_view)
 
     def get_current_beat(self) -> Optional[BeatData]:
-        """Get current beat - component is now stateless, returns None."""
-        return None  # Component no longer stores beat data
+        """Get current beat - component is stateless."""
+        return None
 
     def clear_pictograph(self) -> None:
         """Clear the pictograph display."""
-        if self.scene:
-            self.scene.clear()
+        self.clear()
 
     def cleanup(self) -> None:
-        try:
-            if self.scene:
-                self.scene.clear()
-                self.scene.setParent(None)
-                self.scene = None
-        except RuntimeError:
-            pass
+        """Clean up the component."""
+        if self._current_view:
+            self.detach_view()
+        self.clear()
 
-    def _fit_view(self) -> None:
-        """Fit the pictograph scene to the view, exactly like Legacy."""
-        if self.scene:
-            try:
-                # Simple Legacy-style fitting: just use fitInView to automatically scale
-                self.setSceneRect(self.scene.itemsBoundingRect())
-                self.fitInView(self.sceneRect(), Qt.AspectRatioMode.KeepAspectRatio)
-            except RuntimeError:
-                pass
+    def get_current_view(self) -> Optional[QGraphicsView]:
+        """Get the currently attached view."""
+        return self._current_view
 
-    def resizeEvent(self, event: QResizeEvent) -> None:
-        super().resizeEvent(event)
-        self._fit_view()
+    def set_scaling_context(
+        self, context: ScalingContext, **context_params: Any
+    ) -> None:
+        """Set the scaling context and parameters."""
+        self._scaling_context = context
+        self._context_params = context_params
 
-    def showEvent(self, event: Any) -> None:
-        super().showEvent(event)
-        self._fit_view()
+        # Re-apply scaling with new context
+        if self._current_view:
+            self._fit_view_to_scene(self._current_view)
 
-    def paintEvent(self, event: Any) -> None:
-        """Handle paint events and draw borders if enabled."""
-        super().paintEvent(event)
-
-        # Draw borders using the border manager
-        painter = QPainter(self.viewport())
-        try:
-            self.draw_pictograph_borders(
-                painter, self.viewport().rect(), self.viewport().size().width()
-            )
-        finally:
-            painter.end()
-
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        """Handle key press events for debugging."""
-        if (
-            event.key() == Qt.Key.Key_D
-            and event.modifiers() == Qt.KeyboardModifier.ControlModifier
-        ):
-            self.toggle_dimension_debugging()
-        else:
-            super().keyPressEvent(event)
-
-    def enterEvent(self, event: QEnterEvent) -> None:
-        """Handle mouse enter events for hover effects."""
-        super().enterEvent(event)
-        # Default hover behavior - can be overridden by context configurator
-        if hasattr(self, "_hover_enter_func"):
-            self._hover_enter_func()
-
-    def leaveEvent(self, event: QEvent) -> None:
-        """Handle mouse leave events for hover effects."""
-        super().leaveEvent(event)
-        # Default hover behavior - can be overridden by context configurator
-        if hasattr(self, "_hover_leave_func"):
-            self._hover_leave_func()
+    def get_scaling_context(self) -> ScalingContext:
+        """Get the current scaling context."""
+        return self._scaling_context
 
     def toggle_dimension_debugging(self) -> None:
         """Toggle dimension debugging on/off."""
         self.debug_enabled = not self.debug_enabled
         if self.debug_enabled:
             print(
-                "🔍 Modern Dimension debugging ENABLED - Press Ctrl+D again to disable"
+                "🔍 Optimized Dimension debugging ENABLED - Press Ctrl+D again to disable"
             )
             self._trigger_debug_print()
         else:
-            print("🔍 Modern Dimension debugging DISABLED")
+            print("🔍 Optimized Dimension debugging DISABLED")
 
     def _trigger_debug_print(self) -> None:
-        """Trigger debug print after a short delay to ensure rendering is complete."""
+        """Trigger debug print after a short delay."""
         if self.debug_enabled:
-            self.debug_timer.start(100)  # 100ms delay
+            self.debug_timer.start(100)
 
     def _print_debug_dimensions(self) -> None:
         """Print detailed dimension information for debugging."""
-        if not self.debug_enabled or not self.scene:
+        if not self.debug_enabled:
             return
 
         print("\n" + "=" * 80)
-        print("🔍 Modern PICTOGRAPH DIMENSION DEBUG")
+        print("🔍 OPTIMIZED PICTOGRAPH DIMENSION DEBUG")
         print("=" * 80)
 
-        # Component dimensions
-        component_size = self.size()
-        viewport_size = self.viewport().size()
-        print(f"📐 Component Size: {component_size.width()}x{component_size.height()}")
-        print(f"📐 Viewport Size: {viewport_size.width()}x{viewport_size.height()}")
-
         # Scene dimensions
-        scene_rect = self.scene.sceneRect()
+        scene_rect = self.sceneRect()
         print(
             f"📐 Scene Rect: {scene_rect.width()}x{scene_rect.height()} at ({scene_rect.x()}, {scene_rect.y()})"
         )
 
-        # View scaling
-        transform = self.transform()
-        scale_x = transform.m11()
-        scale_y = transform.m22()
-        print(f"📐 View Scale: {scale_x:.4f}x{scale_y:.4f}")
+        # View dimensions (if attached)
+        if self._current_view:
+            view_size = self._current_view.size()
+            viewport_size = self._current_view.viewport().size()
+            print(f"📐 View Size: {view_size.width()}x{view_size.height()}")
+            print(f"📐 Viewport Size: {viewport_size.width()}x{viewport_size.height()}")
 
-        # Calculate effective pictograph size
-        effective_width = scene_rect.width() * scale_x
-        effective_height = scene_rect.height() * scale_y
-        print(
-            f"📐 Effective Pictograph Size: {effective_width:.1f}x{effective_height:.1f}"
-        )
+            # View scaling
+            transform = self._current_view.transform()
+            scale_x = transform.m11()
+            scale_y = transform.m22()
+            print(f"📐 View Scale: {scale_x:.4f}x{scale_y:.4f}")
 
-        # TKA glyph analysis
-        self._debug_tka_glyph_dimensions()
+            # Effective pictograph size
+            effective_width = scene_rect.width() * scale_x
+            effective_height = scene_rect.height() * scale_y
+            print(
+                f"📐 Effective Pictograph Size: {effective_width:.1f}x{effective_height:.1f}"
+            )
+        else:
+            print("📐 No view currently attached")
 
         print("=" * 80)
         print()
-
-    def _debug_tka_glyph_dimensions(self) -> None:
-        """Debug TKA glyph specific dimensions."""
-        if not self.scene:
-            return
-
-        print("\n🔤 TKA GLYPH ANALYSIS:")
-
-        # Find TKA glyph items in the scene
-        tka_items = []
-        for item in self.scene.items():
-            if hasattr(item, "childItems") and item.childItems():
-                # Check if this looks like a TKA group
-                children = item.childItems()
-                if len(children) > 0:
-                    first_child = children[0]
-                    if hasattr(first_child, "boundingRect"):
-                        tka_items.append((item, first_child))
-
-        if not tka_items:
-            print("   No TKA glyph items found")
-            return
-
-        for i, (group_item, letter_item) in enumerate(tka_items):
-            print(f"   TKA Group {i+1}:")
-
-            # Group dimensions
-            group_rect = group_item.boundingRect()
-            group_pos = group_item.pos()
-            print(
-                f"     Group Rect: {group_rect.width():.1f}x{group_rect.height():.1f}"
-            )
-            print(f"     Group Pos: ({group_pos.x():.1f}, {group_pos.y():.1f})")
-
-            # Letter dimensions
-            letter_rect = letter_item.boundingRect()
-            letter_pos = letter_item.pos()
-            print(
-                f"     Letter Rect: {letter_rect.width():.1f}x{letter_rect.height():.1f}"
-            )
-            print(f"     Letter Pos: ({letter_pos.x():.1f}, {letter_pos.y():.1f})")
-
-            # Scene coordinates
-            scene_rect = group_item.sceneBoundingRect()
-            print(
-                f"     Scene Rect: {scene_rect.width():.1f}x{scene_rect.height():.1f} at ({scene_rect.x():.1f}, {scene_rect.y():.1f})"
-            )
-
-            # Effective size after view scaling
-            transform = self.transform()
-            effective_width = scene_rect.width() * transform.m11()
-            effective_height = scene_rect.height() * transform.m22()
-            print(f"     Effective Size: {effective_width:.1f}x{effective_height:.1f}")
-
-    def set_scaling_context(
-        self, context: ScalingContext, **context_params: Any
-    ) -> None:
-        """Set the scaling context and parameters for context-aware scaling."""
-        self.scaling_context = context
-        self.context_params = context_params
-        # Re-apply scaling with new context
-        self._fit_view()
-
-    def get_scaling_context(self) -> ScalingContext:
-        """Get the current scaling context."""
-        return self.scaling_context
 
 
 def create_pictograph_component(
@@ -314,11 +208,11 @@ def create_pictograph_component(
     and creates a properly configured PictographComponent instance.
 
     Args:
-        parent: Optional parent widget
+        parent: Optional parent widget (for scene hierarchy)
         container: Optional DI container (uses global if not provided)
 
     Returns:
-        PictographComponent: Configured component instance
+        PictographComponent: Configured component instance (scene-only)
     """
     if container is None:
         container = get_container()
@@ -335,3 +229,66 @@ def create_pictograph_component(
         border_service = PictographBorderManager()
 
     return PictographComponent(border_service, parent)
+
+
+class PictographWidget(QWidget):
+    """Widget wrapper for PictographComponent to provide widget interface for UI layouts."""
+
+    def __init__(self, pictograph_component: PictographComponent, parent=None):
+        super().__init__(parent)
+        self._pictograph_component = pictograph_component
+        self._view = QGraphicsView(self)
+
+        # Set up layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        # Connect scene to view
+        self._view.setScene(pictograph_component)
+        layout.addWidget(self._view)
+
+        # Configure view for optimal pictograph display
+        self._view.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self._view.setDragMode(QGraphicsView.DragMode.NoDrag)
+        self._view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._view.setFrameStyle(0)  # Remove frame
+
+        # Attach view to component
+        pictograph_component.attach_view(self._view)
+
+    def update_from_pictograph_data(self, pictograph_data: PictographData) -> None:
+        """Delegate to the wrapped component."""
+        self._pictograph_component.update_from_pictograph_data(pictograph_data)
+
+    def update_from_beat(self, beat_data: BeatData) -> None:
+        """Delegate to the wrapped component."""
+        self._pictograph_component.update_from_beat(beat_data)
+
+    def clear_pictograph(self) -> None:
+        """Delegate to the wrapped component."""
+        self._pictograph_component.clear_pictograph()
+
+    def disable_borders(self) -> None:
+        """Disable borders - compatibility method."""
+        # This method exists for compatibility with legacy code
+        pass
+
+    def set_scaling_context(self, context, **context_params) -> None:
+        """Set scaling context - delegate to wrapped component."""
+        self._pictograph_component.set_scaling_context(context, **context_params)
+
+    def get_pictograph_component(self) -> PictographComponent:
+        """Get the wrapped pictograph component."""
+        return self._pictograph_component
+
+    def cleanup(self) -> None:
+        """Clean up the widget and component."""
+        self._pictograph_component.cleanup()
+
+
+def create_pictograph_widget() -> PictographWidget:
+    """Factory function to create a PictographWidget with proper DI."""
+    component = create_pictograph_component()
+    return PictographWidget(component)

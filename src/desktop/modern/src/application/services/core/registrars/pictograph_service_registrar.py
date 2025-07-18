@@ -10,7 +10,7 @@ Services Registered:
 - PictographManager: Core pictograph management
 - PictographBorderManager: Border management for pictographs
 - PictographContextDetector: Context detection services
-- PictographVisibilityManager: Global visibility management
+- PictographVisibilityService: Visibility management
 - PictographPoolManager: High-performance object pooling
 """
 
@@ -52,8 +52,8 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
         # Register pictograph pool manager (performance critical)
         self._register_pictograph_pool_manager(container)
 
-        # Register arrow item pool manager (performance critical)
-        self._register_arrow_item_pool_manager(container)
+        # Register pictograph rendering service (performance critical)
+        self._register_pictograph_rendering_service(container)
 
         self._update_progress("Pictograph services registered successfully")
 
@@ -70,17 +70,15 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from application.services.pictograph.context_detection_service import (
                 PictographContextDetector,
             )
-            from application.services.pictograph.global_visibility_service import (
-                PictographVisibilityManager,
-            )
             from application.services.pictograph.pictograph_position_matcher import (
                 PictographCSVManager,
             )
             from application.services.pictograph.pictograph_validator import (
                 PictographValidator,
             )
-            from application.services.pictograph.scaling_service import (
-                PictographScaler,
+            from application.services.pictograph.scaling_service import PictographScaler
+            from application.services.pictograph.simple_visibility_service import (
+                PictographVisibilityService,
             )
             from core.interfaces.core_services import (
                 IPictographBorderManager,
@@ -111,11 +109,11 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             )
             self._mark_service_available("PictographContextDetector")
 
-            # Register global visibility service as singleton to ensure all components use the same instance
+            # Register visibility service as singleton to ensure all components use the same instance
             container.register_singleton(
-                PictographVisibilityManager, PictographVisibilityManager
+                PictographVisibilityService, PictographVisibilityService
             )
-            self._mark_service_available("PictographVisibilityManager")
+            self._mark_service_available("PictographVisibilityService")
 
             # Register pictograph validator
             container.register_factory(IPictographValidator, PictographValidator)
@@ -159,24 +157,38 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
                     f"Critical pictograph pool manager unavailable: {e}"
                 ) from e
 
-    def _register_arrow_item_pool_manager(self, container: "DIContainer") -> None:
-        """Register the global arrow item pool manager for performance optimization."""
+    def _register_pictograph_rendering_service(self, container: "DIContainer") -> None:
+        """Register the pictograph rendering service with microservice dependencies."""
         try:
-            from application.services.arrow_item_pool_manager import (
-                ArrowItemPoolManager,
+            from application.services.pictograph.pictograph_rendering_service import (
+                PictographRenderingService,
+            )
+            from core.interfaces.pictograph_rendering_services import (
+                IPictographRenderingService,
             )
 
-            # Create and register the arrow item pool manager instance
-            arrow_pool_manager = ArrowItemPoolManager()
-            container.register_instance(ArrowItemPoolManager, arrow_pool_manager)
-            self._mark_service_available("ArrowItemPoolManager")
+            # Register as singleton to ensure only one instance is ever created
+            container.register_singleton(
+                IPictographRenderingService, PictographRenderingService
+            )
+            container.register_singleton(
+                PictographRenderingService, PictographRenderingService
+            )
+
+            self._mark_service_available("PictographRenderingService")
+            logger.info("🎨 [REGISTRAR] Pictograph rendering service registered")
 
         except ImportError as e:
-            error_msg = f"Failed to register arrow item pool manager: {e}"
+            error_msg = f"Failed to import pictograph rendering service: {e}"
             logger.error(error_msg)
 
-            # Arrow pool manager is critical for performance, so re-raise the error
             if self.is_critical():
                 raise ImportError(
-                    f"Critical arrow item pool manager unavailable: {e}"
+                    f"Critical pictograph rendering service unavailable: {e}"
                 ) from e
+        except Exception as e:
+            error_msg = (
+                f"Unexpected error registering pictograph rendering service: {e}"
+            )
+            logger.error(error_msg)
+            raise

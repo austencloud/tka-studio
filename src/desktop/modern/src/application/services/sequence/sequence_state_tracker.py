@@ -146,7 +146,12 @@ class SequenceStateTracker(QObject):
             )
 
             persistence_service = SequencePersister()
-            start_position_manager = SequenceStartPositionManager()
+
+            # Use dependency injection to get the start position manager
+            from core.dependency_injection.di_container import get_container
+
+            container = get_container()
+            start_position_manager = container.resolve(SequenceStartPositionManager)
 
             # Load sequence (this will need to be converted from legacy format)
             # For now, we'll just refresh what we have

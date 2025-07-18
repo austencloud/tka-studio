@@ -70,6 +70,15 @@ class SignalCoordinator(QObject):
 
         self._setup_signal_connections()
 
+    def connect_construct_tab_signals(self, construct_tab_widget):
+        """Connect to construct tab signals after initialization."""
+        # Connect to construct tab signals (which bridge loading service callbacks)
+        # NOTE: Removed construct_tab_widget.sequence_modified connection to prevent circular signals
+        # The construct tab forwards our signals, so connecting back creates a loop
+        construct_tab_widget.start_position_loaded_from_persistence.connect(
+            self._handle_start_position_loaded_from_persistence
+        )
+
     def _setup_signal_connections(self):
         """Setup all signal connections between components"""
 
@@ -100,11 +109,9 @@ class SignalCoordinator(QObject):
             self.beat_operations.add_pictograph_to_sequence
         )
 
-        # Loading service signals
-        self.loading_service.sequence_loaded.connect(self._handle_sequence_modified)
-        self.loading_service.start_position_loaded.connect(
-            self._handle_start_position_loaded_from_persistence
-        )
+        # Connect to construct tab signals (which bridge loading service callbacks)
+        # Note: construct_tab_widget will be set after initialization
+        # These connections will be made in set_construct_tab_widget method
 
         # Beat operations signals
         self.beat_operations.beat_added.connect(self._on_beat_modified)
@@ -181,15 +188,22 @@ class SignalCoordinator(QObject):
         self, position_key: str, start_position_beat_data: BeatData
     ):
         """Handle start position creation with pre-loaded transition"""
+        print(
+            f"🎯 [SIGNAL_COORDINATOR] _handle_start_position_created called with position: {position_key}"
+        )
 
         self.start_position_manager.set_start_position(start_position_beat_data)
 
         # Pre-load option picker content WITHOUT animations to avoid double fade
+        print(
+            f"🎯 [SIGNAL_COORDINATOR] Calling option_picker_manager.prepare_from_start_position..."
+        )
         self.option_picker_manager.prepare_from_start_position(
             position_key, start_position_beat_data
         )
 
         # Transition to option picker with content already loaded
+        print(f"🎯 [SIGNAL_COORDINATOR] Transitioning to option picker...")
         self.layout_manager.transition_to_option_picker()
         self.start_position_set.emit(position_key)
 
@@ -419,21 +433,8 @@ class SignalCoordinator(QObject):
 
     def _handle_workbench_modified(self, sequence: SequenceData):
         """Handle workbench sequence modification with circular emission protection"""
-        print(
-            f"🔄 [SIGNAL_COORDINATOR] _handle_workbench_modified called with sequence length: {len(sequence.beats)}"
-        )
-
-        # Add stack trace to see who called this
-        import traceback
-
-        print("🔍 [SIGNAL_COORDINATOR] Workbench modified call stack:")
-        for line in traceback.format_stack()[-3:-1]:  # Show last 2 callers
-            print(f"    {line.strip()}")
 
         if self._handling_sequence_modification:
-            print(
-                "🔄 [SIGNAL_COORDINATOR] Already handling sequence modification - skipping"
-            )
             return
 
         try:

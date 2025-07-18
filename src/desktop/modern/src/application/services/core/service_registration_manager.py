@@ -480,8 +480,17 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         # Register services without interfaces yet
         container.register_singleton(SequenceLoader, SequenceLoader)
         container.register_singleton(SequenceBeatOperations, SequenceBeatOperations)
-        container.register_singleton(
-            SequenceStartPositionManager, SequenceStartPositionManager
+
+        # Register SequenceStartPositionManager with dependency injection
+        def create_sequence_start_position_manager(c):
+            from core.interfaces.workbench_services import IWorkbenchStateManager
+
+            return SequenceStartPositionManager(
+                workbench_state_manager=c.resolve(IWorkbenchStateManager)
+            )
+
+        container.register_factory(
+            SequenceStartPositionManager, create_sequence_start_position_manager
         )
 
     def register_motion_services(self, container: "DIContainer") -> None:

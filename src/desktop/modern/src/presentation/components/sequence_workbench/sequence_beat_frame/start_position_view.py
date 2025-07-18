@@ -13,8 +13,8 @@ from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
 from ...pictograph.pictograph_component import (
-    PictographComponent,
-    create_pictograph_component,
+    PictographWidget,
+    create_pictograph_widget,
 )
 from .selection_overlay import SelectionOverlay
 from .start_text_overlay import StartTextOverlay, add_start_text_to_view
@@ -47,7 +47,7 @@ class StartPositionView(QFrame):
         self._is_highlighted = False
 
         # UI components
-        self._pictograph_component: Optional[PictographComponent] = None
+        self._pictograph_component: Optional[PictographWidget] = None
         self._selection_overlay: Optional[SelectionOverlay] = None
 
         # Additional state specific to start position
@@ -69,8 +69,8 @@ class StartPositionView(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # Create pictograph component
-        self._pictograph_component = create_pictograph_component(parent=self)
+        # Create pictograph widget
+        self._pictograph_component = create_pictograph_widget()
         self._configure_pictograph_component()
 
         # Enable visibility for start position pictographs

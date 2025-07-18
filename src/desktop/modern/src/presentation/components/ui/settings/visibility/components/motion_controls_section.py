@@ -8,9 +8,6 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 import logging
 from typing import Dict
 
-from application.services.pictograph.visibility_state_manager import (
-    VisibilityStateManager,
-)
 from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 from presentation.components.ui.settings.components.motion_toggle import MotionToggle
 from PyQt6.QtCore import pyqtSignal
@@ -33,22 +30,22 @@ class MotionControlsSection(QFrame):
     def __init__(
         self,
         visibility_service: IVisibilitySettingsManager,
-        state_manager: VisibilityStateManager,
+        simple_visibility_service,
         parent=None,
     ):
         """
         Initialize motion controls section.
 
         Args:
-            visibility_service: Service for visibility state management
-            state_manager: State manager for validation and updates
+            visibility_service: Service for visibility state management (legacy interface)
+            simple_visibility_service: Simple visibility service for state management
             parent: Parent widget
         """
         super().__init__(parent)
 
         # Service dependencies
         self.visibility_service = visibility_service
-        self.state_manager = state_manager
+        self.simple_visibility_service = simple_visibility_service
 
         # UI components
         self.motion_toggles: Dict[str, MotionToggle] = {}
@@ -99,7 +96,7 @@ class MotionControlsSection(QFrame):
     def _load_initial_settings(self):
         """Load initial motion visibility settings."""
         for color, toggle in self.motion_toggles.items():
-            visible = self.state_manager.get_motion_visibility(color)
+            visible = self.simple_visibility_service.get_motion_visibility(color)
             toggle.set_active(visible)
 
     def _on_motion_visibility_changed(self, color: str, visible: bool):
@@ -111,8 +108,8 @@ class MotionControlsSection(QFrame):
             visible: Whether the motion should be visible
         """
         try:
-            # Use state manager for validation and updates
-            self.state_manager.set_motion_visibility(color, visible)
+            # Use simple visibility service for validation and updates
+            self.simple_visibility_service.set_motion_visibility(color, visible)
 
             # Emit signal for parent coordination
             self.motion_visibility_changed.emit(color, visible)
@@ -127,9 +124,9 @@ class MotionControlsSection(QFrame):
                 toggle.set_active(not visible)
 
     def update_motion_toggles(self):
-        """Update motion toggle states from state manager."""
+        """Update motion toggle states from simple visibility service."""
         for color, toggle in self.motion_toggles.items():
-            visible = self.state_manager.get_motion_visibility(color)
+            visible = self.simple_visibility_service.get_motion_visibility(color)
             if toggle.get_is_active() != visible:
                 toggle.set_active(visible)
 

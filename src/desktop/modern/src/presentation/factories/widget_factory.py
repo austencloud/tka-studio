@@ -53,15 +53,13 @@ class WidgetFactory:
         """Create a filter widget."""
         return self.option_picker_factory.create_filter_widget(parent)
 
-    def create_pictograph_component(self, parent: Optional[QGraphicsView] = None):
-        """Create a pictograph component with injected dependencies."""
-        from core.interfaces.core_services import IPictographBorderManager
+    def create_pictograph_widget(self, parent: Optional[QWidget] = None):
+        """Create a pictograph widget with injected dependencies."""
         from presentation.components.pictograph.pictograph_component import (
-            PictographComponent,
+            create_pictograph_widget,
         )
 
-        border_service = self.container.resolve(IPictographBorderManager)
-        return PictographComponent(border_service, parent)
+        return create_pictograph_widget()
 
 
 # Export the main classes

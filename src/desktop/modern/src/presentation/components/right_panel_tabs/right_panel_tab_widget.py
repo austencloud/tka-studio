@@ -42,14 +42,29 @@ class RightPanelTabWidget(QWidget):
         layout.setSpacing(0)
 
         # Tab definitions
-        tab_configs = [
-            ("🔨 Build", self.picker_tab_clicked),
-            ("🤖 Generate", self.generate_controls_tab_clicked),
-            ("🔧 Edit", self.graph_editor_tab_clicked),
-        ]
+        tab_configs = {
+            0: {
+                "text": "🔨 Build",
+                "signal": self.picker_tab_clicked,
+                "tooltip": "Build and construct your sequence",
+            },
+            1: {
+                "text": "🤖 Generate",
+                "signal": self.generate_controls_tab_clicked,
+                "tooltip": "Generate AI-powered content",
+            },
+            2: {
+                "text": "🔧 Edit",
+                "signal": self.graph_editor_tab_clicked,
+                "tooltip": "Edit and refine your sequence",
+            },
+        }
 
-        for i, (text, signal) in enumerate(tab_configs):
-            tab_button = self._create_tab_button(text, i, signal)
+        for index in sorted(tab_configs.keys()):
+            config = tab_configs[index]
+            tab_button = self._create_tab_button(
+                config["text"], index, config["signal"], config["tooltip"]
+            )
             self._tab_buttons.append(tab_button)
             layout.addWidget(tab_button)
 
@@ -57,7 +72,7 @@ class RightPanelTabWidget(QWidget):
         self._set_active_tab(0)
 
     def _create_tab_button(
-        self, text: str, index: int, signal: pyqtSignal
+        self, text: str, index: int, signal: pyqtSignal, tooltip: str
     ) -> QPushButton:
         """Create a single tab button with glassmorphism styling."""
         button = QPushButton(text)
@@ -66,13 +81,8 @@ class RightPanelTabWidget(QWidget):
         button.setMinimumHeight(48)
         button.setMaximumHeight(48)
 
-        # Add tooltip for better UX
-        tooltips = {
-            0: "Build and construct your sequence",
-            1: "Generate AI-powered content",
-            2: "Edit and refine your sequence",
-        }
-        button.setToolTip(tooltips.get(index, ""))
+        # Set tooltip
+        button.setToolTip(tooltip)
 
         # Connect the button click to both the signal and tab switching
         button.clicked.connect(lambda: self._on_tab_clicked(index))

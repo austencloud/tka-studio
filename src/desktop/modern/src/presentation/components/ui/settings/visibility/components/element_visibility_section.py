@@ -8,9 +8,6 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 import logging
 from typing import Dict
 
-from application.services.pictograph.visibility_state_manager import (
-    VisibilityStateManager,
-)
 from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 from presentation.components.ui.settings.components.element_toggle import ElementToggle
 from PyQt6.QtCore import pyqtSignal
@@ -33,22 +30,22 @@ class ElementVisibilitySection(QFrame):
     def __init__(
         self,
         visibility_service: IVisibilitySettingsManager,
-        state_manager: VisibilityStateManager,
+        simple_visibility_service,
         parent=None,
     ):
         """
         Initialize element visibility section.
 
         Args:
-            visibility_service: Service for visibility state management
-            state_manager: State manager for validation and updates
+            visibility_service: Service for visibility state management (legacy interface)
+            simple_visibility_service: Simple visibility service for state management
             parent: Parent widget
         """
         super().__init__(parent)
 
         # Service dependencies
         self.visibility_service = visibility_service
-        self.state_manager = state_manager
+        self.simple_visibility_service = simple_visibility_service
 
         # UI components
         self.element_toggles: Dict[str, ElementToggle] = {}
@@ -103,7 +100,7 @@ class ElementVisibilitySection(QFrame):
     def _load_initial_settings(self):
         """Load initial element visibility settings."""
         for name, toggle in self.element_toggles.items():
-            visible = self.state_manager.get_glyph_visibility(name)
+            visible = self.simple_visibility_service.get_glyph_visibility(name)
             toggle.setChecked(visible)
 
     def _on_element_visibility_changed(self, name: str, visible: bool):
@@ -115,8 +112,8 @@ class ElementVisibilitySection(QFrame):
             visible: Whether the element should be visible
         """
         try:
-            # Use state manager for updates
-            self.state_manager.set_glyph_visibility(name, visible)
+            # Use simple visibility service for updates
+            self.simple_visibility_service.set_glyph_visibility(name, visible)
 
             # Emit signal for parent coordination
             self.element_visibility_changed.emit(name, visible)

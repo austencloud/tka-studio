@@ -12,7 +12,7 @@ from application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
 from domain.models.pictograph_data import PictographData
-from presentation.components.pictograph.pictograph_component import PictographComponent
+from presentation.components.pictograph.pictograph_component import PictographWidget
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
@@ -37,7 +37,7 @@ class OptionPictograph(QFrame):
         super().__init__(parent)
 
         self._pictograph_data: Optional[PictographData] = None
-        self._pictograph_component: "PictographComponent" = pictograph_component
+        self._pictograph_component: "PictographWidget" = pictograph_component
         self._size_calculator: OptionPickerSizeCalculator = size_calculator
 
         # Debounce mechanism to prevent rapid duplicate selections

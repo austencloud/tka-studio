@@ -169,7 +169,11 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 SequenceStartPositionManager,
             )
 
-            start_position_manager = SequenceStartPositionManager()
+            # Use dependency injection to get the start position manager
+            from core.dependency_injection.di_container import get_container
+
+            container = get_container()
+            start_position_manager = container.resolve(SequenceStartPositionManager)
             # Pass the beat data directly - it contains embedded pictograph
             start_position_manager.set_start_position(beat_data)
 
@@ -276,8 +280,10 @@ class ClearStartPositionCommand(ICommand[None]):
             from application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
+            from core.dependency_injection.di_container import get_container
 
-            start_position_manager = SequenceStartPositionManager()
+            container = get_container()
+            start_position_manager = container.resolve(SequenceStartPositionManager)
             start_position_manager.clear_start_position()
 
             return None

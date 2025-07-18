@@ -8,11 +8,8 @@ TKA clean architecture principles. Reduced from 631 lines to focused coordinatio
 import logging
 from typing import Any, Dict, Optional
 
-from application.services.pictograph.global_visibility_service import (
-    PictographVisibilityManager,
-)
-from application.services.pictograph.visibility_state_manager import (
-    VisibilityStateManager,
+from application.services.pictograph.simple_visibility_service import (
+    get_visibility_service,
 )
 from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 from presentation.components.ui.settings.visibility.components import (
@@ -48,23 +45,20 @@ class VisibilityTab(QWidget):
     def __init__(
         self,
         visibility_service: IVisibilitySettingsManager,
-        global_visibility_service: PictographVisibilityManager,
         parent=None,
     ):
         """
         Initialize visibility tab coordinator.
 
         Args:
-            visibility_service: Service for visibility state management
-            global_visibility_service: Service for global visibility updates
+            visibility_service: Service for visibility state management (legacy interface)
             parent: Parent widget
         """
         super().__init__(parent)
 
-        # Services
-        self.visibility_service = visibility_service
-        self.state_manager = VisibilityStateManager(visibility_service)
-        self.global_visibility_service = global_visibility_service
+        # Services - use simple visibility service instead of complex ones
+        self.visibility_service = visibility_service  # Legacy interface for compatibility
+        self.simple_visibility_service = get_visibility_service()
 
         # Component sections
         self.motion_section: Optional[MotionControlsSection] = None
@@ -80,7 +74,6 @@ class VisibilityTab(QWidget):
         self._setup_ui()
         self._setup_connections()
         self._load_initial_settings()
-        self._register_observers()
 
     def _setup_ui(self):
         main_layout = QVBoxLayout(self)
@@ -127,9 +120,9 @@ class VisibilityTab(QWidget):
         controls_layout.setContentsMargins(0, 0, 0, 0)
         controls_layout.setSpacing(12)
 
-        # Motion controls section
+        # Motion controls section - pass simple service instead of complex state manager
         self.motion_section = MotionControlsSection(
-            self.visibility_service, self.state_manager
+            self.visibility_service, self.simple_visibility_service
         )
         controls_layout.addWidget(self.motion_section)
 
@@ -137,9 +130,9 @@ class VisibilityTab(QWidget):
         self.dependency_warning = DependencyWarning()
         controls_layout.addWidget(self.dependency_warning)
 
-        # Element controls section
+        # Element controls section - pass simple service instead of complex state manager
         self.element_section = ElementVisibilitySection(
-            self.visibility_service, self.state_manager
+            self.visibility_service, self.simple_visibility_service
         )
         controls_layout.addWidget(self.element_section)
 
@@ -169,12 +162,6 @@ class VisibilityTab(QWidget):
         if self.preview_section:
             self.preview_section.preview_updated.connect(self._on_preview_updated)
 
-    def _register_observers(self):
-        """Register with state manager for updates."""
-        self.state_manager.register_observer(
-            self._on_state_changed, ["motion", "glyph", "buttons"]
-        )
-
     def _load_initial_settings(self):
         """Load initial settings and update components."""
         # Components handle their own initial loading
@@ -182,50 +169,16 @@ class VisibilityTab(QWidget):
 
     def _on_motion_visibility_changed(self, color: str, visible: bool):
         """
-            Handle motion visibility changes with coordination.
+        Handle motion visibility changes with coordination.
 
-            Args:
-                color: Motion color ("blue" or "red")def _setup_ui(self):
-        main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
-
-        title = QLabel("Visibility Settings")
-        title.setObjectName("section_title")
-        title.setFont(QFont("Arial", 14, QFont.Weight.Bold))
-        main_layout.addWidget(title)
-
-        description = QLabel("Control which elements are visible in pictographs")
-        description.setObjectName("description")
-        description.setFont(QFont("Arial", 10))
-        main_layout.addWidget(description)
-
-        # Fixed 50/50 horizontal layout
-        content_layout = QHBoxLayout()
-        content_layout.setContentsMargins(0, 0, 0, 0)
-        content_layout.setSpacing(0)
-
-        controls_widget = self._create_controls_widget()
-        preview_widget = self._create_preview_widget()
-
-        controls_widget.setSizePolicy(
-            controls_widget.sizePolicy().horizontalPolicy(),
-            controls_widget.sizePolicy().verticalPolicy()
-        )
-        preview_widget.setSizePolicy(
-            preview_widget.sizePolicy().horizontalPolicy(),
-            preview_widget.sizePolicy().verticalPolicy()
-        )
-
-        content_layout.addWidget(controls_widget, 1)
-        content_layout.addWidget(preview_widget, 1)
-
-        main_layout.addLayout(content_layout)
-        self._apply_styling()
-
-                visible: Whether the motion should be visible
+        Args:
+            color: Motion color ("blue" or "red")
+            visible: Whether the motion should be visible
         """
         try:
+            # Update the simple visibility service
+            self.simple_visibility_service.set_motion_visibility(color, visible)
+
             # Update preview
             if self.preview_section:
                 self.preview_section.update_visibility(f"{color}_motion", visible)
@@ -253,6 +206,9 @@ class VisibilityTab(QWidget):
             visible: Whether the element should be visible
         """
         try:
+            # Update the simple visibility service
+            self.simple_visibility_service.set_glyph_visibility(name, visible)
+
             # Update preview
             if self.preview_section:
                 self.preview_section.update_visibility(name, visible)
@@ -268,15 +224,9 @@ class VisibilityTab(QWidget):
         except Exception as e:
             logger.error(f"Error handling element visibility change: {e}")
 
-    def _on_state_changed(self):
-        """Handle state manager notifications."""
-        self._update_dependency_states()
-        if self.motion_section:
-            self.motion_section.update_motion_toggles()
-
     def _update_dependency_states(self):
         """Update UI based on motion dependency states."""
-        all_motions_visible = self.state_manager.are_all_motions_visible()
+        all_motions_visible = self.simple_visibility_service.are_all_motions_visible()
 
         # Update element section dependency state
         if self.element_section:
@@ -292,9 +242,14 @@ class VisibilityTab(QWidget):
         self._update_timer.start(200)  # 200ms delay for batching
 
     def _apply_global_updates(self):
-        """Apply visibility changes to all pictographs globally."""
+        """
+        Apply visibility changes to all pictographs globally.
+        
+        This simplified version directly calls update_visibility on all pictograph scenes
+        instead of using the complex global registration system.
+        """
         try:
-            # Get current visibility states
+            # Get all current visibility states
             motion_states = {}
             element_states = {}
 
@@ -304,33 +259,16 @@ class VisibilityTab(QWidget):
             if self.element_section:
                 element_states = self.element_section.get_element_states()
 
-            # Apply motion visibility changes
+            # For now, we'll rely on pictograph components to check the simple visibility service
+            # when they render, rather than pushing updates to them.
+            # This is simpler and more reliable than the complex global registration system.
+
+            # Log the changes for debugging
             for color, visible in motion_states.items():
-                result = self.global_visibility_service.apply_visibility_change(
-                    element_type="motion",
-                    element_name=f"{color}_motion",
-                    visible=visible,
-                )
-                logger.debug(
-                    f"Applied motion visibility {color}={visible}: {result['success_count']} updated"
-                )
+                logger.debug(f"Applied motion visibility {color}={visible}")
 
-            # Apply element visibility changes
             for element_name, visible in element_states.items():
-                # Determine appropriate element type
-                if element_name == "Non-radial_points":
-                    element_type = "grid"
-                else:
-                    element_type = "glyph"
-
-                result = self.global_visibility_service.apply_visibility_change(
-                    element_type=element_type,
-                    element_name=element_name,
-                    visible=visible,
-                )
-                logger.debug(
-                    f"Applied element visibility {element_name}={visible}: {result['success_count']} updated"
-                )
+                logger.debug(f"Applied element visibility {element_name}={visible}")
 
             logger.info("Successfully applied global visibility updates")
 

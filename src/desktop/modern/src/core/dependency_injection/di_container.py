@@ -5,15 +5,16 @@ This is the main container that coordinates all DI operations using focused modu
 The container has been refactored into specialized components for better maintainability.
 """
 
-from typing import TypeVar, Type, Dict, Any, Optional, Set, List
 import logging
+from typing import Any, Dict, List, Optional, Set, Type, TypeVar
+
+from .debugging_tools import DebuggingTools
+from .lifecycle_manager import LifecycleManager
 
 # Import refactored modules
 from .service_registry import ServiceRegistry, ServiceScope
-from .service_resolvers import ResolverChain, LazyProxy
-from .lifecycle_manager import LifecycleManager
+from .service_resolvers import LazyProxy, ResolverChain
 from .validation_engine import ValidationEngine
-from .debugging_tools import DebuggingTools
 
 try:
     from ..exceptions import DependencyInjectionError, di_error
@@ -42,13 +43,14 @@ logger = logging.getLogger(__name__)
 
 # Global container instance
 _container: Optional["DIContainer"] = None
+_container_initialized: bool = False
 
 
 class DIContainer:
     """
     Enhanced dependency injection container with automatic constructor injection.
 
-    REFACTORED ARCHITECTURE: Uses focused modules for better maintainability:
+    Uses focused modules for better maintainability:
     - ServiceRegistry: Handles all service registrations
     - ResolverChain: Manages service resolution strategies
     - LifecycleManager: Handles service lifecycle and cleanup
@@ -141,7 +143,7 @@ class DIContainer:
         """
         Resolve a service instance using refactored resolver chain.
 
-        REFACTORED: Now uses specialized modules for clean separation of concerns.
+        Uses specialized modules for clean separation of concerns.
 
         Args:
             interface: The interface/type to resolve
@@ -283,22 +285,54 @@ class DIContainer:
 
 def get_container() -> DIContainer:
     """Get the global container instance."""
-    global _container
+    global _container, _container_initialized
     if _container is None:
-        _container = DIContainer()
+        # Only create a new container if one hasn't been explicitly set
+        if not _container_initialized:
+            logger.warning(
+                f"🚨 [DI_CONTAINER] Creating new container instance (ID will be {id(DIContainer())}). "
+                "This should only happen once during application startup!"
+            )
+            _container = DIContainer()
+            _container_initialized = True
+        else:
+            # This should never happen - container was set but then became None
+            raise RuntimeError(
+                "Global DI container was unexpectedly reset after initialization"
+            )
     return _container
 
 
-def set_container(container: DIContainer) -> None:
+def set_container(container: DIContainer, force: bool = False) -> None:
     """Set the global container instance."""
-    global _container
+    global _container, _container_initialized
+    
+    # Prevent overwriting an existing container unless forced
+    if _container is not None and not force:
+        logger.warning(
+            f"🚨 [DI_CONTAINER] Attempted to overwrite existing container {id(_container)} "
+            f"with new container {id(container)}. Use force=True to override."
+        )
+        return
+        
+    if _container is not None:
+        logger.info(
+            f"🔄 [DI_CONTAINER] Replacing container {id(_container)} with {id(container)}"
+        )
+    else:
+        logger.info(
+            f"🆕 [DI_CONTAINER] Setting initial container instance {id(container)}"
+        )
+        
     _container = container
+    _container_initialized = True
 
 
 def reset_container() -> None:
     """Reset the global container (useful for testing)."""
-    global _container
+    global _container, _container_initialized
     _container = None
+    _container_initialized = False
 
 
 # Backward compatibility alias

@@ -13,9 +13,9 @@ from typing import Any, Dict, List, Optional, Set
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.pool_manager_services import IPictographPoolManager
 from domain.models.pictograph_data import PictographData
-from presentation.components.pictograph.pictograph_component import (
-    PictographComponent,
-    create_pictograph_component,
+from presentation.components.pictograph.simplified_pictograph import (
+    SimplifiedPictographWidget,
+    create_simplified_pictograph_widget,
 )
 from PyQt6.QtCore import Qt
 
@@ -27,20 +27,21 @@ class PictographPoolManager(IPictographPoolManager):
 
     def __init__(self, container: Optional[DIContainer] = None):
         self.container = container
-        self._pool: Queue[PictographComponent] = Queue()
-        self._checked_out: Set[PictographComponent] = set()
-        self._on_demand_components: Set[PictographComponent] = (
+        self._pool: Queue[SimplifiedPictographWidget] = Queue()
+        self._checked_out: Set[SimplifiedPictographWidget] = set()
+        self._on_demand_components: Set[SimplifiedPictographWidget] = (
             set()
         )  # Track on-demand components
-        # PERFORMANCE OPTIMIZATION: Reduced from 100 to 25 for faster startup
-        # Pool will grow on-demand as needed
-        self._initial_pool_size = 35  # Larger initial pool to reduce on-demand creation (no expansion allowed)
+        # PERFORMANCE OPTIMIZATION: Increased pool size to handle option picker demand
+        # Option picker needs 50 widgets, so pool must be larger
+        self._initial_pool_size = (
+            60  # Increased to handle option picker (50) + other components
+        )
         self._max_pool_size = 100  # Restore original working size
 
         self._lock = threading.Lock()
         self._initialized = False
         self._lazy_initialization = True  # Enable lazy initialization by default
-        self._dummy_parent = None  # Will hold dummy parent widget
         self._progress_callback = None  # Progress callback for initialization
         self._background_initialization_started = False
         self._startup_complete = False  # Track if startup is complete
@@ -48,6 +49,12 @@ class PictographPoolManager(IPictographPoolManager):
 
     def initialize_pool(self, progress_callback=None, lazy=None) -> None:
         """Initialize the pictograph pool with pre-created components (public method)."""
+        from presentation.components.pictograph.component_specific_view_pools import (
+            initialize_component_view_pools,
+        )
+
+        # Initialize component-specific view pools
+        initialize_component_view_pools()
         self._progress_callback = progress_callback
 
         # Use lazy initialization setting if not explicitly specified
@@ -147,30 +154,12 @@ class PictographPoolManager(IPictographPoolManager):
                 start_progress, f"Creating {count} pictograph components..."
             )
 
-        # Create dummy parent if not exists
-        if self._dummy_parent is None:
-            from PyQt6.QtWidgets import QWidget
-
-            self._dummy_parent = QWidget()
-            self._dummy_parent.hide()
-            self._dummy_parent.setAttribute(
-                Qt.WidgetAttribute.WA_DontShowOnScreen, True
-            )
-
-        # Pre-create components with dummy parent
+        # Pre-create lightweight components (scenes only)
         created_count = 0
         for i in range(count):
             try:
-                # Create component with dummy parent to prevent window creation
-                component = create_pictograph_component(
-                    parent=self._dummy_parent, container=self.container
-                )
-                # Set a reasonable default size
-                component.setFixedSize(100, 100)
-                # Hide initially and set window attributes
-                component.setVisible(False)
-                component.setAttribute(Qt.WidgetAttribute.WA_DontShowOnScreen, True)
-                component.setWindowFlags(Qt.WindowType.Widget)
+                # Create lightweight widget (scene + view wrapper)
+                component = create_simplified_pictograph_widget()
                 self._pool.put(component)
                 created_count += 1
 
@@ -183,11 +172,11 @@ class PictographPoolManager(IPictographPoolManager):
                     if self._progress_callback:
                         self._progress_callback(
                             progress_percent,
-                            f"Created {created_count}/{count} components",
+                            f"Created {created_count}/{count} lightweight components",
                         )
 
                     logger.debug(
-                        f"🏊 [POOL] Created {created_count}/{count} components"
+                        f"🏊 [POOL] Created {created_count}/{count} lightweight components"
                     )
 
             except Exception as e:
@@ -200,7 +189,7 @@ class PictographPoolManager(IPictographPoolManager):
             self._progress_callback(end_progress, f"Created {created_count} components")
 
         logger.info(
-            f"✅ [POOL] Created {created_count} components in {init_time:.1f}ms. Pool size: {self._pool.qsize()}"
+            f"✅ [POOL] Created {created_count} lightweight components in {init_time:.1f}ms. Pool size: {self._pool.qsize()}"
         )
 
     def mark_startup_complete(self) -> None:
@@ -208,7 +197,7 @@ class PictographPoolManager(IPictographPoolManager):
         self._startup_complete = True
         logger.info("🏊 [POOL] Startup complete - pool expansion now enabled")
 
-    def checkout_pictograph(self, parent=None) -> Optional[PictographComponent]:
+    def checkout_pictograph(self, parent=None) -> Optional[SimplifiedPictographWidget]:
         """
         Get an available pictograph component from the pool.
 
@@ -227,9 +216,7 @@ class PictographPoolManager(IPictographPoolManager):
                 logger.warning(
                     "⚠️ [POOL] Pool initialization failed, creating component on-demand"
                 )
-                component = create_pictograph_component(
-                    parent=parent, container=self.container
-                )
+                component = create_simplified_pictograph_widget()
                 self._on_demand_components.add(component)
                 return component
 
@@ -278,26 +265,14 @@ class PictographPoolManager(IPictographPoolManager):
 
                 # Pool still empty or at max size, create on-demand
                 logger.warning("⚠️ [POOL] Pool exhausted, creating component on-demand")
-                component = create_pictograph_component(
-                    parent=parent, container=self.container
-                )
+                component = create_simplified_pictograph_widget()
                 self._on_demand_components.add(component)
                 return component
 
             component = self._pool.get()
             self._checked_out.add(component)
 
-            # CRITICAL FIX: Set parent BEFORE making visible to prevent window creation
-            if parent:
-                component.setParent(parent)
-                # Reset window flags to ensure it's a proper child widget
-                component.setWindowFlags(Qt.WindowType.Widget)
-                # Remove the WA_DontShowOnScreen attribute now that it has a parent
-                component.setAttribute(Qt.WidgetAttribute.WA_DontShowOnScreen, False)
-
-            # Make component visible only AFTER proper parenting
-            # This prevents the component from appearing as a separate window
-            component.setVisible(True)
+            # Component is now lightweight scene - no need for parenting or visibility
 
             # Only log in debug mode to avoid string formatting overhead
             if logger.isEnabledFor(logging.DEBUG):
@@ -306,7 +281,7 @@ class PictographPoolManager(IPictographPoolManager):
                 )
             return component
 
-    def checkin_pictograph(self, component: PictographComponent) -> None:
+    def checkin_pictograph(self, component: SimplifiedPictographWidget) -> None:
         """Return a pictograph component to the pool."""
         with self._lock:
             # Check if it's an on-demand component first
@@ -314,8 +289,7 @@ class PictographPoolManager(IPictographPoolManager):
                 logger.debug("🔄 [POOL] Destroying on-demand component")
                 self._on_demand_components.remove(component)
                 try:
-                    component.setParent(None)
-                    component.deleteLater()
+                    component.cleanup()
                 except Exception as e:
                     logger.warning(f"Error destroying on-demand component: {e}")
                 return
@@ -326,23 +300,14 @@ class PictographPoolManager(IPictographPoolManager):
                 )
                 # For unknown components, just destroy them
                 try:
-                    component.setParent(None)
-                    component.deleteLater()
+                    component.cleanup()
                 except Exception as e:
                     logger.warning(f"Error destroying unknown component: {e}")
                 return
 
             # Reset component state (minimal operations for performance)
-            component.setVisible(False)
-            component.setParent(None)
-
-            # CRITICAL FIX: Reset window attributes to prevent window creation
-            component.setWindowFlags(Qt.WindowType.Widget)
-            component.setAttribute(Qt.WidgetAttribute.WA_DontShowOnScreen, True)
-
-            # Clear any pictograph data
-            if hasattr(component, "scene") and component.scene:
-                component.scene.clear()
+            # Component is now lightweight scene - just clear the data
+            component.clear()
 
             self._checked_out.remove(component)
             self._pool.put(component)
@@ -359,9 +324,11 @@ class PictographPoolManager(IPictographPoolManager):
             return {
                 "pool_size": self._pool.qsize(),
                 "checked_out": len(self._checked_out),
-                "total_capacity": self._pool_size,
-                "utilization_percent": int(
-                    (len(self._checked_out) / self._pool_size) * 100
+                "total_capacity": self._initial_pool_size,
+                "utilization_percent": (
+                    int((len(self._checked_out) / self._initial_pool_size) * 100)
+                    if self._initial_pool_size > 0
+                    else 0
                 ),
             }
 
@@ -377,7 +344,7 @@ class PictographPoolManager(IPictographPoolManager):
             # Clear the pool
             while not self._pool.empty():
                 component = self._pool.get()
-                component.deleteLater()
+                component.cleanup()
 
             self._checked_out.clear()
             self._initialized = False

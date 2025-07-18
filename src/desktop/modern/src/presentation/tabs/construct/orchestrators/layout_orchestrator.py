@@ -29,10 +29,10 @@ class LayoutOrchestrator:
             "generate_controls",
         ]
         self.panel_tab_mapping = {
-            0: 0,  # start_position_picker -> tab 0
-            1: 0,  # option_picker -> tab 0
-            2: 1,  # graph_editor -> tab 1
-            3: 2,  # generate_controls -> tab 2
+            0: 0,  # start_position_picker -> tab 0 (Build)
+            1: 0,  # option_picker -> tab 0 (Build)
+            2: 2,  # graph_editor (stack index 2) -> tab 2 (Edit)
+            3: 1,  # generate_controls (stack index 3) -> tab 1 (Generate)
         }
 
     def register_component(self, name: str, component):

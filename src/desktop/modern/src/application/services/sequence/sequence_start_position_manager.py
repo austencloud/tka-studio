@@ -6,12 +6,13 @@ Responsible for setting, updating, and managing start positions in sequences.
 """
 
 from abc import ABCMeta
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Optional
 
 from application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
 from application.services.sequence.beat_factory import BeatFactory
 from application.services.sequence.sequence_persister import SequencePersister
 from core.interfaces.sequence_data_services import ISequenceStartPositionManager
+from core.interfaces.workbench_services import IWorkbenchStateManager
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
@@ -46,12 +47,10 @@ class SequenceStartPositionManager(
 
     def __init__(
         self,
-        workbench_getter: Optional[Callable[[], object]] = None,
-        workbench_setter: Optional[Callable[[SequenceData], None]] = None,
+        workbench_state_manager: IWorkbenchStateManager,
     ):
         super().__init__()
-        self.workbench_getter = workbench_getter
-        self.workbench_setter = workbench_setter
+        self.workbench_state_manager = workbench_state_manager
         self.modern_to_legacy_converter = ModernToLegacyConverter()
         self.persistence_service = SequencePersister()
 
@@ -83,12 +82,9 @@ class SequenceStartPositionManager(
             # Save updated sequence (preserves existing beats)
             self.persistence_service.save_current_sequence(sequence)
 
-            # Set start position in workbench
-            workbench: SequenceWorkbench = (
-                self.workbench_getter() if self.workbench_getter else None
-            )
-            if workbench and hasattr(workbench, "set_start_position"):
-                workbench.set_start_position(start_position_beat_data)
+            # Set start position in workbench via state manager
+            if self.workbench_state_manager:
+                self.workbench_state_manager.set_start_position(start_position_beat_data)
 
             # Emit signal
             self.start_position_set.emit(start_position_beat_data)
@@ -102,14 +98,10 @@ class SequenceStartPositionManager(
     def update_start_position_orientation(self, color: str, new_orientation: int):
         """Update start position orientation for a specific color"""
         try:
-            workbench = self.workbench_getter()
-            if not workbench or not hasattr(workbench, "_start_position_data"):
-                print("⚠️ No start position data available in workbench")
-                return
-
-            start_position_data = workbench._start_position_data
+            # Get current start position via state manager
+            start_position_data = self.workbench_state_manager.get_start_position()
             if not start_position_data:
-                print("⚠️ No start position data to update")
+                print("⚠️ No start position data available")
                 return
 
             # Update the appropriate motion based on color
@@ -131,9 +123,9 @@ class SequenceStartPositionManager(
                 print(f"⚠️ Invalid color '{color}' or missing motion data")
                 return
 
-            # Update workbench
-            if hasattr(workbench, "set_start_position"):
-                workbench.set_start_position(updated_start_position)
+            # Update workbench via state manager
+            if self.workbench_state_manager:
+                self.workbench_state_manager.set_start_position(updated_start_position)
 
             # Update persistence
             self._update_start_position_in_persistence(updated_start_position)
@@ -148,11 +140,9 @@ class SequenceStartPositionManager(
             traceback.print_exc()
 
     def get_current_start_position(self) -> Optional[BeatData]:
-        """Get the current start position from workbench"""
+        """Get the current start position from state manager"""
         try:
-            workbench = self.workbench_getter()
-            if workbench and hasattr(workbench, "_start_position_data"):
-                return workbench._start_position_data
+            return self.workbench_state_manager.get_start_position()
         except Exception as e:
             print(f"❌ Error getting current start position: {e}")
         return None
@@ -160,18 +150,9 @@ class SequenceStartPositionManager(
     def clear_start_position(self):
         """Clear the current start position"""
         try:
-            # Clear from workbench
-            workbench = self.workbench_getter()
-            if workbench and hasattr(workbench, "_start_position_data"):
-                workbench._start_position_data = None
-
-                # Clear from beat frame if available
-                if hasattr(workbench, "_beat_frame_section"):
-                    beat_frame_section = workbench._beat_frame_section
-                    if beat_frame_section and hasattr(
-                        beat_frame_section, "initialize_cleared_start_position"
-                    ):
-                        beat_frame_section.initialize_cleared_start_position()
+            # Clear from workbench via state manager
+            if self.workbench_state_manager:
+                self.workbench_state_manager.set_start_position(None)
 
             # Clear from persistence (only if sequence exists and has start position)
             sequence = self.persistence_service.load_current_sequence()
@@ -215,9 +196,8 @@ class SequenceStartPositionManager(
     def has_start_position(self) -> bool:
         """Check if a start position is currently set"""
         try:
-            workbench = self.workbench_getter()
-            if workbench and hasattr(workbench, "_start_position_data"):
-                return workbench._start_position_data is not None
+            start_position = self.workbench_state_manager.get_start_position()
+            return start_position is not None
         except Exception as e:
             print(f"❌ Error checking start position: {e}")
         return False

@@ -160,6 +160,14 @@ class StartPositionPicker(QWidget):
             }
         """
 
+    @property
+    def position_options(self):
+        """Get available position options for testing compatibility."""
+        if hasattr(self.content, "position_options") and self.content.position_options:
+            # Return the actual position options which should have position_key attributes
+            return self.content.position_options
+        return []
+
     def _connect_signals(self):
         """Connect sub-component signals."""
         # Header signals

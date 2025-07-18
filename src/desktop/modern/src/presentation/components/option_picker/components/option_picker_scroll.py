@@ -255,8 +255,15 @@ class OptionPickerScroll(QScrollArea):
         return self._widget_pool_manager.get_widget_by_id(pool_id)
 
     def _update_size(self):
-        """Update picker size using legacy-style approach."""
+        """Update picker size using legacy-style approach, but defer until main window is properly shown."""
         try:
+            # Check if main window is properly shown before sizing
+            if not self._is_main_window_ready():
+                print(f"🔍 [SIZING] Main window not ready, deferring sizing...")
+                # Defer sizing until main window is properly shown
+                QTimer.singleShot(200, self._update_size)
+                return
+
             # Legacy approach: use parent container width directly
             # This mimics: self.option_scroll.setFixedWidth(self.parent().parent().width() // 2)
 
@@ -265,7 +272,7 @@ class OptionPickerScroll(QScrollArea):
                 parent_width = self.parent().width()
                 print(f"🔍 [SIZING] Parent width: {parent_width}px")
 
-                if parent_width > 200:  # Valid parent width
+                if parent_width > 622:  # Valid parent width (not splash screen size)
                     # Use the full parent width (the parent should be sized correctly)
                     width = parent_width
                     print(f"🔍 [SIZING] Using parent width: {width}px")
@@ -295,6 +302,31 @@ class OptionPickerScroll(QScrollArea):
             # Fallback to a reasonable default
             self.setFixedWidth(400)
 
+    def _is_main_window_ready(self) -> bool:
+        """Check if the main window is properly shown and ready for sizing."""
+        try:
+            from PyQt6.QtWidgets import QApplication
+
+            # Get the main window from QApplication
+            app = QApplication.instance()
+            if not app:
+                return False
+
+            # Find the main window
+            for widget in app.topLevelWidgets():
+                if widget.objectName() == "TKAMainWindow" or "MainWindow" in str(
+                    type(widget)
+                ):
+                    # Check if main window is visible and has proper size
+                    if widget.isVisible() and widget.width() > 800:
+                        return True
+
+            return False
+
+        except Exception as e:
+            print(f"⚠️ [SIZING] Error checking main window readiness: {e}")
+            return False
+
     def load_options_from_sequence(self, sequence_data: SequenceData) -> None:
         """Load options with debouncing - delegated to refresh orchestrator."""
         self._refresh_orchestrator.load_options_from_sequence(sequence_data)
@@ -305,12 +337,16 @@ class OptionPickerScroll(QScrollArea):
 
     def _handle_refresh_request(self, sequence_data: SequenceData) -> None:
         """Handle refresh request from orchestrator."""
+        print(
+            f"🔄 [OPTION_PICKER] _handle_refresh_request called with sequence: {sequence_data}"
+        )
         try:
             # Set UI loading state
             self._set_loading_state(True)
 
             # Skip fade animations if preparing for widget transition
             if self._refresh_orchestrator.is_preparing_for_transition():
+                print(f"🔄 [OPTION_PICKER] Preparing for transition, updating directly")
                 self._update_all_sections_directly(sequence_data)
                 return
 
@@ -318,10 +354,15 @@ class OptionPickerScroll(QScrollArea):
             existing_sections = [
                 section for section in self.sections.values() if section.pictographs
             ]
+            print(
+                f"🔄 [OPTION_PICKER] Found {len(existing_sections)} existing sections with content"
+            )
 
             if self._animation_orchestrator and existing_sections:
+                print(f"🔄 [OPTION_PICKER] Using fade animation")
                 self._fade_and_update_all_sections(sequence_data)
             else:
+                print(f"🔄 [OPTION_PICKER] Using direct update")
                 self._update_all_sections_directly(sequence_data)
 
         except Exception as e:
@@ -332,20 +373,27 @@ class OptionPickerScroll(QScrollArea):
 
     def _update_all_sections_directly(self, sequence_data: SequenceData) -> None:
         """Update all sections directly without animation using section manager."""
+        print(f"🔄 [OPTION_PICKER] _update_all_sections_directly called")
         try:
             # ✅ Use service to get options (pure business logic)
+            print(f"🔄 [OPTION_PICKER] Getting options from sequence option service...")
             options_by_type = self._sequence_option_service.get_options_for_sequence(
                 sequence_data
             )
+            print(f"🔄 [OPTION_PICKER] Received options: {options_by_type}")
 
             if not options_by_type:
                 print("❌ [UI] No options received from service")
                 return
 
+            print(
+                f"🔄 [OPTION_PICKER] Updating sections with {len(options_by_type)} option types"
+            )
             # ✅ Update UI sections using section manager
             self._section_manager.update_all_sections_directly(
                 sequence_data, options_by_type
             )
+            print(f"✅ [OPTION_PICKER] Sections updated successfully")
 
             # ✅ Apply sizing using service (defer with longer delay during startup)
             # Use longer delay during sequence restoration to ensure UI is fully initialized
