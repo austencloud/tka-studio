@@ -6,11 +6,16 @@ without dealing with the actual launching process.
 """
 
 import logging
+import sys
+from typing import List, Optional, Dict, Any
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
+from domain.models import (
+    ApplicationData,
+    ApplicationCategory,
+    ApplicationStatus,
+)
 from core.interfaces import IApplicationService, ILauncherStateService
-from domain.models import ApplicationCategory, ApplicationData, ApplicationStatus
 
 logger = logging.getLogger(__name__)
 
@@ -165,6 +170,10 @@ class ApplicationService(IApplicationService):
             if default_app.id not in state.applications:
                 self._state_service.add_application(default_app)
 
+        logger.info(
+            f"Initialized {len(self._default_applications)} default applications"
+        )
+
     def _create_default_applications(self) -> List[ApplicationData]:
         """Create the default set of applications."""
         # Get TKA root directory (launcher's parent)
@@ -193,13 +202,62 @@ class ApplicationService(IApplicationService):
                 display_order=2,
             ),
             ApplicationData(
+                id="sequence_workbench",
+                title="Sequence Workbench",
+                description="Standalone sequence workbench for development and testing",
+                icon="🎯",
+                category=ApplicationCategory.DESKTOP,
+                command="python standalone_sequence_workbench.py",
+                working_dir=tka_root / "src" / "desktop" / "modern",
+                display_order=3,
+            ),
+            # Web Applications
+            ApplicationData(
+                id="animator_standalone",
+                title="Pictograph Animator (Standalone)",
+                description="Launch the standalone pictograph animation tool",
+                icon="🎬",
+                category=ApplicationCategory.WEB,
+                command=f"{sys.executable} -m http.server 8080",
+                working_dir=tka_root / "src" / "web" / "animator",
+                display_order=3,
+                environment_vars={
+                    "BROWSER_URL": "http://localhost:8080/standalone_animator.html"
+                },
+            ),
+            ApplicationData(
+                id="web_v1_legacy",
+                title="TKA Web (v1-legacy) - Simple Server",
+                description="Launch the legacy TKA web interface using simple HTTP server",
+                icon="🌐",
+                category=ApplicationCategory.WEB,
+                command=f"{sys.executable} -m http.server 8081",
+                working_dir=tka_root / "src" / "web" / "v1-legacy",
+                display_order=4,
+                environment_vars={"BROWSER_URL": "http://localhost:8081"},
+            ),
+            ApplicationData(
                 id="landing_page",
                 title="TKA Landing Page",
                 description="Launch the TKA marketing and information website",
-                icon="🌐",
+                icon="🏠",
                 category=ApplicationCategory.WEB,
-                command="npm run dev",
+                command=f"{sys.executable} -m http.server 8082",
                 working_dir=tka_root / "src" / "web" / "landing",
-                display_order=4,
+                display_order=5,
+                environment_vars={"BROWSER_URL": "http://localhost:8082"},
             ),
+            # Development Tools
+            ApplicationData(
+                id="test_suite",
+                title="Test Suite",
+                description="Run the comprehensive TKA test suite",
+                icon="🧪",
+                category=ApplicationCategory.DEVELOPMENT,
+                command="pytest",
+                working_dir=tka_root,
+                display_order=6,
+            ),
+            # Note: Removed dev_server, test_runner_focused, code_formatter, settings, and about applications
+            # as requested to simplify the launcher interface
         ]

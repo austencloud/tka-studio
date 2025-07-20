@@ -132,9 +132,10 @@ class PictographWidget(QWidget):
     def _apply_start_position_scaling(self):
         """Apply manual scaling for start position pickers like legacy system."""
         try:
-            # Get scene dimensions
-            scene_rect = self._scene.sceneRect()
-            if scene_rect.width() <= 0 or scene_rect.height() <= 0:
+            # CRITICAL FIX: Use items bounding rect like legacy system
+            # Legacy uses self.pictograph.width() which is the actual content width
+            items_rect = self._scene.itemsBoundingRect()
+            if items_rect.width() <= 0 or items_rect.height() <= 0:
                 return
 
             # Get main window width for calculation
@@ -158,8 +159,10 @@ class PictographWidget(QWidget):
             target_size = target_size - (2 * border_width)
             target_size = max(target_size, min_size)
 
-            # Calculate scale factor like legacy
-            scale_factor = target_size / max(scene_rect.width(), scene_rect.height())
+            # CRITICAL FIX: Calculate scale factor using actual content bounds like legacy
+            # Legacy: self.view_scale = size / self.pictograph.width()
+            content_size = max(items_rect.width(), items_rect.height())
+            scale_factor = target_size / content_size
 
             # Apply manual scaling like legacy
             self._view.resetTransform()
@@ -185,6 +188,10 @@ class PictographWidget(QWidget):
         # Also delegate to scene if it supports it
         if hasattr(self._scene, "set_scaling_context"):
             self._scene.set_scaling_context(context, **params)
+
+        # CRITICAL FIX: Trigger view fitting after scaling context is set
+        # This ensures start position scaling is applied immediately
+        self._fit_view()
 
     def setFixedSize(self, width, height=None) -> None:
         """Override setFixedSize to ensure proper view fitting."""

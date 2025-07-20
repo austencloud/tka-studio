@@ -9,12 +9,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -24,16 +21,13 @@
       "name": "🖥️ TKA Desktop App",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/src/desktop/modern/main.py",
+      "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -47,12 +41,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -109,12 +100,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -129,12 +117,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -149,12 +134,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -169,12 +151,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,
@@ -188,12 +167,9 @@
       "console": "integratedTerminal",
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages;${workspaceFolder}/.venv/Lib/site-packages",
-        "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-        "PYTHONNOUSERSITE": "1"
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/src;${workspaceFolder}/launcher;${workspaceFolder}/packages"
       },
       "stopOnEntry": false,
       "showReturnValue": true,

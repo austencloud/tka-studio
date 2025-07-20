@@ -12,7 +12,7 @@ from domain.models.sequence_data import SequenceData
 from presentation.tabs.browse.models import FilterType
 from presentation.tabs.browse.services.browse_service import BrowseService
 from presentation.tabs.browse.services.browse_state_service import BrowseStateService
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtCore import QPoint, QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QPixmap, QResizeEvent
 from PyQt6.QtWidgets import (
     QFrame,
@@ -266,9 +266,11 @@ class SequenceBrowserPanel(QWidget):
         thumbnail_count = 0
 
         for section_name, section_sequences in sections.items():
-            # Add section header
-            if section_name:  # Only add header if section name is not empty
-                current_row = self._add_section_header(section_name, current_row)
+            # Add section header for all sections (including first section)
+            current_row = self._add_section_header(section_name, current_row)
+
+            # Move to next row for thumbnails after header
+            current_row += 1
 
             # Add sequences for this section
             for sequence in section_sequences:
@@ -390,7 +392,10 @@ class SequenceBrowserPanel(QWidget):
         header_layout.addStretch()
 
         # Add header spanning all 3 columns
-        current_row += 1
+        # For the first section (current_row == 0), place header at row 0
+        # For subsequent sections, increment row first
+        if current_row > 0:
+            current_row += 1
         self.grid_layout.addWidget(header_widget, current_row, 0, 1, 3)
 
         return current_row
@@ -410,9 +415,14 @@ class SequenceBrowserPanel(QWidget):
                     and widget.findChild(QLabel)
                     and widget.findChild(QLabel).text() == section
                 ):
-
-                    # Scroll to this widget
-                    self.scroll_area.ensureWidgetVisible(widget)
+                    # Use precise positioning like legacy system
+                    # Calculate the exact position to place header at top of scroll area
+                    header_global_pos = widget.mapToGlobal(QPoint(0, 0))
+                    content_widget_pos = self.scroll_area.widget().mapFromGlobal(
+                        header_global_pos
+                    )
+                    vertical_pos = content_widget_pos.y()
+                    self.scroll_area.verticalScrollBar().setValue(vertical_pos)
                     break
         else:
             # If no section found, scroll to top
