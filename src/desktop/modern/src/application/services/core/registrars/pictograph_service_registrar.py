@@ -76,7 +76,8 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from application.services.pictograph.pictograph_validator import (
                 PictographValidator,
             )
-            from application.services.pictograph.scaling_service import PictographScaler
+
+            # PictographScaler removed - direct views handle their own scaling
             from application.services.pictograph.simple_visibility_service import (
                 PictographVisibilityService,
             )
@@ -86,7 +87,6 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             )
             from core.interfaces.pictograph_services import (
                 IPictographValidator,
-                IScalingService,
             )
 
             # Register pictograph data manager
@@ -119,9 +119,7 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             container.register_factory(IPictographValidator, PictographValidator)
             self._mark_service_available("PictographValidator")
 
-            # Register pictograph scaler
-            container.register_singleton(IScalingService, PictographScaler)
-            self._mark_service_available("PictographScaler")
+            # PictographScaler registration removed - direct views handle their own scaling
 
         except ImportError as e:
             error_msg = f"Failed to register core pictograph services: {e}"

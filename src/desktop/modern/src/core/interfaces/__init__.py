@@ -52,9 +52,7 @@ from .organization_services import *
 # Pictograph service interfaces
 from .pictograph_services import (
     IPictographValidator,
-    IScalingService,
     RenderingContext,
-    ScalingContext,
 )
 
 # Positioning service interfaces
@@ -118,8 +116,6 @@ __all__ = [
     "ITurnIntensityManagerFactory",
     # Pictograph services
     "IPictographValidator",
-    "IScalingService",
-    "ScalingContext",
     "RenderingContext",
     # Settings services
     "IBackgroundSettingsManager",

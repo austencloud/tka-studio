@@ -7,23 +7,10 @@ These interfaces define contracts for validation, scaling, and pictograph manipu
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Tuple
-
-from core.types import Size
+from typing import Any, Dict, List
 
 
-class ScalingContext(Enum):
-    """Different contexts where pictographs are displayed, each with specific scaling needs."""
-
-    OPTION_VIEW = "option_view"
-    START_POS_PICKER = "start_pos_picker"
-    ADVANCED_START_POS = "advanced_start_pos"
-    CODEX_VIEW = "codex_view"
-    BEAT_VIEW = "beat_view"
-    GRAPH_EDITOR_VIEW = "graph_editor_view"
-    LEARN_QUESTION = "learn_question"
-    LEARN_ANSWER = "learn_answer"
-    DEFAULT = "default"
+# ScalingContext removed - direct views handle their own scaling
 
 
 class RenderingContext(Enum):
@@ -100,46 +87,7 @@ class IPictographValidator(ABC):
         """
 
 
-class IScalingService(ABC):
-    """
-    Interface for context-aware pictograph scaling calculations.
-
-    Provides methods to calculate appropriate scaling factors for pictographs
-    in different display contexts, maintaining visual consistency across the application.
-    """
-
-    @abstractmethod
-    def calculate_scale(
-        self,
-        context: ScalingContext,
-        container_size: Size,
-        scene_size: Size,
-        **context_params,
-    ) -> Tuple[float, float]:
-        """
-        Calculate scale factors for a pictograph in a specific context.
-
-        Args:
-            context: The scaling context (enum)
-            container_size: Size of the container widget
-            scene_size: Size of the pictograph scene
-            **context_params: Additional context-specific parameters
-
-        Returns:
-            Tuple of (scale_x, scale_y) factors
-        """
-
-    @abstractmethod
-    def get_responsive_border_width(self, target_size: int) -> int:
-        """
-        Calculate responsive border width based on target size.
-
-        Args:
-            target_size: Target size for the pictograph
-
-        Returns:
-            int: Calculated border width
-        """
+# IScalingService removed - direct views handle their own scaling using Qt's built-in methods
 
 
 class IPictographDataManager(ABC):
