@@ -328,6 +328,18 @@ def register_extracted_services(container: DIContainer) -> None:
             logger.warning(f"Failed to register positioning services: {e}")
             # Don't fail the entire registration process
 
+        # Register sequence card services
+        try:
+            from core.dependency_injection.sequence_card_service_registration import (
+                register_sequence_card_services,
+            )
+            
+            register_sequence_card_services(container)
+            logger.debug("Successfully registered sequence card services")
+        except Exception as e:
+            logger.warning(f"Failed to register sequence card services: {e}")
+            # Don't fail the entire registration process
+
         # DI registration log removed to reduce startup noise
 
     except Exception as e:

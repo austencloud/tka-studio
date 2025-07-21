@@ -47,7 +47,18 @@ class QuestionGenerationService(IQuestionGenerationService):
         self._previous_correct_letters: Dict[str, Any] = {}
         self._previous_pictographs: Dict[str, Set[str]] = {}
 
-        logger.info("Question generation service initialized")
+        # Debug: Check what type of pictograph service we got
+        service_type = type(self.pictograph_data_service).__name__
+        logger.info(f"Question generation service initialized with {service_type}")
+
+        if "Mock" in service_type:
+            logger.warning(
+                "🚨 Using MockPictographDataService - real pictographs will not be rendered!"
+            )
+        else:
+            logger.info(
+                "✅ Using real pictograph data service for actual pictograph rendering"
+            )
 
     def generate_question(
         self, session_id: str, lesson_config: LessonConfig
@@ -111,6 +122,21 @@ class QuestionGenerationService(IQuestionGenerationService):
 
             # Get random pictograph for this letter
             correct_pictograph_data = random.choice(pictograph_dataset[correct_letter])
+
+            # Debug: Log what pictograph data we're using
+            logger.info(
+                f"🎨 Selected pictograph for question: {correct_pictograph_data.get('id', 'unknown')}"
+            )
+            logger.info(f"   Type: {correct_pictograph_data.get('type', 'unknown')}")
+            if "data" in correct_pictograph_data:
+                pictograph_obj = correct_pictograph_data["data"]
+                logger.info(f"   PictographData: {type(pictograph_obj)}")
+                if hasattr(pictograph_obj, "arrows"):
+                    logger.info(f"   Arrows: {len(pictograph_obj.arrows)} arrows")
+                if hasattr(pictograph_obj, "grid_data"):
+                    logger.info(
+                        f"   Grid: {pictograph_obj.grid_data.grid_mode if pictograph_obj.grid_data else 'None'}"
+                    )
 
             # Generate wrong answers (3 different letters)
             wrong_answers = self._generate_wrong_letters(

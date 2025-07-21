@@ -12,7 +12,8 @@ from domain.models.pictograph_data import PictographData
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
-from ...pictograph.pictograph_widget import PictographWidget, create_pictograph_widget
+from ...pictograph.views import create_beat_view
+from ...pictograph.views.beat_pictograph_view import BeatPictographView
 from .selection_overlay import SelectionOverlay
 from .start_text_overlay import StartTextOverlay, add_start_text_to_view
 
@@ -44,7 +45,7 @@ class StartPositionView(QFrame):
         self._is_highlighted = False
 
         # UI components
-        self._pictograph_component: Optional[PictographWidget] = None
+        self._pictograph_component: Optional[BeatPictographView] = None
         self._selection_overlay: Optional[SelectionOverlay] = None
 
         # Additional state specific to start position
@@ -66,13 +67,8 @@ class StartPositionView(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # Create pictograph widget
-        self._pictograph_component = create_pictograph_widget()
-        self._configure_pictograph_component()
-
-        # Enable visibility for start position pictographs
-        if hasattr(self._pictograph_component, "enable_visibility"):
-            self._pictograph_component.enable_visibility()
+        # Create direct pictograph view for start position in beat frame (no widget wrapper)
+        self._pictograph_component = create_beat_view(parent=self)
 
         # Ensure pictograph component is visible (needed for blank white background)
         self._pictograph_component.show()
@@ -112,17 +108,7 @@ class StartPositionView(QFrame):
         """Update the pictograph display - delegates to the new separate data approach"""
         self._update_pictograph()
 
-    def _configure_pictograph_component(self):
-        """Configure the pictograph component for start position context"""
-        if hasattr(self._pictograph_component, "set_scaling_context"):
-            from application.services.pictograph.scaling_service import ScalingContext
-
-            self._pictograph_component.set_scaling_context(
-                ScalingContext.START_POS_PICKER
-            )
-
-        # Disable borders for start position view
-        self._pictograph_component.disable_borders()
+    # Direct view handles its own scaling and styling - no configuration needed
 
     def _initialize_start_text_widget(self):
         """Initialize START text widget overlay after component is ready"""
@@ -303,11 +289,9 @@ class StartPositionView(QFrame):
 
         # NEW APPROACH: Use separate pictograph data if available
         if hasattr(self, "_pictograph_data") and self._pictograph_data is not None:
-            self._pictograph_component.update_from_pictograph_data(
-                self._pictograph_data
-            )
+            self._pictograph_component.update_pictograph(self._pictograph_data)
         elif self._beat_data:
-            self._pictograph_component.update_from_beat(self._beat_data)
+            self._pictograph_component.update_pictograph(self._beat_data)
         else:
             self._pictograph_component.clear_pictograph()
 

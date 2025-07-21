@@ -12,8 +12,8 @@ from application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
 from domain.models.pictograph_data import PictographData
-from presentation.components.pictograph.pictograph_widget import PictographWidget
-from PyQt6.QtCore import Qt, pyqtSignal
+from presentation.components.pictograph.views import create_option_view
+from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
 logger = logging.getLogger(__name__)
@@ -31,13 +31,22 @@ class OptionPictograph(QFrame):
 
         Args:
             parent: Parent widget
-            pictograph_component: Pre-created pictograph component from pool (injected)
+            pictograph_component: DEPRECATED - now creates direct view
             size_calculator: OptionPickerSizeCalculator service for sizing calculations (injected)
         """
         super().__init__(parent)
 
         self._pictograph_data: Optional[PictographData] = None
-        self._pictograph_component: "PictographWidget" = pictograph_component
+
+        # Create direct pictograph view (no widget wrapper)
+        def get_main_window_size():
+            main_window = self.window()
+            return main_window.size() if main_window else QSize(1000, 800)
+
+        self._pictograph_component = create_option_view(
+            parent=self, main_window_size_provider=get_main_window_size
+        )
+
         self._size_calculator: OptionPickerSizeCalculator = size_calculator
 
         # Debounce mechanism to prevent rapid duplicate selections
@@ -85,9 +94,30 @@ class OptionPictograph(QFrame):
 
         if self._pictograph_component and pictograph_data:
             try:
+                # LEGACY-STYLE SIZING: Calculate size like legacy system
+                main_window = self.window()
+                main_window_width = main_window.width() if main_window else 1200
+                option_picker_width = self.parent().width() if self.parent() else 800
+
+                # Legacy formula: size = max(mw_width // 16, option_picker.width() // 8)
+                size_option_1 = main_window_width // 16
+                size_option_2 = option_picker_width // 8
+                target_size = max(size_option_1, size_option_2)
+
+                # Apply border calculation like legacy
+                border_width = max(1, int(target_size * 0.015))
+                target_size = target_size - (2 * border_width)
+                target_size = max(target_size, 100)  # Minimum size
+
+                # DIRECT VIEW APPROACH: Set size and update option picker width
+                self._pictograph_component.set_option_picker_width(
+                    self.parent().width() if self.parent() else 800
+                )
+
+                # Update pictograph data - direct view handles scaling automatically
                 self._pictograph_component.update_from_pictograph_data(pictograph_data)
                 logger.debug(
-                    f"Updated pictograph option with letter: {pictograph_data.letter}"
+                    f"Updated pictograph option with letter: {pictograph_data.letter}, size: {target_size}x{target_size}"
                 )
             except Exception as e:
                 logger.error(f"Error updating pictograph option: {e}")

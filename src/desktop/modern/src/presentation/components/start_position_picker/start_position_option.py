@@ -8,6 +8,7 @@ hover effects, and improved user interaction feedback.
 import logging
 
 from application.services.pictograph_pool_manager import PictographPoolManager
+from presentation.components.pictograph.views import create_start_position_view
 from core.interfaces.start_position_services import IStartPositionDataService
 from presentation.components.sequence_workbench.sequence_beat_frame.selection_overlay import (
     SelectionOverlay,
@@ -96,27 +97,24 @@ class StartPositionOption(QWidget):
         else:
             self.setStyleSheet(self._get_basic_styles())
 
-        # Get pictograph component from pool
-        self._pictograph_component = self._pool_manager.checkout_pictograph(parent=self)
+        # Create direct pictograph view (no pool, no widget wrapper)
+        self._pictograph_component = create_start_position_view(
+            parent=self, is_advanced=False  # Will be updated when sizing is applied
+        )
         self.pictograph_component = self._pictograph_component  # Keep legacy reference
 
-        if self._pictograph_component:
-            # Start with default size - will be updated by parent when sizing is applied
-            initial_size = 200 if self.enhanced_styling else 180
-            self._pictograph_component.setFixedSize(initial_size, initial_size)
+        # Start with default size - will be updated by parent when sizing is applied
+        initial_size = 200 if self.enhanced_styling else 180
+        self._pictograph_component.setFixedSize(initial_size, initial_size)
 
-            # Load pictograph data
-            pictograph_data = self.data_service.get_position_data(
-                self.position_key, self.grid_mode
-            )
-            if pictograph_data:
-                self._pictograph_component.update_from_pictograph_data(pictograph_data)
+        # Load pictograph data
+        pictograph_data = self.data_service.get_position_data(
+            self.position_key, self.grid_mode
+        )
+        if pictograph_data:
+            self._pictograph_component.update_from_pictograph_data(pictograph_data)
 
-            layout.addWidget(self._pictograph_component)
-        else:
-            logger.warning(
-                f"Failed to get pictograph component from pool for start position: {self.position_key}"
-            )
+        layout.addWidget(self._pictograph_component)
 
         # Position labels removed - they were redundant
 
@@ -331,48 +329,36 @@ class StartPositionOption(QWidget):
         painter.end()
 
     def update_pictograph_size(self, container_size: int, is_advanced: bool = False):
-        """Update the pictograph size to match the container."""
+        """Update the pictograph size to match the container using direct view approach."""
         if self._pictograph_component:
             # Calculate pictograph size to better fill the container
             # Leave minimal space for margins (8px total = 4px on each side)
             pictograph_size = max(
                 container_size - 8, 60
             )  # Minimal margins for better centering
+
+            # DIRECT VIEW APPROACH: Set advanced mode and size
+            self._pictograph_component.set_advanced_mode(is_advanced)
             self._pictograph_component.setFixedSize(pictograph_size, pictograph_size)
-
-            # Set the appropriate scaling context based on mode
-            if hasattr(self._pictograph_component, "set_scaling_context"):
-                from application.services.pictograph.scaling_service import (
-                    ScalingContext,
-                )
-
-                context = (
-                    ScalingContext.ADVANCED_START_POS
-                    if is_advanced
-                    else ScalingContext.START_POS_PICKER
-                )
-                self._pictograph_component.set_scaling_context(context)
 
             logger.debug(
                 f"Updated pictograph size to {pictograph_size}px for position {self.position_key}, advanced={is_advanced}"
             )
 
     def closeEvent(self, event):
-        """Clean up pool resources when widget is closed."""
-        self._cleanup_pool_resources()
+        """Clean up resources when widget is closed."""
+        self._cleanup_resources()
         super().closeEvent(event)
 
-    def _cleanup_pool_resources(self):
-        """Return pictograph component to pool for reuse."""
-        if self._pictograph_component and self._pool_manager:
+    def _cleanup_resources(self):
+        """Clean up direct view resources."""
+        if self._pictograph_component:
             try:
-                self._pool_manager.checkin_pictograph(self._pictograph_component)
+                self._pictograph_component.cleanup()
                 self._pictograph_component = None
             except Exception as e:
-                logger.warning(
-                    f"Failed to return start position component to pool: {e}"
-                )
+                logger.warning(f"Failed to cleanup start position component: {e}")
 
     def __del__(self):
         """Ensure cleanup on deletion."""
-        self._cleanup_pool_resources()
+        self._cleanup_resources()

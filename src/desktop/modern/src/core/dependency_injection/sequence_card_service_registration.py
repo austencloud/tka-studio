@@ -1,32 +1,95 @@
 """
-Sequence Card Services Registration - STARTER VERSION
+Sequence Card Services Dependency Injection Registration
 
-Basic service registration to get the tab working.
-Replace with full implementation from comprehensive plan.
+Registers all sequence card services with the DI container following
+the established patterns for service registration.
 """
 
 import logging
+from pathlib import Path
+
 from core.dependency_injection.di_container import DIContainer
+from core.interfaces.sequence_card_services import (
+    ISequenceCardDataService,
+    ISequenceCardCacheService,
+    ISequenceCardLayoutService,
+    ISequenceCardDisplayService,
+    ISequenceCardExportService,
+    ISequenceCardSettingsService,
+)
+from application.services.sequence_card.sequence_data_service import (
+    SequenceCardDataService,
+)
+from application.services.sequence_card.sequence_cache_service import (
+    SequenceCardCacheService,
+)
+from application.services.sequence_card.sequence_layout_service import (
+    SequenceCardLayoutService,
+)
+from application.services.sequence_card.sequence_display_service import (
+    SequenceCardDisplayService,
+)
+from application.services.sequence_card.sequence_export_service import (
+    SequenceCardExportService,
+)
+from application.services.sequence_card.sequence_settings_service import (
+    SequenceCardSettingsService,
+)
+
+# Import the actual tab component
+from presentation.tabs.sequence_card.sequence_card_tab import SequenceCardTab
 
 logger = logging.getLogger(__name__)
 
 
 def register_sequence_card_services(container: DIContainer) -> None:
     """
-    Register sequence card services - STARTER VERSION.
-    
-    TODO: Implement full service registration following the comprehensive plan.
-    
+    Register all sequence card services with the DI container.
+
     Args:
         container: DI container to register services with
     """
     try:
-        logger.info("Registering sequence card services (starter version)...")
-        
-        # TODO: Register actual services here
-        # For now, just log that registration happened
-        
-        logger.info("Sequence card services registration completed (starter version)")
+        logger.info("Registering sequence card services...")
+
+        # Core data and cache services (singleton for performance)
+        container.register_singleton(ISequenceCardDataService, SequenceCardDataService)
+        container.register_singleton(
+            ISequenceCardCacheService, SequenceCardCacheService
+        )
+        container.register_singleton(
+            ISequenceCardLayoutService, SequenceCardLayoutService
+        )
+
+        # Settings service (singleton for state consistency)
+        container.register_singleton(
+            ISequenceCardSettingsService, SequenceCardSettingsService
+        )
+
+        # Display service (singleton, depends on multiple services)
+        container.register_singleton(
+            ISequenceCardDisplayService, SequenceCardDisplayService
+        )
+
+        # Export service (singleton for operation consistency)
+        container.register_singleton(
+            ISequenceCardExportService, SequenceCardExportService
+        )
+
+        # Register the actual tab component with factory to inject dependencies
+        container.register_factory(
+            SequenceCardTab,
+            lambda c: SequenceCardTab(
+                data_service=c.resolve(ISequenceCardDataService),
+                cache_service=c.resolve(ISequenceCardCacheService),
+                layout_service=c.resolve(ISequenceCardLayoutService),
+                display_service=c.resolve(ISequenceCardDisplayService),
+                export_service=c.resolve(ISequenceCardExportService),
+                settings_service=c.resolve(ISequenceCardSettingsService),
+            ),
+        )
+
+        logger.info("Sequence card services registration completed successfully")
 
     except Exception as e:
         logger.error(f"Failed to register sequence card services: {e}")
@@ -35,10 +98,8 @@ def register_sequence_card_services(container: DIContainer) -> None:
 
 def validate_sequence_card_service_registration(container: DIContainer) -> bool:
     """
-    Validate sequence card service registration.
-    
-    TODO: Implement full validation following the comprehensive plan.
-    
+    Validate that all sequence card services are properly registered and can be resolved.
+
     Args:
         container: DI container to validate
 
@@ -46,13 +107,125 @@ def validate_sequence_card_service_registration(container: DIContainer) -> bool:
         True if all services can be resolved, False otherwise
     """
     try:
-        logger.info("Validating sequence card service registration (starter version)...")
-        
-        # TODO: Add actual validation logic
-        
-        logger.info("Sequence card service registration validation completed (starter version)")
+        logger.info("Validating sequence card service registration...")
+
+        # Test core service resolution
+        data_service = container.resolve(ISequenceCardDataService)
+        cache_service = container.resolve(ISequenceCardCacheService)
+        layout_service = container.resolve(ISequenceCardLayoutService)
+        settings_service = container.resolve(ISequenceCardSettingsService)
+        display_service = container.resolve(ISequenceCardDisplayService)
+        export_service = container.resolve(ISequenceCardExportService)
+
+        # Test tab component resolution
+        sequence_card_tab = container.resolve(SequenceCardTab)
+
+        # Verify services have expected interfaces
+        services_to_check = [
+            (data_service, ISequenceCardDataService),
+            (cache_service, ISequenceCardCacheService),
+            (layout_service, ISequenceCardLayoutService),
+            (settings_service, ISequenceCardSettingsService),
+            (display_service, ISequenceCardDisplayService),
+            (export_service, ISequenceCardExportService),
+        ]
+
+        for service, interface in services_to_check:
+            if not isinstance(service, interface):
+                logger.error(f"Service {service} does not implement {interface}")
+                return False
+
+        # Verify tab component was created successfully
+        if sequence_card_tab is None:
+            logger.error("SequenceCardTab could not be created")
+            return False
+
+        # Test basic functionality
+        try:
+            from utils.path_helpers import get_dictionary_path
+
+            dictionary_path = Path(get_dictionary_path())
+            if dictionary_path.exists():
+                sequences = data_service.get_all_sequences(dictionary_path)
+                logger.info(f"Found {len(sequences)} sequences in dictionary")
+            else:
+                logger.warning(f"Dictionary path does not exist: {dictionary_path}")
+        except ImportError:
+            logger.warning(
+                "Dictionary path helper not available, skipping sequence test"
+            )
+
+        # Test cache stats
+        cache_stats = cache_service.get_cache_stats()
+        logger.info(f"Cache initialized with stats: {cache_stats}")
+
+        # Test layout calculations
+        grid_dims = layout_service.calculate_grid_dimensions(16)
+        logger.info(f"Grid dimensions for length 16: {grid_dims}")
+
+        # Test settings
+        last_length = settings_service.get_last_selected_length()
+        logger.info(f"Last selected length: {last_length}")
+
+        logger.info(
+            "Sequence card service registration validation completed successfully"
+        )
         return True
 
     except Exception as e:
         logger.error(f"Sequence card service registration validation failed: {e}")
         return False
+
+
+def get_sequence_card_service_dependencies() -> dict:
+    """
+    Get information about sequence card service dependencies for documentation.
+
+    Returns:
+        Dictionary describing service dependencies
+    """
+    return {
+        "core_services": {
+            ISequenceCardDataService.__name__: {
+                "implementation": SequenceCardDataService.__name__,
+                "dependencies": [],
+                "description": "Manages sequence data loading and metadata extraction",
+            },
+            ISequenceCardCacheService.__name__: {
+                "implementation": SequenceCardCacheService.__name__,
+                "dependencies": [],
+                "description": "Provides multi-level LRU caching for images",
+            },
+            ISequenceCardLayoutService.__name__: {
+                "implementation": SequenceCardLayoutService.__name__,
+                "dependencies": [],
+                "description": "Calculates layout dimensions and scaling",
+            },
+            ISequenceCardSettingsService.__name__: {
+                "implementation": SequenceCardSettingsService.__name__,
+                "dependencies": [],
+                "description": "Manages settings persistence",
+            },
+        },
+        "coordination_services": {
+            ISequenceCardDisplayService.__name__: {
+                "implementation": SequenceCardDisplayService.__name__,
+                "dependencies": [
+                    ISequenceCardDataService.__name__,
+                    ISequenceCardCacheService.__name__,
+                    ISequenceCardLayoutService.__name__,
+                ],
+                "description": "Coordinates display operations with batch processing",
+            },
+            ISequenceCardExportService.__name__: {
+                "implementation": SequenceCardExportService.__name__,
+                "dependencies": [],
+                "description": "Handles export and regeneration operations",
+            },
+        },
+        "external_dependencies": [
+            "utils.path_helpers (optional)",
+            "main_window.main_widget.metadata_extractor (optional)",
+            "legacy sequence card export components (optional)",
+        ],
+    }

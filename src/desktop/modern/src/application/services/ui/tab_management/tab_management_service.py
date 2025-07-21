@@ -98,6 +98,8 @@ class TabManagementService(ITabManagementService):
             tab_widget = self._create_browse_tab()
         elif tab_name == "learn":
             tab_widget = self._create_learn_tab()
+        elif tab_name == "sequence_card":
+            tab_widget = self._create_sequence_card_tab()
         else:
             # Create placeholder for other tabs
             tab_widget = self._create_placeholder_tab(tab_name)
@@ -174,6 +176,16 @@ class TabManagementService(ITabManagementService):
         container = get_container()
         learn_tab = container.resolve(LearnTab)
         return learn_tab
+
+    def _create_sequence_card_tab(self) -> QWidget:
+        """Create the actual sequence card tab widget."""
+        from core.dependency_injection.di_container import get_container
+        from presentation.tabs.sequence_card import SequenceCardTab
+
+        # Get the DI container and resolve the Sequence Card Tab
+        container = get_container()
+        sequence_card_tab = container.resolve(SequenceCardTab)
+        return sequence_card_tab
 
     def get_current_tab_name(self) -> Optional[str]:
         """Get the name of the currently active tab."""

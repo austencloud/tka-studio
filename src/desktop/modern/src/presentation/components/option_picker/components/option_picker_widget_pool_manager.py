@@ -56,20 +56,13 @@ class OptionPickerWidgetPoolManager:
             f"🏗️ [WIDGET_POOL] Initializing widget pool with {self._max_widgets} widgets"
         )
 
-        # Create Qt widgets with injected pictograph components
+        # Create Qt widgets with direct view approach (no pictograph pool needed)
         for i in range(self._max_widgets):
             try:
-                # Get pictograph component from pool service
-                pictograph_component = (
-                    self._pictograph_pool_manager.checkout_pictograph(
-                        parent=self._parent
-                    )
-                )
-
-                # Create frame with injected dependencies
+                # Create frame with direct view (no pictograph component injection needed)
                 frame = OptionPictograph(
                     parent=self._parent,
-                    pictograph_component=pictograph_component,
+                    pictograph_component=None,  # DEPRECATED - creates own direct view
                     size_calculator=self._size_calculator,
                 )
                 frame.hide()  # Hide initially to prevent random display
@@ -77,6 +70,9 @@ class OptionPickerWidgetPoolManager:
 
             except Exception as e:
                 print(f"❌ [WIDGET_POOL] Error creating widget {i}: {e}")
+                import traceback
+
+                traceback.print_exc()
 
         # Initialize service pool with same IDs
         self._option_pool_service.reset_pool()

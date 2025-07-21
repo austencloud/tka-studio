@@ -93,86 +93,86 @@ class PictographWidget(QWidget):
         self._fit_view()
 
     def _fit_view(self):
-        """Fit view to scene content."""
+        """Fit view to scene content using legacy-style direct scaling."""
         if self._scene and self._view:
             try:
-                # Check if we have a start position scaling context
-                if self._scaling_context and self._is_start_position_context():
-                    self._apply_start_position_scaling()
-                else:
-                    # Use standard fitInView for other contexts
-                    # CRITICAL FIX: Use items bounding rect like legacy system
-                    # This ensures we fit to actual content, not the full 950x950 scene
-                    items_rect = self._scene.itemsBoundingRect()
-                    if not items_rect.isEmpty():
-                        # Update scene rect to match items bounds (like legacy)
-                        self._scene.setSceneRect(items_rect)
-                        self._view.fitInView(
-                            items_rect, Qt.AspectRatioMode.KeepAspectRatio
-                        )
-                    else:
-                        # Fallback to scene rect if no items
-                        scene_rect = self._scene.sceneRect()
-                        if not scene_rect.isEmpty():
-                            self._view.fitInView(
-                                scene_rect, Qt.AspectRatioMode.KeepAspectRatio
-                            )
+                # Always use items bounding rect for accurate content sizing
+                items_rect = self._scene.itemsBoundingRect()
+
+                if items_rect.isEmpty():
+                    # No content to scale
+                    return
+
+                # LEGACY-STYLE SCALING: Direct calculation like legacy system
+                self._apply_legacy_style_scaling(items_rect)
+
             except RuntimeError:
                 pass  # Handle deleted objects gracefully
 
-    def _is_start_position_context(self) -> bool:
-        """Check if current scaling context is for start position picker."""
-        from application.services.pictograph.scaling_service import ScalingContext
+    def _apply_legacy_style_scaling(self, items_rect):
+        """Apply legacy-style direct scaling exactly like the original system."""
+        try:
+            # CRITICAL: Use Qt's built-in fitInView like legacy system
+            # This automatically handles scene-to-view scaling without hardcoded dimensions
+            self._view.fitInView(items_rect, Qt.AspectRatioMode.KeepAspectRatio)
 
-        return self._scaling_context in [
+            # Apply context-specific scale adjustments if needed (like legacy margin adjustments)
+            if self._scaling_context:
+                current_transform = self._view.transform()
+                current_scale = current_transform.m11()  # Get current scale factor
+
+                # Apply simple adjustment factor
+                adjustment_factor = self._get_context_adjustment_factor()
+                new_scale = current_scale * adjustment_factor
+
+                # Apply the adjusted scaling
+                self._view.resetTransform()
+                self._view.scale(new_scale, new_scale)
+                self._view.centerOn(items_rect.center())
+
+        except Exception:
+            # Final fallback
+            self._view.fitInView(
+                self._scene.sceneRect(), Qt.AspectRatioMode.KeepAspectRatio
+            )
+
+    def _get_context_adjustment_factor(self):
+        """Get simple context-specific adjustment factor for legacy-style scaling."""
+        if not self._scaling_context:
+            return 0.95  # Small margin for default
+
+        from core.interfaces.pictograph_services import ScalingContext
+
+        # Simple adjustment factors (like legacy margin calculations)
+        if self._scaling_context == ScalingContext.LEARN_QUESTION:
+            return 0.85  # Slightly smaller for questions
+        elif self._scaling_context == ScalingContext.LEARN_ANSWER:
+            return 0.80  # Smaller for answer options
+        elif self._scaling_context in [
             ScalingContext.START_POS_PICKER,
             ScalingContext.ADVANCED_START_POS,
-        ]
+        ]:
+            return 0.90  # Slight margin for start positions
+        elif self._scaling_context == ScalingContext.OPTION_VIEW:
+            return 0.95  # Small margin for option picker
+        else:
+            return 0.95  # Default margin
 
-    def _apply_start_position_scaling(self):
-        """Apply manual scaling for start position pickers like legacy system."""
-        try:
-            # CRITICAL FIX: Use items bounding rect like legacy system
-            # Legacy uses self.pictograph.width() which is the actual content width
-            items_rect = self._scene.itemsBoundingRect()
-            if items_rect.width() <= 0 or items_rect.height() <= 0:
-                return
+    def ensure_square_widget(self, size: int):
+        """
+        Ensure the pictograph widget is square like legacy system.
 
-            # Get main window width for calculation
-            main_window = self.window()
-            main_window_width = main_window.width() if main_window else 1200
+        This is the key to fixing display issues - legacy system always
+        sets pictograph widgets to be square with setFixedSize(size, size).
 
-            # Calculate target size based on context (like legacy)
-            from application.services.pictograph.scaling_service import ScalingContext
+        Args:
+            size: The size for both width and height
+        """
+        self.setFixedSize(size, size)
 
-            if self._scaling_context == ScalingContext.ADVANCED_START_POS:
-                # Advanced mode: main_window_width // 12
-                target_size = main_window_width // 12
-                min_size = 70
-            else:
-                # Basic mode: main_window_width // 10
-                target_size = main_window_width // 10
-                min_size = 80
-
-            # Apply border calculation like legacy
-            border_width = max(1, int(target_size * 0.015))
-            target_size = target_size - (2 * border_width)
-            target_size = max(target_size, min_size)
-
-            # CRITICAL FIX: Calculate scale factor using actual content bounds like legacy
-            # Legacy: self.view_scale = size / self.pictograph.width()
-            content_size = max(items_rect.width(), items_rect.height())
-            scale_factor = target_size / content_size
-
-            # Apply manual scaling like legacy
-            self._view.resetTransform()
-            self._view.scale(scale_factor, scale_factor)
-
-        except Exception as e:
-            # Fallback to fitInView if manual scaling fails
-            items_rect = self._scene.itemsBoundingRect()
-            if not items_rect.isEmpty():
-                self._view.fitInView(items_rect, Qt.AspectRatioMode.KeepAspectRatio)
+        # After setting widget size, trigger a re-fit of the view
+        if self._scene and self._view:
+            self._fit_view()
 
     # === COMPATIBILITY METHODS ===
 
@@ -200,6 +200,28 @@ class PictographWidget(QWidget):
         else:
             super().setFixedSize(width, height)
         self._fit_view()
+
+    def set_square_size(self, size: int) -> None:
+        """Set widget to a square size for perfect pictograph display."""
+        self.setFixedSize(size, size)
+
+    def fit_to_container(
+        self, container_width: int, container_height: int, maintain_square: bool = True
+    ) -> None:
+        """
+        Fit the pictograph widget to its container while maintaining aspect ratio.
+
+        Args:
+            container_width: Available container width
+            container_height: Available container height
+            maintain_square: Whether to maintain square aspect ratio (default: True)
+        """
+        if maintain_square:
+            # Use smaller dimension to ensure square fits in container
+            size = min(container_width, container_height)
+            self.set_square_size(size)
+        else:
+            self.setFixedSize(container_width, container_height)
 
     # === PROPERTY ACCESS ===
 

@@ -34,14 +34,6 @@ class PictographValidator(IPictographValidator):
         self.pictograph_data = pictograph_data
         self.orientation_calculator = orientation_calculator
 
-    def validate_dependencies(self) -> bool:
-        """Validate that all required dependencies are available."""
-        # PictographData is required
-        if self.pictograph_data is None:
-            return False
-        # OrientationCalculator is optional (has fallback)
-        return True
-
     def ends_with_beta(self) -> bool:
         """
         Check if pictograph ends with beta position.
@@ -145,59 +137,6 @@ class PictographValidator(IPictographValidator):
                     self.pictograph_data.motions[arrow_data.color]
                 )
                 if end_ori not in [Orientation.IN, Orientation.OUT]:
-                    return False
-            return True
-        except (AttributeError, ValueError):
-            return False
-
-    def ends_with_layer1(self) -> bool:
-        """
-        Check if pictograph ends with layer1 (both props have same radial/nonradial orientation).
-
-        Legacy logic: red_prop.check.is_radial() == blue_prop.check.is_radial()
-        """
-        try:
-            # Check if any arrows have valid motion data
-            valid_arrows = [
-                arrow for arrow in self.pictograph_data.arrows.values() if arrow
-            ]
-            if not valid_arrows:
-                return False
-
-            # Check if all props have the same radial/nonradial orientation
-            orientations = []
-            for arrow_data in valid_arrows:
-                end_ori = self._get_arrow_end_orientation(
-                    self.pictograph_data.motions[arrow_data.color]
-                )
-                is_radial = end_ori in [Orientation.IN, Orientation.OUT]
-                orientations.append(is_radial)
-
-            # All orientations should be the same for layer1
-            return len(set(orientations)) <= 1 if orientations else False
-        except (AttributeError, ValueError):
-            return False
-
-    def ends_with_layer2(self) -> bool:
-        """
-        Check if pictograph ends with layer2 (both props are nonradial).
-
-        Legacy logic: red_prop.check.is_nonradial() and blue_prop.check.is_nonradial()
-        """
-        try:
-            # Check if any arrows have valid motion data
-            valid_arrows = [
-                arrow for arrow in self.pictograph_data.arrows.values() if arrow
-            ]
-            if not valid_arrows:
-                return False
-
-            # Check if all props are nonradial
-            for arrow_data in valid_arrows:
-                end_ori = self._get_arrow_end_orientation(
-                    self.pictograph_data.motions[arrow_data.color]
-                )
-                if end_ori not in [Orientation.CLOCK, Orientation.COUNTER]:
                     return False
             return True
         except (AttributeError, ValueError):

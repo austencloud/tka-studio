@@ -12,7 +12,8 @@ from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
-from ...pictograph.pictograph_widget import PictographWidget, create_pictograph_widget
+from ...pictograph.views import create_beat_view
+from ...pictograph.views.beat_pictograph_view import BeatPictographView
 from .beat_number_overlay import BeatNumberOverlay, add_beat_number_to_view
 from .selection_overlay import SelectionOverlay
 from .start_text_overlay import StartTextOverlay
@@ -46,7 +47,7 @@ class BeatView(QFrame):
         self._is_highlighted = False
 
         # UI components
-        self._pictograph_component: Optional[PictographWidget] = None
+        self._pictograph_component: Optional[BeatPictographView] = None
         self._selection_overlay: Optional[SelectionOverlay] = None
 
         # START text overlay for preserved start position beat
@@ -71,9 +72,8 @@ class BeatView(QFrame):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        # Create pictograph widget
-        self._pictograph_component = create_pictograph_widget()
-        self._configure_pictograph_component()
+        # Create direct pictograph view for beat frame (no widget wrapper)
+        self._pictograph_component = create_beat_view(parent=self)
         layout.addWidget(self._pictograph_component)
 
         # Enable mouse tracking for hover effects
@@ -111,16 +111,7 @@ class BeatView(QFrame):
         elif self._pictograph_component:
             self._pictograph_component.clear_pictograph()
 
-    def _configure_pictograph_component(self):
-        """Configure the pictograph component for beat view context"""
-        # CRITICAL FIX: Set proper scaling context for beat frame
-        from application.services.pictograph.scaling_service import ScalingContext
-
-        self._pictograph_component.set_scaling_context(ScalingContext.BEAT_VIEW)
-
-        # CRITICAL FIX: Disable borders in beat frame context (like Legacy)
-        # Beat frames should be borderless, unlike option pickers which show colored borders
-        self._pictograph_component.disable_borders()
+    # Direct view handles its own scaling and styling - no configuration needed
 
     # State management
     def set_beat_data(self, beat_data: Optional[BeatData]):
@@ -198,7 +189,7 @@ class BeatView(QFrame):
             return
 
         # Update the pictograph component with beat data
-        self._pictograph_component.update_from_beat(self._beat_data)
+        self._pictograph_component.update_pictograph(self._beat_data)
 
         # Update START text overlay (mutual exclusivity with beat content)
         self._update_start_text_overlay()

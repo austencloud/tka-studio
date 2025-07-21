@@ -30,9 +30,7 @@ from application.services.learn import (
     LearnNavigationService,
     LearnDataService,
 )
-from application.services.learn.mock_pictograph_data_service import (
-    MockPictographDataService,
-)
+
 from infrastructure.file_system.file_system_service import FileSystemService
 from presentation.tabs.learn import LearnTab
 
@@ -49,10 +47,19 @@ def register_learn_services(container: DIContainer) -> None:
     try:
         logger.info("Registering learn services...")
 
-        # External dependencies (real services)
-        container.register_singleton(
-            IPictographDataService, MockPictographDataService
-        )  # Keep mock for now since no real implementation exists
+        # External dependencies (use real data services)
+        # Use the real pictograph service with actual TKA dataset
+        from application.services.learn.real_pictograph_data_service import (
+            RealPictographDataService,
+        )
+
+        # Register the real service for Learn Tab functionality
+        container.register_factory(
+            IPictographDataService, lambda: RealPictographDataService(container)
+        )
+        logger.info(
+            "🎯 Registered IPictographDataService using RealPictographDataService"
+        )
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Core learn services (singleton pattern for state management)

@@ -70,10 +70,14 @@ class FramePoolService:
                 OptionPictograph,
             )
 
-            # Create all frames upfront
+            # Create all frames upfront with direct view approach
             self._pool = []
             for i in range(self._max_frames):
-                frame = OptionPictograph(parent=parent_widget)
+                frame = OptionPictograph(
+                    parent=parent_widget,
+                    pictograph_component=None,  # DEPRECATED - creates own direct view
+                    size_calculator=None,  # Will be set when needed
+                )
                 frame.hide()  # Start hidden
                 self._pool.append(frame)
 
