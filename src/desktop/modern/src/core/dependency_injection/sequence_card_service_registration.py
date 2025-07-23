@@ -76,6 +76,18 @@ def register_sequence_card_services(container: DIContainer) -> None:
             ISequenceCardExportService, SequenceCardExportService
         )
 
+        # Register Qt adaptor for display service
+        from presentation.adaptors.sequence_card_display_adaptor import (
+            SequenceCardDisplayAdaptor,
+        )
+
+        container.register_factory(
+            SequenceCardDisplayAdaptor,
+            lambda c: SequenceCardDisplayAdaptor(
+                c.resolve(ISequenceCardDisplayService)
+            ),
+        )
+
         # Register the actual tab component with factory to inject dependencies
         container.register_factory(
             SequenceCardTab,
@@ -84,6 +96,7 @@ def register_sequence_card_services(container: DIContainer) -> None:
                 cache_service=c.resolve(ISequenceCardCacheService),
                 layout_service=c.resolve(ISequenceCardLayoutService),
                 display_service=c.resolve(ISequenceCardDisplayService),
+                display_adaptor=c.resolve(SequenceCardDisplayAdaptor),
                 export_service=c.resolve(ISequenceCardExportService),
                 settings_service=c.resolve(ISequenceCardSettingsService),
             ),
@@ -140,20 +153,22 @@ def validate_sequence_card_service_registration(container: DIContainer) -> bool:
             logger.error("SequenceCardTab could not be created")
             return False
 
-        # Test basic functionality
+        # Test basic functionality with modern path service
         try:
-            from utils.path_helpers import get_dictionary_path
+            from application.services.sequence_card.path_service import (
+                SequenceCardPathService,
+            )
 
-            dictionary_path = Path(get_dictionary_path())
+            path_service = SequenceCardPathService()
+            dictionary_path = path_service.get_dictionary_path()
+
             if dictionary_path.exists():
                 sequences = data_service.get_all_sequences(dictionary_path)
                 logger.info(f"Found {len(sequences)} sequences in dictionary")
             else:
                 logger.warning(f"Dictionary path does not exist: {dictionary_path}")
-        except ImportError:
-            logger.warning(
-                "Dictionary path helper not available, skipping sequence test"
-            )
+        except Exception as e:
+            logger.warning(f"Could not test dictionary functionality: {e}")
 
         # Test cache stats
         cache_stats = cache_service.get_cache_stats()
@@ -224,8 +239,8 @@ def get_sequence_card_service_dependencies() -> dict:
             },
         },
         "external_dependencies": [
-            "utils.path_helpers (optional)",
-            "main_window.main_widget.metadata_extractor (optional)",
-            "legacy sequence card export components (optional)",
+            "PIL (Pillow) for image metadata extraction",
+            "PyQt6 for UI components",
+            "pathlib for modern path handling",
         ],
     }

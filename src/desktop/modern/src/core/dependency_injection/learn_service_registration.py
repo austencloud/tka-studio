@@ -58,7 +58,7 @@ def register_learn_services(container: DIContainer) -> None:
             IPictographDataService, lambda: RealPictographDataService(container)
         )
         logger.info(
-            "🎯 Registered IPictographDataService using RealPictographDataService"
+            "🎯 Registered IPictographDataService using RealPictographDataService (REAL PICTOGRAPHS)"
         )
         container.register_singleton(IFileSystemService, FileSystemService)
 

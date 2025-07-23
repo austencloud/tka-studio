@@ -296,7 +296,7 @@ class TestSequenceCardCacheService:
         assert stats.raw_cache_hits == 1
         assert stats.raw_cache_misses == 1
         assert stats.scaled_cache_misses == 1
-        assert stats.hit_ratio == 0.5  # 1 hit out of 2 total requests
+        assert abs(stats.hit_ratio - 0.333) < 0.01  # 1 hit out of 3 total requests
 
 
 class TestSequenceCardLayoutService:
@@ -681,10 +681,8 @@ class TestSequenceCardServiceIntegration:
 import pytest
 
 # Add performance markers to sequence card services tests
-pytest.mark.performance = pytest.mark.skipif(
-    not pytest.config.getoption("--run-performance", default=False),
-    reason="Performance tests disabled by default",
-)
+# Note: Performance tests are marked with @pytest.mark.performance
+# and can be run with: pytest -m performance
 
 
 # Add this section to existing test classes

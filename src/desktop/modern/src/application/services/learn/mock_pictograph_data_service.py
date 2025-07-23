@@ -163,34 +163,100 @@ class MockPictographDataService(IPictographDataService):
         return list(self._mock_data.keys())
 
     def get_pictographs_by_letter(self, letter: str) -> List[Dict[str, Any]]:
-        """Get mock pictographs for a specific letter."""
-        # Return mock pictographs for testing
-        return [
-            {
-                "id": f"mock_{letter}_1",
+        """Get mock pictographs for a specific letter with proper PictographData objects."""
+        # Import required classes
+        try:
+            from domain.models.pictograph_data import PictographData
+            from domain.models.grid_data import GridData
+            from domain.models.enums import GridPosition, GridMode
+            from data.constants import START_POS, END_POS, BLUE_ATTRS, RED_ATTRS
+        except ImportError:
+            # Fallback if imports not available
+            logger.error("Could not import required classes for PictographData creation")
+            return self._get_fallback_pictographs(letter)
+        
+        pictographs = []
+        variant = 0
+        
+        # Grid position mapping (integer positions to GridPosition enums)
+        position_map = {
+            1: GridPosition.ALPHA1,
+            2: GridPosition.ALPHA3, 
+            3: GridPosition.ALPHA5,
+            4: GridPosition.ALPHA7,
+        }
+        
+        # Generate pictographs with different start/end position combinations
+        for start_pos_int in range(1, 5):  # 1, 2, 3, 4
+            for end_pos_int in range(1, 5):  # 1, 2, 3, 4
+                variant += 1
+                
+                # Create proper PictographData object
+                try:
+                    pictograph_data = PictographData(
+                        id=f"mock_{letter}_{variant}",
+                        letter=letter,
+                        start_position=position_map.get(start_pos_int, GridPosition.ALPHA1),
+                        end_position=position_map.get(end_pos_int, GridPosition.ALPHA1),
+                        grid_data=GridData(grid_mode=GridMode.DIAMOND),
+                        metadata={
+                            "created_by": "mock_service",
+                            "is_test_data": True,
+                            "start_pos_int": start_pos_int,
+                            "end_pos_int": end_pos_int,
+                        }
+                    )
+                    
+                    # Wrap in expected format with position data for legacy compatibility
+                    pictograph = {
+                        "id": f"mock_{letter}_{variant}",
+                        "letter": letter,
+                        "type": "mock",
+                        START_POS: start_pos_int,  # For legacy question generation
+                        END_POS: end_pos_int,      # For legacy question generation
+                        "data": pictograph_data,   # For modern rendering
+                        BLUE_ATTRS: {
+                            "motion_type": "clockwise" if variant % 2 == 0 else "counterclockwise",
+                            "start_ori": "in",
+                            "prop_rot_dir": "clockwise" if variant % 2 == 0 else "counterclockwise",
+                            "start_loc": "center",
+                            "end_loc": "center",
+                            "turns": 1,
+                        },
+                        RED_ATTRS: {
+                            "motion_type": "counterclockwise" if variant % 2 == 0 else "clockwise",
+                            "start_ori": "in",
+                            "prop_rot_dir": "counterclockwise" if variant % 2 == 0 else "clockwise",
+                            "start_loc": "center",
+                            "end_loc": "center",
+                            "turns": 0,
+                        },
+                    }
+                    pictographs.append(pictograph)
+                    
+                except Exception as e:
+                    logger.warning(f"Failed to create PictographData for {letter}_{variant}: {e}")
+                    # Continue with other pictographs
+                    continue
+        
+        logger.info(f"Generated {len(pictographs)} mock pictographs with PictographData for letter {letter}")
+        return pictographs
+    
+    def _get_fallback_pictographs(self, letter: str) -> List[Dict[str, Any]]:
+        """Fallback method when PictographData creation fails."""
+        # Simple fallback without PictographData objects
+        pictographs = []
+        for i in range(1, 5):
+            pictograph = {
+                "id": f"fallback_{letter}_{i}",
                 "letter": letter,
-                "type": "mock",
-                "data": {"letter": letter, "variant": 1},
-            },
-            {
-                "id": f"mock_{letter}_2",
-                "letter": letter,
-                "type": "mock",
-                "data": {"letter": letter, "variant": 2},
-            },
-            {
-                "id": f"mock_{letter}_3",
-                "letter": letter,
-                "type": "mock",
-                "data": {"letter": letter, "variant": 3},
-            },
-            {
-                "id": f"mock_{letter}_4",
-                "letter": letter,
-                "type": "mock",
-                "data": {"letter": letter, "variant": 4},
-            },
-        ]
+                "type": "fallback",
+                "start_pos": i,
+                "end_pos": i,
+                "data": None,  # No PictographData available
+            }
+            pictographs.append(pictograph)
+        return pictographs
 
     def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
         """
@@ -225,25 +291,79 @@ class MockPictographDataService(IPictographDataService):
         return dataset
 
     def _initialize_test_data(self) -> None:
-        """Initialize mock test data for common letters."""
+        """Initialize mock test data for common letters with PictographData objects."""
+        # Import required classes
+        try:
+            from domain.models.pictograph_data import PictographData
+            from domain.models.grid_data import GridData
+            from domain.models.enums import GridPosition, GridMode
+            from data.constants import START_POS, END_POS, BLUE_ATTRS, RED_ATTRS
+        except ImportError:
+            logger.error("Could not import required classes - skipping test data initialization")
+            return
+        
         test_letters = ["A", "B", "C", "D", "E", "F", "G", "H"]
+        
+        # Grid position mapping
+        position_map = {
+            1: GridPosition.ALPHA1,
+            2: GridPosition.ALPHA3,
+            3: GridPosition.ALPHA5, 
+            4: GridPosition.ALPHA7,
+        }
 
         for letter in test_letters:
-            for variant in range(1, 5):  # 4 variants per letter
-                pictograph_id = f"mock_{letter}_{variant}"
-                self._mock_data[pictograph_id] = {
-                    "id": pictograph_id,
-                    "letter": letter,
-                    "type": "mock",
-                    "data": {
-                        "letter": letter,
-                        "variant": variant,
-                        "grid_mode": "diamond",
-                        "arrows": {},
-                        "props": {},
-                        "metadata": {
-                            "created_by": "mock_service",
-                            "is_test_data": True,
-                        },
-                    },
-                }
+            variant = 0
+            # Generate combinations of start/end positions like legacy system
+            for start_pos in range(1, 5):  # 1, 2, 3, 4
+                for end_pos in range(1, 5):  # 1, 2, 3, 4
+                    variant += 1
+                    pictograph_id = f"mock_{letter}_{variant}"
+                    
+                    try:
+                        # Create proper PictographData object
+                        pictograph_data = PictographData(
+                            id=pictograph_id,
+                            letter=letter,
+                            start_position=position_map.get(start_pos, GridPosition.ALPHA1),
+                            end_position=position_map.get(end_pos, GridPosition.ALPHA1),
+                            grid_data=GridData(grid_mode=GridMode.DIAMOND),
+                            metadata={
+                                "created_by": "mock_service",
+                                "is_test_data": True,
+                                "start_pos_int": start_pos,
+                                "end_pos_int": end_pos,
+                            }
+                        )
+                        
+                        # Store in expected format
+                        self._mock_data[pictograph_id] = {
+                            "id": pictograph_id,
+                            "letter": letter,
+                            "type": "mock",
+                            START_POS: start_pos,  # Critical for Lesson3
+                            END_POS: end_pos,      # Critical for Lesson3
+                            "data": pictograph_data,  # For modern rendering
+                            BLUE_ATTRS: {
+                                "motion_type": "clockwise" if variant % 2 == 0 else "counterclockwise",
+                                "start_ori": "in",
+                                "prop_rot_dir": "clockwise" if variant % 2 == 0 else "counterclockwise",
+                                "start_loc": "center",
+                                "end_loc": "center",
+                                "turns": 1,
+                            },
+                            RED_ATTRS: {
+                                "motion_type": "counterclockwise" if variant % 2 == 0 else "clockwise",
+                                "start_ori": "in",
+                                "prop_rot_dir": "counterclockwise" if variant % 2 == 0 else "clockwise",
+                                "start_loc": "center",
+                                "end_loc": "center",
+                                "turns": 0,
+                            },
+                        }
+                        
+                    except Exception as e:
+                        logger.warning(f"Failed to create test data for {pictograph_id}: {e}")
+                        continue
+        
+        logger.info(f"Initialized mock test data for {len(test_letters)} letters with PictographData objects")

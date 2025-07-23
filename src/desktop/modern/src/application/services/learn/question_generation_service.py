@@ -438,18 +438,72 @@ class QuestionGenerationService(IQuestionGenerationService):
         # Import constants to avoid circular imports
         try:
             from data.constants import START_POS
-
-            return pictograph.get(START_POS)
+            
+            # Try legacy format first (direct key access)
+            if START_POS in pictograph:
+                return pictograph[START_POS]
         except ImportError:
-            # Fallback if constants not available
-            return pictograph.get("start_pos")
+            pass
+        
+        # Try standard fallback
+        if "start_pos" in pictograph:
+            return pictograph["start_pos"]
+        
+        # Try modern format (nested in data)
+        if "data" in pictograph:
+            data = pictograph["data"]
+            if hasattr(data, "start_position") and data.start_position:
+                # Convert GridPosition enum to integer
+                return self._convert_grid_position_to_int(data.start_position)
+            if "start_pos" in data:
+                return data["start_pos"]
+        
+        logger.warning(f"Could not extract start_pos from pictograph: {list(pictograph.keys())}")
+        return 1  # Default fallback
 
     def _get_end_pos(self, pictograph: Dict) -> Any:
         """Get end position from pictograph data."""
         try:
             from data.constants import END_POS
-
-            return pictograph.get(END_POS)
+            
+            # Try legacy format first (direct key access)
+            if END_POS in pictograph:
+                return pictograph[END_POS]
         except ImportError:
-            # Fallback if constants not available
-            return pictograph.get("end_pos")
+            pass
+        
+        # Try standard fallback
+        if "end_pos" in pictograph:
+            return pictograph["end_pos"]
+        
+        # Try modern format (nested in data)
+        if "data" in pictograph:
+            data = pictograph["data"]
+            if hasattr(data, "end_position") and data.end_position:
+                # Convert GridPosition enum to integer
+                return self._convert_grid_position_to_int(data.end_position)
+            if "end_pos" in data:
+                return data["end_pos"]
+        
+        logger.warning(f"Could not extract end_pos from pictograph: {list(pictograph.keys())}")
+        return 1  # Default fallback
+    
+    def _convert_grid_position_to_int(self, grid_position) -> int:
+        """Convert GridPosition enum to integer for legacy compatibility."""
+        if grid_position is None:
+            return 1  # Default position
+        
+        # Map GridPosition enums to integers (1-4 for legacy compatibility)
+        position_map = {
+            # Alpha positions (diamond/radial grid)
+            "ALPHA1": 1, "ALPHA2": 2, "ALPHA3": 3, "ALPHA4": 4,
+            "ALPHA5": 1, "ALPHA6": 2, "ALPHA7": 3, "ALPHA8": 4,  # Wrap around
+            
+            # Beta positions (box grid)  
+            "BETA1": 1, "BETA2": 2, "BETA3": 3, "BETA4": 4,
+            "BETA5": 1, "BETA6": 2, "BETA7": 3, "BETA8": 4,  # Wrap around
+        }
+        
+        # Get position name (handle both enum and string)
+        position_name = grid_position.name if hasattr(grid_position, "name") else str(grid_position)
+        return position_map.get(position_name, 1)  # Default to 1 if not found

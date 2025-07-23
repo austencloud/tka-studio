@@ -31,6 +31,7 @@ class RealPictographDataService(IPictographDataService):
         self._pictograph_manager: Optional[IPictographDataManager] = None
         self._dataset_query_service: Optional[IDatasetQuery] = None
         self._dataset_cache: Optional[Dict[str, List[BeatData]]] = None
+        self._pictograph_cache: Dict[str, Any] = {}  # Cache for individual pictographs
         logger.info(
             "🎯 REAL PICTOGRAPH DATA SERVICE INITIALIZED - Using actual TKA dataset!"
         )
@@ -170,21 +171,50 @@ class RealPictographDataService(IPictographDataService):
                     for i, beat_data in enumerate(beat_data_list):
                         if beat_data.has_pictograph:
                             pictograph_data = beat_data.pictograph_data
+                            
+                            # Extract position data for compatibility with legacy question generation
+                            start_pos = self._convert_grid_position_to_int(pictograph_data.start_position)
+                            end_pos = self._convert_grid_position_to_int(pictograph_data.end_position)
+                            
+                            # Import constants for legacy compatibility
+                            try:
+                                from data.constants import START_POS, END_POS, BLUE_ATTRS, RED_ATTRS
+                            except ImportError:
+                                START_POS = "start_pos"
+                                END_POS = "end_pos"
+                                BLUE_ATTRS = "blue_attributes"
+                                RED_ATTRS = "red_attributes"
+                            
+                            # Create legacy-compatible dictionary with REAL pictograph data
                             pictograph_dict = {
                                 "id": f"{letter}_{i}",
                                 "letter": letter,
                                 "type": "real",
-                                "data": pictograph_data,
-                                "beat_data": beat_data,
+                                START_POS: start_pos,    # Critical for Lesson3 question generation
+                                END_POS: end_pos,        # Critical for Lesson3 question generation
+                                "data": pictograph_data, # REAL PictographData for modern rendering
+                                "beat_data": beat_data,  # Full beat data for reference
                             }
+                            
+                            # Add blue/red attributes if available from motions
+                            if pictograph_data.motions:
+                                blue_motion = pictograph_data.motions.get("blue")
+                                red_motion = pictograph_data.motions.get("red")
+                                
+                                if blue_motion:
+                                    pictograph_dict[BLUE_ATTRS] = self._extract_motion_attributes(blue_motion)
+                                if red_motion:
+                                    pictograph_dict[RED_ATTRS] = self._extract_motion_attributes(red_motion)
+                            
                             pictographs.append(pictograph_dict)
 
-                            # Debug: Log pictograph data details
+                            # Debug: Log real pictograph data details
                             if i < 2:  # Log first 2 for each letter
                                 logger.info(
-                                    f"🎨 {letter}_{i}: PictographData type={type(pictograph_data)}, "
-                                    f"has_arrows={hasattr(pictograph_data, 'arrows') and len(pictograph_data.arrows) > 0 if pictograph_data else False}, "
-                                    f"has_grid={hasattr(pictograph_data, 'grid_data') if pictograph_data else False}"
+                                    f"🎯 REAL {letter}_{i}: PictographData type={type(pictograph_data)}, "
+                                    f"start_pos={start_pos}, end_pos={end_pos}, "
+                                    f"arrows={len(pictograph_data.arrows) if pictograph_data.arrows else 0}, "
+                                    f"grid_mode={pictograph_data.grid_data.grid_mode if pictograph_data.grid_data else 'None'}"
                                 )
                         else:
                             logger.warning(
@@ -389,3 +419,59 @@ class RealPictographDataService(IPictographDataService):
             "Update metadata operation not supported in Learn Tab (read-only mode)"
         )
         return False
+
+    def _convert_grid_position_to_int(self, grid_position) -> int:
+        """Convert GridPosition enum to integer for legacy compatibility."""
+        if grid_position is None:
+            return 1  # Default position
+        
+        # Map GridPosition enums to integers (1-4 for legacy compatibility)
+        # Based on the actual TKA grid system positions
+        position_map = {
+            # Alpha positions (diamond/radial grid) - map to 1-4
+            "ALPHA1": 1, "ALPHA2": 2, "ALPHA3": 3, "ALPHA4": 4,
+            "ALPHA5": 1, "ALPHA6": 2, "ALPHA7": 3, "ALPHA8": 4,  # Wrap around for 8-position grids
+            
+            # Beta positions (box grid) - map to 1-4  
+            "BETA1": 1, "BETA2": 2, "BETA3": 3, "BETA4": 4,
+            "BETA5": 1, "BETA6": 2, "BETA7": 3, "BETA8": 4,  # Wrap around for 8-position grids
+            
+            # Gamma positions (diamond) - map to 1-4
+            "GAMMA1": 1, "GAMMA2": 2, "GAMMA3": 3, "GAMMA4": 4,
+            "GAMMA5": 1, "GAMMA6": 2, "GAMMA7": 3, "GAMMA8": 4,
+            "GAMMA9": 1, "GAMMA10": 2, "GAMMA11": 3, "GAMMA12": 4,
+            "GAMMA13": 1, "GAMMA14": 2, "GAMMA15": 3, "GAMMA16": 4,
+        }
+        
+        # Get position name (handle both enum and string)
+        position_name = grid_position.name if hasattr(grid_position, "name") else str(grid_position)
+        mapped_pos = position_map.get(position_name, 1)  # Default to 1 if not found
+        
+        logger.debug(f"Converted grid position {position_name} -> {mapped_pos}")
+        return mapped_pos
+    
+    def _extract_motion_attributes(self, motion_data) -> dict:
+        """Extract motion attributes in legacy format."""
+        if not motion_data:
+            return {}
+        
+        try:
+            return {
+                "motion_type": motion_data.motion_type.value if hasattr(motion_data.motion_type, "value") else str(motion_data.motion_type),
+                "start_ori": motion_data.start_orientation.value if hasattr(motion_data.start_orientation, "value") else str(motion_data.start_orientation),
+                "prop_rot_dir": motion_data.prop_rotation_direction.value if hasattr(motion_data.prop_rotation_direction, "value") else str(motion_data.prop_rotation_direction),
+                "start_loc": motion_data.start_location.value if hasattr(motion_data.start_location, "value") else str(motion_data.start_location),
+                "end_loc": motion_data.end_location.value if hasattr(motion_data.end_location, "value") else str(motion_data.end_location),
+                "turns": getattr(motion_data, "turns", 0),
+            }
+        except Exception as e:
+            logger.warning(f"Failed to extract motion attributes: {e}")
+            # Return default attributes
+            return {
+                "motion_type": "clockwise",
+                "start_ori": "in",
+                "prop_rot_dir": "clockwise",
+                "start_loc": "center",
+                "end_loc": "center", 
+                "turns": 0,
+            }

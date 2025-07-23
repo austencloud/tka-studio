@@ -2,6 +2,7 @@
 Sequence Card Display Service Implementation
 
 Coordinates display operations with batch processing and state management.
+Framework-agnostic service layer.
 """
 
 import logging
@@ -38,16 +39,18 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         if dictionary_path:
             self.dictionary_path = dictionary_path
         else:
-            try:
-                from utils.path_helpers import get_dictionary_path
+            # Use modern path service
+            from .path_service import SequenceCardPathService
 
-                self.dictionary_path = Path(get_dictionary_path())
-            except ImportError:
-                # Fallback for testing
-                self.dictionary_path = Path("data/dictionary")
+            path_service = SequenceCardPathService()
+            self.dictionary_path = path_service.get_dictionary_path()
 
         self.display_state = DisplayState()
         self.progress_callback: Optional[Callable[[int, int], None]] = None
+        self.sequences_loaded_callback: Optional[
+            Callable[[List[SequenceCardData]], None]
+        ] = None
+        self.loading_state_callback: Optional[Callable[[bool], None]] = None
         self._cancel_requested = False
         self._current_sequences: List[SequenceCardData] = []
 
@@ -61,6 +64,10 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         self.display_state.is_loading = True
         self.display_state.current_length = length
         self.display_state.current_column_count = column_count
+
+        # Notify loading state change
+        if self.loading_state_callback:
+            self.loading_state_callback(True)
 
         logger.info(
             f"Starting display of length {length} sequences with {column_count} columns"
@@ -78,6 +85,11 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
             if not sequences:
                 logger.warning(f"No sequences found for length {length}")
                 self.display_state.is_loading = False
+                if self.loading_state_callback:
+                    self.loading_state_callback(False)
+                # Still notify with empty list
+                if self.sequences_loaded_callback:
+                    self.sequences_loaded_callback([])
                 return
 
             logger.info(f"Found {len(sequences)} sequences for length {length}")
@@ -88,6 +100,8 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         except Exception as e:
             logger.error(f"Error displaying sequences: {e}")
             self.display_state.is_loading = False
+            if self.loading_state_callback:
+                self.loading_state_callback(False)
 
     def get_display_state(self) -> DisplayState:
         """Get current display state."""
@@ -110,16 +124,27 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         """Set progress update callback."""
         self.progress_callback = callback
 
+    def set_sequences_loaded_callback(
+        self, callback: Callable[[List[SequenceCardData]], None]
+    ) -> None:
+        """Set callback for when sequences are loaded."""
+        self.sequences_loaded_callback = callback
+
+    def set_loading_state_callback(self, callback: Callable[[bool], None]) -> None:
+        """Set callback for loading state changes."""
+        self.loading_state_callback = callback
+
     def get_current_sequences(self) -> List[SequenceCardData]:
         """Get currently loaded sequences."""
         return self._current_sequences
 
     def _process_sequences_in_batches(self, sequences: List[SequenceCardData]) -> None:
-        """Process sequences in batches for better UI responsiveness."""
+        """Process sequences with legacy-style responsiveness."""
         if self._cancel_requested:
             return
 
-        for sequence in sequences:
+        # Process sequences immediately with frequent progress updates (legacy style)
+        for i, sequence in enumerate(sequences):
             if self._cancel_requested:
                 return
 
@@ -137,14 +162,27 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
 
             self.display_state.processed_sequences += 1
 
-            # Update progress
+            # Update progress more frequently (legacy style)
             if self.progress_callback:
                 self.progress_callback(
                     self.display_state.processed_sequences,
                     self.display_state.total_sequences,
                 )
 
+            # Legacy-style frequent progress updates every 10 sequences
+            if i % 10 == 0 and i > 0:
+                logger.debug(f"Processed {i}/{len(sequences)} sequences")
+
         self.display_state.is_loading = False
+
+        # Notify loading state change
+        if self.loading_state_callback:
+            self.loading_state_callback(False)
+
+        # Notify sequences loaded
+        if self.sequences_loaded_callback:
+            self.sequences_loaded_callback(self._current_sequences)
+
         logger.info(
             f"Display complete: {self.display_state.processed_sequences} sequences processed"
         )

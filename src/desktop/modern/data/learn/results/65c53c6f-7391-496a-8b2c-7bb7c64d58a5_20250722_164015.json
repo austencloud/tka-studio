@@ -1,0 +1,16 @@
+{
+  "session_id": "65c53c6f-7391-496a-8b2c-7bb7c64d58a5",
+  "lesson_type": "pictograph_to_letter",
+  "quiz_mode": "fixed_question",
+  "total_questions": 20,
+  "correct_answers": 20,
+  "incorrect_guesses": 0,
+  "questions_answered": 20,
+  "accuracy_percentage": 100.0,
+  "completion_time_seconds": 63.088237,
+  "completed_at": "2025-07-22T16:40:15.260710",
+  "average_time_per_question": 3.15441185,
+  "streak_longest_correct": 20,
+  "saved_timestamp": "2025-07-22T16:40:15.261710",
+  "version": "1.0"
+}
