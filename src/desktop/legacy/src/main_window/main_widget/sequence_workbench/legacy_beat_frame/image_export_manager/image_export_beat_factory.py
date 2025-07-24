@@ -1,19 +1,17 @@
 from typing import TYPE_CHECKING, Union
 
+from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
-from base_widgets.pictograph.elements.views.beat_view import (
-    LegacyBeatView,
-)
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
-        LegacyBeatFrame,
-    )
-    from .image_export_manager import ImageExportManager
-
     from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame import (
         TempBeatFrame,
     )
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+        LegacyBeatFrame,
+    )
+
+    from .image_export_manager import ImageExportManager
 
 
 class ImageExportBeatFactory:
@@ -26,13 +24,24 @@ class ImageExportBeatFactory:
         self.beat_frame_class = beat_frame_class
 
     def process_sequence_to_beats(self, sequence: list[dict]) -> list[LegacyBeatView]:
-        if self.beat_frame_class.__name__ == "SequenceBeatFrame":
+        temp_beat_frame = None
+
+        if self.beat_frame_class.__name__ in [
+            "SequenceBeatFrame",
+            "LegacyBeatFrame",
+            "SequenceWorkbenchBeatFrame",
+        ]:
             temp_beat_frame = self.beat_frame_class(
                 self.export_manager.main_widget.sequence_workbench
             )
         elif self.beat_frame_class.__name__ == "TempBeatFrame":
             temp_beat_frame = self.beat_frame_class(
                 self.export_manager.main_widget.browse_tab
+            )
+
+        if temp_beat_frame is None:
+            raise ValueError(
+                f"Unsupported beat frame class: {self.beat_frame_class.__name__}"
             )
 
         filled_beats = []

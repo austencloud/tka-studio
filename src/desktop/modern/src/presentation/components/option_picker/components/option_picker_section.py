@@ -427,9 +427,14 @@ class OptionPickerSection(QGroupBox):
         self, pictographs_for_section: List[PictographData]
     ) -> None:
         """Update pictograph content (extracted for reuse in animation and direct modes)."""
+        # PAGINATION DEBUG: Log section content update
+        print(f"🔍 [PAGINATION_DEBUG] OptionPickerSection._update_pictograph_content:")
+        print(f"   Section: {self.letter_type}")
+        print(f"   Received {len(pictographs_for_section)} pictographs to display")
+
         # ✅ Create and setup Qt widgets
         frames = []
-        for pictograph_data in pictographs_for_section:
+        for i, pictograph_data in enumerate(pictographs_for_section):
             # Get widget from pool using service
             pool_id = self._option_pool_service.checkout_item()
             if pool_id is not None:
@@ -451,12 +456,30 @@ class OptionPickerSection(QGroupBox):
                     option_frame.option_selected.connect(self._on_pictograph_selected)
                     frames.append(option_frame)
 
+        # PAGINATION DEBUG: Log frames created and added
+        print(
+            f"   Created {len(frames)} frames from {len(pictographs_for_section)} pictographs"
+        )
+
         # ✅ Add Qt widgets to layout
         for frame in frames:
             self.add_pictograph(frame)
 
+        # PAGINATION DEBUG: Log final section state
+        final_count = len(self.pictographs) if hasattr(self, "pictographs") else 0
+        print(
+            f"   Section {self.letter_type} now has {final_count} pictographs in layout"
+        )
+
     def clear_pictographs(self) -> None:
         """Clear pictographs from Qt layout."""
+        # PAGINATION DEBUG: Log section clearing
+        initial_count = len(self.pictographs)
+        print(f"🔍 [PAGINATION_DEBUG] OptionPickerSection.clear_pictographs:")
+        print(f"   Section: {self.letter_type}")
+        print(f"   Clearing {initial_count} pictographs")
+
+        items_returned = 0
         for pictograph_frame in self.pictographs.values():
             if hasattr(pictograph_frame, "setVisible"):
                 # Remove from Qt layout
@@ -482,7 +505,10 @@ class OptionPickerSection(QGroupBox):
                 ) in self.scroll_area._widget_pool_manager._widget_pool.items():
                     if widget == pictograph_frame:
                         self._option_pool_service.checkin_item(pool_id)
+                        items_returned += 1
                         break
+
+        print(f"   Returned {items_returned} items to pool")
 
         # Clear tracking dictionary
         self.pictographs = {}

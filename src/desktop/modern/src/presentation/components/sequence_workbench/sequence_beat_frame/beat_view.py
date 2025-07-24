@@ -337,14 +337,14 @@ class BeatView(QFrame):
                 register_image_export_services,
             )
             from core.interfaces.image_export_services import (
-                IImageExportService,
                 ImageExportOptions,
+                ISequenceImageExporter,
             )
 
             # Setup export service
             container = DIContainer()
             register_image_export_services(container)
-            export_service = container.resolve(IImageExportService)
+            export_service = container.resolve(ISequenceImageExporter)
 
             # Create export options for single beat
             options = ImageExportOptions(

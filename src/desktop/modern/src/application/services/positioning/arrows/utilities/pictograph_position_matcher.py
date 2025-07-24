@@ -139,9 +139,9 @@ class PictographPositionMatcher:
             print("❌ No dataset loaded")
             return []
 
-        print(
-            f"🔍 [POSITION_MATCHER] Looking for pictographs with start_pos='{last_beat_end_pos}'"
-        )
+        # PAGINATION DEBUG: Log position matcher retrieval
+        print(f"🔍 [PAGINATION_DEBUG] PictographPositionMatcher.get_next_options:")
+        print(f"   Looking for pictographs with start_pos='{last_beat_end_pos}'")
 
         next_opts = []
         dataset_groups_checked = 0
@@ -164,6 +164,12 @@ class PictographPositionMatcher:
                     except Exception as e:
                         print(f"   ❌ Failed to convert match {matches_found}: {e}")
                         continue
+
+        # PAGINATION DEBUG: Log position matcher results
+        print(f"   Dataset groups checked: {dataset_groups_checked}")
+        print(f"   Total items checked: {total_items_checked}")
+        print(f"   Matches found: {matches_found}")
+        print(f"   Final options returned: {len(next_opts)}")
 
         return next_opts
 

@@ -192,6 +192,24 @@ class SignalCoordinator(QObject):
             f"🎯 [SIGNAL_COORDINATOR] _handle_start_position_created called with position: {position_key}"
         )
 
+        # PAGINATION DEBUG: Track consecutive selections of the same position
+        if not hasattr(self, "_last_selected_position"):
+            self._last_selected_position = None
+            self._consecutive_selections = 0
+
+        if self._last_selected_position == position_key:
+            self._consecutive_selections += 1
+            print(
+                f"🔍 [PAGINATION_DEBUG] SignalCoordinator: Consecutive selection #{self._consecutive_selections} of position '{position_key}'"
+            )
+        else:
+            self._consecutive_selections = 1
+            print(
+                f"🔍 [PAGINATION_DEBUG] SignalCoordinator: First selection of position '{position_key}'"
+            )
+
+        self._last_selected_position = position_key
+
         self.start_position_manager.set_start_position(start_position_beat_data)
 
         # Pre-load option picker content WITHOUT animations to avoid double fade

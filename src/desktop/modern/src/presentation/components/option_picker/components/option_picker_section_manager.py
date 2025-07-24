@@ -53,10 +53,38 @@ class OptionPickerSectionManager:
                 if hasattr(section, "_animation_orchestrator"):
                     section._animation_orchestrator = None
 
+            # PAGINATION DEBUG: Log section manager update process
+            total_options = sum(len(options) for options in options_by_type.values())
+            print(
+                f"🔍 [PAGINATION_DEBUG] OptionPickerSectionManager.update_all_sections_directly:"
+            )
+            print(f"   Total options to distribute: {total_options}")
+
+            # PAGINATION FIX: Ensure all sections are properly cleared before loading new options
+            # This prevents widget pool exhaustion that causes the pagination issue
+            print(
+                f"🔧 [PAGINATION_FIX] Clearing all sections before loading new options..."
+            )
+            for letter_type, section in self._sections.items():
+                section.clear_pictographs()
+
             # Update all sections quickly
             for letter_type, section in self._sections.items():
                 section_options = options_by_type.get(letter_type, [])
+                print(
+                    f"   Updating {letter_type} section with {len(section_options)} options"
+                )
+
                 section.load_options_from_sequence(section_options)
+
+                # PAGINATION DEBUG: Verify what was actually set in the section
+                if hasattr(section, "pictographs") and section.pictographs:
+                    actual_count = len(section.pictographs)
+                    print(
+                        f"     {letter_type} section now has {actual_count} pictographs"
+                    )
+                else:
+                    print(f"     {letter_type} section has no pictographs after update")
 
             # Restore animation orchestrators
             for letter_type, section in self._sections.items():

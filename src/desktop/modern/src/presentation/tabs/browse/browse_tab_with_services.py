@@ -9,12 +9,17 @@ Updated to include:
 - Sequence deletion with confirmation
 """
 
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.browse_services import ISequenceDeletionService
-from core.interfaces.image_export_services import IImageExportService, ISequenceMetadataExtractor, ImageExportOptions
+from core.interfaces.image_export_services import (
+    ImageExportOptions,
+    ISequenceImageExporter,
+    ISequenceMetadataExtractor,
+)
 from domain.models.sequence_data import SequenceData
 from presentation.components.ui.full_screen.full_screen_overlay import FullScreenOverlay
 from presentation.tabs.browse.components.filter_selection_panel import (
@@ -36,8 +41,6 @@ from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QHBoxLayout, QMessageBox, QStackedWidget, QWidget
 
-import logging
-
 logger = logging.getLogger(__name__)
 
 
@@ -51,7 +54,7 @@ class BrowseTab(QWidget):
       - Index 0: Filter selection panel
       - Index 1: Sequence browser panel
     - Right: Sequence viewer panel
-    
+
     Features:
     - Full image export functionality via DI services
     - Sequence deletion with confirmation dialogs
@@ -64,15 +67,15 @@ class BrowseTab(QWidget):
     open_in_construct = pyqtSignal(str)  # sequence_id
 
     def __init__(
-        self, 
-        sequences_dir: Path, 
-        settings_file: Path, 
+        self,
+        sequences_dir: Path,
+        settings_file: Path,
         container: DIContainer,
-        parent: Optional[QWidget] = None
+        parent: Optional[QWidget] = None,
     ):
         """
         Initialize the modern browse tab with complete service integration.
-        
+
         Args:
             sequences_dir: Directory containing sequence files
             settings_file: Settings file path
@@ -80,14 +83,14 @@ class BrowseTab(QWidget):
             parent: Parent widget
         """
         super().__init__(parent)
-        
+
         # Store services and data
         self.sequences_dir = sequences_dir
         self.container = container
-        
+
         # Initialize services from DI container
         try:
-            self.image_export_service = container.get_service(IImageExportService)
+            self.image_export_service = container.get_service(ISequenceImageExporter)
             self.metadata_extractor = container.get_service(ISequenceMetadataExtractor)
             self.deletion_service = container.get_service(ISequenceDeletionService)
             logger.info("✅ All services initialized from DI container")
@@ -124,12 +127,16 @@ class BrowseTab(QWidget):
     def _initialize_fallback_services(self):
         """Initialize fallback services if DI container services are not available."""
         logger.warning("Initializing fallback services")
-        
+
         # Create basic fallback implementations
-        from application.services.image_export.modern_metadata_extractor import ModernMetadataExtractor
-        from application.services.browse.sequence_deletion_service import SequenceDeletionService
-        
-        self.metadata_extractor = ModernMetadataExtractor()
+        from application.services.browse.sequence_deletion_service import (
+            SequenceDeletionService,
+        )
+        from application.services.image_export.sequence_metadata_extractor import (
+            SequenceMetadataExtractor,
+        )
+
+        self.metadata_extractor = SequenceMetadataExtractor()
         self.deletion_service = SequenceDeletionService(self.sequences_dir)
         self.image_export_service = None  # Will show error if used
 
@@ -359,146 +366,146 @@ class BrowseTab(QWidget):
         """Handle save image action using the modern image export service."""
         try:
             logger.info(f"💾 Saving image for sequence {sequence_id}")
-            
+
             if not self.image_export_service:
                 QMessageBox.warning(
-                    self, 
-                    "Service Unavailable", 
-                    "Image export service is not available."
+                    self,
+                    "Service Unavailable",
+                    "Image export service is not available.",
                 )
                 return
-            
+
             # Get sequence data
             sequence_data = self._get_sequence_data(sequence_id)
             if not sequence_data:
                 QMessageBox.warning(
-                    self, 
-                    "No Sequence", 
-                    "Please select a sequence first."
+                    self, "No Sequence", "Please select a sequence first."
                 )
                 return
-            
+
             # Get current variation index
-            current_variation = self.sequence_viewer_panel.action_panel.current_variation_index
-            
+            current_variation = (
+                self.sequence_viewer_panel.action_panel.current_variation_index
+            )
+
             # Get the thumbnail path for the current variation
-            if (not sequence_data.thumbnails or 
-                current_variation < 0 or 
-                current_variation >= len(sequence_data.thumbnails)):
+            if (
+                not sequence_data.thumbnails
+                or current_variation < 0
+                or current_variation >= len(sequence_data.thumbnails)
+            ):
                 QMessageBox.warning(
-                    self, 
-                    "No Image", 
-                    "No image available for the selected variation."
+                    self, "No Image", "No image available for the selected variation."
                 )
                 return
-            
+
             current_thumbnail_path = Path(sequence_data.thumbnails[current_variation])
-            
+
             # Extract sequence JSON from thumbnail metadata
-            sequence_json_data = self.metadata_extractor.extract_metadata(current_thumbnail_path)
+            sequence_json_data = self.metadata_extractor.extract_metadata(
+                current_thumbnail_path
+            )
             if not sequence_json_data:
                 QMessageBox.warning(
-                    self, 
-                    "No Metadata", 
-                    "Could not extract sequence data from the selected image."
+                    self,
+                    "No Metadata",
+                    "Could not extract sequence data from the selected image.",
                 )
                 return
-            
+
             # Create export options (using default settings for now)
             export_options = ImageExportOptions(
                 add_word=True,
                 add_user_info=True,
                 add_difficulty_level=True,
-                include_start_position=True
+                include_start_position=True,
             )
-            
+
             # Use file dialog to get save location
             from PyQt6.QtWidgets import QFileDialog
+
             suggested_name = f"{sequence_data.word}_exported.png"
             file_path, _ = QFileDialog.getSaveFileName(
                 self,
                 "Save Sequence Image",
                 suggested_name,
-                "PNG Images (*.png);;All Files (*)"
+                "PNG Images (*.png);;All Files (*)",
             )
-            
+
             if file_path:
                 output_path = Path(file_path)
-                
+
                 # Extract sequence beats from metadata
                 sequence_beats = sequence_json_data.get("sequence", [])
-                
+
                 # Export the image
                 result = self.image_export_service.export_sequence_image(
-                    sequence_beats,
-                    sequence_data.word,
-                    output_path,
-                    export_options
+                    sequence_beats, sequence_data.word, output_path, export_options
                 )
-                
+
                 if result.success:
                     QMessageBox.information(
                         self,
                         "Export Successful",
-                        f"Image saved successfully to:\n{output_path}"
+                        f"Image saved successfully to:\n{output_path}",
                     )
                     logger.info(f"✅ Successfully exported image to {output_path}")
                 else:
                     QMessageBox.critical(
                         self,
                         "Export Failed",
-                        f"Failed to export image:\n{result.error_message}"
+                        f"Failed to export image:\n{result.error_message}",
                     )
                     logger.error(f"❌ Failed to export image: {result.error_message}")
-            
+
         except Exception as e:
             logger.error(f"Error during image save: {e}", exc_info=True)
             QMessageBox.critical(
                 self,
-                "Export Error", 
-                f"An error occurred while saving the image:\n{str(e)}"
+                "Export Error",
+                f"An error occurred while saving the image:\n{str(e)}",
             )
 
     def _handle_delete_variation(self, sequence_id: str) -> None:
         """Handle delete variation action using the deletion service."""
         try:
             logger.info(f"🗑️ Deleting variation for sequence {sequence_id}")
-            
+
             # Get sequence data
             sequence_data = self._get_sequence_data(sequence_id)
             if not sequence_data:
                 QMessageBox.warning(
-                    self, 
-                    "No Sequence", 
-                    "Please select a sequence first."
+                    self, "No Sequence", "Please select a sequence first."
                 )
                 return
-            
+
             # Get current variation index
-            current_variation = self.sequence_viewer_panel.action_panel.current_variation_index
-            
+            current_variation = (
+                self.sequence_viewer_panel.action_panel.current_variation_index
+            )
+
             if not sequence_data.thumbnails:
                 QMessageBox.warning(
-                    self, 
-                    "No Variations", 
-                    "No variations available to delete."
+                    self, "No Variations", "No variations available to delete."
                 )
                 return
-            
+
             # Perform deletion using the service
             success = self.deletion_service.delete_variation(
                 sequence_data.word,
                 sequence_data.thumbnails,
                 current_variation,
-                self  # parent widget for dialogs
+                self,  # parent widget for dialogs
             )
-            
+
             if success:
-                logger.info(f"✅ Successfully deleted variation {current_variation} of {sequence_data.word}")
-                
+                logger.info(
+                    f"✅ Successfully deleted variation {current_variation} of {sequence_data.word}"
+                )
+
                 # Refresh the data to reflect changes
                 self.refresh_sequences()
-                
+
                 # Update the viewer
                 updated_sequence_data = self._get_sequence_data(sequence_id)
                 if updated_sequence_data and updated_sequence_data.thumbnails:
@@ -508,56 +515,58 @@ class BrowseTab(QWidget):
                     # No variations left, clear viewer
                     self.sequence_viewer_panel.clear_sequence()
                     self._show_sequence_browser()
-            
+
         except Exception as e:
             logger.error(f"Error during variation deletion: {e}", exc_info=True)
             QMessageBox.critical(
                 self,
                 "Deletion Error",
-                f"An error occurred while deleting the variation:\n{str(e)}"
+                f"An error occurred while deleting the variation:\n{str(e)}",
             )
 
     def _handle_fullscreen_view(self, sequence_id: str) -> None:
         """Handle fullscreen view action using the full screen overlay."""
         try:
             logger.info(f"🔍 Opening fullscreen view for sequence {sequence_id}")
-            
+
             # Get current image info
-            current_thumbnails = self.sequence_viewer_panel.image_viewer.current_thumbnails
+            current_thumbnails = (
+                self.sequence_viewer_panel.image_viewer.current_thumbnails
+            )
             current_index = self.sequence_viewer_panel.image_viewer.current_index
-            
-            if (not current_thumbnails or 
-                current_index < 0 or 
-                current_index >= len(current_thumbnails)):
+
+            if (
+                not current_thumbnails
+                or current_index < 0
+                or current_index >= len(current_thumbnails)
+            ):
                 QMessageBox.warning(
-                    self,
-                    "No Image",
-                    "No image available for fullscreen view."
+                    self, "No Image", "No image available for fullscreen view."
                 )
                 return
-            
+
             current_thumbnail_path = Path(current_thumbnails[current_index])
-            
+
             if not current_thumbnail_path.exists():
                 QMessageBox.warning(
                     self,
                     "Image Not Found",
-                    f"Image file not found:\n{current_thumbnail_path}"
+                    f"Image file not found:\n{current_thumbnail_path}",
                 )
                 return
-            
+
             # Create and show full screen overlay
             overlay = FullScreenOverlay(self)
             overlay.show_image(current_thumbnail_path)
-            
+
             logger.info(f"✅ Opened fullscreen view for {current_thumbnail_path}")
-            
+
         except Exception as e:
             logger.error(f"Error during fullscreen view: {e}", exc_info=True)
             QMessageBox.critical(
                 self,
                 "Fullscreen Error",
-                f"An error occurred while opening fullscreen view:\n{str(e)}"
+                f"An error occurred while opening fullscreen view:\n{str(e)}",
             )
 
     def _get_sequence_data(self, sequence_id: str) -> Optional[SequenceData]:

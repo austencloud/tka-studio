@@ -6,22 +6,38 @@ This module registers all image export services with the dependency injection co
 
 import logging
 
-from application.services.image_export.modern_image_export_service import (
-    ModernImageExportService,
+from application.services.image_export.drawers.beat_drawer import BeatDrawer
+from application.services.image_export.drawers.difficulty_level_drawer import (
+    DifficultyLevelDrawer,
 )
-from application.services.image_export.modern_image_renderer import ModernImageRenderer
-from application.services.image_export.modern_layout_calculator import (
-    ModernLayoutCalculator,
+from application.services.image_export.drawers.font_margin_helper import (
+    FontMarginHelper,
 )
-from application.services.image_export.modern_metadata_extractor import (
-    ModernMetadataExtractor,
+from application.services.image_export.drawers.user_info_drawer import UserInfoDrawer
+from application.services.image_export.drawers.word_drawer import WordDrawer
+from application.services.image_export.sequence_image_exporter import (
+    SequenceImageExporter,
+)
+from application.services.image_export.sequence_image_layout_calculator import (
+    SequenceImageLayoutCalculator,
+)
+from application.services.image_export.sequence_image_renderer import (
+    SequenceImageRenderer,
+)
+from application.services.image_export.sequence_metadata_extractor import (
+    SequenceMetadataExtractor,
 )
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.image_export_services import (
-    IImageExportService,
-    IImageLayoutCalculator,
-    IImageRenderer,
+    IBeatDrawer,
+    IDifficultyLevelDrawer,
+    IFontMarginHelper,
+    ISequenceImageExporter,
+    ISequenceImageLayoutCalculator,
+    ISequenceImageRenderer,
     ISequenceMetadataExtractor,
+    IUserInfoDrawer,
+    IWordDrawer,
 )
 
 logger = logging.getLogger(__name__)
@@ -40,18 +56,35 @@ def register_image_export_services(container: DIContainer) -> None:
         # First register pictograph services that image export depends on
         _register_pictograph_services(container)
 
+        # Register drawer services first (following Legacy drawer pattern)
+        container.register_singleton(IFontMarginHelper, FontMarginHelper)
+        container.register_factory(
+            IWordDrawer, lambda: WordDrawer(container.resolve(IFontMarginHelper))
+        )
+        container.register_factory(
+            IUserInfoDrawer,
+            lambda: UserInfoDrawer(container.resolve(IFontMarginHelper)),
+        )
+        container.register_singleton(IDifficultyLevelDrawer, DifficultyLevelDrawer)
+        container.register_factory(
+            IBeatDrawer,
+            lambda: BeatDrawer(container.resolve(IFontMarginHelper), container),
+        )
+
         # Register core image export services as singletons
         # Pass container to image renderer so it can access pictograph services
         container.register_factory(
-            IImageRenderer, lambda: ModernImageRenderer(container=container)
+            ISequenceImageRenderer, lambda: SequenceImageRenderer(container=container)
         )
         container.register_singleton(
-            ISequenceMetadataExtractor, ModernMetadataExtractor
+            ISequenceMetadataExtractor, SequenceMetadataExtractor
         )
-        container.register_singleton(IImageLayoutCalculator, ModernLayoutCalculator)
+        container.register_singleton(
+            ISequenceImageLayoutCalculator, SequenceImageLayoutCalculator
+        )
 
         # Register main export service as singleton
-        container.register_singleton(IImageExportService, ModernImageExportService)
+        container.register_singleton(ISequenceImageExporter, SequenceImageExporter)
 
         logger.info("Image export services registration completed successfully")
 

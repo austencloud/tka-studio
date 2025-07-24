@@ -17,8 +17,8 @@ from core.dependency_injection.image_export_service_registration import (
     register_image_export_services,
 )
 from core.interfaces.image_export_services import (
-    IImageExportService,
     ImageExportOptions,
+    ISequenceImageExporter,
 )
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject
@@ -55,7 +55,7 @@ class WorkbenchExportService(QObject):
         # Initialize the actual image export service using DI container
         self._container = DIContainer()
         register_image_export_services(self._container)
-        self._image_export_service = self._container.resolve(IImageExportService)
+        self._image_export_service = self._container.resolve(ISequenceImageExporter)
 
         # Store reference to original global container for restoration
         self._original_container = None

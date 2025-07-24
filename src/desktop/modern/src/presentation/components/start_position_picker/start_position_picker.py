@@ -108,10 +108,10 @@ class StartPositionPicker(QWidget):
         self.setStyleSheet(self._get_glassmorphism_styles())
         self.setObjectName("UnifiedStartPositionPicker")
 
-        # Main layout
+        # Main layout - match option picker's top-hugging approach
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(24, 24, 24, 24)
-        layout.setSpacing(20)
+        layout.setContentsMargins(0, 0, 0, 0)  # No margins like option picker
+        layout.setSpacing(0)  # No spacing like option picker
 
         # Create sub-components
         self.header = StartPositionPickerHeader(self)
@@ -141,10 +141,21 @@ class StartPositionPicker(QWidget):
         )
         self.footer = StartPositionPickerFooter(self)
 
+        # Wrap content and footer in containers with margins (header hugs top)
+        content_container = QWidget()
+        content_layout = QVBoxLayout(content_container)
+        content_layout.setContentsMargins(24, 0, 24, 0)  # Side margins only
+        content_layout.addWidget(self.content)
+
+        footer_container = QWidget()
+        footer_layout = QVBoxLayout(footer_container)
+        footer_layout.setContentsMargins(24, 0, 24, 24)  # Side and bottom margins
+        footer_layout.addWidget(self.footer)
+
         # Add components to layout
-        layout.addWidget(self.header)
-        layout.addWidget(self.content, 1)  # Content gets stretch factor
-        layout.addWidget(self.footer)
+        layout.addWidget(self.header)  # Header hugs top (no container needed)
+        layout.addWidget(content_container, 1)  # Content gets stretch factor
+        layout.addWidget(footer_container)
 
     def _get_glassmorphism_styles(self) -> str:
         """Main container glassmorphism styling - EXACT copy from original."""
@@ -172,8 +183,8 @@ class StartPositionPicker(QWidget):
         """Connect sub-component signals."""
         # Header signals
         self.header.back_to_basic_requested.connect(self._switch_to_basic_mode)
-        self.header.grid_mode_toggle_requested.connect(self._toggle_grid_mode)
-        self.header.grid_mode_changed.connect(self.header._on_grid_mode_toggled)
+        # Use the new grid_mode_changed signal instead of old toggle system
+        self.header.grid_mode_changed.connect(self._on_grid_mode_changed)
 
         # Content signals
         self.content.position_selected.connect(self._handle_position_selection)
@@ -239,15 +250,13 @@ class StartPositionPicker(QWidget):
         """Switch to advanced mode."""
         self.set_mode(PickerMode.ADVANCED)
 
-    def _toggle_grid_mode(self):
-        """Toggle between diamond and box grid modes - EXACT logic from original."""
+    def _on_grid_mode_changed(self, new_mode: str):
+        """Handle grid mode change from the PyToggle system."""
         old_grid_mode = self.grid_mode
-
-        # Get the current grid mode from the header radio buttons
-        self.grid_mode = self.header.get_current_grid_mode()
-
+        self.grid_mode = new_mode
+        
         logger.info(f"Grid mode changed from {old_grid_mode} to {self.grid_mode}")
-
+        
         # Reload content for new grid mode with a small delay to avoid conflicts
         QTimer.singleShot(10, self._reload_content_for_grid_mode)
 

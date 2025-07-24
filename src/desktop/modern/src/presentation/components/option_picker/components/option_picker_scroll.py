@@ -384,9 +384,27 @@ class OptionPickerScroll(QScrollArea):
             )
             print(f"🔄 [OPTION_PICKER] Received options: {options_by_type}")
 
+            # PAGINATION DEBUG: Log detailed option counts at UI layer
+            total_ui_options = sum(len(options) for options in options_by_type.values())
+            print(
+                f"🔍 [PAGINATION_DEBUG] OptionPickerScroll._update_all_sections_directly:"
+            )
+            print(f"   Total options received from service: {total_ui_options}")
+            for letter_type, options in options_by_type.items():
+                if options:
+                    print(f"     {letter_type}: {len(options)} options")
+
             if not options_by_type:
                 print("❌ [UI] No options received from service")
                 return
+
+            # PAGINATION FIX: Reset widget pool to ensure clean state
+            # This prevents pool exhaustion that causes the pagination issue
+            print(
+                f"🔧 [PAGINATION_FIX] Resetting widget pool before loading options..."
+            )
+            if hasattr(self, "_widget_pool_manager") and self._widget_pool_manager:
+                self._widget_pool_manager.reset_pool()
 
             print(
                 f"🔄 [OPTION_PICKER] Updating sections with {len(options_by_type)} option types"

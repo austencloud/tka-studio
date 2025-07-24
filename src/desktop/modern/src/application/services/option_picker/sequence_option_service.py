@@ -59,24 +59,48 @@ class SequenceOptionService(ISequenceOptionService):
                 )
                 return {}
 
+            # PAGINATION DEBUG: Log the retrieval stage
+            print(
+                f"🔍 [PAGINATION_DEBUG] SequenceOptionService.get_options_for_sequence:"
+            )
+            print(f"   End position: {end_position}")
+
             # Get all valid next options
             all_options = self._position_matcher.get_next_options(end_position)
+
+            # PAGINATION DEBUG: Log raw option count
+            print(f"   Raw options from position matcher: {len(all_options)}")
 
             # Update orientations for all options based on sequence state
             updated_options = self._update_option_orientations(
                 all_options, end_orientations
             )
 
+            # PAGINATION DEBUG: Log after orientation update
+            print(f"   Options after orientation update: {len(updated_options)}")
+
             # Also update prop orientations using the OptionOrientationUpdater (only for modern format)
             if isinstance(sequence_data, SequenceData):
                 updated_options = self._orientation_updater.update_option_orientations(
                     sequence_data, updated_options
                 )
+                print(
+                    f"   Options after prop orientation update: {len(updated_options)}"
+                )
             else:
                 print("Using legacy format - prop orientations handled manually")
 
             # Group by letter type
-            return self._group_options_by_type(updated_options)
+            grouped_options = self._group_options_by_type(updated_options)
+
+            # PAGINATION DEBUG: Log final grouped counts
+            total_grouped = sum(len(options) for options in grouped_options.values())
+            print(f"   Final grouped options: {total_grouped}")
+            for letter_type, options in grouped_options.items():
+                if options:
+                    print(f"     {letter_type}: {len(options)} options")
+
+            return grouped_options
 
         except Exception as e:
             print(f"❌ [SEQUENCE_OPTION] Error getting options for sequence: {e}")

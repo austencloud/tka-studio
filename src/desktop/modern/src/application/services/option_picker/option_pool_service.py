@@ -27,15 +27,29 @@ class OptionPoolService:
 
         Returns pool ID (int) - presentation layer maps to actual Qt widgets.
         """
+        # PAGINATION DEBUG: Log pool state before checkout
+        available_count = len(self._available_ids)
+        in_use_count = len(self._in_use_ids)
+
         if self._available_ids:
             item_id = self._available_ids.pop()
             self._in_use_ids.add(item_id)
+
+            # PAGINATION DEBUG: Log successful checkout
+            print(f"🔍 [PAGINATION_DEBUG] OptionPoolService.checkout_item:")
+            print(f"   Checked out item {item_id}")
+            print(
+                f"   Pool state: {available_count-1} available, {in_use_count+1} in use"
+            )
+
             return item_id
 
         # If no available items, we should not reuse items that are still in use
         # This prevents the "disappearing first pictograph" bug
         # Instead, return None to indicate pool exhaustion
-        print(f"⚠️ [OPTION_POOL] Pool exhausted - all {self._max_items} items in use")
+        print(f"🔍 [PAGINATION_DEBUG] OptionPoolService.checkout_item:")
+        print(f"   ⚠️ POOL EXHAUSTED - all {self._max_items} items in use")
+        print(f"   Available: {available_count}, In use: {in_use_count}")
         return None
 
     def checkin_item(self, item_id: int) -> None:
@@ -44,9 +58,26 @@ class OptionPoolService:
 
         Pure pool management - no Qt widget handling.
         """
+        # PAGINATION DEBUG: Log checkin process
+        was_in_use = item_id in self._in_use_ids
+        available_before = len(self._available_ids)
+        in_use_before = len(self._in_use_ids)
+
         if item_id in self._in_use_ids:
             self._in_use_ids.remove(item_id)
             self._available_ids.add(item_id)
+
+            print(f"🔍 [PAGINATION_DEBUG] OptionPoolService.checkin_item:")
+            print(f"   Checked in item {item_id}")
+            print(
+                f"   Pool state: {available_before+1} available, {in_use_before-1} in use"
+            )
+        else:
+            print(f"🔍 [PAGINATION_DEBUG] OptionPoolService.checkin_item:")
+            print(f"   ⚠️ Attempted to check in item {item_id} that was not in use")
+            print(
+                f"   Pool state unchanged: {available_before} available, {in_use_before} in use"
+            )
 
     def reset_pool(self) -> None:
         """Reset entire pool to available state."""
