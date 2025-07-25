@@ -5,11 +5,9 @@ Handles export and regeneration of sequence card images.
 """
 
 import logging
-from pathlib import Path
 from typing import Callable, Optional
 
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import pyqtSignal, QThread
 
 from core.interfaces.sequence_card_services import ISequenceCardExportService
 

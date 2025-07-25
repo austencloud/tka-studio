@@ -24,19 +24,16 @@ class IBeatFactory(ABC):
         metadata: Optional[Dict[str, Any]] = None,
     ) -> BeatData:
         """Create BeatData with embedded pictograph."""
-        pass
 
     @abstractmethod
     def create_empty_beat(self, beat_number: int, duration: float = 1.0) -> BeatData:
         """Create empty beat without pictograph."""
-        pass
 
     @abstractmethod
     def create_start_position_beat_data(
         self, pictograph_data: PictographData, sequence_start_position: str = "alpha"
     ) -> BeatData:
         """Create a start position beat with pictograph."""
-        pass
 
 
 class BeatFactory(IBeatFactory):

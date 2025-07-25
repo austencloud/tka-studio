@@ -7,7 +7,7 @@ Based on Legacy audit showing complex state management that needs careful portin
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from presentation.tabs.browse.models import (
     BrowseState,

@@ -8,9 +8,8 @@ and countdown quiz modes.
 import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel
-from PyQt6.QtCore import Qt, pyqtSignal, QPropertyAnimation, QEasingCurve
-from PyQt6.QtGui import QPainter, QColor, QPen, QBrush
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton
+from PyQt6.QtCore import Qt, pyqtSignal
 
 from core.interfaces.learn_services import ILearnUIService
 from domain.models.learn import QuizMode

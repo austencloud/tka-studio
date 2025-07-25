@@ -6,7 +6,7 @@ Extracted from UIStateManager to follow single responsibility principle.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from core.events.event_bus import EventPriority, UIEvent, get_event_bus
 from core.interfaces.core_services import IUIStateManager

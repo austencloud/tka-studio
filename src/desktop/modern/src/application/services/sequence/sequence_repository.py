@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 class RepositoryError(Exception):
     """Custom exception for repository errors."""
 
-    pass
 
 
 class ISequenceRepository(ABC):
@@ -27,42 +26,34 @@ class ISequenceRepository(ABC):
     @abstractmethod
     def save(self, sequence: SequenceData) -> SequenceData:
         """Save a sequence to storage."""
-        pass
 
     @abstractmethod
     def get_by_id(self, sequence_id: str) -> Optional[SequenceData]:
         """Retrieve a sequence by its ID."""
-        pass
 
     @abstractmethod
     def get_all(self) -> List[SequenceData]:
         """Retrieve all sequences."""
-        pass
 
     @abstractmethod
     def delete(self, sequence_id: str) -> bool:
         """Delete a sequence by ID."""
-        pass
 
     @abstractmethod
     def exists(self, sequence_id: str) -> bool:
         """Check if a sequence exists."""
-        pass
 
     @abstractmethod
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current active sequence."""
-        pass
 
     @abstractmethod
     def set_current_sequence(self, sequence: SequenceData) -> None:
         """Set the current active sequence."""
-        pass
 
     @abstractmethod
     def clear_current_sequence(self) -> None:
         """Clear the current active sequence."""
-        pass
 
 
 class SequenceRepository(ISequenceRepository):

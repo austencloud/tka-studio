@@ -55,7 +55,6 @@ class ComponentSizer(IComponentSizer):
 
     def __init__(self):
         """Initialize the component sizer."""
-        pass
 
     def calculate_pictograph_frame_size(
         self, container_width: int, constraints: Optional[SizeConstraints] = None

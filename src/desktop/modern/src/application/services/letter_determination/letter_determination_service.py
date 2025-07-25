@@ -118,7 +118,6 @@ class LetterDeterminationService(ILetterDeterminationService):
         logger.info(f"Updating pictograph dataset with {len(dataset)} letters")
         # The dataset provider handles the actual update
         # This method exists for interface compliance
-        pass
 
     def get_available_strategies(self) -> List[str]:
         """Get list of available determination strategies."""

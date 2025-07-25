@@ -7,9 +7,9 @@ that must behave identically across desktop and web platforms.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
-from domain.models.enums import Location, MotionType, Orientation
+from domain.models.enums import MotionType, Orientation
 from domain.models.motion_data import MotionData
 
 
@@ -33,7 +33,6 @@ class IOrientationCalculator(ABC):
         Note:
             Web implementation: Same mathematical logic, different coordinate systems
         """
-        pass
 
     @abstractmethod
     def flip_orientation(self, orientation: Orientation) -> Orientation:
@@ -49,7 +48,6 @@ class IOrientationCalculator(ABC):
         Note:
             Web implementation: Identical logic across platforms
         """
-        pass
 
     @abstractmethod
     def calculate_orientation_for_motion_type(
@@ -72,7 +70,6 @@ class IOrientationCalculator(ABC):
         Note:
             Web implementation: Core business logic must be identical
         """
-        pass
 
     @abstractmethod
     def get_orientation_flip_rules(self) -> Dict[str, Any]:
@@ -85,7 +82,6 @@ class IOrientationCalculator(ABC):
         Note:
             Web implementation: Rules loaded from JSON or constants
         """
-        pass
 
     @abstractmethod
     def validate_orientation_transition(
@@ -108,7 +104,6 @@ class IOrientationCalculator(ABC):
         Note:
             Web implementation: Same validation logic, may use different error handling
         """
-        pass
 
 
 class ITurnIntensityManager(ABC):
@@ -127,7 +122,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Uses same random generation logic with web-compatible RNG
         """
-        pass
 
     @abstractmethod
     def get_possible_turns_for_level(self, level: int) -> List[Union[int, float, str]]:
@@ -143,7 +137,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Same turn values, may be stored as constants
         """
-        pass
 
     @abstractmethod
     def validate_turn_intensity(
@@ -162,7 +155,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass
 
     @abstractmethod
     def get_turn_distribution_stats(self) -> Dict[str, Any]:
@@ -175,7 +167,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Same statistical calculations
         """
-        pass
 
     @abstractmethod
     def reset_turn_allocation(self) -> None:
@@ -185,7 +176,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Clears allocated turns arrays
         """
-        pass
 
     @abstractmethod
     def get_word_length(self) -> int:
@@ -195,7 +185,6 @@ class ITurnIntensityManager(ABC):
         Returns:
             Number of beats/motions in the sequence
         """
-        pass
 
     @abstractmethod
     def get_level(self) -> int:
@@ -205,7 +194,6 @@ class ITurnIntensityManager(ABC):
         Returns:
             Difficulty level (2 or 3)
         """
-        pass
 
     @abstractmethod
     def get_max_turn_intensity(self) -> float:
@@ -215,7 +203,6 @@ class ITurnIntensityManager(ABC):
         Returns:
             Maximum turn intensity value
         """
-        pass
 
 
 class ITurnIntensityManagerFactory(ABC):
@@ -239,7 +226,6 @@ class ITurnIntensityManagerFactory(ABC):
         Note:
             Web implementation: Creates web-compatible manager instance
         """
-        pass
 
     @abstractmethod
     def allocate_turns_for_blue_and_red(
@@ -259,7 +245,6 @@ class ITurnIntensityManagerFactory(ABC):
         Note:
             Web implementation: Same interface for generation services
         """
-        pass
 
     @abstractmethod
     def get_default_parameters(self) -> Dict[str, Any]:
@@ -272,7 +257,6 @@ class ITurnIntensityManagerFactory(ABC):
         Note:
             Web implementation: May be stored as configuration constants
         """
-        pass
 
     @abstractmethod
     def validate_generation_parameters(
@@ -292,4 +276,3 @@ class ITurnIntensityManagerFactory(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass

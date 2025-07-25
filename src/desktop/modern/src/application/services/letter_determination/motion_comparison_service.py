@@ -6,13 +6,13 @@ Direct port of legacy MotionComparator logic with modern service patterns.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from core.interfaces.letter_determination.letter_determination_services import (
     IMotionComparisonService,
     IPictographDatasetProvider,
 )
-from domain.models.enums import GridPosition, MotionType, PropRotationDirection
+from domain.models.enums import MotionType, PropRotationDirection
 from domain.models.letter_determination.determination_models import (
     AttributeComparisonResult,
     MotionComparisonContext,

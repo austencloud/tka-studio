@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Callable
 
 from domain.models.sequence_data import SequenceData
-from domain.models.beat_data import BeatData
 
 
 class IThumbnailGenerationService(ABC):
@@ -33,7 +32,6 @@ class IThumbnailGenerationService(ABC):
         Returns:
             Path to the generated thumbnail, or None if generation failed
         """
-        pass
 
 
 class IUISetupManager(ABC):
@@ -47,7 +45,6 @@ class IUISetupManager(ABC):
         Args:
             window: Main window object to configure
         """
-        pass
 
     @abstractmethod
     def setup_component_layouts(self, container: Any) -> None:
@@ -57,7 +54,6 @@ class IUISetupManager(ABC):
         Args:
             container: Container widget to setup layouts for
         """
-        pass
 
     @abstractmethod
     def apply_theme(self, theme_name: str) -> bool:
@@ -70,7 +66,6 @@ class IUISetupManager(ABC):
         Returns:
             True if theme was applied successfully
         """
-        pass
 
     @abstractmethod
     def get_available_themes(self) -> List[str]:
@@ -80,7 +75,6 @@ class IUISetupManager(ABC):
         Returns:
             List of theme names
         """
-        pass
 
 
 class ISequenceStateReader(ABC):
@@ -94,7 +88,6 @@ class ISequenceStateReader(ABC):
         Returns:
             Dictionary containing sequence state information
         """
-        pass
 
     @abstractmethod
     def get_beat_state(self, beat_index: int) -> Optional[Dict[str, Any]]:
@@ -107,7 +100,6 @@ class ISequenceStateReader(ABC):
         Returns:
             Beat state dictionary or None if not found
         """
-        pass
 
     @abstractmethod
     def get_selection_state(self) -> Dict[str, Any]:
@@ -117,7 +109,6 @@ class ISequenceStateReader(ABC):
         Returns:
             Dictionary containing selection state
         """
-        pass
 
     @abstractmethod
     def is_sequence_modified(self) -> bool:
@@ -127,7 +118,6 @@ class ISequenceStateReader(ABC):
         Returns:
             True if sequence has unsaved changes
         """
-        pass
 
 
 class IWindowDiscoveryService(ABC):
@@ -141,7 +131,6 @@ class IWindowDiscoveryService(ABC):
         Returns:
             Main window object or None if not found
         """
-        pass
 
     @abstractmethod
     def discover_child_windows(self, parent_window: Any) -> List[Any]:
@@ -154,7 +143,6 @@ class IWindowDiscoveryService(ABC):
         Returns:
             List of child window objects
         """
-        pass
 
     @abstractmethod
     def find_window_by_title(self, title: str) -> Optional[Any]:
@@ -167,7 +155,6 @@ class IWindowDiscoveryService(ABC):
         Returns:
             Window object or None if not found
         """
-        pass
 
     @abstractmethod
     def find_window_by_class(self, class_name: str) -> Optional[Any]:
@@ -180,7 +167,6 @@ class IWindowDiscoveryService(ABC):
         Returns:
             Window object or None if not found
         """
-        pass
 
 
 class IComponentVisibilityManager(ABC):
@@ -195,7 +181,6 @@ class IComponentVisibilityManager(ABC):
             component_id: Unique identifier for component
             visible: Whether component should be visible
         """
-        pass
 
     @abstractmethod
     def is_component_visible(self, component_id: str) -> bool:
@@ -208,7 +193,6 @@ class IComponentVisibilityManager(ABC):
         Returns:
             True if component is visible
         """
-        pass
 
     @abstractmethod
     def toggle_component_visibility(self, component_id: str) -> bool:
@@ -221,7 +205,6 @@ class IComponentVisibilityManager(ABC):
         Returns:
             New visibility state
         """
-        pass
 
     @abstractmethod
     def get_all_component_states(self) -> Dict[str, bool]:
@@ -231,17 +214,14 @@ class IComponentVisibilityManager(ABC):
         Returns:
             Dictionary mapping component IDs to visibility states
         """
-        pass
 
     @abstractmethod
     def show_all_components(self) -> None:
         """Show all components."""
-        pass
 
     @abstractmethod
     def hide_all_components(self) -> None:
         """Hide all components."""
-        pass
 
 
 class ITabStateManager(ABC):
@@ -255,7 +235,6 @@ class ITabStateManager(ABC):
         Args:
             tab_id: Unique identifier for tab
         """
-        pass
 
     @abstractmethod
     def get_active_tab(self) -> Optional[str]:
@@ -265,7 +244,6 @@ class ITabStateManager(ABC):
         Returns:
             Active tab ID or None if no tab is active
         """
-        pass
 
     @abstractmethod
     def get_tab_state(self, tab_id: str) -> Dict[str, Any]:
@@ -278,7 +256,6 @@ class ITabStateManager(ABC):
         Returns:
             Tab state dictionary
         """
-        pass
 
     @abstractmethod
     def set_tab_state(self, tab_id: str, state: Dict[str, Any]) -> None:
@@ -289,7 +266,6 @@ class ITabStateManager(ABC):
             tab_id: Unique identifier for tab
             state: State data to set
         """
-        pass
 
     @abstractmethod
     def get_all_tab_states(self) -> Dict[str, Dict[str, Any]]:
@@ -299,7 +275,6 @@ class ITabStateManager(ABC):
         Returns:
             Dictionary mapping tab IDs to their state dictionaries
         """
-        pass
 
 
 class IHotkeyRegistry(ABC):
@@ -317,7 +292,6 @@ class IHotkeyRegistry(ABC):
         Returns:
             True if registration was successful
         """
-        pass
 
     @abstractmethod
     def unregister_hotkey(self, key_combination: str) -> bool:
@@ -330,7 +304,6 @@ class IHotkeyRegistry(ABC):
         Returns:
             True if unregistration was successful
         """
-        pass
 
     @abstractmethod
     def handle_key_event(self, key_event: Any) -> bool:
@@ -343,7 +316,6 @@ class IHotkeyRegistry(ABC):
         Returns:
             True if event was handled by a hotkey
         """
-        pass
 
     @abstractmethod
     def get_registered_hotkeys(self) -> Dict[str, str]:
@@ -353,7 +325,6 @@ class IHotkeyRegistry(ABC):
         Returns:
             Dictionary mapping key combinations to descriptions
         """
-        pass
 
     @abstractmethod
     def is_hotkey_registered(self, key_combination: str) -> bool:
@@ -366,7 +337,6 @@ class IHotkeyRegistry(ABC):
         Returns:
             True if hotkey is registered
         """
-        pass
 
 
 class IWindowStateManager(ABC):
@@ -381,7 +351,6 @@ class IWindowStateManager(ABC):
             window_id: Unique identifier for window
             state: State data to save
         """
-        pass
 
     @abstractmethod
     def load_window_state(self, window_id: str) -> Optional[Dict[str, Any]]:
@@ -394,7 +363,6 @@ class IWindowStateManager(ABC):
         Returns:
             Window state dictionary or None if not found
         """
-        pass
 
     @abstractmethod
     def get_default_window_state(self, window_id: str) -> Dict[str, Any]:
@@ -407,7 +375,6 @@ class IWindowStateManager(ABC):
         Returns:
             Default window state dictionary
         """
-        pass
 
     @abstractmethod
     def reset_window_state(self, window_id: str) -> None:
@@ -417,7 +384,6 @@ class IWindowStateManager(ABC):
         Args:
             window_id: Unique identifier for window
         """
-        pass
 
 
 class IUILayoutProvider(ABC):
@@ -430,34 +396,27 @@ class IUILayoutProvider(ABC):
     @abstractmethod
     def get_main_window_size(self) -> Any:
         """Get the main window size."""
-        pass
 
     @abstractmethod
     def get_workbench_size(self) -> Any:
         """Get the workbench area size."""
-        pass
 
     @abstractmethod
     def get_picker_size(self) -> Any:
         """Get the option picker size."""
-        pass
 
     @abstractmethod
     def get_layout_ratio(self) -> Tuple[int, int]:
         """Get the layout ratio (workbench:picker)."""
-        pass
 
     @abstractmethod
     def set_layout_ratio(self, ratio: Tuple[int, int]) -> None:
         """Set the layout ratio."""
-        pass
 
     @abstractmethod
     def calculate_component_size(self, component_type: str, parent_size: Any) -> Any:
         """Calculate component size based on parent and type."""
-        pass
 
     @abstractmethod
     def set_main_window_size(self, size: Any) -> None:
         """Set the main window size."""
-        pass

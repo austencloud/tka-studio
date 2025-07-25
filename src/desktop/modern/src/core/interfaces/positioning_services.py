@@ -347,17 +347,14 @@ class IOrientationCalculator(ABC):
     @abstractmethod
     def calculate_orientation(self, motion_data: Any, context: Any) -> Any:
         """Calculate orientation based on motion and context."""
-        pass
 
     @abstractmethod
     def get_orientation_adjustments(self, orientation: Any) -> Dict[str, Any]:
         """Get adjustments for orientation."""
-        pass
 
     @abstractmethod
     def validate_orientation(self, orientation: Any) -> bool:
         """Validate orientation data."""
-        pass
 
 
 class IQuadrantAdjuster(ABC):
@@ -366,14 +363,11 @@ class IQuadrantAdjuster(ABC):
     @abstractmethod
     def adjust_for_quadrant(self, position: Any, quadrant: str) -> Any:
         """Adjust position for specific quadrant."""
-        pass
 
     @abstractmethod
     def get_quadrant(self, position: Any) -> str:
         """Get quadrant for position."""
-        pass
 
     @abstractmethod
     def validate_quadrant(self, quadrant: str) -> bool:
         """Validate quadrant identifier."""
-        pass

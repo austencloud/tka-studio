@@ -6,7 +6,6 @@ Updated to work with the modern domain models and letter type classification sys
 """
 
 import logging
-from typing import Optional
 
 from core.interfaces.pictograph_services import IPictographValidator
 from domain.models.enums import Orientation

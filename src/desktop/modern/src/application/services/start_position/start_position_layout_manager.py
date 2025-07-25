@@ -6,10 +6,9 @@ Contains Qt-specific layout manipulation logic.
 """
 
 import logging
-from typing import List, Optional
+from typing import List
 
 from PyQt6.QtWidgets import QGridLayout, QWidget, QApplication
-from PyQt6.QtCore import QTimer
 
 from application.services.start_position.start_position_layout_service import (
     StartPositionLayoutService, LayoutMode

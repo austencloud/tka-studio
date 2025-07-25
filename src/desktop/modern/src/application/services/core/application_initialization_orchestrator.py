@@ -120,7 +120,6 @@ class ApplicationInitializationOrchestrator(IApplicationInitializationOrchestrat
     def cleanup_application(self) -> None:
         """Cleanup application resources."""
         # Currently no cleanup needed, but provides extension point
-        pass
 
     def get_application_info(self) -> dict:
         """Get application information and status."""

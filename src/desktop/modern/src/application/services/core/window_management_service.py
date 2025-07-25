@@ -12,7 +12,6 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
 
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtWidgets import QMainWindow

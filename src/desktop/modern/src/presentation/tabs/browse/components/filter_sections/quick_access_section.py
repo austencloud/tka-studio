@@ -10,7 +10,7 @@ Features:
 from typing import Optional
 
 from presentation.tabs.browse.models import FilterType
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
 

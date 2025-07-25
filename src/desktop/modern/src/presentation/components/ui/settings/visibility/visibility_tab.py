@@ -6,7 +6,7 @@ TKA clean architecture principles. Reduced from 631 lines to focused coordinatio
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from application.services.pictograph.simple_visibility_service import (
     get_visibility_service,

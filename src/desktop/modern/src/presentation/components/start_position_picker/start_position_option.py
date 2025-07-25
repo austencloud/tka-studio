@@ -15,7 +15,6 @@ from presentation.components.sequence_workbench.sequence_beat_frame.selection_ov
 )
 from PyQt6.QtCore import (
     QEasingCurve,
-    QPoint,
     QPropertyAnimation,
     QRectF,
     Qt,

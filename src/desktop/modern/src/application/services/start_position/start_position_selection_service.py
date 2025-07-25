@@ -6,7 +6,6 @@ Extracts command creation and validation logic from presentation components.
 """
 
 import logging
-from typing import Optional
 
 from core.interfaces.start_position_services import IStartPositionSelectionService
 from core.commands.start_position_commands import SetStartPositionCommand

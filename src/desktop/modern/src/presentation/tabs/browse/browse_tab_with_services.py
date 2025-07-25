@@ -11,7 +11,7 @@ Updated to include:
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.browse_services import ISequenceDeletionService
@@ -38,7 +38,6 @@ from presentation.tabs.browse.services.modern_dictionary_data_manager import (
     ModernDictionaryDataManager,
 )
 from PyQt6.QtCore import QTimer, pyqtSignal
-from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QHBoxLayout, QMessageBox, QStackedWidget, QWidget
 
 logger = logging.getLogger(__name__)

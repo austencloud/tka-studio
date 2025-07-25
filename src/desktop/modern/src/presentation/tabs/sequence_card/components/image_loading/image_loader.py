@@ -6,7 +6,6 @@ Handles background image loading for sequence card widgets.
 
 import logging
 from pathlib import Path
-from typing import List
 
 from PyQt6.QtCore import QThread, pyqtSignal
 from PyQt6.QtGui import QPixmap

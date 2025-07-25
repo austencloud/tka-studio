@@ -253,7 +253,6 @@ class SignalCoordinator(QObject):
 
     def _handle_operation_completed(self, message: str):
         """Handle workbench operation completion"""
-        pass
 
     def _handle_picker_mode_request(self):
         """Handle picker mode request from workbench button panel with smart switching."""
@@ -348,11 +347,9 @@ class SignalCoordinator(QObject):
 
     def _on_start_position_set(self, start_position_data):
         """Handle start position set."""
-        pass
 
     def _on_start_position_updated(self, start_position_data):
         """Handle start position updated."""
-        pass
 
     def _handle_workbench_modified_with_operation(
         self, sequence: SequenceData, operation_type: str

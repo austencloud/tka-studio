@@ -4,7 +4,7 @@ Settings dialog services initialization.
 Handles the creation and initialization of all services required by the settings dialog.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any, Dict
 
 from core.interfaces.core_services import IUIStateManager
 

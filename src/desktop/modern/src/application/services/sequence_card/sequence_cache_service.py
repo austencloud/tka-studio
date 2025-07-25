@@ -5,7 +5,6 @@ Multi-level LRU caching with memory management.
 """
 
 import logging
-import time
 from pathlib import Path
 from typing import Dict, Optional
 import gc

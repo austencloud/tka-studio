@@ -262,7 +262,6 @@ def test_migration_checklist():
     9. ✅ Performance is acceptable
     10. ✅ Error handling works correctly
     """
-    pass
 
 # 8. SPECIFIC FILE UPDATES NEEDED
 
@@ -298,7 +297,7 @@ Update import statements throughout your codebase:
 # from main_window.main_widget.fade_manager.widget_fader import WidgetFader
 
 # NEW IMPORTS (to add):
-from core.interfaces.animation_interfaces import IFadeOrchestrator, FadeOptions, StackFadeOptions
+from core.interfaces.animation_interfaces import FadeOptions, StackFadeOptions
 from application.services.ui.animation import LegacyFadeManagerAdapter  # For gradual migration
 
 
@@ -332,4 +331,3 @@ class PerformanceNotes:
        - Better testability leads to better optimization
        - Clear dependency boundaries
     """
-    pass

@@ -22,7 +22,6 @@ from core.interfaces.image_export_services import (
 )
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 logger = logging.getLogger(__name__)
 

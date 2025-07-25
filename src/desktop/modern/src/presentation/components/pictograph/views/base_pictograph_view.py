@@ -117,7 +117,6 @@ class BasePictographView(QGraphicsView):
         """Apply view-specific scaling adjustments. Override in subclasses."""
         # Base implementation applies no additional scaling
         # Subclasses can override for specific scaling behavior
-        pass
 
     # === PROPERTIES ===
 

@@ -10,7 +10,6 @@ This service handles:
 """
 
 import logging
-import sys
 from typing import Any, Dict, Optional
 
 from core.interfaces.pictograph_rendering_services import IPictographCacheManager

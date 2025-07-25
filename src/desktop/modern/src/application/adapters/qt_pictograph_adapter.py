@@ -6,14 +6,12 @@ presentation layer. Converts render commands to QT graphics items.
 """
 
 import logging
-import os
 
 # Import the framework-agnostic core services
-import sys
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
-from PyQt6.QtCore import QPointF, QRectF, QSizeF
-from PyQt6.QtGui import QColor, QPainter, QPixmap
+from PyQt6.QtCore import QPointF, QSizeF
+from PyQt6.QtGui import QColor
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsItem, QGraphicsScene

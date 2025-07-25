@@ -6,11 +6,10 @@ based on the legacy dictionary data manager architecture.
 """
 
 import json
-import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from PIL import Image
 from PyQt6.QtCore import QObject, pyqtSignal

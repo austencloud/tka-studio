@@ -7,10 +7,8 @@ Focused solely on data retrieval and filtering logic.
 
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
-import pandas as pd
-from core.config.data_config import create_data_config_with_fallback
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 
@@ -29,45 +27,38 @@ class IDatasetQuery(ABC):
         self, position_key: str, grid_mode: str = "diamond"
     ) -> Optional[BeatData]:
         """Get the actual pictograph data for a start position as BeatData with embedded pictograph."""
-        pass
 
     @abstractmethod
     def get_start_position_pictograph_data(
         self, position_key: str, grid_mode: str = "diamond"
     ) -> Optional[PictographData]:
         """Get pictograph data for a start position (proper domain model)."""
-        pass
 
     @abstractmethod
     def find_pictograph_by_criteria(
         self, letter: str, start_pos: str, end_pos: str, grid_mode: str = "diamond"
     ) -> Optional[BeatData]:
         """Find a pictograph by specific criteria."""
-        pass
 
     @abstractmethod
     def find_pictographs_by_letter(
         self, letter: str, grid_mode: str = "diamond"
     ) -> List[BeatData]:
         """Find all pictographs with a specific letter."""
-        pass
 
     @abstractmethod
     def find_pictographs_by_position_range(
         self, start_positions: List[str], grid_mode: str = "diamond"
     ) -> List[BeatData]:
         """Find pictographs within a range of start positions."""
-        pass
 
     @abstractmethod
     def get_available_letters(self, grid_mode: str = "diamond") -> List[str]:
         """Get all available letters in the dataset."""
-        pass
 
     @abstractmethod
     def get_available_positions(self, grid_mode: str = "diamond") -> dict:
         """Get all available positions in the dataset."""
-        pass
 
 
 class DatasetQuery(IDatasetQuery):

@@ -12,7 +12,6 @@ from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
 from application.services.core.prop_rendering_service import (
-    CorePropRenderingService,
     create_prop_rendering_service
 )
 from application.services.core.pictograph_rendering.real_asset_provider import (

@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 from domain.models.beat_data import BeatData
-from domain.models.pictograph_data import PictographData
 
 if TYPE_CHECKING:
     from presentation.components.graph_editor.graph_editor import GraphEditor

@@ -7,7 +7,6 @@ that must behave identically across desktop and web platforms.
 """
 
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
 from domain.models import (
@@ -15,8 +14,6 @@ from domain.models import (
     ElementalType,
     GlyphData,
     LetterType,
-    Location,
-    MotionData,
     PictographData,
     VTGMode,
 )
@@ -39,7 +36,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same classification logic, different data structures
         """
-        pass
 
     @abstractmethod
     def get_vtg_mode(self, pictograph_data: PictographData) -> VTGMode:
@@ -55,7 +51,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same logic, may use different motion data access
         """
-        pass
 
     @abstractmethod
     def get_elemental_type(self, pictograph_data: PictographData) -> ElementalType:
@@ -71,7 +66,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same classification rules across platforms
         """
-        pass
 
     @abstractmethod
     def get_letter_type(self, letter: str) -> LetterType:
@@ -87,7 +81,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Static mapping, can be shared configuration
         """
-        pass
 
     @abstractmethod
     def get_letter_type_map(self) -> Dict[str, LetterType]:
@@ -100,7 +93,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Static data, can be shared JSON configuration
         """
-        pass
 
     @abstractmethod
     def validate_glyph_data(self, glyph_data: GlyphData) -> bool:
@@ -116,7 +108,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same validation rules across platforms
         """
-        pass
 
     @abstractmethod
     def get_glyph_characteristics(self, glyph_data: GlyphData) -> Dict[str, Any]:
@@ -132,7 +123,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same characteristic definitions
         """
-        pass
 
     @abstractmethod
     def is_reversible_glyph(self, glyph_data: GlyphData) -> bool:
@@ -148,7 +138,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same reversibility rules
         """
-        pass
 
     @abstractmethod
     def get_glyph_complexity_score(self, glyph_data: GlyphData) -> float:
@@ -164,7 +153,6 @@ class IGlyphDataService(ABC):
         Note:
             Web implementation: Same scoring algorithm
         """
-        pass
 
 
 class IGlyphGenerationService(ABC):
@@ -184,7 +172,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Same generation logic, different randomization
         """
-        pass
 
     @abstractmethod
     def generate_glyph_sequence(
@@ -203,7 +190,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Same sequence generation logic
         """
-        pass
 
     @abstractmethod
     def validate_glyph_sequence(
@@ -221,7 +207,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Same validation rules
         """
-        pass
 
     @abstractmethod
     def get_generation_constraints(self) -> Dict[str, Any]:
@@ -234,7 +219,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Static constraints, can be shared configuration
         """
-        pass
 
     @abstractmethod
     def apply_generation_filter(
@@ -253,7 +237,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Same filtering logic
         """
-        pass
 
     @abstractmethod
     def get_generation_statistics(self) -> Dict[str, Any]:
@@ -266,7 +249,6 @@ class IGlyphGenerationService(ABC):
         Note:
             Web implementation: Same statistical calculations
         """
-        pass
 
 
 class IGlyphClassificationService(ABC):
@@ -288,7 +270,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same classification logic
         """
-        pass
 
     @abstractmethod
     def classify_by_elemental_type(
@@ -306,7 +287,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same classification logic
         """
-        pass
 
     @abstractmethod
     def classify_by_letter_type(
@@ -324,7 +304,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same classification logic
         """
-        pass
 
     @abstractmethod
     def get_classification_statistics(self, glyphs: List[GlyphData]) -> Dict[str, Any]:
@@ -340,7 +319,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same statistical calculations
         """
-        pass
 
     @abstractmethod
     def find_similar_glyphs(
@@ -363,7 +341,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same similarity algorithm
         """
-        pass
 
     @abstractmethod
     def calculate_glyph_similarity(self, glyph1: GlyphData, glyph2: GlyphData) -> float:
@@ -380,7 +357,6 @@ class IGlyphClassificationService(ABC):
         Note:
             Web implementation: Same similarity calculation
         """
-        pass
 
 
 class IGlyphRenderingService(ABC):
@@ -401,7 +377,6 @@ class IGlyphRenderingService(ABC):
         Note:
             Web implementation: Canvas/SVG rendering instead of PyQt6
         """
-        pass
 
     @abstractmethod
     def render_glyph_sequence(
@@ -420,7 +395,6 @@ class IGlyphRenderingService(ABC):
         Note:
             Web implementation: CSS Grid/Flexbox layout instead of PyQt6
         """
-        pass
 
     @abstractmethod
     def get_glyph_bounds(self, glyph_data: GlyphData) -> Tuple[int, int, int, int]:
@@ -436,7 +410,6 @@ class IGlyphRenderingService(ABC):
         Note:
             Web implementation: getBoundingClientRect() equivalent
         """
-        pass
 
     @abstractmethod
     def export_glyph_image(
@@ -456,7 +429,6 @@ class IGlyphRenderingService(ABC):
         Note:
             Web implementation: Blob download instead of direct file writing
         """
-        pass
 
     @abstractmethod
     def get_supported_formats(self) -> List[str]:
@@ -469,7 +441,6 @@ class IGlyphRenderingService(ABC):
         Note:
             Web implementation: May differ from desktop due to browser support
         """
-        pass
 
 
 class IGlyphCacheService(ABC):
@@ -487,7 +458,6 @@ class IGlyphCacheService(ABC):
         Note:
             Web implementation: IndexedDB or localStorage caching
         """
-        pass
 
     @abstractmethod
     def get_cached_glyph(self, key: str) -> Optional[GlyphData]:
@@ -503,7 +473,6 @@ class IGlyphCacheService(ABC):
         Note:
             Web implementation: IndexedDB or localStorage retrieval
         """
-        pass
 
     @abstractmethod
     def clear_cache(self) -> None:
@@ -513,7 +482,6 @@ class IGlyphCacheService(ABC):
         Note:
             Web implementation: Clear IndexedDB or localStorage
         """
-        pass
 
     @abstractmethod
     def get_cache_statistics(self) -> Dict[str, Any]:
@@ -526,7 +494,6 @@ class IGlyphCacheService(ABC):
         Note:
             Web implementation: Storage API quota information
         """
-        pass
 
     @abstractmethod
     def is_cached(self, key: str) -> bool:
@@ -539,4 +506,3 @@ class IGlyphCacheService(ABC):
         Returns:
             True if cached, False otherwise
         """
-        pass

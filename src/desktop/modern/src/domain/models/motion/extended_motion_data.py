@@ -6,7 +6,7 @@ for letter determination without modifying the core domain model.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional
 from domain.models.motion_data import MotionData
 from domain.models.enums import MotionType, RotationDirection
 

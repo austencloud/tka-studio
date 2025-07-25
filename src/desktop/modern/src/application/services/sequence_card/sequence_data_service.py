@@ -5,9 +5,8 @@ Handles file system operations, metadata extraction, and data validation.
 """
 
 import logging
-import os
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 from core.interfaces.sequence_card_services import (
     ISequenceCardDataService,

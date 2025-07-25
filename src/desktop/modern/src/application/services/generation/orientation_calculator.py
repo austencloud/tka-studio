@@ -5,7 +5,7 @@ Direct port of legacy orientation calculation logic.
 Critical for ensuring beats flow correctly together.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from enum import Enum
 
 

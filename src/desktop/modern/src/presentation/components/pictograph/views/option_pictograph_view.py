@@ -10,7 +10,6 @@ from typing import Callable, Optional
 from presentation.components.option_picker.types.letter_types import LetterType
 from PyQt6.QtCore import QRectF, QSize, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen, QResizeEvent
-from PyQt6.QtWidgets import QGraphicsView
 
 from .base_pictograph_view import BasePictographView
 
@@ -221,4 +220,3 @@ class OptionPictographView(BasePictographView):
     def update_border_widths(self):
         """Legacy compatibility method."""
         # Border styling is handled in CSS
-        pass

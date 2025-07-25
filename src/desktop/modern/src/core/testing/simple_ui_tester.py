@@ -9,7 +9,7 @@ import json
 import time
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 from PyQt6.QtWidgets import QApplication
 
 from core.application.application_factory import ApplicationFactory

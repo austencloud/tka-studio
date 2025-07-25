@@ -6,7 +6,7 @@ without any Qt dependencies.
 """
 
 import logging
-from typing import Any, Dict, Tuple
+from typing import Dict, Tuple
 
 from core.interfaces.core_services import IPictographBorderManager
 from domain.models import LetterType

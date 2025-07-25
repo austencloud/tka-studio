@@ -6,7 +6,7 @@ duplicate cache implementations and provide consistent cache behavior.
 """
 
 import logging
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 from core.interfaces.data_services import IDataCacheManager
 

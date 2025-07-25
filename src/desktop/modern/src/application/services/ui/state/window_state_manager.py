@@ -6,7 +6,7 @@ Extracted from UIStateManager to follow single responsibility principle.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from core.events.event_bus import UIEvent, get_event_bus
 from core.interfaces.core_services import IUIStateManager
@@ -145,12 +145,10 @@ class WindowStateManager(IUIStateManager):
     def save_state(self) -> None:
         """Save current state to persistent storage."""
         # TODO: Implement persistence
-        pass
 
     def load_state(self) -> None:
         """Load state from persistent storage."""
         # TODO: Implement persistence
-        pass
 
     def toggle_graph_editor(self) -> bool:
         """Toggle graph editor visibility."""

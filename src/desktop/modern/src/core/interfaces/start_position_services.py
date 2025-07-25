@@ -6,7 +6,7 @@ that follow TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from core.commands.start_position_commands import SetStartPositionCommand
 from core.types import Size

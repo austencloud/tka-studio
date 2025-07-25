@@ -12,8 +12,7 @@ Following established patterns:
 """
 
 import logging
-from enum import Enum
-from typing import Any, Dict, List, NamedTuple, Optional
+from typing import Any, Dict, List, Optional
 
 from core.interfaces.workbench_services import (
     IWorkbenchSessionManager,
@@ -21,7 +20,6 @@ from core.interfaces.workbench_services import (
     SessionRestorationResult,
 )
 from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
 
 logger = logging.getLogger(__name__)
 

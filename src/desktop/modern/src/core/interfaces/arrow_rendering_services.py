@@ -6,11 +6,9 @@ of concerns and enable testing.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Set, Tuple
+from typing import Optional
 
-from domain.models import Location, MotionData
-from domain.models.arrow_data import ArrowData
-from domain.models.pictograph_data import PictographData
+from domain.models import MotionData
 
 
 class IArrowRenderingService(ABC):

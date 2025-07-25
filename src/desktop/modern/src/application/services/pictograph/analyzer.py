@@ -6,7 +6,7 @@ arrow positioning, dash location calculations, and other pictograph operations.
 It provides comprehensive pictograph analysis functionality.
 """
 
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from domain.models import ArrowColor, LetterType, Location
 from domain.models.enums import GridMode
@@ -30,7 +30,6 @@ class PictographAnalyzer:
 
     def __init__(self):
         """Initialize the pictograph analysis service."""
-        pass
 
     def get_letter_info(self, pictograph_data: PictographData) -> dict:
         """

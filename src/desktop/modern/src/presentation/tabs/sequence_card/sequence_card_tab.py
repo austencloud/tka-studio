@@ -6,7 +6,6 @@ Uses clean service injection and maintains visual parity with legacy implementat
 """
 
 import logging
-from pathlib import Path
 from typing import Optional
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
@@ -213,7 +212,6 @@ class SequenceCardTab(QWidget):
     def _on_progress_updated(self, current: int, total: int) -> None:
         """Handle progress updates."""
         # Progress updates are handled by the header component
-        pass
 
     def _on_sequences_displayed(self, count: int) -> None:
         """Handle sequences displayed."""

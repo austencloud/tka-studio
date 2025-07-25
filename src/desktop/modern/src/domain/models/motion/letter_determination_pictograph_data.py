@@ -6,7 +6,7 @@ functionality without modifying the core domain model.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
+from typing import Optional
 from domain.models.pictograph_data import PictographData
 from domain.models.enums import Letter, GridPosition, Timing, Direction
 from .extended_motion_data import ExtendedMotionData
@@ -237,7 +237,7 @@ class LetterDeterminationPictographData:
     @classmethod
     def from_legacy_dict(cls, data: dict) -> 'LetterDeterminationPictographData':
         """Create from legacy dictionary format."""
-        from domain.models.enums import MotionType, Orientation, Location, RotationDirection
+        from domain.models.enums import MotionType, RotationDirection
         from domain.models.motion_data import MotionData
         
         # Convert motion attributes

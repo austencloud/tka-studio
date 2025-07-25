@@ -18,7 +18,6 @@ from typing import Callable, Optional
 logger = logging.getLogger(__name__)
 
 from core.dependency_injection.di_container import DIContainer
-from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
 
 from application.services.core.application_initialization_orchestrator import (

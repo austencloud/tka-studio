@@ -12,7 +12,6 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 from application.services.pictograph.pictograph_csv_manager import (
-    IPictographCSVManager,
     PictographCSVManager,
 )
 from domain.models import (

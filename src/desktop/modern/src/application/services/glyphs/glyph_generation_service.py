@@ -68,7 +68,6 @@ class GlyphGenerationService(IGlyphGenerationService):
         # - Has dash: has_dash_from_pictograph(pictograph_data)
         # - Turns: get_turns_from_motions(pictograph_data)
         # - Visibility: PictographVisibilityManager
-        pass
 
     def determine_letter_type(self, letter: str) -> Optional[LetterType]:
         """Determine the letter type from the letter string."""

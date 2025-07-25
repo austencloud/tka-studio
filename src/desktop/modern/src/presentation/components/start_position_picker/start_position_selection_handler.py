@@ -5,13 +5,11 @@ Manages start position selection, data creation, and related operations for the 
 Responsible for handling start position picker interactions and creating start position data.
 """
 
-from typing import Callable, Optional
 
 from application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
 from application.services.sequence.beat_factory import BeatFactory
-from domain.models.beat_data import BeatData
 from domain.models.grid_data import GridData
 from domain.models.pictograph_data import PictographData
 from PyQt6.QtCore import QObject, pyqtSignal

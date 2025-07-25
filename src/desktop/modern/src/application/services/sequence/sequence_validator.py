@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 class ValidationError(Exception):
     """Custom exception for validation errors."""
 
-    pass
 
 
 class ISequenceValidator(ABC):
@@ -28,27 +27,22 @@ class ISequenceValidator(ABC):
     @abstractmethod
     def validate_sequence(self, sequence: SequenceData) -> bool:
         """Validate a complete sequence against all rules."""
-        pass
 
     @abstractmethod
     def validate_beat(self, beat: BeatData, position: Optional[int] = None) -> bool:
         """Validate a single beat against validation rules."""
-        pass
 
     @abstractmethod
     def check_sequence_integrity(self, sequence: SequenceData) -> List[str]:
         """Check sequence integrity and return list of issues."""
-        pass
 
     @abstractmethod
     def is_valid_sequence_length(self, length: int) -> bool:
         """Check if sequence length is valid."""
-        pass
 
     @abstractmethod
     def validate_sequence_continuity(self, sequence: SequenceData) -> bool:
         """Validate that beats flow correctly in sequence."""
-        pass
 
 
 class SequenceValidator(ISequenceValidator):

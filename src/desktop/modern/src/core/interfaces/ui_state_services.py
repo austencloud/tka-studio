@@ -8,7 +8,7 @@ and state persistence that must work identically across desktop and web platform
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from domain.models.beat_data import BeatData
 from domain.models.enums import LetterType, MotionType
@@ -37,7 +37,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Retrieved from component state
         """
-        pass
 
     @abstractmethod
     def set_current_options(self, options: Dict[str, Any]) -> None:
@@ -50,7 +49,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Updates component state and triggers re-render
         """
-        pass
 
     @abstractmethod
     def get_selected_option(self) -> Optional[str]:
@@ -60,7 +58,6 @@ class IOptionPickerStateManager(ABC):
         Returns:
             Selected option key or None if none selected
         """
-        pass
 
     @abstractmethod
     def set_selected_option(self, option_key: str) -> None:
@@ -73,7 +70,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Updates selection state and UI
         """
-        pass
 
     @abstractmethod
     def get_option_visibility(self, option_key: str) -> bool:
@@ -86,7 +82,6 @@ class IOptionPickerStateManager(ABC):
         Returns:
             True if visible, False otherwise
         """
-        pass
 
     @abstractmethod
     def set_option_visibility(self, option_key: str, visible: bool) -> None:
@@ -100,7 +95,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Updates display state and re-renders
         """
-        pass
 
     @abstractmethod
     def get_option_filters(self) -> Dict[str, Any]:
@@ -113,7 +107,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Retrieved from filter state
         """
-        pass
 
     @abstractmethod
     def set_option_filters(self, filters: Dict[str, Any]) -> None:
@@ -126,7 +119,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Updates filter state and refreshes options
         """
-        pass
 
     @abstractmethod
     def reset_to_defaults(self) -> None:
@@ -136,7 +128,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Restores default state and re-renders
         """
-        pass
 
     @abstractmethod
     def get_state_snapshot(self) -> Dict[str, Any]:
@@ -149,7 +140,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Serializable state for persistence
         """
-        pass
 
     @abstractmethod
     def restore_state_snapshot(self, snapshot: Dict[str, Any]) -> None:
@@ -162,7 +152,6 @@ class IOptionPickerStateManager(ABC):
         Note:
             Web implementation: Restores state and re-renders
         """
-        pass
 
 
 class IThumbnailGenerator(ABC):
@@ -185,7 +174,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Uses Canvas API or WebGL for rendering
         """
-        pass
 
     @abstractmethod
     def generate_sequence_thumbnail(
@@ -204,7 +192,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Uses Canvas API for sequence overview
         """
-        pass
 
     @abstractmethod
     def generate_motion_thumbnail(
@@ -223,7 +210,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Uses Canvas API or SVG rendering
         """
-        pass
 
     @abstractmethod
     def generate_letter_thumbnail(
@@ -242,7 +228,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Uses Canvas API or SVG rendering
         """
-        pass
 
     @abstractmethod
     def get_thumbnail_cache_stats(self) -> Dict[str, Any]:
@@ -255,7 +240,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: May use browser storage for caching
         """
-        pass
 
     @abstractmethod
     def clear_thumbnail_cache(self) -> None:
@@ -265,7 +249,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Clears browser storage cache
         """
-        pass
 
     @abstractmethod
     def set_thumbnail_quality(self, quality: float) -> None:
@@ -278,7 +261,6 @@ class IThumbnailGenerator(ABC):
         Note:
             Web implementation: Affects Canvas rendering quality
         """
-        pass
 
 
 class IMainWindowStateManager(ABC):
@@ -295,7 +277,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Returns viewport and UI state
         """
-        pass
 
     @abstractmethod
     def set_window_state(self, state: Dict[str, Any]) -> None:
@@ -308,7 +289,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Updates UI layout and viewport
         """
-        pass
 
     @abstractmethod
     def get_active_panel(self) -> Optional[str]:
@@ -318,7 +298,6 @@ class IMainWindowStateManager(ABC):
         Returns:
             Active panel name or None if none active
         """
-        pass
 
     @abstractmethod
     def set_active_panel(self, panel_name: str) -> None:
@@ -331,7 +310,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Updates UI to show active panel
         """
-        pass
 
     @abstractmethod
     def get_panel_visibility(self, panel_name: str) -> bool:
@@ -344,7 +322,6 @@ class IMainWindowStateManager(ABC):
         Returns:
             True if visible, False otherwise
         """
-        pass
 
     @abstractmethod
     def set_panel_visibility(self, panel_name: str, visible: bool) -> None:
@@ -358,7 +335,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Updates UI display state
         """
-        pass
 
     @abstractmethod
     def get_ui_mode(self) -> UIMode:
@@ -368,7 +344,6 @@ class IMainWindowStateManager(ABC):
         Returns:
             Current UI mode
         """
-        pass
 
     @abstractmethod
     def set_ui_mode(self, mode: UIMode) -> None:
@@ -381,7 +356,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Updates UI layout and available controls
         """
-        pass
 
     @abstractmethod
     def save_window_layout(self, layout_name: str) -> bool:
@@ -397,7 +371,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Saves to browser storage
         """
-        pass
 
     @abstractmethod
     def load_window_layout(self, layout_name: str) -> bool:
@@ -413,7 +386,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Loads from browser storage
         """
-        pass
 
     @abstractmethod
     def get_available_layouts(self) -> List[str]:
@@ -426,7 +398,6 @@ class IMainWindowStateManager(ABC):
         Note:
             Web implementation: Retrieved from browser storage
         """
-        pass
 
 
 class IDialogStateManager(ABC):
@@ -446,7 +417,6 @@ class IDialogStateManager(ABC):
         Note:
             Web implementation: Shows modal or updates UI state
         """
-        pass
 
     @abstractmethod
     def hide_dialog(self, dialog_id: str) -> None:
@@ -459,7 +429,6 @@ class IDialogStateManager(ABC):
         Note:
             Web implementation: Hides modal or updates UI state
         """
-        pass
 
     @abstractmethod
     def is_dialog_visible(self, dialog_id: str) -> bool:
@@ -472,7 +441,6 @@ class IDialogStateManager(ABC):
         Returns:
             True if visible, False otherwise
         """
-        pass
 
     @abstractmethod
     def get_dialog_data(self, dialog_id: str) -> Optional[Dict[str, Any]]:
@@ -485,7 +453,6 @@ class IDialogStateManager(ABC):
         Returns:
             Dialog data or None if not found
         """
-        pass
 
     @abstractmethod
     def set_dialog_data(self, dialog_id: str, data: Dict[str, Any]) -> None:
@@ -499,7 +466,6 @@ class IDialogStateManager(ABC):
         Note:
             Web implementation: Updates dialog component state
         """
-        pass
 
     @abstractmethod
     def get_dialog_result(self, dialog_id: str) -> Optional[Any]:
@@ -512,7 +478,6 @@ class IDialogStateManager(ABC):
         Returns:
             Dialog result or None if no result
         """
-        pass
 
     @abstractmethod
     def set_dialog_result(self, dialog_id: str, result: Any) -> None:
@@ -526,7 +491,6 @@ class IDialogStateManager(ABC):
         Note:
             Web implementation: Updates dialog state and may trigger callbacks
         """
-        pass
 
     @abstractmethod
     def get_active_dialogs(self) -> List[str]:
@@ -536,7 +500,6 @@ class IDialogStateManager(ABC):
         Returns:
             List of active dialog IDs
         """
-        pass
 
 
 class IProgressStateManager(ABC):
@@ -557,7 +520,6 @@ class IProgressStateManager(ABC):
         Note:
             Web implementation: Shows progress UI component
         """
-        pass
 
     @abstractmethod
     def update_progress(
@@ -574,7 +536,6 @@ class IProgressStateManager(ABC):
         Note:
             Web implementation: Updates progress UI component
         """
-        pass
 
     @abstractmethod
     def complete_progress(self, operation_id: str) -> None:
@@ -587,7 +548,6 @@ class IProgressStateManager(ABC):
         Note:
             Web implementation: Hides progress UI component
         """
-        pass
 
     @abstractmethod
     def cancel_progress(self, operation_id: str) -> None:
@@ -600,7 +560,6 @@ class IProgressStateManager(ABC):
         Note:
             Web implementation: Hides progress UI and may trigger cleanup
         """
-        pass
 
     @abstractmethod
     def get_progress_status(self, operation_id: str) -> Optional[Dict[str, Any]]:
@@ -613,7 +572,6 @@ class IProgressStateManager(ABC):
         Returns:
             Progress status dictionary or None if not found
         """
-        pass
 
     @abstractmethod
     def get_active_operations(self) -> List[str]:
@@ -623,4 +581,3 @@ class IProgressStateManager(ABC):
         Returns:
             List of active operation IDs
         """
-        pass

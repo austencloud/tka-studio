@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 
-from .graph_editor_hotkey_manager import GraphEditorHotkeyManager, IHotkeyCallbacks
+from .graph_editor_hotkey_manager import GraphEditorHotkeyManager
 
 if TYPE_CHECKING:
     from core.interfaces.workbench_services import IGraphEditorService

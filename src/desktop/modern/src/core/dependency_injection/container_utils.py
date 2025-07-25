@@ -6,7 +6,6 @@ including initialization helpers for testing and development.
 """
 
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

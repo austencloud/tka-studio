@@ -77,27 +77,22 @@ class ISequenceCardDataService(ABC):
     @abstractmethod
     def get_sequences_by_length(self, base_path: Path, length: int) -> List[SequenceCardData]:
         """Get all sequences of specified length."""
-        pass
     
     @abstractmethod
     def get_all_sequences(self, base_path: Path) -> List[SequenceCardData]:
         """Get all sequences regardless of length."""
-        pass
     
     @abstractmethod
     def extract_metadata(self, image_path: Path) -> Dict[str, Any]:
         """Extract metadata from sequence image."""
-        pass
     
     @abstractmethod
     def watch_directory_changes(self, path: Path, callback: Callable[[Path], None]) -> None:
         """Watch for directory changes."""
-        pass
     
     @abstractmethod
     def validate_sequence_data(self, data: SequenceCardData) -> Tuple[bool, List[str]]:
         """Validate sequence data."""
-        pass
 
 
 class ISequenceCardCacheService(ABC):
@@ -106,27 +101,22 @@ class ISequenceCardCacheService(ABC):
     @abstractmethod
     def get_cached_image(self, path: Path, scale: float = 1.0) -> Optional[bytes]:
         """Get cached image data."""
-        pass
     
     @abstractmethod
     def cache_image(self, path: Path, image_data: bytes, scale: float = 1.0) -> None:
         """Cache image data."""
-        pass
     
     @abstractmethod
     def clear_cache(self, cache_level: Optional[CacheLevel] = None) -> None:
         """Clear cache."""
-        pass
     
     @abstractmethod
     def get_cache_stats(self) -> CacheStats:
         """Get cache performance statistics."""
-        pass
     
     @abstractmethod
     def optimize_memory_usage(self) -> None:
         """Optimize memory usage."""
-        pass
 
 
 class ISequenceCardLayoutService(ABC):
@@ -135,17 +125,14 @@ class ISequenceCardLayoutService(ABC):
     @abstractmethod
     def calculate_grid_dimensions(self, sequence_length: int) -> GridDimensions:
         """Calculate optimal grid dimensions for sequence length."""
-        pass
     
     @abstractmethod
     def calculate_page_size(self, available_width: int, column_count: int) -> Tuple[int, int]:
         """Calculate optimal page size."""
-        pass
     
     @abstractmethod
     def calculate_scale_factor(self, original_size: Tuple[int, int], target_size: Tuple[int, int]) -> float:
         """Calculate appropriate scale factor."""
-        pass
 
 
 class ISequenceCardDisplayService(ABC):
@@ -154,22 +141,18 @@ class ISequenceCardDisplayService(ABC):
     @abstractmethod
     def display_sequences(self, length: int, column_count: int) -> None:
         """Display sequences of specified length."""
-        pass
     
     @abstractmethod
     def get_display_state(self) -> DisplayState:
         """Get current display state."""
-        pass
     
     @abstractmethod
     def cancel_current_operation(self) -> None:
         """Cancel current loading operation."""
-        pass
     
     @abstractmethod
     def set_progress_callback(self, callback: Callable[[int, int], None]) -> None:
         """Set progress update callback."""
-        pass
 
 
 class ISequenceCardExportService(ABC):
@@ -178,17 +161,14 @@ class ISequenceCardExportService(ABC):
     @abstractmethod
     def export_all_sequences(self) -> bool:
         """Export all sequence cards."""
-        pass
     
     @abstractmethod
     def regenerate_all_images(self) -> bool:
         """Regenerate all sequence card images."""
-        pass
     
     @abstractmethod
     def set_export_progress_callback(self, callback: Callable[[int, int, str], None]) -> None:
         """Set export progress callback."""
-        pass
 
 
 class ISequenceCardSettingsService(ABC):
@@ -197,19 +177,15 @@ class ISequenceCardSettingsService(ABC):
     @abstractmethod
     def get_last_selected_length(self) -> int:
         """Get last selected length."""
-        pass
     
     @abstractmethod
     def save_selected_length(self, length: int) -> None:
         """Save selected length."""
-        pass
     
     @abstractmethod
     def get_column_count(self) -> int:
         """Get column count setting."""
-        pass
     
     @abstractmethod
     def save_column_count(self, count: int) -> None:
         """Save column count setting."""
-        pass

@@ -5,14 +5,13 @@ This file shows how the framework-agnostic core can be adapted for web use.
 This demonstrates the cross-platform nature of the new architecture.
 """
 
-from typing import Any, Dict, Optional, List
+from typing import Any
 from core.interfaces.animation_core_interfaces import (
     ITargetAdapter,
     IAnimationRenderer,
     IAnimationScheduler,
     AnimationTarget,
-    AnimationConfig,
-    AnimationType
+    AnimationConfig
 )
 
 
@@ -109,7 +108,6 @@ class WebAnimationScheduler(IAnimationScheduler):
         # For now, this shows the interface structure
         
         import asyncio
-        import time
         
         start_time = self.get_current_time()
         

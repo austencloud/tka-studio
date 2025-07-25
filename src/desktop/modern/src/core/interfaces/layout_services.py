@@ -8,7 +8,7 @@ and cross-platform layout operations.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 from domain.models.sequence_data import SequenceData
 
@@ -152,7 +152,6 @@ class IResponsiveScalingCalculator(ABC):
         Note:
             Web implementation: Uses CSS scale transforms or viewport units
         """
-        pass
 
     @abstractmethod
     def get_density_scaling_factor(self, density: str) -> float:
@@ -168,7 +167,6 @@ class IResponsiveScalingCalculator(ABC):
         Note:
             Web implementation: Uses devicePixelRatio and CSS media queries
         """
-        pass
 
     @abstractmethod
     def calculate_context_aware_scaling(self, context: str, base_size: Size) -> float:
@@ -185,7 +183,6 @@ class IResponsiveScalingCalculator(ABC):
         Note:
             Web implementation: May use CSS container queries
         """
-        pass
 
     @abstractmethod
     def get_breakpoint_scaling(self, viewport_width: int) -> float:
@@ -201,7 +198,6 @@ class IResponsiveScalingCalculator(ABC):
         Note:
             Web implementation: Uses CSS breakpoints and media queries
         """
-        pass
 
     @abstractmethod
     def calculate_adaptive_scaling(
@@ -221,7 +217,6 @@ class IResponsiveScalingCalculator(ABC):
         Note:
             Web implementation: Uses CSS clamp() or JavaScript calculations
         """
-        pass
 
 
 class IBeatResizer(ABC):
@@ -242,7 +237,6 @@ class IBeatResizer(ABC):
         Note:
             Web implementation: Uses CSS Grid or Flexbox calculations
         """
-        pass
 
     @abstractmethod
     def resize_beat_frames(self, beat_frames: List[Any], new_size: Size) -> None:
@@ -256,7 +250,6 @@ class IBeatResizer(ABC):
         Note:
             Web implementation: Updates CSS properties or style attributes
         """
-        pass
 
     @abstractmethod
     def calculate_scroll_requirements(
@@ -275,7 +268,6 @@ class IBeatResizer(ABC):
         Note:
             Web implementation: Uses CSS overflow properties
         """
-        pass
 
     @abstractmethod
     def get_optimal_aspect_ratio(self) -> float:
@@ -288,7 +280,6 @@ class IBeatResizer(ABC):
         Note:
             Web implementation: May use CSS aspect-ratio property
         """
-        pass
 
     @abstractmethod
     def validate_beat_size(self, size: Size, min_size: Size, max_size: Size) -> Size:
@@ -303,7 +294,6 @@ class IBeatResizer(ABC):
         Returns:
             Validated and adjusted size
         """
-        pass
 
 
 class IComponentSizer(ABC):
@@ -326,7 +316,6 @@ class IComponentSizer(ABC):
         Note:
             Web implementation: Uses CSS sizing strategies for each component type
         """
-        pass
 
     @abstractmethod
     def get_size_constraints(self, component_type: ComponentType) -> Dict[str, Any]:
@@ -342,7 +331,6 @@ class IComponentSizer(ABC):
         Note:
             Web implementation: Constraints may be defined in CSS custom properties
         """
-        pass
 
     @abstractmethod
     def calculate_optimal_grid_size(
@@ -361,7 +349,6 @@ class IComponentSizer(ABC):
         Note:
             Web implementation: Uses CSS Grid auto-fit or auto-fill
         """
-        pass
 
     @abstractmethod
     def apply_responsive_constraints(
@@ -380,7 +367,6 @@ class IComponentSizer(ABC):
         Note:
             Web implementation: Uses CSS media queries and viewport units
         """
-        pass
 
 
 class IComponentPositionCalculator(ABC):
@@ -402,7 +388,6 @@ class IComponentPositionCalculator(ABC):
         Note:
             Web implementation: Uses CSS positioning or CSS Grid/Flexbox
         """
-        pass
 
     @abstractmethod
     def calculate_grid_positions(
@@ -422,7 +407,6 @@ class IComponentPositionCalculator(ABC):
         Note:
             Web implementation: Uses CSS Grid template areas or calculations
         """
-        pass
 
     @abstractmethod
     def calculate_flow_positions(
@@ -441,7 +425,6 @@ class IComponentPositionCalculator(ABC):
         Note:
             Web implementation: Uses CSS Flexbox or flow layout
         """
-        pass
 
     @abstractmethod
     def get_layout_bounds(
@@ -460,7 +443,6 @@ class IComponentPositionCalculator(ABC):
         Note:
             Web implementation: Uses getBoundingClientRect() equivalent
         """
-        pass
 
     @abstractmethod
     def apply_spacing_constraints(
@@ -479,7 +461,6 @@ class IComponentPositionCalculator(ABC):
         Note:
             Web implementation: Uses CSS gap or margin properties
         """
-        pass
 
 
 class IDimensionCalculator(ABC):
@@ -499,7 +480,6 @@ class IDimensionCalculator(ABC):
         Note:
             Web implementation: Uses CSS calculations or JavaScript sizing
         """
-        pass
 
     @abstractmethod
     def get_screen_dimensions(self) -> Size:
@@ -512,7 +492,6 @@ class IDimensionCalculator(ABC):
         Note:
             Web implementation: Uses window.innerWidth/innerHeight
         """
-        pass
 
     @abstractmethod
     def calculate_container_dimensions(self, parent_size: Size, margin: int) -> Size:
@@ -526,7 +505,6 @@ class IDimensionCalculator(ABC):
         Returns:
             Container dimensions with margin applied
         """
-        pass
 
     @abstractmethod
     def get_content_dimensions(self, element: Any) -> Size:
@@ -542,7 +520,6 @@ class IDimensionCalculator(ABC):
         Note:
             Web implementation: Uses getBoundingClientRect() or similar
         """
-        pass
 
     @abstractmethod
     def calculate_aspect_ratio_size(self, base_size: Size, target_ratio: float) -> Size:
@@ -559,7 +536,6 @@ class IDimensionCalculator(ABC):
         Note:
             Web implementation: May use CSS aspect-ratio property
         """
-        pass
 
     @abstractmethod
     def validate_size_constraints(
@@ -576,4 +552,3 @@ class IDimensionCalculator(ABC):
         Returns:
             Validated size within constraints
         """
-        pass

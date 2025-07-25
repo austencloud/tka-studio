@@ -5,10 +5,9 @@ Tests buttons and provides clear guidance for AI agents when buttons fail.
 """
 
 import time
-from typing import Dict, List, Optional, Any
-from PyQt6.QtWidgets import QPushButton, QWidget
+from typing import List
+from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtTest import QTest
 
 from core.testing.ai_agent_helpers import AITestResult

@@ -21,7 +21,6 @@ from .beat_data import BeatData
 # Import enums from their new location
 from .enums import (
     ArrowColor,
-    Direction,
     ElementalType,
     GridMode,
     GridPosition,
@@ -32,7 +31,6 @@ from .enums import (
     MotionType,
     Orientation,
     RotationDirection,
-    Timing,
     VTGMode,
 )
 from .grid_data import GridData

@@ -29,7 +29,6 @@ class ILessonConfigurationService(ABC):
         Returns:
             Dictionary mapping lesson identifiers to configurations
         """
-        pass
     
     @abstractmethod
     def get_lesson_config(self, lesson_type: LessonType) -> Optional[LessonConfig]:
@@ -42,7 +41,6 @@ class ILessonConfigurationService(ABC):
         Returns:
             Lesson configuration or None if not found
         """
-        pass
     
     @abstractmethod
     def get_lesson_names(self) -> List[str]:
@@ -52,7 +50,6 @@ class ILessonConfigurationService(ABC):
         Returns:
             List of human-readable lesson names
         """
-        pass
 
 
 class IQuizSessionService(ABC):
@@ -70,7 +67,6 @@ class IQuizSessionService(ABC):
         Returns:
             Unique session identifier
         """
-        pass
     
     @abstractmethod
     def get_session(self, session_id: str) -> Optional[QuizSession]:
@@ -83,7 +79,6 @@ class IQuizSessionService(ABC):
         Returns:
             Quiz session or None if not found
         """
-        pass
     
     @abstractmethod
     def update_session_progress(self, session_id: str, **updates) -> bool:
@@ -97,7 +92,6 @@ class IQuizSessionService(ABC):
         Returns:
             True if update successful, False otherwise
         """
-        pass
     
     @abstractmethod
     def end_session(self, session_id: str) -> bool:
@@ -110,7 +104,6 @@ class IQuizSessionService(ABC):
         Returns:
             True if session ended successfully, False otherwise
         """
-        pass
     
     @abstractmethod
     def get_active_sessions(self) -> List[QuizSession]:
@@ -120,7 +113,6 @@ class IQuizSessionService(ABC):
         Returns:
             List of active quiz sessions
         """
-        pass
 
 
 class IQuestionGenerationService(ABC):
@@ -138,7 +130,6 @@ class IQuestionGenerationService(ABC):
         Returns:
             Generated question data
         """
-        pass
     
     @abstractmethod
     def get_pictograph_dataset(self) -> Dict[Any, List[Dict]]:
@@ -148,7 +139,6 @@ class IQuestionGenerationService(ABC):
         Returns:
             Dictionary mapping letters to pictograph data lists
         """
-        pass
     
     @abstractmethod
     def validate_question(self, question: QuestionData) -> bool:
@@ -161,7 +151,6 @@ class IQuestionGenerationService(ABC):
         Returns:
             True if question is valid, False otherwise
         """
-        pass
 
 
 class IAnswerValidationService(ABC):
@@ -179,7 +168,6 @@ class IAnswerValidationService(ABC):
         Returns:
             True if answer is correct, False otherwise
         """
-        pass
     
     @abstractmethod
     def record_answer(self, session_id: str, question_id: str, correct: bool) -> None:
@@ -191,7 +179,6 @@ class IAnswerValidationService(ABC):
             question_id: Question that was answered
             correct: Whether the answer was correct
         """
-        pass
     
     @abstractmethod
     def get_answer_history(self, session_id: str) -> List[Tuple[str, bool]]:
@@ -204,7 +191,6 @@ class IAnswerValidationService(ABC):
         Returns:
             List of tuples containing (question_id, correct)
         """
-        pass
 
 
 class ILessonProgressService(ABC):
@@ -221,7 +207,6 @@ class ILessonProgressService(ABC):
         Returns:
             Dictionary containing progress information
         """
-        pass
     
     @abstractmethod
     def is_lesson_complete(self, session_id: str) -> bool:
@@ -234,7 +219,6 @@ class ILessonProgressService(ABC):
         Returns:
             True if lesson is complete, False otherwise
         """
-        pass
     
     @abstractmethod
     def calculate_results(self, session_id: str) -> LessonResults:
@@ -247,7 +231,6 @@ class ILessonProgressService(ABC):
         Returns:
             Complete lesson results with statistics
         """
-        pass
     
     @abstractmethod
     def should_advance_to_next_question(self, session_id: str) -> bool:
@@ -260,7 +243,6 @@ class ILessonProgressService(ABC):
         Returns:
             True if should advance, False otherwise
         """
-        pass
 
 
 class ILearnUIService(ABC):
@@ -278,7 +260,6 @@ class ILearnUIService(ABC):
         Returns:
             Dictionary mapping font type to size
         """
-        pass
     
     @abstractmethod
     def get_component_sizes(self, widget_width: int, widget_height: int) -> Dict[str, Tuple[int, int]]:
@@ -292,7 +273,6 @@ class ILearnUIService(ABC):
         Returns:
             Dictionary mapping component type to (width, height) tuple
         """
-        pass
     
     @abstractmethod
     def get_layout_spacing(self, widget_width: int, widget_height: int) -> Dict[str, int]:
@@ -306,7 +286,6 @@ class ILearnUIService(ABC):
         Returns:
             Dictionary mapping spacing type to pixel value
         """
-        pass
 
 
 class ILearnNavigationService(ABC):
@@ -315,7 +294,6 @@ class ILearnNavigationService(ABC):
     @abstractmethod
     def navigate_to_lesson_selector(self) -> None:
         """Navigate to lesson selector view."""
-        pass
     
     @abstractmethod
     def navigate_to_lesson(self, session_id: str) -> None:
@@ -325,7 +303,6 @@ class ILearnNavigationService(ABC):
         Args:
             session_id: Session to navigate to
         """
-        pass
     
     @abstractmethod
     def navigate_to_results(self, session_id: str) -> None:
@@ -335,7 +312,6 @@ class ILearnNavigationService(ABC):
         Args:
             session_id: Session to show results for
         """
-        pass
     
     @abstractmethod
     def get_current_view(self) -> str:
@@ -345,7 +321,6 @@ class ILearnNavigationService(ABC):
         Returns:
             String identifier for current view
         """
-        pass
     
     @abstractmethod
     def can_navigate_back(self) -> bool:
@@ -355,7 +330,6 @@ class ILearnNavigationService(ABC):
         Returns:
             True if can navigate back, False otherwise
         """
-        pass
 
 
 class ILearnDataService(ABC):
@@ -373,7 +347,6 @@ class ILearnDataService(ABC):
         Returns:
             True if save successful, False otherwise
         """
-        pass
     
     @abstractmethod
     def load_lesson_progress(self, session_id: str) -> Optional[Dict[str, Any]]:
@@ -386,7 +359,6 @@ class ILearnDataService(ABC):
         Returns:
             Progress data or None if not found
         """
-        pass
     
     @abstractmethod
     def save_lesson_results(self, results: LessonResults) -> bool:
@@ -399,7 +371,6 @@ class ILearnDataService(ABC):
         Returns:
             True if save successful, False otherwise
         """
-        pass
     
     @abstractmethod
     def get_lesson_history(self, lesson_type: LessonType, limit: int = 10) -> List[LessonResults]:
@@ -413,4 +384,3 @@ class ILearnDataService(ABC):
         Returns:
             List of lesson results ordered by completion date
         """
-        pass

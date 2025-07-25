@@ -163,7 +163,6 @@ class OptionPickerWidget(QWidget):
 
     def initialize(self) -> None:
         """Initialize - already done in constructor."""
-        pass
 
     def cleanup(self) -> None:
         """Cleanup resources."""

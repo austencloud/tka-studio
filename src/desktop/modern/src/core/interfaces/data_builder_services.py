@@ -32,7 +32,6 @@ class IBeatDataBuilder(ABC):
         Note:
             Web implementation: Creates beat data structure for client-side
         """
-        pass
 
     @abstractmethod
     def validate_beat_config(self, beat_config: Dict[str, Any]) -> bool:
@@ -45,7 +44,6 @@ class IBeatDataBuilder(ABC):
         Returns:
             True if configuration is valid
         """
-        pass
 
     @abstractmethod
     def get_default_beat_config(self) -> Dict[str, Any]:
@@ -55,7 +53,6 @@ class IBeatDataBuilder(ABC):
         Returns:
             Default beat configuration dictionary
         """
-        pass
 
     @abstractmethod
     def build_from_legacy_data(self, legacy_data: Dict[str, Any]) -> Any:
@@ -68,7 +65,6 @@ class IBeatDataBuilder(ABC):
         Returns:
             Modern beat data object
         """
-        pass
 
 
 class IPictographFactory(ABC):
@@ -86,7 +82,6 @@ class IPictographFactory(ABC):
         Returns:
             Pictograph instance
         """
-        pass
 
     @abstractmethod
     def get_available_types(self) -> List[str]:
@@ -96,7 +91,6 @@ class IPictographFactory(ABC):
         Returns:
             List of available pictograph types
         """
-        pass
 
     @abstractmethod
     def validate_pictograph_config(
@@ -112,7 +106,6 @@ class IPictographFactory(ABC):
         Returns:
             True if configuration is valid
         """
-        pass
 
     @abstractmethod
     def create_from_beat_data(self, beat_data: Any) -> Any:
@@ -125,7 +118,6 @@ class IPictographFactory(ABC):
         Returns:
             Pictograph instance
         """
-        pass
 
 
 class IConversionUtils(ABC):
@@ -146,7 +138,6 @@ class IConversionUtils(ABC):
         Returns:
             Converted (x, y) coordinates
         """
-        pass
 
     @abstractmethod
     def convert_color_format(self, color: str, from_format: str, to_format: str) -> str:
@@ -161,7 +152,6 @@ class IConversionUtils(ABC):
         Returns:
             Converted color value
         """
-        pass
 
     @abstractmethod
     def convert_units(self, value: float, from_unit: str, to_unit: str) -> float:
@@ -176,7 +166,6 @@ class IConversionUtils(ABC):
         Returns:
             Converted value
         """
-        pass
 
     @abstractmethod
     def normalize_data_format(self, data: Any, target_format: str) -> Any:
@@ -190,7 +179,6 @@ class IConversionUtils(ABC):
         Returns:
             Normalized data
         """
-        pass
 
 
 class IDatasetQuery(ABC):
@@ -207,7 +195,6 @@ class IDatasetQuery(ABC):
         Returns:
             List of matching pictographs
         """
-        pass
 
     @abstractmethod
     def filter_by_attributes(
@@ -223,7 +210,6 @@ class IDatasetQuery(ABC):
         Returns:
             Filtered dataset
         """
-        pass
 
     @abstractmethod
     def sort_dataset(
@@ -240,7 +226,6 @@ class IDatasetQuery(ABC):
         Returns:
             Sorted dataset
         """
-        pass
 
     @abstractmethod
     def search_text(self, dataset: List[Any], search_term: str) -> List[Any]:
@@ -254,7 +239,6 @@ class IDatasetQuery(ABC):
         Returns:
             Matching results
         """
-        pass
 
     @abstractmethod
     def aggregate_data(
@@ -271,7 +255,6 @@ class IDatasetQuery(ABC):
         Returns:
             Aggregated results dictionary
         """
-        pass
 
     @abstractmethod
     def apply_filters(
@@ -287,7 +270,6 @@ class IDatasetQuery(ABC):
         Returns:
             Filtered dataset
         """
-        pass
 
 
 class IPictographDataService(ABC):
@@ -307,7 +289,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: May load from server or local storage
         """
-        pass
 
     @abstractmethod
     def save_pictograph_data(self, pictograph_id: str, data: Any) -> bool:
@@ -324,7 +305,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: May save to server or local storage
         """
-        pass
 
     @abstractmethod
     def delete_pictograph_data(self, pictograph_id: str) -> bool:
@@ -340,7 +320,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: Removes from server or local storage
         """
-        pass
 
     @abstractmethod
     def list_pictograph_ids(self) -> List[str]:
@@ -353,7 +332,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: Retrieved from server or local storage
         """
-        pass
 
     @abstractmethod
     def search_pictographs(self, search_criteria: Dict[str, Any]) -> List[Any]:
@@ -369,7 +347,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: May search server-side or client-side
         """
-        pass
 
     @abstractmethod
     def validate_pictograph_data(self, data: Any) -> Tuple[bool, List[str]]:
@@ -382,7 +359,6 @@ class IPictographDataService(ABC):
         Returns:
             Tuple of (is_valid, error_messages)
         """
-        pass
 
     @abstractmethod
     def get_pictograph_metadata(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
@@ -398,7 +374,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: Lightweight metadata for quick access
         """
-        pass
 
     @abstractmethod
     def update_pictograph_metadata(
@@ -417,7 +392,6 @@ class IPictographDataService(ABC):
         Note:
             Web implementation: Updates cached metadata
         """
-        pass
 
 
 class IPositionAttributeMapper(ABC):
@@ -426,17 +400,14 @@ class IPositionAttributeMapper(ABC):
     @abstractmethod
     def map_position_attributes(self, position_data: Dict[str, Any]) -> Dict[str, Any]:
         """Map position attributes between formats."""
-        pass
 
     @abstractmethod
     def validate_position_data(self, position_data: Dict[str, Any]) -> bool:
         """Validate position data structure."""
-        pass
 
     @abstractmethod
     def get_default_position_attributes(self) -> Dict[str, Any]:
         """Get default position attributes."""
-        pass
 
 
 class IPositionResolver(ABC):
@@ -445,17 +416,14 @@ class IPositionResolver(ABC):
     @abstractmethod
     def resolve_position(self, position_key: str) -> Optional[Any]:
         """Resolve position from key."""
-        pass
 
     @abstractmethod
     def get_valid_positions(self) -> List[str]:
         """Get list of valid position keys."""
-        pass
 
     @abstractmethod
     def validate_position_key(self, position_key: str) -> bool:
         """Validate position key format."""
-        pass
 
 
 class IGlyphDataService(ABC):
@@ -472,7 +440,6 @@ class IGlyphDataService(ABC):
         Args:
             pictograph_data: The pictograph data to analyze
         """
-        pass
 
     @abstractmethod
     def determine_glyph_data_from_beat(self, beat_data: "BeatData") -> None:
@@ -485,17 +452,14 @@ class IGlyphDataService(ABC):
         Args:
             beat_data: The beat data to analyze
         """
-        pass
 
     @abstractmethod
     def _beat_data_to_pictograph_data(self, beat_data: "BeatData") -> "PictographData":
         """Convert BeatData to PictographData for glyph processing."""
-        pass
 
     @abstractmethod
     def _determine_letter_type(self, letter: str) -> Optional["LetterType"]:
         """Determine the letter type from the letter string."""
-        pass
 
     @abstractmethod
     def _determine_vtg_mode(
@@ -507,32 +471,27 @@ class IGlyphDataService(ABC):
         This is a simplified implementation. The full logic is quite complex
         and involves grid mode checking, position analysis, etc.
         """
-        pass
 
     @abstractmethod
     def _motions_same_direction(
         self, blue_motion: "MotionData", red_motion: "MotionData"
     ) -> bool:
         """Check if two motions are in the same direction."""
-        pass
 
     @abstractmethod
     def _determine_timing(
         self, blue_motion: "MotionData", red_motion: "MotionData"
     ) -> str:
         """Determine if motions are split, together, or quarter pattern."""
-        pass
 
     @abstractmethod
     def _vtg_to_elemental(
         self, vtg_mode: Optional["VTGMode"]
     ) -> Optional["ElementalType"]:
         """Convert VTG mode to elemental type."""
-        pass
 
     @abstractmethod
     def _determine_positions(
         self, pictograph_data: "PictographData"
     ) -> Tuple[Optional[str], Optional[str]]:
         """Determine start and end positions from pictograph data."""
-        pass

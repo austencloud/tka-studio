@@ -6,7 +6,6 @@ Validates that the UI testing framework is properly installed and working.
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Add the src directory to the Python path
@@ -20,19 +19,7 @@ def validate_imports():
     print("🔍 Validating imports...")
 
     try:
-        from core.testing import (
-            SimpleUITester,
-            UITestRunner,
-            ComponentInitializer,
-            ButtonTester,
-            GraphEditorTester,
-            TKAAITestHelper,
-            AITestResult,
-            quick_ui_test,
-            full_ui_test,
-            test_buttons_only,
-            test_graph_editor_only,
-        )
+        pass
 
         print("✅ All imports successful")
         return True

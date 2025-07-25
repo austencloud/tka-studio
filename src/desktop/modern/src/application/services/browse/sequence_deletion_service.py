@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import QDialog, QMessageBox, QWidget
+from PyQt6.QtWidgets import QMessageBox, QWidget
 
 logger = logging.getLogger(__name__)
 

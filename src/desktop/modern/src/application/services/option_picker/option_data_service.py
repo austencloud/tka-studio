@@ -11,7 +11,6 @@ from typing import List, Optional
 
 from application.services.data.dataset_query import IDatasetQuery
 from core.dependency_injection.di_container import DIContainer
-from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from presentation.components.option_picker.types.letter_types import LetterType
 

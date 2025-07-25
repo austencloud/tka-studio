@@ -19,7 +19,6 @@ from core.interfaces.animation_core_interfaces import (
     AnimationConfig,
     AnimationEvent,
     AnimationState,
-    AnimationType,
     EasingType
 )
 

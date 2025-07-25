@@ -41,12 +41,10 @@ class CAPOperation(ABC):
     @abstractmethod
     def execute(self, sequence: SequenceData, **kwargs) -> SequenceData:
         """Execute the CAP transformation."""
-        pass
 
     @abstractmethod
     def validate_applicability(self, sequence: SequenceData) -> bool:
         """Check if CAP can be applied to this sequence."""
-        pass
 
 
 class StrictRotatedCAP(CAPOperation):

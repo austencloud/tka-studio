@@ -12,7 +12,6 @@ PROVIDES:
 - Event-driven prop positioning
 """
 
-import os
 import sys
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Tuple

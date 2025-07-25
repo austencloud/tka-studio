@@ -16,7 +16,7 @@ Services Registered:
 """
 
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from ..service_registration_manager import BaseServiceRegistrar
 
@@ -110,9 +110,6 @@ class SequenceServiceRegistrar(BaseServiceRegistrar):
             # Register sequence state tracker service
             # Note: This needs event_bus and command_processor dependencies
             # For now, we'll register it as a factory that gets resolved later
-            from application.services.sequence.sequence_state_tracker_service import (
-                SequenceStateTrackerService,
-            )
             from presentation.adapters.qt.sequence_state_tracker_adapter import (
                 QtSequenceStateTrackerAdapter,
             )

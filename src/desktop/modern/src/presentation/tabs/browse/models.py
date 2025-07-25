@@ -8,7 +8,7 @@ and straightforward data structures.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Import existing SequenceData from domain models
 # from ...domain.models.sequence_data import SequenceData

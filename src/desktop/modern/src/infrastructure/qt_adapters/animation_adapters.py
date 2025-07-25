@@ -6,15 +6,12 @@ the platform-agnostic animation protocols, enabling seamless integration
 with the existing Qt desktop infrastructure.
 """
 
-from typing import Any, Optional
+from typing import Any
 from PyQt6.QtWidgets import QStackedWidget, QGraphicsOpacityEffect
-from PyQt6.QtCore import QPropertyAnimation, QParallelAnimationGroup, QObject
+from PyQt6.QtCore import QPropertyAnimation, QParallelAnimationGroup
 
 from core.types.animation import (
-    StackContainer,
-    OpacityEffect,
     PropertyAnimation,
-    AnimationGroup,
 )
 
 

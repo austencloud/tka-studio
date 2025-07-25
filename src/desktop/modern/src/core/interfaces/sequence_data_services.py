@@ -11,7 +11,6 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from domain.models.beat_data import BeatData
-from domain.models.enums import LetterType, MotionType
 from domain.models.sequence_data import SequenceData
 
 
@@ -41,7 +40,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Uses browser storage or server API
         """
-        pass
 
     @abstractmethod
     def load_sequence(self, filepath: str) -> Optional[SequenceData]:
@@ -57,7 +55,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Uses browser storage or server API
         """
-        pass
 
     @abstractmethod
     def delete_sequence(self, filepath: str) -> bool:
@@ -73,7 +70,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Uses browser storage or server API
         """
-        pass
 
     @abstractmethod
     def list_sequences(self, directory: str = "") -> List[str]:
@@ -89,7 +85,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Lists from browser storage or server
         """
-        pass
 
     @abstractmethod
     def get_sequence_metadata(self, filepath: str) -> Optional[Dict[str, Any]]:
@@ -105,7 +100,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Metadata may be cached in browser storage
         """
-        pass
 
     @abstractmethod
     def backup_sequence(self, filepath: str, backup_name: str) -> bool:
@@ -122,7 +116,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Creates backup in browser storage
         """
-        pass
 
     @abstractmethod
     def restore_sequence(self, backup_name: str, filepath: str) -> bool:
@@ -139,7 +132,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Restores from browser storage backup
         """
-        pass
 
     @abstractmethod
     def get_recent_sequences(self, limit: int = 10) -> List[str]:
@@ -155,7 +147,6 @@ class ISequenceRepository(ABC):
         Note:
             Web implementation: Retrieved from browser storage history
         """
-        pass
 
 
 class ISequenceTransformer(ABC):
@@ -179,7 +170,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same transformation logic across platforms
         """
-        pass
 
     @abstractmethod
     def reverse_sequence(self, sequence: SequenceData) -> SequenceData:
@@ -195,7 +185,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same logic across platforms
         """
-        pass
 
     @abstractmethod
     def mirror_sequence(
@@ -214,7 +203,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same mirroring logic across platforms
         """
-        pass
 
     @abstractmethod
     def scale_sequence(self, sequence: SequenceData, factor: float) -> SequenceData:
@@ -231,7 +219,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same scaling logic across platforms
         """
-        pass
 
     @abstractmethod
     def merge_sequences(
@@ -250,7 +237,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same merging logic across platforms
         """
-        pass
 
     @abstractmethod
     def split_sequence(
@@ -269,7 +255,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same splitting logic across platforms
         """
-        pass
 
     @abstractmethod
     def filter_beats(
@@ -288,7 +273,6 @@ class ISequenceTransformer(ABC):
         Note:
             Web implementation: Same filtering logic across platforms
         """
-        pass
 
     @abstractmethod
     def get_available_transformations(self) -> List[str]:
@@ -298,7 +282,6 @@ class ISequenceTransformer(ABC):
         Returns:
             List of transformation names
         """
-        pass
 
 
 class IPictographDataManager(ABC):
@@ -318,7 +301,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Retrieved from browser storage or server
         """
-        pass
 
     @abstractmethod
     def save_pictograph_data(self, pictograph_id: str, data: Dict[str, Any]) -> bool:
@@ -335,7 +317,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Saves to browser storage or server
         """
-        pass
 
     @abstractmethod
     def delete_pictograph_data(self, pictograph_id: str) -> bool:
@@ -351,7 +332,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Deletes from browser storage or server
         """
-        pass
 
     @abstractmethod
     def list_pictographs(self, category: Optional[str] = None) -> List[str]:
@@ -367,7 +347,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Lists from browser storage or server
         """
-        pass
 
     @abstractmethod
     def get_pictograph_metadata(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
@@ -383,7 +362,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Metadata may be cached in browser storage
         """
-        pass
 
     @abstractmethod
     def search_pictographs(
@@ -402,7 +380,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: May use client-side search or server API
         """
-        pass
 
     @abstractmethod
     def get_pictograph_categories(self) -> List[str]:
@@ -415,7 +392,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Retrieved from browser storage or server
         """
-        pass
 
     @abstractmethod
     def create_pictograph_category(self, category_name: str) -> bool:
@@ -431,7 +407,6 @@ class IPictographDataManager(ABC):
         Note:
             Web implementation: Creates in browser storage or server
         """
-        pass
 
 
 class IDataValidationService(ABC):
@@ -451,7 +426,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass
 
     @abstractmethod
     def validate_beat_data(self, beat_data: BeatData) -> Tuple[bool, List[str]]:
@@ -467,7 +441,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass
 
     @abstractmethod
     def validate_pictograph_data(
@@ -485,7 +458,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass
 
     @abstractmethod
     def validate_data_format(
@@ -504,7 +476,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Same validation logic across platforms
         """
-        pass
 
     @abstractmethod
     def get_validation_schema(self, schema_type: str) -> Dict[str, Any]:
@@ -520,7 +491,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Static schemas, can be shared configuration
         """
-        pass
 
     @abstractmethod
     def register_custom_validator(
@@ -538,7 +508,6 @@ class IDataValidationService(ABC):
         Note:
             Web implementation: Custom validators stored in memory
         """
-        pass
 
     @abstractmethod
     def get_available_validators(self) -> List[str]:
@@ -548,7 +517,6 @@ class IDataValidationService(ABC):
         Returns:
             List of validator names
         """
-        pass
 
 
 class IDataExportService(ABC):
@@ -572,7 +540,6 @@ class IDataExportService(ABC):
         Note:
             Web implementation: Downloads file or saves to browser storage
         """
-        pass
 
     @abstractmethod
     def export_beat_data(
@@ -592,7 +559,6 @@ class IDataExportService(ABC):
         Note:
             Web implementation: Downloads file or saves to browser storage
         """
-        pass
 
     @abstractmethod
     def export_pictograph_data(
@@ -612,7 +578,6 @@ class IDataExportService(ABC):
         Note:
             Web implementation: Downloads file or saves to browser storage
         """
-        pass
 
     @abstractmethod
     def get_supported_formats(self) -> List[str]:
@@ -622,7 +587,6 @@ class IDataExportService(ABC):
         Returns:
             List of format names
         """
-        pass
 
     @abstractmethod
     def get_format_options(self, format_type: str) -> Dict[str, Any]:
@@ -635,7 +599,6 @@ class IDataExportService(ABC):
         Returns:
             Dictionary of format options
         """
-        pass
 
 
 class IDataImportService(ABC):
@@ -658,7 +621,6 @@ class IDataImportService(ABC):
         Note:
             Web implementation: Imports from file upload or browser storage
         """
-        pass
 
     @abstractmethod
     def import_beat_data(self, filepath: str, format_type: str) -> Optional[BeatData]:
@@ -675,7 +637,6 @@ class IDataImportService(ABC):
         Note:
             Web implementation: Imports from file upload or browser storage
         """
-        pass
 
     @abstractmethod
     def import_pictograph_data(
@@ -694,7 +655,6 @@ class IDataImportService(ABC):
         Note:
             Web implementation: Imports from file upload or browser storage
         """
-        pass
 
     @abstractmethod
     def get_supported_import_formats(self) -> List[str]:
@@ -704,7 +664,6 @@ class IDataImportService(ABC):
         Returns:
             List of format names
         """
-        pass
 
     @abstractmethod
     def validate_import_file(
@@ -723,7 +682,6 @@ class IDataImportService(ABC):
         Note:
             Web implementation: Validates file upload or browser storage file
         """
-        pass
 
 
 class ISequenceLoader(ABC):
@@ -745,7 +703,6 @@ class ISequenceLoader(ABC):
         Returns:
             Loaded sequence data, or None if failed
         """
-        pass
 
     @abstractmethod
     def load_current_sequence(self) -> Optional[SequenceData]:
@@ -755,7 +712,6 @@ class ISequenceLoader(ABC):
         Returns:
             Current sequence data, or None if not found
         """
-        pass
 
 
 class ISequenceDictionaryManager(ABC):
@@ -777,7 +733,6 @@ class ISequenceDictionaryManager(ABC):
         Returns:
             Word string, or None if failed
         """
-        pass
 
     @abstractmethod
     def calculate_difficulty(self, sequence: SequenceData) -> int:
@@ -790,7 +745,6 @@ class ISequenceDictionaryManager(ABC):
         Returns:
             Difficulty level as integer
         """
-        pass
 
     @abstractmethod
     def add_sequence_to_dictionary(self, sequence: SequenceData, word: str) -> bool:
@@ -804,7 +758,6 @@ class ISequenceDictionaryManager(ABC):
         Returns:
             True if successfully added, False otherwise
         """
-        pass
 
 
 class ISequenceGenerator(ABC):
@@ -830,7 +783,6 @@ class ISequenceGenerator(ABC):
         Returns:
             Generated sequence data
         """
-        pass
 
 
 class ISequenceStartPositionManager(ABC):
@@ -848,7 +800,6 @@ class ISequenceStartPositionManager(ABC):
         Args:
             start_position_beat_data: Beat data for start position
         """
-        pass
 
     @abstractmethod
     def update_start_position_orientation(self, color: str, new_orientation: int) -> None:
@@ -859,7 +810,6 @@ class ISequenceStartPositionManager(ABC):
             color: Color identifier
             new_orientation: New orientation value
         """
-        pass
 
     @abstractmethod
     def get_current_start_position(self) -> Optional[BeatData]:
@@ -869,12 +819,10 @@ class ISequenceStartPositionManager(ABC):
         Returns:
             Current start position beat data, or None if not set
         """
-        pass
 
     @abstractmethod
     def clear_start_position(self) -> None:
         """Clear the start position."""
-        pass
 
     @abstractmethod
     def has_start_position(self) -> bool:
@@ -884,4 +832,3 @@ class ISequenceStartPositionManager(ABC):
         Returns:
             True if has start position, False otherwise
         """
-        pass

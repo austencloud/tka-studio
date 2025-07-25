@@ -6,7 +6,6 @@ the established patterns for service registration.
 """
 
 import logging
-from pathlib import Path
 
 from application.services.sequence_card.sequence_cache_service import (
     SequenceCardCacheService,

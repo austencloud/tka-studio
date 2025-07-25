@@ -5,11 +5,9 @@ Interfaces for browse-related services following clean architecture patterns.
 """
 
 from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from domain.models.sequence_data import SequenceData
-from presentation.tabs.browse.models import FilterType
 from PyQt6.QtWidgets import QWidget
 
 
@@ -36,7 +34,6 @@ class ISequenceDeletionService(ABC):
         Returns:
             True if deletion was successful, False if cancelled or failed
         """
-        pass
 
     @abstractmethod
     def delete_entire_sequence(
@@ -52,7 +49,6 @@ class ISequenceDeletionService(ABC):
         Returns:
             True if deletion was successful, False if cancelled or failed
         """
-        pass
 
 
 class IThumbnailFactory(ABC):
@@ -73,7 +69,6 @@ class IThumbnailFactory(ABC):
         Returns:
             QWidget containing the sequence thumbnail
         """
-        pass
 
 
 class ILayoutManager(ABC):
@@ -82,7 +77,6 @@ class ILayoutManager(ABC):
     @abstractmethod
     def clear_grid(self) -> None:
         """Clear all items from the grid layout."""
-        pass
 
     @abstractmethod
     def add_section_header(self, section_name: str, current_row: int) -> int:
@@ -96,7 +90,6 @@ class ILayoutManager(ABC):
         Returns:
             Updated row position after adding header
         """
-        pass
 
     @abstractmethod
     def add_thumbnail_to_grid(self, thumbnail: QWidget, row: int, col: int) -> None:
@@ -108,17 +101,14 @@ class ILayoutManager(ABC):
             row: Grid row position
             col: Grid column position
         """
-        pass
 
     @abstractmethod
     def set_row_stretch(self, row: int, stretch: int) -> None:
         """Set stretch factor for a grid row."""
-        pass
 
     @abstractmethod
     def get_row_count(self) -> int:
         """Get the current number of rows in the grid."""
-        pass
 
 
 class ILoadingStateManager(ABC):
@@ -127,12 +117,10 @@ class ILoadingStateManager(ABC):
     @abstractmethod
     def show_loading_state(self) -> None:
         """Show loading UI and hide main content."""
-        pass
 
     @abstractmethod
     def hide_loading_state(self) -> None:
         """Hide loading UI and show main content."""
-        pass
 
     @abstractmethod
     def update_progress(self, current: int, total: int, message: str = "") -> None:
@@ -144,12 +132,10 @@ class ILoadingStateManager(ABC):
             total: Total progress value
             message: Optional status message
         """
-        pass
 
     @abstractmethod
     def show_empty_state(self) -> None:
         """Show empty state when no sequences are found."""
-        pass
 
 
 class ISequenceSorter(ABC):
@@ -169,7 +155,6 @@ class ISequenceSorter(ABC):
         Returns:
             Sorted list of sequences
         """
-        pass
 
     @abstractmethod
     def group_sequences_into_sections(
@@ -185,7 +170,6 @@ class ISequenceSorter(ABC):
         Returns:
             Dictionary mapping section names to sequence lists
         """
-        pass
 
     @abstractmethod
     def get_section_key(self, sequence: SequenceData, sort_method: str) -> str:
@@ -199,7 +183,6 @@ class ISequenceSorter(ABC):
         Returns:
             Section key string
         """
-        pass
 
 
 class INavigationHandler(ABC):
@@ -213,7 +196,6 @@ class INavigationHandler(ABC):
         Args:
             section_name: Name of the section to scroll to
         """
-        pass
 
     @abstractmethod
     def update_navigation_sections(
@@ -226,4 +208,3 @@ class INavigationHandler(ABC):
             section_names: List of section names
             sort_method: Current sort method
         """
-        pass

@@ -18,22 +18,18 @@ class ISequencePersister(ABC):
     @abstractmethod
     def load_current_sequence(self) -> List[Dict[str, Any]]:
         """Load current sequence from JSON file."""
-        pass
 
     @abstractmethod
     def save_current_sequence(self, sequence: List[Dict[str, Any]]) -> None:
         """Save current sequence to JSON file."""
-        pass
 
     @abstractmethod
     def clear_current_sequence(self) -> None:
         """Clear the current sequence."""
-        pass
 
     @abstractmethod
     def get_default_sequence(self) -> List[Dict[str, Any]]:
         """Return default sequence metadata."""
-        pass
 
 
 class SequencePersister(ISequencePersister):

@@ -5,10 +5,8 @@ Tests graph editor interactions and provides clear guidance for AI agents.
 """
 
 import time
-from typing import Dict, List, Optional, Any
-from PyQt6.QtWidgets import QWidget, QPushButton
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QKeyEvent
+from typing import List
+from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
 
 from core.testing.ai_agent_helpers import AITestResult

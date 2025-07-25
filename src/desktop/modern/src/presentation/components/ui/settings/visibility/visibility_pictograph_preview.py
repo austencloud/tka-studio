@@ -10,13 +10,10 @@ from typing import Dict, Optional
 
 from domain.models import (
     BeatData,
-    ElementalType,
-    LetterType,
     Location,
     MotionData,
     MotionType,
     RotationDirection,
-    VTGMode,
 )
 from domain.models.enums import Orientation
 from domain.models.pictograph_data import PictographData

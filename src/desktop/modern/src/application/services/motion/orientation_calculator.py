@@ -14,7 +14,7 @@ while maintaining the proven orientation calculation algorithms.
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from domain.models.enums import Location, MotionType, Orientation
+from domain.models.enums import MotionType, Orientation
 from domain.models.motion_data import MotionData
 
 

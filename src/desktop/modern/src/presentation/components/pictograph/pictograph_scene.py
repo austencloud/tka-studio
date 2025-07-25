@@ -13,11 +13,8 @@ from application.services.pictograph.pictograph_visibility_manager import (
 )
 from domain.models import BeatData
 from domain.models.arrow_data import ArrowData
-from domain.models.enums import LetterType
-from domain.models.letter_type_classifier import LetterTypeClassifier
 from domain.models.pictograph_data import PictographData
 from domain.models.pictograph_utils import (
-    compute_elemental_type_from_pictograph,
     compute_vtg_mode,
     should_show_elemental,
     should_show_positions,

@@ -6,7 +6,6 @@ Provides integration points for running UI tests from the main application.
 
 import logging
 import sys
-from typing import Optional
 
 from core.testing.simple_ui_tester import SimpleUITester
 from core.testing.ai_agent_helpers import TKAAITestHelper

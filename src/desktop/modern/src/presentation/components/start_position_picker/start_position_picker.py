@@ -30,7 +30,7 @@ from presentation.components.start_position_picker.start_position_picker_footer 
 from presentation.components.start_position_picker.start_position_picker_header import (
     StartPositionPickerHeader,
 )
-from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)

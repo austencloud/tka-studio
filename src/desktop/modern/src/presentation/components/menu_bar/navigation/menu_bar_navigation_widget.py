@@ -7,9 +7,9 @@ Provides clean button-based navigation between different application sections.
 
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from ..buttons.styled_button import ButtonContext, StyledButton
 
@@ -91,7 +91,6 @@ class MenuBarNavigationWidget(QWidget):
 
     def _connect_signals(self):
         """Connect internal signals."""
-        pass
 
     def _on_tab_clicked(self, tab_name: str):
         """Handle tab button click."""

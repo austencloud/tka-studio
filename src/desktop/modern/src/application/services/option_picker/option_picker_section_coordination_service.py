@@ -12,9 +12,7 @@ from domain.models.sequence_data import SequenceData
 from presentation.components.option_picker.types.letter_types import LetterType
 
 if TYPE_CHECKING:
-    from presentation.components.option_picker.components.option_picker_section import (
-        OptionPickerSection,
-    )
+    pass
 
 
 class OptionPickerSectionCoordinationService:

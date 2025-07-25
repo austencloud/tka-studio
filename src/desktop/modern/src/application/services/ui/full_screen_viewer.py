@@ -27,7 +27,6 @@ class IThumbnailGenerator(Protocol):
         fullscreen_preview: bool = False,
     ) -> Optional[Path]:
         """Generate thumbnail image for sequence"""
-        pass
 
 
 class ISequenceStateReader(Protocol):
@@ -35,7 +34,6 @@ class ISequenceStateReader(Protocol):
 
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence from workbench UI state"""
-        pass
 
 
 class IFullScreenOverlayFactory(Protocol):
@@ -43,7 +41,6 @@ class IFullScreenOverlayFactory(Protocol):
 
     def create_overlay(self, parent_widget) -> "IFullScreenOverlay":
         """Create a full screen overlay widget"""
-        pass
 
 
 class IFullScreenOverlay(Protocol):
@@ -51,11 +48,9 @@ class IFullScreenOverlay(Protocol):
 
     def show_image(self, image_path: Path) -> None:
         """Display image in full screen overlay"""
-        pass
 
     def close(self) -> None:
         """Close the overlay"""
-        pass
 
 
 class FullScreenViewer(IFullScreenViewer):

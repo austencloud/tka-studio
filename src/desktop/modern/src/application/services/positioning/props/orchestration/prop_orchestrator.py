@@ -11,7 +11,6 @@ PROVIDES:
 - Event-driven prop positioning
 """
 
-import logging
 import os
 import sys
 import uuid

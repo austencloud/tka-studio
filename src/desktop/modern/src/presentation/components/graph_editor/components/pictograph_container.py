@@ -7,11 +7,9 @@ from application.services.pictograph.pictograph_position_matcher import (
 from domain.models.beat_data import BeatData
 from domain.models.pictograph_data import PictographData
 from presentation.components.pictograph.views import (
-    BasePictographView,
     create_pictograph_view,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QMouseEvent, QPainter
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 from ..config import ColorConfig, LayoutConfig, SizeConfig, StateConfig, UIConfig

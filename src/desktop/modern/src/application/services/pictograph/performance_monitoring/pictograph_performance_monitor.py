@@ -12,7 +12,7 @@ This service handles:
 import logging
 import time
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from core.interfaces.pictograph_rendering_services import IPictographPerformanceMonitor
 

@@ -332,7 +332,6 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
         """Register services that haven't been migrated to specialized registrars yet."""
         # All services are now handled by specialized registrars!
         # This method is kept for backward compatibility but no longer needed.
-        pass
 
     def register_event_system(self, container: "DIContainer") -> None:
         """

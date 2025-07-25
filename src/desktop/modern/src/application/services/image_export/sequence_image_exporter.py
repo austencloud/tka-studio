@@ -5,9 +5,7 @@ This service provides image export functionality that replicates the legacy syst
 while following clean architecture patterns and using modern data types.
 """
 
-import json
 import logging
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 

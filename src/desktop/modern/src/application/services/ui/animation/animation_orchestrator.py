@@ -4,18 +4,14 @@ This is the main service that UI components interact with.
 """
 
 import asyncio
-from typing import Any, List, Optional, Callable, Dict
-from dataclasses import dataclass
+from typing import Any, List, Optional, Callable
 
 from core.interfaces.animation_core_interfaces import (
     IAnimationOrchestrator,
     IAnimationCommand,
     IAnimationEngine,
     IEventBus,
-    AnimationTarget,
     AnimationConfig,
-    AnimationType,
-    EasingType,
     FadeCommand,
     TransitionCommand
 )
@@ -27,7 +23,6 @@ from core.animation.animation_engine import (
 from .adapters.qt_adapters import (
     QtTargetAdapter,
     QtAnimationRenderer,
-    QtAnimationScheduler,
     QtEventBridge,
     QtStackWidgetAdapter,
     QtGraphicsEffectManager,

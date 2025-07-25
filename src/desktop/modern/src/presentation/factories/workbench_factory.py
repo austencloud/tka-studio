@@ -38,11 +38,8 @@ from application.services.workbench.workbench_state_manager import WorkbenchStat
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.core_services import ILayoutService, IUIStateManager
 from core.interfaces.workbench_services import (
-    IBeatDeletionService,
-    IDictionaryService,
     IFullScreenViewer,
     IGraphEditorService,
-    ISequenceWorkbenchService,
     IWorkbenchStateManager,
 )
 from presentation.components.sequence_workbench.sequence_workbench import (

@@ -14,7 +14,7 @@ from core.interfaces.image_export_services import IBeatDrawer, ImageExportOption
 from domain.models.pictograph_data import PictographData
 from presentation.components.pictograph.pictograph_scene import PictographScene
 from PyQt6.QtCore import QRect, Qt
-from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen, QPixmap
+from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper

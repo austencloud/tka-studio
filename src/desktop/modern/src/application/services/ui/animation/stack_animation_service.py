@@ -10,8 +10,7 @@ from core.interfaces.animation_interfaces import (
     IStackAnimationService, 
     IAnimationService,
     StackFadeOptions, 
-    ParallelStackOperation,
-    FadeOptions
+    ParallelStackOperation
 )
 from core.interfaces.core_services import ILayoutService
 

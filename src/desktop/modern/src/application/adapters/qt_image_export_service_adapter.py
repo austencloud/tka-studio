@@ -10,10 +10,8 @@ from typing import Any, Dict, List
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QImage, QPainter, QPen, QFont
-from PyQt6.QtWidgets import QApplication
 
 from application.services.core.image_export_service import (
-    CoreImageExportService,
     create_image_export_service
 )
 from application.services.core.types import Point, Size

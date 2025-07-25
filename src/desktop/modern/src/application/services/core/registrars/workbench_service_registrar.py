@@ -14,7 +14,7 @@ Services Registered:
 """
 
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from ..service_registration_manager import BaseServiceRegistrar
 

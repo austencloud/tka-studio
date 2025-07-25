@@ -14,7 +14,7 @@ from core.interfaces.browse_services import (
     IThumbnailFactory,
 )
 from domain.models.sequence_data import SequenceData
-from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication
 
 
 class SequenceDisplayCoordinatorService:

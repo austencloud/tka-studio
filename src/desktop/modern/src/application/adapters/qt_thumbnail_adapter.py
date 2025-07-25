@@ -9,8 +9,8 @@ import logging
 from typing import Dict, List, Optional
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QPixmap
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 # Import framework-agnostic core
 import sys

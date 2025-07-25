@@ -5,7 +5,7 @@ Implements sophisticated beat sizing logic with precise
 dimension calculations and intelligent responsive behavior.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 from core.interfaces.core_services import IBeatResizer
 from PyQt6.QtCore import Qt
@@ -13,9 +13,6 @@ from PyQt6.QtWidgets import QScrollArea, QWidget
 
 if TYPE_CHECKING:
     from presentation.components.graph_editor.graph_editor import GraphEditor
-    from presentation.components.sequence_workbench.beat_frame.beat_frame import (
-        BeatFrame,
-    )
     from presentation.components.sequence_workbench.sequence_beat_frame.sequence_beat_frame import (
         SequenceBeatFrame,
     )

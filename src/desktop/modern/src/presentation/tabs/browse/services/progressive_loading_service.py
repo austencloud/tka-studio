@@ -5,7 +5,7 @@ This service handles progressive loading of sequences with visual feedback,
 ensuring the UI remains responsive during heavy operations.
 """
 
-from typing import Any, Callable, List, Optional
+from typing import Any, List
 
 from domain.models.sequence_data import SequenceData
 from presentation.tabs.browse.models import FilterType

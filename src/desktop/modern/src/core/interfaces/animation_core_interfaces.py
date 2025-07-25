@@ -4,10 +4,9 @@ These interfaces define the canonical animation system that can be adapted to an
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, List, Callable, Union, Dict, Any, Protocol
+from typing import Optional, List, Callable, Dict, Any
 from dataclasses import dataclass
 from enum import Enum
-import asyncio
 
 
 class EasingType(Enum):
@@ -84,22 +83,18 @@ class IAnimationCommand(ABC):
     @abstractmethod
     def command_id(self) -> str:
         """Unique identifier for this command."""
-        pass
     
     @abstractmethod
     async def execute(self) -> bool:
         """Execute the animation command."""
-        pass
     
     @abstractmethod
     async def undo(self) -> bool:
         """Undo the animation command (if possible)."""
-        pass
     
     @abstractmethod
     def can_undo(self) -> bool:
         """Check if this command can be undone."""
-        pass
 
 
 class IEventBus(ABC):
@@ -108,17 +103,14 @@ class IEventBus(ABC):
     @abstractmethod
     def emit(self, event_type: str, data: Any) -> None:
         """Emit an event."""
-        pass
     
     @abstractmethod
     def subscribe(self, event_type: str, handler: Callable[[Any], None]) -> str:
         """Subscribe to events. Returns subscription ID."""
-        pass
     
     @abstractmethod
     def unsubscribe(self, subscription_id: str) -> None:
         """Unsubscribe from events."""
-        pass
 
 
 class IAnimationEngine(ABC):
@@ -131,7 +123,6 @@ class IAnimationEngine(ABC):
         config: AnimationConfig
     ) -> str:
         """Start animation on target. Returns animation ID."""
-        pass
     
     @abstractmethod
     async def animate_targets(
@@ -140,27 +131,22 @@ class IAnimationEngine(ABC):
         config: AnimationConfig
     ) -> List[str]:
         """Animate multiple targets. Returns list of animation IDs."""
-        pass
     
     @abstractmethod
     def pause_animation(self, animation_id: str) -> bool:
         """Pause a running animation."""
-        pass
     
     @abstractmethod
     def resume_animation(self, animation_id: str) -> bool:
         """Resume a paused animation."""
-        pass
     
     @abstractmethod
     def cancel_animation(self, animation_id: str) -> bool:
         """Cancel an animation."""
-        pass
     
     @abstractmethod
     def get_animation_state(self, animation_id: str) -> Optional[AnimationState]:
         """Get current state of an animation."""
-        pass
 
 
 class ITargetAdapter(ABC):
@@ -169,7 +155,6 @@ class ITargetAdapter(ABC):
     @abstractmethod
     def adapt_target(self, framework_target: Any) -> AnimationTarget:
         """Convert framework-specific target to AnimationTarget."""
-        pass
     
     @abstractmethod
     def apply_animation(
@@ -179,7 +164,6 @@ class ITargetAdapter(ABC):
         value: Any
     ) -> bool:
         """Apply animation value to the actual target."""
-        pass
 
 
 class IAnimationRenderer(ABC):
@@ -194,12 +178,10 @@ class IAnimationRenderer(ABC):
         progress: float
     ) -> bool:
         """Render a single animation frame."""
-        pass
     
     @abstractmethod
     def supports_property(self, property_name: str) -> bool:
         """Check if this renderer supports the given property."""
-        pass
 
 
 class IAnimationScheduler(ABC):
@@ -213,12 +195,10 @@ class IAnimationScheduler(ABC):
         frame_callback: Callable[[float], None]
     ) -> None:
         """Schedule animation frames."""
-        pass
     
     @abstractmethod
     def get_current_time(self) -> float:
         """Get current time in seconds."""
-        pass
 
 
 class ISettingsProvider(ABC):
@@ -227,22 +207,18 @@ class ISettingsProvider(ABC):
     @abstractmethod
     def get_animations_enabled(self) -> bool:
         """Check if animations are globally enabled."""
-        pass
     
     @abstractmethod
     def get_default_duration(self) -> float:
         """Get default animation duration."""
-        pass
     
     @abstractmethod
     def get_default_easing(self) -> EasingType:
         """Get default easing type."""
-        pass
     
     @abstractmethod
     def get_reduced_motion(self) -> bool:
         """Check if user prefers reduced motion."""
-        pass
 
 
 # Command Implementations
@@ -374,7 +350,6 @@ class IAnimationOrchestrator(ABC):
         config: Optional[AnimationConfig] = None
     ) -> str:
         """Fade a target in or out."""
-        pass
     
     @abstractmethod
     async def fade_targets(
@@ -384,7 +359,6 @@ class IAnimationOrchestrator(ABC):
         config: Optional[AnimationConfig] = None
     ) -> List[str]:
         """Fade multiple targets."""
-        pass
     
     @abstractmethod
     async def transition_targets(
@@ -394,17 +368,14 @@ class IAnimationOrchestrator(ABC):
         config: Optional[AnimationConfig] = None
     ) -> None:
         """Fade out, update, then fade in."""
-        pass
     
     @abstractmethod
     async def execute_command(self, command: IAnimationCommand) -> bool:
         """Execute an animation command."""
-        pass
     
     @abstractmethod
     async def undo_last_command(self) -> bool:
         """Undo the last executed command."""
-        pass
 
 
 class IAnimationServiceFactory(ABC):
@@ -413,14 +384,11 @@ class IAnimationServiceFactory(ABC):
     @abstractmethod
     def create_target_adapter(self, framework_name: str) -> ITargetAdapter:
         """Create target adapter for specific framework."""
-        pass
     
     @abstractmethod
     def create_renderer(self, framework_name: str) -> IAnimationRenderer:
         """Create renderer for specific framework."""
-        pass
     
     @abstractmethod
     def create_scheduler(self, framework_name: str) -> IAnimationScheduler:
         """Create scheduler for specific framework."""
-        pass

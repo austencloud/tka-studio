@@ -15,8 +15,7 @@ from core.interfaces.animation_core_interfaces import (
     IEventBus,
     AnimationTarget,
     AnimationConfig,
-    AnimationEvent,
-    AnimationType
+    AnimationEvent
 )
 
 

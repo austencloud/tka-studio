@@ -18,7 +18,6 @@ from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QCoreApplication
 from PyQt6.QtGui import QFont
 
 from core.interfaces.sequence_card_services import (
-    ISequenceCardDisplayService,
     ISequenceCardCacheService,
     ISequenceCardLayoutService,
     SequenceCardData,

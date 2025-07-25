@@ -5,7 +5,7 @@ Provides quick navigation to different sections of the filtered results.
 Based on the Legacy SequencePickerNavSidebar architecture.
 """
 
-from typing import Callable, Dict, List, Optional
+from typing import List, Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont

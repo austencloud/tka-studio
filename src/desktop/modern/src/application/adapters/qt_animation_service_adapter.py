@@ -7,15 +7,14 @@ framework independence.
 """
 
 import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QStackedWidget, QGraphicsOpacityEffect
+from PyQt6.QtWidgets import QWidget, QGraphicsOpacityEffect
 
 from application.services.core.animation_service import (
     AnimationCommand,
     AnimationType,
-    CoreAnimationService,
     EasingType,
     create_animation_service
 )

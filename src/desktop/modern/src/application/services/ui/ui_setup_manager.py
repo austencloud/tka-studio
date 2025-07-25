@@ -19,8 +19,7 @@ from typing import TYPE_CHECKING, Callable, Optional
 from core.interfaces.session_services import ISessionStateTracker
 from presentation.components.menu_bar import MenuBarWidget
 from presentation.tabs.construct.construct_tab import ConstructTab
-from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 from .tab_management import ITabManagementService, TabManagementService
@@ -347,7 +346,7 @@ class UISetupManager(IUISetupManager):
 
             # Create a simple placeholder that looks like the real tab but loads instantly
             from PyQt6.QtCore import Qt
-            from PyQt6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
+            from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
             minimal_tab = QWidget()
             layout = QVBoxLayout(minimal_tab)
@@ -729,7 +728,7 @@ class UISetupManager(IUISetupManager):
                 time.sleep(0.2)
 
                 # Load construct tab in background
-                from PyQt6.QtCore import QThread, QTimer
+                from PyQt6.QtCore import QTimer
 
                 def load_on_main_thread():
                     """Load construct tab on main thread."""
@@ -940,7 +939,6 @@ class UISetupManager(IUISetupManager):
             # Import browse tab
             # Create browse tab with required paths
             # Using TKA's standard directories
-            import os
             from pathlib import Path
 
             from presentation.tabs.browse.browse_tab import BrowseTab

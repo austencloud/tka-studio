@@ -7,8 +7,7 @@ Handles smooth transitions between the two main browse modes.
 
 from typing import Dict, Optional
 
-from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QRect, pyqtSignal
-from PyQt6.QtGui import QPainter, QPaintEvent
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 

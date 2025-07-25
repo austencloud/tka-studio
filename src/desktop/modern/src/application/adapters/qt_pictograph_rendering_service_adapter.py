@@ -14,8 +14,7 @@ from PyQt6.QtWidgets import QGraphicsScene
 
 # Import the framework-agnostic services
 from application.services.core.pictograph_orchestration_service import (
-    CorePictographOrchestrationService,
-    IPictographOrchestrationService
+    CorePictographOrchestrationService
 )
 from application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider

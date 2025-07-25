@@ -7,7 +7,7 @@ and session coordination operations within the workbench context.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Dict, List, NamedTuple, Optional
+from typing import List, NamedTuple, Optional
 
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData

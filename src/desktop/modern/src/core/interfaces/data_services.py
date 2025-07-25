@@ -5,7 +5,7 @@ Interface definitions for data management services following TKA's clean archite
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 
 class IDataCacheManager(ABC):
@@ -22,7 +22,6 @@ class IDataCacheManager(ABC):
         Returns:
             Cached value or None if not found
         """
-        pass
 
     @abstractmethod
     def set_position_cache(self, key: str, value: Any) -> None:
@@ -33,7 +32,6 @@ class IDataCacheManager(ABC):
             key: Cache key
             value: Value to cache
         """
-        pass
 
     @abstractmethod
     def get_sequence_cache(self, key: str) -> Optional[Any]:
@@ -46,7 +44,6 @@ class IDataCacheManager(ABC):
         Returns:
             Cached value or None if not found
         """
-        pass
 
     @abstractmethod
     def set_sequence_cache(self, key: str, value: Any) -> None:
@@ -57,7 +54,6 @@ class IDataCacheManager(ABC):
             key: Cache key
             value: Value to cache
         """
-        pass
 
     @abstractmethod
     def get_pictograph_cache(self, key: str) -> Optional[Any]:
@@ -70,7 +66,6 @@ class IDataCacheManager(ABC):
         Returns:
             Cached value or None if not found
         """
-        pass
 
     @abstractmethod
     def set_pictograph_cache(self, key: str, value: Any) -> None:
@@ -81,7 +76,6 @@ class IDataCacheManager(ABC):
             key: Cache key
             value: Value to cache
         """
-        pass
 
     @abstractmethod
     def get_conversion_cache(self, key: str) -> Optional[Any]:
@@ -94,7 +88,6 @@ class IDataCacheManager(ABC):
         Returns:
             Cached value or None if not found
         """
-        pass
 
     @abstractmethod
     def set_conversion_cache(self, key: str, value: Any) -> None:
@@ -105,32 +98,26 @@ class IDataCacheManager(ABC):
             key: Cache key
             value: Value to cache
         """
-        pass
 
     @abstractmethod
     def clear_all(self) -> None:
         """Clear all caches."""
-        pass
 
     @abstractmethod
     def clear_position_cache(self) -> None:
         """Clear only position cache."""
-        pass
 
     @abstractmethod
     def clear_sequence_cache(self) -> None:
         """Clear only sequence cache."""
-        pass
 
     @abstractmethod
     def clear_pictograph_cache(self) -> None:
         """Clear only pictograph cache."""
-        pass
 
     @abstractmethod
     def clear_conversion_cache(self) -> None:
         """Clear only conversion cache."""
-        pass
 
     @abstractmethod
     def get_cache_stats(self) -> Dict[str, Any]:
@@ -140,7 +127,6 @@ class IDataCacheManager(ABC):
         Returns:
             Dictionary with cache sizes, hit rates, and other metrics
         """
-        pass
 
 
 class IDatasetManager(ABC):
@@ -158,7 +144,6 @@ class IDatasetManager(ABC):
         Returns:
             Unique identifier for the added pictograph
         """
-        pass
 
     @abstractmethod
     def get_from_dataset(self, pictograph_id: str) -> Optional[Any]:
@@ -171,7 +156,6 @@ class IDatasetManager(ABC):
         Returns:
             Pictograph data or None if not found
         """
-        pass
 
     @abstractmethod
     def search_dataset(self, query: Any) -> List[Any]:
@@ -184,7 +168,6 @@ class IDatasetManager(ABC):
         Returns:
             List of matching pictographs
         """
-        pass
 
     @abstractmethod
     def get_dataset_by_category(self, category: str) -> List[Any]:
@@ -197,7 +180,6 @@ class IDatasetManager(ABC):
         Returns:
             List of pictographs in category
         """
-        pass
 
     @abstractmethod
     def get_all_categories(self) -> List[str]:
@@ -207,7 +189,6 @@ class IDatasetManager(ABC):
         Returns:
             List of category names
         """
-        pass
 
     @abstractmethod
     def remove_from_dataset(self, pictograph_id: str) -> bool:
@@ -220,7 +201,6 @@ class IDatasetManager(ABC):
         Returns:
             True if removed, False if not found
         """
-        pass
 
     @abstractmethod
     def get_dataset_stats(self) -> Dict[str, Any]:
@@ -230,12 +210,10 @@ class IDatasetManager(ABC):
         Returns:
             Dictionary with dataset metrics
         """
-        pass
 
     @abstractmethod
     def clear_dataset(self) -> None:
         """Clear entire dataset."""
-        pass
 
     @abstractmethod
     def clear_category(self, category: str) -> bool:
@@ -248,7 +226,6 @@ class IDatasetManager(ABC):
         Returns:
             True if category existed and was cleared
         """
-        pass
 
 
 class ICsvReader(ABC):
@@ -265,7 +242,6 @@ class ICsvReader(ABC):
         Returns:
             List of dictionaries representing CSV rows, or None if error
         """
-        pass
 
     @abstractmethod
     def read_csv_with_headers(self, file_path: str) -> Optional[Dict[str, Any]]:
@@ -278,7 +254,6 @@ class ICsvReader(ABC):
         Returns:
             Dictionary with headers and data, or None if error
         """
-        pass
 
     @abstractmethod
     def validate_csv_structure(
@@ -294,7 +269,6 @@ class ICsvReader(ABC):
         Returns:
             True if structure is valid
         """
-        pass
 
 
 class IPositionResolver(ABC):
@@ -311,7 +285,6 @@ class IPositionResolver(ABC):
         Returns:
             Resolved position object or None if cannot resolve
         """
-        pass
 
     @abstractmethod
     def resolve_start_position(
@@ -326,7 +299,6 @@ class IPositionResolver(ABC):
         Returns:
             Resolved start position object or None if cannot resolve
         """
-        pass
 
     @abstractmethod
     def resolve_end_position(self, end_position_data: Dict[str, Any]) -> Optional[Any]:
@@ -339,7 +311,6 @@ class IPositionResolver(ABC):
         Returns:
             Resolved end position object or None if cannot resolve
         """
-        pass
 
     @abstractmethod
     def get_available_positions(self) -> List[str]:
@@ -349,7 +320,6 @@ class IPositionResolver(ABC):
         Returns:
             List of position identifiers
         """
-        pass
 
 
 class IPositionAttributeMapper(ABC):
@@ -366,7 +336,6 @@ class IPositionAttributeMapper(ABC):
         Returns:
             Mapped position attributes
         """
-        pass
 
     @abstractmethod
     def reverse_map_attributes(self, mapped_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -379,7 +348,6 @@ class IPositionAttributeMapper(ABC):
         Returns:
             Original format position data
         """
-        pass
 
     @abstractmethod
     def get_attribute_mapping(self) -> Dict[str, str]:
@@ -389,7 +357,6 @@ class IPositionAttributeMapper(ABC):
         Returns:
             Dictionary of attribute mappings
         """
-        pass
 
 
 class ILegacyToModernConverter(ABC):
@@ -406,7 +373,6 @@ class ILegacyToModernConverter(ABC):
         Returns:
             Modern sequence object or None if conversion failed
         """
-        pass
 
     @abstractmethod
     def convert_beat(self, legacy_beat: Dict[str, Any]) -> Optional[Any]:
@@ -419,7 +385,6 @@ class ILegacyToModernConverter(ABC):
         Returns:
             Modern beat object or None if conversion failed
         """
-        pass
 
     @abstractmethod
     def convert_pictograph(self, legacy_pictograph: Dict[str, Any]) -> Optional[Any]:
@@ -432,7 +397,6 @@ class ILegacyToModernConverter(ABC):
         Returns:
             Modern pictograph object or None if conversion failed
         """
-        pass
 
 
 class IModernToLegacyConverter(ABC):
@@ -452,7 +416,6 @@ class IModernToLegacyConverter(ABC):
         Returns:
             Legacy beat data or None if conversion failed
         """
-        pass
 
     @abstractmethod
     def convert_start_position_to_legacy_format(
@@ -467,7 +430,6 @@ class IModernToLegacyConverter(ABC):
         Returns:
             Legacy start position data or None if conversion failed
         """
-        pass
 
 
 class IDataManager(ABC):
@@ -476,34 +438,27 @@ class IDataManager(ABC):
     @abstractmethod
     def load_diamond_dataset(self) -> Any:
         """Load diamond pictograph dataset with error handling."""
-        pass
 
     @abstractmethod
     def load_box_dataset(self) -> Any:
         """Load box pictograph dataset with error handling."""
-        pass
 
     @abstractmethod
     def load_combined_dataset(self) -> Any:
         """Load and combine both diamond and box datasets."""
-        pass
 
     @abstractmethod
     def validate_data_files(self) -> Dict[str, Any]:
         """Validate data files and return status information."""
-        pass
 
     @abstractmethod
     def get_data_config(self) -> Any:
         """Get the current data configuration."""
-        pass
 
     @abstractmethod
     def reload_config(self, new_config: Any) -> None:
         """Reload with new configuration."""
-        pass
 
     @abstractmethod
     def get_dataset_info(self) -> Dict[str, Any]:
         """Get information about loaded datasets."""
-        pass

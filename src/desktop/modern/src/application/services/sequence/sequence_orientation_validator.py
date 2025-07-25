@@ -11,11 +11,10 @@ from the actual sequence context.
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 
 from domain.models.beat_data import BeatData
-from domain.models.enums import MotionType, Orientation
-from domain.models.motion_data import MotionData
+from domain.models.enums import Orientation
 from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 

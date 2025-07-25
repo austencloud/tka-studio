@@ -1,6 +1,6 @@
 """JSON serialization for domain models."""
 import json
-from typing import Any, Type, TypeVar, Dict
+from typing import Any, Type, TypeVar
 from dataclasses import is_dataclass
 from enum import Enum
 from .camel_case import dataclass_to_camel_dict, dict_from_camel_case

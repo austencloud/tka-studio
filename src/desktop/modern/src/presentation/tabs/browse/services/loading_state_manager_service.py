@@ -5,8 +5,6 @@ Service for managing loading states, progress, and loading UI components.
 """
 
 from core.interfaces.browse_services import ILoadingStateManager
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QLabel, QProgressBar, QWidget
 
 

@@ -13,7 +13,6 @@ from core.events.domain_events import (
     CommandRedoneEvent,
     CommandUndoneEvent,
 )
-from core.events.event_bus import BaseEvent
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
 

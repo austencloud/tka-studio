@@ -5,7 +5,7 @@ This service determines glyph information (VTG mode, elemental type, letter type
 from pictograph data and motion information, following validated glyph classification logic.
 """
 
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from core.interfaces.data_builder_services import IGlyphDataService
 from domain.models import (
@@ -95,7 +95,6 @@ class GlyphDataService(IGlyphDataService):
         # - Has dash: has_dash_from_pictograph(pictograph_data)
         # - Turns: get_turns_from_motions(pictograph_data)
         # - Visibility: PictographVisibilityManager
-        pass
 
     def determine_glyph_data_from_beat(self, beat_data: BeatData) -> None:
         """

@@ -4,9 +4,7 @@ Simple UI Testing Framework - Chunk 2: Component Initialization
 Initializes workbench and graph editor with real data.
 """
 
-from typing import Any, List, Optional
 
-from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
 
 

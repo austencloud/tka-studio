@@ -23,7 +23,7 @@ from application.services.ui.state.option_picker_state_manager import (
 )
 from application.services.ui.state.tab_state_manager import TabStateManager
 from application.services.ui.state.window_state_manager import WindowStateManager
-from core.events.event_bus import UIEvent, get_event_bus
+from core.events.event_bus import get_event_bus
 from core.interfaces.core_services import IUIStateManager
 from core.interfaces.session_services import ISessionStateTracker
 
@@ -264,7 +264,6 @@ class UICoordinator(IUIStateManager):
         """Setup event subscriptions for coordination."""
         # Subscribe to events that require coordination between managers
         # This is where cross-cutting concerns are handled
-        pass
 
     # Session integration methods (for backward compatibility)
     def set_session_service(self, session_service: ISessionStateTracker) -> None:

@@ -7,7 +7,6 @@ This script can be run directly or imported as a module.
 """
 
 import sys
-import os
 import argparse
 import logging
 from pathlib import Path
@@ -22,7 +21,6 @@ from core.testing import (
     full_ui_test,
     test_buttons_only,
     test_graph_editor_only,
-    UITestRunner,
 )
 
 

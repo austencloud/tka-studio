@@ -7,7 +7,7 @@ difficulty levels, and other categorized options.
 """
 
 from pathlib import Path
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional
 
 from domain.models.sequence_data import SequenceData
 from presentation.tabs.browse.models import FilterType, SortMethod

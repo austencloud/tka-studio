@@ -12,8 +12,7 @@ Following established patterns:
 """
 
 import logging
-from enum import Enum
-from typing import NamedTuple, Optional
+from typing import Optional
 
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData

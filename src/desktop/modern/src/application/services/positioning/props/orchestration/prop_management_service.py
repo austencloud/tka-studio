@@ -11,12 +11,10 @@ This service is responsible for determining when and how to separate props
 to avoid overlaps, particularly for beta-ending letters.
 """
 
-import json
 import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from core.types import Point

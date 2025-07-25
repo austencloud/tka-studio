@@ -9,8 +9,8 @@ Uses the centralized glassmorphism style system for consistent modern aesthetics
 from typing import Optional
 
 from presentation.styles.glassmorphism_styles import GlassmorphismStyleGenerator
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QSizePolicy, QWidget
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QSizePolicy, QWidget
 
 
 class RightPanelTabWidget(QWidget):

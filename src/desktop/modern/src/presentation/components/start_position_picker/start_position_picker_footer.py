@@ -8,7 +8,7 @@ Extracted from the main StartPositionPicker for better maintainability.
 import logging
 from typing import TYPE_CHECKING
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 if TYPE_CHECKING:

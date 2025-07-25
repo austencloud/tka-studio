@@ -11,7 +11,6 @@ from typing import Any, Dict, List, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.pool_manager_services import IPictographPoolManager
-from domain.models.pictograph_data import PictographData
 from presentation.components.pictograph.views import create_pictograph_view
 
 logger = logging.getLogger(__name__)
@@ -47,7 +46,6 @@ class PictographPoolManager(IPictographPoolManager):
 
     def checkin_pictograph(self, component) -> None:
         """Return component - no-op since no pooling."""
-        pass
 
     def cleanup_pool(self) -> None:
         """Cleanup pool - no-op."""
@@ -72,12 +70,9 @@ class PictographPoolManager(IPictographPoolManager):
 
     def configure_pictograph(self, pictograph: Any, config: Dict[str, Any]) -> None:
         """Configure pictograph - no-op since direct views configure themselves."""
-        pass
 
     def preload_pictographs(self, pictograph_types: List[str], count: int) -> None:
         """Preload pictographs - no-op since direct views are lightweight."""
-        pass
 
     def reset_pictograph(self, pictograph: Any) -> None:
         """Reset pictograph - no-op since direct views handle their own state."""
-        pass

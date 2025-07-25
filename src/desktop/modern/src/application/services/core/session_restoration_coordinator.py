@@ -10,7 +10,6 @@ PROVIDES:
 - Event publishing for session restoration
 """
 
-from abc import ABC, abstractmethod
 from typing import Optional
 
 from application.services.sequence.sequence_restorer import ISequenceRestorer

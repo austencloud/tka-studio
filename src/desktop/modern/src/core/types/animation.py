@@ -8,7 +8,6 @@ seamless cross-platform animation support.
 
 from dataclasses import dataclass
 from typing import Any, Protocol, Union
-from abc import ABC, abstractmethod
 
 
 class StackContainer(Protocol):

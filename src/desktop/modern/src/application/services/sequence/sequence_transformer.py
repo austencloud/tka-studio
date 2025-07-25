@@ -8,7 +8,7 @@ solely on sequence transformations and spatial operations.
 
 import logging
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from core.interfaces.sequence_operation_services import ISequenceTransformer
 from domain.models.beat_data import BeatData

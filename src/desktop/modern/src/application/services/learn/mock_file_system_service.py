@@ -7,7 +7,6 @@ the Learn Tab functionality without requiring the full file system infrastructur
 
 import logging
 from typing import Optional, Any, Dict, List
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 

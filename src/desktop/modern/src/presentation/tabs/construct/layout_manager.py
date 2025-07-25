@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.animation_core_interfaces import IAnimationOrchestrator
-from core.interfaces.workbench_services import IWorkbenchStateManager
 from presentation.components.right_panel_tabs.right_panel_tab_widget import (
     RightPanelTabWidget,
 )
@@ -22,9 +21,7 @@ from .orchestrators.layout_orchestrator import LayoutOrchestrator
 from .orchestrators.progress_reporter import ProgressReporter
 
 if TYPE_CHECKING:
-    from presentation.components.sequence_workbench.sequence_beat_frame.sequence_beat_frame import (
-        SequenceBeatFrame,
-    )
+    pass
 
 
 class ConstructTabLayoutManager:

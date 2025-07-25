@@ -24,7 +24,6 @@ import logging
 
 from core.types.coordinates import qpoint_to_point
 from core.types.geometry import Point
-from domain.models.arrow_data import ArrowData
 from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
 

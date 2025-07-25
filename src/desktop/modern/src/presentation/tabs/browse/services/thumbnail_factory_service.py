@@ -9,8 +9,8 @@ from typing import Optional
 from core.interfaces.browse_services import IThumbnailFactory
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QPixmap
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 
 class ThumbnailFactoryService(IThumbnailFactory):

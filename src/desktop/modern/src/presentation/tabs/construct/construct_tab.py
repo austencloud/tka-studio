@@ -28,9 +28,7 @@ from .signal_coordinator import SignalCoordinator
 
 
 if TYPE_CHECKING:
-    from presentation.components.sequence_workbench.sequence_workbench import (
-        SequenceWorkbench,
-    )
+    pass
 
 
 class ConstructTab(QWidget):

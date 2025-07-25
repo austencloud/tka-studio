@@ -11,7 +11,6 @@ PROVIDES:
 - Scene-relative offset scaling
 """
 
-import os
 import sys
 from abc import ABC, abstractmethod
 from typing import Dict, Tuple

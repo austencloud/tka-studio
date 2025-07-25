@@ -16,9 +16,8 @@ ARCHITECTURE:
 """
 
 import logging
-import os
 import sys
-from typing import Optional, Dict, Any
+from typing import Optional
 from pathlib import Path
 
 # Add project root to path using pathlib (standardized approach)
@@ -37,7 +36,6 @@ sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
 
 # Import framework-agnostic core services (using established import pattern)
-from application.services.core.types import Point, Size, RenderCommand
 from application.services.core.prop_rendering_service import CorePropRenderingService
 from application.adapters.qt_prop_rendering_service_adapter import QtPropRenderingServiceAdapter
 from domain.models.motion_data import MotionData

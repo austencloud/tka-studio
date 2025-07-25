@@ -6,7 +6,6 @@ for quiz sessions.
 """
 
 import logging
-from datetime import datetime
 from typing import Dict, Any
 
 from core.interfaces.learn_services import (

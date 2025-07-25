@@ -6,12 +6,9 @@ supporting pictograph validation, beat validation, and sequence validation.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
 
-from domain.models.enums import Orientation
-from domain.models.letter_condition import LetterCondition
 from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
 
 
 class IPictographValidator(ABC):

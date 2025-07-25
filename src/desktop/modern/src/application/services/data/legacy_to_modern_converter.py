@@ -155,7 +155,6 @@ class LegacyToModernConverter(ILegacyToModernConverter):
     ) -> Optional[BeatData]:
         """Convert a legacy start position to a BeatData object."""
         # TODO: Implement this method
-        pass
 
     # Interface implementation methods
     def convert_legacy_data(self, legacy_data: Dict[str, Any]) -> Any:

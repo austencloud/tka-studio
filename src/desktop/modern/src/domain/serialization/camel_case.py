@@ -1,7 +1,7 @@
 """CamelCase conversion utilities for domain models."""
 import re
-from dataclasses import fields, is_dataclass, asdict
-from typing import Dict, Any, Union
+from dataclasses import fields, is_dataclass
+from typing import Dict, Any
 from enum import Enum
 
 def to_camel_case(snake_str: str) -> str:

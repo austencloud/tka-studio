@@ -16,9 +16,7 @@ from domain.models.pictograph_data import PictographData
 from domain.models.sequence_data import SequenceData
 
 if TYPE_CHECKING:
-    from presentation.components.sequence_workbench.sequence_workbench import (
-        SequenceWorkbench,
-    )
+    pass
 
 logger = logging.getLogger(__name__)
 

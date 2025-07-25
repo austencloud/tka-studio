@@ -6,15 +6,13 @@ This replaces the complex web of signal coordinators and multiple state holders.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from core.events.domain_events import (
     CommandExecutedEvent,
     CommandRedoneEvent,
     CommandUndoneEvent,
 )
-from core.events.event_bus import BaseEvent
-from core.interfaces.sequence_operation_services import ISequenceStateTracker
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal

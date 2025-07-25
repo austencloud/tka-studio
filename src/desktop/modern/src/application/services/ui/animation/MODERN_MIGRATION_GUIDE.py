@@ -352,7 +352,6 @@ class PerformanceOptimizations:
        - Platform adapters only handle rendering
        - Reusable across web and desktop
     """
-    pass
 
 # 11. TROUBLESHOOTING COMMON ISSUES
 

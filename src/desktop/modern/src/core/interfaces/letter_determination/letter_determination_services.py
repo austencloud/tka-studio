@@ -43,7 +43,6 @@ class ILetterDeterminationService(ABC):
         Returns:
             Result containing the determined letter and metadata
         """
-        pass
 
     @abstractmethod
     def update_pictograph_dataset(
@@ -56,7 +55,6 @@ class ILetterDeterminationService(ABC):
         Args:
             dataset: Dictionary mapping letters to example pictographs
         """
-        pass
 
     @abstractmethod
     def get_available_strategies(self) -> List[str]:
@@ -66,7 +64,6 @@ class ILetterDeterminationService(ABC):
         Returns:
             List of strategy names
         """
-        pass
 
     @abstractmethod
     def validate_pictograph_data(
@@ -82,7 +79,6 @@ class ILetterDeterminationService(ABC):
         Returns:
             True if data is valid for determination
         """
-        pass
 
 
 class IMotionComparisonService(ABC):
@@ -111,7 +107,6 @@ class IMotionComparisonService(ABC):
         Returns:
             Similarity score between 0.0 and 1.0
         """
-        pass
 
     @abstractmethod
     def compare_attributes(
@@ -131,7 +126,6 @@ class IMotionComparisonService(ABC):
         Returns:
             Detailed comparison result
         """
-        pass
 
     @abstractmethod
     def reverse_prop_rot_dir(self, prop_rot_dir: str) -> str:
@@ -144,7 +138,6 @@ class IMotionComparisonService(ABC):
         Returns:
             Reversed rotation direction
         """
-        pass
 
     @abstractmethod
     def apply_direction_inversion(
@@ -162,7 +155,6 @@ class IMotionComparisonService(ABC):
         Returns:
             Potentially inverted prop rotation direction
         """
-        pass
 
 
 class ILetterDeterminationStrategy(ABC):
@@ -184,7 +176,6 @@ class ILetterDeterminationStrategy(ABC):
         Returns:
             True if this strategy should be used for the motion
         """
-        pass
 
     @abstractmethod
     def execute(
@@ -206,7 +197,6 @@ class ILetterDeterminationStrategy(ABC):
         Returns:
             Result of the determination attempt
         """
-        pass
 
     @abstractmethod
     def get_strategy_name(self) -> str:
@@ -216,7 +206,6 @@ class ILetterDeterminationStrategy(ABC):
         Returns:
             Strategy name for logging/debugging
         """
-        pass
 
 
 class IMotionAttributeService(ABC):
@@ -240,7 +229,6 @@ class IMotionAttributeService(ABC):
         Returns:
             Motion data with synchronized attributes
         """
-        pass
 
     @abstractmethod
     def apply_prefloat_transformations(
@@ -258,7 +246,6 @@ class IMotionAttributeService(ABC):
         Returns:
             Transformed attributes with prefloat information
         """
-        pass
 
     @abstractmethod
     def validate_attribute_consistency(
@@ -276,7 +263,6 @@ class IMotionAttributeService(ABC):
         Returns:
             True if attributes are consistent
         """
-        pass
 
     @abstractmethod
     def extract_prefloat_attributes(
@@ -292,7 +278,6 @@ class IMotionAttributeService(ABC):
         Returns:
             Dictionary of color -> prefloat attributes
         """
-        pass
 
 
 class IPictographDatasetProvider(ABC):
@@ -310,14 +295,12 @@ class IPictographDatasetProvider(ABC):
         Returns:
             Dictionary mapping letters to example pictographs
         """
-        pass
         
     @abstractmethod
     def reload_dataset(self) -> None:
         """
         Reload dataset from storage.
         """
-        pass
 
     @abstractmethod
     def get_dataset_metadata(self) -> Dict[str, any]:
@@ -327,7 +310,6 @@ class IPictographDatasetProvider(ABC):
         Returns:
             Dictionary containing dataset information
         """
-        pass
 
     @abstractmethod
     def validate_dataset(self) -> bool:
@@ -337,4 +319,3 @@ class IPictographDatasetProvider(ABC):
         Returns:
             True if dataset is valid and complete
         """
-        pass

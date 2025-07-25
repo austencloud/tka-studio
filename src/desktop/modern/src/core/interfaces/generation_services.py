@@ -180,7 +180,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Client-side turn calculation
         """
-        pass
 
     @abstractmethod
     def apply_turn_intensity(
@@ -199,7 +198,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Updates sequence turn properties
         """
-        pass
 
     @abstractmethod
     def get_intensity_range(self, level: int) -> Tuple[float, float]:
@@ -215,7 +213,6 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Returns level-appropriate ranges
         """
-        pass
 
     @abstractmethod
     def validate_intensity(self, intensity: float, level: int) -> bool:
@@ -229,7 +226,6 @@ class ITurnIntensityManager(ABC):
         Returns:
             True if intensity is valid for level
         """
-        pass
 
     @abstractmethod
     def get_recommended_intensity(self, level: int) -> float:
@@ -245,4 +241,3 @@ class ITurnIntensityManager(ABC):
         Note:
             Web implementation: Returns level-optimized intensity
         """
-        pass

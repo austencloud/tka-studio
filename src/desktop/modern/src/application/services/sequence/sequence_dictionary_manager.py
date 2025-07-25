@@ -24,7 +24,6 @@ class SequenceDictionaryManager(ISequenceDictionaryManager):
 
     def __init__(self):
         """Initialize the dictionary service."""
-        pass
 
     def get_word_for_sequence(self, sequence: SequenceData) -> Optional[str]:
         """Get word associated with sequence."""

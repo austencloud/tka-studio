@@ -8,7 +8,7 @@ Rewritten to match the Legacy browse tab layout exactly:
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from domain.models.sequence_data import SequenceData
 from presentation.tabs.browse.components.filter_selection_panel import (

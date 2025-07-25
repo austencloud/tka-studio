@@ -7,7 +7,7 @@ with proper dependency injection and configuration.
 
 from typing import TYPE_CHECKING, Optional
 
-from PyQt6.QtWidgets import QGraphicsView, QWidget
+from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from core.dependency_injection.di_container import DIContainer

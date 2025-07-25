@@ -9,8 +9,6 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 from domain.models import MotionData, PictographData
-from PyQt6.QtCore import QPointF
-from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
@@ -40,7 +38,6 @@ class IPictographRenderingService(ABC):
         Returns:
             Created grid item or None if rendering failed
         """
-        pass
 
     @abstractmethod
     def render_prop(
@@ -61,7 +58,6 @@ class IPictographRenderingService(ABC):
         Returns:
             Created prop item or None if rendering failed
         """
-        pass
 
     @abstractmethod
     def render_glyph(
@@ -78,7 +74,6 @@ class IPictographRenderingService(ABC):
         Returns:
             Created glyph item or None if rendering failed
         """
-        pass
 
     @abstractmethod
     def get_cache_stats(self) -> Dict[str, Any]:
@@ -88,12 +83,10 @@ class IPictographRenderingService(ABC):
         Returns:
             Dictionary containing cache hit rates, renderer counts, etc.
         """
-        pass
 
     @abstractmethod
     def clear_cache(self) -> None:
         """Clear all caches to free memory."""
-        pass
 
     @abstractmethod
     def get_cache_info(self) -> str:
@@ -103,7 +96,6 @@ class IPictographRenderingService(ABC):
         Returns:
             Human-readable string with cache statistics
         """
-        pass
 
 
 class IArrowRenderingService(ABC):
@@ -134,12 +126,10 @@ class IArrowRenderingService(ABC):
         Returns:
             Created arrow item or None if rendering failed
         """
-        pass
 
     @abstractmethod
     def clear_arrows(self, scene: QGraphicsScene) -> None:
         """Clear all arrows from the specified scene."""
-        pass
 
 
 class IPictographAssetManager(ABC):
@@ -152,37 +142,30 @@ class IPictographAssetManager(ABC):
     @abstractmethod
     def get_grid_svg_path(self, grid_mode: str) -> str:
         """Get file path for grid SVG."""
-        pass
 
     @abstractmethod
     def get_prop_svg_path(self, prop_type: str) -> str:
         """Get file path for prop SVG."""
-        pass
 
     @abstractmethod
     def get_arrow_svg_path(self, motion_data: MotionData, color: str) -> str:
         """Get file path for arrow SVG."""
-        pass
 
     @abstractmethod
     def get_glyph_svg_path(self, glyph_type: str, glyph_data: Any) -> str:
         """Get file path for glyph SVG."""
-        pass
 
     @abstractmethod
     def load_svg_data(self, svg_path: str) -> Optional[str]:
         """Load SVG data from file with caching."""
-        pass
 
     @abstractmethod
     def apply_color_transformation(self, svg_data: str, color: str) -> str:
         """Apply color transformation to SVG data."""
-        pass
 
     @abstractmethod
     def svg_path_exists(self, svg_path: str) -> bool:
         """Check if SVG file exists."""
-        pass
 
 
 class IPictographCacheManager(ABC):
@@ -195,37 +178,30 @@ class IPictographCacheManager(ABC):
     @abstractmethod
     def get_renderer(self, cache_key: str) -> Optional[Any]:
         """Get cached renderer by key."""
-        pass
 
     @abstractmethod
     def store_renderer(self, cache_key: str, renderer: Any) -> None:
         """Store renderer in cache."""
-        pass
 
     @abstractmethod
     def get_svg_data(self, cache_key: str) -> Optional[str]:
         """Get cached SVG data by key."""
-        pass
 
     @abstractmethod
     def store_svg_data(self, cache_key: str, svg_data: str) -> None:
         """Store SVG data in cache."""
-        pass
 
     @abstractmethod
     def evict_least_used(self) -> None:
         """Evict least recently used items from cache."""
-        pass
 
     @abstractmethod
     def get_memory_usage(self) -> int:
         """Get estimated memory usage in bytes."""
-        pass
 
     @abstractmethod
     def clear_all_caches(self) -> None:
         """Clear all caches."""
-        pass
 
 
 class IPictographPerformanceMonitor(ABC):
@@ -238,29 +214,23 @@ class IPictographPerformanceMonitor(ABC):
     @abstractmethod
     def start_render_timer(self, operation: str) -> str:
         """Start timing a render operation. Returns timer ID."""
-        pass
 
     @abstractmethod
     def end_render_timer(self, timer_id: str) -> float:
         """End timing and return duration in milliseconds."""
-        pass
 
     @abstractmethod
     def record_cache_hit(self, cache_type: str) -> None:
         """Record a cache hit."""
-        pass
 
     @abstractmethod
     def record_cache_miss(self, cache_type: str) -> None:
         """Record a cache miss."""
-        pass
 
     @abstractmethod
     def get_performance_report(self) -> Dict[str, Any]:
         """Get comprehensive performance report."""
-        pass
 
     @abstractmethod
     def reset_statistics(self) -> None:
         """Reset all performance statistics."""
-        pass

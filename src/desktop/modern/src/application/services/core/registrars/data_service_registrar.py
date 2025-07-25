@@ -16,7 +16,7 @@ Services Registered:
 """
 
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from core.interfaces.core_services import IDataServiceRegistrar
 from ..service_registration_manager import BaseServiceRegistrar

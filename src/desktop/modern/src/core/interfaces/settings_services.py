@@ -8,7 +8,7 @@ being tied to specific storage implementations (file system vs web storage).
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 class PropType(Enum):
@@ -37,7 +37,6 @@ class IBackgroundSettingsManager(ABC):
         Note:
             Web implementation: May need to validate asset availability
         """
-        pass
 
     @abstractmethod
     def get_current_background(self) -> str:
@@ -50,7 +49,6 @@ class IBackgroundSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage
         """
-        pass
 
     @abstractmethod
     def set_background(self, background_type: str) -> bool:
@@ -66,7 +64,6 @@ class IBackgroundSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage, may trigger CSS updates
         """
-        pass
 
     @abstractmethod
     def is_valid_background(self, background_type: str) -> bool:
@@ -79,7 +76,6 @@ class IBackgroundSettingsManager(ABC):
         Returns:
             True if valid, False otherwise
         """
-        pass
 
 
 class IVisibilitySettingsManager(ABC):
@@ -99,7 +95,6 @@ class IVisibilitySettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage with fallback defaults
         """
-        pass
 
     @abstractmethod
     def set_glyph_visibility(self, glyph_name: str, visible: bool) -> None:
@@ -113,7 +108,6 @@ class IVisibilitySettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage, may trigger UI updates
         """
-        pass
 
     @abstractmethod
     def get_motion_visibility(self, motion_color: str) -> bool:
@@ -126,7 +120,6 @@ class IVisibilitySettingsManager(ABC):
         Returns:
             True if visible, False if hidden
         """
-        pass
 
     @abstractmethod
     def set_motion_visibility(self, motion_color: str, visible: bool) -> None:
@@ -137,7 +130,6 @@ class IVisibilitySettingsManager(ABC):
             motion_color: Color of the motion ("red" or "blue")
             visible: Visibility state to set
         """
-        pass
 
     @abstractmethod
     def get_non_radial_visibility(self) -> bool:
@@ -147,7 +139,6 @@ class IVisibilitySettingsManager(ABC):
         Returns:
             True if visible, False if hidden
         """
-        pass
 
     @abstractmethod
     def set_non_radial_visibility(self, visible: bool) -> None:
@@ -157,7 +148,6 @@ class IVisibilitySettingsManager(ABC):
         Args:
             visible: Visibility state to set
         """
-        pass
 
     @abstractmethod
     def get_all_visibility_settings(self) -> Dict[str, bool]:
@@ -170,7 +160,6 @@ class IVisibilitySettingsManager(ABC):
         Note:
             Web implementation: Aggregated from multiple localStorage keys
         """
-        pass
 
     @abstractmethod
     def reset_to_defaults(self) -> None:
@@ -180,7 +169,6 @@ class IVisibilitySettingsManager(ABC):
         Note:
             Web implementation: Clears relevant localStorage keys
         """
-        pass
 
     @abstractmethod
     def get_grid_visibility(self) -> bool:
@@ -190,7 +178,6 @@ class IVisibilitySettingsManager(ABC):
         Returns:
             True if grid is visible, False if hidden
         """
-        pass
 
     @abstractmethod
     def set_grid_visibility(self, visible: bool) -> None:
@@ -200,7 +187,6 @@ class IVisibilitySettingsManager(ABC):
         Args:
             visible: Grid visibility state to set
         """
-        pass
 
 
 class IBeatLayoutSettingsManager(ABC):
@@ -220,7 +206,6 @@ class IBeatLayoutSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage with calculated fallbacks
         """
-        pass
 
     @abstractmethod
     def set_layout_for_length(self, sequence_length: int, rows: int, cols: int) -> None:
@@ -235,7 +220,6 @@ class IBeatLayoutSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage with structured keys
         """
-        pass
 
     @abstractmethod
     def get_default_sequence_length(self) -> int:
@@ -245,7 +229,6 @@ class IBeatLayoutSettingsManager(ABC):
         Returns:
             Default sequence length
         """
-        pass
 
     @abstractmethod
     def set_default_sequence_length(self, length: int) -> None:
@@ -255,7 +238,6 @@ class IBeatLayoutSettingsManager(ABC):
         Args:
             length: Default sequence length (must be positive)
         """
-        pass
 
     @abstractmethod
     def get_layout_options_for_length(
@@ -273,7 +255,6 @@ class IBeatLayoutSettingsManager(ABC):
         Note:
             Web implementation: Calculated dynamically, may cache results
         """
-        pass
 
 
 class IPropTypeSettingsManager(ABC):
@@ -290,7 +271,6 @@ class IPropTypeSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage, parsed to enum
         """
-        pass
 
     @abstractmethod
     def set_prop_type(self, prop_type: PropType) -> None:
@@ -303,7 +283,6 @@ class IPropTypeSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage as string value
         """
-        pass
 
     @abstractmethod
     def get_available_prop_types(self) -> List[PropType]:
@@ -313,7 +292,6 @@ class IPropTypeSettingsManager(ABC):
         Returns:
             List of available prop type enum values
         """
-        pass
 
     @abstractmethod
     def is_valid_prop_type(self, prop_type: PropType) -> bool:
@@ -326,7 +304,6 @@ class IPropTypeSettingsManager(ABC):
         Returns:
             True if valid, False otherwise
         """
-        pass
 
     @abstractmethod
     def get_prop_setting(self, setting_key: str, default: Any = None) -> Any:
@@ -343,7 +320,6 @@ class IPropTypeSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage with prop_ prefix
         """
-        pass
 
     @abstractmethod
     def set_prop_setting(self, setting_key: str, value: Any) -> None:
@@ -357,7 +333,6 @@ class IPropTypeSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage with prop_ prefix
         """
-        pass
 
 
 class IUserProfileSettingsManager(ABC):
@@ -374,7 +349,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage
         """
-        pass
 
     @abstractmethod
     def set_current_user(self, username: str) -> None:
@@ -387,7 +361,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage, may trigger profile switch
         """
-        pass
 
     @abstractmethod
     def get_all_users(self) -> List[str]:
@@ -400,7 +373,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage as JSON array
         """
-        pass
 
     @abstractmethod
     def add_user(self, username: str) -> bool:
@@ -416,7 +388,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Updates localStorage user list
         """
-        pass
 
     @abstractmethod
     def remove_user(self, username: str) -> bool:
@@ -432,7 +403,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Updates localStorage and cleans up user-specific data
         """
-        pass
 
     @abstractmethod
     def get_user_setting(
@@ -452,7 +422,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage with user_ prefix
         """
-        pass
 
     @abstractmethod
     def set_user_setting(self, username: str, setting_key: str, value: Any) -> None:
@@ -467,7 +436,6 @@ class IUserProfileSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage with user_ prefix
         """
-        pass
 
 
 class IImageExportSettingsManager(ABC):
@@ -484,7 +452,6 @@ class IImageExportSettingsManager(ABC):
         Note:
             Web implementation: Retrieved from localStorage
         """
-        pass
 
     @abstractmethod
     def set_export_format(self, format_name: str) -> bool:
@@ -500,7 +467,6 @@ class IImageExportSettingsManager(ABC):
         Note:
             Web implementation: Stored in localStorage, validates against supported formats
         """
-        pass
 
     @abstractmethod
     def get_supported_formats(self) -> List[str]:
@@ -513,7 +479,6 @@ class IImageExportSettingsManager(ABC):
         Note:
             Web implementation: May differ from desktop due to browser support
         """
-        pass
 
     @abstractmethod
     def get_export_quality(self) -> int:
@@ -523,7 +488,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             Export quality percentage
         """
-        pass
 
     @abstractmethod
     def set_export_quality(self, quality: int) -> bool:
@@ -536,7 +500,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             True if successful, False if invalid quality
         """
-        pass
 
     @abstractmethod
     def get_export_dimensions(self) -> Tuple[int, int]:
@@ -546,7 +509,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             Tuple of (width, height) in pixels
         """
-        pass
 
     @abstractmethod
     def set_export_dimensions(self, width: int, height: int) -> bool:
@@ -560,7 +522,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             True if successful, False if invalid dimensions
         """
-        pass
 
     @abstractmethod
     def get_include_background(self) -> bool:
@@ -570,7 +531,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             True if background should be included, False otherwise
         """
-        pass
 
     @abstractmethod
     def set_include_background(self, include: bool) -> None:
@@ -580,7 +540,6 @@ class IImageExportSettingsManager(ABC):
         Args:
             include: Whether to include background
         """
-        pass
 
     @abstractmethod
     def get_scale_factor(self) -> float:
@@ -590,7 +549,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             Scale factor (typically 1.0 for normal size)
         """
-        pass
 
     @abstractmethod
     def set_scale_factor(self, scale: float) -> bool:
@@ -603,7 +561,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             True if successful, False if invalid scale
         """
-        pass
 
     @abstractmethod
     def get_quality_presets(self) -> Dict[str, int]:
@@ -613,7 +570,6 @@ class IImageExportSettingsManager(ABC):
         Returns:
             Dictionary mapping preset names to quality values
         """
-        pass
 
     @abstractmethod
     def apply_quality_preset(self, preset_name: str) -> bool:
@@ -626,4 +582,3 @@ class IImageExportSettingsManager(ABC):
         Returns:
             True if successful, False if invalid preset
         """
-        pass

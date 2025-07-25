@@ -9,13 +9,10 @@ from abc import ABCMeta
 from typing import TYPE_CHECKING, Optional
 
 from application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
-from application.services.sequence.beat_factory import BeatFactory
 from application.services.sequence.sequence_persister import SequencePersister
 from core.interfaces.sequence_data_services import ISequenceStartPositionManager
 from core.interfaces.workbench_services import IWorkbenchStateManager
 from domain.models.beat_data import BeatData
-from domain.models.pictograph_data import PictographData
-from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
@@ -24,9 +21,7 @@ class QObjectABCMeta(type(QObject), ABCMeta):
 
 
 if TYPE_CHECKING:
-    from presentation.components.sequence_workbench.sequence_workbench import (
-        SequenceWorkbench,
-    )
+    pass
 
 
 class SequenceStartPositionManager(

@@ -23,7 +23,6 @@ class IBlobAnimation(ABC):
         Note:
             Web implementation: Uses requestAnimationFrame timing
         """
-        pass
 
     @abstractmethod
     def get_blob_positions(self) -> List[Dict[str, Any]]:
@@ -36,12 +35,10 @@ class IBlobAnimation(ABC):
         Note:
             Web implementation: Returns data for CSS/WebGL rendering
         """
-        pass
 
     @abstractmethod
     def reset_blobs(self) -> None:
         """Reset blobs to initial state."""
-        pass
 
     @abstractmethod
     def set_blob_count(self, count: int) -> None:
@@ -54,7 +51,6 @@ class IBlobAnimation(ABC):
         Note:
             Web implementation: Dynamically creates/removes DOM elements
         """
-        pass
 
 
 class ISparkleAnimation(ABC):
@@ -71,7 +67,6 @@ class ISparkleAnimation(ABC):
         Note:
             Web implementation: Uses CSS animations or WebGL particles
         """
-        pass
 
     @abstractmethod
     def add_sparkle(self, position: Tuple[float, float]) -> None:
@@ -84,7 +79,6 @@ class ISparkleAnimation(ABC):
         Note:
             Web implementation: Creates DOM element or WebGL particle
         """
-        pass
 
     @abstractmethod
     def get_sparkle_positions(self) -> List[Dict[str, Any]]:
@@ -97,12 +91,10 @@ class ISparkleAnimation(ABC):
         Note:
             Web implementation: Returns data for rendering system
         """
-        pass
 
     @abstractmethod
     def clear_sparkles(self) -> None:
         """Clear all sparkles."""
-        pass
 
 
 class IWaveEffects(ABC):
@@ -119,7 +111,6 @@ class IWaveEffects(ABC):
         Note:
             Web implementation: Updates CSS transform properties
         """
-        pass
 
     @abstractmethod
     def get_wave_parameters(self) -> Dict[str, Any]:
@@ -132,7 +123,6 @@ class IWaveEffects(ABC):
         Note:
             Web implementation: Used for CSS custom properties
         """
-        pass
 
     @abstractmethod
     def set_wave_intensity(self, intensity: float) -> None:
@@ -145,7 +135,6 @@ class IWaveEffects(ABC):
         Note:
             Web implementation: Updates CSS animation-duration
         """
-        pass
 
 
 class IBubblePhysics(ABC):
@@ -162,7 +151,6 @@ class IBubblePhysics(ABC):
         Note:
             Web implementation: Uses physics engine or manual calculations
         """
-        pass
 
     @abstractmethod
     def add_bubble(self, position: Tuple[float, float], size: float) -> str:
@@ -179,7 +167,6 @@ class IBubblePhysics(ABC):
         Note:
             Web implementation: Creates DOM element with physics properties
         """
-        pass
 
     @abstractmethod
     def remove_bubble(self, bubble_id: str) -> bool:
@@ -195,7 +182,6 @@ class IBubblePhysics(ABC):
         Note:
             Web implementation: Removes DOM element
         """
-        pass
 
     @abstractmethod
     def get_bubble_positions(self) -> List[Dict[str, Any]]:
@@ -208,7 +194,6 @@ class IBubblePhysics(ABC):
         Note:
             Web implementation: Returns data for CSS positioning
         """
-        pass
 
     @abstractmethod
     def set_gravity(self, gravity: float) -> None:
@@ -221,7 +206,6 @@ class IBubblePhysics(ABC):
         Note:
             Web implementation: Updates physics simulation parameters
         """
-        pass
 
 
 class IFishMovement(ABC):
@@ -238,7 +222,6 @@ class IFishMovement(ABC):
         Note:
             Web implementation: Updates CSS transform for fish sprites
         """
-        pass
 
     @abstractmethod
     def get_fish_positions(self) -> List[Dict[str, Any]]:
@@ -251,7 +234,6 @@ class IFishMovement(ABC):
         Note:
             Web implementation: Returns data for sprite positioning
         """
-        pass
 
     @abstractmethod
     def set_fish_speed(self, speed: float) -> None:
@@ -264,7 +246,6 @@ class IFishMovement(ABC):
         Note:
             Web implementation: Updates CSS animation-duration
         """
-        pass
 
 
 class IFishSpawning(ABC):
@@ -285,7 +266,6 @@ class IFishSpawning(ABC):
         Note:
             Web implementation: Creates DOM element for fish sprite
         """
-        pass
 
     @abstractmethod
     def despawn_fish(self, fish_id: str) -> bool:
@@ -301,7 +281,6 @@ class IFishSpawning(ABC):
         Note:
             Web implementation: Removes DOM element
         """
-        pass
 
     @abstractmethod
     def get_spawn_rate(self) -> float:
@@ -311,7 +290,6 @@ class IFishSpawning(ABC):
         Returns:
             Fish spawning rate (fish per second)
         """
-        pass
 
     @abstractmethod
     def set_spawn_rate(self, rate: float) -> None:
@@ -324,7 +302,6 @@ class IFishSpawning(ABC):
         Note:
             Web implementation: Updates spawn timer interval
         """
-        pass
 
 
 class ISnowflakePhysics(ABC):
@@ -341,7 +318,6 @@ class ISnowflakePhysics(ABC):
         Note:
             Web implementation: Updates CSS transforms for snowflakes
         """
-        pass
 
     @abstractmethod
     def add_snowflake(self, position: Optional[Tuple[float, float]] = None) -> str:
@@ -357,7 +333,6 @@ class ISnowflakePhysics(ABC):
         Note:
             Web implementation: Creates DOM element with physics
         """
-        pass
 
     @abstractmethod
     def get_snowflake_positions(self) -> List[Dict[str, Any]]:
@@ -370,7 +345,6 @@ class ISnowflakePhysics(ABC):
         Note:
             Web implementation: Returns data for DOM positioning
         """
-        pass
 
     @abstractmethod
     def set_wind_force(self, force: Tuple[float, float]) -> None:
@@ -383,7 +357,6 @@ class ISnowflakePhysics(ABC):
         Note:
             Web implementation: Updates physics simulation
         """
-        pass
 
 
 class ISantaMovement(ABC):
@@ -400,7 +373,6 @@ class ISantaMovement(ABC):
         Note:
             Web implementation: Updates CSS transform for Santa sprite
         """
-        pass
 
     @abstractmethod
     def get_santa_position(self) -> Dict[str, Any]:
@@ -413,7 +385,6 @@ class ISantaMovement(ABC):
         Note:
             Web implementation: Returns position data for CSS positioning
         """
-        pass
 
     @abstractmethod
     def set_santa_path(self, waypoints: List[Tuple[float, float]]) -> None:
@@ -426,12 +397,10 @@ class ISantaMovement(ABC):
         Note:
             Web implementation: Defines CSS animation keyframes
         """
-        pass
 
     @abstractmethod
     def reset_santa_position(self) -> None:
         """Reset Santa to starting position."""
-        pass
 
 
 class IShootingStar(ABC):
@@ -448,7 +417,6 @@ class IShootingStar(ABC):
         Note:
             Web implementation: Updates CSS transform and opacity
         """
-        pass
 
     @abstractmethod
     def trigger_shooting_star(self) -> str:
@@ -461,7 +429,6 @@ class IShootingStar(ABC):
         Note:
             Web implementation: Creates DOM element with animation
         """
-        pass
 
     @abstractmethod
     def get_shooting_star_positions(self) -> List[Dict[str, Any]]:
@@ -474,7 +441,6 @@ class IShootingStar(ABC):
         Note:
             Web implementation: Returns data for CSS positioning
         """
-        pass
 
 
 class IStarTwinkling(ABC):
@@ -491,7 +457,6 @@ class IStarTwinkling(ABC):
         Note:
             Web implementation: Updates CSS opacity animations
         """
-        pass
 
     @abstractmethod
     def get_star_states(self) -> List[Dict[str, Any]]:
@@ -504,7 +469,6 @@ class IStarTwinkling(ABC):
         Note:
             Web implementation: Returns opacity and brightness data
         """
-        pass
 
     @abstractmethod
     def set_twinkle_rate(self, rate: float) -> None:
@@ -517,7 +481,6 @@ class IStarTwinkling(ABC):
         Note:
             Web implementation: Updates CSS animation timing
         """
-        pass
 
 
 class ICometTrajectory(ABC):
@@ -534,7 +497,6 @@ class ICometTrajectory(ABC):
         Note:
             Web implementation: Updates CSS transform and SVG path
         """
-        pass
 
     @abstractmethod
     def get_comet_position(self) -> Dict[str, Any]:
@@ -547,12 +509,10 @@ class ICometTrajectory(ABC):
         Note:
             Web implementation: Returns position for CSS positioning
         """
-        pass
 
     @abstractmethod
     def reset_comet(self) -> None:
         """Reset comet to starting position."""
-        pass
 
     @abstractmethod
     def set_comet_speed(self, speed: float) -> None:
@@ -565,7 +525,6 @@ class ICometTrajectory(ABC):
         Note:
             Web implementation: Updates CSS animation-duration
         """
-        pass
 
 
 class IMoonPositioning(ABC):
@@ -582,7 +541,6 @@ class IMoonPositioning(ABC):
         Note:
             Web implementation: Updates CSS transform for moon
         """
-        pass
 
     @abstractmethod
     def get_moon_position(self) -> Dict[str, Any]:
@@ -595,7 +553,6 @@ class IMoonPositioning(ABC):
         Note:
             Web implementation: Returns position data for CSS
         """
-        pass
 
     @abstractmethod
     def set_moon_phase(self, phase: float) -> None:
@@ -608,7 +565,6 @@ class IMoonPositioning(ABC):
         Note:
             Web implementation: Updates CSS mask or clip-path
         """
-        pass
 
 
 class IUfoBehavior(ABC):
@@ -625,7 +581,6 @@ class IUfoBehavior(ABC):
         Note:
             Web implementation: Updates CSS transform and effects
         """
-        pass
 
     @abstractmethod
     def get_ufo_position(self) -> Dict[str, Any]:
@@ -638,7 +593,6 @@ class IUfoBehavior(ABC):
         Note:
             Web implementation: Returns position data for CSS
         """
-        pass
 
     @abstractmethod
     def trigger_ufo_event(self, event_type: str) -> None:
@@ -651,7 +605,6 @@ class IUfoBehavior(ABC):
         Note:
             Web implementation: Triggers CSS animations or effects
         """
-        pass
 
     @abstractmethod
     def set_ufo_behavior_mode(self, mode: str) -> None:
@@ -664,4 +617,3 @@ class IUfoBehavior(ABC):
         Note:
             Web implementation: Changes CSS animation sets
         """
-        pass

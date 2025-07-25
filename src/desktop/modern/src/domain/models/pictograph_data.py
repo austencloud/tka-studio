@@ -1,17 +1,14 @@
 import json
 import uuid
-from dataclasses import dataclass, field, fields, is_dataclass
-from enum import Enum
-from typing import Any, Dict, Optional, Tuple, Union
+from dataclasses import dataclass, field
+from typing import Any, Dict, Optional
 
 from domain.models.arrow_data import ArrowData
 from domain.models.enums import (
     ArrowType,
     Direction,
-    GridMode,
     GridPosition,
     LetterType,
-    PropType,
     Timing,
 )
 from domain.models.grid_data import GridData

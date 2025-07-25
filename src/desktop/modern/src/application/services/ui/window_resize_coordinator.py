@@ -7,7 +7,6 @@ Ensures all pictograph components use the correct main window width for scaling 
 
 from typing import List, Optional, Protocol, runtime_checkable
 from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import QWidget
 
 
 @runtime_checkable

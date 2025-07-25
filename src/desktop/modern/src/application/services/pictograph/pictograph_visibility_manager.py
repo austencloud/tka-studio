@@ -7,7 +7,7 @@ visibility settings for elemental, VTG, TKA, and position glyphs.
 """
 
 from typing import Dict, Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from domain.models.enums import LetterType
 from domain.models.pictograph_utils import (

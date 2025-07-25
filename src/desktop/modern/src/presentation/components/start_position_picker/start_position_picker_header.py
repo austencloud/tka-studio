@@ -13,7 +13,7 @@ import sys
 from enum import Enum
 
 from PyQt6.QtCore import QEasingCurve, QEvent, Qt, pyqtSignal
-from PyQt6.QtGui import QCursor, QFont
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 sys.path.append(
@@ -252,7 +252,6 @@ class StartPositionPickerHeader(QWidget):
     def set_grid_mode_button_text(self, grid_mode: str):
         """Update grid mode button text - DEPRECATED: Now using toggle and label."""
         # This method is kept for compatibility but the label is updated in set_grid_mode
-        pass
 
     def _on_back_button_clicked(self):
         """Handle back button click."""

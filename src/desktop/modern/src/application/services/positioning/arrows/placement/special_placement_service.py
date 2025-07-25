@@ -19,12 +19,10 @@ PROVIDES:
 
 import json
 import logging
-import time
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 from domain.models import MotionData, Orientation
-from domain.models.arrow_data import ArrowData
 from domain.models.pictograph_data import PictographData
 from PyQt6.QtCore import QPointF
 

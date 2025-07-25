@@ -4,7 +4,7 @@ ComponentConnector
 Handles signal connections and inter-component communication for the construct tab.
 """
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 

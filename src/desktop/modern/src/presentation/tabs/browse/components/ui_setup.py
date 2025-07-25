@@ -5,7 +5,6 @@ Handles the UI setup and component creation for the sequence browser.
 Separates UI construction from business logic.
 """
 
-from presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (

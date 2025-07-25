@@ -4,14 +4,11 @@ Dependency Injection configuration for the modern animation system.
 
 from core.dependency_injection.di_container import DIContainer
 from core.interfaces.animation_core_interfaces import (
-    IAnimationEngine,
     IAnimationOrchestrator,
-    IEventBus,
 )
 
 from .animation_orchestrator import (
     LegacyFadeManagerWrapper,
-    ModernAnimationOrchestrator,
     create_modern_animation_system,
 )
 
@@ -19,7 +16,6 @@ from .animation_orchestrator import (
 class AnimationSystemFactory:
     """Factory interface for animation system creation."""
 
-    pass
 
 
 class ModernAnimationServiceRegistration:

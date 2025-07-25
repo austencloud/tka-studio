@@ -8,7 +8,7 @@ Handles different question formats and answer generation.
 import logging
 import random
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Set
 
 from core.interfaces.learn_services import (
     IQuestionGenerationService,

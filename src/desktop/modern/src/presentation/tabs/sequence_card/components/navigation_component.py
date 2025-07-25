@@ -8,10 +8,10 @@ import logging
 from typing import Optional
 
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, 
-    QScrollArea, QFrame, QSizePolicy
+    QWidget, QVBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, 
+    QFrame
 )
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 
 from core.interfaces.sequence_card_services import ISequenceCardSettingsService, ISequenceCardDisplayService

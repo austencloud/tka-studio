@@ -6,7 +6,7 @@ eliminate the widget wrapper complexity and provide immediate, consistent
 scaling like the legacy system.
 """
 
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QSize
 

@@ -5,13 +5,12 @@ Core animation components for the modern fade system.
 import asyncio
 from typing import Dict, Optional, List
 from PyQt6.QtWidgets import QWidget, QGraphicsOpacityEffect
-from PyQt6.QtCore import QPropertyAnimation, QParallelAnimationGroup, QObject
+from PyQt6.QtCore import QPropertyAnimation, QParallelAnimationGroup
 
 from core.interfaces.animation_interfaces import (
     IGraphicsEffectManager, 
     IAnimationFactory, 
-    FadeOptions, 
-    EasingType
+    FadeOptions
 )
 
 

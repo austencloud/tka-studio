@@ -13,7 +13,6 @@ ARCHITECTURE:
 """
 
 import logging
-import os
 
 # Import framework-agnostic core services
 import sys
@@ -37,7 +36,7 @@ _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
 
-from domain.models import MotionData, PictographData
+from domain.models import MotionData
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
@@ -48,10 +47,8 @@ from application.adapters.qt_pictograph_adapter import (
 )
 from application.services.core.pictograph_renderer import (
     CorePictographRenderer,
-    IPictographAssetProvider,
     create_pictograph_renderer,
 )
-from application.services.core.types import RenderCommand, Size
 from application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )

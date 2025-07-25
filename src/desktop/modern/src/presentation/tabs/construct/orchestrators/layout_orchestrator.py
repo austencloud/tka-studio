@@ -5,7 +5,6 @@ Coordinates the overall layout structure and component organization.
 This is Qt-agnostic and focuses on coordination logic.
 """
 
-from typing import Callable, Optional
 
 
 class LayoutOrchestrator:
