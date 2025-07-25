@@ -139,10 +139,8 @@ class OptionProvider(IOptionProvider):
 
             # Extract end position from glyph_data
             end_position = None
-            if last_beat.pictograph_data.glyph_data and hasattr(
-                last_beat.pictograph_data.glyph_data, "end_position"
-            ):
-                end_position = last_beat.pictograph_data.glyph_data.end_position
+            if last_beat.pictograph_data.end_position:
+                end_position = last_beat.pictograph_data.end_position
             elif last_beat.metadata and "end_position" in last_beat.metadata:
                 end_position = last_beat.metadata["end_position"]
 

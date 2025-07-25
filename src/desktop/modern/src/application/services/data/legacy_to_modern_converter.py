@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from core.interfaces.data_services import ILegacyToModernConverter
 from domain.models.beat_data import BeatData
-from domain.models.glyph_data import GlyphData
 from domain.models.motion_data import MotionData
 
 if TYPE_CHECKING:
@@ -67,15 +66,11 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             blue_motion = self._create_motion_data_from_attributes(blue_attrs)
             red_motion = self._create_motion_data_from_attributes(red_attrs)
 
-            # Create glyph data as proper GlyphData object
-            glyph_data = GlyphData(
-                start_position=start_pos,
-                end_position=end_pos,
-            )
+            # Glyph data is no longer needed - all glyph information is computed from PictographData
 
             # Create PictographData with motion data
             pictograph_data = self._create_pictograph_data_from_legacy(
-                beat_dict, blue_motion, red_motion, glyph_data
+                beat_dict, blue_motion, red_motion
             )
 
             # Create complete beat data with pictograph reference
@@ -119,7 +114,6 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         beat_dict: dict,
         blue_motion: MotionData,
         red_motion: MotionData,
-        glyph_data: GlyphData,
     ) -> "PictographData":
         """Create PictographData from legacy beat data with motion data."""
         from domain.models.arrow_data import ArrowData
@@ -153,7 +147,6 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             letter=beat_dict.get("letter"),
             start_position=beat_dict.get("start_pos", ""),
             end_position=beat_dict.get("end_pos", ""),
-            glyph_data=glyph_data,
             metadata={"source": "legacy_conversion"},
         )
 

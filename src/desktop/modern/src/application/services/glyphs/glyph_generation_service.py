@@ -55,36 +55,20 @@ class GlyphGenerationService(IGlyphGenerationService):
         self._letter_type_map = self._build_letter_type_map()
         self._glyph_mappings = self._build_glyph_mappings()
 
-    def generate_glyph_data(self, beat_data: BeatData) -> Optional[GlyphData]:
-        """Generate glyph data for beat data."""
-        if beat_data.is_blank or not beat_data.letter:
-            return None
+    def generate_glyph_data(self, beat_data: BeatData) -> None:
+        """
+        Generate glyph data for beat data.
 
-        # Determine letter type
-        letter_type = self.determine_letter_type(beat_data.letter)
-
-        # Determine VTG mode
-        vtg_mode = self._determine_vtg_mode(beat_data)
-
-        # Determine if letter has dash
-        has_dash = "-" in beat_data.letter if beat_data.letter else False
-
-        # Determine start and end positions
-        start_position, end_position = self._determine_positions(beat_data)
-
-        return GlyphData(
-            vtg_mode=vtg_mode,
-            elemental_type=self._vtg_to_elemental(vtg_mode),
-            letter_type=letter_type,
-            has_dash=has_dash,
-            turns_data=None,  # TODO: Implement turns data parsing
-            start_position=start_position,
-            end_position=end_position,
-            show_elemental=letter_type == LetterType.TYPE1 if letter_type else False,
-            show_vtg=letter_type == LetterType.TYPE1 if letter_type else False,
-            show_tka=True,
-            show_positions=letter_type != LetterType.TYPE6 if letter_type else True,
-        )
+        Note: This method no longer returns GlyphData as all glyph information
+        is now computed directly from PictographData using utility functions.
+        """
+        # All glyph data is now computed from PictographData when needed:
+        # - VTG mode: compute_vtg_mode(pictograph_data)
+        # - Elemental type: compute_elemental_type_from_pictograph(pictograph_data)
+        # - Has dash: has_dash_from_pictograph(pictograph_data)
+        # - Turns: get_turns_from_motions(pictograph_data)
+        # - Visibility: PictographVisibilityManager
+        pass
 
     def determine_letter_type(self, letter: str) -> Optional[LetterType]:
         """Determine the letter type from the letter string."""

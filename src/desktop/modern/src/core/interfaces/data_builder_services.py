@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from domain.models.beat_data import BeatData
 from domain.models.enums import ElementalType, VTGMode
-from domain.models.glyph_data import GlyphData
 from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
 from presentation.components.option_picker.types.letter_types import LetterType
@@ -463,32 +462,28 @@ class IGlyphDataService(ABC):
     """Interface for glyph data services."""
 
     @abstractmethod
-    def determine_glyph_data(
-        self, pictograph_data: "PictographData"
-    ) -> Optional["GlyphData"]:
+    def determine_glyph_data(self, pictograph_data: "PictographData") -> None:
         """
         Determine glyph data from pictograph information.
 
+        Note: This method no longer returns GlyphData as all glyph information
+        is now computed directly from PictographData using utility functions.
+
         Args:
             pictograph_data: The pictograph data to analyze
-
-        Returns:
-            GlyphData with determined glyph information, or None if no glyphs needed
         """
         pass
 
     @abstractmethod
-    def determine_glyph_data_from_beat(
-        self, beat_data: "BeatData"
-    ) -> Optional["GlyphData"]:
+    def determine_glyph_data_from_beat(self, beat_data: "BeatData") -> None:
         """
         Backward compatibility method to determine glyph data from beat data.
 
+        Note: This method no longer returns GlyphData as all glyph information
+        is now computed directly from PictographData using utility functions.
+
         Args:
             beat_data: The beat data to analyze
-
-        Returns:
-            GlyphData with determined glyph information, or None if no glyphs needed
         """
         pass
 

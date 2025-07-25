@@ -104,13 +104,25 @@ class PictographFactory(IPictographFactory):
                 grid_mode=GridMode.DIAMOND if grid_mode == "diamond" else GridMode.BOX
             )
 
+            # Determine letter type from letter
+            letter = entry.get("letter", "?")
+            letter_type = None
+            if letter and letter != "?":
+                from domain.models.enums import LetterType
+                from domain.models.letter_type_classifier import LetterTypeClassifier
+
+                letter_type_str = LetterTypeClassifier.get_letter_type(letter)
+                # Convert string to enum
+                letter_type = getattr(LetterType, letter_type_str.upper(), None)
+
             # Create initial pictograph data
             pictograph_data = PictographData(
                 grid_data=grid_data,
                 arrows=arrows,
                 props={},  # Props will be generated during rendering
                 motions=motions,  # NEW: Motion dictionary
-                letter=entry.get("letter", "?"),
+                letter=letter,
+                letter_type=letter_type,  # NEW: Set letter type for glyph rendering
                 start_position=entry.get("start_pos"),
                 end_position=entry.get("end_pos"),
                 metadata={
@@ -119,9 +131,9 @@ class PictographFactory(IPictographFactory):
                 },
             )
 
-            # Generate and attach glyph data
-            glyph_data = self.glyph_service.determine_glyph_data(pictograph_data)
-            return pictograph_data.update(glyph_data=glyph_data)
+            # Glyph data is no longer needed - all glyph information is computed from PictographData
+            self.glyph_service.determine_glyph_data(pictograph_data)
+            return pictograph_data
 
         except Exception as e:
             logger.error(f"Error creating pictograph data from entry: {e}")
@@ -227,11 +239,23 @@ class PictographFactory(IPictographFactory):
             grid_mode=GridMode.DIAMOND if grid_mode == "diamond" else GridMode.BOX
         )
 
+        # Determine letter type for fallback too
+        letter = entry.get("letter", "?")
+        letter_type = None
+        if letter and letter != "?":
+            from domain.models.enums import LetterType
+            from domain.models.letter_type_classifier import LetterTypeClassifier
+
+            letter_type_str = LetterTypeClassifier.get_letter_type(letter)
+            # Convert string to enum
+            letter_type = getattr(LetterType, letter_type_str.upper(), None)
+
         return PictographData(
             grid_data=grid_data,
             arrows={},
             props={},
-            letter=entry.get("letter", "?"),
+            letter=letter,
+            letter_type=letter_type,
             metadata={
                 "source": "fallback",
                 "error": "Failed to parse dataset entry",

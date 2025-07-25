@@ -216,12 +216,8 @@ class DetailedInfoPanel(QWidget):
             additional_info += "Blue Reversal: Yes\n"
         if beat_data.red_reversal:
             additional_info += "Red Reversal: Yes\n"
-        if beat_data.pictograph_data.glyph_data:
-            glyph_type = (
-                beat_data.pictograph_data.glyph_data.letter_type.value
-                if beat_data.pictograph_data.glyph_data.letter_type
-                else "None"
-            )
+        if beat_data.pictograph_data.letter_type:
+            glyph_type = beat_data.pictograph_data.letter_type.value
             additional_info += f"Glyph: {glyph_type}\n"
 
         self._arrow_info_label.setText(additional_info)

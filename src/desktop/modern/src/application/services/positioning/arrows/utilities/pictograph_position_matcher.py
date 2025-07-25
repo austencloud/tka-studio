@@ -16,7 +16,6 @@ from application.services.pictograph.pictograph_position_matcher import (
 )
 from domain.models import (
     ArrowData,
-    GlyphData,
     GridData,
     GridMode,
     Location,
@@ -245,19 +244,17 @@ class PictographPositionMatcher:
         )
 
         # Generate glyph data using the glyph data service
-        glyph_data = self._generate_glyph_data(pictograph_data)
+        self._generate_glyph_data(pictograph_data)
 
-        # Return final PictographData object with glyph data
-        return pictograph_data.update(glyph_data=glyph_data)
+        # Return final PictographData object
+        return pictograph_data
 
-    def _generate_glyph_data(
-        self, pictograph_data: PictographData
-    ) -> Optional[GlyphData]:
+    def _generate_glyph_data(self, pictograph_data: PictographData) -> None:
         """Generate glyph data for pictograph data using the glyph data service."""
         from application.services.glyphs.glyph_data_service import GlyphDataService
 
         glyph_service = GlyphDataService()
-        return glyph_service.determine_glyph_data(pictograph_data)
+        glyph_service.determine_glyph_data(pictograph_data)
 
     def _parse_motion_type(self, motion_type_str: str) -> "MotionType":
         """Parse motion type string to MotionType enum."""

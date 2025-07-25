@@ -35,7 +35,6 @@ from .enums import (
     Timing,
     VTGMode,
 )
-from .glyph_data import GlyphData
 from .grid_data import GridData
 from .letter_type_classifier import (  # Export letter type classifier
     LetterTypeClassifier,
@@ -94,7 +93,6 @@ __all__ = [
     "GridMode",
     # Core models - Data classes
     "MotionData",
-    "GlyphData",
     "BeatData",
     "SequenceData",
     # Pictograph models

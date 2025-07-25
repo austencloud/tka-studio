@@ -47,12 +47,12 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             Dictionary in legacy JSON format
         """
         try:
-            # Extract position data from glyph_data if available
+            # Extract position data directly from pictograph_data
             start_pos = ""
             end_pos = ""
-            if beat.pictograph_data.glyph_data:
-                start_pos = beat.pictograph_data.glyph_data.start_position or ""
-                end_pos = beat.pictograph_data.glyph_data.end_position or ""
+            # Use start/end positions directly from pictograph_data
+            start_pos = beat.pictograph_data.start_position or ""
+            end_pos = beat.pictograph_data.end_position or ""
 
             # Extract timing and direction from metadata
             timing = beat.metadata.get("timing", "same") if beat.metadata else "same"
@@ -79,7 +79,11 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             return {
                 "beat": beat_number,
                 "letter": beat.letter or "?",
-                "letter_type": "Type1",  # Default for now - could extract from glyph_data.letter_type
+                "letter_type": (
+                    beat.pictograph_data.letter_type.value
+                    if beat.pictograph_data.letter_type
+                    else "Type1"
+                ),
                 "duration": int(beat.duration),
                 "start_pos": start_pos,
                 "end_pos": end_pos,
@@ -106,17 +110,12 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             Dictionary in legacy start position format
         """
         try:
-            # Extract start position type (alpha, beta, gamma) from glyph_data if available
+            # Extract start position type (alpha, beta, gamma) directly from pictograph_data
             end_pos = "alpha1"  # Default
             sequence_start_position = "alpha"  # Default
 
-            if (
-                start_position_beat_data.pictograph_data.glyph_data
-                and start_position_beat_data.pictograph_data.glyph_data.end_position
-            ):
-                end_pos = (
-                    start_position_beat_data.pictograph_data.glyph_data.end_position
-                )
+            if start_position_beat_data.pictograph_data.end_position:
+                end_pos = start_position_beat_data.pictograph_data.end_position
                 sequence_start_position = self.position_mapper.extract_position_type(
                     end_pos
                 )

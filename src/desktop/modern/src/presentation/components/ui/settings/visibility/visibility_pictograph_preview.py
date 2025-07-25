@@ -140,38 +140,25 @@ class VisibilityPictographPreview(QWidget):
                 end_ori=Orientation.IN,
             )
 
-            # Create comprehensive glyph data with all elements
-            glyph_data = GlyphData(
-                vtg_mode=VTGMode.SPLIT_SAME,
-                elemental_type=ElementalType.WATER,
-                letter_type=LetterType.TYPE1,
-                has_dash=False,  # "A" doesn't have dash
-                turns_data="(0.0, 0.0)",  # Basic positioning without turns
-                start_position="alpha1",
-                end_position="alpha3",
-                show_elemental=True,
-                show_vtg=True,
-                show_tka=True,
-                show_positions=True,
-            )
+            # Glyph data is no longer needed - all derived data now comes from PictographData
 
             motions = {
                 "blue": blue_motion,
                 "red": red_motion,
             }
+            from domain.models.enums import Direction, GridPosition, LetterType, Timing
+
             self.sample_pictograph_data = PictographData(
                 motions=motions,
                 letter="A",
-                start_position="alpha1",
-                end_position="alpha3",
-                glyph_data=glyph_data,
+                start_position=GridPosition.ALPHA1,
+                end_position=GridPosition.ALPHA3,
+                timing=Timing.SPLIT,
+                direction=Direction.SAME,
+                letter_type=LetterType.TYPE1,
                 is_blank=False,
                 metadata={
                     "preview_mode": True,
-                    "start_position": "alpha1",
-                    "end_position": "alpha3",
-                    "timing": "split",
-                    "direction": "same",
                 },
             )
 

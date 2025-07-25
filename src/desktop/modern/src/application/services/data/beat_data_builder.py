@@ -11,7 +11,6 @@ from typing import Any, Dict, Optional
 from core.interfaces.data_builder_services import IBeatDataBuilder
 from domain.models.beat_data import BeatData
 from domain.models.enums import GridMode, GridPosition
-from domain.models.glyph_data import GlyphData
 from domain.models.grid_data import GridData
 from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
@@ -124,11 +123,7 @@ class BeatDataBuilder(IBeatDataBuilder):
                 metadata=self._metadata.copy(),
             )
 
-        # Create glyph data if not already set
-        if not self._glyph_data and (self._start_position or self._end_position):
-            self._glyph_data = GlyphData(
-                start_position=self._start_position, end_position=self._end_position
-            )
+        # Glyph data is no longer needed - all glyph information is computed from PictographData
 
         # Build the BeatData
         try:

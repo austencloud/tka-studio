@@ -113,7 +113,6 @@ class SetStartPositionCommand(ICommand[BeatData]):
             # Get the dataset query service via dependency injection
             from application.services.data.dataset_query import IDatasetQuery
             from core.dependency_injection.di_container import get_container
-            from domain.models.glyph_data import GlyphData
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -129,15 +128,10 @@ class SetStartPositionCommand(ICommand[BeatData]):
                     self.position_key
                 )
 
-                # Create proper glyph data with the specific position
-                glyph_data = GlyphData(
+                # Update the embedded pictograph data with position info (glyph data no longer needed)
+                updated_pictograph_data = start_pos_beat_data.pictograph_data.update(
                     start_position=self.position_key,
                     end_position=specific_end_pos,
-                )
-
-                # Update the embedded pictograph data with proper glyph data and position info
-                updated_pictograph_data = start_pos_beat_data.pictograph_data.update(
-                    glyph_data=glyph_data,
                 )
 
                 # Update the beat data with the updated pictograph
@@ -190,21 +184,18 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 extract_end_position_from_position_key,
             )
             from application.services.sequence.beat_factory import BeatFactory
-            from domain.models.glyph_data import GlyphData
             from domain.models.pictograph_data import PictographData
 
             # Extract end position from position key
             specific_end_pos = extract_end_position_from_position_key(self.position_key)
 
-            # Create basic glyph data
-            glyph_data = GlyphData(
-                start_position=self.position_key,
-                end_position=specific_end_pos,
-            )
+            # Glyph data is no longer needed - all glyph information is computed from PictographData
 
             # Create minimal pictograph data for fallback
             pictograph_data = PictographData(
-                glyph_data=glyph_data,
+                letter=self.position_key,
+                start_position=self.position_key,
+                end_position=specific_end_pos,
                 arrows={},  # Empty arrows for now
                 props={},  # Empty props for now
                 motions={},  # Empty motions for now

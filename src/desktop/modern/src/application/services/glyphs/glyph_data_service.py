@@ -11,7 +11,6 @@ from core.interfaces.data_builder_services import IGlyphDataService
 from domain.models import (
     BeatData,
     ElementalType,
-    GlyphData,
     LetterType,
     Location,
     MotionData,
@@ -80,62 +79,37 @@ class GlyphDataService(IGlyphDataService):
         "Γ": LetterType.TYPE6,
     }
 
-    def determine_glyph_data(
-        self, pictograph_data: PictographData
-    ) -> Optional[GlyphData]:
+    def determine_glyph_data(self, pictograph_data: PictographData) -> None:
         """
         Determine glyph data from pictograph information.
 
+        Note: This method no longer returns GlyphData as all glyph information
+        is now computed directly from PictographData using utility functions.
+
         Args:
             pictograph_data: The pictograph data to analyze
-
-        Returns:
-            GlyphData with determined glyph information, or None if no glyphs needed
         """
-        if pictograph_data.is_blank or not pictograph_data.letter:
-            return None
+        # All glyph data is now computed from PictographData when needed:
+        # - VTG mode: compute_vtg_mode(pictograph_data)
+        # - Elemental type: compute_elemental_type_from_pictograph(pictograph_data)
+        # - Has dash: has_dash_from_pictograph(pictograph_data)
+        # - Turns: get_turns_from_motions(pictograph_data)
+        # - Visibility: PictographVisibilityManager
+        pass
 
-        # Determine letter type
-        letter_type = self._determine_letter_type(pictograph_data.letter)
-
-        # Determine VTG mode
-        vtg_mode = self._determine_vtg_mode(pictograph_data)
-
-        # Determine if letter has dash
-        has_dash = "-" in pictograph_data.letter if pictograph_data.letter else False
-
-        # Determine start and end positions
-        start_position, end_position = self._determine_positions(pictograph_data)
-
-        return GlyphData(
-            vtg_mode=vtg_mode,
-            elemental_type=self._vtg_to_elemental(vtg_mode),
-            letter_type=letter_type,
-            has_dash=has_dash,
-            turns_data=None,  # TODO: Implement turns data parsing
-            start_position=start_position,
-            end_position=end_position,
-            show_elemental=letter_type == LetterType.TYPE1,
-            show_vtg=letter_type == LetterType.TYPE1,
-            show_tka=True,
-            show_positions=letter_type != LetterType.TYPE6,  # Don't show for α, β, Γ
-        )
-
-    def determine_glyph_data_from_beat(
-        self, beat_data: BeatData
-    ) -> Optional[GlyphData]:
+    def determine_glyph_data_from_beat(self, beat_data: BeatData) -> None:
         """
         Backward compatibility method to determine glyph data from beat data.
 
+        Note: This method no longer returns GlyphData as all glyph information
+        is now computed directly from PictographData using utility functions.
+
         Args:
             beat_data: The beat data to analyze
-
-        Returns:
-            GlyphData with determined glyph information, or None if no glyphs needed
         """
         # Convert BeatData to PictographData for processing
         pictograph_data = self._beat_data_to_pictograph_data(beat_data)
-        return self.determine_glyph_data(pictograph_data)
+        self.determine_glyph_data(pictograph_data)
 
     def _beat_data_to_pictograph_data(self, beat_data: BeatData) -> PictographData:
         """Convert BeatData to PictographData for glyph processing."""

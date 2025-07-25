@@ -53,6 +53,14 @@ class RotationDirection(Enum):
     NO_ROTATION = "no_rot"
 
 
+class PropRotationDirection(Enum):
+    """Prop rotation directions matching legacy constants."""
+
+    CLOCKWISE = "clockwise"
+    COUNTER_CLOCKWISE = "counter_clockwise"
+    NO_ROT = "no_rot"
+
+
 class Orientation(Enum):
     """Prop orientations."""
 
@@ -73,6 +81,10 @@ class Location(Enum):
     SOUTHEAST = "se"
     SOUTHWEST = "sw"
     NORTHWEST = "nw"
+
+
+"""Remove redundant Position enum - use existing GridPosition"""
+# Position enum removed - using existing GridPosition
 
 
 class GridPosition(Enum):
@@ -215,6 +227,69 @@ class PropType(Enum):
     CHICKEN = "chicken"
     TRIQUETRA = "triquetra"
     TRIQUETRA2 = "triquetra2"
+
+
+class Letter(Enum):
+    """Letter constants for TKA glyphs."""
+
+    # Type 1 - Dual Shift
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    E = "E"
+    F = "F"
+    G = "G"
+    H = "H"
+    I = "I"
+    J = "J"
+    K = "K"
+    L = "L"
+    M = "M"
+    N = "N"
+    O = "O"
+    P = "P"
+    Q = "Q"
+    R = "R"
+    S = "S"
+    T = "T"
+    U = "U"
+    V = "V"
+
+    # Type 2 - Shift
+    W = "W"
+    X = "X"
+    Y = "Y"
+    Z = "Z"
+    SIGMA = "Σ"
+    DELTA = "Δ"
+    THETA = "θ"
+    OMEGA = "Ω"
+
+    # Type 3 - Cross Shift
+    W_CROSS = "W-"
+    X_CROSS = "X-"
+    Y_CROSS = "Y-"
+    Z_CROSS = "Z-"
+    SIGMA_CROSS = "Σ-"
+    DELTA_CROSS = "Δ-"
+    THETA_CROSS = "θ-"
+    OMEGA_CROSS = "Ω-"
+
+    # Type 4 - Dash
+    PHI = "Φ"
+    PSI = "Ψ"
+    LAMBDA = "Λ"
+
+    # Type 5 - Dual Dash
+    PHI_DUAL = "Φ-"
+    PSI_DUAL = "Ψ-"
+    LAMBDA_DUAL = "Λ-"
+
+    # Type 6 - Static
+    ALPHA = "α"
+    BETA = "β"
+    GAMMA = "Γ"
 
 
 class BackgroundType(Enum):

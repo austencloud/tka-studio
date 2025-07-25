@@ -8,11 +8,22 @@ import logging
 import uuid
 from typing import Optional
 
+from application.services.pictograph.pictograph_visibility_manager import (
+    get_pictograph_visibility_manager,
+)
 from domain.models import BeatData
 from domain.models.arrow_data import ArrowData
 from domain.models.enums import LetterType
 from domain.models.letter_type_classifier import LetterTypeClassifier
 from domain.models.pictograph_data import PictographData
+from domain.models.pictograph_utils import (
+    compute_elemental_type_from_pictograph,
+    compute_vtg_mode,
+    should_show_elemental,
+    should_show_positions,
+    should_show_tka,
+    should_show_vtg,
+)
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtWidgets import QGraphicsScene
@@ -374,7 +385,6 @@ class PictographScene(QGraphicsScene):
             },
             motions=pictograph_data.motions,
             letter=pictograph_data.letter,
-            glyph_data=pictograph_data.glyph_data,
         )
 
         # Render arrows directly (if visible)
@@ -384,59 +394,80 @@ class PictographScene(QGraphicsScene):
             if red_motion and self._visibility_service.get_motion_visibility("red"):
                 self._create_arrow_directly("red", red_motion, full_pictograph_data)
 
-        # Render glyphs if glyph data is available and visibility allows
-        if pictograph_data.glyph_data:
-            glyph_data = pictograph_data.glyph_data
+        # Render glyphs using computed data from PictographData
+        if pictograph_data.letter:
+            visibility_manager = get_pictograph_visibility_manager()
+            pictograph_id = pictograph_data.id
+
+            # Compute derived data from PictographData
+            vtg_mode = compute_vtg_mode(pictograph_data)
+            letter_type = pictograph_data.letter_type
+
+            # Initialize visibility if not already set
+            if not visibility_manager.get_visibility_state(pictograph_id):
+                visibility_manager.initialize_pictograph_visibility(
+                    pictograph_id, letter_type
+                )
 
             # Render elemental glyph (if visible)
             if (
-                glyph_data.show_elemental
-                and glyph_data.vtg_mode
+                should_show_elemental(letter_type)
+                and visibility_manager.get_pictograph_visibility(
+                    pictograph_id, "elemental"
+                )
+                and vtg_mode
                 and self._visibility_service.get_glyph_visibility("Elemental")
             ):
                 self.elemental_glyph_renderer.render_elemental_glyph(
-                    glyph_data.vtg_mode,
-                    glyph_data.letter_type.value if glyph_data.letter_type else None,
+                    vtg_mode,
+                    letter_type.value if letter_type else None,
                 )
 
             # Render VTG glyph (if visible)
             if (
-                glyph_data.show_vtg
-                and glyph_data.vtg_mode
+                should_show_vtg(letter_type)
+                and visibility_manager.get_pictograph_visibility(pictograph_id, "vtg")
+                and vtg_mode
                 and self._visibility_service.get_glyph_visibility("VTG")
             ):
                 self.vtg_glyph_renderer.render_vtg_glyph(
-                    glyph_data.vtg_mode,
-                    glyph_data.letter_type.value if glyph_data.letter_type else None,
+                    vtg_mode,
+                    letter_type.value if letter_type else None,
                 )
 
             # Render TKA glyph (if visible)
             if (
-                glyph_data.show_tka
-                and pictograph_data.letter
+                should_show_tka(letter_type)
+                and visibility_manager.get_pictograph_visibility(pictograph_id, "tka")
                 and self._visibility_service.get_glyph_visibility("TKA")
             ):
-                letter_type_str = LetterTypeClassifier.get_letter_type(
-                    pictograph_data.letter
+                from domain.models.pictograph_utils import (
+                    get_turns_from_motions,
+                    has_dash_from_pictograph,
                 )
-                letter_type = LetterType(letter_type_str)
+
+                has_dash = has_dash_from_pictograph(pictograph_data)
+                turns_data = get_turns_from_motions(pictograph_data)
 
                 self.tka_glyph_renderer.render_tka_glyph(
                     pictograph_data.letter,
                     letter_type,
-                    glyph_data.has_dash,
-                    glyph_data.turns_data,
+                    has_dash,
+                    turns_data,
                 )
 
             # Render position glyph (if visible)
             if (
-                glyph_data.show_positions
-                and glyph_data.start_position
-                and glyph_data.end_position
+                should_show_positions(letter_type)
+                and visibility_manager.get_pictograph_visibility(
+                    pictograph_id, "positions"
+                )
+                and pictograph_data.start_position
+                and pictograph_data.end_position
                 and self._visibility_service.get_glyph_visibility("Positions")
             ):
                 self.position_glyph_renderer.render_position_glyph(
-                    glyph_data.start_position,
-                    glyph_data.end_position,
+                    pictograph_data.start_position,
+                    pictograph_data.end_position,
                     pictograph_data.letter,
                 )

@@ -17,7 +17,6 @@ from application.services.pictograph.pictograph_csv_manager import (
 )
 from domain.models import (
     ArrowData,
-    GlyphData,
     GridData,
     GridMode,
     Location,
@@ -38,9 +37,10 @@ class PictographPositionMatcher:
     No complex validation or rule-based generation - just simple dataset lookups.
     """
 
-    def __init__(self, csv_manager: Optional[IPictographCSVManager] = None):
-        """Initialize position matching service with dependency injection."""
-        self.csv_manager = csv_manager or PictographCSVManager()
+    def __init__(self):
+        """Initialize position matching service with Modern's native dataset."""
+        self.pictograph_manager = PictographCSVManager()
+
         self.pictograph_dataset: Optional[Dict[str, List[Dict[str, Any]]]] = None
         self._load_dataset()
 
@@ -48,7 +48,7 @@ class PictographPositionMatcher:
         """Load dataset using Modern's native pictograph management service."""
         try:
             # Get the raw CSV dataset from Modern's service
-            raw_dataset = self.csv_manager._load_csv_data()
+            raw_dataset = self.pictograph_manager._load_csv_data()
 
             if raw_dataset is None or raw_dataset.empty:
                 print("❌ Dataset is empty")
@@ -139,6 +139,10 @@ class PictographPositionMatcher:
             print("❌ No dataset loaded")
             return []
 
+        print(
+            f"🔍 [POSITION_MATCHER] Looking for pictographs with start_pos='{last_beat_end_pos}'"
+        )
+
         next_opts = []
         dataset_groups_checked = 0
         total_items_checked = 0
@@ -224,6 +228,16 @@ class PictographPositionMatcher:
         if red_motion:
             motions["red"] = red_motion
 
+        # Determine letter type from letter
+        letter_type = None
+        if letter and letter != "unknown":
+            from domain.models.enums import LetterType
+            from domain.models.letter_type_classifier import LetterTypeClassifier
+
+            letter_type_str = LetterTypeClassifier.get_letter_type(letter)
+            # Convert string to enum
+            letter_type = getattr(LetterType, letter_type_str.upper(), None)
+
         # Create initial PictographData object with motion dictionary
         pictograph_data = PictographData(
             grid_data=grid_data,
@@ -231,6 +245,7 @@ class PictographPositionMatcher:
             props={},  # Props will be generated during rendering
             motions=motions,  # NEW: Motion dictionary (consistent with arrows/props)
             letter=letter,
+            letter_type=letter_type,  # NEW: Set letter type for glyph rendering
             start_position=item.get("start_pos", "unknown"),
             end_position=item.get("end_pos", "unknown"),
             is_blank=len(arrows) == 0,
@@ -241,19 +256,17 @@ class PictographPositionMatcher:
         )
 
         # Generate glyph data using the glyph data service
-        glyph_data = self._generate_glyph_data(pictograph_data)
+        self._generate_glyph_data(pictograph_data)
 
-        # Return final PictographData object with glyph data
-        return pictograph_data.update(glyph_data=glyph_data)
+        # Return final PictographData object
+        return pictograph_data
 
-    def _generate_glyph_data(
-        self, pictograph_data: PictographData
-    ) -> Optional[GlyphData]:
+    def _generate_glyph_data(self, pictograph_data: PictographData) -> None:
         """Generate glyph data for pictograph data using the glyph data service."""
         from application.services.glyphs.glyph_data_service import GlyphDataService
 
         glyph_service = GlyphDataService()
-        return glyph_service.determine_glyph_data(pictograph_data)
+        glyph_service.determine_glyph_data(pictograph_data)
 
     def _parse_motion_type(self, motion_type_str: str) -> "MotionType":
         """Parse motion type string to MotionType enum."""

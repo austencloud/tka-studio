@@ -5,8 +5,15 @@ from enum import Enum
 from typing import Any, Dict, Optional, Tuple, Union
 
 from domain.models.arrow_data import ArrowData
-from domain.models.enums import ArrowType, GridMode, GridPosition, PropType
-from domain.models.glyph_data import GlyphData
+from domain.models.enums import (
+    ArrowType,
+    Direction,
+    GridMode,
+    GridPosition,
+    LetterType,
+    PropType,
+    Timing,
+)
 from domain.models.grid_data import GridData
 from domain.models.prop_data import PropData
 
@@ -40,8 +47,12 @@ class PictographData:
     start_position: Optional[GridPosition] = None
     end_position: Optional[GridPosition] = None
 
-    # Glyph data for notation rendering
-    glyph_data: Optional[GlyphData] = None
+    # Letter determination fields
+    beat: int = 0
+    timing: Optional["Timing"] = None  # Timing.SPLIT or Timing.TOG
+    direction: Optional["Direction"] = None  # Direction.SAME or Direction.OPP
+    duration: Optional[int] = None
+    letter_type: Optional["LetterType"] = None
 
     # Visual state
     is_blank: bool = False

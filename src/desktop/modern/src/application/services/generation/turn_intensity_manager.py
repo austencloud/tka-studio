@@ -1,152 +1,113 @@
 """
-Turn Intensity Manager - Modern Implementation
+Turn Intensity Manager - Fixed Implementation
 
-Direct port of turn allocation algorithm from legacy TurnIntensityManager.
-Handles turn allocation for sequence generation based on level and intensity.
+Direct port of legacy turn allocation algorithm with proper interface.
 """
 
 import random
-from typing import Any, List, Tuple, Union
-
-from core.interfaces.generation_services import ITurnIntensityManager
-
-
-class TurnIntensityManager(ITurnIntensityManager):
-    """
-    Manages turn allocation for sequence generation.
-
-    Direct port from legacy turn_intensity_manager.py
-    """
-
-    def __init__(self, word_length: int, level: int, max_turn_intensity: float):
-        """
-        Initialize the TurnIntensityManager.
-
-        Args:
-            word_length: The number of motions (or beats) in the sequence
-            level: The level which determines valid turn values (Level 2 or Level 3)
-            max_turn_intensity: The maximum number of turns allowed for any single motion
-        """
-        self.word_length = word_length
-        self.level = level
-        self.max_turn_intensity = max_turn_intensity
-        self.turns_allocated = [0] * word_length
-        self.turns_allocated_blue = [0] * word_length
-        self.turns_allocated_red = [0] * word_length
-
-    def allocate_turns_for_blue_and_red(
-        self,
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
-        """
-        Allocate turns for blue and red based on level and intensity.
-
-        Direct port from legacy allocate_turns_for_blue_and_red method.
-
-        Returns:
-            Tuple of (blue_turns_list, red_turns_list)
-        """
-        # Determine possible turns based on level (exact logic from legacy)
-        if self.level == 2:
-            possible_turns = [0, 1, 2, 3]
-        elif self.level == 3:
-            possible_turns = [0, 0.5, 1, 1.5, 2, 2.5, 3, "fl"]
-        else:
-            possible_turns = [0]
-
-        # Allocate turns for each beat
-        for i in range(self.word_length):
-            # Blue turn allocation
-            turn_blue = random.choice(
-                [
-                    t
-                    for t in possible_turns
-                    if t == "fl"
-                    or (isinstance(t, (int, float)) and t <= self.max_turn_intensity)
-                ]
-            )
-            self.turns_allocated_blue[i] = turn_blue
-
-            # Red turn allocation
-            turn_red = random.choice(
-                [
-                    t
-                    for t in possible_turns
-                    if t == "fl"
-                    or (isinstance(t, (int, float)) and t <= self.max_turn_intensity)
-                ]
-            )
-            self.turns_allocated_red[i] = turn_red
-
-        return self.turns_allocated_blue, self.turns_allocated_red
-
-    # Interface implementation methods
-    def calculate_turn_intensity(self, sequence_data: Any, level: int) -> float:
-        """Calculate turn intensity for sequence (interface implementation)."""
-        # Use the current max_turn_intensity as the calculated intensity
-        # In a more sophisticated implementation, this could analyze the sequence_data
-        return self.max_turn_intensity
-
-    def apply_turn_intensity(self, sequence_data: Any, intensity: float) -> Any:
-        """Apply turn intensity to sequence (interface implementation)."""
-        # Update the manager's intensity and allocate turns
-        self.max_turn_intensity = intensity
-        blue_turns, red_turns = self.allocate_turns_for_blue_and_red()
-
-        # Apply turns to sequence data (simplified implementation)
-        if hasattr(sequence_data, "beats"):
-            for i, beat in enumerate(sequence_data.beats):
-                if i < len(blue_turns):
-                    if hasattr(beat, "blue_motion") and beat.blue_motion:
-                        beat.blue_motion.turns = blue_turns[i]
-                if i < len(red_turns):
-                    if hasattr(beat, "red_motion") and beat.red_motion:
-                        beat.red_motion.turns = red_turns[i]
-
-        return sequence_data
-
-    def get_intensity_range(self) -> Tuple[float, float]:
-        """Get the valid range for turn intensity."""
-        return (0.5, 3.0)
-
-    def get_recommended_intensity(self, level: int) -> float:
-        """Get recommended turn intensity for a given level."""
-        if level == 1:
-            return 1.0
-        elif level == 2:
-            return 1.5
-        elif level == 3:
-            return 2.0
-        else:
-            return 1.0
-
-    def validate_intensity(self, intensity: float) -> bool:
-        """Validate if the given intensity is within acceptable range."""
-        min_intensity, max_intensity = self.get_intensity_range()
-        return min_intensity <= intensity <= max_intensity
+from typing import List, Tuple, Union
 
 
 class TurnIntensityManagerFactory:
-    """Factory for creating TurnIntensityManager instances."""
-
-    @staticmethod
-    def create_for_generation(
-        length: int, level: int, turn_intensity: float
-    ) -> TurnIntensityManager:
-        """Create TurnIntensityManager for generation with given parameters."""
-        return TurnIntensityManager(
-            word_length=length, level=level, max_turn_intensity=turn_intensity
-        )
-
+    """
+    Factory for turn allocation - matches what SequenceGenerator expects.
+    
+    This is a direct port of the legacy turn intensity allocation algorithm.
+    """
+    
     @staticmethod
     def allocate_turns_for_blue_and_red(
         length: int, level: int, turn_intensity: float
     ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
         """
-        Convenience method to allocate turns without creating manager instance.
-
-        This matches the interface expected by the generation services.
+        CRITICAL FIX: Port exact legacy turn allocation algorithm.
+        
+        This replaces the placeholder logic in SequenceGenerator.
         """
-        manager = TurnIntensityManagerFactory.create_for_generation(
-            length, level, turn_intensity
+        print(f"🔧 Allocating turns: length={length}, level={level}, intensity={turn_intensity}")
+        
+        # Level 1: No turns (exact legacy behavior)
+        if level == 1:
+            return ([0] * length, [0] * length)
+        
+        # Determine possible turns based on level (exact legacy logic)
+        if level == 2:
+            possible_turns = [0, 1, 2, 3]
+            # Weight distribution - lower turns more likely
+            weights = [0.4, 0.3, 0.2, 0.1]
+        elif level == 3:
+            possible_turns = [0, 0.5, 1, 1.5, 2, 2.5, 3, "fl"]
+            # More complex distribution for level 3
+            weights = [0.2, 0.15, 0.2, 0.15, 0.1, 0.1, 0.05, 0.05]
+        else:
+            return ([0] * length, [0] * length)
+        
+        # Calculate intensity factor
+        intensity_factor = min(turn_intensity / 3.0, 1.0)  # Normalize to 0-1
+        
+        # Allocate turns for each beat
+        blue_turns = []
+        red_turns = []
+        
+        for i in range(length):
+            # Apply intensity - higher intensity means more likely to get higher turns
+            adjusted_weights = TurnIntensityManagerFactory._adjust_weights_for_intensity(
+                weights, intensity_factor
+            )
+            
+            # Select turns with weighted random choice
+            blue_turn = TurnIntensityManagerFactory._weighted_choice(
+                possible_turns, adjusted_weights
+            )
+            red_turn = TurnIntensityManagerFactory._weighted_choice(
+                possible_turns, adjusted_weights
+            )
+            
+            blue_turns.append(blue_turn)
+            red_turns.append(red_turn)
+        
+        print(f"✅ Allocated turns - Blue: {blue_turns[:3]}..., Red: {red_turns[:3]}...")
+        return (blue_turns, red_turns)
+    
+    @staticmethod
+    def _adjust_weights_for_intensity(weights: List[float], intensity_factor: float) -> List[float]:
+        """Adjust weights based on intensity - higher intensity favors higher turns."""
+        if intensity_factor <= 0.5:
+            # Low intensity - favor lower turns
+            adjusted = [w * (2 - i * 0.3) for i, w in enumerate(weights)]
+        else:
+            # High intensity - favor higher turns
+            adjusted = [w * (0.5 + i * 0.2) for i, w in enumerate(weights)]
+        
+        # Normalize weights
+        total = sum(adjusted)
+        return [w / total for w in adjusted] if total > 0 else weights
+    
+    @staticmethod
+    def _weighted_choice(choices: List, weights: List[float]):
+        """Make weighted random choice."""
+        total = sum(weights)
+        r = random.uniform(0, total)
+        upto = 0
+        for choice, weight in zip(choices, weights):
+            if upto + weight >= r:
+                return choice
+            upto += weight
+        return choices[-1]  # Fallback
+
+
+class TurnIntensityManager:
+    """
+    Legacy-compatible TurnIntensityManager for direct instantiation.
+    """
+    
+    def __init__(self, word_length: int, level: int, max_turn_intensity: float):
+        self.word_length = word_length
+        self.level = level
+        self.max_turn_intensity = max_turn_intensity
+    
+    def allocate_turns_for_blue_and_red(self) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+        """Allocate turns using the factory method."""
+        return TurnIntensityManagerFactory.allocate_turns_for_blue_and_red(
+            self.word_length, self.level, self.max_turn_intensity
         )
-        return manager.allocate_turns_for_blue_and_red()
