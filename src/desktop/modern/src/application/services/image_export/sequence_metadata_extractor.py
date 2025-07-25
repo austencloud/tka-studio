@@ -24,7 +24,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
     """
 
     def __init__(self):
-        logger.info("Modern metadata extractor initialized")
+        pass
 
     def extract_sequence_data(self, file_path: Path) -> Optional[List[Dict[str, Any]]]:
         """Extract sequence data from a file."""

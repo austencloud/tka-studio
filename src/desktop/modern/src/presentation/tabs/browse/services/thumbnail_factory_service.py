@@ -6,22 +6,18 @@ Service for creating sequence thumbnail widgets with image loading.
 
 from typing import Optional
 
+from core.interfaces.browse_services import IThumbnailFactory
+from domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
-
-from core.interfaces.browse_services import IThumbnailFactory
-from domain.models.sequence_data import SequenceData
 
 
 class ThumbnailFactoryService(IThumbnailFactory):
     """Service for creating sequence thumbnail widgets."""
 
     def create_thumbnail(
-        self, 
-        sequence: SequenceData,
-        thumbnail_width: int,
-        sort_method: str
+        self, sequence: SequenceData, thumbnail_width: int, sort_method: str
     ) -> QWidget:
         """Create a thumbnail widget for a sequence with actual image loading."""
         # Create container frame
@@ -71,17 +67,14 @@ class ThumbnailFactoryService(IThumbnailFactory):
         return thumbnail
 
     def _load_thumbnail_image(
-        self, 
-        sequence: SequenceData, 
-        image_label: QLabel, 
-        thumbnail_width: int
+        self, sequence: SequenceData, image_label: QLabel, thumbnail_width: int
     ) -> None:
         """Load and set the thumbnail image."""
         thumbnail_path = self._get_thumbnail_path(sequence)
-        
+
         if thumbnail_path:
             pixmap = QPixmap(thumbnail_path)
-            
+
             if not pixmap.isNull():
                 # Scale image to fit while maintaining aspect ratio
                 scaled_pixmap = pixmap.scaled(
@@ -104,7 +97,9 @@ class ThumbnailFactoryService(IThumbnailFactory):
             return sequence.thumbnail_paths[0]
         return None
 
-    def _set_placeholder_image(self, sequence: SequenceData, image_label: QLabel) -> None:
+    def _set_placeholder_image(
+        self, sequence: SequenceData, image_label: QLabel
+    ) -> None:
         """Set a placeholder when no image is available."""
         # Check if image loading failed or no image available
         if self._get_thumbnail_path(sequence):
@@ -130,6 +125,6 @@ class ThumbnailFactoryService(IThumbnailFactory):
                 border-radius: 4px;
                 padding: 10px;
             """
-        
+
         image_label.setText(placeholder_text)
         image_label.setStyleSheet(style)

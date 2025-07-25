@@ -16,20 +16,11 @@ REFACTORING NOTE: This service is being broken down into smaller microservices:
 import logging
 from typing import Any, Dict, Optional
 
-from application.services.pictograph.asset_management.pictograph_asset_manager import (
-    PictographAssetManager,
-)
-from application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
-)
 from application.services.pictograph.glyph_rendering.glyph_rendering_service import (
     GlyphRenderingService,
 )
 from application.services.pictograph.grid_rendering.grid_rendering_service import (
     GridRenderingService,
-)
-from application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
-    PictographPerformanceMonitor,
 )
 from application.services.pictograph.prop_rendering.prop_rendering_service import (
     PropRenderingService,
@@ -37,6 +28,16 @@ from application.services.pictograph.prop_rendering.prop_rendering_service impor
 from domain.models import MotionData, PictographData
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
+
+from application.services.pictograph.asset_management.pictograph_asset_manager import (
+    PictographAssetManager,
+)
+from application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
+from application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
+    PictographPerformanceMonitor,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -66,9 +67,7 @@ class PictographRenderingService:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             if not cls._creation_logged:
-                logger.info(
-                    "🎨 [RENDERING_SERVICE] Created singleton orchestrator instance"
-                )
+
                 cls._creation_logged = True
         return cls._instance
 
@@ -104,10 +103,6 @@ class PictographRenderingService:
             self._asset_manager, self._cache_manager, self._performance_monitor
         )
 
-        logger.info(
-            "🎨 [RENDERING_SERVICE] Initialized pictograph rendering orchestrator"
-        )
-
         # Pre-initialize common renderers for better startup performance
         self._preload_common_renderers()
 
@@ -125,10 +120,6 @@ class PictographRenderingService:
 
             # Pre-load glyph renderers
             self._glyph_renderer.preload_common_glyphs()
-
-            logger.info(
-                "🚀 [RENDERING_SERVICE] Pre-loaded common renderers for optimal performance"
-            )
 
         except Exception as e:
             logger.warning(
@@ -195,7 +186,7 @@ class PictographRenderingService:
         cache_stats = self._cache_manager.get_cache_stats()
         asset_stats = self._asset_manager.get_asset_stats()
         performance_report = self._performance_monitor.get_performance_report()
-        
+
         # Combine stats from all services
         combined_stats = {
             **cache_stats,
@@ -205,7 +196,7 @@ class PictographRenderingService:
             "prop_stats": self._prop_renderer.get_prop_stats(),
             "glyph_stats": self._glyph_renderer.get_glyph_stats(),
         }
-        
+
         return combined_stats
 
     def clear_rendered_props(self):
@@ -220,7 +211,7 @@ class PictographRenderingService:
         self._cache_manager.clear_all_caches()
         self._asset_manager.clear_color_cache()
         self._performance_monitor.reset_statistics()
-        
+
         logger.info("🧹 [RENDERING_SERVICE] Cleared all caches across microservices")
 
     def get_cache_info(self) -> str:
@@ -228,7 +219,7 @@ class PictographRenderingService:
         cache_stats = self.get_cache_stats()
         cache_info = self._cache_manager.get_cache_info()
         performance_report = self._performance_monitor.get_performance_report()
-        
+
         return (
             f"PictographRenderingService Orchestrator Stats:\n"
             f"{cache_info}\n"
@@ -245,27 +236,27 @@ class PictographRenderingService:
     # ============================================================================
     # MICROSERVICE ACCESS METHODS
     # ============================================================================
-    
+
     def get_asset_manager(self) -> PictographAssetManager:
         """Get the asset manager microservice."""
         return self._asset_manager
-    
+
     def get_cache_manager(self) -> PictographCacheManager:
         """Get the cache manager microservice."""
         return self._cache_manager
-    
+
     def get_performance_monitor(self) -> PictographPerformanceMonitor:
         """Get the performance monitor microservice."""
         return self._performance_monitor
-    
+
     def get_grid_renderer(self) -> GridRenderingService:
         """Get the grid rendering microservice."""
         return self._grid_renderer
-    
+
     def get_prop_renderer(self) -> PropRenderingService:
         """Get the prop rendering microservice."""
         return self._prop_renderer
-    
+
     def get_glyph_renderer(self) -> GlyphRenderingService:
         """Get the glyph rendering microservice."""
         return self._glyph_renderer

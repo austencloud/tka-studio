@@ -32,8 +32,9 @@ def _install_qt_message_handler():
         # ULTRA-AGGRESSIVE SUPPRESSION: Block ALL CSS and styling warnings to eliminate processing overhead
         suppressed_patterns = [
             "unknown property",
-            "transition",
+            "text-shadow",
             "transform",
+            "transition",
             "box-shadow",
             "backdrop-filter",
             "qobject::setparent",
@@ -296,6 +297,11 @@ def main():
         parallel_mode, monitor, geometry = detect_parallel_testing_mode()
         app = QApplication(sys.argv)
         app.setStyle("Fusion")
+
+        # PERFORMANCE OPTIMIZATION: Install Qt message handler to suppress CSS warnings
+        _install_qt_message_handler()
+
+        # PERFORMANCE OPTIMIZATION: Apply aggressive startup silencing
         screens = QGuiApplication.screens()
 
         if parallel_mode and len(screens) > 1:

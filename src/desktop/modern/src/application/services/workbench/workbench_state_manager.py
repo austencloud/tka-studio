@@ -17,7 +17,11 @@ from typing import NamedTuple, Optional
 
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData
-from core.interfaces.workbench_services import IWorkbenchStateManager, WorkbenchState, StateChangeResult
+from core.interfaces.workbench_services import (
+    IWorkbenchStateManager,
+    WorkbenchState,
+    StateChangeResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -90,16 +94,10 @@ class WorkbenchStateManager(IWorkbenchStateManager):
             logger.debug(
                 f"Sequence changed: {sequence.length if sequence else 0} beats"
             )
-            print(
-                f"🔄 [STATE_MANAGER] Sequence content changed: {previous_sequence.length if previous_sequence else 0} → {sequence.length if sequence else 0} beats"
-            )
 
         if state_changed:
             self._current_state = new_state
             logger.debug(f"Workbench state changed: {previous_state} -> {new_state}")
-            print(
-                f"🔄 [STATE_MANAGER] Workbench state changed: {previous_state} → {new_state}"
-            )
 
         # Coordinate with SequenceStateTracker if available and not restoring
         if self._sequence_state_tracker and not self._is_restoring:

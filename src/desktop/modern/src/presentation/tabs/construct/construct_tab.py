@@ -247,9 +247,6 @@ class ConstructTab(QWidget):
 
         # MODERN ARCHITECTURE: No need to connect workbench setter
         # StartPositionSelectionHandler emits signals -> SignalCoordinator -> StartPositionManager -> WorkbenchStateManager
-        print(
-            "🏗️ [CONSTRUCT_TAB] Using modern state manager architecture (no direct workbench setter needed)"
-        )
 
         # Initialize signal coordinator after all components are ready
         self.signal_coordinator = SignalCoordinator(
@@ -469,7 +466,7 @@ class ConstructTab(QWidget):
 
     def _on_option_picker_ready(self, option_picker):
         """Handle option picker ready event from layout manager."""
-        print(f"🔧 [CONSTRUCT_TAB] Option picker ready callback received")
+
         if self.option_picker_manager:
             self.option_picker_manager.set_option_picker(option_picker)
         else:

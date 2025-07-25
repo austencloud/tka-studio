@@ -85,9 +85,7 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
                 IPictographBorderManager,
                 IPictographContextDetector,
             )
-            from core.interfaces.pictograph_services import (
-                IPictographValidator,
-            )
+            from core.interfaces.pictograph_services import IPictographValidator
 
             # Register pictograph data manager
             container.register_singleton(IPictographDataManager, PictographDataManager)
@@ -174,7 +172,6 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             )
 
             self._mark_service_available("PictographRenderingService")
-            logger.info("🎨 [REGISTRAR] Pictograph rendering service registered")
 
         except ImportError as e:
             error_msg = f"Failed to import pictograph rendering service: {e}"

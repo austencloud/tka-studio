@@ -242,11 +242,7 @@ class OptionPickerScroll(QScrollArea):
         # Layout orchestrator will handle spacing when header is added
 
         # Mark all sections as initialized
-        print(f"🔧 [SCROLL] Setting _all_sections_initialized = True")
         self._all_sections_initialized = True
-        print(
-            f"🔧 [SCROLL] Verification: _all_sections_initialized = {self._all_sections_initialized}"
-        )
 
     def add_header_label(self, header_widget: QWidget) -> None:
         """Add a header label widget at the top of the scroll area with balanced spacing."""
@@ -344,14 +340,6 @@ class OptionPickerScroll(QScrollArea):
 
     def _handle_refresh_request(self, sequence_data: SequenceData) -> None:
         """Handle refresh request from orchestrator."""
-        print(
-            f"🔄 [OPTION_PICKER] _handle_refresh_request called with sequence: {sequence_data}"
-        )
-
-        # TEMPORARILY DISABLED: Don't process refresh requests until all sections are initialized
-        # if not self._all_sections_initialized:
-        #     print(f"❌ [SCROLL] Sections not fully initialized, deferring refresh")
-        #     return
 
         try:
             # Set UI loading state
@@ -359,7 +347,6 @@ class OptionPickerScroll(QScrollArea):
 
             # Skip fade animations if preparing for widget transition
             if self._refresh_orchestrator.is_preparing_for_transition():
-                print(f"🔄 [OPTION_PICKER] Preparing for transition, updating directly")
                 self._update_all_sections_directly(sequence_data)
                 return
 
@@ -367,15 +354,10 @@ class OptionPickerScroll(QScrollArea):
             existing_sections = [
                 section for section in self.sections.values() if section.pictographs
             ]
-            print(
-                f"🔄 [OPTION_PICKER] Found {len(existing_sections)} existing sections with content"
-            )
 
             if self._animation_orchestrator and existing_sections:
-                print(f"🔄 [OPTION_PICKER] Using fade animation")
                 self._fade_and_update_all_sections(sequence_data)
             else:
-                print(f"🔄 [OPTION_PICKER] Using direct update")
                 self._update_all_sections_directly(sequence_data)
 
         except Exception as e:
@@ -386,14 +368,11 @@ class OptionPickerScroll(QScrollArea):
 
     def _update_all_sections_directly(self, sequence_data: SequenceData) -> None:
         """Update all sections directly without animation using section manager."""
-        print(f"🔄 [OPTION_PICKER] _update_all_sections_directly called")
         try:
             # ✅ Use service to get options (pure business logic)
-            print(f"🔄 [OPTION_PICKER] Getting options from sequence option service...")
             options_by_type = self._sequence_option_service.get_options_for_sequence(
                 sequence_data
             )
-            print(f"🔄 [OPTION_PICKER] Received options: {options_by_type}")
 
             if not options_by_type:
                 print("❌ [UI] No options received from service")
@@ -404,14 +383,10 @@ class OptionPickerScroll(QScrollArea):
             if hasattr(self, "_widget_pool_manager") and self._widget_pool_manager:
                 self._widget_pool_manager.reset_pool()
 
-            print(
-                f"🔄 [OPTION_PICKER] Updating sections with {len(options_by_type)} option types"
-            )
             # ✅ Update UI sections using section manager
             self._section_manager.update_all_sections_directly(
                 sequence_data, options_by_type
             )
-            print(f"✅ [OPTION_PICKER] Sections updated successfully")
 
             # ✅ Apply sizing using service (defer with longer delay during startup)
             # Use longer delay during sequence restoration to ensure UI is fully initialized
@@ -435,7 +410,24 @@ class OptionPickerScroll(QScrollArea):
             def update_callback():
                 self._update_all_sections_directly(sequence_data)
 
-            self._animator.fade_out_and_update(pictograph_frames, update_callback)
+            def fade_in_callback():
+                # Get the new frames after content update and fade them in
+                new_frames = self._section_manager.get_all_pictograph_frames()
+                if new_frames:
+                    # Use the section animation handler to fade in the new frames
+                    for section in self._section_manager._sections.values():
+                        if hasattr(section, "_animation_handler"):
+                            section_frames = (
+                                section._widget_manager.get_active_widgets()
+                            )
+                            if section_frames:
+                                section._animation_handler.fade_in_frames(
+                                    section_frames
+                                )
+
+            self._animator.fade_out_and_update(
+                pictograph_frames, update_callback, fade_in_callback
+            )
 
         except Exception as e:
             print(f"❌ [SCROLL] Fade transition failed: {e}")

@@ -55,9 +55,6 @@ class ModernDictionaryDataManager(QObject):
         self._has_loaded = False
         self._loading_errors: List[str] = []
 
-        print(f"📂 Dictionary directory: {self.dictionary_dir}")
-        print(f"📁 Directory exists: {self.dictionary_dir.exists()}")
-
     def _find_data_directory(self) -> Path:
         """Find the data directory using the same logic as legacy."""
         # Start from current file and search upward
@@ -85,10 +82,7 @@ class ModernDictionaryDataManager(QObject):
         if self._has_loaded:
             return
 
-        print("🔄 Loading sequences from dictionary...")
-
         if not self.dictionary_dir.exists():
-            print(f"❌ Dictionary directory not found: {self.dictionary_dir}")
             return
 
         # Get all sequence directories
@@ -99,19 +93,14 @@ class ModernDictionaryDataManager(QObject):
         ]
 
         total_dirs = len(sequence_dirs)
-        print(f"📁 Found {total_dirs} sequence directories")
 
         for i, sequence_dir in enumerate(sequence_dirs):
             try:
-                self.loading_progress.emit(
-                    f"Loading {sequence_dir.name}...", i, total_dirs
-                )
 
                 # Find thumbnails in this directory
                 thumbnails = self._find_thumbnails(sequence_dir)
 
                 if not thumbnails:
-                    print(f"⚠️  No thumbnails found in {sequence_dir.name}")
                     continue
 
                 # Create sequence record
@@ -142,15 +131,10 @@ class ModernDictionaryDataManager(QObject):
 
             except Exception as e:
                 error_msg = f"Error loading {sequence_dir.name}: {e}"
-                print(f"❌ {error_msg}")
                 self._loading_errors.append(error_msg)
 
         self._has_loaded = True
         loaded_count = len(self._loaded_records)
-
-        print(f"✅ Loaded {loaded_count} sequences successfully")
-        if self._loading_errors:
-            print(f"⚠️  {len(self._loading_errors)} errors during loading")
 
         self.data_loaded.emit(loaded_count)
 
@@ -209,9 +193,9 @@ class ModernDictionaryDataManager(QObject):
                     return result
 
         except FileNotFoundError:
-            print(f"⚠️  Thumbnail not found: {thumbnail_path}")
+            pass  # Thumbnail not found
         except Exception as e:
-            print(f"❌ Error extracting metadata from {thumbnail_path}: {e}")
+            pass  # Error extracting metadata
 
         return None
 

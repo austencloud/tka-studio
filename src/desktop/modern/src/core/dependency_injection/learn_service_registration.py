@@ -7,30 +7,29 @@ the established patterns for service registration.
 
 import logging
 
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.learn_services import (
-    ILessonConfigurationService,
-    IQuizSessionService,
-    IQuestionGenerationService,
-    IAnswerValidationService,
-    ILessonProgressService,
-    ILearnUIService,
-    ILearnNavigationService,
-    ILearnDataService,
-)
-from core.interfaces.data_builder_services import IPictographDataService
-from core.interfaces.organization_services import IFileSystemService
 from application.services.learn import (
-    LessonConfigurationService,
-    QuizSessionService,
-    QuestionGenerationService,
     AnswerValidationService,
-    LessonProgressService,
-    LearnUIService,
-    LearnNavigationService,
     LearnDataService,
+    LearnNavigationService,
+    LearnUIService,
+    LessonConfigurationService,
+    LessonProgressService,
+    QuestionGenerationService,
+    QuizSessionService,
 )
-
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.data_builder_services import IPictographDataService
+from core.interfaces.learn_services import (
+    IAnswerValidationService,
+    ILearnDataService,
+    ILearnNavigationService,
+    ILearnUIService,
+    ILessonConfigurationService,
+    ILessonProgressService,
+    IQuestionGenerationService,
+    IQuizSessionService,
+)
+from core.interfaces.organization_services import IFileSystemService
 from infrastructure.file_system.file_system_service import FileSystemService
 from presentation.tabs.learn import LearnTab
 
@@ -45,7 +44,6 @@ def register_learn_services(container: DIContainer) -> None:
         container: DI container to register services with
     """
     try:
-        logger.info("Registering learn services...")
 
         # External dependencies (use real data services)
         # Use the real pictograph service with actual TKA dataset
@@ -57,9 +55,7 @@ def register_learn_services(container: DIContainer) -> None:
         container.register_factory(
             IPictographDataService, lambda: RealPictographDataService(container)
         )
-        logger.info(
-            "🎯 Registered IPictographDataService using RealPictographDataService (REAL PICTOGRAPHS)"
-        )
+
         container.register_singleton(IFileSystemService, FileSystemService)
 
         # Core learn services (singleton pattern for state management)
@@ -80,8 +76,6 @@ def register_learn_services(container: DIContainer) -> None:
 
         # Main learn tab (transient to allow multiple instances if needed)
         container.register_transient(LearnTab, LearnTab)
-
-        logger.info("Learn services registration completed successfully")
 
     except Exception as e:
         logger.error(f"Failed to register learn services: {e}")

@@ -14,12 +14,7 @@ PROVIDES:
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from domain.models import (
-    MotionData,
-    BeatData,
-    Location,
-    Orientation,
-)
+from domain.models import BeatData, Location, MotionData, Orientation
 
 
 class SeparationDirection(Enum):
@@ -84,68 +79,13 @@ class DirectionCalculationService(IDirectionCalculationService):
         CRITICAL: This replicates the BetaPropDirectionCalculator logic exactly.
         DO NOT SIMPLIFY - this complex logic was carefully crafted for correct arrow positioning.
         """
-        # Replicate the get_dir_for_non_shift method exactly
-        location = motion.end_loc
+        # SPECIAL CASE: Letter I positioning
+        # Letter I uses PRO/ANTI motion type logic instead of location-based logic
+        if beat_data.letter == "I":
+            return self._calculate_letter_I_direction(motion, beat_data, color)
 
-        # Determine if prop is radial or nonradial based on end orientation
-        # Validated logic: RADIAL = IN/OUT, NONRADIAL = CLOCK/COUNTER
-        is_radial = motion.end_ori in [Orientation.IN, Orientation.OUT]
-
-        # Determine grid mode based on location
-        grid_mode = self.detect_grid_mode(location)
-
-        if grid_mode == "diamond":
-            if is_radial:
-                # Diamond layer reposition map for RADIAL
-                direction_map = {
-                    (Location.NORTH, "red"): SeparationDirection.RIGHT,
-                    (Location.NORTH, "blue"): SeparationDirection.LEFT,
-                    (Location.EAST, "red"): SeparationDirection.DOWN,
-                    (Location.EAST, "blue"): SeparationDirection.UP,
-                    (Location.SOUTH, "red"): SeparationDirection.LEFT,
-                    (Location.SOUTH, "blue"): SeparationDirection.RIGHT,
-                    (Location.WEST, "blue"): SeparationDirection.DOWN,
-                    (Location.WEST, "red"): SeparationDirection.UP,
-                }
-            else:
-                # Diamond layer reposition map for NONRADIAL
-                direction_map = {
-                    (Location.NORTH, "red"): SeparationDirection.UP,
-                    (Location.NORTH, "blue"): SeparationDirection.DOWN,
-                    (Location.SOUTH, "red"): SeparationDirection.UP,
-                    (Location.SOUTH, "blue"): SeparationDirection.DOWN,
-                    (Location.EAST, "red"): SeparationDirection.RIGHT,
-                    (Location.WEST, "blue"): SeparationDirection.LEFT,
-                    (Location.WEST, "red"): SeparationDirection.RIGHT,
-                    (Location.EAST, "blue"): SeparationDirection.LEFT,
-                }
-        else:  # box grid
-            if is_radial:
-                # Box layer reposition map for RADIAL
-                direction_map = {
-                    (Location.NORTHEAST, "red"): SeparationDirection.DOWNRIGHT,
-                    (Location.NORTHEAST, "blue"): SeparationDirection.UPLEFT,
-                    (Location.SOUTHEAST, "red"): SeparationDirection.UPRIGHT,
-                    (Location.SOUTHEAST, "blue"): SeparationDirection.DOWNLEFT,
-                    (Location.SOUTHWEST, "red"): SeparationDirection.DOWNRIGHT,
-                    (Location.SOUTHWEST, "blue"): SeparationDirection.UPLEFT,
-                    (Location.NORTHWEST, "red"): SeparationDirection.UPRIGHT,
-                    (Location.NORTHWEST, "blue"): SeparationDirection.DOWNLEFT,
-                }
-            else:
-                # Box layer reposition map for NONRADIAL
-                direction_map = {
-                    (Location.NORTHEAST, "red"): SeparationDirection.UPRIGHT,
-                    (Location.NORTHEAST, "blue"): SeparationDirection.DOWNLEFT,
-                    (Location.SOUTHEAST, "red"): SeparationDirection.DOWNRIGHT,
-                    (Location.SOUTHEAST, "blue"): SeparationDirection.UPLEFT,
-                    (Location.SOUTHWEST, "red"): SeparationDirection.UPRIGHT,
-                    (Location.SOUTHWEST, "blue"): SeparationDirection.DOWNLEFT,
-                    (Location.NORTHWEST, "red"): SeparationDirection.DOWNRIGHT,
-                    (Location.NORTHWEST, "blue"): SeparationDirection.UPLEFT,
-                }
-
-        return direction_map.get((location, color), SeparationDirection.RIGHT)
+        # Use standard direction calculation for all other letters
+        return self._calculate_standard_direction(motion, beat_data, color)
 
     def calculate_end_orientation(
         self, motion_data: MotionData, start_orientation: Orientation = Orientation.IN
@@ -205,3 +145,132 @@ class DirectionCalculationService(IDirectionCalculationService):
     def _switch_orientation(self, orientation: Orientation) -> Orientation:
         """Switch between IN and OUT orientations."""
         return Orientation.OUT if orientation == Orientation.IN else Orientation.IN
+
+    def _calculate_letter_I_direction(
+        self, motion: MotionData, beat_data: BeatData, color: str
+    ) -> SeparationDirection:
+        """
+        Calculate direction for letter I using PRO/ANTI motion type logic.
+
+        This replicates the legacy reposition_I method:
+        1. Identify which motion is PRO and which is ANTI
+        2. Calculate direction for PRO motion
+        3. ANTI motion moves in opposite direction
+        """
+        from domain.models.enums import MotionType
+
+        # Get both motions from beat data
+        red_motion = (
+            beat_data.red_motion
+            if hasattr(beat_data, "red_motion")
+            else beat_data.pictograph_data.motions.get("red")
+        )
+        blue_motion = (
+            beat_data.blue_motion
+            if hasattr(beat_data, "blue_motion")
+            else beat_data.pictograph_data.motions.get("blue")
+        )
+
+        if not red_motion or not blue_motion:
+            # Fallback to standard logic if we can't get both motions
+            return self._calculate_standard_direction(motion, beat_data, color)
+
+        # Identify PRO and ANTI motions
+        pro_motion = None
+        anti_motion = None
+        pro_color = None
+        anti_color = None
+
+        if red_motion.motion_type == MotionType.PRO:
+            pro_motion = red_motion
+            pro_color = "red"
+            anti_motion = blue_motion
+            anti_color = "blue"
+        elif blue_motion.motion_type == MotionType.PRO:
+            pro_motion = blue_motion
+            pro_color = "blue"
+            anti_motion = red_motion
+            anti_color = "red"
+
+        if not pro_motion or not anti_motion:
+            # If it's not a PRO/ANTI combination, fall back to standard logic
+            return self._calculate_standard_direction(motion, beat_data, color)
+
+        # Calculate direction for PRO motion using standard logic
+        pro_direction = self._calculate_standard_direction(
+            pro_motion, beat_data, pro_color
+        )
+
+        # Return the calculated direction for PRO or its opposite for ANTI
+        if color == pro_color:
+            return pro_direction
+        else:
+            return self.get_opposite_direction(pro_direction)
+
+    def _calculate_standard_direction(
+        self, motion: MotionData, beat_data: BeatData, color: str
+    ) -> SeparationDirection:
+        """
+        Calculate direction using the standard location-based logic.
+        This is the original logic extracted for reuse in letter I handling.
+        """
+        location = motion.end_loc
+
+        # Determine if prop is radial or nonradial based on end orientation
+        is_radial = motion.end_ori in [Orientation.IN, Orientation.OUT]
+
+        # Determine grid mode based on location
+        grid_mode = self.detect_grid_mode(location)
+
+        if grid_mode == "diamond":
+            if is_radial:
+                # Diamond layer reposition map for RADIAL
+                direction_map = {
+                    (Location.NORTH, "red"): SeparationDirection.RIGHT,
+                    (Location.NORTH, "blue"): SeparationDirection.LEFT,
+                    (Location.EAST, "red"): SeparationDirection.DOWN,
+                    (Location.EAST, "blue"): SeparationDirection.UP,
+                    (Location.SOUTH, "red"): SeparationDirection.LEFT,
+                    (Location.SOUTH, "blue"): SeparationDirection.RIGHT,
+                    (Location.WEST, "blue"): SeparationDirection.DOWN,
+                    (Location.WEST, "red"): SeparationDirection.UP,
+                }
+            else:
+                # Diamond layer reposition map for NONRADIAL
+                direction_map = {
+                    (Location.NORTH, "red"): SeparationDirection.UP,
+                    (Location.NORTH, "blue"): SeparationDirection.DOWN,
+                    (Location.SOUTH, "red"): SeparationDirection.UP,
+                    (Location.SOUTH, "blue"): SeparationDirection.DOWN,
+                    (Location.EAST, "red"): SeparationDirection.RIGHT,
+                    (Location.WEST, "blue"): SeparationDirection.LEFT,
+                    (Location.WEST, "red"): SeparationDirection.RIGHT,
+                    (Location.EAST, "blue"): SeparationDirection.LEFT,
+                }
+        else:  # box grid
+            if is_radial:
+                # Box layer reposition map for RADIAL
+                direction_map = {
+                    (Location.NORTHEAST, "red"): SeparationDirection.DOWNRIGHT,
+                    (Location.NORTHEAST, "blue"): SeparationDirection.UPLEFT,
+                    (Location.SOUTHEAST, "red"): SeparationDirection.UPRIGHT,
+                    (Location.SOUTHEAST, "blue"): SeparationDirection.DOWNLEFT,
+                    (Location.SOUTHWEST, "red"): SeparationDirection.DOWNRIGHT,
+                    (Location.SOUTHWEST, "blue"): SeparationDirection.UPLEFT,
+                    (Location.NORTHWEST, "red"): SeparationDirection.UPRIGHT,
+                    (Location.NORTHWEST, "blue"): SeparationDirection.DOWNLEFT,
+                }
+            else:
+                # Box layer reposition map for NONRADIAL
+                direction_map = {
+                    (Location.NORTHEAST, "red"): SeparationDirection.UPRIGHT,
+                    (Location.NORTHEAST, "blue"): SeparationDirection.DOWNLEFT,
+                    (Location.SOUTHEAST, "red"): SeparationDirection.DOWNRIGHT,
+                    (Location.SOUTHEAST, "blue"): SeparationDirection.UPLEFT,
+                    (Location.SOUTHWEST, "red"): SeparationDirection.UPRIGHT,
+                    (Location.SOUTHWEST, "blue"): SeparationDirection.DOWNLEFT,
+                    (Location.NORTHWEST, "red"): SeparationDirection.DOWNRIGHT,
+                    (Location.NORTHWEST, "blue"): SeparationDirection.UPLEFT,
+                }
+
+        return direction_map.get((location, color), SeparationDirection.RIGHT)

@@ -47,7 +47,6 @@ class LearnServiceRegistrar(IServiceRegistrar):
             register_learn_services(container)
 
             self._update_progress("Learn Tab services registered successfully")
-            logger.info("Learn Tab services registered successfully")
 
         except Exception as e:
             logger.error(f"Failed to register Learn Tab services: {e}")

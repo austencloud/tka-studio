@@ -11,6 +11,12 @@ This service handles:
 import logging
 from typing import Optional
 
+from domain.models import MotionData, PictographData
+from PyQt6.QtCore import QByteArray, QPointF
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from PyQt6.QtWidgets import QGraphicsScene
+
 from application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
@@ -20,11 +26,6 @@ from application.services.pictograph.cache_management.pictograph_cache_manager i
 from application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
-from domain.models import MotionData, PictographData
-from PyQt6.QtCore import QByteArray, QPointF
-from PyQt6.QtSvg import QSvgRenderer
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtWidgets import QGraphicsScene
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +51,6 @@ class PropRenderingService:
         self._asset_manager = asset_manager
         self._cache_manager = cache_manager
         self._performance_monitor = performance_monitor
-
-        logger.info("🎭 [PROP_RENDERER] Initialized prop rendering service")
 
     def render_prop(
         self,
@@ -407,13 +406,10 @@ class PropRenderingService:
     def preload_common_props(self) -> None:
         """Pre-load commonly used prop renderers for better performance."""
         try:
-            logger.info("🚀 [PROP_RENDERER] Pre-loading common prop renderers...")
 
             # Pre-load prop renderers for common colors
             for color in self._asset_manager.get_supported_colors():
                 self._get_prop_renderer(color)
-
-            logger.info("✅ [PROP_RENDERER] Pre-loaded common prop renderers")
 
         except Exception as e:
             logger.warning(

@@ -8,23 +8,11 @@ the established patterns for service registration.
 import logging
 from pathlib import Path
 
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.sequence_card_services import (
-    ISequenceCardDataService,
-    ISequenceCardCacheService,
-    ISequenceCardLayoutService,
-    ISequenceCardDisplayService,
-    ISequenceCardExportService,
-    ISequenceCardSettingsService,
-)
-from application.services.sequence_card.sequence_data_service import (
-    SequenceCardDataService,
-)
 from application.services.sequence_card.sequence_cache_service import (
     SequenceCardCacheService,
 )
-from application.services.sequence_card.sequence_layout_service import (
-    SequenceCardLayoutService,
+from application.services.sequence_card.sequence_data_service import (
+    SequenceCardDataService,
 )
 from application.services.sequence_card.sequence_display_service import (
     SequenceCardDisplayService,
@@ -32,8 +20,20 @@ from application.services.sequence_card.sequence_display_service import (
 from application.services.sequence_card.sequence_export_service import (
     SequenceCardExportService,
 )
+from application.services.sequence_card.sequence_layout_service import (
+    SequenceCardLayoutService,
+)
 from application.services.sequence_card.sequence_settings_service import (
     SequenceCardSettingsService,
+)
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.sequence_card_services import (
+    ISequenceCardCacheService,
+    ISequenceCardDataService,
+    ISequenceCardDisplayService,
+    ISequenceCardExportService,
+    ISequenceCardLayoutService,
+    ISequenceCardSettingsService,
 )
 
 # Import the actual tab component
@@ -50,7 +50,6 @@ def register_sequence_card_services(container: DIContainer) -> None:
         container: DI container to register services with
     """
     try:
-        logger.info("Registering sequence card services...")
 
         # Core data and cache services (singleton for performance)
         container.register_singleton(ISequenceCardDataService, SequenceCardDataService)
@@ -101,8 +100,6 @@ def register_sequence_card_services(container: DIContainer) -> None:
                 settings_service=c.resolve(ISequenceCardSettingsService),
             ),
         )
-
-        logger.info("Sequence card services registration completed successfully")
 
     except Exception as e:
         logger.error(f"Failed to register sequence card services: {e}")

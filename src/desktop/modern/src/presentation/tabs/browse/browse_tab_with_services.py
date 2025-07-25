@@ -204,8 +204,6 @@ class BrowseTab(QWidget):
 
     def _on_data_loaded(self, count: int) -> None:
         """Handle data loading completion."""
-        logger.info(f"📚 Loaded {count} sequences from dictionary")
-
         # Check for loading errors
         errors = self.dictionary_manager.get_loading_errors()
         if errors:

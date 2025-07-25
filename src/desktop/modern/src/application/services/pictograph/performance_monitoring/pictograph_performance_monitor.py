@@ -66,10 +66,6 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
             "error_count": 0,
         }
 
-        logger.info(
-            "📊 [PERFORMANCE_MONITOR] Initialized pictograph performance monitor"
-        )
-
     def start_render_timer(self, operation: str) -> str:
         """Start timing a render operation. Returns timer ID."""
         timer_id = str(uuid.uuid4())

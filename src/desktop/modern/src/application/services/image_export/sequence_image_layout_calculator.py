@@ -54,8 +54,6 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
             25: (4, 7),  # Legacy: [7, 4] -> (4 cols, 7 rows)
         }
 
-        logger.info("Modern layout calculator initialized")
-
     def calculate_layout(
         self, num_beats: int, include_start_position: bool
     ) -> Tuple[int, int]:

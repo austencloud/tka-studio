@@ -52,8 +52,6 @@ class SequenceImageExporter(ISequenceImageExporter):
             "high_quality": True,
         }
 
-        logger.info("Modern image export service initialized")
-
     def export_sequence_image(
         self,
         sequence_data: List[Dict[str, Any]],

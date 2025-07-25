@@ -108,9 +108,6 @@ class OptionPickerSectionLayoutManager:
     def add_widget_to_grid(self, widget: OptionPictograph, position: int) -> None:
         """Add widget to grid layout at calculated position."""
         if not self.is_layout_initialized():
-            print(
-                f"❌ [LAYOUT_MGR] Layout not ready: layout={self._pictographs_layout is not None}, ui_init={self._ui_initialized}"
-            )
             raise RuntimeError("Layout not initialized. Call setup_layout() first.")
 
         # Use service for grid layout calculation
@@ -265,11 +262,7 @@ class OptionPickerSectionLayoutManager:
 
     def is_layout_initialized(self) -> bool:
         """Check if the layout has been initialized."""
-        result = self._pictographs_layout is not None and self._ui_initialized
-        print(
-            f"🔧 [LAYOUT_MGR] is_layout_initialized() = {result} (layout={self._pictographs_layout is not None}, ui_init={self._ui_initialized})"
-        )
-        return result
+        return self._pictographs_layout is not None and self._ui_initialized
 
     def toggle_pictograph_frame_visibility(self) -> None:
         """Toggle visibility of the pictograph frame."""

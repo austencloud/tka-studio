@@ -61,9 +61,6 @@ class OptionPickerSectionManager:
             # Update all sections quickly
             for letter_type, section in self._sections.items():
                 section_options = options_by_type.get(letter_type, [])
-                print(
-                    f"🔧 [SECTION_MGR] Updating {letter_type} with {len(section_options)} options"
-                )
                 section.load_options_from_sequence(section_options)
 
             # Restore animation orchestrators

@@ -31,6 +31,9 @@ class SequenceWorkbenchButtonPanel(QWidget):
         layout.setSpacing(8)
         layout.setContentsMargins(12, 12, 12, 12)
 
+        # Add initial stretch at the top
+        layout.addStretch()
+
         # Button configurations with emojis for modern appeal
         button_configs = [
             # Dictionary & Export group

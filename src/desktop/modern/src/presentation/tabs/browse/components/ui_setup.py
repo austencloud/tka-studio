@@ -5,6 +5,7 @@ Handles the UI setup and component creation for the sequence browser.
 Separates UI construction from business logic.
 """
 
+from presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -19,7 +20,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from .modern_browse_control_panel import ModernBrowseControlPanel
 from .modern_navigation_sidebar import ModernNavigationSidebar
 
@@ -30,7 +30,7 @@ class SequenceBrowserUISetup:
     def __init__(self, parent_widget: QWidget):
         """Initialize with parent widget."""
         self.parent = parent_widget
-        
+
         # UI components that will be created
         self.control_panel: ModernBrowseControlPanel = None
         self.navigation_sidebar: ModernNavigationSidebar = None

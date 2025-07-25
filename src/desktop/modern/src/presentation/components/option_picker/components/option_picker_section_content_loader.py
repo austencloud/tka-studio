@@ -62,9 +62,6 @@ class OptionPickerSectionContentLoader:
 
         This is the main entry point that replaces the original 100-line method.
         """
-        print(
-            f"🔧 [CONTENT_LOADER] load_options_from_sequence called for {self._letter_type} with {len(pictographs_for_section)} pictographs"
-        )
         try:
             # Validate state before starting
             can_load, reason = self._state_manager.validate_state_for_operation(

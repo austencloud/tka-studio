@@ -67,7 +67,6 @@ class LoadingStateManagerService(ILoadingStateManager):
             self.loading_label.setText(message)
 
         progress_percent = (current / total * 100) if total > 0 else 0
-        print(f"📈 Loading progress: {current}/{total} ({progress_percent:.1f}%)")
 
     def show_empty_state(self) -> None:
         """Show empty state when no sequences are found."""
@@ -98,7 +97,6 @@ class LoadingStateManagerService(ILoadingStateManager):
 
     def set_loading_started(self, total_count: int) -> None:
         """Handle loading started."""
-        print(f"📊 Loading started: {total_count} sequences total")
 
         if self.loading_progress_bar:
             self.loading_progress_bar.setMaximum(total_count)
@@ -110,14 +108,11 @@ class LoadingStateManagerService(ILoadingStateManager):
     def set_loading_completed(self, total_loaded: int) -> None:
         """Handle loading completion."""
         if self._loading_cancelled:
-            print("🚫 Loading cancelled, ignoring completion")
             return
-
-        print(f"✅ Loading completed: {total_loaded} sequences")
         self.hide_loading_state()
 
     def set_loading_cancelled(self) -> None:
         """Handle loading cancellation."""
-        print("❌ Loading cancelled")
+
         self.hide_loading_state()
         self._loading_cancelled = True

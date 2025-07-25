@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class PictographAssetManager(IPictographAssetManager):
     """
     Microservice for managing pictograph SVG assets.
-    
+
     Provides:
     - Cached SVG file loading
     - Color transformations for props
@@ -37,12 +37,12 @@ class PictographAssetManager(IPictographAssetManager):
         # Color mapping for SVG transformations
         self._color_map = {
             "blue": "#2E3192",  # Reference blue color
-            "red": "#ED1C24",   # Reference red color
+            "red": "#ED1C24",  # Reference red color
         }
-        
+
         # Cached colored SVG data to avoid repeated transformations
         self._colored_svg_cache: Dict[str, str] = {}
-        
+
         # Performance statistics
         self._stats = {
             "svg_files_loaded": 0,
@@ -50,8 +50,6 @@ class PictographAssetManager(IPictographAssetManager):
             "cache_hits": 0,
             "cache_misses": 0,
         }
-        
-        logger.info("🎨 [ASSET_MANAGER] Initialized pictograph asset manager")
 
     def get_grid_svg_path(self, grid_mode: str) -> str:
         """Get file path for grid SVG based on mode."""
@@ -69,7 +67,9 @@ class PictographAssetManager(IPictographAssetManager):
         """Get file path for arrow SVG based on motion data and color."""
         # TODO: Implement arrow SVG path resolution
         # This will need to integrate with the existing arrow rendering service
-        logger.debug(f"🏹 [ASSET_MANAGER] Arrow SVG path requested for {motion_data.motion_type} {color}")
+        logger.debug(
+            f"🏹 [ASSET_MANAGER] Arrow SVG path requested for {motion_data.motion_type} {color}"
+        )
         return ""
 
     def get_glyph_svg_path(self, glyph_type: str, glyph_data) -> str:
@@ -94,7 +94,9 @@ class PictographAssetManager(IPictographAssetManager):
     def apply_color_transformation(self, svg_data: str, color: str) -> str:
         """Apply color transformation to SVG data."""
         if color not in self._color_map:
-            logger.warning(f"⚠️ [ASSET_MANAGER] Unknown color: {color}, using original SVG")
+            logger.warning(
+                f"⚠️ [ASSET_MANAGER] Unknown color: {color}, using original SVG"
+            )
             return svg_data
 
         # Cache key for colored SVG
@@ -135,7 +137,9 @@ class PictographAssetManager(IPictographAssetManager):
     def add_color_mapping(self, color_name: str, hex_color: str) -> None:
         """Add a new color mapping for transformations."""
         self._color_map[color_name] = hex_color
-        logger.info(f"🎨 [ASSET_MANAGER] Added color mapping: {color_name} -> {hex_color}")
+        logger.info(
+            f"🎨 [ASSET_MANAGER] Added color mapping: {color_name} -> {hex_color}"
+        )
 
     def clear_color_cache(self) -> None:
         """Clear the colored SVG cache."""

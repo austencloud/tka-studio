@@ -212,7 +212,7 @@ class ConstructTabLayoutManager:
         # Note: WorkbenchStateManager is framework-agnostic and doesn't need direct workbench reference
         # The workbench widget communicates with the state manager through method calls
         if self.workbench:
-            print("✅ [LAYOUT_MANAGER] Workbench available for component connections")
+            pass  # Workbench available for component connections
 
         # Connect components through component connector
         self.component_connector.set_workbench(self.workbench)
@@ -306,7 +306,6 @@ class ConstructTabLayoutManager:
     def _create_real_option_picker(self):
         """Create the real option picker after main window is shown."""
         try:
-            print("🔧 [LAYOUT_MANAGER] Creating deferred option picker...")
 
             # Create the real option picker
             option_widget, self.option_picker = (
@@ -326,15 +325,9 @@ class ConstructTabLayoutManager:
                         "option_picker", self.option_picker
                     )
 
-                    print(
-                        "✅ [LAYOUT_MANAGER] Option picker created and replaced placeholder"
-                    )
-
                     # Notify callback that option picker is ready
                     if self.option_picker_ready_callback:
-                        print(
-                            "🔧 [LAYOUT_MANAGER] Notifying option picker ready callback..."
-                        )
+
                         self.option_picker_ready_callback(self.option_picker)
 
         except Exception as e:

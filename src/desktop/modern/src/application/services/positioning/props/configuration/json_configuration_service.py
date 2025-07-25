@@ -49,8 +49,21 @@ class JSONConfigurator(IJSONConfigurator):
     Uses immutable data patterns following TKA architecture.
     """
 
+    _instance: Optional["JSONConfigurator"] = None
+    _initialized: bool = False
+
+    def __new__(cls, config_paths: Optional[list] = None):
+        """Ensure singleton behavior to prevent redundant initialization."""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self, config_paths: Optional[list] = None):
         """Initialize with optional custom configuration paths and eager loading."""
+        # Prevent re-initialization of singleton
+        if self._initialized:
+            return
+
         start_time = time.time()
         logger = logging.getLogger(__name__)
 
@@ -65,6 +78,8 @@ class JSONConfigurator(IJSONConfigurator):
         logger.info(
             f"JSON Configuration Service initialized: {placement_count} placements loaded in {load_time:.1f}ms"
         )
+
+        self._initialized = True
 
     def load_special_placements(self) -> Dict[str, Any]:
         """Load special placement data from JSON configuration files."""

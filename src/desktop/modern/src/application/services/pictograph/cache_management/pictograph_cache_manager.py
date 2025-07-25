@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class PictographCacheManager(IPictographCacheManager):
     """
     Microservice for managing pictograph rendering caches.
-    
+
     Provides:
     - QSvgRenderer caching with LRU eviction
     - SVG data caching
@@ -31,7 +31,9 @@ class PictographCacheManager(IPictographCacheManager):
     - Configurable cache limits
     """
 
-    def __init__(self, max_renderers: int = 50, max_svg_data: int = 100, max_memory_mb: int = 50):
+    def __init__(
+        self, max_renderers: int = 50, max_svg_data: int = 100, max_memory_mb: int = 50
+    ):
         """Initialize the cache manager with configurable limits."""
         # Cache configuration
         self._config = {
@@ -39,20 +41,20 @@ class PictographCacheManager(IPictographCacheManager):
             "max_svg_data": max_svg_data,
             "max_memory_mb": max_memory_mb,
         }
-        
+
         # Renderer caches by category
         self._grid_renderer_cache: Dict[str, QSvgRenderer] = {}
         self._prop_renderer_cache: Dict[str, QSvgRenderer] = {}
         self._glyph_renderer_cache: Dict[str, QSvgRenderer] = {}
         self._arrow_renderer_cache: Dict[str, QSvgRenderer] = {}
-        
+
         # SVG data cache
         self._svg_data_cache: Dict[str, str] = {}
-        
+
         # Access tracking for LRU eviction
         self._renderer_access_order: list[str] = []
         self._svg_access_order: list[str] = []
-        
+
         # Performance statistics
         self._stats = {
             "cache_hits": 0,
@@ -61,28 +63,32 @@ class PictographCacheManager(IPictographCacheManager):
             "evictions_performed": 0,
             "memory_warnings": 0,
         }
-        
-        logger.info(f"🗄️ [CACHE_MANAGER] Initialized with limits: {max_renderers} renderers, {max_svg_data} SVG files, {max_memory_mb}MB")
 
     def get_renderer(self, cache_key: str) -> Optional[QSvgRenderer]:
         """Get cached renderer by key."""
         # Check all renderer caches
-        for cache in [self._grid_renderer_cache, self._prop_renderer_cache, 
-                     self._glyph_renderer_cache, self._arrow_renderer_cache]:
+        for cache in [
+            self._grid_renderer_cache,
+            self._prop_renderer_cache,
+            self._glyph_renderer_cache,
+            self._arrow_renderer_cache,
+        ]:
             if cache_key in cache:
                 self._stats["cache_hits"] += 1
                 self._update_renderer_access(cache_key)
                 return cache[cache_key]
-        
+
         self._stats["cache_misses"] += 1
         return None
 
     def store_renderer(self, cache_key: str, renderer: QSvgRenderer) -> None:
         """Store renderer in appropriate cache based on key prefix."""
         if not renderer or not renderer.isValid():
-            logger.warning(f"⚠️ [CACHE_MANAGER] Attempted to cache invalid renderer: {cache_key}")
+            logger.warning(
+                f"⚠️ [CACHE_MANAGER] Attempted to cache invalid renderer: {cache_key}"
+            )
             return
-        
+
         # Determine cache based on key prefix
         if cache_key.startswith("grid_"):
             target_cache = self._grid_renderer_cache
@@ -95,20 +101,25 @@ class PictographCacheManager(IPictographCacheManager):
         else:
             logger.warning(f"⚠️ [CACHE_MANAGER] Unknown cache key prefix: {cache_key}")
             target_cache = self._prop_renderer_cache  # Default fallback
-        
+
         # Check if we need to evict before storing
-        total_renderers = sum(len(cache) for cache in [
-            self._grid_renderer_cache, self._prop_renderer_cache,
-            self._glyph_renderer_cache, self._arrow_renderer_cache
-        ])
-        
+        total_renderers = sum(
+            len(cache)
+            for cache in [
+                self._grid_renderer_cache,
+                self._prop_renderer_cache,
+                self._glyph_renderer_cache,
+                self._arrow_renderer_cache,
+            ]
+        )
+
         if total_renderers >= self._config["max_renderers"]:
             self._evict_least_used_renderer()
-        
+
         target_cache[cache_key] = renderer
         self._update_renderer_access(cache_key)
         self._stats["renderers_created"] += 1
-        
+
         logger.debug(f"🗄️ [CACHE_MANAGER] Cached renderer: {cache_key}")
 
     def get_svg_data(self, cache_key: str) -> Optional[str]:
@@ -117,7 +128,7 @@ class PictographCacheManager(IPictographCacheManager):
             self._stats["cache_hits"] += 1
             self._update_svg_access(cache_key)
             return self._svg_data_cache[cache_key]
-        
+
         self._stats["cache_misses"] += 1
         return None
 
@@ -125,10 +136,10 @@ class PictographCacheManager(IPictographCacheManager):
         """Store SVG data in cache."""
         if len(self._svg_data_cache) >= self._config["max_svg_data"]:
             self._evict_least_used_svg()
-        
+
         self._svg_data_cache[cache_key] = svg_data
         self._update_svg_access(cache_key)
-        
+
         logger.debug(f"🗄️ [CACHE_MANAGER] Cached SVG data: {cache_key}")
 
     def evict_least_used(self) -> None:
@@ -140,11 +151,15 @@ class PictographCacheManager(IPictographCacheManager):
         """Evict the least recently used renderer."""
         if not self._renderer_access_order:
             return
-        
+
         # Find the oldest accessed renderer that still exists
         for cache_key in self._renderer_access_order:
-            for cache in [self._grid_renderer_cache, self._prop_renderer_cache,
-                         self._glyph_renderer_cache, self._arrow_renderer_cache]:
+            for cache in [
+                self._grid_renderer_cache,
+                self._prop_renderer_cache,
+                self._glyph_renderer_cache,
+                self._arrow_renderer_cache,
+            ]:
                 if cache_key in cache:
                     del cache[cache_key]
                     self._renderer_access_order.remove(cache_key)
@@ -156,7 +171,7 @@ class PictographCacheManager(IPictographCacheManager):
         """Evict the least recently used SVG data."""
         if not self._svg_access_order:
             return
-        
+
         cache_key = self._svg_access_order.pop(0)
         if cache_key in self._svg_data_cache:
             del self._svg_data_cache[cache_key]
@@ -178,21 +193,31 @@ class PictographCacheManager(IPictographCacheManager):
     def get_memory_usage(self) -> int:
         """Get estimated memory usage in bytes."""
         # Rough estimation based on cache sizes
-        renderer_memory = sum(len(cache) for cache in [
-            self._grid_renderer_cache, self._prop_renderer_cache,
-            self._glyph_renderer_cache, self._arrow_renderer_cache
-        ]) * 1024  # Estimate 1KB per renderer
-        
+        renderer_memory = (
+            sum(
+                len(cache)
+                for cache in [
+                    self._grid_renderer_cache,
+                    self._prop_renderer_cache,
+                    self._glyph_renderer_cache,
+                    self._arrow_renderer_cache,
+                ]
+            )
+            * 1024
+        )  # Estimate 1KB per renderer
+
         svg_memory = sum(len(svg_data) for svg_data in self._svg_data_cache.values())
-        
+
         total_memory = renderer_memory + svg_memory
-        
+
         # Check if we're approaching memory limits
         max_memory_bytes = self._config["max_memory_mb"] * 1024 * 1024
         if total_memory > max_memory_bytes * 0.8:  # 80% threshold
             self._stats["memory_warnings"] += 1
-            logger.warning(f"⚠️ [CACHE_MANAGER] Memory usage approaching limit: {total_memory / 1024 / 1024:.1f}MB")
-        
+            logger.warning(
+                f"⚠️ [CACHE_MANAGER] Memory usage approaching limit: {total_memory / 1024 / 1024:.1f}MB"
+            )
+
         return total_memory
 
     def clear_all_caches(self) -> None:
@@ -204,7 +229,7 @@ class PictographCacheManager(IPictographCacheManager):
         self._svg_data_cache.clear()
         self._renderer_access_order.clear()
         self._svg_access_order.clear()
-        
+
         # Reset stats
         self._stats = {
             "cache_hits": 0,
@@ -213,14 +238,18 @@ class PictographCacheManager(IPictographCacheManager):
             "evictions_performed": 0,
             "memory_warnings": 0,
         }
-        
+
         logger.info("🧹 [CACHE_MANAGER] Cleared all caches")
 
     def get_cache_stats(self) -> Dict[str, Any]:
         """Get comprehensive cache statistics."""
         total_requests = self._stats["cache_hits"] + self._stats["cache_misses"]
-        hit_rate = (self._stats["cache_hits"] / total_requests * 100) if total_requests > 0 else 0
-        
+        hit_rate = (
+            (self._stats["cache_hits"] / total_requests * 100)
+            if total_requests > 0
+            else 0
+        )
+
         return {
             "cache_hits": self._stats["cache_hits"],
             "cache_misses": self._stats["cache_misses"],
@@ -240,7 +269,7 @@ class PictographCacheManager(IPictographCacheManager):
         """Get detailed cache information for debugging."""
         stats = self.get_cache_stats()
         memory_mb = stats["estimated_memory_bytes"] / 1024 / 1024
-        
+
         return (
             f"PictographCacheManager Stats:\n"
             f"  Cache Hits: {stats['cache_hits']}\n"

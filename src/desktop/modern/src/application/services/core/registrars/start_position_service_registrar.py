@@ -60,7 +60,7 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
 
         # Mark as registered globally
         StartPositionServiceRegistrar._SERVICES_REGISTERED = True
-        logger.info("✅ Start position services registered successfully")
+
         self._update_progress("Start position services registered successfully")
 
     def _register_core_start_position_services(self, container: "DIContainer") -> None:
@@ -71,11 +71,9 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
             from application.services.start_position.start_position_data_service import (
                 StartPositionDataService,
             )
-
             from application.services.start_position.start_position_orchestrator import (
                 StartPositionOrchestrator,
             )
-
             from application.services.start_position.start_position_ui_service import (
                 StartPositionUIService,
             )

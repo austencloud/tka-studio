@@ -100,8 +100,16 @@ class PropOrchestrator(IPropOrchestrator):
                 from core.dependency_injection.di_container import get_container
 
                 container = get_container()
-                self.config_service = container.get(IJSONConfigurator)
-            except Exception:
+                self.config_service = container.resolve(IJSONConfigurator)
+            except Exception as e:
+                # Log the DI failure for debugging
+                import logging
+
+                logger = logging.getLogger(__name__)
+                logger.warning(
+                    f"Failed to resolve IJSONConfigurator from DI container: {e}"
+                )
+
                 # Fallback to creating new instance if DI fails
                 self.config_service = JSONConfigurator()
         else:

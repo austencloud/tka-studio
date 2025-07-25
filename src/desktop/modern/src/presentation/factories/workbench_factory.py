@@ -89,9 +89,7 @@ def configure_workbench_services(container: DIContainer) -> None:
         from core.service_locator import get_sequence_state_manager
 
         sequence_state_tracker = get_sequence_state_manager()
-        print(
-            f"🔧 [WORKBENCH_FACTORY] Got SequenceStateTracker: {sequence_state_tracker is not None}"
-        )
+
         workbench_state_manager = WorkbenchStateManager(
             sequence_state_tracker=sequence_state_tracker
         )

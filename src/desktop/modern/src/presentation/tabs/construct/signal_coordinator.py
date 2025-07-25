@@ -180,55 +180,35 @@ class SignalCoordinator(QObject):
                 self.layout_manager.workbench.clear_sequence_requested.connect(
                     self.clear_sequence
                 )
-                print(
-                    "✅ [SIGNAL_COORDINATOR] Connected workbench clear_sequence_requested signal"
-                )
 
     def _handle_start_position_created(
         self, position_key: str, start_position_beat_data: BeatData
     ):
         """Handle start position creation with pre-loaded transition"""
-        print(
-            f"🎯 [SIGNAL_COORDINATOR] _handle_start_position_created called with position: {position_key}"
-        )
 
         self.start_position_manager.set_start_position(start_position_beat_data)
 
         # Pre-load option picker content WITHOUT animations to avoid double fade
-        print(
-            f"🎯 [SIGNAL_COORDINATOR] Calling option_picker_manager.prepare_from_start_position..."
-        )
         self.option_picker_manager.prepare_from_start_position(
             position_key, start_position_beat_data
         )
 
         # Transition to option picker with content already loaded
-        print(f"🎯 [SIGNAL_COORDINATOR] Transitioning to option picker...")
         self.layout_manager.transition_to_option_picker()
         self.start_position_set.emit(position_key)
 
     def _handle_start_position_loaded_from_persistence(
         self, position_key: str, start_position_data
     ):
-        """Handle start position loaded from persistence during startup"""
-        print(
-            f"🔍 [SIGNAL_COORDINATOR] Handling start position loaded: position_key={position_key}, start_position_data={start_position_data}"
-        )
-
         # Only populate option picker if we have valid start position data
         if start_position_data is not None:
-            print(
-                f"✅ [SIGNAL_COORDINATOR] Valid start position data found, populating option picker"
-            )
             self.option_picker_manager.populate_from_start_position(
                 position_key, start_position_data
             )
             self.layout_manager.transition_to_option_picker()
         else:
-            print(
-                f"⚠️ [SIGNAL_COORDINATOR] No start position data found, skipping option picker population"
-            )
             # Don't transition to option picker if there's no data
+            pass
 
     def _handle_sequence_modified(self, sequence: SequenceData):
         """Handle sequence modification from sequence manager"""
@@ -257,13 +237,11 @@ class SignalCoordinator(QObject):
         )
 
         if start_position_set or has_beats:
-
             # Pre-load option picker content before transition
             self.option_picker_manager.refresh_from_sequence(sequence)
             # Ensure we're showing the option picker when start position is set OR beats exist
             self.layout_manager.transition_to_option_picker()
         else:
-
             self.layout_manager.transition_to_start_position_picker()
 
         # Emit external signal
@@ -275,6 +253,7 @@ class SignalCoordinator(QObject):
 
     def _handle_operation_completed(self, message: str):
         """Handle workbench operation completion"""
+        pass
 
     def _handle_picker_mode_request(self):
         """Handle picker mode request from workbench button panel with smart switching."""
@@ -297,21 +276,14 @@ class SignalCoordinator(QObject):
 
         if start_position_set or has_beats:
             # Start position is set OR beats exist → show option picker
-            print(
-                f"🎯 [SIGNAL_COORDINATOR] Smart switching to option picker (start_pos_set={start_position_set}, has_beats={has_beats})"
-            )
             self.layout_manager.transition_to_option_picker()
         else:
             # Completely empty (no start position AND no beats) → show start position picker
-            print(
-                f"🎯 [SIGNAL_COORDINATOR] Smart switching to start position picker (completely empty)"
-            )
             self.layout_manager.transition_to_start_position_picker()
 
     def clear_sequence(self):
         """Clear the current sequence (public interface)"""
         try:
-
             # Clear persistence FIRST
             from application.services.sequence.sequence_persister import (
                 SequencePersister,
@@ -321,23 +293,11 @@ class SignalCoordinator(QObject):
             persistence_service.clear_current_sequence()
 
             # Clear sequence in workbench
-            print(
-                f"🔍 [SIGNAL_COORDINATOR] Loading service: {self.loading_service is not None}"
-            )
             if hasattr(self.loading_service, "workbench_setter"):
                 workbench_setter = self.loading_service.workbench_setter
-                print(
-                    f"🔍 [SIGNAL_COORDINATOR] Workbench setter: {workbench_setter is not None}"
-                )
                 if workbench_setter:
                     empty_sequence = SequenceData.empty()
-                    print(
-                        f"🔍 [SIGNAL_COORDINATOR] Calling workbench setter with empty sequence"
-                    )
                     workbench_setter(empty_sequence)
-                    print(
-                        f"✅ [SIGNAL_COORDINATOR] Workbench setter called successfully"
-                    )
                 else:
                     print(f"❌ [SIGNAL_COORDINATOR] Workbench setter is None")
             else:
@@ -368,9 +328,6 @@ class SignalCoordinator(QObject):
         if sequence is None:
             sequence = SequenceData.empty()
 
-        print(
-            f"🔧 Force updating picker state for sequence with {sequence.length} beats"
-        )
         self._handle_sequence_modified(sequence)
 
     def _on_beat_modified(self, *args):
@@ -391,28 +348,18 @@ class SignalCoordinator(QObject):
 
     def _on_start_position_set(self, start_position_data):
         """Handle start position set."""
-        print(
-            f"🎯 [SIGNAL_COORDINATOR] Start position set: {start_position_data.letter}"
-        )
+        pass
 
     def _on_start_position_updated(self, start_position_data):
         """Handle start position updated."""
-        print(
-            f"🎯 [SIGNAL_COORDINATOR] Start position updated: {start_position_data.letter}"
-        )
+        pass
 
     def _handle_workbench_modified_with_operation(
         self, sequence: SequenceData, operation_type: str
     ):
         """Handle workbench sequence modification with operation type information"""
-        print(
-            f"🔄 [SIGNAL_COORDINATOR] _handle_workbench_modified_with_operation called with sequence length: {len(sequence.beats)}, operation: {operation_type}"
-        )
 
         if self._handling_sequence_modification:
-            print(
-                "🔄 [SIGNAL_COORDINATOR] Already handling sequence modification - skipping"
-            )
             return
 
         try:
@@ -426,9 +373,6 @@ class SignalCoordinator(QObject):
             if operation_type != "delete_beat":
                 self._handle_sequence_modified(sequence)
             else:
-                print(
-                    f"🎯 [SIGNAL_COORDINATOR] Skipping tab switch for delete_beat operation"
-                )
                 # Still emit the external signal for other listeners
                 self.sequence_modified.emit(sequence)
 

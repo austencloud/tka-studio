@@ -52,9 +52,6 @@ class OptionPickerWidgetPoolManager:
 
     def _initialize_widget_pool(self) -> None:
         """Initialize Qt widget pool with proper dependency injection."""
-        print(
-            f"🏗️ [WIDGET_POOL] Initializing widget pool with {self._max_widgets} widgets"
-        )
 
         # Create Qt widgets with direct view approach (no pictograph pool needed)
         for i in range(self._max_widgets):
@@ -69,10 +66,7 @@ class OptionPickerWidgetPoolManager:
                 self._widget_pool[i] = frame
 
             except Exception as e:
-                print(f"❌ [WIDGET_POOL] Error creating widget {i}: {e}")
-                import traceback
-
-                traceback.print_exc()
+                pass  # Error creating widget
 
         # Initialize service pool with same IDs
         self._option_pool_service.reset_pool()

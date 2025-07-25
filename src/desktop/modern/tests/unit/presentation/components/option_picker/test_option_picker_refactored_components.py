@@ -77,6 +77,30 @@ class TestOptionPickerAnimator:
         assert callback_called
         assert not animator.is_animating()
 
+    def test_animator_with_fade_in_callback(self, qtbot):
+        """Test animator calls fade_in_callback when provided."""
+        parent = QWidget()
+        qtbot.addWidget(parent)
+
+        animator = OptionPickerAnimator(parent)
+        update_called = False
+        fade_in_called = False
+
+        def update_callback():
+            nonlocal update_called
+            update_called = True
+
+        def fade_in_callback():
+            nonlocal fade_in_called
+            fade_in_called = True
+
+        # Test with no frames - should call update directly and skip fade_in_callback
+        animator.fade_out_and_update([], update_callback, fade_in_callback)
+
+        assert update_called
+        assert not fade_in_called  # Should not be called when no frames to animate
+        assert not animator.is_animating()
+
 
 class TestOptionPickerSizeManager:
     """Test the OptionPickerSizeManager component."""

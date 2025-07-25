@@ -125,9 +125,6 @@ class OptionPickerSection(QGroupBox):
         self, pictographs_for_section: List[PictographData]
     ) -> None:
         """Load options for this section."""
-        print(
-            f"🔧 [SECTION] {self.letter_type} load_options_from_sequence called with {len(pictographs_for_section)} pictographs"
-        )
         self._content_loader.load_options_from_sequence(pictographs_for_section)
 
     def clear_pictographs(self) -> None:

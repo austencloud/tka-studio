@@ -17,6 +17,10 @@ from typing import Callable, Optional
 
 logger = logging.getLogger(__name__)
 
+from core.dependency_injection.di_container import DIContainer
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QMainWindow, QTabWidget
+
 from application.services.core.application_initialization_orchestrator import (
     ApplicationInitializationOrchestrator,
     IApplicationInitializationOrchestrator,
@@ -25,9 +29,6 @@ from application.services.core.service_registration_manager import (
     IServiceRegistrationManager,
     ServiceRegistrationManager,
 )
-from core.dependency_injection.di_container import DIContainer
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QMainWindow, QTabWidget
 
 from ..ui.background_manager import BackgroundManager, IBackgroundManager
 from ..ui.ui_setup_manager import IUISetupManager, UISetupManager
@@ -83,13 +84,14 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
             if container:
                 try:
+                    from core.interfaces.session_services import ISessionStateTracker
+
                     from application.services.core.session_restoration_coordinator import (
                         ISessionRestorationCoordinator,
                     )
                     from application.services.core.window_management_service import (
                         IWindowManagementService,
                     )
-                    from core.interfaces.session_services import ISessionStateTracker
 
                     window_service = container.resolve(IWindowManagementService)
                     session_coordinator = container.resolve(
@@ -325,16 +327,10 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
     def _create_progress_callback(
         self, splash_screen: "SplashScreen"
     ) -> Optional[Callable]:
-        """Create progress callback for splash screen updates with detailed timing."""
-        import time
+        """Create progress callback for splash screen updates."""
 
-        start_time = time.perf_counter()
-
-        def detailed_progress_callback(progress: int, message: str):
-            elapsed = time.perf_counter() - start_time
-            logger.info(f"🚀 [{elapsed:.1f}s] {progress}% - {message}")
-
+        def progress_callback(progress: int, message: str):
             if splash_screen:
                 splash_screen.update_progress(progress, message)
 
-        return detailed_progress_callback  # Always return callback for timing info
+        return progress_callback

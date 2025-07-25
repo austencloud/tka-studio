@@ -107,7 +107,15 @@ class OptionPickerAnimator:
             update_callback()
 
             # Start fade in for new content
-            self._fade_in_new_content()
+            if self._pending_fade_callback:
+                # Use the provided fade_in_callback if available
+                print("🎭 [ANIMATOR] Using provided fade_in_callback")
+                self._pending_fade_callback()
+                self._pending_fade_callback = None
+                self._is_animating = False
+            else:
+                # Fallback to automatic fade in
+                self._fade_in_new_content()
 
         except Exception as e:
             print(f"❌ [ANIMATOR] Failed to complete fade transition: {e}")
