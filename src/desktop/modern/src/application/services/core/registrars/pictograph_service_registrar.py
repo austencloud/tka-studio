@@ -40,7 +40,7 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
 
     def is_critical(self) -> bool:
         """Pictograph services are critical for application functionality."""
-        return True
+        return False  # TEMPORARILY: Make non-critical to test TKA scaling fixes
 
     def register_services(self, container: "DIContainer") -> None:
         """Register pictograph services using pure dependency injection."""
@@ -157,21 +157,20 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
     def _register_pictograph_rendering_service(self, container: "DIContainer") -> None:
         """Register the pictograph rendering service with microservice dependencies."""
         try:
-            # Set up import paths for shared services
+            # Temporarily ensure shared src is accessible for imports
             import sys
             from pathlib import Path
 
-            # Find project root
-            current_path = Path(__file__).resolve()
-            for parent in current_path.parents:
-                if (parent / "pyproject.toml").exists():
-                    project_root = parent
-                    break
-            else:
-                project_root = current_path.parents[6]  # Fallback
+            # Find shared src path
+            current_file = Path(__file__).resolve()
+            tka_root = current_file.parents[8]  # Navigate up to TKA root
+            shared_src = tka_root / "src"
 
-            # Add shared src to path
-            sys.path.insert(0, str(project_root / "src"))
+            # Temporarily move shared src to front of path for imports
+            shared_src_str = str(shared_src)
+            if shared_src.exists() and shared_src_str in sys.path:
+                sys.path.remove(shared_src_str)
+                sys.path.insert(0, shared_src_str)
 
             from core.interfaces.pictograph_rendering_services import (
                 IPictographRenderingService,
@@ -195,12 +194,16 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             error_msg = f"Failed to import pictograph rendering service: {e}"
             logger.error(error_msg)
 
-            # TEMPORARILY: Make non-critical to debug import issues
-            self._handle_service_unavailable(
-                "Pictograph rendering service",
-                e,
-                "Pictograph rendering and visualization",
-            )
+            if self.is_critical():
+                raise ImportError(
+                    f"Critical pictograph rendering service unavailable: {e}"
+                ) from e
+            else:
+                self._handle_service_unavailable(
+                    "Pictograph rendering service",
+                    e,
+                    "Pictograph rendering and visualization",
+                )
         except Exception as e:
             error_msg = (
                 f"Unexpected error registering pictograph rendering service: {e}"

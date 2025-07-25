@@ -3,39 +3,39 @@
 TKA (The Kinetic Alphabet) - Main Application Entry Point
 """
 
+import os
 import sys
-from pathlib import Path
 
-# Add necessary paths to Python path
-project_root = Path(__file__).parent
-src_paths = [
-    project_root / "src",
-    project_root / "src" / "desktop" / "modern" / "src",
-    project_root / "launcher",
-    project_root / "packages",
-]
-
-for path in src_paths:
-    if path.exists() and str(path) not in sys.path:
-        sys.path.insert(0, str(path))
+# Use the existing universal path management system
+import tka_paths
 
 
 def main():
     """Main entry point for TKA application."""
     try:
-        # Import after path setup
-        from src.desktop.modern.main import main as modern_main
+        # Get TKA root and change to it
+        tka_root = tka_paths.find_tka_root()
+        os.chdir(tka_root)
+
+        # Import after path setup - modern main.py is in src/desktop/modern/
+        # Since src/desktop/modern is in sys.path, we can import main directly
+        sys.path.insert(0, str(tka_root / "src" / "desktop" / "modern"))
+        from main import main as modern_main
 
         # Launch the modern TKA application
         modern_main()
     except ImportError as e:
-        print(f"Import error: {e}")
-        print("Available paths:")
-        for path in sys.path[:5]:
-            print(f"  {path}")
+        print(f"❌ Import error: {e}")
+        print("📁 Available paths:")
+        for i, path in enumerate(sys.path[:10]):
+            print(f"  {i}: {path}")
+        print(f"📂 Current working directory: {os.getcwd()}")
         sys.exit(1)
     except Exception as e:
-        print(f"Error launching TKA application: {e}")
+        print(f"❌ Error launching TKA application: {e}")
+        import traceback
+
+        traceback.print_exc()
         sys.exit(1)
 
 

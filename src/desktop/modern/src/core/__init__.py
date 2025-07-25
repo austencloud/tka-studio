@@ -1,13 +1,17 @@
 # Modern Core Module
 
-from . import commands
-from . import dependency_injection
-from . import events
-from . import interfaces
-from . import serialization
-from . import types
+from . import (
+    application,
+    commands,
+    dependency_injection,
+    events,
+    interfaces,
+    serialization,
+    types,
+)
 
 __all__ = [
+    "application",
     "commands",
     "dependency_injection",
     "events",

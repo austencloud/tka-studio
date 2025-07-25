@@ -17,17 +17,6 @@ from core.dependency_injection.di_container import DIContainer
 
 logger = logging.getLogger(__name__)
 
-from application.services.core.session_state_tracker import SessionStateTracker
-
-# Import production services
-from application.services.layout.layout_manager import LayoutManager
-from application.services.pictograph.pictograph_position_matcher import (
-    PictographCSVManager,
-)
-from application.services.sequence.sequence_beat_operations import (
-    SequenceBeatOperations,
-)
-
 # Import existing service interfaces
 from core.interfaces.core_services import (
     IArrowManagementService,
@@ -50,6 +39,17 @@ from infrastructure.storage.file_based_sequence_data_service import (
     FileBasedSequenceDataService,
 )
 from infrastructure.storage.file_based_settings_service import FileBasedSettingsService
+
+from application.services.core.session_state_tracker import SessionStateTracker
+
+# Import production services
+from application.services.layout.layout_manager import LayoutManager
+from application.services.pictograph.pictograph_position_matcher import (
+    PictographCSVManager,
+)
+from application.services.sequence.sequence_beat_operations import (
+    SequenceBeatOperations,
+)
 
 logger = logging.getLogger(__name__)
 # Import test doubles (to be created) - using try/except for graceful fallback
@@ -181,22 +181,24 @@ class ApplicationFactory:
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
+        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+
         from application.services.settings.visibility_settings_manager import (
             VisibilitySettingsManager,
         )
-        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 
         container.register_singleton(
             IVisibilitySettingsManager, VisibilitySettingsManager
         )
 
         # Register pictograph context service
-        from application.services.pictograph.context_detection_service import (
-            PictographContextDetector,
-        )
         from core.interfaces.core_services import (
             IPictographBorderManager,
             IPictographContextDetector,
+        )
+
+        from application.services.pictograph.context_detection_service import (
+            PictographContextDetector,
         )
 
         container.register_singleton(
@@ -263,22 +265,24 @@ class ApplicationFactory:
         container.register_singleton(ISessionStateTracker, SessionStateTracker)
 
         # Register visibility service
+        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+
         from application.services.settings.visibility_settings_manager import (
             VisibilitySettingsManager,
         )
-        from core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 
         container.register_singleton(
             IVisibilitySettingsManager, VisibilitySettingsManager
         )
 
         # Register pictograph context service
-        from application.services.pictograph.context_detection_service import (
-            PictographContextDetector,
-        )
         from core.interfaces.core_services import (
             IPictographBorderManager,
             IPictographContextDetector,
+        )
+
+        from application.services.pictograph.context_detection_service import (
+            PictographContextDetector,
         )
 
         container.register_singleton(

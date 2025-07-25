@@ -6,12 +6,53 @@ Modified to support different application modes via Application Factory.
 Modern modular architecture with dependency injection and clean separation of concerns.
 """
 
+# CRITICAL: Path setup MUST be first - before any other imports
+# This ensures VS Code debugger can find all modules
+import sys
+from pathlib import Path
+
+# Check if tka_paths has already been imported (e.g., from root main.py)
+if "tka_paths" not in sys.modules:
+    # Only do manual path setup if tka_paths hasn't been imported
+    # Get the TKA project root (3 levels up from this file)
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parents[2]  # main.py -> modern -> desktop -> TKA
+
+    # Define the same paths as root main.py - MUST match exactly
+    src_paths = [
+        project_root
+        / "src"
+        / "desktop"
+        / "modern"
+        / "src",  # Modern src (highest priority)
+        project_root / "src" / "desktop",  # Desktop directory
+        project_root / "src",  # Shared src (lowest priority)
+        project_root / "launcher",
+        project_root / "packages",
+    ]
+
+    # Add paths in reverse order since insert(0) puts them at the beginning
+    for path in reversed(src_paths):
+        if path.exists() and str(path) not in sys.path:
+            sys.path.insert(0, str(path))
+
+    print(
+        f"🔧 [PATH_SETUP] Added {len([p for p in src_paths if p.exists()])} paths for VS Code debugger compatibility"
+    )
+    print(f"🔧 [PATH_SETUP] First 5 sys.path entries:")
+    for i, path in enumerate(sys.path[:5]):
+        print(f"  {i}: {path}")
+else:
+    print("🔧 [PATH_SETUP] Skipping manual path setup - tka_paths already imported")
+
+# Now safe to import everything else
 import argparse
 import logging
 import os
-import sys
-from pathlib import Path
 from typing import TYPE_CHECKING, Optional
+
+# Path setup is now handled at the top of the file
+
 
 if TYPE_CHECKING:
     from presentation.components.ui.splash_screen import SplashScreen
@@ -20,9 +61,6 @@ if TYPE_CHECKING:
 from PyQt6.QtCore import QTimer, QtMsgType, qInstallMessageHandler
 from PyQt6.QtGui import QGuiApplication, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget
-
-modern_src_path = Path(__file__).parent / "src"
-sys.path.insert(0, str(modern_src_path))
 
 
 def _install_qt_message_handler():

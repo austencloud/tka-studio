@@ -6,6 +6,19 @@ This module registers all image export services with the dependency injection co
 
 import logging
 
+from core.dependency_injection.di_container import DIContainer
+from core.interfaces.image_export_services import (
+    IBeatDrawer,
+    IDifficultyLevelDrawer,
+    IFontMarginHelper,
+    ISequenceImageExporter,
+    ISequenceImageLayoutCalculator,
+    ISequenceImageRenderer,
+    ISequenceMetadataExtractor,
+    IUserInfoDrawer,
+    IWordDrawer,
+)
+
 from application.services.image_export.drawers.beat_drawer import BeatDrawer
 from application.services.image_export.drawers.difficulty_level_drawer import (
     DifficultyLevelDrawer,
@@ -26,18 +39,6 @@ from application.services.image_export.sequence_image_renderer import (
 )
 from application.services.image_export.sequence_metadata_extractor import (
     SequenceMetadataExtractor,
-)
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.image_export_services import (
-    IBeatDrawer,
-    IDifficultyLevelDrawer,
-    IFontMarginHelper,
-    ISequenceImageExporter,
-    ISequenceImageLayoutCalculator,
-    ISequenceImageRenderer,
-    ISequenceMetadataExtractor,
-    IUserInfoDrawer,
-    IWordDrawer,
 )
 
 logger = logging.getLogger(__name__)
@@ -93,6 +94,20 @@ def register_image_export_services(container: DIContainer) -> None:
 def _register_pictograph_services(container: DIContainer) -> None:
     """Register pictograph services needed for real pictograph rendering."""
     try:
+        # Temporarily ensure shared src is accessible for imports
+        import sys
+        from pathlib import Path
+
+        # Find shared src path
+        current_file = Path(__file__).resolve()
+        tka_root = current_file.parents[6]  # Navigate up to TKA root
+        shared_src = tka_root / "src"
+
+        # Temporarily move shared src to front of path for imports
+        shared_src_str = str(shared_src)
+        if shared_src.exists() and shared_src_str in sys.path:
+            sys.path.remove(shared_src_str)
+            sys.path.insert(0, shared_src_str)
 
         # Import and register the pictograph service registrar
         from application.services.core.registrars.pictograph_service_registrar import (
