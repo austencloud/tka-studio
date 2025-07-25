@@ -8,11 +8,12 @@ letter, dash, dots, and turn numbers for pictographs.
 import os
 from typing import Optional
 
-from application.services.assets.image_asset_utils import get_image_path
 from domain.models import LetterType
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsItemGroup
+
+from application.services.assets.image_asset_utils import get_image_path
 
 
 class TKAGlyphRenderer:

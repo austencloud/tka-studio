@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class RenderCommandType(Enum):
     """Types of render commands that can be generated."""
+
     GRID = "grid"
     PROP = "prop"
     ARROW = "arrow"
@@ -33,6 +34,7 @@ class RenderCommandType(Enum):
 @dataclass
 class RenderCommand:
     """Framework-agnostic render command."""
+
     command_id: str
     command_type: RenderCommandType
     position: Point
@@ -49,6 +51,7 @@ class RenderCommand:
 @dataclass
 class RenderContext:
     """Context information for rendering operations."""
+
     target_size: Size
     background_color: str = "white"
     grid_mode: str = "diamond"
@@ -60,11 +63,9 @@ class RenderContext:
 
 class IRenderCommandGenerator(Protocol):
     """Protocol for services that generate render commands."""
-    
+
     def generate_render_commands(
-        self, 
-        pictograph_data: PictographData, 
-        context: RenderContext
+        self, pictograph_data: PictographData, context: RenderContext
     ) -> List[RenderCommand]:
         """Generate render commands for the pictograph."""
         ...
@@ -72,56 +73,56 @@ class IRenderCommandGenerator(Protocol):
 
 class IAssetProvider(ABC):
     """Abstract interface for asset providers."""
-    
+
     @abstractmethod
     def get_grid_svg(self, grid_mode: str) -> Optional[str]:
         """Get grid SVG content."""
-        
+
     @abstractmethod
     def get_prop_svg(self, prop_type: str, color: str) -> Optional[str]:
         """Get prop SVG content with color applied."""
-        
+
     @abstractmethod
     def get_arrow_svg(self, arrow_data: Dict[str, Any]) -> Optional[str]:
         """Get arrow SVG content."""
-        
+
     @abstractmethod
-    def get_glyph_svg(self, glyph_type: str, glyph_data: Dict[str, Any]) -> Optional[str]:
+    def get_glyph_svg(
+        self, glyph_type: str, glyph_data: Dict[str, Any]
+    ) -> Optional[str]:
         """Get glyph SVG content."""
 
 
 class CorePictographRenderingService:
     """
     Framework-agnostic core pictograph rendering service.
-    
+
     Generates render commands instead of Qt objects, enabling use in:
     - Qt desktop applications (via adapter)
-    - Web services 
+    - Web services
     - Headless image generation
     - Testing environments
-    
+
     This service follows the same clean architecture pattern as your
     existing core services in src/application/services/core/.
     """
-    
+
     def __init__(self, asset_provider: IAssetProvider):
         """Initialize with asset provider."""
         self._asset_provider = asset_provider
-        
+
     def generate_complete_pictograph_commands(
-        self, 
-        pictograph_data: PictographData, 
-        context: RenderContext
+        self, pictograph_data: PictographData, context: RenderContext
     ) -> List[RenderCommand]:
         """
         Generate all render commands for a complete pictograph.
-        
+
         Returns list of render commands that can be executed by
         framework-specific adapters.
         """
         commands = []
         command_counter = 0
-        
+
         try:
             # 1. Generate grid command
             if context.show_grid:
@@ -131,7 +132,7 @@ class CorePictographRenderingService:
                 if grid_command:
                     commands.append(grid_command)
                     command_counter += 1
-            
+
             # 2. Generate prop commands
             if context.show_props and pictograph_data.motions:
                 prop_commands = self._generate_prop_commands(
@@ -139,7 +140,7 @@ class CorePictographRenderingService:
                 )
                 commands.extend(prop_commands)
                 command_counter += len(prop_commands)
-            
+
             # 3. Generate arrow commands
             if context.show_arrows and pictograph_data.motions:
                 arrow_commands = self._generate_arrow_commands(
@@ -147,21 +148,21 @@ class CorePictographRenderingService:
                 )
                 commands.extend(arrow_commands)
                 command_counter += len(arrow_commands)
-            
+
             # 4. Generate glyph commands
             if context.show_glyphs:
                 glyph_commands = self._generate_glyph_commands(
                     pictograph_data, context, command_counter
                 )
                 commands.extend(glyph_commands)
-            
+
             logger.debug(f"Generated {len(commands)} render commands for pictograph")
             return commands
-            
+
         except Exception as e:
             logger.error(f"Failed to generate pictograph commands: {e}")
             return []
-    
+
     def _generate_grid_command(
         self, context: RenderContext, command_id: str
     ) -> Optional[RenderCommand]:
@@ -170,7 +171,7 @@ class CorePictographRenderingService:
             svg_content = self._asset_provider.get_grid_svg(context.grid_mode)
             if not svg_content:
                 return None
-                
+
             return RenderCommand(
                 command_id=command_id,
                 command_type=RenderCommandType.GRID,
@@ -178,21 +179,21 @@ class CorePictographRenderingService:
                 size=context.target_size,
                 svg_content=svg_content,
                 z_index=0,  # Grid in background
-                metadata={"grid_mode": context.grid_mode}
+                metadata={"grid_mode": context.grid_mode},
             )
         except Exception as e:
             logger.error(f"Failed to generate grid command: {e}")
             return None
-    
+
     def _generate_prop_commands(
-        self, 
-        pictograph_data: PictographData, 
-        context: RenderContext, 
-        start_counter: int
+        self,
+        pictograph_data: PictographData,
+        context: RenderContext,
+        start_counter: int,
     ) -> List[RenderCommand]:
         """Generate prop render commands for all motions."""
         commands = []
-        
+
         try:
             for color, motion_data in pictograph_data.motions.items():
                 if motion_data:
@@ -204,35 +205,35 @@ class CorePictographRenderingService:
                         start_counter += 1
         except Exception as e:
             logger.error(f"Failed to generate prop commands: {e}")
-        
+
         return commands
-    
+
     def _generate_single_prop_command(
-        self, 
-        motion_data: MotionData, 
-        color: str, 
-        context: RenderContext, 
-        command_id: str
+        self,
+        motion_data: MotionData,
+        color: str,
+        context: RenderContext,
+        command_id: str,
     ) -> Optional[RenderCommand]:
         """Generate render command for a single prop."""
         try:
             # Get prop type from motion data or default to staff
-            prop_type = getattr(motion_data, 'prop_type', 'staff')
-            
+            prop_type = getattr(motion_data, "prop_type", "staff")
+
             # Get SVG content for prop
             svg_content = self._asset_provider.get_prop_svg(prop_type, color)
             if not svg_content:
                 return None
-            
+
             # Calculate prop position from motion data
             position = self._calculate_prop_position(motion_data, context)
-            
+
             # Calculate prop rotation
             rotation = self._calculate_prop_rotation(motion_data)
-            
+
             # Standard prop size (can be made configurable)
             prop_size = Size(50, 200)  # Typical staff dimensions
-            
+
             return RenderCommand(
                 command_id=command_id,
                 command_type=RenderCommandType.PROP,
@@ -245,22 +246,22 @@ class CorePictographRenderingService:
                 metadata={
                     "motion_type": motion_data.motion_type.value,
                     "end_location": motion_data.end_loc.value,
-                    "end_orientation": motion_data.end_ori.value
-                }
+                    "end_orientation": motion_data.end_ori.value,
+                },
             )
         except Exception as e:
             logger.error(f"Failed to generate prop command for {color}: {e}")
             return None
-    
+
     def _generate_arrow_commands(
-        self, 
-        pictograph_data: PictographData, 
-        context: RenderContext, 
-        start_counter: int
+        self,
+        pictograph_data: PictographData,
+        context: RenderContext,
+        start_counter: int,
     ) -> List[RenderCommand]:
         """Generate arrow render commands."""
         commands = []
-        
+
         try:
             for color, motion_data in pictograph_data.motions.items():
                 if motion_data:
@@ -272,15 +273,15 @@ class CorePictographRenderingService:
                         start_counter += 1
         except Exception as e:
             logger.error(f"Failed to generate arrow commands: {e}")
-        
+
         return commands
-    
+
     def _generate_single_arrow_command(
-        self, 
-        motion_data: MotionData, 
-        color: str, 
-        context: RenderContext, 
-        command_id: str
+        self,
+        motion_data: MotionData,
+        color: str,
+        context: RenderContext,
+        command_id: str,
     ) -> Optional[RenderCommand]:
         """Generate render command for a single arrow."""
         try:
@@ -290,20 +291,20 @@ class CorePictographRenderingService:
                 "start_location": motion_data.start_loc.value,
                 "end_location": motion_data.end_loc.value,
                 "turns": motion_data.turns,
-                "color": color
+                "color": color,
             }
-            
+
             # Get SVG content for arrow
             svg_content = self._asset_provider.get_arrow_svg(arrow_data)
             if not svg_content:
                 return None
-            
+
             # Calculate arrow position (center of motion path)
             position = self._calculate_arrow_position(motion_data, context)
-            
+
             # Arrow size
             arrow_size = Size(100, 100)  # Standard arrow size
-            
+
             return RenderCommand(
                 command_id=command_id,
                 command_type=RenderCommandType.ARROW,
@@ -312,21 +313,21 @@ class CorePictographRenderingService:
                 svg_content=svg_content,
                 color=color,
                 z_index=1,  # Arrows between grid and props
-                metadata=arrow_data
+                metadata=arrow_data,
             )
         except Exception as e:
             logger.error(f"Failed to generate arrow command for {color}: {e}")
             return None
-    
+
     def _generate_glyph_commands(
-        self, 
-        pictograph_data: PictographData, 
-        context: RenderContext, 
-        start_counter: int
+        self,
+        pictograph_data: PictographData,
+        context: RenderContext,
+        start_counter: int,
     ) -> List[RenderCommand]:
         """Generate glyph render commands."""
         commands = []
-        
+
         try:
             # Letter glyph
             if pictograph_data.letter:
@@ -336,15 +337,15 @@ class CorePictographRenderingService:
                 if letter_command:
                     commands.append(letter_command)
                     start_counter += 1
-            
+
             # Additional glyphs can be added here
             # (elemental, VTG, TKA, etc.)
-            
+
         except Exception as e:
             logger.error(f"Failed to generate glyph commands: {e}")
-        
+
         return commands
-    
+
     def _generate_letter_glyph_command(
         self, letter: str, context: RenderContext, command_id: str
     ) -> Optional[RenderCommand]:
@@ -352,14 +353,14 @@ class CorePictographRenderingService:
         try:
             glyph_data = {"letter": letter, "type": "letter"}
             svg_content = self._asset_provider.get_glyph_svg("letter", glyph_data)
-            
+
             if not svg_content:
                 return None
-            
+
             # Position letter glyph at top-left
             position = Point(10, 10)
             size = Size(40, 40)
-            
+
             return RenderCommand(
                 command_id=command_id,
                 command_type=RenderCommandType.GLYPH,
@@ -367,14 +368,14 @@ class CorePictographRenderingService:
                 size=size,
                 svg_content=svg_content,
                 z_index=3,  # Glyphs on top
-                metadata=glyph_data
+                metadata=glyph_data,
             )
         except Exception as e:
             logger.error(f"Failed to generate letter glyph command for {letter}: {e}")
             return None
-    
+
     # Helper methods for position and rotation calculations
-    
+
     def _calculate_prop_position(
         self, motion_data: MotionData, context: RenderContext
     ) -> Point:
@@ -384,13 +385,13 @@ class CorePictographRenderingService:
         center_x = context.target_size.width / 2
         center_y = context.target_size.height / 2
         return Point(center_x, center_y)
-    
+
     def _calculate_prop_rotation(self, motion_data: MotionData) -> float:
         """Calculate prop rotation based on motion data."""
         # This would use the same logic as your PropManagementService
         # For now, return 0 as placeholder
         return 0.0
-    
+
     def _calculate_arrow_position(
         self, motion_data: MotionData, context: RenderContext
     ) -> Point:
@@ -404,7 +405,7 @@ class CorePictographRenderingService:
 
 # Factory function for easy creation
 def create_core_pictograph_rendering_service(
-    asset_provider: IAssetProvider
+    asset_provider: IAssetProvider,
 ) -> CorePictographRenderingService:
     """Create core pictograph rendering service with asset provider."""
     return CorePictographRenderingService(asset_provider)

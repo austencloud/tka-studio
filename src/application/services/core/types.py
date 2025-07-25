@@ -198,8 +198,16 @@ class ImageData:
     width: int
     height: int
     format: ImageFormat
-    data: bytes
-    metadata: Dict[str, Any]
+    data: bytes = b""  # Optional for export specifications
+    metadata: Dict[str, Any] = None
+    background_color: Optional[Color] = None
+    render_commands: Optional[List[Dict[str, Any]]] = None
+    
+    def __post_init__(self):
+        if self.metadata is None:
+            self.metadata = {}
+        if self.render_commands is None:
+            self.render_commands = []
 
 
 # ============================================================================

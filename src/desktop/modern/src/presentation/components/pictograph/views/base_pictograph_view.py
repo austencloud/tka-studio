@@ -117,6 +117,68 @@ class BasePictographView(QGraphicsView):
         """Apply view-specific scaling adjustments. Override in subclasses."""
         # Base implementation applies no additional scaling
         # Subclasses can override for specific scaling behavior
+        pass
+
+    def _apply_unified_scaling(self, margin_factor: float = 0.95):
+        """
+        Apply unified scaling logic used by most pictograph views.
+
+        Args:
+            margin_factor: Scaling factor to apply (0.95 = 95% of container size)
+        """
+        # Get current widget size
+        widget_size = self.size()
+
+        if widget_size.width() <= 0 or widget_size.height() <= 0:
+            return
+
+        # Use the smaller dimension to maintain aspect ratio
+        target_size = min(widget_size.width(), widget_size.height())
+
+        # Apply margin factor
+        target_size = int(target_size * margin_factor)
+
+        # Apply legacy-style view scaling
+        self._apply_legacy_view_scaling(target_size)
+
+    def _apply_legacy_view_scaling(self, target_size: int):
+        """
+        Apply legacy-style view scaling with consistent logic.
+
+        Args:
+            target_size: Target size for scaling
+        """
+        if not self._scene:
+            return
+
+        # Get scene content bounds
+        items_rect = self._scene.itemsBoundingRect()
+
+        if items_rect.isEmpty():
+            # Use scene rect as fallback
+            items_rect = self._scene.sceneRect()
+
+        if items_rect.isEmpty():
+            return
+
+        # Calculate scale to fit target size while maintaining aspect ratio
+        scene_width = items_rect.width()
+        scene_height = items_rect.height()
+
+        if scene_width > 0 and scene_height > 0:
+            # Calculate scale factors for both dimensions
+            scale_x = target_size / scene_width
+            scale_y = target_size / scene_height
+
+            # Use minimum scale to ensure content fits
+            scale_factor = min(scale_x, scale_y)
+
+            # Apply the scaling
+            self.resetTransform()
+            self.scale(scale_factor, scale_factor)
+
+            # Center the content
+            self.centerOn(items_rect.center())
 
     # === PROPERTIES ===
 

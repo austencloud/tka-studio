@@ -7,6 +7,10 @@ presentation layer. Converts render commands to QT graphics items.
 
 import logging
 
+# Add project root to path for core services
+import sys
+from pathlib import Path
+
 # Import the framework-agnostic core services
 from typing import Dict, Optional
 
@@ -15,6 +19,20 @@ from PyQt6.QtGui import QColor
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsItem, QGraphicsScene
+
+
+def _get_project_root() -> Path:
+    """Find the TKA project root by looking for pyproject.toml."""
+    current_path = Path(__file__).resolve()
+    for parent in current_path.parents:
+        if (parent / "pyproject.toml").exists():
+            return parent
+    # Fallback: assume TKA is 6 levels up from this file
+    return current_path.parents[5]
+
+
+_project_root = _get_project_root()
+sys.path.insert(0, str(_project_root / "src"))
 
 from application.services.core.pictograph_renderer import (
     CorePictographRenderer,

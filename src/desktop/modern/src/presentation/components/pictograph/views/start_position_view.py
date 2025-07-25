@@ -54,54 +54,15 @@ class StartPositionView(BasePictographView):
 
     def _apply_view_specific_scaling(self):
         """Apply start position specific scaling."""
-        # Get current widget size
-        widget_size = self.size()
-
-        if widget_size.width() <= 0 or widget_size.height() <= 0:
-            return
-
-        # Use the smaller dimension to maintain square aspect ratio
-        size = min(widget_size.width(), widget_size.height())
-
-        # Apply margin based on mode (like legacy system)
+        # Use unified scaling with mode-specific margin factor
         margin_factor = 0.90 if self._is_advanced else 0.95
-        effective_size = int(size * margin_factor)
-
-        # Apply legacy-style view scaling
-        self._apply_legacy_view_scaling(effective_size)
-
-    def _apply_legacy_view_scaling(self, target_size: int):
-        """Apply legacy-style view scaling for start positions."""
-        if not self._scene:
-            return
-
-        # Get scene content bounds
-        items_rect = self._scene.itemsBoundingRect()
-
-        if items_rect.isEmpty():
-            # Use scene rect as fallback
-            items_rect = self._scene.sceneRect()
-
-        if items_rect.isEmpty():
-            return
-
-        # Calculate scale to fit target size
-        scene_size = max(items_rect.width(), items_rect.height())
-        if scene_size > 0:
-            scale_factor = target_size / scene_size
-
-            # Apply the scaling
-            self.resetTransform()
-            self.scale(scale_factor, scale_factor)
-
-            # Center the content
-            self.centerOn(items_rect.center())
+        self._apply_unified_scaling(margin_factor)
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         """Handle resize with start position specific logic."""
         super().resizeEvent(event)
-        # Apply scaling immediately when resized
-        self._apply_view_specific_scaling()
+        # NOTE: _apply_view_specific_scaling() is already called by base class _fit_view_to_content()
+        # Removing duplicate call to fix double scaling issue
 
     def setFixedSize(self, width, height=None) -> None:
         """Override setFixedSize to trigger scaling."""

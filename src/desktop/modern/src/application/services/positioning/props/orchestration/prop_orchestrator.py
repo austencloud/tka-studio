@@ -14,8 +14,9 @@ PROVIDES:
 import os
 import sys
 import uuid
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
 from pathlib import Path
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
+
 
 # Add project root to path using pathlib (standardized approach)
 def _get_project_root() -> Path:
@@ -26,6 +27,7 @@ def _get_project_root() -> Path:
             return parent
     # Fallback: assume TKA is 7 levels up from this file
     return current_path.parents[6]
+
 
 # Add project paths for imports
 _project_root = _get_project_root()
@@ -66,7 +68,11 @@ if TYPE_CHECKING:
     from application.services.core.events import IEventBus
 
 try:
-    from application.services.core.events import EventPriority, PropPositionedEvent, get_event_bus
+    from application.services.core.events import (
+        EventPriority,
+        PropPositionedEvent,
+        get_event_bus,
+    )
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:

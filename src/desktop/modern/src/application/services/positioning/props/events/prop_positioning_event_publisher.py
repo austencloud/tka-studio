@@ -11,12 +11,13 @@ PROVIDES:
 - Type-safe event publishing
 """
 
-import uuid
 import sys
+import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
 
 # Add project root to path using pathlib (standardized approach)
 def _get_project_root() -> Path:
@@ -28,16 +29,19 @@ def _get_project_root() -> Path:
     # Fallback: assume TKA is 7 levels up from this file
     return current_path.parents[6]
 
+
 # Add project paths for imports
 _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
 
 from domain.models.beat_data import BeatData
-from domain.models.motion_data import MotionData
 from domain.models.enums import PropType
+from domain.models.motion_data import MotionData
 
-from application.services.positioning.props.calculation.direction_calculation_service import SeparationDirection
+from application.services.positioning.props.calculation.direction_calculation_service import (
+    SeparationDirection,
+)
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -158,7 +162,9 @@ class PropPositioningEventPublisher(IPropPositioningEventPublisher):
             and PropPositionedEvent is not None
         )
 
-    def _publish_event(self, positioning_type: str, position_data: Dict[str, Any]) -> None:
+    def _publish_event(
+        self, positioning_type: str, position_data: Dict[str, Any]
+    ) -> None:
         """Publish a prop positioned event."""
         if not self._can_publish_events():
             return

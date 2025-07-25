@@ -13,8 +13,9 @@ PROVIDES:
 
 import sys
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple
 from pathlib import Path
+from typing import Dict, Tuple
+
 
 # Add project root to path using pathlib (standardized approach)
 def _get_project_root() -> Path:
@@ -25,6 +26,7 @@ def _get_project_root() -> Path:
             return parent
     # Fallback: assume TKA is 7 levels up from this file
     return current_path.parents[6]
+
 
 # Add project paths for imports
 _project_root = _get_project_root()

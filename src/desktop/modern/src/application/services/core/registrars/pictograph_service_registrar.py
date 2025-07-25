@@ -156,15 +156,23 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
 
     def _register_pictograph_rendering_service(self, container: "DIContainer") -> None:
         """Register the pictograph rendering service with microservice dependencies."""
-        # TEMPORARILY DISABLED - Import path issues need to be resolved
-        self._handle_service_unavailable(
-            "Pictograph rendering service",
-            ImportError("Temporarily disabled for prop service testing"),
-            "Pictograph rendering and visualization",
-        )
-        return
-
         try:
+            # Set up import paths for shared services
+            import sys
+            from pathlib import Path
+
+            # Find project root
+            current_path = Path(__file__).resolve()
+            for parent in current_path.parents:
+                if (parent / "pyproject.toml").exists():
+                    project_root = parent
+                    break
+            else:
+                project_root = current_path.parents[6]  # Fallback
+
+            # Add shared src to path
+            sys.path.insert(0, str(project_root / "src"))
+
             from core.interfaces.pictograph_rendering_services import (
                 IPictographRenderingService,
             )
@@ -187,10 +195,12 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             error_msg = f"Failed to import pictograph rendering service: {e}"
             logger.error(error_msg)
 
-            if self.is_critical():
-                raise ImportError(
-                    f"Critical pictograph rendering service unavailable: {e}"
-                ) from e
+            # TEMPORARILY: Make non-critical to debug import issues
+            self._handle_service_unavailable(
+                "Pictograph rendering service",
+                e,
+                "Pictograph rendering and visualization",
+            )
         except Exception as e:
             error_msg = (
                 f"Unexpected error registering pictograph rendering service: {e}"

@@ -22,10 +22,10 @@ from typing import Any, Dict, Optional
 
 # Add project root to path using pathlib (standardized approach)
 def _get_project_root() -> Path:
-    """Find the TKA project root by looking for pyproject.toml or main.py."""
+    """Find the TKA project root by looking for pyproject.toml."""
     current_path = Path(__file__).resolve()
     for parent in current_path.parents:
-        if (parent / "pyproject.toml").exists() or (parent / "main.py").exists():
+        if (parent / "pyproject.toml").exists():
             return parent
     # Fallback: assume TKA is 6 levels up from this file
     return current_path.parents[5]
@@ -45,6 +45,9 @@ from application.adapters.qt_pictograph_adapter import (
     QtPictographRenderingAdapter,
     create_qt_pictograph_adapter,
 )
+
+# Import from shared application services
+sys.path.insert(0, str(_project_root / "src"))
 from application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     create_pictograph_renderer,

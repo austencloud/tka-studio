@@ -1,11 +1,11 @@
 """
 Prop rendering microservice for pictograph rendering - REFACTORED VERSION
 
-This service now generates framework-agnostic prop render commands instead of 
+This service now generates framework-agnostic prop render commands instead of
 directly manipulating Qt objects. This enables:
 
 - Web service reuse of the same prop logic
-- Better testability without Qt dependencies  
+- Better testability without Qt dependencies
 - Clean separation between business logic and presentation
 - Maintained backward compatibility through Qt adapters
 
@@ -17,8 +17,9 @@ ARCHITECTURE:
 
 import logging
 import sys
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+
 
 # Add project root to path using pathlib (standardized approach)
 def _get_project_root() -> Path:
@@ -30,23 +31,30 @@ def _get_project_root() -> Path:
     # Fallback: assume TKA is 7 levels up from this file
     return current_path.parents[6]
 
+
 # Add project paths for imports
 _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
 
-# Import framework-agnostic core services (using established import pattern)
-from application.services.core.prop_rendering_service import CorePropRenderingService
-from application.adapters.qt_prop_rendering_service_adapter import QtPropRenderingServiceAdapter
 from domain.models.motion_data import MotionData
 from domain.models.pictograph_data import PictographData
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
 # Qt imports for compatibility
 from PyQt6.QtWidgets import QGraphicsScene
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+
+from application.adapters.qt_prop_rendering_service_adapter import (
+    QtPropRenderingServiceAdapter,
+)
+
+# Import framework-agnostic core services (using established import pattern)
+from application.services.core.prop_rendering_service import CorePropRenderingService
 
 # Support dependencies for existing functionality
-from application.services.pictograph.prop_rendering.asset_manager import PropAssetManager
+from application.services.pictograph.prop_rendering.asset_manager import (
+    PropAssetManager,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +65,7 @@ class PropRenderingService:
     """
     Qt adapter for prop rendering - REFACTORED VERSION
 
-    This service now acts as a Qt adapter that delegates prop rendering to the 
+    This service now acts as a Qt adapter that delegates prop rendering to the
     framework-agnostic core services. This provides:
 
     - Same public interface for existing Qt code compatibility
@@ -88,7 +96,9 @@ class PropRenderingService:
         # Qt adapter for executing render commands
         self._qt_adapter = qt_adapter or QtPropRenderingServiceAdapter()
 
-        logger.info("✅ [PROP_SERVICE] Initialized with framework-agnostic architecture")
+        logger.info(
+            "✅ [PROP_SERVICE] Initialized with framework-agnostic architecture"
+        )
 
     def render_prop(
         self,
@@ -99,12 +109,14 @@ class PropRenderingService:
     ) -> Optional[QGraphicsSvgItem]:
         """
         Render prop to Qt scene - REFACTORED to use framework-agnostic adapter.
-        
+
         This method maintains the exact same interface as before but now delegates
         to the Qt adapter which uses framework-agnostic core services internally.
         """
-        logger.debug(f"🎭 [PROP_SERVICE] Delegating {color} prop rendering to Qt adapter")
-        
+        logger.debug(
+            f"🎭 [PROP_SERVICE] Delegating {color} prop rendering to Qt adapter"
+        )
+
         # Delegate to Qt adapter (maintains same interface, uses framework-agnostic core)
         return self._qt_adapter.render_prop(scene, color, motion_data, pictograph_data)
 
@@ -140,16 +152,22 @@ class PropRenderingService:
     # ============================================================================
 
     def _get_prop_renderer(self, color: str):
-        """DEPRECATED: Direct Qt renderer access - use adapter instead.""" 
-        logger.warning("_get_prop_renderer() is deprecated - using Qt adapter internally")
+        """DEPRECATED: Direct Qt renderer access - use adapter instead."""
+        logger.warning(
+            "_get_prop_renderer() is deprecated - using Qt adapter internally"
+        )
         return None  # Qt adapter handles this internally
 
     def _create_prop_renderer(self, color: str):
         """DEPRECATED: Direct Qt renderer creation - use adapter instead."""
-        logger.warning("_create_prop_renderer() is deprecated - using Qt adapter internally")
+        logger.warning(
+            "_create_prop_renderer() is deprecated - using Qt adapter internally"
+        )
         return None  # Qt adapter handles this internally
 
     def _position_prop(self, prop_item, motion_data, color, pictograph_data=None):
         """DEPRECATED: Direct prop positioning - handled by adapter internally."""
-        logger.warning("_position_prop() is deprecated - Qt adapter handles positioning")
+        logger.warning(
+            "_position_prop() is deprecated - Qt adapter handles positioning"
+        )
         pass  # Qt adapter handles this internally
