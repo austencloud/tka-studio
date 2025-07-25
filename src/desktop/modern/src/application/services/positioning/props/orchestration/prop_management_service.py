@@ -452,24 +452,24 @@ class PropManagementService(IPropManagementService):
     ) -> tuple[SeparationDirection, SeparationDirection]:
         """
         Calculate directions for letter I using PRO/ANTI coordination.
-        
+
         This replicates the legacy reposition_I logic:
         1. Find which motion is PRO
         2. Calculate direction for the PRO motion
         3. ANTI motion gets opposite direction
-        
+
         Returns:
             (blue_direction, red_direction)
         """
         from domain.models.enums import MotionType
-        
+
         # Identify PRO and ANTI motions
         if red_motion.motion_type == MotionType.PRO:
             pro_motion = red_motion
             pro_color = "red"
             anti_motion = blue_motion
         elif blue_motion.motion_type == MotionType.PRO:
-            pro_motion = blue_motion  
+            pro_motion = blue_motion
             pro_color = "blue"
             anti_motion = red_motion
         else:
@@ -478,13 +478,13 @@ class PropManagementService(IPropManagementService):
             blue_direction = self._calculate_standard_direction(blue_motion, "blue")
             red_direction = self._calculate_standard_direction(red_motion, "red")
             return blue_direction, red_direction
-        
+
         # Calculate direction for PRO motion
         pro_direction = self._calculate_standard_direction(pro_motion, pro_color)
-        
+
         # ANTI motion gets opposite direction
         anti_direction = self._get_opposite_direction(pro_direction)
-        
+
         # Return directions in correct order (blue, red)
         if pro_color == "red":
             return anti_direction, pro_direction  # blue=anti, red=pro
@@ -499,10 +499,10 @@ class PropManagementService(IPropManagementService):
 
         For letter I, the PRO prop and ANTI prop should always move in opposite directions,
         regardless of their end locations. This replicates the legacy reposition_I() logic.
-        
+
         Algorithm:
         1. Find the PRO motion (regardless of color)
-        2. Calculate direction for the PRO motion 
+        2. Calculate direction for the PRO motion
         3. ANTI motion always gets the opposite of PRO direction
         """
         from domain.models.enums import MotionType
@@ -510,10 +510,9 @@ class PropManagementService(IPropManagementService):
         # We need both motions to determine which is PRO and which is ANTI
         # For now, we'll handle the current motion and assume the caller
         # will handle the pairing logic correctly
-        
         # Calculate the standard direction for this motion
         standard_direction = self._calculate_standard_direction(motion, color)
-        
+
         if motion.motion_type == MotionType.PRO:
             # PRO motion uses its standard direction
             return standard_direction
@@ -521,11 +520,11 @@ class PropManagementService(IPropManagementService):
             # ANTI motion should use opposite of PRO motion's direction
             # Since we don't have access to the PRO motion here,
             # we'll need to implement this differently
-            
+
             # For now, we need to rethink this approach
             # The legacy system calculates PRO direction first, then makes ANTI opposite
             # But our service calculates each motion independently
-            
+
             # Temporary fix: return opposite of standard direction
             # This may not be correct in all cases
             return self._get_opposite_direction(standard_direction)
@@ -729,10 +728,11 @@ class PropManagementService(IPropManagementService):
     def _get_json_configurator(self):
         """Get JSONConfigurator singleton from DI container."""
         try:
+            from core.dependency_injection.di_container import get_container
+
             from application.services.positioning.props.configuration.json_configuration_service import (
                 IJSONConfigurator,
             )
-            from core.dependency_injection.di_container import get_container
 
             container = get_container()
             return container.resolve(IJSONConfigurator)

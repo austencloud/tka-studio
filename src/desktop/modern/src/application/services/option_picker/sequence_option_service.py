@@ -7,6 +7,14 @@ Extracted from option_picker_scroll.py to maintain clean architecture.
 
 from typing import Any, Dict, List, Union
 
+from core.interfaces.sequence_operation_services import ISequenceOptionService
+from domain.models.enums import Location, MotionType, Orientation, RotationDirection
+from domain.models.letter_type_classifier import LetterTypeClassifier
+from domain.models.motion_data import MotionData
+from domain.models.pictograph_data import PictographData
+from domain.models.sequence_data import SequenceData
+from presentation.components.option_picker.types.letter_types import LetterType
+
 from application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
@@ -16,13 +24,9 @@ from application.services.positioning.arrows.calculation.orientation_calculator 
 from application.services.positioning.arrows.utilities.pictograph_position_matcher import (
     PictographPositionMatcher,
 )
-from core.interfaces.sequence_operation_services import ISequenceOptionService
-from domain.models.enums import Location, MotionType, Orientation, RotationDirection
-from domain.models.letter_type_classifier import LetterTypeClassifier
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
-from domain.models.sequence_data import SequenceData
-from presentation.components.option_picker.types.letter_types import LetterType
+from application.services.sequence.sequence_orientation_validator import (
+    SequenceOrientationValidator,
+)
 
 
 class SequenceOptionService(ISequenceOptionService):
@@ -37,6 +41,7 @@ class SequenceOptionService(ISequenceOptionService):
         self._position_matcher = position_matcher
         self._orientation_updater = OptionOrientationUpdater()
         self._orientation_calculator = OrientationCalculator()
+        self._sequence_orientation_validator = SequenceOrientationValidator()
 
     def get_options_for_sequence(
         self, sequence_data: Union[SequenceData, List[dict]]
@@ -49,9 +54,8 @@ class SequenceOptionService(ISequenceOptionService):
         Returns pure domain data - no Qt objects.
         """
         try:
-            # Extract end position and orientations from sequence
+            # Extract end position from sequence
             end_position = self._extract_end_position(sequence_data)
-            end_orientations = self._extract_end_orientations(sequence_data)
 
             if not end_position:
                 print(
@@ -62,18 +66,19 @@ class SequenceOptionService(ISequenceOptionService):
             # Get all valid next options
             all_options = self._position_matcher.get_next_options(end_position)
 
-            # Update orientations for all options based on sequence state
-            updated_options = self._update_option_orientations(
-                all_options, end_orientations
-            )
-
-            # Also update prop orientations using the OptionOrientationUpdater (only for modern format)
+            # FIXED: Use the new sequence orientation validator for proper orientation handling
             if isinstance(sequence_data, SequenceData):
-                updated_options = self._orientation_updater.update_option_orientations(
-                    sequence_data, updated_options
+                # Use modern sequence orientation validator for accurate orientation continuity
+                updated_options = self._sequence_orientation_validator.calculate_option_start_orientations(
+                    sequence_data, all_options
                 )
             else:
-                print("Using legacy format - prop orientations handled manually")
+                # Fallback for legacy format - use old method
+                end_orientations = self._extract_end_orientations(sequence_data)
+                updated_options = self._update_option_orientations(
+                    all_options, end_orientations
+                )
+                print("Using legacy format - orientation handling may be less accurate")
 
             # Group by letter type
             return self._group_options_by_type(updated_options)

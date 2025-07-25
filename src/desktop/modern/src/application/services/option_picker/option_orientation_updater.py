@@ -123,12 +123,20 @@ class OptionOrientationUpdater:
             if "blue" in beat.pictograph_data.motions:
                 blue_motion = beat.pictograph_data.motions["blue"]
                 if blue_motion and hasattr(blue_motion, "end_ori"):
-                    blue_end_ori = blue_motion.end_ori
+                    # FIXED: Convert Orientation enum to string value
+                    end_ori = blue_motion.end_ori
+                    blue_end_ori = (
+                        end_ori.value if hasattr(end_ori, "value") else str(end_ori)
+                    )
 
             if "red" in beat.pictograph_data.motions:
                 red_motion = beat.pictograph_data.motions["red"]
                 if red_motion and hasattr(red_motion, "end_ori"):
-                    red_end_ori = red_motion.end_ori
+                    # FIXED: Convert Orientation enum to string value
+                    end_ori = red_motion.end_ori
+                    red_end_ori = (
+                        end_ori.value if hasattr(end_ori, "value") else str(end_ori)
+                    )
 
         return blue_end_ori, red_end_ori
 
