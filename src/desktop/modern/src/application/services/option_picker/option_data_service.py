@@ -126,11 +126,17 @@ class OptionDataService:
                 letter, grid_mode="diamond"
             )
 
-            # Convert to PictographData
+            # Convert to PictographData and ensure letter_type is set
             pictographs = []
             for beat_data in beat_data_list[:max_count]:
                 if beat_data.has_pictograph:
-                    pictographs.append(beat_data.pictograph_data)
+                    pictograph_data = beat_data.pictograph_data
+
+                    # Ensure letter_type is set for glyph rendering
+                    if not pictograph_data.letter_type and pictograph_data.letter:
+                        pictograph_data = self._ensure_letter_type_set(pictograph_data)
+
+                    pictographs.append(pictograph_data)
 
             return pictographs
 
@@ -139,15 +145,65 @@ class OptionDataService:
             # For testing/fallback, create mock pictographs
             return self._create_mock_pictographs(letter, max_count)
 
+    def _ensure_letter_type_set(
+        self, pictograph_data: PictographData
+    ) -> PictographData:
+        """Ensure letter_type is set on pictograph data for glyph rendering."""
+        if pictograph_data.letter_type or not pictograph_data.letter:
+            return pictograph_data
+
+        try:
+            from domain.models.enums import LetterType
+            from domain.models.letter_type_classifier import LetterTypeClassifier
+
+            # Determine letter type from letter
+            letter_type_str = LetterTypeClassifier.get_letter_type(
+                pictograph_data.letter
+            )
+            letter_type = getattr(LetterType, letter_type_str.upper(), None)
+
+            # Create new instance with letter_type set (dataclass is frozen)
+            return PictographData(
+                id=pictograph_data.id,
+                grid_data=pictograph_data.grid_data,
+                arrows=pictograph_data.arrows,
+                props=pictograph_data.props,
+                motions=pictograph_data.motions,
+                letter=pictograph_data.letter,
+                letter_type=letter_type,  # Set the letter type
+                start_position=pictograph_data.start_position,
+                end_position=pictograph_data.end_position,
+                beat=pictograph_data.beat,
+                timing=pictograph_data.timing,
+                direction=pictograph_data.direction,
+                duration=pictograph_data.duration,
+                is_blank=pictograph_data.is_blank,
+                is_mirrored=pictograph_data.is_mirrored,
+                metadata=pictograph_data.metadata,
+            )
+
+        except Exception as e:
+            logger.warning(
+                f"Failed to set letter_type for {pictograph_data.letter}: {e}"
+            )
+            return pictograph_data
+
     def _create_mock_pictographs(self, letter: str, count: int) -> List[PictographData]:
         """Create mock pictographs for testing when real data is not available."""
+        from domain.models.enums import LetterType
         from domain.models.grid_data import GridData
+        from domain.models.letter_type_classifier import LetterTypeClassifier
+
+        # Determine letter type for mock pictographs too
+        letter_type_str = LetterTypeClassifier.get_letter_type(letter)
+        letter_type = getattr(LetterType, letter_type_str.upper(), None)
 
         mock_pictographs = []
         for i in range(count):
-            # Create a simple mock pictograph
+            # Create a simple mock pictograph with letter_type set
             mock_pictograph = PictographData(
                 letter=letter,
+                letter_type=letter_type,  # Set letter type for glyph rendering
                 grid_data=GridData(),
                 arrows={},
                 props={},

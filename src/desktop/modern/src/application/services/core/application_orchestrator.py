@@ -26,7 +26,6 @@ from application.services.core.service_registration_manager import (
     ServiceRegistrationManager,
 )
 from core.dependency_injection.di_container import DIContainer
-from presentation.components.ui.splash_screen import SplashScreen
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
 
@@ -99,7 +98,9 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
                     session_service = container.resolve(ISessionStateTracker)
 
                 except Exception as e:
-                    print(f"⚠️ [ORCHESTRATOR] Could not resolve all services: {e}")
+                    logger.error(
+                        f"⚠️ [ORCHESTRATOR] Could not resolve all services: {e}"
+                    )
 
             # Create with available services (fallback to defaults if needed)
             if not window_service:
@@ -291,30 +292,25 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
                                         break
 
                             if option_picker:
-                                print(
-                                    f"🔄 [POST-LAYOUT] Forcing option picker resize with main window: {main_window.width()}x{main_window.height()}"
-                                )
-                                # Force the option picker to recalculate its size
                                 option_picker._update_size()
-                                print(
-                                    f"🔄 [POST-LAYOUT] Option picker resize completed"
-                                )
                             else:
-                                print(
+                                logger.warning(
                                     "⚠️ [POST-LAYOUT] Option picker not found in stack"
                                 )
                         else:
-                            print(
+                            logger.warning(
                                 "⚠️ [POST-LAYOUT] Picker stack not found in layout manager"
                             )
                     else:
-                        print(
+                        logger.warning(
                             "⚠️ [POST-LAYOUT] Construct tab or layout manager not found"
                         )
                 else:
-                    print("⚠️ [POST-LAYOUT] Tab widget not available")
+                    logger.warning("⚠️ [POST-LAYOUT] Tab widget not available")
             except Exception as e:
-                print(f"❌ [POST-LAYOUT] Error forcing option picker resize: {e}")
+                logger.error(
+                    f"❌ [POST-LAYOUT] Error forcing option picker resize: {e}"
+                )
 
         # Use a timer to ensure the main window layout is fully processed
         QTimer.singleShot(100, force_option_picker_resize)
@@ -336,7 +332,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
         def detailed_progress_callback(progress: int, message: str):
             elapsed = time.perf_counter() - start_time
-            print(f"🚀 [{elapsed:.1f}s] {progress}% - {message}")
+            logger.info(f"🚀 [{elapsed:.1f}s] {progress}% - {message}")
 
             if splash_screen:
                 splash_screen.update_progress(progress, message)

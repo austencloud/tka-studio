@@ -351,10 +351,39 @@ class SequenceOptionService(ISequenceOptionService):
         for option in options:
             letter = option.letter
             if letter:
-                letter_type = LetterTypeClassifier.get_letter_type(letter)
-                if letter_type not in options_by_type:
-                    options_by_type[letter_type] = []
-                options_by_type[letter_type].append(option)
+                letter_type_str = LetterTypeClassifier.get_letter_type(letter)
+
+                # Ensure letter_type is set on the pictograph data for glyph rendering
+                if not option.letter_type:
+                    from domain.models.enums import LetterType
+
+                    letter_type_enum = getattr(
+                        LetterType, letter_type_str.upper(), None
+                    )
+
+                    # Create new instance with letter_type set (dataclass is frozen)
+                    option = PictographData(
+                        id=option.id,
+                        grid_data=option.grid_data,
+                        arrows=option.arrows,
+                        props=option.props,
+                        motions=option.motions,
+                        letter=option.letter,
+                        letter_type=letter_type_enum,  # Set the letter type
+                        start_position=option.start_position,
+                        end_position=option.end_position,
+                        beat=option.beat,
+                        timing=option.timing,
+                        direction=option.direction,
+                        duration=option.duration,
+                        is_blank=option.is_blank,
+                        is_mirrored=option.is_mirrored,
+                        metadata=option.metadata,
+                    )
+
+                if letter_type_str not in options_by_type:
+                    options_by_type[letter_type_str] = []
+                options_by_type[letter_type_str].append(option)
 
         return options_by_type
 

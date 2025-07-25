@@ -386,22 +386,17 @@ def main():
             splash.update_progress(100, "Application ready!")
             app.processEvents()
 
-            print("SUCCESS: TKA application startup completed successfully!")
-
             def show_main_window():
                 """Show main window exactly when splash finishes fading."""
-                print("🔧 [MAIN] Showing main window...")
                 window.show()
                 window.raise_()
                 window.activateWindow()
-                print(f"🔧 [MAIN] Main window visible: {window.isVisible()}")
 
             # TEMPORARY FIX: Show window immediately for debugging
-            print("🔧 [MAIN] Showing window immediately for debugging...")
             show_main_window()
 
             # Also hide splash screen with callback
-            splash.hide_animated(callback=lambda: print("🔧 [MAIN] Splash hidden"))
+            splash.hide_animated()
 
         fade_in_animation.finished.connect(start_initialization)
 
@@ -409,14 +404,11 @@ def main():
         if "--test-generation" in sys.argv:
 
             def run_tests_after_init():
-                print("\n🧪 Running generation tests...")
                 try:
                     from test_generation_simple import test_generation_functionality
 
                     test_success = test_generation_functionality()
-                    if test_success:
-                        print("🎉 Generation tests passed!")
-                    else:
+                    if not test_success:
                         print("❌ Generation tests failed!")
                 except Exception as e:
                     print(f"❌ Failed to run generation tests: {e}")

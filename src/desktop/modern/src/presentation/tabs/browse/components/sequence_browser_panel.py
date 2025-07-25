@@ -359,7 +359,7 @@ class SequenceBrowserPanel(QWidget):
             else "alphabetical"
         )
 
-        # Display with stable layout
+        # Display with stable layout So
         self._display_sequences_with_stable_layout(sequences, sort_method)
 
     def _show_loading_state(self) -> None:

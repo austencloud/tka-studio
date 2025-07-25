@@ -53,10 +53,6 @@ class OptionPickerSizeCalculator:
                 # They are displayed side by side, so each one should be 1/3 width
                 section_width = base_width // 3
 
-                print(f"   Individual grouped section calculation:")
-                print(f"     Base width: {base_width}px")
-                print(f"     Section width (1/3): {section_width}px")
-
                 return {
                     "width": section_width,
                     "columns": 8,  # Keep 8 columns for consistency

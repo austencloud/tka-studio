@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 class OptionPickerSectionWidgetManager:
     """
     Handles widget management and pooling for OptionPickerSection.
-    
+
     Responsibilities:
     - Widget checkout/checkin from pool
     - Signal connections and lifecycle
@@ -48,7 +48,7 @@ class OptionPickerSectionWidgetManager:
         self._scroll_area = scroll_area
         self._option_pool_service = option_pool_service
         self._selection_callback = selection_callback
-        
+
         # Widget tracking
         self._active_widgets: Dict[str, OptionPictograph] = {}
         self._widget_pool_mapping: Dict[OptionPictograph, int] = {}
@@ -58,17 +58,17 @@ class OptionPickerSectionWidgetManager:
     ) -> List[OptionPictograph]:
         """
         Create and setup widgets for the given pictographs.
-        
+
         Returns:
             List of configured OptionPictograph widgets ready for layout
         """
         widgets = []
-        
+
         for i, pictograph_data in enumerate(pictographs_for_section):
             widget = self._checkout_and_setup_widget(pictograph_data)
             if widget:
                 widgets.append(widget)
-                
+
         return widgets
 
     def _checkout_and_setup_widget(
@@ -92,7 +92,7 @@ class OptionPickerSectionWidgetManager:
 
         # Setup signal connections
         self._connect_widget_signals(option_frame)
-        
+
         # Track widget and its pool mapping
         key = f"pictograph_{len(self._active_widgets)}"
         self._active_widgets[key] = option_frame
@@ -125,10 +125,7 @@ class OptionPickerSectionWidgetManager:
 
     def _setup_widget_letter_type(self, widget: OptionPictograph) -> None:
         """Setup letter type on widget for border coloring."""
-        if (
-            hasattr(widget, "_pictograph_component")
-            and widget._pictograph_component
-        ):
+        if hasattr(widget, "_pictograph_component") and widget._pictograph_component:
             if hasattr(widget._pictograph_component, "set_letter_type"):
                 widget._pictograph_component.set_letter_type(self._letter_type)
 
@@ -136,7 +133,7 @@ class OptionPickerSectionWidgetManager:
         """Clear all widgets and return them to pool."""
         for widget in list(self._active_widgets.values()):
             self._cleanup_and_return_widget(widget)
-        
+
         # Clear tracking dictionaries
         self._active_widgets.clear()
         self._widget_pool_mapping.clear()
@@ -145,7 +142,7 @@ class OptionPickerSectionWidgetManager:
         """Clean up widget and return it to pool."""
         if not widget:
             return
-            
+
         # Remove from layout (handled by layout manager)
         widget.setVisible(False)
 

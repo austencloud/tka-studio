@@ -436,11 +436,14 @@ class PictographScene(QGraphicsScene):
                 )
 
             # Render TKA glyph (if visible)
-            if (
-                should_show_tka(letter_type)
-                and visibility_manager.get_pictograph_visibility(pictograph_id, "tka")
-                and self._visibility_service.get_glyph_visibility("TKA")
-            ):
+            should_show = should_show_tka(letter_type)
+            pictograph_visible = visibility_manager.get_pictograph_visibility(
+                pictograph_id, "tka"
+            )
+            glyph_visible = self._visibility_service.get_glyph_visibility("TKA")
+
+            if should_show and pictograph_visible and glyph_visible:
+
                 from domain.models.pictograph_utils import (
                     get_turns_from_motions,
                     has_dash_from_pictograph,
