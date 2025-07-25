@@ -11,13 +11,31 @@ PROVIDES:
 - Scene-relative offset scaling
 """
 
+import os
+import sys
 from abc import ABC, abstractmethod
 from typing import Dict, Tuple
+from pathlib import Path
 
+# Add project root to path using pathlib (standardized approach)
+def _get_project_root() -> Path:
+    """Find the TKA project root by looking for pyproject.toml or main.py."""
+    current_path = Path(__file__).resolve()
+    for parent in current_path.parents:
+        if (parent / "pyproject.toml").exists() or (parent / "main.py").exists():
+            return parent
+    # Fallback: assume TKA is 7 levels up from this file
+    return current_path.parents[6]
+
+# Add project paths for imports
+_project_root = _get_project_root()
+sys.path.insert(0, str(_project_root))
+sys.path.insert(0, str(_project_root / "src"))
+
+from core.types import Point
 from domain.models.enums import PropType
-from PyQt6.QtCore import QPointF
 
-from ...props.calculation.direction_calculation_service import SeparationDirection
+from .direction_calculation_service import SeparationDirection
 
 
 class IOffsetCalculationService(ABC):
@@ -26,7 +44,7 @@ class IOffsetCalculationService(ABC):
     @abstractmethod
     def calculate_directional_offset(
         self, direction: SeparationDirection, prop_type: PropType
-    ) -> QPointF:
+    ) -> Point:
         """Calculate offset based on direction and prop type."""
 
     @abstractmethod
@@ -35,7 +53,7 @@ class IOffsetCalculationService(ABC):
         blue_direction: SeparationDirection,
         red_direction: SeparationDirection,
         prop_type: PropType,
-    ) -> Tuple[QPointF, QPointF]:
+    ) -> Tuple[Point, Point]:
         """Calculate separation offsets for blue and red props."""
 
     @abstractmethod
@@ -64,7 +82,7 @@ class OffsetCalculationService(IOffsetCalculationService):
 
     def calculate_directional_offset(
         self, direction: SeparationDirection, prop_type: PropType
-    ) -> QPointF:
+    ) -> Point:
         """
         Calculate offset based on direction and prop type.
 
@@ -83,24 +101,24 @@ class OffsetCalculationService(IOffsetCalculationService):
 
         # Direction to offset mapping using SeparationDirection enum
         offset_map = {
-            SeparationDirection.LEFT: QPointF(-base_offset, 0),
-            SeparationDirection.RIGHT: QPointF(base_offset, 0),
-            SeparationDirection.UP: QPointF(0, -base_offset),
-            SeparationDirection.DOWN: QPointF(0, base_offset),
-            SeparationDirection.DOWNRIGHT: QPointF(diagonal_offset, diagonal_offset),
-            SeparationDirection.UPLEFT: QPointF(-diagonal_offset, -diagonal_offset),
-            SeparationDirection.DOWNLEFT: QPointF(-diagonal_offset, diagonal_offset),
-            SeparationDirection.UPRIGHT: QPointF(diagonal_offset, -diagonal_offset),
+            SeparationDirection.LEFT: Point(-base_offset, 0),
+            SeparationDirection.RIGHT: Point(base_offset, 0),
+            SeparationDirection.UP: Point(0, -base_offset),
+            SeparationDirection.DOWN: Point(0, base_offset),
+            SeparationDirection.DOWNRIGHT: Point(diagonal_offset, diagonal_offset),
+            SeparationDirection.UPLEFT: Point(-diagonal_offset, -diagonal_offset),
+            SeparationDirection.DOWNLEFT: Point(-diagonal_offset, diagonal_offset),
+            SeparationDirection.UPRIGHT: Point(diagonal_offset, -diagonal_offset),
         }
 
-        return offset_map.get(direction, QPointF(0, 0))
+        return offset_map.get(direction, Point(0, 0))
 
     def calculate_separation_offsets(
         self,
         blue_direction: SeparationDirection,
         red_direction: SeparationDirection,
         prop_type: PropType,
-    ) -> Tuple[QPointF, QPointF]:
+    ) -> Tuple[Point, Point]:
         """Calculate separation offsets for blue and red props."""
         blue_offset = self.calculate_directional_offset(blue_direction, prop_type)
         red_offset = self.calculate_directional_offset(red_direction, prop_type)
@@ -121,12 +139,10 @@ class OffsetCalculationService(IOffsetCalculationService):
         base_offset = self.calculate_base_offset(prop_type)
         return base_offset / (2**0.5)
 
-    def scale_offset_for_scene_size(
-        self, offset: QPointF, scene_size: float
-    ) -> QPointF:
+    def scale_offset_for_scene_size(self, offset: Point, scene_size: float) -> Point:
         """Scale offset based on actual scene size vs reference size."""
         scale_factor = scene_size / self._scene_reference_size
-        return QPointF(offset.x() * scale_factor, offset.y() * scale_factor)
+        return Point(offset.x * scale_factor, offset.y * scale_factor)
 
     def get_offset_for_prop_size_category(self, size_category: str) -> int:
         """Get offset divisor for prop size category."""

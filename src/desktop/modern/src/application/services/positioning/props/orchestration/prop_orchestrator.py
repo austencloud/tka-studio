@@ -11,38 +11,63 @@ PROVIDES:
 - Event-driven prop positioning
 """
 
+import logging
+import os
+import sys
 import uuid
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from pathlib import Path
+
+# Add project root to path using pathlib (standardized approach)
+def _get_project_root() -> Path:
+    """Find the TKA project root by looking for pyproject.toml or main.py."""
+    current_path = Path(__file__).resolve()
+    for parent in current_path.parents:
+        if (parent / "pyproject.toml").exists() or (parent / "main.py").exists():
+            return parent
+    # Fallback: assume TKA is 7 levels up from this file
+    return current_path.parents[6]
+
+# Add project paths for imports
+_project_root = _get_project_root()
+sys.path.insert(0, str(_project_root))
+sys.path.insert(0, str(_project_root / "src"))
+import os
+import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
-from domain.models import BeatData
+# Add project root to path (following established pattern)
+sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
+
+from domain.models.beat_data import BeatData
 from domain.models.enums import PropType
 from PyQt6.QtCore import QPointF
 
-from ...props.calculation.direction_calculation_service import (
+from application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
 )
-from ...props.calculation.offset_calculation_service import (
+from application.services.positioning.props.calculation.offset_calculation_service import (
     IOffsetCalculationService,
     OffsetCalculationService,
 )
-from ...props.calculation.prop_classification_service import (
+from application.services.positioning.props.calculation.prop_classification_service import (
     IPropClassificationService,
     PropClassificationService,
 )
-from ...props.configuration.json_configuration_service import (
+from application.services.positioning.props.configuration.json_configuration_service import (
     IJSONConfigurator,
     JSONConfigurator,
 )
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from core.events import IEventBus
+    from application.services.core.events import IEventBus
 
 try:
-    from core.events import EventPriority, PropPositionedEvent, get_event_bus
+    from application.services.core.events import EventPriority, PropPositionedEvent, get_event_bus
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:

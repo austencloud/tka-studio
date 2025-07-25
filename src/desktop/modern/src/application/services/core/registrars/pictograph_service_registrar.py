@@ -60,6 +60,12 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
     def _register_core_pictograph_services(self, container: "DIContainer") -> None:
         """Register core pictograph management services."""
         try:
+            from core.interfaces.core_services import (
+                IPictographBorderManager,
+                IPictographContextDetector,
+            )
+            from core.interfaces.pictograph_services import IPictographValidator
+
             from application.services.data.pictograph_data_service import (
                 IPictographDataManager,
                 PictographDataManager,
@@ -81,11 +87,6 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from application.services.pictograph.simple_visibility_service import (
                 PictographVisibilityService,
             )
-            from core.interfaces.core_services import (
-                IPictographBorderManager,
-                IPictographContextDetector,
-            )
-            from core.interfaces.pictograph_services import IPictographValidator
 
             # Register pictograph data manager
             container.register_singleton(IPictographDataManager, PictographDataManager)
@@ -155,12 +156,21 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
 
     def _register_pictograph_rendering_service(self, container: "DIContainer") -> None:
         """Register the pictograph rendering service with microservice dependencies."""
+        # TEMPORARILY DISABLED - Import path issues need to be resolved
+        self._handle_service_unavailable(
+            "Pictograph rendering service",
+            ImportError("Temporarily disabled for prop service testing"),
+            "Pictograph rendering and visualization",
+        )
+        return
+
         try:
-            from application.services.pictograph.pictograph_rendering_service import (
-                PictographRenderingService,
-            )
             from core.interfaces.pictograph_rendering_services import (
                 IPictographRenderingService,
+            )
+
+            from application.services.pictograph.pictograph_rendering_service import (
+                PictographRenderingService,
             )
 
             # Register as singleton to ensure only one instance is ever created

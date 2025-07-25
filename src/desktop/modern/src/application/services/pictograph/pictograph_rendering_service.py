@@ -1,34 +1,57 @@
 """
-Shared rendering service for all pictograph scenes.
+Shared rendering service for all pictograph scenes - REFACTORED VERSION
 
-This service provides centralized, cached rendering for grids, props, arrows, and glyphs
-to eliminate the performance overhead of creating multiple renderer instances per scene.
+This service now acts as a Qt adapter that delegates to the framework-agnostic
+core pictograph rendering service. This eliminates Qt dependencies from the
+business logic while maintaining backward compatibility.
 
-REFACTORING NOTE: This service is being broken down into smaller microservices:
-- PictographAssetManager: SVG loading and color transformations
-- PictographCacheManager: Caching and memory management
-- GridRenderingService: Grid-specific rendering
-- PropRenderingService: Prop-specific rendering
-- GlyphRenderingService: Glyph-specific rendering
-- PictographPerformanceMonitor: Performance tracking
+ARCHITECTURE:
+- Delegates to CorePictographRenderingService for business logic
+- Uses Qt adapters to convert render commands to Qt graphics items
+- Maintains same public interface for existing code compatibility
+- Enables web service reuse of the same core logic
 """
 
 import logging
+import os
+
+# Import framework-agnostic core services
+import sys
+from pathlib import Path
 from typing import Any, Dict, Optional
 
-from application.services.pictograph.glyph_rendering.glyph_rendering_service import (
-    GlyphRenderingService,
-)
-from application.services.pictograph.grid_rendering.grid_rendering_service import (
-    GridRenderingService,
-)
-from application.services.pictograph.prop_rendering.prop_rendering_service import (
-    PropRenderingService,
-)
+
+# Add project root to path using pathlib (standardized approach)
+def _get_project_root() -> Path:
+    """Find the TKA project root by looking for pyproject.toml or main.py."""
+    current_path = Path(__file__).resolve()
+    for parent in current_path.parents:
+        if (parent / "pyproject.toml").exists() or (parent / "main.py").exists():
+            return parent
+    # Fallback: assume TKA is 6 levels up from this file
+    return current_path.parents[5]
+
+
+# Add project paths for imports
+_project_root = _get_project_root()
+sys.path.insert(0, str(_project_root))
+sys.path.insert(0, str(_project_root / "src"))
+
 from domain.models import MotionData, PictographData
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
+# Import Qt adapter for render command execution
+from application.adapters.qt_pictograph_adapter import (
+    QtPictographRenderingAdapter,
+    create_qt_pictograph_adapter,
+)
+from application.services.core.pictograph_renderer import (
+    CorePictographRenderer,
+    IPictographAssetProvider,
+    create_pictograph_renderer,
+)
+from application.services.core.types import RenderCommand, Size
 from application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
@@ -44,19 +67,21 @@ logger = logging.getLogger(__name__)
 
 class PictographRenderingService:
     """
-    Orchestrator service for pictograph rendering.
+    Qt-specific pictograph rendering service - REFACTORED VERSION
 
-    This service coordinates specialized microservices to provide:
-    - Grids (diamond, box modes) via GridRenderingService
-    - Props (staff in various colors) via PropRenderingService
-    - Arrows (via existing arrow rendering service)
-    - Glyphs (letters, elemental, VTG, TKA, positions) via GlyphRenderingService
+    This service now acts as a Qt adapter that delegates rendering to the
+    framework-agnostic CorePictographRenderingService. This provides:
 
-    Benefits:
-    - Modular architecture with focused microservices
-    - Dependency injection for better testability
-    - Centralized coordination with distributed responsibilities
-    - Maintained compatibility with existing interface
+    - Same public interface for existing Qt code compatibility
+    - Framework-agnostic business logic for web service reuse
+    - Clean separation between Qt presentation and core logic
+    - Better testability and maintainability
+
+    Architecture:
+    1. Receives Qt rendering requests (same interface as before)
+    2. Converts Qt data to framework-agnostic format
+    3. Delegates to CorePictographRenderingService for business logic
+    4. Uses QtPictographRenderingAdapter to execute render commands on Qt scenes
     """
 
     _instance = None
@@ -67,7 +92,9 @@ class PictographRenderingService:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             if not cls._creation_logged:
-
+                logger.info(
+                    "🎨 [RENDERING_SERVICE] Creating shared pictograph rendering service"
+                )
                 cls._creation_logged = True
         return cls._instance
 
@@ -76,50 +103,55 @@ class PictographRenderingService:
         asset_manager: PictographAssetManager = None,
         cache_manager: PictographCacheManager = None,
         performance_monitor: PictographPerformanceMonitor = None,
-        grid_renderer: GridRenderingService = None,
-        prop_renderer: PropRenderingService = None,
-        glyph_renderer: GlyphRenderingService = None,
+        # New framework-agnostic dependencies
+        core_service: CorePictographRenderer = None,
+        qt_adapter: QtPictographRenderingAdapter = None,
     ):
-        """Initialize the orchestrator with injected microservices."""
+        """Initialize the service with framework-agnostic core and Qt adapter."""
         # Prevent re-initialization of singleton
         if hasattr(self, "_initialized"):
             return
 
-        # Initialize microservices (create defaults if not injected)
+        # Legacy dependencies (still used for compatibility)
         self._asset_manager = asset_manager or PictographAssetManager()
         self._cache_manager = cache_manager or PictographCacheManager()
         self._performance_monitor = (
             performance_monitor or PictographPerformanceMonitor()
         )
 
-        # Initialize rendering services with dependencies
-        self._grid_renderer = grid_renderer or GridRenderingService(
-            self._asset_manager, self._cache_manager, self._performance_monitor
-        )
-        self._prop_renderer = prop_renderer or PropRenderingService(
-            self._asset_manager, self._cache_manager, self._performance_monitor
-        )
-        self._glyph_renderer = glyph_renderer or GlyphRenderingService(
-            self._asset_manager, self._cache_manager, self._performance_monitor
+        # Core framework-agnostic service
+        if core_service is None:
+            # Create asset provider that integrates with existing asset management
+            asset_provider = None  # Will use default asset provider
+            self._core_service = create_pictograph_renderer(asset_provider)
+        else:
+            self._core_service = core_service
+
+        # Qt adapter for executing render commands
+        self._qt_adapter = qt_adapter or create_qt_pictograph_adapter(
+            self._asset_manager
         )
 
-        # Pre-initialize common renderers for better startup performance
-        self._preload_common_renderers()
+        # Qt adapter for executing render commands
+        self._qt_adapter = qt_adapter or create_qt_pictograph_adapter(
+            self._asset_manager
+        )
 
         # Mark as initialized
         self._initialized = True
 
+        # Pre-load common renderers for performance
+        self._preload_common_renderers()
+
+        logger.info(
+            "✅ [RENDERING_SERVICE] Service initialized with framework-agnostic core"
+        )
+
     def _preload_common_renderers(self):
         """Pre-create commonly used renderers during startup."""
         try:
-            # Pre-load grid renderers
-            self._grid_renderer.preload_common_grids()
-
-            # Pre-load prop renderers for common colors
-            self._prop_renderer.preload_common_props()
-
-            # Pre-load glyph renderers
-            self._glyph_renderer.preload_common_glyphs()
+            # Let the Qt adapter handle pre-loading since it manages Qt-specific rendering
+            logger.info("🚀 [RENDERING_SERVICE] Pre-loading delegated to Qt adapter")
 
         except Exception as e:
             logger.warning(
@@ -130,7 +162,7 @@ class PictographRenderingService:
         self, scene: QGraphicsScene, grid_mode: str = "diamond"
     ) -> Optional[QGraphicsSvgItem]:
         """
-        Render grid using cached renderer.
+        Render grid using framework-agnostic core service + Qt adapter.
 
         Args:
             scene: Target scene to render into
@@ -139,7 +171,12 @@ class PictographRenderingService:
         Returns:
             Created grid item or None if rendering failed
         """
-        return self._grid_renderer.render_grid(scene, grid_mode)
+        try:
+            # Delegate to Qt adapter which uses the core service
+            return self._qt_adapter.render_grid(scene, grid_mode)
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Grid rendering failed: {e}")
+            return None
 
     def render_prop(
         self,
@@ -149,7 +186,7 @@ class PictographRenderingService:
         pictograph_data=None,
     ) -> Optional[QGraphicsSvgItem]:
         """
-        Render prop using cached, colored renderer.
+        Render prop using framework-agnostic core service + Qt adapter.
 
         Args:
             scene: Target scene to render into
@@ -160,15 +197,30 @@ class PictographRenderingService:
         Returns:
             Created prop item or None if rendering failed
         """
-        return self._prop_renderer.render_prop(
-            scene, color, motion_data, pictograph_data
-        )
+        try:
+            # Convert motion data to dictionary format for adapter
+            motion_dict = {
+                "motion_type": motion_data.motion_type.value,
+                "start_loc": motion_data.start_loc.value,
+                "end_loc": motion_data.end_loc.value,
+                "start_ori": motion_data.start_ori.value,
+                "end_ori": motion_data.end_ori.value,
+                "turns": motion_data.turns,
+            }
+
+            # Delegate to Qt adapter which uses the core service
+            return self._qt_adapter.render_prop(
+                scene, color, motion_dict, pictograph_data
+            )
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Prop rendering failed: {e}")
+            return None
 
     def render_glyph(
         self, scene: QGraphicsScene, glyph_type: str, glyph_data: Any
     ) -> Optional[QGraphicsSvgItem]:
         """
-        Render glyph using cached renderer.
+        Render glyph using framework-agnostic core service + Qt adapter.
 
         Args:
             scene: Target scene to render into
@@ -178,26 +230,37 @@ class PictographRenderingService:
         Returns:
             Created glyph item or None if rendering failed
         """
-        return self._glyph_renderer.render_glyph(scene, glyph_type, glyph_data)
+        try:
+            # Delegate to Qt adapter which uses the core service
+            return self._qt_adapter.render_glyph(scene, glyph_type, glyph_data)
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Glyph rendering failed: {e}")
+            return None
 
     def get_cache_stats(self) -> Dict[str, Any]:
-        """Get cache performance statistics from all microservices."""
-        # Aggregate stats from all microservices
-        cache_stats = self._cache_manager.get_cache_stats()
-        asset_stats = self._asset_manager.get_asset_stats()
-        performance_report = self._performance_monitor.get_performance_report()
+        """Get cache performance statistics from core and adapter services."""
+        try:
+            # Get stats from legacy services (for compatibility)
+            cache_stats = self._cache_manager.get_cache_stats()
+            asset_stats = self._asset_manager.get_asset_stats()
+            performance_report = self._performance_monitor.get_performance_report()
 
-        # Combine stats from all services
-        combined_stats = {
-            **cache_stats,
-            **asset_stats,
-            "performance": performance_report,
-            "grid_stats": self._grid_renderer.get_grid_stats(),
-            "prop_stats": self._prop_renderer.get_prop_stats(),
-            "glyph_stats": self._glyph_renderer.get_glyph_stats(),
-        }
+            # Get stats from Qt adapter
+            adapter_stats = self._qt_adapter.get_render_statistics()
 
-        return combined_stats
+            # Combine stats from all services
+            combined_stats = {
+                **cache_stats,
+                **asset_stats,
+                "performance": performance_report,
+                "adapter_stats": adapter_stats,
+                "architecture": "framework_agnostic_core_with_qt_adapter",
+            }
+
+            return combined_stats
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Failed to get cache stats: {e}")
+            return {"error": str(e)}
 
     def clear_rendered_props(self):
         """Clear rendered props from all scenes (compatibility method)."""
@@ -208,33 +271,38 @@ class PictographRenderingService:
 
     def clear_cache(self):
         """Clear all caches to free memory."""
-        self._cache_manager.clear_all_caches()
-        self._asset_manager.clear_color_cache()
-        self._performance_monitor.reset_statistics()
+        try:
+            self._cache_manager.clear_all_caches()
+            self._asset_manager.clear_color_cache()
+            self._performance_monitor.reset_statistics()
 
-        logger.info("🧹 [RENDERING_SERVICE] Cleared all caches across microservices")
+            logger.info("🧹 [RENDERING_SERVICE] Cleared all caches across services")
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Failed to clear caches: {e}")
 
     def get_cache_info(self) -> str:
         """Get detailed cache information for debugging."""
-        cache_stats = self.get_cache_stats()
-        cache_info = self._cache_manager.get_cache_info()
-        performance_report = self._performance_monitor.get_performance_report()
+        try:
+            cache_stats = self.get_cache_stats()
+            cache_info = self._cache_manager.get_cache_info()
+            performance_report = self._performance_monitor.get_performance_report()
 
-        return (
-            f"PictographRenderingService Orchestrator Stats:\n"
-            f"{cache_info}\n"
-            f"Performance Summary:\n"
-            f"  Total Operations: {performance_report.get('system_health', {}).get('total_operations', 0)}\n"
-            f"  Slow Operations: {performance_report.get('system_health', {}).get('slow_operations', 0)}\n"
-            f"  Error Count: {performance_report.get('system_health', {}).get('error_count', 0)}\n"
-            f"Microservices Status:\n"
-            f"  Grid Renderer: {cache_stats.get('grid_stats', {}).get('service_status', 'unknown')}\n"
-            f"  Prop Renderer: {cache_stats.get('prop_stats', {}).get('service_status', 'unknown')}\n"
-            f"  Glyph Renderer: {cache_stats.get('glyph_stats', {}).get('service_status', 'unknown')}"
-        )
+            return (
+                f"PictographRenderingService (Framework-Agnostic) Stats:\n"
+                f"{cache_info}\n"
+                f"Performance Summary:\n"
+                f"  Total Operations: {performance_report.get('system_health', {}).get('total_operations', 0)}\n"
+                f"  Slow Operations: {performance_report.get('system_health', {}).get('slow_operations', 0)}\n"
+                f"  Error Count: {performance_report.get('system_health', {}).get('error_count', 0)}\n"
+                f"Architecture: Framework-agnostic core with Qt adapter\n"
+                f"Adapter Stats: {cache_stats.get('adapter_stats', 'unavailable')}"
+            )
+        except Exception as e:
+            logger.error(f"❌ [RENDERING_SERVICE] Failed to get cache info: {e}")
+            return f"Error getting cache info: {e}"
 
     # ============================================================================
-    # MICROSERVICE ACCESS METHODS
+    # SERVICE ACCESS METHODS (UPDATED FOR NEW ARCHITECTURE)
     # ============================================================================
 
     def get_asset_manager(self) -> PictographAssetManager:
@@ -249,14 +317,32 @@ class PictographRenderingService:
         """Get the performance monitor microservice."""
         return self._performance_monitor
 
-    def get_grid_renderer(self) -> GridRenderingService:
-        """Get the grid rendering microservice."""
-        return self._grid_renderer
+    def get_core_service(self) -> CorePictographRenderer:
+        """Get the framework-agnostic core service."""
+        return self._core_service
 
-    def get_prop_renderer(self) -> PropRenderingService:
-        """Get the prop rendering microservice."""
-        return self._prop_renderer
+    def get_qt_adapter(self) -> QtPictographRenderingAdapter:
+        """Get the Qt adapter service."""
+        return self._qt_adapter
 
-    def get_glyph_renderer(self) -> GlyphRenderingService:
-        """Get the glyph rendering microservice."""
-        return self._glyph_renderer
+    # Legacy compatibility methods (deprecated but maintained for transition)
+    def get_grid_renderer(self):
+        """DEPRECATED: Use get_qt_adapter() instead."""
+        logger.warning(
+            "get_grid_renderer() is deprecated - use get_qt_adapter() instead"
+        )
+        return self._qt_adapter
+
+    def get_prop_renderer(self):
+        """DEPRECATED: Use get_qt_adapter() instead."""
+        logger.warning(
+            "get_prop_renderer() is deprecated - use get_qt_adapter() instead"
+        )
+        return self._qt_adapter
+
+    def get_glyph_renderer(self):
+        """DEPRECATED: Use get_qt_adapter() instead."""
+        logger.warning(
+            "get_glyph_renderer() is deprecated - use get_qt_adapter() instead"
+        )
+        return self._qt_adapter

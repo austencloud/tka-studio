@@ -66,6 +66,14 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_arrow_positioning_services(self, container: "DIContainer") -> None:
         """Register arrow positioning microservices."""
         try:
+            from core.interfaces.positioning_services import (
+                IArrowAdjustmentCalculator,
+                IArrowCoordinateSystemService,
+                IArrowLocationCalculator,
+                IArrowPositioningOrchestrator,
+                IArrowRotationCalculator,
+            )
+
             from application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
@@ -80,13 +88,6 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             )
             from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
-            )
-            from core.interfaces.positioning_services import (
-                IArrowAdjustmentCalculator,
-                IArrowCoordinateSystemService,
-                IArrowLocationCalculator,
-                IArrowPositioningOrchestrator,
-                IArrowRotationCalculator,
             )
 
             # Register calculator microservices
@@ -158,6 +159,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_prop_management_services(self, container: "DIContainer") -> None:
         """Register prop management services."""
         try:
+            # Register legacy PropManagementService for backward compatibility
             from application.services.positioning.props.orchestration.prop_management_service import (
                 IPropManagementService,
                 PropManagementService,
@@ -165,6 +167,23 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
 
             container.register_singleton(IPropManagementService, PropManagementService)
             self._mark_service_available("PropManagementService")
+
+            # Register new modular PropPositioningOrchestrator
+            from application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
+                IPropPositioningOrchestrator,
+                PropPositioningOrchestrator,
+            )
+
+            container.register_singleton(
+                IPropPositioningOrchestrator, PropPositioningOrchestrator
+            )
+            self._mark_service_available("PropPositioningOrchestrator")
+
+            # Register individual modular services
+            self._register_prop_detection_services(container)
+            self._register_prop_calculation_services(container)
+            self._register_prop_specialization_services(container)
+            self._register_prop_event_services(container)
 
         except ImportError as e:
             self._handle_service_unavailable(
@@ -188,4 +207,103 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
         except ImportError as e:
             self._handle_service_unavailable(
                 "Orchestration services", e, "Prop and pictograph orchestration"
+            )
+
+    def _register_prop_detection_services(self, container: "DIContainer") -> None:
+        """Register prop detection services."""
+        try:
+            from application.services.positioning.props.detection import (
+                BetaPositioningDetector,
+                IBetaPositioningDetector,
+                IPropOverlapDetector,
+                PropOverlapDetector,
+            )
+
+            container.register_singleton(
+                IBetaPositioningDetector, BetaPositioningDetector
+            )
+            container.register_singleton(IPropOverlapDetector, PropOverlapDetector)
+            self._mark_service_available("PropDetectionServices")
+
+        except ImportError as e:
+            self._handle_service_unavailable(
+                "Prop detection services", e, "Beta positioning and overlap detection"
+            )
+
+    def _register_prop_calculation_services(self, container: "DIContainer") -> None:
+        """Register prop calculation services."""
+        try:
+            from application.services.positioning.props.calculation import (
+                DirectionCalculationService,
+                IDirectionCalculationService,
+                IOffsetCalculationService,
+                IPropClassificationService,
+                IPropRotationCalculator,
+                OffsetCalculationService,
+                PropClassificationService,
+                PropRotationCalculator,
+            )
+
+            container.register_singleton(
+                IDirectionCalculationService, DirectionCalculationService
+            )
+            container.register_singleton(
+                IOffsetCalculationService, OffsetCalculationService
+            )
+            container.register_singleton(
+                IPropClassificationService, PropClassificationService
+            )
+            container.register_singleton(
+                IPropRotationCalculator, PropRotationCalculator
+            )
+            self._mark_service_available("PropCalculationServices")
+
+        except ImportError as e:
+            self._handle_service_unavailable(
+                "Prop calculation services",
+                e,
+                "Direction, offset, and rotation calculations",
+            )
+
+    def _register_prop_specialization_services(self, container: "DIContainer") -> None:
+        """Register prop specialization services."""
+        try:
+            from application.services.positioning.props.specialization import (
+                ILetterIPositioningService,
+                ISpecialPlacementOverrideService,
+                LetterIPositioningService,
+                SpecialPlacementOverrideService,
+            )
+
+            container.register_singleton(
+                ILetterIPositioningService, LetterIPositioningService
+            )
+            container.register_singleton(
+                ISpecialPlacementOverrideService, SpecialPlacementOverrideService
+            )
+            self._mark_service_available("PropSpecializationServices")
+
+        except ImportError as e:
+            self._handle_service_unavailable(
+                "Prop specialization services",
+                e,
+                "Letter I positioning and special overrides",
+            )
+
+    def _register_prop_event_services(self, container: "DIContainer") -> None:
+        """Register prop event services."""
+        try:
+            from application.services.positioning.props.events import (
+                IPropPositioningEventPublisher,
+                PropPositioningEventPublisher,
+            )
+
+            container.register_singleton(
+                IPropPositioningEventPublisher, PropPositioningEventPublisher
+            )
+            self._mark_service_available("PropEventServices")
+
+        except ImportError as e:
+            self._handle_service_unavailable(
+                "Prop event services", e, "Prop positioning event publishing"
             )

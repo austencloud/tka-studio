@@ -11,7 +11,6 @@ from typing import Dict, Optional
 from domain.models import (
     BeatData,
     ElementalType,
-    GlyphData,
     LetterType,
     Location,
     MotionData,
