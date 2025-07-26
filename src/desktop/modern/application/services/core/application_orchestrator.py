@@ -278,9 +278,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             try:
                 # Background initialization tasks can be added here as needed
                 # Removed pictograph pool initialization as it's no longer needed with direct views
-                logger.info(
-                    "🔄 Background initialization complete - using direct view approach"
-                )
+                pass
 
             except Exception as e:
                 StandardErrorHandler.handle_service_error(

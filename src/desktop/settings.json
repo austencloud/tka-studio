@@ -1,7 +1,7 @@
 {
   "browse_tab": {
-    "filter_type": "starting_position",
-    "filter_values": "Gamma",
+    "filter_type": "length",
+    "filter_values": "3",
     "selected_sequence": null,
     "selected_variation": null,
     "navigation_mode": "filter_selector",
