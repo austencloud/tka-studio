@@ -15,7 +15,7 @@ from typing import List, Optional
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
-from domain.models import (
+from desktop.modern.domain.models import (
     ArrowData,
     BeatData,
     GridData,
@@ -27,7 +27,7 @@ from domain.models import (
     SequenceData,
 )
 
-from application.services.sequence.beat_factory import BeatFactory
+from shared.application.services.sequence.beat_factory import BeatFactory
 
 
 def create_sample_motion_data(

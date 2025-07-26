@@ -8,10 +8,10 @@ IWorkbenchStateManager interface and provides expected behavior.
 import pytest
 from unittest.mock import Mock, MagicMock
 
-from application.services.workbench.workbench_state_manager import WorkbenchStateManager
-from core.interfaces.workbench_services import IWorkbenchStateManager, WorkbenchState, StateChangeResult
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
+from shared.application.services.workbench.workbench_state_manager import WorkbenchStateManager
+from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager, WorkbenchState, StateChangeResult
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class TestWorkbenchStateManagerInterface:

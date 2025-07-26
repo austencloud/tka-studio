@@ -6,7 +6,7 @@ Tests the platform-agnostic sizing logic extracted from OptionPickerSizeManager.
 import unittest
 from unittest.mock import Mock, patch
 
-from application.services.option_picker.option_picker_size_service import (
+from desktop.modern.application.services.option_picker.option_picker_size_service import (
     OptionPickerSizeService,
 )
 

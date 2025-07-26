@@ -21,7 +21,7 @@ class TestImportCompatibility:
     def test_extended_motion_data_import(self):
         """Test ExtendedMotionData import."""
         try:
-            from domain.models.motion.extended_motion_data import ExtendedMotionData
+            from desktop.modern.domain.models.motion.extended_motion_data import ExtendedMotionData
 
             assert ExtendedMotionData is not None
         except ImportError as e:
@@ -30,7 +30,7 @@ class TestImportCompatibility:
     def test_letter_determination_pictograph_data_import(self):
         """Test LetterDeterminationPictographData import."""
         try:
-            from domain.models.motion.letter_determination_pictograph_data import (
+            from desktop.modern.domain.models.motion.letter_determination_pictograph_data import (
                 LetterDeterminationPictographData,
             )
 
@@ -41,7 +41,7 @@ class TestImportCompatibility:
     def test_letter_determination_service_import(self):
         """Test ILetterDeterminationService import."""
         try:
-            from core.interfaces.letter_determination.letter_determination_services import (
+            from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
                 ILetterDeterminationService,
             )
 
@@ -52,13 +52,13 @@ class TestImportCompatibility:
     def test_core_domain_imports(self):
         """Test core domain model imports."""
         try:
-            from domain.models.enums import (
+            from desktop.modern.domain.models.enums import (
                 Location,
                 MotionType,
                 Orientation,
                 RotationDirection,
             )
-            from domain.models.motion_data import MotionData
+            from desktop.modern.domain.models.motion_data import MotionData
 
             assert all(
                 [MotionData, MotionType, RotationDirection, Location, Orientation]
@@ -72,14 +72,14 @@ class TestModelExtensions:
 
     def test_extended_motion_data_creation(self):
         """Test creating ExtendedMotionData from MotionData."""
-        from domain.models.enums import (
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion.extended_motion_data import ExtendedMotionData
-        from domain.models.motion_data import MotionData
+        from desktop.modern.domain.models.motion.extended_motion_data import ExtendedMotionData
+        from desktop.modern.domain.models.motion_data import MotionData
 
         # Create base motion
         base_motion = MotionData(
@@ -114,14 +114,14 @@ class TestModelExtensions:
 
     def test_extended_motion_data_properties(self):
         """Test ExtendedMotionData specific properties."""
-        from domain.models.enums import (
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion.extended_motion_data import ExtendedMotionData
-        from domain.models.motion_data import MotionData
+        from desktop.modern.domain.models.motion.extended_motion_data import ExtendedMotionData
+        from desktop.modern.domain.models.motion_data import MotionData
 
         # Test float motion
         float_motion = ExtendedMotionData(
@@ -153,7 +153,7 @@ class TestLegacyCompatibility:
 
     def test_legacy_dict_conversion(self):
         """Test conversion from legacy dict to modern model and back."""
-        from domain.models.motion.letter_determination_pictograph_data import (
+        from desktop.modern.domain.models.motion.letter_determination_pictograph_data import (
             LetterDeterminationPictographData,
         )
 
@@ -210,7 +210,7 @@ class TestPhase2Implementation:
     def test_dataset_provider_creation(self):
         """Test that PictographDatasetProvider can be created."""
         try:
-            from application.services.letter_determination.pictograph_dataset_provider import (
+            from shared.application.services.letter_determination.pictograph_dataset_provider import (
                 PictographDatasetProvider,
             )
 
@@ -222,19 +222,19 @@ class TestPhase2Implementation:
     def test_service_registration(self):
         """Test that letter determination services can be registered."""
         try:
-            from core.dependency_injection.di_container import DIContainer
-            from core.dependency_injection.letter_determination_service_registration import (
+            from desktop.modern.core.dependency_injection.di_container import DIContainer
+            from desktop.modern.core.dependency_injection.letter_determination_service_registration import (
                 register_letter_determination_services,
             )
-            from core.interfaces.letter_determination.letter_determination_services import (
+            from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
                 ILetterDeterminationService,
             )
 
             container = DIContainer()
 
             # Register required dependencies first
-            from application.services.data.dataset_query import DatasetQuery
-            from application.services.pictograph.pictograph_csv_manager import (
+            from shared.application.services.data.dataset_query import DatasetQuery
+            from shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
 
@@ -254,10 +254,10 @@ class TestPhase2Implementation:
     def test_generation_services_compatibility(self):
         """Test that generation services work with existing models."""
         try:
-            from application.services.generation.freeform_generation_service import (
+            from shared.application.services.generation.freeform_generation_service import (
                 RotationDeterminer,
             )
-            from application.services.generation.turn_intensity_manager import (
+            from shared.application.services.generation.turn_intensity_manager import (
                 TurnIntensityManager,
             )
 
@@ -287,22 +287,22 @@ class TestPhase3Integration:
     def test_letter_determination_pipeline(self):
         """Test that the complete letter determination works end-to-end."""
         try:
-            from core.dependency_injection.di_container import DIContainer
-            from core.dependency_injection.letter_determination_service_registration import (
+            from desktop.modern.core.dependency_injection.di_container import DIContainer
+            from desktop.modern.core.dependency_injection.letter_determination_service_registration import (
                 register_letter_determination_services,
             )
-            from core.interfaces.letter_determination.letter_determination_services import (
+            from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
                 ILetterDeterminationService,
             )
-            from domain.models.enums import GridPosition, Letter
-            from domain.models.pictograph_data import PictographData
+            from desktop.modern.domain.models.enums import GridPosition, Letter
+            from desktop.modern.domain.models.pictograph_data import PictographData
 
             # Setup container
             container = DIContainer()
 
             # Register dependencies
-            from application.services.data.dataset_query import DatasetQuery
-            from application.services.pictograph.pictograph_csv_manager import (
+            from shared.application.services.data.dataset_query import DatasetQuery
+            from shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
 
@@ -316,7 +316,7 @@ class TestPhase3Integration:
             letter_service = container.resolve(ILetterDeterminationService)
 
             # Create test pictograph data (minimal valid data)
-            from domain.models import (
+            from desktop.modern.domain.models import (
                 GridData,
                 Location,
                 MotionData,
@@ -352,7 +352,7 @@ class TestPhase3Integration:
             # Set letter determination fields directly on PictographData
             from dataclasses import replace
 
-            from domain.models.enums import Direction, Timing
+            from desktop.modern.domain.models.enums import Direction, Timing
 
             letter_data = replace(
                 test_pictograph,
@@ -376,13 +376,13 @@ class TestPhase3Integration:
     def test_strategy_coverage(self):
         """Test that strategies are available and can be applied."""
         try:
-            from application.services.letter_determination.strategies.dual_float_strategy import (
+            from shared.application.services.letter_determination.strategies.dual_float_strategy import (
                 DualFloatStrategy,
             )
-            from application.services.letter_determination.strategies.non_hybrid_shift_strategy import (
+            from shared.application.services.letter_determination.strategies.non_hybrid_shift_strategy import (
                 NonHybridShiftStrategy,
             )
-            from core.interfaces.letter_determination.letter_determination_services import (
+            from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
                 IMotionComparisonService,
             )
 
@@ -392,7 +392,7 @@ class TestPhase3Integration:
                     return 0.8
 
                 def compare_attributes(self, attrs1, attrs2, context=None):
-                    from domain.models.letter_determination.determination_models import (
+                    from desktop.modern.domain.models.letter_determination.determination_models import (
                         AttributeComparisonResult,
                     )
 

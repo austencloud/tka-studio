@@ -16,8 +16,8 @@ from unittest.mock import MagicMock, Mock
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
-from core.interfaces.workbench_services import IGraphEditorService
-from domain.models import BeatData, MotionData, SequenceData
+from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
+from desktop.modern.domain.models import BeatData, MotionData, SequenceData
 
 
 class MockGraphEditorService:

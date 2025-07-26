@@ -1,10 +1,10 @@
 <script>
   import CallToAction from "./CallToAction.svelte";
-  import { onMount } from 'svelte';
 
-  let isVisible = false;
+  let isVisible = $state(false);
 
-  onMount(() => {
+  // Use $effect to handle mounting behavior with runes
+  $effect(() => {
     isVisible = true;
   });
 </script>

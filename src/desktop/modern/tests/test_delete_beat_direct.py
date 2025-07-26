@@ -9,15 +9,15 @@ import sys
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from application.services.sequence.sequence_beat_operations import (
+from desktop.modern.application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
-from application.services.workbench.workbench_operation_coordinator import (
+from shared.application.services.workbench.workbench_operation_coordinator import (
     WorkbenchOperationCoordinator,
 )
-from application.services.workbench.workbench_state_manager import WorkbenchStateManager
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
+from shared.application.services.workbench.workbench_state_manager import WorkbenchStateManager
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 def test_delete_beat_service_directly():

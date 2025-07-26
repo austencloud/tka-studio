@@ -10,7 +10,7 @@ import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-from core.interfaces import ISettingsService
+from desktop.modern.core.interfaces import ISettingsService
 
 logger = logging.getLogger(__name__)
 

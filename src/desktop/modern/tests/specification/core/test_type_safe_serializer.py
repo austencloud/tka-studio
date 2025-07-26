@@ -12,15 +12,15 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 import pytest
-from core.serialization.type_safe_serializer import (
+from desktop.modern.core.serialization.type_safe_serializer import (
     BatchSerializer,
     SerializationError,
     TypeSafeSerializer,
 )
-from domain.models.beat_data import BeatData
-from domain.models.enums import Location, MotionType, RotationDirection
-from domain.models.motion_data import MotionData
-from domain.models.sequence_data import SequenceData
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import Location, MotionType, RotationDirection
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 @dataclass(frozen=True)

@@ -156,7 +156,7 @@ class ServiceRegistrationValidator:
     def _check_global_container(self) -> bool:
         """Check if global container is available."""
         try:
-            from core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import get_container
             container = get_container()
             return container is not None
         except Exception as e:
@@ -168,8 +168,8 @@ class ServiceRegistrationValidator:
         try:
             # This would depend on the specific export service implementation
             # For now, we'll check if we can create an export container
-            from core.dependency_injection.di_container import DIContainer
-            from core.dependency_injection.image_export_service_registration import register_image_export_services
+            from desktop.modern.core.dependency_injection.di_container import DIContainer
+            from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
             
             test_container = DIContainer()
             register_image_export_services(test_container)
@@ -188,7 +188,7 @@ class ServiceRegistrationValidator:
                 return False
             
             # Try to resolve from global container
-            from core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import get_container
             container = get_container()
             
             if not container:
@@ -210,8 +210,8 @@ class ServiceRegistrationValidator:
             original_container = self._get_current_container()
             
             # Create a test export container
-            from core.dependency_injection.di_container import DIContainer, set_container
-            from core.dependency_injection.image_export_service_registration import register_image_export_services
+            from desktop.modern.core.dependency_injection.di_container import DIContainer, set_container
+            from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
             
             test_export_container = DIContainer()
             register_image_export_services(test_export_container)
@@ -235,7 +235,7 @@ class ServiceRegistrationValidator:
     def _get_current_container(self):
         """Get the current global container."""
         try:
-            from core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import get_container
             return get_container()
         except Exception:
             return None
@@ -243,8 +243,8 @@ class ServiceRegistrationValidator:
     def _test_set_export_container(self) -> bool:
         """Test setting export container as global."""
         try:
-            from core.dependency_injection.di_container import DIContainer, set_container
-            from core.dependency_injection.image_export_service_registration import register_image_export_services
+            from desktop.modern.core.dependency_injection.di_container import DIContainer, set_container
+            from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
             
             export_container = DIContainer()
             register_image_export_services(export_container)
@@ -276,7 +276,7 @@ class ServiceRegistrationValidator:
         """Test restoring the original container."""
         try:
             if original_container:
-                from core.dependency_injection.di_container import set_container
+                from desktop.modern.core.dependency_injection.di_container import set_container
                 set_container(original_container, force=True)
                 return True
             return False

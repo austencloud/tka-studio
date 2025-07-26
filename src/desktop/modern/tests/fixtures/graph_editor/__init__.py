@@ -9,8 +9,8 @@ Available fixtures:
 - mock_beat_data: Sample beat and sequence data for testing
 
 Usage:
-    from tests.fixtures.graph_editor import create_all_mock_services
-    from tests.fixtures.graph_editor.mock_beat_data import create_sample_beat_data
+    from desktop.modern.tests.fixtures.graph_editor import create_all_mock_services
+    from desktop.modern.tests.fixtures.graph_editor.mock_beat_data import create_sample_beat_data
 """
 
 from .mock_services import (

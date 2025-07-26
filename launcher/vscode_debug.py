@@ -34,7 +34,7 @@ print("\n✅ If you see this, F5 is working and running the correct file!")
 # Test if we can import launcher modules
 try:
     print("\n🧪 Testing launcher imports...")
-    from domain.models import LauncherState
+    from desktop.modern.domain.models import LauncherState
 
     print("✅ domain.models imported successfully")
 except Exception as e:

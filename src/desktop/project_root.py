@@ -42,7 +42,7 @@ def get_import_paths() -> List[Path]:
     return [
         project_root
         / "modern"
-        / "src",  # Primary source code (enables: from presentation.*)
+        / "src",  # Primary source code (enables: from desktop.modern.presentation.*)
         project_root / "modern",  # Modern directory (enables: from src.*)
         project_root,  # Project root (enables: from project_root import)
     ]

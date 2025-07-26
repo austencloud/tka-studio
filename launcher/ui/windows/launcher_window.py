@@ -18,25 +18,25 @@ Architecture:
 
 import logging
 
-from ui.layouts.application_grid import ApplicationGridWidget
 from config.config.launcher_config import LauncherConfig
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
     QVBoxLayout,
     QWidget,
-    QLabel,
-    QHBoxLayout,
-    QPushButton,
 )
+from ui.layouts.application_grid import ApplicationGridWidget
 from ui.pyqt6_compatible_design_system import get_reliable_style_builder
 
 try:
-    from managers.window_mode_manager import WindowModeManager
     from managers.window_geometry_manager import WindowGeometryManager
+    from managers.window_mode_manager import WindowModeManager
 except ImportError:
-    from managers.window_mode_manager import WindowModeManager
     from managers.window_geometry_manager import WindowGeometryManager
+    from managers.window_mode_manager import WindowModeManager
 
 logger = logging.getLogger(__name__)
 

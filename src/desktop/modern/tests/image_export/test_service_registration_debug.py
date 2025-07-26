@@ -7,8 +7,8 @@ This test helps debug why the pictograph rendering service isn't being registere
 import pytest
 from PyQt6.QtWidgets import QApplication
 
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.image_export_service_registration import register_image_export_services
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
 
 
 class TestServiceRegistrationDebug:
@@ -42,7 +42,7 @@ class TestServiceRegistrationDebug:
         
         # Try to resolve the pictograph rendering service
         try:
-            from core.interfaces.pictograph_rendering_services import IPictographRenderingService
+            from desktop.modern.core.interfaces.pictograph_rendering_services import IPictographRenderingService
             service = container.resolve(IPictographRenderingService)
             print(f"✅ IPictographRenderingService resolved: {type(service)}")
         except Exception as e:
@@ -50,7 +50,7 @@ class TestServiceRegistrationDebug:
         
         # Try to resolve other services
         try:
-            from core.interfaces.image_export_services import IImageExportService
+            from desktop.modern.core.interfaces.image_export_services import IImageExportService
             export_service = container.resolve(IImageExportService)
             print(f"✅ IImageExportService resolved: {type(export_service)}")
         except Exception as e:
@@ -72,7 +72,7 @@ class TestServiceRegistrationDebug:
         container = DIContainer()
         
         try:
-            from application.services.core.registrars.pictograph_service_registrar import (
+            from shared.application.services.core.registrars.pictograph_service_registrar import (
                 PictographServiceRegistrar
             )
             
@@ -87,7 +87,7 @@ class TestServiceRegistrationDebug:
             print("✅ Pictograph services registered via registrar")
             
             # Try to resolve the service
-            from core.interfaces.pictograph_rendering_services import IPictographRenderingService
+            from desktop.modern.core.interfaces.pictograph_rendering_services import IPictographRenderingService
             service = container.resolve(IPictographRenderingService)
             print(f"✅ IPictographRenderingService resolved after direct registration: {type(service)}")
             
@@ -101,13 +101,13 @@ class TestServiceRegistrationDebug:
         print("🔍 Testing pictograph service imports...")
         
         try:
-            from core.interfaces.pictograph_rendering_services import IPictographRenderingService
+            from desktop.modern.core.interfaces.pictograph_rendering_services import IPictographRenderingService
             print("✅ IPictographRenderingService imported")
         except Exception as e:
             print(f"❌ Failed to import IPictographRenderingService: {e}")
         
         try:
-            from application.services.pictograph.pictograph_rendering_service import PictographRenderingService
+            from desktop.modern.application.services.pictograph.pictograph_rendering_service import PictographRenderingService
             print("✅ PictographRenderingService imported")
         except Exception as e:
             print(f"❌ Failed to import PictographRenderingService: {e}")
@@ -115,7 +115,7 @@ class TestServiceRegistrationDebug:
             traceback.print_exc()
         
         try:
-            from application.services.core.registrars.pictograph_service_registrar import PictographServiceRegistrar
+            from shared.application.services.core.registrars.pictograph_service_registrar import PictographServiceRegistrar
             print("✅ PictographServiceRegistrar imported")
         except Exception as e:
             print(f"❌ Failed to import PictographServiceRegistrar: {e}")

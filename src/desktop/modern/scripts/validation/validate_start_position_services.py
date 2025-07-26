@@ -19,7 +19,7 @@ def validate_services():
     try:
         # Test interface imports
         print("  📋 Testing interface imports...")
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionSelectionService,
             IStartPositionUIService,
@@ -29,7 +29,7 @@ def validate_services():
         
         # Test service implementation imports
         print("  🔧 Testing service implementation imports...")
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionSelectionService,
             StartPositionUIService,
@@ -98,12 +98,12 @@ def validate_di_registration():
     
     try:
         # Test DI container creation
-        from core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
         container = DIContainer()
         print("    ✅ DI container created")
         
         # Test registration function import
-        from core.dependency_injection.config_registration import register_start_position_services
+        from desktop.modern.core.dependency_injection.config_registration import register_start_position_services
         print("    ✅ Registration function imported")
         
         # Test service registration
@@ -111,7 +111,7 @@ def validate_di_registration():
         print("    ✅ Services registered in container")
         
         # Test service resolution
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionSelectionService,
             IStartPositionUIService,

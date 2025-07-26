@@ -16,7 +16,7 @@ def test_service_functionality():
     """Test all service methods work correctly."""
     print("🧪 Testing Service Functionality...")
 
-    from application.services.start_position import (
+    from desktop.modern.application.services.start_position import (
         StartPositionDataService,
         StartPositionOrchestrator,
         StartPositionSelectionService,

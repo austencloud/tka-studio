@@ -17,7 +17,7 @@ modern_src = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
 # Import specific fixtures from graph editor (excluding problematic autouse fixtures)
-from tests.fixtures.graph_editor.conftest import (
+from desktop.modern.tests.fixtures.graph_editor.conftest import (
     basic_test_data,
     complex_beat,
     complex_test_data,
@@ -38,7 +38,7 @@ from tests.fixtures.graph_editor.conftest import (
 )
 
 # Import mock configurations for manual use
-from tests.fixtures.mock_configurations import (
+from desktop.modern.tests.fixtures.mock_configurations import (
     DataCacheManagerMock,
     SectionManagerMock,
     WidgetPoolManagerMock,
@@ -112,7 +112,7 @@ def pytest_runtest_teardown(item, nextitem):
 
     # Clean up DI container global state
     try:
-        from core.dependency_injection.di_container import reset_container
+        from desktop.modern.core.dependency_injection.di_container import reset_container
 
         reset_container()
     except ImportError:

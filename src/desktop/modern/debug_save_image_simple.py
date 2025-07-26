@@ -27,8 +27,8 @@ def test_coordinator_without_rendering():
     try:
         # Step 1: Create a test sequence
         print("\n📊 Step 1: Creating test sequence...")
-        from domain.models.sequence_data import SequenceData
-        from domain.models.beat_data import BeatData
+        from desktop.modern.domain.models.sequence_data import SequenceData
+        from desktop.modern.domain.models.beat_data import BeatData
         
         beat1 = BeatData(beat_number=1, is_blank=False)
         beat2 = BeatData(beat_number=2, is_blank=False)
@@ -43,7 +43,7 @@ def test_coordinator_without_rendering():
         
         # Step 2: Create state manager and set sequence
         print("\n🔧 Step 2: Creating state manager...")
-        from application.services.workbench.workbench_state_manager import WorkbenchStateManager
+        from shared.application.services.workbench.workbench_state_manager import WorkbenchStateManager
         
         state_manager = WorkbenchStateManager()
         result = state_manager.set_sequence(sequence)
@@ -64,7 +64,7 @@ def test_coordinator_without_rendering():
         
         # Step 4: Create operation coordinator
         print("\n🔧 Step 4: Creating operation coordinator...")
-        from application.services.workbench.workbench_operation_coordinator import WorkbenchOperationCoordinator
+        from shared.application.services.workbench.workbench_operation_coordinator import WorkbenchOperationCoordinator
         
         coordinator = WorkbenchOperationCoordinator(
             workbench_state_manager=state_manager,
@@ -104,8 +104,8 @@ def test_actual_workbench_setup():
     try:
         # Check how the workbench service registrar creates the coordinator
         print("\n🔧 Testing service registrar...")
-        from core.dependency_injection.di_container import DIContainer
-        from application.services.core.registrars.workbench_service_registrar import WorkbenchServiceRegistrar
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from shared.application.services.core.registrars.workbench_service_registrar import WorkbenchServiceRegistrar
         
         container = DIContainer()
         registrar = WorkbenchServiceRegistrar()

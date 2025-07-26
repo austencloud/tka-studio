@@ -1,1 +1,0 @@
-# Cache management microservice package

@@ -27,24 +27,24 @@ from PyQt6.QtWidgets import (
 # Add src to path for imports
 sys.path.insert(0, "src")
 
-from application.services.data.pictograph_factory import PictographFactory
-from application.services.glyphs.glyph_data_service import GlyphDataService
-from application.services.pictograph.pictograph_csv_manager import PictographCSVManager
-from application.services.ui.animation.modern_service_registration import (
+from shared.application.services.data.pictograph_factory import PictographFactory
+from shared.application.services.glyphs.glyph_data_service import GlyphDataService
+from shared.application.services.pictograph.pictograph_csv_manager import PictographCSVManager
+from shared.application.services.ui.animation.modern_service_registration import (
     setup_modern_animation_services,
 )
-from core.dependency_injection.di_container import DIContainer
-from core.interfaces.animation_core_interfaces import (
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
     EasingType,
     IAnimationOrchestrator,
 )
-from domain.models.arrow_data import ArrowData
-from domain.models.enums import Location, MotionType, RotationDirection
-from domain.models.grid_data import GridData, GridMode
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
-from presentation.components.pictograph.pictograph_widget import PictographWidget
+from desktop.modern.domain.models.arrow_data import ArrowData
+from desktop.modern.domain.models.enums import Location, MotionType, RotationDirection
+from desktop.modern.domain.models.grid_data import GridData, GridMode
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.presentation.components.pictograph.pictograph_widget import PictographWidget
 
 
 class InteractiveAnimationDemo(QMainWindow):
@@ -307,7 +307,7 @@ class InteractiveAnimationDemo(QMainWindow):
                     )
 
                     # Create pictograph component using the factory function
-                    from presentation.components.pictograph.pictograph_widget import (
+                    from desktop.modern.presentation.components.pictograph.pictograph_widget import (
                         create_pictograph_widget,
                     )
 

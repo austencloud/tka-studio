@@ -64,7 +64,7 @@ class TestIsolationManager:
     def _reset_di_container(self):
         """Reset the DI container to clean state."""
         try:
-            from core.dependency_injection.di_container import reset_container
+            from desktop.modern.core.dependency_injection.di_container import reset_container
             reset_container()
         except ImportError:
             pass  # DI container not available
@@ -130,7 +130,7 @@ def auto_configure_mocks(*mocks):
     def decorator(test_func):
         def wrapper(*args, **kwargs):
             # Import here to avoid circular dependencies
-            from tests.fixtures.mock_configurations import create_mock_with_iterables
+            from desktop.modern.tests.fixtures.mock_configurations import create_mock_with_iterables
             
             # Configure any Mock objects in the test
             frame = sys._getframe(1)
@@ -178,7 +178,7 @@ def create_section_mock_with_pictographs(pictograph_count: int = 2):
     Returns:
         Configured section mock
     """
-    from tests.fixtures.mock_configurations import configure_section_mock
+    from desktop.modern.tests.fixtures.mock_configurations import configure_section_mock
     
     section_mock = Mock()
     pictographs = [Mock() for _ in range(pictograph_count)]
@@ -198,7 +198,7 @@ def create_widget_pool_mock(widget_count: int = 5):
     Returns:
         Configured widget pool mock
     """
-    from tests.fixtures.mock_configurations import configure_widget_pool_mock
+    from desktop.modern.tests.fixtures.mock_configurations import configure_widget_pool_mock
     
     pool_mock = Mock()
     configure_widget_pool_mock(pool_mock, widget_count)
@@ -214,7 +214,7 @@ def create_data_cache_mock():
     Returns:
         Configured data cache mock
     """
-    from tests.fixtures.mock_configurations import DataCacheManagerMock
+    from desktop.modern.tests.fixtures.mock_configurations import DataCacheManagerMock
     
     cache_mock = DataCacheManagerMock()
     _isolation_manager.register_mock(cache_mock)

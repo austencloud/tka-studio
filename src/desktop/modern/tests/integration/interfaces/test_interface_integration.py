@@ -10,18 +10,18 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from application.services.data.cache_manager import DataCacheManager
-from application.services.ui.thumbnail_generation_service import (
+from shared.application.services.data.cache_manager import DataCacheManager
+from shared.application.services.ui.thumbnail_generation_service import (
     ThumbnailGenerationService,
 )
-from application.services.ui.ui_state_manager import UIStateManager
-from application.services.workbench.workbench_state_manager import WorkbenchStateManager
-from core.interfaces.core_services import IUIStateManager
-from core.interfaces.data_services import IDataCacheManager
-from core.interfaces.ui_services import IThumbnailGenerationService
-from core.interfaces.workbench_services import IWorkbenchStateManager, WorkbenchState
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
+from shared.application.services.ui.ui_state_manager import UIStateManager
+from shared.application.services.workbench.workbench_state_manager import WorkbenchStateManager
+from desktop.modern.core.interfaces.core_services import IUIStateManager
+from desktop.modern.core.interfaces.data_services import IDataCacheManager
+from desktop.modern.core.interfaces.ui_services import IThumbnailGenerationService
+from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager, WorkbenchState
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class TestDependencyInjectionIntegration:

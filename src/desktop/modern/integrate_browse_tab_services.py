@@ -50,7 +50,7 @@ def register_services_in_application_factory():
     logger.info("="*80)
     logger.info("1. Update src/core/application/application_factory.py")
     logger.info("   Add this import:")
-    logger.info("   from core.dependency_injection.browse_service_registration import register_browse_services")
+    logger.info("   from desktop.modern.core.dependency_injection.browse_service_registration import register_browse_services")
     logger.info("")
     logger.info("2. In the create_production_app() method, add:")
     logger.info("   register_browse_services(container, sequences_directory)")

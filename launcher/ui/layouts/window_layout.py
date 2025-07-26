@@ -6,25 +6,24 @@ Manages the layout and positioning of all launcher window components.
 Handles responsive design and component arrangement.
 """
 
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QFrame,
     QHBoxLayout,
     QScrollArea,
-    QFrame,
     QSplitter,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from PyQt6.QtGui import QFont
-
-from ui.pyqt6_compatible_design_system import get_reliable_style_builder
-from ui.reliable_effects import get_shadow_manager
-from ui.components import ReliableSearchBox, ReliableButton
+from ui.components import ReliableButton, ReliableSearchBox
 from ui.launcher_components import (
     LauncherHeader,
-    LauncherStatusBar,
     LauncherNotification,
+    LauncherStatusBar,
 )
+from ui.pyqt6_compatible_design_system import get_reliable_style_builder
+from ui.reliable_effects import get_shadow_manager
 
 
 class LauncherLayoutManager:

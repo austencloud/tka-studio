@@ -25,14 +25,14 @@ def main():
         
         # Test export service
         print("  🔧 WorkbenchExportService...", end=" ")
-        from application.services.workbench.workbench_export_service import WorkbenchExportService
+        from desktop.modern.application.services.workbench.workbench_export_service import WorkbenchExportService
         export_service = WorkbenchExportService()
         assert export_service.validate_export_directory()
         print("✅")
         
         # Test clipboard service
         print("  📋 WorkbenchClipboardService...", end=" ")
-        from application.services.workbench.workbench_clipboard_service import (
+        from desktop.modern.application.services.workbench.workbench_clipboard_service import (
             WorkbenchClipboardService, MockClipboardAdapter
         )
         clipboard_service = WorkbenchClipboardService(MockClipboardAdapter())
@@ -42,7 +42,7 @@ def main():
         
         # Test coordinator
         print("  🎛️ EnhancedWorkbenchOperationCoordinator...", end=" ")
-        from application.services.workbench.enhanced_workbench_operation_coordinator import (
+        from shared.application.services.workbench.enhanced_workbench_operation_coordinator import (
             EnhancedWorkbenchOperationCoordinator
         )
         coordinator = EnhancedWorkbenchOperationCoordinator()
@@ -52,7 +52,7 @@ def main():
         
         # Test interfaces
         print("  📄 Service interfaces...", end=" ")
-        from core.interfaces.workbench_export_services import IWorkbenchExportService
+        from desktop.modern.core.interfaces.workbench_export_services import IWorkbenchExportService
         print("✅")
         
         print("\n🎉 All validations passed!")

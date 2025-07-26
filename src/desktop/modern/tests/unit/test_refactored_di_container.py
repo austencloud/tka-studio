@@ -15,7 +15,7 @@ def test_di_container_imports():
     """Test that all refactored DI modules import correctly."""
     try:
         # Test main container import
-        from core.dependency_injection import (
+        from desktop.modern.core.dependency_injection import (
             DIContainer,
             get_container,
             reset_container,
@@ -26,7 +26,7 @@ def test_di_container_imports():
         assert reset_container is not None
 
         # Test focused module imports
-        from core.dependency_injection import (
+        from desktop.modern.core.dependency_injection import (
             ServiceRegistry,
             ServiceScope,
             ServiceDescriptor,
@@ -57,7 +57,7 @@ def test_di_container_imports():
 def test_di_container_creation():
     """Test that the refactored DI container can be created."""
     try:
-        from core.dependency_injection import DIContainer
+        from desktop.modern.core.dependency_injection import DIContainer
 
         container = DIContainer()
         assert container is not None
@@ -78,7 +78,7 @@ def test_di_container_creation():
 def test_basic_service_registration():
     """Test basic service registration functionality."""
     try:
-        from core.dependency_injection import DIContainer
+        from desktop.modern.core.dependency_injection import DIContainer
 
         # Create test classes
         class ITestService:
@@ -107,7 +107,7 @@ def test_basic_service_registration():
 def test_service_resolution():
     """Test service resolution functionality."""
     try:
-        from core.dependency_injection import DIContainer
+        from desktop.modern.core.dependency_injection import DIContainer
 
         # Create test classes
         class ITestService:
@@ -141,7 +141,7 @@ def test_service_resolution():
 def test_debugging_functionality():
     """Test debugging tools functionality."""
     try:
-        from core.dependency_injection import DIContainer
+        from desktop.modern.core.dependency_injection import DIContainer
 
         class ITestService:
             def get_value(self) -> str:
@@ -174,7 +174,7 @@ def test_debugging_functionality():
 def test_lifecycle_management():
     """Test lifecycle management functionality."""
     try:
-        from core.dependency_injection import DIContainer
+        from desktop.modern.core.dependency_injection import DIContainer
 
         class TestServiceWithLifecycle:
             def __init__(self):

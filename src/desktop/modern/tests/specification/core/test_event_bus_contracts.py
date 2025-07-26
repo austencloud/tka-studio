@@ -27,7 +27,7 @@ class TestEventBusContracts:
     def test_event_bus_import(self):
         """Test that event bus can be imported."""
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             assert get_event_bus is not None
             assert reset_event_bus is not None
@@ -44,7 +44,7 @@ class TestEventBusContracts:
         - Multiple calls return consistent bus
         """
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Reset to clean state
             reset_event_bus()
@@ -74,7 +74,7 @@ class TestEventBusContracts:
         - Subscription doesn't fail with valid parameters
         """
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Reset and get clean bus
             reset_event_bus()
@@ -115,7 +115,7 @@ class TestEventBusContracts:
         - Publishing doesn't fail with valid events
         """
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Reset and get clean bus
             reset_event_bus()
@@ -169,7 +169,7 @@ class TestEventBusContracts:
         - Bus can be used normally after reset
         """
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Get initial bus
             bus1 = get_event_bus()
@@ -208,7 +208,7 @@ class TestEventBusContracts:
         - Event processing is predictable
         """
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Reset and get clean bus
             reset_event_bus()
@@ -315,7 +315,7 @@ class TestEventBusContracts:
         import time
 
         try:
-            from core.events import get_event_bus, reset_event_bus
+            from desktop.modern.core.events import get_event_bus, reset_event_bus
 
             # Reset and get clean bus
             reset_event_bus()

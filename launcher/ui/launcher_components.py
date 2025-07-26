@@ -6,12 +6,11 @@ Modern launcher components built with the reliable design system.
 These replace the old ModernXXX components with simpler, more reliable versions.
 """
 
-from PyQt6.QtWidgets import QLabel, QFrame, QVBoxLayout, QHBoxLayout
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QPropertyAnimation, QEasingCurve
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
-
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 from ui.pyqt6_compatible_design_system import get_reliable_style_builder
-from ui.reliable_effects import get_shadow_manager, get_animation_manager
+from ui.reliable_effects import get_animation_manager, get_shadow_manager
 
 
 class LauncherLabel(QLabel):

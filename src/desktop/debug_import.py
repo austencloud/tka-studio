@@ -43,11 +43,11 @@ except Exception as e:
 
 try:
     print("\n2. Testing core imports...")
-    from core.dependency_injection.di_container import DIContainer
+    from desktop.modern.core.dependency_injection.di_container import DIContainer
 
     print("✓ DIContainer imported")
 
-    from core.interfaces.core_services import ILayoutService
+    from desktop.modern.core.interfaces.core_services import ILayoutService
 
     print("✓ ILayoutService imported")
 
@@ -57,13 +57,13 @@ except Exception as e:
 
 try:
     print("\n3. Testing option picker component imports...")
-    from presentation.components.option_picker.core.option_picker_widget import (
+    from desktop.modern.presentation.components.option_picker.core.option_picker_widget import (
         ModernOptionPickerWidget,
     )
 
     print("✓ ModernOptionPickerWidget imported")
 
-    from presentation.components.option_picker.components.filters.option_filter import (
+    from desktop.modern.presentation.components.option_picker.components.filters.option_filter import (
         OptionPickerFilter,
     )
 
@@ -110,7 +110,7 @@ except Exception as e:
 
 try:
     print("\n6. Testing specific class import...")
-    from presentation.factories.widget_factory import OptionPickerWidgetFactory
+    from desktop.modern.presentation.factories.widget_factory import OptionPickerWidgetFactory
 
     print("✓ OptionPickerWidgetFactory imported successfully")
 

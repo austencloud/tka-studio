@@ -264,14 +264,14 @@ class WorkbenchTestRunner:
                 sys.path.insert(0, str(project_src))
             
             print("🔧 Testing WorkbenchExportService...")
-            from application.services.workbench.workbench_export_service import WorkbenchExportService
+            from desktop.modern.application.services.workbench.workbench_export_service import WorkbenchExportService
             
             export_service = WorkbenchExportService()
             assert export_service.validate_export_directory()
             print("✅ WorkbenchExportService basic functionality works")
             
             print("📋 Testing WorkbenchClipboardService...")
-            from application.services.workbench.workbench_clipboard_service import (
+            from desktop.modern.application.services.workbench.workbench_clipboard_service import (
                 WorkbenchClipboardService, MockClipboardAdapter
             )
             
@@ -281,7 +281,7 @@ class WorkbenchTestRunner:
             print("✅ WorkbenchClipboardService basic functionality works")
             
             print("🎛️ Testing EnhancedWorkbenchOperationCoordinator...")
-            from application.services.workbench.enhanced_workbench_operation_coordinator import (
+            from shared.application.services.workbench.enhanced_workbench_operation_coordinator import (
                 EnhancedWorkbenchOperationCoordinator
             )
             

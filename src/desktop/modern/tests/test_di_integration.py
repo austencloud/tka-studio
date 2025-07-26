@@ -16,7 +16,7 @@ def test_di_integration():
 
     try:
         # Create application container
-        from core.application.application_factory import (
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )
@@ -24,7 +24,7 @@ def test_di_integration():
         container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
 
         # Test service resolution
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,

@@ -17,7 +17,7 @@ def test_critical_interfaces():
 
     # Test 1: SessionStateTracker
     try:
-        from application.services.core.session_state_tracker import SessionStateTracker
+        from shared.application.services.core.session_state_tracker import SessionStateTracker
 
         tracker = SessionStateTracker()
 
@@ -38,7 +38,7 @@ def test_critical_interfaces():
 
     # Test 2: BeatSelectionService
     try:
-        from application.services.workbench.beat_selection_service import (
+        from shared.application.services.workbench.beat_selection_service import (
             BeatSelectionService,
         )
 
@@ -57,7 +57,7 @@ def test_critical_interfaces():
 
     # Test 3: OrientationCalculator
     try:
-        from application.services.positioning.arrows.calculation.orientation_calculator import (
+        from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
             OrientationCalculator,
         )
 
@@ -90,7 +90,7 @@ def test_application_startup():
 
     try:
         # Import main application components
-        from core.application.application_factory import (
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )

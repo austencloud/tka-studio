@@ -8,12 +8,12 @@ section updates, state caching, and coordination between sections.
 import unittest
 from unittest.mock import Mock
 
-from application.services.option_picker.option_picker_section_coordination_service import (
+from shared.application.services.option_picker.option_picker_section_coordination_service import (
     OptionPickerSectionCoordinationService,
 )
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
-from presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
 
 
 class TestOptionPickerSectionCoordinationService(unittest.TestCase):

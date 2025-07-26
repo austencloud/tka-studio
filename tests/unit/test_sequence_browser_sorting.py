@@ -9,13 +9,13 @@ from datetime import date, datetime
 from unittest.mock import Mock, patch
 
 import pytest
-from domain.models.sequence_data import SequenceData
-from presentation.tabs.browse.components.sequence_browser_panel import (
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.tabs.browse.components.sequence_browser_panel import (
     SequenceBrowserPanel,
 )
-from presentation.tabs.browse.models import FilterType
-from presentation.tabs.browse.services.browse_service import BrowseService
-from presentation.tabs.browse.services.browse_state_service import BrowseStateService
+from desktop.modern.presentation.tabs.browse.models import FilterType
+from desktop.modern.presentation.tabs.browse.services.browse_service import BrowseService
+from desktop.modern.presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtWidgets import QApplication
 
 

@@ -8,8 +8,8 @@ IDataCacheManager interface and provides expected caching behavior.
 import pytest
 from unittest.mock import Mock
 
-from application.services.data.cache_manager import DataCacheManager
-from core.interfaces.data_services import IDataCacheManager
+from shared.application.services.data.cache_manager import DataCacheManager
+from desktop.modern.core.interfaces.data_services import IDataCacheManager
 
 
 class TestDataCacheManagerInterface:

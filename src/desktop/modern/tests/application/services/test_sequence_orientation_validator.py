@@ -12,21 +12,21 @@ Verifies that the sequence orientation validator correctly:
 from unittest.mock import Mock, patch
 
 import pytest
-from domain.models.beat_data import BeatData
-from domain.models.enums import (
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import (
     GridPosition,
     Location,
     MotionType,
     Orientation,
     RotationDirection,
 )
-from domain.models.grid_data import GridData
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
-from domain.models.prop_data import PropData, PropType
-from domain.models.sequence_data import SequenceData
+from desktop.modern.domain.models.grid_data import GridData
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.prop_data import PropData, PropType
+from desktop.modern.domain.models.sequence_data import SequenceData
 
-from application.services.sequence.sequence_orientation_validator import (
+from shared.application.services.sequence.sequence_orientation_validator import (
     SequenceOrientationValidator,
 )
 

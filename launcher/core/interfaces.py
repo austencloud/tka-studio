@@ -8,7 +8,7 @@ and testability. These interfaces define the contracts for launcher services.
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Protocol
 
-from domain.models import (
+from desktop.modern.domain.models import (
     ApplicationCategory,
     ApplicationData,
     ApplicationStatus,

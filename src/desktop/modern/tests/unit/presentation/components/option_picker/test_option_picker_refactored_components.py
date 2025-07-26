@@ -7,24 +7,24 @@ Tests all the new focused components to ensure they work correctly.
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
-from presentation.components.option_picker.components.option_picker_animator import (
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.components.option_picker.components.option_picker_animator import (
     OptionPickerAnimator,
 )
-from presentation.components.option_picker.components.option_picker_layout_orchestrator import (
+from desktop.modern.presentation.components.option_picker.components.option_picker_layout_orchestrator import (
     OptionPickerLayoutOrchestrator,
 )
-from presentation.components.option_picker.components.option_picker_section_manager import (
+from desktop.modern.presentation.components.option_picker.components.option_picker_section_manager import (
     OptionPickerSectionManager,
 )
-from presentation.components.option_picker.components.option_picker_size_manager import (
+from desktop.modern.presentation.components.option_picker.components.option_picker_size_manager import (
     OptionPickerSizeManager,
 )
-from presentation.components.option_picker.components.option_picker_widget_pool_manager import (
+from desktop.modern.presentation.components.option_picker.components.option_picker_widget_pool_manager import (
     OptionPickerWidgetPoolManager,
 )
-from presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QApplication, QVBoxLayout, QWidget
 

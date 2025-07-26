@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import psutil
-from core.interfaces import IApplicationLaunchService, ILauncherStateService
-from domain.models import (
+from desktop.modern.core.interfaces import IApplicationLaunchService, ILauncherStateService
+from desktop.modern.domain.models import (
     ApplicationData,
     ApplicationStatus,
     LaunchRequest,

@@ -45,7 +45,7 @@ class AutoMockPatcher:
     
     def _patch_data_cache_manager(self):
         """Patch DataCacheManager with proper mock."""
-        from tests.fixtures.mock_configurations import DataCacheManagerMock
+        from desktop.modern.tests.fixtures.mock_configurations import DataCacheManagerMock
         
         # Patch the actual class
         patcher = patch(
@@ -58,7 +58,7 @@ class AutoMockPatcher:
     
     def _patch_section_managers(self):
         """Patch section managers with proper mocks."""
-        from tests.fixtures.mock_configurations import SectionManagerMock
+        from desktop.modern.tests.fixtures.mock_configurations import SectionManagerMock
         
         # Patch OptionPickerSectionManager
         patcher = patch(
@@ -71,7 +71,7 @@ class AutoMockPatcher:
     
     def _patch_widget_pool_managers(self):
         """Patch widget pool managers with proper mocks."""
-        from tests.fixtures.mock_configurations import WidgetPoolManagerMock
+        from desktop.modern.tests.fixtures.mock_configurations import WidgetPoolManagerMock
         
         # Patch OptionPickerWidgetPoolManager
         patcher = patch(
@@ -84,7 +84,7 @@ class AutoMockPatcher:
     
     def _patch_di_container(self):
         """Patch DI container with proper mock."""
-        from tests.fixtures.mock_configurations import DIContainerMock
+        from desktop.modern.tests.fixtures.mock_configurations import DIContainerMock
         
         # Patch DIContainer
         patcher = patch(
@@ -119,28 +119,28 @@ def auto_mock_patches():
 @pytest.fixture(scope="function") 
 def mock_data_cache_manager():
     """Fixture providing a properly configured DataCacheManager mock."""
-    from tests.fixtures.mock_configurations import DataCacheManagerMock
+    from desktop.modern.tests.fixtures.mock_configurations import DataCacheManagerMock
     return DataCacheManagerMock()
 
 
 @pytest.fixture(scope="function")
 def mock_section_manager():
     """Fixture providing a properly configured section manager mock."""
-    from tests.fixtures.test_isolation import create_section_mock_with_pictographs
+    from desktop.modern.tests.fixtures.test_isolation import create_section_mock_with_pictographs
     return create_section_mock_with_pictographs()
 
 
 @pytest.fixture(scope="function")
 def mock_widget_pool_manager():
     """Fixture providing a properly configured widget pool manager mock."""
-    from tests.fixtures.test_isolation import create_widget_pool_mock
+    from desktop.modern.tests.fixtures.test_isolation import create_widget_pool_mock
     return create_widget_pool_mock()
 
 
 @pytest.fixture(scope="function")
 def mock_di_container():
     """Fixture providing a properly configured DI container mock."""
-    from tests.fixtures.mock_configurations import DIContainerMock
+    from desktop.modern.tests.fixtures.mock_configurations import DIContainerMock
     return DIContainerMock()
 
 
@@ -173,7 +173,7 @@ def with_auto_mocks(test_func):
 # Utility functions for common mock patterns
 def create_mock_sections_dict(section_count: int = 2) -> Dict[str, Mock]:
     """Create a dictionary of properly configured section mocks."""
-    from tests.fixtures.test_isolation import create_section_mock_with_pictographs
+    from desktop.modern.tests.fixtures.test_isolation import create_section_mock_with_pictographs
     
     sections = {}
     for i in range(section_count):
@@ -240,7 +240,7 @@ class TemporaryMockPatch:
 # Convenience functions for specific service patches
 def patch_data_cache_manager():
     """Context manager to patch DataCacheManager."""
-    from tests.fixtures.mock_configurations import DataCacheManagerMock
+    from desktop.modern.tests.fixtures.mock_configurations import DataCacheManagerMock
     return TemporaryMockPatch(
         'application.services.data.cache_manager.DataCacheManager',
         DataCacheManagerMock
@@ -249,7 +249,7 @@ def patch_data_cache_manager():
 
 def patch_section_manager():
     """Context manager to patch OptionPickerSectionManager."""
-    from tests.fixtures.mock_configurations import SectionManagerMock
+    from desktop.modern.tests.fixtures.mock_configurations import SectionManagerMock
     return TemporaryMockPatch(
         'presentation.components.option_picker.components.option_picker_section_manager.OptionPickerSectionManager',
         SectionManagerMock
@@ -258,7 +258,7 @@ def patch_section_manager():
 
 def patch_widget_pool_manager():
     """Context manager to patch OptionPickerWidgetPoolManager."""
-    from tests.fixtures.mock_configurations import WidgetPoolManagerMock
+    from desktop.modern.tests.fixtures.mock_configurations import WidgetPoolManagerMock
     return TemporaryMockPatch(
         'presentation.components.option_picker.components.option_picker_widget_pool_manager.OptionPickerWidgetPoolManager',
         WidgetPoolManagerMock

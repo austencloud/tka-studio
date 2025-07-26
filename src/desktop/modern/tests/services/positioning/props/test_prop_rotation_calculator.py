@@ -5,10 +5,10 @@ Tests the prop rotation calculation service in isolation.
 """
 
 import pytest
-from domain.models import MotionData, MotionType, Orientation
-from domain.models.enums import Location, RotationDirection
+from desktop.modern.domain.models import MotionData, MotionType, Orientation
+from desktop.modern.domain.models.enums import Location, RotationDirection
 
-from application.services.positioning.props.calculation.prop_rotation_calculator import (
+from shared.application.services.positioning.props.calculation.prop_rotation_calculator import (
     PropRotationCalculator,
 )
 

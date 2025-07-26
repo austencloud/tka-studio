@@ -55,8 +55,8 @@ from typing import TYPE_CHECKING, Optional
 
 
 if TYPE_CHECKING:
-    from presentation.components.ui.splash_screen import SplashScreen
-    from core.application.application_factory import ApplicationMode
+    from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
+    from desktop.modern.core.application.application_factory import ApplicationMode
 
 from PyQt6.QtCore import QTimer, QtMsgType, qInstallMessageHandler
 from PyQt6.QtGui import QGuiApplication, QIcon
@@ -130,11 +130,12 @@ class TKAMainWindow(QMainWindow):
         self.parallel_geometry = parallel_geometry
 
         if self.container:
-            from application.services.core.application_orchestrator import (
+            from desktop.modern.application.services.core.application_orchestrator import (
                 ApplicationOrchestrator,
             )
 
-            self.orchestrator = ApplicationOrchestrator(container=self.container)
+            # Create orchestrator with default services (it will create its own lifecycle manager)
+            self.orchestrator = ApplicationOrchestrator()
             self.tab_widget = self.orchestrator.initialize_application(
                 self,
                 splash_screen,
@@ -210,13 +211,16 @@ def create_application():
         _install_qt_message_handler()
 
     # Create container for dependency injection
-    from core.application.application_factory import ApplicationFactory, ApplicationMode
+    from desktop.modern.core.application.application_factory import (
+        ApplicationFactory,
+        ApplicationMode,
+    )
 
     container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
 
     # Initialize services
     try:
-        from core.service_locator import initialize_services
+        from desktop.modern.core.service_locator import initialize_services
 
         initialize_services()
     except Exception as e:
@@ -252,11 +256,11 @@ def main():
     logger = logging.getLogger(__name__)
 
     # Import ApplicationMode when needed
-    from core.application.application_factory import ApplicationMode
+    from desktop.modern.core.application.application_factory import ApplicationMode
 
     # INSTANT FIX: Suppress verbose arrow positioning logs
     try:
-        from core.logging.instant_fix import apply_instant_fix
+        from desktop.modern.core.logging.instant_fix import apply_instant_fix
 
         apply_instant_fix("quiet")
 
@@ -271,13 +275,15 @@ def main():
     if "--test" in sys.argv:
         app_mode = ApplicationMode.TEST
         # For test mode, just create container and return it
-        from core.application.application_factory import ApplicationFactory
+        from desktop.modern.core.application.application_factory import (
+            ApplicationFactory,
+        )
 
         container = ApplicationFactory.create_app(app_mode)
 
         # Initialize services for test mode too
         try:
-            from core.service_locator import initialize_services
+            from desktop.modern.core.service_locator import initialize_services
 
             initialize_services()
             logger.info("✅ Event-driven services initialized for test mode")
@@ -292,13 +298,15 @@ def main():
     elif "--headless" in sys.argv:
         app_mode = ApplicationMode.HEADLESS
         # For headless mode, create container but no UI
-        from core.application.application_factory import ApplicationFactory
+        from desktop.modern.core.application.application_factory import (
+            ApplicationFactory,
+        )
 
         container = ApplicationFactory.create_app(app_mode)
 
         # Initialize services for headless mode too
         try:
-            from core.service_locator import initialize_services
+            from desktop.modern.core.service_locator import initialize_services
 
             initialize_services()
             logger.info("✅ Event-driven services initialized for headless mode")
@@ -314,14 +322,16 @@ def main():
     # For production and recording modes, continue with UI setup
     try:
         # Lazy import ApplicationFactory when needed
-        from core.application.application_factory import ApplicationFactory
+        from desktop.modern.core.application.application_factory import (
+            ApplicationFactory,
+        )
 
         # Create application using factory
         container = ApplicationFactory.create_app(app_mode)
 
         # Initialize event-driven architecture services
         try:
-            from core.service_locator import initialize_services
+            from desktop.modern.core.service_locator import initialize_services
 
             if not initialize_services():
                 logger.warning(
@@ -365,7 +375,7 @@ def main():
             )
 
         # Lazy import splash screen when needed
-        from presentation.components.ui.splash_screen import SplashScreen
+        from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
 
         # UI setup with splash screen
         splash = SplashScreen(target_screen=target_screen)

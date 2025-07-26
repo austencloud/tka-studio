@@ -17,14 +17,14 @@ from PyQt6.QtTest import QTest
 from PyQt6.QtCore import Qt, QTimer
 
 # DI Container and registration
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.sequence_card_service_registration import (
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.sequence_card_service_registration import (
     register_sequence_card_services,
     validate_sequence_card_service_registration,
 )
 
 # Interfaces
-from core.interfaces.sequence_card_services import (
+from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDataService,
     ISequenceCardCacheService,
     ISequenceCardLayoutService,
@@ -34,7 +34,7 @@ from core.interfaces.sequence_card_services import (
 )
 
 # Tab implementation
-from presentation.tabs.sequence_card import SequenceCardTab
+from desktop.modern.presentation.tabs.sequence_card import SequenceCardTab
 
 
 class TestSequenceCardServiceRegistration:
@@ -356,10 +356,10 @@ class TestSequenceCardRealWorldScenarios:
         register_sequence_card_services(container)
 
         # Override display service with explicit path to avoid legacy imports
-        from application.services.sequence_card.sequence_display_service import (
+        from shared.application.services.sequence_card.sequence_display_service import (
             SequenceCardDisplayService,
         )
-        from core.interfaces.sequence_card_services import (
+        from desktop.modern.core.interfaces.sequence_card_services import (
             ISequenceCardDataService,
             ISequenceCardCacheService,
             ISequenceCardLayoutService,

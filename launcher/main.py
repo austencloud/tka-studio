@@ -18,13 +18,14 @@ Author: TKA Development Team
 Version: 4.0.0 (Pure PyQt6 Rewrite)
 """
 
-import sys
-import os
 import logging
+import os
+import sys
 from pathlib import Path
-from PyQt6.QtWidgets import QApplication
+
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QApplication
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -124,8 +125,8 @@ class TKAModernLauncherApp:
         print("🛠️ Initializing launcher components...")
         try:
             print("📦 Importing launcher components...")
-            from ui.windows.launcher_window import TKALauncherWindow
             from integration.tka_integration import TKAIntegrationService
+            from ui.windows.launcher_window import TKALauncherWindow
 
             print("✅ Launcher components imported successfully")
 

@@ -11,14 +11,14 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from application.services.ui.ui_state_manager import (
+from shared.application.services.ui.ui_state_manager import (
     TabType,
     UIComponent,
     UIState,
     UIStateManager,
 )
-from core.interfaces.core_services import IUIStateManager
-from core.interfaces.session_services import ISessionStateTracker
+from desktop.modern.core.interfaces.core_services import IUIStateManager
+from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 
 
 class TestUIStateManagerInterface:

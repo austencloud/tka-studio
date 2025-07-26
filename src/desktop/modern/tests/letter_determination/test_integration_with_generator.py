@@ -21,11 +21,11 @@ class TestLetterDeterminationIntegration:
 
     def test_letter_determination_service_resolution(self):
         """Test that letter determination service can be resolved from DI container."""
-        from core.dependency_injection.di_container import DIContainer
-        from core.dependency_injection.letter_determination_service_registration import (
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.letter_determination_service_registration import (
             register_letter_determination_services,
         )
-        from core.interfaces.letter_determination.letter_determination_services import (
+        from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
             ILetterDeterminationService,
         )
 
@@ -33,8 +33,8 @@ class TestLetterDeterminationIntegration:
         container = DIContainer()
 
         # Register required dependencies
-        from application.services.data.dataset_query import DatasetQuery
-        from application.services.pictograph.pictograph_csv_manager import (
+        from shared.application.services.data.dataset_query import DatasetQuery
+        from shared.application.services.pictograph.pictograph_csv_manager import (
             PictographCSVManager,
         )
 
@@ -51,7 +51,7 @@ class TestLetterDeterminationIntegration:
 
     def test_pictograph_data_with_letter_fields(self):
         """Test that PictographData properly supports letter determination fields."""
-        from domain.models import (
+        from desktop.modern.domain.models import (
             GridData,
             Location,
             MotionData,
@@ -59,14 +59,14 @@ class TestLetterDeterminationIntegration:
             Orientation,
             RotationDirection,
         )
-        from domain.models.enums import (
+        from desktop.modern.domain.models.enums import (
             Direction,
             GridPosition,
             Letter,
             LetterType,
             Timing,
         )
-        from domain.models.pictograph_data import PictographData
+        from desktop.modern.domain.models.pictograph_data import PictographData
 
         # Create a PictographData with letter determination fields
         pictograph = PictographData(
@@ -114,13 +114,13 @@ class TestLetterDeterminationIntegration:
 
     def test_motion_data_with_prefloat_fields(self):
         """Test that MotionData properly supports prefloat fields."""
-        from domain.models.enums import (
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion_data import MotionData
+        from desktop.modern.domain.models.motion_data import MotionData
 
         # Create MotionData with prefloat fields
         motion = MotionData(
@@ -145,14 +145,14 @@ class TestLetterDeterminationIntegration:
 
     def test_end_to_end_letter_determination(self):
         """Test complete end-to-end letter determination flow."""
-        from core.dependency_injection.di_container import DIContainer
-        from core.dependency_injection.letter_determination_service_registration import (
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.letter_determination_service_registration import (
             register_letter_determination_services,
         )
-        from core.interfaces.letter_determination.letter_determination_services import (
+        from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
             ILetterDeterminationService,
         )
-        from domain.models import (
+        from desktop.modern.domain.models import (
             GridData,
             Location,
             MotionData,
@@ -160,15 +160,15 @@ class TestLetterDeterminationIntegration:
             Orientation,
             RotationDirection,
         )
-        from domain.models.enums import GridPosition, Letter
-        from domain.models.pictograph_data import PictographData
+        from desktop.modern.domain.models.enums import GridPosition, Letter
+        from desktop.modern.domain.models.pictograph_data import PictographData
 
         # Setup container
         container = DIContainer()
 
         # Register dependencies
-        from application.services.data.dataset_query import DatasetQuery
-        from application.services.pictograph.pictograph_csv_manager import (
+        from shared.application.services.data.dataset_query import DatasetQuery
+        from shared.application.services.pictograph.pictograph_csv_manager import (
             PictographCSVManager,
         )
 
@@ -234,13 +234,13 @@ class TestLetterDeterminationIntegration:
 
     def test_strategy_application(self):
         """Test that strategies apply correctly to different motion types."""
-        from application.services.letter_determination.strategies.dual_float_strategy import (
+        from shared.application.services.letter_determination.strategies.dual_float_strategy import (
             DualFloatStrategy,
         )
-        from application.services.letter_determination.strategies.non_hybrid_shift_strategy import (
+        from shared.application.services.letter_determination.strategies.non_hybrid_shift_strategy import (
             NonHybridShiftStrategy,
         )
-        from domain.models import (
+        from desktop.modern.domain.models import (
             GridData,
             Location,
             MotionData,
@@ -248,8 +248,8 @@ class TestLetterDeterminationIntegration:
             Orientation,
             RotationDirection,
         )
-        from domain.models.enums import GridPosition
-        from domain.models.pictograph_data import PictographData
+        from desktop.modern.domain.models.enums import GridPosition
+        from desktop.modern.domain.models.pictograph_data import PictographData
 
         # Mock comparison service
         class MockComparisonService:

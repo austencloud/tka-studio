@@ -6,13 +6,13 @@ previously stored in GlyphData.
 """
 
 import pytest
-from application.services.pictograph.pictograph_visibility_manager import (
+from shared.application.services.pictograph.pictograph_visibility_manager import (
     PictographVisibilityManager,
     PictographVisibilityState,
     get_pictograph_visibility_manager,
     reset_pictograph_visibility_manager,
 )
-from domain.models.enums import LetterType
+from desktop.modern.domain.models.enums import LetterType
 
 
 class TestPictographVisibilityState:

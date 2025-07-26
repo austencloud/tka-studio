@@ -11,10 +11,10 @@ sys.path.insert(0, str(modern_src_path))
 print("Testing basic imports...")
 
 try:
-    from core.interfaces.start_position_services import IStartPositionDataService
+    from desktop.modern.core.interfaces.start_position_services import IStartPositionDataService
     print("✅ Interface import successful")
     
-    from application.services.start_position.start_position_data_service import StartPositionDataService
+    from shared.application.services.start_position.start_position_data_service import StartPositionDataService
     print("✅ Service import successful")
     
     service = StartPositionDataService()

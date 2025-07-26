@@ -21,7 +21,7 @@ modern_src = project_root / "src" / "desktop" / "modern" / "src"
 if modern_src.exists() and str(modern_src) not in sys.path:
     sys.path.insert(0, str(modern_src))
 
-from core.interfaces import (
+from desktop.modern.core.interfaces import (
     IApplicationLaunchService,
     IApplicationService,
     ILauncherStateService,
@@ -29,12 +29,12 @@ from core.interfaces import (
 )
 
 if TYPE_CHECKING:
-    from core.dependency_injection.di_container import DIContainer
+    from desktop.modern.core.dependency_injection.di_container import DIContainer
 
 # Import TKA's DI container (now that path is set up)
 try:
     # Try to import TKA DI directly (path should be available now)
-    from core.dependency_injection.di_container import (
+    from desktop.modern.core.dependency_injection.di_container import (
         DIContainer,
         get_container,
     )
@@ -46,7 +46,7 @@ except ImportError:
     get_container = None
 
 
-from core.interfaces import ISettingsService
+from desktop.modern.core.interfaces import ISettingsService
 from services.launcher_state_service import LauncherStateService
 from services.application_service import ApplicationService
 from services.settings_service import SettingsService

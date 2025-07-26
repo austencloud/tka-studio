@@ -8,15 +8,15 @@ Validates backward compatibility and service integration.
 from unittest.mock import Mock, patch
 
 import pytest
-from core.types import Point
-from domain.models import BeatData, MotionData, MotionType, Orientation
-from domain.models.enums import Location, PropType
-from domain.models.pictograph_data import PictographData
+from desktop.modern.core.types import Point
+from desktop.modern.domain.models import BeatData, MotionData, MotionType, Orientation
+from desktop.modern.domain.models.enums import Location, PropType
+from desktop.modern.domain.models.pictograph_data import PictographData
 
-from application.services.positioning.props.calculation.direction_calculation_service import (
+from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     SeparationDirection,
 )
-from application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
+from shared.application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
     PropPositioningOrchestrator,
 )
 

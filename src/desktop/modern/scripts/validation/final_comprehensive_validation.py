@@ -23,13 +23,13 @@ def run_final_validation():
     # Test 1: Service Architecture
     total_tests += 1
     try:
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionOrchestrator,
             StartPositionSelectionService,
             StartPositionUIService,
         )
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
@@ -77,10 +77,10 @@ def run_final_validation():
     # Test 3: Dependency Injection
     total_tests += 1
     try:
-        from core.dependency_injection.config_registration import (
+        from desktop.modern.core.dependency_injection.config_registration import (
             register_start_position_services,
         )
-        from core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         container = DIContainer()
         register_start_position_services(container)
@@ -107,10 +107,10 @@ def run_final_validation():
         # Test that components can accept services
         import inspect
 
-        from presentation.components.start_position_picker.start_position_option import (
+        from desktop.modern.presentation.components.start_position_picker.start_position_option import (
             StartPositionOption,
         )
-        from presentation.components.start_position_picker.start_position_picker import (
+        from desktop.modern.presentation.components.start_position_picker.start_position_picker import (
             StartPositionPicker,
         )
 

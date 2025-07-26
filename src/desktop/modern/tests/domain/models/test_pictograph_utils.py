@@ -6,7 +6,7 @@ replacing the redundant fields that were previously stored in GlyphData.
 """
 
 import pytest
-from domain.models.enums import (
+from desktop.modern.domain.models.enums import (
     Direction,
     ElementalType,
     GridPosition,
@@ -18,10 +18,10 @@ from domain.models.enums import (
     Timing,
     VTGMode,
 )
-from domain.models.grid_data import GridData
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
-from domain.models.pictograph_utils import (
+from desktop.modern.domain.models.grid_data import GridData
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.pictograph_utils import (
     compute_elemental_type,
     compute_elemental_type_from_pictograph,
     compute_vtg_mode,

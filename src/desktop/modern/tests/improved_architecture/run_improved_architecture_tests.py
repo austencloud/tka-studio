@@ -106,21 +106,21 @@ def check_imports():
     
     try:
         # Test core service imports
-        from application.services.sequence.sequence_loader_service import SequenceLoaderService
-        from application.services.sequence.sequence_beat_operations_service import SequenceBeatOperationsService
+        from shared.application.services.sequence.sequence_loader_service import SequenceLoaderService
+        from shared.application.services.sequence.sequence_beat_operations_service import SequenceBeatOperationsService
         print("✅ Core services import correctly")
         
         # Test adapter imports  
-        from presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
-        from presentation.adapters.qt.sequence_beat_operations_adapter import QtSequenceBeatOperationsAdapter
+        from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
+        from desktop.modern.presentation.adapters.qt.sequence_beat_operations_adapter import QtSequenceBeatOperationsAdapter
         print("✅ Qt adapters import correctly")
         
         # Test interface imports
-        from core.interfaces.workbench_services import IWorkbenchStateManager
+        from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
         print("✅ Workbench interfaces import correctly")
         
         # Test construct tab imports
-        from presentation.tabs.construct.layout_manager import ConstructTabLayoutManager
+        from desktop.modern.presentation.tabs.construct.layout_manager import ConstructTabLayoutManager
         print("✅ Construct tab imports correctly")
         
         return True
@@ -136,7 +136,7 @@ def verify_architecture_changes():
     
     # Check that services no longer use getter/setter pattern
     try:
-        from application.services.sequence.sequence_loader_service import SequenceLoaderService
+        from shared.application.services.sequence.sequence_loader_service import SequenceLoaderService
         service = SequenceLoaderService.__init__.__code__.co_varnames
         
         if 'workbench_state_manager' in service:

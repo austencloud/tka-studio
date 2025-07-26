@@ -18,9 +18,9 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtCore import Qt
 
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.service_registration import register_services
-from core.interfaces.sequence_card_services import ISequenceCardCacheService
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.service_registration import register_services
+from desktop.modern.core.interfaces.sequence_card_services import ISequenceCardCacheService
 
 # Configure logging
 logging.basicConfig(

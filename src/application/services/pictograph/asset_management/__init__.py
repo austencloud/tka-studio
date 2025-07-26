@@ -1,1 +1,0 @@
-# Asset management microservice package

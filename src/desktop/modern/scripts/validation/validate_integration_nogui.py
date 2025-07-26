@@ -24,13 +24,13 @@ def test_service_integration():
     total_tests += 1
     try:
         print("  📋 Testing service and component imports...")
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionOrchestrator,
             StartPositionSelectionService,
             StartPositionUIService,
         )
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
@@ -62,10 +62,10 @@ def test_service_integration():
     total_tests += 1
     try:
         print("  🏗️  Testing DI container integration...")
-        from core.dependency_injection.config_registration import (
+        from desktop.modern.core.dependency_injection.config_registration import (
             register_start_position_services,
         )
-        from core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         container = DIContainer()
         register_start_position_services(container)

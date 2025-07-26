@@ -8,18 +8,18 @@ ensuring proper communication and state management.
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from domain.models.sequence_data import SequenceData
-from presentation.tabs.browse.components.modern_browse_control_panel import (
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.tabs.browse.components.modern_browse_control_panel import (
     ModernBrowseControlPanel,
     ModernSortButton,
     ModernSortWidget,
 )
-from presentation.tabs.browse.components.sequence_browser_panel import (
+from desktop.modern.presentation.tabs.browse.components.sequence_browser_panel import (
     SequenceBrowserPanel,
 )
-from presentation.tabs.browse.models import FilterType, SortMethod
-from presentation.tabs.browse.services.browse_service import BrowseService
-from presentation.tabs.browse.services.browse_state_service import BrowseStateService
+from desktop.modern.presentation.tabs.browse.models import FilterType, SortMethod
+from desktop.modern.presentation.tabs.browse.services.browse_service import BrowseService
+from desktop.modern.presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtWidgets import QApplication
 
 

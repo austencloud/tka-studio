@@ -1,13 +1,4 @@
-"""
-Comprehensive tests for Phase 1 interface implementations.
-
-This test suite validates the newly created interfaces to ensure they:
-1. Are properly structured and importable
-2. Follow the established patterns
-3. Have correct method signatures
-4. Include proper documentation
-5. Are platform-agnostic
-"""
+"""Tests for Phase 1 interface implementations."""
 
 import inspect
 from abc import ABC, abstractmethod
@@ -15,7 +6,8 @@ from typing import Any, Dict, List, Optional, Tuple, get_type_hints
 from unittest.mock import MagicMock, Mock
 
 import pytest
-from core.interfaces.layout_services import (
+
+from desktop.modern.core.interfaces.layout_services import (
     ComponentType,
     IBeatLayoutCalculator,
     IBeatResizer,
@@ -27,14 +19,14 @@ from core.interfaces.layout_services import (
     Position,
     Size,
 )
-from core.interfaces.motion_services import (
+from desktop.modern.core.interfaces.motion_services import (
     IOrientationCalculator,
     ITurnIntensityManager,
     ITurnIntensityManagerFactory,
 )
 
 # Import the interfaces we want to test
-from core.interfaces.settings_services import (
+from desktop.modern.core.interfaces.settings_services import (
     IBackgroundSettingsManager,
     IBeatLayoutSettingsManager,
     IImageExportSettingsManager,
@@ -43,7 +35,7 @@ from core.interfaces.settings_services import (
     IVisibilitySettingsManager,
     PropType,
 )
-from core.interfaces.workbench_export_services import (
+from desktop.modern.core.interfaces.workbench_export_services import (
     IWorkbenchClipboardService,
     IWorkbenchExportService,
 )

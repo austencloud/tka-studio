@@ -20,7 +20,7 @@ def test_button_connections():
     app = QApplication.instance() or QApplication([])
     
     # Import after QApplication is created
-    from presentation.tabs.browse.browse_tab import BrowseTab
+    from desktop.modern.presentation.tabs.browse.browse_tab import BrowseTab
     
     # Create a simple test
     sequences_dir = Path("data/sequences")  # Use your actual path

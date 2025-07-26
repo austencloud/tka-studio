@@ -102,7 +102,7 @@ line_length = 88
 init-hook = '''
 import sys; import os;
 project_root = os.path.dirname(os.path.abspath(__file__ if "__file__" in globals() else os.getcwd()));
-paths = [".", "src", "src/desktop/legacy/src", "src/desktop/modern/src", "launcher", "packages", "packages/shared-types/python", "packages/constants/python", "data", "assets", "schemas"];
+paths = [".", "src", "src/shared", "src/desktop/modern", "src/desktop/legacy", "src/web", "launcher", "packages", "packages/shared-types/python", "packages/constants/python", "data", "assets", "schemas"];
 [sys.path.insert(0, os.path.join(project_root, path)) for path in paths if os.path.exists(os.path.join(project_root, path)) and os.path.join(project_root, path) not in sys.path]
 '''
 # PyQt6 support
@@ -219,8 +219,10 @@ allow-wildcard-with-all = false
 [tool.pyright]
 # Include all source directories
 include = [
-    "src/desktop/legacy/src",
-    "src/desktop/modern/src",
+    "src/shared",
+    "src/desktop/modern",
+    "src/desktop/legacy",
+    "src/web",
     "launcher",
     "packages",
     "tests",
@@ -242,8 +244,10 @@ exclude = [
 extraPaths = [
     ".",
     "src",
-    "src/desktop/legacy/src",
-    "src/desktop/modern/src",
+    "src/shared",
+    "src/desktop/modern",
+    "src/desktop/legacy",
+    "src/web",
     "launcher",
     "packages",
     "packages/shared-types/python",
@@ -301,11 +305,11 @@ reportCallIssue = "none"
 
 # --- SETUPTOOLS CONFIGURATION ---
 [tool.setuptools.packages.find]
-# Include all packages from the modern desktop source
-where = ["src/desktop/modern/src"]
+# Include all packages from the flattened source structure
+where = ["src"]
 include = ["*"]
 exclude = ["tests*", "*tests*", "test_*"]
 
 [tool.setuptools.package-dir]
-# Map the root package to the modern desktop source
-"" = "src/desktop/modern/src"
+# Map the root package to the src directory
+"" = "src"

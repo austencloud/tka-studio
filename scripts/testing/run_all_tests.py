@@ -33,7 +33,7 @@ def setup_python_path():
     
     # Test the import
     try:
-        from domain.models.enums import Location
+        from desktop.modern.domain.models.enums import Location
         print("✅ Domain models import successful")
         return True
     except Exception as e:

@@ -17,19 +17,19 @@ from PyQt6.QtTest import QTest, QSignalSpy
 from PyQt6.QtGui import QPixmap
 
 # Import components to test
-from presentation.tabs.sequence_card.components.header_component import (
+from desktop.modern.presentation.tabs.sequence_card.components.header_component import (
     SequenceCardHeaderComponent,
 )
-from presentation.tabs.sequence_card.components.navigation_component import (
+from desktop.modern.presentation.tabs.sequence_card.components.navigation_component import (
     SequenceCardNavigationComponent,
 )
-from presentation.tabs.sequence_card.components.content_component import (
+from desktop.modern.presentation.tabs.sequence_card.components.content_component import (
     SequenceCardContentComponent,
 )
-from presentation.tabs.sequence_card.sequence_card_tab import SequenceCardTab
+from desktop.modern.presentation.tabs.sequence_card.sequence_card_tab import SequenceCardTab
 
 # Import interfaces
-from core.interfaces.sequence_card_services import (
+from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDataService,
     ISequenceCardCacheService,
     ISequenceCardLayoutService,
@@ -41,7 +41,7 @@ from core.interfaces.sequence_card_services import (
 )
 
 # Import service implementations for performance tests
-from application.services.sequence_card.sequence_cache_service import (
+from shared.application.services.sequence_card.sequence_cache_service import (
     SequenceCardCacheService,
 )
 

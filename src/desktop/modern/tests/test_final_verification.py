@@ -6,12 +6,12 @@ Final verification test for the refactoring.
 def test_final_verification():
     """Test that all core functionality works correctly after refactoring."""
     # Test basic imports and functionality
-    from application.services.pictograph.pictograph_visibility_manager import (
+    from shared.application.services.pictograph.pictograph_visibility_manager import (
         get_pictograph_visibility_manager,
     )
-    from domain.models.enums import Direction, GridPosition, LetterType, Timing, VTGMode
-    from domain.models.pictograph_data import PictographData
-    from domain.models.pictograph_utils import (
+    from desktop.modern.domain.models.enums import Direction, GridPosition, LetterType, Timing, VTGMode
+    from desktop.modern.domain.models.pictograph_data import PictographData
+    from desktop.modern.domain.models.pictograph_utils import (
         compute_vtg_mode,
         has_dash_from_pictograph,
     )

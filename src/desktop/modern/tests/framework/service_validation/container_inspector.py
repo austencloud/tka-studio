@@ -180,7 +180,7 @@ class ContainerInspector:
         """
         try:
             # Try to get the global container
-            from core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import get_container
             container = get_container()
             
             if not container:

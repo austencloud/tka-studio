@@ -21,10 +21,10 @@ from typing import Any, Dict, List, Optional, Tuple
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from application.services.sequence.sequence_persister import SequencePersister
-from core.application.application_factory import ApplicationFactory
-from core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
-from domain.models import BeatData, SequenceData
+from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.modern.core.application.application_factory import ApplicationFactory
+from desktop.modern.core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
+from desktop.modern.domain.models import BeatData, SequenceData
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication
 
@@ -139,10 +139,10 @@ class TKAWorkflowTester:
 
         # Ensure arrow positioning orchestrator is registered
         try:
-            from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
             )
-            from core.interfaces.positioning_services import (
+            from desktop.modern.core.interfaces.positioning_services import (
                 IArrowPositioningOrchestrator,
             )
 
@@ -169,22 +169,22 @@ class TKAWorkflowTester:
         """Register arrow positioning orchestrator and its dependencies."""
         try:
             # Import all required services
-            from application.services.positioning.arrows.calculation.arrow_location_calculator import (
+            from shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
-            from application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
+            from shared.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
                 ArrowRotationCalculatorService,
             )
-            from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+            from shared.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
                 ArrowCoordinateSystemService,
             )
-            from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
+            from shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
                 ArrowAdjustmentCalculatorService,
             )
-            from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
             )
-            from core.interfaces.positioning_services import (
+            from desktop.modern.core.interfaces.positioning_services import (
                 IArrowAdjustmentCalculator,
                 IArrowCoordinateSystemService,
                 IArrowLocationCalculator,
@@ -225,7 +225,7 @@ class TKAWorkflowTester:
 
             # Create fresh construct tab if needed
             if not self.construct_tab:
-                from presentation.tabs.construct.construct_tab_widget import (
+                from desktop.modern.presentation.tabs.construct.construct_tab_widget import (
                     ConstructTabWidget,
                 )
 
@@ -395,7 +395,7 @@ class TKAWorkflowTester:
 
             # Check if arrow positioning orchestrator is available
             try:
-                from core.interfaces.positioning_services import (
+                from desktop.modern.core.interfaces.positioning_services import (
                     IArrowPositioningOrchestrator,
                 )
 

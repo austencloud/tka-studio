@@ -18,10 +18,10 @@ import pytest
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
-from core.application.application_factory import ApplicationFactory
+from desktop.modern.core.application.application_factory import ApplicationFactory
 
 # Import TKA testing infrastructure
-from core.testing.ai_agent_helpers import TKAAITestHelper
+from desktop.modern.core.testing.ai_agent_helpers import TKAAITestHelper
 
 from .mock_beat_data import (
     GraphEditorTestData,

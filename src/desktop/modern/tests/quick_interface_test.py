@@ -11,9 +11,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 def test_interface_imports():
     """Test that interfaces can be imported correctly."""
     try:
-        from core.interfaces.pictograph_services import IPictographValidator, IScalingService
-        from core.interfaces.layout_services import IBeatLayoutCalculator
-        from core.interfaces.workbench_services import IWorkbenchSessionManager
+        from desktop.modern.core.interfaces.pictograph_services import IPictographValidator, IScalingService
+        from desktop.modern.core.interfaces.layout_services import IBeatLayoutCalculator
+        from desktop.modern.core.interfaces.workbench_services import IWorkbenchSessionManager
         print("✅ All interfaces imported successfully")
         return True
     except ImportError as e:
@@ -23,10 +23,10 @@ def test_interface_imports():
 def test_implementation_imports():
     """Test that concrete implementations can be imported."""
     try:
-        from application.services.pictograph.pictograph_validator import PictographValidator
-        from application.services.pictograph.scaling_service import PictographScaler
-        from application.services.layout.beat_layout_calculator import BeatLayoutCalculator
-        from application.services.workbench.workbench_session_manager import WorkbenchSessionManager
+        from shared.application.services.pictograph.pictograph_validator import PictographValidator
+        from shared.application.services.pictograph.scaling_service import PictographScaler
+        from shared.application.services.layout.beat_layout_calculator import BeatLayoutCalculator
+        from shared.application.services.workbench.workbench_session_manager import WorkbenchSessionManager
         print("✅ All implementations imported successfully")
         return True
     except ImportError as e:
@@ -36,13 +36,13 @@ def test_implementation_imports():
 def test_inheritance():
     """Test that implementations properly inherit from interfaces."""
     try:
-        from core.interfaces.pictograph_services import IPictographValidator, IScalingService
-        from core.interfaces.layout_services import IBeatLayoutCalculator
-        from core.interfaces.workbench_services import IWorkbenchSessionManager
+        from desktop.modern.core.interfaces.pictograph_services import IPictographValidator, IScalingService
+        from desktop.modern.core.interfaces.layout_services import IBeatLayoutCalculator
+        from desktop.modern.core.interfaces.workbench_services import IWorkbenchSessionManager
         
-        from application.services.pictograph.scaling_service import PictographScaler
-        from application.services.layout.beat_layout_calculator import BeatLayoutCalculator
-        from application.services.workbench.workbench_session_manager import WorkbenchSessionManager
+        from shared.application.services.pictograph.scaling_service import PictographScaler
+        from shared.application.services.layout.beat_layout_calculator import BeatLayoutCalculator
+        from shared.application.services.workbench.workbench_session_manager import WorkbenchSessionManager
         
         # Test inheritance
         scaler = PictographScaler()

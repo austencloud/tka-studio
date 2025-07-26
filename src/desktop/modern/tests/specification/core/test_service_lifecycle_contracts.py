@@ -35,10 +35,10 @@ class TestServiceLifecycleContracts:
         - Service creation is consistent
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from application.services.ui.ui_state_manager import (
+            from shared.application.services.ui.ui_state_manager import (
                 UIStateManager as UIStateManagementService,
             )
 
@@ -66,10 +66,10 @@ class TestServiceLifecycleContracts:
         - Service dependencies are handled correctly
         """
         try:
-            from application.services.graph_editor.graph_editor_coordinator import (
+            from shared.application.services.graph_editor.graph_editor_coordinator import (
                 GraphEditorCoordinator as GraphEditorService,
             )
-            from application.services.ui.ui_state_manager import (
+            from shared.application.services.ui.ui_state_manager import (
                 UIStateManager as UIStateManagementService,
             )
 
@@ -98,14 +98,14 @@ class TestServiceLifecycleContracts:
         - Singleton behavior is consistent
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
-            from core.interfaces.core_services import ILayoutService
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             # Reset and create container
             reset_container()
@@ -137,18 +137,18 @@ class TestServiceLifecycleContracts:
         - Dependency chain works correctly
         """
         try:
-            from application.services.graph_editor.graph_editor_coordinator import (
+            from shared.application.services.graph_editor.graph_editor_coordinator import (
                 GraphEditorCoordinator as GraphEditorService,
             )
-            from application.services.ui.ui_state_manager import (
+            from shared.application.services.ui.ui_state_manager import (
                 UIStateManager as UIStateManagementService,
             )
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
-            from core.interfaces.core_services import IUIStateManagementService
-            from core.interfaces.workbench_services import IGraphEditorService
+            from desktop.modern.core.interfaces.core_services import IUIStateManagementService
+            from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
 
             # Reset and create container
             reset_container()
@@ -183,10 +183,10 @@ class TestServiceLifecycleContracts:
         - State is isolated between instances
         """
         try:
-            from application.services.graph_editor.graph_editor_coordinator import (
+            from shared.application.services.graph_editor.graph_editor_coordinator import (
                 GraphEditorCoordinator as GraphEditorService,
             )
-            from application.services.ui.ui_state_manager import (
+            from shared.application.services.ui.ui_state_manager import (
                 UIStateManager as UIStateManagementService,
             )
 
@@ -224,10 +224,10 @@ class TestServiceLifecycleContracts:
         - Resources are properly released
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from application.services.ui.ui_state_manager import (
+            from shared.application.services.ui.ui_state_manager import (
                 UIStateManager as UIStateManagementService,
             )
 

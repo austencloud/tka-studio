@@ -15,28 +15,28 @@ import pytest
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from application.services.positioning.arrows.calculation.arrow_location_calculator import (
+from shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
     ArrowLocationCalculatorService,
 )
-from application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
+from shared.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
     ArrowRotationCalculatorService,
 )
-from application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+from shared.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
     ArrowCoordinateSystemService,
 )
-from application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+from shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
     ArrowAdjustmentCalculator as ArrowAdjustmentCalculatorService,
 )
 
 # Import the services we're testing
-from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
     ArrowPositioningOrchestrator,
 )
-from core.types.geometry import Point
-from domain.models.arrow_data import ArrowData
-from domain.models.enums import Location, MotionType, RotationDirection
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
+from desktop.modern.core.types.geometry import Point
+from desktop.modern.domain.models.arrow_data import ArrowData
+from desktop.modern.domain.models.enums import Location, MotionType, RotationDirection
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 class TestArrowPositioningBaseline:

@@ -13,9 +13,9 @@ from datetime import datetime
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QImage
 
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.image_export_service_registration import register_image_export_services
-from core.interfaces.image_export_services import (
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
+from desktop.modern.core.interfaces.image_export_services import (
     IImageExportService,
     ImageExportOptions
 )
@@ -159,7 +159,7 @@ class TestManualInspectionExport:
         """Try to get real sequence data from the TKA dataset."""
         try:
             # Try to access the real pictograph data service
-            from application.services.learn.real_pictograph_data_service import RealPictographDataService
+            from shared.application.services.learn.real_pictograph_data_service import RealPictographDataService
             
             # Create the service
             real_data_service = RealPictographDataService(self.container)

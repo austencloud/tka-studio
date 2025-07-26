@@ -5,11 +5,11 @@ Tests the prop overlap detection service in isolation.
 """
 
 import pytest
-from domain.models import BeatData, MotionData, MotionType, Orientation
-from domain.models.enums import Location, RotationDirection
-from domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models import BeatData, MotionData, MotionType, Orientation
+from desktop.modern.domain.models.enums import Location, RotationDirection
+from desktop.modern.domain.models.pictograph_data import PictographData
 
-from application.services.positioning.props.detection.prop_overlap_detector import (
+from shared.application.services.positioning.props.detection.prop_overlap_detector import (
     PropOverlapDetector,
 )
 

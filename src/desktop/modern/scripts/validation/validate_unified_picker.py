@@ -32,7 +32,7 @@ def validate_service_registration():
 
     try:
         # Create application factory and container
-        from core.application.application_factory import (
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )
@@ -41,7 +41,7 @@ def validate_service_registration():
         container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
 
         # Validate start position services are registered
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
@@ -90,12 +90,12 @@ def validate_component_creation():
             app = QApplication([])
 
         # Get container and services
-        from application.services.pictograph_pool_manager import PictographPoolManager
-        from core.application.application_factory import (
+        from shared.application.services.pictograph_pool_manager import PictographPoolManager
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
@@ -116,7 +116,7 @@ def validate_component_creation():
         logger.info("Creating unified start position picker...")
 
         # Import and create unified component
-        from presentation.components.start_position_picker.start_position_picker import (
+        from desktop.modern.presentation.components.start_position_picker.start_position_picker import (
             PickerMode,
             UnifiedStartPositionPicker,
         )
@@ -175,11 +175,11 @@ def validate_service_functionality():
     logger = logging.getLogger(__name__)
 
     try:
-        from core.application.application_factory import (
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionSelectionService,
             IStartPositionUIService,
         )

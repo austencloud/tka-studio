@@ -12,8 +12,8 @@ TESTS:
 """
 
 import pytest
-from domain.models.beat_data import BeatData
-from domain.models.enums import (
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import (
     ElementalType,
     LetterType,
     Location,
@@ -22,8 +22,8 @@ from domain.models.enums import (
     RotationDirection,
     VTGMode,
 )
-from domain.models.motion_data import MotionData
-from domain.models.sequence_data import SequenceData
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.sequence_data import SequenceData
 from hypothesis import assume, given
 from hypothesis import strategies as st
 

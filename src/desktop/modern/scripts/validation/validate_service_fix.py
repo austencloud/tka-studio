@@ -17,8 +17,8 @@ def test_application_startup_scenario():
 
     try:
         # Create mock pool manager (same as what the application uses)
-        from application.services.pictograph_pool_manager import PictographPoolManager
-        from core.dependency_injection.di_container import DIContainer
+        from shared.application.services.pictograph_pool_manager import PictographPoolManager
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         # Create a minimal container for pool manager
         container = DIContainer()
@@ -26,7 +26,7 @@ def test_application_startup_scenario():
 
         # Test 1: EnhancedStartPositionPicker without services (application startup scenario)
         print("  Testing EnhancedStartPositionPicker without services...")
-        from presentation.components.start_position_picker.enhanced_start_position_picker import (
+        from desktop.modern.presentation.components.start_position_picker.enhanced_start_position_picker import (
             EnhancedStartPositionPicker,
         )
 
@@ -49,7 +49,7 @@ def test_application_startup_scenario():
             first_option = enhanced_picker.position_options[0]
 
             # Verify the option has StartPositionDataService as fallback
-            from application.services.start_position.start_position_data_service import (
+            from shared.application.services.start_position.start_position_data_service import (
                 StartPositionDataService,
             )
 
@@ -66,7 +66,7 @@ def test_application_startup_scenario():
 
         # Test 3: StartPositionPicker without services
         print("  Testing StartPositionPicker without services...")
-        from presentation.components.start_position_picker.start_position_picker import (
+        from desktop.modern.presentation.components.start_position_picker.start_position_picker import (
             StartPositionPicker,
         )
 
@@ -78,7 +78,7 @@ def test_application_startup_scenario():
 
         # Test 4: AdvancedStartPositionPicker without services
         print("  Testing AdvancedStartPositionPicker without services...")
-        from presentation.components.start_position_picker.advanced_start_position_picker import (
+        from desktop.modern.presentation.components.start_position_picker.advanced_start_position_picker import (
             AdvancedStartPositionPicker,
         )
 
@@ -107,7 +107,7 @@ def test_service_method_compatibility():
 
     try:
         # Test that StartPositionDataService has all the methods we expect
-        from application.services.start_position.start_position_data_service import (
+        from shared.application.services.start_position.start_position_data_service import (
             StartPositionDataService,
         )
 
@@ -161,16 +161,16 @@ def test_all_fallback_scenarios():
         mock_pool = MockPool()
 
         # Create data service for mandatory injection
-        from application.services.start_position.start_position_data_service import (
+        from shared.application.services.start_position.start_position_data_service import (
             StartPositionDataService,
         )
-        from application.services.start_position.start_position_orchestrator import (
+        from desktop.modern.application.services.start_position.start_position_orchestrator import (
             StartPositionOrchestrator,
         )
-        from application.services.start_position.start_position_selection_service import (
+        from shared.application.services.start_position.start_position_selection_service import (
             StartPositionSelectionService,
         )
-        from application.services.start_position.start_position_ui_service import (
+        from desktop.modern.application.services.start_position.start_position_ui_service import (
             StartPositionUIService,
         )
 

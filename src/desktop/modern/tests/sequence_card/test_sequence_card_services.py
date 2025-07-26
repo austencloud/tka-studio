@@ -12,7 +12,7 @@ from unittest.mock import Mock, patch, MagicMock
 from typing import List
 
 # Import the services and interfaces we're testing
-from core.interfaces.sequence_card_services import (
+from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDataService,
     ISequenceCardCacheService,
     ISequenceCardLayoutService,
@@ -26,22 +26,22 @@ from core.interfaces.sequence_card_services import (
     CacheLevel,
 )
 
-from application.services.sequence_card.sequence_data_service import (
+from shared.application.services.sequence_card.sequence_data_service import (
     SequenceCardDataService,
 )
-from application.services.sequence_card.sequence_cache_service import (
+from shared.application.services.sequence_card.sequence_cache_service import (
     SequenceCardCacheService,
 )
-from application.services.sequence_card.sequence_layout_service import (
+from desktop.modern.application.services.sequence_card.sequence_layout_service import (
     SequenceCardLayoutService,
 )
-from application.services.sequence_card.sequence_display_service import (
+from shared.application.services.sequence_card.sequence_display_service import (
     SequenceCardDisplayService,
 )
-from application.services.sequence_card.sequence_export_service import (
+from desktop.modern.application.services.sequence_card.sequence_export_service import (
     SequenceCardExportService,
 )
-from application.services.sequence_card.sequence_settings_service import (
+from shared.application.services.sequence_card.sequence_settings_service import (
     SequenceCardSettingsService,
 )
 

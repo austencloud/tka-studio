@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 
 import os
 
-from core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.di_container import DIContainer
 from core.exceptions import DependencyInjectionError
 
 

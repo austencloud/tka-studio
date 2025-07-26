@@ -6,13 +6,13 @@ Tests the Letter I positioning service with PRO/ANTI coordination logic.
 
 import pytest
 
-from domain.models import MotionData, MotionType, Orientation
-from domain.models.enums import Location
+from desktop.modern.domain.models import MotionData, MotionType, Orientation
+from desktop.modern.domain.models.enums import Location
 
-from application.services.positioning.props.specialization.letter_i_positioning_service import (
+from shared.application.services.positioning.props.specialization.letter_i_positioning_service import (
     LetterIPositioningService,
 )
-from application.services.positioning.props.calculation.direction_calculation_service import (
+from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     SeparationDirection,
 )
 

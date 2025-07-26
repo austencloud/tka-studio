@@ -25,25 +25,25 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QTimer
 
 # Import the testing framework
-from tests.framework.ui_automation import (
+from desktop.modern.tests.framework.ui_automation import (
     PickerNavigator,
     BeatFrameValidator, 
     WorkbenchController,
     SequenceSpec,
 )
-from tests.framework.visual_regression import (
+from desktop.modern.tests.framework.visual_regression import (
     ImageComparator,
     FontSizeValidator,
 )
-from tests.framework.service_validation import (
+from desktop.modern.tests.framework.service_validation import (
     ContainerInspector,
     ServiceRegistrationValidator,
 )
 
 # Import application components
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.image_export_service_registration import register_image_export_services
-from core.interfaces.image_export_services import IImageExportService, ImageExportOptions
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
+from desktop.modern.core.interfaces.image_export_services import IImageExportService, ImageExportOptions
 
 
 class TestComprehensiveExportRegression:

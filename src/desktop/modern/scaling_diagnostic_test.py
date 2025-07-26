@@ -96,7 +96,7 @@ def test_start_position_scaling(main_window):
     results = []
 
     try:
-        from presentation.components.pictograph.views import create_start_position_view
+        from desktop.modern.presentation.components.pictograph.views import create_start_position_view
 
         # Test different container sizes
         test_sizes = [120, 100, 80]
@@ -162,7 +162,7 @@ def test_option_picker_scaling(main_window):
     results = []
 
     try:
-        from presentation.components.option_picker.components.option_pictograph import (
+        from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
             OptionPictograph,
         )
 
@@ -240,7 +240,7 @@ def test_learn_tab_scaling(main_window):
     results = []
 
     try:
-        from presentation.components.pictograph.pictograph_widget import (
+        from desktop.modern.presentation.components.pictograph.pictograph_widget import (
             PictographWidget,
         )
 

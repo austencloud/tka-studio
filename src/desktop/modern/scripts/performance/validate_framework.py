@@ -28,7 +28,7 @@ from core.performance.integration import (
     get_performance_integration,
     initialize_performance_framework,
 )
-from infrastructure.performance.storage import get_performance_storage
+from desktop.modern.infrastructure.performance.storage import get_performance_storage
 
 # Setup logging
 logging.basicConfig(

@@ -17,9 +17,9 @@ sys.path.insert(0, str(modern_src_path))
 
 from PyQt6.QtWidgets import QApplication
 
-from core.dependency_injection.di_container import DIContainer
-from core.dependency_injection.image_export_service_registration import register_image_export_services
-from core.interfaces.image_export_services import (
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.image_export_service_registration import register_image_export_services
+from desktop.modern.core.interfaces.image_export_services import (
     IImageExportService,
     ImageExportOptions,
     ExportProgress

@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, "src")
 
-from application.services.learn.mock_pictograph_data_service import MockPictographDataService
+from shared.application.services.learn.mock_pictograph_data_service import MockPictographDataService
 
 print("Testing Mock Service Position Data")
 mock_service = MockPictographDataService()

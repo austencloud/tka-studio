@@ -7,13 +7,13 @@ Tests the offset calculation service in isolation.
 import pytest
 import math
 
-from core.types import Point
-from domain.models.enums import PropType
+from desktop.modern.core.types import Point
+from desktop.modern.domain.models.enums import PropType
 
-from application.services.positioning.props.calculation.offset_calculation_service import (
+from shared.application.services.positioning.props.calculation.offset_calculation_service import (
     OffsetCalculationService,
 )
-from application.services.positioning.props.calculation.direction_calculation_service import (
+from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     SeparationDirection,
 )
 

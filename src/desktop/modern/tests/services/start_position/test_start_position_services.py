@@ -7,13 +7,13 @@ Basic tests to verify service structure and functionality.
 import pytest
 from unittest.mock import Mock, patch
 
-from application.services.start_position import (
+from desktop.modern.application.services.start_position import (
     StartPositionDataService,
     StartPositionSelectionService,
     StartPositionUIService,
     StartPositionOrchestrator
 )
-from core.interfaces.start_position_services import (
+from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
     IStartPositionSelectionService,
     IStartPositionUIService,

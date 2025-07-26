@@ -10,13 +10,13 @@ from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from application.services.ui.thumbnail_generation_service import (
+from shared.application.services.ui.thumbnail_generation_service import (
     MockThumbnailGenerationService,
     ThumbnailGenerationService,
 )
-from core.interfaces.ui_services import IThumbnailGenerationService
-from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
+from desktop.modern.core.interfaces.ui_services import IThumbnailGenerationService
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class TestThumbnailGenerationServiceInterface:

@@ -7,18 +7,18 @@ import sys
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from core.dependency_injection.di_container import DIContainer
-from presentation.tabs.construct.components.component_connector import (
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.presentation.tabs.construct.components.component_connector import (
     ComponentConnector,
 )
-from presentation.tabs.construct.components.panel_factory import PanelFactory
-from presentation.tabs.construct.components.transition_animator import (
+from desktop.modern.presentation.tabs.construct.components.panel_factory import PanelFactory
+from desktop.modern.presentation.tabs.construct.components.transition_animator import (
     TransitionAnimator,
 )
-from presentation.tabs.construct.orchestrators.layout_orchestrator import (
+from desktop.modern.presentation.tabs.construct.orchestrators.layout_orchestrator import (
     LayoutOrchestrator,
 )
-from presentation.tabs.construct.orchestrators.progress_reporter import ProgressReporter
+from desktop.modern.presentation.tabs.construct.orchestrators.progress_reporter import ProgressReporter
 from PyQt6.QtWidgets import QApplication, QStackedWidget, QWidget
 
 

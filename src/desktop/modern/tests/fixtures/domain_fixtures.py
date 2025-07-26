@@ -9,8 +9,8 @@ Provides reusable domain model fixtures for testing.
 from pathlib import Path
 
 import pytest
-from domain.models import BeatData, SequenceData
-from domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models import BeatData, SequenceData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent / "src"
@@ -20,7 +20,7 @@ modern_src = Path(__file__).parent.parent.parent / "src"
 def sample_beat_data():
     """Provide sample beat data for testing."""
     try:
-        from domain.models import BeatData
+        from desktop.modern.domain.models import BeatData
 
         beat = BeatData(beat_number=1, duration=1.0)
 
@@ -34,7 +34,7 @@ def sample_beat_data():
 def sample_sequence_data():
     """Provide sample sequence data for testing."""
     try:
-        from domain.models import BeatData, SequenceData
+        from desktop.modern.domain.models import BeatData, SequenceData
 
         beats = [
             BeatData(beat_number=1, duration=1.0),
@@ -55,7 +55,7 @@ def sample_sequence_data():
 def empty_sequence_data():
     """Provide empty sequence data for testing."""
     try:
-        from domain.models import SequenceData
+        from desktop.modern.domain.models import SequenceData
 
         return SequenceData.empty()
 
@@ -67,7 +67,7 @@ def empty_sequence_data():
 def sample_motion_data():
     """Provide sample motion data for testing."""
     try:
-        from domain.models import Location, MotionData, MotionType, RotationDirection
+        from desktop.modern.domain.models import Location, MotionData, MotionType, RotationDirection
 
         motion = MotionData(
             motion_type=MotionType.PRO,
@@ -89,7 +89,7 @@ def sample_motion_data():
 def sample_pictograph_data():
     """Provide sample pictograph data for testing."""
     try:
-        from domain.models import (
+        from desktop.modern.domain.models import (
             ArrowData,
             GridData,
             GridMode,

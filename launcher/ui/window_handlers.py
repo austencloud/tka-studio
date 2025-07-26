@@ -12,7 +12,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QResizeEvent, QCloseEvent
 
-from ui.layouts.application_grid import ApplicationGridWidget
+from desktop.modern.ui.layouts.application_grid import ApplicationGridWidget
 from config.config.launcher_config import LauncherConfig
 
 logger = logging.getLogger(__name__)

@@ -28,7 +28,7 @@ class TestDIContainerContracts:
     def test_di_container_import(self):
         """Test that DI container can be imported."""
         try:
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
@@ -48,7 +48,7 @@ class TestDIContainerContracts:
         - Multiple containers can exist independently
         """
         try:
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
@@ -80,14 +80,14 @@ class TestDIContainerContracts:
         - Interface-to-implementation mapping works
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
-            from core.interfaces.core_services import ILayoutService
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             # Reset and create container
             reset_container()
@@ -118,14 +118,14 @@ class TestDIContainerContracts:
         - Unregistered services raise appropriate errors
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
-            from core.interfaces.core_services import ILayoutService
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             # Reset and create container
             reset_container()
@@ -156,14 +156,14 @@ class TestDIContainerContracts:
         - New registrations work after reset
         """
         try:
-            from application.services.layout.layout_manager import (
+            from shared.application.services.layout.layout_manager import (
                 LayoutManager as LayoutManagementService,
             )
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
-            from core.interfaces.core_services import ILayoutService
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             # Create and configure container
             reset_container()
@@ -201,7 +201,7 @@ class TestDIContainerContracts:
         - Container remains stable after errors
         """
         try:
-            from core.dependency_injection.di_container import (
+            from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )

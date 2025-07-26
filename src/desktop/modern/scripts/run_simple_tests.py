@@ -21,13 +21,13 @@ def run_start_position_service_tests():
 
     try:
         # Import the service classes
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionOrchestrator,
             StartPositionSelectionService,
             StartPositionUIService,
         )
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,

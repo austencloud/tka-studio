@@ -26,12 +26,12 @@ def comprehensive_scaling_test():
 
     # Initialize core services and DI container
     print("🔧 Initializing core services...")
-    from core.service_locator import initialize_services
+    from desktop.modern.core.service_locator import initialize_services
 
     initialize_services()
 
     print("🔧 Creating production application container...")
-    from core.application.application_factory import ApplicationFactory
+    from desktop.modern.core.application.application_factory import ApplicationFactory
 
     container = ApplicationFactory.create_production_app()
 
@@ -52,7 +52,7 @@ def comprehensive_scaling_test():
         print("\n📍 TESTING START POSITION VIEW")
         print("-" * 40)
 
-        from presentation.components.sequence_workbench.sequence_beat_frame.start_position_view import (
+        from desktop.modern.presentation.components.sequence_workbench.sequence_beat_frame.start_position_view import (
             StartPositionView,
         )
 
@@ -77,7 +77,7 @@ def comprehensive_scaling_test():
         print("-" * 40)
 
         try:
-            from presentation.components.start_position_picker.start_position_option import (
+            from desktop.modern.presentation.components.start_position_picker.start_position_option import (
                 StartPositionOption,
             )
 
@@ -219,9 +219,9 @@ def comprehensive_scaling_test():
         try:
             # Create minimal test beat data
             from domain.enums.grid_mode import GridMode
-            from domain.models.beat_data import BeatData
-            from domain.models.grid_data import GridData
-            from domain.models.pictograph_data import PictographData
+            from desktop.modern.domain.models.beat_data import BeatData
+            from desktop.modern.domain.models.grid_data import GridData
+            from desktop.modern.domain.models.pictograph_data import PictographData
 
             grid_data = GridData(
                 grid_mode=GridMode.DIAMOND,

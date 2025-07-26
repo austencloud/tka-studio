@@ -67,7 +67,7 @@ def test_arrow_positioning_orchestrator():
         tester = create_workflow_tester(config)
         
         try:
-            from core.interfaces.positioning_services import IArrowPositioningOrchestrator
+            from desktop.modern.core.interfaces.positioning_services import IArrowPositioningOrchestrator
             orchestrator = tester.container.resolve(IArrowPositioningOrchestrator)
             
             if orchestrator:

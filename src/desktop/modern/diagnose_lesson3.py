@@ -32,10 +32,10 @@ def diagnose_learn_tab():
         print("\n📋 Step 1: Check Service Registration")
         print("-" * 40)
         
-        from core.dependency_injection.di_container import DIContainer
-        from core.dependency_injection.learn_service_registration import register_learn_services
-        from core.interfaces.data_builder_services import IPictographDataService
-        from core.interfaces.learn_services import IQuestionGenerationService, IQuizSessionService
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.dependency_injection.learn_service_registration import register_learn_services
+        from desktop.modern.core.interfaces.data_builder_services import IPictographDataService
+        from desktop.modern.core.interfaces.learn_services import IQuestionGenerationService, IQuizSessionService
         
         # Setup DI container
         container = DIContainer()
@@ -99,8 +99,8 @@ def diagnose_learn_tab():
         question_service = container.resolve(IQuestionGenerationService)
         
         # Test Lesson3 specifically
-        from domain.models.learn import LessonType, QuizMode
-        from application.services.learn.lesson_configuration_service import LessonConfigurationService
+        from desktop.modern.domain.models.learn import LessonType, QuizMode
+        from shared.application.services.learn.lesson_configuration_service import LessonConfigurationService
         
         # Get Lesson3 config
         config_service = LessonConfigurationService()

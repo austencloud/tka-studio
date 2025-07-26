@@ -9,10 +9,10 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from domain.models.sequence_data import SequenceData
-from presentation.tabs.browse.models import FilterType
-from presentation.tabs.browse.browse_tab import BrowseTab
-from presentation.tabs.browse.services.browse_service import BrowseService
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.tabs.browse.models import FilterType
+from desktop.modern.presentation.tabs.browse.browse_tab import BrowseTab
+from desktop.modern.presentation.tabs.browse.services.browse_service import BrowseService
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
@@ -227,7 +227,7 @@ class TestBrowseServiceRobustness:
 
     def test_sort_sequences_robustness(self, browse_service):
         """Test sequence sorting robustness."""
-        from presentation.tabs.browse.models import SortMethod
+        from desktop.modern.presentation.tabs.browse.models import SortMethod
 
         sequences = browse_service.load_sequences()
 

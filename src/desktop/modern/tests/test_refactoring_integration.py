@@ -6,11 +6,11 @@ the complete flow from PictographData creation to glyph rendering.
 """
 
 import pytest
-from application.services.pictograph.pictograph_visibility_manager import (
+from shared.application.services.pictograph.pictograph_visibility_manager import (
     get_pictograph_visibility_manager,
     reset_pictograph_visibility_manager,
 )
-from domain.models.enums import (
+from desktop.modern.domain.models.enums import (
     Direction,
     ElementalType,
     GridPosition,
@@ -22,10 +22,10 @@ from domain.models.enums import (
     Timing,
     VTGMode,
 )
-from domain.models.grid_data import GridData
-from domain.models.motion_data import MotionData
-from domain.models.pictograph_data import PictographData
-from domain.models.pictograph_utils import (
+from desktop.modern.domain.models.grid_data import GridData
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.pictograph_utils import (
     compute_elemental_type_from_pictograph,
     compute_vtg_mode,
     get_turns_from_motions,
@@ -232,7 +232,7 @@ class TestRefactoringIntegration:
         """Test that GlyphData has been completely removed."""
         # GlyphData should no longer exist
         try:
-            from domain.models.glyph_data import GlyphData
+            from desktop.modern.domain.models.glyph_data import GlyphData
 
             assert False, "GlyphData should have been removed"
         except ImportError:

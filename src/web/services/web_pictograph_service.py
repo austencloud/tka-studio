@@ -17,12 +17,12 @@ from typing import Dict, List, Optional
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
-from application.services.core.pictograph_renderer import (
+from shared.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     IPictographAssetProvider,
     create_pictograph_renderer,
 )
-from application.services.core.types import (
+from shared.application.services.core.types import (
     ImageData,
     ImageFormat,
     Point,

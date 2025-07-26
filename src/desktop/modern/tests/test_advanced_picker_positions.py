@@ -13,7 +13,7 @@ def test_advanced_picker_positions():
     print("🔍 Testing advanced picker positions...")
 
     try:
-        from application.services.start_position.start_position_ui_service import (
+        from desktop.modern.application.services.start_position.start_position_ui_service import (
             StartPositionUIService,
         )
 

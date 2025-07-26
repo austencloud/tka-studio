@@ -11,8 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from core.interfaces import ILauncherStateService, ISettingsService
-from domain.models import (
+from desktop.modern.core.interfaces import ILauncherStateService, ISettingsService
+from desktop.modern.domain.models import (
     ApplicationCategory,
     ApplicationData,
     ApplicationStatus,

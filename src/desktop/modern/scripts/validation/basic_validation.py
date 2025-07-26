@@ -13,7 +13,7 @@ def test_basic_structure():
     total_tests += 1
     try:
         print("  📋 Testing interface imports...")
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionSelectionService,
             IStartPositionUIService,
@@ -28,7 +28,7 @@ def test_basic_structure():
     total_tests += 1
     try:
         print("  🔧 Testing service implementation imports...")
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionSelectionService,
             StartPositionUIService,
@@ -43,7 +43,7 @@ def test_basic_structure():
     total_tests += 1
     try:
         print("  🏗️  Testing basic service instantiation...")
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionSelectionService,
             StartPositionUIService
@@ -62,12 +62,12 @@ def test_basic_structure():
     total_tests += 1
     try:
         print("  🎯 Testing interface compliance...")
-        from core.interfaces.start_position_services import (
+        from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionSelectionService,
             IStartPositionUIService
         )
-        from application.services.start_position import (
+        from desktop.modern.application.services.start_position import (
             StartPositionDataService,
             StartPositionSelectionService,
             StartPositionUIService

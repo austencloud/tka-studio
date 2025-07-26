@@ -6,27 +6,27 @@ Tests to validate each extracted service works correctly in isolation.
 
 import pytest
 
-from core.types import Point
-from domain.models import BeatData, MotionData, MotionType, Orientation
-from domain.models.enums import Location, PropType
+from desktop.modern.core.types import Point
+from desktop.modern.domain.models import BeatData, MotionData, MotionType, Orientation
+from desktop.modern.domain.models.enums import Location, PropType
 
-from application.services.positioning.props.detection.beta_positioning_detector import (
+from shared.application.services.positioning.props.detection.beta_positioning_detector import (
     BetaPositioningDetector,
 )
-from application.services.positioning.props.detection.prop_overlap_detector import (
+from shared.application.services.positioning.props.detection.prop_overlap_detector import (
     PropOverlapDetector,
 )
-from application.services.positioning.props.calculation.offset_calculation_service import (
+from shared.application.services.positioning.props.calculation.offset_calculation_service import (
     OffsetCalculationService,
 )
-from application.services.positioning.props.calculation.direction_calculation_service import (
+from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     SeparationDirection,
 )
-from application.services.positioning.props.calculation.prop_rotation_calculator import (
+from shared.application.services.positioning.props.calculation.prop_rotation_calculator import (
     PropRotationCalculator,
 )
-from application.services.positioning.props.specialization.letter_i_positioning_service import (
+from shared.application.services.positioning.props.specialization.letter_i_positioning_service import (
     LetterIPositioningService,
 )
 

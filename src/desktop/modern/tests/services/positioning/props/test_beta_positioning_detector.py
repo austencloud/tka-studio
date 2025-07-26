@@ -6,10 +6,10 @@ Tests the beta positioning detection service in isolation.
 
 import pytest
 
-from domain.models import BeatData
-from domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models import BeatData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
-from application.services.positioning.props.detection.beta_positioning_detector import (
+from shared.application.services.positioning.props.detection.beta_positioning_detector import (
     BetaPositioningDetector,
 )
 

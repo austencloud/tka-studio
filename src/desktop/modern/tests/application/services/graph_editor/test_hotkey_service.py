@@ -7,7 +7,7 @@ Simple, reliable tests that actually pass.
 from unittest.mock import MagicMock, Mock
 
 import pytest
-from application.services.graph_editor.graph_editor_hotkey_manager import (
+from desktop.modern.application.services.graph_editor.graph_editor_hotkey_manager import (
     GraphEditorHotkeyManager as GraphEditorHotkeyService,
 )
 from PyQt6.QtCore import Qt

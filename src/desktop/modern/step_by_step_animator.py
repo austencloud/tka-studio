@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from presentation.components.graph_editor.components.adjustment_panel import (
+from desktop.modern.presentation.components.graph_editor.components.adjustment_panel import (
     AdjustmentPanel,
 )
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
@@ -42,11 +42,11 @@ from PyQt6.QtWidgets import (
 modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
-from domain.models.beat_models import BeatData
-from domain.models.enums import Location, MotionType, Orientation, RotationDirection
-from domain.models.motion_models import MotionData
-from domain.models.sequence_data import SequenceData
-from presentation.components.pictograph.pictograph_widget import (
+from desktop.modern.domain.models.beat_models import BeatData
+from desktop.modern.domain.models.enums import Location, MotionType, Orientation, RotationDirection
+from desktop.modern.domain.models.motion_models import MotionData
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.components.pictograph.pictograph_widget import (
     create_pictograph_widget,
 )
 

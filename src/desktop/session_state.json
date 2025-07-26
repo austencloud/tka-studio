@@ -1,0 +1,24 @@
+{
+  "session_metadata": {
+    "session_id": "4d863ec3-ee9e-4bc0-9263-0c6218dc2466",
+    "created_at": "2025-07-25T15:52:42.925269",
+    "last_interaction": "2025-07-25T16:16:31.226498",
+    "tka_version": "modern"
+  },
+  "workbench_state": {
+    "selected_beat_index": null,
+    "selected_beat_data": null,
+    "start_position_data": null
+  },
+  "graph_editor_state": {
+    "visible": false,
+    "selected_beat_index": null,
+    "selected_arrow": null,
+    "height": 300
+  },
+  "ui_state": {
+    "active_tab": "sequence_builder",
+    "beat_layout": {},
+    "component_visibility": {}
+  }
+}

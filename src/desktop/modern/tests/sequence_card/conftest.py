@@ -156,7 +156,7 @@ def mock_settings_backend():
 @pytest.fixture
 def sample_sequence_data():
     """Create sample sequence data for testing."""
-    from core.interfaces.sequence_card_services import SequenceCardData
+    from desktop.modern.core.interfaces.sequence_card_services import SequenceCardData
 
     return [
         SequenceCardData(
@@ -176,7 +176,7 @@ def sample_sequence_data():
 @pytest.fixture
 def mock_di_container():
     """Create mock DI container for testing."""
-    from core.dependency_injection.di_container import DIContainer
+    from desktop.modern.core.dependency_injection.di_container import DIContainer
 
     return DIContainer()
 
@@ -251,7 +251,7 @@ def memory_monitor():
 @pytest.fixture
 def large_sequence_dataset():
     """Generate large sequence dataset for performance testing."""
-    from core.interfaces.sequence_card_services import SequenceCardData
+    from desktop.modern.core.interfaces.sequence_card_services import SequenceCardData
 
     def generate_sequences(count=1000):
         sequences = []

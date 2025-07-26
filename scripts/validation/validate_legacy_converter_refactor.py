@@ -29,31 +29,31 @@ def test_imports():
 
     try:
         # Test supporting classes
-        from application.services.data.beat_data_builder import BeatDataBuilder
+        from shared.application.services.data.beat_data_builder import BeatDataBuilder
 
         # Test main refactored class
-        from application.services.data.legacy_data_converter import (
+        from desktop.modern.application.services.data.legacy_data_converter import (
             ILegacyDataConverter,
             LegacyDataConverter,
         )
-        from application.services.data.legacy_format_validator import (
+        from desktop.modern.application.services.data.legacy_format_validator import (
             LegacyFormatValidator,
             ValidationResult,
         )
-        from application.services.data.motion_data_converter import (
+        from desktop.modern.application.services.data.motion_data_converter import (
             MotionConversionResult,
             MotionDataConverter,
         )
 
         # Test domain models
-        from domain.models.beat_data import BeatData
-        from domain.models.enums import (
+        from desktop.modern.domain.models.beat_data import BeatData
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion_models import MotionData
+        from desktop.modern.domain.models.motion_models import MotionData
 
         print("✅ All imports successful")
         return True
@@ -69,14 +69,14 @@ def test_motion_data_converter():
     print("\n🔧 Testing MotionDataConverter...")
 
     try:
-        from application.services.data.motion_data_converter import MotionDataConverter
-        from domain.models.enums import (
+        from desktop.modern.application.services.data.motion_data_converter import MotionDataConverter
+        from desktop.modern.domain.models.enums import (
             HandMotionType,
             Location,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion_models import MotionData
+        from desktop.modern.domain.models.motion_models import MotionData
 
         converter = MotionDataConverter()
 
@@ -118,7 +118,7 @@ def test_legacy_format_validator():
     print("\n🔍 Testing LegacyFormatValidator...")
 
     try:
-        from application.services.data.legacy_format_validator import (
+        from desktop.modern.application.services.data.legacy_format_validator import (
             LegacyFormatValidator,
         )
 
@@ -171,14 +171,14 @@ def test_beat_data_builder():
     print("\n🏗️ Testing BeatDataBuilder...")
 
     try:
-        from application.services.data.beat_data_builder import BeatDataBuilder
-        from domain.models.enums import (
+        from shared.application.services.data.beat_data_builder import BeatDataBuilder
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion_models import MotionData
+        from desktop.modern.domain.models.motion_models import MotionData
 
         builder = BeatDataBuilder()
 
@@ -222,15 +222,15 @@ def test_legacy_data_converter():
     print("\n🔄 Testing LegacyDataConverter...")
 
     try:
-        from application.services.data.beat_data_builder import BeatDataBuilder
-        from application.services.data.legacy_data_converter import LegacyDataConverter
-        from domain.models.enums import (
+        from shared.application.services.data.beat_data_builder import BeatDataBuilder
+        from desktop.modern.application.services.data.legacy_data_converter import LegacyDataConverter
+        from desktop.modern.domain.models.enums import (
             Location,
             MotionType,
             Orientation,
             RotationDirection,
         )
-        from domain.models.motion_models import MotionData
+        from desktop.modern.domain.models.motion_models import MotionData
 
         converter = LegacyDataConverter()
         builder = BeatDataBuilder()
@@ -278,7 +278,7 @@ def test_integration():
     print("\n🔗 Testing integration...")
 
     try:
-        from application.services.data.legacy_data_converter import LegacyDataConverter
+        from desktop.modern.application.services.data.legacy_data_converter import LegacyDataConverter
 
         converter = LegacyDataConverter()
 
@@ -335,7 +335,7 @@ def test_error_handling():
     print("\n⚠️ Testing error handling...")
 
     try:
-        from application.services.data.legacy_data_converter import LegacyDataConverter
+        from desktop.modern.application.services.data.legacy_data_converter import LegacyDataConverter
 
         converter = LegacyDataConverter()
 
