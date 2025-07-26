@@ -200,12 +200,15 @@ class BrowseTab(QWidget):
         # Controller signals (will be connected after controller is created)
 
     def _on_filter_selected(self, filter_type: FilterType, filter_value) -> None:
-        """Handle filter selection - delegate to controller."""
+        """Handle filter selection with stable layout approach."""
         # Save filter state for backward compatibility
         self.state_service.set_filter(filter_type, filter_value)
 
-        # Delegate to controller - it should handle everything including updating the browser panel
-        self.controller.apply_filter(filter_type, filter_value)
+        # IMMEDIATE: Switch to sequence browser with stable skeleton layout
+        self._show_sequence_browser_with_stable_layout(filter_type, filter_value)
+        
+        # THEN: Start progressive loading (after UI is stable)
+        QTimer.singleShot(50, lambda: self.controller.apply_filter(filter_type, filter_value))
 
     def _on_sequence_selected(self, sequence_id: str) -> None:
         """Handle sequence selection - delegate to controller."""
@@ -257,6 +260,18 @@ class BrowseTab(QWidget):
     def _show_sequence_browser(self) -> None:
         """Show sequence browser panel."""
         self.internal_left_stack.setCurrentIndex(1)
+    
+    def _show_sequence_browser_with_stable_layout(self, filter_type: FilterType, filter_value) -> None:
+        """Show sequence browser with immediate skeleton layout for stable UX."""
+        # Switch to sequence browser panel immediately (no delay)
+        self.internal_left_stack.setCurrentIndex(1)
+        
+        # Tell the browser panel to prepare stable layout with skeleton
+        self.sequence_browser_panel.prepare_stable_layout_for_filter(
+            filter_type, filter_value
+        )
+        
+        logger.info(f"🎯 Immediately switched to stable sequence browser for {filter_type.value}: {filter_value}")
 
     def refresh_sequences(self) -> None:
         """Refresh sequence data from disk."""

@@ -19,6 +19,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from desktop.modern.core.interfaces.core_services import IDataServiceRegistrar
+
 from ..service_registration_manager import BaseServiceRegistrar
 
 if TYPE_CHECKING:
@@ -59,14 +60,21 @@ class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
     def _register_core_data_services(self, container: "DIContainer") -> None:
         """Register core data management services."""
         try:
+            from desktop.modern.core.interfaces.data_services import IDataCacheManager
             from shared.application.services.data.cache_manager import DataCacheManager
-            from shared.application.services.data.csv_reader import CSVReader, ICSVReader
-            from shared.application.services.data.data_service import DataManager, IDataManager
+            from shared.application.services.data.csv_reader import (
+                CSVReader,
+                ICSVReader,
+            )
+            from shared.application.services.data.data_service import (
+                DataManager,
+                IDataManager,
+            )
             from shared.application.services.data.dataset_query import (
                 DatasetQuery,
                 IDatasetQuery,
             )
-            from shared.application.services.data.pictograph_data_service import (
+            from shared.application.services.data.pictograph_data_manager import (
                 IPictographDataManager,
                 PictographDataManager,
             )
@@ -74,7 +82,6 @@ class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
                 IJSONConfigurator,
                 JSONConfigurator,
             )
-            from desktop.modern.core.interfaces.data_services import IDataCacheManager
 
             # Register cache manager
             container.register_singleton(DataCacheManager, DataCacheManager)
@@ -109,15 +116,15 @@ class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
     def _register_conversion_services(self, container: "DIContainer") -> None:
         """Register data conversion services."""
         try:
+            from desktop.modern.core.interfaces.data_services import (
+                ILegacyToModernConverter,
+                IModernToLegacyConverter,
+            )
             from shared.application.services.data.legacy_to_modern_converter import (
                 LegacyToModernConverter,
             )
             from shared.application.services.data.modern_to_legacy_converter import (
                 ModernToLegacyConverter,
-            )
-            from desktop.modern.core.interfaces.data_services import (
-                ILegacyToModernConverter,
-                IModernToLegacyConverter,
             )
 
             # Register microservices directly instead of facades

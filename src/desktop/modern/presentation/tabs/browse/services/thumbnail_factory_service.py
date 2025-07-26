@@ -51,14 +51,14 @@ class ThumbnailFactoryService(IThumbnailFactory):
         layout.addWidget(image_label)
 
         # Sequence name
-        name_label = QLabel(sequence.name or f"Sequence {sequence.id[:8]}")
+        name_label = QLabel(sequence.word or f"Sequence {sequence.id[:8] if hasattr(sequence, 'id') else 'Unknown'}")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         name_label.setStyleSheet("font-size: 10px; font-weight: bold;")
         layout.addWidget(name_label)
 
         # Beat count
-        beat_count = len(sequence.beats) if sequence.beats else 0
+        beat_count = sequence.sequence_length if hasattr(sequence, 'sequence_length') else 0
         count_label = QLabel(f"{beat_count} beats")
         count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         count_label.setStyleSheet("color: #666; font-size: 9px;")

@@ -54,6 +54,54 @@ class LayoutManagerService(ILayoutManager):
         self.grid_layout.addWidget(header_widget, current_row, 0, 1, 3)
 
         return current_row
+    
+    def add_skeleton_section_header(self, section_name: str, current_row: int) -> int:
+        """Add a skeleton section header placeholder to the grid."""
+        skeleton_header = QFrame()
+        skeleton_header.setStyleSheet(
+            """
+            QFrame {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #f5f5f5,
+                    stop:0.5 #e8e8e8,
+                    stop:1 #f5f5f5
+                );
+                border: 1px solid #e0e0e0;
+                border-radius: 6px;
+                margin: 10px 0px;
+                min-height: 35px;
+            }
+        """
+        )
+
+        header_layout = QHBoxLayout(skeleton_header)
+        header_layout.setContentsMargins(15, 8, 15, 8)
+
+        # Skeleton title placeholder
+        title_skeleton = QLabel()
+        title_skeleton.setFixedSize(120, 16)
+        title_skeleton.setStyleSheet(
+            """
+            QLabel {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #e0e0e0,
+                    stop:0.5 #d0d0d0,
+                    stop:1 #e0e0e0
+                );
+                border-radius: 3px;
+            }
+        """
+        )
+        header_layout.addWidget(title_skeleton)
+        header_layout.addStretch()
+
+        if current_row > 0:
+            current_row += 1
+        self.grid_layout.addWidget(skeleton_header, current_row, 0, 1, 3)
+
+        return current_row
 
     def add_thumbnail_to_grid(self, thumbnail: QWidget, row: int, col: int) -> None:
         """Add a thumbnail widget to the grid at specified position."""

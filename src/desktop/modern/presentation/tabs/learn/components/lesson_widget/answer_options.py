@@ -6,10 +6,10 @@ and handles user selection with proper feedback.
 """
 
 import logging
-from typing import Optional, List, Any, Dict
+from typing import Any, Dict, List, Optional
 
-from PyQt6.QtWidgets import QWidget, QGridLayout, QHBoxLayout, QPushButton
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QPushButton, QWidget
 
 from desktop.modern.core.interfaces.learn_services import ILearnUIService
 from desktop.modern.domain.models.learn import QuestionData
@@ -240,9 +240,12 @@ class AnswerOptions(QWidget):
         """
         try:
             # Import required components
-            from PyQt6.QtWidgets import QFrame, QVBoxLayout, QSizePolicy
-            from desktop.modern.presentation.components.pictograph.views import create_learn_view
+            from PyQt6.QtWidgets import QFrame, QSizePolicy, QVBoxLayout
+
             from desktop.modern.domain.models.pictograph_data import PictographData
+            from desktop.modern.presentation.components.pictograph.views import (
+                create_learn_view,
+            )
 
             # Extract PictographData from the option data structure
             actual_pictograph_data = None
@@ -284,15 +287,22 @@ class AnswerOptions(QWidget):
                     parent=option_frame, context="answer"
                 )
                 pictograph_widget.setSizePolicy(
-                    QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+                    QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
                 )
 
-                # Set size constraints for answer options
-                pictograph_widget.setMinimumSize(100, 100)
-                pictograph_widget.setMaximumSize(200, 200)
+                # Set fixed square size for answer options to prevent wide containers
+                answer_size = 150  # Square size for answer options
+                pictograph_widget.setFixedSize(answer_size, answer_size)
+
+                # Set the frame to also be square to match the pictograph
+                option_frame.setFixedSize(
+                    answer_size + 8, answer_size + 8
+                )  # +8 for margins
 
                 # Fit to container as a square for consistent answer option display
-                pictograph_widget.fit_to_container(200, 200, maintain_square=True)
+                pictograph_widget.fit_to_container(
+                    answer_size, answer_size, maintain_square=True
+                )
 
                 # Direct view handles its own scaling - no scaling context needed
 

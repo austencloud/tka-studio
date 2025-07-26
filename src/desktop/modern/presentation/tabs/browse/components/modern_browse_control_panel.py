@@ -322,15 +322,20 @@ class ModernBrowseControlPanel(QFrame):
         self.current_filter_description = description
         self.filter_label.setText(description)
 
-    def update_count(self, count: int) -> None:
+    def update_count(self, count) -> None:
         """Update the sequence count label."""
-        self.current_count = count
-        if count == 0:
-            self.count_label.setText("No sequences")
-        elif count == 1:
-            self.count_label.setText("1 sequence")
+        if isinstance(count, str):
+            # Handle string count (e.g., "Loading...")
+            self.count_label.setText(count)
         else:
-            self.count_label.setText(f"{count} sequences")
+            # Handle integer count
+            self.current_count = count
+            if count == 0:
+                self.count_label.setText("No sequences")
+            elif count == 1:
+                self.count_label.setText("1 sequence")
+            else:
+                self.count_label.setText(f"{count} sequences")
 
     def get_current_sort_method(self) -> str:
         """Get the current sort method."""

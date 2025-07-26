@@ -63,7 +63,7 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.pictograph_services import (
                 IPictographValidator,
             )
-            from shared.application.services.data.pictograph_data_service import (
+            from shared.application.services.data.pictograph_data_manager import (
                 IPictographDataManager,
                 PictographDataManager,
             )

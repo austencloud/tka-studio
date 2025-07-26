@@ -143,6 +143,92 @@ class ModernNavigationSidebar(QWidget):
 
         # Add stretch to push buttons to top
         self.content_layout.addStretch()
+    
+    def show_skeleton_sections(self, expected_sections: List[str]) -> None:
+        """
+        Show skeleton placeholders for expected sections during loading.
+        
+        Args:
+            expected_sections: List of section names that are expected to load
+        """
+        # Clear existing content
+        self._clear_content()
+        
+        # Add section header for skeleton
+        header_label = QLabel("Loading sections...")
+        header_label.setFont(QFont("Segoe UI", 11, QFont.Weight.Bold))
+        header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        header_label.setStyleSheet(
+            """
+            QLabel {
+                color: rgba(255, 255, 255, 0.6);
+                padding: 8px 5px;
+                font-weight: bold;
+                font-style: italic;
+            }
+        """
+        )
+        self.content_layout.addWidget(header_label)
+        
+        # Add separator line
+        separator = QFrame()
+        separator.setFrameShape(QFrame.Shape.HLine)
+        separator.setStyleSheet(
+            """
+            QFrame {
+                background-color: rgba(255, 255, 255, 0.2);
+                border: none;
+                max-height: 1px;
+                margin: 0px 10px;
+            }
+        """
+        )
+        self.content_layout.addWidget(separator)
+        
+        # Create skeleton buttons for expected sections
+        for section in expected_sections:
+            skeleton_button = self._create_skeleton_section_button(section)
+            self.content_layout.addWidget(skeleton_button)
+        
+        # Add stretch to push buttons to top
+        self.content_layout.addStretch()
+        
+        print(f"📊 Created skeleton navigation with {len(expected_sections)} sections")
+    
+    def _create_skeleton_section_button(self, section: str) -> QWidget:
+        """
+        Create a skeleton placeholder button for a section.
+        
+        Args:
+            section: The section name (for sizing purposes)
+            
+        Returns:
+            A skeleton button widget
+        """
+        skeleton_button = QFrame()
+        skeleton_button.setFixedHeight(36)  # Same height as real buttons
+        
+        # Calculate width based on section text length
+        text_width = len(section) * 8 + 24  # Approximate character width + padding
+        skeleton_button.setMinimumWidth(max(60, min(120, text_width)))
+        
+        skeleton_button.setStyleSheet(
+            """
+            QFrame {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 rgba(255, 255, 255, 0.08),
+                    stop:0.5 rgba(255, 255, 255, 0.12),
+                    stop:1 rgba(255, 255, 255, 0.08)
+                );
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                margin: 2px 0px;
+            }
+        """
+        )
+        
+        return skeleton_button
 
     def _get_header_text(self, sort_order: str) -> str:
         """Get the header text for the current sort order."""

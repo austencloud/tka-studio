@@ -1,0 +1,1556 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0 -- F:\CODE\TKA\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+metadata: {'Python': '3.13.5', 'Platform': 'Windows-11-10.0.26100-SP0', 'Packages': {'pytest': '8.4.1', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.9.0', 'Faker': '37.4.0', 'hypothesis': '6.135.26', 'asyncio': '1.0.0', 'benchmark': '5.1.0', 'cov': '6.2.1', 'html': '4.1.1', 'metadata': '3.1.1', 'mock': '3.14.1', 'qt': '4.4.0', 'xvfb': '3.0.0'}}
+PyQt6 6.9.1 -- Qt runtime 6.9.1 -- Qt compiled 6.9.0
+rootdir: F:\CODE\TKA\tests\e2e
+configfile: pytest.ini
+plugins: anyio-4.9.0, Faker-37.4.0, hypothesis-6.135.26, asyncio-1.0.0, benchmark-5.1.0, cov-6.2.1, html-4.1.1, metadata-3.1.1, mock-3.14.1, qt-4.4.0, xvfb-3.0.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+tests\e2e\workflows\test_learn_tab_pictograph_diagnostic.py::TestLearnTabPictographDiagnostic::test_learn_tab_pictograph_diagnostic INFO: FIXTURE: Creating QApplication for test session
+INFO: FIXTURE: Creating TKA application instance
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f195' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 57, in create_production_app
+    ApplicationFactory._set_global_container(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 263, in _set_global_container
+    set_container(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\di_container.py", line 329, in set_container
+    logger.info(
+Message: '\U0001f195 [DI_CONTAINER] Setting initial container instance 2216616934240'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f527' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 171, in register_all_common_services
+    logger.info("\U0001f527 Starting common service registration...")
+Message: '\U0001f527 Starting common service registration...'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 174, in register_all_common_services
+    ServiceRegistrationHelper.register_common_data_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 49, in register_common_data_services
+    ServiceRegistrationHelper._register_services_batch(container, registrations, "common data services")
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 255, in _register_services_batch
+    logger.info(f"\U0001f4ca {batch_name}: {successful} successful, {failed} failed registrations")
+Message: '\U0001f4ca common data services: 3 successful, 0 failed registrations'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 177, in register_all_common_services
+    ServiceRegistrationHelper.register_common_core_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 80, in register_common_core_services
+    ServiceRegistrationHelper._register_services_batch(container, registrations, "common core services")
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 255, in _register_services_batch
+    logger.info(f"\U0001f4ca {batch_name}: {successful} successful, {failed} failed registrations")
+Message: '\U0001f4ca common core services: 5 successful, 0 failed registrations'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 180, in register_all_common_services
+    ServiceRegistrationHelper.register_common_session_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 133, in register_common_session_services
+    ServiceRegistrationHelper._register_services_batch(container, basic_registrations, "basic session services")
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 255, in _register_services_batch
+    logger.info(f"\U0001f4ca {batch_name}: {successful} successful, {failed} failed registrations")
+Message: '\U0001f4ca basic session services: 3 successful, 0 failed registrations'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 180, in register_all_common_services
+    ServiceRegistrationHelper.register_common_session_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 141, in register_common_session_services
+    logger.info("\u2705 Registered session coordinator with dependencies")
+Message: '\u2705 Registered session coordinator with dependencies'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 183, in register_all_common_services
+    ServiceRegistrationHelper.register_common_pictograph_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 101, in register_common_pictograph_services
+    ServiceRegistrationHelper._register_services_batch(container, registrations, "common pictograph services")
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 255, in _register_services_batch
+    logger.info(f"\U0001f4ca {batch_name}: {successful} successful, {failed} failed registrations")
+Message: '\U0001f4ca common pictograph services: 2 successful, 0 failed registrations'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 184, in register_all_common_services
+    ServiceRegistrationHelper.register_visibility_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 156, in register_visibility_services
+    logger.info("\u2705 Registered visibility settings services")
+Message: '\u2705 Registered visibility settings services'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 60, in create_production_app
+    ServiceRegistrationHelper.register_all_common_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 186, in register_all_common_services
+    logger.info("\u2705 Common service registration completed")
+Message: '\u2705 Common service registration completed'
+Arguments: ()
+[PATH_SETUP] Added 0 paths for VS Code debugger compatibility
+[PATH_SETUP] First 5 sys.path entries:
+  0: F:\CODE\TKA
+  1: F:\CODE\TKA\src
+  2: F:\CODE\TKA
+  3: C:\Users\Austen\AppData\Local\Programs\Python\Python313\python313.zip
+  4: C:\Users\Austen\AppData\Local\Programs\Python\Python313\DLLs
+INFO: Qt image export engine initialized
+INFO: Qt image export adapter initialized
+INFO: Created Qt image export adapter with framework-agnostic core
+--- Logging error ---
+Traceback (most recent call last):
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 217, in resolve
+    return factory_or_implementation(container)
+TypeError: register_image_export_services.<locals>.<lambda>() takes 0 positional arguments but 1 was given
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 66, in create_production_app
+    ServiceRegistrationHelper.apply_service_registration_manager(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 217, in apply_service_registration_manager
+    service_manager.register_all_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\service_registration_manager.py", line 312, in register_all_services
+    self._coordinator.register_all_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\service_registration_manager.py", line 192, in register_all_services
+    registrar.register_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\registrars\workbench_service_registrar.py", line 65, in register_services
+    self._register_business_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\registrars\workbench_service_registrar.py", line 136, in _register_business_services
+    export_service_instance = WorkbenchExportService()
+  File "F:\CODE\TKA\src\desktop\modern\application\services\workbench\workbench_export_service.py", line 57, in __init__
+    self._image_export_service = self._container.resolve(ISequenceImageExporter)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\di_container.py", line 174, in resolve
+    instance = self._resolver_chain.resolve(interface, self._registry, self)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 274, in resolve
+    return resolver.resolve(service_type, registry, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 57, in resolve
+    instance = self._create_with_constructor_injection(implementation, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 89, in _create_with_constructor_injection
+    dependencies[param_name] = container.resolve(param_type)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\di_container.py", line 174, in resolve
+    instance = self._resolver_chain.resolve(interface, self._registry, self)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 274, in resolve
+    return resolver.resolve(service_type, registry, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 220, in resolve
+    return factory_or_implementation()
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\image_export_service_registration.py", line 77, in <lambda>
+    ISequenceImageRenderer, lambda: SequenceImageRenderer(container=container)
+  File "F:\CODE\TKA\src\desktop\modern\application\services\image_export\sequence_image_renderer.py", line 84, in __init__
+    logger.info("\u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture")
+Message: '\u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture'
+Arguments: ()
+WARNING: Sequence state manager not initialized - call initialize_services() first
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 66, in create_production_app
+    ServiceRegistrationHelper.apply_service_registration_manager(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 218, in apply_service_registration_manager
+    logger.info("\u2705 Service registration manager applied")
+Message: '\u2705 Service registration manager applied'
+Arguments: ()
+INFO: Qt image export engine initialized
+INFO: Qt image export adapter initialized
+INFO: Created Qt image export adapter with framework-agnostic core
+--- Logging error ---
+Traceback (most recent call last):
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 217, in resolve
+    return factory_or_implementation(container)
+TypeError: register_image_export_services.<locals>.<lambda>() takes 0 positional arguments but 1 was given
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 69, in create_production_app
+    ServiceRegistrationHelper.register_extracted_services_with_error_handling(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 194, in register_extracted_services_with_error_handling
+    register_result = register_extracted_services(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\config_registration.py", line 321, in register_extracted_services
+    registration_coordinator.register_all_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\service_registration_manager.py", line 192, in register_all_services
+    registrar.register_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\registrars\workbench_service_registrar.py", line 65, in register_services
+    self._register_business_services(container)
+  File "F:\CODE\TKA\src\shared\application\services\core\registrars\workbench_service_registrar.py", line 136, in _register_business_services
+    export_service_instance = WorkbenchExportService()
+  File "F:\CODE\TKA\src\desktop\modern\application\services\workbench\workbench_export_service.py", line 57, in __init__
+    self._image_export_service = self._container.resolve(ISequenceImageExporter)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\di_container.py", line 174, in resolve
+    instance = self._resolver_chain.resolve(interface, self._registry, self)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 274, in resolve
+    return resolver.resolve(service_type, registry, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 57, in resolve
+    instance = self._create_with_constructor_injection(implementation, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 89, in _create_with_constructor_injection
+    dependencies[param_name] = container.resolve(param_type)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\di_container.py", line 174, in resolve
+    instance = self._resolver_chain.resolve(interface, self._registry, self)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 274, in resolve
+    return resolver.resolve(service_type, registry, container)
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\service_resolvers.py", line 220, in resolve
+    return factory_or_implementation()
+  File "F:\CODE\TKA\src\desktop\modern\core\dependency_injection\image_export_service_registration.py", line 77, in <lambda>
+    ISequenceImageRenderer, lambda: SequenceImageRenderer(container=container)
+  File "F:\CODE\TKA\src\desktop\modern\application\services\image_export\sequence_image_renderer.py", line 84, in __init__
+    logger.info("\u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture")
+Message: '\u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture'
+Arguments: ()
+WARNING: Sequence state manager not initialized - call initialize_services() first
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 69, in create_production_app
+    ServiceRegistrationHelper.register_extracted_services_with_error_handling(container)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\service_registration_helper.py", line 202, in register_extracted_services_with_error_handling
+    logger.info("\u2705 Extracted services registered successfully")
+Message: '\u2705 Extracted services registered successfully'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 6: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201, in console_main
+    code = main()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 130, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 164, in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\runner.py", line 514, in setup
+    col.setup()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\python.py", line 1674, in setup
+    self._request._fillfixtures()
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 719, in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 548, in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1083, in execute
+    fixturedef = request._get_active_fixturedef(argname)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 639, in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1127, in execute
+    result = ihook.pytest_fixture_setup(fixturedef=self, request=request)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 1195, in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+  File "F:\CODE\TKA\.venv\Lib\site-packages\_pytest\fixtures.py", line 922, in call_fixture_func
+    fixture_result = next(generator)
+  File "F:\CODE\TKA\tests\e2e\conftest.py", line 79, in tka_app
+    app, main_window = create_application()
+  File "F:\CODE\TKA\src\desktop\modern\main.py", line 408, in create_application
+    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 222, in create_app
+    return creator()
+  File "F:\CODE\TKA\src\desktop\modern\core\application\application_factory.py", line 71, in create_production_app
+    logger.info("\u2705 Production application container created successfully")
+Message: '\u2705 Production application container created successfully'
+Arguments: ()
+ERROR: FIXTURE: Failed to create TKA application: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>
+INFO: FIXTURE: Cleaning up TKA application
+ERRORINFO: FIXTURE: Cleaning up QApplication
+
+
+=================================== ERRORS ====================================
+_ ERROR at setup of TestLearnTabPictographDiagnostic.test_learn_tab_pictograph_diagnostic _
+src\desktop\modern\main.py:174: in _setup_modern_state_persistence
+    print(f"\U0001f50d DEBUG: Starting state persistence setup. Container: {self.container}")
+C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py:19: in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f50d' in position 0: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+.venv\Lib\site-packages\pytestqt\plugin.py:180: in pytest_runtest_setup
+    result = yield
+             ^^^^^
+tests\e2e\conftest.py:79: in tka_app
+    app, main_window = create_application()
+                       ^^^^^^^^^^^^^^^^^^^^
+src\desktop\modern\main.py:429: in create_application
+    window = TKAMainWindow(
+src\desktop\modern\main.py:133: in __init__
+    self._setup_modern_state_persistence()
+src\desktop\modern\main.py:202: in _setup_modern_state_persistence
+    print(f"\u26a0\ufe0f Failed to initialize modern state persistence: {e}")
+C:\Users\Austen\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py:19: in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>
+----------------------------- Captured log setup ------------------------------
+INFO     tests.e2e.conftest:conftest.py:47 FIXTURE: Creating QApplication for test session\nINFO     tests.e2e.conftest:conftest.py:73 FIXTURE: Creating TKA application instance\nINFO     desktop.modern.core.dependency_injection.di_container:di_container.py:329 \U0001f195 [DI_CONTAINER] Setting initial container instance 2216616934240\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:171 \U0001f527 Starting common service registration...\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:255 \U0001f4ca common data services: 3 successful, 0 failed registrations\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:255 \U0001f4ca common core services: 5 successful, 0 failed registrations\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:255 \U0001f4ca basic session services: 3 successful, 0 failed registrations\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:141 \u2705 Registered session coordinator with dependencies\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:255 \U0001f4ca common pictograph services: 2 successful, 0 failed registrations\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:156 \u2705 Registered visibility settings services\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:186 \u2705 Common service registration completed\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:71 Qt image export engine initialized\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:283 Qt image export adapter initialized\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:368 Created Qt image export adapter with framework-agnostic core\nINFO     desktop.modern.application.services.image_export.sequence_image_renderer:sequence_image_renderer.py:84 \u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture\nWARNING  desktop.modern.core.service_locator:service_locator.py:96 Sequence state manager not initialized - call initialize_services() first\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:218 \u2705 Service registration manager applied\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:71 Qt image export engine initialized\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:283 Qt image export adapter initialized\nINFO     shared.application.adapters.qt_image_export_adapter:qt_image_export_adapter.py:368 Created Qt image export adapter with framework-agnostic core\nINFO     desktop.modern.application.services.image_export.sequence_image_renderer:sequence_image_renderer.py:84 \u2705 [IMAGE_RENDERER] Initialized with framework-agnostic architecture\nWARNING  desktop.modern.core.service_locator:service_locator.py:96 Sequence state manager not initialized - call initialize_services() first\nINFO     desktop.modern.core.application.service_registration_helper:service_registration_helper.py:202 \u2705 Extracted services registered successfully\nINFO     desktop.modern.core.application.application_factory:application_factory.py:71 \u2705 Production application container created successfully\nERROR    tests.e2e.conftest:conftest.py:89 FIXTURE: Failed to create TKA application: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>\nINFO     tests.e2e.conftest:conftest.py:93 FIXTURE: Cleaning up TKA application
+=========================== short test summary info ===========================
+ERROR tests\e2e\workflows\test_learn_tab_pictograph_diagnostic.py::TestLearnTabPictographDiagnostic::test_learn_tab_pictograph_diagnostic
+============================== 1 error in 1.05s ===============================

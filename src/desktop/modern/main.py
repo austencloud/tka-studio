@@ -37,9 +37,9 @@ if "tka_paths" not in sys.modules:
             sys.path.insert(0, str(path))
 
     print(
-        f"🔧 [PATH_SETUP] Added {len([p for p in src_paths if p.exists()])} paths for VS Code debugger compatibility"
+        f"[PATH_SETUP] Added {len([p for p in src_paths if p.exists()])} paths for VS Code debugger compatibility"
     )
-    print(f"🔧 [PATH_SETUP] First 5 sys.path entries:")
+    print(f"[PATH_SETUP] First 5 sys.path entries:")
     for i, path in enumerate(sys.path[:5]):
         print(f"  {i}: {path}")
 else:

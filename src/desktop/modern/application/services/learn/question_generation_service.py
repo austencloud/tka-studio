@@ -113,13 +113,13 @@ class QuestionGenerationService(IQuestionGenerationService):
             wrong_answers = self._generate_wrong_letters(
                 correct_letter, pictograph_dataset
             )
-            options = [correct_letter.value] + wrong_answers
+            options = [correct_letter] + wrong_answers
             random.shuffle(options)
 
             return QuestionData(
                 question_content=correct_pictograph_data,
                 answer_options=options,
-                correct_answer=correct_letter.value,
+                correct_answer=correct_letter,
                 question_type="pictograph_to_letter",
             )
 
@@ -134,7 +134,7 @@ class QuestionGenerationService(IQuestionGenerationService):
 
             # Get random letter and pictograph
             available_letters = list(pictograph_dataset.keys())
-            correct_letter = random.choice(available_letters)
+            correct_letter: str = random.choice(available_letters)
 
             # Filter by grid mode if necessary
             filtered_dataset = self._filter_pictograph_dataset_by_grid_mode(
@@ -150,7 +150,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             random.shuffle(pictographs)
 
             return QuestionData(
-                question_content=correct_letter.value,
+                question_content=correct_letter,
                 answer_options=pictographs,
                 correct_answer=correct_pictograph,
                 question_type="letter_to_pictograph",
@@ -226,7 +226,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to validate question: {e}")
             return False
 
-    def _generate_correct_letter(self, session_id: str, dataset: Dict) -> Any:
+    def _generate_correct_letter(self, session_id: str, dataset: Dict) -> str:
         """Generate correct letter avoiding previous."""
         try:
             letters = list(dataset.keys())
@@ -250,8 +250,9 @@ class QuestionGenerationService(IQuestionGenerationService):
     def _generate_wrong_letters(self, correct_letter: Any, dataset: Dict) -> List[str]:
         """Generate 3 wrong letter answers."""
         try:
+            # Dataset keys are already strings, not enum objects
             available_letters = [
-                letter.value for letter in dataset.keys() if letter != correct_letter
+                letter for letter in dataset.keys() if letter != correct_letter
             ]
 
             if len(available_letters) < 3:
@@ -291,22 +292,72 @@ class QuestionGenerationService(IQuestionGenerationService):
     def _generate_initial_pictograph(self, dataset: Dict) -> Dict:
         """Generate initial pictograph for next pictograph questions."""
         try:
-            # Find pictographs where start_pos == end_pos
-            valid_initial = []
-            for letter_pictographs in dataset.values():
+            # Filter dataset to only include TRUE start positions (start_pos == end_pos)
+            # This should only include beta positions like beta1, beta3, beta5, beta7
+            true_start_positions = []
+
+            # Debug: Log first few pictographs to understand the data structure
+            debug_count = 0
+            for letter, letter_pictographs in dataset.items():
                 for pictograph in letter_pictographs:
-                    if self._get_start_pos(pictograph) == self._get_end_pos(pictograph):
-                        valid_initial.append(pictograph)
+                    start_pos = self._get_start_pos(pictograph)
+                    end_pos = self._get_end_pos(pictograph)
 
-            if not valid_initial:
-                logger.warning("No valid initial pictographs found")
-                # Fallback to any pictograph
-                for letter_pictographs in dataset.values():
-                    if letter_pictographs:
-                        return letter_pictographs[0]
-                raise ValueError("No pictographs available")
+                    # Log first 5 pictographs for debugging
+                    if debug_count < 5:
+                        logger.info(
+                            f"DEBUG: Letter '{letter}', start_pos='{start_pos}', end_pos='{end_pos}', equal={start_pos == end_pos}"
+                        )
+                        debug_count += 1
 
-            return random.choice(valid_initial)
+                    # Only include pictographs where start_pos == end_pos (true start positions)
+                    if start_pos and end_pos and start_pos == end_pos:
+                        # Accept any letter with start_pos == end_pos as a potential start position
+                        # This includes β, B, and any other letters that might be start positions
+                        true_start_positions.append(pictograph)
+                        logger.info(
+                            f"Found true start position: {letter} - {start_pos}"
+                        )
+
+            logger.info(
+                f"Total true start positions found: {len(true_start_positions)}"
+            )
+
+            # Select from true start positions
+            if true_start_positions:
+                selected = random.choice(true_start_positions)
+                logger.info(
+                    f"Selected start position pictograph: {selected.get('letter', 'Unknown')} - {self._get_start_pos(selected)}"
+                )
+                return selected
+
+            # Fallback: look for any start position (start_pos == end_pos) without beta requirement
+            logger.warning(
+                "No beta start positions found, looking for any start positions"
+            )
+            fallback_start_positions = []
+
+            for letter, letter_pictographs in dataset.items():
+                for pictograph in letter_pictographs:
+                    start_pos = self._get_start_pos(pictograph)
+                    end_pos = self._get_end_pos(pictograph)
+
+                    if start_pos and end_pos and start_pos == end_pos:
+                        fallback_start_positions.append(pictograph)
+
+            if fallback_start_positions:
+                selected = random.choice(fallback_start_positions)
+                logger.warning(
+                    f"Using fallback start position: {selected.get('letter', 'Unknown')} - {self._get_start_pos(selected)}"
+                )
+                return selected
+
+            # Last resort: any pictograph
+            logger.error("No start position pictographs found, using any pictograph")
+            for letter_pictographs in dataset.values():
+                if letter_pictographs:
+                    return letter_pictographs[0]
+            raise ValueError("No pictographs available")
 
         except Exception as e:
             logger.error(f"Failed to generate initial pictograph: {e}")
@@ -348,25 +399,68 @@ class QuestionGenerationService(IQuestionGenerationService):
         try:
             correct_start_pos = self._get_start_pos(correct_pictograph)
             wrong_pictographs = []
-            attempts = 0
-            max_attempts = 100
 
-            while len(wrong_pictographs) < 3 and attempts < max_attempts:
-                # Get random pictograph
-                letter = random.choice(list(dataset.keys()))
-                random_pictograph = random.choice(dataset[letter])
+            # Collect all pictographs that CAN follow the initial pictograph but are different from correct answer
+            valid_candidates = []
+            for letter_pictographs in dataset.values():
+                for pictograph in letter_pictographs:
+                    # Valid candidate if it has the same start_pos (can follow) but is different from correct answer
+                    if (
+                        self._get_start_pos(pictograph) == correct_start_pos
+                        and pictograph != correct_pictograph
+                    ):
+                        valid_candidates.append(pictograph)
 
-                # Check if it has different start_pos than correct answer
-                if self._get_start_pos(random_pictograph) != correct_start_pos:
-                    # Avoid duplicates
-                    if random_pictograph not in wrong_pictographs:
-                        wrong_pictographs.append(random_pictograph)
+            # If we don't have enough valid candidates, add some random pictographs as distractors
+            if len(valid_candidates) < 3:
+                logger.info(
+                    f"Only {len(valid_candidates)} valid next pictographs found, adding random distractors"
+                )
 
-                attempts += 1
+                # Add random pictographs as distractors
+                all_pictographs = []
+                for letter_pictographs in dataset.values():
+                    all_pictographs.extend(letter_pictographs)
+
+                # Remove the correct answer from all pictographs
+                all_pictographs = [
+                    p for p in all_pictographs if p != correct_pictograph
+                ]
+
+                # Add random distractors to reach at least 3 candidates
+                random.shuffle(all_pictographs)
+                for pictograph in all_pictographs:
+                    if pictograph not in valid_candidates:
+                        valid_candidates.append(pictograph)
+                        if (
+                            len(valid_candidates) >= 6
+                        ):  # Get extra candidates for variety
+                            break
+
+            # Shuffle and take up to 3 unique wrong answers
+            if valid_candidates:
+                random.shuffle(valid_candidates)
+
+                # Ensure we get unique pictographs (by letter and position)
+                seen_keys = set()
+                for pictograph in valid_candidates:
+                    if len(wrong_pictographs) >= 3:
+                        break
+
+                    # Create unique key based on letter and positions
+                    key = (
+                        pictograph.get("letter", ""),
+                        self._get_start_pos(pictograph),
+                        self._get_end_pos(pictograph),
+                    )
+
+                    if key not in seen_keys:
+                        wrong_pictographs.append(pictograph)
+                        seen_keys.add(key)
 
             if len(wrong_pictographs) < 3:
                 logger.warning(
-                    f"Could only generate {len(wrong_pictographs)} wrong pictographs"
+                    f"Could only generate {len(wrong_pictographs)} wrong pictographs from {len(valid_candidates)} candidates"
                 )
 
             return wrong_pictographs
@@ -391,9 +485,21 @@ class QuestionGenerationService(IQuestionGenerationService):
         try:
             from data.constants import START_POS
 
+            # Check if data is a PictographData object
+            if "data" in pictograph and hasattr(pictograph["data"], "start_position"):
+                return pictograph["data"].start_position
+            # Try nested data structure as dict
+            elif "data" in pictograph and isinstance(pictograph["data"], dict):
+                return pictograph["data"].get(START_POS)
             return pictograph.get(START_POS)
         except ImportError:
             # Fallback if constants not available
+            # Check if data is a PictographData object
+            if "data" in pictograph and hasattr(pictograph["data"], "start_position"):
+                return pictograph["data"].start_position
+            # Try nested data structure as dict
+            elif "data" in pictograph and isinstance(pictograph["data"], dict):
+                return pictograph["data"].get("start_pos")
             return pictograph.get("start_pos")
 
     def _get_end_pos(self, pictograph: Dict) -> Any:
@@ -401,7 +507,50 @@ class QuestionGenerationService(IQuestionGenerationService):
         try:
             from data.constants import END_POS
 
+            # Check if data is a PictographData object
+            if "data" in pictograph and hasattr(pictograph["data"], "end_position"):
+                return pictograph["data"].end_position
+            # Try nested data structure as dict
+            elif "data" in pictograph and isinstance(pictograph["data"], dict):
+                return pictograph["data"].get(END_POS)
             return pictograph.get(END_POS)
         except ImportError:
             # Fallback if constants not available
+            # Check if data is a PictographData object
+            if "data" in pictograph and hasattr(pictograph["data"], "end_position"):
+                return pictograph["data"].end_position
+            # Try nested data structure as dict
+            elif "data" in pictograph and isinstance(pictograph["data"], dict):
+                return pictograph["data"].get("end_pos")
             return pictograph.get("end_pos")
+
+    def _has_zero_turns(self, pictograph: Dict) -> bool:
+        """Check if pictograph has zero turns in all motions."""
+        try:
+            # Check blue and red motion attributes for turns
+            try:
+                from data.constants import BLUE_ATTRS, RED_ATTRS
+            except ImportError:
+                BLUE_ATTRS = "blue_attributes"
+                RED_ATTRS = "red_attributes"
+
+            blue_attrs = pictograph.get(BLUE_ATTRS, {})
+            red_attrs = pictograph.get(RED_ATTRS, {})
+
+            # Check blue motion turns
+            blue_turns = blue_attrs.get("turns", 0)
+            if blue_turns != 0:
+                return False
+
+            # Check red motion turns
+            red_turns = red_attrs.get("turns", 0)
+            if red_turns != 0:
+                return False
+
+            # If we get here, all motions have 0 turns
+            return True
+
+        except Exception as e:
+            logger.warning(f"Error checking turns for pictograph: {e}")
+            # Default to True if we can't determine turns
+            return True

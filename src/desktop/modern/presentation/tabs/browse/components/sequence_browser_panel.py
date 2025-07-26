@@ -5,7 +5,12 @@ Simplified sequence browser that delegates responsibilities to focused services.
 This reduces the main class from 900+ lines to a focused orchestrator.
 """
 
+import logging
 from typing import List, Optional
+
+from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtGui import QResizeEvent
+from PyQt6.QtWidgets import QApplication, QWidget
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.tabs.browse.models import FilterType
@@ -20,9 +25,6 @@ from desktop.modern.presentation.tabs.browse.services import (
     SequenceSorterService,
     ThumbnailFactoryService,
 )
-from PyQt6.QtCore import QTimer, pyqtSignal
-from PyQt6.QtGui import QResizeEvent
-from PyQt6.QtWidgets import QWidget
 
 from .modern_browse_control_panel import ModernBrowseControlPanel
 from .modern_navigation_sidebar import ModernNavigationSidebar
@@ -174,7 +176,7 @@ class SequenceBrowserPanel(QWidget):
         filter_value: any,
         chunk_size: int = 6,
     ) -> None:
-        """Start progressive loading with stable layout."""
+        """Start progressive loading with visible layout (like legacy)."""
 
         # Store filter state
         self.current_filter_type = filter_type
@@ -183,14 +185,14 @@ class SequenceBrowserPanel(QWidget):
         # Update control panel
         if self.control_panel:
             self.control_panel.update_filter_description(filter_type, filter_value)
-            self.control_panel.update_count(0)
+            self.control_panel.update_count("Loading...")
 
         # Clear current data
         self.current_sequences.clear()
         self.all_loaded_sequences.clear()
 
-        # Show loading state
-        self.loading_state_manager.show_loading_state()
+        # CRITICAL: Keep browsing widget visible (like legacy) - don't show loading widget
+        self.loading_state_manager.hide_loading_state()  # Ensure browsing area is visible
 
         # Start progressive loading
         if self.progressive_loading_service:
@@ -228,6 +230,42 @@ class SequenceBrowserPanel(QWidget):
             sequences, sort_method
         )
 
+    def prepare_stable_layout_for_filter(
+        self, filter_type: FilterType, filter_value
+    ) -> None:
+        """Prepare for progressive loading with immediate UI setup (like legacy)."""
+        # Store filter state
+        self.current_filter_type = filter_type
+        self.current_filter_values = filter_value
+
+        # Update control panel immediately with filter info
+        if self.control_panel:
+            self.control_panel.update_filter_description(filter_type, filter_value)
+            self.control_panel.update_count("Loading...")
+
+        # Clear current data and layout (like legacy clear_layout)
+        self.current_sequences.clear()
+        self.all_loaded_sequences.clear()
+        
+        # Clear the grid layout completely (like legacy)
+        if self.layout_manager:
+            self.layout_manager.clear_grid()
+            print(f"🧹 Cleared grid layout")
+        
+        # CRITICAL: Ensure browsing widget is visible immediately
+        if hasattr(self, 'loading_state_manager'):
+            self.loading_state_manager.hide_loading_state()
+            print(f"👁️ Ensured browsing widget is visible")
+        
+        # Clear navigation sidebar
+        if self.navigation_sidebar:
+            self.navigation_sidebar.update_sections([], "alphabetical")
+            print(f"🧭 Cleared navigation sidebar")
+
+        print(
+            f"🎨 Prepared for progressive loading: {filter_type.value}: {filter_value}"
+        )
+
     def _get_current_sort_method(self) -> str:
         """Get the current sort method from state service."""
         return (
@@ -243,17 +281,28 @@ class SequenceBrowserPanel(QWidget):
             self.progressive_loading_service.cancel_loading()
 
     def _on_loading_started(self, total_count: int) -> None:
-        """Handle loading started signal."""
-        self.loading_state_manager.set_loading_started(total_count)
+        """Handle loading started signal - keep browsing area visible."""
+        # DON'T show loading state - keep browsing area visible for progressive loading
+        # self.loading_state_manager.set_loading_started(total_count)
+        
+        # Just ensure browsing area is visible
+        self.loading_state_manager.hide_loading_state()
+        
+        print(f"🚀 Started progressive loading: {total_count} sequences to load")
 
     def _on_sequences_chunk_loaded(self, chunk_sequences: List[SequenceData]) -> None:
-        """Handle chunk loading."""
+        """Handle chunk loading with progressive layout addition (like legacy)."""
+        print(f"📦 _on_sequences_chunk_loaded called with {len(chunk_sequences)} sequences")
+        
         if self.loading_state_manager.is_cancelled:
+            print(f"⛔ Loading cancelled, skipping chunk")
             return
 
         self.all_loaded_sequences.extend(chunk_sequences)
         chunk_size = len(chunk_sequences)
         total_loaded = len(self.all_loaded_sequences)
+        
+        print(f"📈 Progress: {total_loaded} total sequences loaded so far")
 
         # Update progress
         self.loading_state_manager.update_progress(
@@ -262,18 +311,20 @@ class SequenceBrowserPanel(QWidget):
 
         if self.control_panel:
             self.control_panel.update_count(total_loaded)
+            print(f"📋 Updated count to {total_loaded}")
 
-        # For first chunk, initialize layout
-        if total_loaded == chunk_size:
-            self.loading_state_manager.hide_loading_state()
-            sort_method = self._get_current_sort_method()
-            self.display_coordinator.initialize_progressive_layout(sort_method)
-
-        # Add sequences progressively
+        # PROGRESSIVE ADDITION: Add new sequences to layout one by one (like legacy)
         sort_method = self._get_current_sort_method()
-        self.display_coordinator.add_sequences_progressively(
-            chunk_sequences, sort_method
-        )
+        print(f"🔄 About to add sequences to layout with sort method: {sort_method}")
+        
+        self._add_sequences_progressively_to_layout(chunk_sequences, sort_method)
+        
+        # Update navigation as we add sections
+        self._update_navigation_progressively()
+        
+        # Process events to keep UI responsive (like legacy)
+        QApplication.processEvents()
+        print(f"✅ Completed processing chunk of {chunk_size} sequences")
 
     def _on_loading_progress(self, current: int, total: int) -> None:
         """Handle loading progress update."""
@@ -287,10 +338,15 @@ class SequenceBrowserPanel(QWidget):
         self.current_sequences = final_sequences
         self.loading_state_manager.set_loading_completed(len(final_sequences))
 
-        # Finalize layout with proper sections
-        sort_method = self._get_current_sort_method()
-        self.display_coordinator.finalize_progressive_layout(
-            final_sequences, sort_method
+        # Update final count and navigation
+        if self.control_panel:
+            self.control_panel.update_count(len(final_sequences))
+
+        # Final navigation update
+        self._update_navigation_progressively()
+
+        print(
+            f"✅ Progressive loading completed: {len(final_sequences)} sequences loaded"
         )
 
     def _on_loading_cancelled(self) -> None:
@@ -299,12 +355,18 @@ class SequenceBrowserPanel(QWidget):
 
         if self.all_loaded_sequences:
             self.current_sequences = self.all_loaded_sequences
-            sort_method = self._get_current_sort_method()
-            self.display_coordinator.finalize_progressive_layout(
-                self.current_sequences, sort_method
+            # Update count and navigation with what we have
+            if self.control_panel:
+                self.control_panel.update_count(len(self.all_loaded_sequences))
+            self._update_navigation_progressively()
+            print(
+                f"⚠️ Loading cancelled: {len(self.all_loaded_sequences)} sequences partially loaded"
             )
         else:
-            self.display_coordinator.show_empty_state()
+            # Show empty state
+            if self.control_panel:
+                self.control_panel.update_count(0)
+            print(f"❌ Loading cancelled: No sequences loaded")
 
     def _on_sort_changed(self, sort_method: str) -> None:
         """Handle sort method change."""
@@ -343,6 +405,127 @@ class SequenceBrowserPanel(QWidget):
 
         if self.display_coordinator:
             self.display_coordinator.update_thumbnail_width(new_width)
+
+    def _add_sequences_progressively_to_layout(
+        self, chunk_sequences: List[SequenceData], sort_method: str
+    ) -> None:
+        """Add sequences to layout progressively, one by one (like legacy)."""
+        if not chunk_sequences or not self.layout_manager:
+            return
+
+        # Group sequences by section (like legacy grouping)
+        sections_to_add = self._group_sequences_by_section(chunk_sequences, sort_method)
+
+        # Get current layout state
+        current_row = self.layout_manager.get_row_count()
+
+        # Add each section progressively
+        for section_name, section_sequences in sections_to_add.items():
+            # Check if we need to add a section header
+            if self._should_add_section_header(section_name):
+                current_row = self.layout_manager.add_section_header(
+                    section_name, current_row
+                )
+                current_row += 1
+
+            # Add thumbnails for this section one by one
+            column_index = self._get_current_column_for_row(current_row)
+
+            for sequence in section_sequences:
+                # Create thumbnail (like legacy add_thumbnail_box)
+                thumbnail = self.thumbnail_factory.create_thumbnail(
+                    sequence, self.thumbnail_width, sort_method
+                )
+
+                # Make clickable
+                if self.display_coordinator and hasattr(
+                    self.display_coordinator, "thumbnail_click_callback"
+                ):
+                    thumbnail.mousePressEvent = (
+                        lambda event, seq_id=sequence.id: self._on_thumbnail_clicked(
+                            seq_id
+                        )
+                    )
+
+                # Add to grid layout (like legacy)
+                self.layout_manager.add_thumbnail_to_grid(
+                    thumbnail, current_row, column_index
+                )
+
+                # Show immediately (like legacy)
+                thumbnail.show()
+
+                # Move to next position
+                column_index = (column_index + 1) % 3  # 3 columns
+                if column_index == 0:
+                    current_row += 1
+
+                # Process events to keep UI responsive (critical for legacy-like behavior)
+                QApplication.processEvents()
+
+        print(f"🔄 Added {len(chunk_sequences)} sequences progressively to layout")
+
+    def _group_sequences_by_section(
+        self, sequences: List[SequenceData], sort_method: str
+    ) -> dict:
+        """Group sequences by section (like legacy)."""
+        sections = {}
+
+        for sequence in sequences:
+            section_name = self._get_section_name_for_sequence(sequence, sort_method)
+            if section_name not in sections:
+                sections[section_name] = []
+            sections[section_name].append(sequence)
+
+        return sections
+
+    def _get_section_name_for_sequence(
+        self, sequence: SequenceData, sort_method: str
+    ) -> str:
+        """Get section name for a sequence based on sort method."""
+        if sort_method == "alphabetical":
+            return sequence.word[0].upper() if sequence.word else "#"
+        elif sort_method == "length":
+            if sequence.sequence_length <= 3:
+                return "Short (1-3)"
+            elif sequence.sequence_length <= 6:
+                return "Medium (4-6)"
+            else:
+                return "Long (7+)"
+        elif sort_method == "level":
+            return f"Level {sequence.level if sequence.level else 'Unknown'}"
+        elif sort_method == "date_added":
+            return sequence.date_added if sequence.date_added else "Unknown"
+        else:
+            return "Other"
+
+    def _should_add_section_header(self, section_name: str) -> bool:
+        """Check if we should add a section header."""
+        # For now, always add headers (could be optimized to check if section already exists)
+        return True
+
+    def _get_current_column_for_row(self, row: int) -> int:
+        """Get the current column index for a row (based on existing items)."""
+        # For simplicity, start at column 0 for new rows
+        # Could be enhanced to check existing items in the row
+        return 0
+
+    def _update_navigation_progressively(self) -> None:
+        """Update navigation as sections are added."""
+        if not self.navigation_sidebar or not self.all_loaded_sequences:
+            return
+
+        # Get unique sections from loaded sequences
+        sort_method = self._get_current_sort_method()
+        sections = set()
+
+        for sequence in self.all_loaded_sequences:
+            section_name = self._get_section_name_for_sequence(sequence, sort_method)
+            sections.add(section_name)
+
+        # Update navigation with current sections
+        sections_list = sorted(list(sections))
+        self.navigation_sidebar.update_sections(sections_list, sort_method)
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         """Handle resize event by updating thumbnail dimensions."""
