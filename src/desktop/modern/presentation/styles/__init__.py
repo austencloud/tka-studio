@@ -7,23 +7,26 @@ utility functions for consistent UI styling across the application.
 
 Key Components:
 - DesignSystem: Central styling coordination
-- GlassmorphismStyles: Modern glass aesthetic effects  
+- GlassmorphismStyles: Modern glass aesthetic effects
 - StyleMixin: Component integration utilities
 - ComponentTypes and StyleVariants: Type definitions
 """
 
-# Core design system
-from .design_system import (
-    DesignSystem,
-    get_design_system,
-    reset_design_system,
-    get_button_style,
-    get_panel_style,
-    get_label_style,
-)
+# Component-specific mixins
+from .component_mixins import *
 
 # Type definitions
 from .core.types import ComponentType, StyleVariant
+
+# Core design system
+from .design_system import (
+    DesignSystem,
+    get_button_style,
+    get_design_system,
+    get_label_style,
+    get_panel_style,
+    reset_design_system,
+)
 
 # Glassmorphism styling
 from .glassmorphism_styles import (
@@ -34,16 +37,13 @@ from .glassmorphism_styles import (
 
 # Component integration mixins
 from .mixins import (
-    StyleMixin,
     StyledWidget,
-    apply_style_to_widget,
+    StyleMixin,
     apply_button_style_to_widget,
-    apply_menu_bar_style_to_widget,
     apply_dialog_style_to_widget,
+    apply_menu_bar_style_to_widget,
+    apply_style_to_widget,
 )
-
-# Component-specific mixins
-from .component_mixins import *
 
 # Style guide utilities (if available)
 try:
@@ -59,18 +59,15 @@ __all__ = [
     "get_design_system",
     "reset_design_system",
     "get_button_style",
-    "get_panel_style", 
+    "get_panel_style",
     "get_label_style",
-    
     # Type definitions
     "ComponentType",
     "StyleVariant",
-    
     # Glassmorphism
     "GlassmorphismColors",
     "GlassmorphismEffects",
     "GlassmorphismStyleGenerator",
-    
     # Mixins and utilities
     "StyleMixin",
     "StyledWidget",
@@ -80,20 +77,21 @@ __all__ = [
     "apply_dialog_style_to_widget",
 ]
 
+
 # Module-level convenience functions
 def create_component_style(
     component_type: ComponentType,
     variant: StyleVariant = StyleVariant.DEFAULT,
-    **kwargs
+    **kwargs,
 ) -> str:
     """
     Module-level convenience function to create component styles.
-    
+
     Args:
         component_type: The type of component to style
         variant: The style variant to apply
         **kwargs: Additional styling options
-        
+
     Returns:
         CSS string for the component
     """
@@ -103,10 +101,10 @@ def create_component_style(
 def get_color(color_name: str) -> str:
     """
     Module-level convenience function to get colors from the design system.
-    
+
     Args:
         color_name: Name of the color to retrieve
-        
+
     Returns:
         Color value as a string
     """
@@ -116,10 +114,10 @@ def get_color(color_name: str) -> str:
 def get_effect(effect_name: str) -> str:
     """
     Module-level convenience function to get effects from the design system.
-    
+
     Args:
         effect_name: Name of the effect to retrieve
-        
+
     Returns:
         Effect value as a string
     """
@@ -127,8 +125,10 @@ def get_effect(effect_name: str) -> str:
 
 
 # Add module-level convenience functions to exports
-__all__.extend([
-    "create_component_style",
-    "get_color", 
-    "get_effect",
-])
+__all__.extend(
+    [
+        "create_component_style",
+        "get_color",
+        "get_effect",
+    ]
+)
