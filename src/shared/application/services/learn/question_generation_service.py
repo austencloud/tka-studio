@@ -8,14 +8,14 @@ Handles different question formats and answer generation.
 import logging
 import random
 from datetime import datetime
-from typing import Dict, List, Any, Set
+from typing import Any, Dict, List, Set
 
 from desktop.modern.core.interfaces.learn_services import (
     IQuestionGenerationService,
     IQuizSessionService,
 )
-from desktop.modern.core.interfaces.data_builder_services import IPictographDataService
-from desktop.modern.domain.models.learn import QuestionData, LessonConfig, LessonType
+from desktop.modern.core.interfaces.pictograph_services import IPictographDataManager
+from desktop.modern.domain.models.learn import LessonConfig, LessonType, QuestionData
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class QuestionGenerationService(IQuestionGenerationService):
     def __init__(
         self,
         session_service: IQuizSessionService,
-        pictograph_data_service: IPictographDataService,
+        pictograph_data_service: IPictographDataManager,
     ):
         """
         Initialize question generation service.
@@ -438,17 +438,17 @@ class QuestionGenerationService(IQuestionGenerationService):
         # Import constants to avoid circular imports
         try:
             from data.constants import START_POS
-            
+
             # Try legacy format first (direct key access)
             if START_POS in pictograph:
                 return pictograph[START_POS]
         except ImportError:
             pass
-        
+
         # Try standard fallback
         if "start_pos" in pictograph:
             return pictograph["start_pos"]
-        
+
         # Try modern format (nested in data)
         if "data" in pictograph:
             data = pictograph["data"]
@@ -457,25 +457,27 @@ class QuestionGenerationService(IQuestionGenerationService):
                 return self._convert_grid_position_to_int(data.start_position)
             if "start_pos" in data:
                 return data["start_pos"]
-        
-        logger.warning(f"Could not extract start_pos from pictograph: {list(pictograph.keys())}")
+
+        logger.warning(
+            f"Could not extract start_pos from pictograph: {list(pictograph.keys())}"
+        )
         return 1  # Default fallback
 
     def _get_end_pos(self, pictograph: Dict) -> Any:
         """Get end position from pictograph data."""
         try:
             from data.constants import END_POS
-            
+
             # Try legacy format first (direct key access)
             if END_POS in pictograph:
                 return pictograph[END_POS]
         except ImportError:
             pass
-        
+
         # Try standard fallback
         if "end_pos" in pictograph:
             return pictograph["end_pos"]
-        
+
         # Try modern format (nested in data)
         if "data" in pictograph:
             data = pictograph["data"]
@@ -484,26 +486,41 @@ class QuestionGenerationService(IQuestionGenerationService):
                 return self._convert_grid_position_to_int(data.end_position)
             if "end_pos" in data:
                 return data["end_pos"]
-        
-        logger.warning(f"Could not extract end_pos from pictograph: {list(pictograph.keys())}")
+
+        logger.warning(
+            f"Could not extract end_pos from pictograph: {list(pictograph.keys())}"
+        )
         return 1  # Default fallback
-    
+
     def _convert_grid_position_to_int(self, grid_position) -> int:
         """Convert GridPosition enum to integer for legacy compatibility."""
         if grid_position is None:
             return 1  # Default position
-        
+
         # Map GridPosition enums to integers (1-4 for legacy compatibility)
         position_map = {
             # Alpha positions (diamond/radial grid)
-            "ALPHA1": 1, "ALPHA2": 2, "ALPHA3": 3, "ALPHA4": 4,
-            "ALPHA5": 1, "ALPHA6": 2, "ALPHA7": 3, "ALPHA8": 4,  # Wrap around
-            
-            # Beta positions (box grid)  
-            "BETA1": 1, "BETA2": 2, "BETA3": 3, "BETA4": 4,
-            "BETA5": 1, "BETA6": 2, "BETA7": 3, "BETA8": 4,  # Wrap around
+            "ALPHA1": 1,
+            "ALPHA2": 2,
+            "ALPHA3": 3,
+            "ALPHA4": 4,
+            "ALPHA5": 1,
+            "ALPHA6": 2,
+            "ALPHA7": 3,
+            "ALPHA8": 4,  # Wrap around
+            # Beta positions (box grid)
+            "BETA1": 1,
+            "BETA2": 2,
+            "BETA3": 3,
+            "BETA4": 4,
+            "BETA5": 1,
+            "BETA6": 2,
+            "BETA7": 3,
+            "BETA8": 4,  # Wrap around
         }
-        
+
         # Get position name (handle both enum and string)
-        position_name = grid_position.name if hasattr(grid_position, "name") else str(grid_position)
+        position_name = (
+            grid_position.name if hasattr(grid_position, "name") else str(grid_position)
+        )
         return position_map.get(position_name, 1)  # Default to 1 if not found

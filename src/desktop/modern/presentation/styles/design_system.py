@@ -20,7 +20,7 @@ from .glassmorphism_styles import (
 class DesignSystem:
     """
     Central design system that provides consistent styling across the application.
-    
+
     This class coordinates all visual elements including colors, typography,
     spacing, and component-specific styles while maintaining the glassmorphism
     aesthetic throughout the application.
@@ -58,7 +58,7 @@ class DesignSystem:
         self,
         component_type: ComponentType,
         variant: StyleVariant = StyleVariant.DEFAULT,
-        **kwargs
+        **kwargs,
     ) -> str:
         """
         Create CSS styling for a specific component type and variant.
@@ -75,8 +75,10 @@ class DesignSystem:
             raise ValueError(f"Unsupported component type: {component_type}")
 
         component_config = self._component_styles[component_type]
-        variant_styles = component_config.get(variant.value, component_config.get("default", {}))
-        
+        variant_styles = component_config.get(
+            variant.value, component_config.get("default", {})
+        )
+
         # Apply any kwargs as overrides
         final_styles = {**variant_styles}
         if kwargs:
@@ -89,7 +91,7 @@ class DesignSystem:
         css_rules = []
         for property_name, value in style_dict.items():
             # Convert Python-style property names to CSS
-            css_property = property_name.replace('_', '-')
+            css_property = property_name.replace("_", "-")
             css_rules.append(f"{css_property}: {value};")
         return " ".join(css_rules)
 
@@ -168,7 +170,6 @@ class DesignSystem:
                 "background-color": self._colors.GLASS_BASE,
                 "border-bottom": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "padding": "8px 16px",
-                "backdrop-filter": "blur(10px)",
                 "box-shadow": self._effects.SHADOW_SUBTLE,
             },
         }
@@ -180,7 +181,6 @@ class DesignSystem:
                 "background-color": self._colors.GLASS_BASE,
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
-                "backdrop-filter": "blur(15px)",
                 "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
@@ -193,7 +193,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": self._effects.PADDING_LARGE,
-                "backdrop-filter": "blur(10px)",
                 "box-shadow": self._effects.SHADOW_SUBTLE,
             },
             "accent": {
@@ -201,7 +200,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.ACCENT_BORDER}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": self._effects.PADDING_LARGE,
-                "backdrop-filter": "blur(10px)",
                 "box-shadow": self._effects.SHADOW_ACCENT,
             },
             "subtle": {
@@ -209,7 +207,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": self._effects.PADDING_LARGE,
-                "backdrop-filter": "blur(5px)",
             },
         }
 
@@ -221,7 +218,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_NORMAL}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "24px",
-                "backdrop-filter": "blur(20px)",
                 "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.2)",
             },
         }
@@ -238,7 +234,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": "16px",
-                "backdrop-filter": "blur(10px)",
             },
         }
 
@@ -323,7 +318,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "16px",
-                "backdrop-filter": "blur(10px)",
                 "box-shadow": self._effects.SHADOW_SUBTLE,
                 "transition": self._effects.TRANSITION_NORMAL,
             },
@@ -332,7 +326,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.ACCENT_BORDER}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "16px",
-                "backdrop-filter": "blur(10px)",
                 "box-shadow": self._effects.SHADOW_ACCENT,
                 "transition": self._effects.TRANSITION_NORMAL,
             },
@@ -362,7 +355,6 @@ class DesignSystem:
         return {
             "default": {
                 "background-color": "rgba(0, 0, 0, 0.4)",
-                "backdrop-filter": "blur(5px)",
             },
         }
 
@@ -388,7 +380,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "20px",
-                "backdrop-filter": "blur(15px)",
                 "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
@@ -421,10 +412,10 @@ _design_system_instance: Optional[DesignSystem] = None
 def get_design_system() -> DesignSystem:
     """
     Get the global design system instance.
-    
+
     This function ensures there's only one design system instance throughout
     the application lifecycle, providing consistency and performance.
-    
+
     Returns:
         The global DesignSystem instance
     """
@@ -437,7 +428,7 @@ def get_design_system() -> DesignSystem:
 def reset_design_system() -> None:
     """
     Reset the global design system instance.
-    
+
     This is mainly useful for testing or when configuration changes require
     a fresh design system instance.
     """
@@ -449,14 +440,20 @@ def reset_design_system() -> None:
 # Convenience functions for quick styling
 def get_button_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
     """Quick function to get button styling."""
-    return get_design_system().create_component_style(ComponentType.BUTTON, variant, **kwargs)
+    return get_design_system().create_component_style(
+        ComponentType.BUTTON, variant, **kwargs
+    )
 
 
 def get_panel_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
     """Quick function to get panel styling."""
-    return get_design_system().create_component_style(ComponentType.PANEL, variant, **kwargs)
+    return get_design_system().create_component_style(
+        ComponentType.PANEL, variant, **kwargs
+    )
 
 
 def get_label_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
     """Quick function to get label styling."""
-    return get_design_system().create_component_style(ComponentType.LABEL, variant, **kwargs)
+    return get_design_system().create_component_style(
+        ComponentType.LABEL, variant, **kwargs
+    )

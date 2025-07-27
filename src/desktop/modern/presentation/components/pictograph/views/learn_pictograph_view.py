@@ -14,7 +14,7 @@ from .base_pictograph_view import BasePictographView
 class LearnPictographView(BasePictographView):
     """
     Direct pictograph view for learn tab contexts.
-    
+
     Features:
     - Auto-sizes to fill parent container
     - Maintains aspect ratio
@@ -23,27 +23,48 @@ class LearnPictographView(BasePictographView):
     """
 
     def __init__(self, parent=None, context: str = "question"):
+        # DEBUG: Log widget creation details
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"🎭 [LEARN_VIEW_DEBUG] Creating LearnPictographView")
+        logger.info(f"   📱 Parent: {parent}")
+        logger.info(f"   📱 Parent type: {type(parent) if parent else 'None'}")
+        logger.info(f"   📱 Context: {context}")
+
         super().__init__(parent)
-        
+
         # Store context for scaling adjustments
         self._context = context  # "question" or "answer"
-        
+
+        # CRITICAL FIX: Ensure widget flags are set correctly to prevent separate window
+        from PyQt6.QtCore import Qt
+
+        self.setWindowFlags(Qt.WindowType.Widget)
+
+        # DEBUG: Log widget state after initialization
+        logger.info(f"   📱 After init - Parent: {self.parent()}")
+        logger.info(f"   📱 After init - Window flags: {self.windowFlags()}")
+        logger.info(f"   📱 After init - Is window: {self.isWindow()}")
+
         # Set size policy to expand and fill available space
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
+
         # Apply learn tab specific styling
         self._setup_learn_styling()
 
     def _setup_learn_styling(self):
         """Apply learn tab specific styling."""
-        # Clean styling for learn tab display
-        self.setStyleSheet("""
+        # Dark theme styling for learn tab display
+        self.setStyleSheet(
+            """
             LearnPictographView {
-                border: 1px solid #e0e0e0;
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 4px;
-                background-color: white;
+                background-color: rgba(255, 255, 255, 0.1);
             }
-        """)
+        """
+        )
 
     def set_context(self, context: str):
         """Set the learn context (question or answer)."""
@@ -54,24 +75,24 @@ class LearnPictographView(BasePictographView):
         """Apply learn tab specific scaling to fill container."""
         # Get current widget size (this is our container)
         widget_size = self.size()
-        
+
         if widget_size.width() <= 0 or widget_size.height() <= 0:
             return
-            
+
         # Use the full container size for learn tab
         container_width = widget_size.width()
         container_height = widget_size.height()
-        
+
         # Apply context-specific margin
         margin_factor = self._get_context_margin_factor()
-        
+
         # Calculate effective size with margin
         effective_width = int(container_width * margin_factor)
         effective_height = int(container_height * margin_factor)
-        
+
         # Use smaller dimension to maintain aspect ratio
         effective_size = min(effective_width, effective_height)
-        
+
         # Apply legacy-style view scaling
         self._apply_legacy_view_scaling(effective_size)
 
@@ -88,33 +109,33 @@ class LearnPictographView(BasePictographView):
         """Apply legacy-style view scaling for learn tab."""
         if not self._scene:
             return
-            
+
         # Get scene content bounds
         items_rect = self._scene.itemsBoundingRect()
-        
+
         if items_rect.isEmpty():
             # Use scene rect as fallback
             items_rect = self._scene.sceneRect()
-            
+
         if items_rect.isEmpty():
             return
-            
+
         # Calculate scale to fit target size while maintaining aspect ratio
         scene_width = items_rect.width()
         scene_height = items_rect.height()
-        
+
         if scene_width > 0 and scene_height > 0:
             # Calculate scale factors for both dimensions
             scale_x = target_size / scene_width
             scale_y = target_size / scene_height
-            
+
             # Use minimum scale to ensure content fits
             scale_factor = min(scale_x, scale_y)
-            
+
             # Apply the scaling
             self.resetTransform()
             self.scale(scale_factor, scale_factor)
-            
+
             # Center the content
             self.centerOn(items_rect.center())
 
@@ -124,10 +145,12 @@ class LearnPictographView(BasePictographView):
         # Apply scaling immediately when container resizes
         self._apply_view_specific_scaling()
 
-    def fit_to_container(self, container_width: int, container_height: int, maintain_square: bool = True):
+    def fit_to_container(
+        self, container_width: int, container_height: int, maintain_square: bool = True
+    ):
         """
         Fit the view to its container.
-        
+
         Args:
             container_width: Available container width
             container_height: Available container height

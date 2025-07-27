@@ -285,8 +285,6 @@ class GlassmorphismStyleGenerator:
             background = "rgba(255, 255, 255, 0.1)"
             border = "rgba(255, 255, 255, 0.2)"
 
-        blur_css = "backdrop-filter: blur(10px);" if blur_effect else ""
-
         if custom_properties:
             base_properties.update(custom_properties)
 
@@ -299,6 +297,5 @@ class GlassmorphismStyleGenerator:
             background: {background};
             border: 1px solid {border};
             {' '.join(css_properties)}
-            {blur_css}
         }}
         """

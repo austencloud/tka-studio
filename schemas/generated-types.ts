@@ -4,9 +4,13 @@
  *
  * GENERATED FROM: F:\CODE\TKA\schemas\
  * DO NOT EDIT - Regenerate from schemas when desktop models change
+ *
+ * Last updated: 2025-07-26
  */
 
-// Core Enums (from core-enums.json)
+// ==================== CORE ENUMS ====================
+// (from core-enums.json)
+
 export type MotionType = "pro" | "anti" | "float" | "dash" | "static";
 export type HandMotionType = "shift" | "dash" | "static";
 export type HandPath = "cw" | "ccw" | "dash" | "static";
@@ -63,18 +67,22 @@ export type LetterType =
 export type ArrowColor = "red" | "blue";
 export type GridMode = "diamond" | "box";
 
-// Motion Data (from motion-data-v2.json)
+// ==================== MOTION DATA ====================
+// (from motion-data.json)
+
 export interface MotionData {
-  motion_type: MotionType;
-  prop_rot_dir: RotationDirection;
-  start_loc: Location;
-  end_loc: Location;
+  motionType: MotionType;
+  propRotDir: RotationDirection;
+  startLoc: Location;
+  endLoc: Location;
   turns: number;
-  start_ori: Orientation;
-  end_ori: Orientation;
+  startOri: Orientation;
+  endOri: Orientation;
 }
 
-// Glyph Data (from glyph-data.json)
+// ==================== GLYPH DATA ====================
+// (from glyph-data.json)
+
 export interface GlyphData {
   vtg_mode?: VTGMode | null;
   elemental_type?: ElementalType | null;
@@ -89,54 +97,80 @@ export interface GlyphData {
   show_positions?: boolean;
 }
 
-// Beat Data (from beat-data-v2.json)
+// ==================== BEAT DATA ====================
+// (from beat-data.json)
+
 export interface BeatData {
-  id: string;
-  beat_number: number;
-  letter?: string | null;
+  beatNumber: number;
+  letter: string | null;
   duration?: number;
-  blue_motion?: MotionData | null;
-  red_motion?: MotionData | null;
-  glyph_data?: GlyphData | null;
-  blue_reversal?: boolean;
-  red_reversal?: boolean;
-  is_blank?: boolean;
+  blueMotion: MotionData | null;
+  redMotion: MotionData | null;
+  pictographData?: object | null;
+  glyphData?: object | null;
+  blueReversal?: boolean;
+  redReversal?: boolean;
+  filled?: boolean;
+  tags?: string[];
   metadata?: {
     is_start_position?: boolean;
     [key: string]: any;
-  };
+  } | null;
 }
 
-// Sequence Data (from sequence-data-v2.json)
+// ==================== SEQUENCE DATA ====================
+// (from sequence-data.json)
+
 export interface SequenceData {
   id: string;
   name: string;
-  word: string;
   beats: BeatData[];
-  start_position?: GridPosition | null;
-  metadata?: {
-    author?: string;
-    description?: string;
-    difficulty?: number;
-    tags?: string[];
-    created_at?: string;
-    modified_at?: string;
-    version?: string;
-    [key: string]: any;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  version?: string;
+  length?: number;
+  difficulty?: string | null;
+  tags?: string[];
+}
+
+// ==================== VALIDATION HELPERS ====================
+
+export function isValidMotionType(value: string): value is MotionType {
+  return ["pro", "anti", "float", "dash", "static"].includes(value);
+}
+
+export function isValidLocation(value: string): value is Location {
+  return ["n", "e", "s", "w", "ne", "se", "sw", "nw"].includes(value);
+}
+
+export function isValidGridPosition(value: string): value is GridPosition {
+  return /^(alpha[1-8]|beta[1-8]|gamma(1[0-6]|[1-9]))$/.test(value);
+}
+
+// ==================== FACTORY FUNCTIONS ====================
+
+export function createEmptyBeat(beatNumber: number): BeatData {
+  return {
+    beatNumber,
+    letter: null,
+    duration: 1.0,
+    blueMotion: null,
+    redMotion: null,
+    blueReversal: false,
+    redReversal: false,
+    filled: false,
+    tags: [],
+    metadata: null,
   };
 }
 
-// Utility types for immutable operations
-export interface BeatDataUpdate extends Partial<BeatData> {}
-export interface SequenceDataUpdate extends Partial<SequenceData> {}
-
-// Factory functions (to be implemented to match Python behavior)
-export interface BeatDataFactory {
-  empty(): BeatData;
-  fromDict(data: Record<string, any>): BeatData;
-}
-
-export interface SequenceDataFactory {
-  empty(): SequenceData;
-  fromDict(data: Record<string, any>): SequenceData;
+export function createEmptySequence(id: string, name: string): SequenceData {
+  return {
+    id,
+    name,
+    beats: [],
+    version: "1.0",
+    length: 8,
+    tags: [],
+  };
 }

@@ -11,6 +11,7 @@ This service provides a clean, focused interface for pictograph data operations
 while maintaining the proven data management algorithms.
 """
 
+import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 
@@ -21,6 +22,9 @@ from desktop.modern.domain.models.grid_data import GridData
 from desktop.modern.domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager
+from .dataset_query import IDatasetQuery
+
+logger = logging.getLogger(__name__)
 
 
 class PictographDataManager(IPictographDataManager):
@@ -60,10 +64,17 @@ class PictographDataManager(IPictographDataManager):
     - Category-based organization
     """
 
-    def __init__(self, cache_manager: DataCacheManager = None):
+    def __init__(
+        self,
+        cache_manager: DataCacheManager = None,
+        dataset_query: IDatasetQuery = None,
+    ):
         # Use unified cache manager for pictograph caching
         self.cache_manager = cache_manager or DataCacheManager()
         self._dataset_index: Dict[str, List[str]] = {}
+        self._dataset_query = dataset_query
+        self._pictograph_cache: Dict[str, Any] = {}
+        self._dataset_cache: Optional[Dict[str, List[Dict[str, Any]]]] = None
 
     def create_pictograph(
         self, grid_mode: GridMode = GridMode.DIAMOND
@@ -142,6 +153,131 @@ class PictographDataManager(IPictographDataManager):
         """Clear the pictograph cache."""
         self._pictograph_cache.clear()
         self._dataset_index.clear()
+
+    def get_pictograph_data(self, pictograph_id: str) -> Optional[PictographData]:
+        """
+        Get pictograph data by ID.
+
+        Args:
+            pictograph_id: Unique identifier for pictograph
+
+        Returns:
+            PictographData object or None if not found
+        """
+        try:
+            # Check cache first
+            if pictograph_id in self._pictograph_cache:
+                return self._pictograph_cache[pictograph_id]
+
+            # If we have a dataset query service, try to get real data
+            if self._dataset_query:
+                # For Learn Tab, pictograph_id format is "letter_index" (e.g., "A_0", "B_1")
+                if "_" in pictograph_id:
+                    letter, index_str = pictograph_id.split("_", 1)
+                    try:
+                        index = int(index_str)
+                        beat_data_list = self._dataset_query.find_pictographs_by_letter(
+                            letter
+                        )
+
+                        if index < len(beat_data_list):
+                            beat_data = beat_data_list[index]
+                            if beat_data.has_pictograph:
+                                pictograph_data = beat_data.pictograph_data
+                                # Cache the result
+                                self._pictograph_cache[pictograph_id] = pictograph_data
+                                return pictograph_data
+                    except (ValueError, IndexError):
+                        pass
+
+            # Fallback to cache lookup
+            return self.get_pictograph_by_id(pictograph_id)
+
+        except Exception as e:
+            logger.error(f"Failed to get pictograph data for {pictograph_id}: {e}")
+            return None
+
+    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Get the complete pictograph dataset for question generation.
+
+        Returns:
+            Dictionary mapping letters to lists of pictograph data dictionaries
+        """
+        try:
+            # Use cached dataset if available
+            if self._dataset_cache is not None:
+                return self._dataset_cache
+
+            if not self._dataset_query:
+                logger.warning(
+                    "No dataset query service available - returning empty dataset"
+                )
+                return {}
+
+            logger.info("Building pictograph dataset from TKA data...")
+
+            # Get all available letters from the dataset
+            available_letters = self._dataset_query.get_available_letters()
+            logger.info(f"Found {len(available_letters)} letters in dataset")
+
+            dataset = {}
+            total_pictographs = 0
+
+            for letter in available_letters:
+                pictographs = self._get_pictographs_by_letter(letter)
+                if pictographs:
+                    dataset[letter] = pictographs
+                    total_pictographs += len(pictographs)
+                    logger.debug(f"Letter {letter}: {len(pictographs)} pictographs")
+
+            logger.info(
+                f"Built dataset with {len(dataset)} letters and {total_pictographs} total pictographs"
+            )
+
+            # Cache the result
+            self._dataset_cache = dataset
+            return dataset
+
+        except Exception as e:
+            logger.error(f"Failed to build pictograph dataset: {e}")
+            # Return empty dataset to prevent crashes
+            return {}
+
+    def _get_pictographs_by_letter(self, letter: str) -> List[Dict[str, Any]]:
+        """
+        Get pictographs for a specific letter.
+
+        Args:
+            letter: Letter to search for
+
+        Returns:
+            List of pictograph data dictionaries
+        """
+        try:
+            if not self._dataset_query:
+                return []
+
+            beat_data_list = self._dataset_query.find_pictographs_by_letter(letter)
+
+            pictographs = []
+            for i, beat_data in enumerate(beat_data_list):
+                if beat_data.has_pictograph:
+                    pictograph_dict = {
+                        "id": f"{letter}_{i}",
+                        "letter": letter,
+                        "type": "real",
+                        "data": beat_data.pictograph_data,
+                        "beat_data": beat_data,  # Include full beat data for rendering
+                    }
+                    pictographs.append(pictograph_dict)
+
+            logger.debug(f"Found {len(pictographs)} pictographs for letter {letter}")
+            return pictographs
+
+        except Exception as e:
+            logger.error(f"Failed to get pictographs for letter {letter}: {e}")
+            return []
 
     # Private helper methods
 

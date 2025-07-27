@@ -14,11 +14,9 @@ from desktop.modern.application.services.learn import (
     LearnUIService,
     LessonConfigurationService,
     LessonProgressService,
-    QuestionGenerationService,
     QuizSessionService,
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.interfaces.data_builder_services import IPictographDataService
 from desktop.modern.core.interfaces.learn_services import (
     IAnswerValidationService,
     ILearnDataService,
@@ -30,8 +28,15 @@ from desktop.modern.core.interfaces.learn_services import (
     IQuizSessionService,
 )
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
-from desktop.modern.infrastructure.file_system.file_system_service import FileSystemService
+from desktop.modern.core.interfaces.pictograph_services import IPictographDataManager
+from desktop.modern.infrastructure.file_system.file_system_service import (
+    FileSystemService,
+)
 from desktop.modern.presentation.tabs.learn import LearnTab
+from shared.application.services.data.dataset_query import IDatasetQuery
+from shared.application.services.learn.question_generation_service import (
+    QuestionGenerationService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +52,17 @@ def register_learn_services(container: DIContainer) -> None:
 
         # External dependencies (use real data services)
         # Use the real pictograph service with actual TKA dataset
-        from shared.application.services.learn.real_pictograph_data_service import (
-            RealPictographDataService,
+        from shared.application.services.data.pictograph_data_manager import (
+            PictographDataManager,
         )
 
         # Register the real service for Learn Tab functionality
+        # PictographDataManager now has all the methods needed for Learn Tab
         container.register_factory(
-            IPictographDataService, lambda: RealPictographDataService(container)
+            IPictographDataManager,
+            lambda: PictographDataManager(
+                dataset_query=container.resolve(IDatasetQuery)
+            ),
         )
 
         container.register_singleton(IFileSystemService, FileSystemService)
@@ -63,8 +72,12 @@ def register_learn_services(container: DIContainer) -> None:
             ILessonConfigurationService, LessonConfigurationService
         )
         container.register_singleton(IQuizSessionService, QuizSessionService)
-        container.register_singleton(
-            IQuestionGenerationService, QuestionGenerationService
+        container.register_factory(
+            IQuestionGenerationService,
+            lambda: QuestionGenerationService(
+                session_service=container.resolve(IQuizSessionService),
+                pictograph_data_service=container.resolve(IPictographDataManager),
+            ),
         )
         container.register_singleton(IAnswerValidationService, AnswerValidationService)
         container.register_singleton(ILessonProgressService, LessonProgressService)
@@ -74,8 +87,8 @@ def register_learn_services(container: DIContainer) -> None:
         container.register_singleton(ILearnNavigationService, LearnNavigationService)
         container.register_singleton(ILearnDataService, LearnDataService)
 
-        # Main learn tab (transient to allow multiple instances if needed)
-        container.register_transient(LearnTab, LearnTab)
+        # Main learn tab (factory to inject container)
+        container.register_factory(LearnTab, lambda: LearnTab(container))
 
     except Exception as e:
         logger.error(f"Failed to register learn services: {e}")
@@ -171,7 +184,7 @@ def get_learn_service_dependencies() -> dict:
                 "implementation": QuestionGenerationService.__name__,
                 "dependencies": [
                     IQuizSessionService.__name__,
-                    "IPictographDataService",  # External dependency
+                    IPictographDataManager.__name__,  # Now using unified pictograph manager
                 ],
                 "description": "Generates quiz questions",
             },

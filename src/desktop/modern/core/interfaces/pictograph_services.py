@@ -7,8 +7,7 @@ These interfaces define contracts for validation, scaling, and pictograph manipu
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List
-
+from typing import Any, Dict, List, Optional
 
 # ScalingContext removed - direct views handle their own scaling
 
@@ -112,6 +111,33 @@ class IPictographDataManager(ABC):
     @abstractmethod
     def get_dataset_categories(self) -> List[str]:
         """Get all available dataset categories."""
+
+    @abstractmethod
+    def get_pictograph_data(self, pictograph_id: str) -> Optional[Any]:
+        """
+        Get pictograph data by ID.
+
+        Args:
+            pictograph_id: Unique identifier for pictograph
+
+        Returns:
+            Pictograph data or None if not found
+        """
+
+    @abstractmethod
+    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Get the complete pictograph dataset for question generation.
+
+        Returns:
+            Dictionary mapping letters to lists of pictograph data dictionaries.
+            Each pictograph data dictionary contains:
+            - id: Unique identifier
+            - letter: Associated letter
+            - type: Type of pictograph ("real" or "mock")
+            - data: PictographData object
+            - beat_data: Optional BeatData object for real pictographs
+        """
 
     @abstractmethod
     def add_to_dataset(self, pictograph: Any, category: str = "user_created") -> str:

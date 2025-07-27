@@ -9,7 +9,7 @@ import logging
 import sys
 import traceback
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 # Setup logging
 logging.basicConfig(
@@ -97,11 +97,11 @@ class LearnTabBattleTest:
         try:
             from desktop.modern.domain.models.learn import (
                 LessonConfig,
+                LessonResults,
                 LessonType,
+                QuestionData,
                 QuizMode,
                 QuizSession,
-                QuestionData,
-                LessonResults,
             )
 
             # Test LessonConfig
@@ -179,14 +179,14 @@ class LearnTabBattleTest:
 
         try:
             from desktop.modern.core.interfaces.learn_services import (
-                ILessonConfigurationService,
-                IQuizSessionService,
-                IQuestionGenerationService,
                 IAnswerValidationService,
-                ILessonProgressService,
-                ILearnUIService,
-                ILearnNavigationService,
                 ILearnDataService,
+                ILearnNavigationService,
+                ILearnUIService,
+                ILessonConfigurationService,
+                ILessonProgressService,
+                IQuestionGenerationService,
+                IQuizSessionService,
             )
 
             # Verify all interfaces have required methods
@@ -260,13 +260,13 @@ class LearnTabBattleTest:
 
         try:
             from desktop.modern.application.services.learn import (
-                LessonConfigurationService,
-                QuizSessionService,
                 AnswerValidationService,
-                LessonProgressService,
-                LearnUIService,
-                LearnNavigationService,
                 LearnDataService,
+                LearnNavigationService,
+                LearnUIService,
+                LessonConfigurationService,
+                LessonProgressService,
+                QuizSessionService,
             )
             from desktop.modern.domain.models.learn import LessonType, QuizMode
 
@@ -353,13 +353,16 @@ class LearnTabBattleTest:
         try:
             # Setup Qt application for UI components
             import sys
+
             from PyQt6.QtWidgets import QApplication
 
             app = None
             if not QApplication.instance():
                 app = QApplication(sys.argv)
 
-            from desktop.modern.core.dependency_injection.di_container import DIContainer
+            from desktop.modern.core.dependency_injection.di_container import (
+                DIContainer,
+            )
             from desktop.modern.core.dependency_injection.learn_service_registration import (
                 register_learn_services,
                 validate_learn_service_registration,
@@ -375,10 +378,10 @@ class LearnTabBattleTest:
 
             # Test individual service resolution
             from desktop.modern.core.interfaces.learn_services import (
+                ILearnNavigationService,
+                ILearnUIService,
                 ILessonConfigurationService,
                 IQuizSessionService,
-                ILearnUIService,
-                ILearnNavigationService,
             )
 
             config_service = self.container.resolve(ILessonConfigurationService)
@@ -413,22 +416,27 @@ class LearnTabBattleTest:
             # For now, test imports and basic instantiation
 
             from desktop.modern.presentation.tabs.learn.components import (
-                LessonSelectorPanel,
-                LessonWidgetPanel,
-                LessonResultsPanel,
+                AnswerOptions,
+                LessonControls,
+                LessonTimer,
+                ProgressControls,
+                QuestionDisplay,
             )
 
             # Test component imports work
-            assert LessonSelectorPanel is not None
-            assert LessonWidgetPanel is not None
-            assert LessonResultsPanel is not None
+            assert QuestionDisplay is not None
+            assert AnswerOptions is not None
+            assert ProgressControls is not None
+            assert LessonTimer is not None
+            assert LessonControls is not None
 
             logger.info("✅ UI components can be imported")
 
             # If Qt is available, test basic instantiation
             try:
-                from PyQt6.QtWidgets import QApplication
                 import sys
+
+                from PyQt6.QtWidgets import QApplication
 
                 app = QApplication.instance()
                 if app is None:
@@ -436,17 +444,18 @@ class LearnTabBattleTest:
 
                 # Test component creation with services
                 if self.container:
-                    from desktop.modern.core.interfaces.learn_services import (
-                        ILessonConfigurationService,
-                        ILearnUIService,
-                    )
+                    # Test new component creation
+                    question_display = QuestionDisplay()
+                    answer_options = AnswerOptions()
+                    progress_controls = ProgressControls()
+                    lesson_timer = LessonTimer()
+                    lesson_controls = LessonControls()
 
-                    config_service = self.container.resolve(ILessonConfigurationService)
-                    ui_service = self.container.resolve(ILearnUIService)
-
-                    # Test lesson selector panel creation
-                    selector = LessonSelectorPanel(config_service, ui_service)
-                    assert selector is not None
+                    assert question_display is not None
+                    assert answer_options is not None
+                    assert progress_controls is not None
+                    assert lesson_timer is not None
+                    assert lesson_controls is not None
 
                     logger.info("✅ UI components can be instantiated")
 
@@ -469,13 +478,17 @@ class LearnTabBattleTest:
                 return False
 
             from desktop.modern.core.interfaces.learn_services import (
-                ILessonConfigurationService,
-                IQuizSessionService,
-                IQuestionGenerationService,
                 IAnswerValidationService,
+                ILessonConfigurationService,
                 ILessonProgressService,
+                IQuestionGenerationService,
+                IQuizSessionService,
             )
-            from desktop.modern.domain.models.learn import LessonType, QuizMode, QuestionData
+            from desktop.modern.domain.models.learn import (
+                LessonType,
+                QuestionData,
+                QuizMode,
+            )
 
             # Get services
             config_service = self.container.resolve(ILessonConfigurationService)
@@ -553,7 +566,9 @@ class LearnTabBattleTest:
                 logger.error("Container not available for parity test")
                 return False
 
-            from desktop.modern.core.interfaces.learn_services import ILessonConfigurationService
+            from desktop.modern.core.interfaces.learn_services import (
+                ILessonConfigurationService,
+            )
 
             config_service = self.container.resolve(ILessonConfigurationService)
 
@@ -608,8 +623,8 @@ class LearnTabBattleTest:
                 return False
 
             from desktop.modern.core.interfaces.learn_services import (
-                IQuizSessionService,
                 IAnswerValidationService,
+                IQuizSessionService,
             )
             from desktop.modern.domain.models.learn import QuestionData
 
@@ -631,7 +646,9 @@ class LearnTabBattleTest:
             assert not validation_result  # Should handle gracefully
 
             # Test invalid lesson config requests
-            from desktop.modern.core.interfaces.learn_services import ILessonConfigurationService
+            from desktop.modern.core.interfaces.learn_services import (
+                ILessonConfigurationService,
+            )
             from desktop.modern.domain.models.learn import LessonType
 
             config_service = self.container.resolve(ILessonConfigurationService)
@@ -662,9 +679,10 @@ class LearnTabBattleTest:
                 return False
 
             import time
+
             from desktop.modern.core.interfaces.learn_services import (
-                IQuizSessionService,
                 ILessonConfigurationService,
+                IQuizSessionService,
             )
             from desktop.modern.domain.models.learn import LessonType, QuizMode
 

@@ -1,0 +1,142 @@
+{
+  "phase_1_unit": {
+    "Event Integration Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 1.0575010776519775,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    },
+    "Circuit Breaker Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.924705982208252,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    },
+    "Saga Pattern Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.9455690383911133,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    }
+  },
+  "phase_2_integration": {
+    "End-to-End Event Flow Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 1.0677812099456787,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    },
+    "Service Mesh Integration Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.9215514659881592,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    }
+  },
+  "phase_3_performance": {
+    "Performance & Load Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.871790885925293,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    }
+  },
+  "phase_4_full_system": {
+    "Full System Integration Tests": {
+      "status": "NO_TESTS",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.9726383686065674,
+      "stdout": "INTERNALERROR> Traceback (most recent call last):\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\main.py\", line 287, in wrap_session\nINTERNALERROR>     config.hook.pytest_sessionstart(session=session)\nINTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_hooks.py\", line 512, in __call__\nINTERNALERROR>     return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_manager.py\", line 120, in _hookexec\nINTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 167, in _multicall\nINTERNALERROR>     raise exception\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 139, in _multicall\nINTERNALERROR>     teardown.throw(exception)\nINTERNALERROR>     ~~~~~~~~~~~~~~^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py\", line 780, in pytest_sessionstart\nINTERNALERROR>     return (yield)\nINTERNALERROR>             ^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pluggy\\_callers.py\", line 121, in _multicall\nINTERNALERROR>     res = hook_impl.function(*args)\nINTERNALERROR>   File \"F:\\CODE\\TKA\\tests\\conftest.py\", line 35, in pytest_sessionstart\nINTERNALERROR>     print(\"\\U0001f680 TKA Test Suite Starting\")\nINTERNALERROR>     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR>   File \"C:\\Users\\Austen\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\cp1252.py\", line 19, in encode\nINTERNALERROR>     return codecs.charmap_encode(input,self.errors,encoding_table)[0]\nINTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nINTERNALERROR> UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f680' in position 0: character maps to <undefined>\n",
+      "stderr": "",
+      "return_code": 3
+    }
+  },
+  "manual_verification": {
+    "Manual Testing Suite": {
+      "status": "FAILED",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "duration": 0.6118462085723877,
+      "stdout": "Import Error: No module named 'desktop.modern.presentation.tabs.construct.infrastructure.event_bus'\nPlease ensure TKA source directory is accessible\n",
+      "stderr": ""
+    }
+  },
+  "overall_summary": {
+    "total_tests": 0,
+    "total_passed": 0,
+    "total_failed": 0,
+    "success_rate": 0,
+    "total_duration": 7.373384237289429,
+    "overall_status": "FAILED",
+    "phase_results": [
+      {
+        "tests_run": 0,
+        "passed": 0,
+        "failed": 0,
+        "duration": 2.9277760982513428,
+        "status": "PASSED"
+      },
+      {
+        "tests_run": 0,
+        "passed": 0,
+        "failed": 0,
+        "duration": 1.989332675933838,
+        "status": "PASSED"
+      },
+      {
+        "tests_run": 0,
+        "passed": 0,
+        "failed": 0,
+        "duration": 0.871790885925293,
+        "status": "PASSED"
+      },
+      {
+        "tests_run": 0,
+        "passed": 0,
+        "failed": 0,
+        "duration": 0.9726383686065674,
+        "status": "PASSED"
+      },
+      {
+        "tests_run": 0,
+        "passed": 0,
+        "failed": 0,
+        "duration": 0.6118462085723877,
+        "status": "FAILED"
+      }
+    ]
+  },
+  "metadata": {
+    "test_run_timestamp": "2025-07-26 23:57:22",
+    "total_duration": 7.376872539520264,
+    "python_version": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+    "project_root": "f:\\CODE\\TKA"
+  }
+}

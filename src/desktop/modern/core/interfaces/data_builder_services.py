@@ -12,7 +12,9 @@ from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import ElementalType, VTGMode
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 
 class IBeatDataBuilder(ABC):
@@ -291,106 +293,21 @@ class IPictographDataService(ABC):
         """
 
     @abstractmethod
-    def save_pictograph_data(self, pictograph_id: str, data: Any) -> bool:
+    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
         """
-        Save pictograph data.
-
-        Args:
-            pictograph_id: Unique identifier for pictograph
-            data: Pictograph data to save
+        Get the complete pictograph dataset for question generation.
 
         Returns:
-            True if saved successfully
+            Dictionary mapping letters to lists of pictograph data dictionaries.
+            Each pictograph data dictionary contains:
+            - id: Unique identifier
+            - letter: Associated letter
+            - type: Type of pictograph ("real" or "mock")
+            - data: PictographData object
+            - beat_data: Optional BeatData object for real pictographs
 
         Note:
-            Web implementation: May save to server or local storage
-        """
-
-    @abstractmethod
-    def delete_pictograph_data(self, pictograph_id: str) -> bool:
-        """
-        Delete pictograph data.
-
-        Args:
-            pictograph_id: Unique identifier for pictograph
-
-        Returns:
-            True if deleted successfully
-
-        Note:
-            Web implementation: Removes from server or local storage
-        """
-
-    @abstractmethod
-    def list_pictograph_ids(self) -> List[str]:
-        """
-        List all pictograph IDs.
-
-        Returns:
-            List of pictograph identifiers
-
-        Note:
-            Web implementation: Retrieved from server or local storage
-        """
-
-    @abstractmethod
-    def search_pictographs(self, search_criteria: Dict[str, Any]) -> List[Any]:
-        """
-        Search pictographs by criteria.
-
-        Args:
-            search_criteria: Search criteria dictionary
-
-        Returns:
-            List of matching pictographs
-
-        Note:
-            Web implementation: May search server-side or client-side
-        """
-
-    @abstractmethod
-    def validate_pictograph_data(self, data: Any) -> Tuple[bool, List[str]]:
-        """
-        Validate pictograph data.
-
-        Args:
-            data: Pictograph data to validate
-
-        Returns:
-            Tuple of (is_valid, error_messages)
-        """
-
-    @abstractmethod
-    def get_pictograph_metadata(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Get pictograph metadata.
-
-        Args:
-            pictograph_id: Unique identifier for pictograph
-
-        Returns:
-            Metadata dictionary or None if not found
-
-        Note:
-            Web implementation: Lightweight metadata for quick access
-        """
-
-    @abstractmethod
-    def update_pictograph_metadata(
-        self, pictograph_id: str, metadata: Dict[str, Any]
-    ) -> bool:
-        """
-        Update pictograph metadata.
-
-        Args:
-            pictograph_id: Unique identifier for pictograph
-            metadata: Metadata to update
-
-        Returns:
-            True if updated successfully
-
-        Note:
-            Web implementation: Updates cached metadata
+            Web implementation: May load from server or local storage
         """
 
 

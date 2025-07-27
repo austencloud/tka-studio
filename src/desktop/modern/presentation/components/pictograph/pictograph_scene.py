@@ -91,10 +91,15 @@ class PictographScene(QGraphicsScene):
 
     @property
     def rendering_service(self):
-        """Get shared rendering service for optimal performance."""
+        """Get shared rendering service for optimal performance with retry logic."""
         if self._shared_rendering_service is None:
             try:
                 self._shared_rendering_service = self._get_shared_rendering_service()
+                if self._shared_rendering_service is None:
+                    # Service not available yet, will retry on next access
+                    logger.debug(
+                        f"[SCENE] Rendering service not available yet, will retry later"
+                    )
             except Exception as e:
                 logger.debug(
                     f"[SCENE] Deferred rendering service resolution failed: {e}"
@@ -103,7 +108,7 @@ class PictographScene(QGraphicsScene):
         return self._shared_rendering_service
 
     def _get_shared_rendering_service(self):
-        """Get shared rendering service from DI container."""
+        """Get shared rendering service from DI container with retry logic."""
         try:
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
@@ -113,11 +118,25 @@ class PictographScene(QGraphicsScene):
             )
 
             container = get_container()
+
+            # Check if container has services registered (avoid empty container)
+            service_count = len(getattr(container, "_services", {}))
+            if (
+                service_count < 50
+            ):  # Expect at least 50 services for full initialization
+                logger.debug(
+                    f"[SCENE] Container not fully initialized yet ({service_count} services), deferring rendering service resolution"
+                )
+                return None
+
             service = container.resolve(IPictographRenderingService)
+            logger.debug(
+                f"[SCENE] Successfully resolved rendering service: {type(service)} from container with {service_count} services"
+            )
             return service
 
         except Exception as e:
-            logger.error(f"[SCENE] Failed to get shared rendering service: {e}")
+            logger.debug(f"[SCENE] Failed to get shared rendering service: {e}")
             return None
 
     def _create_arrow_directly(self, color: str, motion_data, full_pictograph_data):
@@ -259,6 +278,13 @@ class PictographScene(QGraphicsScene):
         # Store the data for potential refresh operations
         self._last_pictograph_data = pictograph_data
 
+        # Force retry of rendering service if not available (critical for Learn tab)
+        if not self.rendering_service:
+            logger.debug(
+                f"[SCENE] Forcing rendering service retry for pictograph rendering"
+            )
+            self._shared_rendering_service = None  # Reset to force retry
+
         self.clear()
         if self.rendering_service and hasattr(
             self.rendering_service, "clear_rendered_props"
@@ -306,6 +332,10 @@ class PictographScene(QGraphicsScene):
         grid_visible = self._visibility_service.get_element_visibility("other", "grid")
 
         if grid_visible:
+            # Force retry of rendering service if not available
+            if not self.rendering_service:
+                self._shared_rendering_service = None  # Reset to force retry
+
             if self.rendering_service:
                 grid_mode = (
                     pictograph_data.grid_data.grid_mode.value
@@ -373,7 +403,7 @@ class PictographScene(QGraphicsScene):
             letter_type = pictograph_data.letter_type
 
             # Initialize visibility if not already set
-            if not visibility_manager.get_visibility_state(pictograph_id):
+            if pictograph_id not in visibility_manager._pictograph_visibility:
                 visibility_manager.initialize_pictograph_visibility(
                     pictograph_id, letter_type
                 )

@@ -1,27 +1,26 @@
-# Browse Tab Services
+# Browse Tab Services - Refactored
 
+# Core services with real business logic
 from .browse_service import BrowseService
 from .browse_state_service import BrowseStateService
-from .layout_manager_service import LayoutManagerService
-from .loading_state_manager_service import LoadingStateManagerService
 from .modern_dictionary_data_manager import ModernDictionaryDataManager
-from .navigation_handler_service import NavigationHandlerService
 from .progressive_loading_service import ProgressiveLoadingService
-from .sequence_display_coordinator_service import SequenceDisplayCoordinatorService
-from .sequence_sorter_service import SequenceSorterService
 
-# New refactored services
+# Specialized services (keep these - they have real logic)
+from .sequence_sorter_service import SequenceSorterService
 from .thumbnail_factory_service import ThumbnailFactoryService
+
+# Note: Removed thin wrapper services:
+# - LayoutManagerService (use PyQt directly)
+# - LoadingStateManagerService (use PyQt directly)  
+# - NavigationHandlerService (use PyQt directly)
+# - SequenceDisplayCoordinatorService (use PyQt directly)
 
 __all__ = [
     "BrowseService",
-    "BrowseStateService",
-    "ProgressiveLoadingService",
+    "BrowseStateService", 
     "ModernDictionaryDataManager",
-    "ThumbnailFactoryService",
-    "LayoutManagerService",
-    "LoadingStateManagerService",
+    "ProgressiveLoadingService",
     "SequenceSorterService",
-    "NavigationHandlerService",
-    "SequenceDisplayCoordinatorService",
+    "ThumbnailFactoryService",
 ]

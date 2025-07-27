@@ -1,30 +1,35 @@
 """
-Learn Tab Components Package
+Learn Tab Specialized Components Package
 
-Contains all UI components for the learning module organized by functionality.
+Focused, single-responsibility components for the lesson workspace.
+Each component handles one specific aspect of the lesson interface.
 """
 
-from .lesson_selector import LessonSelectorPanel, LessonModeToggle, LessonButton
-from .lesson_widget import (
-    LessonWidgetPanel, QuestionDisplay, AnswerOptions, 
-    LessonProgressBar, LessonTimer, LessonControls
+from .answer_options import AnswerLayoutManager, AnswerOptionFactory, AnswerOptions
+from .lesson_controls import LessonControls
+from .lesson_timer import LessonTimer
+from .progress_controls import ProgressControls, ProgressInfo
+from .question_display import (
+    LetterQuestionRenderer,
+    PictographQuestionRenderer,
+    QuestionDisplay,
+    QuestionRenderer,
+    TextQuestionRenderer,
 )
-from .results import LessonResultsPanel
 
 __all__ = [
-    # Lesson Selector Components
-    "LessonSelectorPanel",
-    "LessonModeToggle",
-    "LessonButton",
-    
-    # Lesson Widget Components
-    "LessonWidgetPanel",
-    "QuestionDisplay", 
+    # Main components
+    "QuestionDisplay",
     "AnswerOptions",
-    "LessonProgressBar",
+    "ProgressControls",
     "LessonTimer",
     "LessonControls",
-    
-    # Results Components
-    "LessonResultsPanel",
+    # Supporting classes
+    "QuestionRenderer",
+    "PictographQuestionRenderer",
+    "LetterQuestionRenderer",
+    "TextQuestionRenderer",
+    "AnswerOptionFactory",
+    "AnswerLayoutManager",
+    "ProgressInfo",
 ]

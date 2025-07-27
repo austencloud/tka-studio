@@ -1,12 +1,11 @@
 """
-Modern Dictionary Data Manager - Real Data Loading
+Modern Dictionary Data Manager - Consolidated Data Model
 
-This module provides real dictionary data loading functionality for the modern browse tab,
-based on the legacy dictionary data manager architecture.
+This module provides real dictionary data loading functionality for the modern browse tab.
+Simplified to use SequenceData directly instead of separate SequenceRecord.
 """
 
 import json
-from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -14,32 +13,15 @@ from typing import Any, Dict, List, Optional
 from PIL import Image
 from PyQt6.QtCore import QObject, pyqtSignal
 
-
-@dataclass
-class SequenceRecord:
-    """Represents a sequence record with all metadata."""
-
-    word: str
-    thumbnails: List[str]
-    author: Optional[str] = None
-    level: Optional[int] = None
-    sequence_length: Optional[int] = None
-    date_added: Optional[datetime] = None
-    grid_mode: Optional[str] = None
-    prop_type: Optional[str] = None
-    is_favorite: bool = False
-    is_circular: bool = False
-    starting_position: Optional[str] = None
-    difficulty_level: Optional[str] = None
-    tags: List[str] = field(default_factory=list)
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.tabs.browse.errors import DataLoadError
 
 
 class ModernDictionaryDataManager(QObject):
     """
     Modern dictionary data manager that loads real sequence data from the dictionary folder.
 
-    Provides the same functionality as the legacy DictionaryDataManager but with modern
-    architecture and improved error handling.
+    Simplified to use SequenceData directly throughout, eliminating conversion overhead.
     """
 
     # Signals
@@ -50,7 +32,7 @@ class ModernDictionaryDataManager(QObject):
         super().__init__()
         self.data_directory = data_directory or self._find_data_directory()
         self.dictionary_dir = self.data_directory / "dictionary"
-        self._loaded_records: List[SequenceRecord] = []
+        self._loaded_sequences: List[SequenceData] = []
         self._has_loaded = False
         self._loading_errors: List[str] = []
 
@@ -82,7 +64,7 @@ class ModernDictionaryDataManager(QObject):
             return
 
         if not self.dictionary_dir.exists():
-            return
+            raise DataLoadError(f"Dictionary directory not found: {self.dictionary_dir}")
 
         # Get all sequence directories
         sequence_dirs = [
@@ -92,9 +74,13 @@ class ModernDictionaryDataManager(QObject):
         ]
 
         total_dirs = len(sequence_dirs)
-
+        
         for i, sequence_dir in enumerate(sequence_dirs):
             try:
+                # Emit progress
+                self.loading_progress.emit(
+                    f"Loading {sequence_dir.name}...", i, total_dirs
+                )
 
                 # Find thumbnails in this directory
                 thumbnails = self._find_thumbnails(sequence_dir)
@@ -102,38 +88,36 @@ class ModernDictionaryDataManager(QObject):
                 if not thumbnails:
                     continue
 
-                # Create sequence record
-                record = SequenceRecord(word=sequence_dir.name, thumbnails=thumbnails)
-
                 # Extract metadata from the first thumbnail
                 metadata = self._extract_metadata_from_thumbnail(thumbnails[0])
-                if metadata:
-                    record.author = metadata.get("author")
-                    record.level = metadata.get("level")
-                    record.sequence_length = metadata.get("sequence_length")
-                    record.date_added = metadata.get("date_added")
-                    record.grid_mode = metadata.get("grid_mode", "diamond")
-                    record.prop_type = metadata.get("prop_type")
-                    record.is_favorite = metadata.get("is_favorite", False)
-                    record.is_circular = metadata.get("is_circular", False)
-                    record.starting_position = metadata.get("starting_position")
-                    record.difficulty_level = self._map_level_to_difficulty(
-                        record.level
-                    )
-                    record.tags = metadata.get("tags", [])
+                
+                # Create SequenceData directly
+                sequence_data = SequenceData(
+                    word=sequence_dir.name,
+                    thumbnails=thumbnails,
+                    author=metadata.get("author") if metadata else None,
+                    level=metadata.get("level") if metadata else None,
+                    sequence_length=metadata.get("sequence_length") if metadata else len(sequence_dir.name),
+                    date_added=metadata.get("date_added") if metadata else None,
+                    grid_mode=metadata.get("grid_mode", "diamond") if metadata else "diamond",
+                    prop_type=metadata.get("prop_type") if metadata else None,
+                    is_favorite=metadata.get("is_favorite", False) if metadata else False,
+                    is_circular=metadata.get("is_circular", False) if metadata else False,
+                    starting_position=metadata.get("starting_position") if metadata else None,
+                    difficulty_level=self._map_level_to_difficulty(
+                        metadata.get("level") if metadata else None
+                    ),
+                    tags=metadata.get("tags", []) if metadata else [],
+                )
 
-                # If no sequence length from metadata, use word length as fallback
-                if record.sequence_length is None:
-                    record.sequence_length = len(record.word)
-
-                self._loaded_records.append(record)
+                self._loaded_sequences.append(sequence_data)
 
             except Exception as e:
                 error_msg = f"Error loading {sequence_dir.name}: {e}"
                 self._loading_errors.append(error_msg)
 
         self._has_loaded = True
-        loaded_count = len(self._loaded_records)
+        loaded_count = len(self._loaded_sequences)
 
         self.data_loaded.emit(loaded_count)
 
@@ -176,8 +160,7 @@ class ModernDictionaryDataManager(QObject):
                         "is_circular": first_entry.get("is_circular", False),
                         "starting_position": first_entry.get("sequence_start_position"),
                         "word": first_entry.get("word"),
-                        "sequence_length": len(metadata["sequence"])
-                        - 2,  # Exclude metadata entries
+                        "sequence_length": len(metadata["sequence"]) - 2,  # Exclude metadata entries
                         "tags": metadata.get("tags", []),
                     }
 
@@ -209,87 +192,92 @@ class ModernDictionaryDataManager(QObject):
         else:
             return "advanced"
 
-    # Query methods for filtering
+    # Query methods for filtering - now return SequenceData directly
 
-    def get_all_records(self) -> List[SequenceRecord]:
-        """Get all sequence records."""
+    def get_all_sequences(self) -> List[SequenceData]:
+        """Get all sequence data."""
         self.load_all_sequences()
-        return self._loaded_records.copy()
+        return self._loaded_sequences.copy()
 
-    def get_records_by_starting_letter(self, letter: str) -> List[SequenceRecord]:
+    def get_sequences_by_starting_letter(self, letter: str) -> List[SequenceData]:
         """Get sequences starting with the specified letter."""
         self.load_all_sequences()
         return [
-            r for r in self._loaded_records if r.word.upper().startswith(letter.upper())
+            s for s in self._loaded_sequences 
+            if s.word and s.word.upper().startswith(letter.upper())
         ]
 
-    def get_records_by_starting_letters(
+    def get_sequences_by_starting_letters(
         self, letters: List[str]
-    ) -> List[SequenceRecord]:
+    ) -> List[SequenceData]:
         """Get sequences starting with any of the specified letters."""
         self.load_all_sequences()
         letter_set = {letter.upper() for letter in letters}
-        return [r for r in self._loaded_records if r.word[0].upper() in letter_set]
+        return [
+            s for s in self._loaded_sequences 
+            if s.word and s.word[0].upper() in letter_set
+        ]
 
-    def get_records_by_length(self, length: int) -> List[SequenceRecord]:
+    def get_sequences_by_length(self, length: int) -> List[SequenceData]:
         """Get sequences with the specified length."""
         self.load_all_sequences()
-        return [r for r in self._loaded_records if r.sequence_length == length]
+        return [s for s in self._loaded_sequences if s.sequence_length == length]
 
-    def get_records_by_difficulty(self, difficulty: str) -> List[SequenceRecord]:
+    def get_sequences_by_difficulty(self, difficulty: str) -> List[SequenceData]:
         """Get sequences with the specified difficulty level."""
         self.load_all_sequences()
         return [
-            r for r in self._loaded_records if r.difficulty_level == difficulty.lower()
+            s for s in self._loaded_sequences 
+            if s.difficulty_level == difficulty.lower()
         ]
 
-    def get_records_by_level(self, level: int) -> List[SequenceRecord]:
+    def get_sequences_by_level(self, level: int) -> List[SequenceData]:
         """Get sequences with the specified numeric level."""
         self.load_all_sequences()
-        return [r for r in self._loaded_records if r.level == level]
+        return [s for s in self._loaded_sequences if s.level == level]
 
-    def get_records_by_starting_position(self, position: str) -> List[SequenceRecord]:
+    def get_sequences_by_starting_position(self, position: str) -> List[SequenceData]:
         """Get sequences with the specified starting position."""
         self.load_all_sequences()
         return [
-            r for r in self._loaded_records if r.starting_position == position.lower()
+            s for s in self._loaded_sequences 
+            if s.starting_position == position.lower()
         ]
 
-    def get_records_by_author(self, author: str) -> List[SequenceRecord]:
+    def get_sequences_by_author(self, author: str) -> List[SequenceData]:
         """Get sequences by the specified author."""
         self.load_all_sequences()
-        return [r for r in self._loaded_records if r.author == author]
+        return [s for s in self._loaded_sequences if s.author == author]
 
-    def get_records_by_grid_mode(self, grid_mode: str) -> List[SequenceRecord]:
+    def get_sequences_by_grid_mode(self, grid_mode: str) -> List[SequenceData]:
         """Get sequences with the specified grid mode."""
         self.load_all_sequences()
-        return [r for r in self._loaded_records if r.grid_mode == grid_mode.lower()]
+        return [s for s in self._loaded_sequences if s.grid_mode == grid_mode.lower()]
 
-    def get_favorite_records(self) -> List[SequenceRecord]:
+    def get_favorite_sequences(self) -> List[SequenceData]:
         """Get all favorite sequences."""
         self.load_all_sequences()
-        return [r for r in self._loaded_records if r.is_favorite]
+        return [s for s in self._loaded_sequences if s.is_favorite]
 
-    def get_recent_records(self, limit: int = 20) -> List[SequenceRecord]:
+    def get_recent_sequences(self, limit: int = 20) -> List[SequenceData]:
         """Get the most recently added sequences."""
         self.load_all_sequences()
 
-        # Filter records with valid dates and sort by date
-        dated_records = [r for r in self._loaded_records if r.date_added is not None]
-        dated_records.sort(key=lambda x: x.date_added, reverse=True)
+        # Filter sequences with valid dates and sort by date
+        dated_sequences = [s for s in self._loaded_sequences if s.date_added is not None]
+        dated_sequences.sort(key=lambda x: x.date_added, reverse=True)
 
-        return dated_records[:limit]
+        return dated_sequences[:limit]
 
-    def get_records_containing_letters(
+    def get_sequences_containing_letters(
         self, letters: List[str]
-    ) -> List[SequenceRecord]:
+    ) -> List[SequenceData]:
         """Get sequences containing any of the specified letters."""
         self.load_all_sequences()
         letter_set = {letter.upper() for letter in letters}
         return [
-            r
-            for r in self._loaded_records
-            if any(char.upper() in letter_set for char in r.word)
+            s for s in self._loaded_sequences
+            if s.word and any(char.upper() in letter_set for char in s.word)
         ]
 
     # Utility methods
@@ -297,22 +285,22 @@ class ModernDictionaryDataManager(QObject):
     def get_distinct_authors(self) -> List[str]:
         """Get list of all unique authors."""
         self.load_all_sequences()
-        authors = {r.author for r in self._loaded_records if r.author}
+        authors = {s.author for s in self._loaded_sequences if s.author}
         return sorted(authors)
 
     def get_distinct_levels(self) -> List[int]:
         """Get list of all unique levels."""
         self.load_all_sequences()
-        levels = {r.level for r in self._loaded_records if r.level is not None}
+        levels = {s.level for s in self._loaded_sequences if s.level is not None}
         return sorted(levels)
 
     def get_distinct_lengths(self) -> List[int]:
         """Get list of all unique sequence lengths."""
         self.load_all_sequences()
         lengths = {
-            r.sequence_length
-            for r in self._loaded_records
-            if r.sequence_length is not None
+            s.sequence_length
+            for s in self._loaded_sequences
+            if s.sequence_length is not None
         }
         return sorted(lengths)
 
@@ -320,19 +308,19 @@ class ModernDictionaryDataManager(QObject):
         """Get list of all unique starting positions."""
         self.load_all_sequences()
         positions = {
-            r.starting_position for r in self._loaded_records if r.starting_position
+            s.starting_position for s in self._loaded_sequences if s.starting_position
         }
         return sorted(positions)
 
     def get_distinct_grid_modes(self) -> List[str]:
         """Get list of all unique grid modes."""
         self.load_all_sequences()
-        modes = {r.grid_mode for r in self._loaded_records if r.grid_mode}
+        modes = {s.grid_mode for s in self._loaded_sequences if s.grid_mode}
         return sorted(modes)
 
     def get_sequence_count(self) -> int:
         """Get total number of loaded sequences."""
-        return len(self._loaded_records)
+        return len(self._loaded_sequences)
 
     def get_loading_errors(self) -> List[str]:
         """Get list of errors that occurred during loading."""
@@ -340,7 +328,56 @@ class ModernDictionaryDataManager(QObject):
 
     def refresh_data(self) -> None:
         """Refresh the data by reloading from disk."""
-        self._loaded_records.clear()
+        self._loaded_sequences.clear()
         self._loading_errors.clear()
         self._has_loaded = False
         self.load_all_sequences()
+
+    # Backward compatibility methods (renamed from get_records_* to get_sequences_*)
+    def get_all_records(self) -> List[SequenceData]:
+        """Backward compatibility - use get_all_sequences instead."""
+        return self.get_all_sequences()
+
+    def get_records_by_starting_letter(self, letter: str) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_starting_letter instead."""
+        return self.get_sequences_by_starting_letter(letter)
+
+    def get_records_by_starting_letters(self, letters: List[str]) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_starting_letters instead."""
+        return self.get_sequences_by_starting_letters(letters)
+
+    def get_records_by_length(self, length: int) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_length instead."""
+        return self.get_sequences_by_length(length)
+
+    def get_records_by_difficulty(self, difficulty: str) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_difficulty instead."""
+        return self.get_sequences_by_difficulty(difficulty)
+
+    def get_records_by_level(self, level: int) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_level instead."""
+        return self.get_sequences_by_level(level)
+
+    def get_records_by_starting_position(self, position: str) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_starting_position instead."""
+        return self.get_sequences_by_starting_position(position)
+
+    def get_records_by_author(self, author: str) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_author instead."""
+        return self.get_sequences_by_author(author)
+
+    def get_records_by_grid_mode(self, grid_mode: str) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_by_grid_mode instead."""
+        return self.get_sequences_by_grid_mode(grid_mode)
+
+    def get_favorite_records(self) -> List[SequenceData]:
+        """Backward compatibility - use get_favorite_sequences instead."""
+        return self.get_favorite_sequences()
+
+    def get_recent_records(self, limit: int = 20) -> List[SequenceData]:
+        """Backward compatibility - use get_recent_sequences instead."""
+        return self.get_recent_sequences(limit)
+
+    def get_records_containing_letters(self, letters: List[str]) -> List[SequenceData]:
+        """Backward compatibility - use get_sequences_containing_letters instead."""
+        return self.get_sequences_containing_letters(letters)
