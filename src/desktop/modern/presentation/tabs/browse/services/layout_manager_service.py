@@ -4,10 +4,11 @@ Layout Manager Service
 Service for managing grid layout and section organization.
 """
 
-from desktop.modern.core.interfaces.browse_services import ILayoutManager
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QWidget
+
+from desktop.modern.core.interfaces.browse_services import ILayoutManager
 
 
 class LayoutManagerService(ILayoutManager):
@@ -25,26 +26,39 @@ class LayoutManagerService(ILayoutManager):
                 child.widget().deleteLater()
 
     def add_section_header(self, section_name: str, current_row: int) -> int:
-        """Add a section header to the grid."""
+        """Add a modern section header to the grid."""
         header_widget = QFrame()
         header_widget.setStyleSheet(
             """
             QFrame {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 6px;
-                margin: 10px 0px;
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 rgba(100, 150, 255, 0.15),
+                    stop:1 rgba(150, 100, 255, 0.15)
+                );
+                border: 1px solid rgba(100, 150, 255, 0.3);
+                border-radius: 10px;
+                margin: 12px 0px;
+                padding: 8px 16px;
             }
         """
         )
 
         header_layout = QHBoxLayout(header_widget)
-        header_layout.setContentsMargins(15, 8, 15, 8)
+        header_layout.setContentsMargins(20, 12, 20, 12)
 
         title_label = QLabel(section_name)
-        title_label.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
+        title_label.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
         title_label.setStyleSheet(
-            "color: rgba(255, 255, 255, 0.9); background: transparent; border: none;"
+            """
+            QLabel {
+                color: rgba(80, 120, 200, 0.95);
+                background: transparent;
+                border: none;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+            """
         )
         header_layout.addWidget(title_label)
         header_layout.addStretch()
@@ -54,7 +68,7 @@ class LayoutManagerService(ILayoutManager):
         self.grid_layout.addWidget(header_widget, current_row, 0, 1, 3)
 
         return current_row
-    
+
     def add_skeleton_section_header(self, section_name: str, current_row: int) -> int:
         """Add a skeleton section header placeholder to the grid."""
         skeleton_header = QFrame()

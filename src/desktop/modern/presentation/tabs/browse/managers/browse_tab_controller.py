@@ -7,7 +7,7 @@ This class is responsible for:
 - Delegating view state to BrowseViewModel
 - Connecting signals between components
 
-Simplified: View state management moved to BrowseViewModel, 
+Simplified: View state management moved to BrowseViewModel,
 direct UI manipulation minimized.
 """
 
@@ -81,12 +81,16 @@ class BrowseTabController(QObject):
         # Initialize view model for state management
         self.view_model = BrowseViewModel()
 
-        # Initialize managers
-        self.data_manager = BrowseDataManager(data_dir)
-        self.action_handler = BrowseActionHandler(
-            container, sequences_dir, parent_widget
+        # Resolve managers from DI container
+        from desktop.modern.core.interfaces.browse_services import (
+            IBrowseActionHandler,
+            IBrowseDataManager,
+            IBrowseNavigationManager,
         )
-        self.navigation_manager = BrowseNavigationManager(stacked_widget, viewer_panel)
+
+        self.data_manager = container.resolve(IBrowseDataManager)
+        self.action_handler = container.resolve(IBrowseActionHandler)
+        self.navigation_manager = container.resolve(IBrowseNavigationManager)
 
         # Connect signals
         self._connect_signals()
@@ -188,8 +192,10 @@ class BrowseTabController(QObject):
         if selected_id:
             sequence_data = self.view_model.get_sequence_by_id(selected_id)
             if sequence_data:
-                return self.action_handler.handle_save_image(sequence_data, variation_index)
-        
+                return self.action_handler.handle_save_image(
+                    sequence_data, variation_index
+                )
+
         logger.warning("⚠️ No sequence selected for saving")
         return False
 
@@ -207,12 +213,14 @@ class BrowseTabController(QObject):
         if selected_id:
             sequence_data = self.view_model.get_sequence_by_id(selected_id)
             if sequence_data:
-                success = self.action_handler.handle_delete_variation(sequence_data, variation_index)
+                success = self.action_handler.handle_delete_variation(
+                    sequence_data, variation_index
+                )
                 if success:
                     # Refresh data after deletion
                     self.refresh_data()
                 return success
-        
+
         logger.warning("⚠️ No sequence selected for deletion")
         return False
 
@@ -233,7 +241,7 @@ class BrowseTabController(QObject):
                 return self.action_handler.handle_fullscreen_view(
                     sequence_data.thumbnails, variation_index
                 )
-        
+
         logger.warning("⚠️ No sequence or thumbnails available for fullscreen")
         return False
 
@@ -259,7 +267,7 @@ class BrowseTabController(QObject):
             if self.view_model.current_filter_type:
                 self.apply_filter(
                     self.view_model.current_filter_type,
-                    self.view_model.current_filter_value
+                    self.view_model.current_filter_value,
                 )
 
             logger.info("✅ Data refreshed successfully")
@@ -348,7 +356,9 @@ class BrowseTabController(QObject):
             browser_panel = self.stacked_widget.widget(1)  # Browser panel is at index 1
 
             if browser_panel and hasattr(browser_panel, "show_sequences"):
-                logger.info(f"🔄 Updating browser panel with {len(sequences)} sequences")
+                logger.info(
+                    f"🔄 Updating browser panel with {len(sequences)} sequences"
+                )
                 browser_panel.show_sequences(
                     sequences,
                     self.view_model.current_filter_type,

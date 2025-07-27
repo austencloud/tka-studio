@@ -6,11 +6,12 @@ Service for creating sequence thumbnail widgets with image loading.
 
 from typing import Optional
 
-from desktop.modern.core.interfaces.browse_services import IThumbnailFactory
-from desktop.modern.domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout, QWidget
+
+from desktop.modern.core.interfaces.browse_services import IThumbnailFactory
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class ThumbnailFactoryService(IThumbnailFactory):
@@ -19,46 +20,81 @@ class ThumbnailFactoryService(IThumbnailFactory):
     def create_thumbnail(
         self, sequence: SequenceData, thumbnail_width: int, sort_method: str
     ) -> QWidget:
-        """Create a thumbnail widget for a sequence with actual image loading."""
-        # Create container frame
+        """Create a thumbnail widget for a sequence with responsive sizing and modern styling."""
+        # Create container frame with responsive sizing
         thumbnail = QFrame()
-        thumbnail.setFixedSize(thumbnail_width, thumbnail_width)
+
+        # Set responsive sizing - width expands, height follows aspect ratio
+        thumbnail.setMinimumSize(150, 150)
+        thumbnail.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        # Modern attractive styling (Qt-compatible CSS)
         thumbnail.setStyleSheet(
             """
             QFrame {
-                border: 1px solid #ccc;
-                background-color: #f0f0f0;
-                border-radius: 4px;
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 rgba(255, 255, 255, 0.95),
+                    stop:1 rgba(245, 248, 252, 0.95)
+                );
+                border: 1px solid rgba(200, 220, 240, 0.8);
+                border-radius: 12px;
+                padding: 8px;
             }
             QFrame:hover {
-                border-color: #007acc;
-                background-color: #e6f3ff;
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 rgba(240, 248, 255, 0.98),
+                    stop:1 rgba(230, 245, 255, 0.98)
+                );
+                border: 2px solid rgba(100, 150, 255, 0.6);
             }
         """
         )
 
         layout = QVBoxLayout(thumbnail)
-        layout.setContentsMargins(4, 4, 4, 4)
+        layout.setContentsMargins(0, 0, 0, 0)
 
-        # Try to load actual thumbnail image
+        # Try to load actual thumbnail image with aspect ratio preservation
         image_label = QLabel()
         image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        image_label.setMinimumHeight(thumbnail_width - 40)  # Leave space for text
+        image_label.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+        # Image label should expand to fill container width but maintain aspect ratio
 
-        # Load thumbnail image if available
+        # Load thumbnail image if available - will scale to fill available width
         self._load_thumbnail_image(sequence, image_label, thumbnail_width)
 
-        layout.addWidget(image_label)
+        layout.addWidget(image_label, 1)  # Give image most of the space
 
-        # Sequence name
-        name_label = QLabel(sequence.word or f"Sequence {sequence.id[:8] if hasattr(sequence, 'id') else 'Unknown'}")
+        # Sequence name with modern styling
+        name_label = QLabel(
+            sequence.word
+            or f"Sequence {sequence.id[:8] if hasattr(sequence, 'id') else 'Unknown'}"
+        )
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        name_label.setStyleSheet("font-size: 10px; font-weight: bold;")
-        layout.addWidget(name_label)
+        name_label.setStyleSheet(
+            """
+            QLabel {
+                font-size: 11px;
+                font-weight: 600;
+                color: rgba(60, 80, 120, 0.9);
+                background: transparent;
+                padding: 4px 2px;
+                border-radius: 4px;
+            }
+            """
+        )
+        layout.addWidget(name_label, 0)  # Fixed size for text
 
         # Beat count
-        beat_count = sequence.sequence_length if hasattr(sequence, 'sequence_length') else 0
+        beat_count = (
+            sequence.sequence_length if hasattr(sequence, "sequence_length") else 0
+        )
         count_label = QLabel(f"{beat_count} beats")
         count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         count_label.setStyleSheet("color: #666; font-size: 9px;")
@@ -69,19 +105,20 @@ class ThumbnailFactoryService(IThumbnailFactory):
     def _load_thumbnail_image(
         self, sequence: SequenceData, image_label: QLabel, thumbnail_width: int
     ) -> None:
-        """Load and set the thumbnail image."""
+        """Load and set the thumbnail image with proper aspect ratio scaling."""
+        # thumbnail_width parameter kept for interface compatibility
         thumbnail_path = self._get_thumbnail_path(sequence)
 
         if thumbnail_path:
             pixmap = QPixmap(thumbnail_path)
 
             if not pixmap.isNull():
-                # Scale image to fit while maintaining aspect ratio
-                scaled_pixmap = pixmap.scaled(
-                    thumbnail_width - 8,
-                    thumbnail_width - 40,
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation,
+                # Scale to fill the full thumbnail_width - the QLabel will expand to fill container
+                # and the image will scale to fill the QLabel width while maintaining aspect ratio
+                target_width = max(150, thumbnail_width or 350)
+
+                scaled_pixmap = pixmap.scaledToWidth(
+                    target_width, Qt.TransformationMode.SmoothTransformation
                 )
                 image_label.setPixmap(scaled_pixmap)
                 return

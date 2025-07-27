@@ -22,9 +22,6 @@ from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.presentation.tabs.browse.components.filter_selection_panel import (
     FilterSelectionPanel,
 )
-from desktop.modern.presentation.tabs.browse.components.modern_sequence_viewer_panel import (
-    ModernSequenceViewerPanel,
-)
 from desktop.modern.presentation.tabs.browse.components.sequence_browser_panel import (
     SequenceBrowserPanel,
 )
@@ -94,11 +91,14 @@ class BrowseTab(QWidget):
         # Initialize state service for backward compatibility
         self.state_service = BrowseStateService(settings_file)
 
+        # Setup basic layout structure first
+        self._setup_basic_layout()
+
         # Initialize services needed by components
         self._initialize_component_services()
 
-        # Setup layout and UI components first
-        self._setup_layout()
+        # Create panels that depend on services
+        self._create_panels()
 
         # Initialize the controller with all components
         self.controller = BrowseTabController(
@@ -117,26 +117,36 @@ class BrowseTab(QWidget):
         QTimer.singleShot(100, self._initialize_controller)
 
     def _initialize_component_services(self) -> None:
-        """Initialize services needed by UI components."""
-        from desktop.modern.presentation.tabs.browse.services.browse_service import (
-            BrowseService,
-        )
-        from desktop.modern.presentation.tabs.browse.services.modern_dictionary_data_manager import (
-            ModernDictionaryDataManager,
-        )
-        from desktop.modern.presentation.tabs.browse.services.progressive_loading_service import (
-            ProgressiveLoadingService,
+        """Initialize services needed by UI components using dependency injection."""
+        # Register browse services with the container
+        from desktop.modern.core.dependency_injection.browse_service_registration import (
+            register_browse_services,
         )
 
-        # Create services for components
-        self.browse_service = BrowseService(self.sequences_dir)
-        self.dictionary_manager = ModernDictionaryDataManager(self.data_dir)
-        self.progressive_loading_service = ProgressiveLoadingService(
-            self.dictionary_manager
+        register_browse_services(
+            container=self.container,
+            sequences_dir=self.sequences_dir,
+            data_dir=self.data_dir,
+            stacked_widget=self.internal_left_stack,
+            viewer_panel=None,  # Will be created later
+            parent_widget=self,
         )
 
-    def _setup_layout(self) -> None:
-        """Setup layout exactly matching Legacy structure."""
+        # Resolve services from container
+        from desktop.modern.core.interfaces.browse_services import (
+            IBrowseService,
+            IDictionaryDataManager,
+            IProgressiveLoadingService,
+        )
+
+        self.browse_service = self.container.resolve(IBrowseService)
+        self.dictionary_manager = self.container.resolve(IDictionaryDataManager)
+        self.progressive_loading_service = self.container.resolve(
+            IProgressiveLoadingService
+        )
+
+    def _setup_basic_layout(self) -> None:
+        """Setup basic layout structure without service-dependent components."""
         # Main horizontal layout (2:1 ratio like Legacy)
         main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -145,12 +155,24 @@ class BrowseTab(QWidget):
         # Left side - Internal stack for filter selection and sequence browsing
         self.internal_left_stack = QStackedWidget()
 
+        # Right side - Sequence viewer panel (will be created after services)
+        # Add to main layout with 2:1 ratio
+        main_layout.addWidget(self.internal_left_stack, 2)
+
+        # Placeholder for viewer panel (will be added after service initialization)
+        self.main_layout = main_layout
+
+    def _create_panels(self) -> None:
+        """Create panels that depend on services."""
         # Create panels with required services
         self.filter_selection_panel = FilterSelectionPanel(
             self.browse_service, self.dictionary_manager
         )
         self.sequence_browser_panel = SequenceBrowserPanel(
-            self.browse_service, self.state_service, self.progressive_loading_service
+            self.browse_service,
+            self.state_service,
+            self.progressive_loading_service,
+            self.container,
         )
 
         # Add panels to stack (matching Legacy indexes)
@@ -164,12 +186,15 @@ class BrowseTab(QWidget):
         # Start with filter selection visible (matching Legacy)
         self.internal_left_stack.setCurrentIndex(0)
 
-        # Right side - Sequence viewer
+        # Create sequence viewer panel with state service
+        from desktop.modern.presentation.tabs.browse.components.modern_sequence_viewer_panel import (
+            ModernSequenceViewerPanel,
+        )
+
         self.sequence_viewer_panel = ModernSequenceViewerPanel(self.state_service)
 
-        # Add to main layout with 2:1 ratio (matching Legacy exactly)
-        main_layout.addWidget(self.internal_left_stack, 2)  # 66.7% width
-        main_layout.addWidget(self.sequence_viewer_panel, 1)  # 33.3% width
+        # Add viewer panel to main layout
+        self.main_layout.addWidget(self.sequence_viewer_panel, 1)
 
     def _initialize_controller(self) -> None:
         """Initialize the controller and start the browse tab."""
@@ -206,9 +231,11 @@ class BrowseTab(QWidget):
 
         # IMMEDIATE: Switch to sequence browser with stable skeleton layout
         self._show_sequence_browser_with_stable_layout(filter_type, filter_value)
-        
+
         # THEN: Start progressive loading (after UI is stable)
-        QTimer.singleShot(50, lambda: self.controller.apply_filter(filter_type, filter_value))
+        QTimer.singleShot(
+            50, lambda: self.controller.apply_filter(filter_type, filter_value)
+        )
 
     def _on_sequence_selected(self, sequence_id: str) -> None:
         """Handle sequence selection - delegate to controller."""
@@ -260,18 +287,22 @@ class BrowseTab(QWidget):
     def _show_sequence_browser(self) -> None:
         """Show sequence browser panel."""
         self.internal_left_stack.setCurrentIndex(1)
-    
-    def _show_sequence_browser_with_stable_layout(self, filter_type: FilterType, filter_value) -> None:
+
+    def _show_sequence_browser_with_stable_layout(
+        self, filter_type: FilterType, filter_value
+    ) -> None:
         """Show sequence browser with immediate skeleton layout for stable UX."""
         # Switch to sequence browser panel immediately (no delay)
         self.internal_left_stack.setCurrentIndex(1)
-        
+
         # Tell the browser panel to prepare stable layout with skeleton
         self.sequence_browser_panel.prepare_stable_layout_for_filter(
             filter_type, filter_value
         )
-        
-        logger.info(f"🎯 Immediately switched to stable sequence browser for {filter_type.value}: {filter_value}")
+
+        logger.info(
+            f"🎯 Immediately switched to stable sequence browser for {filter_type.value}: {filter_value}"
+        )
 
     def refresh_sequences(self) -> None:
         """Refresh sequence data from disk."""

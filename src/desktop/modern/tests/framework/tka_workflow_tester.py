@@ -21,12 +21,13 @@ from typing import Any, Dict, List, Optional, Tuple
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QApplication
+
 from desktop.modern.core.application.application_factory import ApplicationFactory
 from desktop.modern.core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
 from desktop.modern.domain.models import BeatData, SequenceData
-from PyQt6.QtTest import QTest
-from PyQt6.QtWidgets import QApplication
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 
 class TestMode(Enum):
@@ -169,6 +170,16 @@ class TKAWorkflowTester:
         """Register arrow positioning orchestrator and its dependencies."""
         try:
             # Import all required services
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+                ArrowPositioningOrchestrator,
+            )
+            from desktop.modern.core.interfaces.positioning_services import (
+                IArrowAdjustmentCalculator,
+                IArrowCoordinateSystemService,
+                IArrowLocationCalculator,
+                IArrowPositioningOrchestrator,
+                IArrowRotationCalculator,
+            )
             from shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
@@ -180,16 +191,6 @@ class TKAWorkflowTester:
             )
             from shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator_service import (
                 ArrowAdjustmentCalculatorService,
-            )
-            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
-                ArrowPositioningOrchestrator,
-            )
-            from desktop.modern.core.interfaces.positioning_services import (
-                IArrowAdjustmentCalculator,
-                IArrowCoordinateSystemService,
-                IArrowLocationCalculator,
-                IArrowPositioningOrchestrator,
-                IArrowRotationCalculator,
             )
 
             # Register calculator microservices
@@ -225,11 +226,11 @@ class TKAWorkflowTester:
 
             # Create fresh construct tab if needed
             if not self.construct_tab:
-                from desktop.modern.presentation.tabs.construct.construct_tab_widget import (
-                    ConstructTabWidget,
+                from desktop.modern.presentation.tabs.construct.construct_tab import (
+                    ConstructTab,
                 )
 
-                self.construct_tab = ConstructTabWidget(self.container)
+                self.construct_tab = ConstructTab(self.container)
 
                 # Get component references
                 if hasattr(self.construct_tab, "layout_manager"):

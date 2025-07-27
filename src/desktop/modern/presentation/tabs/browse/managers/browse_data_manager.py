@@ -6,7 +6,7 @@ This class is responsible for:
 - Providing data access methods for the browse tab
 - Managing sequence ID to word mappings
 
-Simplified: No more conversion between data formats since dictionary manager 
+Simplified: No more conversion between data formats since dictionary manager
 returns SequenceData directly.
 """
 
@@ -32,14 +32,23 @@ class BrowseDataManager:
     Focuses on filtering operations and ID mappings.
     """
 
-    def __init__(self, data_dir: Path):
+    def __init__(self, data_dir: Path, dictionary_manager=None):
         """
         Initialize the browse data manager.
 
         Args:
             data_dir: Directory containing dictionary data
+            dictionary_manager: Optional injected dictionary manager
         """
-        self.dictionary_manager = ModernDictionaryDataManager(data_dir)
+        if dictionary_manager:
+            self.dictionary_manager = dictionary_manager
+        else:
+            # Fallback to direct instantiation if not injected
+            from desktop.modern.presentation.tabs.browse.services.modern_dictionary_data_manager import (
+                ModernDictionaryDataManager,
+            )
+
+            self.dictionary_manager = ModernDictionaryDataManager(data_dir)
 
         # Mapping from sequence UUID to word (for quick lookup)
         self.sequence_id_to_word: Dict[str, str] = {}
@@ -128,14 +137,20 @@ class BrowseDataManager:
                     chr(i) for i in range(ord(start_letter), ord(end_letter) + 1)
                 ]
                 logger.info(f"📝 Letter range {filter_value} -> {letters}")
-                return self.dictionary_manager.get_sequences_by_starting_letters(letters)
+                return self.dictionary_manager.get_sequences_by_starting_letters(
+                    letters
+                )
             elif filter_value == "All Letters":
                 return self.dictionary_manager.get_all_sequences()
             else:
                 # Single letter
-                return self.dictionary_manager.get_sequences_by_starting_letter(filter_value)
+                return self.dictionary_manager.get_sequences_by_starting_letter(
+                    filter_value
+                )
         elif isinstance(filter_value, list):
-            return self.dictionary_manager.get_sequences_by_starting_letters(filter_value)
+            return self.dictionary_manager.get_sequences_by_starting_letters(
+                filter_value
+            )
         else:
             return self.dictionary_manager.get_all_sequences()
 
@@ -147,7 +162,9 @@ class BrowseDataManager:
             else:
                 try:
                     length_value = int(filter_value)
-                    logger.info(f"📏 Converting length '{filter_value}' to {length_value}")
+                    logger.info(
+                        f"📏 Converting length '{filter_value}' to {length_value}"
+                    )
                     return self.dictionary_manager.get_sequences_by_length(length_value)
                 except ValueError:
                     logger.warning(f"⚠️ Invalid length value: {filter_value}")

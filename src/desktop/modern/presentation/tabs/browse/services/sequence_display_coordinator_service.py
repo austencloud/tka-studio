@@ -6,6 +6,8 @@ Service for coordinating the display of sequences using other services.
 
 from typing import Callable, List, Optional
 
+from PyQt6.QtWidgets import QApplication
+
 from desktop.modern.core.interfaces.browse_services import (
     ILayoutManager,
     ILoadingStateManager,
@@ -14,7 +16,6 @@ from desktop.modern.core.interfaces.browse_services import (
     IThumbnailFactory,
 )
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtWidgets import QApplication
 
 
 class SequenceDisplayCoordinatorService:
@@ -39,6 +40,10 @@ class SequenceDisplayCoordinatorService:
 
         # Callback for when thumbnails are clicked
         self.thumbnail_click_callback: Optional[Callable[[str], None]] = None
+
+        # Track progressive loading state
+        self._added_sections: set = set()
+        self._last_row_used: int = -1
 
     def set_thumbnail_click_callback(self, callback: Callable[[str], None]) -> None:
         """Set the callback for when thumbnails are clicked."""
@@ -106,37 +111,78 @@ class SequenceDisplayCoordinatorService:
     def add_sequences_progressively(
         self, sequences: List[SequenceData], sort_method: str
     ) -> None:
-        """Add sequences using progressive loading approach."""
+        """Add sequences using true progressive loading approach with proper headers."""
         if not sequences:
             return
 
-        # Create thumbnails for the new sequences
-        for i, sequence in enumerate(sequences):
-            thumbnail = self.thumbnail_factory.create_thumbnail(
-                sequence, self.thumbnail_width, sort_method
-            )
+        # Sort the new sequences to maintain proper order
+        sorted_sequences = self.sequence_sorter.sort_sequences(sequences, sort_method)
 
-            # Make clickable
-            if self.thumbnail_click_callback:
-                thumbnail.mousePressEvent = (
-                    lambda event, seq_id=sequence.id: self.thumbnail_click_callback(
-                        seq_id
-                    )
+        # Group sequences by section
+        sections = self.sequence_sorter.group_sequences_into_sections(
+            sorted_sequences, sort_method
+        )
+
+        # Get current layout state
+        current_row = self._get_next_available_row()
+        current_col = self._get_current_column_position(current_row)
+
+        # Add each section progressively
+        for section_name, section_sequences in sections.items():
+            # Check if this section already exists
+            if not self._section_exists(section_name):
+                # Start new row for header if we're not at column 0
+                if current_col > 0:
+                    current_row += 1
+                    current_col = 0
+
+                # Add section header
+                current_row = self.layout_manager.add_section_header(
+                    section_name, current_row
+                )
+                current_row += 1
+                current_col = 0
+
+                # Track that this section now exists
+                self._mark_section_as_added(section_name)
+
+            # Add thumbnails for this section
+            for sequence in section_sequences:
+                thumbnail = self.thumbnail_factory.create_thumbnail(
+                    sequence, self.thumbnail_width, sort_method
                 )
 
-            # Add to grid layout (simple approach for progressive loading)
-            row = i // 3  # 3 columns
-            col = i % 3
-            self.layout_manager.add_thumbnail_to_grid(thumbnail, row, col)
+                # Make clickable
+                if self.thumbnail_click_callback:
+                    thumbnail.mousePressEvent = (
+                        lambda event, seq_id=sequence.id: self.thumbnail_click_callback(
+                            seq_id
+                        )
+                    )
 
-        # Process events to keep UI responsive
-        QApplication.processEvents()
+                # Add to grid layout at current position
+                self.layout_manager.add_thumbnail_to_grid(
+                    thumbnail, current_row, current_col
+                )
 
-        print(f"🖼️ Added {len(sequences)} sequences progressively")
+                # Show immediately
+                thumbnail.show()
+
+                # Move to next position
+                current_col += 1
+                if current_col >= 3:  # 3 columns
+                    current_col = 0
+                    current_row += 1
+
+                # Process events to keep UI responsive
+                QApplication.processEvents()
+
+        print(f"🖼️ Added {len(sequences)} sequences progressively to final layout")
 
     def initialize_progressive_layout(self, sort_method: str) -> None:
         """Initialize the layout system for progressive loading."""
         self.layout_manager.clear_grid()
+        self._reset_progressive_state()
         print(f"🎨 Layout initialized for {sort_method} sorting")
 
     def finalize_progressive_layout(
@@ -148,6 +194,38 @@ class SequenceDisplayCoordinatorService:
 
         print(f"🎯 Finalizing layout with {len(all_sequences)} sequences")
         self.display_sequences_with_stable_layout(all_sequences, sort_method)
+
+    # === Progressive Loading Helper Methods ===
+
+    def _get_next_available_row(self) -> int:
+        """Get the next available row for adding content."""
+        # Get current row count from layout manager
+        current_rows = (
+            self.layout_manager.get_row_count()
+            if hasattr(self.layout_manager, "get_row_count")
+            else 0
+        )
+        return max(current_rows, self._last_row_used + 1)
+
+    def _get_current_column_position(self, row: int) -> int:
+        """Get the current column position for the given row."""
+        # Count existing items in the current row
+        if hasattr(self.layout_manager, "get_items_in_row"):
+            return self.layout_manager.get_items_in_row(row) % 3
+        return 0
+
+    def _section_exists(self, section_name: str) -> bool:
+        """Check if a section header has already been added."""
+        return section_name in self._added_sections
+
+    def _mark_section_as_added(self, section_name: str) -> None:
+        """Mark a section as having been added."""
+        self._added_sections.add(section_name)
+
+    def _reset_progressive_state(self) -> None:
+        """Reset progressive loading state for a fresh start."""
+        self._added_sections.clear()
+        self._last_row_used = -1
 
     def show_empty_state(self) -> None:
         """Show empty state when no sequences are found."""

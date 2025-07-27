@@ -7,8 +7,9 @@ Interfaces for browse-related services following clean architecture patterns.
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
-from desktop.modern.domain.models.sequence_data import SequenceData
 from PyQt6.QtWidgets import QWidget
+
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class ISequenceDeletionService(ABC):
@@ -208,3 +209,85 @@ class INavigationHandler(ABC):
             section_names: List of section names
             sort_method: Current sort method
         """
+
+
+class IBrowseService(ABC):
+    """Interface for browse service operations."""
+
+    @abstractmethod
+    def get_sequences_by_filter(
+        self, filter_type: str, filter_value: any
+    ) -> List[SequenceData]:
+        """Get sequences filtered by type and value."""
+
+    @abstractmethod
+    def get_all_sequences(self) -> List[SequenceData]:
+        """Get all available sequences."""
+
+
+class IDictionaryDataManager(ABC):
+    """Interface for dictionary data management."""
+
+    @abstractmethod
+    def get_sequences_by_starting_letter(self, letter: str) -> List[SequenceData]:
+        """Get sequences starting with specified letter."""
+
+    @abstractmethod
+    def get_sequences_by_length(self, length: int) -> List[SequenceData]:
+        """Get sequences of specified length."""
+
+    @abstractmethod
+    def get_all_sequences(self) -> List[SequenceData]:
+        """Get all sequences from dictionary."""
+
+
+class IProgressiveLoadingService(ABC):
+    """Interface for progressive loading service."""
+
+    @abstractmethod
+    def start_progressive_loading(self, sequences: List[SequenceData]) -> None:
+        """Start progressive loading of sequences."""
+
+    @abstractmethod
+    def stop_progressive_loading(self) -> None:
+        """Stop current progressive loading."""
+
+
+class IBrowseDataManager(ABC):
+    """Interface for browse data management."""
+
+    @abstractmethod
+    def apply_filter(self, filter_type: str, filter_value: any) -> List[SequenceData]:
+        """Apply filter and return matching sequences."""
+
+    @abstractmethod
+    def get_sequence_by_id(self, sequence_id: str) -> Optional[SequenceData]:
+        """Get sequence by ID."""
+
+
+class IBrowseNavigationManager(ABC):
+    """Interface for browse navigation management."""
+
+    @abstractmethod
+    def navigate_to_browser(self) -> None:
+        """Navigate to browser panel."""
+
+    @abstractmethod
+    def navigate_to_viewer(self) -> None:
+        """Navigate to viewer panel."""
+
+    @abstractmethod
+    def get_current_panel(self) -> str:
+        """Get current panel name."""
+
+
+class IBrowseActionHandler(ABC):
+    """Interface for browse action handling."""
+
+    @abstractmethod
+    def handle_edit_sequence(self, sequence_id: str) -> str:
+        """Handle edit sequence action."""
+
+    @abstractmethod
+    def handle_delete_sequence(self, sequence_id: str) -> bool:
+        """Handle delete sequence action."""

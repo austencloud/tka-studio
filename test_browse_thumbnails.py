@@ -15,7 +15,7 @@ sys.path.insert(0, str(tka_root / "src"))
 import logging
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +27,17 @@ def test_browse_thumbnails():
     # Create app
     app = QApplication([])
 
+    # Create main window with actual application size (90% of screen)
+    screen = app.primaryScreen().availableGeometry()
+    window_width = int(screen.width() * 0.9)
+    window_height = int(screen.height() * 0.9)
+
+    main_window = QMainWindow()
+    main_window.setWindowTitle(
+        f"Browse Tab Test - Realistic Size ({window_width}x{window_height})"
+    )
+    main_window.resize(window_width, window_height)
+
     # Import and create browse tab
     from desktop.modern.core.dependency_injection.di_container import DIContainer
     from desktop.modern.presentation.tabs.browse.browse_tab import BrowseTab
@@ -37,7 +48,10 @@ def test_browse_thumbnails():
     container = DIContainer()
 
     browse_tab = BrowseTab(sequences_dir, settings_file, container)
-    browse_tab.show()
+
+    # Add browse tab to main window for realistic sizing
+    main_window.setCentralWidget(browse_tab)
+    main_window.show()
 
     print("Browse tab created and shown")
     print(

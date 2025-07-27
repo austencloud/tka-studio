@@ -6,8 +6,8 @@ across the application. It integrates glassmorphism effects, typography, spacing
 and component-specific styling into a unified system.
 """
 
-from typing import Dict, Optional, Any
 from functools import lru_cache
+from typing import Any, Dict, Optional
 
 from .core.types import ComponentType, StyleVariant
 from .glassmorphism_styles import (
@@ -90,8 +90,14 @@ class DesignSystem:
         """Convert a dictionary of CSS properties to a CSS string."""
         css_rules = []
         for property_name, value in style_dict.items():
-            # Convert Python-style property names to CSS
-            css_property = property_name.replace("_", "-")
+            # Handle special font properties that need prefixes
+            if property_name == "size":
+                css_property = "font-size"
+            elif property_name == "weight":
+                css_property = "font-weight"
+            else:
+                # Convert Python-style property names to CSS
+                css_property = property_name.replace("_", "-")
             css_rules.append(f"{css_property}: {value};")
         return " ".join(css_rules)
 
