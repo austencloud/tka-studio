@@ -112,8 +112,6 @@ class DesignSystem:
                 "padding": self._effects.PADDING_MEDIUM,
                 "color": self._colors.TEXT_PRIMARY,
                 "font-weight": "500",
-                "transition": self._effects.TRANSITION_NORMAL,
-                "box-shadow": self._effects.SHADOW_SUBTLE,
             },
             "accent": {
                 "background-color": self._colors.ACCENT_BASE,
@@ -122,8 +120,6 @@ class DesignSystem:
                 "padding": self._effects.PADDING_MEDIUM,
                 "color": self._colors.TEXT_PRIMARY,
                 "font-weight": "600",
-                "transition": self._effects.TRANSITION_NORMAL,
-                "box-shadow": self._effects.SHADOW_ACCENT,
             },
             "subtle": {
                 "background-color": "transparent",
@@ -132,7 +128,6 @@ class DesignSystem:
                 "padding": self._effects.PADDING_MEDIUM,
                 "color": self._colors.TEXT_SECONDARY,
                 "font-weight": "400",
-                "transition": self._effects.TRANSITION_NORMAL,
             },
             "prominent": {
                 "background-color": self._colors.GLASS_LIGHTER,
@@ -141,8 +136,6 @@ class DesignSystem:
                 "padding": self._effects.PADDING_LARGE,
                 "color": self._colors.TEXT_PRIMARY,
                 "font-weight": "700",
-                "transition": self._effects.TRANSITION_NORMAL,
-                "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
 
@@ -156,7 +149,6 @@ class DesignSystem:
                 "padding": "12px 20px",
                 "color": self._colors.TEXT_MUTED,
                 "font-weight": "500",
-                "transition": self._effects.TRANSITION_FAST,
             },
             "accent": {
                 "background-color": self._colors.GLASS_BASE,
@@ -165,7 +157,6 @@ class DesignSystem:
                 "padding": "12px 20px",
                 "color": self._colors.TEXT_PRIMARY,
                 "font-weight": "600",
-                "transition": self._effects.TRANSITION_FAST,
             },
         }
 
@@ -176,7 +167,6 @@ class DesignSystem:
                 "background-color": self._colors.GLASS_BASE,
                 "border-bottom": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "padding": "8px 16px",
-                "box-shadow": self._effects.SHADOW_SUBTLE,
             },
         }
 
@@ -187,7 +177,6 @@ class DesignSystem:
                 "background-color": self._colors.GLASS_BASE,
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
-                "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
 
@@ -199,14 +188,12 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": self._effects.PADDING_LARGE,
-                "box-shadow": self._effects.SHADOW_SUBTLE,
             },
             "accent": {
                 "background-color": self._colors.ACCENT_BASE,
                 "border": f"1px solid {self._colors.ACCENT_BORDER}",
                 "border-radius": self._effects.RADIUS_MEDIUM,
                 "padding": self._effects.PADDING_LARGE,
-                "box-shadow": self._effects.SHADOW_ACCENT,
             },
             "subtle": {
                 "background-color": "rgba(255, 255, 255, 0.05)",
@@ -224,7 +211,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_NORMAL}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "24px",
-                "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.2)",
             },
         }
 
@@ -253,7 +239,6 @@ class DesignSystem:
                 "padding": "8px 12px",
                 "color": self._colors.TEXT_PRIMARY,
                 "font-size": "14px",
-                "transition": self._effects.TRANSITION_NORMAL,
             },
             "accent": {
                 "background-color": self._colors.GLASS_BASE,
@@ -262,8 +247,6 @@ class DesignSystem:
                 "padding": "8px 12px",
                 "color": self._colors.TEXT_PRIMARY,
                 "font-size": "14px",
-                "transition": self._effects.TRANSITION_NORMAL,
-                "box-shadow": self._effects.SHADOW_ACCENT,
             },
         }
 
@@ -276,7 +259,6 @@ class DesignSystem:
                 "border-radius": "4px",
                 "width": "18px",
                 "height": "18px",
-                "transition": self._effects.TRANSITION_FAST,
             },
         }
 
@@ -324,16 +306,12 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "16px",
-                "box-shadow": self._effects.SHADOW_SUBTLE,
-                "transition": self._effects.TRANSITION_NORMAL,
             },
             "accent": {
                 "background-color": self._colors.ACCENT_BASE,
                 "border": f"1px solid {self._colors.ACCENT_BORDER}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "16px",
-                "box-shadow": self._effects.SHADOW_ACCENT,
-                "transition": self._effects.TRANSITION_NORMAL,
             },
         }
 
@@ -345,14 +323,12 @@ class DesignSystem:
                 "padding": "8px 12px",
                 "border-bottom": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "color": self._colors.TEXT_PRIMARY,
-                "transition": self._effects.TRANSITION_FAST,
             },
             "accent": {
                 "background-color": self._colors.ACCENT_BASE,
                 "padding": "8px 12px",
                 "border-bottom": f"1px solid {self._colors.ACCENT_BORDER}",
                 "color": self._colors.TEXT_PRIMARY,
-                "transition": self._effects.TRANSITION_FAST,
             },
         }
 
@@ -374,7 +350,6 @@ class DesignSystem:
                 "padding": "6px 10px",
                 "color": self._colors.TEXT_PRIMARY,
                 "font-size": "12px",
-                "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
 
@@ -386,7 +361,6 @@ class DesignSystem:
                 "border": f"1px solid {self._colors.BORDER_SUBTLE}",
                 "border-radius": self._effects.RADIUS_LARGE,
                 "padding": "20px",
-                "box-shadow": self._effects.SHADOW_NORMAL,
             },
         }
 
@@ -401,11 +375,10 @@ class DesignSystem:
 
     def create_hover_style(self, base_style: str) -> str:
         """Create a hover variant of a base style with enhanced effects."""
-        # This is a simplified version - could be expanded for more sophisticated hover effects
+        # PyQt6-compatible hover effects - removed unsupported properties like box-shadow and transform
         hover_additions = f"""
             background-color: {self._colors.GLASS_LIGHT};
-            box-shadow: {self._effects.SHADOW_NORMAL};
-            transform: translateY(-1px);
+            border: 2px solid {self._colors.GLASS_LIGHT};
         """
         return f"{base_style} {hover_additions}"
 

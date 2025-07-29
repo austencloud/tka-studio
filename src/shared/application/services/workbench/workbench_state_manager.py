@@ -174,11 +174,13 @@ class WorkbenchStateManager(IWorkbenchStateManager):
         if self._sequence_state_tracker and not self._is_restoring:
             self._sequence_state_tracker.set_start_position_direct(start_position)
 
-        return (
-            StateChangeResult.create_start_position_changed(previous_state, new_state)
-            if state_changed
-            else StateChangeResult.create_no_change(new_state)
-        )
+        # Return appropriate result based on what actually changed
+        if state_changed or start_position_changed:
+            return StateChangeResult.create_start_position_changed(
+                previous_state, new_state
+            )
+        else:
+            return StateChangeResult.create_no_change(new_state)
 
     def clear_all_state(self) -> StateChangeResult:
         """Clear all workbench state."""

@@ -1,36 +1,30 @@
 """Event system exports for easy importing."""
 
-from .event_bus import (
-    TypeSafeEventBus,
-    IEventBus,
-    get_event_bus,
-    reset_event_bus,
-    BaseEvent,
-    EventPriority,
-)
-
-from .domain_events import (
-    # Sequence events
+from .domain_events import (  # Sequence events; Motion events; Layout events; Arrow/Pictograph events; UI events; Command events
+    ArrowPositionedEvent,
+    BeatAddedEvent,
+    BeatRemovedEvent,
+    BeatUpdatedEvent,
+    CommandExecutedEvent,
+    CommandRedoneEvent,
+    CommandUndoneEvent,
+    ComponentResizedEvent,
+    LayoutRecalculatedEvent,
+    MotionValidatedEvent,
+    PictographUpdatedEvent,
+    PropPositionedEvent,
     SequenceCreatedEvent,
     SequenceUpdatedEvent,
-    BeatAddedEvent,
-    BeatUpdatedEvent,
-    BeatRemovedEvent,
-    # Motion events
-    MotionValidatedEvent,
-    # Layout events
-    LayoutRecalculatedEvent,
-    ComponentResizedEvent,
-    # Arrow/Pictograph events
-    ArrowPositionedEvent,
-    PropPositionedEvent,
-    PictographUpdatedEvent,
-    # UI events
+    StartPositionSelectedEvent,
     UIStateChangedEvent,
-    # Command events
-    CommandExecutedEvent,
-    CommandUndoneEvent,
-    CommandRedoneEvent,
+)
+from .event_bus import (
+    BaseEvent,
+    EventPriority,
+    IEventBus,
+    TypeSafeEventBus,
+    get_event_bus,
+    reset_event_bus,
 )
 
 __all__ = [
@@ -54,6 +48,7 @@ __all__ = [
     "PropPositionedEvent",
     "PictographUpdatedEvent",
     "UIStateChangedEvent",
+    "StartPositionSelectedEvent",
     "CommandExecutedEvent",
     "CommandUndoneEvent",
     "CommandRedoneEvent",

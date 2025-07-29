@@ -4,9 +4,9 @@ These events replace direct method calls between services.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, Any, Dict, List
-from .event_bus import BaseEvent
+from typing import Any, Dict, List, Optional
 
+from .event_bus import BaseEvent
 
 # === Sequence Domain Events ===
 
@@ -189,6 +189,19 @@ class UIStateChangedEvent(BaseEvent):
     @property
     def event_type(self) -> str:
         return f"ui.{self.component}.state_changed"
+
+
+@dataclass(frozen=True)
+class StartPositionSelectedEvent(BaseEvent):
+    """Published when a start position is selected."""
+
+    position_key: str = ""
+    beat_data: Dict[str, Any] = field(default_factory=dict)
+    sequence_id: str = ""
+
+    @property
+    def event_type(self) -> str:
+        return "sequence.start_position_selected"
 
 
 # === Command Events (for undo/redo) ===

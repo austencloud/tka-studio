@@ -7,34 +7,43 @@ Modern implementation preserving exact legacy styling and functionality.
 import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import (
-    QFrame, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QProgressBar, QWidget
-)
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
-from desktop.modern.core.interfaces.sequence_card_services import ISequenceCardExportService, ISequenceCardDisplayService
+from desktop.modern.core.interfaces.sequence_card_services import (
+    ISequenceCardDisplayService,
+    ISequenceCardExportService,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class SequenceCardHeaderComponent(QFrame):
     """Header component with exact legacy styling preserved."""
-    
+
     export_requested = pyqtSignal()
     refresh_requested = pyqtSignal()
     regenerate_requested = pyqtSignal()
 
     def __init__(
-        self, 
+        self,
         export_service: ISequenceCardExportService,
         display_service: ISequenceCardDisplayService,
-        parent: Optional[QWidget] = None
+        parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)
         self.export_service = export_service
         self.display_service = display_service
-        
+
         self._setup_ui()
         self._apply_legacy_styling()
         self._setup_connections()
@@ -100,29 +109,20 @@ class SequenceCardHeaderComponent(QFrame):
     def _apply_legacy_styling(self) -> None:
         """Apply exact legacy styling."""
         self.setObjectName("sequenceCardHeader")
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             #sequenceCardHeader {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 #34495e, stop:1 #2c3e50);
                 border-radius: 10px;
                 border: 1px solid #4a5568;
             }
-            
+
             QLabel {
                 color: #ffffff;
                 background: transparent;
             }
-            
-            QLabel:first-child {
-                color: #ffffff;
-                font-weight: bold;
-            }
-            
-            QLabel:nth-child(2) {
-                color: #bdc3c7;
-                font-style: italic;
-            }
-            
+
             QPushButton {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 #3498db, stop:1 #2980b9);
@@ -165,7 +165,8 @@ class SequenceCardHeaderComponent(QFrame):
                 background: #3498db;
                 border-radius: 6px;
             }
-        """)
+        """
+        )
 
     def _setup_connections(self) -> None:
         """Setup button connections and service signals."""
@@ -173,16 +174,18 @@ class SequenceCardHeaderComponent(QFrame):
         self.export_button.clicked.connect(self._handle_export)
         self.refresh_button.clicked.connect(self._handle_refresh)
         self.regenerate_button.clicked.connect(self._handle_regenerate)
-        
+
         # Service signal connections
-        if hasattr(self.export_service, 'export_progress_updated'):
-            self.export_service.export_progress_updated.connect(self.update_export_progress)
-        if hasattr(self.export_service, 'export_completed'):
+        if hasattr(self.export_service, "export_progress_updated"):
+            self.export_service.export_progress_updated.connect(
+                self.update_export_progress
+            )
+        if hasattr(self.export_service, "export_completed"):
             self.export_service.export_completed.connect(self.export_completed)
-        
-        if hasattr(self.display_service, 'loading_state_changed'):
+
+        if hasattr(self.display_service, "loading_state_changed"):
             self.display_service.loading_state_changed.connect(self.set_loading_state)
-        if hasattr(self.display_service, 'progress_updated'):
+        if hasattr(self.display_service, "progress_updated"):
             self.display_service.progress_updated.connect(self.update_progress)
 
     def _handle_export(self) -> None:
@@ -224,28 +227,37 @@ class SequenceCardHeaderComponent(QFrame):
         if total > 0:
             percentage = int((current / total) * 100)
             self.progress_bar.setValue(percentage)
-            self.description_label.setText(f"Loading... {current}/{total} ({percentage}%)")
+            self.description_label.setText(
+                f"Loading... {current}/{total} ({percentage}%)"
+            )
 
     def update_export_progress(self, current: int, total: int, message: str) -> None:
         """Update export progress."""
         if total > 0:
             percentage = int((current / total) * 100)
             self.progress_bar.setValue(percentage)
-            self.description_label.setText(f"{message} {current}/{total} ({percentage}%)")
+            self.description_label.setText(
+                f"{message} {current}/{total} ({percentage}%)"
+            )
 
     def export_completed(self, success: bool) -> None:
         """Handle export completion."""
         self.export_button.setEnabled(True)
         self.regenerate_button.setEnabled(True)
         self.progress_bar.hide()
-        
+
         if success:
             self.description_label.setText("Export completed successfully!")
         else:
             self.description_label.setText("Export failed. Please try again.")
-        
+
         # Reset message after 3 seconds
-        QTimer.singleShot(3000, lambda: self.description_label.setText("Select a sequence length to view cards"))
+        QTimer.singleShot(
+            3000,
+            lambda: self.description_label.setText(
+                "Select a sequence length to view cards"
+            ),
+        )
 
     def set_description_text(self, text: str) -> None:
         """Set description text."""

@@ -6,6 +6,7 @@ This package provides intelligent logging that adapts to application behavior:
 - Increases detail for slow or failed operations
 - Suppresses repetitive log messages
 - Provides specialized logging for arrow positioning
+- Filters Qt CSS property warnings
 
 Quick Start:
 -----------
@@ -17,6 +18,10 @@ setup_arrow_positioning_logging_only(quiet=True)
 # For full smart logging setup:
 from desktop.modern.core.logging import setup_smart_logging
 setup_smart_logging('development')
+
+# For Qt message filtering only:
+from desktop.modern.core.logging import install_qt_message_filter
+install_qt_message_filter()
 
 # For custom loggers:
 from desktop.modern.core.logging import get_smart_logger, LoggingConfig
@@ -46,6 +51,13 @@ from .config import (
     get_logging_performance_report,
     reset_all_logging_stats,
     setup_smart_logging,
+)
+
+# Qt message filtering
+from .qt_message_filter import (
+    disable_qt_message_filter,
+    get_qt_message_filter_stats,
+    install_qt_message_filter,
 )
 
 # Core smart logging components
@@ -80,6 +92,10 @@ __all__ = [
     "enable_verbose_mode",
     "enable_performance_monitoring",
     "configure_from_environment",
+    # Qt message filtering
+    "install_qt_message_filter",
+    "get_qt_message_filter_stats",
+    "disable_qt_message_filter",
     # Decorators for services
     "log_arrow_adjustment",
     "log_directional_processing",

@@ -93,7 +93,8 @@ def get_command_processor() -> Optional[CommandProcessor]:
 def get_sequence_state_manager() -> Optional[object]:
     """Get the global sequence state manager instance"""
     if _sequence_state_manager is None:
-        logger.warning(
+        # Use debug level to reduce noise - this is expected during initialization
+        logger.debug(
             "Sequence state manager not initialized - call initialize_services() first"
         )
     return _sequence_state_manager

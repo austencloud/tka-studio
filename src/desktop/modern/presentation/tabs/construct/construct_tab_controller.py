@@ -79,6 +79,9 @@ class ConstructTabController(QObject):
             # Connect service signals
             self._connect_service_signals()
 
+            # Create signal coordinator early (before option picker is ready)
+            self._create_signal_coordinator_early()
+
             if self._progress_callback:
                 self._progress_callback(88, "Starting sequence loading...")
 
@@ -332,8 +335,8 @@ class ConstructTabController(QObject):
 
             traceback.print_exc()
 
-    def _create_signal_coordinator(self) -> None:
-        """Create SignalCoordinator with all required dependencies."""
+    def _create_signal_coordinator_early(self) -> None:
+        """Create SignalCoordinator early, before option picker is ready."""
         try:
             from desktop.modern.presentation.components.start_position_picker.start_position_selection_handler import (
                 StartPositionSelectionHandler,
@@ -345,11 +348,15 @@ class ConstructTabController(QObject):
             # Create start position selection handler
             start_position_handler = StartPositionSelectionHandler()
 
-            # Create signal coordinator with all dependencies
+            # Create a placeholder option picker manager for now
+            # This will be replaced when the real option picker is ready
+            self._option_picker_manager = None
+
+            # Create signal coordinator with available dependencies
             self._signal_coordinator = SignalCoordinator(
                 layout_manager=self._view._layout_manager,
                 start_position_handler=start_position_handler,
-                option_picker_manager=self._option_picker_manager,
+                option_picker_manager=self._option_picker_manager,  # Will be None initially
                 loading_service=self._loading_service,
                 beat_operations=self._beat_operations,
                 start_position_manager=self._start_position_manager,
@@ -358,8 +365,50 @@ class ConstructTabController(QObject):
             # Connect construct tab signals
             self._signal_coordinator.connect_construct_tab_signals(self._widget)
 
+            print("✅ Signal coordinator created early")
+
         except Exception as e:
-            print(f"❌ Failed to create SignalCoordinator: {e}")
+            print(f"❌ Failed to create early SignalCoordinator: {e}")
+            import traceback
+
+            traceback.print_exc()
+
+    def _create_signal_coordinator(self) -> None:
+        """Update SignalCoordinator with option picker manager when ready."""
+        try:
+            # If signal coordinator already exists, just update the option picker manager
+            if self._signal_coordinator and self._option_picker_manager:
+                self._signal_coordinator.set_option_picker_manager(
+                    self._option_picker_manager
+                )
+                print("✅ Signal coordinator updated with option picker manager")
+            else:
+                # Fallback: create signal coordinator if it doesn't exist
+                from desktop.modern.presentation.components.start_position_picker.start_position_selection_handler import (
+                    StartPositionSelectionHandler,
+                )
+                from desktop.modern.presentation.tabs.construct.signal_coordinator import (
+                    SignalCoordinator,
+                )
+
+                # Create start position selection handler
+                start_position_handler = StartPositionSelectionHandler()
+
+                # Create signal coordinator with all dependencies
+                self._signal_coordinator = SignalCoordinator(
+                    layout_manager=self._view._layout_manager,
+                    start_position_handler=start_position_handler,
+                    option_picker_manager=self._option_picker_manager,
+                    loading_service=self._loading_service,
+                    beat_operations=self._beat_operations,
+                    start_position_manager=self._start_position_manager,
+                )
+
+                # Connect construct tab signals
+                self._signal_coordinator.connect_construct_tab_signals(self._widget)
+
+        except Exception as e:
+            print(f"❌ Failed to update SignalCoordinator: {e}")
             import traceback
 
             traceback.print_exc()

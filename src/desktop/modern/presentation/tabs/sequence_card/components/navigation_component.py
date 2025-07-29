@@ -7,31 +7,40 @@ Modern implementation preserving exact legacy sidebar styling and functionality.
 import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QPushButton, QComboBox, QScrollArea, 
-    QFrame
-)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QFrame,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
-from desktop.modern.core.interfaces.sequence_card_services import ISequenceCardSettingsService, ISequenceCardDisplayService
+from desktop.modern.core.interfaces.sequence_card_services import (
+    ISequenceCardDisplayService,
+    ISequenceCardSettingsService,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class LengthOptionButton(QPushButton):
     """Custom button for length selection with selection state."""
-    
+
     def __init__(self, length: int, text: str, parent=None):
         super().__init__(text, parent)
         self.length = length
         self.is_selected = False
         self.setCheckable(True)
         self._apply_styling()
-    
+
     def _apply_styling(self):
         """Apply button styling."""
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QPushButton {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 rgba(71, 85, 105, 0.3), stop:1 rgba(51, 65, 85, 0.5));
@@ -57,8 +66,9 @@ class LengthOptionButton(QPushButton):
                 color: white;
                 font-weight: 600;
             }
-        """)
-    
+        """
+        )
+
     def setSelected(self, selected: bool):
         """Set selection state."""
         self.is_selected = selected
@@ -67,23 +77,23 @@ class LengthOptionButton(QPushButton):
 
 class SequenceCardNavigationComponent(QWidget):
     """Navigation component with exact legacy sidebar styling preserved."""
-    
+
     length_selected = pyqtSignal(int)
     column_count_changed = pyqtSignal(int)
 
     def __init__(
-        self, 
+        self,
         settings_service: ISequenceCardSettingsService,
         display_service: ISequenceCardDisplayService,
-        parent: Optional[QWidget] = None
+        parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)
         self.settings_service = settings_service
         self.display_service = display_service
-        
+
         self.length_buttons = {}
         self.selected_length = 16  # Default
-        
+
         self._setup_ui()
         self._apply_legacy_styling()
         self._setup_connections()
@@ -111,11 +121,11 @@ class SequenceCardNavigationComponent(QWidget):
         """Create the sidebar header."""
         header = QFrame()
         header.setObjectName("sidebarHeader")
-        
+
         layout = QVBoxLayout(header)
         layout.setContentsMargins(15, 12, 15, 12)
         layout.setSpacing(4)
-        
+
         # Title
         title = QLabel("Sequence Length")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -125,7 +135,7 @@ class SequenceCardNavigationComponent(QWidget):
         title_font.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, 0.5)
         title.setFont(title_font)
         layout.addWidget(title)
-        
+
         # Subtitle
         subtitle = QLabel("Select a length to display")
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -134,7 +144,7 @@ class SequenceCardNavigationComponent(QWidget):
         subtitle_font.setItalic(True)
         subtitle.setFont(subtitle_font)
         layout.addWidget(subtitle)
-        
+
         return header
 
     def _create_length_scroll_area(self) -> QScrollArea:
@@ -143,13 +153,13 @@ class SequenceCardNavigationComponent(QWidget):
         scroll_area.setWidgetResizable(True)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        
+
         # Content widget
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(5, 5, 5, 5)
         content_layout.setSpacing(5)
-        
+
         # Length options - exact legacy order
         length_options = [
             (0, "All"),
@@ -163,27 +173,29 @@ class SequenceCardNavigationComponent(QWidget):
             (12, "12"),
             (16, "16"),
         ]
-        
+
         for length, text in length_options:
             button = LengthOptionButton(length, text)
-            button.clicked.connect(lambda checked, l=length: self._on_length_button_clicked(l))
+            button.clicked.connect(
+                lambda checked, l=length: self._on_length_button_clicked(l)
+            )
             self.length_buttons[length] = button
             content_layout.addWidget(button)
-        
+
         content_layout.addStretch()
         scroll_area.setWidget(content_widget)
-        
+
         return scroll_area
 
     def _create_column_selector(self) -> QFrame:
         """Create the column selector."""
         selector_frame = QFrame()
         selector_frame.setObjectName("columnSelector")
-        
+
         layout = QVBoxLayout(selector_frame)
         layout.setContentsMargins(10, 8, 10, 8)
         layout.setSpacing(6)
-        
+
         # Label
         label = QLabel("Preview Columns:")
         label_font = QFont()
@@ -191,19 +203,20 @@ class SequenceCardNavigationComponent(QWidget):
         label_font.setWeight(QFont.Weight.Medium)
         label.setFont(label_font)
         layout.addWidget(label)
-        
+
         # Combo box
         self.column_combo = QComboBox()
         self.column_combo.addItems(["2", "3", "4", "5", "6"])
         self.column_combo.setCurrentText("2")  # Default
         layout.addWidget(self.column_combo)
-        
+
         return selector_frame
 
     def _apply_legacy_styling(self) -> None:
         """Apply exact legacy styling."""
         self.setObjectName("sequenceCardNavigation")
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             #sequenceCardNavigation {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 rgba(71, 85, 105, 0.4), stop:1 rgba(51, 65, 85, 0.6));
@@ -218,14 +231,9 @@ class SequenceCardNavigationComponent(QWidget):
                 border: 1px solid rgba(100, 116, 139, 0.4);
             }
             
-            #sidebarHeader QLabel:first-child {
+            #sidebarHeader QLabel {
                 color: #f8fafc;
                 font-weight: bold;
-            }
-            
-            #sidebarHeader QLabel:nth-child(2) {
-                color: #cbd5e1;
-                font-style: italic;
             }
             
             #columnSelector {
@@ -290,7 +298,8 @@ class SequenceCardNavigationComponent(QWidget):
             QScrollBar::handle:vertical:hover {
                 background: rgba(0, 0, 0, 0.5);
             }
-        """)
+        """
+        )
 
     def _setup_connections(self) -> None:
         """Setup signal connections."""
@@ -302,11 +311,11 @@ class SequenceCardNavigationComponent(QWidget):
             # Load saved length
             saved_length = self.settings_service.get_last_selected_length()
             self.select_length(saved_length)
-            
+
             # Load saved column count
             saved_columns = self.settings_service.get_column_count()
             self.column_combo.setCurrentText(str(saved_columns))
-            
+
         except Exception as e:
             logger.warning(f"Error loading saved settings: {e}")
 
@@ -315,7 +324,7 @@ class SequenceCardNavigationComponent(QWidget):
         # Update selection state
         for button_length, button in self.length_buttons.items():
             button.setSelected(button_length == length)
-        
+
         self.selected_length = length
         logger.info(f"Length selected: {length}")
         self.length_selected.emit(length)
@@ -339,10 +348,10 @@ class SequenceCardNavigationComponent(QWidget):
     def resizeEvent(self, event) -> None:
         """Handle resize event for responsive font scaling."""
         super().resizeEvent(event)
-        
+
         # Update font sizes based on width (legacy behavior)
         new_width = event.size().width()
-        
+
         for button in self.length_buttons.values():
             font = button.font()
             new_size = min(max(12, int(new_width / 15)), 14)

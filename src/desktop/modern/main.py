@@ -46,31 +46,83 @@ if "tka_paths" not in sys.modules:
 import logging
 
 # Import the focused startup components
-from desktop.modern.core.startup import ApplicationBootstrapper, ConfigurationManager
+from desktop.modern.core.startup import ConfigurationManager
 
 # Import the extracted main window class
 from desktop.modern.presentation.main_window import TKAMainWindow
 
 
+def _position_window_on_secondary_monitor(window):
+    """
+    Position window on secondary monitor if available, otherwise primary.
+
+    This restores the legacy behavior that was removed during simplification.
+    """
+    from PyQt6.QtGui import QGuiApplication
+
+    screens = QGuiApplication.screens()
+
+    # Use secondary monitor if available, otherwise primary (legacy behavior)
+    target_screen = screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
+
+    if not target_screen:
+        return  # Fallback to default positioning
+
+    # Log which screen we're using
+    screen_name = target_screen.name() if hasattr(target_screen, "name") else "Unknown"
+    screen_type = "secondary" if len(screens) > 1 else "primary"
+    print(f"🖥️ Positioning window on {screen_type} monitor: {screen_name}")
+
+    # Calculate window dimensions (90% of screen size, centered)
+    available_geometry = target_screen.availableGeometry()
+    window_width = int(available_geometry.width() * 0.9)
+    window_height = int(available_geometry.height() * 0.9)
+    x = available_geometry.x() + int((available_geometry.width() - window_width) / 2)
+    y = available_geometry.y() + int((available_geometry.height() - window_height) / 2)
+
+    # Apply geometry
+    window.setGeometry(x, y, window_width, window_height)
+    window.setMinimumSize(1400, 900)
+
+
 def main():
     """
-    Main entry point with support for different application modes.
-
-    Refactored to use focused, single-responsibility components for better maintainability.
+    Main entry point - simple and direct.
     """
     logger = logging.getLogger(__name__)
 
     try:
-        # Load configuration using ConfigurationManager
+        # Load configuration
         config_manager = ConfigurationManager()
         config = config_manager.load_configuration()
 
-        # Bootstrap application using ApplicationBootstrapper
-        bootstrapper = ApplicationBootstrapper()
-        result = bootstrapper.bootstrap_application(config)
+        if config.mode == "test":
+            # Test mode: just create container and return it
+            from desktop.modern.core.application.application_factory import (
+                ApplicationFactory,
+            )
 
-        # Return result for test modes, or exit code for UI modes
-        return result if result is not None else 0
+            container = ApplicationFactory.create_app(config.mode)
+            return container
+
+        # UI mode: create Qt app and main window
+        from PyQt6.QtWidgets import QApplication
+
+        from desktop.modern.core.application.application_factory import (
+            ApplicationFactory,
+        )
+
+        app = QApplication.instance() or QApplication([])
+        container = ApplicationFactory.create_app(config.mode)
+
+        # Create main window
+        window = TKAMainWindow(container)
+
+        # Position window on secondary monitor if available (restored legacy behavior)
+        _position_window_on_secondary_monitor(window)
+
+        window.show()
+        return app.exec()
 
     except Exception as e:
         logger.error(f"Failed to start TKA application: {e}")
@@ -78,6 +130,32 @@ def main():
 
         traceback.print_exc()
         return 1
+
+
+def create_application():
+    """
+    Create application for testing purposes.
+
+    Returns:
+        Tuple of (QApplication, TKAMainWindow) for test compatibility
+    """
+    from PyQt6.QtWidgets import QApplication
+
+    from desktop.modern.core.application.application_factory import ApplicationFactory
+
+    # Create Qt app
+    app = QApplication.instance() or QApplication([])
+
+    # Create container
+    container = ApplicationFactory.create_app("production")
+
+    # Create main window
+    window = TKAMainWindow(container)
+
+    # Position window on secondary monitor if available
+    _position_window_on_secondary_monitor(window)
+
+    return app, window
 
 
 if __name__ == "__main__":

@@ -75,7 +75,29 @@ class SignalCoordinator(QObject):
         # Track current operation type to prevent unwanted tab switching
         self._current_operation_type = None
 
+        # Queue for start position signals when workbench is not ready
+        self._pending_start_position_signals = []
+
         self._setup_signal_connections()
+
+    def set_option_picker_manager(self, option_picker_manager):
+        """Set option picker manager and connect its signals."""
+        self.option_picker_manager = option_picker_manager
+
+        # Connect option picker manager signals now that it's available
+        if self.option_picker_manager:
+            try:
+                self.option_picker_manager.pictograph_selected.disconnect(
+                    self.beat_operations.add_pictograph_to_sequence
+                )
+            except TypeError:
+                # Signal was not connected, which is fine
+                pass
+
+            self.option_picker_manager.pictograph_selected.connect(
+                self.beat_operations.add_pictograph_to_sequence
+            )
+            print("✅ Option picker manager signals connected")
 
     def connect_construct_tab_signals(self, construct_tab_widget):
         """Connect to construct tab signals after initialization."""
@@ -104,17 +126,18 @@ class SignalCoordinator(QObject):
         )
 
         # Option picker manager signals - Prevent duplicate connections
-        try:
-            self.option_picker_manager.pictograph_selected.disconnect(
+        if self.option_picker_manager:
+            try:
+                self.option_picker_manager.pictograph_selected.disconnect(
+                    self.beat_operations.add_pictograph_to_sequence
+                )
+            except TypeError:
+                # Signal was not connected, which is fine
+                pass
+
+            self.option_picker_manager.pictograph_selected.connect(
                 self.beat_operations.add_pictograph_to_sequence
             )
-        except TypeError:
-            # Signal was not connected, which is fine
-            pass
-
-        self.option_picker_manager.pictograph_selected.connect(
-            self.beat_operations.add_pictograph_to_sequence
-        )
 
         # Connect to construct tab signals (which bridge loading service callbacks)
         # Note: construct_tab_widget will be set after initialization
@@ -196,9 +219,14 @@ class SignalCoordinator(QObject):
         self.start_position_manager.set_start_position(start_position_beat_data)
 
         # Pre-load option picker content WITHOUT animations to avoid double fade
-        self.option_picker_manager.prepare_from_start_position(
-            position_key, start_position_beat_data
-        )
+        if self.option_picker_manager:
+            self.option_picker_manager.prepare_from_start_position(
+                position_key, start_position_beat_data
+            )
+        else:
+            print(
+                "⚠️ [SIGNAL_COORDINATOR] Option picker manager not ready, skipping prepare_from_start_position"
+            )
 
         # Transition to option picker with content already loaded
         self.layout_manager.transition_to_option_picker()
@@ -369,9 +397,80 @@ class SignalCoordinator(QObject):
 
     def _on_start_position_set(self, start_position_data):
         """Handle start position set."""
+        # Update the workbench with the new start position
+        if self.layout_manager.workbench and self._is_workbench_ready():
+            self.layout_manager.workbench.set_start_position(start_position_data)
+        else:
+            # Queue the signal for when workbench becomes ready
+            print(
+                f"🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position signal"
+            )
+            self._pending_start_position_signals.append(("set", start_position_data))
+            self._setup_workbench_ready_callback()
 
     def _on_start_position_updated(self, start_position_data):
         """Handle start position updated."""
+        # Update the workbench with the updated start position
+        if self.layout_manager.workbench and self._is_workbench_ready():
+            self.layout_manager.workbench.set_start_position(start_position_data)
+        else:
+            # Queue the signal for when workbench becomes ready
+            print(
+                f"🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position update signal"
+            )
+            self._pending_start_position_signals.append(("update", start_position_data))
+            self._setup_workbench_ready_callback()
+
+    def _is_workbench_ready(self):
+        """Check if workbench is ready to receive signals."""
+        workbench = self.layout_manager.workbench
+        if not workbench:
+            return False
+
+        # Check if workbench has completed deferred initialization
+        return (
+            hasattr(workbench, "_state_manager")
+            and workbench._state_manager is not None
+        )
+
+    def _setup_workbench_ready_callback(self):
+        """Setup callback to process pending signals when workbench becomes ready."""
+        if hasattr(self, "_workbench_ready_timer"):
+            return  # Already set up
+
+        from PyQt6.QtCore import QTimer
+
+        self._workbench_ready_timer = QTimer()
+        self._workbench_ready_timer.timeout.connect(self._check_workbench_ready)
+        self._workbench_ready_timer.start(50)  # Check every 50ms
+
+    def _check_workbench_ready(self):
+        """Check if workbench is ready and process pending signals."""
+        if self._is_workbench_ready():
+            print(
+                f"✅ [SIGNAL_COORDINATOR] Workbench ready, processing {len(self._pending_start_position_signals)} pending signals"
+            )
+
+            # Process all pending signals
+            for (
+                signal_type,
+                start_position_data,
+            ) in self._pending_start_position_signals:
+                if signal_type == "set":
+                    self.layout_manager.workbench.set_start_position(
+                        start_position_data
+                    )
+                elif signal_type == "update":
+                    self.layout_manager.workbench.set_start_position(
+                        start_position_data
+                    )
+
+            # Clear pending signals
+            self._pending_start_position_signals.clear()
+
+            # Stop the timer
+            self._workbench_ready_timer.stop()
+            delattr(self, "_workbench_ready_timer")
 
     def _handle_workbench_modified_with_operation(
         self, sequence: SequenceData, operation_type: str

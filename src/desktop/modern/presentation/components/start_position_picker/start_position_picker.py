@@ -13,10 +13,19 @@ Features:
 """
 
 import logging
+from datetime import datetime
 from enum import Enum
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
+# Event bus imports
+try:
+    from desktop.modern.core.events import StartPositionSelectedEvent, get_event_bus
+
+    EVENT_BUS_AVAILABLE = True
+except ImportError:
+    EVENT_BUS_AVAILABLE = False
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
@@ -76,6 +85,15 @@ class StartPositionPicker(QWidget):
         self.data_service = data_service
         self.ui_service = ui_service
         self.orchestrator = orchestrator
+
+        # Initialize event bus if available
+        self.event_bus = None
+        if EVENT_BUS_AVAILABLE:
+            try:
+                self.event_bus = get_event_bus()
+                logger.debug("Event bus initialized for StartPositionPicker")
+            except Exception as e:
+                logger.debug(f"Event bus not available: {e}")
 
         # State management
         self.current_mode = initial_mode
@@ -228,6 +246,11 @@ class StartPositionPicker(QWidget):
             success = self.orchestrator.handle_position_selection(position_key)
             if success:
                 logger.info(f"✅ Position selection successful: {position_key}")
+
+                # Publish event via event bus (modern approach)
+                self._publish_start_position_event(position_key)
+
+                # Also emit Qt signal for backward compatibility
                 self.start_position_selected.emit(position_key)
             else:
                 logger.warning(f"⚠️ Position selection failed: {position_key}")
@@ -238,6 +261,40 @@ class StartPositionPicker(QWidget):
             logger.error(f"Error in position selection: {e}")
             # Fallback - still emit signal
             self.start_position_selected.emit(position_key)
+
+    def _publish_start_position_event(self, position_key: str):
+        """Publish start position selection event via event bus."""
+        if self.event_bus and EVENT_BUS_AVAILABLE:
+            try:
+                # Get beat data from orchestrator if available
+                beat_data = {}
+                if hasattr(self.orchestrator, "get_last_created_beat_data"):
+                    beat_data_obj = self.orchestrator.get_last_created_beat_data()
+                    if beat_data_obj:
+                        # Convert beat data to dict for event
+                        beat_data = {
+                            "letter": getattr(beat_data_obj, "letter", position_key),
+                            "position_key": position_key,
+                            "timestamp": str(datetime.now()),
+                        }
+
+                # Create and publish event
+                event = StartPositionSelectedEvent(
+                    position_key=position_key,
+                    beat_data=beat_data,
+                    sequence_id="",  # Will be filled by subscribers
+                    source="StartPositionPicker",
+                )
+
+                self.event_bus.publish(event)
+                logger.info(
+                    f"📡 Published StartPositionSelectedEvent for {position_key}"
+                )
+
+            except Exception as e:
+                logger.error(f"Failed to publish start position event: {e}")
+        else:
+            logger.debug("Event bus not available, skipping event publication")
 
     def _switch_to_basic_mode(self):
         """Switch to basic mode."""

@@ -190,8 +190,13 @@ def configure_logging(default_level: int = None) -> logging.Logger:
             # Filter out specific message patterns
             message = str(record.getMessage())
 
-            # Block Qt/SVG property warnings
+            # Block Qt/SVG property warnings including specific CSS properties
             if "unknown property" in message.lower() or "Unknown property" in message:
+                return False
+
+            # Block specific CSS property warnings that PyQt6 doesn't support
+            css_warnings = ["transition", "box-shadow", "transform"]
+            if any(css_prop in message.lower() for css_prop in css_warnings):
                 return False
 
             # Block tab availability warnings during startup

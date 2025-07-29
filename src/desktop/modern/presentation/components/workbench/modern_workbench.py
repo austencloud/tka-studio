@@ -285,25 +285,30 @@ class SequenceWorkbench(ViewableComponentBase):
 
         print(f"🎯 [WORKBENCH] Start position state result: changed={result.changed}")
 
-        # CRITICAL FIX: Always update UI during restoration, even if state didn't change
-        # This ensures visibility is properly set after restoration
-        if result.changed or from_restoration:
-            print(f"🎯 [WORKBENCH] Updating beat frame with start position...")
-            # Update beat frame section
-            if self._beat_frame_section:
-                self._beat_frame_section.set_start_position(
-                    start_position_data, pictograph_data
-                )
+        # CRITICAL FIX: Always update UI when start position is set, regardless of state change
+        # This ensures the start position view always reflects the current selection
+        print(
+            f"🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
+        )
 
-            # Emit sequence_modified if not in restoration mode
-            if not self._state_manager.should_prevent_auto_save():
-                complete_sequence = (
-                    self._state_manager.get_complete_sequence_with_start_position()
-                )
-                if complete_sequence:
-                    self.sequence_modified.emit(complete_sequence)
+        # Update beat frame section - this should always happen for user selections
+        if self._beat_frame_section:
+            self._beat_frame_section.set_start_position(
+                start_position_data, pictograph_data
+            )
+
+        # Only emit sequence_modified if state actually changed and not in restoration mode
+        if result.changed and not self._state_manager.should_prevent_auto_save():
+            complete_sequence = (
+                self._state_manager.get_complete_sequence_with_start_position()
+            )
+            if complete_sequence:
+                self.sequence_modified.emit(complete_sequence)
+                print(f"🎯 [WORKBENCH] Sequence modified signal emitted")
         else:
-            print(f"🎯 [WORKBENCH] Start position unchanged, no UI update needed")
+            print(
+                f"🎯 [WORKBENCH] Skipping sequence modified signal (changed={result.changed}, auto_save_prevented={self._state_manager.should_prevent_auto_save()})"
+            )
 
     def get_start_position(self) -> Optional[BeatData]:
         """Get the current start position from state manager."""

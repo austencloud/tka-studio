@@ -27,6 +27,14 @@ from desktop.modern.core.interfaces.core_services import ILayoutService
 from desktop.modern.domain.models import BeatData, SequenceData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.component_base import ViewableComponentBase
+
+# Event bus imports
+try:
+    from desktop.modern.core.events import StartPositionSelectedEvent
+
+    EVENT_BUS_AVAILABLE = True
+except ImportError:
+    EVENT_BUS_AVAILABLE = False
 from shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
@@ -153,6 +161,9 @@ class SequenceWorkbench(ViewableComponentBase):
 
             self._setup_state_monitoring()  # CRITICAL FIX: Monitor state manager changes
             print("🔧 [WORKBENCH] State monitoring setup complete")
+
+            self._setup_event_subscriptions()  # NEW: Subscribe to event bus events
+            print("🔧 [WORKBENCH] Event subscriptions setup complete")
 
             print("✅ [WORKBENCH] Deferred initialization completed successfully")
 
@@ -402,28 +413,33 @@ class SequenceWorkbench(ViewableComponentBase):
 
         print(f"🎯 [WORKBENCH] Start position state result: changed={result.changed}")
 
-        # CRITICAL FIX: Always update UI during restoration, even if state didn't change
-        # This ensures visibility is properly set after restoration
-        if result.changed or from_restoration:
-            print(f"🎯 [WORKBENCH] Updating beat frame with start position...")
-            # Update beat frame section
-            if self._beat_frame_section:
-                self._beat_frame_section.set_start_position(
-                    start_position_data, pictograph_data
-                )
+        # CRITICAL FIX: Always update UI when start position is set, regardless of state change
+        # This ensures the start position view always reflects the current selection
+        print(
+            f"🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
+        )
 
-            # Update button panel sequence state for smart picker button
-            self._update_button_panel_sequence_state()
+        # Update beat frame section - this should always happen for user selections
+        if self._beat_frame_section:
+            self._beat_frame_section.set_start_position(
+                start_position_data, pictograph_data
+            )
 
-            # Emit sequence_modified if not in restoration mode
-            if not self._state_manager.should_prevent_auto_save():
-                complete_sequence = (
-                    self._state_manager.get_complete_sequence_with_start_position()
-                )
-                if complete_sequence:
-                    self.sequence_modified.emit(complete_sequence)
+        # Update button panel sequence state for smart picker button
+        self._update_button_panel_sequence_state()
+
+        # Only emit sequence_modified if state actually changed and not in restoration mode
+        if result.changed and not self._state_manager.should_prevent_auto_save():
+            complete_sequence = (
+                self._state_manager.get_complete_sequence_with_start_position()
+            )
+            if complete_sequence:
+                self.sequence_modified.emit(complete_sequence)
+                print(f"🎯 [WORKBENCH] Sequence modified signal emitted")
         else:
-            print(f"🎯 [WORKBENCH] Start position unchanged, no UI update needed")
+            print(
+                f"🎯 [WORKBENCH] Skipping sequence modified signal (changed={result.changed}, auto_save_prevented={self._state_manager.should_prevent_auto_save()})"
+            )
 
     def get_start_position(self) -> Optional[BeatData]:
         """Get the current start position from state manager."""
@@ -654,6 +670,58 @@ class SequenceWorkbench(ViewableComponentBase):
 
         except Exception as e:
             self.emit_error(f"Error during cleanup: {e}", e)
+
+    def _setup_event_subscriptions(self):
+        """Setup event bus subscriptions."""
+        if self.event_bus and EVENT_BUS_AVAILABLE:
+            try:
+                # Subscribe to start position selection events
+                self.event_bus.subscribe(
+                    "sequence.start_position_selected",
+                    self._handle_start_position_selected_event,
+                )
+                print("📡 [WORKBENCH] Subscribed to start position events")
+            except Exception as e:
+                print(f"❌ [WORKBENCH] Failed to setup event subscriptions: {e}")
+        else:
+            print("⚠️ [WORKBENCH] Event bus not available, skipping subscriptions")
+
+    def _handle_start_position_selected_event(self, event: StartPositionSelectedEvent):
+        """Handle start position selected event from event bus."""
+        try:
+            print(f"📡 [WORKBENCH] Received start position event: {event.position_key}")
+
+            # Convert event data to beat data format
+            if event.beat_data:
+                # Create a simple beat data object from the event
+                from desktop.modern.domain.models import BeatData
+
+                beat_data = BeatData(
+                    letter=event.beat_data.get("letter", event.position_key),
+                    position_key=event.position_key,
+                    # Add other required fields with defaults
+                )
+
+                # Set the start position using the state manager
+                result = self._state_manager.set_start_position(beat_data)
+                if result.changed:
+                    print(
+                        f"✅ [WORKBENCH] Start position set via event bus: {event.position_key}"
+                    )
+                    # Trigger UI update
+                    self._update_ui_from_state()
+                else:
+                    print(
+                        f"⚠️ [WORKBENCH] Start position unchanged: {event.position_key}"
+                    )
+            else:
+                print("⚠️ [WORKBENCH] No beat data in start position event")
+
+        except Exception as e:
+            print(f"❌ [WORKBENCH] Error handling start position event: {e}")
+            import traceback
+
+            traceback.print_exc()
 
     # New panel mode handlers
     def _handle_picker_mode_request(self):

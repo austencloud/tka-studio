@@ -286,7 +286,7 @@ class StartPositionPickerHeader(QWidget):
                 }
                 QLabel:hover {
                     color: #4B5563;
-                    transform: scale(1.05);
+                    background-color: rgba(75, 85, 99, 0.1);
                 }
             """
             )
@@ -298,11 +298,10 @@ class StartPositionPickerHeader(QWidget):
                     font-family: 'Segoe UI', 'Arial', sans-serif;
                     letter-spacing: 0.8px;
                     text-transform: uppercase;
-                    text-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
                 }
                 QLabel:hover {
                     color: #059669;
-                    transform: scale(1.05);
+                    background-color: rgba(5, 150, 105, 0.1);
                 }
             """
             )
@@ -316,11 +315,10 @@ class StartPositionPickerHeader(QWidget):
                     font-family: 'Segoe UI', 'Arial', sans-serif;
                     letter-spacing: 0.8px;
                     text-transform: uppercase;
-                    text-shadow: 0 1px 2px rgba(59, 130, 246, 0.3);
                 }
                 QLabel:hover {
                     color: #2563EB;
-                    transform: scale(1.05);
+                    background-color: rgba(37, 99, 235, 0.1);
                 }
             """
             )
@@ -335,7 +333,7 @@ class StartPositionPickerHeader(QWidget):
                 }
                 QLabel:hover {
                     color: #4B5563;
-                    transform: scale(1.05);
+                    background-color: rgba(75, 85, 99, 0.1);
                 }
             """
             )
