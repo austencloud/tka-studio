@@ -19,8 +19,12 @@ import sys
 from typing import Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.error_handling import StandardErrorHandler, ErrorSeverity
-from .service_registration_helper import ServiceRegistrationHelper, TestDoubleRegistrationHelper
+from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
+
+from .service_registration_helper import (
+    ServiceRegistrationHelper,
+    TestDoubleRegistrationHelper,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +34,6 @@ class ApplicationMode:
 
     PRODUCTION = "production"
     TEST = "test"
-    HEADLESS = "headless"
-    RECORDING = "recording"
 
 
 class ApplicationFactory:
@@ -66,7 +68,9 @@ class ApplicationFactory:
             ServiceRegistrationHelper.apply_service_registration_manager(container)
 
             # Register extracted services
-            ServiceRegistrationHelper.register_extracted_services_with_error_handling(container)
+            ServiceRegistrationHelper.register_extracted_services_with_error_handling(
+                container
+            )
 
             logger.info("✅ Production application container created successfully")
             return container
@@ -99,7 +103,9 @@ class ApplicationFactory:
             ServiceRegistrationHelper.register_visibility_services(container)
 
             # Register extracted services
-            ServiceRegistrationHelper.register_extracted_services_with_error_handling(container)
+            ServiceRegistrationHelper.register_extracted_services_with_error_handling(
+                container
+            )
 
             # Set this container as the global container
             ApplicationFactory._set_global_container(container)
@@ -109,8 +115,11 @@ class ApplicationFactory:
 
         except ImportError as e:
             StandardErrorHandler.handle_initialization_error(
-                "Test application creation", e, logger, is_critical=True,
-                suggested_action="Ensure test doubles are available"
+                "Test application creation",
+                e,
+                logger,
+                is_critical=True,
+                suggested_action="Ensure test doubles are available",
             )
             raise
         except Exception as e:
@@ -120,86 +129,12 @@ class ApplicationFactory:
             raise
 
     @staticmethod
-    def create_headless_app() -> DIContainer:
-        """
-        Create headless application with real business logic but no UI.
-        Useful for server-side processing or CI/CD environments.
-
-        Returns:
-            DIContainer configured with headless services
-        """
-        try:
-            container = DIContainer()
-
-            # Register common data services (same as production)
-            ServiceRegistrationHelper.register_common_data_services(container)
-
-            # Register real business logic services
-            ApplicationFactory._register_headless_business_services(container)
-
-            # Register headless UI services
-            TestDoubleRegistrationHelper.register_headless_services(container)
-
-            # Register common session services
-            ServiceRegistrationHelper.register_common_session_services(container)
-
-            # Register other common services
-            ServiceRegistrationHelper.register_common_pictograph_services(container)
-            ServiceRegistrationHelper.register_visibility_services(container)
-
-            # Register extracted services
-            ServiceRegistrationHelper.register_extracted_services_with_error_handling(container)
-
-            # Set this container as the global container
-            ApplicationFactory._set_global_container(container)
-
-            logger.info("✅ Headless application container created successfully")
-            return container
-
-        except ImportError as e:
-            StandardErrorHandler.handle_initialization_error(
-                "Headless application creation", e, logger, is_critical=True,
-                suggested_action="Ensure headless services are available"
-            )
-            raise
-        except Exception as e:
-            StandardErrorHandler.handle_initialization_error(
-                "Headless application creation", e, logger, is_critical=True
-            )
-            raise
-
-    @staticmethod
-    def create_recording_app() -> DIContainer:
-        """
-        Create recording application that wraps production services with recording.
-        Used for capturing user workflows to convert into automated tests.
-
-        Returns:
-            DIContainer configured with recording-wrapped services
-        """
-        try:
-            # Start with production app
-            container = ApplicationFactory.create_production_app()
-            
-            # Add recording wrapper services here if needed
-            # TODO: Implement recording wrappers when needed
-            
-            logger.info("✅ Recording application container created successfully")
-            return container
-
-        except Exception as e:
-            StandardErrorHandler.handle_initialization_error(
-                "Recording application creation", e, logger, is_critical=True
-            )
-            raise
-
-    @staticmethod
     def create_app(mode: str = ApplicationMode.PRODUCTION) -> DIContainer:
         """
         Create application based on mode string.
 
         Args:
-            mode: Application mode (production, test, headless, recording)
+            mode: Application mode (production, test, headless)
 
         Returns:
             DIContainer configured for the specified mode
@@ -210,8 +145,6 @@ class ApplicationFactory:
         mode_creators = {
             ApplicationMode.PRODUCTION: ApplicationFactory.create_production_app,
             ApplicationMode.TEST: ApplicationFactory.create_test_app,
-            ApplicationMode.HEADLESS: ApplicationFactory.create_headless_app,
-            ApplicationMode.RECORDING: ApplicationFactory.create_recording_app,
         }
 
         creator = mode_creators.get(mode)
@@ -242,8 +175,6 @@ class ApplicationFactory:
 
         mode_mapping = {
             "--test": ApplicationMode.TEST,
-            "--headless": ApplicationMode.HEADLESS,
-            "--record": ApplicationMode.RECORDING,
         }
 
         for arg, mode in mode_mapping.items():
@@ -259,7 +190,10 @@ class ApplicationFactory:
     def _set_global_container(container: DIContainer) -> None:
         """Set the global container with error handling."""
         try:
-            from desktop.modern.core.dependency_injection.di_container import set_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                set_container,
+            )
+
             set_container(container)
             logger.debug(f"🌐 Global container set: {id(container)}")
         except Exception as e:
@@ -278,10 +212,18 @@ class ApplicationFactory:
     def _register_test_specific_services(container: DIContainer) -> None:
         """Register services specific to test mode."""
         try:
-            from desktop.modern.infrastructure.file_system.file_system_service import FileSystemService
-            from desktop.modern.application.services.core.session_state_tracker import SessionStateTracker
-            from desktop.modern.core.interfaces.organization_services import IFileSystemService
-            from desktop.modern.core.interfaces.session_services import ISessionStateTracker
+            from desktop.modern.application.services.core.session_state_tracker import (
+                SessionStateTracker,
+            )
+            from desktop.modern.core.interfaces.organization_services import (
+                IFileSystemService,
+            )
+            from desktop.modern.core.interfaces.session_services import (
+                ISessionStateTracker,
+            )
+            from desktop.modern.infrastructure.file_system.file_system_service import (
+                FileSystemService,
+            )
 
             # Register some real services that are safe for testing
             container.register_singleton(IFileSystemService, FileSystemService)
@@ -298,11 +240,22 @@ class ApplicationFactory:
     def _register_headless_business_services(container: DIContainer) -> None:
         """Register real business logic services for headless mode."""
         try:
-            from desktop.modern.application.services.sequence.sequence_beat_operations import SequenceBeatOperations
-            from shared.application.services.pictograph.pictograph_csv_manager import PictographCSVManager
-            from desktop.modern.application.services.core.session_state_tracker import SessionStateTracker
-            from desktop.modern.core.interfaces.core_services import ISequenceManager, IPictographManager
-            from desktop.modern.core.interfaces.session_services import ISessionStateTracker
+            from desktop.modern.application.services.core.session_state_tracker import (
+                SessionStateTracker,
+            )
+            from desktop.modern.application.services.sequence.sequence_beat_operations import (
+                SequenceBeatOperations,
+            )
+            from desktop.modern.core.interfaces.core_services import (
+                IPictographManager,
+                ISequenceManager,
+            )
+            from desktop.modern.core.interfaces.session_services import (
+                ISessionStateTracker,
+            )
+            from shared.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
+            )
 
             container.register_singleton(ISequenceManager, SequenceBeatOperations)
             container.register_singleton(IPictographManager, PictographCSVManager)
@@ -312,7 +265,10 @@ class ApplicationFactory:
 
         except Exception as e:
             StandardErrorHandler.handle_service_error(
-                "Headless business services registration", e, logger, ErrorSeverity.WARNING
+                "Headless business services registration",
+                e,
+                logger,
+                ErrorSeverity.WARNING,
             )
 
 

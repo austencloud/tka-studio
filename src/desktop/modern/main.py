@@ -2,7 +2,11 @@
 """
 Kinetic Constructor - Main Application Entry Point
 
-Modified to support different application modes via Application Factory.
+Refactored to use focused, single-responsibility components:
+- ApplicationBootstrapper: Handles initialization sequence and startup coordination
+- ConfigurationManager: Manages configuration loading and validation
+- QtApplicationManager: Handles Qt-specific application lifecycle
+
 Modern modular architecture with dependency injection and clean separation of concerns.
 """
 
@@ -46,67 +50,23 @@ else:
     pass  # tka_paths already imported
 
 # Now safe to import everything else
-import argparse
 import logging
-import os
 from typing import TYPE_CHECKING, Optional
 
-# Path setup is now handled at the top of the file
-
+# Import the new focused startup components
+from desktop.modern.core.startup import (
+    ApplicationBootstrapper,
+    ConfigurationManager,
+    QtApplicationManager,
+)
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
     from desktop.modern.core.application.application_factory import ApplicationMode
 
-from PyQt6.QtCore import QTimer, QtMsgType, qInstallMessageHandler
-from PyQt6.QtGui import QGuiApplication, QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt6.QtWidgets import QMainWindow
 
-
-def _install_qt_message_handler():
-    """Install Qt message handler to suppress CSS property warnings and other noise."""
-
-    def qt_message_handler(msg_type, context, message):
-        # ULTRA-AGGRESSIVE SUPPRESSION: Block ALL CSS and styling warnings to eliminate processing overhead
-        suppressed_patterns = [
-            "unknown property",
-            "text-shadow",
-            "transform",
-            "transition",
-            "box-shadow",
-            "backdrop-filter",
-            "qobject::setparent",
-            "qbasictimer",
-            "timers cannot be started",
-            "different thread",
-            "qwidget",
-            "qpainter",
-            "stylesheet",
-            "css",
-            "style",
-            "font",
-            "color",
-            "border",
-            "margin",
-            "padding",
-            "background",
-            "qml",
-            "opengl",
-            "shader",
-            "texture",
-            "pixmap",
-            "image",
-        ]
-
-        message_lower = message.lower()
-        if any(pattern in message_lower for pattern in suppressed_patterns):
-            return  # Completely suppress these messages to eliminate processing overhead
-
-        # Only show critical errors
-        if msg_type == QtMsgType.QtCriticalMsg or msg_type == QtMsgType.QtFatalMsg:
-            print(f"Qt {msg_type.name}: {message}")
-
-    qInstallMessageHandler(qt_message_handler)
+# Qt message handler is now handled by QtApplicationManager
 
 
 class TKAMainWindow(QMainWindow):
@@ -397,298 +357,30 @@ class TKAMainWindow(QMainWindow):
             self.orchestrator.handle_window_resize(self)
 
 
-def detect_parallel_testing_mode():
-    import argparse
-    import os
-
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--parallel-testing", action="store_true")
-    parser.add_argument("--monitor", choices=["primary", "secondary", "left", "right"])
-    args, _ = parser.parse_known_args()
-
-    env_parallel = os.environ.get("TKA_PARALLEL_TESTING", "").lower() == "true"
-    env_monitor = os.environ.get("TKA_PARALLEL_MONITOR", "")
-    env_geometry = os.environ.get("TKA_PARALLEL_GEOMETRY", "")
-
-    parallel_mode = args.parallel_testing or env_parallel
-    monitor = args.monitor or env_monitor
-
-    return parallel_mode, monitor, env_geometry
-
-
-def create_application():
-    app = QApplication.instance()
-    if not app:
-        app = QApplication(sys.argv)
-        app.setStyle("Fusion")
-
-        # PERFORMANCE OPTIMIZATION: Install Qt message handler to suppress CSS warnings
-        _install_qt_message_handler()
-
-    # Create container for dependency injection
-    from desktop.modern.core.application.application_factory import (
-        ApplicationFactory,
-        ApplicationMode,
-    )
-
-    container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
-
-    # Initialize services
-    try:
-        from desktop.modern.core.service_locator import initialize_services
-
-        initialize_services()
-    except Exception as e:
-        print(f"Warning: Could not initialize services: {e}")
-
-    parallel_mode, monitor, geometry = detect_parallel_testing_mode()
-    screens = QGuiApplication.screens()
-    if parallel_mode and monitor == "secondary" and len(screens) > 1:
-        target_screen = screens[1]
-    elif parallel_mode and monitor == "primary":
-        target_screen = screens[0]
-    else:
-        target_screen = (
-            screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
-        )
-
-    window = TKAMainWindow(
-        container=container,
-        splash_screen=None,
-        target_screen=target_screen,
-        parallel_mode=parallel_mode,
-        parallel_geometry=geometry,
-    )
-
-    return app, window
+# Legacy functions removed - functionality moved to focused components:
+# - detect_parallel_testing_mode() -> ConfigurationManager
+# - create_application() -> QtApplicationManager + ApplicationBootstrapper
 
 
 def main():
-    """Main entry point with support for different application modes."""
+    """
+    Main entry point with support for different application modes.
 
-    # Set up logging
-    logging.basicConfig(level=logging.INFO)
+    Refactored to use focused, single-responsibility components for better maintainability.
+    """
     logger = logging.getLogger(__name__)
 
-    # Import ApplicationMode when needed
-    from desktop.modern.core.application.application_factory import ApplicationMode
-
-    # INSTANT FIX: Suppress verbose arrow positioning logs
     try:
-        from desktop.modern.core.logging.instant_fix import apply_instant_fix
+        # Load configuration using ConfigurationManager
+        config_manager = ConfigurationManager()
+        config = config_manager.load_configuration()
 
-        apply_instant_fix("quiet")
+        # Bootstrap application using ApplicationBootstrapper
+        bootstrapper = ApplicationBootstrapper()
+        result = bootstrapper.bootstrap_application(config)
 
-    except Exception as e:
-        logger.warning(
-            f"⚠️ Could not apply logging fix: {e} - continuing with default logging"
-        )
-
-    # Determine application mode from command line arguments
-    app_mode = ApplicationMode.PRODUCTION
-
-    if "--test" in sys.argv:
-        app_mode = ApplicationMode.TEST
-        # For test mode, just create container and return it
-        from desktop.modern.core.application.application_factory import (
-            ApplicationFactory,
-        )
-
-        container = ApplicationFactory.create_app(app_mode)
-
-        # Initialize services for test mode too
-        try:
-            from desktop.modern.core.service_locator import initialize_services
-
-            initialize_services()
-            logger.info("✅ Event-driven services initialized for test mode")
-        except Exception as e:
-            logger.warning(
-                f"⚠️ Could not initialize event-driven services in test mode: {e}"
-            )
-
-        logger.info(f"Test mode - application ready for automated testing")
-        logger.info(f"Available services: {list(container.get_registrations().keys())}")
-        return container
-    elif "--headless" in sys.argv:
-        app_mode = ApplicationMode.HEADLESS
-        # For headless mode, create container but no UI
-        from desktop.modern.core.application.application_factory import (
-            ApplicationFactory,
-        )
-
-        container = ApplicationFactory.create_app(app_mode)
-
-        # Initialize services for headless mode too
-        try:
-            from desktop.modern.core.service_locator import initialize_services
-
-            initialize_services()
-            logger.info("✅ Event-driven services initialized for headless mode")
-        except Exception as e:
-            logger.warning(
-                f"⚠️ Could not initialize event-driven services in headless mode: {e}"
-            )
-
-        logger.info("Headless mode - application ready for server-side processing")
-        return container
-    elif "--record" in sys.argv:
-        app_mode = ApplicationMode.RECORDING
-    # For production and recording modes, continue with UI setup
-    try:
-        # Lazy import ApplicationFactory when needed
-        from desktop.modern.core.application.application_factory import (
-            ApplicationFactory,
-        )
-
-        # Create application using factory
-        container = ApplicationFactory.create_app(app_mode)
-
-        # Initialize event-driven architecture services
-        try:
-            from desktop.modern.core.service_locator import initialize_services
-
-            if not initialize_services():
-                logger.warning(
-                    "⚠️ Failed to initialize event-driven services - falling back to legacy architecture"
-                )
-        except Exception as e:
-            logger.error(f"❌ Error initializing event-driven services: {e}")
-            logger.warning("⚠️ Continuing with legacy architecture")
-
-        # Continue with existing UI setup for production mode
-        parallel_mode, monitor, geometry = detect_parallel_testing_mode()
-        app = QApplication(sys.argv)
-        app.setStyle("Fusion")
-
-        # PERFORMANCE OPTIMIZATION: Install Qt message handler to suppress CSS warnings
-        _install_qt_message_handler()
-
-        # PERFORMANCE OPTIMIZATION: Apply aggressive startup silencing
-        screens = QGuiApplication.screens()
-
-        if parallel_mode and len(screens) > 1:
-            if monitor in ["secondary", "right"]:
-                primary_screen = screens[0]
-                secondary_screen = screens[1]
-                if secondary_screen.geometry().x() > primary_screen.geometry().x():
-                    target_screen = secondary_screen
-                else:
-                    target_screen = primary_screen
-            elif monitor in ["primary", "left"]:
-                primary_screen = screens[0]
-                secondary_screen = screens[1]
-                if secondary_screen.geometry().x() < primary_screen.geometry().x():
-                    target_screen = secondary_screen
-                else:
-                    target_screen = primary_screen
-            else:
-                target_screen = screens[1]
-        else:
-            target_screen = (
-                screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
-            )
-
-        # Lazy import splash screen when needed
-        from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
-
-        # UI setup with splash screen
-        splash = SplashScreen(target_screen=target_screen)
-        fade_in_animation = splash.show_animated()
-        window = None
-
-        def start_initialization():
-            nonlocal window
-            try:
-                # Give splash screen time to fully appear
-                splash.update_progress(5, "Initializing application...")
-                app.processEvents()
-
-                # Small delay to ensure splash is visible before heavy operations
-                QTimer.singleShot(50, lambda: continue_initialization())
-
-            except Exception:
-                import traceback
-
-                traceback.print_exc()
-                return
-
-        def continue_initialization():
-            nonlocal window
-            try:
-                splash.update_progress(10, "Loading application icon...")
-                app.processEvents()
-                icon_path = Path(__file__).parent / "images" / "icons" / "app_icon.png"
-                if icon_path.exists():
-                    app.setWindowIcon(QIcon(str(icon_path)))
-
-                splash.update_progress(
-                    15, "Creating main window and loading all components..."
-                )
-                app.processEvents()
-
-                splash.update_progress(
-                    15, "Creating main window and loading all components..."
-                )
-
-                window = TKAMainWindow(
-                    container=container,
-                    splash_screen=splash,
-                    target_screen=target_screen,
-                    parallel_mode=parallel_mode,
-                    parallel_geometry=geometry,
-                )
-
-                # Process events to ensure hide takes effect
-                app.processEvents()
-
-                complete_startup()
-            except Exception:
-                import traceback
-
-                traceback.print_exc()
-                return
-
-        def complete_startup():
-            if window is None:
-                return
-            splash.update_progress(100, "Application ready!")
-            app.processEvents()
-
-            def show_main_window():
-                """Show main window exactly when splash finishes fading."""
-                window.show()
-                window.raise_()
-                window.activateWindow()
-
-            # TEMPORARY FIX: Show window immediately for debugging
-            show_main_window()
-
-            # Also hide splash screen with callback
-            splash.hide_animated()
-
-        fade_in_animation.finished.connect(start_initialization)
-
-        # Run generation tests if requested
-        if "--test-generation" in sys.argv:
-
-            def run_tests_after_init():
-                try:
-                    from test_generation_simple import test_generation_functionality
-
-                    test_success = test_generation_functionality()
-                    if not test_success:
-                        print("❌ Generation tests failed!")
-                except Exception as e:
-                    print(f"❌ Failed to run generation tests: {e}")
-                    import traceback
-
-                    traceback.print_exc()
-
-            # Run tests after a short delay to ensure app is fully initialized
-            QTimer.singleShot(2000, run_tests_after_init)
-
-        return app.exec()
+        # Return result for headless/test modes, or exit code for UI modes
+        return result if result is not None else 0
 
     except Exception as e:
         logger.error(f"Failed to start TKA application: {e}")
