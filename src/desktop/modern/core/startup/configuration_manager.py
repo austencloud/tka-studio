@@ -12,12 +12,10 @@ This class centralizes all configuration concerns including:
 - Parallel testing configuration
 """
 
-import argparse
 import logging
-import os
 import sys
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional
 
 from desktop.modern.core.application.application_factory import ApplicationMode
 from desktop.modern.core.error_handling import StandardErrorHandler
@@ -28,10 +26,6 @@ class ApplicationConfiguration:
     """Immutable configuration object for the TKA application."""
 
     mode: str
-    parallel_testing: bool
-    monitor: Optional[str]
-    geometry: Optional[str]
-    test_generation: bool
 
 
 class ConfigurationManager:
@@ -60,23 +54,11 @@ class ConfigurationManager:
             # Parse command line arguments
             app_mode = self._determine_application_mode()
 
-            # Detect parallel testing configuration
-            parallel_mode, monitor, geometry = self._detect_parallel_testing_mode()
-
-            # Check for test generation flag
-            test_generation = "--test-generation" in sys.argv
-
             # Set up logging configuration
             self._configure_logging()
 
             # Create immutable configuration
-            config = ApplicationConfiguration(
-                mode=app_mode,
-                parallel_testing=parallel_mode,
-                monitor=monitor,
-                geometry=geometry,
-                test_generation=test_generation,
-            )
+            config = ApplicationConfiguration(mode=app_mode)
 
             self.logger.info(f"🔧 Application Mode: {config.mode}")
             return config
@@ -98,38 +80,6 @@ class ConfigurationManager:
             return ApplicationMode.TEST
         else:
             return ApplicationMode.PRODUCTION
-
-    def _detect_parallel_testing_mode(
-        self,
-    ) -> Tuple[bool, Optional[str], Optional[str]]:
-        """
-        Detect parallel testing configuration from arguments and environment.
-
-        Returns:
-            Tuple of (parallel_mode, monitor, geometry)
-        """
-        try:
-            parser = argparse.ArgumentParser(add_help=False)
-            parser.add_argument("--parallel-testing", action="store_true")
-            parser.add_argument(
-                "--monitor", choices=["primary", "secondary", "left", "right"]
-            )
-            args, _ = parser.parse_known_args()
-
-            # Check environment variables
-            env_parallel = os.environ.get("TKA_PARALLEL_TESTING", "").lower() == "true"
-            env_monitor = os.environ.get("TKA_PARALLEL_MONITOR", "")
-            env_geometry = os.environ.get("TKA_PARALLEL_GEOMETRY", "")
-
-            parallel_mode = args.parallel_testing or env_parallel
-            monitor = args.monitor or env_monitor or None
-            geometry = env_geometry or None
-
-            return parallel_mode, monitor, geometry
-
-        except Exception as e:
-            self.logger.warning(f"Failed to detect parallel testing mode: {e}")
-            return False, None, None
 
     def _configure_logging(self) -> None:
         """Configure application logging for quiet startup."""

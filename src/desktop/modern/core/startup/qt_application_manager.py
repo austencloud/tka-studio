@@ -151,43 +151,11 @@ class QtApplicationManager:
         try:
             screens = QGuiApplication.screens()
 
-            if not config.parallel_testing:
-                # Default behavior: use secondary screen if available, otherwise primary
-                target_screen = (
-                    screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
-                )
-                self.logger.debug(f"✅ Using default screen: {target_screen.name()}")
-                return target_screen
-
-            # Parallel testing mode with specific monitor selection
-            if len(screens) <= 1:
-                self.logger.warning(
-                    "Parallel testing requested but only one screen available"
-                )
-                return QGuiApplication.primaryScreen()
-
-            primary_screen = screens[0]
-            secondary_screen = screens[1]
-
-            if config.monitor in ["secondary", "right"]:
-                # Use the screen that's to the right
-                if secondary_screen.geometry().x() > primary_screen.geometry().x():
-                    target_screen = secondary_screen
-                else:
-                    target_screen = primary_screen
-            elif config.monitor in ["primary", "left"]:
-                # Use the screen that's to the left
-                if secondary_screen.geometry().x() < primary_screen.geometry().x():
-                    target_screen = secondary_screen
-                else:
-                    target_screen = primary_screen
-            else:
-                # Default to secondary screen
-                target_screen = secondary_screen
-
-            self.logger.info(
-                f"🖥️ Parallel testing target screen: {target_screen.name()}"
+            # Default behavior: use secondary screen if available, otherwise primary
+            target_screen = (
+                screens[1] if len(screens) > 1 else QGuiApplication.primaryScreen()
             )
+            self.logger.debug(f"✅ Using default screen: {target_screen.name()}")
             return target_screen
 
         except Exception as e:

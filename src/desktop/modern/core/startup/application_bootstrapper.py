@@ -177,10 +177,6 @@ class ApplicationBootstrapper:
             # Connect splash animation to initialization
             fade_in_animation.finished.connect(start_initialization)
 
-            # Handle test generation if requested
-            if config.test_generation:
-                self._schedule_test_generation()
-
         except Exception as e:
             StandardErrorHandler.handle_initialization_error(
                 "UI setup with splash", e, self.logger, is_critical=True
@@ -204,8 +200,6 @@ class ApplicationBootstrapper:
                 container=self._container,
                 splash_screen=splash,
                 target_screen=target_screen,
-                parallel_mode=config.parallel_testing,
-                parallel_geometry=config.geometry,
             )
 
             # Complete startup
@@ -235,25 +229,3 @@ class ApplicationBootstrapper:
 
         except Exception as e:
             self.logger.error(f"Failed to complete startup: {e}")
-
-    def _schedule_test_generation(self) -> None:
-        """Schedule test generation to run after initialization."""
-
-        def run_tests_after_init():
-            try:
-                from test_generation_simple import test_generation_functionality
-
-                test_success = test_generation_functionality()
-                if not test_success:
-                    self.logger.error("❌ Generation tests failed!")
-                else:
-                    self.logger.info("✅ Generation tests completed successfully")
-
-            except Exception as e:
-                self.logger.error(f"❌ Failed to run generation tests: {e}")
-                import traceback
-
-                traceback.print_exc()
-
-        # Run tests after a short delay to ensure app is fully initialized
-        QTimer.singleShot(2000, run_tests_after_init)
