@@ -2,32 +2,37 @@
 Component Visibility Manager - UI Component Visibility State
 
 Handles visibility state for various UI components throughout the application.
-Extracted from UIStateManager to follow single responsibility principle.
+Uses Qt signals for communication instead of event bus.
 """
 
 import logging
 from typing import Dict
 
-from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
+from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
 
 
-class ComponentVisibilityManager:
+class ComponentVisibilityManager(QObject):
     """
-    Component visibility management.
-    
+    Component visibility management using Qt signals.
+
     Handles:
     - Component visibility state tracking
-    - Visibility state changes
+    - Visibility state changes via Qt signals
     - Component show/hide operations
     - Visibility state persistence
     """
 
+    # Qt signals for component visibility changes
+    component_visibility_changed = pyqtSignal(str, bool)  # component, visible
+    component_shown = pyqtSignal(str)  # component
+    component_hidden = pyqtSignal(str)  # component
+    visibility_reset = pyqtSignal()  # all reset
+
     def __init__(self):
         """Initialize component visibility manager."""
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        super().__init__()
 
         # Component visibility state
         self._component_visibility: Dict[str, bool] = {}
@@ -41,20 +46,15 @@ class ComponentVisibilityManager:
         previous_state = self._component_visibility.get(component, True)
         self._component_visibility[component] = visible
 
-        # Only publish event if state actually changed
+        # Only emit signal if state actually changed
         if previous_state != visible:
-            # Publish component visibility change event
-            event = UIEvent(
-                component="component_visibility",
-                action="changed",
-                state_data={
-                    "component": component,
-                    "visible": visible,
-                    "previous_state": previous_state,
-                },
-                source="component_visibility_manager",
-            )
-            self._event_bus.publish(event)
+            # Emit Qt signal for component visibility change
+            self.component_visibility_changed.emit(component, visible)
+
+            if visible:
+                self.component_shown.emit(component)
+            else:
+                self.component_hidden.emit(component)
 
     def show_component(self, component: str) -> None:
         """Show a component."""
@@ -75,7 +75,9 @@ class ComponentVisibilityManager:
         """Get visibility state for all components."""
         return self._component_visibility.copy()
 
-    def set_multiple_component_visibility(self, visibility_states: Dict[str, bool]) -> None:
+    def set_multiple_component_visibility(
+        self, visibility_states: Dict[str, bool]
+    ) -> None:
         """Set visibility for multiple components at once."""
         for component, visible in visibility_states.items():
             self.set_component_visibility(component, visible)
@@ -84,14 +86,8 @@ class ComponentVisibilityManager:
         """Reset all component visibility to defaults (all visible)."""
         self._component_visibility.clear()
 
-        # Publish component visibility reset event
-        event = UIEvent(
-            component="component_visibility",
-            action="reset",
-            state_data={},
-            source="component_visibility_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signal for component visibility reset
+        self.visibility_reset.emit()
 
     def get_state_for_persistence(self) -> Dict[str, bool]:
         """Get state data for persistence."""

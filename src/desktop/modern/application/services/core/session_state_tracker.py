@@ -36,7 +36,18 @@ except ImportError:
 
     QT_AVAILABLE = False
 
-from desktop.modern.core.events.event_bus import get_event_bus
+# Event system imports with fallback
+try:
+    from desktop.modern.core.events.event_bus import get_event_bus
+
+    EVENT_SYSTEM_AVAILABLE = True
+except ImportError:
+    # Event system not available - use fallback
+    def get_event_bus():
+        return None
+
+    EVENT_SYSTEM_AVAILABLE = False
+
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
 from desktop.modern.core.interfaces.session_services import (

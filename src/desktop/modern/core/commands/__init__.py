@@ -7,12 +7,6 @@ from .command_system import (
     CommandError,
 )
 
-from .sequence_commands import (
-    AddBeatCommand,
-    RemoveBeatCommand,
-    UpdateBeatCommand,
-)
-
 __all__ = [
     "ICommand",
     "CommandProcessor",

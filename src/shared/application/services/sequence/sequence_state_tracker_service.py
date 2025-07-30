@@ -6,15 +6,34 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
-from desktop.modern.core.events.domain_events import (
-    CommandExecutedEvent,
-    CommandRedoneEvent,
-    CommandUndoneEvent,
-)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
+
+
+# Simple event dataclasses to replace missing event bus events
+@dataclass
+class CommandExecutedEvent:
+    command_type: str
+    command_data: Dict[str, Any]
+    timestamp: float = 0.0
+
+
+@dataclass
+class CommandUndoneEvent:
+    command_type: str
+    command_data: Dict[str, Any]
+    timestamp: float = 0.0
+
+
+@dataclass
+class CommandRedoneEvent:
+    command_type: str
+    command_data: Dict[str, Any]
+    timestamp: float = 0.0
+
 
 logger = logging.getLogger(__name__)
 

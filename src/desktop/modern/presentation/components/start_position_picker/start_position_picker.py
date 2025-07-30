@@ -19,13 +19,8 @@ from enum import Enum
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
-# Event bus imports
-try:
-    from desktop.modern.core.events import StartPositionSelectedEvent, get_event_bus
-
-    EVENT_BUS_AVAILABLE = True
-except ImportError:
-    EVENT_BUS_AVAILABLE = False
+# Event bus removed - using Qt signals instead
+EVENT_BUS_AVAILABLE = False
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
@@ -86,14 +81,8 @@ class StartPositionPicker(QWidget):
         self.ui_service = ui_service
         self.orchestrator = orchestrator
 
-        # Initialize event bus if available
+        # Event bus removed - using Qt signals instead
         self.event_bus = None
-        if EVENT_BUS_AVAILABLE:
-            try:
-                self.event_bus = get_event_bus()
-                logger.debug("Event bus initialized for StartPositionPicker")
-            except Exception as e:
-                logger.debug(f"Event bus not available: {e}")
 
         # State management
         self.current_mode = initial_mode
@@ -278,17 +267,9 @@ class StartPositionPicker(QWidget):
                             "timestamp": str(datetime.now()),
                         }
 
-                # Create and publish event
-                event = StartPositionSelectedEvent(
-                    position_key=position_key,
-                    beat_data=beat_data,
-                    sequence_id="",  # Will be filled by subscribers
-                    source="StartPositionPicker",
-                )
-
-                self.event_bus.publish(event)
+                # Event bus removed - Qt signal already emitted above
                 logger.info(
-                    f"📡 Published StartPositionSelectedEvent for {position_key}"
+                    f"📡 Emitted start_position_selected signal for {position_key}"
                 )
 
             except Exception as e:

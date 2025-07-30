@@ -28,13 +28,8 @@ from desktop.modern.domain.models import BeatData, SequenceData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.component_base import ViewableComponentBase
 
-# Event bus imports
-try:
-    from desktop.modern.core.events import StartPositionSelectedEvent
-
-    EVENT_BUS_AVAILABLE = True
-except ImportError:
-    EVENT_BUS_AVAILABLE = False
+# Event bus removed - using Qt signals instead
+EVENT_BUS_AVAILABLE = False
 from shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
@@ -686,7 +681,7 @@ class SequenceWorkbench(ViewableComponentBase):
         else:
             print("⚠️ [WORKBENCH] Event bus not available, skipping subscriptions")
 
-    def _handle_start_position_selected_event(self, event: StartPositionSelectedEvent):
+    def _handle_start_position_selected_event(self, event):
         """Handle start position selected event from event bus."""
         try:
             print(f"📡 [WORKBENCH] Received start position event: {event.position_key}")

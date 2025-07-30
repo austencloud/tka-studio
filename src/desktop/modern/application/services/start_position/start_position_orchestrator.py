@@ -10,11 +10,12 @@ from typing import Any, Dict, Optional
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
+    IStartPositionOrchestrator,
     IStartPositionSelectionService,
     IStartPositionUIService,
-    IStartPositionOrchestrator,
 )
-from desktop.modern.core.service_locator import get_command_processor
+
+# Command processor removed - using Qt signals instead
 from desktop.modern.domain.models.pictograph_data import PictographData
 
 try:
@@ -91,39 +92,16 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
                 logger.error(f"Failed to create selection command: {e}")
                 return False
 
-            # Step 3: Execute the command via command processor
-            command_processor = get_command_processor()
-            if command_processor:
-                try:
-                    result = command_processor.execute(command)
-                    if result.success:
-                        logger.info(
-                            f"✅ Position selection completed successfully: {position_key}"
-                        )
-                        return True
-                    else:
-                        logger.error(
-                            f"❌ Command execution failed: {result.error_message}"
-                        )
-                        return False
-
-                except Exception as e:
-                    logger.error(f"❌ Error executing selection command: {e}")
-                    return False
-            else:
-                logger.warning(
-                    "⚠️ Command processor not available, using fallback approach"
+            # Step 3: Execute the command directly (command processor removed)
+            try:
+                command.execute()
+                logger.info(
+                    f"✅ Position selection completed successfully: {position_key}"
                 )
-                # Fallback: execute command directly
-                try:
-                    command.execute()
-                    logger.info(
-                        f"✅ Position selection completed via fallback: {position_key}"
-                    )
-                    return True
-                except Exception as e:
-                    logger.error(f"❌ Fallback command execution failed: {e}")
-                    return False
+                return True
+            except Exception as e:
+                logger.error(f"❌ Command execution failed: {e}")
+                return False
 
         except Exception as e:
             logger.error(f"❌ Error in position selection workflow: {e}")

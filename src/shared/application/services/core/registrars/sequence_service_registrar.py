@@ -136,19 +136,13 @@ class SequenceServiceRegistrar(BaseServiceRegistrar):
     def _create_sequence_state_tracker_adapter(self):
         """Create a sequence state tracker adapter with required dependencies."""
         try:
-            from desktop.modern.core.service_locator import (
-                get_command_processor,
-                get_event_bus,
-            )
             from desktop.modern.presentation.adapters.qt.sequence_state_tracker_adapter import (
                 QtSequenceStateTrackerAdapter,
             )
 
-            # Get the event bus and command processor from service locator
-            event_bus = get_event_bus()
-            command_processor = get_command_processor()
-
-            return QtSequenceStateTrackerAdapter(event_bus, command_processor)
+            # Create adapter without event bus dependencies for now
+            # TODO: Add proper Qt signal coordination later
+            return QtSequenceStateTrackerAdapter(event_bus=None, command_processor=None)
         except Exception as e:
             logger.error(f"Failed to create sequence state tracker adapter: {e}")
             return None

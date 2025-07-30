@@ -23,7 +23,18 @@ from shared.application.services.ui.state.option_picker_state_manager import (
 )
 from shared.application.services.ui.state.tab_state_manager import TabStateManager
 from shared.application.services.ui.state.window_state_manager import WindowStateManager
-from desktop.modern.core.events.event_bus import get_event_bus
+
+# Event system imports with fallback
+try:
+    from desktop.modern.core.events.event_bus import get_event_bus
+
+    EVENT_SYSTEM_AVAILABLE = True
+except ImportError:
+    # Event system not available - use fallback
+    def get_event_bus():
+        return None
+
+    EVENT_SYSTEM_AVAILABLE = False
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 
@@ -59,8 +70,8 @@ class UICoordinator(IUIStateManager):
         # Session service integration
         self._session_service = session_service
 
-        # Event bus for coordination
-        self._event_bus = get_event_bus()
+        # Event bus for coordination (optional)
+        self._event_bus = get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
 
         # State file for persistence
         modern_dir = Path(__file__).parent.parent.parent.parent.parent.parent

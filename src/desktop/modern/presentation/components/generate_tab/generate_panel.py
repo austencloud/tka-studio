@@ -6,7 +6,7 @@ A clean, single-card design that fits all controls on one screen
 while maintaining the legacy layout structure with subtle glass effects.
 """
 
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from desktop.modern.core.interfaces.generation_services import GenerationMode
 from desktop.modern.domain.models.generation_models import (
@@ -35,6 +35,10 @@ from .generation_controls import (
     ModernSliceSizeSelector,
     ModernTurnIntensitySelector,
 )
+
+if TYPE_CHECKING:
+    from desktop.modern.core.dependency_injection.di_container import DIContainer
+    from .generate_tab_controller import GenerateTabController
 
 
 class GlassMorphicButton(QPushButton):
@@ -118,13 +122,21 @@ class GeneratePanel(QWidget):
     auto_complete_requested = pyqtSignal()
     config_changed = pyqtSignal(GenerationConfig)
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, container: Optional["DIContainer"] = None, parent: Optional[QWidget] = None):
         super().__init__(parent)
+        self._container = container
+        self._controller: Optional["GenerateTabController"] = None
+        
         self._current_config = GenerationConfig()
         self._current_state = GenerationState(config=self._current_config)
+        
         self._setup_ui()
         self._connect_signals()
         self._apply_glassmorphism_theme()
+        
+        # Initialize controller if container is provided
+        if self._container:
+            self._initialize_controller()
 
     def _setup_ui(self):
         """Setup UI with single glass container following legacy structure."""
@@ -357,3 +369,52 @@ class GeneratePanel(QWidget):
 
         # Update visibility based on mode
         self._on_mode_changed(self._current_config.mode)
+
+    def _initialize_controller(self) -> None:
+        """Initialize the generation controller."""
+        if not self._container:
+            return
+            
+        try:
+            from .generate_tab_controller import GenerateTabController
+            
+            self._controller = GenerateTabController(self._container, self)
+            self._controller.set_generate_panel(self)
+            
+            # Connect controller signals
+            self._controller.generation_completed.connect(self._on_generation_completed)
+            self._controller.config_changed.connect(self._on_controller_config_changed)
+            
+            print("✅ Generation controller initialized")
+            
+        except Exception as e:
+            print(f"❌ Failed to initialize generation controller: {str(e)}")
+            # Continue without controller - panel will work in standalone mode
+    
+    def set_controller(self, controller: "GenerateTabController") -> None:
+        """Set the generation controller manually."""
+        self._controller = controller
+        controller.set_generate_panel(self)
+        
+        # Connect controller signals
+        controller.generation_completed.connect(self._on_generation_completed)
+        controller.config_changed.connect(self._on_controller_config_changed)
+    
+    def _on_generation_completed(self, result: GenerationResult) -> None:
+        """Handle generation completion from controller."""
+        self.set_generation_result(result)
+        
+        if result.success:
+            print(f"✅ Generation completed: {len(result.sequence_data or [])} beats")
+        else:
+            print(f"❌ Generation failed: {result.error_message}")
+    
+    def _on_controller_config_changed(self, config: GenerationConfig) -> None:
+        """Handle configuration change from controller."""
+        self._current_config = config
+        self._current_state = self._current_state.with_config(config)
+        self._update_controls_from_config()
+    
+    def get_controller(self) -> Optional["GenerateTabController"]:
+        """Get the current controller instance."""
+        return self._controller

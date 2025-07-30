@@ -2,32 +2,34 @@
 Window State Manager - Window Geometry and State Management
 
 Handles window-specific state including geometry, maximized state, and positioning.
-Extracted from UIStateManager to follow single responsibility principle.
+Uses Qt signals for clean communication.
 """
 
 import logging
 from typing import Any, Dict
 
-from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
-from desktop.modern.core.interfaces.core_services import IUIStateManager
+from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
 
 
-class WindowStateManager(IUIStateManager):
+class WindowStateManager(QObject):
     """
-    Window state management service.
+    Window state management service using Qt signals.
 
     Handles:
     - Window geometry (position and size)
-    - Window maximized state
+    - Window maximized state via Qt signals
     - Window state persistence
     """
 
+    # Qt signals for window state changes
+    geometry_changed = pyqtSignal(dict)  # geometry
+    maximized_changed = pyqtSignal(bool)  # is_maximized
+
     def __init__(self):
         """Initialize window state service."""
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        super().__init__()
 
         # Window state
         self._window_geometry: Dict[str, int] = {}
@@ -48,7 +50,7 @@ class WindowStateManager(IUIStateManager):
             state_data={"geometry": geometry},
             source="window_state_service",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def is_window_maximized(self) -> bool:
         """Check if window is maximized."""
@@ -65,7 +67,7 @@ class WindowStateManager(IUIStateManager):
             state_data={"maximized": maximized},
             source="window_state_service",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_window_state(self) -> Dict[str, any]:
         """Get complete window state."""
@@ -93,7 +95,7 @@ class WindowStateManager(IUIStateManager):
             state_data={},
             source="window_state_service",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_state_for_persistence(self) -> Dict[str, any]:
         """Get state data for persistence."""

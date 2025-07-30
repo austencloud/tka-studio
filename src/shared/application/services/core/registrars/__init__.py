@@ -20,7 +20,7 @@ from .workbench_service_registrar import WorkbenchServiceRegistrar
 
 __all__ = [
     "AnimationServiceRegistrar",
-    "CoreServiceRegistrar", 
+    "CoreServiceRegistrar",
     "DataServiceRegistrar",
     "GraphEditorServiceRegistrar",
     "LearnServiceRegistrar",

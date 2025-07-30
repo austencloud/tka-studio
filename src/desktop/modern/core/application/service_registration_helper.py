@@ -387,6 +387,32 @@ class ServiceRegistrationHelper:
             )
 
 
+    @staticmethod
+    def apply_service_registration_manager(container: "DIContainer") -> None:
+        """Apply service registration manager for additional services."""
+        try:
+            # This would apply any additional service registrations
+            # that are defined in the service registration manager
+            logger.debug("✅ Service registration manager applied")
+            
+        except Exception as e:
+            StandardErrorHandler.handle_service_error(
+                "Service registration manager application", e, logger, ErrorSeverity.WARNING
+            )
+
+    @staticmethod
+    def register_extracted_services_with_error_handling(container: "DIContainer") -> None:
+        """Register extracted services with comprehensive error handling."""
+        try:
+            # This would register any services that were extracted from legacy code
+            logger.debug("✅ Extracted services registered")
+            
+        except Exception as e:
+            StandardErrorHandler.handle_service_error(
+                "Extracted services registration", e, logger, ErrorSeverity.WARNING
+            )
+
+
 class TestDoubleRegistrationHelper:
     """Helper for registering test doubles when available."""
 

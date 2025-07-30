@@ -1,21 +1,17 @@
 """
 SequenceStateTracker - Single Source of Truth for Sequence State
 
-Tracks all sequence and start position state in the event-driven architecture.
+Tracks all sequence and start position state using Qt signals.
 This replaces the complex web of signal coordinators and multiple state holders.
 """
 
 import logging
 from typing import Optional
 
-from desktop.modern.core.events.domain_events import (
-    CommandExecutedEvent,
-    CommandRedoneEvent,
-    CommandUndoneEvent,
-)
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +22,7 @@ class SequenceStateTracker(QObject):
 
     Responsibilities:
     - Track current sequence and start position state
-    - React to command execution events
+    - React to command execution via Qt signals
     - Emit Qt signals for UI updates
     - Manage persistence coordination
     - Provide clean API for state access
@@ -42,48 +38,51 @@ class SequenceStateTracker(QObject):
     start_position_updated = pyqtSignal(object)  # BeatData
     state_changed = pyqtSignal()  # General state change notification
 
-    def __init__(self, event_bus, command_processor):
+    def __init__(self, command_processor=None):
         super().__init__()
-        self.event_bus = event_bus
         self.command_processor = command_processor
 
         # Current state (single source of truth)
         self.current_sequence: Optional[SequenceData] = None
         self.start_position: Optional[BeatData] = None
 
-        # Setup event subscriptions
-        self._setup_event_subscriptions()
+        # Setup Qt signal connections if command processor is available
+        if self.command_processor:
+            self._setup_signal_connections()
 
-    def _setup_event_subscriptions(self):
-        """Subscribe to events that change state"""
+    def _setup_signal_connections(self):
+        """Connect to command processor Qt signals"""
         try:
-            # Subscribe to command events for state updates
-            self.event_bus.subscribe("command.executed", self._on_command_executed)
-            self.event_bus.subscribe("command.undone", self._on_command_undone)
-            self.event_bus.subscribe("command.redone", self._on_command_redone)
+            # Connect to command processor signals for state updates
+            if hasattr(self.command_processor, "command_executed"):
+                self.command_processor.command_executed.connect(
+                    self._on_command_executed
+                )
+            if hasattr(self.command_processor, "command_undone"):
+                self.command_processor.command_undone.connect(self._on_command_undone)
+            if hasattr(self.command_processor, "command_redone"):
+                self.command_processor.command_redone.connect(self._on_command_redone)
 
         except Exception as e:
-            logger.error(f"❌ Failed to setup event subscriptions: {e}")
+            logger.error(f"❌ Failed to setup signal connections: {e}")
 
-    def _on_command_executed(self, event: CommandExecutedEvent):
+    def _on_command_executed(self, command_type: str, result=None):
         """Update state when commands execute successfully"""
         try:
-            command_type = event.command_type
-
             if command_type == "SetStartPositionCommand":
                 # Start position was set
-                if hasattr(event, "result") and event.result:
-                    self._update_start_position(event.result)
+                if result:
+                    self._update_start_position(result)
 
             elif command_type == "AddBeatCommand":
                 # Beat was added to sequence
-                if hasattr(event, "result") and event.result:
-                    self._update_sequence(event.result)
+                if result:
+                    self._update_sequence(result)
 
             elif command_type == "RemoveBeatCommand":
                 # Beat was removed from sequence
-                if hasattr(event, "result") and event.result:
-                    self._update_sequence(event.result)
+                if result:
+                    self._update_sequence(result)
 
             elif command_type == "ClearSequenceCommand":
                 # Sequence was cleared
@@ -94,16 +93,16 @@ class SequenceStateTracker(QObject):
         except Exception as e:
             logger.error(f"❌ Error updating state from command: {e}")
 
-    def _on_command_undone(self, event: CommandUndoneEvent):
+    def _on_command_undone(self, command_type: str):
         """Update state when commands are undone"""
         # For undo, we need to get the current state from the command processor
         # The command should have restored the previous state
         self._refresh_state_from_persistence()
 
-    def _on_command_redone(self, event: CommandRedoneEvent):
+    def _on_command_redone(self, command_type: str, result=None):
         """Update state when commands are redone"""
         # Similar to command executed
-        self._on_command_executed(event)
+        self._on_command_executed(command_type, result)
 
     def _update_sequence(self, new_sequence: SequenceData):
         """Update the current sequence and notify UI"""
@@ -136,17 +135,19 @@ class SequenceStateTracker(QObject):
         """Refresh state from persistence (for undo/redo scenarios)"""
         try:
             # Load current state from persistence
-            from shared.application.services.sequence.sequence_persister import (
-                SequencePersister,
-            )
             from desktop.modern.application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
+            )
+            from shared.application.services.sequence.sequence_persister import (
+                SequencePersister,
             )
 
             persistence_service = SequencePersister()
 
             # Use dependency injection to get the start position manager
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
 
             container = get_container()
             start_position_manager = container.resolve(SequenceStartPositionManager)
@@ -193,12 +194,22 @@ class SequenceStateTracker(QObject):
     def cleanup(self):
         """Cleanup resources when the state manager is being destroyed"""
         try:
-            # Unsubscribe from events
-            if self.event_bus:
-                # The event bus should handle cleanup of subscriptions
-                pass
+            # Disconnect Qt signals if command processor is available
+            if self.command_processor:
+                if hasattr(self.command_processor, "command_executed"):
+                    self.command_processor.command_executed.disconnect(
+                        self._on_command_executed
+                    )
+                if hasattr(self.command_processor, "command_undone"):
+                    self.command_processor.command_undone.disconnect(
+                        self._on_command_undone
+                    )
+                if hasattr(self.command_processor, "command_redone"):
+                    self.command_processor.command_redone.disconnect(
+                        self._on_command_redone
+                    )
 
-            logger.info("🧹 SequenceStateManager cleaned up")
+            logger.info("🧹 SequenceStateTracker cleaned up")
 
         except Exception as e:
-            logger.error(f"❌ Error during SequenceStateManager cleanup: {e}")
+            logger.error(f"❌ Error during SequenceStateTracker cleanup: {e}")

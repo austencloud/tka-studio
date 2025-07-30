@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Optional, Type, TypeVar
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
-from desktop.modern.core.events.event_bus import get_event_bus
+# Event bus removed - using Qt signals instead
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 from desktop.modern.core.interfaces.settings_services import (
     IBackgroundSettingsManager,
@@ -186,7 +186,7 @@ class ModernSettingsService(QObject):
         super().__init__()
 
         self.session_tracker = session_tracker
-        self.event_bus = get_event_bus()
+        # Event bus removed - using Qt signals instead
 
         # Initialize QSettings with proper organization/app names
         self.settings = QSettings(organization_name, application_name)

@@ -1,34 +1,42 @@
 """
-Tab State Manager - Tab Navigation and State Management
+Tab State Manager - Tab-specific State Management
 
-Handles tab-specific state including active tab, tab switching, and tab-specific data.
-Extracted from UIStateManager to follow single responsibility principle.
+Handles tab-specific state including active tab, tab configuration, and persistence.
+Uses Qt signals for clean communication.
 """
 
 import logging
 from typing import Any, Dict
 
-from desktop.modern.core.events.event_bus import EventPriority, UIEvent, get_event_bus
-from desktop.modern.core.interfaces.core_services import IUIStateManager
+from PyQt6.QtCore import QObject, pyqtSignal
+
+# Event bus removed - using Qt signals instead
 
 logger = logging.getLogger(__name__)
 
 
-class TabStateManager(IUIStateManager):
+class TabStateManager(QObject):
     """
-    Tab state management.
+    Tab state management using Qt signals.
 
     Handles:
     - Active tab tracking
-    - Tab switching logic
+    - Tab switching logic via Qt signals
     - Tab-specific state storage
     - Tab state persistence
+
+    Note: Implements IUIStateManager interface methods but doesn't inherit
+    to avoid metaclass conflicts with QObject.
     """
+
+    # Qt signals for tab state changes
+    tab_switched = pyqtSignal(str, str)  # new_tab, previous_tab
+    tab_state_changed = pyqtSignal(str, dict)  # tab_name, state
+    tab_state_updated = pyqtSignal(str, dict)  # tab_name, updates
 
     def __init__(self):
         """Initialize tab state manager."""
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        super().__init__()
 
         # Tab state
         self._active_tab: str = "sequence_builder"
@@ -43,15 +51,9 @@ class TabStateManager(IUIStateManager):
         previous_tab = self._active_tab
         self._active_tab = tab_name
 
-        # Publish tab change event
-        event = UIEvent(
-            component="tab",
-            action="changed",
-            state_data={"previous_tab": previous_tab, "new_tab": tab_name},
-            source="tab_state_manager",
-            priority=EventPriority.HIGH,
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signal for tab change
+        if previous_tab != tab_name:
+            self.tab_switched.emit(tab_name, previous_tab)
 
     def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
         """Get state for a specific tab."""
@@ -71,7 +73,7 @@ class TabStateManager(IUIStateManager):
             state_data={"tab_name": tab_name, "state": state},
             source="tab_state_manager",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def clear_tab_state(self, tab_name: str) -> None:
         """Clear state for a specific tab."""
@@ -85,7 +87,7 @@ class TabStateManager(IUIStateManager):
             state_data={"tab_name": tab_name},
             source="tab_state_manager",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_all_tab_states(self) -> Dict[str, Dict[str, Any]]:
         """Get all tab states."""
@@ -103,7 +105,7 @@ class TabStateManager(IUIStateManager):
             state_data={},
             source="tab_state_manager",
         )
-        self._event_bus.publish(event)
+        # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_state_for_persistence(self) -> Dict[str, Any]:
         """Get state data for persistence."""

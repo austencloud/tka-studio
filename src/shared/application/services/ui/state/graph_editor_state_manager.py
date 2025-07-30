@@ -2,21 +2,21 @@
 Graph Editor State Manager - Graph Editor Specific State
 
 Handles graph editor visibility, height, and other graph editor specific state.
-Extracted from UIStateManager to follow single responsibility principle.
+Uses Qt signals for clean communication.
 """
 
 import logging
 from typing import Any, Dict
 
-from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
+from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
 
 
-class GraphEditorStateManager:
+class GraphEditorStateManager(QObject):
     """
-    Graph editor state management.
-    
+    Graph editor state management using Qt signals.
+
     Handles:
     - Graph editor visibility
     - Graph editor height
@@ -24,10 +24,14 @@ class GraphEditorStateManager:
     - Graph editor state persistence
     """
 
+    # Qt signals for graph editor state changes
+    visibility_changed = pyqtSignal(bool)  # visible
+    height_changed = pyqtSignal(int)  # height
+    state_reset = pyqtSignal()  # state reset
+
     def __init__(self):
         """Initialize graph editor state manager."""
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        super().__init__()
 
         # Graph editor state
         self._graph_editor_visible: bool = False
@@ -42,19 +46,9 @@ class GraphEditorStateManager:
         previous_state = self._graph_editor_visible
         self._graph_editor_visible = visible
 
-        # Only publish event if state actually changed
+        # Only emit signal if state actually changed
         if previous_state != visible:
-            # Publish graph editor visibility change event
-            event = UIEvent(
-                component="graph_editor",
-                action="visibility_changed",
-                state_data={
-                    "visible": visible,
-                    "previous_state": previous_state,
-                },
-                source="graph_editor_state_manager",
-            )
-            self._event_bus.publish(event)
+            self.visibility_changed.emit(visible)
 
     def toggle_graph_editor(self) -> bool:
         """Toggle graph editor visibility and return new state."""
@@ -73,19 +67,9 @@ class GraphEditorStateManager:
         previous_height = self._graph_editor_height
         self._graph_editor_height = clamped_height
 
-        # Only publish event if height actually changed
+        # Only emit signal if height actually changed
         if previous_height != clamped_height:
-            # Publish graph editor height change event
-            event = UIEvent(
-                component="graph_editor",
-                action="height_changed",
-                state_data={
-                    "height": clamped_height,
-                    "previous_height": previous_height,
-                },
-                source="graph_editor_state_manager",
-            )
-            self._event_bus.publish(event)
+            self.height_changed.emit(clamped_height)
 
     def get_graph_editor_state(self) -> Dict[str, Any]:
         """Get complete graph editor state."""
@@ -106,14 +90,8 @@ class GraphEditorStateManager:
         self._graph_editor_visible = False
         self._graph_editor_height = 300
 
-        # Publish graph editor state reset event
-        event = UIEvent(
-            component="graph_editor",
-            action="state_reset",
-            state_data={},
-            source="graph_editor_state_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit signal for state reset
+        self.state_reset.emit()
 
     def get_state_for_persistence(self) -> Dict[str, Any]:
         """Get state data for persistence."""

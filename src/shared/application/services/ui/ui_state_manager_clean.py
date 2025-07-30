@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 
@@ -62,8 +63,6 @@ class UIState:
     active_tab: str = "sequence_builder"
     tab_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
-
-
     # Option picker state
     option_picker_selection: Optional[str] = None
     option_picker_filters: Dict[str, Any] = field(default_factory=dict)
@@ -84,7 +83,7 @@ class UIStateManager(QObject, IUIStateManager):
     - Option picker state management
     - Qt signal-driven state synchronization
     """
-    
+
     # Qt Signals for state changes
     setting_changed = pyqtSignal(str, object)  # key, value
     tab_state_changed = pyqtSignal(str, dict)  # tab_name, state
@@ -96,7 +95,7 @@ class UIStateManager(QObject, IUIStateManager):
 
     def __init__(self, session_service: Optional[ISessionStateTracker] = None):
         QObject.__init__(self)
-        
+
         # Core state
         self._ui_state = UIState()
 
@@ -183,7 +182,9 @@ class UIStateManager(QObject, IUIStateManager):
         # Emit Qt signal for visibility change
         self.component_visibility_changed.emit(component_name, visible)
 
-    def get_component_visibility(self, component_name: str, default: bool = True) -> bool:
+    def get_component_visibility(
+        self, component_name: str, default: bool = True
+    ) -> bool:
         """Get visibility state for a component."""
         return self._ui_state.component_visibility.get(component_name, default)
 

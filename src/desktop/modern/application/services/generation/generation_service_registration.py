@@ -34,13 +34,13 @@ def register_generation_services(container: "DIContainer") -> None:
         from .generation_service import GenerationService
         from .sequence_configuration_service import SequenceConfigurationService
         from .generation_validation_service import GenerationValidationService
-        from .turn_intensity_manager import TurnIntensityManager
+        from .turn_intensity_manager import ModernTurnIntensityManager  # Use modern wrapper
         
         # Register core generation services
         container.register_singleton(IGenerationService, GenerationService)
         container.register_singleton(ISequenceConfigurationService, SequenceConfigurationService)
         container.register_singleton(IGenerationValidationService, GenerationValidationService)
-        container.register_singleton(ITurnIntensityManager, TurnIntensityManager)
+        container.register_singleton(ITurnIntensityManager, ModernTurnIntensityManager)  # Use modern wrapper
         
         logger.info("✅ Generation services registered successfully")
         

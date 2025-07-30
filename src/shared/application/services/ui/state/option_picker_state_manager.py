@@ -2,32 +2,36 @@
 Option Picker State Manager - Option Picker Specific State
 
 Handles option picker selection, filters, and other option picker specific state.
-Extracted from UIStateManager to follow single responsibility principle.
+Uses Qt signals for clean communication.
 """
 
 import logging
 from typing import Any, Dict, Optional
 
-from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
+from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
 
 
-class OptionPickerStateManager:
+class OptionPickerStateManager(QObject):
     """
-    Option picker state management.
-    
+    Option picker state management using Qt signals.
+
     Handles:
     - Option picker selection
-    - Option picker filters
+    - Option picker filters via Qt signals
     - Option picker specific settings
     - Option picker state persistence
     """
 
+    # Qt signals for option picker state changes
+    selection_changed = pyqtSignal(str)  # selection
+    filter_changed = pyqtSignal(str, object)  # filter_name, filter_value
+    state_reset = pyqtSignal()  # state reset
+
     def __init__(self):
         """Initialize option picker state manager."""
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        super().__init__()
 
         # Option picker state
         self._option_picker_selection: Optional[str] = None
@@ -42,17 +46,9 @@ class OptionPickerStateManager:
         previous_selection = self._option_picker_selection
         self._option_picker_selection = selection
 
-        # Publish option picker selection change event
-        event = UIEvent(
-            component="option_picker",
-            action="selection_changed",
-            state_data={
-                "selection": selection,
-                "previous_selection": previous_selection,
-            },
-            source="option_picker_state_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signal for selection change
+        if previous_selection != selection and selection is not None:
+            self.selection_changed.emit(selection)
 
     def clear_option_picker_selection(self) -> None:
         """Clear option picker selection."""
@@ -67,18 +63,9 @@ class OptionPickerStateManager:
         previous_filters = self._option_picker_filters.copy()
         self._option_picker_filters.update(filters)
 
-        # Publish option picker filters change event
-        event = UIEvent(
-            component="option_picker",
-            action="filters_updated",
-            state_data={
-                "filters": filters,
-                "all_filters": self._option_picker_filters.copy(),
-                "previous_filters": previous_filters,
-            },
-            source="option_picker_state_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signals for each filter change
+        for filter_key, filter_value in filters.items():
+            self.filter_changed.emit(filter_key, filter_value)
 
     def set_option_picker_filter(self, filter_key: str, filter_value: Any) -> None:
         """Set a specific option picker filter."""
@@ -89,17 +76,8 @@ class OptionPickerStateManager:
         if filter_key in self._option_picker_filters:
             previous_value = self._option_picker_filters.pop(filter_key)
 
-            # Publish option picker filter removed event
-            event = UIEvent(
-                component="option_picker",
-                action="filter_removed",
-                state_data={
-                    "filter_key": filter_key,
-                    "previous_value": previous_value,
-                },
-                source="option_picker_state_manager",
-            )
-            self._event_bus.publish(event)
+            # Emit Qt signal for filter removal (set to None)
+            self.filter_changed.emit(filter_key, None)
 
             return True
         return False
@@ -109,16 +87,8 @@ class OptionPickerStateManager:
         previous_filters = self._option_picker_filters.copy()
         self._option_picker_filters.clear()
 
-        # Publish option picker filters cleared event
-        event = UIEvent(
-            component="option_picker",
-            action="filters_cleared",
-            state_data={
-                "previous_filters": previous_filters,
-            },
-            source="option_picker_state_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signal for state reset (covers filter clearing)
+        self.state_reset.emit()
 
     def get_option_picker_state(self) -> Dict[str, Any]:
         """Get complete option picker state."""
@@ -139,14 +109,8 @@ class OptionPickerStateManager:
         self._option_picker_selection = None
         self._option_picker_filters.clear()
 
-        # Publish option picker state reset event
-        event = UIEvent(
-            component="option_picker",
-            action="state_reset",
-            state_data={},
-            source="option_picker_state_manager",
-        )
-        self._event_bus.publish(event)
+        # Emit Qt signal for state reset
+        self.state_reset.emit()
 
     def get_state_for_persistence(self) -> Dict[str, Any]:
         """Get state data for persistence."""

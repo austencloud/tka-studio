@@ -10,26 +10,44 @@ PROVIDES:
 - Event publishing for session restoration
 """
 
+from abc import ABCMeta
 from typing import Optional
 
-from shared.application.services.sequence.sequence_restorer import ISequenceRestorer
-from desktop.modern.core.events.event_bus import EventPriority, UIEvent, get_event_bus
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.core.interfaces.core_services import ISessionRestorationCoordinator
-from desktop.modern.core.interfaces.session_services import ISessionStateTracker, SessionState
+from desktop.modern.core.interfaces.session_services import (
+    ISessionStateTracker,
+    SessionState,
+)
+from shared.application.services.sequence.sequence_restorer import ISequenceRestorer
 
 
-class SessionRestorationCoordinator(ISessionRestorationCoordinator):
+class QObjectABCMeta(type(QObject), ABCMeta):
+    """Metaclass that combines QObject's metaclass with ABCMeta."""
+
+    pass
+
+
+class SessionRestorationCoordinator(
+    QObject, ISessionRestorationCoordinator, metaclass=QObjectABCMeta
+):
     """
     Service for coordinating session restoration between services.
 
-    Handles session loading coordination and event publishing
+    Handles session loading coordination and Qt signal emission
     without any window management or domain logic dependencies.
     """
+
+    # Qt signals for session restoration events
+    sequence_restored = pyqtSignal(dict)  # sequence restoration data
+    tab_restored = pyqtSignal(str)  # active_tab
 
     def __init__(
         self, sequence_restoration_service: Optional[ISequenceRestorer] = None
     ):
         """Initialize session restoration coordinator."""
+        super().__init__()
         self.sequence_restoration_service = sequence_restoration_service
         self._pending_session_data = None
 
@@ -69,9 +87,6 @@ class SessionRestorationCoordinator(ISessionRestorationCoordinator):
     def _apply_restored_session_to_ui(self, session_data: SessionState) -> None:
         """Apply restored session data to UI components."""
         try:
-            # Get event bus for publishing restoration events
-            event_bus = get_event_bus()
-
             # Restore sequence if available
             if session_data.current_sequence_id and session_data.current_sequence_data:
                 # Use sequence restoration service if available
@@ -86,31 +101,19 @@ class SessionRestorationCoordinator(ISessionRestorationCoordinator):
                     sequence_data = session_data.current_sequence_data
 
                 if sequence_data:
-                    # Publish sequence restoration event
-                    event = UIEvent(
-                        component="session_restoration",
-                        action="sequence_restored",
-                        state_data={
-                            "sequence_data": sequence_data,
-                            "sequence_id": session_data.current_sequence_id,
-                            "selected_beat_index": session_data.selected_beat_index,
-                            "start_position_data": session_data.start_position_data,
-                        },
-                        source="session_restoration_coordinator",
-                        priority=EventPriority.HIGH,
-                    )
-                    event_bus.publish(event)
+                    # Emit Qt signal for sequence restoration
+                    restoration_data = {
+                        "sequence_data": sequence_data,
+                        "sequence_id": session_data.current_sequence_id,
+                        "selected_beat_index": session_data.selected_beat_index,
+                        "start_position_data": session_data.start_position_data,
+                    }
+                    self.sequence_restored.emit(restoration_data)
 
             # Restore UI state
             if session_data.active_tab:
-                event = UIEvent(
-                    component="session_restoration",
-                    action="tab_restored",
-                    state_data={"active_tab": session_data.active_tab},
-                    source="session_restoration_coordinator",
-                    priority=EventPriority.HIGH,
-                )
-                event_bus.publish(event)
+                # Emit Qt signal for tab restoration
+                self.tab_restored.emit(session_data.active_tab)
 
         except Exception as e:
             print(f"⚠️ Failed to apply restored session to UI: {e}")

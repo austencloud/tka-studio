@@ -10,7 +10,19 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
+# Event system imports with fallback
+try:
+    from desktop.modern.core.events.event_bus import UIEvent, get_event_bus
+
+    EVENT_SYSTEM_AVAILABLE = True
+except ImportError:
+    # Event system not available - use fallbacks
+    UIEvent = object
+
+    def get_event_bus():
+        return None
+
+    EVENT_SYSTEM_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +47,8 @@ class SettingsManager:
         else:
             self._settings_file = settings_file_path
 
-        # Event bus for notifications
-        self._event_bus = get_event_bus()
+        # Event bus for notifications (optional)
+        self._event_bus = get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
 
         # Settings storage
         self._user_settings: Dict[str, Any] = {}
@@ -61,7 +73,8 @@ class SettingsManager:
             state_data={"key": key, "value": value},
             source="settings_service",
         )
-        self._event_bus.publish(event)
+        if self._event_bus:
+            self._event_bus.publish(event)
 
     def get_all_settings(self) -> Dict[str, Any]:
         """Get all settings."""
@@ -82,7 +95,8 @@ class SettingsManager:
             state_data={},
             source="settings_service",
         )
-        self._event_bus.publish(event)
+        if self._event_bus:
+            self._event_bus.publish(event)
 
     def reset_to_defaults(self) -> None:
         """Reset all settings to defaults."""
@@ -125,7 +139,8 @@ class SettingsManager:
                 state_data={"file_path": str(file_path)},
                 source="settings_service",
             )
-            self._event_bus.publish(event)
+            if self._event_bus:
+                self._event_bus.publish(event)
 
             logger.info(f"Settings imported from {file_path}")
             return True

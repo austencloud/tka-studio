@@ -7,17 +7,22 @@ Responsible for adding, removing, and modifying beats within sequences.
 
 from typing import Callable, Optional
 
-from shared.application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.sequence_data import SequenceData
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
 from shared.application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
 from shared.application.services.sequence.beat_factory import BeatFactory
-from shared.application.services.sequence.sequence_beat_service import SequenceBeatService
+from shared.application.services.sequence.sequence_beat_service import (
+    SequenceBeatService,
+)
 from shared.application.services.sequence.sequence_persister import SequencePersister
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class SequenceBeatOperations(QObject):
@@ -119,18 +124,13 @@ class SequenceBeatOperations(QObject):
             # Otherwise, try command system for undo/redo support
             # Import command system
             from desktop.modern.core.commands.sequence_commands import AddBeatCommand
-            from desktop.modern.core.service_locator import (
-                get_command_processor,
-                get_event_bus,
-                get_sequence_state_manager,
-            )
+            from desktop.modern.core.service_locator import get_sequence_state_manager
 
+            # Command processor and event bus removed - using Qt signals instead
             # Get services
-            command_processor = get_command_processor()
-            event_bus = get_event_bus()
             state_manager = get_sequence_state_manager()
 
-            if not command_processor or not event_bus:
+            if not state_manager:
                 print(
                     "⚠️ Command system not available, falling back to direct manipulation"
                 )
