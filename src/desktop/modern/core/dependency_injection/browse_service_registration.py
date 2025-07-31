@@ -71,12 +71,12 @@ def register_browse_services(
         container.register_factory(IBrowseService, lambda: BrowseService(sequences_dir))
 
         # Register dictionary data manager
-        from desktop.modern.application.services.browse.modern_dictionary_data_manager import (
-            ModernDictionaryDataManager,
+        from application.services.browse.dictionary_data_manager import (
+            DictionaryDataManager,
         )
 
         container.register_factory(
-            IDictionaryDataManager, lambda: ModernDictionaryDataManager(data_dir)
+            IDictionaryDataManager, lambda: DictionaryDataManager(data_dir)
         )
 
         # Register progressive loading service

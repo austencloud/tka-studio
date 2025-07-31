@@ -16,6 +16,8 @@ This file is being refactored into specialized registrars following microservice
 The goal is to split this large manager into focused, domain-specific registrars.
 """
 
+from __future__ import annotations
+
 import logging
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
@@ -40,7 +42,7 @@ class IServiceRegistrar(ABC):
     """
 
     @abstractmethod
-    def register_services(self, container: "DIContainer") -> None:
+    def register_services(self, container: DIContainer) -> None:
         """Register all services for this domain in the DI container."""
 
     @abstractmethod
@@ -67,7 +69,7 @@ class BaseServiceRegistrar(IServiceRegistrar):
     - Standardized error handling
     """
 
-    def __init__(self, progress_callback=None):
+    def __init__(self, progress_callback: callable | None = None):
         """Initialize with optional progress callback."""
         self.progress_callback = progress_callback
         self._service_availability: dict[str, bool] = {}
@@ -132,7 +134,7 @@ class ServiceRegistrationCoordinator:
     maintainable architecture following single responsibility principle.
     """
 
-    def __init__(self, progress_callback=None):
+    def __init__(self, progress_callback: callable | None = None):
         """Initialize coordinator with optional progress callback."""
         self.progress_callback = progress_callback
         self._registrars: list[IServiceRegistrar] = []
@@ -182,7 +184,7 @@ class ServiceRegistrationCoordinator:
             LearnServiceRegistrar(self.progress_callback),
         ]
 
-    def register_all_services(self, container: "DIContainer") -> None:
+    def register_all_services(self, container: DIContainer) -> None:
         """Register all services using specialized registrars."""
         self._update_progress("Configuring services with new registrar architecture...")
 
@@ -275,7 +277,7 @@ class IServiceRegistrationManager(ABC):
     """Interface for service registration operations."""
 
     @abstractmethod
-    def register_all_services(self, container: "DIContainer") -> None:
+    def register_all_services(self, container: DIContainer) -> None:
         """Register all application services in the DI container."""
 
 
@@ -292,7 +294,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
     This wrapper will be deprecated once all consumers are migrated.
     """
 
-    def __init__(self, progress_callback=None):
+    def __init__(self, progress_callback: callable | None = None):
         """Initialize with optional progress callback."""
         self.progress_callback = progress_callback
 
@@ -307,7 +309,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             "prop_orchestration": False,
         }
 
-    def register_all_services(self, container: "DIContainer") -> None:
+    def register_all_services(self, container: DIContainer) -> None:
         """
         Register all application services in the DI container.
 
@@ -322,7 +324,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
 
         self._update_progress("Services configured")
 
-    def _register_remaining_legacy_services(self, container: "DIContainer") -> None:
+    def _register_remaining_legacy_services(self, container: DIContainer) -> None:
         """Register services that haven't been migrated to specialized registrars yet."""
         # All services are now handled by specialized registrars!
         # This method is kept for backward compatibility but no longer needed.

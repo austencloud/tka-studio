@@ -9,6 +9,9 @@ Features:
 - Maintains all existing filter functionality
 """
 
+from application.services.browse.dictionary_data_manager import (
+    DictionaryDataManager,
+)
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont, QResizeEvent
 from PyQt6.QtWidgets import (
@@ -23,9 +26,6 @@ from PyQt6.QtWidgets import (
 
 from desktop.modern.application.services.browse.browse_service import (
     BrowseService,
-)
-from desktop.modern.application.services.browse.modern_dictionary_data_manager import (
-    ModernDictionaryDataManager,
 )
 from desktop.modern.domain.models.browse_models import FilterType
 from desktop.modern.presentation.components.browse.filter_sections import (
@@ -53,7 +53,7 @@ class FilterSelectionPanel(QWidget, StyleMixin):
     def __init__(
         self,
         browse_service: BrowseService,
-        dictionary_manager: ModernDictionaryDataManager,
+        dictionary_manager: DictionaryDataManager,
         parent: QWidget | None = None,
     ):
         """Initialize the organized filter selection panel."""

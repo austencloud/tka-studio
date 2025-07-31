@@ -2,7 +2,7 @@
 
 from .browse_service import BrowseService
 from .browse_state_service import BrowseStateService
-from .modern_dictionary_data_manager import ModernDictionaryDataManager
+from .dictionary_data_manager import DictionaryDataManager
 from .progressive_loading_service import ProgressiveLoadingService
 from .sequence_deletion_service import SequenceDeletionService
 from .sequence_sorter_service import SequenceSorterService
@@ -12,7 +12,7 @@ __all__ = [
     "SequenceDeletionService",
     "BrowseService",
     "BrowseStateService",
-    "ModernDictionaryDataManager",
+    "DictionaryDataManager",
     "ProgressiveLoadingService",
     "SequenceSorterService",
     "ThumbnailFactoryService",

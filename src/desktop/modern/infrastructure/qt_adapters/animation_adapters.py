@@ -130,16 +130,6 @@ class QtAnimationGroupAdapter:
 
 
 # Factory functions for creating adapters
-def create_stack_adapter(qt_stack: QStackedWidget) -> QtStackAdapter:
-    """Create a stack adapter for the given Qt stacked widget."""
-    return QtStackAdapter(qt_stack)
-
-
-def create_opacity_effect_adapter(
-    qt_effect: QGraphicsOpacityEffect,
-) -> QtOpacityEffectAdapter:
-    """Create an opacity effect adapter for the given Qt graphics effect."""
-    return QtOpacityEffectAdapter(qt_effect)
 
 
 def create_property_animation_adapter(
@@ -147,10 +137,3 @@ def create_property_animation_adapter(
 ) -> QtPropertyAnimationAdapter:
     """Create a property animation adapter for the given Qt animation."""
     return QtPropertyAnimationAdapter(qt_animation)
-
-
-def create_animation_group_adapter(
-    qt_group: QParallelAnimationGroup,
-) -> QtAnimationGroupAdapter:
-    """Create an animation group adapter for the given Qt animation group."""
-    return QtAnimationGroupAdapter(qt_group)

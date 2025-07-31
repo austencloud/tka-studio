@@ -61,11 +61,11 @@ class GeneratePanel(QWidget):
     def __init__(
         self,
         container: Optional["DIContainer"] = None,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ):
         super().__init__(parent)
         self._container = container
-        self._controller: Optional[GenerateTabController] = None
+        self._controller: GenerateTabController | None = None
 
         self._current_config = GenerationConfig()
         self._current_state = GenerationState(config=self._current_config)

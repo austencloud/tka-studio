@@ -40,11 +40,11 @@ class BrowseDataManager:
             self.dictionary_manager = dictionary_manager
         else:
             # Fallback to direct instantiation if not injected
-            from desktop.modern.application.services.browse.modern_dictionary_data_manager import (
-                ModernDictionaryDataManager,
+            from application.services.browse.dictionary_data_manager import (
+                DictionaryDataManager,
             )
 
-            self.dictionary_manager = ModernDictionaryDataManager(data_dir)
+            self.dictionary_manager = DictionaryDataManager(data_dir)
 
         # Mapping from sequence UUID to word (for quick lookup)
         self.sequence_id_to_word: dict[str, str] = {}

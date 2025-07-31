@@ -17,7 +17,7 @@ from desktop.modern.domain.models.browse_errors import DataLoadError
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 
-class ModernDictionaryDataManager(QObject):
+class DictionaryDataManager(QObject):
     """
     Modern dictionary data manager that loads real sequence data from the dictionary folder.
 

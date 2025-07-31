@@ -10,12 +10,12 @@ Updated to work directly with SequenceData (no more SequenceRecord conversion).
 import logging
 from typing import Any
 
+from application.services.browse.dictionary_data_manager import (
+    DictionaryDataManager,
+)
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication
 
-from desktop.modern.application.services.browse.modern_dictionary_data_manager import (
-    ModernDictionaryDataManager,
-)
 from desktop.modern.domain.models.browse_errors import DataLoadError
 from desktop.modern.domain.models.browse_models import FilterType
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -40,7 +40,7 @@ class ProgressiveLoadingService(QObject):
     loading_completed = pyqtSignal(list)  # List[SequenceData] final_result
     loading_cancelled = pyqtSignal()
 
-    def __init__(self, dictionary_manager: ModernDictionaryDataManager):
+    def __init__(self, dictionary_manager: DictionaryDataManager):
         super().__init__()
         self.dictionary_manager = dictionary_manager
         self._loading_timer = QTimer()

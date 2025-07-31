@@ -4,8 +4,6 @@ Generation mode toggle component.
 Provides a toggle between freeform and circular generation modes.
 """
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QPushButton, QWidget
 
@@ -19,7 +17,7 @@ class GenerationModeToggle(GenerationControlBase):
 
     mode_changed = pyqtSignal(GenerationMode)
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         super().__init__(
             "Generation Mode",
             "Choose between freeform or circular sequence generation",
