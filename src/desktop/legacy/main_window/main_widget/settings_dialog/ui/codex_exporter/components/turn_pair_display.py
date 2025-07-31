@@ -2,7 +2,8 @@
 Turn pair display component for the codex exporter.
 """
 
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
+
 from .turn_config_style_provider import TurnConfigStyleProvider
 
 

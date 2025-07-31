@@ -1,15 +1,16 @@
-from PyQt6.QtWidgets import QPushButton, QLabel
-from PyQt6.QtCore import Qt, QPoint
 from typing import TYPE_CHECKING
 
-from .sidebar_length_section import SidebarLengthSection
-from .sidebar_level_section import SidebarLevelSection
-from .sidebar_button import SidebarButton
+from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtWidgets import QLabel, QPushButton
+
 from .base_sidebar_section import BaseSidebarSection
+from .sidebar_button import SidebarButton
 from .sidebar_date_added_section import SidebarDateAddedSection
 from .sidebar_generic_section import SidebarGenericSection
+from .sidebar_length_section import SidebarLengthSection
 from .sidebar_letter_section import SidebarLetterSection
-from legacy_settings_manager.global_settings.app_context import AppContext
+from .sidebar_level_section import SidebarLevelSection
 
 if TYPE_CHECKING:
     from ..sequence_picker import SequencePickerNavSidebar

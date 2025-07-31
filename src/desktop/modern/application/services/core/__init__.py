@@ -3,8 +3,8 @@
 # Import shared src modules to make them available in the modern src namespace
 try:
     # Import from shared src - these modules exist in the TKA/src directory
-    import sys
     from pathlib import Path
+    import sys
 
     # Find and add shared src to path if not already there
     current_file = Path(__file__).resolve()
@@ -17,11 +17,13 @@ try:
 
     # Now import the shared modules
     from shared.application.adapters.qt_image_export_adapter import QtImageExportAdapter
-    from shared.application.services.core.pictograph_renderer import CorePictographRenderer
+    from shared.application.services.core.pictograph_renderer import (
+        CorePictographRenderer,
+    )
 
     # Make them available in this namespace
     __all__ = ["CorePictographRenderer", "QtImageExportAdapter"]
 
-except ImportError as e:
+except ImportError:
     # If shared modules aren't available, that's okay - they're optional
     pass

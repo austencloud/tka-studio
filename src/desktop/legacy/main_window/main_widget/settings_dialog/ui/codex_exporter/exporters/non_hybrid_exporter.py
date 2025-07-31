@@ -2,8 +2,8 @@
 Non-hybrid pictograph exporter for the codex pictograph exporter.
 """
 
-from typing import TYPE_CHECKING
 import os
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..pictograph_data_manager import PictographDataManager

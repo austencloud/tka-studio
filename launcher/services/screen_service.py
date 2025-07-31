@@ -8,11 +8,11 @@ and intelligent screen selection for launcher positioning.
 import logging
 from typing import List, Optional
 
+from PyQt6.QtCore import QRect
+from PyQt6.QtWidgets import QApplication
+
 from desktop.modern.core.interfaces import IScreenService
 from desktop.modern.domain.models import ScreenData, WindowGeometry
-from PyQt6.QtCore import QRect
-from PyQt6.QtGui import QScreen
-from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)
 

@@ -9,7 +9,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QGridLayout, QPushButton, QVBoxLayout, QWidget
 
 from desktop.modern.domain.models.learn import QuestionData
 from desktop.modern.domain.models.pictograph_data import PictographData

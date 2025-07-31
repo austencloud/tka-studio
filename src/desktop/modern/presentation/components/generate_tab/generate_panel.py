@@ -25,92 +25,24 @@ from desktop.modern.domain.models.generation_models import (
     GenerationResult,
     GenerationState,
 )
-
-from .generation_controls import (
-    ModernCAPTypeSelector,
-    ModernGenerationModeToggle,
-    ModernLengthSelector,
-    ModernLetterTypeSelector,
-    ModernLevelSelector,
-    ModernPropContinuityToggle,
-    ModernSliceSizeSelector,
-    ModernTurnIntensitySelector,
+from desktop.modern.presentation.components.generate_tab.selectors import (
+    CAPTypeSelector,
+    LengthSelector,
+    LetterTypeSelector,
+    LevelSelector,
+    ModernGridModeSelector,
+    PropContinuityToggle,
+    SliceSizeSelector,
+    TurnIntensitySelector,
 )
-from .grid_mode_selector import ModernGridModeSelector
+from desktop.modern.presentation.styles.glassmorphism_styles import (
+    GlassmorphismStyleGenerator,
+)
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
 
     from .generate_tab_controller import GenerateTabController
-
-
-class GlassMorphicButton(QPushButton):
-    """Clean glassmorphic button with subtle effects."""
-
-    def __init__(
-        self, text: str, primary: bool = False, parent: Optional[QWidget] = None
-    ):
-        super().__init__(text, parent)
-        self.primary = primary
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setMinimumHeight(40)
-        self.setFont(QFont("Segoe UI", 10, QFont.Weight.Medium))
-        self.setStyleSheet(self._get_button_style())
-
-    def _get_button_style(self):
-        if self.primary:
-            return """
-                QPushButton {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(70, 130, 255, 0.8),
-                        stop:1 rgba(50, 110, 235, 0.9));
-                    color: white;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 8px;
-                    padding: 8px 20px;
-                    font-weight: 500;
-                }
-                QPushButton:hover {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(80, 140, 255, 0.9),
-                        stop:1 rgba(60, 120, 245, 1.0));
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                }
-                QPushButton:pressed {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(60, 120, 235, 0.7),
-                        stop:1 rgba(40, 100, 215, 0.8));
-                }
-                QPushButton:disabled {
-                    background: rgba(100, 100, 100, 0.3);
-                    color: rgba(255, 255, 255, 0.5);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                }
-            """
-        else:
-            return """
-                QPushButton {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(255, 255, 255, 0.15),
-                        stop:1 rgba(255, 255, 255, 0.08));
-                    color: rgba(255, 255, 255, 0.9);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 8px;
-                    padding: 8px 20px;
-                    font-weight: 500;
-                }
-                QPushButton:hover {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(255, 255, 255, 0.2),
-                        stop:1 rgba(255, 255, 255, 0.12));
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                }
-                QPushButton:pressed {
-                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                        stop:0 rgba(255, 255, 255, 0.1),
-                        stop:1 rgba(255, 255, 255, 0.05));
-                }
-            """
 
 
 class GeneratePanel(QWidget):
@@ -132,7 +64,7 @@ class GeneratePanel(QWidget):
     ):
         super().__init__(parent)
         self._container = container
-        self._controller: Optional["GenerateTabController"] = None
+        self._controller: Optional[GenerateTabController] = None
 
         self._current_config = GenerationConfig()
         self._current_state = GenerationState(config=self._current_config)
@@ -168,17 +100,11 @@ class GeneratePanel(QWidget):
         # Action buttons section
         self._setup_action_buttons(container_layout)
 
-        # Apply glass styling to container
+        # Apply glass styling to container using established system
         glass_container.setStyleSheet(
-            """
-            QFrame {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.12),
-                    stop:1 rgba(255, 255, 255, 0.08));
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 16px;
-            }
-        """
+            GlassmorphismStyleGenerator.create_container_style(
+                variant="default", custom_properties={"border-radius": "16px"}
+            )
         )
 
         main_layout.addWidget(glass_container)
@@ -213,15 +139,15 @@ class GeneratePanel(QWidget):
         controls_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Create all controls matching legacy order
-        self._level_selector = ModernLevelSelector()
-        self._length_selector = ModernLengthSelector()
-        self._turn_intensity_selector = ModernTurnIntensitySelector()
+        self._level_selector = LevelSelector()
+        self._length_selector = LengthSelector()
+        self._turn_intensity_selector = TurnIntensitySelector()
         self._grid_mode_selector = ModernGridModeSelector()
-        self._mode_toggle = ModernGenerationModeToggle()
-        self._prop_continuity_toggle = ModernPropContinuityToggle()
-        self._letter_type_selector = ModernLetterTypeSelector()
-        self._slice_size_selector = ModernSliceSizeSelector()
-        self._cap_type_selector = ModernCAPTypeSelector()
+        self._mode_toggle = GenerationModeToggle()
+        self._prop_continuity_toggle = PropContinuityToggle()
+        self._letter_type_selector = LetterTypeSelector()
+        self._slice_size_selector = SliceSizeSelector()
+        self._cap_type_selector = CAPTypeSelector()
 
         # Add controls with proper spacing allocation
         # Level selector gets more space since it has 3 large buttons + descriptions
@@ -246,14 +172,30 @@ class GeneratePanel(QWidget):
         button_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         button_layout.setSpacing(60)  # More space between buttons
 
-        self._auto_complete_button = GlassMorphicButton("Auto-Complete", primary=False)
-        self._generate_button = GlassMorphicButton("Generate New", primary=True)
+        # Create buttons using standard QPushButton
+        self._auto_complete_button = QPushButton("Auto-Complete")
+        self._generate_button = QPushButton("Generate New")
 
-        # Make buttons a bit larger for better visibility
-        self._auto_complete_button.setMinimumHeight(45)
-        self._generate_button.setMinimumHeight(45)
-        self._auto_complete_button.setMinimumWidth(140)
-        self._generate_button.setMinimumWidth(140)
+        # Apply glassmorphism styling using the established system
+        self._auto_complete_button.setStyleSheet(
+            GlassmorphismStyleGenerator.create_button_style(
+                variant="default",
+                size="large",
+                custom_properties={"min-width": "140px", "min-height": "45px"},
+            )
+        )
+
+        self._generate_button.setStyleSheet(
+            GlassmorphismStyleGenerator.create_button_style(
+                variant="accent",
+                size="large",
+                custom_properties={"min-width": "140px", "min-height": "45px"},
+            )
+        )
+
+        # Set cursor for better UX
+        self._auto_complete_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._generate_button.setCursor(Qt.CursorShape.PointingHandCursor)
 
         button_layout.addWidget(self._auto_complete_button)
         button_layout.addWidget(self._generate_button)

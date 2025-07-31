@@ -13,32 +13,24 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 def test_interface_imports():
     """Test that all interfaces can be imported successfully."""
     try:
-        pass
-
         print("✅ Settings services interfaces imported successfully")
     except ImportError as e:
         print(f"❌ Settings services import failed: {e}")
         return False
 
     try:
-        pass
-
         print("✅ Workbench export services interfaces imported successfully")
     except ImportError as e:
         print(f"❌ Workbench export services import failed: {e}")
         return False
 
     try:
-        pass
-
         print("✅ Motion services interfaces imported successfully")
     except ImportError as e:
         print(f"❌ Motion services import failed: {e}")
         return False
 
     try:
-        pass
-
         print("✅ Layout services interfaces imported successfully")
     except ImportError as e:
         print(f"❌ Layout services import failed: {e}")
@@ -51,16 +43,18 @@ def test_interface_structure():
     """Test that interfaces have proper structure."""
     from abc import ABC
 
-    from desktop.modern.core.interfaces.settings_services import IBackgroundSettingsManager
+    from desktop.modern.core.interfaces.settings_services import (
+        IBackgroundSettingsManager,
+    )
 
     # Test that it's an abstract base class
     assert issubclass(IBackgroundSettingsManager, ABC), "Should be ABC subclass"
-    assert hasattr(
-        IBackgroundSettingsManager, "__abstractmethods__"
-    ), "Should have abstract methods"
-    assert (
-        len(IBackgroundSettingsManager.__abstractmethods__) > 0
-    ), "Should have abstract methods"
+    assert hasattr(IBackgroundSettingsManager, "__abstractmethods__"), (
+        "Should have abstract methods"
+    )
+    assert len(IBackgroundSettingsManager.__abstractmethods__) > 0, (
+        "Should have abstract methods"
+    )
 
     print("✅ Interface structure validation passed")
     return True
@@ -76,9 +70,9 @@ def test_enum_definitions():
     assert PropType.STAFF.value == "Staff", "PropType.STAFF should have correct value"
 
     # Test ComponentType
-    assert hasattr(
-        ComponentType, "PICTOGRAPH_FRAME"
-    ), "ComponentType should have PICTOGRAPH_FRAME"
+    assert hasattr(ComponentType, "PICTOGRAPH_FRAME"), (
+        "ComponentType should have PICTOGRAPH_FRAME"
+    )
 
     # Test LayoutMode
     assert hasattr(LayoutMode, "GRID"), "LayoutMode should have GRID"
@@ -107,7 +101,9 @@ def test_data_classes():
 
 def test_mock_implementation():
     """Test that interfaces can be implemented with mock classes."""
-    from desktop.modern.core.interfaces.settings_services import IBackgroundSettingsManager
+    from desktop.modern.core.interfaces.settings_services import (
+        IBackgroundSettingsManager,
+    )
 
     class MockBackgroundSettingsManager(IBackgroundSettingsManager):
         def get_available_backgrounds(self):
@@ -124,21 +120,21 @@ def test_mock_implementation():
 
     # Test instantiation
     manager = MockBackgroundSettingsManager()
-    assert isinstance(
-        manager, IBackgroundSettingsManager
-    ), "Should be instance of interface"
+    assert isinstance(manager, IBackgroundSettingsManager), (
+        "Should be instance of interface"
+    )
 
     # Test method calls
     assert manager.get_available_backgrounds() == [
         "Aurora",
         "Bubbles",
     ], "Should return expected backgrounds"
-    assert (
-        manager.get_current_background() == "Aurora"
-    ), "Should return current background"
-    assert (
-        manager.set_background("Bubbles") == True
-    ), "Should set background successfully"
+    assert manager.get_current_background() == "Aurora", (
+        "Should return current background"
+    )
+    assert manager.set_background("Bubbles") == True, (
+        "Should set background successfully"
+    )
     assert manager.is_valid_background("Aurora") == True, "Should validate background"
 
     print("✅ Mock implementation validation passed")

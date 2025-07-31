@@ -4,9 +4,10 @@ Memory Cache Manager - Handles in-memory LRU caching with single responsibility.
 Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
-import logging
 import collections
-from typing import Optional, OrderedDict as OrderedDictType, TypeVar, Generic
+from collections import OrderedDict as OrderedDictType
+import logging
+from typing import Generic, Optional, TypeVar
 
 T = TypeVar("T")
 

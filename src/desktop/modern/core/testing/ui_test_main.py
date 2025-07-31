@@ -6,10 +6,10 @@ Run comprehensive UI tests for the TKA application.
 This script can be run directly or imported as a module.
 """
 
-import sys
 import argparse
 import logging
 from pathlib import Path
+import sys
 
 # Add the src directory to the Python path
 current_dir = Path(__file__).parent
@@ -17,8 +17,8 @@ src_dir = current_dir.parent.parent  # Go up to the src directory
 sys.path.insert(0, str(src_dir))
 
 from desktop.modern.core.testing import (
-    quick_ui_test,
     full_ui_test,
+    quick_ui_test,
     test_buttons_only,
     test_graph_editor_only,
 )

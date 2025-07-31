@@ -14,10 +14,10 @@ while maintaining the proven algorithms from the individual services.
 Uses Qt signals for clean inter-component communication.
 """
 
-import json
 from abc import ABCMeta
 from dataclasses import dataclass, field
 from enum import Enum
+import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
@@ -29,8 +29,6 @@ from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 
 class QObjectABCMeta(type(QObject), ABCMeta):
     """Metaclass that combines QObject's metaclass with ABCMeta."""
-
-    pass
 
 
 class UIComponent(Enum):
@@ -346,7 +344,7 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
         """Load UI state from file."""
         try:
             if self._settings_file.exists():
-                with open(self._settings_file, "r", encoding="utf-8") as f:
+                with open(self._settings_file, encoding="utf-8") as f:
                     data = json.load(f)
 
                 # Update state with loaded data

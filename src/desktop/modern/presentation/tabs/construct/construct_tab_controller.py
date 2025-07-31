@@ -188,7 +188,6 @@ class ConstructTabController(QObject):
 
     def _on_start_position_updated(self, start_position_data: BeatData) -> None:
         """Handle start position updated."""
-        pass
 
     def _load_sequence_on_startup(self) -> None:
         """Load sequence from persistence on startup."""
@@ -232,7 +231,6 @@ class ConstructTabController(QObject):
     def add_beat_to_sequence(self, beat_data: BeatData) -> None:
         """Add beat to sequence via beat operations service."""
         # TODO: Implement in beat operations adapter
-        pass
 
     def set_start_position(self, start_position_data: BeatData) -> None:
         """Set start position via start position manager."""
@@ -245,14 +243,12 @@ class ConstructTabController(QObject):
     def update_beat_turns(self, beat_index: int, color: str, new_turns: int) -> None:
         """Update beat turns via beat operations service."""
         # TODO: Implement in beat operations adapter
-        pass
 
     def update_beat_orientation(
         self, beat_index: int, color: str, new_orientation: int
     ) -> None:
         """Update beat orientation via beat operations service."""
         # TODO: Implement in beat operations adapter
-        pass
 
     def handle_resize(self, event, main_window) -> None:
         """Handle window resize events."""
@@ -276,7 +272,7 @@ class ConstructTabController(QObject):
                 f"🔍 [CONSTRUCT_TAB_CONTROLLER] RECEIVED LENGTH: {generation_config.length}"
             )
             print(
-                f"🔍 [CONSTRUCT_TAB_CONTROLLER] This is the REAL execution path from Generate button click"
+                "🔍 [CONSTRUCT_TAB_CONTROLLER] This is the REAL execution path from Generate button click"
             )
 
             # Get the unified modern generation service
@@ -332,7 +328,7 @@ class ConstructTabController(QObject):
                 # Process each pictograph individually like legacy system
                 for i, pictograph_data in enumerate(result.sequence_data):
                     print(
-                        f"� [CONSTRUCT_TAB_CONTROLLER] Processing beat {i+1}/{len(result.sequence_data)} incrementally"
+                        f"� [CONSTRUCT_TAB_CONTROLLER] Processing beat {i + 1}/{len(result.sequence_data)} incrementally"
                     )
 
                     # Apply arrow positioning to this individual pictograph
@@ -353,16 +349,16 @@ class ConstructTabController(QObject):
                     QApplication.processEvents()
 
                     print(
-                        f"✅ [CONSTRUCT_TAB_CONTROLLER] Beat {i+1} added incrementally with correct arrow positioning"
+                        f"✅ [CONSTRUCT_TAB_CONTROLLER] Beat {i + 1} added incrementally with correct arrow positioning"
                     )
 
                 print(
-                    f"✅ [CONSTRUCT_TAB_CONTROLLER] All beats processed incrementally using legacy-style approach"
+                    "✅ [CONSTRUCT_TAB_CONTROLLER] All beats processed incrementally using legacy-style approach"
                 )
 
             # Notify generation completion
             self.generation_completed.emit(True, "")
-            print(f"✅ Generation completed successfully using modern services")
+            print("✅ Generation completed successfully using modern services")
 
         except Exception as e:
             print(f"❌ Generation failed: {e}")

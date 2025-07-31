@@ -1,4 +1,15 @@
 from typing import TYPE_CHECKING
+
+from objects.motion.managers.handpath_calculator import HandpathCalculator
+from PyQt6.QtWidgets import QApplication
+
+from data.CAP_executors.rotated_loc_maps import (
+    hand_rot_dir_map,
+    loc_map_ccw,
+    loc_map_cw,
+    loc_map_dash,
+    loc_map_static,
+)
 from data.constants import (
     BEAT,
     BLUE,
@@ -25,18 +36,9 @@ from data.constants import (
     TIMING,
     TURNS,
 )
-from data.CAP_executors.rotated_loc_maps import (
-    loc_map_cw,
-    loc_map_ccw,
-    loc_map_dash,
-    loc_map_static,
-    hand_rot_dir_map,
-)
-from PyQt6.QtWidgets import QApplication
-
-from objects.motion.managers.handpath_calculator import HandpathCalculator
-from .CAP_executor import CAPExecutor
 from data.positions_maps import positions_map
+
+from .CAP_executor import CAPExecutor
 
 if TYPE_CHECKING:
     from ..circular_sequence_builder import CircularSequenceBuilder
@@ -145,15 +147,15 @@ class RotatedSwappedCAPExecutor(CAPExecutor):
                 RED_ATTRS
             ][PREFLOAT_PROP_ROT_DIR]
 
-        new_entry[BLUE_ATTRS][
-            END_ORI
-        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-            new_entry, BLUE
+        new_entry[BLUE_ATTRS][END_ORI] = (
+            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+                new_entry, BLUE
+            )
         )
-        new_entry[RED_ATTRS][
-            END_ORI
-        ] = self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
-            new_entry, RED
+        new_entry[RED_ATTRS][END_ORI] = (
+            self.circular_sequence_generator.json_manager.ori_calculator.calculate_end_ori(
+                new_entry, RED
+            )
         )
 
         return new_entry
@@ -245,10 +247,10 @@ class RotatedSwappedCAPExecutor(CAPExecutor):
 
         # Handle floating states
         if previous_matching_beat_attributes.get(PREFLOAT_MOTION_TYPE):
-            new_entry_attributes[
-                PREFLOAT_MOTION_TYPE
-            ] = previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
-            new_entry_attributes[
-                PREFLOAT_PROP_ROT_DIR
-            ] = previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
+            new_entry_attributes[PREFLOAT_MOTION_TYPE] = (
+                previous_matching_beat_attributes[PREFLOAT_MOTION_TYPE]
+            )
+            new_entry_attributes[PREFLOAT_PROP_ROT_DIR] = (
+                previous_matching_beat_attributes[PREFLOAT_PROP_ROT_DIR]
+            )
         return new_entry_attributes

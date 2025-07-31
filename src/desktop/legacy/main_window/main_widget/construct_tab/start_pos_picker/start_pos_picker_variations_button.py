@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QFont, QEnterEvent
+
 from PyQt6.QtCore import Qt
-
+from PyQt6.QtGui import QEnterEvent, QFont
 from styles.styled_button import StyledButton
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.start_pos_picker.start_pos_picker import (

@@ -13,61 +13,61 @@ from PyQt6.QtWidgets import QComboBox, QFrame, QLabel, QLineEdit, QVBoxLayout
 class FormatSettingsCard(QFrame):
     """
     Format settings card containing format and quality controls.
-    
+
     Provides controls for:
     - Export format selection (PNG, JPG, etc.)
     - Quality/resolution settings
     """
-    
+
     # Signal emitted when format settings change
     format_changed = pyqtSignal(str, str)  # setting_name, value
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("format_settings_card")
-        
+
         # Control references
         self.format_combo = None
         self.quality_input = None
-        
+
         self._setup_ui()
         self._setup_connections()
         self._apply_styling()
-    
+
     def _setup_ui(self):
         """Setup the UI layout."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
         layout.setSpacing(10)
-        
+
         # Title
         title = QLabel("Format Settings")
         title.setObjectName("subsection_title")
         title.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         layout.addWidget(title)
-        
+
         # Format selection
         format_label = QLabel("Export Format:")
         format_label.setObjectName("setting_label")
         layout.addWidget(format_label)
-        
+
         self.format_combo = QComboBox()
         self.format_combo.setObjectName("setting_combo")
         self.format_combo.addItems(["PNG", "JPG", "PDF", "SVG"])
         self.format_combo.setCurrentText("PNG")
         layout.addWidget(self.format_combo)
-        
+
         # Quality/Resolution setting
         quality_label = QLabel("Quality/Resolution:")
         quality_label.setObjectName("setting_label")
         layout.addWidget(quality_label)
-        
+
         self.quality_input = QLineEdit()
         self.quality_input.setObjectName("setting_input")
         self.quality_input.setPlaceholderText("e.g., 300 DPI, 1920x1080")
         self.quality_input.setText("300 DPI")
         layout.addWidget(self.quality_input)
-    
+
     def _setup_connections(self):
         """Setup signal connections."""
         self.format_combo.currentTextChanged.connect(
@@ -76,7 +76,7 @@ class FormatSettingsCard(QFrame):
         self.quality_input.textChanged.connect(
             lambda text: self.format_changed.emit("quality", text)
         )
-    
+
     def _apply_styling(self):
         """Apply glassmorphism styling."""
         self.setStyleSheet("""
@@ -171,14 +171,14 @@ class FormatSettingsCard(QFrame):
                 color: rgba(255, 255, 255, 0.5);
             }
         """)
-    
+
     def get_format_settings(self) -> dict:
         """Get current format settings as a dictionary."""
         return {
             "format": self.format_combo.currentText(),
             "quality": self.quality_input.text(),
         }
-    
+
     def set_format_settings(self, settings: dict):
         """Set format settings from a dictionary."""
         if "format" in settings:

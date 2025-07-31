@@ -1,16 +1,16 @@
-from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-
-from data.constants import *
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.grid_mode_checker import GridModeChecker
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
     ArrowRotAngleOverrideKeyGenerator,
 )
-from main_window.main_widget.grid_mode_checker import GridModeChecker
-from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.motion.handpath_calculator import (
     HandpathCalculator,
 )
+
+from data.constants import *
 
 if TYPE_CHECKING:
     from objects.arrow.arrow import Arrow

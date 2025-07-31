@@ -1,24 +1,25 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QObject
 
-from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_button_manager import (
-    PropRotDirButtonManager,
-)
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.motion_type_setter import (
     MotionTypeSetter,
 )
+from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_button_manager import (
+    PropRotDirButtonManager,
+)
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
-from data.constants import CLOCKWISE, DASH, DASH, FLOAT, NO_ROT, STATIC
 from objects.motion.motion import Motion
+from PyQt6.QtCore import QObject
 
-from .turns_value import TurnsValue
+from data.constants import CLOCKWISE, DASH, FLOAT, NO_ROT, STATIC
+
 from .turns_command import AdjustTurnsCommand, SetTurnsCommand, TurnsCommand
-from legacy_settings_manager.global_settings.app_context import AppContext
+from .turns_value import TurnsValue
 
 if TYPE_CHECKING:
-    from .turns_state import TurnsState
     from .json_turns_repository import JsonTurnsRepository
     from .turns_presenter import TurnsPresenter
+    from .turns_state import TurnsState
 
 
 class TurnsAdjustmentManager(QObject):

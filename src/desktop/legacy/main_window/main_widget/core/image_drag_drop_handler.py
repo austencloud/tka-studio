@@ -7,12 +7,12 @@ onto the application window.
 """
 
 import logging
-from typing import TYPE_CHECKING, List, Optional, Callable
 from pathlib import Path
+from typing import TYPE_CHECKING, Callable, List, Optional
 
-from PyQt6.QtCore import QObject, pyqtSignal, QMimeData
+from PyQt6.QtCore import QMimeData, QObject, pyqtSignal
 from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
-from PyQt6.QtWidgets import QWidget, QMessageBox
+from PyQt6.QtWidgets import QMessageBox, QWidget
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext

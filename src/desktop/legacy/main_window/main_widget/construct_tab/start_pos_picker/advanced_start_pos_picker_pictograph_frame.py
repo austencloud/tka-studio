@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton
 from typing import TYPE_CHECKING
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.advanced_start_pos_picker.advanced_start_pos_picker import (

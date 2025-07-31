@@ -7,16 +7,17 @@ Manages the layout and organization of sequence card pages.
 import logging
 from typing import List, Optional
 
-from PyQt6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QScrollArea
 from PyQt6.QtCore import QCoreApplication, QSize
+from PyQt6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
 
 from desktop.modern.core.interfaces.sequence_card_services import (
-    SequenceCardData,
-    ISequenceCardLayoutService,
     ISequenceCardCacheService,
+    ISequenceCardLayoutService,
+    SequenceCardData,
 )
-from ..widgets.sequence_card_page_widget import SequenceCardPageWidget
+
 from ..image_loading.image_loader import ImageLoader
+from ..widgets.sequence_card_page_widget import SequenceCardPageWidget
 
 logger = logging.getLogger(__name__)
 

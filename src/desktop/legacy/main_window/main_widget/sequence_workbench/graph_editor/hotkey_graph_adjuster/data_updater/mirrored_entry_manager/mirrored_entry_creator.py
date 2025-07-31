@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-from enums.letter.letter import Letter
 
+from enums.letter.letter import Letter
 from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.arrow.arrow import Arrow
 from placement_managers.attr_key_generator import (
@@ -11,17 +11,16 @@ if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.data_updater.special_placement_data_updater import (
         SpecialPlacementDataUpdater,
     )
-
-    from .mirrored_entry_manager import MirroredEntryManager
-
     from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
         TurnsTupleGenerator,
     )
 
+    from .mirrored_entry_manager import MirroredEntryManager
+
 
 class MirroredEntryCreator:
     def __init__(self, mirrored_entry_manager: "MirroredEntryManager"):
-        self.special_placement_data_updater: "SpecialPlacementDataUpdater" = (
+        self.special_placement_data_updater: SpecialPlacementDataUpdater = (
             mirrored_entry_manager.data_updater
         )
         self.turns_tuple_generator: TurnsTupleGenerator = (

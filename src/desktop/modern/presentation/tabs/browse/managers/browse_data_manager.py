@@ -17,9 +17,6 @@ from typing import Dict, List, Optional
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.tabs.browse.errors import DataLoadError, FilterError
 from desktop.modern.presentation.tabs.browse.models import FilterType
-from desktop.modern.presentation.tabs.browse.services.modern_dictionary_data_manager import (
-    ModernDictionaryDataManager,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -223,7 +220,7 @@ class BrowseDataManager:
         )
 
         # DEBUG: Log the first few sequence IDs for comparison
-        logger.info(f"🔍 [DATA_MANAGER] First 3 sequence IDs in data:")
+        logger.info("🔍 [DATA_MANAGER] First 3 sequence IDs in data:")
         for i, sequence in enumerate(all_sequences[:3]):
             logger.info(f"   {i}: {sequence.id}")
         logger.info(f"🔍 [DATA_MANAGER] Requested ID: {sequence_id}")
@@ -243,7 +240,7 @@ class BrowseDataManager:
         logger.error(
             f"❌ [DATA_MANAGER] No sequence found for sequence_id: {sequence_id}"
         )
-        logger.info(f"🔍 [DATA_MANAGER] Available sequence IDs:")
+        logger.info("🔍 [DATA_MANAGER] Available sequence IDs:")
         for i, sequence in enumerate(all_sequences[:5]):  # Show first 5 for debugging
             logger.info(f"🔍 [DATA_MANAGER]   {i}: {sequence.id} -> {sequence.word}")
 

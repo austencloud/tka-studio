@@ -17,7 +17,6 @@ class AnimationSystemFactory:
     """Factory interface for animation system creation."""
 
 
-
 class ModernAnimationServiceRegistration:
     """Registers modern animation services with the DI container."""
 
@@ -30,7 +29,9 @@ class ModernAnimationServiceRegistration:
             # Get settings coordinator if available
             settings_coordinator = None
             try:
-                from desktop.modern.core.interfaces.settings_interfaces import ISettingsCoordinator
+                from desktop.modern.core.interfaces.settings_interfaces import (
+                    ISettingsCoordinator,
+                )
 
                 settings_coordinator = container.resolve(ISettingsCoordinator)
             except:

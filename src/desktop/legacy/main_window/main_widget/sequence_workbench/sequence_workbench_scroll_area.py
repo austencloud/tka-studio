@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import QScrollArea
 
 if TYPE_CHECKING:

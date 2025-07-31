@@ -9,4 +9,4 @@ if TYPE_CHECKING:
 class SequenceViewerState:
     def __init__(self):
         self.sequence_json: Optional[dict] = None
-        self.matching_thumbnail_box: "ThumbnailBox" = None
+        self.matching_thumbnail_box: ThumbnailBox = None

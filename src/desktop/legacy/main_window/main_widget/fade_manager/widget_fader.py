@@ -1,19 +1,19 @@
 from typing import TYPE_CHECKING, Optional, Union
-from PyQt6.QtWidgets import QWidget, QGraphicsOpacityEffect, QGraphicsItem
-from PyQt6.QtCore import (
-    QParallelAnimationGroup,
-    QPropertyAnimation,
-    QEasingCurve,
-)
-from enums.glyph_enum import Glyph
 
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
 )
+from enums.glyph_enum import Glyph
 from main_window.main_widget.base_indicator_label import BaseIndicatorLabel
 from main_window.main_widget.fade_manager.fadeable_opacity_effect import (
     FadableOpacityEffect,
 )
+from PyQt6.QtCore import (
+    QEasingCurve,
+    QParallelAnimationGroup,
+    QPropertyAnimation,
+)
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsOpacityEffect, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.fade_manager.fade_manager import FadeManager
@@ -187,9 +187,7 @@ class WidgetFader:
             return [element]
 
         # Original logic for objects with a name attribute
-        if element.name == "TKA":
-            items = element.get_all_items()
-        elif element.name == "Positions":
+        if element.name == "TKA" or element.name == "Positions":
             items = element.get_all_items()
         elif element.name == "Reversals":
             items = element.reversal_items.values()

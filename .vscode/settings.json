@@ -11,14 +11,34 @@
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.formatOnType": true,
+  "editor.formatOnType": false,
+
+  // === RUFF CONFIGURATION (REPLACES BLACK + ISORT + PYLINT) ===
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
     }
   },
+
+  // === DISABLE OLD TOOLS TO SAVE MEMORY ===
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.formatting.provider": "none",
+  "python.formatting.blackEnabled": false,
+  "isort.check": false,
+
+  // === PERFORMANCE OPTIMIZATIONS ===
+  // Reduce Python analysis memory usage
+  "python.analysis.memory.keepLibraryAst": false,
+  "python.analysis.autoImportCompletions": false,
+  "python.analysis.indexing": false,
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "python.analysis.typeCheckingMode": "off",
+
+  // === WEB/JS FORMATTERS ===
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -39,6 +59,8 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
+
+  // === MEMORY-SAVING FILE EXCLUSIONS ===
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true,
@@ -48,23 +70,57 @@
     "**/node_modules": true,
     "**/.git": true,
     "**/.DS_Store": true,
-    "**/Thumbs.db": true
+    "**/Thumbs.db": true,
+    // TKA specific - exclude heavy directories
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true
   },
+
+  // === AGGRESSIVE FILE WATCHER EXCLUSIONS ===
   "files.watcherExclude": {
     "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
     "**/.venv/**": true,
+    "**/env/**": true,
+    "**/venv/**": true,
     "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.mypy_cache/**": true,
     "**/node_modules/**": true,
     "**/dist/**": true,
-    "**/build/**": true
+    "**/build/**": true,
+    // TKA specific heavy directories
+    "**/images/**": true,
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true,
+    "**/test_reports/**": true
   },
+
+  // === SEARCH EXCLUSIONS ===
   "search.exclude": {
     "**/node_modules/**": true,
     "**/dist/**": true,
     "**/build/**": true,
-    "**/__pycache__/**": true
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.venv/**": true,
+    "**/venv/**": true,
+    "**/env/**": true,
+    // TKA specific
+    "**/images/**": true,
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true
   },
+
+  // === GIT PERFORMANCE ===
   "git.autoRepositoryDetection": "subFolders",
+  "git.autofetch": false,
+  "git.enableStatusBarSync": false,
+
+  // === DISABLE HEAVY EXTENSIONS ===
   "cSpell.enabled": false,
   "cSpell.ignorePaths": [
     "**/node_modules/**",
@@ -79,13 +135,17 @@
     "**/*.pyd",
     "**/*.pyc"
   ],
+
+  // === TESTING CONFIGURATION ===
   "python.testing.pytestArgs": [".", "-v", "--tb=short"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.testing.cwd": "${workspaceFolder}",
-  "python.testing.autoTestDiscoverOnSaveEnabled": true,
+  "python.testing.autoTestDiscoverOnSaveEnabled": false,
   "python.testing.pytestPath": "./.venv/Scripts/pytest.exe",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.diagnosticMode": "workspace",
-  "python.analysis.indexing": true
+
+  // === TYPESCRIPT PERFORMANCE (for web components) ===
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.suggest.autoImports": false,
+  "typescript.disableAutomaticTypeAcquisition": true
 }

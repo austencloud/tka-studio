@@ -5,7 +5,6 @@ Reusable motion toggle button with color coding and glassmorphism styling.
 Extracted from the monolithic visibility tab for better component organization.
 """
 
-
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QPushButton
 
@@ -18,7 +17,7 @@ class MotionToggle(QPushButton):
     def __init__(self, color: str, parent=None):
         """
         Initialize motion toggle button.
-        
+
         Args:
             color: Motion color ("blue" or "red")
             parent: Parent widget
@@ -26,13 +25,13 @@ class MotionToggle(QPushButton):
         super().__init__(parent)
         self.color = color
         self.is_active = True
-        
+
         self.setCheckable(True)
         self.setChecked(True)
         self.setText(f"{color.title()} Motion")
         self.setMinimumSize(100, 35)
         self.setMaximumSize(120, 40)
-        
+
         self.clicked.connect(self._on_clicked)
         self._apply_styling()
 
@@ -43,7 +42,7 @@ class MotionToggle(QPushButton):
     def set_active(self, active: bool):
         """
         Set active state and update styling.
-        
+
         Args:
             active: Whether the motion is active/visible
         """

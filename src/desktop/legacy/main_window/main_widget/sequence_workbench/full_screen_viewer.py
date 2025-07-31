@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QApplication, QMessageBox
 
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.full_screen_image_overlay import (
     FullScreenImageOverlay,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QApplication, QMessageBox
 from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:
@@ -61,9 +61,9 @@ class FullScreenViewer:
                         if hasattr(mw, "widget_manager") and hasattr(
                             mw.widget_manager, "_widgets"
                         ):
-                            mw.widget_manager._widgets[
-                                "full_screen_overlay"
-                            ] = full_screen_overlay
+                            mw.widget_manager._widgets["full_screen_overlay"] = (
+                                full_screen_overlay
+                            )
                     except (AttributeError, TypeError):
                         # Widget manager not available - overlay will still work
                         pass

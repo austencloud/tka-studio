@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from base_widgets.pictograph.elements.views.GE_pictograph_view import GE_PictographView
 from main_window.main_widget.sequence_workbench.graph_editor.GE_pictograph import (
     GE_Pictograph,
 )
-
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
+
     from ..legacy_graph_editor import LegacyGraphEditor
 
 
@@ -28,9 +28,7 @@ class LegacyGraphEditorPictographContainer(QWidget):
         self.GE_view = GE_PictographView(self, self.GE_pictograph)
 
     def update_pictograph(self, reference_beat: "Beat" = None) -> None:
-        selected_beat_view = (
-            self.graph_editor.sequence_workbench.beat_frame.get.currently_selected_beat_view()
-        )
+        selected_beat_view = self.graph_editor.sequence_workbench.beat_frame.get.currently_selected_beat_view()
         if not selected_beat_view:
             return
         if not reference_beat:

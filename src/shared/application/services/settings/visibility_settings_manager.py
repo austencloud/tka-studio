@@ -1,7 +1,9 @@
 from typing import Dict
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
-from desktop.modern.core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
+from desktop.modern.core.interfaces.tab_settings_interfaces import (
+    IVisibilitySettingsManager,
+)
 
 
 class VisibilitySettingsManager(IVisibilitySettingsManager):

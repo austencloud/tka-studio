@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING, Any
-from PyQt6.QtCore import QPointF
+
 from legacy_settings_manager.global_settings.app_context import AppContext
 from placement_managers.arrow_placement_manager.arrow_placement_context import (
     ArrowPlacementContext,
@@ -7,6 +7,7 @@ from placement_managers.arrow_placement_manager.arrow_placement_context import (
 from placement_managers.attr_key_generator import (
     AttrKeyGenerator,
 )
+from PyQt6.QtCore import QPointF
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.data_updater.ori_key_generator import (
@@ -18,9 +19,9 @@ class SpecialPlacementStrategy:
     def __init__(self, ori_key_generator: "OriKeyGenerator") -> None:
         self.special_placement_loader = AppContext.special_placement_loader()
         self.ori_key_generator = ori_key_generator
-        self.special_placements: dict[
-            str, dict[str, dict[str, Any]]
-        ] = self.special_placement_loader.load_or_return_special_placements()
+        self.special_placements: dict[str, dict[str, dict[str, Any]]] = (
+            self.special_placement_loader.load_or_return_special_placements()
+        )
         self.attr_key_generator = AttrKeyGenerator()
 
     def get_special_placements(self) -> dict[str, dict[str, dict[str, Any]]]:

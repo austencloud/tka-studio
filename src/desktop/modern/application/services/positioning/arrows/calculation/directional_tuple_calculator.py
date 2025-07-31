@@ -11,8 +11,15 @@ missing from the modern arrow positioning system.
 import logging
 from typing import List, Tuple
 
-from desktop.modern.core.interfaces.positioning_services import IDirectionalTupleCalculator
-from desktop.modern.domain.models import Location, MotionData, MotionType, RotationDirection
+from desktop.modern.core.interfaces.positioning_services import (
+    IDirectionalTupleCalculator,
+)
+from desktop.modern.domain.models import (
+    Location,
+    MotionData,
+    MotionType,
+    RotationDirection,
+)
 
 # Conditional PyQt6 imports for testing compatibility
 try:

@@ -1,8 +1,9 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/scroll_area.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QScrollArea, QFrame, QWidget
-from PyQt6.QtCore import Qt, QEvent
+
+from PyQt6.QtCore import QEvent, Qt
 from PyQt6.QtGui import QWheelEvent
+from PyQt6.QtWidgets import QFrame, QScrollArea, QWidget
 
 if TYPE_CHECKING:
     from ...sequence_card_tab import SequenceCardTab

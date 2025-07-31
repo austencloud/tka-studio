@@ -3,10 +3,10 @@ Settings management for TKA Unified Launcher.
 Enhanced with state persistence and smart initialization.
 """
 
+from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -64,7 +64,7 @@ class SettingsManager:
         """Load settings from file."""
         if self.settings_path.exists():
             try:
-                with open(self.settings_path, "r", encoding="utf-8") as f:
+                with open(self.settings_path, encoding="utf-8") as f:
                     data = json.load(f)
 
                 # Update settings with loaded data

@@ -1,6 +1,4 @@
 from typing import Callable
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import pyqtSignal, QSize
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.construct_tab.add_to_sequence_manager.add_to_sequence_manager import (
@@ -10,16 +8,19 @@ from main_window.main_widget.construct_tab.option_picker.widgets.scroll.option_s
     OptionScroll,
 )
 from main_window.main_widget.fade_manager.fade_manager import FadeManager
-from .choose_your_next_pictograph_label import ChooseYourNextPictographLabel
-from ..core.option_factory import OptionFactory
-from ..core.option_getter import OptionGetter
-from ..handlers.click_handler import OptionClickHandler
-from ..core.option_updater import OptionUpdater
-from .reversal_filter_widget import OptionPickerReversalFilter
-from ..layout.layout_manager import OptionPickerLayoutManager
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
+from PyQt6.QtCore import QSize, pyqtSignal
+from PyQt6.QtWidgets import QWidget
+
+from ..core.option_factory import OptionFactory
+from ..core.option_getter import OptionGetter
+from ..core.option_updater import OptionUpdater
+from ..handlers.click_handler import OptionClickHandler
+from ..layout.layout_manager import OptionPickerLayoutManager
+from .choose_your_next_pictograph_label import ChooseYourNextPictographLabel
+from .reversal_filter_widget import OptionPickerReversalFilter
 
 
 class LegacyOptionPicker(QWidget):

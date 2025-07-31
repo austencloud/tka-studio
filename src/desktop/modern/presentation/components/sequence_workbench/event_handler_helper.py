@@ -5,22 +5,27 @@ Extracted event handler methods without any changes to functionality.
 Just moves the code to reduce the main file size.
 """
 
-from shared.application.services.workbench.workbench_operation_coordinator import OperationType, OperationResult
+from shared.application.services.workbench.workbench_operation_coordinator import (
+    OperationResult,
+    OperationType,
+)
 
 
 class EventHandlerHelper:
     """Helper class for workbench event handlers - simple extraction."""
-    
+
     def __init__(self, workbench):
         self.workbench = workbench
-    
+
     def execute_operation(self, operation_type: OperationType):
         """Execute operation via operation coordinator."""
 
         # Handle copy JSON specially to pass the current sequence
         if operation_type == OperationType.COPY_JSON:
             current_sequence = self.workbench._state_manager.get_current_sequence()
-            operation_method = lambda: self.workbench._operation_coordinator.copy_json(current_sequence)
+            operation_method = lambda: self.workbench._operation_coordinator.copy_json(
+                current_sequence
+            )
         else:
             # Get the operation method from coordinator
             operation_methods = {
@@ -44,7 +49,9 @@ class EventHandlerHelper:
         """Handle delete beat operation."""
         selected_index = None
         if self.workbench._beat_frame_section:
-            selected_index = self.workbench._beat_frame_section.get_selected_beat_index()
+            selected_index = (
+                self.workbench._beat_frame_section.get_selected_beat_index()
+            )
 
         result = self.workbench._operation_coordinator.delete_beat(selected_index)
         print(
@@ -54,24 +61,24 @@ class EventHandlerHelper:
 
     def handle_clear(self):
         """Handle clear sequence operation."""
-        print(f"🧹 [WORKBENCH] Clear sequence requested")
+        print("🧹 [WORKBENCH] Clear sequence requested")
 
         # Clear the sequence via state manager
         result = self.workbench._state_manager.set_sequence(None)
 
         if result.changed:
-            print(f"🧹 [WORKBENCH] Sequence cleared, updating UI...")
+            print("🧹 [WORKBENCH] Sequence cleared, updating UI...")
             # Update UI to reflect the cleared sequence
             self.workbench._update_ui_from_state()
 
             # IMPORTANT: Clear the start position data from state manager
             # so that when a new start position is selected, it will be detected as a change
-            print(f"🧹 [WORKBENCH] Clearing start position data from state manager...")
+            print("🧹 [WORKBENCH] Clearing start position data from state manager...")
             self.workbench._state_manager.set_start_position(None)
 
             # Reset start position to text-only mode (no pictograph)
             if self.workbench._beat_frame_section:
-                print(f"🧹 [WORKBENCH] Initializing cleared start position view...")
+                print("🧹 [WORKBENCH] Initializing cleared start position view...")
                 self.workbench._beat_frame_section.initialize_cleared_start_position()
 
             # Update button panel state after clearing
@@ -93,9 +100,13 @@ class EventHandlerHelper:
 
         # Smart switching logic
         if not current_sequence and not start_position:
-            print("⚡ [WORKBENCH] No sequence or start position - switching to start position picker")
+            print(
+                "⚡ [WORKBENCH] No sequence or start position - switching to start position picker"
+            )
         elif start_position and not current_sequence:
-            print("⚡ [WORKBENCH] Has start position but no sequence - switching to option picker")
+            print(
+                "⚡ [WORKBENCH] Has start position but no sequence - switching to option picker"
+            )
         elif current_sequence:
             print("⚡ [WORKBENCH] Has sequence - staying in option picker")
 

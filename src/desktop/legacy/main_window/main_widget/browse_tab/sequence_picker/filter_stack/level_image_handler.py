@@ -1,13 +1,12 @@
-import os
 from functools import partial
+import os
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QEvent, QObject, QSize, Qt
+from PyQt6.QtGui import QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import (
     QLabel,
 )
-from PyQt6.QtCore import Qt, QEvent, QObject, QSize
-from PyQt6.QtGui import QPixmap, QPainter, QPen
-
 
 if TYPE_CHECKING:
     from base_widgets.base_go_back_button import MainWidget

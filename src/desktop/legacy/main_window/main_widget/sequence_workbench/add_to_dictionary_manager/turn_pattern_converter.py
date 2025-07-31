@@ -1,4 +1,4 @@
-from data.constants import SEQUENCE_START_POSITION, BLUE_ATTRS, RED_ATTRS, TURNS
+from data.constants import BLUE_ATTRS, RED_ATTRS, SEQUENCE_START_POSITION, TURNS
 
 
 class TurnPatternConverter:

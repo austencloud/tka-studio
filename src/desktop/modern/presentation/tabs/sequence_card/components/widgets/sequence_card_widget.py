@@ -7,14 +7,15 @@ Individual sequence card display widget with optimized image loading.
 import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import QLabel, QSizePolicy
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QLabel, QSizePolicy
 
 from desktop.modern.core.interfaces.sequence_card_services import (
-    SequenceCardData,
     ISequenceCardCacheService,
+    SequenceCardData,
 )
+
 from ..image_loading.image_loader import ImageLoader
 
 logger = logging.getLogger(__name__)

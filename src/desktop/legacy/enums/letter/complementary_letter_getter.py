@@ -1,6 +1,5 @@
 from enums.letter.letter import Letter
 
-
 complementary_letter_mapping = {
     "A": "B",
     "B": "A",

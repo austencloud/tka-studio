@@ -6,8 +6,8 @@ Multi-level LRU caching with memory management.
 
 import gc
 import logging
-import time
 from pathlib import Path
+import time
 from typing import Dict, Optional
 
 from desktop.modern.core.interfaces.sequence_card_services import (
@@ -91,7 +91,6 @@ class SequenceCardCacheService(ISequenceCardCacheService):
         cache_key = self._get_cache_key(path, scale)
 
         # Check memory usage periodically (not on every call)
-        import time
 
         current_time = time.time()
         if current_time - self._last_memory_check > self._memory_check_interval:

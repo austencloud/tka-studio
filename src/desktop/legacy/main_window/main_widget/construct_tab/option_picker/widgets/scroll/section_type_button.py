@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QPushButton, QLabel, QHBoxLayout
-from PyQt6.QtCore import Qt, QSize, pyqtSignal
-from PyQt6.QtGui import QFont, QMouseEvent
+
 from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QFont, QMouseEvent
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton
 from utils.letter_type_text_painter import LetterTypeTextPainter
 
 if TYPE_CHECKING:

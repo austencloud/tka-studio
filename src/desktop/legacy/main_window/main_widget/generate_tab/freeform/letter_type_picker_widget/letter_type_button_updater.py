@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtGui import QColor
 
 if TYPE_CHECKING:

@@ -2,9 +2,12 @@
 # File: prop_rot_dir_ui_handler.py
 # ==========================================
 from typing import TYPE_CHECKING
+
 from objects.arrow.arrow import Motion
 from utils.path_helpers import get_image_path
+
 from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, ICON_DIR
+
 from .prop_rot_dir_button import PropRotDirButton
 
 if TYPE_CHECKING:
@@ -30,9 +33,8 @@ class PropRotDirUIHandler:
             self.turns_box, direction, get_image_path(f"{ICON_DIR}clock/{icon_name}")
         )
         button.clicked.connect(
-            lambda _, d=direction: self.turns_box.prop_rot_dir_button_manager.set_prop_rot_dir(
-                d
-            )
+            lambda _,
+            d=direction: self.turns_box.prop_rot_dir_button_manager.set_prop_rot_dir(d)
         )
         return button
 
@@ -46,9 +48,7 @@ class PropRotDirUIHandler:
 
     def handle_button_visibility(self, motion: Motion) -> None:
         """Control button visibility based on motion state."""
-        if motion.state.turns == 0:
-            self._hide_all_buttons()
-        elif motion.state.turns == "fl":
+        if motion.state.turns == 0 or motion.state.turns == "fl":
             self._hide_all_buttons()
         else:
             self._show_all_buttons()

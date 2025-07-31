@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
-from .codex_scroll_area import CodexScrollArea
-from .codex_toggle_button import CodexToggleButton
-from .codex_control_widget import CodexControlWidget
-from .codex_section_manager import CodexSectionManager
 from .codex_animation_manager import CodexAnimationManager
+from .codex_control_widget import CodexControlWidget
 from .codex_data_manager import CodexDataManager
+from .codex_scroll_area import CodexScrollArea
+from .codex_section_manager import CodexSectionManager
+from .codex_toggle_button import CodexToggleButton
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

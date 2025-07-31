@@ -1,7 +1,8 @@
 import random
-from PyQt6.QtGui import QPainter, QPixmap, QCursor
+
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtGui import QCursor, QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import Qt, QPoint
 from utils.path_helpers import get_image_path
 
 

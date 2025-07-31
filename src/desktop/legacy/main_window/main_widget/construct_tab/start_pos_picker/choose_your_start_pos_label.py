@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFontMetrics
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING, Union
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFontMetrics
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.advanced_start_pos_picker.advanced_start_pos_picker import (

@@ -6,15 +6,15 @@ previously stored in GlyphData. It provides a centralized way to manage
 visibility settings for elemental, VTG, TKA, and position glyphs.
 """
 
-from typing import Dict, Optional
 from dataclasses import dataclass
+from typing import Dict, Optional
 
 from desktop.modern.domain.models.enums import LetterType
 from desktop.modern.domain.models.pictograph_utils import (
     should_show_elemental,
-    should_show_vtg,
-    should_show_tka,
     should_show_positions,
+    should_show_tka,
+    should_show_vtg,
 )
 
 
@@ -23,6 +23,7 @@ class PictographVisibilityState:
     """
     Visibility state for a single pictograph's glyphs.
     """
+
     show_elemental: bool = True
     show_vtg: bool = True
     show_tka: bool = True
@@ -48,13 +49,15 @@ class PictographVisibilityState:
         )
 
     @classmethod
-    def from_letter_type(cls, letter_type: Optional[LetterType]) -> "PictographVisibilityState":
+    def from_letter_type(
+        cls, letter_type: Optional[LetterType]
+    ) -> "PictographVisibilityState":
         """
         Create visibility state based on letter type defaults.
-        
+
         Args:
             letter_type: The letter type to determine default visibility
-            
+
         Returns:
             PictographVisibilityState with appropriate defaults
         """
@@ -69,7 +72,7 @@ class PictographVisibilityState:
 class PictographVisibilityManager:
     """
     Manager for pictograph glyph visibility settings.
-    
+
     This class replaces the visibility flags that were previously stored
     in GlyphData, providing a centralized way to manage visibility state
     for different glyph types across pictographs.
@@ -79,7 +82,7 @@ class PictographVisibilityManager:
         """Initialize the visibility manager."""
         # Per-pictograph visibility state
         self._pictograph_visibility: Dict[str, PictographVisibilityState] = {}
-        
+
         # Global visibility overrides (from settings)
         self._global_visibility: Dict[str, bool] = {
             "elemental": True,
@@ -91,10 +94,10 @@ class PictographVisibilityManager:
     def get_visibility_state(self, pictograph_id: str) -> PictographVisibilityState:
         """
         Get visibility state for a pictograph.
-        
+
         Args:
             pictograph_id: The pictograph ID
-            
+
         Returns:
             PictographVisibilityState for the pictograph
         """
@@ -107,7 +110,7 @@ class PictographVisibilityManager:
     ) -> None:
         """
         Set visibility state for a pictograph.
-        
+
         Args:
             pictograph_id: The pictograph ID
             visibility_state: The visibility state to set
@@ -119,14 +122,14 @@ class PictographVisibilityManager:
     ) -> None:
         """
         Set visibility for a specific glyph type on a pictograph.
-        
+
         Args:
             pictograph_id: The pictograph ID
             glyph_type: The glyph type ("elemental", "vtg", "tka", "positions")
             visible: Whether the glyph should be visible
         """
         state = self.get_visibility_state(pictograph_id)
-        
+
         if glyph_type == "elemental":
             state.show_elemental = visible
         elif glyph_type == "vtg":
@@ -137,25 +140,23 @@ class PictographVisibilityManager:
             state.show_positions = visible
         else:
             raise ValueError(f"Unknown glyph type: {glyph_type}")
-        
+
         self._pictograph_visibility[pictograph_id] = state
 
-    def get_pictograph_visibility(
-        self, pictograph_id: str, glyph_type: str
-    ) -> bool:
+    def get_pictograph_visibility(self, pictograph_id: str, glyph_type: str) -> bool:
         """
         Get visibility for a specific glyph type on a pictograph.
-        
+
         Args:
             pictograph_id: The pictograph ID
             glyph_type: The glyph type ("elemental", "vtg", "tka", "positions")
-            
+
         Returns:
             True if the glyph should be visible
         """
         state = self.get_visibility_state(pictograph_id)
         global_visible = self._global_visibility.get(glyph_type, True)
-        
+
         if glyph_type == "elemental":
             return state.show_elemental and global_visible
         elif glyph_type == "vtg":
@@ -170,23 +171,23 @@ class PictographVisibilityManager:
     def set_global_visibility(self, glyph_type: str, visible: bool) -> None:
         """
         Set global visibility override for a glyph type.
-        
+
         Args:
             glyph_type: The glyph type ("elemental", "vtg", "tka", "positions")
             visible: Whether the glyph type should be globally visible
         """
         if glyph_type not in self._global_visibility:
             raise ValueError(f"Unknown glyph type: {glyph_type}")
-        
+
         self._global_visibility[glyph_type] = visible
 
     def get_global_visibility(self, glyph_type: str) -> bool:
         """
         Get global visibility override for a glyph type.
-        
+
         Args:
             glyph_type: The glyph type ("elemental", "vtg", "tka", "positions")
-            
+
         Returns:
             True if the glyph type is globally visible
         """
@@ -197,7 +198,7 @@ class PictographVisibilityManager:
     ) -> None:
         """
         Initialize visibility state for a pictograph based on its letter type.
-        
+
         Args:
             pictograph_id: The pictograph ID
             letter_type: The letter type to determine default visibility
@@ -208,7 +209,7 @@ class PictographVisibilityManager:
     def remove_pictograph_visibility(self, pictograph_id: str) -> None:
         """
         Remove visibility state for a pictograph.
-        
+
         Args:
             pictograph_id: The pictograph ID to remove
         """
@@ -221,7 +222,7 @@ class PictographVisibilityManager:
     def get_all_visibility_states(self) -> Dict[str, PictographVisibilityState]:
         """
         Get all pictograph visibility states.
-        
+
         Returns:
             Dictionary mapping pictograph IDs to visibility states
         """
@@ -235,7 +236,7 @@ _visibility_manager: Optional[PictographVisibilityManager] = None
 def get_pictograph_visibility_manager() -> PictographVisibilityManager:
     """
     Get the global pictograph visibility manager instance.
-    
+
     Returns:
         The global PictographVisibilityManager instance
     """

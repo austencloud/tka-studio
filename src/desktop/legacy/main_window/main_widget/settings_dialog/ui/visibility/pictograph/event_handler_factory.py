@@ -1,9 +1,10 @@
-from typing import Union, TYPE_CHECKING
-from PyQt6.QtCore import Qt
+from typing import TYPE_CHECKING, Union
+
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
 )
 from enums.glyph_enum import Glyph
+from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
     from .visibility_pictograph_interaction_manager import (

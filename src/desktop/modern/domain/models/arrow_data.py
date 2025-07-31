@@ -18,10 +18,10 @@ PROVIDES:
 - Easy testing and serialization
 """
 
-import json
-import uuid
 from dataclasses import dataclass, field
+import json
 from typing import Any, Dict, Optional
+import uuid
 
 from desktop.modern.domain.models.enums import ArrowType
 

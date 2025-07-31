@@ -13,11 +13,16 @@ Key principles from Legacy:
 
 from typing import TYPE_CHECKING
 
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
-from desktop.modern.presentation.utils.letter_type_text_painter import LetterTypeTextPainter
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QMouseEvent
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton
+
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
+from desktop.modern.presentation.utils.letter_type_text_painter import (
+    LetterTypeTextPainter,
+)
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (

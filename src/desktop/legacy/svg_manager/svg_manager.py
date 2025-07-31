@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
+
 from objects.arrow.arrow_svg_manager import ArrowSvgManager
-from svg_manager.svg_color_handler import SvgColorHandler
 from svg_manager.prop_svg_manager import PropSvgManager
+from svg_manager.svg_color_handler import SvgColorHandler
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
@@ -24,10 +25,10 @@ class SvgManager:
         """
         try:
             file_path = get_image_path(svg_path)
-            with open(file_path, "r") as file:
+            with open(file_path) as file:
                 svg_data = file.read()
             return svg_data
-        except (FileNotFoundError, IOError):
+        except (OSError, FileNotFoundError):
             # If the file is not found, return a simple placeholder SVG
             return self._create_placeholder_svg(svg_path)
 

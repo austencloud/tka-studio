@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING
-from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, NO_ROT
+
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_button import (
     PropRotDirButton,
 )
-from ..base_adjustment_box_header_widget import BaseAdjustmentBoxHeaderWidget
 from utils.path_helpers import get_image_path
-from data.constants import ICON_DIR
+
+from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, ICON_DIR, NO_ROT
+
+from ..base_adjustment_box_header_widget import BaseAdjustmentBoxHeaderWidget
 
 if TYPE_CHECKING:
     from .turns_box import TurnsBox

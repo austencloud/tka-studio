@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QSpacerItem, QVBoxLayout
 
 if TYPE_CHECKING:
     from .splash_screen import SplashScreen

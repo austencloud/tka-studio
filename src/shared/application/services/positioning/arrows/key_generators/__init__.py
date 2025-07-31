@@ -10,6 +10,6 @@ from .turns_tuple_key_generator import TurnsTupleKeyGenerator
 
 __all__ = [
     "AttributeKeyGenerator",
-    "PlacementKeyGenerator", 
+    "PlacementKeyGenerator",
     "TurnsTupleKeyGenerator",
 ]

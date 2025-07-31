@@ -1,5 +1,6 @@
 from tkinter import HORIZONTAL
 from typing import TYPE_CHECKING
+
 from data.constants import BLUE_ATTRS, END_POS, RED_ATTRS, VERTICAL
 from data.positions_maps import mirrored_positions
 

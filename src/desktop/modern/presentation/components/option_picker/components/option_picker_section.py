@@ -14,14 +14,12 @@ Architecture:
 
 from typing import Callable, List, Optional
 
-from shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtWidgets import QGroupBox
+
+from desktop.modern.core.interfaces.animation_core_interfaces import (
+    IAnimationOrchestrator,
 )
-from shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
-from shared.application.services.option_picker.option_pool_service import OptionPoolService
-from desktop.modern.core.interfaces.animation_core_interfaces import IAnimationOrchestrator
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_picker_section_animation_handler import (
     OptionPickerSectionAnimationHandler,
@@ -38,9 +36,18 @@ from desktop.modern.presentation.components.option_picker.components.option_pick
 from desktop.modern.presentation.components.option_picker.components.option_picker_section_widget_manager import (
     OptionPickerSectionWidgetManager,
 )
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtWidgets import QGroupBox
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
+from shared.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
+from shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
+from shared.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
 
 
 class OptionPickerSection(QGroupBox):

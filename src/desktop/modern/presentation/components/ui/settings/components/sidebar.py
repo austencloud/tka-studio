@@ -5,7 +5,8 @@ Provides navigation between different settings tabs.
 """
 
 from typing import List
-from PyQt6.QtCore import Qt, QSize, pyqtSignal
+
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 

@@ -11,7 +11,11 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QFontMetrics, QImage, QPainter, QPen
-from desktop.modern.core.interfaces.image_export_services import IWordDrawer, ImageExportOptions
+
+from desktop.modern.core.interfaces.image_export_services import (
+    ImageExportOptions,
+    IWordDrawer,
+)
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -22,7 +26,7 @@ logger = logging.getLogger(__name__)
 class WordDrawer(IWordDrawer):
     """
     Drawer for rendering word text with legacy-compatible font scaling.
-    
+
     This drawer replicates the exact word rendering logic from the Legacy system,
     including font scaling based on sequence length and kerning adjustments.
     """
@@ -30,17 +34,17 @@ class WordDrawer(IWordDrawer):
     def __init__(self, font_margin_helper: "FontMarginHelper"):
         """
         Initialize the word drawer.
-        
+
         Args:
             font_margin_helper: Helper for font and margin calculations
         """
         self.font_margin_helper = font_margin_helper
-        
+
         # Legacy-compatible base font settings
         self.base_font = QFont("Georgia", 175, QFont.Weight.DemiBold, False)
         self.base_margin = 50
         self.border_width = 3
-        
+
         logger.debug("WordDrawer initialized with legacy-compatible settings")
 
     def draw_word(
@@ -52,7 +56,7 @@ class WordDrawer(IWordDrawer):
     ) -> None:
         """
         Draw word text onto the image using legacy scaling logic.
-        
+
         Args:
             image: Target image
             word: Word to draw
@@ -129,7 +133,7 @@ class WordDrawer(IWordDrawer):
     ) -> tuple[int, int]:
         """
         Calculate text position using legacy logic.
-        
+
         Args:
             image: Target image
             text_width: Width of the text
@@ -138,7 +142,7 @@ class WordDrawer(IWordDrawer):
             kerning: Kerning value
             word_length: Length of the word
             additional_height_top: Additional height at top
-            
+
         Returns:
             Tuple of (x, y) position
         """
@@ -148,10 +152,10 @@ class WordDrawer(IWordDrawer):
             - (text_height // 10)
             + self.border_width
         )
-        
+
         # Legacy X positioning (centered with kerning)
         x = (image.width() - text_width - kerning * (word_length - 1)) // 2
-        
+
         return x, y
 
     def _draw_text_with_kerning(
@@ -165,7 +169,7 @@ class WordDrawer(IWordDrawer):
     ) -> None:
         """
         Draw text with legacy kerning behavior.
-        
+
         Args:
             painter: QPainter to draw with
             word: Word to draw
@@ -176,7 +180,7 @@ class WordDrawer(IWordDrawer):
         """
         x = start_x
         painter.setPen(QPen(Qt.GlobalColor.black))
-        
+
         for letter in word:
             painter.drawText(x, y, letter)
             x += metrics.horizontalAdvance(letter) + kerning

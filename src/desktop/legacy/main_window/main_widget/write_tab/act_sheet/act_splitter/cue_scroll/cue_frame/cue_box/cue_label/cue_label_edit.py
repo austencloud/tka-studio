@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QTextEdit, QSizePolicy
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QTextOption, QKeyEvent
+from PyQt6.QtGui import QKeyEvent, QTextOption
+from PyQt6.QtWidgets import QSizePolicy, QTextEdit
 
 
 class CueLabelEdit(QTextEdit):

@@ -132,17 +132,17 @@ class DockWindowSetup:
 
     def get_dock_stylesheet(self) -> str:
         """Get the complete stylesheet for the dock window."""
-        return f"""
-            TKADockWindow {{
+        return """
+            TKADockWindow {
                 background: rgba(20, 20, 20, 0.95);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 8px;
-            }}
+            }
             
-            #dock_icons_container {{
+            #dock_icons_container {
                 background: transparent;
                 border: none;
-            }}
+            }
         """
 
     def apply_size_configuration(self, dock_widget: QWidget, height: int):
@@ -180,7 +180,7 @@ class DockWindowSetup:
     def update_configuration(self, new_config: DockConfiguration):
         """Update dock configuration."""
         self.dock_config = new_config
-        logger.info(f"📝 Updated dock window configuration")
+        logger.info("📝 Updated dock window configuration")
 
     def get_layout_margins(self) -> tuple[int, int, int, int]:
         """Get layout margins for the dock."""

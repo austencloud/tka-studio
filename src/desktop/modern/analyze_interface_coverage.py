@@ -6,10 +6,10 @@ which services need interfaces for complete cross-platform coverage.
 """
 
 import ast
-import os
-import re
 from dataclasses import dataclass
+import os
 from pathlib import Path
+import re
 from typing import Dict, List, Set
 
 
@@ -74,7 +74,7 @@ class ServiceAnalyzer:
                     continue
 
                 try:
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     # Find interface definitions
@@ -103,7 +103,7 @@ class ServiceAnalyzer:
     def _analyze_service_file(self, file_path: Path) -> None:
         """Analyze a single service file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Parse AST to find classes
@@ -317,18 +317,18 @@ class ServiceAnalyzer:
         has_interface = len(categorized["has_interface"])
         needs_interface = total_services - has_interface
 
-        report.append(f"\n## 📊 Summary")
+        report.append("\n## 📊 Summary")
         report.append(f"- **Total Services Found**: {total_services}")
         report.append(f"- **Services with Interfaces**: {has_interface}")
         report.append(f"- **Services Needing Interfaces**: {needs_interface}")
-        report.append(f"- **Coverage**: {(has_interface/total_services)*100:.1f}%")
+        report.append(f"- **Coverage**: {(has_interface / total_services) * 100:.1f}%")
 
         # Priority breakdown
         high_priority = len(categorized["needs_interface_high"])
         medium_priority = len(categorized["needs_interface_medium"])
         low_priority = len(categorized["needs_interface_low"])
 
-        report.append(f"\n## 🎯 Priority Breakdown")
+        report.append("\n## 🎯 Priority Breakdown")
         report.append(f"- **High Priority**: {high_priority} services")
         report.append(f"- **Medium Priority**: {medium_priority} services")
         report.append(f"- **Low Priority**: {low_priority} services")
@@ -358,7 +358,7 @@ class ServiceAnalyzer:
             report.append(f"  - Interface File: `{service.interface_file}`")
 
         # Category breakdown
-        report.append(f"\n## 📂 By Category")
+        report.append("\n## 📂 By Category")
         for category, services in sorted(categorized["by_category"].items()):
             with_interface = sum(1 for s in services if s.has_interface)
             without_interface = len(services) - with_interface

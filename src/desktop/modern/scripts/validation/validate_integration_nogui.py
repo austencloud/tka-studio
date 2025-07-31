@@ -5,8 +5,8 @@ This script validates that all presentation components can properly use the new 
 and that backward compatibility is maintained, without requiring GUI components.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add src to path
 modern_src_path = Path(__file__).parent / "src"

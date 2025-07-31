@@ -8,10 +8,11 @@ This service bridges graph editor changes to beat repository and UI components w
 from dataclasses import replace
 from typing import TYPE_CHECKING, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import MotionType
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
     from desktop.modern.core.interfaces.core_services import ISequenceManager
@@ -30,7 +31,7 @@ class GraphEditorDataFlowManager(QObject):
         super().__init__(parent)
         self._current_sequence: Optional[SequenceData] = None
         self._current_beat_index: Optional[int] = None
-        self._sequence_service: Optional["ISequenceManager"] = None
+        self._sequence_service: Optional[ISequenceManager] = None
 
     def set_context(self, sequence: SequenceData, beat_index: int):
         """Set current sequence and beat context"""

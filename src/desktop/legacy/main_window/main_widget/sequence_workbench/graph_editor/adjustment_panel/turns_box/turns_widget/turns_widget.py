@@ -1,8 +1,11 @@
-from PyQt6.QtWidgets import QVBoxLayout, QWidget
-from PyQt6.QtCore import pyqtSignal
 from typing import TYPE_CHECKING
 
+from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
 from ...turns_adjustment_manager.json_turns_repository import JsonTurnsRepository
+from ...turns_adjustment_manager.motion_type_setter import MotionTypeSetter
 from ...turns_adjustment_manager.turns_adjustment_manager import (
     TurnsAdjustmentManager,
 )
@@ -12,12 +15,9 @@ from ...turns_adjustment_manager.turns_value import TurnsValue
 from ...turns_box.turns_widget.turns_display_frame.turns_display_frame import (
     TurnsDisplayFrame,
 )
-
-from .turns_text_label import TurnsTextLabel
-from ...turns_adjustment_manager.motion_type_setter import MotionTypeSetter
 from .direct_set_dialog.direct_set_turns_dialog import DirectSetTurnsDialog
 from .motion_type_label import MotionTypeLabel
-from legacy_settings_manager.global_settings.app_context import AppContext
+from .turns_text_label import TurnsTextLabel
 
 if TYPE_CHECKING:
     from ..turns_box import TurnsBox

@@ -5,23 +5,23 @@ This module processes images that are dropped onto the application,
 providing various options for what to do with them.
 """
 
-import os
-import shutil
-import logging
-from typing import TYPE_CHECKING, List, Dict
-from pathlib import Path
 from datetime import datetime
+import logging
+import os
+from pathlib import Path
+import shutil
+from typing import TYPE_CHECKING, Dict, List
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QComboBox,
-)
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+)
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext

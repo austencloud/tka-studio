@@ -1,7 +1,8 @@
 import json
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QToolTip, QApplication
-from PyQt6.QtGui import QCursor, QClipboard
+
+from PyQt6.QtGui import QClipboard, QCursor
+from PyQt6.QtWidgets import QApplication, QToolTip
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
@@ -28,7 +29,7 @@ class dictCopier:
                     QCursor.pos(), "Pictograph dictionary copied to clipboard.", None
                 )
 
-            except Exception as e:
+            except Exception:
                 QToolTip.showText(QCursor.pos(), "Failed to copy dictionary.", None)
         else:
             QToolTip.showText(QCursor.pos(), "No dictionary to copy.", None)

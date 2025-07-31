@@ -6,7 +6,7 @@ Handles ONLY UI creation, layout, and styling.
 
 RESPONSIBILITIES:
 - UI widget creation and layout via ConstructTabLayoutManager
-- Styling and visual appearance  
+- Styling and visual appearance
 - User interaction handling (clicks, etc.)
 - Qt-specific UI behavior
 
@@ -16,17 +16,19 @@ DOES NOT HANDLE:
 - State management (that's the controller)
 """
 
-from typing import Optional, Callable
+from typing import Callable, Optional
+
 from PyQt6.QtWidgets import QWidget
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
+
 from .layout_manager import ConstructTabLayoutManager
 
 
 class ConstructTabView(QWidget):
     """
     FOCUSED view for construct tab UI.
-    
+
     Extracted from ConstructTab god object to separate UI concerns.
     Handles only UI creation and layout via ConstructTabLayoutManager.
     """
@@ -36,13 +38,15 @@ class ConstructTabView(QWidget):
         self._parent_widget = parent_widget
         self._layout_manager: Optional[ConstructTabLayoutManager] = None
 
-    def setup_ui(self, 
-                 container: DIContainer, 
-                 progress_callback: Optional[Callable] = None,
-                 option_picker_ready_callback: Optional[Callable] = None) -> None:
+    def setup_ui(
+        self,
+        container: DIContainer,
+        progress_callback: Optional[Callable] = None,
+        option_picker_ready_callback: Optional[Callable] = None,
+    ) -> None:
         """
         Setup the UI using the ConstructTabLayoutManager.
-        
+
         This integrates with the existing layout system.
         """
         try:
@@ -50,20 +54,22 @@ class ConstructTabView(QWidget):
             self._layout_manager = ConstructTabLayoutManager(
                 container=container,
                 progress_callback=progress_callback,
-                option_picker_ready_callback=option_picker_ready_callback
+                option_picker_ready_callback=option_picker_ready_callback,
             )
-            
+
             # Let layout manager setup the UI on parent widget
             self._layout_manager.setup_ui(self._parent_widget)
-            
+
             print("✅ ConstructTabView UI setup completed")
-            
+
         except Exception as e:
             print(f"❌ Failed to setup ConstructTabView UI: {e}")
 
     def force_picker_update(self) -> None:
         """Force picker update - delegate to layout manager."""
-        if self._layout_manager and hasattr(self._layout_manager, 'force_picker_update'):
+        if self._layout_manager and hasattr(
+            self._layout_manager, "force_picker_update"
+        ):
             self._layout_manager.force_picker_update()
 
     def get_workbench(self):

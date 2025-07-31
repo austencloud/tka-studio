@@ -8,12 +8,15 @@ while using the framework-agnostic core service internally.
 import logging
 from typing import Optional
 
-from desktop.modern.domain.models import MotionData, PictographData
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
 # Import Qt render engine from existing adapter
-from desktop.modern.application.adapters.qt_pictograph_adapter import QtRenderEngine, QtTypeConverter
+from desktop.modern.application.adapters.qt_pictograph_adapter import (
+    QtRenderEngine,
+    QtTypeConverter,
+)
+from desktop.modern.domain.models import MotionData, PictographData
 from shared.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )

@@ -15,4 +15,3 @@ class StyleProvider(ABC):
         self, variant: StyleVariant = StyleVariant.DEFAULT, **kwargs
     ) -> str:
         """Generate CSS style string for the component."""
-        pass

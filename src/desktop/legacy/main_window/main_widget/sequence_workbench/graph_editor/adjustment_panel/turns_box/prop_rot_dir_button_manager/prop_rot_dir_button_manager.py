@@ -1,19 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication
-from data.constants import (
-    END_ORI,
-    LETTER,
-    MOTION_TYPE,
-    NO_ROT,
-    PROP_ROT_DIR,
-    TURNS,
-    CLOCKWISE,
-)
+
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.turns_value import (
     TurnsValue,
 )
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_btn_state import (
     PropRotationState,
 )
@@ -21,6 +11,18 @@ from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.tu
     PropRotDirLogicHandler,
 )
 from objects.motion.motion import Motion
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
+from data.constants import (
+    CLOCKWISE,
+    END_ORI,
+    LETTER,
+    MOTION_TYPE,
+    NO_ROT,
+    PROP_ROT_DIR,
+    TURNS,
+)
 
 if TYPE_CHECKING:
     from ..turns_box import TurnsBox
@@ -126,9 +128,7 @@ class PropRotDirButtonManager:
         self.json_manager = (
             self.turns_box.graph_editor.sequence_workbench.main_widget.json_manager
         )
-        self.beat_frame = (
-            self.turns_box.graph_editor.sequence_workbench.main_widget.sequence_workbench.beat_frame
-        )
+        self.beat_frame = self.turns_box.graph_editor.sequence_workbench.main_widget.sequence_workbench.beat_frame
         if new_letter:
             pictograph.state.pictograph_data[LETTER] = new_letter.value
             pictograph.state.letter = new_letter

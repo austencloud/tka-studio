@@ -128,7 +128,6 @@ class BasePictographView(QGraphicsView):
         """Apply view-specific scaling adjustments. Override in subclasses."""
         # Base implementation applies no additional scaling
         # Subclasses can override for specific scaling behavior
-        pass
 
     def _apply_unified_scaling(self, margin_factor: float = 0.95):
         """

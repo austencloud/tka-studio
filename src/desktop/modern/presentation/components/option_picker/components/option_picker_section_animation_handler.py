@@ -13,6 +13,9 @@ Extracted from OptionPickerSection to follow Single Responsibility Principle.
 import asyncio
 from typing import Callable, List, Optional
 
+from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
+from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
+
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
     EasingType,
@@ -22,15 +25,15 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
-from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
-from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 
 class OptionPickerSectionAnimationHandler:
     """
     Handles animation logic for OptionPickerSection.
-    
+
     Responsibilities:
     - Qt-based fade in/out animations
     - Async animation orchestrator integration
@@ -48,7 +51,7 @@ class OptionPickerSectionAnimationHandler:
         self._parent_widget = parent_widget
         self._letter_type = letter_type
         self._animation_orchestrator = animation_orchestrator
-        
+
         # Animation state
         self._current_fade_animation: Optional[QParallelAnimationGroup] = None
         self._is_animating = False
@@ -61,24 +64,26 @@ class OptionPickerSectionAnimationHandler:
     ) -> bool:
         """
         Animate content update with fade out -> update -> fade in.
-        
+
         Args:
             existing_frames: Current frames to fade out
             update_callback: Function to call after fade out (updates content)
             fade_in_callback: Function to call after content update (fades in new content)
-            
+
         Returns:
             True if animation started successfully, False if fallback needed
         """
         if not self._animation_orchestrator or not existing_frames:
             return False
-            
+
         try:
             return self._start_qt_fade_animation(
                 existing_frames, update_callback, fade_in_callback
             )
         except Exception as e:
-            print(f"❌ [ANIMATION] Qt fade animation failed for {self._letter_type}: {e}")
+            print(
+                f"❌ [ANIMATION] Qt fade animation failed for {self._letter_type}: {e}"
+            )
             return False
 
     def _start_qt_fade_animation(
@@ -108,10 +113,10 @@ class OptionPickerSectionAnimationHandler:
         # Store reference to prevent garbage collection
         self._current_fade_animation = fade_out_group
         self._is_animating = True
-        
+
         fade_out_group.finished.connect(on_fade_out_complete)
         fade_out_group.start()
-        
+
         return True
 
     def _setup_frame_for_fade_out(
@@ -132,7 +137,9 @@ class OptionPickerSectionAnimationHandler:
             # Validate graphics effect is properly set
             graphics_effect = frame.graphicsEffect()
             if not graphics_effect:
-                print(f"⚠️ [FADE] No graphics effect for fade-out frame in {self._letter_type}")
+                print(
+                    f"⚠️ [FADE] No graphics effect for fade-out frame in {self._letter_type}"
+                )
                 return False
 
             # Create fade out animation
@@ -141,18 +148,20 @@ class OptionPickerSectionAnimationHandler:
             animation.setStartValue(1.0)
             animation.setEndValue(0.0)
             fade_out_group.addAnimation(animation)
-            
+
             return True
 
         except Exception as e:
-            print(f"⚠️ [FADE] Skipping invalid fade-out frame in {self._letter_type}: {e}")
+            print(
+                f"⚠️ [FADE] Skipping invalid fade-out frame in {self._letter_type}: {e}"
+            )
             return False
 
     def fade_in_frames(self, frames: List[OptionPictograph]) -> None:
         """Fade in newly loaded frames."""
         if not frames:
             return
-            
+
         try:
             fade_in_group = QParallelAnimationGroup(self._parent_widget)
             valid_animations = 0
@@ -196,7 +205,7 @@ class OptionPickerSectionAnimationHandler:
             animation.setStartValue(0.0)
             animation.setEndValue(1.0)
             fade_in_group.addAnimation(animation)
-            
+
             return True
 
         except Exception as e:
@@ -212,14 +221,12 @@ class OptionPickerSectionAnimationHandler:
     ) -> None:
         """
         Animate using async animation orchestrator.
-        
+
         This method provides async animation support for advanced scenarios.
         """
         try:
             # Animation config matching legacy timing (200ms)
-            config = AnimationConfig(
-                duration=0.2, easing=EasingType.EASE_IN_OUT
-            )
+            config = AnimationConfig(duration=0.2, easing=EasingType.EASE_IN_OUT)
 
             # Fade out existing frames
             if existing_frames:
@@ -254,7 +261,9 @@ class OptionPickerSectionAnimationHandler:
                     await asyncio.gather(*fade_in_tasks)
 
         except Exception as e:
-            print(f"❌ [ANIMATION] Error in async fade transition for {self._letter_type}: {e}")
+            print(
+                f"❌ [ANIMATION] Error in async fade transition for {self._letter_type}: {e}"
+            )
             # Fallback to direct update
             update_callback(pictographs_for_section)
 

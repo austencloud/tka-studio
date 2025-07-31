@@ -6,11 +6,17 @@ It generates image export commands and data that can be executed
 by any image processing framework.
 """
 
-import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+import logging
+from typing import Any, Dict, List, Tuple
 
-from shared.application.services.core.types import Color, ImageData, ImageFormat, Point, Size
+from shared.application.services.core.types import (
+    Color,
+    ImageData,
+    ImageFormat,
+    Point,
+    Size,
+)
 
 logger = logging.getLogger(__name__)
 

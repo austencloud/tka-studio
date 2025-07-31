@@ -10,6 +10,6 @@ from .prop_overlap_detector import IPropOverlapDetector, PropOverlapDetector
 __all__ = [
     "IBetaPositioningDetector",
     "BetaPositioningDetector",
-    "IPropOverlapDetector", 
+    "IPropOverlapDetector",
     "PropOverlapDetector",
 ]

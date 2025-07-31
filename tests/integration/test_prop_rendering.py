@@ -103,7 +103,7 @@ def test_prop_rendering():
 
         # Test pictograph data conversion
         converted_data = adapter._convert_pictograph_data_to_dict(pictograph_data)
-        print(f"✅ Converted pictograph data:")
+        print("✅ Converted pictograph data:")
         print(f"   Grid mode: {converted_data['grid_mode']}")
         print(f"   Motions: {len(converted_data['motions'])}")
         print(f"   Props: {len(converted_data['props'])}")

@@ -1,4 +1,7 @@
 from typing import TYPE_CHECKING
+
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
 from data.constants import (
     BEAT,
     BLUE_ATTRS,
@@ -17,8 +20,6 @@ from data.constants import (
     TIMING,
     TURNS,
 )
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.json_manager.json_manager import JsonManager

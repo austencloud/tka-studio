@@ -1,12 +1,12 @@
 # act_tab_beat.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsView, QGraphicsTextItem, QMenu
-from PyQt6.QtCore import QPointF, Qt
-from PyQt6.QtGui import QFont, QAction
 
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.act_beat import (
     ActBeat,
 )
+from PyQt6.QtCore import QPointF, Qt
+from PyQt6.QtGui import QAction, QFont
+from PyQt6.QtWidgets import QGraphicsTextItem, QGraphicsView, QMenu
 
 if TYPE_CHECKING:
     from main_window.main_widget.write_tab.act_sheet.act_splitter.act_beat_scroll.act_beat_frame.act_beat_frame import (
@@ -14,9 +14,6 @@ if TYPE_CHECKING:
     )
 
 # act_tab_beat.py
-from PyQt6.QtWidgets import QGraphicsView, QGraphicsTextItem
-from PyQt6.QtCore import Qt, QPointF
-from PyQt6.QtGui import QFont
 
 
 class ActBeatView(QGraphicsView):

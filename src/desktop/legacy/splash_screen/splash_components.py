@@ -1,10 +1,11 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFont, QPixmap
-from PyQt6.QtCore import Qt
+
 from main_window.main_widget.rainbow_progress_bar import (
     RainbowProgressBar,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtWidgets import QLabel
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:

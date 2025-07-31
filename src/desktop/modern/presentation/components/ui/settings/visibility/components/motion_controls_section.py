@@ -8,11 +8,16 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 import logging
 from typing import Dict
 
-from desktop.modern.core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
-from desktop.modern.presentation.components.ui.settings.components.motion_toggle import MotionToggle
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
+
+from desktop.modern.core.interfaces.tab_settings_interfaces import (
+    IVisibilitySettingsManager,
+)
+from desktop.modern.presentation.components.ui.settings.components.motion_toggle import (
+    MotionToggle,
+)
 
 logger = logging.getLogger(__name__)
 

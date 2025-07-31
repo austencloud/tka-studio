@@ -1,5 +1,4 @@
-# This file now contains the configuration for Pylint, Pyright, Black, and isort.
-# You can safely delete the .pylintrc file after using this.
+# This file now contains the configuration for Ruff (replaces Pylint, Black, and isort)
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
@@ -30,7 +29,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["black>=23.0.0", "isort>=5.12.0", "pylint>=2.17.0", "mypy>=1.5.0"]
+# Replaced old tools with Ruff
+dev = ["ruff>=0.1.0", "mypy>=1.5.0"]
 test-automation = [
     "pre-commit>=3.0.0",
     "watchdog>=3.0.0",
@@ -68,246 +68,146 @@ markers = [
 ]
 
 # ===================================================================
-# LINTER AND FORMATTER CONFIGURATION
+# RUFF CONFIGURATION (REPLACES BLACK + ISORT + PYLINT)
 # ===================================================================
 
-[tool.black]
+[tool.ruff]
+# Same line length as your previous Black config
 line-length = 88
-target-version = ['py39']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.venv
-  | build
-  | dist
-)/
-'''
+target-version = "py39"
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-
-# --- CONSOLIDATED PYLINT CONFIGURATION ---
-[tool.pylint.master]
-# Add the project root and necessary directories to Python path
-init-hook = '''
-import sys; import os;
-project_root = os.path.dirname(os.path.abspath(__file__ if "__file__" in globals() else os.getcwd()));
-paths = [".", "src", "src/shared", "src/infrastructure", "src/desktop", "src/desktop/modern", "src/desktop/legacy", "src/web", "launcher", "packages", "packages/shared-types/python", "packages/constants/python", "data", "assets", "schemas"];
-[sys.path.insert(0, os.path.join(project_root, path)) for path in paths if os.path.exists(os.path.join(project_root, path)) and os.path.join(project_root, path) not in sys.path]
-'''
-# PyQt6 support
-extension-pkg-allow-list = ["PyQt6"]
-# Ignore generated files and cache directories
-ignore = [
+# Include and exclude patterns
+include = ["*.py", "*.pyi"]
+extend-exclude = [
+    "build",
+    "dist",
+    ".venv",
+    "venv",
+    "env",
     "__pycache__",
-    ".git",
-    "node_modules",
     ".pytest_cache",
-    ".vscode",
-    "build",
-    "dist",
+    ".mypy_cache",
+    "node_modules",
+    ".git",
 ]
 
-[tool.pylint.basic]
-# Good variable names
-good-names = [
-    "i",
-    "j",
-    "k",
-    "ex",
-    "Run",
-    "_",
-    "x",
-    "y",
-    "w",
-    "h",
-    "r",
-    "g",
-    "b",
-    "a",
-    "id",
-    "ok",
-    "ui",
-    "db",
-    "qt",
-    "app",
-    "e",
+[tool.ruff.lint]
+# Enable these rule sets (replaces most of your Pylint config)
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort (import sorting)
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "PIE",    # flake8-pie
+    "SIM",    # flake8-simplify
+    "RET",    # flake8-return
+    "PTH",    # flake8-use-pathlib
 ]
 
-[tool.pylint.typecheck]
-# Tell Pylint about PyQt6 generated members
-generated-members = [
-    "PyQt6.*",
-    "PyQt6.QtWidgets.*",
-    "PyQt6.QtCore.*",
-    "PyQt6.QtGui.*",
-]
-# Ignore missing members in certain modules
-ignored-modules = ["PyQt6"]
-
-[tool.pylint.messages_control]
-# Disable all the warnings from your .pylintrc, plus the new ones
-disable = [
-    "C0330", # Wrong hanging indentation
-    "C0326", # Bad whitespace
-    "C0303", # Trailing whitespace
-    "C0301", # Line too long
-    "C0305", # Trailing newlines
-    "C0325", # superfluous parentheses
-    "C0411", # Wrong import order
-    "C0412", # Ungrouped imports
-    "C0415", # Import outside toplevel
-    "C2401", # Non-ASCII name (for Greek letters)
-    "E0213", # No self argument
-    "W0107", # Unnecessary pass statement
-    "W0611", # Unused import
-    "W0201", # Attribute defined outside __init__
-    "W0613", # Unused argument (common in Qt signal handlers)
-    "W0621", # Redefined outer name
-    "W1203", # logging-fstring-interpolation
-    "W0718", # broad-exception-caught
-    "R0903", # Too few public methods (common in Qt widgets)
-    "R0913", # Too many arguments (common in Qt constructors)
-    "R0914", # Too many locals
-    "R0912", # Too many branches
-    "R0915", # Too many statements
-    "R0201", # Method could be a function (common in Qt event handlers)
-    "C0103", # Invalid name (Qt uses camelCase method names)
-    "C0116", # Missing function or method docstring
-    "C0115", # Missing class docstring
-    "C0114", # Missing module docstring
-    "C0413", # Wrong import position
-    "E0401", # Import error
-    "W1309", # f-string without interpolation
-    "C0121", # singleton-comparison (like == False)
-    "W0212", # protected-access
-    "W0401", # wildcard import
-
+# Disable rules that were causing issues in your old Pylint config
+ignore = [
+    "E501",   # Line too long (handled by formatter)
+    "E731",   # Do not assign a lambda expression
+    "N802",   # Function name should be lowercase (Qt uses camelCase)
+    "N803",   # Argument name should be lowercase (Qt uses camelCase)
+    "N806",   # Variable in function should be lowercase (Qt uses camelCase)
+    "N812",   # Lowercase imported as non-lowercase (PyQt6 modules)
+    "N815",   # mixedCase variable in class scope (Qt widgets)
+    "N816",   # mixedCase variable in global scope
+    "B008",   # Do not perform function calls in argument defaults
+    "C901",   # Too complex (we handle complexity differently)
+    "RET504", # Unnecessary variable assignment before return
+    "RET505", # Unnecessary else after return
+    "RET506", # Unnecessary elif after raise
+    "RET507", # Unnecessary elif after continue
+    "RET508", # Unnecessary elif after break
+    "SIM102", # Use a single if-statement instead of nested if-statements
+    "SIM108", # Use ternary operator instead of if-else
+    "SIM117", # Use a single with statement for multiple contexts
+    "PTH100", # os.path.abspath should be replaced by Path.resolve()
+    "PTH103", # os.makedirs should be replaced by Path.mkdir
+    "PTH107", # os.remove should be replaced by Path.unlink
+    "PTH110", # os.path.exists should be replaced by Path.exists
+    "PTH111", # os.path.expanduser should be replaced by Path.expanduser
+    "PTH112", # os.path.isdir should be replaced by Path.is_dir
+    "PTH113", # os.path.isfile should be replaced by Path.is_file
+    "PTH118", # os.path.join should be replaced by Path
+    "PTH119", # os.path.basename should be replaced by Path.name
+    "PTH120", # os.path.dirname should be replaced by Path.parent
+    "PTH123", # open() should be replaced by Path.open()
 ]
 
-[tool.pylint.format]
-# Line length
-max-line-length = 120
+# Allow specific variable names (from your old Pylint config)
+[tool.ruff.lint.per-file-ignores]
+# Test files can have longer lines and more flexibility
+"test_*.py" = ["E501", "N801", "N802", "N803"]
+"*_test.py" = ["E501", "N801", "N802", "N803"]
+"tests/*" = ["E501", "N801", "N802", "N803"]
 
-[tool.pylint.design]
-# Object limits
-max-args = 10
-max-locals = 20
-max-returns = 6
-max-branches = 15
-max-statements = 60
-max-parents = 7
-max-attributes = 15
-max-public-methods = 25
-max-bool-expr = 5
+# Allow unused imports in __init__.py files
+"__init__.py" = ["F401"]
 
-[tool.pylint.imports]
-# Allow relative imports
-allow-wildcard-with-all = false
+[tool.ruff.lint.isort]
+# Configure import sorting (replaces your old isort config)
+case-sensitive = false
+force-single-line = false
+force-sort-within-sections = true
+known-first-party = ["tka"]
+split-on-trailing-comma = true
 
-# --- PYRIGHT / PYLANCE CONFIGURATION ---
-[tool.pyright]
-# Include all source directories
-include = [
-    "src/shared",
-    "src/infrastructure",
-    "src/desktop/modern",
-    "src/desktop/legacy",
-    "src/web",
-    "launcher",
-    "packages",
-    "tests",
-]
+[tool.ruff.lint.mccabe]
+# Complexity threshold (more lenient than default)
+max-complexity = 15
 
-# Exclude build artifacts and cache directories
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 120
+
+[tool.ruff.format]
+# Formatting options (replaces Black)
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+# ===================================================================
+# MYPY CONFIGURATION (KEEPING MINIMAL TYPE CHECKING)
+# ===================================================================
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_redundant_casts = false
+warn_unused_ignores = false
+warn_no_return = false
+warn_unreachable = false
+ignore_missing_imports = true
+strict = false
+
+# Exclude patterns
 exclude = [
-    "**/node_modules",
-    "**/__pycache__",
-    "**/.*",
     "build",
     "dist",
-    "**/.pytest_cache",
-    "**/venv",
-    "**/env",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    "node_modules",
 ]
-
-# Define extra paths for import resolution
-extraPaths = [
-    ".",
-    "src",
-    "src/shared",
-    "src/infrastructure",
-    "src/desktop",
-    "src/desktop/modern",
-    "src/desktop/legacy",
-    "src/web",
-    "launcher",
-    "packages",
-    "packages/shared-types/python",
-    "packages/constants/python",
-    "data",
-    "assets",
-    "schemas",
-    "tests",
-]
-
-# TURN OFF ALL TYPE CHECKING AND REPORTS
-pythonVersion = "3.12"
-typeCheckingMode = "off" # Use "off" to be even less strict than "basic"
-
-# DISABLE ALL REPORTS - NO MORE ERRORS
-reportMissingImports = "none"
-reportMissingTypeStubs = "none"
-reportUnusedImport = "none"
-reportDuplicateImport = "none"
-reportReturnType = "none"
-reportArgumentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportOptionalMemberAccess = "none"
-reportOptionalSubscript = "none"
-reportPrivateImportUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownVariableType = "none"
-reportIncompatibleMethodOverride = "none"
-reportIncompatibleVariableOverride = "none"
-reportIncompleteStub = "none"
-reportInconsistentConstructor = "none"
-reportMissingParameterType = "none"
-reportMissingTypeArgument = "none"
-reportPrivateUsage = "none"
-reportTypeCommentUsage = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnnecessaryCast = "none"
-reportUnnecessaryComparison = "none"
-reportUnnecessaryContains = "none"
-reportUnnecessaryIsInstance = "none"
-reportUnusedClass = "none"
-reportUnusedFunction = "none"
-reportUnusedVariable = "none"
-reportIndexIssue = "none"
-reportOperatorIssue = "none"
-reportAssignmentType = "none"
-reportInvalidTypeForm = "none"
-reportInvalidTypeArguments = "none"
-reportSelfClsParameterName = "none"
-# This one is not a specific report, but turning typeCheckingMode to "off" is the strongest way to disable it.
-reportCallIssue = "none"
 
 # --- SETUPTOOLS CONFIGURATION ---
 [tool.setuptools.packages.find]
-# Include all packages from the flattened source structure
 where = ["src"]
 include = ["*"]
 exclude = ["tests*", "*tests*", "test_*"]
 
 [tool.setuptools.package-dir]
-# Map the root package to the src directory
 "" = "src"

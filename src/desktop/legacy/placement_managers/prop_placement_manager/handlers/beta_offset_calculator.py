@@ -1,18 +1,19 @@
+from typing import TYPE_CHECKING
+
 from enums.prop_type import PropType
+from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import QPointF
+
 from data.constants import (
+    DOWN,
+    DOWNLEFT,
+    DOWNRIGHT,
     LEFT,
     RIGHT,
     UP,
-    DOWN,
-    DOWNRIGHT,
     UPLEFT,
-    DOWNLEFT,
     UPRIGHT,
 )
-from PyQt6.QtCore import QPointF
-from typing import TYPE_CHECKING
-
-from legacy_settings_manager.global_settings.app_context import AppContext
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.prop_placement_override_manager import (

@@ -13,10 +13,11 @@ Replaces object management logic previously embedded in OptionFactory.
 import logging
 from typing import List, Optional
 
+from PyQt6.QtWidgets import QWidget
+
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
-from PyQt6.QtWidgets import QWidget
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class FramePoolService:
             max_frames: Maximum number of frames in pool (default 36 for 6 sections × 6 frames)
         """
         self._max_frames = max_frames
-        self._pool: List["OptionPictograph"] = []
+        self._pool: List[OptionPictograph] = []
         self._parent_widget: Optional[QWidget] = None
         self._initialized = False
 

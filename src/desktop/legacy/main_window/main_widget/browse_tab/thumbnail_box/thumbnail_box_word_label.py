@@ -1,17 +1,16 @@
-from PyQt6.QtCore import Qt, QEvent
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFont
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QEvent, Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel
 from utils.word_simplifier import WordSimplifier
 
-
 if TYPE_CHECKING:
-    from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_header import (
-        ThumbnailBoxHeader,
-    )
     from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
+    )
+    from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_header import (
+        ThumbnailBoxHeader,
     )
 
 WORD_LENGTH = 8

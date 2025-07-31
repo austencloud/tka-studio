@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import Qt
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.browse_tab import BrowseTab

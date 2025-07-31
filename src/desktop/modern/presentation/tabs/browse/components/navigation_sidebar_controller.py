@@ -6,13 +6,15 @@ Manages section navigation, scrolling, and progressive updates.
 """
 
 import logging
-from typing import Dict, List, Optional, Callable
+from typing import Callable, Dict, List, Optional
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QScrollArea, QWidget
+from PyQt6.QtWidgets import QScrollArea
 
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.modern.presentation.tabs.browse.components.navigation_sidebar import NavigationSidebar
+from desktop.modern.presentation.tabs.browse.components.navigation_sidebar import (
+    NavigationSidebar,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,7 @@ logger = logging.getLogger(__name__)
 class NavigationSidebarController:
     """
     Controller for managing navigation sidebar operations.
-    
+
     Handles:
     - Section navigation and scrolling
     - Progressive section updates
@@ -35,26 +37,26 @@ class NavigationSidebarController:
     ):
         """
         Initialize the navigation sidebar controller.
-        
+
         Args:
             navigation_sidebar: The navigation sidebar widget
             scroll_area: The main scroll area for content
         """
         self.navigation_sidebar = navigation_sidebar
         self.scroll_area = scroll_area
-        
+
         # Section tracking
         self.current_sections: Dict[str, int] = {}  # section_name -> sequence_count
         self.section_positions: Dict[str, int] = {}  # section_name -> scroll_position
-        
+
         # Progressive update timer
         self.update_timer = QTimer()
         self.update_timer.setSingleShot(True)
         self.update_timer.timeout.connect(self._perform_navigation_update)
-        
+
         # Callbacks
         self.section_selected_callback: Optional[Callable[[str], None]] = None
-        
+
         self._connect_signals()
 
     def _connect_signals(self) -> None:
@@ -66,25 +68,27 @@ class NavigationSidebarController:
         """Set callback for section selection events."""
         self.section_selected_callback = callback
 
-    def update_navigation_sections(self, sequences: List[SequenceData], sort_method: str) -> None:
+    def update_navigation_sections(
+        self, sequences: List[SequenceData], sort_method: str
+    ) -> None:
         """
         Update navigation sections based on loaded sequences.
-        
+
         Args:
             sequences: List of loaded sequences
             sort_method: Current sort method for grouping
         """
         logger.info(f"🧭 [NAVIGATION] Updating sections for {len(sequences)} sequences")
-        
+
         # Group sequences by section
         sections = self._group_sequences_by_section(sequences, sort_method)
-        
+
         # Update section counts
         self.current_sections = {
             section_name: len(section_sequences)
             for section_name, section_sequences in sections.items()
         }
-        
+
         # Update navigation sidebar
         if self.navigation_sidebar:
             self.navigation_sidebar.update_sections(self.current_sections)
@@ -102,12 +106,12 @@ class NavigationSidebarController:
     def scroll_to_section(self, section_name: str) -> None:
         """
         Scroll to a specific section.
-        
+
         Args:
             section_name: Name of the section to scroll to
         """
         logger.info(f"📍 [NAVIGATION] Scrolling to section: {section_name}")
-        
+
         if not self.scroll_area:
             logger.warning("⚠️ [NAVIGATION] No scroll area available for scrolling")
             return
@@ -120,12 +124,14 @@ class NavigationSidebarController:
                 vertical_scrollbar.setValue(position)
                 logger.info(f"📍 [NAVIGATION] Scrolled to position {position}")
         else:
-            logger.warning(f"⚠️ [NAVIGATION] Section '{section_name}' position not found")
+            logger.warning(
+                f"⚠️ [NAVIGATION] Section '{section_name}' position not found"
+            )
 
     def update_section_position(self, section_name: str, position: int) -> None:
         """
         Update the scroll position for a section.
-        
+
         Args:
             section_name: Name of the section
             position: Scroll position for the section
@@ -135,7 +141,7 @@ class NavigationSidebarController:
     def add_section_progressively(self, section_name: str, sequence_count: int) -> None:
         """
         Add or update a section during progressive loading.
-        
+
         Args:
             section_name: Name of the section
             sequence_count: Number of sequences in the section
@@ -144,56 +150,54 @@ class NavigationSidebarController:
             self.current_sections[section_name] += sequence_count
         else:
             self.current_sections[section_name] = sequence_count
-        
+
         # Schedule progressive update
         self.update_navigation_progressively()
 
     def _on_section_selected(self, section_name: str) -> None:
         """Handle section selection from navigation sidebar."""
         logger.info(f"🎯 [NAVIGATION] Section selected: {section_name}")
-        
+
         # Scroll to section
         self.scroll_to_section(section_name)
-        
+
         # Call callback if set
         if self.section_selected_callback:
             self.section_selected_callback(section_name)
 
     def _group_sequences_by_section(
-        self, 
-        sequences: List[SequenceData], 
-        sort_method: str
+        self, sequences: List[SequenceData], sort_method: str
     ) -> Dict[str, List[SequenceData]]:
         """
         Group sequences by section based on sort method.
-        
+
         Args:
             sequences: List of sequences to group
             sort_method: Method for grouping
-            
+
         Returns:
             Dictionary mapping section names to sequence lists
         """
         sections: Dict[str, List[SequenceData]] = {}
-        
+
         for sequence in sequences:
             section_name = self._get_section_name(sequence, sort_method)
-            
+
             if section_name not in sections:
                 sections[section_name] = []
-            
+
             sections[section_name].append(sequence)
-        
+
         return sections
 
     def _get_section_name(self, sequence: SequenceData, sort_method: str) -> str:
         """
         Get the section name for a sequence based on sort method.
-        
+
         Args:
             sequence: The sequence to categorize
             sort_method: The sorting method
-            
+
         Returns:
             Section name for the sequence
         """
@@ -212,10 +216,10 @@ class NavigationSidebarController:
     def clear_sections(self) -> None:
         """Clear all sections from navigation."""
         logger.info("🧹 [NAVIGATION] Clearing all sections")
-        
+
         self.current_sections.clear()
         self.section_positions.clear()
-        
+
         if self.navigation_sidebar:
             self.navigation_sidebar.clear_sections()
 
@@ -230,7 +234,7 @@ class NavigationSidebarController:
     ) -> None:
         """
         Update widget references.
-        
+
         Args:
             navigation_sidebar: The navigation sidebar widget
             scroll_area: The main scroll area for content
@@ -239,9 +243,9 @@ class NavigationSidebarController:
             # Disconnect old signals
             if self.navigation_sidebar:
                 self.navigation_sidebar.section_selected.disconnect()
-            
+
             self.navigation_sidebar = navigation_sidebar
             self._connect_signals()
-        
+
         if scroll_area is not None:
             self.scroll_area = scroll_area

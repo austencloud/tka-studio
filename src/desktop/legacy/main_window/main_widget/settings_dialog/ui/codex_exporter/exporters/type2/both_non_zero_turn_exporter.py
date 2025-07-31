@@ -5,7 +5,7 @@ This module handles the export of Type 2 pictographs when both turn values are n
 """
 
 import os
-from typing import TYPE_CHECKING, List, Dict, Any
+from typing import TYPE_CHECKING, Any, Dict, List
 
 from ...turn_applier import TurnApplier
 from .base_exporter import Type2BaseExporter

@@ -8,21 +8,22 @@ Uses clean service injection and maintains visual parity with legacy implementat
 import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
-from PyQt6.QtCore import pyqtSignal, QTimer, Qt, QCoreApplication
+from PyQt6.QtCore import QCoreApplication, Qt, QTimer, pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
 
 from desktop.modern.core.interfaces.sequence_card_services import (
-    ISequenceCardDataService,
     ISequenceCardCacheService,
-    ISequenceCardLayoutService,
+    ISequenceCardDataService,
     ISequenceCardDisplayService,
     ISequenceCardExportService,
+    ISequenceCardLayoutService,
     ISequenceCardSettingsService,
 )
+
 from .components import (
+    SequenceCardContentComponent,
     SequenceCardHeaderComponent,
     SequenceCardNavigationComponent,
-    SequenceCardContentComponent,
 )
 
 logger = logging.getLogger(__name__)

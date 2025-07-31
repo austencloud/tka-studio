@@ -23,12 +23,14 @@ Architecture:
 import logging
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStackedWidget
+from PyQt6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
+
+from desktop.modern.domain.models import BeatData
 from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.turn_adjustment_controls import (
     TurnAdjustmentControls,
 )
+
 from .dual_orientation_picker import DualOrientationPicker
 
 logger = logging.getLogger(__name__)

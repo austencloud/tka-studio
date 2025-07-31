@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
     ArrowRotAngleOverrideKeyGenerator,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.arrow.arrow import Arrow
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .mirrored_entry_manager import MirroredEntryManager
@@ -93,7 +93,7 @@ class MirroredEntryRotAngleManager:
         return arrow.motion.state.motion_type in [STATIC, DASH]
 
     def _check_for_rotation_angle_override(self, turn_data: dict) -> Optional[int]:
-        for key in turn_data.keys():
+        for key in turn_data:
             if "rot_angle_override" in key:
                 return turn_data[key]
         return None

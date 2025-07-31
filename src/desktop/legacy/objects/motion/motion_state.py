@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from data.constants import PREFLOAT_MOTION_TYPE, PREFLOAT_PROP_ROT_DIR, PRO, ANTI, FLOAT
 from objects.motion.prefloat_state_updater import PrefloatStateUpdater
+
+from data.constants import ANTI, FLOAT, PREFLOAT_MOTION_TYPE, PREFLOAT_PROP_ROT_DIR, PRO
 
 
 @dataclass

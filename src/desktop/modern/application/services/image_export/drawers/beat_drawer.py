@@ -9,12 +9,18 @@ pictograph system while maintaining exact legacy positioning and layout logic.
 import logging
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from shared.application.services.data.pictograph_factory import PictographFactory
-from desktop.modern.core.interfaces.image_export_services import IBeatDrawer, ImageExportOptions
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.pictograph.pictograph_scene import PictographScene
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
+
+from desktop.modern.core.interfaces.image_export_services import (
+    IBeatDrawer,
+    ImageExportOptions,
+)
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.presentation.components.pictograph.pictograph_scene import (
+    PictographScene,
+)
+from shared.application.services.data.pictograph_factory import PictographFactory
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -291,7 +297,9 @@ class BeatDrawer(IBeatDrawer):
         try:
             # Ensure the global container is set so PictographScene can access services
             if self.container:
-                from desktop.modern.core.dependency_injection.di_container import set_container
+                from desktop.modern.core.dependency_injection.di_container import (
+                    set_container,
+                )
 
                 set_container(self.container)
 
@@ -403,7 +411,10 @@ class BeatDrawer(IBeatDrawer):
         # Use legacy font size calculation
         base_font = QFont("Arial", 12, QFont.Weight.Bold)
         font, _ = self.font_margin_helper.adjust_font_and_margin(
-            base_font, 1, 0, beat_scale  # Use 1 beat for overlay text
+            base_font,
+            1,
+            0,
+            beat_scale,  # Use 1 beat for overlay text
         )
 
         painter.setFont(font)

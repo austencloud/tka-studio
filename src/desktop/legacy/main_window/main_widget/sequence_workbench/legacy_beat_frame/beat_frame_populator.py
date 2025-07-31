@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
-from data.constants import LETTER, SEQUENCE_START_POSITION
+
 from legacy_settings_manager.global_settings.app_context import AppContext
 from utils.reversal_detector import ReversalDetector
 from utils.word_simplifier import WordSimplifier
+
+from data.constants import LETTER, SEQUENCE_START_POSITION
 
 if TYPE_CHECKING:
     from .legacy_beat_frame import LegacyBeatFrame

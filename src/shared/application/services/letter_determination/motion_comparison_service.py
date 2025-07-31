@@ -76,7 +76,6 @@ class MotionComparisonService(IMotionComparisonService):
             motion1.start_position == motion2.start_position
             and motion1.end_position == motion2.end_position
         ):
-
             # Motion type matching (legacy: motion type comparison)
             if (
                 blue_motion_type2 == blue_motion_type1

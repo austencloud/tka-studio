@@ -1,6 +1,6 @@
-from styles.styled_button import StyledButton
-from PyQt6.QtGui import QFontMetrics
 from PyQt6.QtCore import QEvent
+from PyQt6.QtGui import QFontMetrics
+from styles.styled_button import StyledButton
 
 
 class SidebarButton(StyledButton):

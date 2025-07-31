@@ -1,10 +1,11 @@
 import logging
-from typing import TYPE_CHECKING, Dict, Any, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from main_window.main_widget.json_manager.json_act_saver import JsonActSaver
 from main_window.main_widget.json_manager.json_sequence_updater.json_sequence_updater import (
     JsonSequenceUpdater,
 )
+
 from .json_ori_calculator import JsonOriCalculator
 from .json_ori_validation_engine import JsonOriValidationEngine
 from .json_start_position_handler import JsonStartPositionHandler

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QTimer
 
+from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
 from main_window.main_widget.browse_tab.browse_tab_filter_controller import (
     BrowseTabFilterController,
 )
@@ -9,17 +9,17 @@ from main_window.main_widget.browse_tab.browse_tab_persistence_manager import (
     BrowseTabPersistenceManager,
 )
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
-from interfaces.settings_manager_interface import ISettingsManager
-from interfaces.json_manager_interface import IJsonManager
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QWidget
 
-from .sequence_picker.sequence_picker import SequencePicker
 from .browse_tab_filter_manager import BrowseTabFilterManager
 from .browse_tab_getter import BrowseTabGetter
+from .browse_tab_selection_handler import BrowseTabSelectionHandler
+from .browse_tab_state import BrowseTabState
 from .browse_tab_ui_updater import BrowseTabUIUpdater
 from .deletion_handler.browse_tab_deletion_handler import BrowseTabDeletionHandler
-from .browse_tab_selection_handler import BrowseTabSelectionHandler
+from .sequence_picker.sequence_picker import SequencePicker
 from .sequence_viewer.sequence_viewer import SequenceViewer
-from .browse_tab_state import BrowseTabState
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
@@ -155,6 +155,7 @@ class BrowseTab(QWidget):
         Recursively activate all filter widgets to ensure event handling works.
         """
         import logging
+
         from PyQt6.QtWidgets import QWidget
 
         logger = logging.getLogger(__name__)

@@ -9,15 +9,15 @@ This package implements 2024-2025 microservices infrastructure patterns:
 - Distributed Observability
 """
 
-from .event_bus import ConstructTabEventBus, DomainEvent
-from .service_mesh import ComponentServiceMesh, ServiceProxy
 from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig
+from .event_bus import ConstructTabEventBus, DomainEvent
 from .health_monitor import HealthMonitor
 from .metrics_collector import MetricsCollector
+from .service_mesh import ComponentServiceMesh, ServiceProxy
 
 __all__ = [
     "ConstructTabEventBus",
-    "DomainEvent", 
+    "DomainEvent",
     "ComponentServiceMesh",
     "ServiceProxy",
     "CircuitBreaker",

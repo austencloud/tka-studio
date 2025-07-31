@@ -6,6 +6,7 @@ Tests graph editor interactions and provides clear guidance for AI agents.
 
 import time
 from typing import List
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
 
@@ -372,7 +373,7 @@ class GraphEditorTester:
         print(f"\n🔍 CONTROL GUIDANCE for {control_name}:")
         print(f"   📋 Description: {guidance.get('description', 'Unknown')}")
         print(f"   🎯 Expected: {guidance.get('expected_behavior', 'Unknown')}")
-        print(f"   🐛 Common Issues:")
+        print("   🐛 Common Issues:")
 
         for issue in guidance.get("common_issues", []):
             print(f"      • {issue}")
@@ -380,7 +381,7 @@ class GraphEditorTester:
 
     def test_all_graph_editor_interactions(self, controls: dict) -> AITestResult:
         """Test all graph editor interactions."""
-        print(f"🧪 Testing all graph editor interactions...")
+        print("🧪 Testing all graph editor interactions...")
 
         start_time = time.time()
         all_results = []
@@ -406,7 +407,7 @@ class GraphEditorTester:
         overall_success = successful_tests > 0  # At least some tests should pass
         execution_time = time.time() - start_time
 
-        print(f"\n📊 GRAPH EDITOR TESTING SUMMARY:")
+        print("\n📊 GRAPH EDITOR TESTING SUMMARY:")
         print(f"   ✅ Successful test suites: {successful_tests}/{len(all_results)}")
         print(
             f"   ❌ Failed test suites: {len(all_results) - successful_tests}/{len(all_results)}"

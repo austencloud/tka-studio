@@ -1,5 +1,5 @@
-from typing import Dict, List, Optional, Set, Tuple
 import os
+from typing import Dict, List, Optional, Set, Tuple
 
 
 class TurnConfiguration:

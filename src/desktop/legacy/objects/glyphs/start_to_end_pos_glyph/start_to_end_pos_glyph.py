@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsItemGroup
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtSvg import QSvgRenderer
 import os
+from typing import TYPE_CHECKING
 
 from enums.letter.letter import Letter
-
 from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from PyQt6.QtWidgets import QGraphicsItemGroup
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:

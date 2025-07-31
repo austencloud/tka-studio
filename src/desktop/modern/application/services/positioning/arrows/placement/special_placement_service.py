@@ -22,9 +22,10 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
+from PyQt6.QtCore import QPointF
+
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.pictograph_data import PictographData
-from PyQt6.QtCore import QPointF
 
 logger = logging.getLogger(__name__)
 
@@ -173,7 +174,7 @@ class SpecialPlacementService:
                     # Load all placement JSON files in this directory
                     for file_path in directory.glob("*_placements.json"):
                         try:
-                            with open(file_path, "r", encoding="utf-8") as f:
+                            with open(file_path, encoding="utf-8") as f:
                                 data = json.load(f)
                                 self.special_placements[mode][subfolder].update(data)
                         except Exception:
@@ -240,7 +241,6 @@ class SpecialPlacementService:
             red_motion = pictograph_data.motions.get("red")
 
             if blue_motion and red_motion:
-
                 blue_turns = getattr(blue_motion, "turns", 0)
                 red_turns = getattr(red_motion, "turns", 0)
 

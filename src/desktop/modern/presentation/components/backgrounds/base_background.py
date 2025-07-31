@@ -1,6 +1,7 @@
-from PyQt6.QtCore import QObject, pyqtSignal
 from abc import abstractmethod
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
     from PyQt6.QtGui import QPainter

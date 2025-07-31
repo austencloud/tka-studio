@@ -197,7 +197,7 @@ class OptionPickerScroll(QScrollArea):
             OptionPickerGroupWidget,
         )
 
-        self.sections: Dict[LetterType, "OptionPickerSection"] = {}
+        self.sections: Dict[LetterType, OptionPickerSection] = {}
         individual_sections = []
         grouped_sections = []
 
@@ -263,7 +263,6 @@ class OptionPickerScroll(QScrollArea):
         """Initialize widget pool - now uses lazy loading for better memory efficiency."""
         # OPTIMIZED: No longer pre-create widgets - they will be created on-demand
         # This reduces initial memory usage and widget count
-        pass
 
     def get_widget_from_pool(self, pool_id: int) -> Optional[OptionPictograph]:
         """Get Qt widget from pool by ID - creates on-demand if not exists."""

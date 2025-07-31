@@ -1,11 +1,12 @@
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
-from data.constants import DASH, STATIC
-from objects.arrow.arrow import Arrow
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
     ArrowRotAngleOverrideKeyGenerator,
 )
+from objects.arrow.arrow import Arrow
+
+from data.constants import DASH, STATIC
 
 logger = logging.getLogger(__name__)
 

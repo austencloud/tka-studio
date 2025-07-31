@@ -6,7 +6,7 @@ Interface definitions for UI-related services following TKA's clean architecture
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Callable
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -389,7 +389,7 @@ class IWindowStateManager(ABC):
 class IUILayoutProvider(ABC):
     """
     Interface for UI layout provider operations.
-    
+
     Provides basic UI layout information and component sizing.
     """
 

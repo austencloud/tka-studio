@@ -1,14 +1,14 @@
-from PyQt6.QtGui import QPalette, QColor, QCursor
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QCursor, QPalette
 from PyQt6.QtWidgets import (
-    QWidget,
-    QTabWidget,
-    QPushButton,
+    QComboBox,
     QFrame,
     QLabel,
-    QComboBox,
+    QPushButton,
     QSpinBox,
+    QTabWidget,
+    QWidget,
 )
-from PyQt6.QtCore import Qt
 
 
 class DarkThemeStyler:

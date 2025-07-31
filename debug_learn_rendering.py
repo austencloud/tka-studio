@@ -17,9 +17,6 @@ def test_learn_rendering():
         from desktop.modern.domain.models.grid_data import GridData
         from desktop.modern.domain.models.pictograph_data import PictographData
         from desktop.modern.main import create_application
-        from desktop.modern.presentation.components.pictograph.pictograph_scene import (
-            PictographScene,
-        )
 
         # Import directly to avoid circular import
         from desktop.modern.presentation.components.pictograph.views.base_pictograph_view import (

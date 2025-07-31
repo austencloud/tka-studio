@@ -10,6 +10,7 @@ import logging
 from typing import Tuple
 
 from PyQt6.QtGui import QFont
+
 from desktop.modern.core.interfaces.image_export_services import IFontMarginHelper
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 class FontMarginHelper(IFontMarginHelper):
     """
     Helper class for font and margin calculations using exact legacy logic.
-    
+
     This class replicates the exact font scaling logic from the Legacy system
     to prevent font sizing regressions and ensure consistent visual output.
     """
@@ -36,16 +37,16 @@ class FontMarginHelper(IFontMarginHelper):
     ) -> Tuple[QFont, int]:
         """
         Adjust font and margin based on number of beats - EXACT LEGACY LOGIC.
-        
+
         This method replicates the exact calculations from the Legacy system
         to prevent "humongous" text issues for small sequences.
-        
+
         Args:
             base_font: Base font to adjust
             num_filled_beats: Number of beats in sequence
             base_margin: Base margin to adjust
             beat_scale: Scale factor to apply
-            
+
         Returns:
             Tuple of (adjusted_font, adjusted_margin)
         """
@@ -91,50 +92,54 @@ class FontMarginHelper(IFontMarginHelper):
     def calculate_beat_scale(self, beat_size: int, reference_size: int = 280) -> float:
         """
         Calculate beat scale factor based on beat size.
-        
+
         Args:
             beat_size: Actual beat size in pixels
             reference_size: Reference beat size for scaling (default: 280)
-            
+
         Returns:
             Scale factor for fonts and elements
         """
         if reference_size <= 0:
-            logger.warning(f"Invalid reference size: {reference_size}, using default 280")
+            logger.warning(
+                f"Invalid reference size: {reference_size}, using default 280"
+            )
             reference_size = 280
 
         beat_scale = beat_size / reference_size
-        
-        logger.debug(f"Beat scale calculated: {beat_scale} (size: {beat_size}, ref: {reference_size})")
-        
+
+        logger.debug(
+            f"Beat scale calculated: {beat_scale} (size: {beat_size}, ref: {reference_size})"
+        )
+
         return beat_scale
 
     @staticmethod
     def get_legacy_font_sizes() -> dict:
         """
         Get the standard legacy font sizes for different text elements.
-        
+
         Returns:
             Dictionary of font sizes for different elements
         """
         return {
-            "word": 175,        # Base word font size
-            "user_info_bold": 50,    # User info bold font size
+            "word": 175,  # Base word font size
+            "user_info_bold": 50,  # User info bold font size
             "user_info_normal": 50,  # User info normal font size
-            "beat_number": 12,       # Beat number overlay font size
-            "difficulty": None,      # Difficulty font size is calculated dynamically
+            "beat_number": 12,  # Beat number overlay font size
+            "difficulty": None,  # Difficulty font size is calculated dynamically
         }
 
     @staticmethod
     def get_legacy_margins() -> dict:
         """
         Get the standard legacy margin values.
-        
+
         Returns:
             Dictionary of margin values for different elements
         """
         return {
-            "base": 50,      # Base margin
-            "border": 3,     # Border width
-            "kerning": 20,   # Letter spacing for word text
+            "base": 50,  # Base margin
+            "border": 3,  # Border width
+            "kerning": 20,  # Letter spacing for word text
         }

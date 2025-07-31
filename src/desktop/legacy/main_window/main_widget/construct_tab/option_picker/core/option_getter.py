@@ -1,4 +1,7 @@
 from typing import Any, Optional
+
+from interfaces.json_manager_interface import IJsonManager
+
 from data.constants import (
     BLUE,
     BLUE_ATTRS,
@@ -11,7 +14,6 @@ from data.constants import (
     START_ORI,
     START_POS,
 )
-from interfaces.json_manager_interface import IJsonManager
 
 
 class OptionGetter:

@@ -2,18 +2,20 @@
 Container component that combines all turn configuration components.
 """
 
-from typing import Dict, Any
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QSizePolicy
+from typing import Any, Dict
+
 from legacy_settings_manager.legacy_settings_manager import (
     LegacySettingsManager,
 )
-from ..widgets import ModernCard
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
+
 from ..theme import Colors
-from .turn_config_style_provider import TurnConfigStyleProvider
-from .grid_mode_selector import GridModeSelector
-from .turn_slider import TurnSlider
-from .turn_pair_display import TurnPairDisplay
+from ..widgets import ModernCard
 from .generate_all_checkbox import GenerateAllCheckbox
+from .grid_mode_selector import GridModeSelector
+from .turn_config_style_provider import TurnConfigStyleProvider
+from .turn_pair_display import TurnPairDisplay
+from .turn_slider import TurnSlider
 
 
 class TurnConfigContainer(QWidget):

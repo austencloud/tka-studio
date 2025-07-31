@@ -6,10 +6,10 @@ It generates animation commands and data that can be executed
 by any animation framework.
 """
 
-import logging
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Union
+import logging
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

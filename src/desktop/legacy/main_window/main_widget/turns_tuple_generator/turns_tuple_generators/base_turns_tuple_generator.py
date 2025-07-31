@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
-from data.constants import BLUE, RED
+
 from objects.motion.motion import Motion
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

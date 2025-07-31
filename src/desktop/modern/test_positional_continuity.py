@@ -5,9 +5,8 @@ This script tests that generated sequences have proper positional flow.
 """
 
 import logging
-import os
-import sys
 from pathlib import Path
+import sys
 
 # Use the same path setup as the main application
 current_file = Path(__file__).resolve()
@@ -76,11 +75,11 @@ def test_positional_continuity():
             current_end = current_beat.end_position
             next_start = next_beat.start_position
 
-            print(f"   Beat {i+1}: {current_beat.letter} ends at {current_end}")
-            print(f"   Beat {i+2}: {next_beat.letter} starts at {next_start}")
+            print(f"   Beat {i + 1}: {current_beat.letter} ends at {current_end}")
+            print(f"   Beat {i + 2}: {next_beat.letter} starts at {next_start}")
 
             if current_end != next_start:
-                error_msg = f"❌ CONTINUITY BREAK: Beat {i+1} ends at {current_end} but Beat {i+2} starts at {next_start}"
+                error_msg = f"❌ CONTINUITY BREAK: Beat {i + 1} ends at {current_end} but Beat {i + 2} starts at {next_start}"
                 print(f"   {error_msg}")
                 continuity_errors.append(error_msg)
             else:
@@ -96,13 +95,13 @@ def test_positional_continuity():
         # Summary
         print("\n" + "=" * 60)
         if continuity_errors:
-            print(f"❌ POSITIONAL CONTINUITY TEST FAILED")
+            print("❌ POSITIONAL CONTINUITY TEST FAILED")
             print(f"   Found {len(continuity_errors)} continuity errors:")
             for error in continuity_errors:
                 print(f"   - {error}")
             return False
         else:
-            print(f"✅ POSITIONAL CONTINUITY TEST PASSED")
+            print("✅ POSITIONAL CONTINUITY TEST PASSED")
             print(
                 f"   All {len(generated_beats)} beats maintain proper positional flow!"
             )
@@ -110,7 +109,7 @@ def test_positional_continuity():
             # Additional test: Check if pictograph data has all required fields for rendering
             print("\n4. Checking pictograph data completeness for rendering...")
             for i, beat in enumerate(generated_beats):
-                print(f"   Beat {i+1} ({beat.letter}):")
+                print(f"   Beat {i + 1} ({beat.letter}):")
                 print(f"     - Letter: {beat.letter}")
                 print(f"     - Letter Type: {beat.letter_type}")
                 print(f"     - Start Position: {beat.start_position}")

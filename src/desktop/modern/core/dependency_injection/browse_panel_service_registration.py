@@ -5,7 +5,6 @@ Register browse panel services with the dependency injection container.
 """
 
 import logging
-from typing import Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.browse_services import (

@@ -11,9 +11,9 @@ Main Components:
 - MirroredEntryAdapter: Adapter for integrating with existing code
 """
 
-from .mirrored_entry_service import MirroredEntryService
-from .mirrored_entry_factory import MirroredEntryFactory
 from .mirrored_entry_adapter import MirroredEntryAdapter
+from .mirrored_entry_factory import MirroredEntryFactory
+from .mirrored_entry_service import MirroredEntryService
 from .mirrored_entry_utils import MirroredEntryUtils
 
 # Export the main components

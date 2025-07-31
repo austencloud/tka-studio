@@ -5,15 +5,11 @@ Manages the immutable state of the launcher including mode switching,
 geometry persistence, and application state tracking.
 """
 
-import json
 import logging
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces import ILauncherStateService, ISettingsService
 from desktop.modern.domain.models import (
-    ApplicationCategory,
     ApplicationData,
     ApplicationStatus,
     LauncherState,

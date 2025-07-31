@@ -2,16 +2,19 @@
 # File: prop_rot_dir_logic_handler.py
 # ==========================================
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QObject, pyqtSignal
-from data.constants import ANTI, CLOCKWISE, PRO
-from objects.motion.motion import Motion
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from objects.motion.motion import Motion
+from PyQt6.QtCore import QObject, pyqtSignal
 from utils.reversal_detector import ReversalDetector
+
+from data.constants import ANTI, CLOCKWISE, PRO
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_box.prop_rot_dir_button_manager.prop_rot_dir_ui_handler import (
         PropRotDirUIHandler,
     )
+
     from ..turns_box import TurnsBox
 
 
@@ -24,7 +27,7 @@ class PropRotDirLogicHandler(QObject):
         super().__init__()
         self.turns_box = turns_box
         self.ui_handler = ui_handler
-        self.current_motion: "Motion" = None
+        self.current_motion: Motion = None
 
     def validate_rotation_change(self, new_direction: str) -> bool:
         """Check if rotation change is valid."""
@@ -72,9 +75,7 @@ class PropRotDirLogicHandler(QObject):
 
     def _update_pictograph_data(self) -> None:
         """Update pictograph JSON data after a rotation change."""
-        pictograph_index = (
-            self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
-        )
+        pictograph_index = self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
         json_index = pictograph_index + 2  # JSON stores additional metadata
 
         json_updater = self.turns_box.graph_editor.main_widget.json_manager.updater
@@ -104,9 +105,7 @@ class PropRotDirLogicHandler(QObject):
 
     def _detect_reversals(self) -> None:
         """Detect motion reversals and update pictograph UI accordingly."""
-        pictograph_index = (
-            self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
-        )
+        pictograph_index = self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
         sequence_so_far = self.turns_box.graph_editor.main_widget.json_manager.loader_saver.load_current_sequence()[
             : pictograph_index + 2
         ]
@@ -124,9 +123,7 @@ class PropRotDirLogicHandler(QObject):
 
     def _get_affected_pictographs(self) -> list[LegacyPictograph]:
         """Retrieve pictographs that need updating due to rotation changes."""
-        selected_beat = (
-            self.turns_box.graph_editor.sequence_workbench.beat_frame.get.currently_selected_beat_view()
-        )
+        selected_beat = self.turns_box.graph_editor.sequence_workbench.beat_frame.get.currently_selected_beat_view()
         if not selected_beat:
             return []
 
@@ -150,9 +147,7 @@ class PropRotDirLogicHandler(QObject):
 
     def update_related_components(self) -> None:
         """Updates JSON, detects reversals, updates UI labels, and ensures UI consistency."""
-        pictograph_index = (
-            self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
-        )
+        pictograph_index = self.turns_box.graph_editor.sequence_workbench.beat_frame.get.index_of_currently_selected_beat()
         json_index = pictograph_index + 2  # JSON stores additional metadata
 
         # Update JSON data

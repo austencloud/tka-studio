@@ -1,10 +1,11 @@
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPen, QColor
-from PyQt6.QtCore import Qt, QRect
 from typing import TYPE_CHECKING
 
-from data.constants import GOLD
 from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import QRect, Qt
+from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtWidgets import QWidget
+
+from data.constants import GOLD
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.elements.views.base_pictograph_view import (

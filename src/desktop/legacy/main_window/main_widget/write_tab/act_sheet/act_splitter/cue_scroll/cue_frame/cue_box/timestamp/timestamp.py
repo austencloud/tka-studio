@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt, QEvent
+
+from PyQt6.QtCore import QEvent, Qt
 
 from .......editable_label import EditableLabel
 
@@ -7,6 +8,7 @@ if TYPE_CHECKING:
     from ..cue_box import CueBox
 
 from typing import TYPE_CHECKING
+
 from .timestamp_line_edit import TimestampLineEdit  # Import the custom line edit
 
 if TYPE_CHECKING:

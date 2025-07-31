@@ -10,21 +10,21 @@ import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QGridLayout,
     QGroupBox,
     QLabel,
     QPushButton,
-    QGridLayout,
+    QVBoxLayout,
+    QWidget,
 )
 
 from desktop.modern.domain.models import Orientation
 from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.styling_helpers import (
-    apply_modern_panel_styling,
-    apply_unified_button_styling,
-    UNIFIED_BUTTON_WIDTH,
     UNIFIED_BUTTON_HEIGHT,
     UNIFIED_BUTTON_SPACING,
+    UNIFIED_BUTTON_WIDTH,
+    apply_modern_panel_styling,
+    apply_unified_button_styling,
 )
 
 logger = logging.getLogger(__name__)

@@ -1,9 +1,13 @@
 from typing import Dict
 
-from desktop.modern.core.interfaces.tab_settings_interfaces import IPropTypeSettingsManager, PropType
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QIcon
 from PyQt6.QtWidgets import QGridLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+
+from desktop.modern.core.interfaces.tab_settings_interfaces import (
+    IPropTypeSettingsManager,
+    PropType,
+)
 
 
 class PropButton(QPushButton):
@@ -257,7 +261,7 @@ class PropTypeTab(QWidget):
 
     def _setup_connections(self):
         """Setup signal connections."""
-        pass  # Connections are set up in _setup_ui
+        # Connections are set up in _setup_ui
 
     def update_active_prop_type_from_settings(self):
         """Update the active prop type from current settings."""

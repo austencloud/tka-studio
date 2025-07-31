@@ -1,7 +1,8 @@
+from typing import TYPE_CHECKING, Union
+
+from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtGui import QPainter, QPen, QColor
-from typing import TYPE_CHECKING, Union
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
@@ -79,7 +80,7 @@ class TurnsNumber(QGraphicsSvgItem):
                         raise FileNotFoundError("Using default SVG")
 
                 # Read the SVG file if it exists
-                with open(svg_path, "r", encoding="utf-8") as f:
+                with open(svg_path, encoding="utf-8") as f:
                     svg_data = f.read()
 
             except FileNotFoundError as e:

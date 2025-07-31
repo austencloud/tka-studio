@@ -7,7 +7,8 @@ that maintains backward compatibility while using the new architecture.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, Any
+from typing import TYPE_CHECKING, Any, Dict
+
 from PyQt6.QtGui import QPixmap
 
 if TYPE_CHECKING:

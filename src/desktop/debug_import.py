@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Debug script to investigate widget_factory import issues"""
 
+import os
 import sys
 import traceback
-import os
 
 # Add the source path
 sys.path.append("modern/src")
@@ -15,25 +15,12 @@ print(f"Python path includes: {[p for p in sys.path if 'tka-desktop' in p]}")
 
 try:
     print("\n1. Testing basic imports...")
-    from typing import Optional
 
     print("✓ typing imported")
 
-    from PyQt6.QtWidgets import (
-        QWidget,
-        QVBoxLayout,
-        QScrollArea,
-        QSizePolicy,
-        QApplication,
-    )
-
     print("✓ PyQt6.QtWidgets imported")
 
-    from PyQt6.QtCore import Qt
-
     print("✓ PyQt6.QtCore imported")
-
-    from PyQt6.QtGui import QScreen
 
     print("✓ PyQt6.QtGui imported")
 
@@ -43,11 +30,8 @@ except Exception as e:
 
 try:
     print("\n2. Testing core imports...")
-    from desktop.modern.core.dependency_injection.di_container import DIContainer
 
     print("✓ DIContainer imported")
-
-    from desktop.modern.core.interfaces.core_services import ILayoutService
 
     print("✓ ILayoutService imported")
 
@@ -57,15 +41,8 @@ except Exception as e:
 
 try:
     print("\n3. Testing option picker component imports...")
-    from desktop.modern.presentation.components.option_picker.core.option_picker_widget import (
-        ModernOptionPickerWidget,
-    )
 
     print("✓ ModernOptionPickerWidget imported")
-
-    from desktop.modern.presentation.components.option_picker.components.filters.option_filter import (
-        OptionPickerFilter,
-    )
 
     print("✓ OptionPickerFilter imported")
 
@@ -89,7 +66,7 @@ except Exception as e:
 
 try:
     print("\n5. Testing direct file execution...")
-    with open("modern/src/presentation/factories/widget_factory.py", "r") as f:
+    with open("modern/src/presentation/factories/widget_factory.py") as f:
         content = f.read()
 
     print(f"   File size: {len(content)} characters")
@@ -110,7 +87,6 @@ except Exception as e:
 
 try:
     print("\n6. Testing specific class import...")
-    from desktop.modern.presentation.factories.widget_factory import OptionPickerWidgetFactory
 
     print("✓ OptionPickerWidgetFactory imported successfully")
 

@@ -1,6 +1,7 @@
-from data.constants import PROP_TYPE
 from enums.prop_type import PropType
 from objects.prop.prop import Prop
+
+from data.constants import PROP_TYPE
 
 # List of prop class names
 prop_types = [

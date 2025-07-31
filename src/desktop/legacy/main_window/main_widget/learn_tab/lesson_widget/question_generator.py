@@ -2,10 +2,9 @@ import random
 from typing import TYPE_CHECKING
 
 from enums.letter.letter import Letter
-
-from data.constants import END_POS, LETTER, START_POS
 from main_window.main_widget.grid_mode_checker import GridModeChecker
 
+from data.constants import END_POS, LETTER, START_POS
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (

@@ -1,16 +1,16 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_ui_manager.py
-import os
-import logging
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+import logging
+import os
+from typing import TYPE_CHECKING, Optional
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QApplication,
     QFileDialog,
     QMessageBox,
     QProgressDialog,
-    QApplication,
 )
-from PyQt6.QtCore import Qt
-
 from utils.path_helpers import get_user_editable_resource_path, get_win32_photos_path
 
 if TYPE_CHECKING:
@@ -51,7 +51,7 @@ class ExportUIManager:
             default_dir = None
 
             if os.path.exists(settings_path):
-                with open(settings_path, "r") as f:
+                with open(settings_path) as f:
                     settings = json.load(f)
                     default_dir = os.path.join(
                         get_win32_photos_path(), "TKA Sequence Cards"

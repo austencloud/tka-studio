@@ -20,11 +20,11 @@ class IBeatLayoutCalculator(ABC):
     ) -> Dict[str, Any]:
         """
         Calculate layout for beat frames in a sequence.
-        
+
         Args:
             sequence: The sequence data containing beats
             container_size: The container dimensions (width, height)
-            
+
         Returns:
             Dict containing layout information (rows, columns, positions)
         """
@@ -35,11 +35,11 @@ class IBeatLayoutCalculator(ABC):
     ) -> Tuple[int, int]:
         """
         Get optimal grid layout (rows, cols) for items.
-        
+
         Args:
             item_count: Number of items to arrange
             container_size: Container dimensions (width, height)
-            
+
         Returns:
             Tuple of (rows, columns) for optimal arrangement
         """
@@ -54,10 +54,10 @@ class IComponentPositionCalculator(ABC):
     ) -> Dict[str, Tuple[int, int]]:
         """
         Calculate positions for UI components based on layout configuration.
-        
+
         Args:
             layout_config: Configuration dictionary for layout
-            
+
         Returns:
             Dict mapping component IDs to (x, y) positions
         """
@@ -68,11 +68,11 @@ class IComponentPositionCalculator(ABC):
     ) -> Tuple[int, int]:
         """
         Calculate centered position for an item within a container.
-        
+
         Args:
             item_size: Size of the item (width, height)
             container_size: Size of the container (width, height)
-            
+
         Returns:
             Tuple of (x, y) position for centering
         """
@@ -90,7 +90,7 @@ class IComponentPositionCalculator(ABC):
     ) -> Dict[int, Tuple[int, int]]:
         """
         Calculate positions for items in a grid layout.
-        
+
         Args:
             item_count: Number of items to position
             rows: Number of rows in grid
@@ -99,7 +99,7 @@ class IComponentPositionCalculator(ABC):
             item_size: Size of each item
             spacing: Space between items
             padding: Padding around edges
-            
+
         Returns:
             Dict mapping item indices to (x, y) positions
         """
@@ -114,11 +114,11 @@ class IResponsiveScalingCalculator(ABC):
     ) -> float:
         """
         Calculate responsive scaling factor for content within container.
-        
+
         Args:
             content_size: Original content dimensions (width, height)
             container_size: Target container dimensions (width, height)
-            
+
         Returns:
             float: Scaling factor to apply
         """
@@ -132,12 +132,12 @@ class IResponsiveScalingCalculator(ABC):
     ) -> Tuple[float, float]:
         """
         Calculate scaling factors that may be aspect-aware.
-        
+
         Args:
             content_size: Original content dimensions
             container_size: Target container dimensions
             maintain_aspect_ratio: Whether to maintain aspect ratio
-            
+
         Returns:
             Tuple of (scale_x, scale_y) factors
         """
@@ -146,7 +146,7 @@ class IResponsiveScalingCalculator(ABC):
     def get_minimum_scale_factor(self) -> float:
         """
         Get the minimum allowable scale factor.
-        
+
         Returns:
             float: Minimum scale factor (e.g., 0.1 for 10% minimum)
         """
@@ -155,7 +155,7 @@ class IResponsiveScalingCalculator(ABC):
     def get_maximum_scale_factor(self) -> float:
         """
         Get the maximum allowable scale factor.
-        
+
         Returns:
             float: Maximum scale factor (e.g., 5.0 for 500% maximum)
         """
@@ -170,12 +170,12 @@ class IComponentSizer(ABC):
     ) -> Tuple[int, int]:
         """
         Calculate size for a component based on its type and parent.
-        
+
         Args:
             component_type: Type of component (e.g., 'beat_frame', 'option_picker')
             parent_size: Size of parent container
             **kwargs: Additional sizing parameters
-            
+
         Returns:
             Tuple of (width, height) for the component
         """
@@ -184,10 +184,10 @@ class IComponentSizer(ABC):
     def calculate_minimum_size(self, component_type: str) -> Tuple[int, int]:
         """
         Calculate minimum size for a component type.
-        
+
         Args:
             component_type: Type of component
-            
+
         Returns:
             Tuple of minimum (width, height)
         """
@@ -198,11 +198,11 @@ class IComponentSizer(ABC):
     ) -> Tuple[int, int]:
         """
         Calculate preferred size for a component within available space.
-        
+
         Args:
             component_type: Type of component
             available_space: Available space (width, height)
-            
+
         Returns:
             Tuple of preferred (width, height)
         """
@@ -222,14 +222,14 @@ class IDimensionCalculator(ABC):
     ) -> Tuple[int, int]:
         """
         Calculate total dimensions needed for a layout.
-        
+
         Args:
             item_count: Number of items
             item_size: Size of each item
             layout: Layout as (rows, columns)
             spacing: Space between items
             padding: Padding around edges
-            
+
         Returns:
             Tuple of total (width, height) needed
         """
@@ -240,11 +240,11 @@ class IDimensionCalculator(ABC):
     ) -> Tuple[int, int]:
         """
         Calculate available space after reserving space for other elements.
-        
+
         Args:
             container_size: Total container size
             reserved_space: Dict with 'top', 'bottom', 'left', 'right' reserved pixels
-            
+
         Returns:
             Tuple of available (width, height)
         """
@@ -253,10 +253,10 @@ class IDimensionCalculator(ABC):
     def get_aspect_ratio(self, size: Tuple[int, int]) -> float:
         """
         Calculate aspect ratio from size.
-        
+
         Args:
             size: Size tuple (width, height)
-            
+
         Returns:
             float: Aspect ratio (width/height)
         """

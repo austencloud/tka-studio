@@ -25,16 +25,22 @@ from desktop.modern.application.services.sequence.sequence_start_position_manage
 )
 
 # Services moved to application layer
-from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
+from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import (
+    QtSequenceLoaderAdapter,
+)
 from desktop.modern.presentation.components.option_picker.option_picker_manager import (
     OptionPickerManager,
 )
 from desktop.modern.presentation.components.start_position_picker.start_position_selection_handler import (
     StartPositionSelectionHandler,
 )
-from desktop.modern.presentation.tabs.construct.layout_manager import ConstructTabLayoutManager
 from desktop.modern.presentation.tabs.construct.construct_tab import ConstructTab
-from desktop.modern.presentation.tabs.construct.signal_coordinator import SignalCoordinator
+from desktop.modern.presentation.tabs.construct.layout_manager import (
+    ConstructTabLayoutManager,
+)
+from desktop.modern.presentation.tabs.construct.signal_coordinator import (
+    SignalCoordinator,
+)
 
 # Create alias for backward compatibility
 ModernConstructTab = ConstructTab

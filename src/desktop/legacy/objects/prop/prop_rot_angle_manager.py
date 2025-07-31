@@ -1,19 +1,20 @@
 from typing import TYPE_CHECKING
+
 from data.constants import (
     BOX,
+    CLOCK,
+    COUNTER,
     DIAMOND,
+    EAST,
     IN,
+    NORTH,
     NORTHEAST,
     NORTHWEST,
     OUT,
-    CLOCK,
-    COUNTER,
-    NORTH,
     SOUTH,
     SOUTHEAST,
     SOUTHWEST,
     WEST,
-    EAST,
 )
 
 if TYPE_CHECKING:

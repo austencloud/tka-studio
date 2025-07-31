@@ -1,8 +1,9 @@
 # orientation_text_label.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFont
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.ori_picker_box.ori_picker_widget.ori_picker_widget import (

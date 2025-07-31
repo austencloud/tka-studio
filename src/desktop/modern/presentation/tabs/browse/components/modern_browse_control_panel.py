@@ -7,8 +7,6 @@ Provides sort controls, filter description, and sequence count display.
 
 from typing import Optional
 
-from desktop.modern.presentation.tabs.browse.models import FilterType, SortMethod
-from desktop.modern.presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -18,6 +16,11 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QVBoxLayout,
     QWidget,
+)
+
+from desktop.modern.presentation.tabs.browse.models import FilterType, SortMethod
+from desktop.modern.presentation.tabs.browse.services.browse_state_service import (
+    BrowseStateService,
 )
 
 

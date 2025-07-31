@@ -26,4 +26,3 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
 
     def update_display(self, sequence_data):
         """Update the display with new sequence data."""
-        pass

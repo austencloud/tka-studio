@@ -3,11 +3,9 @@ Command pattern implementation for undoable operations.
 Provides type-safe, undoable commands with event integration.
 """
 
-import logging
-import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from datetime import datetime
+import logging
 from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar
 
 if TYPE_CHECKING:
@@ -110,7 +108,6 @@ class CommandProcessor:
                 self._current_index = len(self._history) - 1
 
             # Command executed successfully
-            pass
 
             self._logger.info(f"Command executed successfully: {command.description}")
             return CommandResult(success=True, result=result, command_id=command_id)
@@ -142,7 +139,6 @@ class CommandProcessor:
             self._current_index -= 1
 
             # Command undone successfully
-            pass
 
             self._logger.info(f"Command undone successfully: {command.description}")
             return CommandResult(success=True, result=result, command_id=command_id)
@@ -175,7 +171,6 @@ class CommandProcessor:
             result = command.execute()
 
             # Command redone successfully
-            pass
 
             self._logger.info(f"Command redone successfully: {command.description}")
             return CommandResult(success=True, result=result, command_id=command_id)

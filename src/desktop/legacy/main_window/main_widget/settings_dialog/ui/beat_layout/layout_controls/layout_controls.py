@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGroupBox, QHBoxLayout
+
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
 
 from ..length_selector.length_selector import LengthSelector
+from .default_layout_label import DefaultLayoutLabel
 from .layout_selector.layout_selector import LayoutSelector
 from .update_default_layout_button import UpdateDefaultLayoutButton
-from .default_layout_label import DefaultLayoutLabel
 
 if TYPE_CHECKING:
     from ..beat_layout_tab import BeatLayoutTab

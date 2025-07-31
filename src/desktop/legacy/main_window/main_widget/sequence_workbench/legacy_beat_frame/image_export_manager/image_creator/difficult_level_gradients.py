@@ -1,5 +1,5 @@
-from PyQt6.QtGui import QLinearGradient, QColor
 from PyQt6.QtCore import QPointF, QRect, Qt
+from PyQt6.QtGui import QColor, QLinearGradient
 
 
 class DifficultyLevelGradients:

@@ -2,15 +2,16 @@
 Manages pictograph data for the codex exporter.
 """
 
-from typing import TYPE_CHECKING, Dict, Any, Optional, List, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+
 from enums.letter.letter import Letter
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
-        ImageExportTab,
-    )
     from main_window.main_widget.settings_dialog.ui.codex_exporter.codex_exporter_tab import (
         CodexExporterTab,
+    )
+    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
+        ImageExportTab,
     )
 
 

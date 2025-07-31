@@ -162,7 +162,6 @@ class ArrowAdjustmentLookup:
         """Generate all required keys for special placement lookup."""
         try:
             # Create minimal pictograph data for legacy services that still need it
-            pass
 
             ori_key = self.orientation_key_service.generate_orientation_key(
                 motion_data, pictograph_data

@@ -1,17 +1,18 @@
 from typing import Union
-from PyQt6.QtWidgets import (
-    QLabel,
-    QWidget,
-    QStackedLayout,
-    QLineEdit,
-    QTextEdit,
-    QSizePolicy,
-)
-from PyQt6.QtCore import Qt
+
 from main_window.main_widget.write_tab.editable_label_manager import (
     EditableLabelManager,
 )
-from PyQt6.QtGui import QTextOption, QResizeEvent
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QResizeEvent, QTextOption
+from PyQt6.QtWidgets import (
+    QLabel,
+    QLineEdit,
+    QSizePolicy,
+    QStackedLayout,
+    QTextEdit,
+    QWidget,
+)
 
 
 class EditableLabel(QWidget):

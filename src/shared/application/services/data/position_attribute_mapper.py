@@ -5,11 +5,13 @@ Handles mapping and conversion of position and orientation attributes between fo
 Focused solely on attribute transformation logic.
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import Any, Dict, Union
 
-from desktop.modern.core.interfaces.data_builder_services import IPositionAttributeMapper
+from desktop.modern.core.interfaces.data_builder_services import (
+    IPositionAttributeMapper,
+)
 
 logger = logging.getLogger(__name__)
 

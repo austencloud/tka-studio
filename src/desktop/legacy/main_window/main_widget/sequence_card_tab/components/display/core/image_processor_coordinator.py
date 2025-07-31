@@ -6,14 +6,14 @@ architecture that follows the Single Responsibility Principle.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, Any
-from PyQt6.QtGui import QPixmap
+from typing import TYPE_CHECKING, Any, Dict
+
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QPixmap
 
-
+from .image_cache_manager import ImageCacheManager
 from .image_loader import ImageLoader
 from .image_scaler import ImageScaler
-from .image_cache_manager import ImageCacheManager
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import (

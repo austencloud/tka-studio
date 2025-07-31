@@ -3,20 +3,26 @@
 Qt worker for snowflake animation timing - physics logic delegated to SnowflakePhysics service.
 """
 
-from PyQt6.QtCore import QObject, pyqtSignal
 import time
-from shared.application.services.backgrounds.snowfall.snowflake_physics import SnowflakePhysics
+
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from shared.application.services.backgrounds.snowfall.snowflake_physics import (
+    SnowflakePhysics,
+)
 
 
 class SnowflakeWorker(QObject):
     """Qt worker for snowflake animation - delegates physics to SnowflakePhysics service."""
-    
+
     update_snowflakes = pyqtSignal(list)
 
     def __init__(self, snowflake_count, width, height, image_count):
         super().__init__()
         self.running = False
-        self._physics_service = SnowflakePhysics(snowflake_count, width, height, image_count)
+        self._physics_service = SnowflakePhysics(
+            snowflake_count, width, height, image_count
+        )
 
     def start(self):
         """Start the animation loop."""
@@ -32,11 +38,11 @@ class SnowflakeWorker(QObject):
         while self.running:
             # Update physics using service
             self._physics_service.update_snowflakes()
-            
+
             # Get current states and emit as legacy format for compatibility
             snowflake_states = self._physics_service.get_snowflake_states()
             legacy_format = self._convert_to_legacy_format(snowflake_states)
-            
+
             self.update_snowflakes.emit(legacy_format)
             time.sleep(0.016)  # ~60 FPS
 

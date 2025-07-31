@@ -2,8 +2,8 @@
 Factory for creating SequencePropertiesManager instances with proper dependency injection.
 """
 
-from typing import TYPE_CHECKING
 import logging
+from typing import TYPE_CHECKING
 
 from desktop.modern.core.application_context import ApplicationContext
 

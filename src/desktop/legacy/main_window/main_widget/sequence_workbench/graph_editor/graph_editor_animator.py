@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QPropertyAnimation, QRect, QPoint, QEasingCurve, QObject
+
+from PyQt6.QtCore import QEasingCurve, QObject, QPoint, QPropertyAnimation, QRect
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (

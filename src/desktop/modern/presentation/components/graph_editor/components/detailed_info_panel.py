@@ -22,9 +22,10 @@ Architecture:
 import logging
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
+
+from desktop.modern.domain.models import BeatData
 
 logger = logging.getLogger(__name__)
 
@@ -195,15 +196,15 @@ class DetailedInfoPanel(QWidget):
 
         # Red motion details
         if beat_data.pictograph_data.motions["red"]:
-            motion_info += f"Red Motion: {beat_data.pictograph_data.motions["red"].motion_type.value}\n"
-            motion_info += f"Red Direction: {beat_data.pictograph_data.motions["red"].prop_rot_dir.value}\n"
-            motion_info += f"Red Start: {beat_data.pictograph_data.motions["red"].start_loc.value}\n"
+            motion_info += f"Red Motion: {beat_data.pictograph_data.motions['red'].motion_type.value}\n"
+            motion_info += f"Red Direction: {beat_data.pictograph_data.motions['red'].prop_rot_dir.value}\n"
+            motion_info += f"Red Start: {beat_data.pictograph_data.motions['red'].start_loc.value}\n"
             motion_info += (
-                f"Red End: {beat_data.pictograph_data.motions["red"].end_loc.value}\n"
+                f"Red End: {beat_data.pictograph_data.motions['red'].end_loc.value}\n"
             )
             if beat_data.pictograph_data.motions["red"].turns:
                 motion_info += (
-                    f"Red Turns: {beat_data.pictograph_data.motions["red"].turns}\n"
+                    f"Red Turns: {beat_data.pictograph_data.motions['red'].turns}\n"
                 )
 
         self._motion_info_label.setText(motion_info)

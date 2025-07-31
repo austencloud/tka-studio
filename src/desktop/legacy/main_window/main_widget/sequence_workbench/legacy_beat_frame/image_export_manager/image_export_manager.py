@@ -1,11 +1,12 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+
 from legacy_settings_manager.global_settings.app_context import AppContext
-from .image_export_layout_handler import ImageExportLayoutHandler
+
 from .image_creator.image_creator import ImageCreator
 from .image_export_beat_factory import ImageExportBeatFactory
+from .image_export_layout_handler import ImageExportLayoutHandler
 from .image_saver import ImageSaver
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

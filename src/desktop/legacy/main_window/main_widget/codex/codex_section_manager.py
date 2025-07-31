@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
-from PyQt6.QtCore import Qt
-
-from enums.letter.letter_type import LetterType
 from base_widgets.pictograph.elements.views.codex_pictograph_view import (
     CodexPictographView,
 )
-from .codex_section_type_label import CodexSectionTypeLabel
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
+
+from .codex_section_type_label import CodexSectionTypeLabel
 
 if TYPE_CHECKING:
     from .codex import Codex
@@ -37,7 +37,7 @@ class CodexSectionManager:
         self.codex = codex
         self.scroll_area = self.codex.scroll_area
         self.content_layout = self.scroll_area.content_layout
-        self.codex_views: dict[str, "CodexPictographView"] = {}
+        self.codex_views: dict[str, CodexPictographView] = {}
         self.setup_sections()
 
     def setup_sections(self) -> None:

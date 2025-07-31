@@ -1,10 +1,11 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QLabel,
-    QApplication,
-)
+
 from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import (
+    QApplication,
+    QLabel,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.sequence_card_tab import (

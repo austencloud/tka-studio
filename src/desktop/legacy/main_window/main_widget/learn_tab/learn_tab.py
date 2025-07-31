@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QStackedLayout
-from main_window.main_widget.learn_tab.lesson_configs import LESSON_CONFIGS
-from interfaces.settings_manager_interface import ISettingsManager
+
 from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
+from main_window.main_widget.learn_tab.lesson_configs import LESSON_CONFIGS
+from PyQt6.QtWidgets import QStackedLayout, QWidget
+
 from .lesson_selector.lesson_selector import LessonSelector
 from .lesson_widget.lesson_results_widget import LessonResultsWidget
 from .lesson_widget.lesson_widget import LessonWidget

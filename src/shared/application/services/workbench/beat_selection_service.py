@@ -5,8 +5,8 @@ Handles all beat selection logic including multi-selection, keyboard navigation,
 and validation without any Qt dependencies.
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import List, NamedTuple, Optional
 
 from desktop.modern.core.interfaces.workbench_services import IBeatSelectionService

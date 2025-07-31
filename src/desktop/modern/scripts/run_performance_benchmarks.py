@@ -7,16 +7,16 @@ modern component architecture to validate world-class performance standards.
 
 Usage:
     python run_performance_benchmarks.py [--quick] [--detailed]
-    
+
 Options:
     --quick     Run quick benchmarks with reduced iterations
     --detailed  Run detailed benchmarks with extended analysis
 """
 
-import sys
 import argparse
-import time
 from pathlib import Path
+import sys
+import time
 
 # Add src to path for imports
 modern_src_path = Path(__file__).parent.parent / "src"
@@ -32,6 +32,7 @@ from performance.test_component_performance import ComponentPerformanceBenchmark
 def print_system_info():
     """Print system information for benchmark context."""
     import platform
+
     import psutil
 
     print("SYSTEM INFORMATION")
@@ -85,7 +86,7 @@ def run_quick_benchmarks():
                 print(f"{test_name.replace('_', ' ').title()}: {status}")
 
             print(f"\nOverall: {passed_tests}/{total_tests} benchmarks passed")
-            print(f"Success Rate: {(passed_tests/total_tests)*100:.1f}%")
+            print(f"Success Rate: {(passed_tests / total_tests) * 100:.1f}%")
 
             return passed_tests == total_tests
 

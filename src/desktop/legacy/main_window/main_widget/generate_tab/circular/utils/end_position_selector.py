@@ -1,8 +1,9 @@
 import random
+
 from data.positions_maps import (
     half_position_map,
-    quarter_position_map_cw,
     quarter_position_map_ccw,
+    quarter_position_map_cw,
 )
 
 

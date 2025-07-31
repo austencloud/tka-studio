@@ -5,11 +5,11 @@ Ensures data integrity for cross-language communication and provides
 validation for all domain model serialization operations.
 """
 
-from typing import Any, Dict, Type, TypeVar
-import json
-import logging
 from dataclasses import is_dataclass
 from datetime import datetime
+import json
+import logging
+from typing import Any, Dict, Type, TypeVar
 
 T = TypeVar("T")
 logger = logging.getLogger(__name__)
@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 class SerializationError(Exception):
     """Raised when serialization/deserialization fails."""
-
 
 
 class TypeSafeSerializer:

@@ -5,23 +5,24 @@ This module provides properly typed versions of common utility functions
 that were previously untyped or poorly typed.
 """
 
+import logging
 from typing import (
-    TypeVar,
-    Generic,
-    Optional,
-    Union,
-    Dict,
-    List,
     Any,
     Callable,
-    Tuple,
+    Dict,
+    Generic,
+    List,
+    Optional,
     Protocol,
+    Tuple,
+    TypeVar,
+    Union,
     runtime_checkable,
 )
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QFont
+
 from PyQt6.QtCore import QSize
-import logging
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QWidget
 
 T = TypeVar("T")
 K = TypeVar("K")

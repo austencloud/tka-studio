@@ -1,5 +1,7 @@
-from typing import TYPE_CHECKING, Callable, Any
+from typing import TYPE_CHECKING, Any, Callable
+
 from PyQt6.QtWidgets import QWidget
+
 from ..button_answers_renderer import ButtonAnswersRenderer
 from ..pictograph_answers_renderer import PictographAnswersRenderer
 

@@ -1,17 +1,20 @@
 from copy import deepcopy
 from functools import partial
-from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
-from typing import Callable, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, List
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QVBoxLayout
+
 from data.constants import BOX, DIAMOND, END_POS, GRID_MODE, LETTER, START_POS
-from .advanced_start_pos_picker_pictograph_view import (
-    AdvancedStartPosPickerPictographView,
-)
+
 from ..start_pos_picker.base_start_pos_picker import (
     BaseStartPosPicker,
 )
 from ..start_pos_picker.choose_your_start_pos_label import (
     ChooseYourStartPosLabel,
+)
+from .advanced_start_pos_picker_pictograph_view import (
+    AdvancedStartPosPickerPictographView,
 )
 
 if TYPE_CHECKING:

@@ -8,13 +8,17 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 import logging
 from typing import TYPE_CHECKING, Callable, List, Optional
 
-from shared.application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
-from shared.application.services.sequence.beat_factory import BeatFactory
-from shared.application.services.sequence.sequence_persister import SequencePersister
-from desktop.modern.core.interfaces.sequence_data_services import ISequenceStartPositionManager
+from desktop.modern.core.interfaces.sequence_data_services import (
+    ISequenceStartPositionManager,
+)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
+from shared.application.services.sequence.beat_factory import BeatFactory
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.sequence_workbench.sequence_workbench import (

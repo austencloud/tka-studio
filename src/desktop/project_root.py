@@ -11,8 +11,8 @@ Import this at the top of any script that needs reliable imports:
 """
 
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import List
 
 # Global flag to prevent duplicate setup
@@ -138,11 +138,11 @@ def print_debug_info():
     print("\nImport Paths:")
     for i, path in enumerate(get_import_paths()):
         exists = "✅" if path.exists() else "❌"
-        print(f"  {i+1}. {exists} {path}")
+        print(f"  {i + 1}. {exists} {path}")
 
-    print(f"\nPython sys.path (first 5 entries):")
+    print("\nPython sys.path (first 5 entries):")
     for i, path in enumerate(sys.path[:5]):
-        print(f"  {i+1}. {path}")
+        print(f"  {i + 1}. {path}")
 
     print(f"\nPYTHONPATH: {os.environ.get('PYTHONPATH', 'Not set')}")
 

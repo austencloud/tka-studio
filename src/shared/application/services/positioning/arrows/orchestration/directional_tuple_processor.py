@@ -24,6 +24,7 @@ USAGE:
 
 import logging
 from typing import List, Tuple
+
 from desktop.modern.core.types.coordinates import point_to_qpoint
 from desktop.modern.core.types.geometry import Point
 from desktop.modern.domain.models.enums import Location

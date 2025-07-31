@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from data.constants import BLUE_ATTRS, RED_ATTRS
 
-
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_properties_manager.sequence_properties_manager import (
         SequencePropertiesManager,

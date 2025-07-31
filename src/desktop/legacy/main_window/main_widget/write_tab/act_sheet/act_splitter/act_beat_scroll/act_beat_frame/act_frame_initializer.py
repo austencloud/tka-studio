@@ -1,7 +1,9 @@
 # act_beat_frame_initializer.py
 
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
+
 from .act_beat_view import ActBeatView
 from .act_step_label import ActStepLabel
 

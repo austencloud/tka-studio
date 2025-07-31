@@ -1,7 +1,8 @@
 # src/main_window/main_widget/sequence_card_tab/components/pages/factory.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QGridLayout, QFrame
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFrame, QGridLayout, QWidget
 
 if TYPE_CHECKING:
     from ...sequence_card_tab import SequenceCardTab

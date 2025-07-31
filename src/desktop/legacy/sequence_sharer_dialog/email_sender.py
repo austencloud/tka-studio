@@ -1,11 +1,11 @@
-import os
-import smtplib
-from email.mime.base import MIMEBase
-from email.header import Header
 from email import encoders
+from email.header import Header
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
+import os
+import smtplib
 
 
 class EmailSender:

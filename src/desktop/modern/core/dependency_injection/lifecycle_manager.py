@@ -8,8 +8,8 @@ Handles:
 - Lifecycle event coordination
 """
 
-from typing import Dict, Any, List, Optional, Type, Callable
 import logging
+from typing import Any, Callable, Dict, List, Optional, Type
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +31,7 @@ class LifecycleManager:
     def create_with_lifecycle(self, instance: Any) -> Any:
         """Create instance with proper lifecycle management."""
         # Call initialization method if it exists
-        if hasattr(instance, "initialize") and callable(
-            getattr(instance, "initialize")
-        ):
+        if hasattr(instance, "initialize") and callable(instance.initialize):
             try:
                 instance.initialize()
                 self._initialized_services.append(instance)
@@ -45,7 +43,7 @@ class LifecycleManager:
                 raise
 
         # Register for cleanup if it has cleanup method
-        if hasattr(instance, "cleanup") and callable(getattr(instance, "cleanup")):
+        if hasattr(instance, "cleanup") and callable(instance.cleanup):
             self.cleanup_handlers.append(instance.cleanup)
             logger.debug(f"Registered cleanup for service: {type(instance).__name__}")
 
@@ -88,7 +86,7 @@ class LifecycleManager:
 
         # Cleanup scoped instances
         for instance in scope_instances.values():
-            if hasattr(instance, "cleanup") and callable(getattr(instance, "cleanup")):
+            if hasattr(instance, "cleanup") and callable(instance.cleanup):
                 try:
                     instance.cleanup()
                     logger.debug(
@@ -167,9 +165,7 @@ class LifecycleManager:
 
     def force_cleanup_service(self, service_instance: Any) -> bool:
         """Force cleanup of a specific service instance."""
-        if hasattr(service_instance, "cleanup") and callable(
-            getattr(service_instance, "cleanup")
-        ):
+        if hasattr(service_instance, "cleanup") and callable(service_instance.cleanup):
             try:
                 service_instance.cleanup()
 

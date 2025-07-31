@@ -1,5 +1,11 @@
 from typing import TYPE_CHECKING
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from PyQt6.QtWidgets import QApplication
+from utils.reversal_detector import (
+    ReversalDetector,
+)
+
 from data.constants import (
     BEAT,
     BLUE_ATTRS,
@@ -10,14 +16,11 @@ from data.constants import (
     START_ORI,
     START_POS,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
-from utils.reversal_detector import (
-    ReversalDetector,
-)
 
 if TYPE_CHECKING:
-    from .legacy_beat_frame import LegacyBeatFrame
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
+
+    from .legacy_beat_frame import LegacyBeatFrame
 
 
 class BeatFrameUpdater:

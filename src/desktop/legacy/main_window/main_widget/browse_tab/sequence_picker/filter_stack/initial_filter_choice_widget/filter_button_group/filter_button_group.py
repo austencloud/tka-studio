@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSizePolicy
-from PyQt6.QtGui import QFont, QResizeEvent
-from PyQt6.QtCore import Qt, QTimer, QSize
 
 from main_window.main_widget.browse_tab.sequence_picker.filter_stack.initial_filter_choice_widget.filter_button_group.filter_button import (
     FilterButton,
 )
+from PyQt6.QtCore import QSize, Qt, QTimer
+from PyQt6.QtGui import QFont, QResizeEvent
+from PyQt6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from ..initial_filter_choice_widget import InitialFilterChoiceWidget

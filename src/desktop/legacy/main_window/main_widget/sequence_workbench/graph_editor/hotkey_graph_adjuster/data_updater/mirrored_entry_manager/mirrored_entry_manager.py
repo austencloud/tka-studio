@@ -1,4 +1,5 @@
 import logging
+
 from .mirrored_entry_adapter import MirroredEntryAdapter
 
 logger = logging.getLogger(__name__)

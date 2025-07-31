@@ -5,7 +5,7 @@ Extracted UI setup methods without any changes to functionality.
 Just moves the code to reduce the main file size.
 """
 
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QLabel
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from .beat_frame_section import WorkbenchBeatFrameSection
 from .button_interface import WorkbenchButtonInterfaceAdapter
@@ -14,10 +14,10 @@ from .indicator_section import WorkbenchIndicatorSection
 
 class UISetupHelper:
     """Helper class for workbench UI setup - simple extraction."""
-    
+
     def __init__(self, workbench):
         self.workbench = workbench
-    
+
     def setup_ui_minimal(self):
         """Setup minimal UI for fast startup."""
         # Create main widget only
@@ -46,7 +46,9 @@ class UISetupHelper:
         # Create sections using existing components
         print("🔧 [WORKBENCH] Creating indicator section...")
         self.workbench._indicator_section = WorkbenchIndicatorSection(
-            dictionary_service=self.workbench._safe_resolve("SequenceDictionaryService"),
+            dictionary_service=self.workbench._safe_resolve(
+                "SequenceDictionaryService"
+            ),
             parent=self.workbench._widget,
         )
         self.workbench._main_layout.addWidget(self.workbench._indicator_section, 0)
@@ -65,7 +67,9 @@ class UISetupHelper:
 
     def setup_button_interface(self):
         """Setup button interface adapter."""
-        self.workbench._button_interface = WorkbenchButtonInterfaceAdapter(self.workbench._widget)
+        self.workbench._button_interface = WorkbenchButtonInterfaceAdapter(
+            self.workbench._widget
+        )
         if self.workbench._button_interface.signals:
             self.workbench._button_interface.signals.sequence_modified.connect(
                 self.workbench.sequence_modified
@@ -73,4 +77,6 @@ class UISetupHelper:
             self.workbench._button_interface.signals.operation_completed.connect(
                 self.workbench.operation_completed
             )
-            self.workbench._button_interface.signals.operation_failed.connect(self.workbench.error_occurred)
+            self.workbench._button_interface.signals.operation_failed.connect(
+                self.workbench.error_occurred
+            )

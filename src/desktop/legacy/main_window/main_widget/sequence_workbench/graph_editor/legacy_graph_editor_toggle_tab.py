@@ -1,8 +1,9 @@
 # graph_editor_toggle_tab.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor import (
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 OPACITY = 0.7
 
 # Define common gradients as constants for readability
-BLUESTEEL_GRADIENT = f"""
+BLUESTEEL_GRADIENT = """
     qlineargradient(
         spread: pad,
         x1: 0, y1: 0, x2: 1, y2: 1,

@@ -7,8 +7,6 @@ to easily adopt the centralized design system styling. These mixins eliminate
 the need for components to implement their own styling logic.
 """
 
-from typing import Any, Dict, Optional
-
 from PyQt6.QtWidgets import QWidget
 
 from .design_system import ComponentType, StyleVariant, get_design_system

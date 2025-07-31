@@ -1,6 +1,7 @@
 import random
-from PyQt6.QtGui import QPainter, QColor, QLinearGradient, QBrush
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter
 from PyQt6.QtWidgets import QWidget
 
 

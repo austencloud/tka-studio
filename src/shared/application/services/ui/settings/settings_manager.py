@@ -113,7 +113,7 @@ class SettingsManager(QObject):
                 logger.warning(f"Settings file not found: {file_path}")
                 return False
 
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 imported_settings = json.load(f)
 
             # Validate imported settings
@@ -145,7 +145,7 @@ class SettingsManager(QObject):
         """Load settings from file."""
         try:
             if self._settings_file.exists():
-                with open(self._settings_file, "r", encoding="utf-8") as f:
+                with open(self._settings_file, encoding="utf-8") as f:
                     data = json.load(f)
                     # Extract user_settings if it exists, otherwise use the whole data
                     if isinstance(data, dict) and "user_settings" in data:

@@ -5,8 +5,8 @@ This scene coordinates multiple specialized renderers to create the complete pic
 """
 
 import logging
-import uuid
 from typing import Optional
+import uuid
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
@@ -78,10 +78,10 @@ class PictographScene(QGraphicsScene):
         self._services_initialized = False
 
         # Store the last rendered data for refresh capability
-        self._last_pictograph_data: Optional["PictographData"] = None
+        self._last_pictograph_data: Optional[PictographData] = None
 
         # Store the last rendered data for refresh capability
-        self._last_pictograph_data: Optional["PictographData"] = None
+        self._last_pictograph_data: Optional[PictographData] = None
 
         # Use shared rendering service instead of per-scene renderers
         self._shared_rendering_service = None
@@ -98,7 +98,7 @@ class PictographScene(QGraphicsScene):
                 if self._shared_rendering_service is None:
                     # Service not available yet, will retry on next access
                     logger.debug(
-                        f"[SCENE] Rendering service not available yet, will retry later"
+                        "[SCENE] Rendering service not available yet, will retry later"
                     )
             except Exception as e:
                 logger.debug(
@@ -281,7 +281,7 @@ class PictographScene(QGraphicsScene):
         # Force retry of rendering service if not available (critical for Learn tab)
         if not self.rendering_service:
             logger.debug(
-                f"[SCENE] Forcing rendering service retry for pictograph rendering"
+                "[SCENE] Forcing rendering service retry for pictograph rendering"
             )
             self._shared_rendering_service = None  # Reset to force retry
 
@@ -442,7 +442,6 @@ class PictographScene(QGraphicsScene):
             glyph_visible = self._visibility_service.get_glyph_visibility("TKA")
 
             if should_show and pictograph_visible and glyph_visible:
-
                 from desktop.modern.domain.models.pictograph_utils import (
                     get_turns_from_motions,
                     has_dash_from_pictograph,

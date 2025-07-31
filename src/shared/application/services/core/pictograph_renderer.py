@@ -6,19 +6,15 @@ instead of directly manipulating UI frameworks. Can be used by both desktop (QT)
 and web services.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import Dict, List, Optional, Protocol
 
 from .types import (
-    AssetHandle,
     Color,
     Colors,
-    ImageData,
-    ImageFormat,
     Point,
     RenderCommand,
-    RenderTarget,
     Size,
     SvgAsset,
 )
@@ -59,14 +55,12 @@ class IPictographRenderer(ABC):
         self, pictograph_data: Dict, target_size: Size, options: Optional[Dict] = None
     ) -> List[RenderCommand]:
         """Create list of render commands for pictograph."""
-        pass
 
     @abstractmethod
     def render_grid(
         self, grid_mode: str, target_size: Size, position: Point = Point(0, 0)
     ) -> RenderCommand:
         """Create render command for grid."""
-        pass
 
     @abstractmethod
     def render_prop(
@@ -77,14 +71,12 @@ class IPictographRenderer(ABC):
         motion_data: Optional[Dict] = None,
     ) -> RenderCommand:
         """Create render command for prop."""
-        pass
 
     @abstractmethod
     def render_glyph(
         self, glyph_type: str, glyph_id: str, position: Point, size: Size
     ) -> RenderCommand:
         """Create render command for glyph."""
-        pass
 
 
 # ============================================================================
@@ -504,7 +496,8 @@ class CorePictographRenderer(IPictographRenderer):
 
             # Create BeatData with proper parameters
             beat_data = BeatData(
-                beat_number=1, pictograph_data=pictograph_obj  # Default beat number
+                beat_number=1,
+                pictograph_data=pictograph_obj,  # Default beat number
             )
 
             if not detector.should_apply_beta_positioning(beat_data):

@@ -1,9 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_page_renderer.py
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
+from PyQt6.QtCore import QRect, Qt
+from PyQt6.QtGui import QFont, QImage, QImageReader, QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPixmap, QPainter, QImage, QImageReader, QFont
-from PyQt6.QtCore import Qt, QRect
 
 # Try to import PIL for image enhancement, but make it optional
 try:
@@ -13,9 +14,9 @@ try:
 except ImportError:
     PIL_AVAILABLE = False
 
+from .color_manager import ColorManager
 from .export_config import ExportConfig
 from .export_grid_calculator import ExportGridCalculator
-from .color_manager import ColorManager
 
 
 class ExportPageRenderer:
@@ -185,11 +186,13 @@ class ExportPageRenderer:
             # Skip if we've processed all cells in the grid
             if idx >= rows * cols:
                 self.logger.warning(
-                    f"Skipping item {idx+1} as it exceeds grid capacity ({rows}x{cols})"
+                    f"Skipping item {idx + 1} as it exceeds grid capacity ({rows}x{cols})"
                 )
                 continue
 
-            self.logger.debug(f"Processing sequence item {idx+1}/{len(sequence_items)}")
+            self.logger.debug(
+                f"Processing sequence item {idx + 1}/{len(sequence_items)}"
+            )
 
             # Get the sequence data
             sequence_data = item["sequence_data"]
@@ -322,8 +325,8 @@ class ExportPageRenderer:
         # Apply sharpening if enabled (helps maintain detail after scaling)
         if self.sharpen_after_scaling:
             try:
-                import tempfile
                 import os
+                import tempfile
 
                 # Create a temporary file for the conversion
                 with tempfile.NamedTemporaryFile(

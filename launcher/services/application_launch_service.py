@@ -1,14 +1,16 @@
+from datetime import datetime
 import logging
 import os
+from pathlib import Path
 import subprocess
 import sys
 import time
-from datetime import datetime
-from pathlib import Path
 from typing import Dict, List, Optional
 
-import psutil
-from desktop.modern.core.interfaces import IApplicationLaunchService, ILauncherStateService
+from desktop.modern.core.interfaces import (
+    IApplicationLaunchService,
+    ILauncherStateService,
+)
 from desktop.modern.domain.models import (
     ApplicationData,
     ApplicationStatus,

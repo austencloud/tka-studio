@@ -1,22 +1,23 @@
 import os
 from typing import TYPE_CHECKING
-from enums.letter.letter import Letter
 
-from data.constants import BLUE, RED
+from enums.letter.letter import Letter
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.json_manager.special_placement_saver import (
     SpecialPlacementSaver,
 )
-
-from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.arrow.arrow import Arrow
 from placement_managers.attr_key_generator import (
     AttrKeyGenerator,
 )
 
+from data.constants import BLUE, RED
+
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.hotkey_graph_adjuster import (
         HotkeyGraphAdjuster,
     )
+
     from .special_placement_data_updater import SpecialPlacementDataUpdater
 
 
@@ -31,7 +32,7 @@ class SpecialPlacementEntryRemover:
         self.special_placement_saver = SpecialPlacementSaver()
         self.special_placement_loader = AppContext.special_placement_loader()
         self.ge_view = hotkey_graph_adjuster.ge_view
-        self.data_updater: "SpecialPlacementDataUpdater" = (
+        self.data_updater: SpecialPlacementDataUpdater = (
             self.ge_view.pictograph.managers.arrow_placement_manager.data_updater
         )
 

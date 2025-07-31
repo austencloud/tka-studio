@@ -6,6 +6,7 @@ Extracted from ThumbnailImageLabel to follow Single Responsibility Principle.
 
 import logging
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import QSize
 
 if TYPE_CHECKING:

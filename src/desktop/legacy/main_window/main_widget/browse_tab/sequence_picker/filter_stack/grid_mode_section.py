@@ -1,24 +1,25 @@
 # grid_mode_section.py
 
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QGridLayout,
-    QSpacerItem,
-    QSizePolicy,
-)
-from PyQt6.QtCore import Qt, QEvent, QObject
-from PyQt6.QtGui import QPixmap, QPainter, QPen
-from PyQt6.QtSvg import QSvgRenderer
-
 from functools import partial
 import os
+from typing import TYPE_CHECKING
 
-from data.constants import GRID_MODE
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import QEvent, QObject, Qt
+from PyQt6.QtGui import QPainter, QPen, QPixmap
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtWidgets import (
+    QGridLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+)
 from styles.styled_button import StyledButton
 from utils.path_helpers import get_data_path, get_image_path
+
+from data.constants import GRID_MODE
+
 from .filter_section_base import FilterSectionBase
 
 if TYPE_CHECKING:
@@ -99,9 +100,9 @@ class GridModeSection(FilterSectionBase):
     def create_description_label(self, grid_mode: str) -> QLabel:
         """Create a label for the grid mode description."""
         if grid_mode == "Box":
-            description = f"Sequences using diagonal points\nNE, SE, SW, NW"
+            description = "Sequences using diagonal points\nNE, SE, SW, NW"
         elif grid_mode == "Diamond":
-            description = f"Sequences using cardinal points\nN, E, S, W"
+            description = "Sequences using cardinal points\nN, E, S, W"
         description_label = QLabel(description)
         description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.description_labels[grid_mode] = description_label

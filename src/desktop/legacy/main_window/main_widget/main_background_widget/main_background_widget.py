@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPixmap
-from PyQt6.QtCore import Qt
+
 from interfaces.settings_manager_interface import ISettingsManager
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter, QPixmap
+from PyQt6.QtWidgets import QWidget
+
 from .backgrounds.aurora.aurora_background import AuroraBackground
 from .backgrounds.aurora_borealis_background import AuroraBorealisBackground
 from .backgrounds.base_background import BaseBackground
@@ -14,7 +16,6 @@ if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
 
 from contextlib import contextmanager
-from PyQt6.QtGui import QPainter
 
 
 @contextmanager

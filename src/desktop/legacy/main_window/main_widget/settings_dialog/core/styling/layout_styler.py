@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .color_manager import ColorManager
-    from .typography_manager import TypographyManager
     from .component_styler import ComponentStyler
+    from .typography_manager import TypographyManager
 
 
 class LayoutStyler:
@@ -89,16 +89,16 @@ class LayoutStyler:
                 stop:0 {primary_color},
                 stop:1 {primary_light});
             color: {text_primary};
-            border: 1px solid {self.color_manager.get_color('primary', 0.4)};
+            border: 1px solid {self.color_manager.get_color("primary", 0.4)};
             font-weight: 600;
         }}
 
         QListWidget::item:hover:!selected {{
             background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 {self.color_manager.get_color('surface_light', 0.6)},
-                stop:1 {self.color_manager.get_color('surface_lighter', 0.4)});
+                stop:0 {self.color_manager.get_color("surface_light", 0.6)},
+                stop:1 {self.color_manager.get_color("surface_lighter", 0.4)});
             color: {text_primary};
-            border: 1px solid {self.color_manager.get_color('border_light', 0.3)};
+            border: 1px solid {self.color_manager.get_color("border_light", 0.3)};
         }}
 
         QListWidget::item:focus {{
@@ -168,8 +168,8 @@ class LayoutStyler:
         /* Group boxes with glassmorphism */
         QGroupBox {{
             background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                stop:0 {self.color_manager.get_color('surface', 0.1)},
-                stop:1 {self.color_manager.get_color('surface_light', 0.08)});
+                stop:0 {self.color_manager.get_color("surface", 0.1)},
+                stop:1 {self.color_manager.get_color("surface_light", 0.08)});
             border: 1px solid {border_light};
             border-radius: {radius_md}px;
             padding: {spacing_lg}px {spacing_md}px;
@@ -193,29 +193,29 @@ class LayoutStyler:
         /* Modern form elements */
         QLineEdit, QTextEdit, QComboBox, QSpinBox {{
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                stop:0 {self.color_manager.get_color('surface', 0.6)},
-                stop:1 {self.color_manager.get_color('surface_light', 0.4)});
-            border: 1px solid {self.color_manager.get_color('border', 0.4)};
+                stop:0 {self.color_manager.get_color("surface", 0.6)},
+                stop:1 {self.color_manager.get_color("surface_light", 0.4)});
+            border: 1px solid {self.color_manager.get_color("border", 0.4)};
             border-radius: {radius_md}px;
             padding: {spacing_sm}px {spacing_md}px;
             color: {text_primary};
             font-size: {body_size}px;
             min-height: 32px;
-            selection-background-color: {self.color_manager.get_color('primary', 0.3)};
+            selection-background-color: {self.color_manager.get_color("primary", 0.3)};
         }}
 
         QLineEdit:focus, QTextEdit:focus, QComboBox:focus, QSpinBox:focus {{
-            border: 2px solid {self.color_manager.get_color('primary', 0.8)};
+            border: 2px solid {self.color_manager.get_color("primary", 0.8)};
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                stop:0 {self.color_manager.get_color('surface_light', 0.7)},
-                stop:1 {self.color_manager.get_color('surface_lighter', 0.5)});
+                stop:0 {self.color_manager.get_color("surface_light", 0.7)},
+                stop:1 {self.color_manager.get_color("surface_lighter", 0.5)});
         }}
 
         QLineEdit:hover, QTextEdit:hover, QComboBox:hover, QSpinBox:hover {{
-            border-color: {self.color_manager.get_color('border_light', 0.6)};
+            border-color: {self.color_manager.get_color("border_light", 0.6)};
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                stop:0 {self.color_manager.get_color('surface_light', 0.6)},
-                stop:1 {self.color_manager.get_color('surface_lighter', 0.4)});
+                stop:0 {self.color_manager.get_color("surface_light", 0.6)},
+                stop:1 {self.color_manager.get_color("surface_lighter", 0.4)});
         }}
         """
 
@@ -246,7 +246,7 @@ class LayoutStyler:
                 stop:0 {primary_color},
                 stop:1 {primary_dark});
             color: {text_primary};
-            border: 1px solid {self.color_manager.get_color('primary', 0.5)};
+            border: 1px solid {self.color_manager.get_color("primary", 0.5)};
             border-radius: {radius_md}px;
             padding: {spacing_sm}px {spacing_lg}px;
             font-size: {body_size}px;
@@ -271,7 +271,7 @@ class LayoutStyler:
         QPushButton:disabled {{
             background: {surface_light};
             color: {text_muted};
-            border: 1px solid {self.color_manager.get_color('border', 0.2)};
+            border: 1px solid {self.color_manager.get_color("border", 0.2)};
         }}
         """
 
@@ -313,11 +313,11 @@ class LayoutStyler:
         QCheckBox::indicator:checked {{
             background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                 stop:0 {primary_color},
-                stop:1 {self.color_manager.get_color('primary_light')});
+                stop:1 {self.color_manager.get_color("primary_light")});
             border-color: {primary_color};
         }}
 
         QCheckBox::indicator:hover {{
-            border-color: {self.color_manager.get_color('border_light')};
+            border-color: {self.color_manager.get_color("border_light")};
         }}
         """

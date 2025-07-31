@@ -8,7 +8,7 @@ Orchestrates views, controllers, and state management with clean separation of c
 import logging
 from typing import Optional
 
-from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer

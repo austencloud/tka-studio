@@ -1,6 +1,5 @@
 from enums.prop_type import PropType
 
-
 prop_class_mapping = {
     "Hand": PropType.Hand,
     "Staff": PropType.Staff,

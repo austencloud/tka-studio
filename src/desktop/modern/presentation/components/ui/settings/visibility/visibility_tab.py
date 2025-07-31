@@ -8,19 +8,22 @@ TKA clean architecture principles. Reduced from 631 lines to focused coordinatio
 import logging
 from typing import Optional
 
-from shared.application.services.pictograph.simple_visibility_service import (
-    get_visibility_service,
+from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+
+from desktop.modern.core.interfaces.tab_settings_interfaces import (
+    IVisibilitySettingsManager,
 )
-from desktop.modern.core.interfaces.tab_settings_interfaces import IVisibilitySettingsManager
 from desktop.modern.presentation.components.ui.settings.visibility.components import (
     DependencyWarning,
     ElementVisibilitySection,
     MotionControlsSection,
     VisibilityPreviewSection,
 )
-from PyQt6.QtCore import QTimer, pyqtSignal
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from shared.application.services.pictograph.simple_visibility_service import (
+    get_visibility_service,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -294,10 +297,11 @@ class VisibilityTab(QWidget):
         and triggers them to re-render with the new visibility settings.
         """
         try:
+            from PyQt6.QtWidgets import QApplication
+
             from desktop.modern.presentation.components.pictograph.pictograph_scene import (
                 PictographScene,
             )
-            from PyQt6.QtWidgets import QApplication
 
             # Get the main application instance
             app = QApplication.instance()

@@ -1,17 +1,16 @@
 # src/main_window/main_widget/sequence_card_tab/tab.py
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QFrame,
-    QProgressBar,
-)
+from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
-
-
-from typing import TYPE_CHECKING
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.sequence_card_tab import (

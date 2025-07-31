@@ -6,7 +6,7 @@ including lesson selection, quiz functionality, and progress tracking.
 """
 
 import logging
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget

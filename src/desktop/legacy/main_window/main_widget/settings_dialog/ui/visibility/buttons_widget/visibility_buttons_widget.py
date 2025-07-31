@@ -1,6 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout
-from .visibility_button import VisibilityButton
 from typing import TYPE_CHECKING
+
+from PyQt6.QtWidgets import QGridLayout, QWidget
+
+from .visibility_button import VisibilityButton
 
 if TYPE_CHECKING:
     from ..visibility_tab import VisibilityTab

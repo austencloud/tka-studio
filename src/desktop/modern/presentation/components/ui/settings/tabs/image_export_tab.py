@@ -8,7 +8,6 @@ clean architecture and glassmorphism design.
 
 from typing import Dict, Union
 
-from desktop.modern.core.interfaces.tab_settings_interfaces import IImageExporter
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
 from PyQt6.QtWidgets import (
@@ -23,6 +22,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from desktop.modern.core.interfaces.tab_settings_interfaces import IImageExporter
 
 
 class ImageExportPreviewPanel(QFrame):

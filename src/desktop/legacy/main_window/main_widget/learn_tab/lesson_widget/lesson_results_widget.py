@@ -1,6 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame
 
 from main_window.main_widget.learn_tab.lesson_widget.lesson_results_label import (
     LessonResultLabel,
@@ -8,7 +6,8 @@ from main_window.main_widget.learn_tab.lesson_widget.lesson_results_label import
 from main_window.main_widget.learn_tab.lesson_widget.lesson_start_over_button import (
     LessonStartOverButton,
 )
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.learn_tab import LearnTab
@@ -94,11 +93,11 @@ class LessonResultsWidget(QWidget):
     def show_results(self, lesson_widget: "LessonWidget", incorrect_guesses):
         """Display the results after the quiz or countdown ends."""
         self.set_result_text(
-            f"🎉 Well done!! 🎉\n\n"
+            "🎉 Well done!! 🎉\n\n"
             + f"You successfully completed {lesson_widget.current_question - 1} question"
             + f"{'s' if lesson_widget.current_question - 1 != 1 else ''}"
             + (
-                f"!\nwithout making any mistakes! Great job!"
+                "!\nwithout making any mistakes! Great job!"
                 if incorrect_guesses == 0
                 else f" but you made {incorrect_guesses} mistake"
                 f"{'s' if incorrect_guesses != 1 else ''}.\nKeep on practicing!"

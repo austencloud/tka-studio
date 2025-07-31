@@ -13,7 +13,7 @@ from .window_state_manager import WindowStateManager
 
 __all__ = [
     "ComponentVisibilityManager",
-    "GraphEditorStateManager", 
+    "GraphEditorStateManager",
     "HotkeyRegistry",
     "OptionPickerStateManager",
     "TabStateManager",

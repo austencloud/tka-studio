@@ -294,9 +294,7 @@ class IOptionProvider(ABC):
 
     @abstractmethod
     def filter_options(
-        self, 
-        options: List[Dict[str, Any]], 
-        filters: Dict[str, Any]
+        self, options: List[Dict[str, Any]], filters: Dict[str, Any]
     ) -> List[Dict[str, Any]]:
         """
         Filter options based on criteria.
@@ -314,10 +312,7 @@ class IOptionProvider(ABC):
 
     @abstractmethod
     def sort_options(
-        self, 
-        options: List[Dict[str, Any]], 
-        sort_key: str, 
-        reverse: bool = False
+        self, options: List[Dict[str, Any]], sort_key: str, reverse: bool = False
     ) -> List[Dict[str, Any]]:
         """
         Sort options by a key.
@@ -335,7 +330,9 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def search_options(self, query: str, option_type: OptionType) -> List[Dict[str, Any]]:
+    def search_options(
+        self, query: str, option_type: OptionType
+    ) -> List[Dict[str, Any]]:
         """
         Search options by query.
 
@@ -400,11 +397,7 @@ class ISequenceOptionService(ABC):
         """
 
     @abstractmethod
-    def apply_option_to_sequence(
-        self, 
-        sequence_id: str, 
-        option_id: str
-    ) -> bool:
+    def apply_option_to_sequence(self, sequence_id: str, option_id: str) -> bool:
         """
         Apply an option to a sequence.
 
@@ -421,9 +414,7 @@ class ISequenceOptionService(ABC):
 
     @abstractmethod
     def get_compatible_options(
-        self, 
-        sequence_id: str, 
-        position: int
+        self, sequence_id: str, position: int
     ) -> List[Dict[str, Any]]:
         """
         Get options compatible with a specific position in sequence.
@@ -441,10 +432,7 @@ class ISequenceOptionService(ABC):
 
     @abstractmethod
     def validate_option_compatibility(
-        self, 
-        sequence_id: str, 
-        option_id: str, 
-        position: int
+        self, sequence_id: str, option_id: str, position: int
     ) -> Tuple[bool, List[str]]:
         """
         Validate option compatibility with sequence.
@@ -462,10 +450,7 @@ class ISequenceOptionService(ABC):
         """
 
     @abstractmethod
-    def get_next_recommended_options(
-        self, 
-        sequence_id: str
-    ) -> List[Dict[str, Any]]:
+    def get_next_recommended_options(self, sequence_id: str) -> List[Dict[str, Any]]:
         """
         Get recommended next options for a sequence.
 
@@ -480,10 +465,7 @@ class ISequenceOptionService(ABC):
         """
 
     @abstractmethod
-    def analyze_sequence_patterns(
-        self, 
-        sequence_id: str
-    ) -> Dict[str, Any]:
+    def analyze_sequence_patterns(self, sequence_id: str) -> Dict[str, Any]:
         """
         Analyze patterns in a sequence to suggest options.
 

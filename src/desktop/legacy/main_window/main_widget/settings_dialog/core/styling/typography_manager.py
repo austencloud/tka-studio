@@ -5,7 +5,8 @@ Extracted from GlassmorphismStyler to follow Single Responsibility Principle.
 """
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from PyQt6.QtGui import QFont
 
 

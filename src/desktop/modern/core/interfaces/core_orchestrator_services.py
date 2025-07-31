@@ -14,8 +14,7 @@ class IApplicationOrchestrator(ABC):
 
     @abstractmethod
     def initialize_application(
-        self, 
-        progress_callback: Optional[Callable[[str, int], None]] = None
+        self, progress_callback: Optional[Callable[[str, int], None]] = None
     ) -> bool:
         """
         Initialize the complete application.
@@ -102,9 +101,9 @@ class IApplicationInitializationOrchestrator(ABC):
 
     @abstractmethod
     def initialize_services(
-        self, 
+        self,
         container: Any,
-        progress_callback: Optional[Callable[[str, int], None]] = None
+        progress_callback: Optional[Callable[[str, int], None]] = None,
     ) -> bool:
         """
         Initialize all application services.
@@ -122,9 +121,9 @@ class IApplicationInitializationOrchestrator(ABC):
 
     @abstractmethod
     def initialize_ui_components(
-        self, 
+        self,
         main_window: Any,
-        progress_callback: Optional[Callable[[str, int], None]] = None
+        progress_callback: Optional[Callable[[str, int], None]] = None,
     ) -> bool:
         """
         Initialize UI components.
@@ -388,11 +387,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def set_window_geometry(
-        self, 
-        window: Any, 
-        geometry: Dict[str, int]
-    ) -> None:
+    def set_window_geometry(self, window: Any, geometry: Dict[str, int]) -> None:
         """
         Set window geometry.
 
@@ -486,11 +481,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def restore_window_state(
-        self, 
-        window: Any, 
-        state: Dict[str, Any]
-    ) -> None:
+    def restore_window_state(self, window: Any, state: Dict[str, Any]) -> None:
         """
         Restore window state.
 

@@ -7,11 +7,9 @@ ROBUST: Handles all error cases gracefully, works without optional services.
 
 import logging
 import time
-from typing import Any, Dict, List
+from typing import Any
 
-from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.generation_services import (
-    GenerationMode,
     IGenerationService,
     ValidationResult,
 )

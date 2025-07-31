@@ -1,7 +1,8 @@
 import importlib
 
-from data.prop_class_mapping import PropType
 from objects.prop.prop import Prop
+
+from data.prop_class_mapping import PropType
 
 
 class PropFactory:

@@ -1,11 +1,10 @@
 import logging
 from typing import TYPE_CHECKING
 
-
+from objects.motion.motion import Motion
 from placement_managers.arrow_placement_manager.arrow_placement_context import (
     ArrowPlacementContext,
 )
-
 
 from data.constants import (
     BLUE,
@@ -15,7 +14,6 @@ from data.constants import (
     OUT,
     RED,
 )
-from objects.motion.motion import Motion
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.managers.getter.pictograph_getter import (
@@ -62,9 +60,7 @@ class OriKeyGenerator:
             color == RED
             and start_ori in [CLOCK, COUNTER]
             and other_start_ori in [IN, OUT]
-        ):
-            return "from_layer3_blue1_red2"
-        elif (
+        ) or (
             color == BLUE
             and start_ori in [IN, OUT]
             and other_start_ori in [CLOCK, COUNTER]
@@ -102,9 +98,7 @@ class OriKeyGenerator:
             motion.state.color == RED
             and motion.state.start_ori in [CLOCK, COUNTER]
             and other_motion.state.start_ori in [IN, OUT]
-        ):
-            return "from_layer3_blue1_red2"
-        elif (
+        ) or (
             motion.state.color == BLUE
             and motion.state.start_ori in [IN, OUT]
             and other_motion.state.start_ori in [CLOCK, COUNTER]

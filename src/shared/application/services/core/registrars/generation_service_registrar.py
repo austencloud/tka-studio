@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class GenerationServiceRegistrar(BaseServiceRegistrar):
     """
     Registrar for generation-related services.
-    
+
     Critical registrar handling sequence generation services required for
     the Generate panel functionality in the application.
     """
@@ -49,12 +49,13 @@ class GenerationServiceRegistrar(BaseServiceRegistrar):
         """Register core generation services."""
         try:
             # Import service interfaces
+            # Import service implementations
+            from desktop.modern.application.services.generation.generation_service import (
+                GenerationService,
+            )
             from desktop.modern.core.interfaces.generation_services import (
                 IGenerationService,
             )
-
-            # Import service implementations
-            from desktop.modern.application.services.generation.generation_service import GenerationService
 
             # Register core generation services with container injection
             # Create a wrapper class that the DI container can instantiate
@@ -75,7 +76,7 @@ class GenerationServiceRegistrar(BaseServiceRegistrar):
             container.register_singleton(
                 IGenerationService, ContainerAwareGenerationService
             )
-            
+
             self._mark_service_available("IGenerationService")
             logger.info("✅ Core generation services registered successfully")
 

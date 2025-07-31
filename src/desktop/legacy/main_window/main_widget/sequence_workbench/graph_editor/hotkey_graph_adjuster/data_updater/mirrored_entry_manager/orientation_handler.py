@@ -1,9 +1,12 @@
 import logging
 from typing import List
+
 from enums.letter.letter import Letter
 from enums.letter.letter_condition import LetterCondition
-from data.constants import BLUE, RED, IN, OUT
 from objects.arrow.arrow import Arrow
+
+from data.constants import BLUE, IN, OUT, RED
+
 from .turns_pattern_manager import TurnsPatternManager
 
 logger = logging.getLogger(__name__)

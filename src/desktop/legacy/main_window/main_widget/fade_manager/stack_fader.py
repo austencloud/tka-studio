@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Optional
+
 from PyQt6.QtWidgets import QStackedWidget
 
 if TYPE_CHECKING:

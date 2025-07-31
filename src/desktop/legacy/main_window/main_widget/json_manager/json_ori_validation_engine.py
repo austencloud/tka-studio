@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from data.constants import (
     BLUE,
     BLUE_ATTRS,
@@ -41,9 +42,9 @@ class JsonOriValidationEngine:
 
         # Recalculate the end orientation
         for color in [RED, BLUE]:
-            pictograph[f"{color}_attributes"][
-                END_ORI
-            ] = self.ori_calculator.calculate_end_ori(pictograph, color)
+            pictograph[f"{color}_attributes"][END_ORI] = (
+                self.ori_calculator.calculate_end_ori(pictograph, color)
+            )
 
         return pictograph
 

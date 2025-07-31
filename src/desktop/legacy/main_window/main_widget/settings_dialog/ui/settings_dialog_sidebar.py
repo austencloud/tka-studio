@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QListWidget, QListWidgetItem, QLabel, QVBoxLayout, QWidget
-from PyQt6.QtCore import Qt, pyqtSignal, QSize, QEvent
-from PyQt6.QtGui import QPixmap, QPainter, QColor
+
+from PyQt6.QtCore import QEvent, QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QColor, QPainter, QPixmap
+from PyQt6.QtWidgets import QLabel, QListWidget, QListWidgetItem, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.legacy_settings_dialog import (

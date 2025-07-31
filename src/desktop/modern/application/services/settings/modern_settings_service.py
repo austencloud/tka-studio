@@ -12,11 +12,11 @@ Architecture:
 - QSettings integration: Platform-independent persistence
 """
 
+from datetime import datetime
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -29,7 +29,6 @@ from desktop.modern.core.interfaces.settings_services import (
     IPropTypeSettingsManager,
     IUserProfileSettingsManager,
     IVisibilitySettingsManager,
-    PropType,
 )
 
 T = TypeVar("T")
@@ -119,8 +118,8 @@ class ApplicationStateMemento:
 
     def to_json(self) -> str:
         """Convert memento to JSON string for serialization."""
-        import json
         from datetime import datetime
+        import json
 
         def datetime_serializer(obj):
             """JSON serializer for datetime objects."""
@@ -535,7 +534,7 @@ class ModernSettingsService(QObject):
                 logger.info("No state memento file found")
                 return None
 
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 memento_data = json.load(f)
 
             memento = ApplicationStateMemento.from_dict(memento_data)

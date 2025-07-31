@@ -1,13 +1,12 @@
 from typing import TYPE_CHECKING
-from enums.letter.letter_type import LetterType
 
-from enums.prop_type import PropType
 from enums.letter.letter import Letter
-
+from enums.letter.letter_type import LetterType
+from enums.prop_type import PropType
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.prop.prop import Prop
 
 if TYPE_CHECKING:

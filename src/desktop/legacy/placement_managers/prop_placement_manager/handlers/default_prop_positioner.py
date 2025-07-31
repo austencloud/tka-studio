@@ -1,23 +1,26 @@
 # default_prop_positioner.py
 
-from PyQt6.QtCore import QPointF
-from typing import TYPE_CHECKING
-from data.constants import BOX, DIAMOND
-from objects.prop.prop import Prop
-import logging
 from functools import lru_cache
+import logging
+from typing import TYPE_CHECKING
+
+from objects.prop.prop import Prop
+from PyQt6.QtCore import QPointF
+
+from data.constants import BOX, DIAMOND
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.grid.grid_point import GridPoint
-    from ..prop_placement_manager import PropPlacementManager
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
+    from ..prop_placement_manager import PropPlacementManager
 
 logger = logging.getLogger(__name__)
 
 
 class DefaultPropPositioner:
     def __init__(self, prop_placement_manager: "PropPlacementManager") -> None:
-        self.pictograph: "LegacyPictograph" = prop_placement_manager.pictograph
+        self.pictograph: LegacyPictograph = prop_placement_manager.pictograph
         self.prop_placement_manager = prop_placement_manager
 
     def set_prop_to_default_loc(self, prop: Prop) -> None:

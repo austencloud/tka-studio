@@ -11,7 +11,11 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QFontMetrics, QImage, QPainter, QPen
-from desktop.modern.core.interfaces.image_export_services import IUserInfoDrawer, ImageExportOptions
+
+from desktop.modern.core.interfaces.image_export_services import (
+    ImageExportOptions,
+    IUserInfoDrawer,
+)
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -22,7 +26,7 @@ logger = logging.getLogger(__name__)
 class UserInfoDrawer(IUserInfoDrawer):
     """
     Drawer for rendering user information with legacy-compatible positioning.
-    
+
     This drawer replicates the exact user info rendering logic from the Legacy system,
     including font scaling and positioning for user name, date, and notes.
     """
@@ -30,18 +34,18 @@ class UserInfoDrawer(IUserInfoDrawer):
     def __init__(self, font_margin_helper: "FontMarginHelper"):
         """
         Initialize the user info drawer.
-        
+
         Args:
             font_margin_helper: Helper for font and margin calculations
         """
         self.font_margin_helper = font_margin_helper
-        
+
         # Legacy-compatible base font settings
         self.user_info_font_bold = QFont("Georgia", 50, QFont.Weight.Bold)
         self.user_info_font_normal = QFont("Georgia", 50, QFont.Weight.Normal)
         self.base_margin = 50
         self.border_width = 3
-        
+
         logger.debug("UserInfoDrawer initialized with legacy-compatible settings")
 
     def draw_user_info(
@@ -52,7 +56,7 @@ class UserInfoDrawer(IUserInfoDrawer):
     ) -> None:
         """
         Draw user information onto the image using legacy scaling and positioning.
-        
+
         Args:
             image: Target image
             options: Export options containing user info
@@ -112,15 +116,16 @@ class UserInfoDrawer(IUserInfoDrawer):
     def _format_export_date(self, date_str: str) -> str:
         """
         Format export date in legacy format.
-        
+
         Args:
             date_str: Date string to format
-            
+
         Returns:
             Formatted date string
         """
         if not date_str:
             from datetime import datetime
+
             date_str = datetime.now().strftime("%m-%d-%Y")
 
         # Legacy format: remove leading zeros
@@ -129,6 +134,7 @@ class UserInfoDrawer(IUserInfoDrawer):
         except (ValueError, AttributeError):
             logger.warning(f"Invalid date format: {date_str}, using current date")
             from datetime import datetime
+
             return datetime.now().strftime("%-m-%-d-%Y")
 
     def _draw_text_at_position(
@@ -143,7 +149,7 @@ class UserInfoDrawer(IUserInfoDrawer):
     ) -> None:
         """
         Draw text at the specified position using exact legacy positioning.
-        
+
         Args:
             painter: QPainter to draw with
             image: Target image
@@ -182,11 +188,11 @@ class UserInfoDrawer(IUserInfoDrawer):
     def _calculate_text_dimensions(self, text: str, font: QFont) -> tuple[int, int]:
         """
         Calculate text dimensions for the given font.
-        
+
         Args:
             text: Text to measure
             font: Font to use for measurement
-            
+
         Returns:
             Tuple of (width, height)
         """

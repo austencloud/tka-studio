@@ -6,9 +6,10 @@ Tests buttons and provides clear guidance for AI agents when buttons fail.
 
 import time
 from typing import List
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtCore import Qt, QPoint
+
+from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QPushButton
 
 from desktop.modern.core.testing.ai_agent_helpers import AITestResult
 
@@ -279,7 +280,7 @@ class ButtonTester:
         print(f"   📁 File: {guidance.get('file', 'Unknown')}")
         print(f"   ⚙️  Method: {guidance.get('method', 'Unknown')}")
         print(f"   🔗 Signal: {guidance.get('signal', 'Unknown')}")
-        print(f"   🐛 Common Issues:")
+        print("   🐛 Common Issues:")
 
         for issue in guidance.get("common_issues", []):
             print(f"      • {issue}")
@@ -310,7 +311,7 @@ class ButtonTester:
         overall_success = failed_tests == 0
         execution_time = time.time() - start_time
 
-        print(f"\n📊 BUTTON TESTING SUMMARY:")
+        print("\n📊 BUTTON TESTING SUMMARY:")
         print(f"   ✅ Successful: {successful_tests}/{len(results)}")
         print(f"   ❌ Failed: {failed_tests}/{len(results)}")
         print(f"   ⏱️  Total time: {execution_time:.2f}s")

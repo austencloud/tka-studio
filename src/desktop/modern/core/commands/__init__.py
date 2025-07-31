@@ -1,10 +1,10 @@
 """Command pattern infrastructure for undoable operations."""
 
 from .command_system import (
-    ICommand,
+    CommandError,
     CommandProcessor,
     CommandResult,
-    CommandError,
+    ICommand,
 )
 
 __all__ = [

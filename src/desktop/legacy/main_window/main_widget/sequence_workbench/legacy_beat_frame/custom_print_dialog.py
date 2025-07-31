@@ -1,19 +1,18 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt6.QtGui import QPixmap, QPainter
-from PyQt6.QtCore import Qt
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter, QPixmap
+from PyQt6.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QGraphicsView,
-    QSpinBox,
-    QLabel,
     QGraphicsScene,
+    QGraphicsView,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSpinBox,
+    QVBoxLayout,
 )
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

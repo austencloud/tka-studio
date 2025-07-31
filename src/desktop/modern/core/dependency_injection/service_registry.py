@@ -10,10 +10,10 @@ Handles all service registration operations including:
 - Lazy registration
 """
 
-from typing import Type, TypeVar, Dict, Any, Optional, Callable
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 import logging
+from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 logger = logging.getLogger(__name__)
 

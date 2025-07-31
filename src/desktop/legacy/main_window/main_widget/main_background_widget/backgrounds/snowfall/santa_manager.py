@@ -1,10 +1,11 @@
 import random
-from PyQt6.QtGui import QPixmap, QPainter, QTransform
-from PyQt6.QtWidgets import QWidget
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter, QPixmap, QTransform
+from PyQt6.QtWidgets import QWidget
+from utils.path_helpers import get_image_path
 
 from data.constants import DIRECTION
-from utils.path_helpers import get_image_path
 
 
 class SantaManager:

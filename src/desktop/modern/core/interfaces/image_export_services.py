@@ -9,10 +9,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from PyQt6.QtGui import QImage, QPainter
+from PyQt6.QtCore import QRect
+from PyQt6.QtGui import QFont, QImage, QPainter
 
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 @dataclass

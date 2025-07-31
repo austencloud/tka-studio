@@ -1,14 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QFont
-
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QWidget,
-)
-
 
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.current_word_line_edit import (
     CurrentWordLineEdit,
+)
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QWidget,
 )
 from utils.word_simplifier import WordSimplifier
 

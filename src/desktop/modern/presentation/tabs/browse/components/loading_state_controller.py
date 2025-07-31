@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class LoadingStateController:
     """
     Controller for managing loading state transitions.
-    
+
     Handles:
     - Loading/browsing widget visibility
     - Progress bar updates
@@ -33,7 +33,7 @@ class LoadingStateController:
     ):
         """
         Initialize the loading state controller.
-        
+
         Args:
             loading_widget: Widget to show during loading
             browsing_widget: Widget to show during browsing
@@ -44,20 +44,22 @@ class LoadingStateController:
         self.browsing_widget = browsing_widget
         self.loading_progress_bar = loading_progress_bar
         self.loading_label = loading_label
-        
+
         # State tracking
         self._is_loading = False
         self._loading_cancelled = False
 
-    def show_loading_state(self, message: str = "Preparing to load sequences...") -> None:
+    def show_loading_state(
+        self, message: str = "Preparing to load sequences..."
+    ) -> None:
         """
         Show loading UI and hide main content.
-        
+
         Args:
             message: Loading message to display
         """
         logger.info(f"🔄 [LOADING_STATE] Showing loading state: {message}")
-        
+
         self._is_loading = True
         self._loading_cancelled = False
 
@@ -77,7 +79,7 @@ class LoadingStateController:
     def hide_loading_state(self) -> None:
         """Hide loading UI and show main content."""
         logger.info("✅ [LOADING_STATE] Hiding loading state")
-        
+
         self._is_loading = False
 
         if self.loading_widget:
@@ -86,14 +88,11 @@ class LoadingStateController:
             self.browsing_widget.show()
 
     def update_loading_progress(
-        self, 
-        current: int, 
-        total: int, 
-        message: str = ""
+        self, current: int, total: int, message: str = ""
     ) -> None:
         """
         Update loading progress.
-        
+
         Args:
             current: Current progress value
             total: Total progress value
@@ -113,12 +112,14 @@ class LoadingStateController:
         if total > 0:
             percentage = (current / total) * 100
             if percentage % 25 == 0:  # Log at 25%, 50%, 75%, 100%
-                logger.info(f"📊 [LOADING_STATE] Progress: {current}/{total} ({percentage:.0f}%)")
+                logger.info(
+                    f"📊 [LOADING_STATE] Progress: {current}/{total} ({percentage:.0f}%)"
+                )
 
     def set_loading_message(self, message: str) -> None:
         """
         Set the loading message.
-        
+
         Args:
             message: Message to display
         """
@@ -129,7 +130,7 @@ class LoadingStateController:
         """Cancel the current loading operation."""
         logger.info("⛔ [LOADING_STATE] Loading cancelled")
         self._loading_cancelled = True
-        
+
         if self.loading_label:
             self.loading_label.setText("Cancelling...")
 
@@ -145,10 +146,10 @@ class LoadingStateController:
         """Reset the loading state."""
         self._is_loading = False
         self._loading_cancelled = False
-        
+
         if self.loading_progress_bar:
             self.loading_progress_bar.setValue(0)
-        
+
         if self.loading_label:
             self.loading_label.setText("")
 
@@ -161,7 +162,7 @@ class LoadingStateController:
     ) -> None:
         """
         Update the widget references.
-        
+
         Args:
             loading_widget: Widget to show during loading
             browsing_widget: Widget to show during browsing
@@ -180,16 +181,16 @@ class LoadingStateController:
     def prepare_for_progressive_loading(self) -> None:
         """Prepare state for progressive loading (keep browsing area visible)."""
         logger.info("🎨 [LOADING_STATE] Preparing for progressive loading")
-        
+
         # For progressive loading, we want to keep the browsing widget visible
         # and just clear the content, rather than showing a loading screen
         self._is_loading = True
         self._loading_cancelled = False
-        
+
         # Ensure browsing widget is visible
         if self.browsing_widget:
             self.browsing_widget.show()
-        
+
         # Hide loading widget since we're doing progressive loading
         if self.loading_widget:
             self.loading_widget.hide()
@@ -197,18 +198,20 @@ class LoadingStateController:
     def finalize_progressive_loading(self, total_loaded: int) -> None:
         """
         Finalize progressive loading state.
-        
+
         Args:
             total_loaded: Total number of items loaded
         """
-        logger.info(f"✅ [LOADING_STATE] Progressive loading completed: {total_loaded} items")
-        
+        logger.info(
+            f"✅ [LOADING_STATE] Progressive loading completed: {total_loaded} items"
+        )
+
         self._is_loading = False
-        
+
         # Ensure browsing widget is visible
         if self.browsing_widget:
             self.browsing_widget.show()
-        
+
         # Hide loading widget
         if self.loading_widget:
             self.loading_widget.hide()

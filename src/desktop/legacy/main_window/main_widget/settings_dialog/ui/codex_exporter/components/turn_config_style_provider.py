@@ -6,6 +6,7 @@ by leveraging the central theme module.
 """
 
 from PyQt6.QtWidgets import QWidget
+
 from ..theme import Colors, Sizing, StyleSheet
 
 

@@ -1,6 +1,12 @@
-import json
 import codecs
+import json
+
+from objects.arrow.arrow import Arrow
+from placement_managers.arrow_placement_manager.strategies.placement_key_generator import (
+    PlacementKeyGenerator,
+)
 from PyQt6.QtCore import QPointF
+from utils.path_helpers import get_data_path
 
 from data.constants import (
     ANTI,
@@ -11,11 +17,6 @@ from data.constants import (
     PRO,
     STATIC,
 )
-from objects.arrow.arrow import Arrow
-from placement_managers.arrow_placement_manager.strategies.placement_key_generator import (
-    PlacementKeyGenerator,
-)
-from utils.path_helpers import get_data_path
 
 
 class DefaultPlacementStrategy:

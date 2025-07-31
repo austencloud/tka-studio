@@ -1,23 +1,25 @@
 # src/main_window/main_widget/sequence_card_tab/tab.py
 import logging
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QApplication
-from PyQt6.QtCore import Qt, QTimer
-from interfaces.settings_manager_interface import ISettingsManager
+from typing import TYPE_CHECKING
+
 from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
+
+from .components.display.printable_displayer import PrintableDisplayer
+from .components.navigation.sidebar import SequenceCardNavSidebar
+from .components.pages.factory import SequenceCardPageFactory
+from .components.pages.printable_factory import PrintablePageFactory
+from .components.pages.printable_layout import PaperOrientation, PaperSize
 from .content_area import SequenceCardContentArea
+from .core.refresher import SequenceCardRefresher
+from .export.image_exporter import SequenceCardImageExporter
+from .export.page_exporter import SequenceCardPageExporter
 from .header import SequenceCardHeader
 from .initializer import USE_PRINTABLE_LAYOUT, SequenceCardInitializer
 from .resource_manager import SequenceCardResourceManager
 from .settings_handler import SequenceCardSettingsHandler
-from .components.navigation.sidebar import SequenceCardNavSidebar
-from .components.pages.factory import SequenceCardPageFactory
-from .core.refresher import SequenceCardRefresher
-from .components.pages.printable_factory import PrintablePageFactory
-from .components.pages.printable_layout import PaperSize, PaperOrientation
-from .export.image_exporter import SequenceCardImageExporter
-from .export.page_exporter import SequenceCardPageExporter
-from .components.display.printable_displayer import PrintableDisplayer
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

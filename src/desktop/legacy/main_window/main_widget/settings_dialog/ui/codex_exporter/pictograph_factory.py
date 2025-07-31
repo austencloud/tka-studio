@@ -2,16 +2,18 @@
 Creates pictographs for the codex exporter.
 """
 
-from typing import TYPE_CHECKING, Dict, Any, Union
+from typing import TYPE_CHECKING, Any, Dict, Union
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
 from data.constants import GRID_MODE
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
-        ImageExportTab,
-    )
     from main_window.main_widget.settings_dialog.ui.codex_exporter.codex_exporter_tab import (
         CodexExporterTab,
+    )
+    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
+        ImageExportTab,
     )
 
 
@@ -45,7 +47,7 @@ class CustomPropSvgManager:
         # Load the SVG data
         from utils.path_helpers import get_image_path
 
-        with open(get_image_path(svg_path), "r") as file:
+        with open(get_image_path(svg_path)) as file:
             svg_data = file.read()
 
         # Apply color transformations if needed
@@ -106,7 +108,7 @@ class CustomSvgManager:
         """
         from utils.path_helpers import get_image_path
 
-        with open(get_image_path(svg_path), "r") as file:
+        with open(get_image_path(svg_path)) as file:
             svg_data = file.read()
         return svg_data
 

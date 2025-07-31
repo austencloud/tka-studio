@@ -6,6 +6,7 @@ Ensures all pictograph components use the correct main window width for scaling 
 """
 
 from typing import List, Optional, Protocol, runtime_checkable
+
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
@@ -80,7 +81,6 @@ class WindowResizeCoordinator(QObject):
             self._current_window_width is None
             or abs(new_width - self._current_window_width) >= self._resize_threshold
         ):
-
             self._current_window_width = new_width
 
             # Emit signal to trigger re-scaling

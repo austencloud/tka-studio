@@ -19,9 +19,9 @@ from desktop.modern.core.interfaces.positioning_services import (
     IArrowRotationCalculator,
 )
 from desktop.modern.domain.models import (
+    Location,
     MotionData,
     MotionType,
-    Location,
     RotationDirection,
 )
 

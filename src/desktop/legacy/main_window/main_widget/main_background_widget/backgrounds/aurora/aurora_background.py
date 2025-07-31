@@ -1,15 +1,15 @@
 # aurora_background_manager.py
 
-from PyQt6.QtGui import QLinearGradient, QColor, QPainter
-from PyQt6.QtWidgets import QWidget
 import math
 
 from main_window.main_widget.main_background_widget.backgrounds.base_background import (
     BaseBackground,
 )
+from PyQt6.QtGui import QColor, QLinearGradient, QPainter
+from PyQt6.QtWidgets import QWidget
 
-from .sparkle_manager import SparkleManager
 from .blob_manager import BlobManager
+from .sparkle_manager import SparkleManager
 
 
 class AuroraBackground(BaseBackground):

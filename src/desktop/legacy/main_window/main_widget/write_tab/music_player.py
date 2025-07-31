@@ -1,7 +1,7 @@
 # music_player_widget.py
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QSlider
-from PyQt6.QtCore import QTimer, Qt
 import pygame
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QSlider, QWidget
 
 
 class MusicPlayer(QWidget):

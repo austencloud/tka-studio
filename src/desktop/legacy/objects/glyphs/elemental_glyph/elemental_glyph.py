@@ -1,7 +1,10 @@
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtSvg import QSvgRenderer
-
 from typing import TYPE_CHECKING
+
+from enums.letter.letter_type import LetterType
+from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from utils.path_helpers import get_image_path
 
 from data.constants import (
     QUARTER_OPP,
@@ -11,10 +14,6 @@ from data.constants import (
     TOG_OPP,
     TOG_SAME,
 )
-from enums.letter.letter_type import LetterType
-from legacy_settings_manager.global_settings.app_context import AppContext
-from utils.path_helpers import get_image_path
-
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
@@ -43,7 +42,7 @@ class ElementalGlyph(QGraphicsSvgItem):
         self.pictograph = pictograph
 
     def set_elemental_glyph(self) -> None:
-        if not self.pictograph.state.letter_type in [LetterType.Type1]:
+        if self.pictograph.state.letter_type not in [LetterType.Type1]:
             self.setVisible(False)
         vtg_mode = self.pictograph.state.vtg_mode
         svg_path: str = SVG_PATHS.get(vtg_mode, "")

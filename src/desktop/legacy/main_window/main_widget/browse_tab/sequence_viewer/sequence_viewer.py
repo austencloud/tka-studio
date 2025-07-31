@@ -1,14 +1,13 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
 from typing import TYPE_CHECKING, Optional
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
-from .sequence_viewer_state import SequenceViewerState
-from .sequence_viewer_action_button_panel import SequenceViewerActionButtonPanel
 from ..thumbnail_box.thumbnail_box import ThumbnailBox
-
+from .sequence_viewer_action_button_panel import SequenceViewerActionButtonPanel
+from .sequence_viewer_state import SequenceViewerState
 
 if TYPE_CHECKING:
     from ..browse_tab import BrowseTab

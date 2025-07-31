@@ -9,10 +9,10 @@ Provides:
 - Diagnostic information
 """
 
-from typing import Dict, List, Type, Any, get_type_hints
+from datetime import datetime
 import inspect
 import logging
-from datetime import datetime
+from typing import Any, Dict, List, Type, get_type_hints
 
 logger = logging.getLogger(__name__)
 
@@ -95,8 +95,8 @@ class DebuggingTools:
 
     def _is_primitive_type(self, param_type: Type) -> bool:
         """Check if a type is a primitive type."""
-        from pathlib import Path
         from datetime import datetime, timedelta
+        from pathlib import Path
         from typing import Union
 
         primitive_types = {

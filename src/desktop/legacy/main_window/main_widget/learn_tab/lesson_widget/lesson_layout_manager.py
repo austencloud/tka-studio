@@ -1,7 +1,8 @@
 # learn_tab/base_classes/lesson_widget/lesson_layout_manager.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
 
 if TYPE_CHECKING:
     from .lesson_widget import LessonWidget

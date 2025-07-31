@@ -12,8 +12,8 @@ DI Container Contract Tests
 Defines behavioral contracts for the dependency injection container system.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -80,14 +80,14 @@ class TestDIContainerContracts:
         - Interface-to-implementation mapping works
         """
         try:
-            from shared.application.services.layout.layout_manager import (
-                LayoutManager as LayoutManagementService,
-            )
             from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
             from desktop.modern.core.interfaces.core_services import ILayoutService
+            from shared.application.services.layout.layout_manager import (
+                LayoutManager as LayoutManagementService,
+            )
 
             # Reset and create container
             reset_container()
@@ -118,14 +118,14 @@ class TestDIContainerContracts:
         - Unregistered services raise appropriate errors
         """
         try:
-            from shared.application.services.layout.layout_manager import (
-                LayoutManager as LayoutManagementService,
-            )
             from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
             from desktop.modern.core.interfaces.core_services import ILayoutService
+            from shared.application.services.layout.layout_manager import (
+                LayoutManager as LayoutManagementService,
+            )
 
             # Reset and create container
             reset_container()
@@ -156,14 +156,14 @@ class TestDIContainerContracts:
         - New registrations work after reset
         """
         try:
-            from shared.application.services.layout.layout_manager import (
-                LayoutManager as LayoutManagementService,
-            )
             from desktop.modern.core.dependency_injection.di_container import (
                 DIContainer,
                 reset_container,
             )
             from desktop.modern.core.interfaces.core_services import ILayoutService
+            from shared.application.services.layout.layout_manager import (
+                LayoutManager as LayoutManagementService,
+            )
 
             # Create and configure container
             reset_container()

@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtCore import QPropertyAnimation, QEasingCurve, QObject, QAbstractAnimation
 import logging
+from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QAbstractAnimation, QEasingCurve, QObject, QPropertyAnimation
 
 if TYPE_CHECKING:
     from .codex import Codex

@@ -25,7 +25,6 @@ from domain.models import (
     WindowGeometry,
 )
 from PyQt6.QtCore import QRect
-from PyQt6.QtGui import QScreen
 from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)

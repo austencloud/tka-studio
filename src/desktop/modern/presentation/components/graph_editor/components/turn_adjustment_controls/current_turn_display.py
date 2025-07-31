@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
 class CurrentTurnDisplay(QWidget):
@@ -12,7 +12,7 @@ class CurrentTurnDisplay(QWidget):
             QLabel {{
                 font-size: 14px;
                 font-weight: bold;
-                color: {'#4A90E2' if color == 'blue' else '#E74C3C'};
+                color: {"#4A90E2" if color == "blue" else "#E74C3C"};
                 padding: 2px;
             }}
             """

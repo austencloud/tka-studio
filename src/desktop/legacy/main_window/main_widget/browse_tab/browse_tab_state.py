@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from legacy_settings_manager.browse_tab_settings import BrowseTabSettings
 

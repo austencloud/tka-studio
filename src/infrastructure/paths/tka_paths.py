@@ -24,10 +24,10 @@ FEATURES:
 """
 
 import os
-import sys
-import warnings
 from pathlib import Path
+import sys
 from typing import List, Optional, Set
+import warnings
 
 # Global state
 _PATHS_CONFIGURED = False
@@ -343,7 +343,7 @@ def print_debug_info() -> None:
         exists = "✅" if Path(path).exists() else "❌"
         print(f"  {i}. {exists} {path}")
 
-    print(f"\nFirst 10 sys.path entries:")
+    print("\nFirst 10 sys.path entries:")
     for i, path in enumerate(info["sys_path_first_10"], 1):
         print(f"  {i}. {path}")
 

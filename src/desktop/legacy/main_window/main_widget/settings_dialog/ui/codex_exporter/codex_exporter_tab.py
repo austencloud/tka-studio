@@ -4,18 +4,6 @@ Modern 2025 UI design with glass-morphism and gradient effects.
 """
 
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QFrame,
-    QGraphicsDropShadowEffect,
-    QSizePolicy,
-)
-
-from PyQt6.QtGui import QFont, QColor
-
 
 from main_window.main_widget.settings_dialog.ui.codex_exporter.codex_exporter import (
     CodexExporter,
@@ -25,6 +13,16 @@ from main_window.main_widget.settings_dialog.ui.codex_exporter.components.turn_c
 )
 from main_window.main_widget.settings_dialog.ui.codex_exporter.widgets import (
     ModernButton,
+)
+from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QLabel,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
 )
 
 from .theme import Colors, Sizing

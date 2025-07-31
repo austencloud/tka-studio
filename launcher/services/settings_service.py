@@ -8,7 +8,7 @@ with proper defaults following TKA patterns.
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from desktop.modern.core.interfaces import ISettingsService
 
@@ -96,7 +96,7 @@ class SettingsService(ISettingsService):
                 logger.error(f"Settings file not found: {file_path}")
                 return False
 
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 imported_settings = json.load(f)
 
             # Validate imported settings
@@ -124,7 +124,7 @@ class SettingsService(ISettingsService):
         """Load settings from file."""
         try:
             if self._settings_file.exists():
-                with open(self._settings_file, "r", encoding="utf-8") as f:
+                with open(self._settings_file, encoding="utf-8") as f:
                     self._settings = json.load(f)
 
                 # Validate loaded settings

@@ -5,9 +5,9 @@ Handles data loading and filtering without over-engineered patterns.
 Focused, testable, and maintainable - around 150 lines.
 """
 
+from copy import deepcopy
 import csv
 import logging
-from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -48,14 +48,14 @@ class PictographDataManager:
             # Load diamond pictographs
             diamond_file = data_dir / "DiamondPictographDataframe.csv"
             if diamond_file.exists():
-                with open(diamond_file, "r", encoding="utf-8") as f:
+                with open(diamond_file, encoding="utf-8") as f:
                     reader = csv.DictReader(f)
                     self.diamond_data = list(reader)
 
             # Load box pictographs
             box_file = data_dir / "BoxPictographDataframe.csv"
             if box_file.exists():
-                with open(box_file, "r", encoding="utf-8") as f:
+                with open(box_file, encoding="utf-8") as f:
                     reader = csv.DictReader(f)
                     self.box_data = list(reader)
 

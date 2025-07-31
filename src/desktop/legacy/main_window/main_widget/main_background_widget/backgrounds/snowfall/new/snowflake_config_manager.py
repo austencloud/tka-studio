@@ -1,5 +1,6 @@
 import json
-from PyQt6.QtCore import pyqtSignal, QObject
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class SnowflakeConfigManager(QObject):
@@ -12,7 +13,7 @@ class SnowflakeConfigManager(QObject):
 
     def load_config(self):
         try:
-            with open(self.config_path, "r") as file:
+            with open(self.config_path) as file:
                 self.config = json.load(file)
                 self.config_updated.emit(self.config)
         except FileNotFoundError:

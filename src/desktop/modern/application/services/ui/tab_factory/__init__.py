@@ -1,5 +1,5 @@
 """Tab factory services for consistent tab creation."""
 
-from .tab_factory import TabFactory, TabDefinition
+from .tab_factory import TabDefinition, TabFactory
 
-__all__ = ['TabFactory', 'TabDefinition']
+__all__ = ["TabFactory", "TabDefinition"]

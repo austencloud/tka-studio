@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QPushButton, QWidget, QHBoxLayout
 
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_nav_button import (
     ThumbnailBoxNavButton,
 )
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box import (

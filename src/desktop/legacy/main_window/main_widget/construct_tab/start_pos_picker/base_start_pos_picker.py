@@ -1,13 +1,15 @@
-from typing import Callable
-from PyQt6.QtWidgets import QWidget
 from copy import deepcopy
+from typing import Callable
+
 from base_widgets.pictograph.elements.views.start_pos_picker_pictograph_view import (
     StartPosPickerPictographView,
 )
-from data.positions_maps import box_positions, diamond_positions
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from data.constants import BOX, DIAMOND, END_POS, GRID_MODE, LETTER, START_POS
 from PyQt6.QtCore import QSize
+from PyQt6.QtWidgets import QWidget
+
+from data.constants import BOX, DIAMOND, END_POS, GRID_MODE, LETTER, START_POS
+from data.positions_maps import box_positions, diamond_positions
 
 
 class BaseStartPosPicker(QWidget):

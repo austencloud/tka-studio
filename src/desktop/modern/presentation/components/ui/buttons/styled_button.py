@@ -157,9 +157,10 @@ class StyledButton(QPushButton, StyleMixin):
     def update_appearance(self):
         """Update button appearance based on current state and context."""
         # Try to use new design system for supported contexts
-        if self._context == ButtonContext.NAVIGATION:
-            self._apply_design_system_styling()
-        elif self._context == ButtonContext.STANDARD:
+        if (
+            self._context == ButtonContext.NAVIGATION
+            or self._context == ButtonContext.STANDARD
+        ):
             self._apply_design_system_styling()
         else:
             # Fall back to legacy styling for unsupported contexts
@@ -215,10 +216,10 @@ class StyledButton(QPushButton, StyleMixin):
             QPushButton {{
                 background: {self._get_navigation_background()};
                 border: {self._get_navigation_border()};
-                border-radius: {self.config['border_radius']}px;
-                padding: {self.config['padding']};
+                border-radius: {self.config["border_radius"]}px;
+                padding: {self.config["padding"]};
                 color: {self._get_navigation_text_color()};
-                font-weight: {self.config['font_weight'].value};
+                font-weight: {self.config["font_weight"].value};
                 text-align: center;
                 outline: none;
                 /* Prevent text clipping issues */
@@ -231,7 +232,7 @@ class StyledButton(QPushButton, StyleMixin):
                 background: {self._get_navigation_hover_background()};
                 border: {self._get_navigation_hover_border()};
                 /* Ensure font-weight doesn't change on hover to prevent text shifting */
-                font-weight: {self.config['font_weight'].value};
+                font-weight: {self.config["font_weight"].value};
             }}
             QPushButton:pressed {{
                 background: {self._get_navigation_pressed_background()};
@@ -285,10 +286,10 @@ class StyledButton(QPushButton, StyleMixin):
             QPushButton {{
                 background: rgba(70, 130, 180, 0.8);
                 border: 1px solid rgba(70, 130, 180, 1.0);
-                border-radius: {self.config['border_radius']}px;
-                padding: {self.config['padding']};
+                border-radius: {self.config["border_radius"]}px;
+                padding: {self.config["padding"]};
                 color: white;
-                font-weight: {self.config['font_weight'].value};
+                font-weight: {self.config["font_weight"].value};
             }}
             QPushButton:hover {{
                 background: rgba(70, 130, 180, 0.9);
@@ -305,8 +306,8 @@ class StyledButton(QPushButton, StyleMixin):
             QPushButton {{
                 background: rgba(255, 255, 255, 0.1);
                 border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: {self.config['border_radius']}px;
-                padding: {self.config['padding']};
+                border-radius: {self.config["border_radius"]}px;
+                padding: {self.config["padding"]};
                 color: rgba(255, 255, 255, 0.8);
             }}
             QPushButton:hover {{
@@ -324,10 +325,10 @@ class StyledButton(QPushButton, StyleMixin):
             QPushButton {{
                 background: rgba(128, 128, 128, 0.6);
                 border: 1px solid rgba(128, 128, 128, 0.8);
-                border-radius: {self.config['border_radius']}px;
-                padding: {self.config['padding']};
+                border-radius: {self.config["border_radius"]}px;
+                padding: {self.config["padding"]};
                 color: white;
-                font-weight: {self.config['font_weight'].value};
+                font-weight: {self.config["font_weight"].value};
             }}
             QPushButton:hover {{
                 background: rgba(128, 128, 128, 0.8);
@@ -344,10 +345,10 @@ class StyledButton(QPushButton, StyleMixin):
             QPushButton {{
                 background: rgba(255, 165, 0, 0.8);
                 border: 2px solid rgba(255, 165, 0, 1.0);
-                border-radius: {self.config['border_radius']}px;
-                padding: {self.config['padding']};
+                border-radius: {self.config["border_radius"]}px;
+                padding: {self.config["padding"]};
                 color: white;
-                font-weight: {self.config['font_weight'].value};
+                font-weight: {self.config["font_weight"].value};
             }}
             QPushButton:hover {{
                 background: rgba(255, 165, 0, 0.9);

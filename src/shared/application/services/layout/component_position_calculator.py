@@ -6,13 +6,14 @@ This class preserves all original component positioning logic including
 flow layout, grid layout, and fixed positioning calculations.
 """
 
-from typing import Dict, Any, Tuple
+from typing import Any, Dict, Tuple
 
 from .beat_layout_calculator import BeatLayoutCalculator
 from .layout_types import LayoutMode
 
 try:
     from core.decorators import handle_service_errors
+
     from desktop.modern.core.monitoring import monitor_performance
 except ImportError:
 

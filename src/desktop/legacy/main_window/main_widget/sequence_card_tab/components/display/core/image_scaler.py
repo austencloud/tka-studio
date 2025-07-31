@@ -6,16 +6,18 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 
 import logging
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QImage, QPixmap
+
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QImage, QPixmap
 
-
-from ..scaling.scaling_calculator import ScalingCalculator
-from ..scaling.quality_enhancer import QualityEnhancer
 from ..scaling.aspect_ratio_manager import AspectRatioManager
+from ..scaling.quality_enhancer import QualityEnhancer
+from ..scaling.scaling_calculator import ScalingCalculator
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import PrintablePageFactory
+    from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import (
+        PrintablePageFactory,
+    )
 
 
 class ImageScaler:

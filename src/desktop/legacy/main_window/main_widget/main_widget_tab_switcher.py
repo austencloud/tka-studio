@@ -1,14 +1,16 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QApplication
+
 from main_window.main_widget.browse_tab.sequence_picker.filter_stack.sequence_picker_filter_stack import (
     BrowseTabSection,
 )
 from main_window.main_widget.tab_index import TAB_INDEX
 from main_window.main_widget.tab_indices import LeftStackIndex, RightStackIndex
 from main_window.main_widget.tab_name import TabName
+from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
+
     from desktop.modern.core.application_context import ApplicationContext
 
 
@@ -85,8 +87,8 @@ class MainWidgetTabSwitcher:
 
             print(f"🔍 LAYOUT DEBUG [{context}]:")
             print(f"   Total width: {total_w}px")
-            print(f"   Left: {left_w}px ({left_w/total_w*100:.1f}%)")
-            print(f"   Right: {right_w}px ({right_w/total_w*100:.1f}%)")
+            print(f"   Left: {left_w}px ({left_w / total_w * 100:.1f}%)")
+            print(f"   Right: {right_w}px ({right_w / total_w * 100:.1f}%)")
             print(f"   Ratio: {ratio:.2f} (target: 2.0)")
             print(f"   Stretch factors: Left={left_stretch}, Right={right_stretch}")
             print(f"   Left max width: {main_widget.left_stack.maximumWidth()}")
@@ -124,7 +126,7 @@ class MainWidgetTabSwitcher:
 
                 self.debug_layout_state(main_widget, "after_nuclear_meltdown")
 
-        except Exception as e:
+        except Exception:
             import traceback
 
             traceback.print_exc()
@@ -154,7 +156,7 @@ class MainWidgetTabSwitcher:
 
                 self.debug_layout_state(main_widget, "after_targeted_nuclear_strike")
 
-        except Exception as e:
+        except Exception:
             import traceback
 
             traceback.print_exc()

@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING
+
+from data.constants import *
+
 from .calculators.base_location_calculator import BaseLocationCalculator
 from .calculators.dash_location_calculator import DashLocationCalculator
 from .calculators.shift_location_calculator import ShiftLocationCalculator
 from .calculators.static_location_calculator import StaticLocationCalculator
-from data.constants import *
 
 if TYPE_CHECKING:
     from objects.arrow.arrow import Arrow

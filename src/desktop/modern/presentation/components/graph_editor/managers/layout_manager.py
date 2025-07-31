@@ -1,11 +1,11 @@
 import logging
-from typing import Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QHBoxLayout, QFrame, QSizePolicy
+from typing import TYPE_CHECKING, Optional
+
 from PyQt6.QtCore import QObject, Qt
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QSizePolicy
 
-from ..components.pictograph_container import GraphEditorPictographContainer
 from ..components.adjustment_panel import AdjustmentPanel
-
+from ..components.pictograph_container import GraphEditorPictographContainer
 from ..config import LayoutConfig
 
 logger = logging.getLogger(__name__)

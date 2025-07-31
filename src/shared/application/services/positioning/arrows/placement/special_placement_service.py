@@ -22,9 +22,9 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
-from desktop.modern.domain.models import MotionData, Orientation
-from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.core.types import Point
+from desktop.modern.domain.models import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 logger = logging.getLogger(__name__)
 
@@ -158,7 +158,7 @@ class SpecialPlacementService:
                     # Load all placement JSON files in this directory
                     for file_path in directory.glob("*_placements.json"):
                         try:
-                            with open(file_path, "r", encoding="utf-8") as f:
+                            with open(file_path, encoding="utf-8") as f:
                                 data = json.load(f)
                                 self.special_placements[mode][subfolder].update(data)
                         except Exception:
@@ -167,7 +167,9 @@ class SpecialPlacementService:
         except Exception:
             self.special_placements = {}
 
-    def _generate_orientation_key(self, motion: MotionData, pictograph_data: PictographData) -> str:
+    def _generate_orientation_key(
+        self, motion: MotionData, pictograph_data: PictographData
+    ) -> str:
         """Generate orientation key for special placement lookup."""
         # This is a simplified version - in full implementation would use SpecialPlacementOriKeyGenerator
         # For now, return a default key

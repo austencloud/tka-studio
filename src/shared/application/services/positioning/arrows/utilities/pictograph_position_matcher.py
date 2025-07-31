@@ -11,9 +11,7 @@ the principle that pictographs should be standalone without beat-specific fields
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
-from shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
-)
+
 from desktop.modern.domain.models import (
     ArrowData,
     GridData,
@@ -23,6 +21,9 @@ from desktop.modern.domain.models import (
     MotionType,
     PictographData,
     RotationDirection,
+)
+from shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
 )
 
 
@@ -251,7 +252,9 @@ class PictographPositionMatcher:
 
     def _generate_glyph_data(self, pictograph_data: PictographData) -> None:
         """Generate glyph data for pictograph data using the glyph data service."""
-        from shared.application.services.glyphs.glyph_data_service import GlyphDataService
+        from shared.application.services.glyphs.glyph_data_service import (
+            GlyphDataService,
+        )
 
         glyph_service = GlyphDataService()
         glyph_service.determine_glyph_data(pictograph_data)
@@ -345,7 +348,9 @@ class PictographPositionMatcher:
             }
 
         # Import here to avoid circular imports
-        from desktop.modern.domain.models.letter_type_classifier import LetterTypeClassifier
+        from desktop.modern.domain.models.letter_type_classifier import (
+            LetterTypeClassifier,
+        )
 
         letters = [opt.letter or "Unknown" for opt in options]
         letter_types = {}

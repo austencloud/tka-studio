@@ -7,10 +7,8 @@ the sequence appears correctly in the sequence viewer.
 """
 
 import logging
-import sys
-import time
 from pathlib import Path
-from typing import Optional
+import sys
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -186,7 +184,7 @@ class BrowseSequenceSelectionE2ETest(QObject):
                     logger.info(f"📋 Browse component: {class_name}")
 
             # Log what we found
-            logger.info(f"🔍 Component discovery results:")
+            logger.info("🔍 Component discovery results:")
             logger.info(
                 f"   Filter selection panel: {self.filter_selection_panel is not None}"
             )

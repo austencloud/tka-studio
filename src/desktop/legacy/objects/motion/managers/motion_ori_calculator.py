@@ -1,23 +1,24 @@
 from typing import TYPE_CHECKING, Union
-from data.constants import (
-    ANTI,
-    CCW_HANDPATH,
-    CLOCK,
-    COUNTER,
-    CW_HANDPATH,
-    DASH,
-    PRO,
-    STATIC,
-    IN,
-    OUT,
-    FLOAT,
-    CLOCKWISE,
-    COUNTER_CLOCKWISE,
-)
+
 from objects.motion.managers.handpath_calculator import (
     HandpathCalculator,
 )
 
+from data.constants import (
+    ANTI,
+    CCW_HANDPATH,
+    CLOCK,
+    CLOCKWISE,
+    COUNTER,
+    COUNTER_CLOCKWISE,
+    CW_HANDPATH,
+    DASH,
+    FLOAT,
+    IN,
+    OUT,
+    PRO,
+    STATIC,
+)
 
 if TYPE_CHECKING:
     from objects.motion.motion import Motion

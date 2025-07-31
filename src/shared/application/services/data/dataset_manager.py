@@ -11,14 +11,14 @@ PROVIDES:
 - Dataset indexing
 """
 
-import uuid
 from typing import Any, Dict, List, Optional
+import uuid
 
+from desktop.modern.core.interfaces.data_services import IDatasetManager
+from desktop.modern.domain.models.pictograph_data import PictographData
 from shared.application.services.pictograph.pictograph_csv_manager import (
     PictographSearchQuery,
 )
-from desktop.modern.core.interfaces.data_services import IDatasetManager
-from desktop.modern.domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager
 

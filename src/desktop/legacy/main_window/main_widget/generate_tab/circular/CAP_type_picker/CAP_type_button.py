@@ -1,8 +1,9 @@
 # updated file: main_window/main_widget/generate_tab/widgets/CAP_type_button.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QCursor
+
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import QPushButton
 from styles.dark_theme_styler import DarkThemeStyler
 
 if TYPE_CHECKING:

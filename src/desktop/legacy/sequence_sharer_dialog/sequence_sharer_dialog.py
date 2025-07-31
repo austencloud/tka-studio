@@ -1,21 +1,23 @@
 import os
 import time  # Import time for formatting timestamps
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QDialog,
-    QVBoxLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QMessageBox,
+    QPushButton,
     QSizePolicy,
-    QHBoxLayout,
     QSpacerItem,
-    QCheckBox,
     QTextEdit,  # Use QTextEdit for multi-line input
+    QVBoxLayout,
 )
+
 from .email_sender import EmailSender
-from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

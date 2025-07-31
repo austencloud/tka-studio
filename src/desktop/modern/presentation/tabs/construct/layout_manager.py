@@ -329,7 +329,9 @@ class ConstructTabLayoutManager:
         if self.picker_stack and not self.transition_animator.is_transitioning():
             self._update_tab_active_state(1)  # Generate tab
             self.transition_animator.fade_to_panel(
-                self.picker_stack, 3, "generate controls"  # Stack index 3
+                self.picker_stack,
+                3,
+                "generate controls",  # Stack index 3
             )
 
     def transition_to_export_panel(self):
@@ -337,7 +339,9 @@ class ConstructTabLayoutManager:
         if self.picker_stack and not self.transition_animator.is_transitioning():
             self._update_tab_active_state(3)  # Export tab
             self.transition_animator.fade_to_panel(
-                self.picker_stack, 4, "export panel"  # Stack index 4
+                self.picker_stack,
+                4,
+                "export panel",  # Stack index 4
             )
 
             # Update export panel preview when switching to it
@@ -372,7 +376,8 @@ class ConstructTabLayoutManager:
                     # Use the modern export service with options
                     success, message = (
                         self.workbench._export_service.export_sequence_image(
-                            current_sequence, None  # Let service choose file path
+                            current_sequence,
+                            None,  # Let service choose file path
                         )
                     )
                     if success:
@@ -446,7 +451,6 @@ class ConstructTabLayoutManager:
     def _create_real_option_picker(self):
         """Create the real option picker after main window is shown."""
         try:
-
             # Create the real option picker
             option_widget, self.option_picker = (
                 self.panel_factory.create_option_picker_panel()
@@ -467,7 +471,6 @@ class ConstructTabLayoutManager:
 
                     # Notify callback that option picker is ready
                     if self.option_picker_ready_callback:
-
                         self.option_picker_ready_callback(self.option_picker)
 
         except Exception as e:

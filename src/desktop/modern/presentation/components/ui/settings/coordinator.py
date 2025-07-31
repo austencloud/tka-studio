@@ -4,8 +4,11 @@ Settings dialog coordinator for managing settings state and updates.
 
 from typing import Any, Callable, Dict
 
-from shared.application.services.settings.settings_coordinator import SettingsCoordinator
 from PyQt6.QtCore import QObject, pyqtSignal
+
+from shared.application.services.settings.settings_coordinator import (
+    SettingsCoordinator,
+)
 
 
 class SettingsCoordinator(QObject):

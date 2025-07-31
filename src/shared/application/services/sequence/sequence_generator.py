@@ -8,9 +8,9 @@ CRITICAL FIXES:
 4. Proper error handling and fallbacks
 """
 
+from enum import Enum
 import logging
 import random
-from enum import Enum
 
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceGenerator
 from desktop.modern.domain.models.beat_data import BeatData
@@ -57,7 +57,9 @@ class SequenceGenerator(ISequenceGenerator):
 
         try:
             # Try to get dataset service from DI container
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
             from desktop.modern.core.interfaces.data_services import IDatasetQuery
 
             container = get_container()
@@ -131,7 +133,7 @@ class SequenceGenerator(ISequenceGenerator):
             sequence_so_far.append(start_beat)
 
             for i in range(length):
-                print(f"🔧 Generating beat {i+1}/{length}")
+                print(f"🔧 Generating beat {i + 1}/{length}")
 
                 # FIXED: Better pictograph generation
                 next_pictograph_data = self._generate_next_pictograph_improved(
@@ -203,7 +205,7 @@ class SequenceGenerator(ISequenceGenerator):
             options = self._get_pictograph_options_improved(sequence_so_far)
 
             if not options:
-                print(f"⚠️ No options available, creating fallback")
+                print("⚠️ No options available, creating fallback")
                 return None
 
             # FIXED: Better letter type filtering
@@ -219,7 +221,7 @@ class SequenceGenerator(ISequenceGenerator):
                 )
 
             if not options:
-                print(f"⚠️ No options after filtering")
+                print("⚠️ No options after filtering")
                 return None
 
             # Select option
@@ -723,7 +725,7 @@ class SequenceGenerator(ISequenceGenerator):
             beat = BeatData(
                 beat_number=i + 1,
                 metadata={
-                    "letter": f"F{i+1}",
+                    "letter": f"F{i + 1}",
                     "is_fallback": True,
                     "algorithm": "emergency_fallback",
                 },
@@ -807,7 +809,7 @@ class SequenceGenerator(ISequenceGenerator):
         for i in range(length):
             beat = BeatData(
                 beat_number=i + 1,
-                metadata={"letter": f"A{i+1}", "algorithm": "auto_complete"},
+                metadata={"letter": f"A{i + 1}", "algorithm": "auto_complete"},
             )
             beats.append(beat)
 
@@ -820,7 +822,8 @@ class SequenceGenerator(ISequenceGenerator):
         beats = []
         for i in range(length):
             beat = BeatData(
-                beat_number=i + 1, metadata={"letter": f"M{i+1}", "algorithm": "mirror"}
+                beat_number=i + 1,
+                metadata={"letter": f"M{i + 1}", "algorithm": "mirror"},
             )
             beats.append(beat)
 
@@ -834,7 +837,7 @@ class SequenceGenerator(ISequenceGenerator):
         for i in range(length):
             beat = BeatData(
                 beat_number=i + 1,
-                metadata={"letter": f"C{i+1}", "algorithm": "continuous"},
+                metadata={"letter": f"C{i + 1}", "algorithm": "continuous"},
             )
             beats.append(beat)
 

@@ -12,8 +12,11 @@ This service handles:
 import logging
 from typing import Any, Dict, Optional
 
-from desktop.modern.core.interfaces.pictograph_rendering_services import IPictographCacheManager
 from PyQt6.QtSvg import QSvgRenderer
+
+from desktop.modern.core.interfaces.pictograph_rendering_services import (
+    IPictographCacheManager,
+)
 
 logger = logging.getLogger(__name__)
 

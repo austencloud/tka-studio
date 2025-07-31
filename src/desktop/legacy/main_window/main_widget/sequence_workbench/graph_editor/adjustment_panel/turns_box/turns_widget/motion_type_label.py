@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
     from .turns_widget import TurnsWidget

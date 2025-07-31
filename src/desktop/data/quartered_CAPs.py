@@ -1,6 +1,5 @@
 from data.constants import *
 
-
 quartered_CAPs = {
     (ALPHA1, ALPHA3),
     (ALPHA2, ALPHA4),

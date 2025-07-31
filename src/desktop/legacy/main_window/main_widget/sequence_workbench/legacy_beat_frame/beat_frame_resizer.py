@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget  # Import QWidget
+
 from utils.ui_utils import ensure_positive_size
 
 if TYPE_CHECKING:

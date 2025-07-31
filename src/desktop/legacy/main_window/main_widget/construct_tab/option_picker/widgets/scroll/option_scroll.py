@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING, Callable
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QHBoxLayout
-from PyQt6.QtCore import Qt
+
+from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
 
 from .group_widget import (
     OptionPickerSectionGroupWidget,
 )
 from .section_widget import OptionPickerSectionWidget
-from enums.letter.letter_type import LetterType
-
-from PyQt6.QtCore import QSize
 
 if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (

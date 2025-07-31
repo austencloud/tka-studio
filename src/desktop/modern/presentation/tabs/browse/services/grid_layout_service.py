@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class GridLayoutService:
     """
     Service for managing grid layout operations in the sequence browser.
-    
+
     Handles:
     - Grid layout validation and recreation
     - Section header creation and positioning
@@ -26,10 +26,12 @@ class GridLayoutService:
     - Empty state and fallback displays
     """
 
-    def __init__(self, grid_widget: QWidget, initial_grid_layout: Optional[QGridLayout] = None):
+    def __init__(
+        self, grid_widget: QWidget, initial_grid_layout: Optional[QGridLayout] = None
+    ):
         """
         Initialize the grid layout service.
-        
+
         Args:
             grid_widget: The widget that contains the grid layout
             initial_grid_layout: Optional existing grid layout to manage
@@ -41,37 +43,45 @@ class GridLayoutService:
     def _ensure_valid_layout(self) -> bool:
         """
         Ensure grid layout is valid and recreate if necessary.
-        
+
         Returns:
             True if layout is valid or was successfully recreated, False otherwise
         """
         if self.grid_layout is None or not bool(self.grid_layout):
-            logger.warning("⚠️ [GRID_LAYOUT] Invalid grid layout, attempting to recreate")
-            
+            logger.warning(
+                "⚠️ [GRID_LAYOUT] Invalid grid layout, attempting to recreate"
+            )
+
             if self.grid_widget:
                 self.grid_layout = QGridLayout(self.grid_widget)
                 self.grid_layout.setSpacing(15)
-                
+
                 # Set column stretch factors for 3 equal columns
                 for col in range(3):
                     self.grid_layout.setColumnStretch(col, 1)
-                
-                logger.info(f"🔧 [GRID_LAYOUT] Recreated grid layout: {self.grid_layout}")
+
+                logger.info(
+                    f"🔧 [GRID_LAYOUT] Recreated grid layout: {self.grid_layout}"
+                )
                 return True
             else:
-                logger.error("❌ [GRID_LAYOUT] Cannot recreate grid layout - no grid widget")
+                logger.error(
+                    "❌ [GRID_LAYOUT] Cannot recreate grid layout - no grid widget"
+                )
                 return False
         return True
 
     def clear_grid(self) -> None:
         """Clear all items from the grid layout."""
         if not self._ensure_valid_layout():
-            logger.warning("⚠️ [CLEAR_GRID] Cannot ensure valid grid layout, skipping clear")
+            logger.warning(
+                "⚠️ [CLEAR_GRID] Cannot ensure valid grid layout, skipping clear"
+            )
             return
 
         item_count = self.grid_layout.count()
         logger.info(f"🔍 [CLEAR_GRID] Clearing {item_count} items from grid")
-        
+
         while self.grid_layout.count():
             child = self.grid_layout.takeAt(0)
             if child.widget():
@@ -80,16 +90,18 @@ class GridLayoutService:
     def add_section_header(self, section_name: str, current_row: int) -> int:
         """
         Add a section header to the grid.
-        
+
         Args:
             section_name: Name of the section
             current_row: Current row position in the grid
-            
+
         Returns:
             The row number of the added header
         """
         if not self._ensure_valid_layout():
-            logger.warning("⚠️ [ADD_SECTION_HEADER] Grid layout invalid, skipping header")
+            logger.warning(
+                "⚠️ [ADD_SECTION_HEADER] Grid layout invalid, skipping header"
+            )
             return current_row
 
         header_widget = QFrame()
@@ -124,7 +136,7 @@ class GridLayoutService:
     def add_thumbnail_to_grid(self, thumbnail: QWidget, row: int, col: int) -> None:
         """
         Add a thumbnail widget to the grid at specified position.
-        
+
         Args:
             thumbnail: The thumbnail widget to add
             row: Grid row position
@@ -133,7 +145,7 @@ class GridLayoutService:
         if not self._ensure_valid_layout():
             logger.warning("⚠️ [ADD_THUMBNAIL] Grid layout invalid, skipping thumbnail")
             return
-        
+
         self.grid_layout.addWidget(thumbnail, row, col)
 
     def add_empty_state(self) -> None:

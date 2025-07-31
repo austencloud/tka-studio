@@ -1,6 +1,7 @@
-from data.constants import *
 from objects.motion.handpath_calculator import HandpathCalculator
 from objects.motion.motion import Motion
+
+from data.constants import *
 
 
 class LeadStateDeterminer:

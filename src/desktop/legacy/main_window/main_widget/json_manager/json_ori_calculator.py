@@ -1,3 +1,5 @@
+from objects.motion.managers.handpath_calculator import HandpathCalculator
+
 from data.constants import (
     ANTI,
     CCW_HANDPATH,
@@ -19,7 +21,6 @@ from data.constants import (
     STATIC,
     TURNS,
 )
-from objects.motion.managers.handpath_calculator import HandpathCalculator
 
 
 class JsonOriCalculator:

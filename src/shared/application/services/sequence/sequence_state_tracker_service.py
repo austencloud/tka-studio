@@ -5,8 +5,8 @@ This service tracks sequence state without any Qt dependencies.
 Qt-specific signal coordination is handled by adapters in the presentation layer.
 """
 
-import logging
 from dataclasses import dataclass
+import logging
 from typing import Any, Callable, Dict, List, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData

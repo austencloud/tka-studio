@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout, 
 class SequenceWorkbenchButtonPanel(QWidget):
     """
     Updated button panel for sequence workbench - Save Image button REMOVED.
-    
+
     The export functionality has been moved to the Export tab in the right panel
     to provide a better user experience with live preview and comprehensive settings.
     """
@@ -122,7 +122,7 @@ class SequenceWorkbenchButtonPanel(QWidget):
         print(f"🖱️ [BUTTON_PANEL] Button clicked: {tooltip}")
         print(f"🔄 [BUTTON_PANEL] Emitting signal: {signal}")
         signal.emit()
-        print(f"✅ [BUTTON_PANEL] Signal emitted successfully")
+        print("✅ [BUTTON_PANEL] Signal emitted successfully")
 
     def _apply_styling(self):
         """Apply glassmorphism styling to the button panel and buttons, with a black border"""

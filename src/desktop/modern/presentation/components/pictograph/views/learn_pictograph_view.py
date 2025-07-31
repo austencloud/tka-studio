@@ -27,7 +27,7 @@ class LearnPictographView(BasePictographView):
         import logging
 
         logger = logging.getLogger(__name__)
-        logger.info(f"🎭 [LEARN_VIEW_DEBUG] Creating LearnPictographView")
+        logger.info("🎭 [LEARN_VIEW_DEBUG] Creating LearnPictographView")
         logger.info(f"   📱 Parent: {parent}")
         logger.info(f"   📱 Parent type: {type(parent) if parent else 'None'}")
         logger.info(f"   📱 Context: {context}")

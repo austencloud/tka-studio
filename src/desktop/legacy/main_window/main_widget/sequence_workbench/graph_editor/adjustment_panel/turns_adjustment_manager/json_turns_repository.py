@@ -1,13 +1,14 @@
 # src/main_window/main_widget/sequence_workbench/graph_editor/adjustment_panel/new_turns_adjustment_manager/json_turns_repository.py
 from typing import Optional
+
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.json_manager.json_manager import JsonManager
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.turns_repository import (
     TurnsRepository,
 )
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.turns_value import (
     TurnsValue,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
-from main_window.main_widget.json_manager.json_manager import JsonManager
 
 
 class JsonTurnsRepository(TurnsRepository):

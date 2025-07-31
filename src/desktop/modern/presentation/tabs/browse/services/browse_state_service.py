@@ -38,7 +38,7 @@ class BrowseStateService:
         # Try to load from settings file
         if self.settings_file.exists():
             try:
-                with open(self.settings_file, "r") as f:
+                with open(self.settings_file) as f:
                     data = json.load(f)
                     browse_data = data.get("browse_tab", {})
 
@@ -70,7 +70,7 @@ class BrowseStateService:
         settings_data = {}
         if self.settings_file.exists():
             try:
-                with open(self.settings_file, "r") as f:
+                with open(self.settings_file) as f:
                     settings_data = json.load(f)
             except Exception:
                 settings_data = {}

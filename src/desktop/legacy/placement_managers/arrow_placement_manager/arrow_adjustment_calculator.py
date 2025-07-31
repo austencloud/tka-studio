@@ -1,18 +1,16 @@
 import logging
-from PyQt6.QtCore import QPointF
-from enums.letter.letter import Letter
+from typing import TYPE_CHECKING, Optional
 
+from enums.letter.letter import Letter
 from main_window.main_widget.special_placement_loader import SpecialPlacementLoader
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
 from objects.arrow.arrow import Arrow
-from typing import TYPE_CHECKING, Optional
-
 from placement_managers.arrow_placement_manager.directional_tuple_generator import (
     DirectionalTupleGenerator,
 )
-
+from PyQt6.QtCore import QPointF
 
 if TYPE_CHECKING:
     from .arrow_placement_manager import ArrowPlacementManager
@@ -146,4 +144,4 @@ class ArrowAdjustmentCalculator:
             arrow
         )
 
-        return letter_adjustments.get(key, None)
+        return letter_adjustments.get(key)

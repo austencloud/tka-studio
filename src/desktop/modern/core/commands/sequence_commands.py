@@ -3,13 +3,13 @@ Sequence-specific commands for undoable sequence operations.
 These commands integrate with the event system and domain models.
 """
 
-import uuid
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Optional
-from .command_system import ICommand
+import uuid
 
 from ..events import BeatAddedEvent, BeatRemovedEvent, BeatUpdatedEvent
+from .command_system import ICommand
 
 
 @dataclass

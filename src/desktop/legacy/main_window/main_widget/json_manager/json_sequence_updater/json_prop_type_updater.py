@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from enums.prop_type import PropType
 
-
 if TYPE_CHECKING:
     from main_window.main_widget.json_manager.json_sequence_updater.json_sequence_updater import (
         JsonSequenceUpdater,

@@ -2,9 +2,9 @@
 Modern button with custom styling.
 """
 
-from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QPushButton
 
 # Dark Mode Theme Colors
 DARK_BG = "#121212"  # Main background

@@ -34,7 +34,7 @@ class SequenceLayoutSettings:
 
         if not raw_val:
             try:
-                with open((get_data_path("default_layouts.json")), "r") as file:
+                with open(get_data_path("default_layouts.json")) as file:
                     return json.load(file)
             except FileNotFoundError:
                 return {}
@@ -52,7 +52,7 @@ class SequenceLayoutSettings:
             return {}
 
         try:
-            with open(OVERRIDES_FILE, "r") as file:
+            with open(OVERRIDES_FILE) as file:
                 content = file.read().strip()  # Strip whitespace and newlines
 
                 if not content:
@@ -62,7 +62,7 @@ class SequenceLayoutSettings:
                     return json.loads(content)  # Parse JSON from string instead of file
                 except json.JSONDecodeError:
                     print(
-                        f"⚠️ Warning: `beat_layout_overrides.json` contains invalid JSON. Resetting file."
+                        "⚠️ Warning: `beat_layout_overrides.json` contains invalid JSON. Resetting file."
                     )
                     return {}
 

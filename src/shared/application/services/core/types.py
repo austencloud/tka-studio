@@ -5,11 +5,9 @@ These types replace QT-specific types (QSize, QWidget, etc.) to enable
 true framework independence for core services.
 """
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, Protocol, Union
-
+from typing import Any, Dict, List, Optional, Protocol
 
 # ============================================================================
 # GEOMETRY AND LAYOUT TYPES

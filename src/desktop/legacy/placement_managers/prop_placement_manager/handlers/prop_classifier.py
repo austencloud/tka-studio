@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
-from enums.prop_type import PropType
-from objects.prop.prop import Prop
+
 from enums.prop_type import (
-    big_unilateral_prop_types,
-    small_unilateral_prop_types,
-    small_bilateral_prop_types,
+    PropType,
     big_bilateral_prop_types,
+    big_unilateral_prop_types,
+    small_bilateral_prop_types,
+    small_unilateral_prop_types,
 )
+from objects.prop.prop import Prop
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

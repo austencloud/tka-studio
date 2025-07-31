@@ -9,7 +9,9 @@ import copy
 from typing import TYPE_CHECKING, Any, Dict, List
 
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 if TYPE_CHECKING:
     pass

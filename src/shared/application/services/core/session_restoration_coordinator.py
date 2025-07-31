@@ -26,8 +26,6 @@ from shared.application.services.sequence.sequence_restorer import ISequenceRest
 class QObjectABCMeta(type(QObject), ABCMeta):
     """Metaclass that combines QObject's metaclass with ABCMeta."""
 
-    pass
-
 
 class SessionRestorationCoordinator(
     QObject, ISessionRestorationCoordinator, metaclass=QObjectABCMeta

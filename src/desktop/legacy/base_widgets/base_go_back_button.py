@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QPushButton, QSizePolicy
-from PyQt6.QtCore import Qt
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QPushButton, QSizePolicy
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

@@ -5,8 +5,8 @@ Calculates optimal component sizes based on container constraints.
 Framework-agnostic service for responsive component sizing.
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import Any, Dict, NamedTuple, Optional, Tuple
 
 from desktop.modern.core.interfaces.core_services import IComponentSizer

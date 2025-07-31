@@ -1,14 +1,13 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QFrame,
-    QComboBox,
-)
+from interfaces.settings_manager_interface import ISettingsManager
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont
-
-from interfaces.settings_manager_interface import ISettingsManager
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QFrame,
+    QLabel,
+    QVBoxLayout,
+)
 
 
 class PagePreviewColumnSelector(QFrame):
@@ -16,7 +15,7 @@ class PagePreviewColumnSelector(QFrame):
 
     def __init__(self, settings_manager, sidebar_width: int = 200):
         super().__init__()
-        self.settings_manager: "ISettingsManager" = settings_manager
+        self.settings_manager: ISettingsManager = settings_manager
         self.sidebar_width = sidebar_width
         self.setObjectName("columnFrame")
         self.setup_ui()

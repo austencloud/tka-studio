@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QCheckBox
+from PyQt6.QtWidgets import QCheckBox, QWidget
 
 
 class BaseFontColorUpdater:

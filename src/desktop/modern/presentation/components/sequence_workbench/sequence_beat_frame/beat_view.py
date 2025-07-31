@@ -7,10 +7,11 @@ with modern architecture patterns and Modern pictograph integration.
 
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QAction, QColor, QPainter, QPen
 from PyQt6.QtWidgets import QFileDialog, QFrame, QMenu, QMessageBox, QVBoxLayout
+
+from desktop.modern.domain.models import BeatData
 
 from ...pictograph.views import create_beat_view
 from ...pictograph.views.beat_pictograph_view import BeatPictographView
@@ -332,7 +333,9 @@ class BeatView(QFrame):
             from datetime import datetime
             from pathlib import Path
 
-            from desktop.modern.core.dependency_injection.di_container import DIContainer
+            from desktop.modern.core.dependency_injection.di_container import (
+                DIContainer,
+            )
             from desktop.modern.core.dependency_injection.image_export_service_registration import (
                 register_image_export_services,
             )

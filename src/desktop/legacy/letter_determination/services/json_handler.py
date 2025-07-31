@@ -47,7 +47,9 @@ class LetterDeterminationJsonHandler:
         if self.updater is None:
             return  # Silently ignore if updater is not available
         self.updater.prop_rot_dir_updater.update_prefloat_prop_rot_dir_in_json(
-            index, color, prop_rot_dir  # ✅ Now guaranteed to be an Enum
+            index,
+            color,
+            prop_rot_dir,  # ✅ Now guaranteed to be an Enum
         )
 
     def save_beat(self, index: int, data: dict):

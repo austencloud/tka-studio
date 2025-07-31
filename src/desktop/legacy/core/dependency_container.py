@@ -5,8 +5,8 @@ This module provides a clean, testable way to manage application dependencies
 following the Dependency Inversion Principle.
 """
 
-from typing import TypeVar, Type, Dict, Any, Optional, Callable, Protocol
 import logging
+from typing import Any, Callable, Dict, Optional, Protocol, Type, TypeVar
 
 T = TypeVar("T")
 
@@ -287,8 +287,8 @@ def _register_managers(container: DependencyContainer) -> None:
 
     # Motion and Arrow objects
     try:
-        from objects.motion.motion import Motion
         from objects.arrow.arrow import Arrow
+        from objects.motion.motion import Motion
 
         # Register these as transient since they're often created per-use
         container.register_transient(Motion, Motion)
@@ -314,8 +314,8 @@ def _register_data_services(container: DependencyContainer) -> None:
 
     # Letter Determiner - with proper dependency injection
     try:
-        from letter_determination.core import LetterDeterminer
         from interfaces.json_manager_interface import IJsonManager
+        from letter_determination.core import LetterDeterminer
 
         def create_letter_determiner():
             # Resolve JsonManager from the container

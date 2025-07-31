@@ -8,6 +8,10 @@ that updates in real-time as visibility settings change.
 import logging
 from typing import Dict, Optional
 
+from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
+
 from desktop.modern.domain.models import (
     BeatData,
     Location,
@@ -21,9 +25,6 @@ from desktop.modern.presentation.components.pictograph.views import (
     BasePictographView,
     create_pictograph_view,
 )
-from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +114,6 @@ class VisibilityPictographPreview(QWidget):
     def _create_sample_data(self):
         """Create authentic TKA pictograph data based on real Alpha 1-3 sequence."""
         try:
-
             # Blue motion: pro, clockwise, west to north (basic positioning)
             blue_motion = MotionData(
                 motion_type=MotionType.PRO,
@@ -142,7 +142,12 @@ class VisibilityPictographPreview(QWidget):
                 "blue": blue_motion,
                 "red": red_motion,
             }
-            from desktop.modern.domain.models.enums import Direction, GridPosition, LetterType, Timing
+            from desktop.modern.domain.models.enums import (
+                Direction,
+                GridPosition,
+                LetterType,
+                Timing,
+            )
 
             self.sample_pictograph_data = PictographData(
                 motions=motions,

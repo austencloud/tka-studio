@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_favorites_manager import (
     ThumbnailBoxFavoritesManager,
@@ -10,10 +9,11 @@ from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_nav_buttons_
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_image_label import (
     ThumbnailImageLabel,
 )
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 from .thumbnail_box_header import ThumbnailBoxHeader
-from .variation_number_label import VariationNumberLabel
 from .thumbnail_box_state import ThumbnailBoxState
+from .variation_number_label import VariationNumberLabel
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.browse_tab import BrowseTab

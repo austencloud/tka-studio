@@ -1,13 +1,13 @@
 # dot_handler.py
 
-from PyQt6.QtCore import QPointF
 from typing import TYPE_CHECKING
 
 from objects.glyphs.tka_glyph.turns_parser import parse_turns_tuple_string
+from PyQt6.QtCore import QPointF
 
+from data.constants import OPP, SAME
 
 from .dot import Dot
-from data.constants import OPP, SAME
 
 if TYPE_CHECKING:
     from ..tka_glyph import TKA_Glyph
@@ -30,7 +30,7 @@ class DotHandler:
                 self.glyph.addToGroup(dot)
             else:
                 print(
-                    f"Warning: Dot renderer is None or invalid. Dot will not be displayed."
+                    "Warning: Dot renderer is None or invalid. Dot will not be displayed."
                 )
 
     def hide_dots(self) -> None:

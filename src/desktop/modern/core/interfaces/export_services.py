@@ -6,7 +6,6 @@ the Single Responsibility Principle.
 """
 
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer

@@ -5,8 +5,8 @@ Immutable data structures for motion representation in TKA.
 Handles prop and arrow motion data with type safety and serialization.
 """
 
-import json
 from dataclasses import dataclass, fields
+import json
 from typing import Any, Dict, Optional, Union
 
 from ._shared_utils import process_field_value
@@ -31,7 +31,7 @@ class MotionData:
     start_ori: Orientation = Orientation.IN
     end_ori: Orientation = Orientation.IN
     is_visible: bool = True
-    
+
     # Prefloat attributes for letter determination
     prefloat_motion_type: Optional[MotionType] = None
     prefloat_prop_rot_dir: Optional[RotationDirection] = None
@@ -39,7 +39,11 @@ class MotionData:
     def __post_init__(self):
         """Validate and convert motion data fields to proper enum types."""
         # Handle 'fl' turns for float motions
-        if self.turns != "fl" and isinstance(self.turns, (int, float)) and self.turns < 0:
+        if (
+            self.turns != "fl"
+            and isinstance(self.turns, (int, float))
+            and self.turns < 0
+        ):
             raise ValueError("Turns must be non-negative")
 
         # Validate prefloat attributes for float motions
@@ -128,46 +132,49 @@ class MotionData:
     def is_float(self) -> bool:
         """Check if this motion is in a float state."""
         return self.motion_type == MotionType.FLOAT
-    
+
     @property
     def is_static(self) -> bool:
         """Check if this motion is static."""
         return self.motion_type == MotionType.STATIC
-    
+
     @property
     def is_shift(self) -> bool:
         """Check if this motion is a shift (pro or anti)."""
         return self.motion_type in [MotionType.PRO, MotionType.ANTI]
-    
+
     @property
     def effective_motion_type(self) -> MotionType:
         """Get the effective motion type, considering prefloat states."""
         if self.is_float and self.prefloat_motion_type:
             return self.prefloat_motion_type
         return self.motion_type
-    
+
     @property
     def effective_prop_rot_dir(self) -> RotationDirection:
         """Get the effective prop rotation direction, considering prefloat states."""
         if self.is_float and self.prefloat_prop_rot_dir:
             return self.prefloat_prop_rot_dir
         return self.prop_rot_dir
-    
-    def to_float_state(self, prefloat_motion_type: MotionType, prefloat_prop_rot_dir: RotationDirection) -> 'MotionData':
+
+    def to_float_state(
+        self, prefloat_motion_type: MotionType, prefloat_prop_rot_dir: RotationDirection
+    ) -> "MotionData":
         """Convert this motion to float state with prefloat attributes."""
         return self.update(
             motion_type=MotionType.FLOAT,
             prop_rot_dir=RotationDirection.NO_ROTATION,
-            turns='fl',
+            turns="fl",
             prefloat_motion_type=prefloat_motion_type,
-            prefloat_prop_rot_dir=prefloat_prop_rot_dir
+            prefloat_prop_rot_dir=prefloat_prop_rot_dir,
         )
-    
-    def with_prefloat_attributes(self, motion_type: MotionType, prop_rot_dir: RotationDirection) -> 'MotionData':
+
+    def with_prefloat_attributes(
+        self, motion_type: MotionType, prop_rot_dir: RotationDirection
+    ) -> "MotionData":
         """Create new instance with prefloat attributes."""
         return self.update(
-            prefloat_motion_type=motion_type,
-            prefloat_prop_rot_dir=prop_rot_dir
+            prefloat_motion_type=motion_type, prefloat_prop_rot_dir=prop_rot_dir
         )
 
     @staticmethod
@@ -237,14 +244,14 @@ class MotionData:
             ),
             "turns": self.turns,
         }
-        
+
         # Add prefloat attributes if present
         if self.prefloat_motion_type:
             result["prefloat_motion_type"] = self.prefloat_motion_type.value
-        
+
         if self.prefloat_prop_rot_dir:
             result["prefloat_prop_rot_dir"] = self.prefloat_prop_rot_dir.value
-            
+
         return result
 
     def to_camel_dict(self) -> Dict[str, Any]:
@@ -275,15 +282,25 @@ class MotionData:
                 processed_data[key] = process_field_value(value, field_type)
             else:
                 processed_data[key] = value
-        
+
         # Handle prefloat attributes conversion
-        if "prefloat_motion_type" in processed_data and processed_data["prefloat_motion_type"]:
+        if (
+            "prefloat_motion_type" in processed_data
+            and processed_data["prefloat_motion_type"]
+        ):
             if isinstance(processed_data["prefloat_motion_type"], str):
-                processed_data["prefloat_motion_type"] = MotionType(processed_data["prefloat_motion_type"])
-        
-        if "prefloat_prop_rot_dir" in processed_data and processed_data["prefloat_prop_rot_dir"]:
+                processed_data["prefloat_motion_type"] = MotionType(
+                    processed_data["prefloat_motion_type"]
+                )
+
+        if (
+            "prefloat_prop_rot_dir" in processed_data
+            and processed_data["prefloat_prop_rot_dir"]
+        ):
             if isinstance(processed_data["prefloat_prop_rot_dir"], str):
-                processed_data["prefloat_prop_rot_dir"] = RotationDirection(processed_data["prefloat_prop_rot_dir"])
+                processed_data["prefloat_prop_rot_dir"] = RotationDirection(
+                    processed_data["prefloat_prop_rot_dir"]
+                )
 
         return cls(**processed_data)
 

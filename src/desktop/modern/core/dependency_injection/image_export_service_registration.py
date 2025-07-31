@@ -6,6 +6,27 @@ This module registers all image export services with the dependency injection co
 
 import logging
 
+from desktop.modern.application.services.image_export.drawers.beat_drawer import (
+    BeatDrawer,
+)
+from desktop.modern.application.services.image_export.drawers.difficulty_level_drawer import (
+    DifficultyLevelDrawer,
+)
+from desktop.modern.application.services.image_export.drawers.font_margin_helper import (
+    FontMarginHelper,
+)
+from desktop.modern.application.services.image_export.drawers.user_info_drawer import (
+    UserInfoDrawer,
+)
+from desktop.modern.application.services.image_export.drawers.word_drawer import (
+    WordDrawer,
+)
+from desktop.modern.application.services.image_export.sequence_image_exporter import (
+    SequenceImageExporter,
+)
+from desktop.modern.application.services.image_export.sequence_image_renderer import (
+    SequenceImageRenderer,
+)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.image_export_services import (
     IBeatDrawer,
@@ -18,24 +39,8 @@ from desktop.modern.core.interfaces.image_export_services import (
     IUserInfoDrawer,
     IWordDrawer,
 )
-
-from desktop.modern.application.services.image_export.drawers.beat_drawer import BeatDrawer
-from desktop.modern.application.services.image_export.drawers.difficulty_level_drawer import (
-    DifficultyLevelDrawer,
-)
-from desktop.modern.application.services.image_export.drawers.font_margin_helper import (
-    FontMarginHelper,
-)
-from desktop.modern.application.services.image_export.drawers.user_info_drawer import UserInfoDrawer
-from desktop.modern.application.services.image_export.drawers.word_drawer import WordDrawer
-from desktop.modern.application.services.image_export.sequence_image_exporter import (
-    SequenceImageExporter,
-)
 from shared.application.services.image_export.sequence_image_layout_calculator import (
     SequenceImageLayoutCalculator,
-)
-from desktop.modern.application.services.image_export.sequence_image_renderer import (
-    SequenceImageRenderer,
 )
 from shared.application.services.image_export.sequence_metadata_extractor import (
     SequenceMetadataExtractor,
@@ -95,8 +100,8 @@ def _register_pictograph_services(container: DIContainer) -> None:
     """Register pictograph services needed for real pictograph rendering."""
     try:
         # Temporarily ensure shared src is accessible for imports
-        import sys
         from pathlib import Path
+        import sys
 
         # Find shared src path
         current_file = Path(__file__).resolve()
@@ -129,7 +134,6 @@ def _register_pictograph_services(container: DIContainer) -> None:
 def _register_positioning_services(container: DIContainer) -> None:
     """Register positioning services needed for pictograph scenes."""
     try:
-
         # Import and register the positioning service registrar
         from shared.application.services.core.registrars.positioning_service_registrar import (
             PositioningServiceRegistrar,

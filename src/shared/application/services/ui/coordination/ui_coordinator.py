@@ -221,7 +221,7 @@ class UICoordinator(IUIStateManager):
         """Load state from file."""
         try:
             if self._state_file.exists():
-                with open(self._state_file, "r", encoding="utf-8") as f:
+                with open(self._state_file, encoding="utf-8") as f:
                     data = json.load(f)
 
                 # Load state into each manager

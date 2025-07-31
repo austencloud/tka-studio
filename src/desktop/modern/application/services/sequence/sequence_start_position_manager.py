@@ -8,12 +8,17 @@ Responsible for setting, updating, and managing start positions in sequences.
 from abc import ABCMeta
 from typing import TYPE_CHECKING, Optional
 
-from shared.application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
-from shared.application.services.sequence.sequence_persister import SequencePersister
-from desktop.modern.core.interfaces.sequence_data_services import ISequenceStartPositionManager
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.core.interfaces.sequence_data_services import (
+    ISequenceStartPositionManager,
+)
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.beat_data import BeatData
-from PyQt6.QtCore import QObject, pyqtSignal
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 
 class QObjectABCMeta(type(QObject), ABCMeta):
@@ -79,7 +84,9 @@ class SequenceStartPositionManager(
 
             # Set start position in workbench via state manager
             if self.workbench_state_manager:
-                self.workbench_state_manager.set_start_position(start_position_beat_data)
+                self.workbench_state_manager.set_start_position(
+                    start_position_beat_data
+                )
 
             # Emit signal
             self.start_position_set.emit(start_position_beat_data)

@@ -30,7 +30,7 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
     """
     Modern animation orchestrator that combines the framework-agnostic core
     with platform-specific adapters.
-    
+
     FIXED: No longer imports Qt-specific adapters at module level.
     """
 
@@ -38,9 +38,9 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
         self,
         animation_engine: IAnimationEngine,
         target_adapter,  # Generic type instead of QtTargetAdapter
-        renderer,       # Generic type instead of QtAnimationRenderer  
+        renderer,  # Generic type instead of QtAnimationRenderer
         event_bus: IEventBus,
-        stack_adapter,   # Generic type instead of QtStackWidgetAdapter
+        stack_adapter,  # Generic type instead of QtStackWidgetAdapter
         effect_manager,  # Generic type instead of QtGraphicsEffectManager
         settings_integration,  # Generic type instead of QtSettingsIntegration
     ):
@@ -433,17 +433,12 @@ def create_modern_animation_system(
     Factory function to create the complete modern animation system.
 
     Returns both the modern orchestrator and a legacy wrapper for migration.
-    
+
     FIXED: Qt-specific imports moved inside function to break circular import.
     """
     # FIXED: Import Qt-specific components inside function instead of module level
     from desktop.modern.application.services.ui.animation.adapters.qt_adapters import (
-        QtAnimationRenderer,
         QtEventBridge,
-        QtGraphicsEffectManager,
-        QtSettingsIntegration,
-        QtStackWidgetAdapter,
-        QtTargetAdapter,
         create_qt_animation_components,
     )
 

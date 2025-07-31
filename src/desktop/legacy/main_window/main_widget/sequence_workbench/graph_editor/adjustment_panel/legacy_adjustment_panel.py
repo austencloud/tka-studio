@@ -1,6 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QStackedWidget, QWidget, QSizePolicy
-from data.constants import BLUE, RED, IN
+
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QSizePolicy, QStackedWidget, QWidget
+
+from data.constants import BLUE, IN, RED
+
 from .ori_picker_box.ori_picker_box import OriPickerBox
 from .turns_box.turns_box import TurnsBox
 
@@ -38,12 +41,14 @@ class LegacyAdjustmentPanel(QFrame):
         self.setLayout(self.layout)
 
         # Initialize and configure box pairs
-        self.blue_turns_box, self.red_turns_box = TurnsBox(
-            self, self.GE_pictograph, BLUE
-        ), TurnsBox(self, self.GE_pictograph, RED)
-        self.blue_ori_picker, self.red_ori_picker = OriPickerBox(
-            self, self.GE_pictograph, BLUE
-        ), OriPickerBox(self, self.GE_pictograph, RED)
+        self.blue_turns_box, self.red_turns_box = (
+            TurnsBox(self, self.GE_pictograph, BLUE),
+            TurnsBox(self, self.GE_pictograph, RED),
+        )
+        self.blue_ori_picker, self.red_ori_picker = (
+            OriPickerBox(self, self.GE_pictograph, BLUE),
+            OriPickerBox(self, self.GE_pictograph, RED),
+        )
         self.turns_boxes = [self.blue_turns_box, self.red_turns_box]
         self.ori_picker_boxes = [self.blue_ori_picker, self.red_ori_picker]
         for picker in (self.blue_ori_picker, self.red_ori_picker):

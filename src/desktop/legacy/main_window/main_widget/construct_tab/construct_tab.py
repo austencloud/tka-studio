@@ -1,13 +1,13 @@
 from typing import Callable
 
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from enums.letter.letter import Letter
 from interfaces.json_manager_interface import IJsonManager
 from interfaces.settings_manager_interface import ISettingsManager
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from main_window.main_widget.fade_manager.fade_manager import FadeManager
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
-from main_window.main_widget.fade_manager.fade_manager import FadeManager
 from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtWidgets import QFrame
 
@@ -43,7 +43,7 @@ class ConstructTab(QFrame):
         self.mw_size_provider = size_provider
         self.fade_to_stack_index = fade_to_stack_index
         self.fade_manager = fade_manager
-        self.last_beat: "LegacyPictograph" = None
+        self.last_beat: LegacyPictograph = None
         self.start_position_picked = False
 
         self.pictograph_cache: dict[Letter, dict[str, LegacyPictograph]] = {

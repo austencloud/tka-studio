@@ -3,12 +3,13 @@ Utility functions for working with mirrored entries.
 """
 
 import logging
-from typing import Dict, Any, Tuple
+from typing import Any, Dict, Tuple
 
 from enums.letter.letter import Letter
-from data.constants import BLUE, RED, IN, OUT, CLOCK, COUNTER
-from objects.arrow.arrow import Arrow
 from legacy_settings_manager.global_settings.app_context import AppContext
+from objects.arrow.arrow import Arrow
+
+from data.constants import BLUE, CLOCK, COUNTER, IN, OUT, RED
 
 logger = logging.getLogger(__name__)
 

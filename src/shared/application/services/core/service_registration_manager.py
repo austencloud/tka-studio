@@ -16,8 +16,8 @@ This file is being refactored into specialized registrars following microservice
 The goal is to split this large manager into focused, domain-specific registrars.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 if TYPE_CHECKING:
@@ -240,7 +240,7 @@ class ServiceRegistrationCoordinator:
                 available_count = sum(availability.values())
             else:
                 available_count = len(registrar_services)
-                availability = {service: True for service in registrar_services}
+                availability = dict.fromkeys(registrar_services, True)
 
             status["registrars"][domain_name] = {
                 "is_critical": registrar.is_critical(),
@@ -410,7 +410,7 @@ class ServiceRegistrationManager(IServiceRegistrationManager):
             name for name, status in self._service_availability.items() if not status
         ]
 
-        summary = f"Service Availability Summary:\n"
+        summary = "Service Availability Summary:\n"
         summary += f"  Available ({len(available)}): {', '.join(available) if available else 'None'}\n"
         summary += (
             f"  Missing ({len(missing)}): {', '.join(missing) if missing else 'None'}\n"

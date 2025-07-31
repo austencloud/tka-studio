@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QVBoxLayout, QLabel, QWidget, QFrame, QHBoxLayout
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QColor
 from typing import TYPE_CHECKING, Union
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from data.constants import BLUE, RED
 

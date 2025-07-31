@@ -1,9 +1,11 @@
 import logging
 from typing import TYPE_CHECKING
 
-from data.constants import LEADING, TRAILING
-from main_window.main_widget.grid_mode_checker import GridModeChecker
 from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.grid_mode_checker import GridModeChecker
+
+from data.constants import LEADING, TRAILING
+
 from .arrow_data_updater import ArrowDataUpdater
 from .glyph_updater import GlyphUpdater
 from .motion_data_updater import MotionDataUpdater

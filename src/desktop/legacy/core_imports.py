@@ -5,9 +5,8 @@ This module sets up intelligent import path resolution for 'core.*' modules.
 Import this module early in your application to enable automatic core module resolution.
 """
 
-import os
-import sys
 from pathlib import Path
+import sys
 
 # Add the legacy src directory to Python path if not already present
 legacy_src_path = Path(__file__).parent.parent
@@ -45,4 +44,3 @@ def enable_core_imports():
     Enable core import resolution - call this function early in your application.
     """
     # The resolver is already installed on module import
-    pass

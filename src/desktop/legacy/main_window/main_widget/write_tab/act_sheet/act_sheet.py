@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
-from main_window.main_widget.write_tab.act_sheet.act_loader import ActLoader
 from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.write_tab.act_sheet.act_loader import ActLoader
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
 from .act_header.act_header import ActHeader
-from .act_splitter.act_container import ActContainer
 from .act_saver import ActSaver
+from .act_splitter.act_container import ActContainer
 from .sequence_collector import SequenceCollector
 
 if TYPE_CHECKING:

@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor, QIcon
 from PyQt6.QtWidgets import (
     QPushButton,
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QCursor, QIcon
 
 if TYPE_CHECKING:
     from .user_profile_tab import UserProfileTab

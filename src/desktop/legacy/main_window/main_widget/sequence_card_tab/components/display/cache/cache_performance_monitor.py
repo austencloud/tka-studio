@@ -4,9 +4,9 @@ Cache Performance Monitor - Handles performance monitoring and memory management
 Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
-import logging
 import gc
-from typing import Optional, Dict, Any
+import logging
+from typing import Any, Dict, Optional
 
 
 class CachePerformanceMonitor:

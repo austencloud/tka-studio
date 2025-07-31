@@ -5,8 +5,8 @@ Provides path resolution for sequence card resources without legacy dependencies
 Replaces legacy utils.path_helpers for sequence card functionality.
 """
 
-import os
 import logging
+import os
 from pathlib import Path
 from typing import Optional
 

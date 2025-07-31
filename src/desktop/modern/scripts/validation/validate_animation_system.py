@@ -5,8 +5,6 @@ Tests core functionality step by step.
 
 import asyncio
 import sys
-import time
-from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, "src")
@@ -18,9 +16,7 @@ from desktop.modern.core.animation.animation_engine import (
 )
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
-    AnimationState,
     AnimationTarget,
-    AnimationType,
     EasingType,
 )
 
@@ -225,12 +221,11 @@ def test_qt_adapters():
         # Create Qt application if needed
         import sys
 
+        from PyQt6.QtWidgets import QApplication, QWidget
+
         from desktop.modern.application.services.ui.animation.adapters.qt_adapters import (
-            QtAnimationRenderer,
-            QtTargetAdapter,
             create_qt_animation_components,
         )
-        from PyQt6.QtWidgets import QApplication, QWidget
 
         if not QApplication.instance():
             app = QApplication(sys.argv)
@@ -270,10 +265,11 @@ async def test_qt_integration():
         # Create Qt application if needed
         import sys
 
+        from PyQt6.QtWidgets import QApplication, QWidget
+
         from shared.application.services.ui.animation.animation_orchestrator import (
             create_modern_animation_system,
         )
-        from PyQt6.QtWidgets import QApplication, QWidget
 
         if not QApplication.instance():
             app = QApplication(sys.argv)
@@ -366,14 +362,16 @@ def test_di_container_registration():
     print("🧪 Test 3.1: DI Container Registration")
 
     try:
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.interfaces.animation_core_interfaces import (
+            IAnimationOrchestrator,
+        )
         from shared.application.services.ui.animation.animation_orchestrator import (
             LegacyFadeManagerWrapper,
         )
         from shared.application.services.ui.animation.modern_service_registration import (
             setup_modern_animation_services,
         )
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.modern.core.interfaces.animation_core_interfaces import IAnimationOrchestrator
 
         # Create DI container
         container = DIContainer()
@@ -414,12 +412,15 @@ async def test_di_integration_with_qt():
         # Create Qt application if needed
         import sys
 
+        from PyQt6.QtWidgets import QApplication, QWidget
+
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
+        from desktop.modern.core.interfaces.animation_core_interfaces import (
+            IAnimationOrchestrator,
+        )
         from shared.application.services.ui.animation.modern_service_registration import (
             setup_modern_animation_services,
         )
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.modern.core.interfaces.animation_core_interfaces import IAnimationOrchestrator
-        from PyQt6.QtWidgets import QApplication, QWidget
 
         if not QApplication.instance():
             app = QApplication(sys.argv)
@@ -457,13 +458,13 @@ def test_legacy_compatibility_through_di():
     print("🧪 Test 3.3: Legacy Compatibility through DI")
 
     try:
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
         from shared.application.services.ui.animation.animation_orchestrator import (
             LegacyFadeManagerWrapper,
         )
         from shared.application.services.ui.animation.modern_service_registration import (
             setup_modern_animation_services,
         )
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         # Create DI container and register services
         container = DIContainer()

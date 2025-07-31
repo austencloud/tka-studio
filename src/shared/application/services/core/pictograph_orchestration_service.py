@@ -6,9 +6,9 @@ instead of directly manipulating Qt objects. It can be used by both desktop
 and web services.
 """
 
-import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+import logging
+from typing import Any, Dict, List, Optional
 
 from .pictograph_renderer import CorePictographRenderer, IPictographAssetProvider
 from .types import Point, RenderCommand, Size

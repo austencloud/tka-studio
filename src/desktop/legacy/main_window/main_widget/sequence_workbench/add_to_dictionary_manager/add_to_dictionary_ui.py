@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .dictionary_service import DictionaryService
 
 if TYPE_CHECKING:
@@ -22,7 +23,7 @@ class AddToDictionaryUI:
             sequence_workbench: The sequence workbench that contains this component
         """
         self.sequence_workbench = sequence_workbench
-        self.dictionary_service: "DictionaryService" = (
+        self.dictionary_service: DictionaryService = (
             sequence_workbench.dictionary_service
         )
 

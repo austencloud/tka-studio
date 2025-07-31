@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
-from .base_font_color_updater import BaseFontColorUpdater
+
 from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (
     LessonWidget,
 )
+
+from .base_font_color_updater import BaseFontColorUpdater
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

@@ -1,6 +1,7 @@
 import json
 import os
 from typing import TYPE_CHECKING
+
 from utils.path_helpers import get_user_editable_resource_path
 
 if TYPE_CHECKING:
@@ -20,10 +21,10 @@ class ActLoader:
         if not os.path.isfile(file_path):
             # print(f"No saved act found at {file_path}")
             self.populate_act_from_data(self.default_act)
-            return None
+            return
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 act_data = json.load(f)
                 self.populate_act_from_data(act_data)
         except json.JSONDecodeError:

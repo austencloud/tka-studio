@@ -5,12 +5,12 @@ Manages quiz sessions, state tracking, and session lifecycle
 for the learning module.
 """
 
-import logging
 from datetime import datetime
+import logging
 from typing import Dict, List, Optional
 
 from desktop.modern.core.interfaces.learn_services import IQuizSessionService
-from desktop.modern.domain.models.learn import QuizSession, LessonType, QuizMode
+from desktop.modern.domain.models.learn import LessonType, QuizMode, QuizSession
 
 logger = logging.getLogger(__name__)
 
@@ -114,13 +114,20 @@ class QuizSessionService(IQuizSessionService):
         try:
             session = self._active_sessions.get(session_id)
             if not session:
-                logger.warning(f"Cannot update inactive or non-existent session: {session_id}")
+                logger.warning(
+                    f"Cannot update inactive or non-existent session: {session_id}"
+                )
                 return False
 
             # Validate and apply updates
             valid_fields = {
-                'current_question', 'questions_answered', 'correct_answers',
-                'incorrect_guesses', 'quiz_time', 'is_active', 'is_completed'
+                "current_question",
+                "questions_answered",
+                "correct_answers",
+                "incorrect_guesses",
+                "quiz_time",
+                "is_active",
+                "is_completed",
             }
 
             applied_updates = []
@@ -130,13 +137,17 @@ class QuizSessionService(IQuizSessionService):
                     setattr(session, key, value)
                     applied_updates.append(f"{key}: {old_value} → {value}")
                 else:
-                    logger.warning(f"Invalid update field for session {session_id}: {key}")
+                    logger.warning(
+                        f"Invalid update field for session {session_id}: {key}"
+                    )
 
             # Always update interaction timestamp
             session.mark_interaction()
 
             if applied_updates:
-                logger.debug(f"Updated session {session_id}: {', '.join(applied_updates)}")
+                logger.debug(
+                    f"Updated session {session_id}: {', '.join(applied_updates)}"
+                )
 
             return True
 
@@ -157,7 +168,9 @@ class QuizSessionService(IQuizSessionService):
         try:
             session = self._active_sessions.get(session_id)
             if not session:
-                logger.warning(f"Cannot end inactive or non-existent session: {session_id}")
+                logger.warning(
+                    f"Cannot end inactive or non-existent session: {session_id}"
+                )
                 return False
 
             # Mark session as completed
@@ -262,7 +275,8 @@ class QuizSessionService(IQuizSessionService):
             return {
                 "active_sessions": len(self._active_sessions),
                 "completed_sessions": len(self._completed_sessions),
-                "total_sessions": len(self._active_sessions) + len(self._completed_sessions),
+                "total_sessions": len(self._active_sessions)
+                + len(self._completed_sessions),
             }
         except Exception as e:
             logger.error(f"Failed to get session statistics: {e}")

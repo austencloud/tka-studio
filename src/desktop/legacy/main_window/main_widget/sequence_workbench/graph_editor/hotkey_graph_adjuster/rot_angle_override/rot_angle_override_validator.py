@@ -1,8 +1,9 @@
 # src/main_window/main_widget/sequence_workbench/graph_editor/hotkey_graph_adjuster/arrow_rot_angle_override_manager.py
 from typing import TYPE_CHECKING
-from data.constants import STATIC, DASH
 
 from legacy_settings_manager.global_settings.app_context import AppContext
+
+from data.constants import DASH, STATIC
 
 if TYPE_CHECKING:
     from .rot_angle_override_manager import RotAngleOverrideManager

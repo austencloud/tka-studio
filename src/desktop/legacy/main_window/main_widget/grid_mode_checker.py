@@ -1,4 +1,5 @@
 from typing import Literal
+
 from data.constants import BOX, DIAMOND, END_POS, START_POS
 from data.positions_maps import box_positions, diamond_positions
 

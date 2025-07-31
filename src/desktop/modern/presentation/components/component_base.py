@@ -13,11 +13,12 @@ REPLACES: Direct QObject inheritance with global state access
 PROVIDES: Clean component architecture with dependency injection
 """
 
-from abc import ABC, abstractmethod, ABCMeta
-from typing import Optional, Any, List
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QObject, pyqtSignal
+from abc import ABC, ABCMeta, abstractmethod
 import logging
+from typing import Any, List, Optional
+
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QWidget
 
 # Type imports
 from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -36,7 +37,7 @@ AutoManagedWidget = QWidget
 
 # Event system imports with fallback
 try:
-    from desktop.modern.core.events import IEventBus, BaseEvent
+    from desktop.modern.core.events import BaseEvent, IEventBus
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
@@ -50,7 +51,6 @@ logger = logging.getLogger(__name__)
 
 class QObjectABCMeta(type(QObject), ABCMeta):
     """Metaclass that combines QObject's metaclass with ABCMeta."""
-
 
 
 class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):

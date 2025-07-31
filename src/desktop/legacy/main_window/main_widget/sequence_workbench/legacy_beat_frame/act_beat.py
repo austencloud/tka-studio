@@ -1,15 +1,15 @@
 from typing import TYPE_CHECKING, Union
-from PyQt6.QtWidgets import QGraphicsTextItem
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from objects.glyphs.reversal_glyph import ReversalGlyph
-
+from PyQt6.QtWidgets import QGraphicsTextItem
 
 if TYPE_CHECKING:
-    from main_window.main_widget.write_tab.act_sheet.act_splitter.act_beat_scroll.act_beat_frame.act_beat_view import (
-        ActBeatView,
-    )
     from main_window.main_widget.write_tab.act_sheet.act_splitter.act_beat_scroll.act_beat_frame.act_beat_frame import (
         ActBeatFrame,
+    )
+    from main_window.main_widget.write_tab.act_sheet.act_splitter.act_beat_scroll.act_beat_frame.act_beat_view import (
+        ActBeatView,
     )
 
 
@@ -17,7 +17,7 @@ class ActBeat(LegacyPictograph):
     def __init__(self, beat_frame: "ActBeatFrame", duration: Union[int, float] = 1):
         super().__init__()
         self.reversal_glyph = ReversalGlyph(self)
-        self.view: "ActBeatView" = None
+        self.view: ActBeatView = None
         self.beat_number_item: QGraphicsTextItem = None
         self.duration = duration
         self.is_placeholder = False

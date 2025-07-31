@@ -1,5 +1,6 @@
 import logging
 from typing import TYPE_CHECKING
+
 from data.constants import (
     BLUE_ATTRS,
     END_LOC,
@@ -16,8 +17,8 @@ from data.positions_maps import mirrored_positions
 logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from .codex_control_widget import CodexControlWidget
-from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 
 class CodexReflector:

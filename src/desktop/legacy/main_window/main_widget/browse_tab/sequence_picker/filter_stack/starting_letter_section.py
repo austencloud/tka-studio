@@ -1,15 +1,17 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QEvent, QObject, Qt
+from PyQt6.QtGui import QFontMetrics
 from PyQt6.QtWidgets import (
-    QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtCore import Qt, QEvent, QObject
-from PyQt6.QtGui import QFontMetrics
+from styles.styled_button import StyledButton
 
 from data.constants import LETTER
-from styles.styled_button import StyledButton
+
 from .filter_section_base import FilterSectionBase
 
 if TYPE_CHECKING:
@@ -79,7 +81,7 @@ class StartingLetterSection(FilterSectionBase):
 
     def _get_starting_letter_sequence_counts(self) -> dict[str, int]:
         """Tally up how many sequences start with each letter."""
-        letter_counts = {letter: 0 for letter in self.buttons.keys()}
+        letter_counts = dict.fromkeys(self.buttons.keys(), 0)
         base_words = self.get_sorted_base_words("sequence_length")
 
         for word, _, _ in base_words:

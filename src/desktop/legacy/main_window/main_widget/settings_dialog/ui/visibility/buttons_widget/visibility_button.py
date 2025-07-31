@@ -1,6 +1,7 @@
-from PyQt6.QtGui import QCursor, QFont
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor, QFont
 from styles.button_state import ButtonState
 from styles.styled_button import StyledButton
 
@@ -114,9 +115,7 @@ class VisibilityButton(StyledButton):
 
         # If this is a dependent button, check if it should be disabled
         if self.is_dependent:
-            all_motions_visible = (
-                self.visibility_buttons_widget.visibility_tab.settings.are_all_motions_visible()
-            )
+            all_motions_visible = self.visibility_buttons_widget.visibility_tab.settings.are_all_motions_visible()
             self.setEnabled(all_motions_visible)
             if not all_motions_visible:
                 self.state = ButtonState.DISABLED

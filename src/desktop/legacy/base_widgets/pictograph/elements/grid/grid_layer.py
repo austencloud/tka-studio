@@ -1,4 +1,5 @@
 from PyQt6.QtCore import QPointF
+
 from .grid_point import GridPoint
 
 

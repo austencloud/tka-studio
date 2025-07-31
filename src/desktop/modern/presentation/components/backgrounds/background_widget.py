@@ -1,25 +1,26 @@
 from typing import Optional
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter
-from PyQt6.QtCore import Qt, QTimer
 
-from desktop.modern.presentation.components.backgrounds.starfield_background import (
-    StarfieldBackground,
-)
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QPainter
+from PyQt6.QtWidgets import QWidget
+
 from desktop.modern.presentation.components.backgrounds.aurora_background import (
     AuroraBackground,
 )
 from desktop.modern.presentation.components.backgrounds.aurora_borealis_background import (
     AuroraBorealisBackground,
 )
-from desktop.modern.presentation.components.backgrounds.snowfall_background import (
-    SnowfallBackground,
+from desktop.modern.presentation.components.backgrounds.base_background import (
+    BaseBackground,
 )
 from desktop.modern.presentation.components.backgrounds.bubbles_background import (
     BubblesBackground,
 )
-from desktop.modern.presentation.components.backgrounds.base_background import (
-    BaseBackground,
+from desktop.modern.presentation.components.backgrounds.snowfall_background import (
+    SnowfallBackground,
+)
+from desktop.modern.presentation.components.backgrounds.starfield_background import (
+    StarfieldBackground,
 )
 
 

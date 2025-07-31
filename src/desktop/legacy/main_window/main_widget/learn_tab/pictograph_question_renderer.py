@@ -1,11 +1,9 @@
-from PyQt6.QtWidgets import QHBoxLayout, QWidget
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-
-from PyQt6.QtCore import Qt
-
 from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
     LessonPictographView,
 )
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
 
 
 class PictographQuestionRenderer:

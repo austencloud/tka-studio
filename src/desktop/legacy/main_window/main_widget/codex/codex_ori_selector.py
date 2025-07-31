@@ -1,12 +1,12 @@
 # codex_ori_selector.py
 
-from typing import TYPE_CHECKING
 import logging
+from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QComboBox, QVBoxLayout
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from data.constants import BLUE_ATTRS, RED_ATTRS, START_ORI, IN, CLOCK, OUT, COUNTER
+from data.constants import BLUE_ATTRS, CLOCK, COUNTER, IN, OUT, RED_ATTRS, START_ORI
 
 if TYPE_CHECKING:
     from .codex_control_widget import CodexControlWidget
@@ -89,6 +89,6 @@ class CodexOriSelector(QWidget):
         combo_font.setPointSize(combo_font_size)
         combo_font.setBold(True)
 
-        self.combo_box.setFixedHeight((combo_height))
+        self.combo_box.setFixedHeight(combo_height)
         self.combo_box.setFixedWidth(combo_width)
         self.combo_box.setFont(combo_font)

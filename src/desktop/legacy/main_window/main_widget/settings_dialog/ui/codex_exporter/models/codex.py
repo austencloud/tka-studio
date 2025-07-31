@@ -2,8 +2,8 @@
 Domain model for the Codex Exporter.
 """
 
-from enum import StrEnum
 from dataclasses import dataclass
+from enum import StrEnum
 
 
 class GridMode(StrEnum):

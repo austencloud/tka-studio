@@ -1,13 +1,14 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/disk_cache_manager.py
-import os
-import json
 import hashlib
+import json
 import logging
-import time
+import os
 from pathlib import Path
-from typing import Optional, Dict, Any
-from PyQt6.QtGui import QPixmap
+import time
+from typing import Any, Dict, Optional
+
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QPixmap
 
 
 class DiskCacheManager:
@@ -70,9 +71,9 @@ class DiskCacheManager:
             # Load or create metadata
             if self.metadata_file.exists():
                 try:
-                    with open(self.metadata_file, "r") as f:
+                    with open(self.metadata_file) as f:
                         self.metadata = json.load(f)
-                except (json.JSONDecodeError, IOError):
+                except (OSError, json.JSONDecodeError):
                     logging.warning("Cache metadata corrupted, creating new metadata")
                     self.metadata = {}
             else:

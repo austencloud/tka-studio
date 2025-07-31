@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 
 from objects.motion.motion_state import MotionState
 from objects.motion.motion_turns_manager import MotionTurnsManager
+
 from .motion_checker import MotionChecker
 from .motion_ori_calculator import MotionOriCalculator
 from .motion_updater import MotionUpdater
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-
     from objects.arrow.arrow import Arrow
     from objects.prop.prop import Prop
 

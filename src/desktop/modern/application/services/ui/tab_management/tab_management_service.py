@@ -11,8 +11,8 @@ Service for managing application tabs in the modern TKA desktop app.
 Handles tab switching and registration - tab creation is handled by TabFactory.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import TYPE_CHECKING, Dict, Optional
 
 from PyQt6.QtWidgets import QTabWidget, QWidget

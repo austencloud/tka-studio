@@ -123,7 +123,7 @@ class QtSequenceBeatOperationsAdapter(QObject):
     def add_pictograph_to_sequence(self, pictograph_data: PictographData) -> None:
         """Add pictograph to sequence (compatibility method for signal connections)."""
         try:
-            print(f"🔍 [BEAT_OPERATIONS] add_pictograph_to_sequence called")
+            print("🔍 [BEAT_OPERATIONS] add_pictograph_to_sequence called")
             print(f"🔍 [BEAT_OPERATIONS] Pictograph: {pictograph_data.letter}")
 
             # Get current sequence from workbench state manager

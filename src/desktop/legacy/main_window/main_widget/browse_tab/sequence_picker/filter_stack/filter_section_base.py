@@ -1,10 +1,10 @@
 from datetime import datetime
 import os
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
-from PyQt6.QtCore import Qt
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:

@@ -1,15 +1,17 @@
-from PyQt6.QtWidgets import QDialog, QHBoxLayout
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
-from data.constants import ANTI, BLUE, FLOAT, HEX_BLUE, HEX_RED, PRO
+
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.turns_adjustment_manager.turns_value import (
     TurnsValue,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QHBoxLayout
+
+from data.constants import ANTI, BLUE, FLOAT, HEX_BLUE, HEX_RED, PRO
+
 from .direct_set_turns_button import DirectSetTurnsButton
 
 if TYPE_CHECKING:
     from ..turns_widget import TurnsWidget
-from PyQt6.QtWidgets import QHBoxLayout
 
 
 class DirectSetTurnsDialog(QDialog):

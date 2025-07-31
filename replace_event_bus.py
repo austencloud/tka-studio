@@ -7,7 +7,7 @@ import re
 
 
 def replace_event_bus_with_signals(file_path):
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         content = f.read()
 
     # Remove the _setup_event_subscriptions method call

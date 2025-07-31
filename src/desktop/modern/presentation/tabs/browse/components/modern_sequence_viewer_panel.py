@@ -7,8 +7,6 @@ Displays selected sequences with image preview, metadata, and action buttons.
 
 from typing import Optional
 
-from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.modern.presentation.tabs.browse.services.browse_state_service import BrowseStateService
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
@@ -19,6 +17,11 @@ from PyQt6.QtWidgets import (
     QScrollArea,
     QVBoxLayout,
     QWidget,
+)
+
+from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.modern.presentation.tabs.browse.services.browse_state_service import (
+    BrowseStateService,
 )
 
 

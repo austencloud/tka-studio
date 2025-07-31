@@ -1,16 +1,17 @@
 import os
 import shutil
 from typing import TYPE_CHECKING
-from .variation_number_fixer import VariationNumberFixer
-from ..browse_tab_delete_confirmation_dialog import BrowseTabDeleteConfirmationDialog
-from utils.path_helpers import get_data_path
-from PyQt6.QtWidgets import QApplication
+
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QApplication, QDialog
+from utils.path_helpers import get_data_path
+
+from ..browse_tab_delete_confirmation_dialog import BrowseTabDeleteConfirmationDialog
+from .variation_number_fixer import VariationNumberFixer
 
 if TYPE_CHECKING:
-    from ..thumbnail_box.thumbnail_box import ThumbnailBox
     from ..browse_tab import BrowseTab
+    from ..thumbnail_box.thumbnail_box import ThumbnailBox
 
 DICTIONARY_PATH = "dictionary"
 
@@ -28,9 +29,7 @@ class BrowseTabDeletionHandler:
         dialog = BrowseTabDeleteConfirmationDialog(self.browse_tab)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            current_scroll_position = (
-                self.browse_tab.sequence_picker.scroll_widget.scroll_area.verticalScrollBar().value()
-            )
+            current_scroll_position = self.browse_tab.sequence_picker.scroll_widget.scroll_area.verticalScrollBar().value()
             file_path = thumbnail_box.state.thumbnails.pop(index)
             os.remove(file_path)
             if len(thumbnail_box.state.thumbnails) == 0:

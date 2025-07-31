@@ -23,13 +23,6 @@ Architecture:
 import logging
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData, Orientation
-from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.styling_helpers import (
-    UNIFIED_BUTTON_HEIGHT,
-    UNIFIED_BUTTON_WIDTH,
-    apply_modern_panel_styling,
-    apply_turn_button_styling,
-)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QGroupBox,
@@ -38,6 +31,14 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QVBoxLayout,
     QWidget,
+)
+
+from desktop.modern.domain.models import BeatData, Orientation
+from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.styling_helpers import (
+    UNIFIED_BUTTON_HEIGHT,
+    UNIFIED_BUTTON_WIDTH,
+    apply_modern_panel_styling,
+    apply_turn_button_styling,
 )
 
 logger = logging.getLogger(__name__)

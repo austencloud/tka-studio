@@ -13,7 +13,6 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from desktop.modern.application.services.settings.modern_settings_service import (
-    ApplicationStateMemento,
     ModernSettingsService,
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -65,12 +64,10 @@ class ApplicationStateManager:
             True if state was successfully restored, False otherwise
         """
         try:
-
             # Attempt to restore previous state
             restored_memento = self.settings_service.restore_application_state()
 
             if restored_memento:
-
                 # Apply window state if main window is available
                 if self.main_window and restored_memento.window_geometry:
                     try:
@@ -397,7 +394,6 @@ def integrate_with_application_startup(
         Configured ApplicationStateManager instance
     """
     try:
-
         # Create state manager
         state_manager = create_application_state_manager(container, main_window)
 

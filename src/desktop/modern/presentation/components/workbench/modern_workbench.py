@@ -240,7 +240,7 @@ class SequenceWorkbench(ViewableComponentBase):
         )
 
         if result.changed:
-            print(f"🎯 [WORKBENCH] Updating UI from state...")
+            print("🎯 [WORKBENCH] Updating UI from state...")
             self._update_ui_from_state()
 
             # Emit sequence_modified if not in restoration mode
@@ -257,10 +257,10 @@ class SequenceWorkbench(ViewableComponentBase):
                 if sequence:
                     for i, beat in enumerate(sequence.beats):
                         print(
-                            f"   Beat {i+1}: {beat.letter if hasattr(beat, 'letter') else 'Unknown'}"
+                            f"   Beat {i + 1}: {beat.letter if hasattr(beat, 'letter') else 'Unknown'}"
                         )
         else:
-            print(f"🎯 [WORKBENCH] No change detected, UI not updated")
+            print("🎯 [WORKBENCH] No change detected, UI not updated")
 
     def get_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence from state manager."""
@@ -288,7 +288,7 @@ class SequenceWorkbench(ViewableComponentBase):
         # CRITICAL FIX: Always update UI when start position is set, regardless of state change
         # This ensures the start position view always reflects the current selection
         print(
-            f"🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
+            "🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
         )
 
         # Update beat frame section - this should always happen for user selections
@@ -304,7 +304,7 @@ class SequenceWorkbench(ViewableComponentBase):
             )
             if complete_sequence:
                 self.sequence_modified.emit(complete_sequence)
-                print(f"🎯 [WORKBENCH] Sequence modified signal emitted")
+                print("🎯 [WORKBENCH] Sequence modified signal emitted")
         else:
             print(
                 f"🎯 [WORKBENCH] Skipping sequence modified signal (changed={result.changed}, auto_save_prevented={self._state_manager.should_prevent_auto_save()})"
@@ -358,24 +358,24 @@ class SequenceWorkbench(ViewableComponentBase):
 
     def _handle_clear(self):
         """Handle clear sequence operation."""
-        print(f"🧹 [WORKBENCH] Clear sequence requested")
+        print("🧹 [WORKBENCH] Clear sequence requested")
 
         # Clear the sequence via state manager
         result = self._state_manager.set_sequence(None)
 
         if result.changed:
-            print(f"🧹 [WORKBENCH] Sequence cleared, updating UI...")
+            print("🧹 [WORKBENCH] Sequence cleared, updating UI...")
             # Update UI to reflect the cleared sequence
             self._update_ui_from_state()
 
             # IMPORTANT: Clear the start position data from state manager
             # so that when a new start position is selected, it will be detected as a change
-            print(f"🧹 [WORKBENCH] Clearing start position data from state manager...")
+            print("🧹 [WORKBENCH] Clearing start position data from state manager...")
             self._state_manager.set_start_position(None)
 
             # Reset start position to text-only mode (no pictograph)
             if self._beat_frame_section:
-                print(f"🧹 [WORKBENCH] Initializing cleared start position view...")
+                print("🧹 [WORKBENCH] Initializing cleared start position view...")
                 self._beat_frame_section.initialize_cleared_start_position()
 
         # Also emit the signal for any parent handlers

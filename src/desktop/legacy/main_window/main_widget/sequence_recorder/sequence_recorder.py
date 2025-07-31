@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .SR_capture_frame import SR_CaptureFrame
 from .SR_main_control_frame import SR_MainControlFrame

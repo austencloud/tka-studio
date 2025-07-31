@@ -55,7 +55,9 @@ class WidgetFactory:
 
     def create_pictograph_widget(self, parent: Optional[QWidget] = None):
         """Create a pictograph view with injected dependencies."""
-        from desktop.modern.presentation.components.pictograph.views import create_pictograph_view
+        from desktop.modern.presentation.components.pictograph.views import (
+            create_pictograph_view,
+        )
 
         return create_pictograph_view("base", parent=parent)
 

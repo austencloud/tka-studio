@@ -1,13 +1,17 @@
 from typing import TYPE_CHECKING
-from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, HEX_BLUE, HEX_RED, OPP, SAME
+
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
-from .ori_picker_widget.ori_picker_widget import OriPickerWidget
-from .ori_picker_header import OriPickerHeader
+
+from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, HEX_BLUE, HEX_RED, OPP, SAME
+
 from .color_utils import ColorUtils
+from .ori_picker_header import OriPickerHeader
+from .ori_picker_widget.ori_picker_widget import OriPickerWidget
 
 if TYPE_CHECKING:
-    from ..legacy_adjustment_panel import LegacyAdjustmentPanel
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
+    from ..legacy_adjustment_panel import LegacyAdjustmentPanel
 
 
 class OriPickerBox(QFrame):

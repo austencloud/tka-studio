@@ -1,15 +1,16 @@
 from typing import TYPE_CHECKING
+
+from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtCore import Qt
+from styles.styled_button import StyledButton  # to get data_manager
 
 from data.constants import LETTER
-from legacy_settings_manager.global_settings.app_context import AppContext
-from styles.styled_button import StyledButton  # to get data_manager
 
 from .filter_section_base import FilterSectionBase
 

@@ -10,8 +10,6 @@ from typing import Dict, List, Tuple
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
-from desktop.modern.core.interfaces.settings_services import IImageExportSettingsManager
-
 logger = logging.getLogger(__name__)
 
 

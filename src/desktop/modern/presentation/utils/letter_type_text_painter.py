@@ -9,13 +9,13 @@ Used for styling section headers in the option picker.
 class LetterTypeTextPainter:
     """
     Utility for generating colored HTML text for different motion types.
-    
+
     Directly based on the legacy letter_type_text_painter.py for consistency.
     """
-    
+
     COLORS = {
         "Shift": "#6F2DA8",
-        "Dual": "#00b3ff", 
+        "Dual": "#00b3ff",
         "Dash": "#26e600",
         "Cross": "#26e600",
         "Static": "#eb7d00",
@@ -26,11 +26,11 @@ class LetterTypeTextPainter:
     def get_colored_text(cls, text: str, bold: bool = False) -> str:
         """
         Generate colored HTML text for the given text.
-        
+
         Args:
             text: The text to colorize (e.g., "Dual-Shift")
             bold: Whether to apply bold styling
-            
+
         Returns:
             HTML string with colored spans
         """

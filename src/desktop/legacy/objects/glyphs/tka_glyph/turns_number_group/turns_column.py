@@ -1,9 +1,11 @@
-from PyQt6.QtWidgets import QGraphicsItemGroup
 from typing import TYPE_CHECKING
-from .turns_tuple_interpretor import TurnsTupleInterpreter
-from .turns_number import TurnsNumber
+
+from PyQt6.QtWidgets import QGraphicsItemGroup
 from utils.path_helpers import get_image_path
+
 from ..turns_parser import parse_turns_tuple_string
+from .turns_number import TurnsNumber
+from .turns_tuple_interpretor import TurnsTupleInterpreter
 
 if TYPE_CHECKING:
     from ..tka_glyph import TKA_Glyph

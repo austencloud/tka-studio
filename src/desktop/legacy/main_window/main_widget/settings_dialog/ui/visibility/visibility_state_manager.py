@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Dict, List
 
 if TYPE_CHECKING:
     from legacy_settings_manager.legacy_settings_manager import (

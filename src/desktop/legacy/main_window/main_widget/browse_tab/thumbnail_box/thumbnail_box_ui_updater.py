@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import QTimer
+
 from .thumbnail_box import ThumbnailBox
 
 if TYPE_CHECKING:

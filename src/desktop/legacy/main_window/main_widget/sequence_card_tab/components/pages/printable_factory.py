@@ -1,9 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/components/pages/printable_factory.py
 from typing import TYPE_CHECKING, Tuple
-from PyQt6.QtWidgets import QWidget, QGridLayout, QFrame, QLabel
-from PyQt6.QtCore import Qt, QSize
 
-from .printable_layout import PrintablePageLayout, PaperSize, PaperOrientation
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
+
+from .printable_layout import PaperOrientation, PaperSize, PrintablePageLayout
 
 if TYPE_CHECKING:
     from ...sequence_card_tab import SequenceCardTab

@@ -4,18 +4,18 @@ Main class for the codex pictograph exporter.
 
 from typing import TYPE_CHECKING, List, Union
 
+from .exporters.main_exporter import MainExporter
 from .pictograph_data_manager import PictographDataManager
 from .pictograph_factory import PictographFactory
 from .pictograph_renderer import PictographRenderer
 from .turn_configuration import TurnConfiguration
-from .exporters.main_exporter import MainExporter
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
-        ImageExportTab,
-    )
     from main_window.main_widget.settings_dialog.ui.codex_exporter.codex_exporter_tab import (
         CodexExporterTab,
+    )
+    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
+        ImageExportTab,
     )
 
 

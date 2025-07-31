@@ -14,14 +14,18 @@ import logging
 import time
 from typing import Any, Callable, Dict, List
 
-from desktop.modern.application.services.option_picker.frame_pool_service import FramePoolService
+from desktop.modern.application.services.option_picker.frame_pool_service import (
+    FramePoolService,
+)
 from desktop.modern.core.interfaces.sequence_operation_services import IOptionLoader
 from desktop.modern.core.monitoring import performance_monitor
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +75,6 @@ class OptionLoader(IOptionLoader):
 
         try:
             with performance_monitor.profile_block(f"section_{letter_type}_load_total"):
-
                 # Load each pictograph into a frame
                 for i, pictograph_data in enumerate(pictographs):
                     with performance_monitor.profile_block(
@@ -190,7 +193,6 @@ class OptionLoader(IOptionLoader):
 
         try:
             with performance_monitor.profile_block("batch_load_all_sections"):
-
                 for letter_type, pictographs in sections_data.items():
                     frames = self.load_section_options(
                         letter_type, pictographs, selection_callback

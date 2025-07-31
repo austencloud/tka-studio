@@ -5,14 +5,14 @@ Manages start position selection, data creation, and related operations for the 
 Responsible for handling start position picker interactions and creating start position data.
 """
 
+from PyQt6.QtCore import QObject, pyqtSignal
 
+from desktop.modern.domain.models.grid_data import GridData
+from desktop.modern.domain.models.pictograph_data import PictographData
 from shared.application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
 from shared.application.services.sequence.beat_factory import BeatFactory
-from desktop.modern.domain.models.grid_data import GridData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class StartPositionSelectionHandler(QObject):
@@ -58,7 +58,7 @@ class StartPositionSelectionHandler(QObject):
         # The signal flow will handle workbench updates:
         # start_position_created signal -> SignalCoordinator -> StartPositionManager -> WorkbenchStateManager
         print(
-            f"🏗️ [START_POS_HANDLER] Using modern signal flow (no direct workbench setter)"
+            "🏗️ [START_POS_HANDLER] Using modern signal flow (no direct workbench setter)"
         )
 
         # Emit signal with the created data
@@ -68,7 +68,7 @@ class StartPositionSelectionHandler(QObject):
         self.start_position_created.emit(position_key, start_position_beat_data)
 
         # Request transition to option picker
-        print(f"🎯 [START_POS_HANDLER] Emitting transition_requested signal")
+        print("🎯 [START_POS_HANDLER] Emitting transition_requested signal")
         self.transition_requested.emit()
 
     def _create_start_position_pictograph_data(
@@ -77,8 +77,10 @@ class StartPositionSelectionHandler(QObject):
         """Create start position data from position key using real dataset (separate from sequence beats)"""
         try:
             # Use dependency injection to get shared services
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
             from shared.application.services.data.dataset_query import IDatasetQuery
-            from desktop.modern.core.dependency_injection.di_container import get_container
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)

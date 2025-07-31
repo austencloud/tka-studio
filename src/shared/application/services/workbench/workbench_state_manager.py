@@ -86,7 +86,7 @@ class WorkbenchStateManager(IWorkbenchStateManager):
         self._current_sequence = sequence
 
         # DEBUG: Add comprehensive logging for sequence changes
-        print(f"🔍 [WORKBENCH_STATE] set_sequence called")
+        print("🔍 [WORKBENCH_STATE] set_sequence called")
         print(
             f"🔍 [WORKBENCH_STATE] Previous sequence: {previous_sequence.length if previous_sequence else 0} beats"
         )

@@ -1,15 +1,16 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QListWidget,
-    QLineEdit,
-    QMessageBox,
     QDialogButtonBox,
+    QHBoxLayout,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
-from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
     from legacy_settings_manager.user_profile_settings.user_manager.user_manager import (

@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+
 import pandas as pd
 
 
@@ -26,24 +27,27 @@ class DataPathHandler:
         # To: data/
         project_root = current_file.parent.parent.parent.parent
         data_dir = project_root / "data"
-        
+
         # Fallback: if data dir doesn't exist, look for it by searching upwards
         if not data_dir.exists():
             # Search upwards from current file to find the data directory
             search_path = current_file.parent
             while search_path.parent != search_path:  # Not at filesystem root
                 potential_data = search_path / "data"
-                if potential_data.exists() and (potential_data / "DiamondPictographDataframe.csv").exists():
+                if (
+                    potential_data.exists()
+                    and (potential_data / "DiamondPictographDataframe.csv").exists()
+                ):
                     return potential_data
                 search_path = search_path.parent
-            
+
             # Last resort: look for TKA directory structure
             search_path = current_file.parent
             while search_path.parent != search_path:
                 if search_path.name == "TKA":
                     return search_path / "data"
                 search_path = search_path.parent
-        
+
         return data_dir
 
     @property

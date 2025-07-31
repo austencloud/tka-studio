@@ -6,10 +6,10 @@ presentation layer. Converts render commands to QT graphics items.
 """
 
 import logging
+from pathlib import Path
 
 # Add project root to path for core services
 import sys
-from pathlib import Path
 
 # Import the framework-agnostic core services
 from typing import Dict, Optional
@@ -507,7 +507,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
             grid_path = get_image_path(f"grid/{grid_mode}_grid.svg")
-            with open(grid_path, "r", encoding="utf-8") as file:
+            with open(grid_path, encoding="utf-8") as file:
                 content = file.read()
                 logger.debug(f"Loaded grid directly: {grid_path}")
                 return content
@@ -523,7 +523,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
             prop_path = get_image_path(f"props/{prop_type}.svg")
-            with open(prop_path, "r", encoding="utf-8") as file:
+            with open(prop_path, encoding="utf-8") as file:
                 content = file.read()
                 logger.debug(f"Loaded prop directly: {prop_path}")
                 return content
@@ -549,7 +549,7 @@ class QtAssetProvider(IPictographAssetProvider):
                 logger.warning(f"Unknown glyph type: {glyph_type}")
                 return None
 
-            with open(glyph_path, "r", encoding="utf-8") as file:
+            with open(glyph_path, encoding="utf-8") as file:
                 content = file.read()
                 logger.debug(f"Loaded glyph directly: {glyph_path}")
                 return content
@@ -565,8 +565,8 @@ class QtAssetProvider(IPictographAssetProvider):
         """
         try:
             # Import constants to ensure we use the exact same colors as legacy
-            import sys
             from pathlib import Path
+            import sys
 
             sys.path.insert(
                 0,
@@ -584,11 +584,11 @@ class QtAssetProvider(IPictographAssetProvider):
                 # Map color names to hex values (case insensitive)
                 color_lower = color.lower()
                 if color_lower == "red":
-                    new_hex_color = COLOR_MAP.get(RED, None)
+                    new_hex_color = COLOR_MAP.get(RED)
                 elif color_lower == "blue":
-                    new_hex_color = COLOR_MAP.get(BLUE, None)
+                    new_hex_color = COLOR_MAP.get(BLUE)
                 else:
-                    new_hex_color = COLOR_MAP.get(color, None)
+                    new_hex_color = COLOR_MAP.get(color)
 
             if not new_hex_color:
                 # If we still don't have a color, nothing to replace
@@ -762,7 +762,8 @@ class QtPictographRenderingAdapter:
 
             # Extract position from motion data
             position = Point(
-                motion_data.get("x", 200), motion_data.get("y", 200)  # Default center
+                motion_data.get("x", 200),
+                motion_data.get("y", 200),  # Default center
             )
 
             # Use core renderer to create command with beta positioning support

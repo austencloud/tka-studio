@@ -300,3 +300,11 @@ class BackgroundType(Enum):
     BUBBLES = "Bubbles"
     SNOWFALL = "Snowfall"
     STARFIELD = "Starfield"
+
+
+class PickerMode(Enum):
+    """Picker display modes."""
+
+    BASIC = "basic"
+    ADVANCED = "advanced"
+    AUTO = "auto"

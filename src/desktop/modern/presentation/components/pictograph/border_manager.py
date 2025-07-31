@@ -7,10 +7,11 @@ to PictographBorderService.
 
 from typing import Tuple
 
-from desktop.modern.core.interfaces.core_services import IPictographBorderManager
-from desktop.modern.domain.models import LetterType
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen
+
+from desktop.modern.core.interfaces.core_services import IPictographBorderManager
+from desktop.modern.domain.models import LetterType
 
 
 class PictographBorderManager:

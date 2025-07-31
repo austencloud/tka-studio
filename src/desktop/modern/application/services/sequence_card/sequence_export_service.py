@@ -7,9 +7,11 @@ Handles export and regeneration of sequence card images.
 import logging
 from typing import Callable, Optional
 
-from PyQt6.QtCore import pyqtSignal, QThread
+from PyQt6.QtCore import QThread, pyqtSignal
 
-from desktop.modern.core.interfaces.sequence_card_services import ISequenceCardExportService
+from desktop.modern.core.interfaces.sequence_card_services import (
+    ISequenceCardExportService,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -29,7 +29,7 @@ class ProgressiveLoadingService(QObject):
 
     Instead of loading all sequences at once, this service breaks the process
     into chunks and allows the UI to update between chunks.
-    
+
     Simplified: Now works directly with SequenceData, no conversion needed.
     """
 
@@ -74,7 +74,9 @@ class ProgressiveLoadingService(QObject):
 
         try:
             # Get filtered sequences directly (no conversion needed)
-            self._pending_sequences = self._get_filtered_sequences(filter_type, filter_value)
+            self._pending_sequences = self._get_filtered_sequences(
+                filter_type, filter_value
+            )
 
             total_count = len(self._pending_sequences)
             logger.info(f"🚀 Starting progressive loading: {total_count} sequences")
@@ -128,8 +130,10 @@ class ProgressiveLoadingService(QObject):
         total_progress = len(self._pending_sequences)
         self.loading_progress.emit(current_progress, total_progress)
 
-        logger.debug(f"📦 Processed chunk {self._current_chunk_index + 1}: "
-                    f"{len(chunk_sequences)} sequences ({current_progress}/{total_progress})")
+        logger.debug(
+            f"📦 Processed chunk {self._current_chunk_index + 1}: "
+            f"{len(chunk_sequences)} sequences ({current_progress}/{total_progress})"
+        )
 
         # Allow UI to update
         QApplication.processEvents()
@@ -157,7 +161,7 @@ class ProgressiveLoadingService(QObject):
         self._loading_timer.stop()
         self._is_loading = False
         self._pending_sequences.clear()
-        
+
         # Could emit an error signal here if needed
         logger.error(f"❌ Progressive loading failed: {error_message}")
         self.loading_completed.emit([])
@@ -215,16 +219,26 @@ class ProgressiveLoadingService(QObject):
                 letters = [
                     chr(i) for i in range(ord(start_letter), ord(end_letter) + 1)
                 ]
-                logger.info(f"📝 [PROGRESSIVE] Letter range {filter_value} -> {letters}")
-                return self.dictionary_manager.get_sequences_by_starting_letters(letters)
+                logger.info(
+                    f"📝 [PROGRESSIVE] Letter range {filter_value} -> {letters}"
+                )
+                return self.dictionary_manager.get_sequences_by_starting_letters(
+                    letters
+                )
             elif filter_value == "All Letters":
                 return self.dictionary_manager.get_all_sequences()
             else:
-                return self.dictionary_manager.get_sequences_by_starting_letter(filter_value)
+                return self.dictionary_manager.get_sequences_by_starting_letter(
+                    filter_value
+                )
         elif isinstance(filter_value, list):
-            return self.dictionary_manager.get_sequences_by_starting_letters(filter_value)
+            return self.dictionary_manager.get_sequences_by_starting_letters(
+                filter_value
+            )
         else:
-            logger.warning(f"⚠️ [PROGRESSIVE] Unexpected starting letter filter value: {filter_value}")
+            logger.warning(
+                f"⚠️ [PROGRESSIVE] Unexpected starting letter filter value: {filter_value}"
+            )
             return []
 
     def _apply_length_filter(self, filter_value) -> List[SequenceData]:
@@ -235,15 +249,21 @@ class ProgressiveLoadingService(QObject):
             else:
                 try:
                     length_value = int(filter_value)
-                    logger.info(f"📏 [PROGRESSIVE] Converting length '{filter_value}' to {length_value}")
+                    logger.info(
+                        f"📏 [PROGRESSIVE] Converting length '{filter_value}' to {length_value}"
+                    )
                     return self.dictionary_manager.get_sequences_by_length(length_value)
                 except ValueError:
-                    logger.warning(f"⚠️ [PROGRESSIVE] Invalid length value: {filter_value}")
+                    logger.warning(
+                        f"⚠️ [PROGRESSIVE] Invalid length value: {filter_value}"
+                    )
                     return []
         elif isinstance(filter_value, int):
             return self.dictionary_manager.get_sequences_by_length(filter_value)
         else:
-            logger.warning(f"⚠️ [PROGRESSIVE] Unexpected length filter value: {filter_value}")
+            logger.warning(
+                f"⚠️ [PROGRESSIVE] Unexpected length filter value: {filter_value}"
+            )
             return []
 
     def _apply_difficulty_filter(self, filter_value) -> List[SequenceData]:

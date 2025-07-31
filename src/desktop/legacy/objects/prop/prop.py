@@ -2,15 +2,16 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional, Union
 
 from objects.prop.prop_updater import PropUpdater
-from ..graphical_object import GraphicalObject
 from PyQt6.QtWidgets import QGraphicsPixmapItem
+
+from ..graphical_object import GraphicalObject
 from .prop_attr_manager import PropAttrManager
 from .prop_checker import PropChecker
 from .prop_rot_angle_manager import PropRotAngleManager
 
 if TYPE_CHECKING:
-    from objects.arrow.arrow import Arrow
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from objects.arrow.arrow import Arrow
     from objects.motion.motion import Motion
 
 

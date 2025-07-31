@@ -12,9 +12,9 @@ This class centralizes all configuration concerns including:
 - Parallel testing configuration
 """
 
+from dataclasses import dataclass
 import logging
 import sys
-from dataclasses import dataclass
 from typing import Optional
 
 from desktop.modern.core.application.application_factory import ApplicationMode

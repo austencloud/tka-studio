@@ -1,9 +1,12 @@
 from typing import TYPE_CHECKING
-from enums.prop_type import PropType
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from data.constants import DIAMOND
-from .prop_type_changer import PropTypeChanger
+from enums.prop_type import PropType
 from legacy_settings_manager.settings_logger import log_setting_get, log_setting_set
+
+from data.constants import DIAMOND
+
+from .prop_type_changer import PropTypeChanger
 
 if TYPE_CHECKING:
     from ..legacy_settings_manager import LegacySettingsManager

@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QTextOption, QFontMetrics
+from PyQt6.QtGui import QFontMetrics, QTextOption
+
 from .......editable_label import EditableLabel
 
 if TYPE_CHECKING:

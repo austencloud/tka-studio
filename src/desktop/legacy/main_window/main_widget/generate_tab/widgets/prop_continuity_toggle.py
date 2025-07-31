@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .labeled_toggle_base import LabeledToggleBase
 
 if TYPE_CHECKING:

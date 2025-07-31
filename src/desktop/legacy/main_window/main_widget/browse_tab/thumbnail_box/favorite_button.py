@@ -1,10 +1,10 @@
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QIcon
-from typing import TYPE_CHECKING, Literal
 import os
+from typing import TYPE_CHECKING, Literal
 
 from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QPushButton
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:

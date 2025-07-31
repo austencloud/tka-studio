@@ -10,9 +10,8 @@ This class is responsible for:
 
 import logging
 from pathlib import Path
-from typing import Optional
 
-from PyQt6.QtWidgets import QMessageBox, QWidget, QFileDialog
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QWidget
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.browse_services import ISequenceDeletionService
@@ -32,7 +31,7 @@ logger = logging.getLogger(__name__)
 class BrowseActionHandler:
     """
     Handles all user actions for the Browse tab.
-    
+
     Processes edit, save, delete, and fullscreen actions with proper
     error handling and user feedback.
     """
@@ -45,7 +44,7 @@ class BrowseActionHandler:
     ):
         """
         Initialize the browse action handler.
-        
+
         Args:
             container: Dependency injection container
             sequences_dir: Directory containing sequence files
@@ -53,7 +52,7 @@ class BrowseActionHandler:
         """
         self.sequences_dir = sequences_dir
         self.parent_widget = parent_widget
-        
+
         # Initialize services from DI container
         try:
             self.image_export_service = container.resolve(ISequenceImageExporter)
@@ -66,10 +65,10 @@ class BrowseActionHandler:
     def handle_edit_sequence(self, sequence_id: str) -> str:
         """
         Handle edit sequence action.
-        
+
         Args:
             sequence_id: ID of the sequence to edit
-            
+
         Returns:
             The sequence_id to emit for opening in construct tab
         """
@@ -82,11 +81,11 @@ class BrowseActionHandler:
     ) -> bool:
         """
         Handle save image action using the modern image export service.
-        
+
         Args:
             sequence_data: The sequence data to save
             current_variation_index: Index of the current variation
-            
+
         Returns:
             True if save was successful, False otherwise
         """
@@ -112,11 +111,15 @@ class BrowseActionHandler:
                 or current_variation_index >= len(sequence_data.thumbnails)
             ):
                 QMessageBox.warning(
-                    self.parent_widget, "No Image", "No image available for the selected variation."
+                    self.parent_widget,
+                    "No Image",
+                    "No image available for the selected variation.",
                 )
                 return False
 
-            current_thumbnail_path = Path(sequence_data.thumbnails[current_variation_index])
+            current_thumbnail_path = Path(
+                sequence_data.thumbnails[current_variation_index]
+            )
 
             # Extract sequence JSON from thumbnail metadata
             sequence_json_data = self.metadata_extractor.extract_metadata(
@@ -192,11 +195,11 @@ class BrowseActionHandler:
     ) -> bool:
         """
         Handle delete variation action using the deletion service.
-        
+
         Args:
             sequence_data: The sequence data containing the variation to delete
             current_variation_index: Index of the variation to delete
-            
+
         Returns:
             True if deletion was successful, False otherwise
         """
@@ -209,7 +212,9 @@ class BrowseActionHandler:
 
             if not sequence_data.thumbnails:
                 QMessageBox.warning(
-                    self.parent_widget, "No Variations", "No variations available to delete."
+                    self.parent_widget,
+                    "No Variations",
+                    "No variations available to delete.",
                 )
                 return False
 
@@ -239,11 +244,11 @@ class BrowseActionHandler:
     ) -> bool:
         """
         Handle fullscreen view action using the full screen overlay.
-        
+
         Args:
             current_thumbnails: List of thumbnail paths
             current_index: Index of the current thumbnail
-            
+
         Returns:
             True if fullscreen was opened successfully, False otherwise
         """
@@ -254,7 +259,9 @@ class BrowseActionHandler:
                 or current_index >= len(current_thumbnails)
             ):
                 QMessageBox.warning(
-                    self.parent_widget, "No Image", "No image available for fullscreen view."
+                    self.parent_widget,
+                    "No Image",
+                    "No image available for fullscreen view.",
                 )
                 return False
 

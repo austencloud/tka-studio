@@ -1,5 +1,6 @@
 # src/main_window/main_widget/sequence_workbench/graph_editor/adjustment_panel/new_turns_adjustment_manager/turns_state.py
 from PyQt6.QtCore import QObject, pyqtSignal
+
 from .turns_value import TurnsValue
 
 

@@ -7,18 +7,18 @@ Provides comprehensive input validation for graph editor components
 following TKA architectural patterns and error handling best practices.
 """
 
-import logging
-from typing import Optional, Any, List, Dict
 from dataclasses import dataclass
+import logging
+from pathlib import Path
 
 # Import domain models for validation
 import sys
-from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 modern_src = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(modern_src))
 
-from desktop.modern.domain.models import BeatData, SequenceData, Orientation
+from desktop.modern.domain.models import BeatData, Orientation, SequenceData
 
 logger = logging.getLogger(__name__)
 
@@ -220,7 +220,7 @@ class GraphEditorValidator:
             # Check required motion attributes
             if not hasattr(motion_data, "motion_type"):
                 result.add_error(
-                    f"Motion data missing motion_type",
+                    "Motion data missing motion_type",
                     f"{field_name}.motion_type",
                     None,
                     context,
@@ -228,18 +228,18 @@ class GraphEditorValidator:
 
             if not hasattr(motion_data, "turns"):
                 result.add_error(
-                    f"Motion data missing turns", f"{field_name}.turns", None, context
+                    "Motion data missing turns", f"{field_name}.turns", None, context
                 )
             elif not isinstance(motion_data.turns, (int, float)):
                 result.add_error(
-                    f"Motion turns must be a number",
+                    "Motion turns must be a number",
                     f"{field_name}.turns",
                     motion_data.turns,
                     context,
                 )
             elif motion_data.turns < 0:
                 result.add_error(
-                    f"Motion turns cannot be negative",
+                    "Motion turns cannot be negative",
                     f"{field_name}.turns",
                     motion_data.turns,
                     context,

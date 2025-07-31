@@ -1,15 +1,16 @@
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QCursor, QIcon, QFont
+from enum import Enum
+
 from PyQt6.QtCore import (
-    Qt,
-    pyqtSignal,
+    QEasingCurve,
     QEvent,
     QPropertyAnimation,
-    QEasingCurve,
+    Qt,
     pyqtProperty,
+    pyqtSignal,
 )
+from PyQt6.QtGui import QCursor, QFont, QIcon
+from PyQt6.QtWidgets import QPushButton
 from styles.button_state import ButtonState
-from enum import Enum
 
 
 class ButtonContext(Enum):

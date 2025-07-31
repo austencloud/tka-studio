@@ -6,9 +6,8 @@ Modern launcher components built with the reliable design system.
 These replace the old ModernXXX components with simpler, more reliable versions.
 """
 
-from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel
 from ui.pyqt6_compatible_design_system import get_reliable_style_builder
 from ui.reliable_effects import get_animation_manager, get_shadow_manager
 
@@ -92,9 +91,9 @@ class LauncherNotification(QFrame):
         self.setStyleSheet(
             f"""
             LauncherNotification {{
-                {self.style_builder.glass_surface('secondary')}
-                border-left: 4px solid {color_scheme['primary']};
-                border-radius: {self.style_builder.tokens.RADIUS['md']}px;
+                {self.style_builder.glass_surface("secondary")}
+                border-left: 4px solid {color_scheme["primary"]};
+                border-radius: {self.style_builder.tokens.RADIUS["md"]}px;
             }}
         """
         )
@@ -169,8 +168,8 @@ class LauncherStatusBar(QFrame):
         self.setStyleSheet(
             f"""
             LauncherStatusBar {{
-                {self.style_builder.glass_surface('tertiary')}
-                border-radius: {self.style_builder.tokens.RADIUS['sm']}px;
+                {self.style_builder.glass_surface("tertiary")}
+                border-radius: {self.style_builder.tokens.RADIUS["sm"]}px;
             }}
         """
         )
@@ -219,10 +218,10 @@ class LauncherHeader(QFrame):
     def _setup_styling(self):
         """Apply header styling."""
         self.setStyleSheet(
-            f"""
-            LauncherHeader {{
+            """
+            LauncherHeader {
                 background: transparent;
                 border: none;
-            }}
+            }
         """
         )

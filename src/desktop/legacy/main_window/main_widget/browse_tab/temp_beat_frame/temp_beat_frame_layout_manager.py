@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
-from data.beat_frame_layouts import sequence_workbench_BEAT_FRAME_LAYOUTS
+
 from legacy_settings_manager.global_settings.app_context import AppContext
+
+from data.beat_frame_layouts import sequence_workbench_BEAT_FRAME_LAYOUTS
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame import (

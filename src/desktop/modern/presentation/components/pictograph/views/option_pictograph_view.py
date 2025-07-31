@@ -7,9 +7,12 @@ without widget wrapper complexity.
 
 from typing import Callable, Optional
 
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
 from PyQt6.QtCore import QRectF, QSize, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen, QResizeEvent
+
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 from .base_pictograph_view import BasePictographView
 

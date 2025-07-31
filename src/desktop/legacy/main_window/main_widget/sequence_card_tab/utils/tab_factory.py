@@ -2,12 +2,13 @@
 Factory for creating SequenceCardTab instances with proper dependency injection.
 """
 
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
 import logging
+from typing import TYPE_CHECKING
+
+from main_window.main_widget.core.widget_manager import WidgetFactory
+from PyQt6.QtWidgets import QWidget
 
 from desktop.modern.core.application_context import ApplicationContext
-from main_window.main_widget.core.widget_manager import WidgetFactory
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.sequence_card_tab import (

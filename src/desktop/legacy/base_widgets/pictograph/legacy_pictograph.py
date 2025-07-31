@@ -1,4 +1,11 @@
+from placement_managers.arrow_placement_manager.arrow_placement_manager import (
+    ArrowPlacementManager,
+)
+from placement_managers.prop_placement_manager.prop_placement_manager import (
+    PropPlacementManager,
+)
 from PyQt6.QtWidgets import QGraphicsScene
+from svg_manager.svg_manager import SvgManager
 
 from .elements.pictograph_elements import PictographElements
 from .managers.getter.pictograph_getter import PictographGetter
@@ -8,15 +15,6 @@ from .managers.pictograph_initializer import PictographInitializer
 from .managers.pictograph_managers import PictographManagers
 from .managers.updater.pictograph_updater import PictographUpdater
 from .state.pictograph_state import PictographState
-from placement_managers.arrow_placement_manager.arrow_placement_manager import (
-    ArrowPlacementManager,
-)
-from svg_manager.svg_manager import SvgManager
-
-
-from placement_managers.prop_placement_manager.prop_placement_manager import (
-    PropPlacementManager,
-)
 
 
 class LegacyPictograph(QGraphicsScene):

@@ -287,7 +287,7 @@ class SignalCoordinator(QObject):
 
         if start_position_set or has_beats:
             # DEBUG: Add logging for option picker refresh
-            print(f"🔍 [SIGNAL_COORDINATOR] Refreshing option picker with sequence")
+            print("🔍 [SIGNAL_COORDINATOR] Refreshing option picker with sequence")
             print(
                 f"🔍 [SIGNAL_COORDINATOR] Sequence: {sequence.length if sequence else 0} beats"
             )
@@ -390,10 +390,10 @@ class SignalCoordinator(QObject):
                     empty_sequence = SequenceData.empty()
                     workbench_setter(empty_sequence)
                 else:
-                    print(f"❌ [SIGNAL_COORDINATOR] Workbench setter is None")
+                    print("❌ [SIGNAL_COORDINATOR] Workbench setter is None")
             else:
                 print(
-                    f"❌ [SIGNAL_COORDINATOR] Loading service has no workbench_setter attribute"
+                    "❌ [SIGNAL_COORDINATOR] Loading service has no workbench_setter attribute"
                 )
 
             # Clear start position
@@ -445,7 +445,7 @@ class SignalCoordinator(QObject):
         else:
             # Queue the signal for when workbench becomes ready
             print(
-                f"🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position signal"
+                "🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position signal"
             )
             self._pending_start_position_signals.append(("set", start_position_data))
             self._setup_workbench_ready_callback()
@@ -458,7 +458,7 @@ class SignalCoordinator(QObject):
         else:
             # Queue the signal for when workbench becomes ready
             print(
-                f"🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position update signal"
+                "🔄 [SIGNAL_COORDINATOR] Workbench not ready, queuing start position update signal"
             )
             self._pending_start_position_signals.append(("update", start_position_data))
             self._setup_workbench_ready_callback()
@@ -498,11 +498,7 @@ class SignalCoordinator(QObject):
                 signal_type,
                 start_position_data,
             ) in self._pending_start_position_signals:
-                if signal_type == "set":
-                    self.layout_manager.workbench.set_start_position(
-                        start_position_data
-                    )
-                elif signal_type == "update":
+                if signal_type == "set" or signal_type == "update":
                     self.layout_manager.workbench.set_start_position(
                         start_position_data
                     )

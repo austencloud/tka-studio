@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from data.constants import BLUE_ATTRS, RED_ATTRS, LETTER, MOTION_TYPE, PROP_ROT_DIR
-
+from data.constants import BLUE_ATTRS, LETTER, MOTION_TYPE, PROP_ROT_DIR, RED_ATTRS
 
 if TYPE_CHECKING:
     from .sequence_properties_manager import SequencePropertiesManager

@@ -1,10 +1,11 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt, QRegularExpression
-from PyQt6.QtGui import QRegularExpressionValidator, QKeyEvent
-from PyQt6.QtWidgets import QLineEdit
+
 from main_window.main_widget.write_tab.editable_label_manager import (
     EditableLabelManager,
 )
+from PyQt6.QtCore import QRegularExpression, Qt
+from PyQt6.QtGui import QKeyEvent, QRegularExpressionValidator
+from PyQt6.QtWidgets import QLineEdit
 
 if TYPE_CHECKING:
     from .timestamp import Timestamp

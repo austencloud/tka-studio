@@ -7,20 +7,20 @@ for the learning module.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class LessonType(Enum):
     """Types of lessons available in the learning module."""
-    
+
     PICTOGRAPH_TO_LETTER = "pictograph_to_letter"
-    LETTER_TO_PICTOGRAPH = "letter_to_pictograph" 
+    LETTER_TO_PICTOGRAPH = "letter_to_pictograph"
     VALID_NEXT_PICTOGRAPH = "valid_next_pictograph"
 
 
 class QuizMode(Enum):
     """Quiz modes for lesson execution."""
-    
+
     FIXED_QUESTION = "fixed_question"
     COUNTDOWN = "countdown"
 
@@ -29,21 +29,21 @@ class QuizMode(Enum):
 class LessonConfig:
     """
     Configuration data for a lesson type.
-    
+
     Contains all static configuration needed to set up and run a lesson,
     including display formats, prompts, and quiz parameters.
     """
-    
+
     lesson_type: LessonType
     question_format: str
     answer_format: str
     quiz_description: str
     question_prompt: str
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """
         Serialize configuration to dictionary for session state.
-        
+
         Returns:
             Dictionary representation with enum values serialized as strings
         """
@@ -54,15 +54,15 @@ class LessonConfig:
             "quiz_description": self.quiz_description,
             "question_prompt": self.question_prompt,
         }
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "LessonConfig":
         """
         Deserialize configuration from dictionary.
-        
+
         Args:
             data: Dictionary containing configuration data
-            
+
         Returns:
             LessonConfig instance
         """

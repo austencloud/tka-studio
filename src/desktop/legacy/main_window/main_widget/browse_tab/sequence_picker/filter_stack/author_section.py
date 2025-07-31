@@ -1,23 +1,23 @@
 # author_section.py (refactored)
 
+from functools import partial
 import os
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QGridLayout,
-    QSpacerItem,
-    QSizePolicy,
-)
-from PyQt6.QtCore import Qt
-from functools import partial
 
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QGridLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+)
 from styles.styled_button import StyledButton
 from utils.path_helpers import get_data_path
 
 from .filter_section_base import FilterSectionBase
-from legacy_settings_manager.global_settings.app_context import AppContext
 
 if TYPE_CHECKING:
     from .sequence_picker_filter_stack import SequencePickerFilterStack

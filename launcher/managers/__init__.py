@@ -18,7 +18,7 @@ from .window_mode_manager import WindowModeManager
 
 __all__ = [
     "DockApplicationManager",
-    "DockApplicationIcon", 
+    "DockApplicationIcon",
     "DockContextMenuManager",
     "DockPositionManager",
     "DockWindowSetup",

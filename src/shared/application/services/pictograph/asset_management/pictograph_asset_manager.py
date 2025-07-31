@@ -8,10 +8,10 @@ This service handles:
 - File existence validation
 """
 
+from functools import lru_cache
 import logging
 import os
 import re
-from functools import lru_cache
 from typing import Dict, Optional
 
 from desktop.modern.core.interfaces.pictograph_rendering_services import (
@@ -112,7 +112,7 @@ class PictographAssetManager(IPictographAssetManager):
     def load_svg_data(self, svg_path: str) -> Optional[str]:
         """Load SVG file with LRU caching for performance."""
         try:
-            with open(svg_path, "r", encoding="utf-8") as file:
+            with open(svg_path, encoding="utf-8") as file:
                 content = file.read()
                 self._stats["svg_files_loaded"] += 1
                 logger.debug(f"📁 [ASSET_MANAGER] Loaded SVG file: {svg_path}")

@@ -1,19 +1,19 @@
 from typing import TYPE_CHECKING, Union
 
-from data.constants import (
-    CLOCKWISE,
-    DASH,
-    END_ORI,
-    NO_ROT,
-    STATIC,
-    TURNS,
-    MOTION_TYPE,
-    PROP_ROT_DIR,
-)
 from main_window.main_widget.sequence_properties_manager.sequence_properties_manager import (
     SequencePropertiesManager,
 )
 
+from data.constants import (
+    CLOCKWISE,
+    DASH,
+    END_ORI,
+    MOTION_TYPE,
+    NO_ROT,
+    PROP_ROT_DIR,
+    STATIC,
+    TURNS,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.json_manager.json_sequence_updater.json_sequence_updater import (

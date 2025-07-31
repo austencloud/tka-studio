@@ -1,8 +1,9 @@
 # src/main_window/main_widget/sequence_card_tab/tab.py
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import Qt
-from utils.path_helpers import get_sequence_card_image_exporter_path
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+from utils.path_helpers import get_sequence_card_image_exporter_path
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.sequence_card_tab import (
@@ -62,7 +63,7 @@ class SequenceCardInitializer:
         if hasattr(self.parent.nav_sidebar, "update_selection_styles"):
             self.parent.nav_sidebar.update_selection_styles()
 
-        self.parent.header.description_label.setText(f"Loading saved sequence view...")
+        self.parent.header.description_label.setText("Loading saved sequence view...")
         QApplication.processEvents()
 
         if USE_PRINTABLE_LAYOUT and hasattr(self.parent, "printable_displayer"):

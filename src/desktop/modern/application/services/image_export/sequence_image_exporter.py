@@ -9,6 +9,9 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage
+
 from desktop.modern.core.interfaces.image_export_services import (
     ExportProgress,
     ExportResult,
@@ -18,8 +21,6 @@ from desktop.modern.core.interfaces.image_export_services import (
     ISequenceImageRenderer,
     ISequenceMetadataExtractor,
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QImage
 
 logger = logging.getLogger(__name__)
 

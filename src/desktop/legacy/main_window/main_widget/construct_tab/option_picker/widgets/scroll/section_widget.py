@@ -1,18 +1,18 @@
 from typing import TYPE_CHECKING, Callable
-from PyQt6.QtWidgets import QVBoxLayout, QGroupBox
-from enums.letter.letter_type import LetterType
 
-from data.constants import OPP, SAME
-from PyQt6.QtCore import Qt
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
-from PyQt6.QtCore import QSize
-from main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_pictograph_frame import (
-    OptionPickerSectionPictographFrame,
-)
+from enums.letter.letter_type import LetterType
 from main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_header import (
     OptionPickerSectionHeader,
 )
+from main_window.main_widget.construct_tab.option_picker.widgets.scroll.section_pictograph_frame import (
+    OptionPickerSectionPictographFrame,
+)
+from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QGroupBox, QVBoxLayout
+
+from data.constants import OPP, SAME
 
 if TYPE_CHECKING:
     from .option_scroll import OptionScroll
@@ -81,10 +81,12 @@ class OptionPickerSectionWidget(QGroupBox):
         row, col = divmod(count - 1, COLUMN_COUNT)
         self.pictograph_frame.layout.addWidget(pictograph.elements.view, row, col)
         pictograph.elements.view.setVisible(True)
-        
+
         # Log comprehensive metrics only when pictographs are added
         if len(self.pictographs) in [1, 4, 8, 16]:  # Key milestones
-            self._log_layout_metrics(f"After adding pictograph #{len(self.pictographs)}")
+            self._log_layout_metrics(
+                f"After adding pictograph #{len(self.pictographs)}"
+            )
 
     def _log_layout_metrics(self, context: str):
         """Log comprehensive layout metrics for comparison with modern."""
@@ -92,29 +94,43 @@ class OptionPickerSectionWidget(QGroupBox):
             if self.mw_size_provider:
                 main_window_size = self.mw_size_provider()
                 print(f"\n📊 [LEGACY METRICS] {self.letter_type.value} - {context}")
-                print(f"   Main Window: {main_window_size.width()}x{main_window_size.height()}")
+                print(
+                    f"   Main Window: {main_window_size.width()}x{main_window_size.height()}"
+                )
                 print(f"   Section: {self.width()}x{self.height()}")
-                print(f"   Frame: {self.pictograph_frame.width()}x{self.pictograph_frame.height()}")
+                print(
+                    f"   Frame: {self.pictograph_frame.width()}x{self.pictograph_frame.height()}"
+                )
                 print(f"   Grid spacing: {self.pictograph_frame.layout.spacing()}px")
                 print(f"   Pictograph count: {len(self.pictographs)}")
-                
+
                 # Calculate grid utilization
                 if len(self.pictographs) > 0:
                     COLUMN_COUNT = self.option_scroll.option_picker.COLUMN_COUNT
                     rows = (len(self.pictographs) - 1) // COLUMN_COUNT + 1
                     print(f"   Grid layout: {rows} rows x {COLUMN_COUNT} columns")
-                    
+
                     # Get pictograph size from first pictograph
                     first_pictograph = next(iter(self.pictographs.values()))
-                    pictograph_size = first_pictograph.elements.view.width() if first_pictograph.elements.view.width() > 0 else 80
+                    pictograph_size = (
+                        first_pictograph.elements.view.width()
+                        if first_pictograph.elements.view.width() > 0
+                        else 80
+                    )
                     spacing = self.pictograph_frame.layout.spacing()
-                    expected_frame_width = (pictograph_size * COLUMN_COUNT) + (spacing * (COLUMN_COUNT - 1))
-                    utilization = (expected_frame_width / self.pictograph_frame.width() * 100) if self.pictograph_frame.width() > 0 else 0
+                    expected_frame_width = (pictograph_size * COLUMN_COUNT) + (
+                        spacing * (COLUMN_COUNT - 1)
+                    )
+                    utilization = (
+                        (expected_frame_width / self.pictograph_frame.width() * 100)
+                        if self.pictograph_frame.width() > 0
+                        else 0
+                    )
                     print(f"   Pictograph size: {pictograph_size}px")
                     print(f"   Expected frame width: {expected_frame_width}px")
                     print(f"   Actual frame width: {self.pictograph_frame.width()}px")
                     print(f"   Width utilization: {utilization:.1f}%")
-                print(f"   ---")
+                print("   ---")
         except Exception as e:
             print(f"⚠️ [ERROR] Legacy metrics logging failed: {e}")
 
@@ -124,9 +140,13 @@ class OptionPickerSectionWidget(QGroupBox):
 
         if self.letter_type in [LetterType.Type1, LetterType.Type2, LetterType.Type3]:
             self.setFixedWidth(width)
-            
+
             # Log only on significant width changes for Types 1-3
-            if not self._debug_logged and self.letter_type in [LetterType.Type1, LetterType.Type2, LetterType.Type3]:
+            if not self._debug_logged and self.letter_type in [
+                LetterType.Type1,
+                LetterType.Type2,
+                LetterType.Type3,
+            ]:
                 self._log_layout_metrics("On resize width change")
                 self._debug_logged = True
 
@@ -134,7 +154,7 @@ class OptionPickerSectionWidget(QGroupBox):
             COLUMN_COUNT = self.option_scroll.option_picker.COLUMN_COUNT
 
             calculated_width = int(
-                (width / COLUMN_COUNT) - ((self.option_scroll.spacing))
+                (width / COLUMN_COUNT) - (self.option_scroll.spacing)
             )
 
             view_width = (

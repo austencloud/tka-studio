@@ -146,7 +146,7 @@ class WorkbenchBeatFrameSection(QWidget):
         self._current_sequence = sequence
         if self._beat_frame:
             self._beat_frame.set_sequence(sequence)
-            print(f"✅ [BEAT_FRAME_SECTION] Beat frame updated with sequence")
+            print("✅ [BEAT_FRAME_SECTION] Beat frame updated with sequence")
         else:
             print("⚠️ [BEAT_FRAME_SECTION] No beat frame available")
 
@@ -175,7 +175,7 @@ class WorkbenchBeatFrameSection(QWidget):
 
     def initialize_cleared_start_position(self):
         """Initialize start position view in cleared state (shows START text only)"""
-        print(f"🔧 [BEAT_FRAME_SECTION] Making beat frame section visible...")
+        print("🔧 [BEAT_FRAME_SECTION] Making beat frame section visible...")
         self.show()
         self.setVisible(True)
         print(

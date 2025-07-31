@@ -1,9 +1,10 @@
 import json
 import os
-from PIL import Image
 
-from data.constants import BLUE_ATTRS, RED_ATTRS, TURNS, START_ORI, END_ORI
+from PIL import Image
 from utils.path_helpers import get_data_path
+
+from data.constants import BLUE_ATTRS, END_ORI, RED_ATTRS, START_ORI, TURNS
 
 
 class TurnPatternVariationChecker:
@@ -27,7 +28,7 @@ class TurnPatternVariationChecker:
                 if metadata:
                     seq2 = json.loads(metadata)
                     return self.compare_turns_patterns(seq1, seq2)
-        except IOError as e:
+        except OSError as e:
             # raise an error
             raise e
         return False

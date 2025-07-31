@@ -1,15 +1,15 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QScrollArea,
-    QFrame,
-)
-from PyQt6.QtCore import Qt, pyqtSignal
 from typing import Dict
 
 from main_window.main_widget.sequence_card_tab.components.navigation.length_option_frame import (
     LengthOptionFrame,
+)
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import (
+    QFrame,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
 )
 
 

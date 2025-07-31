@@ -317,7 +317,7 @@ class SequenceWorkbenchPage(BasePage):
     def _find_sequence_display(self):
         """Find sequence display widget."""
         # This would be implemented based on actual UI structure
-        return None
+        return
 
     def _validate_workbench_functionality(self, workbench) -> bool:
         """
@@ -439,7 +439,7 @@ class SequenceWorkbenchPage(BasePage):
             return None
 
         if index < 0 or index >= len(beat_widgets):
-            logger.debug(f"Index {index} out of range (0-{len(beat_widgets)-1})")
+            logger.debug(f"Index {index} out of range (0-{len(beat_widgets) - 1})")
             return None
 
         beat_widget = beat_widgets[index]

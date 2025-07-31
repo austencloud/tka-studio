@@ -8,9 +8,10 @@ high-performance rendering of pictograph elements.
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
-from desktop.modern.domain.models import MotionData, PictographData
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
+
+from desktop.modern.domain.models import MotionData, PictographData
 
 
 class IPictographRenderingService(ABC):

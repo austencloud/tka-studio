@@ -8,11 +8,13 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 import logging
 from typing import TYPE_CHECKING, Callable, List, Optional
 
-from shared.application.services.data.legacy_to_modern_converter import LegacyToModernConverter
-from shared.application.services.sequence.sequence_persister import SequencePersister
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.sequence_data import SequenceData
+from shared.application.services.data.legacy_to_modern_converter import (
+    LegacyToModernConverter,
+)
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.pictograph_data import PictographData
@@ -118,7 +120,9 @@ class SequenceLoaderService(ISequenceLoader):
 
                         # Set start position in workbench via state manager
                         if self.workbench_state_manager:
-                            self.workbench_state_manager.set_start_position(start_position_beat)
+                            self.workbench_state_manager.set_start_position(
+                                start_position_beat
+                            )
 
                         # Notify callbacks instead of emitting Qt signals
                         for callback in self._start_position_loaded_callbacks:
@@ -155,10 +159,12 @@ class SequenceLoaderService(ISequenceLoader):
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
-            from shared.application.services.data.dataset_query import IDatasetQuery
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
             from desktop.modern.domain.models.grid_data import GridData
             from desktop.modern.domain.models.pictograph_data import PictographData
+            from shared.application.services.data.dataset_query import IDatasetQuery
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)

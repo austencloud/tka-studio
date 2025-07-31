@@ -9,10 +9,12 @@ between BeatData and PictographData as needed.
 import logging
 from typing import List, Optional
 
-from shared.application.services.data.dataset_query import IDatasetQuery
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
+from shared.application.services.data.dataset_query import IDatasetQuery
 
 logger = logging.getLogger(__name__)
 
@@ -153,7 +155,9 @@ class OptionDataService:
 
         try:
             from desktop.modern.domain.models.enums import LetterType
-            from desktop.modern.domain.models.letter_type_classifier import LetterTypeClassifier
+            from desktop.modern.domain.models.letter_type_classifier import (
+                LetterTypeClassifier,
+            )
 
             # Determine letter type from letter
             letter_type_str = LetterTypeClassifier.get_letter_type(
@@ -191,7 +195,9 @@ class OptionDataService:
         """Create mock pictographs for testing when real data is not available."""
         from desktop.modern.domain.models.enums import LetterType
         from desktop.modern.domain.models.grid_data import GridData
-        from desktop.modern.domain.models.letter_type_classifier import LetterTypeClassifier
+        from desktop.modern.domain.models.letter_type_classifier import (
+            LetterTypeClassifier,
+        )
 
         # Determine letter type for mock pictographs too
         letter_type_str = LetterTypeClassifier.get_letter_type(letter)

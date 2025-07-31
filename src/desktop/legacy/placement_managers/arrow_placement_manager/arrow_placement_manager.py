@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.data_updater.special_placement_data_updater import (
     SpecialPlacementDataUpdater,
 )
 
+from .arrow_adjustment_calculator import ArrowAdjustmentCalculator
 from .arrow_placement_context import ArrowPlacementContext
 from .quadrant_index_handler import QuadrantIndexHandler
-from .arrow_adjustment_calculator import ArrowAdjustmentCalculator
-from legacy_settings_manager.global_settings.app_context import AppContext
 from .strategies.default_placement_strategy import DefaultPlacementStrategy
 from .strategies.initial_placement_strategy import InitialPlacementStrategy
 from .strategies.quadrant_adjustment_strategy import QuadrantAdjustmentStrategy

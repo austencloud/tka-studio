@@ -1,9 +1,12 @@
-from PyQt6.QtWidgets import QDialog, QHBoxLayout
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QHBoxLayout
+
 from data.constants import BLUE, HEX_BLUE, HEX_RED
-from .ori_button import OriButton  # Import the new OriButton class
+
 from ..color_utils import ColorUtils
+from .ori_button import OriButton  # Import the new OriButton class
 
 if TYPE_CHECKING:
     from .ori_picker_widget import OriPickerWidget

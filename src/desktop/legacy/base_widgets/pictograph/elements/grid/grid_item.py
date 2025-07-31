@@ -1,6 +1,6 @@
 import logging
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
 logger = logging.getLogger(__name__)
 

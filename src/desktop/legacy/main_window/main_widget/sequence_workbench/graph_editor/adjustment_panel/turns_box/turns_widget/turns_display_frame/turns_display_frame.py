@@ -1,12 +1,13 @@
-from PyQt6.QtWidgets import QFrame, QHBoxLayout
 from typing import TYPE_CHECKING
 
-from data.constants import ANTI, FLOAT, PRO
 from objects.motion.motion import Motion
+from PyQt6.QtWidgets import QFrame, QHBoxLayout
+from utils.path_helpers import get_image_path
+
+from data.constants import ANTI, FLOAT, PRO
 
 from .adjust_turns_button import AdjustTurnsButton
 from .GE_turns_label import GE_TurnsLabel
-from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
     from ..turns_widget import TurnsWidget

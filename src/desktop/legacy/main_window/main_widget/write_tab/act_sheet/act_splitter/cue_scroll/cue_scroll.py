@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QScrollArea, QFrame
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFrame, QScrollArea
+
 from .cue_frame.cue_frame import CueFrame
 
 if TYPE_CHECKING:

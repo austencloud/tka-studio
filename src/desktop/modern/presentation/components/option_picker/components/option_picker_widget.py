@@ -12,14 +12,15 @@ Key principles:
 
 from typing import Callable, Optional
 
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
+
 # Services are resolved via DI container - no direct imports needed
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
     OptionPickerScroll,
 )
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
 class OptionPickerWidget(QWidget):

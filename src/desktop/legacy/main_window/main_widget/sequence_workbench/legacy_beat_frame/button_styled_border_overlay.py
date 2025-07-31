@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPainter, QColor
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.freeform.letter_type_picker_widget.letter_type_button import (

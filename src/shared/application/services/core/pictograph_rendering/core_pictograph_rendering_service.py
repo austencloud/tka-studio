@@ -9,11 +9,11 @@ framework-agnostic implementation that follows the same pattern as your
 existing core services.
 """
 
-import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Protocol, Tuple
+import logging
+from typing import Any, Dict, List, Optional, Protocol
 
 from desktop.modern.core.types import Point, Size
 from desktop.modern.domain.models import MotionData, PictographData

@@ -11,10 +11,9 @@ This test autonomously generates sequences in the actual generate tab to verify:
 
 import logging
 
-import pytest
-from PyQt6.QtCore import QTimer
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication
+import pytest
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,8 @@
 # src/main_window/main_widget/sequence_workbench/graph_editor/hotkey_graph_adjuster/rot_angle_override/types.py
-from typing import TypedDict
-from enums.letter.letter import Letter
-
-
 # types.py
-from typing import NotRequired
+from typing import NotRequired, TypedDict
+
+from enums.letter.letter import Letter
 
 
 class PlacementDataEntry(TypedDict):

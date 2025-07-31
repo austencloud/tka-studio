@@ -18,8 +18,8 @@ USAGE:
     container.register_singleton(AppConfig, lambda: app_config)
 """
 
-import os
 from dataclasses import dataclass
+import os
 from typing import Optional
 
 # Result pattern removed - using simple exceptions

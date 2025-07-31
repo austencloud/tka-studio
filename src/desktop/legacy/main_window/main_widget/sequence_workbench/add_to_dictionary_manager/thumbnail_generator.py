@@ -1,11 +1,11 @@
-import os
-import json
-from typing import TYPE_CHECKING
-from PyQt6.QtGui import QImage
-from PIL import Image, PngImagePlugin, ImageEnhance
-import numpy as np
 from datetime import datetime
+import json
+import os
+from typing import TYPE_CHECKING
 
+import numpy as np
+from PIL import Image, ImageEnhance, PngImagePlugin
+from PyQt6.QtGui import QImage
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

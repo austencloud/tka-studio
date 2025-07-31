@@ -1,7 +1,7 @@
 from enums.letter.letter import LetterCondition
+from objects.arrow.arrow import Arrow
 
 from data.constants import CLOCK, COUNTER, IN, NONRADIAL, OUT, RADIAL
-from objects.arrow.arrow import Arrow
 
 
 class PlacementKeyGenerator:

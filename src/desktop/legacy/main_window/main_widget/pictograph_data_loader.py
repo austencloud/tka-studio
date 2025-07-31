@@ -1,8 +1,10 @@
 from copy import deepcopy
 import os
 from typing import TYPE_CHECKING, Optional
-import pandas as pd
+
 from enums.letter.letter import Letter
+import pandas as pd
+from utils.path_helpers import get_data_path
 
 from data.constants import (
     BLUE,
@@ -20,7 +22,6 @@ from data.constants import (
     START_POS,
     TURNS,
 )
-from utils.path_helpers import get_data_path
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
@@ -61,7 +62,7 @@ class PictographDataLoader:
                 # Try to read the CSV files
                 diamond_df = pd.read_csv(diamond_csv_path)
                 box_df = pd.read_csv(box_csv_path)
-            except Exception as e:
+            except Exception:
                 # If there's an error reading the files, create sample data
                 return self._create_sample_pictograph_data()
 

@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING
 
-
-from .level_ui_manager import LevelUIManager
 from .level_image_handler import LevelImageHandler
+from .level_ui_manager import LevelUIManager
 
 if TYPE_CHECKING:
     from .filter_by_level_section import FilterByLevelSection

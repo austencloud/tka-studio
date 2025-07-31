@@ -11,9 +11,11 @@ Faithful port of the orientation key generation logic from legacy special placem
 import logging
 from typing import Optional
 
-from shared.application.services.pictograph.pictograph_validator import PictographValidator
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.pictograph_data import PictographData
+from shared.application.services.pictograph.pictograph_validator import (
+    PictographValidator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +55,7 @@ class SpecialPlacementOriKeyGenerator:
         has_nonradial_props = checker.ends_with_nonradial_ori()
         has_hybrid_orientation = checker.ends_with_layer3()
 
-        logger.debug(f"Orientation analysis:")
+        logger.debug("Orientation analysis:")
         logger.debug(f"  Has radial props: {has_radial_props}")
         logger.debug(f"  Has non-radial props: {has_nonradial_props}")
         logger.debug(f"  Has hybrid orientation: {has_hybrid_orientation}")

@@ -2,9 +2,10 @@
 Generate all checkbox component for the codex exporter.
 """
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QCheckBox
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import QCheckBox, QVBoxLayout, QWidget
+
 from .turn_config_style_provider import TurnConfigStyleProvider
 
 

@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
-from PyQt6.QtCore import Qt
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.browse_tab.sequence_picker.control_panel.sort_widget.sort_button import (
     SortButton,
 )
 from main_window.main_widget.browse_tab.sequence_picker.control_panel.sort_widget.sort_option import (
     SortOption,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.sequence_picker.control_panel.sequence_picker_control_panel import (

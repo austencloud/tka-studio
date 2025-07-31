@@ -5,9 +5,9 @@ Direct port of Circular Algorithmic Permutation logic from legacy system.
 These are the mathematical transformations that make circular sequences work.
 """
 
-import logging
 from abc import ABC, abstractmethod
 from enum import Enum
+import logging
 from typing import Dict, List, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
@@ -229,7 +229,7 @@ class StrictMirroredCAP(CAPOperation):
     def execute(self, sequence: SequenceData, **kwargs) -> SequenceData:
         """Execute strict mirrored CAP transformation."""
         try:
-            print(f"🔧 Applying STRICT_MIRRORED CAP")
+            print("🔧 Applying STRICT_MIRRORED CAP")
 
             if not self.validate_applicability(sequence):
                 raise ValueError("Sequence is not applicable for strict mirrored CAP")

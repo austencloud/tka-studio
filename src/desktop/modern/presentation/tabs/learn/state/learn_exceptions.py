@@ -5,12 +5,12 @@ Specific exception types for the learn tab that enable proper error handling
 and recovery strategies. Each exception type has a clear meaning and context.
 """
 
-from typing import Optional, Any
+from typing import Any, Optional
 
 
 class LearnError(Exception):
     """Base exception for all learn tab related errors."""
-    
+
     def __init__(self, message: str, context: Optional[dict] = None):
         super().__init__(message)
         self.context = context or {}
@@ -18,7 +18,7 @@ class LearnError(Exception):
 
 class InvalidStateTransition(LearnError):
     """Raised when an invalid state transition is attempted."""
-    
+
     def __init__(self, from_state: str, to_state: str, reason: str = ""):
         message = f"Cannot transition from {from_state} to {to_state}"
         if reason:
@@ -28,7 +28,7 @@ class InvalidStateTransition(LearnError):
 
 class LessonNotAvailable(LearnError):
     """Raised when a requested lesson is not available."""
-    
+
     def __init__(self, lesson_type: str, reason: str = ""):
         message = f"Lesson '{lesson_type}' is not available"
         if reason:
@@ -38,7 +38,7 @@ class LessonNotAvailable(LearnError):
 
 class SessionCreationError(LearnError):
     """Raised when session creation fails."""
-    
+
     def __init__(self, lesson_type: str, quiz_mode: str, reason: str = ""):
         message = f"Failed to create session for {lesson_type} in {quiz_mode} mode"
         if reason:
@@ -48,17 +48,19 @@ class SessionCreationError(LearnError):
 
 class QuestionGenerationError(LearnError):
     """Raised when question generation fails."""
-    
+
     def __init__(self, session_id: str, lesson_type: str, reason: str = ""):
         message = f"Failed to generate question for session {session_id}"
         if reason:
             message += f": {reason}"
-        super().__init__(message, {"session_id": session_id, "lesson_type": lesson_type})
+        super().__init__(
+            message, {"session_id": session_id, "lesson_type": lesson_type}
+        )
 
 
 class AnswerValidationError(LearnError):
     """Raised when answer validation fails."""
-    
+
     def __init__(self, question_id: str, answer: Any, reason: str = ""):
         message = f"Failed to validate answer for question {question_id}"
         if reason:
@@ -68,7 +70,7 @@ class AnswerValidationError(LearnError):
 
 class ProgressCalculationError(LearnError):
     """Raised when progress calculation fails."""
-    
+
     def __init__(self, session_id: str, reason: str = ""):
         message = f"Failed to calculate progress for session {session_id}"
         if reason:
@@ -78,7 +80,7 @@ class ProgressCalculationError(LearnError):
 
 class UIRenderingError(LearnError):
     """Raised when UI rendering fails."""
-    
+
     def __init__(self, component: str, reason: str = ""):
         message = f"Failed to render UI component '{component}'"
         if reason:
@@ -88,7 +90,7 @@ class UIRenderingError(LearnError):
 
 class DataCorruptionError(LearnError):
     """Raised when data corruption is detected."""
-    
+
     def __init__(self, data_type: str, identifier: str, reason: str = ""):
         message = f"Data corruption detected in {data_type} '{identifier}'"
         if reason:
@@ -98,7 +100,7 @@ class DataCorruptionError(LearnError):
 
 class NetworkError(LearnError):
     """Raised when network operations fail."""
-    
+
     def __init__(self, operation: str, reason: str = ""):
         message = f"Network operation '{operation}' failed"
         if reason:
@@ -108,7 +110,7 @@ class NetworkError(LearnError):
 
 class ConfigurationError(LearnError):
     """Raised when configuration is invalid or missing."""
-    
+
     def __init__(self, config_type: str, reason: str = ""):
         message = f"Configuration error in '{config_type}'"
         if reason:
@@ -119,7 +121,7 @@ class ConfigurationError(LearnError):
 # Error recovery strategies
 class ErrorRecoveryStrategy:
     """Defines how to recover from specific error types."""
-    
+
     @staticmethod
     def can_recover(error: LearnError) -> bool:
         """Check if an error is recoverable."""
@@ -128,10 +130,10 @@ class ErrorRecoveryStrategy:
             QuestionGenerationError,
             AnswerValidationError,
             UIRenderingError,
-            NetworkError
+            NetworkError,
         )
         return isinstance(error, recoverable_types)
-    
+
     @staticmethod
     def get_recovery_action(error: LearnError) -> str:
         """Get the recommended recovery action for an error."""
@@ -149,7 +151,7 @@ class ErrorRecoveryStrategy:
             return "reset_to_safe_state"
         else:
             return "show_error_message"
-    
+
     @staticmethod
     def get_user_message(error: LearnError) -> str:
         """Get a user-friendly error message."""
@@ -162,7 +164,9 @@ class ErrorRecoveryStrategy:
         elif isinstance(error, UIRenderingError):
             return "Display issue encountered. Refreshing the interface..."
         elif isinstance(error, NetworkError):
-            return "Network connection issue. Please check your connection and try again."
+            return (
+                "Network connection issue. Please check your connection and try again."
+            )
         elif isinstance(error, DataCorruptionError):
             return "Data integrity issue detected. Please restart the lesson."
         else:

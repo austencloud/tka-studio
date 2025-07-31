@@ -1,6 +1,7 @@
 from typing import LiteralString
-from PyQt6.QtWidgets import QProgressBar, QVBoxLayout, QLabel, QWidget
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QProgressBar, QVBoxLayout, QWidget
 
 
 class RainbowProgressBar(QWidget):

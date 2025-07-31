@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from enums.glyph_enum import Glyph
 
 if TYPE_CHECKING:

@@ -4,9 +4,13 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
 
-from shared.application.services.backgrounds.snowfall.santa_movement import SantaMovement
+from shared.application.services.backgrounds.snowfall.santa_movement import (
+    SantaMovement,
+)
 from shared.application.services.backgrounds.snowfall.shooting_star import ShootingStar
-from shared.application.services.backgrounds.snowfall.snowflake_physics import SnowflakePhysics
+from shared.application.services.backgrounds.snowfall.snowflake_physics import (
+    SnowflakePhysics,
+)
 
 from .asset_utils import get_image_path
 from .base_background import BaseBackground

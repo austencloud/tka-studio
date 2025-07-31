@@ -1,4 +1,5 @@
 from typing import Optional
+
 from data.constants import (
     ANTI,
     BEAT,
@@ -16,7 +17,9 @@ from data.constants import (
     RED,
     RED_ATTRS,
 )
-from desktop.modern.application.services.json_handler import LetterDeterminationJsonHandler
+from desktop.modern.application.services.json_handler import (
+    LetterDeterminationJsonHandler,
+)
 
 
 class AttributeManager:

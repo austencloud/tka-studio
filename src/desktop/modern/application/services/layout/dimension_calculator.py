@@ -5,9 +5,10 @@ Merged from responsive_sizing_manager.py and dimension_analyzer.py
 
 from typing import Any, Dict, Tuple
 
-from desktop.modern.core.interfaces.core_services import IDimensionCalculator
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QApplication, QWidget
+
+from desktop.modern.core.interfaces.core_services import IDimensionCalculator
 
 
 class DimensionCalculator(IDimensionCalculator):

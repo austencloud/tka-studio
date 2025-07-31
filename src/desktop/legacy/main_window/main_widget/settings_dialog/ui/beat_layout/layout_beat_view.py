@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )

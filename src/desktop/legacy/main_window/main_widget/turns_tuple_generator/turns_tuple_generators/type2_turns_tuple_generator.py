@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
-from data.constants import ANTI, FLOAT, NO_ROT, PRO
+
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generators.base_turns_tuple_generator import (
     BaseTurnsTupleGenerator,
 )
+
+from data.constants import ANTI, FLOAT, NO_ROT, PRO
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

@@ -6,7 +6,7 @@ clean architecture patterns and service composition principles.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from PyQt6.QtCore import QSettings
 
@@ -63,7 +63,6 @@ def register_settings_services(container: DIContainer) -> None:
         Exception: If service registration fails
     """
     try:
-
         # Create shared QSettings instance
         def create_shared_settings():
             return QSettings("TKA", "KineticConstructor")
@@ -136,7 +135,6 @@ def validate_settings_registration(container: DIContainer) -> bool:
         True if all services are working, False otherwise
     """
     try:
-
         # Test main settings service
         settings_service = container.resolve(ModernSettingsService)
         if not settings_service:

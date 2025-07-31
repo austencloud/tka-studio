@@ -23,8 +23,8 @@ MODES:
 
 import argparse
 import logging
-import sys
 from pathlib import Path
+import sys
 
 # Add the src directory to Python path for imports
 src_path = (

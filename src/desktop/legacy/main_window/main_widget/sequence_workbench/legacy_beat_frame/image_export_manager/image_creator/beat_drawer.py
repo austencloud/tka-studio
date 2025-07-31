@@ -1,6 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QPainter, QImage, QPixmap
-from PyQt6.QtCore import Qt
 
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
@@ -8,7 +6,8 @@ from base_widgets.pictograph.elements.views.beat_view import (
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_creator.combined_grid_handler import (
     CombinedGridHandler,
 )
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage, QPainter, QPixmap
 
 if TYPE_CHECKING:
     from ..image_creator.image_creator import ImageCreator

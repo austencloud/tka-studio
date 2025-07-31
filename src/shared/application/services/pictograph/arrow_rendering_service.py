@@ -5,13 +5,15 @@ Handles SVG caching, asset management, color transforms, and positioning
 calculations without any Qt dependencies.
 """
 
-import logging
 from functools import lru_cache
+import logging
 from typing import Optional, Set
 
-from shared.application.services.assets.asset_manager import AssetManager
-from desktop.modern.core.interfaces.arrow_rendering_services import IArrowRenderingService
+from desktop.modern.core.interfaces.arrow_rendering_services import (
+    IArrowRenderingService,
+)
 from desktop.modern.domain.models import MotionData
+from shared.application.services.assets.asset_manager import AssetManager
 
 logger = logging.getLogger(__name__)
 

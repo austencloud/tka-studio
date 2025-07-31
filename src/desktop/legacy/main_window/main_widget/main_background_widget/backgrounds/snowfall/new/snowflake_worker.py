@@ -1,8 +1,7 @@
-from PyQt6.QtCore import QObject, pyqtSignal
 import random
+import time
 
 from PyQt6.QtCore import QObject, pyqtSignal
-import time
 
 
 class SnowflakeWorker(QObject):

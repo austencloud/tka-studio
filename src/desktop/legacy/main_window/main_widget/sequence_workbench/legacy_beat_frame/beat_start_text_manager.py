@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QPointF
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QGraphicsTextItem
-from PyQt6.QtCore import QPointF
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat

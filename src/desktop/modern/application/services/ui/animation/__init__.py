@@ -79,7 +79,7 @@ fade_manager.stack_fader.fade_stack(stack, 1, duration=300)
    ```python
    # Old
    fade_manager.widget_fader.fade_widgets([widget], True)
-   
+
    # New
    await orchestrator.fade_target(widget, fade_in=True)
    ```
@@ -92,107 +92,99 @@ fade_manager.stack_fader.fade_stack(stack, 1, duration=300)
 """
 
 # Core interfaces
-from desktop.modern.core.interfaces.animation_core_interfaces import (
-    IAnimationOrchestrator,
-    IAnimationEngine,
-    IAnimationCommand,
-    IEventBus,
-    AnimationTarget,
-    AnimationConfig,
-    AnimationType,
-    EasingType,
-    AnimationState,
-    FadeCommand,
-    TransitionCommand
-)
-
 # Core engine
 from desktop.modern.core.animation.animation_engine import (
     CoreAnimationEngine,
-    SimpleEventBus,
     DefaultSettingsProvider,
     EasingFunctions,
-    create_default_animation_engine
+    SimpleEventBus,
+    create_default_animation_engine,
+)
+from desktop.modern.core.interfaces.animation_core_interfaces import (
+    AnimationConfig,
+    AnimationState,
+    AnimationTarget,
+    AnimationType,
+    EasingType,
+    FadeCommand,
+    IAnimationCommand,
+    IAnimationEngine,
+    IAnimationOrchestrator,
+    IEventBus,
+    TransitionCommand,
 )
 
 # Qt adapters
 from .adapters.qt_adapters import (
-    QtTargetAdapter,
     QtAnimationRenderer,
     QtAnimationScheduler,
     QtEventBridge,
-    QtStackWidgetAdapter,
     QtGraphicsEffectManager,
-    create_qt_animation_components
+    QtStackWidgetAdapter,
+    QtTargetAdapter,
+    create_qt_animation_components,
 )
 
 # Main orchestrator
 from .animation_orchestrator import (
-    ModernAnimationOrchestrator,
     LegacyFadeManagerWrapper,
-    create_modern_animation_system
+    ModernAnimationOrchestrator,
+    create_modern_animation_system,
 )
-
-# DI registration
-from .modern_service_registration import (
-    setup_modern_animation_services,
-    ModernAnimationServiceRegistration,
-    create_simple_animation_orchestrator,
-    create_legacy_adapter
-)
+from .animation_service import AnimationService as LegacyAnimationService
 
 # Legacy compatibility (keeping old exports)
 from .fade_orchestrator import FadeOrchestrator as LegacyFadeOrchestrator
-from .animation_service import AnimationService as LegacyAnimationService
+
+# DI registration
+from .modern_service_registration import (
+    ModernAnimationServiceRegistration,
+    create_legacy_adapter,
+    create_simple_animation_orchestrator,
+    setup_modern_animation_services,
+)
 
 __all__ = [
     # Main interfaces
-    'IAnimationOrchestrator',
-    'IAnimationEngine',
-    'IAnimationCommand',
-    'IEventBus',
-    
+    "IAnimationOrchestrator",
+    "IAnimationEngine",
+    "IAnimationCommand",
+    "IEventBus",
     # Data classes
-    'AnimationTarget',
-    'AnimationConfig',
-    'AnimationType',
-    'EasingType',
-    'AnimationState',
-    
+    "AnimationTarget",
+    "AnimationConfig",
+    "AnimationType",
+    "EasingType",
+    "AnimationState",
     # Commands
-    'FadeCommand',
-    'TransitionCommand',
-    
+    "FadeCommand",
+    "TransitionCommand",
     # Core engine
-    'CoreAnimationEngine',
-    'SimpleEventBus',
-    'DefaultSettingsProvider',
-    'EasingFunctions',
-    'create_default_animation_engine',
-    
+    "CoreAnimationEngine",
+    "SimpleEventBus",
+    "DefaultSettingsProvider",
+    "EasingFunctions",
+    "create_default_animation_engine",
     # Qt adapters
-    'QtTargetAdapter',
-    'QtAnimationRenderer',
-    'QtAnimationScheduler',
-    'QtEventBridge',
-    'QtStackWidgetAdapter',
-    'QtGraphicsEffectManager',
-    'create_qt_animation_components',
-    
+    "QtTargetAdapter",
+    "QtAnimationRenderer",
+    "QtAnimationScheduler",
+    "QtEventBridge",
+    "QtStackWidgetAdapter",
+    "QtGraphicsEffectManager",
+    "create_qt_animation_components",
     # Modern orchestrator (primary interface)
-    'ModernAnimationOrchestrator',
-    'LegacyFadeManagerWrapper',
-    'create_modern_animation_system',
-    
+    "ModernAnimationOrchestrator",
+    "LegacyFadeManagerWrapper",
+    "create_modern_animation_system",
     # DI setup
-    'setup_modern_animation_services',
-    'ModernAnimationServiceRegistration',
-    'create_simple_animation_orchestrator',
-    'create_legacy_adapter',
-    
+    "setup_modern_animation_services",
+    "ModernAnimationServiceRegistration",
+    "create_simple_animation_orchestrator",
+    "create_legacy_adapter",
     # Legacy compatibility
-    'LegacyFadeOrchestrator',
-    'LegacyAnimationService',
+    "LegacyFadeOrchestrator",
+    "LegacyAnimationService",
 ]
 
 # Version info

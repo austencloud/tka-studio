@@ -1,11 +1,13 @@
 # strategies/dual_float.py
 from dataclasses import dataclass
 
-from data.constants import BLUE_ATTRS, FLOAT, MOTION_TYPE, RED_ATTRS, START_LOC
 from letter_determination.determination_result import DeterminationResult
-from .base_strategy import LetterDeterminationStrategy
-from desktop.modern.application.services.motion_comparator import MotionComparator
+
+from data.constants import BLUE_ATTRS, FLOAT, MOTION_TYPE, RED_ATTRS, START_LOC
 from desktop.modern.application.services.attribute_manager import AttributeManager
+from desktop.modern.application.services.motion_comparator import MotionComparator
+
+from .base_strategy import LetterDeterminationStrategy
 
 
 @dataclass

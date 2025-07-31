@@ -1,18 +1,17 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGridLayout
-from PyQt6.QtGui import QKeyEvent
 
-
+from base_widgets.base_beat_frame import BaseBeatFrame
+from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat_frame_layout_manager import (
     BeatFrameLayoutManager,
 )
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_export_manager import (
     ImageExportManager,
 )
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtWidgets import QGridLayout
 
-from .legacy_start_pos_beat import LegacyStartPositionBeat
-from .start_pos_beat_view import StartPositionBeatView
-from .start_position_adder import StartPositionAdder
 from ..beat_factory import BeatFactory
 from .beat_adder import BeatAdder
 from .beat_duration_manager import BeatDurationManager
@@ -20,11 +19,10 @@ from .beat_frame_key_event_handler import BeatFrameKeyEventHandler
 from .beat_frame_populator import BeatFramePopulator
 from .beat_frame_resizer import BeatFrameResizer
 from .beat_frame_updater import BeatFrameUpdater
-
 from .beat_selection_overlay import BeatSelectionOverlay
-from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
-from base_widgets.base_beat_frame import BaseBeatFrame
-from PyQt6.QtCore import pyqtSignal
+from .legacy_start_pos_beat import LegacyStartPositionBeat
+from .start_pos_beat_view import StartPositionBeatView
+from .start_position_adder import StartPositionAdder
 
 if TYPE_CHECKING:
     from ..sequence_workbench import SequenceWorkbench

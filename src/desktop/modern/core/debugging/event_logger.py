@@ -7,12 +7,12 @@ This provides comprehensive logging of all events and commands for debugging pur
 import logging
 from typing import Any
 
-from desktop.modern.core.events.event_bus import BaseEvent
 from desktop.modern.core.events.domain_events import (
     CommandExecutedEvent,
-    CommandUndoneEvent,
     CommandRedoneEvent,
+    CommandUndoneEvent,
 )
+from desktop.modern.core.events.event_bus import BaseEvent
 
 logger = logging.getLogger(__name__)
 
@@ -172,8 +172,8 @@ def log_debug_info():
 
     try:
         from desktop.modern.core.service_locator import (
-            get_sequence_state_manager,
             get_command_processor,
+            get_sequence_state_manager,
         )
 
         # Log state manager info

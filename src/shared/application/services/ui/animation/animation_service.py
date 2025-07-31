@@ -10,4 +10,4 @@ For the complete modern implementation, see:
 # For backward compatibility during migration, import from new location
 from .animation_orchestrator import ModernAnimationOrchestrator as AnimationService
 
-__all__ = ['AnimationService']
+__all__ = ["AnimationService"]

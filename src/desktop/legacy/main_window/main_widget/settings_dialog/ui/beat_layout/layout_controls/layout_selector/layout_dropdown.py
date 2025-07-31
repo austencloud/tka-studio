@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QComboBox
+
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QComboBox
 
 if TYPE_CHECKING:
     from .layout_selector import LayoutSelector

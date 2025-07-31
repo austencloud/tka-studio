@@ -1,8 +1,10 @@
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QScrollArea
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
-from .nav_sidebar_manager import NavSidebarManager
+
 from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+
+from .nav_sidebar_manager import NavSidebarManager
 
 if TYPE_CHECKING:
     from ..sequence_picker import SequencePicker

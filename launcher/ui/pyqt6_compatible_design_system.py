@@ -6,11 +6,6 @@ Replaces the dual enhanced/fallback system with one solid implementation
 using proven PyQt6 techniques. No conditional loading or fallbacks.
 """
 
-from typing import Dict, Any
-from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QApplication
-
 
 class PyQt6CompatibleTokens:
     """Reliable design tokens optimized for PyQt6 visibility."""

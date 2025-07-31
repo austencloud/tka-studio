@@ -5,12 +5,12 @@ Immutable data structures for individual beats in kinetic sequences.
 Handles beat data, motion references, and glyph information.
 """
 
-import json
-import uuid
 from dataclasses import dataclass, field
+import json
 
 # Forward reference for PictographData to avoid circular imports
 from typing import TYPE_CHECKING, Any, Dict, Optional
+import uuid
 
 from .motion_data import MotionData
 
@@ -83,15 +83,17 @@ class BeatData:
         return None
 
     @classmethod
-    def from_pictograph(cls, pictograph_data: "PictographData", beat_number: int) -> "BeatData":
+    def from_pictograph(
+        cls, pictograph_data: "PictographData", beat_number: int
+    ) -> "BeatData":
         """Create BeatData from PictographData."""
         return cls(
             beat_number=beat_number,
             pictograph_data=pictograph_data,
             metadata={
                 "letter": pictograph_data.letter,
-                "created_from_pictograph": True
-            }
+                "created_from_pictograph": True,
+            },
         )
 
     def to_dict(self) -> Dict[str, Any]:

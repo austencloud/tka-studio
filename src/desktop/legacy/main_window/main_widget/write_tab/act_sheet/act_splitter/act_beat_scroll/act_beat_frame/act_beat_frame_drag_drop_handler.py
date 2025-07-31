@@ -1,8 +1,9 @@
 # act_beat_frame_drag_drop_handler.py
 
-from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
 import json
 from typing import TYPE_CHECKING
+
+from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
 
 if TYPE_CHECKING:
     from .act_beat_frame import ActBeatFrame

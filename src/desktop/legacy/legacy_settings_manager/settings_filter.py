@@ -7,7 +7,8 @@ suppressing almost all settings logs during normal operation.
 
 import logging
 import re
-from typing import Set, Pattern, List
+from re import Pattern
+from typing import List, Set
 
 
 class SettingsFilter(logging.Filter):

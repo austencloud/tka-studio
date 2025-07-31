@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:

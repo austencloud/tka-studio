@@ -1,5 +1,6 @@
 # user_profile_settings.py
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import QSettings
 
 if TYPE_CHECKING:

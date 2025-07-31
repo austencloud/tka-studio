@@ -21,5 +21,5 @@ class SpecialPlacementSaver:
                     formatted_json_str,
                 )
                 file.write(formatted_json_str)
-        except IOError as e:
+        except OSError as e:
             logging.error(f"Failed to write to {file_path}: {e}")

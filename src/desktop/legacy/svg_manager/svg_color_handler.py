@@ -24,7 +24,7 @@ class SvgColorHandler:
             new_hex_color = new_color
         else:
             # 2) Maybe "BLUE", "RED", or something else
-            new_hex_color = COLOR_MAP.get(new_color, None)
+            new_hex_color = COLOR_MAP.get(new_color)
 
         if not new_hex_color:
             # If we still don't have a color, nothing to replace.

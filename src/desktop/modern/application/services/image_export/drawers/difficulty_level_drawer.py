@@ -8,12 +8,13 @@ sizing, positioning, and gradient logic.
 
 import logging
 
+from PyQt6.QtCore import QRect, Qt
+from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QLinearGradient, QPainter, QPen
+
 from desktop.modern.core.interfaces.image_export_services import (
     IDifficultyLevelDrawer,
     ImageExportOptions,
 )
-from PyQt6.QtCore import QRect, Qt
-from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QLinearGradient, QPainter, QPen
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +122,7 @@ class DifficultyLevelDrawer(IDifficultyLevelDrawer):
             gradient.setColorAt(0.6, QColor(180, 180, 180))
             gradient.setColorAt(1, QColor(110, 110, 110))
         elif difficulty_level == 3:
-            # Level 3: Gold to dark olive gradient 
+            # Level 3: Gold to dark olive gradient
             gradient.setColorAt(0, QColor(255, 215, 0))  # Gold
             gradient.setColorAt(0.2, QColor(238, 201, 0))  # Goldenrod
             gradient.setColorAt(0.4, QColor(218, 165, 32))  # Goldenrod darker

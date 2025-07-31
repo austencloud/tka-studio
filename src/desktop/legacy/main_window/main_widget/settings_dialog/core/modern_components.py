@@ -2,21 +2,22 @@
 Modern UI Components for the settings dialog with glassmorphism design.
 """
 
-from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QTimer
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QCheckBox,
+    QComboBox,
+    QFrame,
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QCheckBox,
-    QSlider,
-    QComboBox,
-    QFrame,
     QSizePolicy,
+    QSlider,
     QToolTip,
-    QGraphicsOpacityEffect,
+    QVBoxLayout,
+    QWidget,
 )
+
 from .glassmorphism_styler import GlassmorphismStyler
 
 
@@ -196,11 +197,11 @@ class ModernSlider(QWidget):
 
         label_style = f"""
         QLabel {{
-            color: {GlassmorphismStyler.get_color('text_secondary')};
-            font-size: {GlassmorphismStyler.FONTS['body_small']['size']}px;
-            background-color: {GlassmorphismStyler.get_color('surface', 0.3)};
-            border-radius: {GlassmorphismStyler.RADIUS['sm']}px;
-            padding: {GlassmorphismStyler.SPACING['xs']}px {GlassmorphismStyler.SPACING['sm']}px;
+            color: {GlassmorphismStyler.get_color("text_secondary")};
+            font-size: {GlassmorphismStyler.FONTS["body_small"]["size"]}px;
+            background-color: {GlassmorphismStyler.get_color("surface", 0.3)};
+            border-radius: {GlassmorphismStyler.RADIUS["sm"]}px;
+            padding: {GlassmorphismStyler.SPACING["xs"]}px {GlassmorphismStyler.SPACING["sm"]}px;
         }}
         """
         self.value_label.setStyleSheet(label_style)
@@ -274,7 +275,7 @@ class StatusIndicator(QLabel):
         QLabel {{
             background-color: {color};
             border-radius: 6px;
-            border: 1px solid {GlassmorphismStyler.get_color('border', 0.3)};
+            border: 1px solid {GlassmorphismStyler.get_color("border", 0.3)};
         }}
         """
         self.setStyleSheet(style)
@@ -327,16 +328,16 @@ class HelpTooltip(QLabel):
 
         style = f"""
         QLabel {{
-            background-color: {GlassmorphismStyler.get_color('surface_light', 0.5)};
-            color: {GlassmorphismStyler.get_color('text_muted')};
+            background-color: {GlassmorphismStyler.get_color("surface_light", 0.5)};
+            color: {GlassmorphismStyler.get_color("text_muted")};
             border-radius: 10px;
             font-size: 10px;
             font-weight: bold;
         }}
 
         QLabel:hover {{
-            background-color: {GlassmorphismStyler.get_color('primary', 0.3)};
-            color: {GlassmorphismStyler.get_color('text_primary')};
+            background-color: {GlassmorphismStyler.get_color("primary", 0.3)};
+            color: {GlassmorphismStyler.get_color("text_primary")};
         }}
         """
         self.setStyleSheet(style)

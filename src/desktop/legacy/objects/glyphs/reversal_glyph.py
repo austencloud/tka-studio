@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsTextItem, QGraphicsItemGroup
-from PyQt6.QtGui import QFont, QColor
 
-from data.constants import BLUE, HEX_BLUE, HEX_RED, RED
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.json_manager.current_sequence_loader import (
     CurrentSequenceLoader,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtWidgets import QGraphicsItemGroup, QGraphicsTextItem
 from utils.reversal_detector import ReversalDetector
+
+from data.constants import BLUE, HEX_BLUE, HEX_RED, RED
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

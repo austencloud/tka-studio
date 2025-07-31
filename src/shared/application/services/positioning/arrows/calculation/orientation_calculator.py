@@ -16,7 +16,13 @@ import logging
 from typing import Any, Dict
 
 from desktop.modern.core.interfaces.positioning_services import IOrientationCalculator
-from desktop.modern.domain.models import HandPath, Location, MotionData, MotionType, Orientation
+from desktop.modern.domain.models import (
+    HandPath,
+    Location,
+    MotionData,
+    MotionType,
+    Orientation,
+)
 from desktop.modern.domain.models.enums import RotationDirection
 
 logger = logging.getLogger(__name__)

@@ -14,13 +14,18 @@ PROVIDES:
 from abc import ABC, abstractmethod
 from typing import Callable, Optional
 
+from PyQt6.QtWidgets import QMainWindow
+
+from desktop.modern.application.services.core.window_management_service import (
+    IWindowManagementService,
+)
+from desktop.modern.application.services.ui.window_discovery_service import (
+    IWindowDiscoveryService,
+)
+from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 from shared.application.services.core.session_restoration_coordinator import (
     ISessionRestorationCoordinator,
 )
-from desktop.modern.application.services.core.window_management_service import IWindowManagementService
-from desktop.modern.application.services.ui.window_discovery_service import IWindowDiscoveryService
-from desktop.modern.core.interfaces.session_services import ISessionStateTracker
-from PyQt6.QtWidgets import QMainWindow
 
 
 class IApplicationInitializationOrchestrator(ABC):

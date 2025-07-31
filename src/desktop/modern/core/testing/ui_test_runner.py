@@ -7,8 +7,8 @@ Provides integration points for running UI tests from the main application.
 import logging
 import sys
 
-from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
 from desktop.modern.core.testing.ai_agent_helpers import TKAAITestHelper
+from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
 
 logger = logging.getLogger(__name__)
 

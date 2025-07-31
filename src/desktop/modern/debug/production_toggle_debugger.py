@@ -7,7 +7,8 @@ to monitor toggle functionality and identify production-specific failures.
 """
 
 import time
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, List, Optional
+
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
@@ -423,7 +424,9 @@ class ProductionToggleDebugger(QObject):
         events = self.get_event_sequence()
         if events:
             for i, event in enumerate(events):
-                production_log(f"   {i+1}. {event['type']} at {event['timestamp']:.3f}")
+                production_log(
+                    f"   {i + 1}. {event['type']} at {event['timestamp']:.3f}"
+                )
         else:
             production_log("   No events captured")
 

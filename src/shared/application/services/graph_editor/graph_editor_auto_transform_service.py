@@ -8,9 +8,10 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 import logging
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
-
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+    from desktop.modern.presentation.components.graph_editor.graph_editor import (
+        GraphEditor,
+    )
 
 logger = logging.getLogger(__name__)
 

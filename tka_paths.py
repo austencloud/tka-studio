@@ -11,9 +11,9 @@ WARNING: This is a compatibility layer. New code should import from:
 This file will be removed in a future version.
 """
 
+from pathlib import Path
 import sys
 import warnings
-from pathlib import Path
 
 # Add src to path to enable the new import
 _tka_root = Path(__file__).parent

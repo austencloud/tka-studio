@@ -3,10 +3,12 @@
 Refactored PrintableDisplayer that uses the new component-based architecture.
 This class now delegates most of its functionality to the SequenceDisplayManager.
 """
-from typing import TYPE_CHECKING, Optional, List
+
+from typing import TYPE_CHECKING, List, Optional
+
 from PyQt6.QtWidgets import QWidget
 
-from ..pages.printable_layout import PaperSize, PaperOrientation
+from ..pages.printable_layout import PaperOrientation, PaperSize
 from .sequence_display_manager import SequenceDisplayManager
 
 if TYPE_CHECKING:

@@ -9,7 +9,6 @@ readable and maintainable.
 import logging
 from typing import List, Optional
 
-from PyQt6.QtCore import QObject
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QTabWidget, QWidget
 

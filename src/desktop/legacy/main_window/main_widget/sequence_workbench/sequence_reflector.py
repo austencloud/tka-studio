@@ -1,6 +1,12 @@
 from typing import TYPE_CHECKING
+
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.sequence_workbench.base_sequence_modifier import (
+    BaseSequenceModifier,
+)
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
+
 from data.constants import (
     BLUE_ATTRS,
     CLOCKWISE,
@@ -13,12 +19,8 @@ from data.constants import (
     START_POS,
     VERTICAL,
 )
-from data.positions_maps import mirrored_positions
 from data.locations import vertical_loc_mirror_map
-from main_window.main_widget.sequence_workbench.base_sequence_modifier import (
-    BaseSequenceModifier,
-)
-from legacy_settings_manager.global_settings.app_context import AppContext
+from data.positions_maps import mirrored_positions
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.sequence_workbench import (
@@ -52,9 +54,7 @@ class SequenceReflector(BaseSequenceModifier):
         metadata = self.json_loader.load_current_sequence()[0].copy()
         mirrored_sequence = [metadata]
 
-        start_pos_beat_data = (
-            self.sequence_workbench.beat_frame.start_pos_view.start_pos.state.pictograph_data.copy()
-        )
+        start_pos_beat_data = self.sequence_workbench.beat_frame.start_pos_view.start_pos.state.pictograph_data.copy()
         self._reflect_dict(start_pos_beat_data)
         mirrored_sequence.append(start_pos_beat_data)
 

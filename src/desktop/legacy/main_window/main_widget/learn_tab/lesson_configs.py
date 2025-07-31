@@ -1,6 +1,5 @@
 from data.constants import LETTER
 
-
 LESSON_CONFIGS = {
     "Lesson1": {
         "question_format": "pictograph",

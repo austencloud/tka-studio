@@ -7,12 +7,15 @@ dimension calculations and intelligent responsive behavior.
 
 from typing import TYPE_CHECKING, Any, Optional, Tuple
 
-from desktop.modern.core.interfaces.core_services import IBeatResizer
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
 
+from desktop.modern.core.interfaces.core_services import IBeatResizer
+
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+    from desktop.modern.presentation.components.graph_editor.graph_editor import (
+        GraphEditor,
+    )
     from desktop.modern.presentation.components.sequence_workbench.sequence_beat_frame.sequence_beat_frame import (
         SequenceBeatFrame,
     )
@@ -38,7 +41,7 @@ class BeatResizer(IBeatResizer):
         self._size_cache = {}
 
         # Graph editor reference for accurate height calculations
-        self._graph_editor_ref: Optional["GraphEditor"] = None
+        self._graph_editor_ref: Optional[GraphEditor] = None
 
     def set_graph_editor_reference(self, graph_editor: "GraphEditor"):
         """Set reference to graph editor for accurate height calculations"""
@@ -258,7 +261,9 @@ class BeatResizer(IBeatResizer):
             return updated_data
 
     def calculate_optimal_size(
-        self, beat_data: Any, container_size: Tuple[int, int]  # noqa: ARG002
+        self,
+        beat_data: Any,
+        container_size: Tuple[int, int],  # noqa: ARG002
     ) -> Tuple[int, int]:
         """Calculate optimal size for beat within container (interface implementation)."""
         # Note: beat_data parameter is part of interface but not used in this implementation

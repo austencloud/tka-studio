@@ -1,11 +1,11 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QFont
 from typing import TYPE_CHECKING
 
 from main_window.main_widget.generate_tab.widgets.increment_adjuster_button import (
     IncrementAdjusterButton,
 )
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab

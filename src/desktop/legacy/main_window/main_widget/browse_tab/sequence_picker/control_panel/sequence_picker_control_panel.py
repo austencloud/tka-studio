@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from main_window.main_widget.browse_tab.sequence_picker.control_panel.sequence_picker_go_back_button import (
     SequencePickerGoBackButton,
 )
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 from .currently_displaying_label import (
     CurrentlyDisplayingLabel,

@@ -7,10 +7,11 @@ integrating with Modern's start position picker and pictograph system.
 
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData
-from desktop.modern.domain.models.pictograph_data import PictographData
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
+
+from desktop.modern.domain.models import BeatData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 from ...pictograph.views import create_beat_view
 from ...pictograph.views.beat_pictograph_view import BeatPictographView

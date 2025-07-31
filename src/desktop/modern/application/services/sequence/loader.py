@@ -5,17 +5,19 @@ Handles sequence loading from persistence and startup restoration.
 Responsible for loading sequences from current_sequence.json and managing startup workflows.
 """
 
-import logging
 from abc import ABCMeta
+import logging
 from typing import TYPE_CHECKING, Callable, Optional
-
-from shared.application.services.data.legacy_to_modern_converter import LegacyToModernConverter
-from shared.application.services.sequence.sequence_persister import SequencePersister
-from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
-from desktop.modern.domain.models.sequence_data import SequenceData
 
 # Removed circular import - workbench should be passed as parameter if needed
 from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
+from desktop.modern.domain.models.sequence_data import SequenceData
+from shared.application.services.data.legacy_to_modern_converter import (
+    LegacyToModernConverter,
+)
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.pictograph_data import PictographData
@@ -148,10 +150,12 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
-            from shared.application.services.data.dataset_query import IDatasetQuery
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
             from desktop.modern.domain.models.grid_data import GridData
             from desktop.modern.domain.models.pictograph_data import PictographData
+            from shared.application.services.data.dataset_query import IDatasetQuery
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -207,7 +211,6 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
     def _initialize_empty_sequence_start_position(self):
         """Initialize start position component for empty sequences"""
         try:
-
             # Get workbench to initialize start position component
             if self.workbench_getter:
                 workbench = self.workbench_getter()

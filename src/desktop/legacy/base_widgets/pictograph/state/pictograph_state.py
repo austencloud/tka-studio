@@ -4,8 +4,9 @@ from typing import Optional, Union
 
 from enums.letter.letter import Letter
 from enums.letter.letter_type import LetterType
-from data.constants import BLUE_ATTRS, LETTER, RED_ATTRS
 from enums.prop_type import PropType
+
+from data.constants import BLUE_ATTRS, LETTER, RED_ATTRS
 
 
 @dataclass

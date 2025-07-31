@@ -1,31 +1,28 @@
-import os
 import logging
+import os
 from typing import TYPE_CHECKING
 
 from enums.letter.letter import Letter
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
+    TurnsTupleGenerator,
+)
+from objects.arrow.arrow import Arrow
+from placement_managers.attr_key_generator import (
+    AttrKeyGenerator,
+)
+from PyQt6.QtCore import QPoint
 from utils.path_helpers import get_data_path
 
 from .mirrored_entry_manager.mirrored_entry_manager import MirroredEntryManager
 from .ori_key_generator import OriKeyGenerator
-from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
-    TurnsTupleGenerator,
-)
-from legacy_settings_manager.global_settings.app_context import AppContext
-from placement_managers.attr_key_generator import (
-    AttrKeyGenerator,
-)
-
-
-from objects.arrow.arrow import Arrow
-from PyQt6.QtCore import QPoint
 
 if TYPE_CHECKING:
-    from base_widgets.pictograph.managers.pictograph_checker import PictographChecker
     from base_widgets.pictograph.managers.getter.pictograph_getter import (
         PictographGetter,
     )
+    from base_widgets.pictograph.managers.pictograph_checker import PictographChecker
     from base_widgets.pictograph.state.pictograph_state import PictographState
-
     from placement_managers.arrow_placement_manager.arrow_placement_manager import (
         ArrowPlacementManager,
     )

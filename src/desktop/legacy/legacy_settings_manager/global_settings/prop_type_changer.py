@@ -1,10 +1,13 @@
 from typing import TYPE_CHECKING
+
 from enums.prop_type import PropType
-from data.constants import BLUE, RED
 from objects.prop.prop import Prop
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
     from ..legacy_settings_manager import LegacySettingsManager
 
 

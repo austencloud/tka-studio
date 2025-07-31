@@ -6,12 +6,11 @@ This script provides a single entry point for all development tasks.
 
 import argparse
 import os
+from pathlib import Path
 import signal
 import subprocess
 import sys
-import threading
 import time
-from pathlib import Path
 
 
 class TKADeveloper:

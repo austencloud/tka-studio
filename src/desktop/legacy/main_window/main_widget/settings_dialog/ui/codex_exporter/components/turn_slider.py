@@ -2,16 +2,17 @@
 Turn slider component for the codex exporter.
 """
 
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QSlider,
-    QSizePolicy,
-)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QSizePolicy,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
+
 from .turn_config_style_provider import TurnConfigStyleProvider
 
 

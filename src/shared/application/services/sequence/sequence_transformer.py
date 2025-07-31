@@ -6,11 +6,13 @@ Extracted from the monolithic sequence management service to focus
 solely on sequence transformations and spatial operations.
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import Any, Dict
 
-from desktop.modern.core.interfaces.sequence_operation_services import ISequenceTransformer
+from desktop.modern.core.interfaces.sequence_operation_services import (
+    ISequenceTransformer,
+)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -89,7 +91,7 @@ class SequenceTransformer(ISequenceTransformer):
             new_beats.append(new_beat)
 
         transformed_sequence = sequence.update(beats=new_beats)
-        logger.info(f"Color swap applied successfully")
+        logger.info("Color swap applied successfully")
         return transformed_sequence
 
     def _apply_horizontal_reflection(self, sequence: SequenceData) -> SequenceData:
@@ -104,7 +106,7 @@ class SequenceTransformer(ISequenceTransformer):
             new_beats.append(new_beat)
 
         transformed_sequence = sequence.update(beats=new_beats)
-        logger.info(f"Horizontal reflection applied successfully")
+        logger.info("Horizontal reflection applied successfully")
         return transformed_sequence
 
     def _apply_vertical_reflection(self, sequence: SequenceData) -> SequenceData:
@@ -119,7 +121,7 @@ class SequenceTransformer(ISequenceTransformer):
             new_beats.append(new_beat)
 
         transformed_sequence = sequence.update(beats=new_beats)
-        logger.info(f"Vertical reflection applied successfully")
+        logger.info("Vertical reflection applied successfully")
         return transformed_sequence
 
     def _apply_rotation(self, sequence: SequenceData, degrees: int) -> SequenceData:
@@ -153,7 +155,7 @@ class SequenceTransformer(ISequenceTransformer):
             new_beats[i] = beat.update(beat_number=i + 1)
 
         reversed_sequence = sequence.update(beats=new_beats)
-        logger.info(f"Sequence reversal applied successfully")
+        logger.info("Sequence reversal applied successfully")
         return reversed_sequence
 
     def _apply_transformation_to_beat(

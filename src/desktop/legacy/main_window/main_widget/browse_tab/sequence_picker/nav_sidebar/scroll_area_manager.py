@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QScrollArea
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.sequence_picker.nav_sidebar.sequence_picker_nav_sidebar import (

@@ -1,14 +1,15 @@
 from typing import Dict
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QSpinBox,
-    QFrame,
-    QGridLayout,
-)
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGridLayout,
+    QLabel,
+    QSpinBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from desktop.modern.core.interfaces.tab_settings_interfaces import (
     IBeatLayoutService,

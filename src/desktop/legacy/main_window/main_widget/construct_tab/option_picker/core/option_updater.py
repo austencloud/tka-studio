@@ -1,8 +1,9 @@
-from typing import TYPE_CHECKING
 import os
+from typing import TYPE_CHECKING
+
 from enums.letter.letter_type import LetterType
-from main_window.main_widget.fade_manager.fade_manager import FadeManager
 from interfaces.json_manager_interface import IJsonManager
+from main_window.main_widget.fade_manager.fade_manager import FadeManager
 
 if TYPE_CHECKING:
     from ..widgets.legacy_option_picker import LegacyOptionPicker

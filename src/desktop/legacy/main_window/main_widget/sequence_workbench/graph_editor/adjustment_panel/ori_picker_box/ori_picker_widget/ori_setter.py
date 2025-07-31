@@ -1,14 +1,16 @@
 # orientation_setter.py
 from typing import TYPE_CHECKING
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
 from data.constants import (
     BLUE,
     BLUE_ATTRS,
-    RED_ATTRS,
-    START_ORI,
-    END_ORI,
     BOX,
     DIAMOND,
+    END_ORI,
+    RED_ATTRS,
+    START_ORI,
 )
 
 if TYPE_CHECKING:
@@ -67,9 +69,7 @@ class OrientationSetter:
         self.json_validation_engine.run(is_current_sequence=True)
 
     def _update_start_position_pictographs(self, orientation: str) -> None:
-        construct_tab = (
-            self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
-        )
+        construct_tab = self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
         start_position_pictographs = (
             construct_tab.start_pos_picker.pictograph_frame.start_positions
         )
@@ -85,16 +85,12 @@ class OrientationSetter:
                 )
 
     def _refresh_option_picker(self) -> None:
-        construct_tab = (
-            self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
-        )
+        construct_tab = self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
         self.option_picker = construct_tab.option_picker
         self.option_picker.updater.refresh_options()
 
     def _update_start_options(self, orientation: str) -> None:
-        construct_tab = (
-            self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
-        )
+        construct_tab = self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
         start_pos_picker = construct_tab.start_pos_picker
         for pictograph in start_pos_picker.start_options.values():
             pictograph.managers.updater.update_pictograph(
@@ -107,9 +103,7 @@ class OrientationSetter:
             )
 
     def _update_advanced_start_pos_picker(self, orientation: str) -> None:
-        construct_tab = (
-            self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
-        )
+        construct_tab = self.ori_picker_box.graph_editor.sequence_workbench.main_widget.construct_tab
         advanced_start_pos_picker = construct_tab.advanced_start_pos_picker
         grid_mode = DIAMOND
         if grid_mode == BOX:

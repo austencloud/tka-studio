@@ -7,10 +7,10 @@ Manages progressive image loading with immediate UI response and background load
 import logging
 from typing import List, Optional
 
-from PyQt6.QtCore import QTimer, QCoreApplication
+from PyQt6.QtCore import QCoreApplication, QTimer
 
-from ..widgets.sequence_card_page_widget import SequenceCardPageWidget
 from ..image_loading.image_loader import ImageLoader
+from ..widgets.sequence_card_page_widget import SequenceCardPageWidget
 
 logger = logging.getLogger(__name__)
 
@@ -168,7 +168,7 @@ class ProgressiveLoadingManager:
         # Safety check: ensure widget still exists and is valid
         try:
             if (
-                card_widget and not card_widget.isVisible() is None
+                card_widget and card_widget.isVisible() is not None
             ):  # Widget still exists
                 card_widget.load_image_optimized()
         except RuntimeError:

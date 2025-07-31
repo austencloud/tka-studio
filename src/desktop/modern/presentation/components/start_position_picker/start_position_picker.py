@@ -12,9 +12,9 @@ Features:
 - Responsive layout that adapts to container size
 """
 
-import logging
 from datetime import datetime
 from enum import Enum
+import logging
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
@@ -396,10 +396,3 @@ class StartPositionPicker(QWidget):
             self.content.apply_sizing(container_width, is_advanced)
         except Exception as e:
             logger.error(f"Error updating option sizes: {e}")
-
-    def sizeHint(self) -> QSize:
-        """Provide size hint for the unified picker - EXACT copy from original."""
-        if self.current_mode == PickerMode.ADVANCED:
-            return QSize(800, 700)  # Larger size for 4x4 grid
-        else:
-            return QSize(600, 500)  # Smaller size for 3 positions

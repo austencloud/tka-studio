@@ -1,12 +1,13 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
 import logging
+from typing import TYPE_CHECKING
 
-from desktop.modern.core.application_context import ApplicationContext
 from main_window.main_widget.core.widget_manager import WidgetFactory
 from main_window.main_widget.main_background_widget.main_background_widget import (
     MainBackgroundWidget,
 )
+from PyQt6.QtWidgets import QWidget
+
+from desktop.modern.core.application_context import ApplicationContext
 
 if TYPE_CHECKING:
     pass

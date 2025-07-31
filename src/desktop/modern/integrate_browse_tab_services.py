@@ -5,8 +5,8 @@ This script integrates the new service-enabled browse tab into the modern archit
 """
 
 import logging
-import shutil
 from pathlib import Path
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ def integrate_new_browse_tab():
         # Replace with new version
         if new_browse_tab.exists():
             shutil.copy2(new_browse_tab, old_browse_tab)
-            logger.info(f"✅ Replaced browse_tab.py with service-enabled version")
+            logger.info("✅ Replaced browse_tab.py with service-enabled version")
         else:
             logger.error(f"❌ New browse tab file not found: {new_browse_tab}")
             return False

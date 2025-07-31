@@ -1,14 +1,16 @@
+import hashlib
 import json
 import os
-import hashlib
+
 from base_widgets.pictograph.managers.pictograph_checker import (
     END_ORI,
     START_ORI,
     TURNS,
 )
-from data.constants import BLUE_ATTRS, RED_ATTRS
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from utils.path_helpers import get_data_path
+
+from data.constants import BLUE_ATTRS, RED_ATTRS
 
 
 def hash_sequence(sequence):

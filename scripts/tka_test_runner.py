@@ -27,15 +27,15 @@ Research Citations:
 """
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List
 
 
 @dataclass
@@ -640,7 +640,7 @@ def main():
 
         # Show some passing tests for satisfaction
         if result.passed > 0:
-            print(f"\nSample Passing Tests:")
+            print("\nSample Passing Tests:")
             passing_tests = []
             for line in result.output.split("\n"):
                 if " PASSED " in line and "::" in line:

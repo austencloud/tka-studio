@@ -1,19 +1,17 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QApplication,
-)
-from PyQt6.QtCore import Qt
 from functools import partial
-
+from typing import TYPE_CHECKING
 
 from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (
     LessonWidget,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QVBoxLayout,
+    QWidget,
+)
 from styles.styled_button import StyledButton
-
 
 from .lesson_mode_toggle_widget import LessonModeToggleWidget
 
@@ -106,7 +104,9 @@ class LessonSelector(QWidget):
         super().resizeEvent(event)
 
     def _resize_title_label(self):
-        title_font_size = max(16, self.main_widget.width() // 35)  # Larger title, minimum 16pt
+        title_font_size = max(
+            16, self.main_widget.width() // 35
+        )  # Larger title, minimum 16pt
         font = self.title_label.font()
         font.setFamily("Georgia")
         font.setPointSize(title_font_size)
@@ -132,8 +132,12 @@ class LessonSelector(QWidget):
         """Manually resize each button based on parent size."""
         for button in self.buttons.values():
             # Make buttons larger and more proportional
-            button_width = max(200, self.main_widget.width() // 3)  # Larger buttons, minimum 200px
-            button_height = max(60, self.main_widget.height() // 8)  # Taller buttons, minimum 60px
+            button_width = max(
+                200, self.main_widget.width() // 3
+            )  # Larger buttons, minimum 200px
+            button_height = max(
+                60, self.main_widget.height() // 8
+            )  # Taller buttons, minimum 60px
 
             button.setFixedSize(button_width, button_height)  # Manually set size
             button.resize(button_width, button_height)  # Force resize event

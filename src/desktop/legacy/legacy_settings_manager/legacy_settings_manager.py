@@ -1,20 +1,22 @@
-import shutil
 import os
+import shutil
 from typing import Any
-from PyQt6.QtCore import QSettings, QObject, pyqtSignal
+
+from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 from utils.path_helpers import get_settings_path
-from .construct_tab_settings import ConstructTabSettings
-from .generate_tab_settings import GenerateTabSettings
-from .sequence_sharing_settings import SequenceShareSettings
+
 from .act_tab_settings import WriteTabSettings
 from .browse_tab_settings import BrowseTabSettings
-from .image_export_settings import ImageExportSettings
-from .sequence_layout_settings import SequenceLayoutSettings
-from .user_profile_settings.user_profile_settings import UserProfileSettings
-from .global_settings.global_settings import GlobalSettings
-from .visibility_settings.visibility_settings import VisibilitySettings
 from .codex_exporter_settings import CodexExporterSettings
+from .construct_tab_settings import ConstructTabSettings
+from .generate_tab_settings import GenerateTabSettings
+from .global_settings.global_settings import GlobalSettings
+from .image_export_settings import ImageExportSettings
 from .sequence_card_tab_settings import SequenceCardTabSettings
+from .sequence_layout_settings import SequenceLayoutSettings
+from .sequence_sharing_settings import SequenceShareSettings
+from .user_profile_settings.user_profile_settings import UserProfileSettings
+from .visibility_settings.visibility_settings import VisibilitySettings
 
 
 class LegacySettingsManager(

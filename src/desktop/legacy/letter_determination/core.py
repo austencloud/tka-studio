@@ -1,13 +1,19 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
-from data.constants import BLUE_ATTRS, MOTION_TYPE, PROP_ROT_DIR, RED_ATTRS, STATIC
+
 from enums.letter.letter import Letter
 from main_window.main_widget.json_manager.json_manager import JsonManager
+
+from data.constants import BLUE_ATTRS, MOTION_TYPE, PROP_ROT_DIR, RED_ATTRS, STATIC
 from desktop.modern.application.services.attribute_manager import AttributeManager
-from desktop.modern.application.services.json_handler import LetterDeterminationJsonHandler
+from desktop.modern.application.services.json_handler import (
+    LetterDeterminationJsonHandler,
+)
 from desktop.modern.application.services.motion_comparator import MotionComparator
-from .strategies.non_hybrid_shift import NonHybridShiftStrategy
+
 from .strategies.dual_float import DualFloatStrategy
+from .strategies.non_hybrid_shift import NonHybridShiftStrategy
 
 if TYPE_CHECKING:
     from .strategies.base_strategy import LetterDeterminationStrategy
@@ -17,7 +23,7 @@ class LetterDeterminer:
     def __init__(
         self,
         pictograph_dataset: dict[Letter, list[dict]],
-        json_manager: "JsonManager",
+        json_manager: JsonManager,
     ):
         self.pictograph_dataset = pictograph_dataset
         self.json_handler = LetterDeterminationJsonHandler(json_manager)
@@ -45,7 +51,7 @@ class LetterDeterminer:
             return None
 
         for strategy_class in self.strategies:
-            strategy: "LetterDeterminationStrategy" = strategy_class(
+            strategy: LetterDeterminationStrategy = strategy_class(
                 self.comparator, self.attribute_manager
             )
 

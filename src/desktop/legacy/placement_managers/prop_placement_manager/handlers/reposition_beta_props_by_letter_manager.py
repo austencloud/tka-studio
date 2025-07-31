@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
-from data.constants import ANTI, PRO
+
 from objects.prop.prop import Prop
+
+from data.constants import ANTI, PRO
 
 if TYPE_CHECKING:
     from .beta_prop_positioner import BetaPropPositioner

@@ -1,14 +1,15 @@
-from PyQt6.QtCore import Qt, QEvent
-from PyQt6.QtWidgets import QWidget, QHBoxLayout
 from typing import TYPE_CHECKING
 
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.browse_tab.thumbnail_box.favorite_button import (
     FavoriteButton,
 )
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_word_label import (
     ThumbnailBoxWordLabel,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import QEvent, Qt
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
+
 from .thumbnail_box_difficulty_label import ThumbnailBoxDifficultyLabel
 
 if TYPE_CHECKING:

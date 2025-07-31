@@ -1,6 +1,5 @@
-from PyQt6.QtCore import Qt, QSize
-
-from styles.styled_button import StyledButton, ButtonContext
+from PyQt6.QtCore import QSize, Qt
+from styles.styled_button import ButtonContext, StyledButton
 
 
 class WorkbenchButton(StyledButton):

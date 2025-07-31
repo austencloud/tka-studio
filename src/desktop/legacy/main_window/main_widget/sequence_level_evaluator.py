@@ -1,4 +1,4 @@
-from data.constants import BLUE_ATTRS, IN, OUT, RED_ATTRS, START_ORI, END_ORI, TURNS
+from data.constants import BLUE_ATTRS, END_ORI, IN, OUT, RED_ATTRS, START_ORI, TURNS
 
 
 class SequenceLevelEvaluator:

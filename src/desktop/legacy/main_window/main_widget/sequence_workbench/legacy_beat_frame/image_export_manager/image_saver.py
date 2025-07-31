@@ -1,8 +1,8 @@
 import os
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtGui import QImage
 
+from PyQt6.QtGui import QImage
+from PyQt6.QtWidgets import QFileDialog
 from utils.path_helpers import get_my_photos_path
 
 if TYPE_CHECKING:
@@ -105,7 +105,7 @@ class ImageSaver:
         )
 
         if not file_name:
-            return None
+            return
 
         # Save the image with maximum quality
         if sequence_image.save(file_name, "PNG", 100):  # Quality 100 = maximum quality

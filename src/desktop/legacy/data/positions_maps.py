@@ -1,6 +1,5 @@
 from data.constants import *
 
-
 quarter_position_map_cw = {
     ALPHA1: ALPHA3,
     ALPHA2: ALPHA4,

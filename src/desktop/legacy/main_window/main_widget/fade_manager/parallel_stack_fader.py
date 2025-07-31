@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtWidgets import QWidget, QStackedWidget
+
+from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.fade_manager.fade_manager import FadeManager

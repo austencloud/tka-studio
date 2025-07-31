@@ -1,4 +1,5 @@
 from typing import Tuple, Union
+
 from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, OPP, SAME
 
 

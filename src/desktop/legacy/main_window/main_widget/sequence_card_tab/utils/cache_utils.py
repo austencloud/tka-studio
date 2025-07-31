@@ -1,9 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/utils/cache_utils.py
-import time
 import hashlib
-from typing import Dict, Optional, Any
-from PyQt6.QtGui import QPixmap
+import time
+from typing import Any, Dict, Optional
+
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QPixmap
 
 
 class ThumbnailCache:

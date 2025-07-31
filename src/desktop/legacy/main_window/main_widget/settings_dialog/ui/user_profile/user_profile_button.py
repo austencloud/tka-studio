@@ -1,7 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QCursor
-
+from PyQt6.QtGui import QCursor, QFont
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 from styles.dark_theme_styler import DarkThemeStyler
 
 

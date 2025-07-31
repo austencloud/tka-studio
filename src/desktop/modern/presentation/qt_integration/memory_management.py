@@ -8,14 +8,14 @@ ARCHITECTURE: Provides smart pointer management, memory leak detection,
 and automatic cleanup for Qt objects to prevent memory leaks.
 """
 
+from dataclasses import dataclass
 import gc
 import logging
 import os
-import time
-import weakref
-from dataclasses import dataclass
 from threading import Lock
+import time
 from typing import Any, Callable, Dict, Generic, List, Optional, Set, TypeVar
+import weakref
 
 # Import Qt modules with compatibility
 try:

@@ -102,7 +102,7 @@ class MetaDataExtractor:
         metadata = self.extract_metadata_from_file(file_path)
         if metadata and "sequence" in metadata:
             return metadata["sequence"][0]["author"]
-        return
+        return None
 
     def get_level(self, file_path):
         metadata = self.extract_metadata_from_file(file_path)
@@ -130,7 +130,7 @@ class MetaDataExtractor:
                             f"Error saving level to thumbnail: {e}",
                         )
                     return level
-        return
+        return None
 
     def get_length(self, file_path):
         metadata = self.extract_metadata_from_file(file_path)
@@ -250,11 +250,10 @@ class MetaDataExtractor:
                 needs_update = False
 
                 # If sequence_start_position is missing, add it
-                if SEQUENCE_START_POSITION not in start_pos_entry:
-                    start_pos_entry[SEQUENCE_START_POSITION] = correct_start_pos
-                    needs_update = True
-                # If sequence_start_position is incorrect, fix it
-                elif start_pos_entry[SEQUENCE_START_POSITION] != correct_start_pos:
+                if (
+                    SEQUENCE_START_POSITION not in start_pos_entry
+                    or start_pos_entry[SEQUENCE_START_POSITION] != correct_start_pos
+                ):
                     start_pos_entry[SEQUENCE_START_POSITION] = correct_start_pos
                     needs_update = True
 

@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-import cv2
 
+import cv2
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QComboBox,
-    QPushButton,
-    QHBoxLayout,
     QFrame,
+    QHBoxLayout,
+    QPushButton,
 )
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_recorder.SR_main_control_frame import (

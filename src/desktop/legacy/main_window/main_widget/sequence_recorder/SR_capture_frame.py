@@ -1,21 +1,20 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QFrame, QApplication
-from PyQt6.QtCore import Qt
 
 from main_window.main_widget.sequence_recorder.SR_beat_frame import SR_BeatFrame
 from main_window.main_widget.sequence_recorder.SR_video_combiner import SR_VideoCombiner
 from main_window.main_widget.sequence_recorder.SR_video_display_frame import (
     SR_VideoDisplayFrame,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QFrame, QHBoxLayout, QSizePolicy
 from utils.path_helpers import get_my_videos_path
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_recorder.sequence_recorder import (
         SequenceRecorder,
     )
 
-from moviepy.editor import concatenate_videoclips, VideoFileClip
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 
 class SR_CaptureFrame(QFrame):

@@ -6,7 +6,7 @@ No over-engineered strategy patterns - around 200 lines.
 """
 
 import logging
-from typing import List, Optional
+from typing import List
 
 from desktop.modern.core.interfaces.generation_services import CAPType, SliceSize
 from desktop.modern.domain.models.generation_models import GenerationConfig
@@ -133,9 +133,10 @@ class CircularGenerator:
             return self._apply_mirrored_transformation(base_pattern)
         elif cap_type == CAPType.STRICT_SWAPPED:
             return self._apply_swapped_transformation(base_pattern)
-        elif cap_type == CAPType.STRICT_COMPLEMENTARY:
-            return self._apply_complementary_transformation(base_pattern)
-        elif cap_type == CAPType.SWAPPED_COMPLEMENTARY:
+        elif (
+            cap_type == CAPType.STRICT_COMPLEMENTARY
+            or cap_type == CAPType.SWAPPED_COMPLEMENTARY
+        ):
             return self._apply_complementary_transformation(base_pattern)
         else:
             logger.error(f"Unknown CAP type: {cap_type}")

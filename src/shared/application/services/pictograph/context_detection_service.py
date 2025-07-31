@@ -8,8 +8,8 @@ Replaces brittle string matching with explicit context declaration and service-b
 import logging
 from typing import Any, Dict, Optional, Protocol, runtime_checkable
 
-from desktop.modern.core.interfaces.pictograph_services import RenderingContext
 from desktop.modern.core.interfaces.core_services import IPictographContextDetector
+from desktop.modern.core.interfaces.pictograph_services import RenderingContext
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +124,7 @@ class PictographContextDetector(IPictographContextDetector):
 
         # Check if scene has explicit context
         if hasattr(scene, "rendering_context"):
-            context = getattr(scene, "rendering_context")
+            context = scene.rendering_context
             if isinstance(context, RenderingContext):
                 logger.debug(f"Scene has explicit context: {context.value}")
                 return context

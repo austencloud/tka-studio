@@ -11,8 +11,8 @@ locates the correct core directory based on the calling file's location.
 import importlib.machinery
 import importlib.util
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import List, Optional
 
 
@@ -94,11 +94,11 @@ class CoreImportLoader:
 
     def create_module(self, spec):
         """Create the module."""
-        return None  # Use default module creation
+        return  # Use default module creation
 
     def exec_module(self, module):
         """Execute the module."""
-        with open(self.spec.origin, "r", encoding="utf-8") as f:
+        with open(self.spec.origin, encoding="utf-8") as f:
             source = f.read()
 
         # Compile and execute the module

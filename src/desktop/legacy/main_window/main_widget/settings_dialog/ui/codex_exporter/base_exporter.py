@@ -2,12 +2,13 @@
 Base class for the codex pictograph exporter.
 """
 
-from typing import TYPE_CHECKING, Dict, Any, Optional
-from PyQt6.QtWidgets import QFileDialog
-from PyQt6.QtGui import QImage
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from data.constants import RED, BLUE
+from PyQt6.QtGui import QImage
+from PyQt6.QtWidgets import QFileDialog
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (

@@ -6,6 +6,7 @@ with appropriate formatting and filtering.
 """
 
 import logging
+
 from utils.logging_config import get_logger
 
 # Create loggers for different UI components

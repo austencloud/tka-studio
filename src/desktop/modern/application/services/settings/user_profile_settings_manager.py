@@ -11,8 +11,6 @@ from typing import Any, List
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
-from desktop.modern.core.interfaces.settings_services import IUserProfileSettingsManager
-
 logger = logging.getLogger(__name__)
 
 

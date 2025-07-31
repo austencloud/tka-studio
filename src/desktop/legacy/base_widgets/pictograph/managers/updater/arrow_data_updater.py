@@ -2,11 +2,12 @@ import logging
 from typing import TYPE_CHECKING, Tuple
 
 from enums.letter.letter_type import LetterType
+
 from data.constants import (
+    BLUE,
     BLUE_ATTRS,
     PROP_ROT_DIR,
     RED,
-    BLUE,
     RED_ATTRS,
     TURNS,
 )

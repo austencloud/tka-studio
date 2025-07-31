@@ -22,13 +22,14 @@ Architecture:
 import logging
 from typing import Optional
 
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
+
 from desktop.modern.domain.models import BeatData
 from desktop.modern.presentation.components.pictograph.views import (
     BasePictographView,
     create_pictograph_view,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
 
 from .detailed_info_panel import DetailedInfoPanel
 

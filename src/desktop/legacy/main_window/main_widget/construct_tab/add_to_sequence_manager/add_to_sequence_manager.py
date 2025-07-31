@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
 
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
-from interfaces.settings_manager_interface import ISettingsManager
 from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 
 if TYPE_CHECKING:
+    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
-    from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
 
 class AddToSequenceManager:

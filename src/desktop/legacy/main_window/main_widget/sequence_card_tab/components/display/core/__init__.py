@@ -1,8 +1,8 @@
 # Core image processing components
-from .image_processor_coordinator import ImageProcessorCoordinator
-from .image_loader import ImageLoader
-from .image_scaler import ImageScaler
 from .image_cache_manager import ImageCacheManager
+from .image_loader import ImageLoader
+from .image_processor_coordinator import ImageProcessorCoordinator
+from .image_scaler import ImageScaler
 
 __all__ = [
     "ImageProcessorCoordinator",

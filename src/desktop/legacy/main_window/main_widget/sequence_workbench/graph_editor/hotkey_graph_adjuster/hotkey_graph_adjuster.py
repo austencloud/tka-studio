@@ -1,13 +1,12 @@
 from typing import TYPE_CHECKING
 
-from .arrow_movement_manager import ArrowMovementManager
-from .prop_placement_override_manager import PropPlacementOverrideManager
-from .data_updater.special_placement_entry_remover import SpecialPlacementEntryRemover
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
 
-
+from .arrow_movement_manager import ArrowMovementManager
+from .data_updater.special_placement_entry_remover import SpecialPlacementEntryRemover
+from .prop_placement_override_manager import PropPlacementOverrideManager
 from .rot_angle_override.rot_angle_override_manager import RotAngleOverrideManager
 
 if TYPE_CHECKING:

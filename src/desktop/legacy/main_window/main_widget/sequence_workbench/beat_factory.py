@@ -1,17 +1,15 @@
 from typing import TYPE_CHECKING
-from enums.letter.letter_type import LetterType
-
 
 from enums.letter.letter import Letter
-
-from data.constants import (
-    FLOAT,
-)
+from enums.letter.letter_type import LetterType
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
     LegacyStartPositionBeat,
 )
 
+from data.constants import (
+    FLOAT,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
@@ -36,9 +34,9 @@ class BeatFactory:
 
             if letter not in self.beat_frame.main_widget.pictograph_cache:
                 self.beat_frame.main_widget.pictograph_cache[letter] = {}
-            self.beat_frame.main_widget.pictograph_cache[letter][
-                pictograph_key
-            ] = start_pos_beat
+            self.beat_frame.main_widget.pictograph_cache[letter][pictograph_key] = (
+                start_pos_beat
+            )
             letter_type = LetterType.get_letter_type(letter)
             for letter_type in LetterType:
                 if letter in letter_type.letters:

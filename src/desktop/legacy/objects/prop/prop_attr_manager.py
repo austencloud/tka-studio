@@ -1,9 +1,10 @@
 from enum import Enum
 from typing import TYPE_CHECKING, Union
 
+from objects.prop.prop_state import PropState
+
 from data.constants import *
 from data.prop_class_mapping import PropType
-from objects.prop.prop_state import PropState
 
 if TYPE_CHECKING:
     from objects.prop.prop import Prop

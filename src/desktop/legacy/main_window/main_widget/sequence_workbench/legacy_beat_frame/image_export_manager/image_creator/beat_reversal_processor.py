@@ -1,10 +1,11 @@
-from data.constants import SEQUENCE_START_POSITION
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
 from utils.reversal_detector import (
     ReversalDetector,
 )
+
+from data.constants import SEQUENCE_START_POSITION
 
 
 class BeatReversalProcessor:

@@ -1,15 +1,15 @@
 # tka_glyph.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsItemGroup
 
 from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtWidgets import QGraphicsItemGroup
 
+from .dash import Dash
 from .dot_handler.dot import Dot
 from .dot_handler.dot_handler import DotHandler
-from .turns_number_group.turns_number import TurnsNumber
 from .tka_letter import TKALetter
-from .dash import Dash
 from .turns_number_group.turns_column import TurnsColumn
+from .turns_number_group.turns_number import TurnsNumber
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

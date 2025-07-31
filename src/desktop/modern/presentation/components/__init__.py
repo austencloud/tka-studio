@@ -6,10 +6,10 @@ in the TKA Desktop application.
 """
 
 from .component_base import (
-    ViewableComponentBase,
     AsyncViewableComponentBase,
     ComponentBase,
     IComponent,
+    ViewableComponentBase,
 )
 
 __all__ = [

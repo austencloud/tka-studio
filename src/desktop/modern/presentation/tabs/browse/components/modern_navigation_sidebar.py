@@ -143,17 +143,17 @@ class ModernNavigationSidebar(QWidget):
 
         # Add stretch to push buttons to top
         self.content_layout.addStretch()
-    
+
     def show_skeleton_sections(self, expected_sections: List[str]) -> None:
         """
         Show skeleton placeholders for expected sections during loading.
-        
+
         Args:
             expected_sections: List of section names that are expected to load
         """
         # Clear existing content
         self._clear_content()
-        
+
         # Add section header for skeleton
         header_label = QLabel("Loading sections...")
         header_label.setFont(QFont("Segoe UI", 11, QFont.Weight.Bold))
@@ -169,7 +169,7 @@ class ModernNavigationSidebar(QWidget):
         """
         )
         self.content_layout.addWidget(header_label)
-        
+
         # Add separator line
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
@@ -184,34 +184,34 @@ class ModernNavigationSidebar(QWidget):
         """
         )
         self.content_layout.addWidget(separator)
-        
+
         # Create skeleton buttons for expected sections
         for section in expected_sections:
             skeleton_button = self._create_skeleton_section_button(section)
             self.content_layout.addWidget(skeleton_button)
-        
+
         # Add stretch to push buttons to top
         self.content_layout.addStretch()
-        
+
         print(f"📊 Created skeleton navigation with {len(expected_sections)} sections")
-    
+
     def _create_skeleton_section_button(self, section: str) -> QWidget:
         """
         Create a skeleton placeholder button for a section.
-        
+
         Args:
             section: The section name (for sizing purposes)
-            
+
         Returns:
             A skeleton button widget
         """
         skeleton_button = QFrame()
         skeleton_button.setFixedHeight(36)  # Same height as real buttons
-        
+
         # Calculate width based on section text length
         text_width = len(section) * 8 + 24  # Approximate character width + padding
         skeleton_button.setMinimumWidth(max(60, min(120, text_width)))
-        
+
         skeleton_button.setStyleSheet(
             """
             QFrame {
@@ -227,7 +227,7 @@ class ModernNavigationSidebar(QWidget):
             }
         """
         )
-        
+
         return skeleton_button
 
     def _get_header_text(self, sort_order: str) -> str:

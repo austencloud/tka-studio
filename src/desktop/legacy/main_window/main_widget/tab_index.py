@@ -1,6 +1,5 @@
 from main_window.main_widget.tab_name import TabName
 
-
 TAB_INDEX = {
     TabName.CONSTRUCT: 0,
     TabName.GENERATE: 1,

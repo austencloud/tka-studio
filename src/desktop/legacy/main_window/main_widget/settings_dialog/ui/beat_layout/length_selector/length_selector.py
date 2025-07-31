@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFrame, QHBoxLayout
-from PyQt6.QtGui import QFont
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QFrame, QHBoxLayout
 
 from .layout_length_button import LayoutLengthButton
 from .num_beats_spinbox import NumBeatsSpinbox
 from .sequence_length_label import SequenceLengthLabel
-from legacy_settings_manager.global_settings.app_context import AppContext
 
 if TYPE_CHECKING:
     from ..layout_controls.layout_controls import LayoutControls

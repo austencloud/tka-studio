@@ -8,10 +8,10 @@ correctly and meet performance targets.
 """
 
 import logging
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -28,6 +28,7 @@ from core.performance.integration import (
     get_performance_integration,
     initialize_performance_framework,
 )
+
 from desktop.modern.infrastructure.performance.storage import get_performance_storage
 
 # Setup logging

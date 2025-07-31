@@ -8,7 +8,9 @@ Extracts UI logic from presentation components while keeping it separate from bu
 import logging
 from typing import Any, Dict, List
 
-from desktop.modern.core.interfaces.start_position_services import IStartPositionUIService
+from desktop.modern.core.interfaces.start_position_services import (
+    IStartPositionUIService,
+)
 
 try:
     from PyQt6.QtCore import QSize

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Optional
+
 from enums.letter.letter import Letter
 
 

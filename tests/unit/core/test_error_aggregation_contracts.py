@@ -12,9 +12,10 @@ Error Aggregation Contract Tests
 Defines behavioral contracts for error collection and aggregation patterns.
 """
 
-import sys
-import pytest
 from pathlib import Path
+import sys
+
+import pytest
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"

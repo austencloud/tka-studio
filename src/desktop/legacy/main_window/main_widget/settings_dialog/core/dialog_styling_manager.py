@@ -4,9 +4,10 @@ Dialog styling manager for the modern settings dialog.
 Handles glassmorphism styling and theming.
 """
 
-from typing import TYPE_CHECKING, Dict, Any
-from PyQt6.QtWidgets import QDialog, QWidget
 import logging
+from typing import TYPE_CHECKING, Any, Dict
+
+from PyQt6.QtWidgets import QDialog, QWidget
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext

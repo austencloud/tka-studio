@@ -1,8 +1,9 @@
-import random
 import math
+import random
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPainter, QPainterPath
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import Qt
 
 
 # StarManager: Manages stars, including different shapes and twinkling behavior

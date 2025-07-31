@@ -1,5 +1,5 @@
-from PyQt6.QtCore import QPropertyAnimation, QEasingCurve
 from enums.glyph_enum import Glyph
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation
 
 
 class VisibilityPictographAnimation:

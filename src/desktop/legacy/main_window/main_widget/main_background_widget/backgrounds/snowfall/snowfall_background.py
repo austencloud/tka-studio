@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING, Union
-from PyQt6.QtGui import QColor, QPainter, QLinearGradient
-from PyQt6.QtWidgets import QWidget
+
 from main_window.main_widget.main_background_widget.backgrounds.base_background import (
     BaseBackground,
 )
+from PyQt6.QtGui import QColor, QLinearGradient, QPainter
+from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.browse_tab import BrowseTab

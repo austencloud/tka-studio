@@ -1,7 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsTextItem
-from PyQt6.QtCore import QPointF
-from PyQt6.QtGui import QFont
 
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
@@ -9,6 +6,9 @@ from base_widgets.pictograph.elements.views.beat_view import (
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
     LegacyStartPositionBeat,
 )
+from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QGraphicsTextItem
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

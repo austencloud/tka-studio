@@ -1,7 +1,6 @@
 # objects/arrow/arrow_updater.py
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from objects.arrow.arrow import Arrow
 

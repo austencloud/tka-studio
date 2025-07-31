@@ -1,13 +1,13 @@
 # pictograph_data_manager.py
 
 from typing import TYPE_CHECKING, Optional
+
 from enums.letter.letter import Letter
 
 from data.constants import *
 
 if TYPE_CHECKING:
     from .codex import Codex
-from enums.letter.letter import Letter
 
 
 RED = "red"
@@ -20,9 +20,9 @@ class CodexDataManager:
 
     def __init__(self, codex: "Codex"):
         self.main_widget = codex.main_widget
-        self.pictograph_data: dict[
-            str, Optional[dict]
-        ] = self._initialize_pictograph_data()
+        self.pictograph_data: dict[str, Optional[dict]] = (
+            self._initialize_pictograph_data()
+        )
 
     def _initialize_pictograph_data(self) -> dict[str, Optional[dict]]:
         """Initializes the pictograph data for all letters."""

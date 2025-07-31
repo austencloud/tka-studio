@@ -1,11 +1,11 @@
 # cue_box.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QSizePolicy, QVBoxLayout, QWidget
 
 from .cue_label.cue_label import CueLabel
 from .timestamp.timestamp import Timestamp
-
 
 if TYPE_CHECKING:
     from ..cue_frame import CueFrame

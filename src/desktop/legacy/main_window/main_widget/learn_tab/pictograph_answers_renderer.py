@@ -1,13 +1,14 @@
-from typing import TYPE_CHECKING, Any, List, Callable
-from PyQt6.QtWidgets import QGridLayout
-from PyQt6.QtCore import Qt
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from typing import TYPE_CHECKING, Any, Callable, List
 
 from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
     LessonPictographView,
 )
-from data.constants import RED
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGridLayout
+
+from data.constants import RED
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.answers_widget import (

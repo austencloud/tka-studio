@@ -1,9 +1,9 @@
 # dash.py
 
 from typing import TYPE_CHECKING
+
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:

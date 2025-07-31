@@ -3,19 +3,20 @@
 Simple launcher for the Image Export Test UI
 """
 
-import sys
-import subprocess
 from pathlib import Path
+import subprocess
+import sys
+
 
 def main():
     """Launch the Image Export Test UI"""
     script_dir = Path(__file__).parent
     ui_script = script_dir / "image_export_test_ui.py"
-    
+
     if not ui_script.exists():
         print(f"❌ UI script not found: {ui_script}")
         return 1
-    
+
     print("🚀 Launching Image Export Test UI...")
     print(f"📁 Script location: {ui_script}")
     print()
@@ -27,7 +28,7 @@ def main():
     print("  • Image save functionality")
     print("  • Responsive UI with progress indicators")
     print()
-    
+
     try:
         # Launch the UI
         subprocess.run([sys.executable, str(ui_script)], check=True)
@@ -37,8 +38,9 @@ def main():
     except KeyboardInterrupt:
         print("\n👋 UI closed by user")
         return 0
-    
+
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

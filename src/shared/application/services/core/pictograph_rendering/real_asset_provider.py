@@ -162,8 +162,8 @@ class RealAssetProvider(IAssetProvider):
         """
         try:
             # Import constants to ensure we use the exact same colors as legacy
-            import sys
             from pathlib import Path
+            import sys
 
             sys.path.insert(
                 0,
@@ -181,11 +181,11 @@ class RealAssetProvider(IAssetProvider):
                 # Map color names to hex values (case insensitive)
                 color_lower = color.lower()
                 if color_lower == "red":
-                    new_hex_color = COLOR_MAP.get(RED, None)
+                    new_hex_color = COLOR_MAP.get(RED)
                 elif color_lower == "blue":
-                    new_hex_color = COLOR_MAP.get(BLUE, None)
+                    new_hex_color = COLOR_MAP.get(BLUE)
                 else:
-                    new_hex_color = COLOR_MAP.get(color, None)
+                    new_hex_color = COLOR_MAP.get(color)
 
             if not new_hex_color:
                 # If we still don't have a color, nothing to replace
@@ -338,8 +338,8 @@ class RealAssetProvider(IAssetProvider):
 
     def _get_color_hex(self, color: str) -> str:
         """Get hex color value for color name."""
-        import sys
         from pathlib import Path
+        import sys
 
         sys.path.insert(
             0, str(Path(__file__).parent.parent.parent.parent.parent.parent / "data")

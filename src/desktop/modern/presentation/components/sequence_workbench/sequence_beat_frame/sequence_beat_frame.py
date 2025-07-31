@@ -381,7 +381,7 @@ class SequenceBeatFrame(QScrollArea):
             # No sequence beats to display, but start position remains visible
             # CRITICAL FIX: Hide all beat widgets when sequence is empty/cleared
             print(
-                f"🧹 [SEQUENCE_BEAT_FRAME] Hiding all beat widgets - sequence is empty"
+                "🧹 [SEQUENCE_BEAT_FRAME] Hiding all beat widgets - sequence is empty"
             )
             for beat_view in self._beat_views:
                 beat_view.hide()

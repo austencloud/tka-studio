@@ -8,12 +8,15 @@ following Modern's dependency injection and clean architecture patterns.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import Dict, Any, List, Set, Optional, Tuple, TYPE_CHECKING
 from dataclasses import dataclass
+from enum import Enum
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
 
 if TYPE_CHECKING:
-    from desktop.modern.domain.models.generation_models import GenerationConfig, GenerationResult
+    from desktop.modern.domain.models.generation_models import (
+        GenerationConfig,
+        GenerationResult,
+    )
 
 
 class GenerationMode(Enum):
@@ -164,9 +167,7 @@ class ITurnIntensityManager(ABC):
     """Interface for turn intensity management operations."""
 
     @abstractmethod
-    def calculate_turn_intensity(
-        self, sequence_data: Any, level: int
-    ) -> float:
+    def calculate_turn_intensity(self, sequence_data: Any, level: int) -> float:
         """
         Calculate turn intensity for sequence.
 
@@ -182,9 +183,7 @@ class ITurnIntensityManager(ABC):
         """
 
     @abstractmethod
-    def apply_turn_intensity(
-        self, sequence_data: Any, intensity: float
-    ) -> Any:
+    def apply_turn_intensity(self, sequence_data: Any, intensity: float) -> Any:
         """
         Apply turn intensity to sequence.
 

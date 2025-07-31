@@ -1,8 +1,9 @@
 from typing import Optional
 
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
+
 from desktop.modern.core.interfaces.workbench_services import IDictionaryService
 from desktop.modern.domain.models import SequenceData
-from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 
 class WorkbenchIndicatorSection(QWidget):

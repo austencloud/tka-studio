@@ -12,9 +12,9 @@ PROVIDES:
 - Event-driven prop positioning
 """
 
-import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Optional, Tuple
 
 

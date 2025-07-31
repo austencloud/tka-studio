@@ -1,7 +1,6 @@
 # In generate_tab_settings.py
-from PyQt6.QtCore import QSettings
-
 from main_window.main_widget.generate_tab.circular.CAP_type import CAPType
+from PyQt6.QtCore import QSettings
 
 
 # In GenerateTabSettings class

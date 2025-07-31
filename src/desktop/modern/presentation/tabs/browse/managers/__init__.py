@@ -17,7 +17,7 @@ from .browse_tab_controller import BrowseTabController
 
 __all__ = [
     "BrowseTabController",
-    "BrowseDataManager", 
+    "BrowseDataManager",
     "BrowseActionHandler",
     "BrowseNavigationManager",
     "BrowsePanel",

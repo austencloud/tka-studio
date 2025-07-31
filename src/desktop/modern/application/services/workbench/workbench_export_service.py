@@ -6,15 +6,15 @@ Now acts as an orchestrator that coordinates specialized export services
 rather than handling all responsibilities itself.
 """
 
-import logging
 from datetime import datetime
+import logging
 from pathlib import Path
 from typing import Optional, Tuple
 
 from PyQt6.QtCore import QObject
 
 from desktop.modern.core.interfaces.export_services import (
-    IExportContainerManager, 
+    IExportContainerManager,
     IExportDirectoryService,
     ISequenceDataTransformer,
     ISequenceJsonExporter,
@@ -198,12 +198,12 @@ class WorkbenchExportService(QObject):
         """Create a fallback placeholder file when export fails."""
         try:
             with open(file_path, "w") as f:
-                f.write(f"# TKA Sequence Image Export Placeholder\n")
+                f.write("# TKA Sequence Image Export Placeholder\n")
                 f.write(f"# Word: {word}\n")
                 f.write(f"# Beats: {beat_count}\n")
                 f.write(f"# File: {file_path}\n")
                 f.write(f"# Export failed with error: {error}\n")
-                f.write(f"# This is a fallback placeholder file\n")
+                f.write("# This is a fallback placeholder file\n")
 
             logger.info(f"Fallback placeholder file created at: {file_path}")
             return False, f"Real export failed: {error}. Placeholder created."

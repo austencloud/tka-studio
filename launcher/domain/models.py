@@ -6,10 +6,10 @@ These models represent the core business entities without any UI coupling.
 """
 
 from dataclasses import dataclass, field, replace
-from typing import Dict, List, Optional, Any, Tuple
 from enum import Enum
-import uuid
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+import uuid
 
 
 class LaunchMode(Enum):

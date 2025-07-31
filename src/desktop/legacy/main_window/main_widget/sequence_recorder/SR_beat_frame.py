@@ -1,10 +1,20 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QGridLayout, QFrame, QApplication
-from PyQt6.QtCore import Qt, QTimer, QSize
-from PyQt6.QtGui import QPixmap, QImage
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 import cv2
+from main_window.main_widget.sequence_recorder.SR_beat_selection_manager import (
+    SR_BeatSelectionManager,
+)
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
+    Beat,
+    LegacyBeatView,
+)
 import numpy as np
+from PyQt6.QtCore import QSize, Qt, QTimer
+from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtWidgets import QApplication, QFrame, QGridLayout
+from utils.path_helpers import get_my_videos_path
+
 from data.constants import (
     BLUE_ATTRS,
     END_ORI,
@@ -14,24 +24,12 @@ from data.constants import (
     START_ORI,
     START_POS,
 )
-from main_window.main_widget.sequence_recorder.SR_beat_selection_manager import (
-    SR_BeatSelectionManager,
-)
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
-    Beat,
-    LegacyBeatView,
-)
-from utils.path_helpers import get_my_videos_path
-
-
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-
 
 if TYPE_CHECKING:
+    from main_window.main_widget.main_widget import MainWidget
     from main_window.main_widget.sequence_recorder.SR_capture_frame import (
         SR_CaptureFrame,
     )
-    from main_window.main_widget.main_widget import MainWidget
 
 
 class SR_BeatFrame(QFrame):
@@ -45,7 +43,7 @@ class SR_BeatFrame(QFrame):
         self.is_recording = False
         self.frame_captures = []  # Store QPixmap captures here
         self.capture_frame = capture_frame
-        self.main_widget: "MainWidget" = capture_frame.main_widget
+        self.main_widget: MainWidget = capture_frame.main_widget
         self.json_manager = self.main_widget.json_manager
         self.pictograph_cache: dict[str, Beat] = {}
         self.beat_views: list[LegacyBeatView] = []
@@ -170,7 +168,7 @@ class SR_BeatFrame(QFrame):
     def save_beat_frame_recording(self) -> str:
         if not self.frame_captures:
             print("No frames captured.")
-            return
+            return None
         output_path = get_my_videos_path("beat_frame_capture.avi")
 
         height, width = (

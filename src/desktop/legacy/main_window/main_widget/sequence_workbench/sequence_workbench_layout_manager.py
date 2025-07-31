@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.sequence_workbench import (

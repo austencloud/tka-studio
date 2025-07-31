@@ -6,9 +6,9 @@ Follows the Single Responsibility Principle by focusing solely on
 file system operations.
 """
 
+from datetime import datetime
 import logging
 import os
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class ExportDirectoryService(IExportDirectoryService):
     """
     Service responsible for managing export directories and file paths.
-    
+
     Responsibilities:
     - Directory creation and validation
     - File path generation with proper naming
@@ -31,14 +31,18 @@ class ExportDirectoryService(IExportDirectoryService):
     def __init__(self, base_export_directory: Optional[str] = None):
         """
         Initialize the directory service.
-        
+
         Args:
             base_export_directory: Base directory for exports, defaults to project exports folder
         """
-        self._base_directory = base_export_directory or self._get_default_export_directory()
+        self._base_directory = (
+            base_export_directory or self._get_default_export_directory()
+        )
         self.ensure_directory_exists(self._base_directory)
-        
-        logger.debug(f"ExportDirectoryService initialized with directory: {self._base_directory}")
+
+        logger.debug(
+            f"ExportDirectoryService initialized with directory: {self._base_directory}"
+        )
 
     def get_export_directory(self) -> str:
         """Get the base export directory path."""
@@ -75,24 +79,24 @@ class ExportDirectoryService(IExportDirectoryService):
             return False
 
     def generate_file_path(
-        self, 
-        word: str, 
-        beat_count: int, 
+        self,
+        word: str,
+        beat_count: int,
         file_extension: str = ".png",
-        custom_path: Optional[str] = None
+        custom_path: Optional[str] = None,
     ) -> str:
         """Generate a file path for export with timestamp and proper naming."""
         try:
             if custom_path:
                 return custom_path
-                
+
             # Generate timestamp-based filename
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"{word}_{beat_count}beats_{timestamp}{file_extension}"
-            
+
             file_path = str(Path(self._base_directory) / filename)
             logger.debug(f"Generated file path: {file_path}")
-            
+
             return file_path
 
         except Exception as e:

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFrame, QSizePolicy
 
+from PyQt6.QtWidgets import QFrame, QSizePolicy
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.sequence_workbench_button_panel import (

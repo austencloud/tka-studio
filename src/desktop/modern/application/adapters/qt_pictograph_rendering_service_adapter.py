@@ -356,7 +356,6 @@ class QtPictographRenderingServiceAdapter:
 
         try:
             # Import positioning services
-            from desktop.modern.core.types.geometry import Point
             from shared.application.services.positioning.arrows.calculation import (
                 ArrowLocationCalculatorService,
             )

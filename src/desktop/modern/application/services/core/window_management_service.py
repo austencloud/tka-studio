@@ -42,7 +42,7 @@ class IWindowManagementService(ABC):
 class WindowManagementService(IWindowManagementService):
     """
     Pure service for window positioning and screen management.
-    
+
     Handles window dimensions, screen detection, and multi-monitor support
     without any session or domain logic dependencies.
     """
@@ -104,13 +104,13 @@ class WindowManagementService(IWindowManagementService):
                 if secondary_screen.geometry().x() > primary_screen.geometry().x():
                     target_screen = secondary_screen
                     print(
-                        f"🔄 Modern forced to RIGHT monitor (secondary) for parallel testing"
+                        "🔄 Modern forced to RIGHT monitor (secondary) for parallel testing"
                     )
                 else:
                     # Primary is on the right
                     target_screen = primary_screen
                     print(
-                        f"🔄 Modern forced to RIGHT monitor (primary) for parallel testing"
+                        "🔄 Modern forced to RIGHT monitor (primary) for parallel testing"
                     )
                 return target_screen
             elif monitor in ["primary", "left"]:
@@ -121,12 +121,12 @@ class WindowManagementService(IWindowManagementService):
                 if primary_screen.geometry().x() < secondary_screen.geometry().x():
                     target_screen = primary_screen
                     print(
-                        f"🔄 Modern forced to LEFT monitor (primary) for parallel testing"
+                        "🔄 Modern forced to LEFT monitor (primary) for parallel testing"
                     )
                 else:
                     target_screen = secondary_screen
                     print(
-                        f"🔄 Modern forced to LEFT monitor (secondary) for parallel testing"
+                        "🔄 Modern forced to LEFT monitor (secondary) for parallel testing"
                     )
                 return target_screen
 
@@ -138,58 +138,60 @@ class WindowManagementService(IWindowManagementService):
         try:
             screens = QGuiApplication.screens()
             primary_screen = QGuiApplication.primaryScreen()
-            
+
             if not screens:
                 return {
                     "valid": False,
                     "error": "No screens detected",
                     "screen_count": 0,
-                    "primary_screen": None
+                    "primary_screen": None,
                 }
-            
+
             if not primary_screen:
                 return {
                     "valid": False,
                     "error": "No primary screen detected",
                     "screen_count": len(screens),
-                    "primary_screen": None
+                    "primary_screen": None,
                 }
-            
+
             # Collect screen information
             screen_info = []
             for i, screen in enumerate(screens):
                 geometry = screen.geometry()
                 available_geometry = screen.availableGeometry()
-                screen_info.append({
-                    "index": i,
-                    "name": screen.name(),
-                    "geometry": {
-                        "x": geometry.x(),
-                        "y": geometry.y(),
-                        "width": geometry.width(),
-                        "height": geometry.height()
-                    },
-                    "available_geometry": {
-                        "x": available_geometry.x(),
-                        "y": available_geometry.y(),
-                        "width": available_geometry.width(),
-                        "height": available_geometry.height()
-                    },
-                    "is_primary": screen == primary_screen
-                })
-            
+                screen_info.append(
+                    {
+                        "index": i,
+                        "name": screen.name(),
+                        "geometry": {
+                            "x": geometry.x(),
+                            "y": geometry.y(),
+                            "width": geometry.width(),
+                            "height": geometry.height(),
+                        },
+                        "available_geometry": {
+                            "x": available_geometry.x(),
+                            "y": available_geometry.y(),
+                            "width": available_geometry.width(),
+                            "height": available_geometry.height(),
+                        },
+                        "is_primary": screen == primary_screen,
+                    }
+                )
+
             return {
                 "valid": True,
                 "screen_count": len(screens),
                 "primary_screen": primary_screen.name(),
                 "screens": screen_info,
-                "multi_monitor": len(screens) > 1
+                "multi_monitor": len(screens) > 1,
             }
-            
+
         except Exception as e:
             return {
                 "valid": False,
                 "error": f"Screen validation failed: {e}",
                 "screen_count": 0,
-                "primary_screen": None
+                "primary_screen": None,
             }

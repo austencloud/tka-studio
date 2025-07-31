@@ -5,13 +5,13 @@ Provides robust auto-save/restore functionality for TKA applications.
 Automatically saves user state after interactions and restores exactly where they left off.
 """
 
-import json
-import logging
-import uuid
 from dataclasses import asdict
 from datetime import datetime, timedelta
+import json
+import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
+import uuid
 
 # Conditional PyQt6 imports for testing compatibility
 try:

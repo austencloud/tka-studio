@@ -21,7 +21,7 @@ class ReversalDetector:
                 continue  # No reversal
 
             if curr_prop_rot_dir != last_prop_rot_dir:
-                reversal_info[f'{color.split("_")[0]}_reversal'] = True
+                reversal_info[f"{color.split('_')[0]}_reversal"] = True
 
         return reversal_info
 

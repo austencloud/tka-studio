@@ -7,19 +7,23 @@ This service handles beat operations on sequences using pure business logic.
 
 from typing import Any, Callable, Optional
 
-from desktop.modern.core.interfaces.sequence_operation_services import ISequenceBeatOperations
-from shared.application.services.data.modern_to_legacy_converter import ModernToLegacyConverter
-from shared.application.services.sequence.beat_factory import BeatFactory
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.modern.core.interfaces.sequence_operation_services import (
+    ISequenceBeatOperations,
+)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
+from shared.application.services.sequence.beat_factory import BeatFactory
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 
 class SequenceBeatService(ISequenceBeatOperations):
     """
     Pure service for handling beat-level operations on sequences.
-    
+
     This is a clean implementation without Qt dependencies that focuses
     solely on business logic for beat operations.
     """
@@ -32,10 +36,10 @@ class SequenceBeatService(ISequenceBeatOperations):
     ):
         """
         Initialize the sequence beat service.
-        
+
         Args:
             sequence_getter: Function to get current sequence
-            sequence_setter: Function to set current sequence  
+            sequence_setter: Function to set current sequence
             persister: Service for persisting sequences
         """
         self.sequence_getter = sequence_getter
@@ -175,9 +179,7 @@ class SequenceBeatService(ISequenceBeatOperations):
 
         return beat_data
 
-    def update_beat_turns(
-        self, beat: BeatData, color: str, new_turns: Any
-    ) -> None:
+    def update_beat_turns(self, beat: BeatData, color: str, new_turns: Any) -> None:
         """Update turns for a specific beat and color."""
         current_sequence = self.get_current_sequence()
         if not current_sequence:

@@ -1,20 +1,21 @@
 import json
 import os
 from typing import TYPE_CHECKING, Union
+
+from main_window.main_widget.sequence_workbench.workbench_button import WorkbenchButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
-    QPushButton,
-    QFrame,
-    QVBoxLayout,
     QApplication,
-    QSpacerItem,
+    QFrame,
+    QPushButton,
     QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
 )
-
-from main_window.main_widget.sequence_workbench.workbench_button import WorkbenchButton
-from .button_panel_placeholder import ButtonPanelPlaceholder
 from utils.path_helpers import get_image_path
+
+from .button_panel_placeholder import ButtonPanelPlaceholder
 
 if TYPE_CHECKING:
     from .sequence_workbench import SequenceWorkbench
@@ -132,7 +133,7 @@ class SequenceWorkbenchButtonPanel(QFrame):
         try:
             sequence_file_path = os.path.join(LEGACY_ROOT, "current_sequence.json")
             if os.path.exists(sequence_file_path):
-                with open(sequence_file_path, "r", encoding="utf-8") as file:
+                with open(sequence_file_path, encoding="utf-8") as file:
                     sequence_data = json.load(file)
                 json_string = json.dumps(sequence_data, indent=4)
                 clipboard = QApplication.clipboard()
@@ -140,17 +141,17 @@ class SequenceWorkbenchButtonPanel(QFrame):
                 self.indicator_label.show_message("Sequence JSON copied to clipboard!")
                 self.copy_sequence_button.setToolTip("Sequence JSON copied!")
             else:
-                error_message = f"Error: current_sequence.json not found."
+                error_message = "Error: current_sequence.json not found."
                 self.indicator_label.show_message(error_message)
                 self.copy_sequence_button.setToolTip("Error: File not found.")
 
         except json.JSONDecodeError as e:
-            error_message = f"Error: Invalid JSON in current_sequence.json."
+            error_message = "Error: Invalid JSON in current_sequence.json."
             print(f"{error_message} Details: {e}")
             self.indicator_label.show_message(error_message)
-            self.copy_sequence_button.setToolTip(f"Error: Invalid JSON.")
+            self.copy_sequence_button.setToolTip("Error: Invalid JSON.")
         except Exception as e:
-            error_message = f"Error copying sequence JSON."
+            error_message = "Error copying sequence JSON."
             print(f"{error_message} Details: {e}")
             self.indicator_label.show_message(error_message)
             self.copy_sequence_button.setToolTip(f"Error: {e}")

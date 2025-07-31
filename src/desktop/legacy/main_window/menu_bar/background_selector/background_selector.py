@@ -1,5 +1,6 @@
 # background_selector.py
 from typing import TYPE_CHECKING
+
 from ..base_selector import LabelSelector
 from .background_dialog import BackgroundDialog
 

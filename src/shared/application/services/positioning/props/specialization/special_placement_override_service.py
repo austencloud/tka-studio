@@ -69,7 +69,7 @@ class SpecialPlacementOverrideService(ISpecialPlacementOverrideService):
         Loads specific positioning data for this configuration.
         """
         override_data = self.get_override_data(beat_data)
-        
+
         # Apply override adjustments
         # TODO: Implement specific override application logic
         # This would modify the beat_data with specific positioning overrides
@@ -109,7 +109,9 @@ class SpecialPlacementOverrideService(ISpecialPlacementOverrideService):
     def _get_json_configurator(self) -> IJSONConfigurator:
         """Get JSONConfigurator singleton from DI container."""
         try:
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
 
             container = get_container()
             return container.resolve(IJSONConfigurator)

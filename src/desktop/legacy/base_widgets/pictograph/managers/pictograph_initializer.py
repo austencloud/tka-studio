@@ -1,10 +1,9 @@
 import json
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QPoint, Qt
-from PyQt6.QtWidgets import QGraphicsTextItem
+
 from base_widgets.pictograph.elements.grid.grid import Grid
 from base_widgets.pictograph.elements.grid.grid_data import GridData
-
+from main_window.main_widget.settings_dialog.settings_provider import SettingsProvider
 from objects.arrow.arrow import Arrow
 from objects.glyphs.elemental_glyph.elemental_glyph import ElementalGlyph
 from objects.glyphs.reversal_glyph import ReversalGlyph
@@ -13,13 +12,15 @@ from objects.glyphs.start_to_end_pos_glyph.start_to_end_pos_glyph import (
 )
 from objects.glyphs.tka_glyph.tka_glyph import TKA_Glyph
 from objects.glyphs.vtg_glyph.vtg_glyph import VTG_Glyph
-from objects.prop.prop_factory import PropFactory
 from objects.motion.motion import Motion
 from objects.prop.prop import Prop
 from objects.prop.prop_classes import *
-from data.constants import *
-from main_window.main_widget.settings_dialog.settings_provider import SettingsProvider
+from objects.prop.prop_factory import PropFactory
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtWidgets import QGraphicsTextItem
 from utils.path_helpers import get_data_path
+
+from data.constants import *
 
 if TYPE_CHECKING:
     from ..legacy_pictograph import LegacyPictograph
@@ -27,8 +28,6 @@ if TYPE_CHECKING:
 
 # pictograph_initializer.py
 
-import json
-from utils.path_helpers import get_data_path
 import logging
 
 logger = logging.getLogger(__name__)
@@ -75,7 +74,7 @@ class PictographInitializer:
         if not self.grid_initialized:
             try:
                 json_path = get_data_path("circle_coords.json")
-                with open(json_path, "r") as file:
+                with open(json_path) as file:
                     data = json.load(file)
 
                 # Create GridData instance

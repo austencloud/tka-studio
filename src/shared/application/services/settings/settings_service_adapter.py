@@ -4,7 +4,10 @@ Settings service implementation that adapts UIStateManagementService.
 
 from typing import Any, Dict
 
-from desktop.modern.core.interfaces.core_services import ISettingsCoordinator, IUIStateManager
+from desktop.modern.core.interfaces.core_services import (
+    ISettingsCoordinator,
+    IUIStateManager,
+)
 
 
 class SettingsServiceAdapter(ISettingsCoordinator):

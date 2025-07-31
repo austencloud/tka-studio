@@ -7,10 +7,9 @@ finding the correct core directory regardless of the current file's location.
 
 import importlib.util
 import logging
-import os
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+import sys
+from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 

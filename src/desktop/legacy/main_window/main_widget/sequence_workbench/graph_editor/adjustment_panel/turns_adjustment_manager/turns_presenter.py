@@ -1,12 +1,14 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import QMessageBox
+
 from data.constants import ANTI, FLOAT, PRO
 
 from ..turns_adjustment_manager.turns_value import TurnsValue
 
 if TYPE_CHECKING:
-    from ..turns_box.turns_widget.turns_widget import TurnsWidget
     from ..turns_box.turns_widget.motion_type_label import MotionTypeLabel
+    from ..turns_box.turns_widget.turns_widget import TurnsWidget
 
 
 class TurnsPresenter:

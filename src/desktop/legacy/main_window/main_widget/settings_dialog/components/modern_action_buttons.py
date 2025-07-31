@@ -5,8 +5,9 @@ Provides Apply, OK, and Cancel buttons with modern styling and state management.
 """
 
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton
-from PyQt6.QtCore import pyqtSignal, Qt
+
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext

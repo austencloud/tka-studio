@@ -1,6 +1,8 @@
 # act_step_label.py
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
+
 from .....editable_label import EditableLabel
 
 if TYPE_CHECKING:

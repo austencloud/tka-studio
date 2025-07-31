@@ -3,9 +3,9 @@ Sequence persistence service - exactly like the legacy version.
 Updates current_sequence.json whenever sequence changes occur.
 """
 
+from abc import ABC, abstractmethod
 import json
 import logging
-from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -60,7 +60,7 @@ class SequencePersister(ISequencePersister):
             if not self.current_sequence_json.exists():
                 return self.get_default_sequence()
 
-            with open(self.current_sequence_json, "r", encoding="utf-8") as file:
+            with open(self.current_sequence_json, encoding="utf-8") as file:
                 content = file.read().strip()
                 if not content:
                     return self.get_default_sequence()

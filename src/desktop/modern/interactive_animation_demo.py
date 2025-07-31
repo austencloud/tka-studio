@@ -7,11 +7,10 @@ import asyncio
 import sys
 from typing import List, Optional
 
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QApplication,
-    QCheckBox,
     QComboBox,
     QGridLayout,
     QGroupBox,
@@ -27,24 +26,22 @@ from PyQt6.QtWidgets import (
 # Add src to path for imports
 sys.path.insert(0, "src")
 
-from shared.application.services.data.pictograph_factory import PictographFactory
-from shared.application.services.glyphs.glyph_data_service import GlyphDataService
-from shared.application.services.pictograph.pictograph_csv_manager import PictographCSVManager
-from shared.application.services.ui.animation.modern_service_registration import (
-    setup_modern_animation_services,
-)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
     EasingType,
     IAnimationOrchestrator,
 )
-from desktop.modern.domain.models.arrow_data import ArrowData
-from desktop.modern.domain.models.enums import Location, MotionType, RotationDirection
-from desktop.modern.domain.models.grid_data import GridData, GridMode
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.pictograph.pictograph_widget import PictographWidget
+from desktop.modern.presentation.components.pictograph.pictograph_widget import (
+    PictographWidget,
+)
+from shared.application.services.data.pictograph_factory import PictographFactory
+from shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
+from shared.application.services.ui.animation.modern_service_registration import (
+    setup_modern_animation_services,
+)
 
 
 class InteractiveAnimationDemo(QMainWindow):
@@ -336,7 +333,7 @@ class InteractiveAnimationDemo(QMainWindow):
                     self.pictographs.append(pictograph)
 
                     self.update_status(
-                        f"Created pictograph {i+1}: {entry.get('letter', '?')} - {entry.get('start_pos', '?')} to {entry.get('end_pos', '?')}"
+                        f"Created pictograph {i + 1}: {entry.get('letter', '?')} - {entry.get('start_pos', '?')} to {entry.get('end_pos', '?')}"
                     )
 
                 except Exception as e:

@@ -292,7 +292,7 @@ class GlyphRenderingService:
                 return renderer
             else:
                 logger.error(
-                    f"❌ [GLYPH_RENDERER] Failed to create fallback glyph renderer"
+                    "❌ [GLYPH_RENDERER] Failed to create fallback glyph renderer"
                 )
                 return None
 
@@ -321,7 +321,6 @@ class GlyphRenderingService:
     def preload_common_glyphs(self) -> None:
         """Pre-load commonly used glyph renderers for better performance."""
         try:
-
             # TODO: Implement pre-loading when glyph assets are available
             # For now, this is a placeholder
 

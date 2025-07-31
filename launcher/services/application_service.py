@@ -6,16 +6,15 @@ without dealing with the actual launching process.
 """
 
 import logging
-import sys
-from typing import List, Optional, Dict, Any
 from pathlib import Path
+import sys
+from typing import List, Optional
 
-from desktop.modern.domain.models import (
-    ApplicationData,
-    ApplicationCategory,
-    ApplicationStatus,
-)
 from desktop.modern.core.interfaces import IApplicationService, ILauncherStateService
+from desktop.modern.domain.models import (
+    ApplicationCategory,
+    ApplicationData,
+)
 
 logger = logging.getLogger(__name__)
 

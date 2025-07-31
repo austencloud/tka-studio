@@ -1,5 +1,6 @@
 import sys
 from typing import TYPE_CHECKING
+
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QApplication
 

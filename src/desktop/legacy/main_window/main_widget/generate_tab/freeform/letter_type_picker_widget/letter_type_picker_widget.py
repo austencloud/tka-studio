@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QVBoxLayout
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+
 from enums.letter.letter_type import LetterType
-
-
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.generate_tab.freeform.letter_type_picker_widget.letter_type_button import (
     LetterTypeButton,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab

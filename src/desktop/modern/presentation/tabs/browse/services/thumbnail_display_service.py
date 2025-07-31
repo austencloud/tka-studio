@@ -6,13 +6,17 @@ Manages the coordination between thumbnail factory and grid layout positioning.
 """
 
 import logging
-from typing import Dict, List, Callable, Optional
+from typing import Callable, Dict, List, Optional
 
 from PyQt6.QtWidgets import QApplication, QWidget
 
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.modern.presentation.tabs.browse.services.grid_layout_service import GridLayoutService
-from desktop.modern.presentation.tabs.browse.services.thumbnail_factory_service import ThumbnailFactoryService
+from desktop.modern.presentation.tabs.browse.services.grid_layout_service import (
+    GridLayoutService,
+)
+from desktop.modern.presentation.tabs.browse.services.thumbnail_factory_service import (
+    ThumbnailFactoryService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +24,7 @@ logger = logging.getLogger(__name__)
 class ThumbnailDisplayService:
     """
     Service for managing thumbnail display operations.
-    
+
     Handles:
     - Thumbnail creation and positioning
     - Section-based grouping and display
@@ -29,14 +33,14 @@ class ThumbnailDisplayService:
     """
 
     def __init__(
-        self, 
+        self,
         grid_layout_service: GridLayoutService,
         thumbnail_factory: ThumbnailFactoryService,
-        thumbnail_width: int = 150
+        thumbnail_width: int = 150,
     ):
         """
         Initialize the thumbnail display service.
-        
+
         Args:
             grid_layout_service: Service for managing grid layout
             thumbnail_factory: Factory for creating thumbnails
@@ -45,7 +49,7 @@ class ThumbnailDisplayService:
         self.grid_layout_service = grid_layout_service
         self.thumbnail_factory = thumbnail_factory
         self.thumbnail_width = thumbnail_width
-        
+
         # Callback for thumbnail clicks
         self.thumbnail_click_callback: Optional[Callable[[str], None]] = None
 
@@ -58,36 +62,34 @@ class ThumbnailDisplayService:
         self.thumbnail_width = width
 
     def display_sequences_with_stable_layout(
-        self, 
-        sequences: List[SequenceData], 
-        sort_method: str
+        self, sequences: List[SequenceData], sort_method: str
     ) -> None:
         """
         Display sequences with stable layout (all at once).
-        
+
         Args:
             sequences: List of sequences to display
             sort_method: Method for sorting and grouping sequences
         """
-        logger.info(f"🎨 [THUMBNAIL_DISPLAY] Displaying {len(sequences)} sequences with stable layout")
-        
+        logger.info(
+            f"🎨 [THUMBNAIL_DISPLAY] Displaying {len(sequences)} sequences with stable layout"
+        )
+
         # Clear existing layout
         self.grid_layout_service.clear_grid()
-        
+
         # Group sequences by section
         sections = self._group_sequences_by_section(sequences, sort_method)
-        
+
         # Display all sections
         self._display_sections(sections, sort_method)
 
     def add_sequences_progressively(
-        self, 
-        chunk_sequences: List[SequenceData], 
-        sort_method: str
+        self, chunk_sequences: List[SequenceData], sort_method: str
     ) -> None:
         """
         Add sequences progressively to the layout.
-        
+
         Args:
             chunk_sequences: Chunk of sequences to add
             sort_method: Method for sorting and grouping sequences
@@ -95,49 +97,59 @@ class ThumbnailDisplayService:
         if not chunk_sequences:
             return
 
-        logger.info(f"📦 [THUMBNAIL_DISPLAY] Adding {len(chunk_sequences)} sequences progressively")
-        
+        logger.info(
+            f"📦 [THUMBNAIL_DISPLAY] Adding {len(chunk_sequences)} sequences progressively"
+        )
+
         # Group sequences by section
         sections_to_add = self._group_sequences_by_section(chunk_sequences, sort_method)
-        
+
         # Get current layout state
         current_row = self.grid_layout_service.get_row_count()
-        
+
         # Add each section progressively
         for section_name, section_sequences in sections_to_add.items():
             # Add section header
-            current_row = self.grid_layout_service.add_section_header(section_name, current_row)
+            current_row = self.grid_layout_service.add_section_header(
+                section_name, current_row
+            )
             current_row += 1
-            
+
             # Add thumbnails for this section
             column_index = 0
-            
+
             for sequence in section_sequences:
                 # Create thumbnail
                 thumbnail = self._create_thumbnail(sequence, sort_method)
-                
+
                 # Add to grid layout
-                self.grid_layout_service.add_thumbnail_to_grid(thumbnail, current_row, column_index)
-                
+                self.grid_layout_service.add_thumbnail_to_grid(
+                    thumbnail, current_row, column_index
+                )
+
                 # Show immediately
                 thumbnail.show()
-                
+
                 # Move to next position
                 column_index = (column_index + 1) % 3  # 3 columns
                 if column_index == 0:
                     current_row += 1
-                
+
                 # Process events to keep UI responsive
                 QApplication.processEvents()
 
-    def _display_sections(self, sections: Dict[str, List[SequenceData]], sort_method: str) -> None:
+    def _display_sections(
+        self, sections: Dict[str, List[SequenceData]], sort_method: str
+    ) -> None:
         """Display all sections in the grid."""
         current_row = 0
         thumbnail_count = 0
 
         for section_name, section_sequences in sections.items():
             # Add section header
-            current_row = self.grid_layout_service.add_section_header(section_name, current_row)
+            current_row = self.grid_layout_service.add_section_header(
+                section_name, current_row
+            )
             current_row += 1
 
             # Create thumbnails for this section
@@ -149,7 +161,9 @@ class ThumbnailDisplayService:
                 if col == 0 and thumbnail_count > 0:
                     current_row += 1
 
-                self.grid_layout_service.add_thumbnail_to_grid(thumbnail, current_row, col)
+                self.grid_layout_service.add_thumbnail_to_grid(
+                    thumbnail, current_row, col
+                )
                 thumbnail_count += 1
 
     def _create_thumbnail(self, sequence: SequenceData, sort_method: str) -> QWidget:
@@ -167,41 +181,39 @@ class ThumbnailDisplayService:
         return thumbnail
 
     def _group_sequences_by_section(
-        self, 
-        sequences: List[SequenceData], 
-        sort_method: str
+        self, sequences: List[SequenceData], sort_method: str
     ) -> Dict[str, List[SequenceData]]:
         """
         Group sequences by section based on sort method.
-        
+
         Args:
             sequences: List of sequences to group
             sort_method: Method for grouping (alphabetical, difficulty, etc.)
-            
+
         Returns:
             Dictionary mapping section names to sequence lists
         """
         sections: Dict[str, List[SequenceData]] = {}
-        
+
         for sequence in sequences:
             section_name = self._get_section_name(sequence, sort_method)
-            
+
             if section_name not in sections:
                 sections[section_name] = []
-            
+
             sections[section_name].append(sequence)
-        
+
         # Sort sections by name
         return dict(sorted(sections.items()))
 
     def _get_section_name(self, sequence: SequenceData, sort_method: str) -> str:
         """
         Get the section name for a sequence based on sort method.
-        
+
         Args:
             sequence: The sequence to categorize
             sort_method: The sorting method
-            
+
         Returns:
             Section name for the sequence
         """

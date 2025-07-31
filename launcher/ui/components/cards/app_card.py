@@ -5,12 +5,11 @@ Reliable Application Card Component
 Professional application card with glassmorphism styling and animations.
 """
 
-from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QHBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 
 from ...pyqt6_compatible_design_system import get_reliable_style_builder
-from ...reliable_effects import get_shadow_manager, get_animation_manager
-from ..buttons.button import ReliableButton
+from ...reliable_effects import get_animation_manager, get_shadow_manager
 
 
 class ReliableApplicationCard(QFrame):
@@ -55,9 +54,9 @@ class ReliableApplicationCard(QFrame):
         self.icon_label.setStyleSheet(
             f"""
             QLabel {{
-                {self.style_builder.glass_surface('secondary')}
-                border-radius: {self.style_builder.tokens.RADIUS['sm']}px;
-                {self.style_builder.typography('lg', 'normal')}
+                {self.style_builder.glass_surface("secondary")}
+                border-radius: {self.style_builder.tokens.RADIUS["sm"]}px;
+                {self.style_builder.typography("lg", "normal")}
             }}
         """
         )
@@ -72,7 +71,7 @@ class ReliableApplicationCard(QFrame):
         self.title_label.setStyleSheet(
             f"""
             QLabel {{
-                {self.style_builder.typography('base', 'semibold')}
+                {self.style_builder.typography("base", "semibold")}
                 color: #ffffff;
             }}
         """
@@ -83,7 +82,7 @@ class ReliableApplicationCard(QFrame):
         self.category_label.setStyleSheet(
             f"""
             QLabel {{
-                {self.style_builder.typography('sm', 'normal')}
+                {self.style_builder.typography("sm", "normal")}
                 color: rgba(255, 255, 255, 0.7);
             }}
         """
@@ -101,7 +100,7 @@ class ReliableApplicationCard(QFrame):
         self.desc_label.setStyleSheet(
             f"""
             QLabel {{
-                {self.style_builder.typography('sm', 'normal')}
+                {self.style_builder.typography("sm", "normal")}
                 color: rgba(255, 255, 255, 0.8);
             }}
         """
@@ -117,8 +116,8 @@ class ReliableApplicationCard(QFrame):
         self.setStyleSheet(
             f"""
             ReliableApplicationCard {{
-                {self.style_builder.glass_surface('primary')}
-                border-radius: {self.style_builder.tokens.RADIUS['xl']}px;
+                {self.style_builder.glass_surface("primary")}
+                border-radius: {self.style_builder.tokens.RADIUS["xl"]}px;
             }}
         """
         )
@@ -137,9 +136,9 @@ class ReliableApplicationCard(QFrame):
             self.setStyleSheet(
                 f"""
                 ReliableApplicationCard {{
-                    {self.style_builder.glass_surface('selected')}
-                    border: {self.style_builder.tokens.BORDERS['selected']};
-                    border-radius: {self.style_builder.tokens.RADIUS['xl']}px;
+                    {self.style_builder.glass_surface("selected")}
+                    border: {self.style_builder.tokens.BORDERS["selected"]};
+                    border-radius: {self.style_builder.tokens.RADIUS["xl"]}px;
                 }}
             """
             )
@@ -154,8 +153,8 @@ class ReliableApplicationCard(QFrame):
             self.setStyleSheet(
                 f"""
                 ReliableApplicationCard {{
-                    {self.style_builder.glass_surface_hover('primary')}
-                    border-radius: {self.style_builder.tokens.RADIUS['xl']}px;
+                    {self.style_builder.glass_surface_hover("primary")}
+                    border-radius: {self.style_builder.tokens.RADIUS["xl"]}px;
                 }}
             """
             )

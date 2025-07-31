@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
+
 from enums.letter.letter_type import LetterType
-from data.constants import BLUE, HEX_BLUE, HEX_RED
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
 from objects.motion.motion import Motion
+
+from data.constants import BLUE, HEX_BLUE, HEX_RED
 
 if TYPE_CHECKING:
     from objects.glyphs.tka_glyph.tka_glyph import TKA_Glyph

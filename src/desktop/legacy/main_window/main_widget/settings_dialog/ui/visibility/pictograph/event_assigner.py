@@ -1,15 +1,18 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
+
+from enums.glyph_enum import Glyph
 from objects.glyphs.reversal_glyph import ReversalGlyph
 from objects.glyphs.start_to_end_pos_glyph.start_to_end_pos_glyph import (
     StartToEndPosGlyph,
 )
-from data.constants import RED, BLUE
-from enums.glyph_enum import Glyph
+from PyQt6.QtCore import Qt
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
-    from objects.prop.prop import Prop
     from objects.arrow.arrow import Arrow
+    from objects.prop.prop import Prop
+
     from .visibility_pictograph_interaction_manager import (
         VisibilityPictographInteractionManager,
     )

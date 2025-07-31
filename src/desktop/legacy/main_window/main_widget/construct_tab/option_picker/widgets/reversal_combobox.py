@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Callable
+
+from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtWidgets import QComboBox
-from PyQt6.QtCore import Qt, QSize
 
 if TYPE_CHECKING:
     from main_window.main_widget.construct_tab.option_picker.widgets.reversal_filter_widget import (
@@ -37,19 +38,19 @@ class ReversalCombobox(QComboBox):
                 color: black;
                 border: 1px solid gray;
                 padding: 2px 4px;
-                font-size: {int(w//100)}px;
+                font-size: {int(w // 100)}px;
             }}
             QComboBox QAbstractItemView {{
                 background-color: white;
                 color: black;
                 selection-background-color: lightgray;
                 selection-color: black;
-                font-size: {int(w//100)}px;
+                font-size: {int(w // 100)}px;
             }}
             QComboBox QAbstractItemView::item:hover {{
                 background-color: lightblue;
                 color: black;
-                font-size: {int(w//100)}px;
+                font-size: {int(w // 100)}px;
             }}
             QComboBox::drop-down {{
                 border: none;

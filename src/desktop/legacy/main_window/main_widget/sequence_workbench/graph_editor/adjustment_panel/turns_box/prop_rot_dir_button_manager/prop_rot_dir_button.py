@@ -2,8 +2,8 @@
 # File: prop_rot_dir_button.py
 # ==========================================
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt, QSize
 
+from PyQt6.QtCore import QSize, Qt
 from styles.styled_button import StyledButton
 
 if TYPE_CHECKING:

@@ -1,6 +1,7 @@
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
 
 if TYPE_CHECKING:
     from .generate_tab import GenerateTab

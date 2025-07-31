@@ -1,13 +1,15 @@
 from typing import TYPE_CHECKING
-from data.constants import BLUE, PROP_DIR
+
 from objects.prop.prop import Prop
-from utils.path_helpers import get_image_path
-from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtSvg import QSvgRenderer
+from utils.path_helpers import get_image_path
+
+from data.constants import BLUE, PROP_DIR
 
 if TYPE_CHECKING:
-    from svg_manager.svg_manager import SvgManager
     from objects.prop.prop import Prop
+    from svg_manager.svg_manager import SvgManager
 
 
 class PropSvgManager:

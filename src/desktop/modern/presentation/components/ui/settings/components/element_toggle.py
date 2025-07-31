@@ -16,24 +16,24 @@ class ElementToggle(QCheckBox):
     def __init__(self, label: str, tooltip: Optional[str] = None, parent=None):
         """
         Initialize element toggle checkbox.
-        
+
         Args:
             label: Display label for the checkbox
             tooltip: Optional tooltip text
             parent: Parent widget
         """
         super().__init__(label, parent)
-        
+
         if tooltip:
             self.setToolTip(tooltip)
-            
+
         self.is_dependent = False
         self._apply_styling()
 
     def set_dependent(self, dependent: bool):
         """
         Mark this toggle as dependent on motion visibility.
-        
+
         Args:
             dependent: Whether this element depends on motion visibility
         """
@@ -43,7 +43,7 @@ class ElementToggle(QCheckBox):
     def set_motions_visible(self, visible: bool):
         """
         Update enabled state based on motion visibility.
-        
+
         Args:
             visible: Whether motions are visible (affects dependent elements)
         """

@@ -15,12 +15,14 @@ This achieves 100% functional parity with the legacy PlacementKeyGenerator.
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from shared.application.services.pictograph.pictograph_validator import PictographValidator
 from desktop.modern.core.interfaces.positioning_services import IPlacementKeyGenerator
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.enums import MotionType
 from desktop.modern.domain.models.letter_condition import LetterCondition
 from desktop.modern.domain.models.pictograph_data import PictographData
+from shared.application.services.pictograph.pictograph_validator import (
+    PictographValidator,
+)
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.arrow_data import ArrowData

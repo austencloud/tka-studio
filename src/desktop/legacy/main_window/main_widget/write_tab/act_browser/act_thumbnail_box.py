@@ -1,6 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QApplication
-from PyQt6.QtGui import QPixmap
 
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box_favorites_manager import (
     ThumbnailBoxFavoritesManager,
@@ -12,7 +10,8 @@ from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from main_window.main_widget.write_tab.act_browser.act_thumbnail_image_label import (
     ActThumbnailImageLabel,
 )
-
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QApplication, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.write_tab.act_browser.act_browser import ActBrowser

@@ -2,8 +2,10 @@ import json
 import logging
 import os
 from typing import Any
-from data.constants import BOX, DIAMOND
+
 from utils.path_helpers import get_data_path
+
+from data.constants import BOX, DIAMOND
 
 
 class SpecialPlacementLoader:
@@ -23,7 +25,7 @@ class SpecialPlacementLoader:
     def load_json_data(self, file_path) -> dict[str, dict[dict[str, Any]]]:
         try:
             if os.path.exists(file_path):
-                with open(file_path, "r", encoding="utf-8") as file:
+                with open(file_path, encoding="utf-8") as file:
                     return json.load(file)
             return {}
         except Exception as e:
@@ -55,7 +57,7 @@ class SpecialPlacementLoader:
             for file_name in os.listdir(directory):
                 if file_name.endswith("_placements.json"):
                     path = os.path.join(directory, file_name)
-                    with open(path, "r", encoding="utf-8") as f:
+                    with open(path, encoding="utf-8") as f:
                         data = json.load(f)
                         mode_data[subfolder].update(data)
         return mode_data

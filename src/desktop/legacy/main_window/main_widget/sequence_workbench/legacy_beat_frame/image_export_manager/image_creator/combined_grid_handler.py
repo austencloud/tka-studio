@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QImage, QPainter, QPixmap
+
 from PyQt6.QtCore import Qt
-from data.constants import BOX, DIAMOND
+from PyQt6.QtGui import QImage, QPainter, QPixmap
 from utils.path_helpers import get_image_path
+
+from data.constants import BOX, DIAMOND
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView

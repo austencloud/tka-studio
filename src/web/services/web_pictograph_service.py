@@ -5,14 +5,12 @@ Demonstrates how the framework-agnostic core pictograph renderer can be used
 in web services without any QT dependencies.
 """
 
-import base64
 import json
 import logging
 import os
 
 # Import the framework-agnostic core services
 import sys
-from io import BytesIO
 from typing import Dict, List, Optional
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
@@ -20,12 +18,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 from shared.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     IPictographAssetProvider,
-    create_pictograph_renderer,
 )
 from shared.application.services.core.types import (
-    ImageData,
-    ImageFormat,
-    Point,
     RenderCommand,
     Size,
     SvgAsset,
@@ -270,7 +264,7 @@ class WebRenderEngine:
             # Wrap in group with transform
             return (
                 f'<g transform="translate({command.position.x},{command.position.y}) '
-                f'scale({command.size.width/100},{command.size.height/100})">'
+                f'scale({command.size.width / 100},{command.size.height / 100})">'
                 f"{inner_content}"
                 f"</g>"
             )

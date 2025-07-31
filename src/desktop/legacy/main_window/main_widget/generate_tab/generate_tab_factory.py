@@ -2,12 +2,13 @@
 Factory for creating GenerateTab instances with proper dependency injection.
 """
 
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
 import logging
+from typing import TYPE_CHECKING
+
+from main_window.main_widget.core.widget_manager import WidgetFactory
+from PyQt6.QtWidgets import QWidget
 
 from desktop.modern.core.application_context import ApplicationContext
-from main_window.main_widget.core.widget_manager import WidgetFactory
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab
@@ -62,13 +63,13 @@ class GenerateTabFactory(WidgetFactory):
             )
 
             # Create the generate tab with dependencies
-            print(f"DEBUG: GenerateTabFactory - Creating GenerateTab...")
+            print("DEBUG: GenerateTabFactory - Creating GenerateTab...")
             generate_tab = GenerateTab(
                 main_widget=coordinator,  # Pass coordinator as main_widget for compatibility
                 settings_manager=settings_manager,
                 json_manager=json_manager,
             )
-            print(f"DEBUG: GenerateTabFactory - GenerateTab created successfully")
+            print("DEBUG: GenerateTabFactory - GenerateTab created successfully")
 
             # Store references for backward compatibility
             generate_tab.app_context = app_context

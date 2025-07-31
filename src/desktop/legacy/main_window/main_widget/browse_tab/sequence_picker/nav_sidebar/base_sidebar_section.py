@@ -5,13 +5,12 @@ from main_window.main_widget.browse_tab.sequence_picker.nav_sidebar.sidebar_butt
 )
 from PyQt6.QtWidgets import (
     QHBoxLayout,
-    QWidget,
-    QSpacerItem,
-    QSizePolicy,
     QLabel,
     QPushButton,
+    QSizePolicy,
+    QSpacerItem,
+    QWidget,
 )
-
 
 if TYPE_CHECKING:
     from .nav_sidebar_manager import NavSidebarManager

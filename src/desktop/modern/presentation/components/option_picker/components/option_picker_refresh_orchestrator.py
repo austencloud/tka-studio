@@ -7,8 +7,9 @@ Manages the complex refresh logic with animation coordination.
 
 from typing import TYPE_CHECKING, Callable, Optional
 
-from desktop.modern.domain.models.sequence_data import SequenceData
 from PyQt6.QtCore import QTimer
+
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 if TYPE_CHECKING:
     from shared.application.services.option_picker.option_configuration_service import (

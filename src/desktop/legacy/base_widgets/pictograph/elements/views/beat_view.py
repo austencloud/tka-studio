@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
+
 from base_widgets.pictograph.elements.views.base_pictograph_view import (
     BasePictographView,
 )
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
+from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

@@ -1,7 +1,8 @@
 # src/main_window/main_widget/sequence_card_tab/components/pages/printable_layout.py
 from enum import Enum
 from typing import Tuple
-from PyQt6.QtCore import QSize, QRect
+
+from PyQt6.QtCore import QRect, QSize
 
 
 class PaperSize(Enum):

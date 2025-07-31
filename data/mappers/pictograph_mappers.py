@@ -1,6 +1,8 @@
-from typing import Dict, Any, List, Union, Hashable
-import pandas as pd
+from collections.abc import Hashable
 import os
+from typing import Any, Dict, List, Union
+
+import pandas as pd
 
 
 class PictographDataMapper:
@@ -33,7 +35,7 @@ class CircleCoordinateMapper:
 
         filepath = os.path.join(self.config_path, "circle_coords.json")
         try:
-            with open(filepath, "r") as f:
+            with open(filepath) as f:
                 return json.load(f)
         except FileNotFoundError:
             return {}

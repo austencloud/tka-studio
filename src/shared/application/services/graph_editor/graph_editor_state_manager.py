@@ -6,6 +6,7 @@ without any Qt dependencies.
 """
 
 from typing import Optional
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
 

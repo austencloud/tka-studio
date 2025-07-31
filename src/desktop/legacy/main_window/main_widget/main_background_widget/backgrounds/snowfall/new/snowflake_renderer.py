@@ -1,7 +1,4 @@
 import random
-from PyQt6.QtCore import Qt, QTimer, QThreadPool
-from PyQt6.QtGui import QPixmap, QPainter
-from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 
 from main_window.main_widget.main_background_widget.backgrounds.snowfall.new.snowflake import (
     Snowflake,
@@ -12,6 +9,9 @@ from main_window.main_widget.main_background_widget.backgrounds.snowfall.new.sno
 from main_window.main_widget.main_background_widget.backgrounds.snowfall.new.snowflake_update_task import (
     SnowflakeUpdateTask,
 )
+from PyQt6.QtCore import Qt, QThreadPool, QTimer
+from PyQt6.QtGui import QPainter, QPixmap
+from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 
 
 class SnowflakeRenderer(QOpenGLWidget):

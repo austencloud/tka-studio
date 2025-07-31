@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import Qt
 import logging
+from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 from data.constants import BLUE_ATTRS, RED_ATTRS
-
 
 logger = logging.getLogger(__name__)
 

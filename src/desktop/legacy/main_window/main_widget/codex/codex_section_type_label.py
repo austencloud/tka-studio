@@ -1,9 +1,10 @@
 # section_type_label.py
 
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtCore import Qt
+
 from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel
 from utils.letter_type_text_painter import (
     LetterTypeTextPainter,
 )

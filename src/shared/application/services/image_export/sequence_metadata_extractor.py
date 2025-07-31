@@ -10,7 +10,9 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from desktop.modern.core.interfaces.image_export_services import ISequenceMetadataExtractor
+from desktop.modern.core.interfaces.image_export_services import (
+    ISequenceMetadataExtractor,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +77,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
                 logger.warning(f"No metadata file found for {file_path}")
                 return None
 
-            with open(json_path, "r", encoding="utf-8") as f:
+            with open(json_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Extract relevant metadata
@@ -145,7 +147,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
     def _extract_from_json(self, json_path: Path) -> Optional[List[Dict[str, Any]]]:
         """Extract sequence data from a JSON file."""
         try:
-            with open(json_path, "r", encoding="utf-8") as f:
+            with open(json_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Handle different JSON structures

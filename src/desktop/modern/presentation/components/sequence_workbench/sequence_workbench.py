@@ -20,7 +20,7 @@ BUSINESS LOGIC DELEGATED TO:
 from typing import TYPE_CHECKING, List, Optional
 
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QWidget
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService
@@ -189,7 +189,7 @@ class SequenceWorkbench(ViewableComponentBase):
 
     def _setup_state_monitoring(self):
         """Setup monitoring of state manager changes for automatic UI updates."""
-        print(f"🔗 [WORKBENCH] Setting up state monitoring...")
+        print("🔗 [WORKBENCH] Setting up state monitoring...")
 
         # Store the original state manager methods to intercept changes
         if hasattr(self._state_manager, "set_sequence"):
@@ -203,7 +203,7 @@ class SequenceWorkbench(ViewableComponentBase):
 
                 # If the state changed, update our UI
                 if result.changed and result.sequence_changed:
-                    print(f"🔄 [WORKBENCH] State changed externally, updating UI...")
+                    print("🔄 [WORKBENCH] State changed externally, updating UI...")
                     self._update_ui_from_state()
                     self._update_button_panel_sequence_state()
 
@@ -211,9 +211,9 @@ class SequenceWorkbench(ViewableComponentBase):
 
             # Replace the method with our monitored version
             self._state_manager.set_sequence = monitored_set_sequence
-            print(f"✅ [WORKBENCH] State monitoring setup complete")
+            print("✅ [WORKBENCH] State monitoring setup complete")
         else:
-            print(f"❌ [WORKBENCH] State manager has no set_sequence method!")
+            print("❌ [WORKBENCH] State manager has no set_sequence method!")
 
     def _setup_session_subscriptions(self):
         """Setup session restoration event subscriptions."""
@@ -241,7 +241,7 @@ class SequenceWorkbench(ViewableComponentBase):
         )
 
         if result.changed:
-            print(f"🎯 [WORKBENCH] Updating UI from state...")
+            print("🎯 [WORKBENCH] Updating UI from state...")
             self._update_ui_from_state()
 
             # Update button panel sequence state for smart picker button
@@ -261,10 +261,10 @@ class SequenceWorkbench(ViewableComponentBase):
                 if sequence:
                     for i, beat in enumerate(sequence.beats):
                         print(
-                            f"   Beat {i+1}: {beat.letter if hasattr(beat, 'letter') else 'Unknown'}"
+                            f"   Beat {i + 1}: {beat.letter if hasattr(beat, 'letter') else 'Unknown'}"
                         )
         else:
-            print(f"🎯 [WORKBENCH] No change detected, UI not updated")
+            print("🎯 [WORKBENCH] No change detected, UI not updated")
 
     def get_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence from state manager."""
@@ -283,7 +283,7 @@ class SequenceWorkbench(ViewableComponentBase):
         result = self._state_manager.set_start_position(start_position)
 
         if result.changed:
-            print(f"🎯 [WORKBENCH] Start position changed, updating UI")
+            print("🎯 [WORKBENCH] Start position changed, updating UI")
             self._update_ui_from_state()
 
             # Update button panel sequence state for smart picker button
@@ -300,7 +300,7 @@ class SequenceWorkbench(ViewableComponentBase):
 
                 print(f"🔄 [WORKBENCH] Start position updated: {position_key}")
         else:
-            print(f"🎯 [WORKBENCH] No start position change detected")
+            print("🎯 [WORKBENCH] No start position change detected")
 
     def set_start_position(
         self,
@@ -324,7 +324,7 @@ class SequenceWorkbench(ViewableComponentBase):
         # CRITICAL FIX: Always update UI when start position is set, regardless of state change
         # This ensures the start position view always reflects the current selection
         print(
-            f"🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
+            "🎯 [WORKBENCH] Updating beat frame with start position (always update UI)..."
         )
 
         # Update beat frame section - this should always happen for user selections
@@ -343,7 +343,7 @@ class SequenceWorkbench(ViewableComponentBase):
             )
             if complete_sequence:
                 self.sequence_modified.emit(complete_sequence)
-                print(f"🎯 [WORKBENCH] Sequence modified signal emitted")
+                print("🎯 [WORKBENCH] Sequence modified signal emitted")
         else:
             print(
                 f"🎯 [WORKBENCH] Skipping sequence modified signal (changed={result.changed}, auto_save_prevented={self._state_manager.should_prevent_auto_save()})"
@@ -437,18 +437,18 @@ class SequenceWorkbench(ViewableComponentBase):
 
         # Update indicator section
         if self._indicator_section:
-            print(f"🔄 [WORKBENCH] Updating indicator section...")
+            print("🔄 [WORKBENCH] Updating indicator section...")
             self._indicator_section.update_sequence(sequence)
 
         # Update beat frame section
         if self._beat_frame_section:
-            print(f"🔄 [WORKBENCH] Updating beat frame section...")
+            print("🔄 [WORKBENCH] Updating beat frame section...")
             self._beat_frame_section.set_sequence(sequence)
         else:
-            print(f"❌ [WORKBENCH] No beat frame section available!")
+            print("❌ [WORKBENCH] No beat frame section available!")
 
         # Update button panel state
-        print(f"🔄 [WORKBENCH] Updating button panel state...")
+        print("🔄 [WORKBENCH] Updating button panel state...")
         self._update_button_panel_sequence_state()
 
     def _on_beat_selected(self, beat_index: int):

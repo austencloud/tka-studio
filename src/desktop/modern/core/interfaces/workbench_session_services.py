@@ -15,6 +15,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 
 class SessionRestorationPhase(Enum):
     """Phases of session restoration."""
+
     NOT_STARTED = "not_started"
     PREPARING = "preparing"
     RESTORING_SEQUENCE = "restoring_sequence"
@@ -26,6 +27,7 @@ class SessionRestorationPhase(Enum):
 
 class SessionRestorationResult(NamedTuple):
     """Result of a session restoration operation."""
+
     success: bool
     phase: SessionRestorationPhase
     sequence_restored: bool
@@ -52,13 +54,15 @@ class IWorkbenchSessionManager(ABC):
     """Interface for workbench session management operations."""
 
     @abstractmethod
-    def begin_restoration_from_event(self, event_data: dict) -> SessionRestorationResult:
+    def begin_restoration_from_event(
+        self, event_data: dict
+    ) -> SessionRestorationResult:
         """
         Begin restoration from session restoration event.
-        
+
         Args:
             event_data: Event data from session restoration event
-            
+
         Returns:
             SessionRestorationResult with restoration details
         """
@@ -67,7 +71,7 @@ class IWorkbenchSessionManager(ABC):
     def execute_restoration(self) -> SessionRestorationResult:
         """
         Execute the restoration with pending session data.
-        
+
         Returns:
             SessionRestorationResult with restoration details
         """
@@ -76,10 +80,10 @@ class IWorkbenchSessionManager(ABC):
     def handle_restoration_event(self, event_data: dict) -> SessionRestorationResult:
         """
         Handle complete restoration from event (convenience method).
-        
+
         Args:
             event_data: Event data from session restoration event
-            
+
         Returns:
             SessionRestorationResult with restoration details
         """
@@ -88,7 +92,7 @@ class IWorkbenchSessionManager(ABC):
     def handle_missing_start_position_restoration(self) -> None:
         """
         Handle restoration when no start position data is available.
-        
+
         This ensures the start position view is properly initialized even when cleared.
         """
 
@@ -96,7 +100,7 @@ class IWorkbenchSessionManager(ABC):
     def get_current_phase(self) -> SessionRestorationPhase:
         """
         Get current restoration phase.
-        
+
         Returns:
             SessionRestorationPhase: Current phase of restoration
         """
@@ -105,7 +109,7 @@ class IWorkbenchSessionManager(ABC):
     def is_restoration_completed(self) -> bool:
         """
         Check if restoration has completed.
-        
+
         Returns:
             bool: True if restoration is completed, False otherwise
         """
@@ -114,7 +118,7 @@ class IWorkbenchSessionManager(ABC):
     def is_restoration_in_progress(self) -> bool:
         """
         Check if restoration is currently in progress.
-        
+
         Returns:
             bool: True if restoration is in progress, False otherwise
         """
@@ -123,7 +127,7 @@ class IWorkbenchSessionManager(ABC):
     def has_pending_restoration_data(self) -> bool:
         """
         Check if there's pending restoration data.
-        
+
         Returns:
             bool: True if pending data exists, False otherwise
         """
@@ -132,7 +136,7 @@ class IWorkbenchSessionManager(ABC):
     def get_restoration_errors(self) -> List[str]:
         """
         Get list of restoration errors.
-        
+
         Returns:
             List[str]: Copy of restoration errors
         """
@@ -141,7 +145,7 @@ class IWorkbenchSessionManager(ABC):
     def setup_event_subscriptions(self) -> List[str]:
         """
         Setup event subscriptions for session restoration.
-        
+
         Returns:
             List[str]: List of subscription IDs for cleanup
         """
@@ -150,7 +154,7 @@ class IWorkbenchSessionManager(ABC):
     def cleanup_event_subscriptions(self, subscription_ids: List[str]) -> None:
         """
         Clean up event subscriptions.
-        
+
         Args:
             subscription_ids: List of subscription IDs to clean up
         """
@@ -163,7 +167,7 @@ class IWorkbenchSessionManager(ABC):
     def get_restoration_status_summary(self) -> dict:
         """
         Get comprehensive restoration status for debugging.
-        
+
         Returns:
             dict: Status summary with restoration details
         """
@@ -176,10 +180,10 @@ class ISessionCoordinator(ABC):
     def coordinate_session_save(self, session_data: dict) -> bool:
         """
         Coordinate saving session data across components.
-        
+
         Args:
             session_data: Session data to save
-            
+
         Returns:
             bool: True if save succeeded, False otherwise
         """
@@ -188,7 +192,7 @@ class ISessionCoordinator(ABC):
     def coordinate_session_load(self) -> Optional[dict]:
         """
         Coordinate loading session data from storage.
-        
+
         Returns:
             Optional[dict]: Loaded session data or None if not available
         """
@@ -197,7 +201,7 @@ class ISessionCoordinator(ABC):
     def coordinate_session_clear(self) -> bool:
         """
         Coordinate clearing session data.
-        
+
         Returns:
             bool: True if clear succeeded, False otherwise
         """
@@ -206,7 +210,7 @@ class ISessionCoordinator(ABC):
     def get_session_metadata(self) -> dict:
         """
         Get metadata about current session.
-        
+
         Returns:
             dict: Session metadata information
         """
@@ -227,7 +231,7 @@ class IWorkbenchStateCoordinator(ABC):
     def is_in_restoration_mode(self) -> bool:
         """
         Check if currently in restoration mode.
-        
+
         Returns:
             bool: True if in restoration mode, False otherwise
         """
@@ -238,11 +242,11 @@ class IWorkbenchStateCoordinator(ABC):
     ) -> bool:
         """
         Update sequence state during restoration.
-        
+
         Args:
             sequence_data: New sequence data
             from_restoration: Whether update is from restoration
-            
+
         Returns:
             bool: True if state changed, False otherwise
         """
@@ -253,11 +257,11 @@ class IWorkbenchStateCoordinator(ABC):
     ) -> bool:
         """
         Update start position state during restoration.
-        
+
         Args:
             start_position_data: New start position data
             from_restoration: Whether update is from restoration
-            
+
         Returns:
             bool: True if state changed, False otherwise
         """
@@ -266,7 +270,7 @@ class IWorkbenchStateCoordinator(ABC):
     def get_current_workbench_state(self) -> dict:
         """
         Get current workbench state snapshot.
-        
+
         Returns:
             dict: Current state information
         """

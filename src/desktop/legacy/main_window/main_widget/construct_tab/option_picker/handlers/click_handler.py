@@ -1,13 +1,15 @@
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
 if TYPE_CHECKING:
-    from ..widgets.legacy_option_picker import LegacyOptionPicker
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
+
+    from ..widgets.legacy_option_picker import LegacyOptionPicker
 
 
 class OptionClickHandler:

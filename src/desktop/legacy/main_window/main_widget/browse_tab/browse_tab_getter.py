@@ -1,5 +1,7 @@
-from typing import TYPE_CHECKING, Any, Generator
+from collections.abc import Generator
 import os
+from typing import TYPE_CHECKING, Any
+
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from utils.path_helpers import get_data_path
 

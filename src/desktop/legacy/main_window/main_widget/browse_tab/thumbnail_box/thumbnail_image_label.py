@@ -1,11 +1,12 @@
-from PyQt6.QtCore import Qt, QRect, QSize, QTimer
-from PyQt6.QtGui import QPixmap, QCursor, QMouseEvent, QPainter, QColor, QPen
-from PyQt6.QtWidgets import QLabel
-from typing import TYPE_CHECKING, Optional, Final
 from pathlib import Path
+from typing import TYPE_CHECKING, Final, Optional
 
-from data.constants import GOLD, BLUE
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import QRect, QSize, Qt, QTimer
+from PyQt6.QtGui import QColor, QCursor, QMouseEvent, QPainter, QPen, QPixmap
+from PyQt6.QtWidgets import QLabel
+
+from data.constants import BLUE, GOLD
 
 # Import the new coordinator and components
 from .core.thumbnail_coordinator import ThumbnailCoordinator

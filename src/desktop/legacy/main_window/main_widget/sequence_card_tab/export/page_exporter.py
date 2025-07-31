@@ -1,15 +1,16 @@
 # src/main_window/main_widget/sequence_card_tab/export/page_exporter.py
+import logging
 import os
 import time
-import logging
 from typing import TYPE_CHECKING, List
+
 from PyQt6.QtWidgets import QApplication, QWidget
 
 from .export_config import ExportConfig
-from .export_ui_manager import ExportUIManager
-from .page_image_data_extractor import PageImageDataExtractor
 from .export_grid_calculator import ExportGridCalculator
 from .export_page_renderer import ExportPageRenderer
+from .export_ui_manager import ExportUIManager
+from .page_image_data_extractor import PageImageDataExtractor
 
 if TYPE_CHECKING:
     from ..sequence_card_tab import SequenceCardTab
@@ -137,15 +138,15 @@ class SequenceCardPageExporter:
 
             # Update progress
             self.ui_manager.update_progress(
-                i, f"Exporting page {i+1} of {len(pages)}..."
+                i, f"Exporting page {i + 1} of {len(pages)}..."
             )
 
             try:
                 # Export the page
-                filename = f"sequence_card_page_{i+1:03d}.png"
+                filename = f"sequence_card_page_{i + 1:03d}.png"
                 filepath = os.path.join(export_subdir, filename)
 
-                self.logger.info(f"Exporting page {i+1} to: {filepath}")
+                self.logger.info(f"Exporting page {i + 1} to: {filepath}")
 
                 # Extract sequence data from the page
                 sequence_items = self.data_extractor.extract_sequence_data_from_page(
@@ -165,9 +166,9 @@ class SequenceCardPageExporter:
                 QApplication.processEvents()
 
             except Exception as e:
-                self.logger.error(f"Error exporting page {i+1}: {e}", exc_info=True)
+                self.logger.error(f"Error exporting page {i + 1}: {e}", exc_info=True)
                 self.ui_manager.show_error_message(
-                    "Export Error", f"Error exporting page {i+1}: {str(e)}"
+                    "Export Error", f"Error exporting page {i + 1}: {str(e)}"
                 )
                 # Optionally, you might want to set was_cancelled_by_user = True here or break
                 # depending on whether one error should halt the entire batch.

@@ -1,17 +1,19 @@
 from typing import TYPE_CHECKING, Union
-from PyQt6.QtWidgets import QGridLayout
-from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
-from PyQt6.QtCore import QEvent
+
 from base_widgets.base_beat_frame import BaseBeatFrame
-from .act_beat_frame_drag_drop_handler import ActBeatFrameDragDropHandler
-from .act_frame_initializer import ActBeatFrameInitializer
-from .act_populator import ActPopulator
-from .act_beat_view import ActBeatView
-from .act_step_label import ActStepLabel
-from .act_beat_frame_layout_manager import ActBeatFrameLayoutManager
+from PyQt6.QtCore import QEvent
+from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
+from PyQt6.QtWidgets import QGridLayout
+
 from ......sequence_workbench.legacy_beat_frame.beat_selection_overlay import (
     BeatSelectionOverlay,
 )
+from .act_beat_frame_drag_drop_handler import ActBeatFrameDragDropHandler
+from .act_beat_frame_layout_manager import ActBeatFrameLayoutManager
+from .act_beat_view import ActBeatView
+from .act_frame_initializer import ActBeatFrameInitializer
+from .act_populator import ActPopulator
+from .act_step_label import ActStepLabel
 
 if TYPE_CHECKING:
     from ..act_beat_scroll import ActBeatScroll

@@ -7,7 +7,9 @@ Extracted from multiple presentation files to maintain clean architecture.
 
 from typing import Dict
 
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 
 
 class OptionPickerSizeCalculator:

@@ -7,13 +7,16 @@ This adapter wraps the pure GraphEditorAutoTransformService to provide Qt-specif
 import logging
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from shared.application.services.graph_editor.graph_editor_auto_transform_service import (
     GraphEditorAutoTransformService,
 )
-from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+    from desktop.modern.presentation.components.graph_editor.graph_editor import (
+        GraphEditor,
+    )
 
 logger = logging.getLogger(__name__)
 

@@ -5,10 +5,9 @@ Manages state transitions and validation for the learn tab following reactive pa
 Provides a single source of truth for state with proper validation and event emission.
 """
 
-import logging
 from dataclasses import replace
 from datetime import datetime
-from typing import Any, Callable, Optional
+import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -22,7 +21,6 @@ from .learn_state import (
     LearnState,
     LearnView,
     ProgressState,
-    UIState,
 )
 
 logger = logging.getLogger(__name__)

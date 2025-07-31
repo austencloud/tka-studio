@@ -1,11 +1,12 @@
-from typing import TYPE_CHECKING
 from copy import deepcopy
+from typing import TYPE_CHECKING
+
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from interfaces.json_manager_interface import IJsonManager
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from data.constants import BLUE_ATTRS, MOTION_TYPE, STATIC
-from interfaces.json_manager_interface import IJsonManager
 
 from .legacy_start_pos_beat import LegacyStartPositionBeat
 

@@ -49,7 +49,6 @@ def register_learn_services(container: DIContainer) -> None:
         container: DI container to register services with
     """
     try:
-
         # External dependencies (use real data services)
         # Use the real pictograph service with actual TKA dataset
         from shared.application.services.data.pictograph_data_manager import (

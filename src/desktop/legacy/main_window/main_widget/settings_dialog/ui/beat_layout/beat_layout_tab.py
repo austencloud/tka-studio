@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from main_window.main_widget.settings_dialog.ui.beat_layout.layout_controls.layout_controls import (
     LayoutControls,
 )
-
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 from .layout_beat_frame.layout_beat_frame import LayoutBeatFrame
 
@@ -134,8 +133,6 @@ class BeatLayoutTab(QWidget):
         self.controls.default_layout_label.setText(f"Default: {layout_text}")
 
     def update_beat_layout_tab(self):
-        beat_count = (
-            self.settings_dialog.main_widget.sequence_workbench.beat_frame.get.beat_count()
-        )
+        beat_count = self.settings_dialog.main_widget.sequence_workbench.beat_frame.get.beat_count()
         self.controls.layout_selector._update_valid_layouts(beat_count)
         self.controls.length_selector.num_beats_spinbox.setValue(beat_count)

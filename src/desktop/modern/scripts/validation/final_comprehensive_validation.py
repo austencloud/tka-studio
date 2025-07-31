@@ -4,8 +4,8 @@ Final Comprehensive Validation
 Tests all components of the start position service refactoring.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add src to path
 modern_src_path = Path(__file__).parent / "src"
@@ -121,9 +121,9 @@ def run_final_validation():
         # Check that data_service is required (not Optional)
         data_service_param = option_sig.parameters.get("data_service")
         assert data_service_param is not None, "data_service parameter should exist"
-        assert (
-            data_service_param.default is inspect.Parameter.empty
-        ), "data_service should be required (no default)"
+        assert data_service_param.default is inspect.Parameter.empty, (
+            "data_service should be required (no default)"
+        )
 
         # Check that all service parameters are required in picker
         service_params = [
@@ -135,9 +135,9 @@ def run_final_validation():
         for param_name in service_params:
             param = picker_sig.parameters.get(param_name)
             assert param is not None, f"{param_name} should exist"
-            assert (
-                param.default is inspect.Parameter.empty
-            ), f"{param_name} should be required (no default)"
+            assert param.default is inspect.Parameter.empty, (
+                f"{param_name} should be required (no default)"
+            )
 
         print("✅ Component integration validation passed - Services are now mandatory")
         passed_tests += 1

@@ -1,9 +1,11 @@
+import json
 import os
 import re
-import json
+
 from PIL import Image
-from data.constants import BLUE_ATTRS, SEQUENCE_START_POSITION, START_ORI
 from utils.path_helpers import get_data_path
+
+from data.constants import BLUE_ATTRS, SEQUENCE_START_POSITION, START_ORI
 
 
 class VariationNumberFixer:

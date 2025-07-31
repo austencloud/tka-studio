@@ -1,12 +1,12 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from PyQt6.QtWidgets import (
-    QLabel,
-    QFrame,
-    QHBoxLayout,
-    QGraphicsDropShadowEffect,
-)
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QCursor, QFont, QColor
+from PyQt6.QtGui import QColor, QCursor, QFont
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QLabel,
+)
 
 
 class LengthOptionFrame(QFrame):

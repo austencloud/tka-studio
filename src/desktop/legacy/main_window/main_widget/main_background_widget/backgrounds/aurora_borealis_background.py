@@ -1,8 +1,7 @@
 import math
 import random
 
-from PyQt6.QtGui import QLinearGradient, QColor, QPainter
-
+from PyQt6.QtGui import QColor, QLinearGradient, QPainter
 from PyQt6.QtWidgets import QWidget
 
 from .base_background import BaseBackground

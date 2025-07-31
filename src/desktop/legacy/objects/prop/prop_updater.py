@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Union
 
-
 if TYPE_CHECKING:
     from objects.prop.prop import Prop
 
@@ -22,9 +21,7 @@ class PropUpdater:
 
         if not hasattr(self.prop.pictograph, "example_data"):
             self.prop.setVisible(
-                (
-                    AppContext()
-                    .settings_manager()
-                    .visibility.get_motion_visibility(self.prop.state.color)
-                )
+                AppContext()
+                .settings_manager()
+                .visibility.get_motion_visibility(self.prop.state.color)
             )

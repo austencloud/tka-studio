@@ -44,7 +44,7 @@ class BetaPositioningDetector(IBetaPositioningDetector):
         """Initialize with beta-ending letter constants."""
         self._beta_ending_letters = [
             "G",
-            "H", 
+            "H",
             "I",
             "J",
             "K",
@@ -75,7 +75,7 @@ class BetaPositioningDetector(IBetaPositioningDetector):
         """Check if letter ends at beta positions."""
         if not letter:
             return False
-        
+
         return letter in self._beta_ending_letters
 
     def get_beta_ending_letters(self) -> List[str]:

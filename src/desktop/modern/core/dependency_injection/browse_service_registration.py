@@ -110,8 +110,10 @@ def register_browse_services(
             # This ensures all components get the same instance
             nav_manager = BrowseNavigationManager(stacked_widget, viewer_panel)
             if viewer_panel is None:
-                logger.warning(f"⚠️ Navigation manager created without viewer panel - will be set later")
-            
+                logger.warning(
+                    "⚠️ Navigation manager created without viewer panel - will be set later"
+                )
+
             container.register_instance(
                 IBrowseNavigationManager,
                 nav_manager,

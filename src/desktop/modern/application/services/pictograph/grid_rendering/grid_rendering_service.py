@@ -167,7 +167,7 @@ class GridRenderingService:
                 return renderer
             else:
                 logger.error(
-                    f"❌ [GRID_RENDERER] Failed to create fallback grid renderer"
+                    "❌ [GRID_RENDERER] Failed to create fallback grid renderer"
                 )
                 return None
 
@@ -203,7 +203,6 @@ class GridRenderingService:
     def preload_common_grids(self) -> None:
         """Pre-load commonly used grid renderers for better performance."""
         try:
-
             # Pre-load diamond and box grids
             self._get_grid_renderer("diamond")
             self._get_grid_renderer("box")

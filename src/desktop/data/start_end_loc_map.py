@@ -1,6 +1,5 @@
 from data.constants import *
 
-
 start_end_loc_map = {
     NORTHEAST: {
         CLOCKWISE: {

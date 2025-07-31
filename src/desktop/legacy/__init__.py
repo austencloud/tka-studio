@@ -6,8 +6,8 @@ All imports should work relative to this src directory.
 """
 
 # Ensure imports work by adding src to path if needed
-import sys
 import os
+import sys
 
 _current_dir = os.path.dirname(os.path.abspath(__file__))
 if _current_dir not in sys.path:

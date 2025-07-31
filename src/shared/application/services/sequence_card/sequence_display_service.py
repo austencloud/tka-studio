@@ -7,14 +7,14 @@ Framework-agnostic service layer.
 
 import logging
 from pathlib import Path
-from typing import Callable, Optional, List
+from typing import Callable, List, Optional
 
 from desktop.modern.core.interfaces.sequence_card_services import (
-    ISequenceCardDisplayService,
-    ISequenceCardDataService,
-    ISequenceCardCacheService,
-    ISequenceCardLayoutService,
     DisplayState,
+    ISequenceCardCacheService,
+    ISequenceCardDataService,
+    ISequenceCardDisplayService,
+    ISequenceCardLayoutService,
     SequenceCardData,
 )
 

@@ -11,14 +11,20 @@ This service is responsible for determining when and how to separate props
 to avoid overlaps, particularly for beta-ending letters.
 """
 
-import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+import uuid
 
 from desktop.modern.core.types import Point
-from desktop.modern.domain.models import BeatData, Location, MotionData, MotionType, Orientation
+from desktop.modern.domain.models import (
+    BeatData,
+    Location,
+    MotionData,
+    MotionType,
+    Orientation,
+)
 from desktop.modern.domain.models.pictograph_data import PictographData
 
 # Event-driven architecture imports
@@ -26,7 +32,12 @@ if TYPE_CHECKING:
     from desktop.modern.core.events import IEventBus
 
 try:
-    from desktop.modern.core.events import EventPriority, IEventBus, PropPositionedEvent, get_event_bus
+    from desktop.modern.core.events import (
+        EventPriority,
+        IEventBus,
+        PropPositionedEvent,
+        get_event_bus,
+    )
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
@@ -726,8 +737,9 @@ class PropManagementService(IPropManagementService):
     def _get_json_configurator(self):
         """Get JSONConfigurator singleton from DI container."""
         try:
-            from desktop.modern.core.dependency_injection.di_container import get_container
-
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
             from shared.application.services.positioning.props.configuration.json_configuration_service import (
                 IJSONConfigurator,
             )

@@ -2,8 +2,6 @@
 Style mixins for easy component integration with the design system.
 """
 
-from typing import Optional, Union
-
 from PyQt6.QtWidgets import QWidget
 
 from .core.types import ComponentType, StyleVariant

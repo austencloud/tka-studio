@@ -1,27 +1,29 @@
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
-from PyQt6.QtCore import pyqtSignal
 from typing import TYPE_CHECKING
+
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from enums.letter.letter import Letter
+from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
+    LegacyStartPositionBeat,
+)
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout
 
 from data.constants import (
     BLUE_ATTRS,
     BOX,
     DIAMOND,
     END_ORI,
+    END_POS,
     RED_ATTRS,
     START_ORI,
     START_POS,
-    END_POS,
 )
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from main_window.main_widget.pictograph_key_generator import PictographKeyGenerator
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
-    LegacyStartPositionBeat,
-)
+
+from .base_start_pos_picker import BaseStartPosPicker
+from .choose_your_start_pos_label import ChooseYourStartPosLabel
 from .start_pos_picker_variations_button import StartPosVariationsButton
 from .start_pos_pictograph_frame import StartPosPickerPictographFrame
-from .choose_your_start_pos_label import ChooseYourStartPosLabel
-from .base_start_pos_picker import BaseStartPosPicker
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (

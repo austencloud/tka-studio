@@ -11,11 +11,11 @@ PROVIDES:
 - Override key generation
 """
 
+from abc import ABC, abstractmethod
 import json
 import logging
-import time
-from abc import ABC, abstractmethod
 from pathlib import Path
+import time
 from typing import Any, Dict, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
@@ -170,7 +170,7 @@ class JSONConfigurator(IJSONConfigurator):
         for config_path in self._config_paths:
             try:
                 if config_path.exists():
-                    with open(config_path, "r") as f:
+                    with open(config_path) as f:
                         self._special_placements = json.load(f)
                     print(f"Loaded special placements from: {config_path}")
                     return

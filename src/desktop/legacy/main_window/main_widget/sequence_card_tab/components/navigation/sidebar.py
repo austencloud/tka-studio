@@ -1,9 +1,11 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from typing import TYPE_CHECKING
-from .page_preview_column_selector import PagePreviewColumnSelector
+
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtWidgets import QApplication, QVBoxLayout, QWidget
+
 from .length_scroll_area import LengthScrollArea
+from .page_preview_column_selector import PagePreviewColumnSelector
 from .sidebar_header import SidebarHeader
 from .sidebar_styler import SidebarStyler
 from .transition_overlay import TransitionOverlay
@@ -52,9 +54,7 @@ class SequenceCardNavSidebar(QWidget):
 
     def on_column_count_changed(self, column_count: int):
         try:
-            scroll_position = (
-                self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().value()
-            )
+            scroll_position = self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().value()
 
             self.sequence_card_tab.setCursor(Qt.CursorShape.WaitCursor)
             self.sequence_card_tab.header.description_label.setText(

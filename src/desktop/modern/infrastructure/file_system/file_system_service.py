@@ -48,7 +48,7 @@ class FileSystemService(IFileSystemService):
             UnicodeDecodeError: If file encoding is invalid
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             logger.debug(f"Successfully read file: {file_path}")

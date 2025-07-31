@@ -6,11 +6,12 @@ without the tight coupling and testing issues of the original singleton pattern.
 """
 
 from typing import TYPE_CHECKING, Optional
-from .dependency_container import get_container, DependencyContainer
+
+from .dependency_container import DependencyContainer, get_container
 
 if TYPE_CHECKING:
-    from interfaces.settings_manager_interface import ISettingsManager
     from interfaces.json_manager_interface import IJsonManager
+    from interfaces.settings_manager_interface import ISettingsManager
     from objects.arrow.arrow import Arrow
 
 
@@ -29,7 +30,7 @@ class ApplicationContext:
             container: Dependency container. If None, uses the global container.
         """
         self._container = container or get_container()
-        self._selected_arrow: Optional["Arrow"] = None
+        self._selected_arrow: Optional[Arrow] = None
 
     @property
     def settings_manager(self) -> "ISettingsManager":

@@ -1,10 +1,12 @@
-import json
 from datetime import datetime
+import json
 from typing import TYPE_CHECKING
+
 from enums.letter.letter_type import LetterType
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
-from ..browse_tab_section_header import BrowseTabSectionHeader
 from PIL import Image
+
+from ..browse_tab_section_header import BrowseTabSectionHeader
 
 if TYPE_CHECKING:
     from .sequence_picker import SequencePicker

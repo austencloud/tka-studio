@@ -1,10 +1,16 @@
 from typing import TYPE_CHECKING, Union
-from enums.letter.letter_type import LetterType
 
 from enums.letter.letter import LetterCondition
+from enums.letter.letter_type import LetterType
+from objects.arrow.arrow import Arrow
 
+from .mirrored_turns_tuple_generator import MirroredTurnsTupleGenerator
 from .turns_tuple_generators.base_turns_tuple_generator import BaseTurnsTupleGenerator
 from .turns_tuple_generators.color_turns_tuple_generator import ColorTurnsTupleGenerator
+from .turns_tuple_generators.gamma_turns_tuple_generator import GammaTurnsTupleGenerator
+from .turns_tuple_generators.lambda_dash_turns_tuple_generator import (
+    LambdaDashTurnsTupleGenerator,
+)
 from .turns_tuple_generators.lambda_turns_tuple_generator import (
     LambdaTurnsTupleGenerator,
 )
@@ -20,13 +26,6 @@ from .turns_tuple_generators.type4_turns_tuple_generator import Type4TurnsTupleG
 from .turns_tuple_generators.type56_turns_tuple_generator import (
     Type56TurnsTupleGenerator,
 )
-from .turns_tuple_generators.gamma_turns_tuple_generator import GammaTurnsTupleGenerator
-from .turns_tuple_generators.lambda_dash_turns_tuple_generator import (
-    LambdaDashTurnsTupleGenerator,
-)
-
-from .mirrored_turns_tuple_generator import MirroredTurnsTupleGenerator
-from objects.arrow.arrow import Arrow
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

@@ -1,19 +1,15 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication
 
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.elements.views.GE_pictograph_view import (
         GE_PictographView,
     )
-
-
-from PyQt6.QtCore import Qt
 
 
 class ArrowMovementManager:
@@ -37,11 +33,7 @@ class ArrowMovementManager:
         turns_tuple = TurnsTupleGenerator().generate_turns_tuple(self.ge_pictograph)
         self.data_updater.update_arrow_adjustments_in_json(adjustment, turns_tuple)
         self.data_updater.mirrored_entry_manager.update_mirrored_entry_in_json()
-        for (
-            pictograph
-        ) in (
-            self.ge_pictograph.main_widget.pictograph_collector.collect_all_pictographs()
-        ):
+        for pictograph in self.ge_pictograph.main_widget.pictograph_collector.collect_all_pictographs():
             if pictograph.state.letter == self.ge_pictograph.state.letter:
                 pictograph.managers.updater.placement_updater.update()
 

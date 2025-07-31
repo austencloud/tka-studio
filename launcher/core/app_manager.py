@@ -3,10 +3,10 @@ Application Manager for TKA Unified Launcher.
 Handles launching and managing TKA applications.
 """
 
-import subprocess
-import sys
 from pathlib import Path
+import subprocess
 from typing import Dict, Optional
+
 from PyQt6.QtCore import QObject, pyqtSignal
 
 

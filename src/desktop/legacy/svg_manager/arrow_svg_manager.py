@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING, Union
-from utils.path_helpers import get_image_path
-from PyQt6.QtSvg import QSvgRenderer
+
 from objects.arrow.arrow import Arrow
-from data.constants import CLOCK, COUNTER, IN, NO_ROT, OUT, FLOAT  # Add FLOAT here
+from PyQt6.QtSvg import QSvgRenderer
+from utils.path_helpers import get_image_path
+
+from data.constants import CLOCK, COUNTER, FLOAT, IN, OUT  # Add FLOAT here
 
 if TYPE_CHECKING:
     from svg_manager.graphical_object_svg_manager import (

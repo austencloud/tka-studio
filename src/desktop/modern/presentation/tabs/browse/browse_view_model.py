@@ -16,7 +16,7 @@ from desktop.modern.presentation.tabs.browse.models import FilterType
 class BrowseViewModel(QObject):
     """
     ViewModel for the Browse tab implementing MVVM pattern.
-    
+
     Manages view-specific state and provides signals for UI updates.
     Decouples view state from business logic.
     """
@@ -31,7 +31,7 @@ class BrowseViewModel(QObject):
 
     def __init__(self):
         super().__init__()
-        
+
         # View state
         self._current_sequences: List[SequenceData] = []
         self._selected_sequence_id: Optional[str] = None
@@ -127,10 +127,10 @@ class BrowseViewModel(QObject):
         """Get human-readable description of current filter."""
         if self._current_filter_type is None:
             return "All sequences"
-        
+
         filter_type = self._current_filter_type
         filter_value = self._current_filter_value
-        
+
         if filter_type == FilterType.STARTING_LETTER:
             return f"Sequences starting with {filter_value}"
         elif filter_type == FilterType.CONTAINS_LETTERS:

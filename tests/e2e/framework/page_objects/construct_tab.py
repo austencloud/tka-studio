@@ -141,10 +141,7 @@ class ConstructTabPage(BasePage):
         """
         if name == "tab_widget":
             return self._find_tab_widget()
-        elif name == "construct_tab_content":
-            tab_widget = self._find_tab_widget()
-            return tab_widget.currentWidget() if tab_widget else None
-        elif name == "current_tab":
+        elif name == "construct_tab_content" or name == "current_tab":
             tab_widget = self._find_tab_widget()
             return tab_widget.currentWidget() if tab_widget else None
 
@@ -405,8 +402,7 @@ class ConstructTabPage(BasePage):
             return False
 
         # Find the first pictograph view and click it
-        from PyQt6.QtCore import QPoint, Qt
-        from PyQt6.QtGui import QMouseEvent
+        from PyQt6.QtCore import Qt
         from PyQt6.QtWidgets import QGraphicsView
 
         pictograph_views = start_position_widget.findChildren(QGraphicsView)

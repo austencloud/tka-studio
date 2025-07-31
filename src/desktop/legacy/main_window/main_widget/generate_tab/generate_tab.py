@@ -1,30 +1,27 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QSpacerItem, QSizePolicy
 from typing import TYPE_CHECKING
 
-
+from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
 from main_window.main_widget.generate_tab.circular.CAP_type_picker.CAP_picker import (
     CAPPicker,
 )
-from interfaces.settings_manager_interface import ISettingsManager
-from interfaces.json_manager_interface import IJsonManager
+from PyQt6.QtWidgets import QSizePolicy, QSpacerItem, QVBoxLayout, QWidget
 
-from .generate_tab_layout_manager import GenerateTabLayoutManager
-from .generate_tab_controller import GenerateTabController
-
-from .widgets.generator_type_toggle import GeneratorTypeToggle
-from .widgets.level_selector.level_selector import LevelSelector
-from .widgets.generate_tab_length_adjuster import GenerateTabLengthAdjuster
-from .widgets.turn_intensity_adjuster import TurnIntensityAdjuster
-from .widgets.prop_continuity_toggle import PropContinuityToggle
-from .widgets.slice_size_toggle import SliceSizeToggle
+from .circular.circular_sequence_builder import CircularSequenceBuilder
+from .customize_your_sequence_label import CustomizeSequenceLabel
+from .freeform.freeform_sequence_builder import FreeFormSequenceBuilder
 from .freeform.letter_type_picker_widget.letter_type_picker_widget import (
     LetterTypePickerWidget,
 )
-from .customize_your_sequence_label import CustomizeSequenceLabel
 from .generate_sequence_button import GenerateSequenceButton
-
-from .freeform.freeform_sequence_builder import FreeFormSequenceBuilder
-from .circular.circular_sequence_builder import CircularSequenceBuilder
+from .generate_tab_controller import GenerateTabController
+from .generate_tab_layout_manager import GenerateTabLayoutManager
+from .widgets.generate_tab_length_adjuster import GenerateTabLengthAdjuster
+from .widgets.generator_type_toggle import GeneratorTypeToggle
+from .widgets.level_selector.level_selector import LevelSelector
+from .widgets.prop_continuity_toggle import PropContinuityToggle
+from .widgets.slice_size_toggle import SliceSizeToggle
+from .widgets.turn_intensity_adjuster import TurnIntensityAdjuster
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

@@ -4,7 +4,6 @@ Simple UI Testing Framework - Chunk 2: Component Initialization
 Initializes workbench and graph editor with real data.
 """
 
-
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 
@@ -49,7 +48,9 @@ class ComponentInitializer:
             )
 
             # Create graph editor
-            from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+            from desktop.modern.presentation.components.graph_editor.graph_editor import (
+                GraphEditor,
+            )
 
             graph_editor = GraphEditor(
                 graph_service=graph_service,

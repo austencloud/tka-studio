@@ -6,8 +6,8 @@ Extracted from the monolithic sequence management service to focus
 solely on validation logic and sequence integrity checks.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import Any, Dict, List, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 class ValidationError(Exception):
     """Custom exception for validation errors."""
-
 
 
 class ISequenceValidator(ABC):

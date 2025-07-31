@@ -7,7 +7,8 @@ throughout the application, creating a cleaner console output.
 
 import logging
 import re
-from typing import List, Pattern, Set
+from re import Pattern
+from typing import List, Set
 
 
 class AppLogFilter(logging.Filter):

@@ -8,6 +8,8 @@ the specific microservices they need instead of going through adapters.
 import logging
 from typing import Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -16,8 +18,9 @@ from desktop.modern.application.services.sequence.sequence_start_position_manage
 )
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import QtSequenceLoaderAdapter
-from PyQt6.QtCore import QObject, pyqtSignal
+from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import (
+    QtSequenceLoaderAdapter,
+)
 
 logger = logging.getLogger(__name__)
 

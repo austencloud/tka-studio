@@ -1,14 +1,15 @@
-from typing import TYPE_CHECKING
 from enum import Enum
-from PyQt6.QtWidgets import QWidget, QStackedWidget
+from typing import TYPE_CHECKING
+
+from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 from .author_section import AuthorSection
 from .contains_letter_section import ContainsLettersSection
+from .filter_by_level_section import FilterByLevelSection
+from .grid_mode_section import GridModeSection
 from .initial_filter_choice_widget.initial_filter_choice_widget import (
     InitialFilterChoiceWidget,
 )
-from .grid_mode_section import GridModeSection
-from .filter_by_level_section import FilterByLevelSection
 from .sequence_length_section import SequenceLengthSection
 from .starting_letter_section import StartingLetterSection
 from .starting_position_section import StartingPositionSection

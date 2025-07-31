@@ -13,61 +13,61 @@ from PyQt6.QtWidgets import QComboBox, QFrame, QLabel, QLineEdit, QVBoxLayout
 class UserSettingsCard(QFrame):
     """
     User settings card containing user information controls.
-    
+
     Provides controls for:
     - User name selection/input
     - Notes/comments input
     """
-    
+
     # Signal emitted when user settings change
     user_setting_changed = pyqtSignal(str, str)  # setting_name, value
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("user_settings_card")
-        
+
         # Control references
         self.user_combo = None
         self.notes_input = None
-        
+
         self._setup_ui()
         self._setup_connections()
         self._apply_styling()
-    
+
     def _setup_ui(self):
         """Setup the UI layout."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 15, 15, 15)
         layout.setSpacing(10)
-        
+
         # Title
         title = QLabel("User Settings")
         title.setObjectName("subsection_title")
         title.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         layout.addWidget(title)
-        
+
         # User name selection
         user_label = QLabel("User Name:")
         user_label.setObjectName("setting_label")
         layout.addWidget(user_label)
-        
+
         self.user_combo = QComboBox()
         self.user_combo.setObjectName("setting_combo")
         self.user_combo.setEditable(True)
         self.user_combo.addItems(["Default User", "Admin", "Guest"])
         self.user_combo.setCurrentText("Default User")
         layout.addWidget(self.user_combo)
-        
+
         # Notes input
         notes_label = QLabel("Notes/Comments:")
         notes_label.setObjectName("setting_label")
         layout.addWidget(notes_label)
-        
+
         self.notes_input = QLineEdit()
         self.notes_input.setObjectName("setting_input")
         self.notes_input.setPlaceholderText("Optional notes or comments...")
         layout.addWidget(self.notes_input)
-    
+
     def _setup_connections(self):
         """Setup signal connections."""
         self.user_combo.currentTextChanged.connect(
@@ -76,7 +76,7 @@ class UserSettingsCard(QFrame):
         self.notes_input.textChanged.connect(
             lambda text: self.user_setting_changed.emit("notes", text)
         )
-    
+
     def _apply_styling(self):
         """Apply glassmorphism styling."""
         self.setStyleSheet("""
@@ -171,14 +171,14 @@ class UserSettingsCard(QFrame):
                 color: rgba(255, 255, 255, 0.5);
             }
         """)
-    
+
     def get_user_settings(self) -> dict:
         """Get current user settings as a dictionary."""
         return {
             "user_name": self.user_combo.currentText(),
             "notes": self.notes_input.text(),
         }
-    
+
     def set_user_settings(self, settings: dict):
         """Set user settings from a dictionary."""
         if "user_name" in settings:

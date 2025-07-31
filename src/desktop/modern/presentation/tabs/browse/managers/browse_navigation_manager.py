@@ -8,8 +8,8 @@ This class is responsible for:
 - Maintaining navigation history and state
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -66,22 +66,23 @@ class BrowseNavigationManager(QObject):
         try:
             self.viewer_panel = viewer_panel
             logger.info(f"🔗 Viewer panel set: {viewer_panel is not None}")
-            
+
             # Validate the viewer panel has required methods
             if viewer_panel is not None:
-                if hasattr(viewer_panel, 'show_sequence'):
+                if hasattr(viewer_panel, "show_sequence"):
                     logger.info("✅ Viewer panel has show_sequence method")
                 else:
                     logger.error("❌ Viewer panel missing show_sequence method")
-                    
+
                 # Log the type for debugging
                 logger.info(f"🔍 Viewer panel type: {type(viewer_panel).__name__}")
             else:
                 logger.warning("⚠️ Viewer panel set to None")
-                
+
         except Exception as e:
             logger.error(f"❌ Failed to set viewer panel: {e}")
             import traceback
+
             traceback.print_exc()
 
     def navigate_to_filter_selection(self) -> None:
@@ -114,15 +115,18 @@ class BrowseNavigationManager(QObject):
 
             # CRITICAL FIX: Validate viewer panel is available before proceeding
             if not self.viewer_panel:
-                logger.error(f"❌ viewer_panel is None - cannot show sequence")
-                logger.error(f"❌ This indicates a DI initialization order problem")
+                logger.error("❌ viewer_panel is None - cannot show sequence")
+                logger.error("❌ This indicates a DI initialization order problem")
                 # Try to recover by waiting a bit and checking again
                 from PyQt6.QtCore import QTimer
-                QTimer.singleShot(100, lambda: self._retry_navigate_to_viewer(sequence_data))
+
+                QTimer.singleShot(
+                    100, lambda: self._retry_navigate_to_viewer(sequence_data)
+                )
                 return
 
             if not sequence_data:
-                logger.error(f"❌ sequence_data is None - cannot show sequence")
+                logger.error("❌ sequence_data is None - cannot show sequence")
                 return
 
             # Update the viewer panel with sequence data
@@ -132,7 +136,7 @@ class BrowseNavigationManager(QObject):
                 )
                 self.viewer_panel.show_sequence(sequence_data)
             else:
-                logger.error(f"❌ viewer_panel missing show_sequence method")
+                logger.error("❌ viewer_panel missing show_sequence method")
                 return
 
             # Update current panel state
@@ -148,15 +152,16 @@ class BrowseNavigationManager(QObject):
         except Exception as e:
             logger.error(f"❌ Failed to navigate to viewer: {e}")
             import traceback
+
             traceback.print_exc()
 
     def _retry_navigate_to_viewer(self, sequence_data) -> None:
         """Retry navigation to viewer after a short delay (recovery mechanism)."""
         if self.viewer_panel:
-            logger.info(f"🔄 Retrying navigation to viewer - panel now available")
+            logger.info("🔄 Retrying navigation to viewer - panel now available")
             self.navigate_to_viewer(sequence_data)
         else:
-            logger.error(f"❌ Viewer panel still not available after retry - giving up")
+            logger.error("❌ Viewer panel still not available after retry - giving up")
 
     def go_back(self) -> bool:
         """
@@ -310,7 +315,7 @@ class BrowseNavigationManager(QObject):
 
     def log_navigation_state(self) -> None:
         """Log current navigation state for debugging."""
-        logger.debug(f"Navigation State:")
+        logger.debug("Navigation State:")
         logger.debug(f"  Current: {self.get_panel_display_name(self.current_panel)}")
         if self.previous_panel:
             logger.debug(

@@ -6,9 +6,10 @@ Service for handling navigation and scrolling within the sequence browser.
 
 from typing import List, Optional
 
-from desktop.modern.core.interfaces.browse_services import INavigationHandler
 from PyQt6.QtCore import QPoint
 from PyQt6.QtWidgets import QGridLayout, QLabel, QScrollArea
+
+from desktop.modern.core.interfaces.browse_services import INavigationHandler
 
 
 class NavigationHandlerService(INavigationHandler):

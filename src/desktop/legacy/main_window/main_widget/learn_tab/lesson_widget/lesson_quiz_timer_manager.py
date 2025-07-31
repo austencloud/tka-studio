@@ -1,7 +1,8 @@
 # quiz_timer_manager.py
 
-from PyQt6.QtCore import QTimer
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QTimer
 
 if TYPE_CHECKING:
     from .lesson_widget import LessonWidget

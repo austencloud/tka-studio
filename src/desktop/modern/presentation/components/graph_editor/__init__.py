@@ -23,16 +23,16 @@ Usage:
 """
 
 # Main public API
-from .graph_editor import GraphEditor
-
-# Individual components (for advanced usage and testing)
-from .managers.signal_coordinator import GraphEditorSignalCoordinator
-from .managers.layout_manager import GraphEditorLayoutManager
-from .managers.state_manager import GraphEditorStateManager
+from .components.adjustment_panel import AdjustmentPanel
 
 # UI components (for compatibility)
 from .components.pictograph_container import GraphEditorPictographContainer
-from .components.adjustment_panel import AdjustmentPanel
+from .graph_editor import GraphEditor
+from .managers.layout_manager import GraphEditorLayoutManager
+
+# Individual components (for advanced usage and testing)
+from .managers.signal_coordinator import GraphEditorSignalCoordinator
+from .managers.state_manager import GraphEditorStateManager
 
 __all__ = [
     # Main public API

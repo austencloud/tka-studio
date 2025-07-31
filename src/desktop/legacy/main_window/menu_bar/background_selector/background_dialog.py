@@ -1,5 +1,6 @@
 # background_dialog.py
 from typing import TYPE_CHECKING
+
 from ..base_options_dialog import BaseOptionsDialog
 
 if TYPE_CHECKING:

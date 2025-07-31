@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from .beat_deleter import BeatDeleter
 
@@ -27,9 +26,7 @@ class WidgetCollector:
         return [widget for widget in widgets if widget]
 
     def _get_GE_pictograph_items(self):
-        GE_pictograph = (
-            self.deleter.beat_frame.sequence_workbench.graph_editor.pictograph_container.GE_view.pictograph
-        )
+        GE_pictograph = self.deleter.beat_frame.sequence_workbench.graph_editor.pictograph_container.GE_view.pictograph
 
         items = []
         items.extend(GE_pictograph.elements.arrows.values())

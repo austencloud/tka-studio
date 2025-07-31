@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout
-from PyQt6.QtCore import pyqtSignal, Qt
+
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QWidget
 
 if TYPE_CHECKING:
     from main_window.menu_bar.menu_bar import MenuBarWidget

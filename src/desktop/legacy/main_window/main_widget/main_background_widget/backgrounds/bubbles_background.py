@@ -1,19 +1,18 @@
 import random
 
+from main_window.main_widget.main_background_widget.backgrounds.base_background import (
+    BaseBackground,
+)
+from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import (
     QColor,
-    QPainter,
     QLinearGradient,
+    QPainter,
     QPixmap,
     QRadialGradient,
     QTransform,
 )
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import Qt, QPointF
-
-from main_window.main_widget.main_background_widget.backgrounds.base_background import (
-    BaseBackground,
-)
 from utils.path_helpers import get_image_path
 
 

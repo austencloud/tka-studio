@@ -1,10 +1,11 @@
 # StarfieldBackgroundManager: Combines all managers and handles rendering
+from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtWidgets import QWidget
+
 from ..base_background import BaseBackground
 from .comet_manager import CometManager
 from .moon_manager import MoonManager
 from .star_manager import StarManager
-from PyQt6.QtGui import QColor, QPainter
-from PyQt6.QtWidgets import QWidget
 from .ufo_manager.ufo_manager import UFOManager
 
 

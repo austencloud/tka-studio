@@ -6,10 +6,11 @@ Extracted from ThumbnailImageLabel to follow Single Responsibility Principle.
 
 import logging
 from typing import TYPE_CHECKING, Optional
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 
-from data.constants import GOLD, BLUE
+from data.constants import BLUE, GOLD
 
 if TYPE_CHECKING:
     from ..thumbnail_box import ThumbnailBox

@@ -1,24 +1,24 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QFrame,
-    QVBoxLayout,
-    QHBoxLayout,
-    QSizePolicy,
-    QStackedLayout,
-)
-from PyQt6.QtCore import Qt
 
+from legacy_settings_manager.legacy_settings_manager import pyqtSignal
 from main_window.main_widget.sequence_workbench.graph_editor.graph_editor_animator import (
     GraphEditorAnimator,
 )
 from main_window.main_widget.sequence_workbench.graph_editor.legacy_graph_editor_toggle_tab import (
     LegacyGraphEditorToggleTab,
 )
-from legacy_settings_manager.legacy_settings_manager import pyqtSignal
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QSizePolicy,
+    QStackedLayout,
+    QVBoxLayout,
+)
 
+from .adjustment_panel.legacy_adjustment_panel import LegacyAdjustmentPanel
 from .arrow_selection_manager import ArrowSelectionManager
 from .graph_editor_layout_manager import GraphEditorLayoutManager
-from .adjustment_panel.legacy_adjustment_panel import LegacyAdjustmentPanel
 from .pictograph_container.legacy_GE_pictograph_container import (
     LegacyGraphEditorPictographContainer,
 )

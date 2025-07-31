@@ -4,14 +4,14 @@ Migration adapters to help transition from AppContext singleton to dependency in
 These adapters provide backward compatibility while gradually migrating to the new system.
 """
 
-from typing import TYPE_CHECKING, Optional, Any
 import logging
+from typing import TYPE_CHECKING, Any, Optional
 
 from .application_context import ApplicationContext
 
 if TYPE_CHECKING:
-    from interfaces.settings_manager_interface import ISettingsManager
     from interfaces.json_manager_interface import IJsonManager
+    from interfaces.settings_manager_interface import ISettingsManager
     from objects.arrow.arrow import Arrow
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class AppContextAdapter:
             app_context: The new application context with dependency injection
         """
         self._app_context = app_context
-        self._selected_arrow: Optional["Arrow"] = None
+        self._selected_arrow: Optional[Arrow] = None
 
     @classmethod
     def settings_manager(cls) -> "ISettingsManager":

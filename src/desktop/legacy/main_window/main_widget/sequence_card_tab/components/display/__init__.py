@@ -1,13 +1,13 @@
-from .scroll_area import SequenceCardScrollArea
+from .image_processor import ImageProcessor
+from .layout_calculator import LayoutCalculator
+from .page_renderer import PageRenderer
 from .printable_displayer import PrintableDisplayer
+from .scroll_area import SequenceCardScrollArea
+from .scroll_view import ScrollView
 
 # Core components
 from .sequence_display_manager import SequenceDisplayManager
-from .image_processor import ImageProcessor
 from .sequence_loader import SequenceLoader
-from .layout_calculator import LayoutCalculator
-from .page_renderer import PageRenderer
-from .scroll_view import ScrollView
 
 __all__ = [
     # Public components

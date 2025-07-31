@@ -1,17 +1,15 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QLabel
-
 from typing import TYPE_CHECKING, Union
 
 from legacy_settings_manager.global_settings.app_context import AppContext
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
-    from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box import (
-        ThumbnailBox,
-    )
     from main_window.main_widget.browse_tab.sequence_viewer.sequence_viewer import (
         SequenceViewer,
+    )
+    from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box import (
+        ThumbnailBox,
     )
 
 
@@ -24,7 +22,7 @@ class VariationNumberLabel(QLabel):
             )
         else:
             self.hide()
-        self.parent: Union["ThumbnailBox", "SequenceViewer"] = parent
+        self.parent: Union[ThumbnailBox, SequenceViewer] = parent
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def update_index(self, index: int):

@@ -1,33 +1,31 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QWidget,
-    QGridLayout,
-    QLabel,
-    QComboBox,
-    QLineEdit,
-    QCheckBox,
-    QFrame,
-    QPushButton,
-)
-from PyQt6.QtCore import pyqtSignal
-
 from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab_button import (
     ImageExportTabButton,
 )
 from main_window.main_widget.settings_dialog.ui.image_export.pictograph_dataset_exporter import (
     PictographDatasetExporter,
 )
-
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
-        ImageExportTab,
-    )
     from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
+    )
+    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
+        ImageExportTab,
     )
 
 

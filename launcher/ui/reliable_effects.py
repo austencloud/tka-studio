@@ -6,10 +6,11 @@ Implements reliable visual effects using only standard QGraphicsEffect
 classes that are guaranteed to work in PyQt6.
 """
 
-from typing import Dict, Any, Optional
-from PyQt6.QtWidgets import QWidget, QGraphicsDropShadowEffect, QGraphicsOpacityEffect
-from PyQt6.QtCore import QPropertyAnimation, QEasingCurve, pyqtSignal, QObject
+from typing import Optional
+
+from PyQt6.QtCore import QEasingCurve, QObject, QPropertyAnimation
 from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QGraphicsDropShadowEffect, QGraphicsOpacityEffect, QWidget
 
 
 class ReliableShadowManager(QObject):

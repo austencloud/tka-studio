@@ -5,14 +5,15 @@ Handles layout calculations and responsive design.
 Replicates legacy system's exact page sizing and grid layout specifications.
 """
 
+from enum import Enum
 import logging
 from typing import Tuple
-from enum import Enum
-from PyQt6.QtCore import QSize, QRect
+
+from PyQt6.QtCore import QRect, QSize
 
 from desktop.modern.core.interfaces.sequence_card_services import (
-    ISequenceCardLayoutService,
     GridDimensions,
+    ISequenceCardLayoutService,
 )
 
 logger = logging.getLogger(__name__)

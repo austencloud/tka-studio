@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from styles.styled_button import StyledButton
 
 if TYPE_CHECKING:
@@ -135,7 +136,7 @@ class SequencePickerGoBackButton(StyledButton):
 
                 logger.info(f"Filter selector index: {filter_selector_index}")
                 filter_stack.setCurrentIndex(filter_selector_index)
-                logger.info(f"✅ Filter stack switched to filter selector")
+                logger.info("✅ Filter stack switched to filter selector")
 
             else:
                 logger.error("❌ Browse tab has no internal_left_stack attribute")
@@ -253,6 +254,7 @@ class SequencePickerGoBackButton(StyledButton):
     def event(self, event):
         """Override general event handler to catch all events."""
         import logging
+
         from PyQt6.QtCore import QEvent
 
         logger = logging.getLogger(__name__)
@@ -351,7 +353,7 @@ class SequencePickerGoBackButton(StyledButton):
             # Update appearance after all size changes
             self.update_appearance()
 
-        except Exception as e:
+        except Exception:
             # Fallback to default size if calculation fails
             self.setFixedSize(80, 30)
             font = self.font()

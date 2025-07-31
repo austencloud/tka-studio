@@ -125,7 +125,7 @@ def setup_smart_logging(environment: str = None) -> LoggingConfig:
 
     print(f"🔧 Smart logging configured for '{environment}' environment")
     print(f"   Performance threshold: {config.performance_threshold_ms}ms")
-    print(f"   Arrow positioning verbosity: REDUCED")
+    print("   Arrow positioning verbosity: REDUCED")
 
     return config
 

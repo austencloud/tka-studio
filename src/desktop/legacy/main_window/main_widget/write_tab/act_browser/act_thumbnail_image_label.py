@@ -1,13 +1,12 @@
-from PIL import Image
 import json
-from PyQt6.QtCore import Qt, QMimeData, QEvent, QByteArray
-from PyQt6.QtGui import QCursor, QMouseEvent, QDrag
 from typing import TYPE_CHECKING
 
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_image_label import (
     ThumbnailImageLabel,
 )
-
+from PIL import Image
+from PyQt6.QtCore import QByteArray, QEvent, QMimeData, Qt
+from PyQt6.QtGui import QCursor, QDrag, QMouseEvent
 
 if TYPE_CHECKING:
     from main_window.main_widget.write_tab.act_browser.act_browser import (

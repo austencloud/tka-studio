@@ -20,24 +20,15 @@ Architecture:
 """
 
 import logging
-from typing import List, Optional
 
 from PyQt6.QtCore import (
-    QEasingCurve,
-    QPropertyAnimation,
-    QRect,
     QSize,
     Qt,
     QTimer,
     pyqtSignal,
 )
-from PyQt6.QtGui import QColor, QFont, QPainter, QPalette, QPixmap
 from PyQt6.QtWidgets import (
-    QFrame,
     QGridLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
     QScrollArea,
     QSizePolicy,
     QVBoxLayout,
@@ -85,7 +76,6 @@ class ApplicationGridWidget(QWidget):
     def _log_initial_sizing(self):
         """Log initial sizing information for debugging."""
         # Sizing analysis removed to reduce startup noise
-        pass
 
     def sizeHint(self):
         """Provide a reasonable size hint for the application grid."""

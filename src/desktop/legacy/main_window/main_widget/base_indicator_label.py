@@ -1,7 +1,8 @@
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QLabel, QGraphicsOpacityEffect
-from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation, pyqtSlot
 from typing import TYPE_CHECKING, Union
+
+from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSlot
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QGraphicsOpacityEffect, QLabel
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (

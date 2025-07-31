@@ -1,16 +1,17 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QApplication, QMessageBox
-from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import QPixmap, QResizeEvent
 
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.ori_picker_box.ori_picker_widget.rotate_button import (
     StyledButton,
 )
 from main_window.main_widget.tab_index import TAB_INDEX
 from main_window.main_widget.tab_name import TabName
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QPixmap, QResizeEvent
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QMessageBox, QWidget
+from utils.path_helpers import get_image_path
+
 from ...full_screen_image_overlay import FullScreenImageOverlay
 from ..temp_beat_frame.temp_beat_frame import TempBeatFrame
-from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
     from .sequence_viewer import SequenceViewer
@@ -50,9 +51,7 @@ class SequenceViewerActionButtonPanel(QWidget):
                     self.browse_tab.deletion_handler.delete_variation(
                         self.sequence_viewer.state.matching_thumbnail_box,
                         (
-                            (
-                                self.sequence_viewer.state.matching_thumbnail_box.state.current_index
-                            )
+                            self.sequence_viewer.state.matching_thumbnail_box.state.current_index
                         ),
                     )
                     if self.sequence_viewer.state.matching_thumbnail_box

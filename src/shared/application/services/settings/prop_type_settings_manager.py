@@ -1,7 +1,10 @@
 from typing import List
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
-from desktop.modern.core.interfaces.tab_settings_interfaces import IPropTypeSettingsManager, PropType
+from desktop.modern.core.interfaces.tab_settings_interfaces import (
+    IPropTypeSettingsManager,
+    PropType,
+)
 
 
 class PropTypeSettingsManager(IPropTypeSettingsManager):

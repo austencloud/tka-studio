@@ -4,22 +4,24 @@ Dialog layout manager for the modern settings dialog.
 Handles UI layout creation and management.
 """
 
+import logging
 from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
     QHBoxLayout,
-    QStackedWidget,
-    QWidget,
     QLabel,
     QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
 )
-import logging
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext
-    from ..ui.settings_dialog_sidebar import SettingsDialogSidebar
+
     from ..components.modern_action_buttons import ModernActionButtons
+    from ..ui.settings_dialog_sidebar import SettingsDialogSidebar
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +43,9 @@ class DialogLayoutManager:
 
         # Layout components
         self.main_container: QWidget = None
-        self.sidebar: "SettingsDialogSidebar" = None
+        self.sidebar: SettingsDialogSidebar = None
         self.content_area: QStackedWidget = None
-        self.action_buttons: "ModernActionButtons" = None
+        self.action_buttons: ModernActionButtons = None
         self.close_button: QPushButton = None
 
     def setup_layout(self) -> dict:

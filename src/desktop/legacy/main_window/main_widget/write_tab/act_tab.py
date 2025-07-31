@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout
+
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
+
 from .act_browser.act_browser import ActBrowser
 from .act_sheet.act_sheet import ActSheet
 

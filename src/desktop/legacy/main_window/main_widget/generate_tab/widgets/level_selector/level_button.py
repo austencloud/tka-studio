@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QStackedLayout
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPixmap, QFont, QMouseEvent
+from PyQt6.QtGui import QFont, QMouseEvent, QPixmap
+from PyQt6.QtWidgets import QLabel, QStackedLayout, QWidget
 
 
 class LevelButton(QWidget):

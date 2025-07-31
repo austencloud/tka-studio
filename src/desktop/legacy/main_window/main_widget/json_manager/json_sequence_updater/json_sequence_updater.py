@@ -2,23 +2,21 @@ from typing import TYPE_CHECKING
 
 from data.constants import BEAT
 
-
 from .json_duration_updater import JsonDurationUpdater
-from .json_prop_rot_dir_updater import JsonPropRotDirUpdater
-from .json_prop_type_updater import JsonPropTypeUpdater
 from .json_letter_updater import JsonLetterUpdater
 from .json_motion_type_updater import JsonMotionTypeUpdater
+from .json_prop_rot_dir_updater import JsonPropRotDirUpdater
+from .json_prop_type_updater import JsonPropTypeUpdater
 from .json_turns_updater import JsonTurnsUpdater
 
-
 if TYPE_CHECKING:
+    from main_window.main_widget.json_manager.json_manager import JsonManager
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import (
         Beat,
     )
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
-    from main_window.main_widget.json_manager.json_manager import JsonManager
 
 
 class JsonSequenceUpdater:

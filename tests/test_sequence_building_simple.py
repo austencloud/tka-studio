@@ -3,16 +3,15 @@ Simple end-to-end test for sequence building workflow without unicode characters
 """
 
 import logging
-import sys
-import time
 from pathlib import Path
+import sys
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from PyQt6.QtCore import QEventLoop, QObject, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject
 from PyQt6.QtTest import QTest
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget
+from PyQt6.QtWidgets import QTabWidget
 
 # Configure simple logging
 logging.basicConfig(

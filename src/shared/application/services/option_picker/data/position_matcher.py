@@ -12,10 +12,10 @@ from typing import TYPE_CHECKING, Any, Dict, Optional
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
 
 if TYPE_CHECKING:
+    from desktop.modern.domain.models import BeatData
     from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
         PictographPositionMatcher,
     )
-    from desktop.modern.domain.models import BeatData
 
 logger = logging.getLogger(__name__)
 

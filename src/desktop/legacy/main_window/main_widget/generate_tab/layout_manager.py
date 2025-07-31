@@ -1,9 +1,8 @@
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QStackedWidget
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
 from main_window.main_widget.generate_tab.generate_tab_spacer import GenerateTabSpacer
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QVBoxLayout
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab

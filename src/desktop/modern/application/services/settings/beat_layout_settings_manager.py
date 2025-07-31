@@ -11,8 +11,6 @@ from typing import Dict, Tuple
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
-from desktop.modern.core.interfaces.settings_services import IBeatLayoutSettingsManager
-
 logger = logging.getLogger(__name__)
 
 
@@ -214,7 +212,7 @@ class BeatLayoutSettingsManager(QObject):
             # Add current custom setting if different
             current = self.get_layout_for_length(sequence_length)
             current_desc = f"{current[0]}x{current[1]}"
-            if current_desc not in [desc.split()[0] for desc in options.keys()]:
+            if current_desc not in [desc.split()[0] for desc in options]:
                 options[f"{current_desc} (Current)"] = current
 
             return options

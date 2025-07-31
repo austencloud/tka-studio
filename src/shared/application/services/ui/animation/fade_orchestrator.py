@@ -8,9 +8,7 @@ For the complete modern implementation, see:
 """
 
 # For backward compatibility during migration, import from new location
-from .animation_orchestrator import (
-    ModernAnimationOrchestrator as FadeOrchestrator,
-    LegacyFadeManagerWrapper
-)
+from .animation_orchestrator import LegacyFadeManagerWrapper
+from .animation_orchestrator import ModernAnimationOrchestrator as FadeOrchestrator
 
-__all__ = ['FadeOrchestrator', 'LegacyFadeManagerWrapper']
+__all__ = ["FadeOrchestrator", "LegacyFadeManagerWrapper"]

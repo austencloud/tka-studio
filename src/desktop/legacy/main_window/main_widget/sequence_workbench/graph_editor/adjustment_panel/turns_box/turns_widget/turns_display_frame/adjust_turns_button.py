@@ -1,17 +1,18 @@
 import os
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt, QRectF, QByteArray
+
+from PyQt6.QtCore import QByteArray, QRectF, Qt
 from PyQt6.QtGui import (
-    QPainter,
     QColor,
     QCursor,
+    QPainter,
     QPen,
 )
 from PyQt6.QtSvg import QSvgRenderer
-
-from data.constants import BLUE, RED
 from styles.styled_button import StyledButton
 from utils.path_helpers import get_image_path
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
     from ..turns_widget import TurnsWidget
@@ -108,13 +109,13 @@ class AdjustTurnsButton(StyledButton):
             # Check if the file exists
             if os.path.exists(self.svg_path):
                 # Try to open the file directly
-                with open(self.svg_path, "r") as file:
+                with open(self.svg_path) as file:
                     svgData = QByteArray(file.read().encode("utf-8"))
             else:
                 # If the file doesn't exist at the direct path, try using get_image_path
                 resolved_path = get_image_path(os.path.basename(self.svg_path))
                 if os.path.exists(resolved_path):
-                    with open(resolved_path, "r") as file:
+                    with open(resolved_path) as file:
                         svgData = QByteArray(file.read().encode("utf-8"))
                 else:
                     return

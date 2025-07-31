@@ -1,22 +1,24 @@
 from enums.letter.letter import Letter
 from enums.letter.letter_type import LetterType
+from objects.motion.motion import Motion
+
 from data.constants import (
+    BLUE,
+    BOX,
     CLOCKWISE,
     COUNTER_CLOCKWISE,
     DIAMOND,
-    BOX,
-    NORTH,
     EAST,
-    SOUTH,
-    WEST,
+    NORTH,
     NORTHEAST,
-    SOUTHEAST,
-    SOUTHWEST,
     NORTHWEST,
     RED,
-    BLUE,
+    SOUTH,
+    SOUTHEAST,
+    SOUTHWEST,
+    WEST,
 )
-from objects.motion.motion import Motion
+
 from .base_location_calculator import BaseLocationCalculator
 
 

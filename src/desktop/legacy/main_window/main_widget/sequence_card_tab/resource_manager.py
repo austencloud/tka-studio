@@ -1,15 +1,13 @@
 # src/main_window/main_widget/sequence_card_tab/tab.py
-import os
 import gc
+import os
+from typing import TYPE_CHECKING
+
 import psutil
 from PyQt6.QtCore import QTimer
-
 from utils.path_helpers import (
     get_sequence_card_image_exporter_path,
 )
-
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.sequence_card_tab import (

@@ -12,9 +12,10 @@ Phase 0 - Days 2-3: Strategic partial refactoring for Sprint 2 preparation.
 from abc import ABC, abstractmethod
 from typing import Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class IWorkbenchButtonInterface(ABC):

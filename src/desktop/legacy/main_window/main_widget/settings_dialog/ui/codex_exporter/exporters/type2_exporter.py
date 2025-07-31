@@ -7,8 +7,8 @@ positions and variations.
 
 from typing import TYPE_CHECKING
 
-from .type2.one_zero_turn_exporter import OneZeroTurnExporter
 from .type2.both_non_zero_turn_exporter import BothNonZeroTurnExporter
+from .type2.one_zero_turn_exporter import OneZeroTurnExporter
 
 if TYPE_CHECKING:
     from ..pictograph_data_manager import PictographDataManager

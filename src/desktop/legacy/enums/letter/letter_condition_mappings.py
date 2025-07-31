@@ -1,5 +1,5 @@
-from enums.letter.letter_condition import LetterCondition
 from enums.letter.letter import Letter
+from enums.letter.letter_condition import LetterCondition
 
 letter_condition_mappings = {
     LetterCondition.PRO: [

@@ -7,9 +7,9 @@ This module provides the base functionality for exporting Type 2 pictographs
 
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
     from ...pictograph_data_manager import PictographDataManager
     from ...pictograph_factory import PictographFactory
     from ...pictograph_renderer import PictographRenderer

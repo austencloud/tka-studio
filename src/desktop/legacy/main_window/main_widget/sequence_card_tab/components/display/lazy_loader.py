@@ -1,9 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/lazy_loader.py
 import logging
-from typing import Dict, Set, Optional, Callable, Any
+from typing import Any, Callable, Dict, Optional, Set
+
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QScrollArea
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QScrollArea, QWidget
 
 
 class LazyImageLoader(QObject):
@@ -70,8 +71,8 @@ class LazyImageLoader(QObject):
     def _create_placeholder(self) -> None:
         """Create a placeholder pixmap for unloaded images."""
         try:
-            from PyQt6.QtGui import QPainter, QColor, QFont
-            from PyQt6.QtCore import Qt, QSize
+            from PyQt6.QtCore import QSize, Qt
+            from PyQt6.QtGui import QColor, QFont, QPainter
 
             size = QSize(200, 150)
             self.placeholder_pixmap = QPixmap(size)

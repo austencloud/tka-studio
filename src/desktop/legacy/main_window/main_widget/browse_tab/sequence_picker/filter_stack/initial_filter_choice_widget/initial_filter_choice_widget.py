@@ -1,11 +1,13 @@
-from typing import TYPE_CHECKING, Union, Any
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGridLayout
+from datetime import datetime, timedelta
+from functools import partial
+from typing import TYPE_CHECKING, Any, Union
+
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QResizeEvent
-from functools import partial
-from datetime import datetime, timedelta
+from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QWidget
 
 from data.constants import GRID_MODE
+
 from ..choose_filter_label import ChooseFilterLabel
 from .filter_button_group.filter_button_group import FilterButtonGroup
 

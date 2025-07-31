@@ -3,33 +3,34 @@
 import random
 from typing import TYPE_CHECKING, Any
 
+from main_window.main_widget.sequence_workbench.sequence_workbench import (
+    SequenceWorkbench,
+)
+
 from data.constants import (
     ANTI,
     BEAT,
     BLUE,
     BLUE_ATTRS,
+    CLOCKWISE,
+    COUNTER_CLOCKWISE,
+    DASH,
     END_ORI,
     FLOAT,
     MOTION_TYPE,
+    NO_ROT,
     PREFLOAT_MOTION_TYPE,
     PREFLOAT_PROP_ROT_DIR,
     PRO,
     PROP_ROT_DIR,
     RED,
-    DASH,
     RED_ATTRS,
     START_ORI,
     STATIC,
-    NO_ROT,
-    CLOCKWISE,
-    COUNTER_CLOCKWISE,
     TURNS,
 )
 
 from .sequence_builder_start_position_manager import SequenceBuilderStartPosManager
-from main_window.main_widget.sequence_workbench.sequence_workbench import (
-    SequenceWorkbench,
-)
 
 if TYPE_CHECKING:
     from .generate_tab import GenerateTab

@@ -9,16 +9,16 @@ It imports from the shared animation system to avoid code duplication.
 from shared.application.services.ui.animation.modern_service_registration import (
     AnimationSystemFactory,
     ModernAnimationServiceRegistration,
-    setup_modern_animation_services,
+    create_legacy_adapter,
     create_simple_animation_orchestrator,
-    create_legacy_adapter
+    setup_modern_animation_services,
 )
 
 # Re-export for local imports
 __all__ = [
-    'AnimationSystemFactory',
-    'ModernAnimationServiceRegistration',
-    'setup_modern_animation_services',
-    'create_simple_animation_orchestrator',
-    'create_legacy_adapter'
+    "AnimationSystemFactory",
+    "ModernAnimationServiceRegistration",
+    "setup_modern_animation_services",
+    "create_simple_animation_orchestrator",
+    "create_legacy_adapter",
 ]

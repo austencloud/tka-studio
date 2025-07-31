@@ -1,13 +1,16 @@
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPainterPath
 from PyQt6.QtWidgets import QWidget
 
-from shared.application.services.backgrounds.aurora.blob_animation import AuroraBlobAnimation
+from shared.application.services.backgrounds.aurora.blob_animation import (
+    AuroraBlobAnimation,
+)
 from shared.application.services.backgrounds.aurora.sparkle_animation import (
     AuroraSparkleAnimation,
 )
-from shared.application.services.backgrounds.aurora.wave_effects import AuroraWaveEffects
+from shared.application.services.backgrounds.aurora.wave_effects import (
+    AuroraWaveEffects,
+)
 
 from .base_background import BaseBackground
 

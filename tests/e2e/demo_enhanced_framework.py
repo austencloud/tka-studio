@@ -12,10 +12,9 @@ This script demonstrates the enhanced features of the modern E2E testing framewo
 Run with: python demo_enhanced_framework.py
 """
 
-import os
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 
 def print_banner():

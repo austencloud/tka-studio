@@ -1,7 +1,7 @@
 import logging
 import os
-import sys
 from pathlib import Path
+import sys
 
 # Simple path setup - add project root and run setup_paths
 project_root = Path(__file__).resolve().parent.parent.parent.parent
@@ -168,6 +168,7 @@ def create_main_window(profiler, splash_screen, app_context):
 
 def install_handlers():
     from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
+
     from src.utils.paint_event_supressor import PaintEventSuppressor
 
     # Install paint event suppressor
@@ -223,6 +224,7 @@ def main():
 
     from legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
     from PyQt6.QtCore import QTimer
+
     from src.profiler import Profiler
     from src.splash_screen.splash_screen import SplashScreen
     from src.utils.logging_config import get_logger
@@ -235,7 +237,7 @@ def main():
     logger = get_logger(__name__)
 
     # Log minimal startup information
-    logger.info(f"Kinetic Constructor legacy.0.0")
+    logger.info("Kinetic Constructor legacy.0.0")
     logger.info(f"Python {sys.version.split()[0]}")
 
     if parallel_mode:

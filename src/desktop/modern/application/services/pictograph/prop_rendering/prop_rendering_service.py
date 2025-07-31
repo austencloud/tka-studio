@@ -16,8 +16,8 @@ ARCHITECTURE:
 """
 
 import logging
-import sys
 from pathlib import Path
+import sys
 from typing import Optional
 
 
@@ -158,18 +158,18 @@ class PropRenderingService:
         logger.warning(
             "_get_prop_renderer() is deprecated - using Qt adapter internally"
         )
-        return None  # Qt adapter handles this internally
+        return  # Qt adapter handles this internally
 
     def _create_prop_renderer(self, color: str):
         """DEPRECATED: Direct Qt renderer creation - use adapter instead."""
         logger.warning(
             "_create_prop_renderer() is deprecated - using Qt adapter internally"
         )
-        return None  # Qt adapter handles this internally
+        return  # Qt adapter handles this internally
 
     def _position_prop(self, prop_item, motion_data, color, pictograph_data=None):
         """DEPRECATED: Direct prop positioning - handled by adapter internally."""
         logger.warning(
             "_position_prop() is deprecated - Qt adapter handles positioning"
         )
-        pass  # Qt adapter handles this internally
+        # Qt adapter handles this internally

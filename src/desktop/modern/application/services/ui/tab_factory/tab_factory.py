@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Callable, Dict, Optional
 
 from PyQt6.QtWidgets import QWidget
 
-from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
+from desktop.modern.core.error_handling import StandardErrorHandler
 
 from ..error_recovery.ui_error_recovery_service import UIErrorRecoveryService
 
@@ -77,7 +77,6 @@ class TabFactory:
 
         for tab_def in self.tab_definitions:
             try:
-
                 # Create the tab
                 tab_widget = tab_def.creator_func(container)
 

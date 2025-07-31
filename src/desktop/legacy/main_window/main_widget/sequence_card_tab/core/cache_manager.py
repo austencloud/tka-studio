@@ -1,10 +1,10 @@
-import os
 import json
-import time
-import shutil
+import os
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+import shutil
 import threading
+import time
+from typing import Any, Dict, List, Optional
 
 
 class SequenceCardCacheManager:
@@ -117,7 +117,7 @@ class SequenceCardCacheManager:
                 return None
 
             # Load cache data
-            with open(cache_file, "r", encoding="utf-8") as f:
+            with open(cache_file, encoding="utf-8") as f:
                 cache_data = json.load(f)
 
             # Validate cache data

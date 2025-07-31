@@ -1,5 +1,9 @@
 # strategies/non_hybrid_shift.py
 from typing import Optional
+
+from letter_determination.determination_result import DeterminationResult
+from letter_determination.strategies.base_strategy import LetterDeterminationStrategy
+
 from data.constants import (
     ANTI,
     BLUE,
@@ -20,8 +24,6 @@ from data.constants import (
     RED_ATTRS,
     START_LOC,
 )
-from letter_determination.determination_result import DeterminationResult
-from letter_determination.strategies.base_strategy import LetterDeterminationStrategy
 
 
 class NonHybridShiftStrategy(LetterDeterminationStrategy):

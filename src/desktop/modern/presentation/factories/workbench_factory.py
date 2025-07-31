@@ -15,26 +15,13 @@ except ImportError:
             self.parent = parent
 
     QT_AVAILABLE = False
-from shared.application.services.graph_editor.graph_editor_coordinator import (
-    GraphEditorCoordinator,
-)
 from desktop.modern.application.services.sequence.loader import SequenceLoader
 from desktop.modern.application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
-from shared.application.services.sequence.sequence_dictionary_manager import (
-    SequenceDictionaryManager,
-)
 from desktop.modern.application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
 )
-from shared.application.services.ui.full_screen_viewer import FullScreenViewer
-from shared.application.services.ui.sequence_state_reader import SequenceStateReader
-from shared.application.services.ui.thumbnail_generation_service import (
-    ThumbnailGenerationService,
-)
-from shared.application.services.workbench.beat_selection_service import BeatSelectionService
-from shared.application.services.workbench.workbench_state_manager import WorkbenchStateManager
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
 from desktop.modern.core.interfaces.workbench_services import (
@@ -45,7 +32,26 @@ from desktop.modern.core.interfaces.workbench_services import (
 from desktop.modern.presentation.components.sequence_workbench.sequence_workbench import (
     SequenceWorkbench,
 )
-from desktop.modern.presentation.components.ui.full_screen import FullScreenOverlayFactory
+from desktop.modern.presentation.components.ui.full_screen import (
+    FullScreenOverlayFactory,
+)
+from shared.application.services.graph_editor.graph_editor_coordinator import (
+    GraphEditorCoordinator,
+)
+from shared.application.services.sequence.sequence_dictionary_manager import (
+    SequenceDictionaryManager,
+)
+from shared.application.services.ui.full_screen_viewer import FullScreenViewer
+from shared.application.services.ui.sequence_state_reader import SequenceStateReader
+from shared.application.services.ui.thumbnail_generation_service import (
+    ThumbnailGenerationService,
+)
+from shared.application.services.workbench.beat_selection_service import (
+    BeatSelectionService,
+)
+from shared.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
+)
 
 
 def create_modern_workbench(

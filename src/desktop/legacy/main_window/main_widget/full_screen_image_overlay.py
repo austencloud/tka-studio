@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
+
+from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, QRect
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

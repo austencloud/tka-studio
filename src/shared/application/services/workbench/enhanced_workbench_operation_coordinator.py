@@ -5,7 +5,7 @@ Coordinates workbench operations across multiple services without Qt dependencie
 Handles operation execution, result coordination, and error management.
 
 ENHANCEMENTS:
-- Added export service integration for image and JSON exports  
+- Added export service integration for image and JSON exports
 - Added clipboard service integration for copy operations
 - Enhanced error handling and result reporting
 - Improved operation validation and precondition checking
@@ -18,8 +18,8 @@ Following established patterns:
 - Returns structured results
 """
 
-import logging
 from enum import Enum
+import logging
 from typing import NamedTuple, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -60,7 +60,9 @@ class OperationResult(NamedTuple):
         additional_data: Optional[dict] = None,
     ):
         """Create a successful operation result."""
-        return cls(True, operation_type, message, updated_sequence, None, additional_data)
+        return cls(
+            True, operation_type, message, updated_sequence, None, additional_data
+        )
 
     @classmethod
     def failure_result(
@@ -123,12 +125,14 @@ class EnhancedWorkbenchOperationCoordinator:
         self._fullscreen_service = fullscreen_service
         self._sequence_transformer = sequence_transformer
         self._sequence_persister = sequence_persister
-        
+
         # NEW: Enhanced services
         self._export_service = export_service
         self._clipboard_service = clipboard_service
 
-        logger.debug("EnhancedWorkbenchOperationCoordinator initialized with new export and clipboard services")
+        logger.debug(
+            "EnhancedWorkbenchOperationCoordinator initialized with new export and clipboard services"
+        )
 
     # Dictionary Operations (unchanged)
     def add_to_dictionary(self) -> OperationResult:
@@ -193,18 +197,17 @@ class EnhancedWorkbenchOperationCoordinator:
             sequence = self._state_manager.get_current_sequence()
 
             # Execute export operation
-            success, result_message = self._export_service.export_sequence_image(sequence)
+            success, result_message = self._export_service.export_sequence_image(
+                sequence
+            )
 
             if success:
                 # result_message contains the file path
-                additional_data = {
-                    "file_path": result_message,
-                    "export_type": "image"
-                }
+                additional_data = {"file_path": result_message, "export_type": "image"}
                 return OperationResult.success_result(
-                    OperationType.SAVE_IMAGE, 
-                    "Image saved successfully!", 
-                    additional_data=additional_data
+                    OperationType.SAVE_IMAGE,
+                    "Image saved successfully!",
+                    additional_data=additional_data,
                 )
             else:
                 return OperationResult.failure_result(
@@ -244,29 +247,34 @@ class EnhancedWorkbenchOperationCoordinator:
             sequence = self._state_manager.get_current_sequence()
 
             # Step 1: Export sequence as JSON
-            json_success, json_result = self._export_service.export_sequence_json(sequence)
-            
+            json_success, json_result = self._export_service.export_sequence_json(
+                sequence
+            )
+
             if not json_success:
                 return OperationResult.failure_result(
                     OperationType.COPY_JSON, f"JSON export failed: {json_result}"
                 )
 
             # Step 2: Copy JSON to clipboard
-            clipboard_success, clipboard_message = self._clipboard_service.copy_text_to_clipboard(json_result)
-            
+            clipboard_success, clipboard_message = (
+                self._clipboard_service.copy_text_to_clipboard(json_result)
+            )
+
             if clipboard_success:
                 additional_data = {
                     "json_length": len(json_result),
-                    "sequence_length": sequence.length
+                    "sequence_length": sequence.length,
                 }
                 return OperationResult.success_result(
-                    OperationType.COPY_JSON, 
-                    "JSON copied to clipboard!", 
-                    additional_data=additional_data
+                    OperationType.COPY_JSON,
+                    "JSON copied to clipboard!",
+                    additional_data=additional_data,
                 )
             else:
                 return OperationResult.failure_result(
-                    OperationType.COPY_JSON, f"Clipboard operation failed: {clipboard_message}"
+                    OperationType.COPY_JSON,
+                    f"Clipboard operation failed: {clipboard_message}",
                 )
 
         except Exception as e:
@@ -337,14 +345,14 @@ class EnhancedWorkbenchOperationCoordinator:
 
             additional_data = {
                 "original_length": sequence.length,
-                "mirrored_length": mirrored_sequence.length
+                "mirrored_length": mirrored_sequence.length,
             }
 
             return OperationResult.success_result(
-                OperationType.MIRROR_SEQUENCE, 
-                "Sequence mirrored!", 
+                OperationType.MIRROR_SEQUENCE,
+                "Sequence mirrored!",
                 mirrored_sequence,
-                additional_data
+                additional_data,
             )
 
         except Exception as e:
@@ -379,14 +387,14 @@ class EnhancedWorkbenchOperationCoordinator:
 
             additional_data = {
                 "original_length": sequence.length,
-                "swapped_length": swapped_sequence.length
+                "swapped_length": swapped_sequence.length,
             }
 
             return OperationResult.success_result(
-                OperationType.SWAP_COLORS, 
-                "Colors swapped!", 
+                OperationType.SWAP_COLORS,
+                "Colors swapped!",
                 swapped_sequence,
-                additional_data
+                additional_data,
             )
 
         except Exception as e:
@@ -421,14 +429,14 @@ class EnhancedWorkbenchOperationCoordinator:
 
             additional_data = {
                 "original_length": sequence.length,
-                "rotated_length": rotated_sequence.length
+                "rotated_length": rotated_sequence.length,
             }
 
             return OperationResult.success_result(
-                OperationType.ROTATE_SEQUENCE, 
-                "Sequence rotated!", 
+                OperationType.ROTATE_SEQUENCE,
+                "Sequence rotated!",
                 rotated_sequence,
-                additional_data
+                additional_data,
             )
 
         except Exception as e:
@@ -448,7 +456,9 @@ class EnhancedWorkbenchOperationCoordinator:
         Returns:
             OperationResult with operation details and updated sequence
         """
-        print(f"🗑️ [ENHANCED_COORDINATOR] delete_beat called with beat_index={beat_index}")
+        print(
+            f"🗑️ [ENHANCED_COORDINATOR] delete_beat called with beat_index={beat_index}"
+        )
 
         try:
             # Check preconditions
@@ -472,44 +482,50 @@ class EnhancedWorkbenchOperationCoordinator:
 
             sequence = self._state_manager.get_current_sequence()
             original_length = sequence.length
-            print(f"📊 [ENHANCED_COORDINATOR] Current sequence has {original_length} beats")
+            print(
+                f"📊 [ENHANCED_COORDINATOR] Current sequence has {original_length} beats"
+            )
 
             # Handle start position deletion (delete all beats)
             if beat_index == -1:
-                print("🗑️ [ENHANCED_COORDINATOR] Start position deletion - deleting all beats")
+                print(
+                    "🗑️ [ENHANCED_COORDINATOR] Start position deletion - deleting all beats"
+                )
                 updated_sequence = sequence.update(beats=[])
                 additional_data = {
                     "deletion_type": "all_beats",
                     "original_length": original_length,
-                    "new_length": 0
+                    "new_length": 0,
                 }
-                print(f"✅ [ENHANCED_COORDINATOR] All beats deleted")
+                print("✅ [ENHANCED_COORDINATOR] All beats deleted")
                 return OperationResult.success_result(
-                    OperationType.DELETE_BEAT, 
-                    "All beats deleted!", 
+                    OperationType.DELETE_BEAT,
+                    "All beats deleted!",
                     updated_sequence,
-                    additional_data
+                    additional_data,
                 )
 
             # Execute normal beat deletion
             print(f"🗑️ [ENHANCED_COORDINATOR] Deleting beat at index {beat_index}")
             updated_sequence = self._beat_operations.delete_beat(sequence, beat_index)
             new_length = updated_sequence.length
-            
+
             additional_data = {
                 "deletion_type": "single_beat",
                 "deleted_index": beat_index,
                 "original_length": original_length,
-                "new_length": new_length
+                "new_length": new_length,
             }
-            
-            print(f"✅ [ENHANCED_COORDINATOR] Beat deletion complete, sequence now has {new_length} beats")
+
+            print(
+                f"✅ [ENHANCED_COORDINATOR] Beat deletion complete, sequence now has {new_length} beats"
+            )
 
             return OperationResult.success_result(
-                OperationType.DELETE_BEAT, 
-                "Beat deleted!", 
+                OperationType.DELETE_BEAT,
+                "Beat deleted!",
                 updated_sequence,
-                additional_data
+                additional_data,
             )
 
         except Exception as e:
@@ -580,14 +596,35 @@ class EnhancedWorkbenchOperationCoordinator:
 
         # ENHANCED: Check service availability with detailed validation
         service_requirements = {
-            OperationType.ADD_TO_DICTIONARY: (self._dictionary_service, "Dictionary service"),
-            OperationType.VIEW_FULLSCREEN: (self._fullscreen_service, "Fullscreen service"),
-            OperationType.MIRROR_SEQUENCE: (self._sequence_transformer, "Sequence transformer"),
-            OperationType.SWAP_COLORS: (self._sequence_transformer, "Sequence transformer"),
-            OperationType.ROTATE_SEQUENCE: (self._sequence_transformer, "Sequence transformer"),
-            OperationType.DELETE_BEAT: (self._beat_operations, "Beat operations service"),
+            OperationType.ADD_TO_DICTIONARY: (
+                self._dictionary_service,
+                "Dictionary service",
+            ),
+            OperationType.VIEW_FULLSCREEN: (
+                self._fullscreen_service,
+                "Fullscreen service",
+            ),
+            OperationType.MIRROR_SEQUENCE: (
+                self._sequence_transformer,
+                "Sequence transformer",
+            ),
+            OperationType.SWAP_COLORS: (
+                self._sequence_transformer,
+                "Sequence transformer",
+            ),
+            OperationType.ROTATE_SEQUENCE: (
+                self._sequence_transformer,
+                "Sequence transformer",
+            ),
+            OperationType.DELETE_BEAT: (
+                self._beat_operations,
+                "Beat operations service",
+            ),
             OperationType.SAVE_IMAGE: (self._export_service, "Export service"),
-            OperationType.COPY_JSON: (self._export_service, "Export service (for JSON)"),
+            OperationType.COPY_JSON: (
+                self._export_service,
+                "Export service (for JSON)",
+            ),
         }
 
         # Special validation for COPY_JSON (requires both export and clipboard)
@@ -637,23 +674,25 @@ class EnhancedWorkbenchOperationCoordinator:
                 self._state_manager.has_sequence() if self._state_manager else False
             ),
             "sequence_length": (
-                self._state_manager.get_current_sequence().length 
-                if self._state_manager and self._state_manager.has_sequence() 
+                self._state_manager.get_current_sequence().length
+                if self._state_manager and self._state_manager.has_sequence()
                 else 0
             ),
         }
 
         # NEW: Enhanced service diagnostics
         enhanced_diagnostics = {}
-        
+
         if self._export_service:
             enhanced_diagnostics["export_service"] = {
                 "directory_valid": self._export_service.validate_export_directory(),
-                "export_stats": self._export_service.get_export_stats()
+                "export_stats": self._export_service.get_export_stats(),
             }
-        
+
         if self._clipboard_service:
-            enhanced_diagnostics["clipboard_service"] = self._clipboard_service.get_clipboard_stats()
+            enhanced_diagnostics["clipboard_service"] = (
+                self._clipboard_service.get_clipboard_stats()
+            )
 
         return {
             "services": service_status,
@@ -666,11 +705,13 @@ class EnhancedWorkbenchOperationCoordinator:
         """NEW: Get detailed health report of all services."""
         try:
             health_report = {
-                "timestamp": logger.handlers[0].baseFilename if logger.handlers else "unknown",
+                "timestamp": logger.handlers[0].baseFilename
+                if logger.handlers
+                else "unknown",
                 "overall_health": "healthy",
                 "critical_services": [],
                 "warnings": [],
-                "service_details": {}
+                "service_details": {},
             }
 
             # Check critical services
@@ -703,13 +744,13 @@ class EnhancedWorkbenchOperationCoordinator:
                 health_report["service_details"]["export_service"] = {
                     "available": True,
                     "directory_valid": self._export_service.validate_export_directory(),
-                    "directory": self._export_service.get_export_directory()
+                    "directory": self._export_service.get_export_directory(),
                 }
 
             if self._clipboard_service:
                 health_report["service_details"]["clipboard_service"] = {
                     "available": True,
-                    "clipboard_available": self._clipboard_service.is_clipboard_available()
+                    "clipboard_available": self._clipboard_service.is_clipboard_available(),
                 }
 
             if health_report["critical_services"]:
@@ -724,5 +765,5 @@ class EnhancedWorkbenchOperationCoordinator:
                 "error": str(e),
                 "critical_services": ["health_check_failed"],
                 "warnings": [],
-                "service_details": {}
+                "service_details": {},
             }

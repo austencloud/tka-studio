@@ -5,8 +5,9 @@ Extracted from GlassmorphismStyler to follow Single Responsibility Principle.
 """
 
 import logging
-from PyQt6.QtWidgets import QWidget, QGraphicsBlurEffect, QGraphicsDropShadowEffect
+
 from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QGraphicsBlurEffect, QGraphicsDropShadowEffect, QWidget
 
 
 class EffectManager:

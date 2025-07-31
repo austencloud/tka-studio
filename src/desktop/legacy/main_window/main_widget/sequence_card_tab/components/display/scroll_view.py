@@ -1,14 +1,15 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/scroll_view.py
 import logging
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QGridLayout, QApplication
-from PyQt6.QtCore import Qt
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.components.display.sequence_display_manager import (
         DisplayConfig,
     )
+
     from ...sequence_card_tab import SequenceCardTab
 
 

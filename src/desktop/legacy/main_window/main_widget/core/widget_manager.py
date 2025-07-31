@@ -4,10 +4,11 @@ Widget manager responsible for managing non-tab widgets.
 This component follows SRP by focusing solely on widget lifecycle management.
 """
 
-from typing import TYPE_CHECKING, Dict, Optional
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QObject, pyqtSignal
 import logging
+from typing import TYPE_CHECKING, Dict, Optional
+
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QWidget
 
 from desktop.modern.core.application_context import ApplicationContext
 
@@ -47,15 +48,6 @@ class WidgetManager(QObject):
     def _register_widget_factories(self) -> None:
         """Register factories for creating different widget types."""
         try:
-            from main_window.main_widget.sequence_workbench.sequence_workbench_factory import (
-                SequenceWorkbenchFactory,
-            )
-            from main_window.main_widget.settings_dialog.settings_dialog_factory import (
-                SettingsDialogFactory,
-            )
-            from main_window.main_widget.full_screen_image_overlay_factory import (
-                FullScreenImageOverlayFactory,
-            )
             from main_window.main_widget.codex.codex_factory import CodexFactory
             from main_window.main_widget.fade_manager.fade_manager_factory import (
                 FadeManagerFactory,
@@ -63,11 +55,20 @@ class WidgetManager(QObject):
             from main_window.main_widget.font_color_updater.font_color_updater_factory import (
                 FontColorUpdaterFactory,
             )
-            from main_window.main_widget.pictograph_collector_factory import (
-                PictographCollectorFactory,
+            from main_window.main_widget.full_screen_image_overlay_factory import (
+                FullScreenImageOverlayFactory,
             )
             from main_window.main_widget.main_background_widget.main_background_widget_factory import (
                 MainBackgroundWidgetFactory,
+            )
+            from main_window.main_widget.pictograph_collector_factory import (
+                PictographCollectorFactory,
+            )
+            from main_window.main_widget.sequence_workbench.sequence_workbench_factory import (
+                SequenceWorkbenchFactory,
+            )
+            from main_window.main_widget.settings_dialog.settings_dialog_factory import (
+                SettingsDialogFactory,
             )
             from main_window.menu_bar.menu_bar_factory import MenuBarFactory
 

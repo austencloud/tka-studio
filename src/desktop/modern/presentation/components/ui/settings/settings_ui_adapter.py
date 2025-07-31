@@ -7,8 +7,9 @@ This adapter handles the conversion between Qt signals and the observer pattern.
 
 from typing import Any
 
-from desktop.modern.core.interfaces.core_services import ISettingsCoordinator
 from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.core.interfaces.core_services import ISettingsCoordinator
 
 
 class SettingsUIAdapter(QObject):

@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtCore import QObject, QEvent
+
+from PyQt6.QtCore import QEvent, QObject
 from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:

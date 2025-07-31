@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPainter, QColor, QPen
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.button_styled_border_overlay import (

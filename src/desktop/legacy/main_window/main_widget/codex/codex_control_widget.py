@@ -1,14 +1,15 @@
 # codex_control_widget.py
 
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .codex_color_swapper import CodexColorSwapper
-from .codex_reflector import CodexReflector
-from .codex_rotater import CodexRotater
 from .codex_control_button import CodexControlButton
 from .codex_ori_selector import CodexOriSelector
+from .codex_reflector import CodexReflector
+from .codex_rotater import CodexRotater
 
 if TYPE_CHECKING:
     from .codex import Codex

@@ -3,7 +3,8 @@ State Manager for TKA Unified Launcher.
 Manages application state and window state persistence.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
+
 from PyQt6.QtCore import QObject, pyqtSignal
 
 

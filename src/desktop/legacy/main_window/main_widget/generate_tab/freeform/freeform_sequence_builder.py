@@ -1,9 +1,12 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QApplication
-import random
 from copy import deepcopy
+import random
+from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
 from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, LETTER
+
 from ..base_sequence_builder import BaseSequenceBuilder
 from ..turn_intensity_manager import TurnIntensityManager
 

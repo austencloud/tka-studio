@@ -1,18 +1,18 @@
 from typing import TYPE_CHECKING
+
+from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
     QHBoxLayout,
-    QPushButton,
-    QLineEdit,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
-from PyQt6.QtCore import pyqtSignal
-
-from main_window.main_widget.metadata_extractor import MetaDataExtractor
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget

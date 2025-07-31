@@ -1,6 +1,4 @@
 from datetime import datetime
-from PyQt6.QtGui import QImage
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.elements.views.beat_view import (
@@ -9,12 +7,14 @@ from base_widgets.pictograph.elements.views.beat_view import (
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_creator.beat_reversal_processor import (
     BeatReversalProcessor,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage
 
-from .height_determiner import HeightDeterminer
 from .beat_drawer import BeatDrawer
+from .height_determiner import HeightDeterminer
+from .image_export_difficulty_level_drawer import ImageExportDifficultyLevelDrawer
 from .user_info_drawer import UserInfoDrawer
 from .word_drawer import WordDrawer
-from .image_export_difficulty_level_drawer import ImageExportDifficultyLevelDrawer
 
 if TYPE_CHECKING:
     from ..image_export_manager import ImageExportManager
@@ -50,9 +50,7 @@ class ImageCreator:
         fullscreen_preview: bool = False,
     ) -> QImage:
         if options is None:
-            options = (
-                self.export_manager.settings_manager.image_export.get_all_image_export_options()
-            )
+            options = self.export_manager.settings_manager.image_export.get_all_image_export_options()
 
         filled_beats = self._process_sequence(sequence)
         num_filled_beats = len(filled_beats)
@@ -109,9 +107,9 @@ class ImageCreator:
             options["additional_height_top"],
             options["additional_height_bottom"],
         ) = self._determine_additional_heights(options, num_filled_beats)
-        options[
-            "user_name"
-        ] = self.export_manager.settings_manager.users.get_current_user()
+        options["user_name"] = (
+            self.export_manager.settings_manager.users.get_current_user()
+        )
         options["export_date"] = datetime.now().strftime("%m-%d-%Y")
         return options
 
@@ -205,7 +203,7 @@ class ImageCreator:
             beat_view.beat.beat_number_item.setVisible(options["add_beat_numbers"])
 
     def _create_image(self, column_count, row_count, additional_height=0) -> QImage:
-        image_width = int((column_count * self.beat_size * self.beat_scale))
+        image_width = int(column_count * self.beat_size * self.beat_scale)
         image_height = int(
             (row_count * self.beat_size * self.beat_scale) + additional_height
         )

@@ -5,25 +5,16 @@ Image Export Test UI
 A nice GUI for testing image rendering with different sequences and options.
 """
 
-import os
-import sys
 from datetime import datetime
 from pathlib import Path
+import sys
 
 # Add the src directory to the Python path
 src_dir = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(src_dir))
 
-from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.dependency_injection.image_export_service_registration import (
-    register_image_export_services,
-)
-from desktop.modern.core.interfaces.image_export_services import (
-    IImageExportService,
-    ImageExportOptions,
-)
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont, QPalette, QPixmap
+from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -39,11 +30,19 @@ from PyQt6.QtWidgets import (
     QProgressBar,
     QPushButton,
     QScrollArea,
-    QSpinBox,
     QSplitter,
     QTextEdit,
     QVBoxLayout,
     QWidget,
+)
+
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.dependency_injection.image_export_service_registration import (
+    register_image_export_services,
+)
+from desktop.modern.core.interfaces.image_export_services import (
+    IImageExportService,
+    ImageExportOptions,
 )
 
 

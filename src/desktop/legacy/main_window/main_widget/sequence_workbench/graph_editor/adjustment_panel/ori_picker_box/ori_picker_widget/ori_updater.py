@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
+
 from data.constants import *
 
 if TYPE_CHECKING:
-    from .ori_picker_widget import OriPickerWidget
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-
     from objects.motion.motion import Motion
+
+    from .ori_picker_widget import OriPickerWidget
 
 
 class OriUpdater:

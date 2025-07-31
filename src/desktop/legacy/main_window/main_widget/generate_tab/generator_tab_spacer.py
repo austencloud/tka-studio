@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import (
-    QSpacerItem,
-    QSizePolicy,
-)
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import (
+    QSizePolicy,
+    QSpacerItem,
+)
 
 
 class GeneratorTabSpacer(QSpacerItem):

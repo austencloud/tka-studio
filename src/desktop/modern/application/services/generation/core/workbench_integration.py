@@ -6,7 +6,7 @@ Direct, focused integration - around 80 lines.
 """
 
 import logging
-from typing import List, Optional
+from typing import List
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 
@@ -64,17 +64,17 @@ class WorkbenchIntegrator:
             success_count = 0
             for i, pictograph in enumerate(sequence):
                 logger.info(
-                    f"🔄 Processing beat {i+1}/{len(sequence)}: {pictograph.letter}"
+                    f"🔄 Processing beat {i + 1}/{len(sequence)}: {pictograph.letter}"
                 )
 
                 if self._add_beat_individually(pictograph, i + 1):
                     success_count += 1
-                    logger.debug(f"✅ Beat {i+1} added successfully")
+                    logger.debug(f"✅ Beat {i + 1} added successfully")
 
                     # Process events for visual feedback (like legacy system)
                     self._process_events_for_visual_feedback()
                 else:
-                    logger.warning(f"❌ Failed to add beat {i+1}")
+                    logger.warning(f"❌ Failed to add beat {i + 1}")
 
             logger.info(
                 f"✅ Sequence generation complete: {success_count}/{len(sequence)} beats added"

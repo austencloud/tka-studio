@@ -1,7 +1,8 @@
 # button_answers_renderer.py
-from typing import TYPE_CHECKING, Any, List, Callable
-from PyQt6.QtWidgets import QHBoxLayout
+from typing import TYPE_CHECKING, Any, Callable, List
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.answers_widget import (

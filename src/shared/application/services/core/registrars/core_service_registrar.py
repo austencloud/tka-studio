@@ -57,6 +57,16 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
     def _register_basic_core_services(self, container: "DIContainer") -> None:
         """Register basic core services (layout, UI coordination)."""
         try:
+            from desktop.modern.core.interfaces.core_services import (
+                ILayoutService,
+                IUIStateManager,
+            )
+            from desktop.modern.core.interfaces.layout_services import (
+                IBeatLayoutCalculator,
+            )
+            from desktop.modern.core.interfaces.ui_services import (
+                IThumbnailGenerationService,
+            )
             from shared.application.services.layout.beat_layout_calculator import (
                 BeatLayoutCalculator,
             )
@@ -68,9 +78,6 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
                 ThumbnailGenerationService,
             )
             from shared.application.services.ui.ui_state_manager import UIStateManager
-            from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
-            from desktop.modern.core.interfaces.layout_services import IBeatLayoutCalculator
-            from desktop.modern.core.interfaces.ui_services import IThumbnailGenerationService
 
             # Register service types with factory functions for proper DI
             def create_layout_service():
@@ -135,21 +142,21 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
                 ApplicationInitializationOrchestrator,
                 IApplicationInitializationOrchestrator,
             )
-            from shared.application.services.core.session_restoration_coordinator import (
-                ISessionRestorationCoordinator,
-                SessionRestorationCoordinator,
-            )
             from desktop.modern.application.services.core.window_management_service import (
                 IWindowManagementService,
                 WindowManagementService,
             )
-            from shared.application.services.sequence.sequence_restorer import (
-                ISequenceRestorer,
-                SequenceRestorer,
-            )
             from desktop.modern.application.services.ui.window_discovery_service import (
                 IWindowDiscoveryService,
                 WindowDiscoveryService,
+            )
+            from shared.application.services.core.session_restoration_coordinator import (
+                ISessionRestorationCoordinator,
+                SessionRestorationCoordinator,
+            )
+            from shared.application.services.sequence.sequence_restorer import (
+                ISequenceRestorer,
+                SequenceRestorer,
             )
 
             # Register individual services

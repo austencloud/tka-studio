@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QIcon, QCursor
-from PyQt6.QtCore import QSize, Qt
 
-from styles.styled_button import StyledButton, ButtonContext
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QCursor, QIcon
+from styles.styled_button import ButtonContext, StyledButton
 from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:

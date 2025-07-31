@@ -1,14 +1,15 @@
 from typing import Callable, Optional
-from PyQt6.QtWidgets import QPushButton, QApplication
+
 from PyQt6.QtCore import (
-    Qt,
     QEasingCurve,
-    QPropertyAnimation,
     QParallelAnimationGroup,
-    pyqtProperty,
+    QPropertyAnimation,
     QSize,
+    Qt,
+    pyqtProperty,
 )
-from PyQt6.QtGui import QIcon, QColor, QPainter, QMouseEvent
+from PyQt6.QtGui import QColor, QIcon, QMouseEvent, QPainter
+from PyQt6.QtWidgets import QApplication, QPushButton
 
 
 class SequenceWorkbenchButton(QPushButton):

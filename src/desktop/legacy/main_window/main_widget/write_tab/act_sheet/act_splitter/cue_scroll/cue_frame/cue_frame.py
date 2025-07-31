@@ -1,7 +1,9 @@
 # cue_frame.py
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QSizePolicy, QVBoxLayout, QWidget
+
 from .cue_box.cue_box import CueBox
 
 if TYPE_CHECKING:

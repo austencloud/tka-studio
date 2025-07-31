@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtGui import QFont
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel
 
 from data.constants import BLUE, RED
 
@@ -27,7 +28,7 @@ class GE_TurnsLabel(QLabel):
 
     def resizeEvent(self, event) -> None:
         self.turns_display_font_size = int(
-            (self.turns_box.adjustment_panel.graph_editor.width() / 22)
+            self.turns_box.adjustment_panel.graph_editor.width() / 22
         )
         self.setFont(QFont("Arial", self.turns_display_font_size, QFont.Weight.Bold))
         self.setMaximumWidth(

@@ -1,7 +1,8 @@
 from typing import Dict, Type
-from .base_background import BaseBackground
+
 from .aurora_background import AuroraBackground
 from .aurora_borealis_background import AuroraBorealisBackground
+from .base_background import BaseBackground
 from .bubbles_background import BubblesBackground
 from .snowfall_background import SnowfallBackground
 from .starfield_background import StarfieldBackground

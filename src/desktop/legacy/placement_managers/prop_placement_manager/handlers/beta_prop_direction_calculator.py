@@ -1,33 +1,33 @@
 from typing import TYPE_CHECKING
+
 from enums.letter.letter import Letter
+from objects.motion.motion import Motion
+from objects.prop.prop import Prop
 
 from data.constants import (
     BLUE,
     BOX,
     DIAMOND,
+    DOWN,
     DOWNLEFT,
     DOWNRIGHT,
-    NONRADIAL,
     EAST,
+    LEFT,
+    NONRADIAL,
     NORTH,
     NORTHEAST,
     NORTHWEST,
     RADIAL,
     RED,
+    RIGHT,
     SOUTH,
     SOUTHEAST,
     SOUTHWEST,
+    UP,
     UPLEFT,
     UPRIGHT,
     WEST,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN,
 )
-
-from objects.motion.motion import Motion
-from objects.prop.prop import Prop
 
 if TYPE_CHECKING:
     pass

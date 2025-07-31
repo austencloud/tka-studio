@@ -1,14 +1,16 @@
 from typing import TYPE_CHECKING
+
 from objects.prop.prop import Prop
+from placement_managers.prop_placement_manager.handlers.beta_offset_calculator import (
+    BetaOffsetCalculator,
+)
 from placement_managers.prop_placement_manager.handlers.beta_prop_direction_calculator import (
     BetaPropDirectionCalculator,
 )
 from placement_managers.prop_placement_manager.handlers.hand_positioner import (
     HandPositioner,
 )
-from placement_managers.prop_placement_manager.handlers.beta_offset_calculator import (
-    BetaOffsetCalculator,
-)
+
 from .big_prop_positioner import BigPropPositioner
 from .prop_classifier import PropClassifier
 from .reposition_beta_props_by_letter_manager import RepositionBetaByLetterHandler
@@ -23,7 +25,7 @@ if TYPE_CHECKING:
 
 class BetaPropPositioner:
     def __init__(self, prop_placement_manager: "PropPlacementManager") -> None:
-        self.pictograph: "LegacyPictograph" = prop_placement_manager.pictograph
+        self.pictograph: LegacyPictograph = prop_placement_manager.pictograph
         self.prop_placement_manager = prop_placement_manager
 
         self.classifier = PropClassifier(self.pictograph)

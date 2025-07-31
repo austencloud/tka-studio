@@ -1,28 +1,29 @@
 from enums.letter.letter_type import LetterType
+from objects.motion.managers.handpath_calculator import HandpathCalculator  # RESTORED!
+from objects.motion.motion import Motion
+
 from data.constants import (
-    PRO,
     ANTI,
-    FLOAT,
-    DASH,
-    STATIC,
+    BOX,
+    CCW_HANDPATH,
     CLOCKWISE,
     COUNTER_CLOCKWISE,
-    NO_ROT,
+    CW_HANDPATH,
+    DASH,
     DIAMOND,
-    BOX,
+    EAST,
+    FLOAT,
+    NO_ROT,
+    NORTH,
     NORTHEAST,
+    NORTHWEST,
+    PRO,
+    SOUTH,
     SOUTHEAST,
     SOUTHWEST,
-    NORTHWEST,
-    NORTH,
-    SOUTH,
-    EAST,
+    STATIC,
     WEST,
-    CW_HANDPATH,
-    CCW_HANDPATH,
 )
-from objects.motion.motion import Motion
-from objects.motion.managers.handpath_calculator import HandpathCalculator  # RESTORED!
 
 
 class DirectionalTupleGenerator:

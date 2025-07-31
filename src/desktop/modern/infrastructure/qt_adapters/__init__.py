@@ -7,15 +7,15 @@ while maintaining web portability.
 """
 
 from .animation_adapters import (
-    QtStackAdapter,
+    QtAnimationGroupAdapter,
     QtOpacityEffectAdapter,
     QtPropertyAnimationAdapter,
-    QtAnimationGroupAdapter,
+    QtStackAdapter,
 )
 
 __all__ = [
     "QtStackAdapter",
-    "QtOpacityEffectAdapter", 
+    "QtOpacityEffectAdapter",
     "QtPropertyAnimationAdapter",
     "QtAnimationGroupAdapter",
 ]

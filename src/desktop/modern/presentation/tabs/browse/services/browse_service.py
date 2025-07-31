@@ -289,7 +289,7 @@ class BrowseService:
 
         try:
             # Load sequence data from JSON
-            with open(json_file, "r") as f:
+            with open(json_file) as f:
                 import json
 
                 data = json.load(f)

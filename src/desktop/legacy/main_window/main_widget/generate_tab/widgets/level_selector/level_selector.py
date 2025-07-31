@@ -1,11 +1,11 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QToolButton, QLabel
-from PyQt6.QtGui import QIcon, QCursor
-from PyQt6.QtCore import Qt, QSize
 from typing import TYPE_CHECKING
 
 from main_window.main_widget.generate_tab.widgets.level_selector.level_selector_difficulty_drawer import (
     LevelSelectorDifficultyDrawer,
 )
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QCursor, QIcon
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QToolButton, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab

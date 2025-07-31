@@ -8,9 +8,9 @@ clean architecture patterns and service registration conventions.
 from __future__ import annotations
 
 import logging
-import sys
 from pathlib import Path
-from typing import Optional, TYPE_CHECKING, Any
+import sys
+from typing import TYPE_CHECKING, Optional
 
 # CRITICAL: Set up TKA path IMMEDIATELY to handle VS Code debugger
 # The debugger changes import resolution, so we must fix paths first
@@ -38,6 +38,7 @@ try:
         DIContainer,
         get_container,
     )
+
     TKA_DI_AVAILABLE = True
 except ImportError:
     # Fallback for standalone launcher operation
@@ -46,12 +47,13 @@ except ImportError:
     get_container = None
 
 
-from desktop.modern.core.interfaces import ISettingsService
-from services.launcher_state_service import LauncherStateService
-from services.application_service import ApplicationService
-from services.settings_service import SettingsService
-from services.screen_service import ScreenService
 from services.application_launch_service import ApplicationLaunchService
+from services.application_service import ApplicationService
+from services.launcher_state_service import LauncherStateService
+from services.screen_service import ScreenService
+from services.settings_service import SettingsService
+
+from desktop.modern.core.interfaces import ISettingsService
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +69,7 @@ class LauncherDIContainer:
     def __init__(self, use_tka_container: bool = True):
         """Initialize the launcher DI container."""
         self._use_tka_container = use_tka_container and TKA_DI_AVAILABLE
-        self._container: Optional["DIContainer"] = None
+        self._container: Optional[DIContainer] = None
         self._services = {}
         self._singletons = {}
 

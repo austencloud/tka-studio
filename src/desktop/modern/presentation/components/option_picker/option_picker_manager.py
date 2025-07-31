@@ -75,7 +75,7 @@ class OptionPickerManager(QObject):
             self.option_picker.pictograph_selected.connect(
                 self._handle_pictograph_selected
             )
-            print(f"✅ [OPTION_PICKER_MANAGER] Option picker connected successfully")
+            print("✅ [OPTION_PICKER_MANAGER] Option picker connected successfully")
 
     def populate_from_start_position(
         self, position_key: str, start_position_beat_data: BeatData
@@ -86,7 +86,7 @@ class OptionPickerManager(QObject):
 
         try:
             print(
-                f"🔍 [OPTION_PICKER_MANAGER] populate_from_start_position called with:"
+                "🔍 [OPTION_PICKER_MANAGER] populate_from_start_position called with:"
             )
             print(f"  position_key: {position_key}")
             print(f"  start_position_beat_data: {start_position_beat_data}")
@@ -156,7 +156,7 @@ class OptionPickerManager(QObject):
             f"🎯 [OPTION_PICKER_MANAGER] prepare_from_start_position called with position: {position_key}"
         )
         if self.option_picker is None:
-            print(f"❌ [OPTION_PICKER_MANAGER] option_picker is None, cannot prepare")
+            print("❌ [OPTION_PICKER_MANAGER] option_picker is None, cannot prepare")
             return
 
         try:
@@ -219,7 +219,7 @@ class OptionPickerManager(QObject):
                         self.option_picker.option_picker_widget.option_picker_scroll
                     )
                     print(
-                        f"🔍 [OPTION_PICKER_MANAGER] Found scroll widget, calling load_options_from_sequence"
+                        "🔍 [OPTION_PICKER_MANAGER] Found scroll widget, calling load_options_from_sequence"
                     )
                     # Use the refresh orchestrator to prepare content without animations
                     scroll._refresh_orchestrator.load_options_from_sequence(
@@ -227,12 +227,12 @@ class OptionPickerManager(QObject):
                     )
                     scroll.prepare_for_transition()
                     print(
-                        f"🔍 [OPTION_PICKER_MANAGER] Completed load_options_from_sequence and prepare_for_transition"
+                        "🔍 [OPTION_PICKER_MANAGER] Completed load_options_from_sequence and prepare_for_transition"
                     )
                 else:
-                    print(f"❌ [OPTION_PICKER_MANAGER] No option_picker_scroll found")
+                    print("❌ [OPTION_PICKER_MANAGER] No option_picker_scroll found")
             else:
-                print(f"❌ [OPTION_PICKER_MANAGER] No option_picker_widget found")
+                print("❌ [OPTION_PICKER_MANAGER] No option_picker_widget found")
 
         except Exception as e:
             print(

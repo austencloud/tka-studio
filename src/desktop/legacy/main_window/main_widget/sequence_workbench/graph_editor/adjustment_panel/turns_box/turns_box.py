@@ -1,15 +1,19 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtWidgets import QFrame, QVBoxLayout
+
 from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, HEX_BLUE, HEX_RED, OPP, SAME
+
 from .prop_rot_dir_button_manager.prop_rot_dir_button_manager import (
     PropRotDirButtonManager,
 )
 from .turns_box_header import TurnsBoxHeader
 from .turns_widget.turns_widget import TurnsWidget
-from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
 if TYPE_CHECKING:
-    from ..legacy_adjustment_panel import LegacyAdjustmentPanel
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
+    from ..legacy_adjustment_panel import LegacyAdjustmentPanel
 
 
 class TurnsBox(QFrame):

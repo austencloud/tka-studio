@@ -1,4 +1,5 @@
 import logging
+
 from PyQt6.QtCore import qInstallMessageHandler
 
 

@@ -7,7 +7,6 @@ providing all the complex dash location maps and calculations with high precisio
 
 from typing import Optional
 
-from shared.application.services.pictograph.analyzer import PictographAnalyzer
 from desktop.modern.core.interfaces.positioning_services import IDashLocationCalculator
 from desktop.modern.domain.models import (
     ArrowColor,
@@ -19,6 +18,7 @@ from desktop.modern.domain.models import (
 )
 from desktop.modern.domain.models.enums import GridMode
 from desktop.modern.domain.models.pictograph_data import PictographData
+from shared.application.services.pictograph.analyzer import PictographAnalyzer
 
 
 class DashLocationCalculator(IDashLocationCalculator):

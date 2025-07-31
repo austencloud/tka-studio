@@ -74,8 +74,8 @@ class ComponentStyler:
             background-color: {base_color};
             color: {text_color};
             border: none;
-            border-radius: {self.RADIUS['md']}px;
-            padding: {self.SPACING['sm']}px {self.SPACING['md']}px;
+            border-radius: {self.RADIUS["md"]}px;
+            padding: {self.SPACING["sm"]}px {self.SPACING["md"]}px;
             font-size: {font_size}px;
             font-weight: 500;
             min-height: 32px;
@@ -83,12 +83,12 @@ class ComponentStyler:
 
         QPushButton:hover {{
             background-color: {hover_color};
-            border: 1px solid {self.color_manager.get_color('primary_light', 0.5)};
+            border: 1px solid {self.color_manager.get_color("primary_light", 0.5)};
         }}
 
         QPushButton:pressed {{
             background-color: {pressed_color};
-            border: 1px solid {self.color_manager.get_color('primary_dark', 0.7)};
+            border: 1px solid {self.color_manager.get_color("primary_dark", 0.7)};
         }}
 
         QPushButton:disabled {{
@@ -115,8 +115,8 @@ class ComponentStyler:
         QLineEdit, QTextEdit, QComboBox {{
             background-color: {bg_color};
             border: 1px solid {border_color};
-            border-radius: {self.RADIUS['md']}px;
-            padding: {self.SPACING['sm']}px {self.SPACING['md']}px;
+            border-radius: {self.RADIUS["md"]}px;
+            padding: {self.SPACING["sm"]}px {self.SPACING["md"]}px;
             color: {text_color};
             font-size: {font_size}px;
             min-height: 32px;
@@ -124,7 +124,7 @@ class ComponentStyler:
 
         QLineEdit:focus, QTextEdit:focus, QComboBox:focus {{
             border-color: {focus_border};
-            background-color: {self.color_manager.get_color('surface', 0.7)};
+            background-color: {self.color_manager.get_color("surface", 0.7)};
         }}
 
         QLineEdit:hover, QTextEdit:hover, QComboBox:hover {{
@@ -150,7 +150,7 @@ class ComponentStyler:
         QCheckBox {{
             color: {text_color};
             font-size: {font_size}px;
-            spacing: {self.SPACING['sm']}px;
+            spacing: {self.SPACING["sm"]}px;
         }}
 
         QCheckBox::indicator {{
@@ -237,7 +237,7 @@ class ComponentStyler:
             background-color: {bg_color};
             border: 1px solid {border_color};
             border-radius: {border_radius}px;
-            padding: {self.SPACING['md']}px;
+            padding: {self.SPACING["md"]}px;
         }}
 
         QWidget:hover {{
@@ -260,8 +260,8 @@ class ComponentStyler:
         QTabWidget::pane {{
             background-color: {bg_color};
             border: 1px solid {border_color};
-            border-radius: {self.RADIUS['lg']}px;
-            padding: {self.SPACING['lg']}px;
+            border-radius: {self.RADIUS["lg"]}px;
+            padding: {self.SPACING["lg"]}px;
         }}
         """
 

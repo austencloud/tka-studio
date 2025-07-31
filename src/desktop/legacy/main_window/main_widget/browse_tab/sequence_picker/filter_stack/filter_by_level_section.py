@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtCore import QEvent
 from main_window.main_widget.browse_tab.sequence_picker.filter_stack.level_resize_handler import (
     LevelResizeHandler,
 )
+from PyQt6.QtCore import QEvent
 from utils.path_helpers import get_image_path
 
 from .filter_section_base import FilterSectionBase

@@ -3,7 +3,7 @@ Manages the generation and manipulation of turns patterns.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, Any
+from typing import TYPE_CHECKING, Any, Dict
 
 from data.constants import BLUE_ATTRS, RED_ATTRS, TURNS
 

@@ -20,20 +20,19 @@ Architecture:
 """
 
 import logging
-from typing import Optional, Callable, List
+from typing import List
+
 from PyQt6.QtCore import (
-    QObject,
-    QPropertyAnimation,
     QEasingCurve,
+    QObject,
     QParallelAnimationGroup,
+    QPoint,
+    QPropertyAnimation,
+    QRect,
     QSequentialAnimationGroup,
     QTimer,
-    QRect,
-    QPoint,
-    pyqtSignal,
 )
-from PyQt6.QtWidgets import QWidget, QGraphicsOpacityEffect
-from PyQt6.QtGui import QTransform
+from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
 
 logger = logging.getLogger(__name__)
 

@@ -5,8 +5,8 @@ This module provides real dictionary data loading functionality for the modern b
 Simplified to use SequenceData directly instead of separate SequenceRecord.
 """
 
-import json
 from datetime import datetime
+import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -197,7 +197,7 @@ class ModernDictionaryDataManager(QObject):
 
         except FileNotFoundError:
             pass  # Thumbnail not found
-        except Exception as e:
+        except Exception:
             pass  # Error extracting metadata
 
         return None

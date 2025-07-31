@@ -4,12 +4,13 @@ Image Loader - Handles image loading and validation with single responsibility.
 Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
-import os
 import logging
-from typing import Optional
+import os
 from pathlib import Path
-from PyQt6.QtGui import QImage
+from typing import Optional
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage
 
 
 class ImageLoader:
@@ -78,7 +79,7 @@ class ImageLoader:
             max_size = self.MAX_FILE_SIZE_MB * 1024 * 1024
             if file_size > max_size:
                 self.logger.warning(
-                    f"Image file too large: {file_size / (1024*1024):.1f}MB > {self.MAX_FILE_SIZE_MB}MB"
+                    f"Image file too large: {file_size / (1024 * 1024):.1f}MB > {self.MAX_FILE_SIZE_MB}MB"
                 )
                 return False
 

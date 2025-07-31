@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
+
+from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from .codex import Codex

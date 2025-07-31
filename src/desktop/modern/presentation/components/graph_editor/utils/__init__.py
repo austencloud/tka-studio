@@ -9,19 +9,18 @@ Available utilities:
 - logging: Simple logging utilities
 """
 
+from .logging import (
+    create_component_logger,
+    log_error_with_context,
+    log_method_call,
+)
 from .validation import (
     ValidationError,
     ValidationResult,
-    validate_beat_data,
-    validate_sequence_data,
-    validate_beat_index,
     validate_arrow_id,
-)
-
-from .logging import (
-    create_component_logger,
-    log_method_call,
-    log_error_with_context,
+    validate_beat_data,
+    validate_beat_index,
+    validate_sequence_data,
 )
 
 __all__ = [

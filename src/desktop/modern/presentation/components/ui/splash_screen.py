@@ -1,4 +1,3 @@
-from desktop.modern.presentation.components.backgrounds.background_widget import MainBackgroundWidget
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import (
     QBrush,
@@ -18,6 +17,10 @@ from PyQt6.QtWidgets import (
     QSpacerItem,
     QVBoxLayout,
     QWidget,
+)
+
+from desktop.modern.presentation.components.backgrounds.background_widget import (
+    MainBackgroundWidget,
 )
 
 

@@ -1,17 +1,17 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtGui import QShowEvent
-from main_window.main_widget.settings_dialog.ui.image_export.image_export_preview_panel import (
-    ImageExportPreviewPanel,
-)
+
 from main_window.main_widget.settings_dialog.ui.image_export.image_export_control_panel import (
     ImageExportControlPanel,
+)
+from main_window.main_widget.settings_dialog.ui.image_export.image_export_preview_panel import (
+    ImageExportPreviewPanel,
 )
 from main_window.main_widget.settings_dialog.ui.image_export.loading_spinner import (
     WaitingSpinner,
 )
-
+from PyQt6.QtGui import QShowEvent
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.legacy_settings_dialog import (
@@ -79,9 +79,9 @@ class ImageExportTab(QWidget):
         # In ImageExportTab.update_preview()
         options = self.settings_manager.image_export.get_all_image_export_options()
         options["user_name"] = self.control_panel.user_combo_box.currentText()
-        options[
-            "notes"
-        ] = self.control_panel.note_input.text()  # Use text field instead of combo box
+        options["notes"] = (
+            self.control_panel.note_input.text()
+        )  # Use text field instead of combo box
         options["export_date"] = datetime.now().strftime("%m-%d-%Y")
 
         sequence = self._get_current_sequence()
@@ -163,9 +163,7 @@ class ImageExportTab(QWidget):
                 "sequence_workbench"
             )
             if sequence_workbench and hasattr(sequence_workbench, "beat_frame"):
-                return (
-                    sequence_workbench.beat_frame.json_manager.loader_saver.load_current_sequence()
-                )
+                return sequence_workbench.beat_frame.json_manager.loader_saver.load_current_sequence()
             else:
                 # Fallback: return empty sequence
                 return []

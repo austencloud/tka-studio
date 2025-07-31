@@ -1,9 +1,12 @@
+from functools import cache
 import logging
-from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from enums.letter.letter import Letter
+from objects.motion.motion import Motion
+
 from data.constants import (
+    BLUE,
     END_LOC,
     FLOAT,
     LEADING,
@@ -13,13 +16,11 @@ from data.constants import (
     PREFLOAT_PROP_ROT_DIR,
     PROP_ROT_DIR,
     RED,
-    BLUE,
     START_LOC,
     START_ORI,
     TRAILING,
     TURNS,
 )
-from objects.motion.motion import Motion
 
 if TYPE_CHECKING:
     from ...legacy_pictograph import LegacyPictograph
@@ -133,7 +134,7 @@ class MotionDataUpdater:
         hashable_tuple = self._dict_to_tuple(data)
         return self._get_motion_dataset_from_tuple(hashable_tuple)
 
-    @lru_cache(maxsize=None)
+    @cache
     def _get_motion_dataset_from_tuple(self, hashable_tuple: tuple) -> dict:
         data = self._tuple_to_dict(hashable_tuple)
         motion_attributes = [

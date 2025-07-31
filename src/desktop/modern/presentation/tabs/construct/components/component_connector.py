@@ -96,9 +96,7 @@ class ComponentConnector(QObject):
         if not beat_frame_section:
             return
 
-        beat_frame: "SequenceBeatFrame" = getattr(
-            beat_frame_section, "_beat_frame", None
-        )
+        beat_frame: SequenceBeatFrame = getattr(beat_frame_section, "_beat_frame", None)
         if not beat_frame:
             return
 
@@ -118,7 +116,7 @@ class ComponentConnector(QObject):
 
         current_sequence = self.workbench.get_sequence()
         if not current_sequence:
-            print(f"⚠️ No current sequence available")
+            print("⚠️ No current sequence available")
             return
 
         if beat_index == -1:
@@ -127,7 +125,7 @@ class ComponentConnector(QObject):
             if start_position_data:
                 self.graph_editor.set_selected_beat_data(-1, start_position_data)
             else:
-                print(f"⚠️ No start position data available")
+                print("⚠️ No start position data available")
             return
 
         if 0 <= beat_index < len(current_sequence.beats):
@@ -176,10 +174,6 @@ class ComponentConnector(QObject):
         # This maintains consistency with other workbench operations
         try:
             if hasattr(self.workbench, "_operation_coordinator"):
-                from shared.application.services.workbench.workbench_operation_coordinator import (
-                    OperationType,
-                )
-
                 result = self.workbench._operation_coordinator.save_image()
 
                 if result.success:

@@ -1,26 +1,25 @@
 # src/main_window/main_widget/sequence_card_tab/export/image_exporter.py
 from datetime import datetime
+import gc
+import io
 import json
 import os
-import gc
 import time
-import psutil
-import io
-from PyQt6.QtGui import QImage
-from PyQt6.QtCore import QBuffer, Qt
 from typing import TYPE_CHECKING
-from PIL import Image, PngImagePlugin
-import numpy as np
-from PyQt6.QtWidgets import QApplication
 
 from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame import (
     TempBeatFrame,
 )
-
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_export_manager import (
     ImageExportManager,
 )
+import numpy as np
+from PIL import Image, PngImagePlugin
+import psutil
+from PyQt6.QtCore import QBuffer, Qt
+from PyQt6.QtGui import QImage
+from PyQt6.QtWidgets import QApplication
 from utils.path_helpers import (
     get_dictionary_path,
     get_sequence_card_image_exporter_path,
@@ -115,7 +114,7 @@ class SequenceCardImageExporter:
 
                 batch_end = min(batch_start + batch_size, total_sequences)
                 print(
-                    f"Processing batch {batch_start//batch_size + 1} of {(total_sequences + batch_size - 1)//batch_size} (sequences {batch_start+1}-{batch_end})"
+                    f"Processing batch {batch_start // batch_size + 1} of {(total_sequences + batch_size - 1) // batch_size} (sequences {batch_start + 1}-{batch_end})"
                 )
 
                 # Process the current batch
@@ -146,8 +145,6 @@ class SequenceCardImageExporter:
         except Exception:
             pass
         finally:
-            pass
-
             # Final memory cleanup
             self._check_and_manage_memory(force_cleanup=True)
 
@@ -246,13 +243,13 @@ class SequenceCardImageExporter:
 
             # Try with more conservative downsampling first
             if max_dimension > 2000:
-                print(f"Retrying with moderate downsampling (max dimension: 2000px)")
+                print("Retrying with moderate downsampling (max dimension: 2000px)")
                 return self.qimage_to_pil(qimage, max_dimension=2000)
             elif max_dimension > 1500:
-                print(f"Retrying with stronger downsampling (max dimension: 1500px)")
+                print("Retrying with stronger downsampling (max dimension: 1500px)")
                 return self.qimage_to_pil(qimage, max_dimension=1500)
             elif max_dimension > 1000:
-                print(f"Retrying with aggressive downsampling (max dimension: 1000px)")
+                print("Retrying with aggressive downsampling (max dimension: 1000px)")
                 return self.qimage_to_pil(qimage, max_dimension=1000)
             else:
                 # If we've already tried aggressive downsampling, create a small error image

@@ -6,15 +6,16 @@ smaller, focused components following the Single Responsibility Principle.
 """
 
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget
-from PyQt6.QtCore import pyqtSignal
 
-from desktop.modern.core.application_context import ApplicationContext
-from main_window.main_widget.core.tab_manager import TabManager
-from main_window.main_widget.core.widget_manager import WidgetManager
-from main_window.main_widget.core.state_manager import StateManager
 from main_window.main_widget.core.image_drag_drop_handler import ImageDragDropHandler
 from main_window.main_widget.core.image_drop_processor import ImageDropProcessor
+from main_window.main_widget.core.state_manager import StateManager
+from main_window.main_widget.core.tab_manager import TabManager
+from main_window.main_widget.core.widget_manager import WidgetManager
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QVBoxLayout, QWidget
+
+from desktop.modern.core.application_context import ApplicationContext
 
 if TYPE_CHECKING:
     from main_window.main_window import MainWindow
@@ -420,6 +421,7 @@ class MainWidgetCoordinator(QWidget):
             construct_tab = self.tab_manager.get_tab_widget("construct")
             if not construct_tab or not hasattr(construct_tab, "start_pos_picker"):
                 import logging
+
                 from PyQt6.QtCore import QTimer
 
                 logger = logging.getLogger(__name__)

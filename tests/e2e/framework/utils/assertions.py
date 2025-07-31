@@ -362,9 +362,9 @@ def assert_state_transition(
 
     for key, expected_value in expected_changes.items():
         if key not in final_state:
-            assert (
-                False
-            ), f"{context_prefix}State transition failed: missing key '{key}' in final state"
+            assert False, (
+                f"{context_prefix}State transition failed: missing key '{key}' in final state"
+            )
 
         if final_state[key] != expected_value:
             initial_value = initial_state.get(key, "missing")

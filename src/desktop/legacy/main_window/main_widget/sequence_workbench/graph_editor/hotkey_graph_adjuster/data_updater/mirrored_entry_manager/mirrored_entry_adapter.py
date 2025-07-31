@@ -1,7 +1,7 @@
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from data.constants import DASH, STATIC
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
     ArrowRotAngleOverrideKeyGenerator,
 )
@@ -9,7 +9,8 @@ from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import 
     TurnsTupleGenerator,
 )
 from objects.arrow.arrow import Arrow
-from legacy_settings_manager.global_settings.app_context import AppContext
+
+from data.constants import DASH, STATIC
 
 from .mirrored_entry_factory import MirroredEntryFactory
 from .mirrored_entry_utils import MirroredEntryUtils
@@ -65,7 +66,7 @@ class MirroredEntryAdapter:
 
         class RotationAngleManagerAdapter:
             def __init__(self):
-                self.data_updater: "SpecialPlacementDataUpdater" = data_updater
+                self.data_updater: SpecialPlacementDataUpdater = data_updater
                 self.turns_tuple_generator = TurnsTupleGenerator()
 
             def update_rotation_angle_in_mirrored_entry(
@@ -163,7 +164,7 @@ class MirroredEntryAdapter:
             def _check_for_rotation_angle_override(
                 self, turn_data: dict
             ) -> Optional[int]:
-                for key in turn_data.keys():
+                for key in turn_data:
                     if "rot_angle_override" in key:
                         return turn_data[key]
                 return None

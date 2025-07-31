@@ -1,7 +1,8 @@
-from data.constants import *
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generators.base_turns_tuple_generator import (
     BaseTurnsTupleGenerator,
 )
+
+from data.constants import *
 
 
 class Type3TurnsTupleGenerator(BaseTurnsTupleGenerator):
@@ -17,9 +18,7 @@ class Type3TurnsTupleGenerator(BaseTurnsTupleGenerator):
                 if isinstance(shift.state.turns, int) or isinstance(
                     shift.state.turns, float
                 ):
-                    if shift.state.turns > 0:
-                        return f"({direction}, {self._normalize_turns(shift)}, {self._normalize_turns(dash)})"
-                    elif dash.state.turns > 0:
+                    if shift.state.turns > 0 or dash.state.turns > 0:
                         return f"({direction}, {self._normalize_turns(shift)}, {self._normalize_turns(dash)})"
                     else:
                         return f"({self._normalize_turns(shift)}, {self._normalize_turns(dash)})"

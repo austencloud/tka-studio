@@ -45,10 +45,10 @@ class PropButton(QPushButton):
                 f"""
                 QPushButton {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('primary', 0.8)},
-                        stop:1 {GlassmorphismStyler.get_color('primary_dark', 0.9)});
-                    border: 2px solid {GlassmorphismStyler.get_color('primary', 1.0)};
-                    border-radius: {GlassmorphismStyler.RADIUS['lg']}px;
+                        stop:0 {GlassmorphismStyler.get_color("primary", 0.8)},
+                        stop:1 {GlassmorphismStyler.get_color("primary_dark", 0.9)});
+                    border: 2px solid {GlassmorphismStyler.get_color("primary", 1.0)};
+                    border-radius: {GlassmorphismStyler.RADIUS["lg"]}px;
                     color: white;
                     font-weight: bold;
                     padding: 8px;
@@ -74,24 +74,24 @@ class PropButton(QPushButton):
                 f"""
                 QPushButton {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface', 0.6)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_light', 0.4)});
-                    border: 1px solid {GlassmorphismStyler.get_color('border', 0.4)};
-                    border-radius: {GlassmorphismStyler.RADIUS['lg']}px;
-                    color: {GlassmorphismStyler.get_color('text_secondary')};
+                        stop:0 {GlassmorphismStyler.get_color("surface", 0.6)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_light", 0.4)});
+                    border: 1px solid {GlassmorphismStyler.get_color("border", 0.4)};
+                    border-radius: {GlassmorphismStyler.RADIUS["lg"]}px;
+                    color: {GlassmorphismStyler.get_color("text_secondary")};
                     padding: 8px;
                 }}
                 QPushButton:hover {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface_light', 0.7)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_lighter', 0.5)});
-                    border: 1px solid {GlassmorphismStyler.get_color('border_light', 0.6)};
-                    color: {GlassmorphismStyler.get_color('text_primary')};
+                        stop:0 {GlassmorphismStyler.get_color("surface_light", 0.7)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_lighter", 0.5)});
+                    border: 1px solid {GlassmorphismStyler.get_color("border_light", 0.6)};
+                    color: {GlassmorphismStyler.get_color("text_primary")};
                 }}
                 QPushButton:pressed {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface', 0.8)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_light', 0.6)});
+                        stop:0 {GlassmorphismStyler.get_color("surface", 0.8)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_light", 0.6)});
                 }}
             """
             )
@@ -104,4 +104,4 @@ class PropButton(QPushButton):
 
     def update_size(self):
         """Update size - no longer needed as we use fixed sizes for consistency."""
-        pass  # Keep for compatibility but don't change sizes
+        # Keep for compatibility but don't change sizes

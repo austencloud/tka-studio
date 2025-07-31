@@ -16,7 +16,14 @@ from pathlib import Path
 from typing import List, Optional
 
 import pandas as pd
-from desktop.modern.domain.models import BeatData, Location, MotionData, MotionType, RotationDirection
+
+from desktop.modern.domain.models import (
+    BeatData,
+    Location,
+    MotionData,
+    MotionType,
+    RotationDirection,
+)
 
 
 class ICSVReader(ABC):

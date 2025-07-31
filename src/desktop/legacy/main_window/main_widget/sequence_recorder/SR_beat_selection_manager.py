@@ -1,15 +1,16 @@
 import os
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPen, QColor
-from PyQt6.QtCore import Qt, QUrl, QTimer
 from typing import TYPE_CHECKING, Optional
+
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
-from data.constants import GOLD
-from utils.path_helpers import get_data_path
+from PyQt6.QtCore import Qt, QTimer, QUrl
+from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtMultimedia import QAudioOutput, QSoundEffect
+from PyQt6.QtWidgets import QWidget
+from utils.path_helpers import get_data_path
 
+from data.constants import GOLD
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_recorder.SR_beat_frame import SR_BeatFrame

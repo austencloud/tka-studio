@@ -5,11 +5,11 @@ Immutable data structures for complete kinetic sequences.
 Handles sequence composition, beat management, and validation.
 """
 
-import json
-import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
+import json
 from typing import Any, Dict, List, Optional
+import uuid
 
 from .beat_data import BeatData
 

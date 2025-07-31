@@ -18,32 +18,32 @@ Usage:
     from desktop.modern.core.dependency_injection.settings_service_registration import (
         create_configured_settings_container
     )
-    
+
     container = create_configured_settings_container()
     settings_service = container.resolve(ModernSettingsService)
-    
+
     # Direct instantiation (for testing)
     from desktop.modern.application.services.settings.modern_settings_service import ModernSettingsService
     from desktop.modern.application.services.core.session_state_tracker import SessionStateTracker
-    
+
     session_tracker = SessionStateTracker(ui_state_manager, file_system_service)
     settings_service = ModernSettingsService(session_tracker)
 """
 
 # Import main services for easy access
-from .modern_settings_service import ModernSettingsService, ApplicationStateMemento
 from .background_settings_manager import BackgroundSettingsManager
-from .visibility_settings_manager import VisibilitySettingsManager
 from .beat_layout_settings_manager import BeatLayoutSettingsManager
+from .image_export_settings_manager import ImageExportSettingsManager
+from .modern_settings_service import ApplicationStateMemento, ModernSettingsService
 from .prop_type_settings_manager import PropTypeSettingsManager
 from .user_profile_settings_manager import UserProfileSettingsManager
-from .image_export_settings_manager import ImageExportSettingsManager
+from .visibility_settings_manager import VisibilitySettingsManager
 
 __all__ = [
     "ModernSettingsService",
     "ApplicationStateMemento",
     "BackgroundSettingsManager",
-    "VisibilitySettingsManager", 
+    "VisibilitySettingsManager",
     "BeatLayoutSettingsManager",
     "PropTypeSettingsManager",
     "UserProfileSettingsManager",

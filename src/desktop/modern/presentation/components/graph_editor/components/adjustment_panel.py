@@ -1,7 +1,6 @@
 import logging
 from typing import Optional
 
-from desktop.modern.domain.models import BeatData, MotionType
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QMouseEvent
 from PyQt6.QtWidgets import (
@@ -13,8 +12,10 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from desktop.modern.domain.models import BeatData, MotionType
+
+from ..config import ColorConfig, TurnConfig, UIConfig
 from .orientation_picker import OrientationPickerWidget
-from ..config import UIConfig, TurnConfig, ColorConfig
 
 logger = logging.getLogger(__name__)
 

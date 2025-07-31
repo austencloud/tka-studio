@@ -1,6 +1,7 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from typing import TYPE_CHECKING
 from PyQt6.QtWidgets import QGraphicsItem
 
 if TYPE_CHECKING:

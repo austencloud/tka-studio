@@ -2,23 +2,28 @@
 Enhanced General Tab with modern UI, thumbnail quality settings, and comprehensive configuration.
 """
 
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QSizePolicy,
-    QSpacerItem,
-    QLineEdit,
-)
 import logging
 
-from main_window.main_widget.settings_dialog.core.glassmorphism_styler import GlassmorphismStyler
-from main_window.main_widget.settings_dialog.core.modern_components import HelpTooltip, ModernComboBox, ModernToggle, SettingCard
-from legacy_settings_manager.legacy_settings_manager import (
-    LegacySettingsManager,
+from main_window.main_widget.settings_dialog.core.glassmorphism_styler import (
+    GlassmorphismStyler,
 )
+from main_window.main_widget.settings_dialog.core.modern_components import (
+    HelpTooltip,
+    ModernComboBox,
+    ModernToggle,
+    SettingCard,
+)
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+    QWidget,
+)
+
 
 class EnhancedGeneralTab(QWidget):
     """
@@ -94,27 +99,27 @@ class EnhancedGeneralTab(QWidget):
             f"""
             QLineEdit {{
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 {GlassmorphismStyler.get_color('surface', 0.6)},
-                    stop:1 {GlassmorphismStyler.get_color('surface_light', 0.4)});
-                border: 1px solid {GlassmorphismStyler.get_color('border', 0.4)};
-                border-radius: {GlassmorphismStyler.RADIUS['md']}px;
-                padding: {GlassmorphismStyler.SPACING['sm']}px {GlassmorphismStyler.SPACING['md']}px;
-                color: {GlassmorphismStyler.get_color('text_primary')};
-                font-size: {GlassmorphismStyler.FONTS['body_medium']['size']}px;
+                    stop:0 {GlassmorphismStyler.get_color("surface", 0.6)},
+                    stop:1 {GlassmorphismStyler.get_color("surface_light", 0.4)});
+                border: 1px solid {GlassmorphismStyler.get_color("border", 0.4)};
+                border-radius: {GlassmorphismStyler.RADIUS["md"]}px;
+                padding: {GlassmorphismStyler.SPACING["sm"]}px {GlassmorphismStyler.SPACING["md"]}px;
+                color: {GlassmorphismStyler.get_color("text_primary")};
+                font-size: {GlassmorphismStyler.FONTS["body_medium"]["size"]}px;
                 min-height: 32px;
-                selection-background-color: {GlassmorphismStyler.get_color('primary', 0.3)};
+                selection-background-color: {GlassmorphismStyler.get_color("primary", 0.3)};
             }}
             QLineEdit:focus {{
-                border: 2px solid {GlassmorphismStyler.get_color('primary', 0.8)};
+                border: 2px solid {GlassmorphismStyler.get_color("primary", 0.8)};
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 {GlassmorphismStyler.get_color('surface_light', 0.7)},
-                    stop:1 {GlassmorphismStyler.get_color('surface_lighter', 0.5)});
+                    stop:0 {GlassmorphismStyler.get_color("surface_light", 0.7)},
+                    stop:1 {GlassmorphismStyler.get_color("surface_lighter", 0.5)});
             }}
             QLineEdit:hover {{
-                border-color: {GlassmorphismStyler.get_color('border_light', 0.6)};
+                border-color: {GlassmorphismStyler.get_color("border_light", 0.6)};
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 {GlassmorphismStyler.get_color('surface_light', 0.6)},
-                    stop:1 {GlassmorphismStyler.get_color('surface_lighter', 0.4)});
+                    stop:0 {GlassmorphismStyler.get_color("surface_light", 0.6)},
+                    stop:1 {GlassmorphismStyler.get_color("surface_lighter", 0.4)});
             }}
             """
         )

@@ -1,6 +1,6 @@
-import os
-from typing import Optional, List
 import logging
+import os
+from typing import List, Optional
 
 
 class CacheManager:

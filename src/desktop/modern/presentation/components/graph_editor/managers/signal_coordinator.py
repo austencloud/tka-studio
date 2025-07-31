@@ -9,9 +9,10 @@ Simplified to remove over-engineered manager dependencies and complex routing.
 import logging
 from typing import TYPE_CHECKING, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
     from desktop.modern.application.services.graph_editor_data_flow_service import (

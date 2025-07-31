@@ -19,9 +19,9 @@ Usage:
 """
 
 import os
-import sys
-import subprocess
 from pathlib import Path
+import subprocess
+import sys
 
 
 def setup_environment():

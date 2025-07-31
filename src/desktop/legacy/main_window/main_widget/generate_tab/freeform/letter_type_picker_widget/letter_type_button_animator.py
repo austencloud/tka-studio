@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import (
     QEasingCurve,
+    QObject,
     QPropertyAnimation,
     pyqtProperty,
-    QObject,
 )
 from PyQt6.QtGui import QColor
 

@@ -1,28 +1,15 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGridLayout
-from PyQt6.QtCore import Qt
-
 
 from base_widgets.base_beat_frame import BaseBeatFrame
-from data.constants import (
-    BLUE_ATTRS,
-    END_ORI,
-    END_POS,
-    RED_ATTRS,
-    SEQUENCE_START_POSITION,
-    START_ORI,
-    START_POS,
-)
-from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame_layout_manager import (
-    TempBeatFrameLayoutManager,
-)
-
-from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
-
+from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame_layout_manager import (
+    TempBeatFrameLayoutManager,
+)
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_export_manager import (
     ImageExportManager,
 )
@@ -32,8 +19,18 @@ from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_p
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat_view import (
     StartPositionBeatView,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGridLayout
 
+from data.constants import (
+    BLUE_ATTRS,
+    END_ORI,
+    END_POS,
+    RED_ATTRS,
+    SEQUENCE_START_POSITION,
+    START_ORI,
+    START_POS,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.browse_tab.browse_tab import (

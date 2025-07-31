@@ -154,7 +154,6 @@ class TKADockWindow(QWidget):
     def _on_applications_loaded(self, application_count: int):
         """Handle applications loaded signal."""
         # Remove the "Applications loaded" log message
-        pass
 
     def _on_launch_requested(self, app_id: str):
         """Handle application launch request."""
@@ -236,7 +235,7 @@ class TKADockWindow(QWidget):
             else:
                 # Fallback: just update visual status
                 logger.warning(
-                    f"⚠️ No launch service available, updating visual status only"
+                    "⚠️ No launch service available, updating visual status only"
                 )
                 self.application_manager.simulate_status_progression(
                     app_id, ApplicationStatus.STOPPING, ApplicationStatus.STOPPED, 1000
@@ -279,7 +278,7 @@ class TKADockWindow(QWidget):
                     )
             else:
                 # Fallback: simulate restart process
-                logger.warning(f"⚠️ No launch service available, simulating restart")
+                logger.warning("⚠️ No launch service available, simulating restart")
                 self.application_manager.simulate_status_progression(
                     app_id, ApplicationStatus.STOPPING, ApplicationStatus.STARTING, 1000
                 )

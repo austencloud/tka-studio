@@ -1,7 +1,6 @@
-from enums.letter.letter import Letter
-
 from typing import TYPE_CHECKING
 
+from enums.letter.letter import Letter
 from legacy_settings_manager.global_settings.app_context import AppContext
 from objects.arrow.arrow import Arrow
 

@@ -1,9 +1,9 @@
-from PyQt6.QtGui import QPainter, QPixmap, QCursor
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtWidgets import QWidget
 from typing import TYPE_CHECKING
-from utils.path_helpers import get_image_path
 
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtGui import QCursor, QPainter, QPixmap
+from PyQt6.QtWidgets import QWidget
+from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
     from .ufo_manager import UFOManager

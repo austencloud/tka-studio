@@ -5,7 +5,7 @@ This class now serves as a thin adapter that delegates to focused services
 via the BeatOperationCoordinator. The God Object has been broken down into:
 
 - BeatCreationService: Beat creation logic
-- BeatSequenceService: Sequence manipulation  
+- BeatSequenceService: Sequence manipulation
 - SequenceWordCalculator: Word calculation
 - SequencePersistenceAdapter: Save/load logic
 - BeatOperationCoordinator: Orchestrates the above
@@ -30,9 +30,9 @@ from .beat_operation_coordinator import BeatOperationCoordinator
 class SequenceBeatOperations(QObject):
     """
     Service for handling beat-level operations on sequences.
-    
+
     REFACTORED: Now delegates to focused services via BeatOperationCoordinator.
-    
+
     Responsibilities:
     - Providing backward-compatible API
     - Delegating to focused services
@@ -51,18 +51,18 @@ class SequenceBeatOperations(QObject):
         modern_to_legacy_converter: Optional[ModernToLegacyConverter] = None,
     ):
         super().__init__()
-        
+
         # Create the coordinator with focused services
         self.coordinator = BeatOperationCoordinator(
             workbench_getter=workbench_getter,
             workbench_setter=workbench_setter,
         )
-        
+
         # Connect coordinator signals to our signals for backward compatibility
         self.coordinator.beat_added.connect(self.beat_added.emit)
         self.coordinator.beat_removed.connect(self.beat_removed.emit)
         self.coordinator.beat_updated.connect(self.beat_updated.emit)
-        
+
         # Legacy properties for backward compatibility
         self.workbench_getter = workbench_getter
         self.workbench_setter = workbench_setter
@@ -84,9 +84,13 @@ class SequenceBeatOperations(QObject):
         """Update the number of turns for a specific beat - exactly like legacy"""
         return self.coordinator.update_beat_turns(beat_index, color, new_turns)
 
-    def update_beat_orientation(self, beat_index: int, color: str, new_orientation: int):
+    def update_beat_orientation(
+        self, beat_index: int, color: str, new_orientation: int
+    ):
         """Update the orientation for a specific beat"""
-        return self.coordinator.update_beat_orientation(beat_index, color, new_orientation)
+        return self.coordinator.update_beat_orientation(
+            beat_index, color, new_orientation
+        )
 
     def remove_beat(self, beat_index: int):
         """Remove a beat from the sequence"""
@@ -102,9 +106,13 @@ class SequenceBeatOperations(QObject):
 
     # LEGACY METHODS - Keep for backward compatibility
 
-    def _calculate_next_beat_number(self, current_sequence: Optional[SequenceData]) -> int:
+    def _calculate_next_beat_number(
+        self, current_sequence: Optional[SequenceData]
+    ) -> int:
         """Calculate the next beat number for a new beat."""
-        return self.coordinator.beat_creator.calculate_next_beat_number(current_sequence)
+        return self.coordinator.beat_creator.calculate_next_beat_number(
+            current_sequence
+        )
 
     def _add_beat_direct(self, beat_data: BeatData):
         """Fallback method: Add beat via direct manipulation (original logic)"""

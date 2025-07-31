@@ -19,7 +19,6 @@ from main_window.main_widget.main_background_widget.backgrounds.starfield.starfi
     StarfieldBackground,
 )
 
-
 if TYPE_CHECKING:
     from .splash_screen import SplashScreen
 

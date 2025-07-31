@@ -6,9 +6,9 @@ code organization, following TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import List, Dict, Union
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, List, Union
 
 
 @dataclass

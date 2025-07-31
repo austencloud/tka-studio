@@ -70,77 +70,77 @@ class DockApplicationIcon(QFrame):
         if status == ApplicationStatus.RUNNING:
             # Running state - green accent
             self.setStyleSheet(
-                f"""
-                DockApplicationIcon {{
+                """
+                DockApplicationIcon {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(34, 197, 94, 0.3),
                         stop:1 rgba(34, 197, 94, 0.1));
                     border: 1px solid rgba(34, 197, 94, 0.5);
                     border-radius: 8px;
-                }}
-                DockApplicationIcon:hover {{
+                }
+                DockApplicationIcon:hover {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(34, 197, 94, 0.4),
                         stop:1 rgba(34, 197, 94, 0.2));
                     border: 1px solid rgba(34, 197, 94, 0.7);
-                }}
+                }
             """
             )
         elif status == ApplicationStatus.STARTING:
             # Starting state - blue accent with subtle animation
             self.setStyleSheet(
-                f"""
-                DockApplicationIcon {{
+                """
+                DockApplicationIcon {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(59, 130, 246, 0.3),
                         stop:1 rgba(59, 130, 246, 0.1));
                     border: 1px solid rgba(59, 130, 246, 0.5);
                     border-radius: 8px;
-                }}
-                DockApplicationIcon:hover {{
+                }
+                DockApplicationIcon:hover {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(59, 130, 246, 0.4),
                         stop:1 rgba(59, 130, 246, 0.2));
                     border: 1px solid rgba(59, 130, 246, 0.7);
-                }}
+                }
             """
             )
         elif status == ApplicationStatus.ERROR:
             # Error state - red accent
             self.setStyleSheet(
-                f"""
-                DockApplicationIcon {{
+                """
+                DockApplicationIcon {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(239, 68, 68, 0.3),
                         stop:1 rgba(239, 68, 68, 0.1));
                     border: 1px solid rgba(239, 68, 68, 0.5);
                     border-radius: 8px;
-                }}
-                DockApplicationIcon:hover {{
+                }
+                DockApplicationIcon:hover {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(239, 68, 68, 0.4),
                         stop:1 rgba(239, 68, 68, 0.2));
                     border: 1px solid rgba(239, 68, 68, 0.7);
-                }}
+                }
             """
             )
         else:
             # Stopped state - subtle glassmorphism appearance
             self.setStyleSheet(
-                f"""
-                DockApplicationIcon {{
+                """
+                DockApplicationIcon {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(255, 255, 255, 0.1),
                         stop:1 rgba(255, 255, 255, 0.05));
                     border: 1px solid rgba(255, 255, 255, 0.15);
                     border-radius: 8px;
-                }}
-                DockApplicationIcon:hover {{
+                }
+                DockApplicationIcon:hover {
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                         stop:0 rgba(255, 255, 255, 0.2),
                         stop:1 rgba(255, 255, 255, 0.1));
                     border: 1px solid rgba(255, 255, 255, 0.25);
-                }}
+                }
             """
             )
 

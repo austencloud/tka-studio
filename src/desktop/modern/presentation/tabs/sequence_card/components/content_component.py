@@ -6,25 +6,26 @@ Coordinates specialized helper components for layout and loading management.
 """
 
 import logging
-from typing import Optional, List
+from typing import List, Optional
 
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QScrollArea,
-    QLabel,
-)
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QCoreApplication
+from PyQt6.QtCore import QCoreApplication, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QLabel,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardCacheService,
     ISequenceCardLayoutService,
     SequenceCardData,
 )
+
 from .image_loading import ImageLoader
-from .loading import ProgressiveLoadingManager
 from .layout import PageLayoutManager
+from .loading import ProgressiveLoadingManager
 
 logger = logging.getLogger(__name__)
 

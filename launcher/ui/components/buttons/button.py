@@ -5,11 +5,11 @@ Reliable Button Component
 Professional button with glassmorphism styling and animations.
 """
 
-from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QPushButton
 
 from ...pyqt6_compatible_design_system import get_reliable_style_builder
-from ...reliable_effects import get_shadow_manager, get_animation_manager
+from ...reliable_effects import get_animation_manager, get_shadow_manager
 
 
 class ReliableButton(QPushButton):
@@ -40,17 +40,17 @@ class ReliableButton(QPushButton):
             f"""
             QPushButton {{
                 {base_style}
-                border-radius: {self.style_builder.tokens.RADIUS['md']}px;
+                border-radius: {self.style_builder.tokens.RADIUS["md"]}px;
                 padding: 10px 20px;
-                {self.style_builder.typography('base', 'medium')}
+                {self.style_builder.typography("base", "medium")}
                 min-height: 36px;
             }}
             QPushButton:hover {{
-                {self.style_builder.glass_surface_hover('primary') if self.variant != 'primary' else base_style}
-                border: {self.style_builder.tokens.BORDERS['hover']};
+                {self.style_builder.glass_surface_hover("primary") if self.variant != "primary" else base_style}
+                border: {self.style_builder.tokens.BORDERS["hover"]};
             }}
             QPushButton:pressed {{
-                {self.style_builder.glass_surface('pressed')}
+                {self.style_builder.glass_surface("pressed")}
             }}
         """
         )

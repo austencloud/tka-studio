@@ -4,8 +4,6 @@ Test Motion Data Basic Functionality
 Basic tests for MotionData domain model without complex dependencies.
 """
 
-import pytest
-
 
 class TestMotionDataBasic:
     """Test basic motion data functionality."""
@@ -17,23 +15,23 @@ class TestMotionDataBasic:
         rotation_directions = ["cw", "ccw", "no_rot"]
         locations = ["n", "s", "e", "w", "ne", "nw", "se", "sw"]
         orientations = ["in", "out"]
-        
+
         # Test that we have expected motion types
         assert "pro" in motion_types
         assert "anti" in motion_types
         assert "static" in motion_types
-        
+
         # Test that we have expected rotation directions
         assert "cw" in rotation_directions
         assert "ccw" in rotation_directions
         assert "no_rot" in rotation_directions
-        
+
         # Test that we have expected locations
         assert "n" in locations
         assert "s" in locations
         assert "e" in locations
         assert "w" in locations
-        
+
         # Test that we have expected orientations
         assert "in" in orientations
         assert "out" in orientations
@@ -43,15 +41,15 @@ class TestMotionDataBasic:
         # Test basic motion data structure
         motion_data_fields = [
             "motion_type",
-            "prop_rot_dir", 
+            "prop_rot_dir",
             "start_loc",
             "end_loc",
             "turns",
             "start_ori",
             "end_ori",
-            "is_visible"
+            "is_visible",
         ]
-        
+
         # Test that we have expected fields
         assert "motion_type" in motion_data_fields
         assert "prop_rot_dir" in motion_data_fields
@@ -66,12 +64,12 @@ class TestMotionDataBasic:
         """Test motion data validation concepts."""
         # Test validation concepts
         valid_turns = [0, 0.5, 1, 1.5, 2, 2.5, 3, "fl"]
-        
+
         # Test numeric turns
         for turns in [0, 0.5, 1, 1.5, 2, 2.5, 3]:
             assert isinstance(turns, (int, float))
             assert turns >= 0
-        
+
         # Test float turns
         assert "fl" in valid_turns
 
@@ -86,9 +84,9 @@ class TestMotionDataBasic:
             "turns": 1,
             "start_ori": "in",
             "end_ori": "out",
-            "is_visible": True
+            "is_visible": True,
         }
-        
+
         # Test that dictionary has expected structure
         assert sample_motion_dict["motion_type"] == "pro"
         assert sample_motion_dict["prop_rot_dir"] == "cw"
@@ -105,13 +103,13 @@ class TestMotionDataBasic:
         immutable_fields = [
             "motion_type",
             "prop_rot_dir",
-            "start_loc", 
+            "start_loc",
             "end_loc",
             "turns",
             "start_ori",
-            "end_ori"
+            "end_ori",
         ]
-        
+
         # Test that fields should be immutable
         for field in immutable_fields:
             assert isinstance(field, str)
@@ -124,9 +122,9 @@ class TestMotionDataBasic:
             "turns": 0.0,
             "start_ori": "in",
             "end_ori": "in",
-            "is_visible": True
+            "is_visible": True,
         }
-        
+
         # Test defaults
         assert defaults["turns"] == 0.0
         assert defaults["start_ori"] == "in"
@@ -138,17 +136,17 @@ class TestMotionDataBasic:
         # Test letter patterns
         letter_i_pattern = {
             "start_loc": "n",
-            "end_loc": "s"  # Opposite locations
+            "end_loc": "s",  # Opposite locations
         }
-        
+
         letter_o_pattern = {
             "start_loc": "n",
-            "end_loc": "n"  # Same location (static)
+            "end_loc": "n",  # Same location (static)
         }
-        
+
         # Test Letter I pattern (opposite locations)
         assert letter_i_pattern["start_loc"] != letter_i_pattern["end_loc"]
-        
+
         # Test Letter O pattern (same location)
         assert letter_o_pattern["start_loc"] == letter_o_pattern["end_loc"]
 
@@ -163,9 +161,9 @@ class TestMotionDataBasic:
             ("out", "n"): 270,
             ("out", "s"): 90,
             ("out", "e"): 0,
-            ("out", "w"): 180
+            ("out", "w"): 180,
         }
-        
+
         # Test that rotation angles are valid
         for (orientation, location), angle in rotation_angles.items():
             assert 0 <= angle < 360
@@ -174,46 +172,42 @@ class TestMotionDataBasic:
     def test_motion_data_overlap_detection(self):
         """Test motion data overlap detection concepts."""
         # Test overlap detection concepts
-        red_motion = {
-            "start_loc": "n",
-            "end_loc": "s"
-        }
-        
-        blue_motion = {
-            "start_loc": "e", 
-            "end_loc": "w"
-        }
-        
+        red_motion = {"start_loc": "n", "end_loc": "s"}
+
+        blue_motion = {"start_loc": "e", "end_loc": "w"}
+
         # Test crossing paths (should overlap at center)
         crossing_paths = (
-            red_motion["start_loc"] == "n" and red_motion["end_loc"] == "s" and
-            blue_motion["start_loc"] == "e" and blue_motion["end_loc"] == "w"
+            red_motion["start_loc"] == "n"
+            and red_motion["end_loc"] == "s"
+            and blue_motion["start_loc"] == "e"
+            and blue_motion["end_loc"] == "w"
         )
-        
+
         assert crossing_paths is True
 
     def test_motion_data_orientation_calculation(self):
         """Test motion data orientation calculation concepts."""
         # Test orientation calculation concepts
         pro_motion_orientations = {
-            0: ("in", "in"),    # 0 turns = no flip
-            1: ("in", "out"),   # 1 turn = flip
-            2: ("in", "in"),    # 2 turns = no flip
-            3: ("in", "out"),   # 3 turns = flip
+            0: ("in", "in"),  # 0 turns = no flip
+            1: ("in", "out"),  # 1 turn = flip
+            2: ("in", "in"),  # 2 turns = no flip
+            3: ("in", "out"),  # 3 turns = flip
         }
-        
+
         anti_motion_orientations = {
-            0: ("in", "out"),   # 0 turns = flip (anti starts flipped)
-            1: ("in", "in"),    # 1 turn = no flip
-            2: ("in", "out"),   # 2 turns = flip
-            3: ("in", "in"),    # 3 turns = no flip
+            0: ("in", "out"),  # 0 turns = flip (anti starts flipped)
+            1: ("in", "in"),  # 1 turn = no flip
+            2: ("in", "out"),  # 2 turns = flip
+            3: ("in", "in"),  # 3 turns = no flip
         }
-        
+
         # Test pro motion orientation logic
         for turns, (start_ori, end_ori) in pro_motion_orientations.items():
             assert start_ori in ["in", "out"]
             assert end_ori in ["in", "out"]
-            
+
         # Test anti motion orientation logic
         for turns, (start_ori, end_ori) in anti_motion_orientations.items():
             assert start_ori in ["in", "out"]
@@ -222,12 +216,8 @@ class TestMotionDataBasic:
     def test_motion_data_float_motion(self):
         """Test motion data float motion concepts."""
         # Test float motion concepts
-        float_motion = {
-            "motion_type": "float",
-            "prop_rot_dir": "no_rot",
-            "turns": "fl"
-        }
-        
+        float_motion = {"motion_type": "float", "prop_rot_dir": "no_rot", "turns": "fl"}
+
         # Test float motion properties
         assert float_motion["motion_type"] == "float"
         assert float_motion["prop_rot_dir"] == "no_rot"
@@ -241,9 +231,9 @@ class TestMotionDataBasic:
             "prop_rot_dir": "no_rot",
             "start_loc": "n",
             "end_loc": "n",  # Same location
-            "turns": 0
+            "turns": 0,
         }
-        
+
         # Test static motion properties
         assert static_motion["motion_type"] == "static"
         assert static_motion["start_loc"] == static_motion["end_loc"]
@@ -257,9 +247,9 @@ class TestMotionDataBasic:
             "prop_rot_dir": "no_rot",
             "start_loc": "n",
             "end_loc": "n",  # Typically same location
-            "turns": 0
+            "turns": 0,
         }
-        
+
         # Test dash motion properties
         assert dash_motion["motion_type"] == "dash"
         assert dash_motion["prop_rot_dir"] == "no_rot"
@@ -269,7 +259,7 @@ class TestMotionDataBasic:
         # Test performance concepts
         motion_count = 1000
         motions = []
-        
+
         # Create many motion data concepts
         for i in range(motion_count):
             motion = {
@@ -279,10 +269,10 @@ class TestMotionDataBasic:
                 "end_loc": "s",
                 "turns": i % 4,
                 "start_ori": "in",
-                "end_ori": "out" if i % 2 else "in"
+                "end_ori": "out" if i % 2 else "in",
             }
             motions.append(motion)
-        
+
         # Test that we can handle many motions efficiently
         assert len(motions) == motion_count
 
@@ -296,12 +286,12 @@ class TestMotionDataBasic:
             "end_loc": "s",
             "turns": 1,
             "start_ori": "in",
-            "end_ori": "out"
+            "end_ori": "out",
         }
-        
+
         # Create multiple identical motions
         motions = [motion_template.copy() for _ in range(10)]
-        
+
         # Test that all motions are identical
         for motion in motions:
             assert motion == motion_template
@@ -310,12 +300,12 @@ class TestMotionDataBasic:
         """Test motion data edge cases."""
         # Test edge cases
         edge_cases = [
-            {"turns": 0.5},      # Half turn
-            {"turns": "fl"},     # Float turns
-            {"start_loc": "ne"}, # Diagonal location
-            {"motion_type": "dash"}, # Dash motion
+            {"turns": 0.5},  # Half turn
+            {"turns": "fl"},  # Float turns
+            {"start_loc": "ne"},  # Diagonal location
+            {"motion_type": "dash"},  # Dash motion
         ]
-        
+
         # Test that edge cases are handled
         for case in edge_cases:
             assert len(case) > 0
@@ -330,9 +320,9 @@ class TestMotionDataBasic:
             "start_loc_required": True,
             "end_loc_required": True,
             "turns_non_negative": True,
-            "orientations_valid": True
+            "orientations_valid": True,
         }
-        
+
         # Test validation rules
         for rule, required in validation_rules.items():
             assert required is True

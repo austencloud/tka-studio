@@ -1,5 +1,6 @@
 # sequence_workbench_font_color_updater.py
 from typing import TYPE_CHECKING
+
 from .base_font_color_updater import BaseFontColorUpdater
 
 if TYPE_CHECKING:

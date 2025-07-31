@@ -34,7 +34,9 @@ class AnimationServiceRegistrar(BaseServiceRegistrar):
     def register_services(self, container) -> None:
         """Register animation services with the DI container."""
         # Check if already registered to prevent spam
-        from desktop.modern.core.interfaces.animation_core_interfaces import IAnimationOrchestrator
+        from desktop.modern.core.interfaces.animation_core_interfaces import (
+            IAnimationOrchestrator,
+        )
 
         try:
             container.resolve(IAnimationOrchestrator)

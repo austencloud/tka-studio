@@ -1,8 +1,9 @@
 # sparkle_manager.py
 
 import random
-from PyQt6.QtGui import QPainter, QColor
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter
 
 
 class SparkleManager:

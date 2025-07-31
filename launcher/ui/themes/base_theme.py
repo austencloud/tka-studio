@@ -17,12 +17,13 @@ Architecture:
 - AccessibilityTheme: WCAG-compliant variants
 """
 
-import logging
+from abc import abstractmethod
 import datetime
-from typing import Dict, Any, Optional, Tuple
-from abc import ABC, abstractmethod
-from PyQt6.QtCore import QObject, pyqtSignal, QTimer
-from PyQt6.QtGui import QPalette, QColor
+import logging
+from typing import Any, Dict, Optional
+
+from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtGui import QPalette
 from PyQt6.QtWidgets import QApplication
 
 from ..design_system import AccentColor, DesignTokens
@@ -53,7 +54,6 @@ class BaseTheme(QObject):
     @abstractmethod
     def generate_palette(self) -> Dict[str, Any]:
         """Generate the theme color palette."""
-        pass
 
     def apply_theme(self):
         """Apply the theme to the application."""
@@ -98,7 +98,7 @@ class SystemIntegration:
                 return AccentColor.PURPLE
             elif 80 <= hue <= 160:  # Green range
                 return AccentColor.EMERALD
-            elif 320 < hue or hue <= 20:  # Red range
+            elif hue > 320 or hue <= 20:  # Red range
                 return AccentColor.ROSE
             elif 20 < hue <= 80:  # Yellow/Orange range
                 return AccentColor.AMBER

@@ -22,14 +22,7 @@ from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.tabs.browse.browse_view_model import BrowseViewModel
 from desktop.modern.presentation.tabs.browse.errors import FilterError, NavigationError
-from desktop.modern.presentation.tabs.browse.managers.browse_action_handler import (
-    BrowseActionHandler,
-)
-from desktop.modern.presentation.tabs.browse.managers.browse_data_manager import (
-    BrowseDataManager,
-)
 from desktop.modern.presentation.tabs.browse.managers.browse_navigation_manager import (
-    BrowseNavigationManager,
     BrowsePanel,
 )
 from desktop.modern.presentation.tabs.browse.models import FilterType
@@ -98,7 +91,6 @@ class BrowseTabController(QObject):
     def initialize(self) -> None:
         """Initialize the controller and load initial data."""
         try:
-
             # Start data loading
             self.view_model.set_loading(True)
             self.data_loading_started.emit()

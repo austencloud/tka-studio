@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel, QFrame, QVBoxLayout, QApplication
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
 
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_export_manager import (
     ImageExportManager,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QApplication, QFrame, QLabel, QVBoxLayout
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
@@ -32,7 +32,7 @@ class ImageExportPreviewPanel(QFrame):
     ) -> QPixmap:
         """Generate and properly scale the preview image while maintaining aspect ratio."""
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        self.image_export_manager: "ImageExportManager" = (
+        self.image_export_manager: ImageExportManager = (
             self.tab.main_widget.sequence_workbench.beat_frame.image_export_manager
         )
 

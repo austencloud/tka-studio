@@ -1,8 +1,8 @@
 # rotate_button.py
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt, QSize
 
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QIcon
 from styles.styled_button import StyledButton
 
 if TYPE_CHECKING:

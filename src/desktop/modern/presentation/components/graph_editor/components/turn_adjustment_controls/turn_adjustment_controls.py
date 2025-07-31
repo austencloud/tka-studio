@@ -9,6 +9,9 @@ Features glassmorphism styling and direct turn value selection.
 import logging
 from typing import Optional
 
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+
 from desktop.modern.domain.models import BeatData, MotionData
 from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.current_turn_display import (
     CurrentTurnDisplay,
@@ -19,8 +22,6 @@ from desktop.modern.presentation.components.graph_editor.components.turn_adjustm
 from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.turn_value_button_grid import (
     TurnValueButtonGrid,
 )
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
 
 logger = logging.getLogger(__name__)
 

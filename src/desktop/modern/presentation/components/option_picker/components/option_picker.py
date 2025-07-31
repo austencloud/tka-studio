@@ -1,5 +1,8 @@
 from typing import Any, Callable, Dict, List, Optional
 
+from PyQt6.QtCore import QSize, pyqtSignal
+from PyQt6.QtWidgets import QWidget
+
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models import SequenceData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -7,8 +10,6 @@ from desktop.modern.presentation.components.component_base import ViewableCompon
 from desktop.modern.presentation.components.option_picker.components.option_picker_widget import (
     OptionPickerWidget,
 )
-from PyQt6.QtCore import QSize, pyqtSignal
-from PyQt6.QtWidgets import QWidget
 
 
 class OptionPicker(ViewableComponentBase):

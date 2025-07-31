@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from styles.styled_button import StyledButton
 
-
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (
         LessonWidget,

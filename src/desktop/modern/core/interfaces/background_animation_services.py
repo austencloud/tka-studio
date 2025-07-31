@@ -252,7 +252,9 @@ class IFishSpawning(ABC):
     """Interface for fish spawning operations."""
 
     @abstractmethod
-    def spawn_fish(self, fish_type: str, position: Optional[Tuple[float, float]] = None) -> str:
+    def spawn_fish(
+        self, fish_type: str, position: Optional[Tuple[float, float]] = None
+    ) -> str:
         """
         Spawn a new fish.
 

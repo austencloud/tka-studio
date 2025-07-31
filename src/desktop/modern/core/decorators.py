@@ -11,13 +11,14 @@ DECORATORS:
 - retry_on_failure: Retry decorator for transient failures
 """
 
+import functools
 import logging
 import time
-import functools
-from typing import Callable, Any, Optional, Type, Union
+from typing import Any, Callable, Optional, Type, Union
+
 from .exceptions import (
-    ValidationError,
     TKABaseException,
+    ValidationError,
     service_error,
 )
 
@@ -303,6 +304,7 @@ def performance_critical(
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             import psutil
+
             from .exceptions import PerformanceError
 
             start_time = time.perf_counter()
@@ -327,7 +329,7 @@ def performance_critical(
                 # Check duration thresholds
                 if max_duration_ms and duration_ms > max_duration_ms:
                     raise PerformanceError(
-                        message=f"Operation exceeded maximum duration",
+                        message="Operation exceeded maximum duration",
                         operation=op_name,
                         threshold=max_duration_ms,
                         actual=duration_ms,
@@ -343,7 +345,7 @@ def performance_critical(
                 # Check memory thresholds
                 if max_memory_mb and memory_used_mb > max_memory_mb:
                     raise PerformanceError(
-                        message=f"Operation exceeded maximum memory usage",
+                        message="Operation exceeded maximum memory usage",
                         operation=op_name,
                         threshold=max_memory_mb,
                         actual=memory_used_mb,

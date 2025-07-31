@@ -167,8 +167,9 @@ class MotionAttributeService(IMotionAttributeService):
             pictograph_data.blue_attributes.motion_type == MotionType.FLOAT
             and pictograph_data.blue_attributes.prefloat_motion_type
         ):
-
-            from desktop.modern.domain.models.motion.motion_attributes import MotionAttributes
+            from desktop.modern.domain.models.motion.motion_attributes import (
+                MotionAttributes,
+            )
 
             prefloat_attrs["blue"] = MotionAttributes(
                 motion_type=pictograph_data.blue_attributes.prefloat_motion_type,
@@ -186,8 +187,9 @@ class MotionAttributeService(IMotionAttributeService):
             pictograph_data.red_attributes.motion_type == MotionType.FLOAT
             and pictograph_data.red_attributes.prefloat_motion_type
         ):
-
-            from desktop.modern.domain.models.motion.motion_attributes import MotionAttributes
+            from desktop.modern.domain.models.motion.motion_attributes import (
+                MotionAttributes,
+            )
 
             prefloat_attrs["red"] = MotionAttributes(
                 motion_type=pictograph_data.red_attributes.prefloat_motion_type,

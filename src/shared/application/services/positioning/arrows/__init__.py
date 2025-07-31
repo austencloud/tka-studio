@@ -43,7 +43,7 @@ from .utilities import PictographPositionMatcher
 __all__ = [
     # Calculation services
     "ArrowLocationCalculatorService",
-    "ArrowRotationCalculatorService", 
+    "ArrowRotationCalculatorService",
     "DashLocationCalculator",
     "DirectionalTupleCalculator",
     "OrientationCalculator",

@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
+    from main_window.main_widget.browse_tab.browse_tab import BrowseTab
     from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_image_label import (
         ThumbnailImageLabel,
     )
-    from main_window.main_widget.browse_tab.browse_tab import BrowseTab
 
 
 class BrowseTabSelectionHandler:

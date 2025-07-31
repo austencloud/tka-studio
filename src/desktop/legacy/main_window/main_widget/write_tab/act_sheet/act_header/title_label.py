@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt, QRect
 
 from main_window.main_widget.write_tab.editable_label import EditableLabel
+from PyQt6.QtCore import QRect, Qt
 
 if TYPE_CHECKING:
     from .act_header import ActHeader

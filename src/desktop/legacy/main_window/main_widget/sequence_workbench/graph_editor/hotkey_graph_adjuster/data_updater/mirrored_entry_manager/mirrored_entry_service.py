@@ -4,19 +4,20 @@ Core functionality for managing mirrored entries in special placements.
 
 import logging
 from typing import TYPE_CHECKING, Any
-from data.constants import BLUE, RED
 
 from enums.letter.letter import Letter
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
 from objects.arrow.arrow import Arrow
-from legacy_settings_manager.global_settings.app_context import AppContext
+
+from data.constants import BLUE, RED
 
 from .orientation_handler import OrientationHandler
-from .turns_pattern_manager import TurnsPatternManager
-from .special_placement_repository import SpecialPlacementRepository
 from .rotation_angle_processor import RotationAngleProcessor
+from .special_placement_repository import SpecialPlacementRepository
+from .turns_pattern_manager import TurnsPatternManager
 
 logger = logging.getLogger(__name__)
 if TYPE_CHECKING:

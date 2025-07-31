@@ -10,7 +10,6 @@ Features:
 
 from typing import List, Optional, Tuple, Union
 
-from desktop.modern.presentation.tabs.browse.models import FilterType
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -21,6 +20,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from desktop.modern.presentation.tabs.browse.models import FilterType
 
 
 class FilterCategorySection(QFrame):

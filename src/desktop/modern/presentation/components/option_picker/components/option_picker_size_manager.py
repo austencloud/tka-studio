@@ -7,11 +7,12 @@ Handles Qt widget interactions and timing.
 
 from typing import Callable
 
+from PyQt6.QtCore import QSize, QTimer
+from PyQt6.QtWidgets import QWidget
+
 from desktop.modern.application.services.option_picker.option_picker_size_service import (
     OptionPickerSizeService,
 )
-from PyQt6.QtCore import QSize, QTimer
-from PyQt6.QtWidgets import QWidget
 
 
 class OptionPickerSizeManager:

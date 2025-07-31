@@ -12,7 +12,9 @@ from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+    from desktop.modern.presentation.components.graph_editor.graph_editor import (
+        GraphEditor,
+    )
 
 logger = logging.getLogger(__name__)
 

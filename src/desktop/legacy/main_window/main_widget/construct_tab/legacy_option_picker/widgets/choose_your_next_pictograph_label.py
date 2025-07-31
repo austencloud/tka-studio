@@ -1,11 +1,11 @@
 # main_window/main_widget/construct_tab/option_picker/choose_your_next_pictograph_label.py
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtCore import Qt, QSize
 from typing import Callable
 
 from main_window.main_widget.construct_tab.option_picker.resizable_mixin import (
     ResizableMixin,
 )
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QLabel
 
 
 class ChooseYourNextPictographLabel(ResizableMixin, QLabel):
@@ -18,5 +18,5 @@ class ChooseYourNextPictographLabel(ResizableMixin, QLabel):
     def resizeEvent(self, event):
         h = self.update_size_and_style()  # Use the mixin’s logic
         self.setStyleSheet(
-            f"background-color: rgba(255,255,255,200); border-radius: {h//2}px;"
+            f"background-color: rgba(255,255,255,200); border-radius: {h // 2}px;"
         )

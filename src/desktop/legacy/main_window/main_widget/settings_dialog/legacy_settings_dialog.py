@@ -5,13 +5,15 @@ This is now a lightweight wrapper around the SettingsDialogCoordinator
 that maintains backward compatibility while using the new architecture.
 """
 
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import QEvent, pyqtSignal
 import logging
+from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QEvent, pyqtSignal
+from PyQt6.QtWidgets import QDialog
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
+
     from desktop.modern.core.application_context import ApplicationContext
 
 logger = logging.getLogger(__name__)

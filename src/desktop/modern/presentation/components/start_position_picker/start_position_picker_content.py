@@ -6,7 +6,6 @@ Extracted from the main StartPositionPicker for better maintainability.
 """
 
 import logging
-from enum import Enum
 from typing import List, Optional
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
@@ -26,14 +25,6 @@ from desktop.modern.presentation.components.start_position_picker.start_position
 )
 
 logger = logging.getLogger(__name__)
-
-
-class PickerMode(Enum):
-    """Picker display modes."""
-
-    BASIC = "basic"
-    ADVANCED = "advanced"
-    AUTO = "auto"
 
 
 class StartPositionPickerContent(QWidget):
@@ -65,7 +56,9 @@ class StartPositionPickerContent(QWidget):
 
         # State
         self.position_options: List[StartPositionOption] = []
-        self._loading_positions = False  # Flag to prevent infinite loops
+        self._current_load_params = (
+            None  # Track current load parameters to prevent duplicate loads
+        )
         self._is_in_transition = False  # Track transition state
 
         # UI components
@@ -113,12 +106,16 @@ class StartPositionPickerContent(QWidget):
 
     def load_positions(self, grid_mode: str, is_advanced: bool):
         """Load position options with fade transition if available."""
-        # Prevent infinite loops with a stronger guard
-        if self._loading_positions:
-            logger.warning(
-                "Already loading positions, skipping to prevent infinite loop"
+        # Check if we're already loading the same parameters
+        current_params = (grid_mode, is_advanced)
+        if self._current_load_params == current_params:
+            logger.debug(
+                f"Already loading positions for {grid_mode} mode ({'advanced' if is_advanced else 'basic'}), skipping duplicate request"
             )
             return
+
+        # Set current load parameters
+        self._current_load_params = current_params
 
         # Use fade transition if animation orchestrator is available and we have existing options
         if (
@@ -134,7 +131,6 @@ class StartPositionPickerContent(QWidget):
         """Load positions with smooth fade transition."""
         try:
             self._is_in_transition = True
-            self._loading_positions = True
 
             mode_str = "advanced" if is_advanced else "basic"
             logger.debug(f"Starting fade transition to {mode_str} mode")
@@ -173,7 +169,7 @@ class StartPositionPickerContent(QWidget):
                     update_callback()
                 finally:
                     self._is_in_transition = False
-                    self._loading_positions = False
+                    self._current_load_params = None
 
             # Run the async fade transition
             asyncio.create_task(run_fade_transition())
@@ -185,8 +181,6 @@ class StartPositionPickerContent(QWidget):
 
     def _load_positions_directly(self, grid_mode: str, is_advanced: bool):
         """Load position options directly without animation."""
-        if not self._is_in_transition:
-            self._loading_positions = True
 
         try:
             mode_str = "advanced" if is_advanced else "basic"
@@ -228,12 +222,12 @@ class StartPositionPickerContent(QWidget):
             self._create_fallback_options(grid_mode)
         finally:
             if not self._is_in_transition:
-                # Use QTimer to reset the flag after a short delay to prevent rapid calls
-                QTimer.singleShot(50, self._reset_loading_flag)
+                # Reset load parameters after a short delay to allow for legitimate new requests
+                QTimer.singleShot(50, self._reset_load_params)
 
-    def _reset_loading_flag(self):
-        """Reset the loading flag after a delay - EXACT copy from original."""
-        self._loading_positions = False
+    def _reset_load_params(self):
+        """Reset the load parameters after a delay."""
+        self._current_load_params = None
 
     def _create_position_options(self, position_keys: List[str], grid_mode: str):
         """Create position option widgets - EXACT logic from original."""

@@ -1,6 +1,7 @@
+from typing import Callable, Union
+
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QFontMetrics
-from typing import Callable, Union
 from PyQt6.QtWidgets import QLabel
 
 

@@ -8,7 +8,9 @@ and difficulty assessment without unnecessary interface abstractions.
 import logging
 from typing import Optional
 
-from desktop.modern.core.interfaces.sequence_data_services import ISequenceDictionaryManager
+from desktop.modern.core.interfaces.sequence_data_services import (
+    ISequenceDictionaryManager,
+)
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 logger = logging.getLogger(__name__)

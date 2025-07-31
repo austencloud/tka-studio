@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from enums.letter.letter import Letter
 
 if TYPE_CHECKING:
-    from desktop.modern.application.services.motion_comparator import MotionComparator
     from desktop.modern.application.services.attribute_manager import AttributeManager
+    from desktop.modern.application.services.motion_comparator import MotionComparator
 
 
 class LetterDeterminationStrategy(ABC):

@@ -14,9 +14,11 @@ No UI dependencies, completely testable in isolation.
 
 import logging
 
-from desktop.modern.core.interfaces.positioning_services import IArrowCoordinateSystemService
+from desktop.modern.core.interfaces.positioning_services import (
+    IArrowCoordinateSystemService,
+)
 from desktop.modern.core.types.geometry import Point
-from desktop.modern.domain.models import MotionData, MotionType, Location
+from desktop.modern.domain.models import Location, MotionData, MotionType
 
 logger = logging.getLogger(__name__)
 

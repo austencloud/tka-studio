@@ -1,14 +1,13 @@
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QMouseEvent, QFont, QFontMetrics
-from PyQt6.QtCore import Qt, pyqtSignal
 from typing import TYPE_CHECKING, Literal
 
-from PyQt6.QtCore import QPoint
-from data.constants import RED, BLUE, IN, OUT, CLOCK, COUNTER
 from main_window.main_widget.sequence_workbench.graph_editor.adjustment_panel.ori_picker_box.ori_picker_widget.ori_selection_dialog import (
     OriSelectionDialog,
 )
+from PyQt6.QtCore import QPoint, Qt, pyqtSignal
+from PyQt6.QtGui import QFont, QFontMetrics, QMouseEvent
+from PyQt6.QtWidgets import QLabel
 
+from data.constants import BLUE, CLOCK, COUNTER, IN, OUT, RED
 
 if TYPE_CHECKING:
     from .ori_picker_widget import OriPickerWidget

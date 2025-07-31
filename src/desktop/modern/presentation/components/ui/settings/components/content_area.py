@@ -5,6 +5,7 @@ Manages the stacked widget that displays different settings tabs.
 """
 
 from typing import Dict
+
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 

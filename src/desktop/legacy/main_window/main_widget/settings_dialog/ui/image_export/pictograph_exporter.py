@@ -1,13 +1,14 @@
-import os
 from datetime import datetime
+import os
 from typing import TYPE_CHECKING, List
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
-from PyQt6.QtGui import QImage, QPainter
-from PyQt6.QtCore import Qt
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from data.constants import LETTER, START_POS, END_POS, BLUE, RED, MOTION_TYPE
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage, QPainter
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from utils.path_helpers import get_my_photos_path
+
+from data.constants import BLUE, END_POS, LETTER, MOTION_TYPE, RED, START_POS
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
@@ -143,7 +144,7 @@ class PictographExporter:
 
                 # Create filename
                 filename = (
-                    f"pictograph_{letter}_{start_pos}_{end_pos}_{timestamp}_{i+1}.png"
+                    f"pictograph_{letter}_{start_pos}_{end_pos}_{timestamp}_{i + 1}.png"
                 )
                 filepath = os.path.join(directory, filename)
 

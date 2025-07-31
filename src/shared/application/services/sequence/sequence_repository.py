@@ -6,8 +6,8 @@ Extracted from the monolithic sequence management service to focus
 solely on data access and storage operations.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import List, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 class RepositoryError(Exception):
     """Custom exception for repository errors."""
-
 
 
 class ISequenceRepository(ABC):

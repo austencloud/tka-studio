@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QGraphicsView, QFrame, QMenu
-from PyQt6.QtCore import Qt, QEvent, QTimer
-from PyQt6.QtGui import QCursor, QAction, QKeyEvent
 
+from PyQt6.QtCore import QEvent, Qt, QTimer
+from PyQt6.QtGui import QAction, QCursor, QKeyEvent
+from PyQt6.QtWidgets import QFrame, QGraphicsView, QMenu
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

@@ -5,14 +5,13 @@ This service loads and uses default placement JSON files for accurate
 arrow positioning with comprehensive adjustment data.
 """
 
-import json
 import codecs
+import json
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 # Use framework-agnostic types from desktop.modern.core.types
 from desktop.modern.core.types import Point
-
 from desktop.modern.domain.models import MotionData, MotionType
 
 

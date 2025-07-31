@@ -1,6 +1,6 @@
 from .factory import SequenceCardPageFactory
 from .printable_factory import PrintablePageFactory
-from .printable_layout import PrintablePageLayout, PaperSize, PaperOrientation
+from .printable_layout import PaperOrientation, PaperSize, PrintablePageLayout
 
 __all__ = [
     "SequenceCardPageFactory",

@@ -1,9 +1,7 @@
-from typing import Dict, Optional, Tuple, TYPE_CHECKING
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 import logging
-
-
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -11,9 +9,9 @@ if TYPE_CHECKING:
 
 try:
     from desktop.modern.core.events import (
+        EventPriority,
         IEventBus,
         get_event_bus,
-        EventPriority,
     )
 
     EVENT_SYSTEM_AVAILABLE = True
@@ -26,8 +24,9 @@ except ImportError:
 
 try:
     from core.decorators import handle_service_errors
-    from desktop.modern.core.monitoring import monitor_performance
     from core.exceptions import ServiceOperationError, ValidationError
+
+    from desktop.modern.core.monitoring import monitor_performance
 except ImportError:
     # For tests, create dummy decorators if imports fail
     def handle_service_errors(*args, **kwargs):

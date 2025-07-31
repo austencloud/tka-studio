@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFrame, QGridLayout, QGraphicsOpacityEffect
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFrame, QGraphicsOpacityEffect, QGridLayout
 
 if TYPE_CHECKING:
     from .section_widget import OptionPickerSectionWidget

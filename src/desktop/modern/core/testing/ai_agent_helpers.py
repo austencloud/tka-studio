@@ -5,8 +5,8 @@ Provides simple interfaces for AI agents to test complex workflows
 using the existing sophisticated TKA architecture.
 """
 
-import logging
 from dataclasses import dataclass
+import logging
 from typing import Any, Dict, List, Optional
 
 # Import your existing architecture
@@ -16,7 +16,13 @@ from desktop.modern.core.interfaces.core_services import (
     ISequenceManager,
     IValidationService,
 )
-from desktop.modern.domain.models import BeatData, Location, MotionData, MotionType, RotationDirection
+from desktop.modern.domain.models import (
+    BeatData,
+    Location,
+    MotionData,
+    MotionType,
+    RotationDirection,
+)
 from desktop.modern.domain.models.enums import GridMode
 
 logger = logging.getLogger(__name__)

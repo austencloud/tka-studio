@@ -7,13 +7,14 @@ Keeps the main window class clean and focused.
 """
 
 import logging
-from typing import Optional, List
-from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+from typing import List, Optional
+
+from config.config.launcher_config import LauncherConfig
+from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtGui import QCloseEvent, QResizeEvent
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QResizeEvent, QCloseEvent
 
 from desktop.modern.ui.layouts.application_grid import ApplicationGridWidget
-from config.config.launcher_config import LauncherConfig
 
 logger = logging.getLogger(__name__)
 
@@ -290,8 +291,8 @@ class LauncherShortcutHandler(QObject):
 
     def _setup_shortcuts(self):
         """Setup keyboard shortcuts."""
-        from PyQt6.QtGui import QShortcut, QKeySequence
         from PyQt6.QtCore import Qt
+        from PyQt6.QtGui import QKeySequence, QShortcut
 
         try:
             # Ctrl+F - Focus search
@@ -322,17 +323,14 @@ class LauncherShortcutHandler(QObject):
     def _focus_search(self):
         """Focus the search box."""
         # This will be connected by the main window
-        pass
 
     def _refresh_applications(self):
         """Refresh applications."""
         # This will be connected by the main window
-        pass
 
     def _clear_search(self):
         """Clear search text."""
         # This will be connected by the main window
-        pass
 
     def _toggle_fullscreen(self):
         """Toggle fullscreen mode."""

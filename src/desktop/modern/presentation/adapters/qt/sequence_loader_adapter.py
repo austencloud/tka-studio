@@ -13,20 +13,25 @@ Benefits:
 
 from typing import Optional
 
-from shared.application.services.data.legacy_to_modern_converter import LegacyToModernConverter
-from shared.application.services.sequence.sequence_loader_service import SequenceLoaderService
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
+from shared.application.services.data.legacy_to_modern_converter import (
+    LegacyToModernConverter,
+)
+from shared.application.services.sequence.sequence_loader_service import (
+    SequenceLoaderService,
+)
 
 
 class QtSequenceLoaderAdapter(QObject):
     """
     Improved Qt adapter for the SequenceLoaderService.
-    
+
     Uses proper dependency injection with IWorkbenchStateManager instead of
     passing getter/setter functions around.
-    
+
     Benefits:
     - Type-safe dependencies
     - Better error handling
@@ -45,7 +50,7 @@ class QtSequenceLoaderAdapter(QObject):
         legacy_to_modern_converter: Optional[LegacyToModernConverter] = None,
     ):
         super().__init__()
-        
+
         self._workbench_state_manager = workbench_state_manager
 
         # Create the pure service
@@ -82,7 +87,7 @@ class QtSequenceLoaderAdapter(QObject):
     def load_current_sequence(self) -> Optional[SequenceData]:
         """Load the current sequence from default location."""
         return self._service.load_current_sequence()
-    
+
     def is_workbench_ready(self) -> bool:
         """Check if workbench is available for operations."""
         return self._workbench_state_manager is not None

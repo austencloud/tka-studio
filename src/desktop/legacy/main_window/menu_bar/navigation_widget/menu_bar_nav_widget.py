@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QFrame, QVBoxLayout
-from PyQt6.QtGui import QFont
+
 from PyQt6.QtCore import pyqtSignal
-
-from styles.styled_button import StyledButton, ButtonContext
-
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QWidget
+from styles.styled_button import ButtonContext, StyledButton
 
 if TYPE_CHECKING:
     from main_window.menu_bar.menu_bar import MenuBarWidget
@@ -66,7 +65,7 @@ class MenuBarNavWidget(QWidget):
                     self.mw.switch_to_tab(tab_name)
                 else:
                     print(
-                        f"DEBUG: ERROR - MainWidget does not have switch_to_tab method!"
+                        "DEBUG: ERROR - MainWidget does not have switch_to_tab method!"
                     )
                     print(f"DEBUG: MainWidget type: {type(self.mw).__name__}")
                     print(

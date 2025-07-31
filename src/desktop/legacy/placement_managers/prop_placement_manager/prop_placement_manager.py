@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .handlers.beta_prop_positioner import BetaPropPositioner
 from .handlers.default_prop_positioner import DefaultPropPositioner
 

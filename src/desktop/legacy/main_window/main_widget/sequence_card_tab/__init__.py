@@ -1,19 +1,17 @@
-from .sequence_card_tab import SequenceCardTab
-from .utils.tab_factory import SequenceCardTabFactory
-
-# Core components
-from .core import (
-    SequenceCardData,
-    ImageLoadRequest,
-    SequenceCardBatch,
-    SequenceCardCacheManager,
-    SequenceCardRefresher,
-)
+from .components.display import SequenceCardScrollArea
 
 # UI components
 from .components.navigation import SequenceCardNavSidebar
-from .components.display import SequenceCardScrollArea
 from .components.pages import SequenceCardPageFactory
+
+# Core components
+from .core import (
+    ImageLoadRequest,
+    SequenceCardBatch,
+    SequenceCardCacheManager,
+    SequenceCardData,
+    SequenceCardRefresher,
+)
 
 # Export functionality
 from .export import SequenceCardImageExporter, SequenceCardPageExporter
@@ -23,9 +21,11 @@ from .loading import (
     AsyncImageLoader,
     SequenceCardLoadingDialog,
 )
+from .sequence_card_tab import SequenceCardTab
 
 # Utilities
-from .utils import ThumbnailCache, ImageProcessor
+from .utils import ImageProcessor, ThumbnailCache
+from .utils.tab_factory import SequenceCardTabFactory
 
 __all__ = [
     # Main components

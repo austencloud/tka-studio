@@ -1,22 +1,22 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/sequence_display_manager.py
 from dataclasses import dataclass
-import os
 import logging
-from typing import Dict, List, Any, Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QApplication, QGridLayout
+import os
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
+
 from PyQt6.QtCore import Qt, QTimer
-
+from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
 from utils.path_helpers import get_sequence_card_image_exporter_path
-from ..pages.printable_layout import PaperSize, PaperOrientation
 
+from ..pages.printable_layout import PaperOrientation, PaperSize
 from .image_processor import (
-    ImageProcessor,
     DEFAULT_IMAGE_CACHE_SIZE,
+    ImageProcessor,
 )  # Import DEFAULT_IMAGE_CACHE_SIZE
-from .sequence_loader import SequenceLoader
-from .page_renderer import PageRenderer
 from .layout_calculator import LayoutCalculator
+from .page_renderer import PageRenderer
 from .scroll_view import ScrollView
+from .sequence_loader import SequenceLoader
 
 # Assuming DisplayConfig is in display_config.py as shown in the problem description
 
@@ -264,7 +264,7 @@ class SequenceDisplayManager:
                         logging.debug(f"Cache hit ratio: {cache_ratio:.2f}")
 
                     self.sequence_card_tab.header.description_label.setText(
-                        f"Loading {length_text} sequences... ({i+1}/{total_sequences})"
+                        f"Loading {length_text} sequences... ({i + 1}/{total_sequences})"
                     )
 
                 try:
@@ -443,7 +443,7 @@ class SequenceDisplayManager:
 
             # Ensure the new page has a layout
             if new_page.layout() is None:
-                logging.warning(f"New page created without layout. Adding QGridLayout.")
+                logging.warning("New page created without layout. Adding QGridLayout.")
                 grid_layout = QGridLayout(new_page)
                 grid_layout.setContentsMargins(10, 10, 10, 10)
                 grid_layout.setSpacing(5)

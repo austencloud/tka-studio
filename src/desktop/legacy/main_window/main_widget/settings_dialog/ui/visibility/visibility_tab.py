@@ -1,12 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-)
-from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
 
 from base_widgets.pictograph.elements.views.visibility_pictograph_view import (
     VisibilityPictographView,
@@ -14,10 +6,18 @@ from base_widgets.pictograph.elements.views.visibility_pictograph_view import (
 from main_window.main_widget.settings_dialog.ui.visibility.visibility_state_manager import (
     VisibilityStateManager,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QVBoxLayout,
+    QWidget,
+)
 
+from .buttons_widget.visibility_buttons_widget import VisibilityButtonsWidget
 from .pictograph.visibility_pictograph import VisibilityPictograph
 from .visibility_toggler import VisibilityToggler
-from .buttons_widget.visibility_buttons_widget import VisibilityButtonsWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.legacy_settings_dialog import (

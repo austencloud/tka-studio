@@ -4,7 +4,6 @@ from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
 
-
 if TYPE_CHECKING:
     from .beat_deleter import BeatDeleter
 

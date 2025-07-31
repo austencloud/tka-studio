@@ -1,17 +1,18 @@
 from data.constants import (
+    CLOCKWISE,
+    CLOSING,
+    COUNTER_CLOCKWISE,
     EAST,
     NORTH,
-    CLOCKWISE,
-    OPENING,
-    CLOSING,
-    WEST,
-    SOUTH,
     NORTHEAST,
-    SOUTHEAST,
     NORTHWEST,
+    OPENING,
+    SOUTH,
+    SOUTHEAST,
     SOUTHWEST,
-    COUNTER_CLOCKWISE,
+    WEST,
 )
+
 from .base_turns_tuple_generator import BaseTurnsTupleGenerator
 
 

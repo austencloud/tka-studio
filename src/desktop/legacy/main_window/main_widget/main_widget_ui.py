@@ -1,28 +1,27 @@
 from typing import TYPE_CHECKING
 
-
+# SettingsDialog import moved to conditional import in _create_components
+from core.migration_adapters import AppContextAdapter
 from main_window.main_widget.codex.codex import Codex
 from main_window.main_widget.fade_manager.fade_manager import FadeManager
 from main_window.main_widget.pictograph_collector import PictographCollector
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QStackedWidget,
+    QVBoxLayout,
+)
 
-# SettingsDialog import moved to conditional import in _create_components
-from core.migration_adapters import AppContextAdapter
+from ..menu_bar.menu_bar import MenuBarWidget
+from .browse_tab.browse_tab_factory import BrowseTabFactory
 from .construct_tab.construct_tab_factory import ConstructTabFactory
+from .font_color_updater.font_color_updater import FontColorUpdater
 from .generate_tab.generate_tab_factory import GenerateTabFactory
 from .learn_tab.learn_tab_factory import LearnTabFactory
-from .browse_tab.browse_tab_factory import BrowseTabFactory
 from .main_background_widget.main_background_widget_factory import (
     MainBackgroundWidgetFactory,
 )
-from .font_color_updater.font_color_updater import FontColorUpdater
 from .sequence_card_tab.utils.tab_factory import SequenceCardTabFactory
-from ..menu_bar.menu_bar import MenuBarWidget
 from .sequence_workbench.sequence_workbench import SequenceWorkbench
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QHBoxLayout,
-    QStackedWidget,
-)
 
 if TYPE_CHECKING:
     from .main_widget import MainWidget
@@ -88,8 +87,9 @@ class MainWidgetUI:
         json_manager = AppContextAdapter.json_manager()
 
         # Create a temporary app context for the transition period
-        from desktop.modern.core.application_context import ApplicationContext
         from core.dependency_container import get_container
+
+        from desktop.modern.core.application_context import ApplicationContext
 
         # Get the global container that was set up in main.py
         container = get_container()

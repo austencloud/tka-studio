@@ -1,5 +1,14 @@
 import json
 from typing import TYPE_CHECKING, Optional
+
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.sequence_level_evaluator import SequenceLevelEvaluator
+from main_window.main_widget.sequence_properties_manager.sequence_properties_manager_factory import (
+    SequencePropertiesManagerFactory,
+)
+from utils.path_helpers import get_user_editable_resource_path
+from utils.word_simplifier import WordSimplifier
+
 from data.constants import (
     BEAT,
     BLUE_ATTRS,
@@ -14,13 +23,6 @@ from data.constants import (
     RED_ATTRS,
     SEQUENCE_START_POSITION,
 )
-from main_window.main_widget.sequence_level_evaluator import SequenceLevelEvaluator
-from main_window.main_widget.sequence_properties_manager.sequence_properties_manager_factory import (
-    SequencePropertiesManagerFactory,
-)
-from legacy_settings_manager.global_settings.app_context import AppContext
-from utils.path_helpers import get_user_editable_resource_path
-from utils.word_simplifier import WordSimplifier
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext
@@ -76,7 +78,7 @@ class SequenceDataLoaderSaver:
 
     def load_current_sequence(self) -> list[dict]:
         try:
-            with open(self.current_sequence_json, "r", encoding="utf-8") as file:
+            with open(self.current_sequence_json, encoding="utf-8") as file:
                 content = file.read().strip()
                 if not content:
                     return self.get_default_sequence()
@@ -148,13 +150,13 @@ class SequenceDataLoaderSaver:
                 self.sequence_properties_manager.calculate_word(sequence)
             )
             if "author" not in sequence[0]:
-                sequence[0][
-                    "author"
-                ] = AppContext.settings_manager().users.get_current_user()
+                sequence[0]["author"] = (
+                    AppContext.settings_manager().users.get_current_user()
+                )
             if "level" not in sequence[0]:
-                sequence[0][
-                    "level"
-                ] = SequenceLevelEvaluator.get_sequence_difficulty_level(sequence)
+                sequence[0]["level"] = (
+                    SequenceLevelEvaluator.get_sequence_difficulty_level(sequence)
+                )
             if "prop_type" not in sequence[0]:
                 sequence[0]["prop_type"] = (
                     AppContext.settings_manager()

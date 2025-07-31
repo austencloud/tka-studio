@@ -6,7 +6,6 @@ progress tracking, and state management. Coordinates between view and services.
 """
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QObject, QTimer
 
@@ -426,7 +425,6 @@ class LessonWorkspaceController(QObject):
         """Handle incorrect answer (allow retry)."""
         # Disable the incorrect option in the view
         # This will be handled by the answer options component
-        pass
 
     def _complete_lesson(self) -> None:
         """Complete the current lesson."""

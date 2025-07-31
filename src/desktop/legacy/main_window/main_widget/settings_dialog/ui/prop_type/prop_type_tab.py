@@ -44,10 +44,10 @@ class PropTypeTab(QWidget):
             f"""
             QWidget#props_container {{
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 {GlassmorphismStyler.get_color('surface', 0.6)},
-                    stop:1 {GlassmorphismStyler.get_color('surface_light', 0.4)});
-                border: 1px solid {GlassmorphismStyler.get_color('border', 0.4)};
-                border-radius: {GlassmorphismStyler.RADIUS['md']}px;
+                    stop:0 {GlassmorphismStyler.get_color("surface", 0.6)},
+                    stop:1 {GlassmorphismStyler.get_color("surface_light", 0.4)});
+                border: 1px solid {GlassmorphismStyler.get_color("border", 0.4)};
+                border-radius: {GlassmorphismStyler.RADIUS["md"]}px;
             }}
         """
         )
@@ -166,4 +166,4 @@ class PropTypeTab(QWidget):
 
     def update_size(self):
         """Update size - no longer needed with fixed modern layout."""
-        pass  # Keep for compatibility
+        # Keep for compatibility

@@ -4,13 +4,15 @@ Settings tab manager for the modern settings dialog.
 Handles tab creation, organization, and management.
 """
 
-from typing import TYPE_CHECKING, Dict, List
-from PyQt6.QtWidgets import QWidget, QStackedWidget, QListWidget, QVBoxLayout, QLabel
-from PyQt6.QtCore import Qt
 import logging
+from typing import TYPE_CHECKING, Dict, List
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QListWidget, QStackedWidget, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from desktop.modern.core.application_context import ApplicationContext
+
     from ..core.settings_state_manager import SettingsStateManager
 
 logger = logging.getLogger(__name__)
@@ -97,12 +99,12 @@ class SettingsTabManager:
         """Create tabs using real implementations."""
         try:
             # Import real tab implementations
-            from ..ui.prop_type.prop_type_tab import PropTypeTab
-            from ..ui.visibility.visibility_tab import VisibilityTab
             from ..ui.beat_layout.beat_layout_tab import BeatLayoutTab
-            from ..ui.image_export.image_export_tab import ImageExportTab
             from ..ui.codex_exporter.codex_exporter_tab import CodexExporterTab
             from ..ui.enhanced_general.enhanced_general_tab import EnhancedGeneralTab
+            from ..ui.image_export.image_export_tab import ImageExportTab
+            from ..ui.prop_type.prop_type_tab import PropTypeTab
+            from ..ui.visibility.visibility_tab import VisibilityTab
 
             return {
                 "General": EnhancedGeneralTab(

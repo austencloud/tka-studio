@@ -168,7 +168,7 @@ class GlassmorphismStyleGenerator:
             background: {normal_bg};
             border: 1px solid {normal_border};
             color: {text_color};
-            {' '.join(css_properties)}
+            {" ".join(css_properties)}
             margin: {GlassmorphismEffects.MARGIN_SMALL};
         }}
         
@@ -296,6 +296,6 @@ class GlassmorphismStyleGenerator:
         QWidget {{
             background: {background};
             border: 1px solid {border};
-            {' '.join(css_properties)}
+            {" ".join(css_properties)}
         }}
         """

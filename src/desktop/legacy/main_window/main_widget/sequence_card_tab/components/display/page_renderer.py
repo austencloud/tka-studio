@@ -1,15 +1,16 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/page_renderer.py
 import logging
-from typing import List, Dict, Any, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QLabel, QSizePolicy, QGridLayout, QVBoxLayout
+from typing import TYPE_CHECKING, Any, Dict, List
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-
+from PyQt6.QtWidgets import QGridLayout, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.components.display.sequence_display_manager import (
         DisplayConfig,
     )
+
     from ..pages.printable_factory import PrintablePageFactory
     from .layout_calculator import LayoutCalculator
 
@@ -85,7 +86,7 @@ class PageRenderer:
             # Verify the layout is a QGridLayout
             if not isinstance(new_page.layout(), QGridLayout):
                 logging.warning(
-                    f"Page has a layout but it's not a QGridLayout. Replacing it."
+                    "Page has a layout but it's not a QGridLayout. Replacing it."
                 )
                 old_layout = new_page.layout()
                 # Remove the old layout

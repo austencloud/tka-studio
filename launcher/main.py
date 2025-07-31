@@ -21,9 +21,7 @@ Version: 4.0.0 (Pure PyQt6 Rewrite)
 import logging
 import os
 import sys
-from pathlib import Path
 
-from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
@@ -247,7 +245,6 @@ def main():
 
         # Test PyQt6 import first
         print("🧪 Testing PyQt6 import...")
-        from PyQt6.QtWidgets import QApplication
 
         print("✅ PyQt6 imported successfully")
 

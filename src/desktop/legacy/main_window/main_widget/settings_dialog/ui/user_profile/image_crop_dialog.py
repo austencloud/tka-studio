@@ -1,16 +1,15 @@
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QDialog,
-    QDialogButtonBox,
-    QFrame,
+from main_window.main_widget.settings_dialog.ui.user_profile.profile_picture_manager import (
+    ProfilePictureManager,
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-
-from main_window.main_widget.settings_dialog.ui.user_profile.profile_picture_manager import (
-    ProfilePictureManager,
+from PyQt6.QtWidgets import (
+    QDialog,
+    QDialogButtonBox,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QVBoxLayout,
 )
 
 

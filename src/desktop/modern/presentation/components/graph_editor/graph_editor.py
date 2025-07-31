@@ -16,12 +16,13 @@ This version uses clean component-based architecture with:
 import logging
 from typing import TYPE_CHECKING, Optional
 
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout
+
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout
 
 from .components.main_adjustment_panel import MainAdjustmentPanel
 

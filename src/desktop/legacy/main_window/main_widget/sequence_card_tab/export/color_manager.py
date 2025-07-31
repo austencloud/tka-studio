@@ -1,8 +1,9 @@
 # src/main_window/main_widget/sequence_card_tab/export/color_manager.py
 import logging
-from typing import Dict, Any
 import re
-from PyQt6.QtGui import QImage, QColor
+from typing import Any, Dict
+
+from PyQt6.QtGui import QColor, QImage
 
 from data.constants import HEX_RED
 
@@ -173,11 +174,11 @@ class ColorManager:
         try:
             if self.use_high_bit_depth and image.format() != self.high_bit_depth_format:
                 # Use 16-bit color depth for better color fidelity if available
-                self.logger.debug(f"Converting image to high bit depth format")
+                self.logger.debug("Converting image to high bit depth format")
                 processed_image = image.convertToFormat(self.high_bit_depth_format)
             else:
                 # Fallback to 8-bit color depth
-                self.logger.debug(f"Converting image to standard format")
+                self.logger.debug("Converting image to standard format")
                 processed_image = image.convertToFormat(self.standard_format)
         except Exception as e:
             # If format conversion fails, use the original image

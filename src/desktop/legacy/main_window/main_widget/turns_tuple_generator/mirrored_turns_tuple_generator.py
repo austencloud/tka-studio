@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, Union
+
 from enums.letter.letter_type import LetterType
-
-
 from objects.arrow.arrow import Arrow
 
 if TYPE_CHECKING:
@@ -50,10 +49,7 @@ class MirroredTurnsTupleGenerator:
                 arrow.motion
             ).state.motion_type
             and not arrow.pictograph.managers.check.has_one_float()
-        ):
-            items = turns_tuple.strip("()").split(", ")
-            return f"({items[1]}, {items[0]})"
-        elif (
+        ) or (
             arrow.motion.state.motion_type
             != arrow.pictograph.managers.get.other_motion(
                 arrow.motion
@@ -96,10 +92,7 @@ class MirroredTurnsTupleGenerator:
         elif (
             arrow.motion.state.turns > 0
             and arrow.pictograph.managers.get.other_arrow(arrow).motion.state.turns == 0
-        ):
-            items = turns_tuple.strip("()").split(", ")
-            return f"({items[1]}, {items[0]}, {items[2]})"
-        elif (
+        ) or (
             arrow.motion.state.turns == 0
             and arrow.pictograph.managers.get.other_arrow(arrow).motion.state.turns > 0
         ):

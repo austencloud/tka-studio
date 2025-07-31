@@ -7,8 +7,9 @@ classification of pictographs (SS, SO, TS, TO, QS, QO).
 
 import os
 from typing import Optional
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+
 from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
 from desktop.modern.domain.models import VTGMode
 from shared.application.services.assets.image_asset_utils import (

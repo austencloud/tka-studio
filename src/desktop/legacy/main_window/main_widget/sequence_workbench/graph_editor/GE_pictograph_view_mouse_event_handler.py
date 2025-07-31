@@ -1,5 +1,6 @@
-from objects.arrow.arrow import Arrow
 from typing import TYPE_CHECKING
+
+from objects.arrow.arrow import Arrow
 from PyQt6.QtGui import QMouseEvent
 
 if TYPE_CHECKING:

@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Union
 
-
 Turns = Union[int, float, str]
 if TYPE_CHECKING:
     from objects.motion.motion import Motion

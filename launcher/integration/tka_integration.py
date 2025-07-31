@@ -19,9 +19,9 @@ Architecture:
 """
 
 import logging
-import sys
 from pathlib import Path
-from typing import List, Optional
+import sys
+from typing import List
 
 # Add paths for TKA imports
 launcher_dir = Path(__file__).parent
@@ -59,9 +59,10 @@ class TKAIntegrationService:
         try:
             # Try to import and use TKA's DI container
             from core.di_integration import get_launcher_container
+
             from desktop.modern.core.interfaces import (
-                IApplicationService,
                 IApplicationLaunchService,
+                IApplicationService,
                 ISettingsService,
             )
 
@@ -113,8 +114,9 @@ class TKAIntegrationService:
         try:
             if self.launch_service:
                 # Create launch request
-                from desktop.modern.domain.models import LaunchRequest
                 from datetime import datetime
+
+                from desktop.modern.domain.models import LaunchRequest
 
                 request = LaunchRequest(
                     application_id=app_id,
@@ -182,7 +184,7 @@ class FallbackApplicationService:
 
     def get_all_applications(self):
         """Return a minimal set of default applications."""
-        from desktop.modern.domain.models import ApplicationData, ApplicationCategory
+        from desktop.modern.domain.models import ApplicationCategory, ApplicationData
 
         # Get the TKA root directory (parent of launcher directory)
         tka_root = Path(__file__).parent.parent
@@ -281,6 +283,7 @@ class FallbackLaunchService:
     def launch_application(self, request):
         """Simple fallback launch implementation."""
         import subprocess
+
         from desktop.modern.domain.models import LaunchResult
 
         try:

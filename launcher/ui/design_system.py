@@ -18,12 +18,13 @@ Architecture:
 - AnimationPresets: Reusable animation configurations
 """
 
-import logging
-from typing import Dict, Any, Optional, Tuple
-from enum import Enum
 from dataclasses import dataclass
-from PyQt6.QtCore import QObject, pyqtSignal, QPropertyAnimation, QEasingCurve
-from PyQt6.QtGui import QColor, QPalette, QFont
+from enum import Enum
+import logging
+from typing import Any, Dict
+
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtGui import QPalette
 from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)
@@ -297,8 +298,8 @@ class StyleBuilder:
 
         # PyQt6 doesn't support backdrop-filter, so we use solid backgrounds
         return f"""
-            background: {self.theme['glass'][surface_key]};
-            border: 1px solid {self.theme['borders']['subtle']};
+            background: {self.theme["glass"][surface_key]};
+            border: 1px solid {self.theme["borders"]["subtle"]};
         """
 
     def button_style(self, variant: str = "primary") -> str:
@@ -306,24 +307,24 @@ class StyleBuilder:
         if variant == "primary":
             # Use solid color instead of gradient for better PyQt6 compatibility
             return f"""
-                background-color: {self.theme['accent']['primary'].replace('rgba', 'rgba').replace('0.9', '1.0')};
-                border: 1px solid {self.theme['borders']['emphasis']};
+                background-color: {self.theme["accent"]["primary"].replace("rgba", "rgba").replace("0.9", "1.0")};
+                border: 1px solid {self.theme["borders"]["emphasis"]};
                 color: #ffffff;
             """
         else:  # secondary/ghost
             return f"""
-                background-color: {self.theme['glass']['surface_secondary']};
-                border: 1px solid {self.theme['borders']['subtle']};
+                background-color: {self.theme["glass"]["surface_secondary"]};
+                border: 1px solid {self.theme["borders"]["subtle"]};
                 color: rgba(255, 255, 255, 0.9);
             """
 
     def typography(self, size: str = "base", weight: str = "normal") -> str:
         """Generate typography CSS."""
         return f"""
-            font-family: {self.theme['typography']['font_family']};
-            font-size: {self.theme['typography']['font_sizes'][size]};
-            font-weight: {self.theme['typography']['font_weights'][weight]};
-            line-height: {self.theme['typography']['line_heights']['normal']};
+            font-family: {self.theme["typography"]["font_family"]};
+            font-size: {self.theme["typography"]["font_sizes"][size]};
+            font-weight: {self.theme["typography"]["font_weights"][weight]};
+            line-height: {self.theme["typography"]["line_heights"]["normal"]};
         """
 
     def shadow(self, variant: str = "card") -> str:

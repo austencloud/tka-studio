@@ -102,29 +102,29 @@ class TKALauncherWindow(QWidget):
             }}
 
             QTabWidget::pane {{
-                {style_builder.glass_surface('secondary')}
-                border-radius: {style_builder.tokens.RADIUS['lg']}px;
+                {style_builder.glass_surface("secondary")}
+                border-radius: {style_builder.tokens.RADIUS["lg"]}px;
             }}
 
             QTabBar::tab {{
-                {style_builder.glass_surface('tertiary')}
-                {style_builder.typography('base', 'medium')}
+                {style_builder.glass_surface("tertiary")}
+                {style_builder.typography("base", "medium")}
                 color: rgba(255, 255, 255, 0.8);
-                padding: {style_builder.tokens.SPACING['md']}px \
-{style_builder.tokens.SPACING['lg']}px;
-                margin-right: {style_builder.tokens.SPACING['xs']}px;
-                border-top-left-radius: {style_builder.tokens.RADIUS['md']}px;
-                border-top-right-radius: {style_builder.tokens.RADIUS['md']}px;
+                padding: {style_builder.tokens.SPACING["md"]}px \
+{style_builder.tokens.SPACING["lg"]}px;
+                margin-right: {style_builder.tokens.SPACING["xs"]}px;
+                border-top-left-radius: {style_builder.tokens.RADIUS["md"]}px;
+                border-top-right-radius: {style_builder.tokens.RADIUS["md"]}px;
             }}
 
             QTabBar::tab:hover {{
-                {style_builder.glass_surface_hover('primary')}
+                {style_builder.glass_surface_hover("primary")}
             }}
 
             QTabBar::tab:selected {{
-                {style_builder.glass_surface('selected')}
+                {style_builder.glass_surface("selected")}
                 color: 
-                border: {style_builder.tokens.BORDERS['selected']};
+                border: {style_builder.tokens.BORDERS["selected"]};
             }}
         """
         )
@@ -257,7 +257,6 @@ class TKALauncherWindow(QWidget):
         logger.info("🧹 Cleaning up TKA Modern Window...")
 
         try:
-
             self.geometry_manager.save_window_geometry(self)
 
             self.mode_manager.cleanup()

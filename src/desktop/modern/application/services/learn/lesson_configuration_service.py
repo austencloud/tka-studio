@@ -57,7 +57,9 @@ class LessonConfigurationService(ILessonConfigurationService):
                 question_prompt="Which pictograph can follow?",
             )
 
-            logger.info(f"Initialized {len(self._lesson_configs)} lesson configurations")
+            logger.info(
+                f"Initialized {len(self._lesson_configs)} lesson configurations"
+            )
 
         except Exception as e:
             logger.error(f"Failed to setup lesson configurations: {e}")

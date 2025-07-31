@@ -13,11 +13,10 @@ Usage:
 """
 
 import argparse
-import subprocess
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict
 
 # Add src to path for imports
 sys.path.insert(

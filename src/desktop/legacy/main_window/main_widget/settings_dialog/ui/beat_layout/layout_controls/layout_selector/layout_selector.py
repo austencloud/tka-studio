@@ -1,9 +1,9 @@
 import json
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QFrame, QHBoxLayout
-from PyQt6.QtCore import Qt, pyqtSignal
 
 from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QHBoxLayout
 from utils.path_helpers import get_data_path
 
 from .layout_dropdown import LayoutDropdown
@@ -43,7 +43,7 @@ class LayoutSelector(QFrame):
         self, file_path: str
     ) -> dict[int, list[list[int]]]:
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 return {int(key): value for key, value in json.load(f).items()}
         except FileNotFoundError:
             raise FileNotFoundError(

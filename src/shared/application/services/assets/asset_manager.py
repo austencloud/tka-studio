@@ -5,15 +5,15 @@ Manages SVG assets, file paths, and color transformations for pictograph renderi
 Framework-agnostic service that handles asset loading, caching, and color transformations.
 """
 
+from functools import lru_cache
 import logging
 import os
 import re
-from functools import lru_cache
 from typing import Dict, Optional, Set
 
-from shared.application.services.assets.image_asset_utils import get_image_path
 from desktop.modern.core.interfaces.core_services import IAssetManager
 from desktop.modern.domain.models import MotionData, MotionType
+from shared.application.services.assets.image_asset_utils import get_image_path
 
 logger = logging.getLogger(__name__)
 
@@ -193,7 +193,7 @@ class AssetManager(IAssetManager):
     def _load_svg_file_cached(self, file_path: str) -> str:
         """Cached SVG file loader with LRU eviction."""
         try:
-            with open(file_path, "r", encoding="utf-8") as file:
+            with open(file_path, encoding="utf-8") as file:
                 content = file.read()
 
                 # Track this file as cached

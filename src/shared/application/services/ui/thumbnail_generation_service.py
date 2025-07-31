@@ -6,8 +6,8 @@ Wraps existing thumbnail generation infrastructure with clean interfaces.
 """
 
 import logging
-import tempfile
 from pathlib import Path
+import tempfile
 from typing import Optional
 
 from desktop.modern.core.interfaces.ui_services import IThumbnailGenerationService
@@ -206,11 +206,11 @@ class ThumbnailGenerationService(IThumbnailGenerationService):
             # For now, return None and log that we need legacy integration
             logger.warning("Legacy thumbnail generator integration not yet implemented")
             logger.info("TODO: Integrate with legacy thumbnail generation system")
-            return None
+            return
 
         except Exception as e:
             logger.error(f"Failed to get legacy thumbnail generator: {e}")
-            return None
+            return
 
 
 class MockThumbnailGenerationService(IThumbnailGenerationService):

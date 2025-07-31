@@ -6,40 +6,15 @@ Extracted from the main StartPositionPicker for better maintainability.
 """
 
 import logging
-import os
 
 # Import the legacy PyToggle for animated grid mode switching
-import sys
-from enum import Enum
-
+from domain.models.enums import PickerMode
+from presentation.components.ui.pytoggle import PyToggle
 from PyQt6.QtCore import QEasingCurve, QEvent, Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
-sys.path.append(
-    os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
-        "..",
-        "..",
-        "..",
-        "legacy",
-        "src",
-        "base_widgets",
-    )
-)
-from desktop.legacy.base_widgets.pytoggle import PyToggle
-
 logger = logging.getLogger(__name__)
-
-
-class PickerMode(Enum):
-    """Picker display modes."""
-
-    BASIC = "basic"
-    ADVANCED = "advanced"
-    AUTO = "auto"
 
 
 class StartPositionPickerHeader(QWidget):

@@ -1,8 +1,8 @@
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QLabel, QSizePolicy
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QLabel, QSizePolicy
 
 if TYPE_CHECKING:
     from .sequence_viewer import SequenceViewer

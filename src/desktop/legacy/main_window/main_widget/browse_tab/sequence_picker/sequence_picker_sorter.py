@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+
 from main_window.main_widget.browse_tab.thumbnail_box.thumbnail_box import ThumbnailBox
 
 if TYPE_CHECKING:
@@ -78,9 +79,7 @@ class SequencePickerSorter:
         self.group_sequences_by_section(sort_method)
 
     def display_sorted_sections(self, skip_scaling: bool = False):
-        sort_method = (
-            self.sequence_picker.control_panel.sort_widget.settings_manager.browse_settings.get_sort_method()
-        )
+        sort_method = self.sequence_picker.control_panel.sort_widget.settings_manager.browse_settings.get_sort_method()
         sorted_sections = self.sequence_picker.section_manager.get_sorted_sections(
             sort_method, self.browse_tab.sequence_picker.sections.keys()
         )
@@ -187,9 +186,7 @@ class SequencePickerSorter:
             thumbnail_box.show()
 
     def reload_currently_displayed_filtered_sequences(self):
-        sort_method = (
-            self.sequence_picker.control_panel.sort_widget.settings_manager.browse_settings.get_sort_method()
-        )
+        sort_method = self.sequence_picker.control_panel.sort_widget.settings_manager.browse_settings.get_sort_method()
         self.sort_and_display_currently_filtered_sequences_by_method(sort_method)
         self.update_ui(
             self.section_manager.get_sorted_sections(

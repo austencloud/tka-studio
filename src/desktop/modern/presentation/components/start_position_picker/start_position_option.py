@@ -94,7 +94,8 @@ class StartPositionOption(QWidget):
 
         # Create direct pictograph view (no pool, no widget wrapper)
         self._pictograph_component = create_start_position_view(
-            parent=self, is_advanced=False  # Will be updated when sizing is applied
+            parent=self,
+            is_advanced=False,  # Will be updated when sizing is applied
         )
         self.pictograph_component = self._pictograph_component  # Keep legacy reference
 
@@ -114,7 +115,7 @@ class StartPositionOption(QWidget):
         )
 
         if pictograph_data:
-            logger.debug(f"🎯 [START_POS_OPTION] Calling update_from_pictograph_data")
+            logger.debug("🎯 [START_POS_OPTION] Calling update_from_pictograph_data")
             self._pictograph_component.update_from_pictograph_data(pictograph_data)
         else:
             logger.warning(

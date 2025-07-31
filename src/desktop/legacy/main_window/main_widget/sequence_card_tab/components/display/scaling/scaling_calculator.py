@@ -6,6 +6,7 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 
 import logging
 from typing import Tuple
+
 from PyQt6.QtCore import QSize
 
 

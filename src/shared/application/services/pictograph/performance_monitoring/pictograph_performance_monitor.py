@@ -11,10 +11,12 @@ This service handles:
 
 import logging
 import time
-import uuid
 from typing import Any, Dict, List
+import uuid
 
-from desktop.modern.core.interfaces.pictograph_rendering_services import IPictographPerformanceMonitor
+from desktop.modern.core.interfaces.pictograph_rendering_services import (
+    IPictographPerformanceMonitor,
+)
 
 logger = logging.getLogger(__name__)
 

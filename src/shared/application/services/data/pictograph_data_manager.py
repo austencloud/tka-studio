@@ -11,8 +11,8 @@ This service provides a clean, focused interface for pictograph data operations
 while maintaining the proven data management algorithms.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import Any, Dict, List, Optional
 
 from desktop.modern.core.interfaces.pictograph_services import IPictographDataManager

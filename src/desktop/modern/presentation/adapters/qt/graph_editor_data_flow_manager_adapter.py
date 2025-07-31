@@ -7,12 +7,13 @@ This maintains the separation between platform-agnostic services and Qt-specific
 
 from typing import Any, Callable, Dict, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.graph_editor.graph_editor_data_flow_service import (
     GraphEditorDataFlowService,
 )
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class QtGraphEditorDataFlowManagerAdapter(QObject):

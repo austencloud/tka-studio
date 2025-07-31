@@ -66,7 +66,6 @@ class PanelFactory:
         layout = QVBoxLayout(widget)
 
         try:
-
             from desktop.modern.core.interfaces.start_position_services import (
                 IStartPositionDataService,
                 IStartPositionOrchestrator,
@@ -140,9 +139,7 @@ class PanelFactory:
         except Exception as e:
             fallback_label = QLabel(f"Export panel unavailable: {e}")
             fallback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            fallback_label.setStyleSheet(
-                "color: red; font-size: 14px; padding: 20px;"
-            )
+            fallback_label.setStyleSheet("color: red; font-size: 14px; padding: 20px;")
             layout.addWidget(fallback_label)
 
             import logging

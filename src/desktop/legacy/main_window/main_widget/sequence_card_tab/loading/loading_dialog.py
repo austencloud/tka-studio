@@ -1,15 +1,15 @@
 # src/main_window/main_widget/sequence_card_tab/loading/loading_dialog.py
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QProgressBar,
     QPushButton,
-    QFrame,
+    QVBoxLayout,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 
 
 class SequenceCardLoadingDialog(QDialog):

@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
-from data.constants import *
+
 from enums.letter.letter_condition import LetterCondition
 from enums.prop_type import PropType
+
+from data.constants import *
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
@@ -64,9 +66,12 @@ class PictographChecker:
             self.pictograph.elements.props[RED],
             self.pictograph.elements.props[BLUE],
         )
-        if red_prop.state.ori == IN and blue_prop.state.ori == OUT:
-            return True
-        elif red_prop.state.ori == OUT and blue_prop.state.ori == IN:
+        if (
+            red_prop.state.ori == IN
+            and blue_prop.state.ori == OUT
+            or red_prop.state.ori == OUT
+            and blue_prop.state.ori == IN
+        ):
             return True
         return False
 

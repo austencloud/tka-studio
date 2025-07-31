@@ -1,15 +1,14 @@
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPen, QColor
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING, Optional
 
-from data.constants import GOLD
+from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat_view import (
     StartPositionBeatView,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtWidgets import QWidget
 
-
-from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
+from data.constants import GOLD
 
 if TYPE_CHECKING:
     from .legacy_beat_frame import LegacyBeatFrame

@@ -56,7 +56,7 @@ class BackgroundManager(IBackgroundManager):
 
     def __init__(self):
         """Initialize background manager."""
-        self.current_background: Optional["MainBackgroundWidget"] = None
+        self.current_background: Optional[MainBackgroundWidget] = None
 
     def setup_background(
         self,

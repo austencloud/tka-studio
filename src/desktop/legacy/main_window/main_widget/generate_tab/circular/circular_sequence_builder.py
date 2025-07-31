@@ -1,8 +1,11 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QApplication
-import random
 from copy import deepcopy
+import random
+from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
+from data.constants import *
 from data.constants import (
     BLUE_ATTRS,
     DASH,
@@ -12,21 +15,21 @@ from data.constants import (
     STATIC,
 )
 from data.positions_maps import (
-    swapped_positions,
     mirrored_positions,
     mirrored_swapped_positions,
+    rotated_and_swapped_positions,
+    swapped_positions,
 )
-from .CAP_executors.CAP_executor import CAPExecutor
-from .CAP_type import CAPType
+
 from ..base_sequence_builder import BaseSequenceBuilder
 from ..turn_intensity_manager import TurnIntensityManager
-from .utils.rotation_determiner import RotationDeterminer
+from .CAP_executor_factory import CAPExecutorFactory, StrictRotatedCAPExecutor
+from .CAP_executors.CAP_executor import CAPExecutor
+from .CAP_type import CAPType
 from .utils.end_position_selector import RotatedEndPositionSelector
 from .utils.pictograph_selector import PictographSelector
+from .utils.rotation_determiner import RotationDeterminer
 from .utils.word_length_calculator import WordLengthCalculator
-from .CAP_executor_factory import CAPExecutorFactory, StrictRotatedCAPExecutor
-from data.constants import *
-from data.positions_maps import rotated_and_swapped_positions
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab
@@ -265,7 +268,7 @@ class CircularSequenceBuilder(BaseSequenceBuilder):
             CAPType.MIRRORED_ROTATED,
             CAPType.MIRRORED_COMPLEMENTARY_ROTATED,
         ]:
-            strict_rotated_executor: "StrictRotatedCAPExecutor" = self.executors.get(
+            strict_rotated_executor: StrictRotatedCAPExecutor = self.executors.get(
                 CAPType.STRICT_ROTATED
             )
             sequence = strict_rotated_executor.create_CAPs(

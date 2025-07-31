@@ -1,6 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_config.py
 import logging
-from typing import Dict, Any, Tuple, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+
 from PyQt6.QtCore import Qt
 
 if TYPE_CHECKING:

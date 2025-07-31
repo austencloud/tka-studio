@@ -1,15 +1,15 @@
 from typing import TYPE_CHECKING
+
 import cv2
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QFont, QImage, QPixmap
 from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QMessageBox,
     QApplication,
     QFrame,
+    QLabel,
+    QMessageBox,
+    QVBoxLayout,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QImage, QPixmap, QFont
-
 from utils.path_helpers import get_my_videos_path
 
 if TYPE_CHECKING:

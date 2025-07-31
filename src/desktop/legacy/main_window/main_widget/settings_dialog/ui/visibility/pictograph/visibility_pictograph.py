@@ -1,24 +1,26 @@
 from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from PyQt6.QtWidgets import QGraphicsProxyWidget
+
 from data.constants import (
     ALPHA1,
+    ALPHA3,
     BLUE,
     END_POS,
     LETTER,
     MOTION_TYPE,
+    PRO,
     RED,
     START_POS,
-    PRO,
-    ALPHA3,
 )
-from PyQt6.QtWidgets import QGraphicsProxyWidget
 
 if TYPE_CHECKING:
-    from ..visibility_tab import VisibilityTab
     from base_widgets.pictograph.elements.views.visibility_pictograph_view import (
         VisibilityPictographView,
     )
+
+    from ..visibility_tab import VisibilityTab
 
 
 class VisibilityPictograph(LegacyPictograph):

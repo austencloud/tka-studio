@@ -1,14 +1,16 @@
 from typing import TYPE_CHECKING
+
 from enums.letter.letter import Letter
-from ..data_updater.special_placement_data_updater import SpecialPlacementDataUpdater
-from .rot_angle_override_data_handler import RotAngleOverrideDataHandler
-from .rot_angle_override_coordinator import RotAngleOverrideCoordinator
-from .rot_angle_override_validator import RotAngleOverrideValidator
-from .rot_angle_override_mirror_handler import RotAngleOverrideMirrorHandler
-from .rot_angle_override_view_updater import RotAngleOverrideViewUpdater
 from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import (
     TurnsTupleGenerator,
 )
+
+from ..data_updater.special_placement_data_updater import SpecialPlacementDataUpdater
+from .rot_angle_override_coordinator import RotAngleOverrideCoordinator
+from .rot_angle_override_data_handler import RotAngleOverrideDataHandler
+from .rot_angle_override_mirror_handler import RotAngleOverrideMirrorHandler
+from .rot_angle_override_validator import RotAngleOverrideValidator
+from .rot_angle_override_view_updater import RotAngleOverrideViewUpdater
 
 if TYPE_CHECKING:
     from ..hotkey_graph_adjuster import HotkeyGraphAdjuster

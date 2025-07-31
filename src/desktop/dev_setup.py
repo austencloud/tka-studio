@@ -13,11 +13,10 @@ Usage:
     python dev_setup.py --reset-cache      # Clear Python cache files
 """
 
-import sys
-import os
-import shutil
 import argparse
 from pathlib import Path
+import shutil
+import sys
 from typing import List, Tuple
 
 
@@ -28,7 +27,7 @@ def create_missing_init_files() -> List[Path]:
     Returns:
         List[Path]: Paths of created files
     """
-    from project_root import PROJECT_ROOT, MODERN_SRC
+    from project_root import MODERN_SRC
 
     directories_needing_init = [
         MODERN_SRC,
@@ -128,7 +127,7 @@ def validate_project_structure() -> bool:
     Returns:
         bool: True if structure is valid
     """
-    from project_root import PROJECT_ROOT, MODERN_SRC
+    from project_root import MODERN_SRC, PROJECT_ROOT
 
     required_paths = [
         PROJECT_ROOT / "modern",

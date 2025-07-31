@@ -5,12 +5,13 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
 import logging
-from typing import Optional, Dict, Any
-from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtCore import QSize
+from typing import Any, Dict, Optional
 
-from ..cache.memory_cache_manager import MemoryCacheManager
+from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QImage, QPixmap
+
 from ..cache.cache_performance_monitor import CachePerformanceMonitor
+from ..cache.memory_cache_manager import MemoryCacheManager
 from ..disk_cache_manager import DiskCacheManager
 
 

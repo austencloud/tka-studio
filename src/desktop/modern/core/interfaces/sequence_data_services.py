@@ -687,7 +687,7 @@ class IDataImportService(ABC):
 class ISequenceLoader(ABC):
     """
     Interface for sequence loading operations.
-    
+
     Handles sequence loading from persistence, startup restoration,
     and conversion between legacy and modern formats.
     """
@@ -696,10 +696,10 @@ class ISequenceLoader(ABC):
     def load_sequence_from_file(self, filepath: str) -> Optional[SequenceData]:
         """
         Load sequence from file.
-        
+
         Args:
             filepath: Path to sequence file
-            
+
         Returns:
             Loaded sequence data, or None if failed
         """
@@ -708,7 +708,7 @@ class ISequenceLoader(ABC):
     def load_current_sequence(self) -> Optional[SequenceData]:
         """
         Load the current sequence from default location.
-        
+
         Returns:
             Current sequence data, or None if not found
         """
@@ -717,7 +717,7 @@ class ISequenceLoader(ABC):
 class ISequenceDictionaryManager(ABC):
     """
     Interface for sequence dictionary operations.
-    
+
     Provides dictionary functionality for sequences including word calculation
     and difficulty assessment.
     """
@@ -726,10 +726,10 @@ class ISequenceDictionaryManager(ABC):
     def get_word_for_sequence(self, sequence: SequenceData) -> Optional[str]:
         """
         Get word associated with sequence.
-        
+
         Args:
             sequence: Sequence data
-            
+
         Returns:
             Word string, or None if failed
         """
@@ -738,10 +738,10 @@ class ISequenceDictionaryManager(ABC):
     def calculate_difficulty(self, sequence: SequenceData) -> int:
         """
         Calculate sequence difficulty level.
-        
+
         Args:
             sequence: Sequence data
-            
+
         Returns:
             Difficulty level as integer
         """
@@ -750,11 +750,11 @@ class ISequenceDictionaryManager(ABC):
     def add_sequence_to_dictionary(self, sequence: SequenceData, word: str) -> bool:
         """
         Add sequence to dictionary.
-        
+
         Args:
             sequence: Sequence data
             word: Associated word
-            
+
         Returns:
             True if successfully added, False otherwise
         """
@@ -763,7 +763,7 @@ class ISequenceDictionaryManager(ABC):
 class ISequenceGenerator(ABC):
     """
     Interface for sequence generation operations.
-    
+
     Handles sequence generation using various algorithms.
     """
 
@@ -773,13 +773,13 @@ class ISequenceGenerator(ABC):
     ) -> SequenceData:
         """
         Generate a sequence using the specified algorithm.
-        
+
         Args:
             sequence_type: Type of sequence generation algorithm
             name: Name for the sequence
             length: Length of sequence
             **kwargs: Additional generation parameters
-            
+
         Returns:
             Generated sequence data
         """
@@ -788,7 +788,7 @@ class ISequenceGenerator(ABC):
 class ISequenceStartPositionManager(ABC):
     """
     Interface for sequence start position management.
-    
+
     Handles start position operations and management.
     """
 
@@ -796,16 +796,18 @@ class ISequenceStartPositionManager(ABC):
     def set_start_position(self, start_position_beat_data: BeatData) -> None:
         """
         Set the start position.
-        
+
         Args:
             start_position_beat_data: Beat data for start position
         """
 
     @abstractmethod
-    def update_start_position_orientation(self, color: str, new_orientation: int) -> None:
+    def update_start_position_orientation(
+        self, color: str, new_orientation: int
+    ) -> None:
         """
         Update start position orientation.
-        
+
         Args:
             color: Color identifier
             new_orientation: New orientation value
@@ -815,7 +817,7 @@ class ISequenceStartPositionManager(ABC):
     def get_current_start_position(self) -> Optional[BeatData]:
         """
         Get current start position.
-        
+
         Returns:
             Current start position beat data, or None if not set
         """
@@ -828,7 +830,7 @@ class ISequenceStartPositionManager(ABC):
     def has_start_position(self) -> bool:
         """
         Check if sequence has start position.
-        
+
         Returns:
             True if has start position, False otherwise
         """

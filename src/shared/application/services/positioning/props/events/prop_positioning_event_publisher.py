@@ -11,12 +11,12 @@ PROVIDES:
 - Type-safe event publishing
 """
 
-import sys
-import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Any, Dict, Optional
+import uuid
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -38,7 +38,6 @@ sys.path.insert(0, str(_project_root / "src"))
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import PropType
 from desktop.modern.domain.models.motion_data import MotionData
-
 from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     SeparationDirection,
 )

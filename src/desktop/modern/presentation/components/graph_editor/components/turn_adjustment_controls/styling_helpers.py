@@ -42,9 +42,9 @@ def apply_modern_panel_styling(panel, color):
         f"""
         QGroupBox {{
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                stop:0 {colors['gradient_start']},
-                stop:1 {colors['gradient_end']});
-            border: 2px solid {colors['border_color']};
+                stop:0 {colors["gradient_start"]},
+                stop:1 {colors["gradient_end"]});
+            border: 2px solid {colors["border_color"]};
             border-radius: {UNIFIED_PANEL_BORDER_RADIUS}px;
             margin-top: 0px;
             padding-top: 8px;
@@ -70,8 +70,8 @@ def apply_unified_button_styling(button, color, button_type="standard"):
     button.setStyleSheet(
         f"""
         QPushButton {{
-            background: rgba({colors['base_rgb']}, 0.4);
-            border: 2px solid rgba({colors['base_rgb']}, 0.6);
+            background: rgba({colors["base_rgb"]}, 0.4);
+            border: 2px solid rgba({colors["base_rgb"]}, 0.6);
             border-radius: {UNIFIED_BORDER_RADIUS}px;
             color: rgba(255, 255, 255, 0.95);
             font-size: {font_size}px;
@@ -79,17 +79,17 @@ def apply_unified_button_styling(button, color, button_type="standard"):
             padding: 8px;
         }}
         QPushButton:hover {{
-            background: rgba({colors['hover_rgb']}, 0.5);
-            border-color: rgba({colors['hover_rgb']}, 0.8);
+            background: rgba({colors["hover_rgb"]}, 0.5);
+            border-color: rgba({colors["hover_rgb"]}, 0.8);
             color: rgba(255, 255, 255, 1.0);
         }}
         QPushButton:pressed {{
-            background: rgba({colors['base_rgb']}, 0.6);
-            border-color: rgba({colors['base_rgb']}, 1.0);
+            background: rgba({colors["base_rgb"]}, 0.6);
+            border-color: rgba({colors["base_rgb"]}, 1.0);
         }}
         QPushButton:checked {{
-            background: rgba({colors['base_rgb']}, 0.8);
-            border-color: rgba({colors['base_rgb']}, 1.0);
+            background: rgba({colors["base_rgb"]}, 0.8);
+            border-color: rgba({colors["base_rgb"]}, 1.0);
             color: rgba(255, 255, 255, 1.0);
             font-weight: bold;
         }}

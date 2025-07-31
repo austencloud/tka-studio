@@ -1,6 +1,9 @@
 from typing import Any, Callable, Dict, List
 
-from desktop.modern.core.interfaces.core_services import ISettingsCoordinator, IUIStateManager
+from desktop.modern.core.interfaces.core_services import (
+    ISettingsCoordinator,
+    IUIStateManager,
+)
 
 
 class SettingsCoordinator(ISettingsCoordinator):

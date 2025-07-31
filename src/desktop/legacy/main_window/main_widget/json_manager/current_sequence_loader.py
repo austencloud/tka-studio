@@ -1,6 +1,8 @@
 import json
-from data.constants import DIAMOND, GRID_MODE
+
 from utils.path_helpers import get_user_editable_resource_path
+
+from data.constants import DIAMOND, GRID_MODE
 
 
 class CurrentSequenceLoader:
@@ -9,7 +11,7 @@ class CurrentSequenceLoader:
 
     def load_current_sequence_json(self) -> list[dict]:
         try:
-            with open(self.current_sequence_json, "r", encoding="utf-8") as file:
+            with open(self.current_sequence_json, encoding="utf-8") as file:
                 content = file.read().strip()
                 if not content:
                     return self.get_default_sequence()

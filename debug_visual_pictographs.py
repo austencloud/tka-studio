@@ -11,8 +11,7 @@ import time
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from PyQt6.QtCore import QSize, QTimer
-from PyQt6.QtGui import QPainter, QPixmap
+from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication, QWidget
 
 
@@ -89,7 +88,7 @@ def debug_visual_pictographs():
             print("✅ Lesson selector found and visible")
 
             # Look for lesson buttons - need to find actual clickable buttons
-            from PyQt6.QtWidgets import QAbstractButton, QPushButton
+            from PyQt6.QtWidgets import QAbstractButton
 
             lesson_buttons = lesson_selector.findChildren(QAbstractButton)
             lesson_buttons = [
@@ -163,7 +162,7 @@ def debug_visual_pictographs():
                             items = scene.items()
                             print(f"📄 Scene items: {len(items)}")
                             for i, item in enumerate(items[:3]):
-                                print(f"    Item {i+1}: {type(item).__name__}")
+                                print(f"    Item {i + 1}: {type(item).__name__}")
 
                         # Check and fix window flags if problematic
                         from PyQt6.QtCore import Qt
@@ -210,12 +209,12 @@ def debug_visual_pictographs():
 
                     for i, widget in enumerate(answer_pictographs[:3]):
                         print(
-                            f"  Answer {i+1}: {widget.__class__.__name__} - Visible: {widget.isVisible()}"
+                            f"  Answer {i + 1}: {widget.__class__.__name__} - Visible: {widget.isVisible()}"
                         )
 
                         # Try to force answer widget visible
                         if not widget.isVisible():
-                            print(f"🔧 Forcing answer widget {i+1} visible...")
+                            print(f"🔧 Forcing answer widget {i + 1} visible...")
                             widget.setVisible(True)
                             widget.show()
                             app.processEvents()
@@ -248,7 +247,7 @@ def debug_visual_pictographs():
                 for i, widget in enumerate(
                     pictograph_widgets[:10]
                 ):  # Limit to first 10
-                    print(f"  Widget {i+1}: {widget.__class__.__name__}")
+                    print(f"  Widget {i + 1}: {widget.__class__.__name__}")
                     print(f"    Visible: {widget.isVisible()}")
                     print(f"    Size: {widget.size()}")
                     print(f"    Position: {widget.pos()}")
@@ -258,7 +257,7 @@ def debug_visual_pictographs():
 
                     # Try to force visibility
                     if not widget.isVisible():
-                        print(f"    🔧 Forcing widget visible...")
+                        print("    🔧 Forcing widget visible...")
                         widget.setVisible(True)
                         widget.show()
                         widget.raise_()
@@ -324,7 +323,7 @@ def debug_visual_pictographs():
 
                                 # Save a screenshot for manual inspection
                                 if has_content:
-                                    filename = f"debug_widget_{i+1}_{widget.__class__.__name__}.png"
+                                    filename = f"debug_widget_{i + 1}_{widget.__class__.__name__}.png"
                                     pixmap.save(filename)
                                     print(f"    Screenshot saved: {filename}")
                         except Exception as e:
@@ -339,7 +338,7 @@ def debug_visual_pictographs():
         if "learn_pictograph_widgets" in locals() and learn_pictograph_widgets:
             print("\n🧠 Learn Pictograph Widgets Details:")
             for i, widget in enumerate(learn_pictograph_widgets):
-                print(f"  Learn Widget {i+1}: {widget.__class__.__name__}")
+                print(f"  Learn Widget {i + 1}: {widget.__class__.__name__}")
                 print(f"    Visible: {widget.isVisible()}")
                 print(f"    Size: {widget.size()}")
                 print(f"    Position: {widget.pos()}")
@@ -350,7 +349,7 @@ def debug_visual_pictographs():
                             items = scene.items()
                             print(f"    Scene items: {len(items)}")
                             for j, item in enumerate(items[:5]):
-                                print(f"      Item {j+1}: {type(item).__name__}")
+                                print(f"      Item {j + 1}: {type(item).__name__}")
                     except Exception as e:
                         print(f"    Scene error: {e}")
 

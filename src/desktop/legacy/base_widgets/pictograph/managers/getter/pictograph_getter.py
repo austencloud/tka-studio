@@ -1,13 +1,11 @@
 from typing import TYPE_CHECKING, Optional
 
-
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
 )
 from base_widgets.pictograph.managers.getter.lead_state_determiner import (
     LeadStateDeterminer,
 )
-from data.constants import *
 from enums.glyph_enum import Glyph
 from enums.letter.letter import Letter
 from enums.letter.letter_type import LetterType
@@ -16,6 +14,8 @@ from main_window.main_widget.turns_tuple_generator.turns_tuple_generator import 
 )
 from objects.arrow.arrow import Arrow
 from objects.motion.motion import Motion
+
+from data.constants import *
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

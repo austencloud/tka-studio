@@ -1,7 +1,9 @@
 from typing import Callable
-from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout
-from PyQt6.QtCore import Qt, QSize
+
 from interfaces.settings_manager_interface import ISettingsManager
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
+
 from .reversal_combobox import ReversalCombobox
 
 

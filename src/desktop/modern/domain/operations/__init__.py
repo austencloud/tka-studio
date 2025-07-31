@@ -5,17 +5,17 @@ Contains all domain-level operations including CAP transformations.
 """
 
 from .cap_operations import (
-    CAPType,
-    CAPOperation,
-    StrictRotatedCAP,
-    StrictMirroredCAP,
     CAPExecutorFactory,
+    CAPOperation,
+    CAPType,
+    StrictMirroredCAP,
+    StrictRotatedCAP,
     apply_cap_to_sequence,
 )
 
 __all__ = [
     "CAPType",
-    "CAPOperation", 
+    "CAPOperation",
     "StrictRotatedCAP",
     "StrictMirroredCAP",
     "CAPExecutorFactory",

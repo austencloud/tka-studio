@@ -15,11 +15,12 @@ Architecture:
 - Automatic migration and validation
 """
 
+from dataclasses import asdict, dataclass
 import json
 import logging
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from PyQt6.QtCore import QRect
 
 logger = logging.getLogger(__name__)
@@ -104,7 +105,7 @@ class LauncherConfig:
         """Load configuration from file with fallback to defaults."""
         try:
             if self.config_file.exists():
-                with open(self.config_file, "r", encoding="utf-8") as f:
+                with open(self.config_file, encoding="utf-8") as f:
                     data = json.load(f)
 
                 # Validate and migrate if needed

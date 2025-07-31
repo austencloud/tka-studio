@@ -2,9 +2,10 @@
 """
 Simple test runner for Start Position Services.
 """
+
 import os
-import sys
 from pathlib import Path
+import sys
 
 # Add src to path
 src_path = Path(__file__).parent / "src"

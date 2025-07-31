@@ -145,7 +145,7 @@ class DesignSystem:
             "default": {
                 "background-color": "transparent",
                 "border": "none",
-                "border-bottom": f"2px solid transparent",
+                "border-bottom": "2px solid transparent",
                 "padding": "12px 20px",
                 "color": self._colors.TEXT_MUTED,
                 "font-weight": "500",

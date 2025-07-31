@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Union
+
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat_grabber import (
     BeatGrabber,
@@ -10,11 +11,10 @@ from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat_start_tex
 from .beat_number_item import BeatNumberItem
 
 if TYPE_CHECKING:
+    from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
         LegacyBeatFrame,
     )
-
-    from base_widgets.pictograph.elements.views.beat_view import LegacyBeatView
 
 
 class Beat(LegacyPictograph):

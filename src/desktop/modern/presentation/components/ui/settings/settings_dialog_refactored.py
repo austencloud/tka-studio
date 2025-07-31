@@ -34,8 +34,6 @@ and tabs exist and will resolve correctly at runtime.
 
 from typing import Any, Dict
 
-from desktop.modern.application.services.ui.settings import UISettingsManager
-from desktop.modern.core.interfaces.core_services import IUIStateManager
 from PyQt6.QtCore import QRectF, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QRegion
 from PyQt6.QtWidgets import (
@@ -48,6 +46,9 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from desktop.modern.application.services.ui.settings import UISettingsManager
+from desktop.modern.core.interfaces.core_services import IUIStateManager
 
 from .components import (
     GlassmorphismStyles,

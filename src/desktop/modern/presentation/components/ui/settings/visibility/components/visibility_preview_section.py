@@ -10,7 +10,7 @@ from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from desktop.modern.presentation.components.ui.settings.visibility.visibility_pictograph_preview import (
     VisibilityPictographPreview,
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class VisibilityPreviewSection(QWidget):
     """
     Interactive pictograph preview section.
-    
+
     Handles preview widget creation, update coordination, and real-time visibility changes.
     Follows TKA single-responsibility principle and clean component organization.
     """
@@ -32,15 +32,15 @@ class VisibilityPreviewSection(QWidget):
     def __init__(self, parent=None):
         """
         Initialize visibility preview section.
-        
+
         Args:
             parent: Parent widget
         """
         super().__init__(parent)
-        
+
         # UI components
         self.preview: Optional[VisibilityPictographPreview] = None
-        
+
         self._setup_ui()
         self._setup_connections()
 
@@ -74,7 +74,7 @@ class VisibilityPreviewSection(QWidget):
     def update_visibility(self, element_name: str, visible: bool):
         """
         Update preview with visibility changes.
-        
+
         Args:
             element_name: Name of the element to update
             visible: Whether the element should be visible
@@ -107,7 +107,7 @@ class VisibilityPreviewSection(QWidget):
     def get_preview_widget(self) -> Optional[VisibilityPictographPreview]:
         """
         Get the preview widget for direct access if needed.
-        
+
         Returns:
             The VisibilityPictographPreview widget or None
         """

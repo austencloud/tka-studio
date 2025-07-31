@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtGui import QKeyEvent
-from PyQt6.QtCore import Qt
 
 from legacy_settings_manager.global_settings.app_context import AppContext
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QKeyEvent
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.elements.views.GE_pictograph_view import (

@@ -9,10 +9,11 @@ Features:
 
 from typing import Optional
 
-from desktop.modern.presentation.tabs.browse.models import FilterType
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
+
+from desktop.modern.presentation.tabs.browse.models import FilterType
 
 
 class QuickAccessSection(QFrame):

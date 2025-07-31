@@ -1,10 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/export/page_image_data_extractor.py
-import os
 import logging
-from typing import List, Dict, Any, Optional, TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QLabel, QGridLayout
+import os
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
+from PyQt6.QtWidgets import QGridLayout, QLabel, QWidget
 from utils.path_helpers import get_sequence_card_image_exporter_path
 
 if TYPE_CHECKING:
@@ -296,7 +296,7 @@ class PageImageDataExtractor:
                     )
 
                     if metadata:
-                        self.logger.debug(f"Successfully extracted metadata from image")
+                        self.logger.debug("Successfully extracted metadata from image")
 
                         # Create sequence_data dictionary
                         sequence_data = {

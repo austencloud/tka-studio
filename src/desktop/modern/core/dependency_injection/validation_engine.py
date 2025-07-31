@@ -9,9 +9,9 @@ Handles:
 - Type safety validation
 """
 
-from typing import Type, List, Set, Dict, Any, get_type_hints
 import inspect
 import logging
+from typing import Any, Dict, List, Set, Type, get_type_hints
 
 try:
     from ..exceptions import DependencyInjectionError
@@ -254,8 +254,8 @@ class ValidationEngine:
 
     def is_primitive_type(self, param_type: Type) -> bool:
         """Check if a type is a primitive type that should not be resolved as a dependency."""
-        from pathlib import Path
         from datetime import datetime, timedelta
+        from pathlib import Path
         from typing import Union
 
         primitive_types = {

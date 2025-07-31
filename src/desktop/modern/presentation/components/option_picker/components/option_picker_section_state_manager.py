@@ -12,10 +12,12 @@ Extracted from OptionPickerSection to follow Single Responsibility Principle.
 
 from typing import TYPE_CHECKING, Optional
 
+from desktop.modern.presentation.components.option_picker.types.letter_types import (
+    LetterType,
+)
 from shared.application.services.option_picker.option_configuration_service import (
     OptionConfigurationService,
 )
-from desktop.modern.presentation.components.option_picker.types.letter_types import LetterType
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
@@ -26,7 +28,7 @@ if TYPE_CHECKING:
 class OptionPickerSectionStateManager:
     """
     Handles state management for OptionPickerSection.
-    
+
     Responsibilities:
     - Loading state management
     - UI initialization tracking
@@ -44,12 +46,12 @@ class OptionPickerSectionStateManager:
         self._letter_type = letter_type
         self._scroll_area = scroll_area
         self._option_config_service = option_config_service
-        
+
         # State tracking
         self._loading_options = False
         self._ui_initialized = False
         self._scroll_area_ready = False
-        
+
         # Configuration state
         self._option_picker_width: Optional[int] = None
         self._is_groupable: Optional[bool] = None
@@ -81,7 +83,7 @@ class OptionPickerSectionStateManager:
     def update_option_picker_width(self, width: int) -> None:
         """Update option picker width and related state."""
         self._option_picker_width = width
-        
+
         # Update groupable state based on configuration
         self._is_groupable = self._option_config_service.is_groupable_type(
             self._letter_type
@@ -98,7 +100,7 @@ class OptionPickerSectionStateManager:
     def check_scroll_area_readiness(self) -> bool:
         """
         Check if scroll area has valid dimensions and update readiness state.
-        
+
         Returns:
             True if scroll area is ready, False otherwise
         """
@@ -114,16 +116,18 @@ class OptionPickerSectionStateManager:
         )
 
         # More robust validation - check if we have a reasonable width
-        is_reasonable_width = scroll_width > 800  # Should be much larger than 640px default
+        is_reasonable_width = (
+            scroll_width > 800
+        )  # Should be much larger than 640px default
         is_not_default = scroll_width != 640  # Avoid the default fallback value
         has_parent_width = parent_width > 800  # Parent should also be properly sized
 
         ready = is_reasonable_width and is_not_default and has_parent_width
-        
+
         if ready != self._scroll_area_ready:
             self._scroll_area_ready = ready
             return True  # State changed
-            
+
         return ready
 
     def can_handle_resize(self) -> bool:
@@ -155,10 +159,12 @@ class OptionPickerSectionStateManager:
             "scroll_area_ready": self._scroll_area_ready,
             "option_picker_width": self._option_picker_width,
             "is_groupable": self._is_groupable,
-            "scroll_area_width": self._scroll_area.width() if self._scroll_area else None,
+            "scroll_area_width": self._scroll_area.width()
+            if self._scroll_area
+            else None,
             "scroll_area_parent_width": (
-                self._scroll_area.parent().width() 
-                if self._scroll_area and self._scroll_area.parent() 
+                self._scroll_area.parent().width()
+                if self._scroll_area and self._scroll_area.parent()
                 else None
             ),
         }
@@ -166,10 +172,10 @@ class OptionPickerSectionStateManager:
     def validate_state_for_operation(self, operation: str) -> tuple[bool, str]:
         """
         Validate state for a specific operation.
-        
+
         Args:
             operation: The operation to validate ('resize', 'load_options', 'clear')
-            
+
         Returns:
             Tuple of (is_valid, reason_if_invalid)
         """
@@ -182,16 +188,16 @@ class OptionPickerSectionStateManager:
                 elif not self._scroll_area_ready:
                     return False, "Scroll area not ready"
             return True, ""
-            
+
         elif operation == "load_options":
             if not self.can_load_options():
                 return False, "UI not initialized"
             return True, ""
-            
+
         elif operation == "clear":
             # Clear can always be performed
             return True, ""
-            
+
         else:
             return False, f"Unknown operation: {operation}"
 

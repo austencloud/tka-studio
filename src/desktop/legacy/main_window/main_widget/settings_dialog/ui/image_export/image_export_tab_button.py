@@ -1,15 +1,16 @@
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QCursor, QFont
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor, QFont
+from PyQt6.QtWidgets import QPushButton
 from styles.dark_theme_styler import DarkThemeStyler
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
-        ImageExportTab,
-    )
     from legacy_settings_manager.legacy_settings_manager import (
         LegacySettingsManager,
+    )
+    from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (
+        ImageExportTab,
     )
 
 

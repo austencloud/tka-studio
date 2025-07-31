@@ -1,9 +1,8 @@
-import json
 from dataclasses import dataclass, field
+import json
 from typing import Any, Dict, Tuple
 
 from desktop.modern.domain.models.enums import GridMode
-
 
 
 @dataclass(frozen=True)

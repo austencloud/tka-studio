@@ -73,8 +73,8 @@ class WorkbenchServiceRegistrar(BaseServiceRegistrar):
         """Register pure business services for workbench functionality."""
         try:
             # Temporarily ensure shared src is accessible for imports
-            import sys
             from pathlib import Path
+            import sys
 
             # Find shared src path
             current_file = Path(__file__).resolve()

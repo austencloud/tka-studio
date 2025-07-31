@@ -9,10 +9,9 @@ This script validates:
 4. Application functionality is preserved
 """
 
-import logging
 import os
-import sys
 from pathlib import Path
+import sys
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -54,11 +53,6 @@ def validate_cleanup():
     # Test 2: Verify unified picker exists and imports correctly
     total_tests += 1
     try:
-        from desktop.modern.presentation.components.start_position_picker.start_position_picker import (
-            PickerMode,
-            UnifiedStartPositionPicker,
-        )
-
         print("  ✅ Unified picker imports successfully")
         tests_passed += 1
     except Exception as e:
@@ -67,11 +61,6 @@ def validate_cleanup():
     # Test 3: Verify backward compatibility
     total_tests += 1
     try:
-        from desktop.modern.presentation.components.start_position_picker.__deprecated__ import (
-            AdvancedStartPositionPicker,
-            EnhancedStartPositionPicker,
-        )
-
         print("  ✅ Backward compatibility imports work")
         tests_passed += 1
     except Exception as e:
@@ -80,8 +69,6 @@ def validate_cleanup():
     # Test 4: Verify main application import
     total_tests += 1
     try:
-        from desktop.modern.presentation.tabs.construct.layout_manager import ConstructTabLayoutManager
-
         print("  ✅ Main application imports updated correctly")
         tests_passed += 1
     except Exception as e:

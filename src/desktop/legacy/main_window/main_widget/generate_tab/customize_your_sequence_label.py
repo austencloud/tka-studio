@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
     from main_window.main_widget.generate_tab.generate_tab import GenerateTab

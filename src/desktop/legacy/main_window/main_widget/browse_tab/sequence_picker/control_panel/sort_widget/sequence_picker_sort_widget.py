@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.browse_tab.sequence_picker.control_panel.sort_widget.sequence_picker_sort_controller import (
     SequencePickerSortController,
 )
@@ -10,7 +10,7 @@ from main_window.main_widget.browse_tab.sequence_picker.control_panel.sort_widge
 from main_window.main_widget.browse_tab.sequence_picker.control_panel.sort_widget.sort_option import (
     SortOption,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 if TYPE_CHECKING:
     from ...sequence_picker import SequencePicker

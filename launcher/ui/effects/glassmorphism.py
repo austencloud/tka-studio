@@ -18,25 +18,24 @@ Architecture:
 """
 
 import logging
-from typing import Optional, Tuple, Dict, Any
-from PyQt6.QtWidgets import (
-    QWidget,
-    QGraphicsEffect,
-    QGraphicsBlurEffect,
-    QGraphicsDropShadowEffect,
-    QGraphicsOpacityEffect,
-)
+from typing import Any, Dict
+
 from PyQt6.QtCore import (
+    QEasingCurve,
     QObject,
     QPropertyAnimation,
-    QEasingCurve,
-    QTimer,
-    pyqtSignal,
     pyqtProperty,
+    pyqtSignal,
 )
-from PyQt6.QtGui import QPainter, QColor, QLinearGradient, QRadialGradient, QBrush, QPen
+from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtWidgets import (
+    QGraphicsBlurEffect,
+    QGraphicsDropShadowEffect,
+    QGraphicsEffect,
+    QWidget,
+)
 
-from ..design_system import get_theme_manager, AccentColor
+from ..design_system import get_theme_manager
 
 logger = logging.getLogger(__name__)
 

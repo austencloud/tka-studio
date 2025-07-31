@@ -5,8 +5,8 @@ Reliable Search Box Component
 Professional search input with glassmorphism styling.
 """
 
-from PyQt6.QtWidgets import QLineEdit
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLineEdit
 
 from ...pyqt6_compatible_design_system import get_reliable_style_builder
 from ...reliable_effects import get_shadow_manager
@@ -33,19 +33,19 @@ class ReliableSearchBox(QLineEdit):
         self.setStyleSheet(
             f"""
             QLineEdit {{
-                {self.style_builder.glass_surface('primary')}
-                border-radius: {self.style_builder.tokens.RADIUS['lg']}px;
+                {self.style_builder.glass_surface("primary")}
+                border-radius: {self.style_builder.tokens.RADIUS["lg"]}px;
                 padding: 12px 20px;
-                {self.style_builder.typography('base', 'normal')}
+                {self.style_builder.typography("base", "normal")}
                 color: #ffffff;
             }}
             QLineEdit:hover {{
-                {self.style_builder.glass_surface_hover('secondary')}
-                border: {self.style_builder.tokens.BORDERS['hover']};
+                {self.style_builder.glass_surface_hover("secondary")}
+                border: {self.style_builder.tokens.BORDERS["hover"]};
             }}
             QLineEdit:focus {{
-                {self.style_builder.glass_surface_hover('primary')}
-                border: {self.style_builder.tokens.BORDERS['focus']};
+                {self.style_builder.glass_surface_hover("primary")}
+                border: {self.style_builder.tokens.BORDERS["focus"]};
             }}
             QLineEdit::placeholder {{
                 color: rgba(255, 255, 255, 0.5);

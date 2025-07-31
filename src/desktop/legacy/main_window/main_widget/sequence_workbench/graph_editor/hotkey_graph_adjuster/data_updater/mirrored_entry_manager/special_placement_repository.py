@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 from enums.letter.letter import Letter
 from legacy_settings_manager.global_settings.app_context import AppContext

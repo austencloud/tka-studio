@@ -2,20 +2,21 @@
 
 from copy import deepcopy
 import random
-from typing import TYPE_CHECKING, Dict, Any
+from typing import TYPE_CHECKING, Any, Dict
+
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
+    LegacyStartPositionBeat,
+)
 
 from data.constants import (
     BLUE_ATTRS,
     DIAMOND,
+    END_ORI,
     END_POS,
     IN,
     RED_ATTRS,
     START_ORI,
-    END_ORI,
     START_POS,
-)
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
-    LegacyStartPositionBeat,
 )
 
 if TYPE_CHECKING:

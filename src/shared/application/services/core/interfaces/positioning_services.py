@@ -66,7 +66,9 @@ class IArrowLocationCalculator(ABC):
     """Interface for calculating arrow locations based on motion data."""
 
     @abstractmethod
-    def calculate_arrow_location(self, motion: MotionData, is_blue_arrow: bool) -> Location:
+    def calculate_arrow_location(
+        self, motion: MotionData, is_blue_arrow: bool
+    ) -> Location:
         """
         Calculate arrow location based on motion data.
 

@@ -2,12 +2,13 @@
 Settings State Manager for tracking changes and managing settings state.
 """
 
-from typing import Dict, Any, Optional, Callable, Set
-from PyQt6.QtCore import QObject, pyqtSignal
 import copy
 import json
 import logging
 import time
+from typing import Any, Callable, Dict, Optional, Set
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class SettingsStateManager(QObject):
@@ -275,7 +276,7 @@ class SettingsStateManager(QObject):
     def restore_backup(self, backup_path: str) -> bool:
         """Restore settings from a backup file."""
         try:
-            with open(backup_path, "r") as f:
+            with open(backup_path) as f:
                 backup_data = json.load(f)
 
             if "settings" in backup_data:

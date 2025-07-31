@@ -5,11 +5,10 @@ These adapters are used in the UI layer to bridge between the clean architecture
 core types and the PyQt6 framework types.
 """
 
-
-from desktop.modern.core.types import Size, Point, Rect
+from desktop.modern.core.types import Point, Rect, Size
 
 try:
-    from PyQt6.QtCore import QSize, QPointF, QRect
+    from PyQt6.QtCore import QPointF, QRect, QSize
 
     QT_AVAILABLE = True
 except ImportError:

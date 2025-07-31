@@ -16,7 +16,7 @@ Architecture:
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from domain.models import ApplicationData, ApplicationStatus
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal

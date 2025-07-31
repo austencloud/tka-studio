@@ -7,8 +7,8 @@ following clean architecture principles.
 """
 
 import logging
-import tempfile
 from pathlib import Path
+import tempfile
 from typing import Optional, Protocol
 
 from desktop.modern.core.interfaces.workbench_services import IFullScreenViewer

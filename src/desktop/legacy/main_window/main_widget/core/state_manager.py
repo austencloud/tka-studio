@@ -4,9 +4,10 @@ State manager responsible for managing application state.
 This component follows SRP by focusing solely on state management.
 """
 
-from typing import TYPE_CHECKING, Dict, Any, Optional
-from PyQt6.QtCore import QObject, pyqtSignal
 import logging
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 from desktop.modern.core.application_context import ApplicationContext
 

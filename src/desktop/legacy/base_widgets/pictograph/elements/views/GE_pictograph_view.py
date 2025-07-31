@@ -1,13 +1,10 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPainter, QPen, QColor, QMouseEvent, QKeyEvent, QCursor
-from PyQt6.QtWidgets import QApplication
+
 from base_widgets.pictograph.elements.views.base_pictograph_view import (
     BasePictographView,
 )
-from data.constants import GOLD
-from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.hotkey_graph_adjuster import (
-    HotkeyGraphAdjuster,
+from main_window.main_widget.sequence_workbench.graph_editor.GE_pictograph import (
+    GE_Pictograph,
 )
 from main_window.main_widget.sequence_workbench.graph_editor.GE_pictograph_view_mouse_event_handler import (
     GE_PictographViewMouseEventHandler,
@@ -15,10 +12,15 @@ from main_window.main_widget.sequence_workbench.graph_editor.GE_pictograph_view_
 from main_window.main_widget.sequence_workbench.graph_editor.graph_editor_view_key_event_handler import (
     GraphEditorViewKeyEventHandler,
 )
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
-from main_window.main_widget.sequence_workbench.graph_editor.GE_pictograph import (
-    GE_Pictograph,
+from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.hotkey_graph_adjuster import (
+    HotkeyGraphAdjuster,
 )
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QCursor, QKeyEvent, QMouseEvent, QPainter, QPen
+from PyQt6.QtWidgets import QApplication
+
+from data.constants import GOLD
 
 if TYPE_CHECKING:
     from .....main_window.main_widget.sequence_workbench.graph_editor.pictograph_container.legacy_GE_pictograph_container import (

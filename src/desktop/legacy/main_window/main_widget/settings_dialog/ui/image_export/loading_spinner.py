@@ -1,13 +1,14 @@
 import math
-from PyQt6.QtCore import QRect, Qt, QTimer, QSize
+
+from PyQt6.QtCore import QRect, QSize, Qt, QTimer
 from PyQt6.QtGui import (
+    QCloseEvent,
     QColor,
+    QHideEvent,
     QPainter,
     QPaintEvent,
-    QShowEvent,
     QResizeEvent,
-    QHideEvent,
-    QCloseEvent,
+    QShowEvent,
 )
 from PyQt6.QtWidgets import QWidget
 

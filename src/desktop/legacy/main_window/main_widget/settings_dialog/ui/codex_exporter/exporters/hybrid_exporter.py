@@ -5,11 +5,11 @@ Hybrid pictograph exporter for the codex pictograph exporter.
 import os
 from typing import TYPE_CHECKING
 
-
 from ..turn_applier import TurnApplier
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
     from ..pictograph_data_manager import PictographDataManager
     from ..pictograph_factory import PictographFactory
     from ..pictograph_renderer import PictographRenderer

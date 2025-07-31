@@ -1,20 +1,21 @@
 import os
-from typing import TYPE_CHECKING, Dict, Any
-from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog
-from PyQt6.QtGui import QImage, QPainter
-from PyQt6.QtCore import Qt
+from typing import TYPE_CHECKING, Any, Dict
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-from data.constants import (
-    START_POS,
-    END_POS,
-    BLUE_ATTRS,
-    RED_ATTRS,
-    MOTION_TYPE,
-    GRID_MODE,
-)
-from utils.path_helpers import get_my_photos_path
 from main_window.main_widget.grid_mode_checker import GridModeChecker
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage, QPainter
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QProgressDialog
+from utils.path_helpers import get_my_photos_path
+
+from data.constants import (
+    BLUE_ATTRS,
+    END_POS,
+    GRID_MODE,
+    MOTION_TYPE,
+    RED_ATTRS,
+    START_POS,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.ui.image_export.image_export_tab import (

@@ -6,9 +6,10 @@ Minimal conftest.py that relies on proper package installation
 instead of sys.path manipulation.
 """
 
-import pytest
-import warnings
 from pathlib import Path
+import warnings
+
+import pytest
 
 
 def pytest_configure(config):
@@ -17,7 +18,7 @@ def pytest_configure(config):
         "unit: Unit tests (fast, isolated)",
         "integration: Integration tests",
         "modern: Modern codebase tests",
-        "legacy: Legacy codebase tests", 
+        "legacy: Legacy codebase tests",
         "launcher: Launcher tests",
         "slow: Tests taking >5 seconds",
         "broken: Known broken tests",
@@ -42,23 +43,24 @@ def tka_root():
     return Path(__file__).parent.absolute()
 
 
-@pytest.fixture(scope="session") 
+@pytest.fixture(scope="session")
 def qt_app():
     """Provide a QApplication instance for GUI tests."""
     try:
-        from PyQt6.QtWidgets import QApplication
         import sys
-        
+
+        from PyQt6.QtWidgets import QApplication
+
         app = QApplication.instance()
         if app is None:
             app = QApplication(sys.argv)
-        
+
         yield app
-        
+
         # Clean up
         if app:
             app.quit()
-            
+
     except ImportError:
         pytest.skip("PyQt6 not available")
 
@@ -68,7 +70,7 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         # Add markers based on test file location
         test_path = str(item.fspath)
-        
+
         if "launcher/tests" in test_path:
             item.add_marker(pytest.mark.launcher)
         elif "src/desktop/modern/tests" in test_path:
@@ -79,9 +81,12 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(pytest.mark.unit)
         elif "tests/integration" in test_path:
             item.add_marker(pytest.mark.integration)
-        
+
         # Mark GUI tests
-        if any(gui_keyword in test_path.lower() for gui_keyword in ["gui", "widget", "window", "qt"]):
+        if any(
+            gui_keyword in test_path.lower()
+            for gui_keyword in ["gui", "widget", "window", "qt"]
+        ):
             item.add_marker(pytest.mark.gui)
 
 

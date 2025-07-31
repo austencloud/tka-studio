@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel
+
 from PyQt6.QtCore import Qt
-
-
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
-    from main_window.main_widget.settings_dialog.ui.beat_layout.layout_controls.layout_controls import LayoutControls
+    from main_window.main_widget.settings_dialog.ui.beat_layout.layout_controls.layout_controls import (
+        LayoutControls,
+    )
 
 
 class DefaultLayoutLabel(QLabel):

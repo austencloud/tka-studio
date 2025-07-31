@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING
-from PyQt6.QtGui import QPainter, QFont, QFontMetrics, QImage
 from datetime import datetime
+from typing import TYPE_CHECKING
+
+from PyQt6.QtGui import QFont, QFontMetrics, QImage, QPainter
 
 from .font_margin_helper import FontMarginHelper
 

@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import (
-    QPainter,
     QColor,
-    QPixmap,
     QImage,
+    QPainter,
+    QPixmap,
 )
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat

@@ -14,10 +14,13 @@ from desktop.modern.presentation.components.sequence_workbench.sequence_beat_fra
 from .beat_frame_section import WorkbenchBeatFrameSection
 
 # Legacy compatibility
-from .button_interface import ButtonOperationResult, IWorkbenchButtonInterface
-from .button_interface import WorkbenchButtonInterfaceAdapter
+from .button_interface import (
+    ButtonOperationResult,
+    IWorkbenchButtonInterface,
+    WorkbenchButtonInterfaceAdapter,
+    WorkbenchButtonSignals,
+)
 from .button_interface import WorkbenchButtonInterfaceAdapter as ButtonInterface
-from .button_interface import WorkbenchButtonSignals
 from .indicator_section import WorkbenchIndicatorSection
 from .sequence_workbench import SequenceWorkbench
 

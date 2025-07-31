@@ -1,10 +1,10 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QFrame,
-)
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QFrame,
+    QLabel,
+    QVBoxLayout,
+)
 
 
 class SidebarHeader(QFrame):

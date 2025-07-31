@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QResizeEvent
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QResizeEvent
+from PyQt6.QtWidgets import QLabel
 
 if TYPE_CHECKING:
     from .initial_filter_choice_widget.initial_filter_choice_widget import (

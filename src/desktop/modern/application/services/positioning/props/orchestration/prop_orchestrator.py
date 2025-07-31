@@ -12,10 +12,10 @@ PROVIDES:
 """
 
 import os
-import sys
-import uuid
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Dict, Optional, Tuple
+import uuid
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -33,19 +33,18 @@ def _get_project_root() -> Path:
 _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-import os
-import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+import sys
+from typing import Any, List
 
 # Add project root to path (following established pattern)
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
 
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.enums import PropType
 from PyQt6.QtCore import QPointF
 
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import PropType
 from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
@@ -127,7 +126,9 @@ class PropOrchestrator(IPropOrchestrator):
         # Use dependency injection for config service to avoid creating multiple instances
         if config_service is None:
             try:
-                from desktop.modern.core.dependency_injection.di_container import get_container
+                from desktop.modern.core.dependency_injection.di_container import (
+                    get_container,
+                )
 
                 container = get_container()
                 self.config_service = container.resolve(IJSONConfigurator)

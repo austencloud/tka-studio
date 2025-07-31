@@ -7,10 +7,11 @@ based on VTG mode classification.
 
 import os
 from typing import Optional
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtSvg import QSvgRenderer
 
-from desktop.modern.domain.models import VTGMode, ElementalType
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+
+from desktop.modern.domain.models import ElementalType, VTGMode
 from shared.application.services.assets.image_asset_utils import (
     get_image_path,
 )

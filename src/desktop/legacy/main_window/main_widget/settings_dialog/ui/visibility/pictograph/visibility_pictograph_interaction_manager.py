@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .event_assigner import EventAssigner
 from .event_handler_factory import EventHandlerFactory
 from .visibility_controller import VisibilityController

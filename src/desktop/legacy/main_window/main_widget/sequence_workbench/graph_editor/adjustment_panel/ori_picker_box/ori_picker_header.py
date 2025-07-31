@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from ..base_adjustment_box_header_widget import BaseAdjustmentBoxHeaderWidget
 
 if TYPE_CHECKING:

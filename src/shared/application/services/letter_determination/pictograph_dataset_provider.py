@@ -8,13 +8,15 @@ Converts existing pictograph data to letter determination format.
 import logging
 from typing import Dict, List, Optional
 
-from shared.application.services.data.dataset_query import DatasetQuery
-from shared.application.services.pictograph.pictograph_csv_manager import PictographCSVManager
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     IPictographDatasetProvider,
 )
 from desktop.modern.domain.models.enums import Letter
 from desktop.modern.domain.models.pictograph_data import PictographData
+from shared.application.services.data.dataset_query import DatasetQuery
+from shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
 
 logger = logging.getLogger(__name__)
 

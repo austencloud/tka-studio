@@ -4,13 +4,14 @@ Thumbnail Cache Manager - Handles disk caching with metadata validation.
 Extracted from ThumbnailImageLabel to follow Single Responsibility Principle.
 """
 
-import logging
-import os
 import hashlib
 import json
-import time  # ← add this at the top
+import logging
+import os
 from pathlib import Path
-from typing import Optional, Dict, Any
+import time  # ← add this at the top
+from typing import Any, Dict, Optional
+
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QPixmap
 
@@ -130,7 +131,7 @@ class ThumbnailCacheManager:
         metadata_path = self.CACHE_DIR / self.CACHE_METADATA_FILE
         try:
             if metadata_path.exists():
-                with open(metadata_path, "r") as f:
+                with open(metadata_path) as f:
                     self._cache_metadata = json.load(f)
             else:
                 self._cache_metadata = {}

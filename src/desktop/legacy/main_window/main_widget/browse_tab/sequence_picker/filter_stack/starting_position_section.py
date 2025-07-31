@@ -1,18 +1,19 @@
-from typing import TYPE_CHECKING, Tuple
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QLabel,
-    QGridLayout,
-    QSpacerItem,
-    QSizePolicy,
-)
-from PyQt6.QtCore import Qt, QEvent, QObject
-from PyQt6.QtGui import QPixmap, QPainter, QPen
-import os
 from functools import partial
+import os
+from typing import TYPE_CHECKING, Tuple
 
+from PyQt6.QtCore import QEvent, QObject, Qt
+from PyQt6.QtGui import QPainter, QPen, QPixmap
+from PyQt6.QtWidgets import (
+    QGridLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+)
 from styles.styled_button import StyledButton
 from utils.path_helpers import get_data_path, get_image_path
+
 from .filter_section_base import FilterSectionBase
 
 if TYPE_CHECKING:
@@ -107,9 +108,9 @@ class StartingPositionSection(FilterSectionBase):
         image_path = os.path.join(self.IMAGE_DIR, f"{position.lower()}.png")
         if os.path.exists(image_path):
             original_pixmap = QPixmap(image_path)
-            self.original_pixmaps[
-                position
-            ] = original_pixmap  # Store the original pixmap
+            self.original_pixmaps[position] = (
+                original_pixmap  # Store the original pixmap
+            )
 
             # Make the image clickable
             image_placeholder.setCursor(Qt.CursorShape.PointingHandCursor)

@@ -1,23 +1,19 @@
 # Example of how to use the refactored DictionaryService in SequenceWorkbench
 
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
 # Import the refactored DictionaryService and UI
 from main_window.main_widget.core.main_widget_coordinator import MainWidgetCoordinator
-from main_window.main_widget.sequence_workbench.add_to_dictionary_manager.dictionary_service import (
-    DictionaryService,
-)
 from main_window.main_widget.sequence_workbench.add_to_dictionary_manager.add_to_dictionary_ui import (
     AddToDictionaryUI,
+)
+from main_window.main_widget.sequence_workbench.add_to_dictionary_manager.dictionary_service import (
+    DictionaryService,
 )
 
 # Other imports remain the same
 from main_window.main_widget.sequence_workbench.beat_deleter.beat_deleter import (
     BeatDeleter,
-)
-from main_window.main_widget.sequence_workbench.labels.workbench_difficulty_label import (
-    WorkbenchDifficultyLabel,
 )
 from main_window.main_widget.sequence_workbench.labels.circular_sequence_indicator import (
     CircularSequenceIndicator,
@@ -25,21 +21,26 @@ from main_window.main_widget.sequence_workbench.labels.circular_sequence_indicat
 from main_window.main_widget.sequence_workbench.labels.sequence_workbench_indicator_label import (
     SequenceWorkbenchIndicatorLabel,
 )
+from main_window.main_widget.sequence_workbench.labels.workbench_difficulty_label import (
+    WorkbenchDifficultyLabel,
+)
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
     LegacyBeatFrame,
 )
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
+
 from .full_screen_viewer import FullScreenViewer
+from .graph_editor.legacy_graph_editor import LegacyGraphEditor
+from .labels.current_word_label import CurrentWordLabel
 from .sequence_color_swapper import SequenceColorSwapper
 from .sequence_reflector import SequenceReflector
 from .sequence_rotater import SequenceRotater
-from .sequence_workbench_layout_manager import SequenceWorkbenchLayoutManager
-from .labels.current_word_label import CurrentWordLabel
-from .graph_editor.legacy_graph_editor import LegacyGraphEditor
 from .sequence_workbench_button_panel import SequenceWorkbenchButtonPanel
+from .sequence_workbench_layout_manager import SequenceWorkbenchLayoutManager
 from .sequence_workbench_scroll_area import SequenceWorkbenchScrollArea
 
 if TYPE_CHECKING:
-    from main_window.main_widget.main_widget import MainWidget
+    pass
 
 
 class SequenceWorkbench(QWidget):

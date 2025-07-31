@@ -7,9 +7,10 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 import logging
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import PrintablePageFactory
+    from main_window.main_widget.sequence_card_tab.components.pages.printable_factory import (
+        PrintablePageFactory,
+    )
 
 
 class AspectRatioManager:

@@ -1,24 +1,28 @@
 """CamelCase conversion utilities for domain models."""
-import re
+
 from dataclasses import fields, is_dataclass
-from typing import Dict, Any
 from enum import Enum
+import re
+from typing import Any, Dict
+
 
 def to_camel_case(snake_str: str) -> str:
     """Convert snake_case to camelCase."""
-    components = snake_str.split('_')
-    return components[0] + ''.join(word.capitalize() for word in components[1:])
+    components = snake_str.split("_")
+    return components[0] + "".join(word.capitalize() for word in components[1:])
+
 
 def to_snake_case(camel_str: str) -> str:
     """Convert camelCase to snake_case."""
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', camel_str)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_str)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
 
 def dataclass_to_camel_dict(obj: Any) -> Dict[str, Any]:
     """Convert dataclass to dict with camelCase keys."""
     if not is_dataclass(obj):
         raise ValueError("Object must be a dataclass")
-    
+
     def convert_value(value: Any) -> Any:
         if is_dataclass(value):
             return dataclass_to_camel_dict(value)
@@ -30,18 +34,20 @@ def dataclass_to_camel_dict(obj: Any) -> Dict[str, Any]:
             return value.value
         else:
             return value
-    
+
     result = {}
     for field in fields(obj):
         snake_name = field.name
         camel_name = to_camel_case(snake_name)
         value = getattr(obj, snake_name)
         result[camel_name] = convert_value(value)
-    
+
     return result
+
 
 def dict_from_camel_case(data: Dict[str, Any]) -> Dict[str, Any]:
     """Convert dict with camelCase keys to snake_case keys."""
+
     def convert_value(value: Any) -> Any:
         if isinstance(value, dict):
             return dict_from_camel_case(value)
@@ -49,5 +55,5 @@ def dict_from_camel_case(data: Dict[str, Any]) -> Dict[str, Any]:
             return [convert_value(item) for item in value]
         else:
             return value
-    
+
     return {to_snake_case(k): convert_value(v) for k, v in data.items()}

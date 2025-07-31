@@ -2,16 +2,16 @@
 Background settings tab with animated clickable preview tiles.
 """
 
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtGui import QCursor, QFont, QPainter
 from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QGridLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
-    QGroupBox,
-    QGridLayout,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer
-from PyQt6.QtGui import QFont, QPainter, QCursor
 
 from desktop.modern.core.interfaces.background_interfaces import IBackgroundService
 
@@ -119,8 +119,9 @@ class AnimatedBackgroundTile(QWidget):
 
     def _paint_aurora(self, painter):
         """Paint animated aurora background."""
-        from PyQt6.QtGui import QLinearGradient, QColor
         import math
+
+        from PyQt6.QtGui import QColor, QLinearGradient
 
         # Animated gradient shift
         shift = math.sin(self.animation_frame * 0.02) * 0.1
@@ -145,8 +146,9 @@ class AnimatedBackgroundTile(QWidget):
 
     def _paint_aurora_borealis(self, painter):
         """Paint animated aurora borealis background."""
-        from PyQt6.QtGui import QLinearGradient, QColor
         import math
+
+        from PyQt6.QtGui import QColor, QLinearGradient
 
         # Animated light wave effect
         wave_offset = math.sin(self.animation_frame * 0.03) * 0.2
@@ -170,8 +172,9 @@ class AnimatedBackgroundTile(QWidget):
 
     def _paint_starfield(self, painter):
         """Paint animated starfield background."""
-        from PyQt6.QtGui import QRadialGradient, QColor
         import math
+
+        from PyQt6.QtGui import QColor, QRadialGradient
 
         gradient = QRadialGradient(
             self.width() / 2, self.height() / 2, self.width() / 2
@@ -194,8 +197,9 @@ class AnimatedBackgroundTile(QWidget):
 
     def _paint_snowfall(self, painter):
         """Paint animated snowfall background."""
-        from PyQt6.QtGui import QLinearGradient, QColor
         import math
+
+        from PyQt6.QtGui import QColor, QLinearGradient
 
         gradient = QLinearGradient(0, 0, 0, self.height())
         gradient.setColorAt(0, QColor("#87CEEB"))
@@ -211,8 +215,9 @@ class AnimatedBackgroundTile(QWidget):
 
     def _paint_bubbles(self, painter):
         """Paint animated bubbles background."""
-        from PyQt6.QtGui import QRadialGradient, QColor
         import math
+
+        from PyQt6.QtGui import QColor, QRadialGradient
 
         gradient = QRadialGradient(
             self.width() / 2, self.height() / 2, self.width() / 2

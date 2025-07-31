@@ -8,14 +8,14 @@ desktop-specific integration.
 
 # Import the shared implementation
 from shared.application.services.ui.animation.animation_orchestrator import (
-    ModernAnimationOrchestrator,
     LegacyFadeManagerWrapper,
-    create_modern_animation_system
+    ModernAnimationOrchestrator,
+    create_modern_animation_system,
 )
 
 # Re-export for local imports
 __all__ = [
-    'ModernAnimationOrchestrator',
-    'LegacyFadeManagerWrapper', 
-    'create_modern_animation_system'
+    "ModernAnimationOrchestrator",
+    "LegacyFadeManagerWrapper",
+    "create_modern_animation_system",
 ]

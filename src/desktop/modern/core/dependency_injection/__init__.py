@@ -12,12 +12,12 @@ REFACTORED ARCHITECTURE: The DI system has been broken down into focused modules
 This provides better maintainability, testability, and separation of concerns.
 """
 
-from .di_container import DIContainer, get_container, reset_container
-from .service_registry import ServiceRegistry, ServiceScope, ServiceDescriptor
-from .service_resolvers import ResolverChain, LazyProxy, IServiceResolver
-from .lifecycle_manager import LifecycleManager
-from .validation_engine import ValidationEngine
 from .debugging_tools import DebuggingTools
+from .di_container import DIContainer, get_container, reset_container
+from .lifecycle_manager import LifecycleManager
+from .service_registry import ServiceDescriptor, ServiceRegistry, ServiceScope
+from .service_resolvers import IServiceResolver, LazyProxy, ResolverChain
+from .validation_engine import ValidationEngine
 
 __all__ = [
     # Main container

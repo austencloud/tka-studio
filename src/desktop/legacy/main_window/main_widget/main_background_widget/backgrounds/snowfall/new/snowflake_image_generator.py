@@ -1,8 +1,9 @@
-import os
-from PyQt6.QtGui import QPixmap, QPainter, QColor, QPainterPath, QGuiApplication
-from PyQt6.QtCore import Qt
 import math
+import os
 import random
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QGuiApplication, QPainter, QPainterPath, QPixmap
 
 
 class SnowflakeImageGenerator:

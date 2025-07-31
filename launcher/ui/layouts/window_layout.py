@@ -6,13 +6,10 @@ Manages the layout and positioning of all launcher window components.
 Handles responsive design and component arrangement.
 """
 
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtGui import QFont
+from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
-    QScrollArea,
-    QSplitter,
     QVBoxLayout,
     QWidget,
 )
@@ -72,7 +69,7 @@ class LauncherLayoutManager:
             QFrame {{
                 background: transparent;
                 border: none;
-                padding: {self.style_builder.tokens.SPACING['md']}px;
+                padding: {self.style_builder.tokens.SPACING["md"]}px;
             }}
         """
         )

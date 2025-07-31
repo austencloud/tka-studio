@@ -1,4 +1,9 @@
 from typing import TYPE_CHECKING
+
+from main_window.main_widget.grid_mode_checker import GridModeChecker
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
 from data.constants import (
     BLUE_ATTRS,
     END_LOC,
@@ -7,13 +12,8 @@ from data.constants import (
     START_LOC,
     START_POS,
 )
-from data.positions_maps import positions_map
 from data.locations import cw_loc_order
-
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication
-
-from main_window.main_widget.grid_mode_checker import GridModeChecker
+from data.positions_maps import positions_map
 
 if TYPE_CHECKING:
     from .codex_control_widget import CodexControlWidget

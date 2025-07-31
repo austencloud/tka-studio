@@ -1,14 +1,15 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QToolButton
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize
+
+from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.sequence_workbench.labels.difficulty_level_icon import (
     DifficultyLevelIcon,
 )
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_creator.difficult_level_gradients import (
     DifficultyLevelGradients,
 )
-from legacy_settings_manager.global_settings.app_context import AppContext
+from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QToolButton
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_workbench.sequence_workbench import (

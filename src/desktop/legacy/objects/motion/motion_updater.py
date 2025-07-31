@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from data.constants import COLOR, END_ORI, LOC, ORI
 
 if TYPE_CHECKING:

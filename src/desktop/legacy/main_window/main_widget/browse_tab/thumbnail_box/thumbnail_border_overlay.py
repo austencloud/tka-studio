@@ -1,8 +1,8 @@
 # thumbnail_border_overlay.py (example)
 
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtGui import QPainter, QPen, QColor
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtWidgets import QWidget
 
 
 class ThumbnailBorderOverlay(QWidget):

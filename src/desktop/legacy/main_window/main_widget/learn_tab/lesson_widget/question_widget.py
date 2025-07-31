@@ -1,12 +1,14 @@
 from typing import TYPE_CHECKING, Any
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from data.constants import LETTER
+
 from main_window.main_widget.learn_tab.pictograph_question_renderer import (
     PictographQuestionRenderer,
 )
 from main_window.main_widget.learn_tab.text_question_renderer import (
     TextQuestionRenderer,
 )
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
+from data.constants import LETTER
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.lesson_widget import (

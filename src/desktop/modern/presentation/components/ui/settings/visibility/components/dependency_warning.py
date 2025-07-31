@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import QLabel
 class DependencyWarning(QLabel):
     """
     Warning display component for motion dependencies.
-    
+
     Shows/hides warnings when motion visibility affects element visibility options.
     Follows TKA single-responsibility principle and glassmorphism design.
     """
@@ -20,28 +20,28 @@ class DependencyWarning(QLabel):
     def __init__(self, parent=None):
         """
         Initialize dependency warning component.
-        
+
         Args:
             parent: Parent widget
         """
         super().__init__(parent)
-        
+
         self.setText(
             "⚠️ Some visibility options are hidden.\nActivate both motions to show them."
         )
         self.setObjectName("dependency_warning")
         self.setWordWrap(True)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         # Initially hidden
         self.hide()
-        
+
         self._apply_styling()
 
     def set_visible(self, visible: bool):
         """
         Set warning visibility based on dependency state.
-        
+
         Args:
             visible: Whether to show the warning
         """
@@ -53,7 +53,7 @@ class DependencyWarning(QLabel):
     def update_warning_state(self, all_motions_visible: bool):
         """
         Update warning visibility based on motion states.
-        
+
         Args:
             all_motions_visible: Whether all motions are currently visible
         """

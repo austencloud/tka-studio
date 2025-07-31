@@ -6,9 +6,9 @@ It generates render commands and positioning data that can be executed
 by any rendering framework.
 """
 
-import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Tuple
+import logging
+from typing import Dict, Optional
 
 from desktop.modern.domain.models import MotionData, PictographData
 from shared.application.services.core.pictograph_renderer import (

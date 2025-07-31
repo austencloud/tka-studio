@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, TypedDict
 
 import pandas as pd
+
 from desktop.modern.domain.models.pictograph_data import PictographData
 
 

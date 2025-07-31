@@ -5,9 +5,9 @@ Generates quiz questions based on lesson types and pictograph data.
 Handles different question formats and answer generation.
 """
 
+from datetime import datetime
 import logging
 import random
-from datetime import datetime
 from typing import Any, Dict, List, Set
 
 from desktop.modern.core.interfaces.learn_services import (
@@ -294,7 +294,7 @@ class QuestionGenerationService(IQuestionGenerationService):
         try:
             # Handle both string keys (mock service) and enum keys (real service)
             available_letters = []
-            for letter in dataset.keys():
+            for letter in dataset:
                 if letter != correct_letter:
                     # If letter is an enum, use .value, otherwise use as string
                     letter_str = (
@@ -320,7 +320,7 @@ class QuestionGenerationService(IQuestionGenerationService):
         """Generate 3 wrong pictographs with different letters."""
         try:
             available_letters = [
-                letter for letter in dataset.keys() if letter != correct_letter
+                letter for letter in dataset if letter != correct_letter
             ]
             wrong_pictographs = []
 

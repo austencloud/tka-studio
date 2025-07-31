@@ -9,7 +9,9 @@ import logging
 import math
 from typing import Tuple
 
-from desktop.modern.core.interfaces.image_export_services import ISequenceImageLayoutCalculator
+from desktop.modern.core.interfaces.image_export_services import (
+    ISequenceImageLayoutCalculator,
+)
 
 logger = logging.getLogger(__name__)
 

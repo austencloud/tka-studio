@@ -1,18 +1,21 @@
 # ori_picker_widget.py
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import Qt, pyqtSignal
 from typing import TYPE_CHECKING
-from data.constants import IN, COUNTER, OUT, CLOCK
+
 from legacy_settings_manager.global_settings.app_context import AppContext
-from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import LegacyOptionPicker
+from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
+    LegacyOptionPicker,
+)
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
+from data.constants import CLOCK, COUNTER, IN, OUT
+
+from .clickable_ori_label import ClickableOriLabel
 from .ori_setter import OrientationSetter
 from .ori_text_label import OrientationTextLabel
-from .clickable_ori_label import ClickableOriLabel
 from .rotate_buttons_widget import RotateButtonsWidget
 
-
 if TYPE_CHECKING:
-
     from ..ori_picker_box import OriPickerBox
 
 

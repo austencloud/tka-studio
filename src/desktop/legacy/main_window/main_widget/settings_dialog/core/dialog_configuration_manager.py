@@ -4,14 +4,16 @@ Dialog configuration manager for the modern settings dialog.
 Handles dialog setup, positioning, and window properties.
 """
 
-from typing import TYPE_CHECKING, Optional
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDialog, QApplication
 import logging
+from typing import TYPE_CHECKING, Optional
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QDialog
 
 if TYPE_CHECKING:
-    from desktop.modern.core.application_context import ApplicationContext
     from main_window.main_widget.main_widget import MainWidget
+
+    from desktop.modern.core.application_context import ApplicationContext
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ These models represent settings data without any UI coupling.
 """
 
 from dataclasses import dataclass, field, replace
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
 
 from desktop.modern.domain.models.enums import BackgroundType, GridMode, PropType
 

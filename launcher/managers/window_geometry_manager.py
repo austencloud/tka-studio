@@ -16,12 +16,11 @@ Architecture:
 """
 
 import logging
-from typing import Optional, Dict, Any
-from PyQt6.QtWidgets import QWidget, QApplication
-from PyQt6.QtCore import QRect
-from PyQt6.QtGui import QScreen
+from typing import Any, Dict, Optional
 
 from config.config.launcher_config import LauncherConfig
+from PyQt6.QtCore import QRect
+from PyQt6.QtWidgets import QApplication, QWidget
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,11 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QScrollArea, QGridLayout, QSizePolicy
+
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from main_window.main_widget.write_tab.act_browser.act_thumbnail_box import (
     ActThumbnailBox,
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGridLayout, QScrollArea, QSizePolicy, QWidget
 
 if TYPE_CHECKING:
     from main_window.main_widget.write_tab.write_tab import WriteTab

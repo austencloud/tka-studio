@@ -1,9 +1,10 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QApplication
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QColor, QPainter, QMouseEvent
 from math import sqrt
 
 from enums.letter.letter_type import LetterType
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QColor, QMouseEvent, QPainter
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget
+
 from .styled_border_overlay_for_button import StyledBorderOverlayForButton
 
 

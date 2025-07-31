@@ -1,19 +1,22 @@
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtSvg import QSvgRenderer
-
 from typing import TYPE_CHECKING, Literal
+
+from legacy_settings_manager.global_settings.app_context import AppContext
+from main_window.main_widget.grid_mode_checker import GridModeChecker
+from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from utils.path_helpers import get_image_path
 
 from data.constants import (
     ALPHA1,
-    BOX,
-    DIAMOND,
     ALPHA5,
     BETA3,
     BETA7,
-    GAMMA10,
-    GAMMA14,
+    BOX,
+    DIAMOND,
     GAMMA4,
     GAMMA8,
+    GAMMA10,
+    GAMMA14,
     QUARTER_OPP,
     QUARTER_SAME,
     SPLIT_OPP,
@@ -21,10 +24,6 @@ from data.constants import (
     TOG_OPP,
     TOG_SAME,
 )
-from main_window.main_widget.grid_mode_checker import GridModeChecker
-from legacy_settings_manager.global_settings.app_context import AppContext
-from utils.path_helpers import get_image_path
-
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
@@ -56,15 +55,15 @@ class VTG_Glyph(QGraphicsSvgItem):
         from enums.letter.letter_type import LetterType
 
         from data.constants import (
-            SPLIT_SAME,
-            SPLIT_OPP,
-            TOG_SAME,
-            TOG_OPP,
-            QUARTER_SAME,
             QUARTER_OPP,
+            QUARTER_SAME,
+            SPLIT_OPP,
+            SPLIT_SAME,
+            TOG_OPP,
+            TOG_SAME,
         )
 
-        if not self.pictograph.state.letter_type in [LetterType.Type1]:
+        if self.pictograph.state.letter_type not in [LetterType.Type1]:
             self.setVisible(False)
 
         SVG_BASE_PATH = get_image_path("vtg_glyphs")
@@ -93,7 +92,7 @@ class VTG_Glyph(QGraphicsSvgItem):
 
     def determine_vtg_mode(self) -> Literal["SS", "SO", "TS", "TO", "QS", "QO"]:
         if not self.pictograph.state.letter:
-            return
+            return None
         letter_str = self.pictograph.state.letter.value
         start_pos = self.pictograph.state.start_pos
         grid_mode = GridModeChecker.get_grid_mode(self.pictograph.state.pictograph_data)

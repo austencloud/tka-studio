@@ -7,7 +7,7 @@ container lifecycle management.
 """
 
 import logging
-from typing import Any, Optional
+from typing import Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.dependency_injection.image_export_service_registration import (

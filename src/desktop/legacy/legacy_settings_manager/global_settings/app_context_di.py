@@ -1,6 +1,7 @@
-from typing import Dict, Any, Type, TypeVar, cast
-from interfaces.settings_manager_interface import ISettingsManager
+from typing import Any, Dict, Type, TypeVar, cast
+
 from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
 
 T = TypeVar("T")
 

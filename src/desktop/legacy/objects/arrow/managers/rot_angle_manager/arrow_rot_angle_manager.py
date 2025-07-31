@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING
+
 from data.constants import *
+
+from .calculators.anti_rot_angle_calculator import AntiRotAngleCalculator
+from .calculators.base_rot_angle_calculator import BaseRotAngleCalculator
+from .calculators.dash_rot_angle_calculator import DashRotAngleCalculator
 from .calculators.float_rot_angle_calculator import FloatRotAngleCalculator
 from .calculators.pro_rot_angle_calculator import ProRotAngleCalculator
-from .calculators.anti_rot_angle_calculator import AntiRotAngleCalculator
-from .calculators.dash_rot_angle_calculator import DashRotAngleCalculator
 from .calculators.static_rot_angle_calculator import StaticRotAngleCalculator
-from .calculators.base_rot_angle_calculator import BaseRotAngleCalculator
 
 if TYPE_CHECKING:
     from objects.arrow.arrow import Arrow

@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING, Any, Callable
+
 from PyQt6.QtCore import Qt
-
 from styles.styled_button import StyledButton
-
 
 if TYPE_CHECKING:
     from main_window.main_widget.learn_tab.lesson_widget.answers_widget import (

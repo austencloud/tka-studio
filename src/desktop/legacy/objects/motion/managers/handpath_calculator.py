@@ -1,17 +1,18 @@
 from collections import defaultdict
+
 from data.constants import (
     CCW_HANDPATH,
     CW_HANDPATH,
     DASH,
-    STATIC,
-    SOUTH,
-    WEST,
-    NORTH,
     EAST,
+    NORTH,
     NORTHEAST,
     NORTHWEST,
+    SOUTH,
     SOUTHEAST,
     SOUTHWEST,
+    STATIC,
+    WEST,
 )
 
 
@@ -68,13 +69,12 @@ class HandpathCalculator:
         self.hand_rot_dir_map = defaultdict(
             lambda: "NO HAND ROTATION FOUND",  # Default value if a key is not found
             {
-                **{pair: CW_HANDPATH for pair in clockwise_pairs + diagonal_clockwise},
-                **{
-                    pair: CCW_HANDPATH
-                    for pair in counter_clockwise_pairs + diagonal_counter_clockwise
-                },
-                **{pair: DASH for pair in dash_pairs},
-                **{pair: STATIC for pair in static_pairs},
+                **dict.fromkeys(clockwise_pairs + diagonal_clockwise, CW_HANDPATH),
+                **dict.fromkeys(
+                    counter_clockwise_pairs + diagonal_counter_clockwise, CCW_HANDPATH
+                ),
+                **dict.fromkeys(dash_pairs, DASH),
+                **dict.fromkeys(static_pairs, STATIC),
             },
         )
 

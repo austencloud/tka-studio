@@ -8,11 +8,11 @@ ARCHITECTURE: Provides automatic lifecycle management for Qt objects with
 smart cleanup registration, resource tracking, and automatic memory management.
 """
 
-import logging
-import weakref
 from dataclasses import dataclass
+import logging
 from threading import Lock
 from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+import weakref
 
 # Import Qt modules with compatibility
 try:
@@ -144,7 +144,7 @@ class QtObjectFactory:
                 "class_name": obj.__class__.__name__,
                 "created_at": self._get_current_time(),
                 "parent": getattr(obj, "parent", lambda: None)(),
-                "children_count": len(getattr(obj, "children", lambda: [])()),
+                "children_count": len(getattr(obj, "children", list)()),
             }
 
     def register_cleanup_handler(self, obj: QObject, handler: Callable) -> None:

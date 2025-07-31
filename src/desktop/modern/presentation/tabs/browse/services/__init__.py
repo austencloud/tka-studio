@@ -12,13 +12,13 @@ from .thumbnail_factory_service import ThumbnailFactoryService
 
 # Note: Removed thin wrapper services:
 # - LayoutManagerService (use PyQt directly)
-# - LoadingStateManagerService (use PyQt directly)  
+# - LoadingStateManagerService (use PyQt directly)
 # - NavigationHandlerService (use PyQt directly)
 # - SequenceDisplayCoordinatorService (use PyQt directly)
 
 __all__ = [
     "BrowseService",
-    "BrowseStateService", 
+    "BrowseStateService",
     "ModernDictionaryDataManager",
     "ProgressiveLoadingService",
     "SequenceSorterService",

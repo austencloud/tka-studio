@@ -15,15 +15,13 @@ PROVIDES:
 - Testable components
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import TYPE_CHECKING, Callable, Optional
 
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
-from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 from desktop.modern.presentation.components.menu_bar import MenuBarWidget
 
 from .error_recovery import UIErrorRecoveryService

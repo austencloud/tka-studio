@@ -9,12 +9,13 @@ support, thread-safe operations, and automatic resource management.
 """
 
 import asyncio
+from collections.abc import Awaitable
+from concurrent.futures import Future, ThreadPoolExecutor
+from dataclasses import dataclass
 import logging
 import threading
 import time
-from concurrent.futures import Future, ThreadPoolExecutor
-from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Dict, List, Optional, TypeVar
+from typing import Any, Callable, Dict, List, Optional, TypeVar
 
 # Import Qt modules with compatibility
 try:

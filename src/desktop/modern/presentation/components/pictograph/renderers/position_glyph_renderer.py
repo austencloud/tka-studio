@@ -7,9 +7,10 @@ with an arrow between them (e.g., α → β).
 
 import os
 from typing import Optional
-from PyQt6.QtWidgets import QGraphicsItemGroup
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+
 from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from PyQt6.QtWidgets import QGraphicsItemGroup
 
 from shared.application.services.assets.image_asset_utils import (
     get_image_path,

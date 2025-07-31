@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from data.constants import ANTI, FLOAT, PREFLOAT_MOTION_TYPE, MOTION_TYPE, PRO
-
+from data.constants import ANTI, FLOAT, MOTION_TYPE, PREFLOAT_MOTION_TYPE, PRO
 
 if TYPE_CHECKING:
     from main_window.main_widget.json_manager.json_sequence_updater.json_sequence_updater import (

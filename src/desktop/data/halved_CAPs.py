@@ -1,6 +1,5 @@
 from data.constants import *
 
-
 halved_CAPs = {
     (ALPHA1, ALPHA5),
     (ALPHA2, ALPHA6),

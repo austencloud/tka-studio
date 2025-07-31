@@ -1,18 +1,18 @@
 from typing import TYPE_CHECKING, Union
-from PyQt6.QtWidgets import QGridLayout, QFrame, QSizePolicy
-from PyQt6.QtCore import Qt, QSize
 
-from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
-
+from main_window.main_widget.sequence_workbench.legacy_beat_frame.beat import Beat
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
     LegacyStartPositionBeat,
 )
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat_view import (
     StartPositionBeatView,
 )
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QFrame, QGridLayout, QSizePolicy
+
 from ..layout_beat_view import LayoutBeatView
 
 if TYPE_CHECKING:

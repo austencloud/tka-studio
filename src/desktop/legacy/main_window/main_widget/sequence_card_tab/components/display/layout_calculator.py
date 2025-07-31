@@ -1,12 +1,13 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/layout_calculator.py
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import QSize
 
+from PyQt6.QtCore import QSize
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_card_tab.components.display.sequence_display_manager import (
         DisplayConfig,
     )
+
     from ...sequence_card_tab import SequenceCardTab
     from ..pages.printable_factory import PrintablePageFactory
 
@@ -52,12 +53,8 @@ class LayoutCalculator:
         scroll_area_width = self.sequence_card_tab.content_area.scroll_area.width()
 
         # Account for scroll bar width if vertical scrollbar is visible
-        if (
-            self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().isVisible()
-        ):
-            scroll_bar_width = (
-                self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().width()
-            )
+        if self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().isVisible():
+            scroll_bar_width = self.sequence_card_tab.content_area.scroll_area.verticalScrollBar().width()
             scroll_area_width -= scroll_bar_width
 
         # MINIMAL MARGINS: Almost no side margins to maximize available width

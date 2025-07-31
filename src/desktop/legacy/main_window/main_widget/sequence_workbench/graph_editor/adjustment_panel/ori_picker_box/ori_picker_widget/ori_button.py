@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QPushButton
+
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QFont, QFontMetrics
+from PyQt6.QtWidgets import QPushButton
+
 from data.constants import BLUE, HEX_BLUE, HEX_RED
 
 if TYPE_CHECKING:

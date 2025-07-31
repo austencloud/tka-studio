@@ -9,6 +9,7 @@ import logging
 from typing import Any, Dict
 
 import pandas as pd
+
 from desktop.modern.core.config.data_config import DataConfig
 from desktop.modern.core.interfaces.data_services import IDataManager
 

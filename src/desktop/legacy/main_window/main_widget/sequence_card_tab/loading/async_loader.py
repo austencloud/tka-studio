@@ -3,6 +3,7 @@ import os
 import queue
 import threading
 from typing import Dict, List, Optional
+
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QImage, QPixmap
 

@@ -1,10 +1,4 @@
 from typing import TYPE_CHECKING
-from PyQt6.QtCore import Qt
-
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QWidget,
-)
 
 from main_window.main_widget.sequence_recorder.SR_beat_control_panel import (
     SR_BeatControlPanel,
@@ -12,7 +6,11 @@ from main_window.main_widget.sequence_recorder.SR_beat_control_panel import (
 from main_window.main_widget.sequence_recorder.SR_video_control_panel import (
     SR_VideoControlPanel,
 )
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QWidget,
+)
 
 if TYPE_CHECKING:
     from main_window.main_widget.sequence_recorder.sequence_recorder import (

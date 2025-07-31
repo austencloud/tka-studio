@@ -5,8 +5,9 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
 import logging
-from PyQt6.QtGui import QImage, QPixmap, QPainter, QColor, QFont
-from PyQt6.QtCore import Qt, QSize, QRect
+
+from PyQt6.QtCore import QRect, QSize, Qt
+from PyQt6.QtGui import QColor, QFont, QImage, QPainter, QPixmap
 
 
 class QualityEnhancer:

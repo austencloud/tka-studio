@@ -7,9 +7,10 @@ to suppress warnings about unsupported CSS properties and other non-critical mes
 
 import logging
 import re
-from typing import List, Pattern
+from re import Pattern
+from typing import List
 
-from PyQt6.QtCore import QLoggingCategory, QtMsgType, qInstallMessageHandler
+from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
 
 logger = logging.getLogger(__name__)
 

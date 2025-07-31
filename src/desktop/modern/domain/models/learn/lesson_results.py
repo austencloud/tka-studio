@@ -7,7 +7,7 @@ including scoring, timing, and performance metrics.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from .lesson_config import LessonType, QuizMode
 
@@ -16,39 +16,39 @@ from .lesson_config import LessonType, QuizMode
 class LessonResults:
     """
     Represents the final results and statistics for a completed lesson.
-    
+
     Contains comprehensive performance data including accuracy, timing,
     and detailed scoring information.
     """
-    
+
     # Session identification
     session_id: str
-    
+
     # Lesson configuration
     lesson_type: LessonType
     quiz_mode: QuizMode
-    
+
     # Core metrics
     total_questions: int
     correct_answers: int
     incorrect_guesses: int
     questions_answered: int
-    
+
     # Performance metrics
     accuracy_percentage: float
     completion_time_seconds: float
-    
+
     # Timing data
     completed_at: datetime = field(default_factory=datetime.now)
-    
+
     # Additional statistics
     average_time_per_question: Optional[float] = None
     streak_longest_correct: Optional[int] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """
         Serialize results to dictionary with proper enum handling.
-        
+
         Returns:
             Dictionary representation suitable for JSON serialization
         """
@@ -66,15 +66,15 @@ class LessonResults:
             "average_time_per_question": self.average_time_per_question,
             "streak_longest_correct": self.streak_longest_correct,
         }
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "LessonResults":
         """
         Deserialize results from dictionary.
-        
+
         Args:
             data: Dictionary containing results data
-            
+
         Returns:
             LessonResults instance
         """
@@ -92,7 +92,7 @@ class LessonResults:
             average_time_per_question=data.get("average_time_per_question"),
             streak_longest_correct=data.get("streak_longest_correct"),
         )
-    
+
     @property
     def grade_letter(self) -> str:
         """Calculate letter grade based on accuracy percentage."""
@@ -106,7 +106,7 @@ class LessonResults:
             return "D"
         else:
             return "F"
-    
+
     @property
     def performance_level(self) -> str:
         """Get performance level description."""
@@ -120,19 +120,19 @@ class LessonResults:
             return "Needs Improvement"
         else:
             return "Poor"
-    
+
     @property
     def minutes_taken(self) -> float:
         """Get completion time in minutes."""
         return self.completion_time_seconds / 60.0
-    
+
     def calculate_score(self, max_points: int = 100) -> int:
         """
         Calculate numeric score out of maximum points.
-        
+
         Args:
             max_points: Maximum possible score
-            
+
         Returns:
             Calculated score based on accuracy percentage
         """

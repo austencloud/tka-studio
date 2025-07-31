@@ -9,8 +9,8 @@ This ensures that options display with correct orientations that flow from the s
 rather than using default "in,in" orientations.
 """
 
-import logging
 from dataclasses import replace
+import logging
 from typing import List, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData

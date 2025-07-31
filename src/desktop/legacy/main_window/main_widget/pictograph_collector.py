@@ -1,12 +1,13 @@
-from typing import TYPE_CHECKING, Callable, Iterator
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Callable
 
 from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
     LessonPictographView,
 )
 
 if TYPE_CHECKING:
-    from main_window.main_widget.main_widget import MainWidget
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+    from main_window.main_widget.main_widget import MainWidget
 
 
 class PictographCollector:
@@ -14,7 +15,7 @@ class PictographCollector:
         self.main_widget = main_widget
 
     def collect_all_pictographs(self) -> list["LegacyPictograph"]:
-        collectors: list[Callable[[], list["LegacyPictograph"]]] = [
+        collectors: list[Callable[[], list[LegacyPictograph]]] = [
             self._collect_from_graph_editor,
             self._collect_from_advanced_start_pos_picker,
             self._collect_from_start_pos_picker,
@@ -162,7 +163,7 @@ class PictographCollector:
             return []
 
         pictographs = []
-        views: list["LessonPictographView"] = []
+        views: list[LessonPictographView] = []
 
         # Safely get lessons
         lesson1 = lesson_widgets_dict.get("Lesson1")

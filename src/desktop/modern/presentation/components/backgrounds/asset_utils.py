@@ -3,7 +3,9 @@ Asset utilities for pictograph rendering.
 Delegates to centralized asset path service.
 """
 
-from desktop.modern.application.services.backgrounds.shared.asset_paths import AssetPathResolver
+from desktop.modern.application.services.backgrounds.shared.asset_paths import (
+    AssetPathResolver,
+)
 
 # Global instance for backward compatibility
 _asset_resolver = AssetPathResolver()

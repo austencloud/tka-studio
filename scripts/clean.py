@@ -4,10 +4,9 @@ Clean script for TKA monorepo.
 This script cleans up build artifacts, cache files, and temporary files.
 """
 
-import os
+from pathlib import Path
 import shutil
 import sys
-from pathlib import Path
 
 
 def clean_directory(path, patterns, description):
@@ -100,7 +99,7 @@ def clean_monorepo():
     # Clean root node_modules
     root_node_modules = root / "node_modules"
     if root_node_modules.exists():
-        print(f"\n🗑️  Removing root node_modules...")
+        print("\n🗑️  Removing root node_modules...")
         try:
             shutil.rmtree(root_node_modules)
             print("   ✅ Root node_modules removed")

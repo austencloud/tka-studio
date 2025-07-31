@@ -8,12 +8,13 @@ while handling Qt-specific concerns (signals, UI state).
 import logging
 from typing import TYPE_CHECKING, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.graph_editor.graph_editor_state_manager import (
     GraphEditorStateManager as GraphEditorStateService,
 )
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
-from PyQt6.QtCore import QObject, pyqtSignal
 
 if TYPE_CHECKING:
     from ..graph_editor import GraphEditor

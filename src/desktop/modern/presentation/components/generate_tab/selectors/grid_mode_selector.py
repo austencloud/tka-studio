@@ -13,10 +13,10 @@ from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QRadioButton, QWidget
 
 from desktop.modern.domain.models.enums import GridMode
 
-from .generation_controls import ModernControlBase
+from .. import GenerationControlBase
 
 
-class ModernGridModeSelector(ModernControlBase):
+class ModernGridModeSelector(GenerationControlBase):
     """Modern grid mode selector for generation configuration"""
 
     value_changed = pyqtSignal(GridMode)

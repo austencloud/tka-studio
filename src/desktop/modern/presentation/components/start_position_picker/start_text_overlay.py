@@ -7,9 +7,10 @@ and positioning.
 """
 
 from typing import Optional
-from PyQt6.QtWidgets import QGraphicsTextItem, QGraphicsScene
-from PyQt6.QtGui import QFont
+
 from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsTextItem
 
 
 class StartTextOverlay(QGraphicsTextItem):

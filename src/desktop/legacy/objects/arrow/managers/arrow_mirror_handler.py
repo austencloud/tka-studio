@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
+
 from PyQt6.QtGui import QTransform
+
 from data.constants import ANTI, CLOCKWISE, COUNTER_CLOCKWISE
 
 if TYPE_CHECKING:

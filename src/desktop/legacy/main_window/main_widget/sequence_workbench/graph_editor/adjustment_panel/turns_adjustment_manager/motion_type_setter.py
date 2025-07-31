@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from objects.motion.motion import Motion
+
     from ..turns_box.turns_widget.turns_widget import TurnsWidget
 
 

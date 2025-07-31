@@ -7,9 +7,9 @@ Contains application factory and related utilities.
 from .application_factory import (
     ApplicationFactory,
     ApplicationMode,
+    get_headless_app,
     get_production_app,
     get_test_app,
-    get_headless_app,
 )
 
 __all__ = [

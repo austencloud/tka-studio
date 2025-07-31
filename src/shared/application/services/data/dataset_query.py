@@ -5,8 +5,8 @@ Handles querying and searching operations on pictograph datasets.
 Focused solely on data retrieval and filtering logic.
 """
 
-import logging
 from abc import ABC, abstractmethod
+import logging
 from typing import List, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
@@ -78,7 +78,9 @@ class DatasetQuery(IDatasetQuery):
             self.data_service = data_service
         else:
             # Create a shared DataManager instance using global caching
-            from desktop.modern.core.config.data_config import create_data_config_with_fallback
+            from desktop.modern.core.config.data_config import (
+                create_data_config_with_fallback,
+            )
 
             self.data_service = DataManager(create_data_config_with_fallback())
         self.pictograph_factory = PictographFactory()

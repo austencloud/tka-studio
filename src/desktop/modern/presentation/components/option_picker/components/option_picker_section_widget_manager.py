@@ -73,7 +73,7 @@ class OptionPickerSectionWidgetManager:
                 widgets.append(widget)
             else:
                 print(
-                    f"❌ [WIDGET_MGR] Failed to create widget {i+1}/{len(pictographs_for_section)} for {pictograph_data.letter}"
+                    f"❌ [WIDGET_MGR] Failed to create widget {i + 1}/{len(pictographs_for_section)} for {pictograph_data.letter}"
                 )
 
         return widgets

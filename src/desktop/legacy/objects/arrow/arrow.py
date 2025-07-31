@@ -1,19 +1,22 @@
 # objects/arrow/arrow.py
+from typing import TYPE_CHECKING
+
 from objects.arrow.managers.location_manager.arrow_location_manager import (
     ArrowLocationManager,
 )
 from objects.arrow.managers.rot_angle_manager.arrow_rot_angle_manager import (
     ArrowRotAngleManager,
 )
-from .arrow_state import ArrowState
-from .arrow_mirror_handler import ArrowMirrorManager
-from .arrow_updater import ArrowUpdater
+
 from ..graphical_object import GraphicalObject
-from typing import TYPE_CHECKING
+from .arrow_mirror_handler import ArrowMirrorManager
+from .arrow_state import ArrowState
+from .arrow_updater import ArrowUpdater
 
 if TYPE_CHECKING:
-    from ..motion.motion import Motion
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+
+    from ..motion.motion import Motion
 
 
 class Arrow(GraphicalObject):
@@ -23,7 +26,7 @@ class Arrow(GraphicalObject):
     def __init__(self, pictograph, arrow_data) -> None:
         super().__init__(pictograph)
         self.arrow_data = arrow_data
-        self.pictograph: "LegacyPictograph" = pictograph
+        self.pictograph: LegacyPictograph = pictograph
         self.state = ArrowState()
         self.state.initialized = False
         self.state.update_from_dict(arrow_data)

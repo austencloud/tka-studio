@@ -35,8 +35,8 @@ class LabelStyleProvider(StyleProvider):
             color: {text_color};
             background: transparent;
             font-family: {tokens.font_family};
-            font-size: {tokens.font_sizes.get(kwargs.get('size', 'base'))};
-            font-weight: {tokens.font_weights.get(kwargs.get('weight', 'normal'))};
+            font-size: {tokens.font_sizes.get(kwargs.get("size", "base"))};
+            font-weight: {tokens.font_weights.get(kwargs.get("weight", "normal"))};
         }}
         """
 
