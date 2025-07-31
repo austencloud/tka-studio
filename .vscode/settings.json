@@ -36,7 +36,6 @@
   "python.analysis.autoImportCompletions": false,
   "python.analysis.indexing": false,
   "python.analysis.diagnosticMode": "openFilesOnly",
-  "python.analysis.typeCheckingMode": "off",
 
   // === WEB/JS FORMATTERS ===
   "[javascript]": {

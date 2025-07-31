@@ -204,6 +204,7 @@ class GenerateTabController(QObject):
                 "length": config.length,
                 "level": config.level,
                 "turn_intensity": config.turn_intensity,
+                "grid_mode": config.grid_mode,
                 "prop_continuity": config.prop_continuity,
                 "letter_types": config.letter_types,
                 "slice_size": config.slice_size,

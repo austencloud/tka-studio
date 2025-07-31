@@ -1,24 +1,26 @@
 """
-Export Panel Cards - Modular components for the export panel
+Export Panel Cards - Component cards for the export panel
 
-This package contains the individual card components that make up the export panel:
-- ExportActionsCard: Export buttons for current sequence and all pictographs
-- ExportOptionsCard: Checkboxes for export settings
-- FormatSettingsCard: Format and quality settings
-- UserSettingsCard: User name and notes input
-- ExportPreviewCard: Live preview display
+Exports all card components used in the export panel for easy importing.
 """
 
+from .consolidated_export_settings_card import ConsolidatedExportSettingsCard
+from .enhanced_export_preview_card import EnhancedExportPreviewCard
 from .export_actions_card import ExportActionsCard
+
+# Legacy cards (kept for backward compatibility if needed)
 from .export_options_card import ExportOptionsCard
 from .export_preview_card import ExportPreviewCard
 from .format_settings_card import FormatSettingsCard
 from .user_settings_card import UserSettingsCard
 
 __all__ = [
+    "ConsolidatedExportSettingsCard",
+    "EnhancedExportPreviewCard",
     "ExportActionsCard",
+    # Legacy cards
     "ExportOptionsCard",
+    "ExportPreviewCard",
     "FormatSettingsCard",
     "UserSettingsCard",
-    "ExportPreviewCard",
 ]

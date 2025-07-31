@@ -27,6 +27,7 @@ from desktop.modern.domain.models.generation_models import (
 )
 from desktop.modern.presentation.components.generate_tab.selectors import (
     CAPTypeSelector,
+    GenerationModeToggle,
     LengthSelector,
     LetterTypeSelector,
     LevelSelector,

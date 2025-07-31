@@ -1,23 +1,14 @@
 """
-Export Panel - Main component for the Export tab
+Export Panel - Proper proportional layout without fixed sizes
 
-This component provides comprehensive export functionality with live preview,
-replacing the save image button from the workbench button panel.
-
-Features:
-- Live preview of export output with real-time updates
-- All export settings migrated from settings dialog
-- Export actions (current sequence, all pictographs)
-- Consistent styling with other right panel tabs
-
-Refactored into smaller components for better maintainability.
+Uses Qt layout system properly with stretch factors and size policies.
 """
 
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
-from PyQt6.QtWidgets import QCheckBox, QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.settings_services import IImageExportSettingsManager
@@ -26,148 +17,18 @@ from desktop.modern.core.interfaces.workbench_export_services import (
 )
 
 from .cards import (
+    ConsolidatedExportSettingsCard,
+    EnhancedExportPreviewCard,
     ExportActionsCard,
-    ExportOptionsCard,
-    ExportPreviewCard,
-    FormatSettingsCard,
-    UserSettingsCard,
 )
-
-
-class ExportPreviewPanel(QFrame):
-    """Live preview panel that shows how the exported image will look."""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self._setup_ui()
-        self._current_pixmap = None
-
-    def _setup_ui(self):
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
-
-        # Preview label
-        self.preview_label = QLabel()
-        self.preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.preview_label.setMinimumSize(400, 300)
-        self.preview_label.setStyleSheet(
-            """
-            QLabel {
-                background: rgba(0, 0, 0, 0.3);
-                border: 2px dashed rgba(255, 255, 255, 0.3);
-                border-radius: 12px;
-                color: rgba(255, 255, 255, 0.6);
-                font-size: 16px;
-                font-weight: 500;
-            }
-        """
-        )
-        self.preview_label.setText(
-            "Preview will appear here\nwhen a sequence is available"
-        )
-
-        # Preview info label
-        self.info_label = QLabel("No export settings applied")
-        self.info_label.setStyleSheet(
-            """
-            QLabel {
-                color: rgba(255, 255, 255, 0.7);
-                font-size: 12px;
-                padding: 8px;
-                text-align: center;
-            }
-        """
-        )
-
-        layout.addWidget(self.preview_label)
-        layout.addWidget(self.info_label)
-
-    def update_preview(self, pixmap: QPixmap, settings_info: str = ""):
-        """Update the preview with a new pixmap and settings info."""
-        if pixmap and not pixmap.isNull():
-            # Scale pixmap to fit the preview area while maintaining aspect ratio
-            scaled_pixmap = pixmap.scaled(
-                self.preview_label.size(),
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation,
-            )
-            self.preview_label.setPixmap(scaled_pixmap)
-            self._current_pixmap = scaled_pixmap
-            self.info_label.setText(settings_info or "Preview updated")
-        else:
-            self.preview_label.clear()
-            self.preview_label.setText("No preview available")
-            self._current_pixmap = None
-            self.info_label.setText("No sequence to preview")
-
-
-class ExportToggle(QCheckBox):
-    """Enhanced export toggle with modern styling."""
-
-    def __init__(self, label: str, tooltip: Union[str, None] = None, parent=None):
-        super().__init__(label, parent)
-        if tooltip:
-            self.setToolTip(tooltip)
-        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self._apply_styling()
-
-    def _apply_styling(self):
-        self.setStyleSheet(
-            """
-            QCheckBox {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 14px;
-                font-weight: 500;
-                font-family: "Inter", "Segoe UI", sans-serif;
-                spacing: 12px;
-                padding: 12px;
-                border-radius: 10px;
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.08),
-                    stop:1 rgba(255, 255, 255, 0.04));
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            QCheckBox:hover {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.12),
-                    stop:1 rgba(255, 255, 255, 0.08));
-                border-color: rgba(255, 255, 255, 0.2);
-            }
-
-            QCheckBox::indicator {
-                width: 20px;
-                height: 20px;
-                border: 2px solid rgba(255, 255, 255, 0.4);
-                border-radius: 6px;
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.12),
-                    stop:1 rgba(255, 255, 255, 0.06));
-            }
-
-            QCheckBox::indicator:checked {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(42, 130, 218, 0.9),
-                    stop:1 rgba(42, 130, 218, 0.7));
-                border-color: rgba(42, 130, 218, 1.0);
-            }
-
-            QCheckBox::indicator:hover {
-                border-color: rgba(255, 255, 255, 0.6);
-            }
-        """
-        )
 
 
 class ExportPanel(QWidget):
     """
-    Main Export Panel component for the right panel tabs.
-
-    Replaces the save image button functionality and provides
-    comprehensive export options with live preview.
+    Export Panel with proper proportional layout using Qt layout system.
     """
 
-    # Signals for parent components
+    # Signals
     export_requested = pyqtSignal(str, dict)  # export_type, options
     setting_changed = pyqtSignal(str, object)  # setting_name, value
 
@@ -181,384 +42,291 @@ class ExportPanel(QWidget):
 
         # Resolve export services
         try:
-            self.export_service = container.resolve(IWorkbenchExportService)
+            self.workbench_export_service = container.resolve(IWorkbenchExportService)
             self.settings_manager = container.resolve(IImageExportSettingsManager)
+            print("✅ [EXPORT_PANEL] Export services resolved successfully")
         except Exception as e:
-            print(f"⚠️ Failed to resolve export services: {e}")
-            self.export_service = None
+            print(f"⚠️ [EXPORT_PANEL] Failed to resolve export services: {e}")
+            self.workbench_export_service = None
             self.settings_manager = None
 
-        # Create preview panel
-        self.preview_panel = ExportPreviewPanel(self)
-
-        # Update timer for preview (debounce rapid changes)
+        # Update timer for preview
         self.update_timer = QTimer()
         self.update_timer.setSingleShot(True)
         self.update_timer.timeout.connect(self._update_preview)
+
+        # Workbench reference
+        self.workbench_widget = None
 
         self._setup_ui()
         self._load_settings()
         self._setup_connections()
 
     def _setup_ui(self):
-        """Set up the main UI layout with improved space utilization."""
+        """Set up proportional layout using Qt layout system."""
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(15, 10, 15, 15)
-        main_layout.setSpacing(10)
+        main_layout.setContentsMargins(8, 8, 8, 8)
+        main_layout.setSpacing(8)
 
-        # Compact header section
-        header_layout = QVBoxLayout()
-        header_layout.setSpacing(5)
-
-        # Compact title
+        # Compact header
         title = QLabel("Export")
-        title.setObjectName("compact_title")
+        title.setObjectName("main_title")
         title.setFont(QFont("Inter", 16, QFont.Weight.Bold))
-        header_layout.addWidget(title)
+        main_layout.addWidget(title)
 
-        # Compact description
-        description = QLabel("Configure export options and preview results")
-        description.setObjectName("compact_description")
-        description.setWordWrap(True)
-        header_layout.addWidget(description)
+        description = QLabel("Configure settings and export current sequence")
+        description.setObjectName("main_description")
+        main_layout.addWidget(description)
 
-        main_layout.addLayout(header_layout)
+        # Main content with proportional layout
+        content_layout = QHBoxLayout()
+        content_layout.setSpacing(12)
 
-        # Export options card (full width)
-        self.options_card = ExportOptionsCard()
-        main_layout.addWidget(self.options_card)
+        # Left: Settings column with proper size policy
+        settings_container = QWidget()
+        settings_container.setObjectName("settings_container")
+        settings_container.setSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding
+        )
 
-        # Format and user settings in horizontal layout
-        settings_layout = QHBoxLayout()
-        settings_layout.setSpacing(15)
+        settings_layout = QVBoxLayout(settings_container)
+        settings_layout.setContentsMargins(0, 0, 0, 0)
+        settings_layout.setSpacing(8)
 
-        self.format_card = FormatSettingsCard()
-        self.user_card = UserSettingsCard()
+        self.settings_card = ConsolidatedExportSettingsCard()
+        settings_layout.addWidget(self.settings_card)
 
-        settings_layout.addWidget(self.format_card)
-        settings_layout.addWidget(self.user_card)
-        main_layout.addLayout(settings_layout)
-
-        # Preview card (full width)
-        self.preview_card = ExportPreviewCard()
-        main_layout.addWidget(self.preview_card)
-
-        # Export actions card at bottom (full width)
         self.actions_card = ExportActionsCard()
-        main_layout.addWidget(self.actions_card)
+        settings_layout.addWidget(self.actions_card)
+
+        settings_layout.addStretch()
+
+        # Right: Preview with proper size policy
+        self.preview_card = EnhancedExportPreviewCard()
+        self.preview_card.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+
+        # Connect export service to preview card
+        if self.workbench_export_service:
+            self.preview_card.set_export_service(self.workbench_export_service)
+
+        # Add to content layout with stretch factors for proportional sizing
+        content_layout.addWidget(settings_container, 1)  # 1 part for settings
+        content_layout.addWidget(
+            self.preview_card, 2
+        )  # 2 parts for preview (2:1 ratio)
+
+        main_layout.addLayout(content_layout, 1)
 
         self._apply_styling()
 
     def _apply_styling(self):
-        """Apply consistent glassmorphism styling."""
-        self.setStyleSheet(
-            """
+        """Apply clean styling without fixed sizes."""
+        self.setStyleSheet("""
             QWidget {
                 background: transparent;
                 color: white;
             }
 
-            QLabel#compact_title {
-                color: white;
+            QLabel#main_title {
+                color: rgba(255, 255, 255, 0.95);
                 font-size: 16px;
                 font-weight: bold;
-                margin-bottom: 3px;
+                margin-bottom: 2px;
+                background: transparent;
+                border: none;
             }
 
-            QLabel#compact_description {
+            QLabel#main_description {
                 color: rgba(255, 255, 255, 0.7);
                 font-size: 12px;
                 margin-bottom: 8px;
+                background: transparent;
+                border: none;
             }
 
-            QLabel#subsection_title {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 16px;
-                font-weight: bold;
-                margin-bottom: 15px;
+            QWidget#settings_container {
+                background: transparent;
             }
-
-            QLabel#input_label {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 14px;
-                font-weight: 500;
-                margin-bottom: 5px;
-                margin-top: 10px;
-            }
-
-            QFrame#settings_section {
-                background: rgba(255, 255, 255, 0.1);
-                border: 2px solid rgba(255, 255, 255, 0.2);
-                border-radius: 12px;
-                padding: 20px;
-                margin: 5px;
-                min-width: 300px;
-            }
-
-            QFrame#preview_container {
-                background: rgba(255, 255, 255, 0.05);
-                border: 2px solid rgba(255, 255, 255, 0.15);
-                border-radius: 12px;
-                padding: 15px;
-            }
-
-            QLineEdit#export_input, QComboBox#export_input {
-                background: rgba(255, 255, 255, 0.1);
-                border: 2px solid rgba(255, 255, 255, 0.3);
-                border-radius: 8px;
-                padding: 10px;
-                color: white;
-                font-size: 14px;
-                margin-bottom: 10px;
-            }
-
-            QLineEdit#export_input:focus, QComboBox#export_input:focus {
-                border-color: rgba(59, 130, 246, 0.8);
-            }
-
-            QPushButton#action_button {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(59, 130, 246, 0.8),
-                    stop:1 rgba(59, 130, 246, 0.6));
-                border: 2px solid rgba(59, 130, 246, 0.3);
-                border-radius: 10px;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 15px;
-                margin: 8px 0;
-                min-height: 50px;
-            }
-
-            QPushButton#action_button:hover {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(59, 130, 246, 1.0),
-                    stop:1 rgba(59, 130, 246, 0.8));
-                border-color: rgba(59, 130, 246, 0.8);
-            }
-
-            QPushButton#action_button:pressed {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(59, 130, 246, 0.6),
-                    stop:1 rgba(59, 130, 246, 0.4));
-            }
-
-            QPushButton#secondary_button {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.15),
-                    stop:1 rgba(255, 255, 255, 0.08));
-                border: 2px solid rgba(255, 255, 255, 0.2);
-                border-radius: 10px;
-                color: white;
-                font-size: 14px;
-                font-weight: 500;
-                padding: 12px;
-                margin: 5px 0;
-            }
-
-            QPushButton#secondary_button:hover {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 rgba(255, 255, 255, 0.25),
-                    stop:1 rgba(255, 255, 255, 0.15));
-                border-color: rgba(255, 255, 255, 0.4);
-            }
-        """
-        )
+        """)
 
     def _load_settings(self):
-        """Load current settings from the settings manager."""
-        if not self.settings_manager:
-            return
-
-        # Load default settings into cards
-        default_options = {
+        """Load default settings."""
+        default_settings = {
             "include_start_position": True,
             "add_beat_numbers": True,
             "add_reversal_symbols": True,
             "add_user_info": True,
             "add_word": True,
             "use_last_save_directory": True,
-        }
-
-        default_format = {
-            "format": "PNG",
-            "quality": "300 DPI",
-        }
-
-        default_user = {
+            "export_format": "PNG",
+            "export_quality": "300 DPI",
             "user_name": "Default User",
-            "notes": "",
+            "custom_note": "",
         }
 
-        # Set defaults in cards
-        self.options_card.set_options(default_options)
-        self.format_card.set_format_settings(default_format)
-        self.user_card.set_user_settings(default_user)
+        self.settings_card.set_all_settings(default_settings)
+        self._update_preview()
 
     def _setup_connections(self):
         """Setup signal connections."""
-        # Export options card
-        self.options_card.option_changed.connect(self._on_option_changed)
-
-        # Format settings card
-        self.format_card.format_changed.connect(self._on_format_changed)
-
-        # User settings card
-        self.user_card.user_setting_changed.connect(self._on_user_setting_changed)
-
-        # Action buttons (from actions card)
+        self.settings_card.setting_changed.connect(self._on_setting_changed)
+        self.preview_card.preview_update_requested.connect(
+            self._on_preview_update_requested
+        )
         self.actions_card.export_current_requested.connect(self._export_current)
-        self.actions_card.export_all_requested.connect(self._export_all)
 
-    def _on_option_changed(self, option_key: str, value: bool):
-        """Handle export option changes and trigger preview update."""
-        print(f"🔧 Export option changed: {option_key} = {value}")
-        self.setting_changed.emit(option_key, value)
+    def _on_setting_changed(self, setting_name: str, value):
+        """Handle setting changes."""
+        print(f"🔧 Export setting changed: {setting_name} = {value}")
 
-        # Trigger preview update with a small delay
-        self.update_timer.start(300)
-
-    def _on_format_changed(self, setting_name: str, value: str):
-        """Handle format setting changes from format card."""
-        print(f"🔧 Format setting changed: {setting_name} = {value}")
-
-        if setting_name == "format":
-            if self.settings_manager:
-                self.settings_manager.set_export_format(value)
-            self.setting_changed.emit("export_format", value)
-        elif setting_name == "quality":
+        # Apply to settings manager if available
+        if self.settings_manager:
             try:
-                if "DPI" in value.upper():
-                    # Extract DPI value
-                    dpi = int("".join(filter(str.isdigit, value)))
-                    quality = min(
-                        100, max(0, dpi // 3)
-                    )  # Convert DPI to quality percentage
-                else:
-                    quality = int(value) if value else 95
-                    quality = max(0, min(100, quality))
-
-                if self.settings_manager:
+                if setting_name == "export_format":
+                    self.settings_manager.set_export_format(value)
+                elif setting_name == "export_quality":
+                    if isinstance(value, str) and "DPI" in value.upper():
+                        dpi = int("".join(filter(str.isdigit, value)))
+                        quality = min(100, max(0, dpi // 3))
+                    else:
+                        quality = int(value) if value else 95
                     self.settings_manager.set_export_quality(quality)
-                self.setting_changed.emit("export_quality", quality)
-            except ValueError:
-                pass  # Invalid input, ignore
+            except (ValueError, AttributeError) as e:
+                print(f"Warning: Failed to apply setting {setting_name}: {e}")
 
+        self.setting_changed.emit(setting_name, value)
         self.update_timer.start(300)
 
-    def _on_user_setting_changed(self, setting_name: str, value: str):
-        """Handle user setting changes from user card."""
-        print(f"🔧 User setting changed: {setting_name} = {value}")
-
-        if setting_name == "user_name":
-            self.setting_changed.emit("user_name", value)
-        elif setting_name == "notes":
-            self.setting_changed.emit("custom_note", value)
-
-        self.update_timer.start(300)
+    def _on_preview_update_requested(self, settings: dict):
+        """Handle preview update requests."""
+        self._update_preview()
 
     def _update_preview(self):
-        """Update the preview image based on current settings."""
-        try:
-            # Get current export options
-            options = self._get_current_export_options()
+        """Update preview with current sequence and settings."""
+        current_settings = self.settings_card.get_all_settings()
 
-            # Create a placeholder preview for now
-            # In a real implementation, this would use the actual export service
-            # to generate a preview of the current sequence
-            placeholder_pixmap = self._create_placeholder_preview(options)
+        # Get sequence from workbench
+        current_sequence = None
+        current_word = "Preview"
 
-            # Update preview card
-            self.preview_card.update_preview(placeholder_pixmap)
-
-        except Exception as e:
-            print(f"Error updating preview: {e}")
-
-    def _get_current_export_options(self) -> Dict[str, Union[bool, str, int]]:
-        """Get current export options as a dictionary."""
-        options = {}
-
-        # Get options from cards
-        options.update(self.options_card.get_options())
-        options.update(self.format_card.get_format_settings())
-        options.update(self.user_card.get_user_settings())
-
-        # Convert quality to int if needed
-        if "quality" in options:
+        if self.workbench_widget and hasattr(self.workbench_widget, "get_sequence"):
             try:
-                quality_str = options["quality"]
-                if "DPI" in str(quality_str).upper():
-                    # Extract DPI value and convert to quality percentage
-                    dpi = int("".join(filter(str.isdigit, str(quality_str))))
-                    options["export_quality"] = min(100, max(0, dpi // 3))
-                else:
-                    options["export_quality"] = int(quality_str) if quality_str else 95
-            except (ValueError, TypeError):
-                options["export_quality"] = 95
-            # Remove the original quality key
-            options.pop("quality", None)
+                current_sequence = self.workbench_widget.get_sequence()
+                print(
+                    f"📊 [EXPORT_PANEL] Got sequence: {current_sequence.length if current_sequence else 0} beats"
+                )
 
-        # Ensure format is properly named
-        if "format" in options:
-            options["export_format"] = options.pop("format")
+                # Try to get word/name
+                if hasattr(self.workbench_widget, "get_current_word"):
+                    current_word = self.workbench_widget.get_current_word() or "Preview"
 
-        return options
+            except Exception as e:
+                print(f"❌ [EXPORT_PANEL] Error getting sequence: {e}")
 
-    def _create_placeholder_preview(
-        self, options: Dict[str, Union[bool, str, int]]
-    ) -> QPixmap:
-        """Create a placeholder preview image."""
-        pixmap = QPixmap(400, 300)
-        pixmap.fill(Qt.GlobalColor.darkGray)
-
-        painter = QPainter(pixmap)
-        painter.setPen(Qt.GlobalColor.white)
-
-        # Draw export info
-        enabled_count = len(
-            [k for k, v in options.items() if v and isinstance(v, bool)]
-        )
-        format_name = options.get("export_format", "PNG")
-        quality = options.get("export_quality", 95)
-
-        text = f"Export Preview\n{format_name} - Quality: {quality}\n{enabled_count} options enabled"
-
-        painter.drawText(
-            pixmap.rect(),
-            Qt.AlignmentFlag.AlignCenter,
-            text,
-        )
-        painter.end()
-
-        return pixmap
+        # Update preview
+        self.preview_card.set_sequence_data(current_sequence, current_word)
+        self.preview_card.update_preview_settings(current_settings, immediate=True)
 
     def _export_current(self):
-        """Export the current sequence (replaces save image button functionality)."""
-        options = self._get_current_export_options()
-        self.export_requested.emit("export_current", options)
+        """Export current sequence using the export service."""
+        if not self.workbench_export_service:
+            print("❌ [EXPORT_PANEL] No export service available")
+            self.actions_card.export_current_btn.setText("❌ No Export Service")
+            QTimer.singleShot(
+                2000,
+                lambda: self.actions_card.export_current_btn.setText(
+                    "🔤 Export Current Sequence"
+                ),
+            )
+            return
 
-        # Show feedback via actions card
-        self.actions_card.set_export_current_loading(True)
+        if not self.workbench_widget or not hasattr(
+            self.workbench_widget, "get_sequence"
+        ):
+            print("❌ [EXPORT_PANEL] No workbench available")
+            self.actions_card.export_current_btn.setText("❌ No Workbench")
+            QTimer.singleShot(
+                2000,
+                lambda: self.actions_card.export_current_btn.setText(
+                    "🔤 Export Current Sequence"
+                ),
+            )
+            return
 
-        # Reset button after delay (in real implementation, this would be done via callback)
-        QTimer.singleShot(
-            2000, lambda: self.actions_card.set_export_current_loading(False)
+        try:
+            current_sequence = self.workbench_widget.get_sequence()
+            if not current_sequence or not current_sequence.beats:
+                print("❌ [EXPORT_PANEL] No sequence to export")
+                self.actions_card.export_current_btn.setText("❌ No Sequence")
+                QTimer.singleShot(
+                    2000,
+                    lambda: self.actions_card.export_current_btn.setText(
+                        "🔤 Export Current Sequence"
+                    ),
+                )
+                return
+
+            # Show loading state
+            self.actions_card.set_export_current_loading(True)
+
+            # Export using the workbench export service
+            success, message = self.workbench_export_service.export_sequence_image(
+                current_sequence
+            )
+
+            if success:
+                print(f"✅ [EXPORT_PANEL] Export successful: {message}")
+                self.actions_card.export_current_btn.setText("✅ Exported!")
+                QTimer.singleShot(
+                    2000, lambda: self.actions_card.set_export_current_loading(False)
+                )
+            else:
+                print(f"❌ [EXPORT_PANEL] Export failed: {message}")
+                self.actions_card.export_current_btn.setText("❌ Export Failed")
+                QTimer.singleShot(
+                    2000, lambda: self.actions_card.set_export_current_loading(False)
+                )
+
+        except Exception as e:
+            print(f"❌ [EXPORT_PANEL] Export error: {e}")
+            self.actions_card.export_current_btn.setText("❌ Export Error")
+            QTimer.singleShot(
+                2000, lambda: self.actions_card.set_export_current_loading(False)
+            )
+
+    def set_workbench_widget(self, workbench_widget):
+        """Connect workbench widget."""
+        self.workbench_widget = workbench_widget
+        print(
+            f"🔗 [EXPORT_PANEL] Workbench connected: {type(workbench_widget).__name__}"
         )
 
-    def _export_all(self):
-        """Export all pictographs."""
-        options = self._get_current_export_options()
-        self.export_requested.emit("export_all", options)
+        # Connect to sequence changes
+        if hasattr(workbench_widget, "sequence_modified"):
+            workbench_widget.sequence_modified.connect(
+                self._on_workbench_sequence_changed
+            )
+            print("🔗 [EXPORT_PANEL] Connected to sequence changes")
 
-        # Show feedback via actions card
-        self.actions_card.set_export_all_loading(True)
+        self._update_preview()
 
-        # Reset button after delay
-        QTimer.singleShot(2000, lambda: self.actions_card.set_export_all_loading(False))
+    def _on_workbench_sequence_changed(self, sequence):
+        """Handle sequence changes from workbench."""
+        print(
+            f"📊 [EXPORT_PANEL] Sequence changed: {sequence.length if sequence else 0} beats"
+        )
+        self._update_preview()
 
-    def update_preview_from_external(self, pixmap: QPixmap = None):
-        """Public method to update preview from external source (e.g., when sequence changes)."""
-        if pixmap:
-            self.preview_card.update_preview(pixmap)
-        else:
-            self._update_preview()
+    def get_current_settings(self) -> dict[str, Union[bool, str, int]]:
+        """Get current export settings."""
+        return self.settings_card.get_all_settings()
+
+    def set_export_enabled(self, enabled: bool):
+        """Enable/disable export functionality."""
+        self.actions_card.export_current_btn.setEnabled(enabled)
+
+    def update_preview_from_external(self, pixmap=None):
+        """Update preview (for compatibility)."""
+        self._update_preview()

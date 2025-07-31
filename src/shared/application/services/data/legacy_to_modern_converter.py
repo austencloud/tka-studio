@@ -8,7 +8,7 @@ Focused solely on legacy-to-modern data transformation.
 import logging
 
 # Forward reference for PictographData
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from desktop.modern.core.interfaces.data_services import ILegacyToModernConverter
 from desktop.modern.domain.models.beat_data import BeatData
@@ -54,10 +54,6 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             # Extract basic beat info
             duration = beat_dict.get("duration", 1.0)
 
-            # Extract position data
-            start_pos = beat_dict.get("start_pos", "")
-            end_pos = beat_dict.get("end_pos", "")
-
             # Extract motion attributes
             blue_attrs = beat_dict.get("blue_attributes", {})
             red_attrs = beat_dict.get("red_attributes", {})
@@ -86,7 +82,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             logger.error(f"Error converting legacy beat data: {e}")
             raise e
 
-    def _create_motion_data_from_attributes(self, attrs: Dict[str, Any]) -> MotionData:
+    def _create_motion_data_from_attributes(self, attrs: dict[str, Any]) -> MotionData:
         """
         Create MotionData from legacy motion attributes.
 
@@ -157,7 +153,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         # TODO: Implement this method
 
     # Interface implementation methods
-    def convert_legacy_data(self, legacy_data: Dict[str, Any]) -> Any:
+    def convert_legacy_data(self, legacy_data: dict[str, Any]) -> Any:
         """Convert legacy data to modern format (interface implementation)."""
         if "beats" in legacy_data:
             return self.convert_legacy_sequence_to_modern(legacy_data)
@@ -166,7 +162,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         else:
             return legacy_data
 
-    def validate_legacy_format(self, data: Dict[str, Any]) -> bool:
+    def validate_legacy_format(self, data: dict[str, Any]) -> bool:
         """Validate legacy data format (interface implementation)."""
         try:
             # Check for basic legacy structure
@@ -181,7 +177,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         except Exception:
             return False
 
-    def get_conversion_metadata(self, legacy_data: Dict[str, Any]) -> Dict[str, Any]:
+    def get_conversion_metadata(self, legacy_data: dict[str, Any]) -> dict[str, Any]:
         """Get metadata about conversion (interface implementation)."""
         return {
             "source_format": "legacy",
@@ -192,7 +188,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         }
 
     # Interface implementation methods
-    def convert_sequence(self, legacy_sequence: List[Dict[str, Any]]) -> Optional[Any]:
+    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Optional[Any]:
         """Convert legacy sequence to modern format."""
         try:
             from desktop.modern.domain.models.sequence_data import SequenceData
@@ -207,7 +203,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             logger.error(f"Error converting legacy sequence: {e}")
             return None
 
-    def convert_beat(self, legacy_beat: Dict[str, Any]) -> Optional[Any]:
+    def convert_beat(self, legacy_beat: dict[str, Any]) -> Optional[Any]:
         """Convert legacy beat to modern format."""
         try:
             beat_number = legacy_beat.get("beat_number", 1)
@@ -216,7 +212,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             logger.error(f"Error converting legacy beat: {e}")
             return None
 
-    def convert_pictograph(self, legacy_pictograph: Dict[str, Any]) -> Optional[Any]:
+    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Optional[Any]:
         """Convert legacy pictograph to modern format."""
         try:
             # TODO: Implement pictograph conversion

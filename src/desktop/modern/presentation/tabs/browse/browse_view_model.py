@@ -5,7 +5,7 @@ Handles view-specific state and logic, decoupled from business logic.
 Provides data binding between the view and model layers.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -22,7 +22,7 @@ class BrowseViewModel(QObject):
     """
 
     # Signals for view updates
-    sequences_changed = pyqtSignal(list)  # List[SequenceData]
+    sequences_changed = pyqtSignal(list)  # list[SequenceData]
     loading_changed = pyqtSignal(bool)
     filter_changed = pyqtSignal(object, object)  # filter_type, filter_value
     selection_changed = pyqtSignal(str)  # sequence_id
@@ -33,7 +33,7 @@ class BrowseViewModel(QObject):
         super().__init__()
 
         # View state
-        self._current_sequences: List[SequenceData] = []
+        self._current_sequences: list[SequenceData] = []
         self._selected_sequence_id: Optional[str] = None
         self._current_filter_type: Optional[FilterType] = None
         self._current_filter_value = None
@@ -41,7 +41,7 @@ class BrowseViewModel(QObject):
         self._error_message: Optional[str] = None
 
     @property
-    def current_sequences(self) -> List[SequenceData]:
+    def current_sequences(self) -> list[SequenceData]:
         """Get current filtered sequences."""
         return self._current_sequences.copy()
 
@@ -70,12 +70,12 @@ class BrowseViewModel(QObject):
         """Get number of current sequences."""
         return len(self._current_sequences)
 
-    def set_sequences(self, sequences: List[SequenceData]) -> None:
+    def set_sequences(self, sequences: list[SequenceData]) -> None:
         """Update the sequence list and notify views."""
         self._current_sequences = sequences.copy()
         self.sequences_changed.emit(sequences)
 
-    def add_sequences(self, sequences: List[SequenceData]) -> None:
+    def add_sequences(self, sequences: list[SequenceData]) -> None:
         """Add sequences to current list (for progressive loading)."""
         self._current_sequences.extend(sequences)
         self.sequences_changed.emit(self._current_sequences)

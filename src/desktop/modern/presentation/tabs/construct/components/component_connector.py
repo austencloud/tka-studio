@@ -44,6 +44,14 @@ class ComponentConnector(QObject):
         self.workbench = workbench
         self._connect_beat_frame_signals()
 
+        # CRITICAL: If export panel already exists, connect it to workbench
+        if self.export_panel and hasattr(self.export_panel, "set_workbench_widget"):
+            self.export_panel.set_workbench_widget(self.workbench)
+            print(
+                "🔗 [COMPONENT_CONNECTOR] Workbench connected to existing export panel"
+            )
+            self._connect_export_panel_updates()
+
     def set_graph_editor(self, graph_editor):
         """Set the graph editor and connect its signals."""
         self.graph_editor = graph_editor
@@ -72,8 +80,12 @@ class ComponentConnector(QObject):
             export_panel.export_requested.connect(self._on_export_requested)
             print("🔤 [COMPONENT_CONNECTOR] Export panel connected")
 
-        # Connect to sequence changes to update export preview
+        # CRITICAL: Connect workbench to export panel for sequence data access
         if self.workbench and export_panel:
+            if hasattr(export_panel, "set_workbench_widget"):
+                export_panel.set_workbench_widget(self.workbench)
+                print("🔗 [COMPONENT_CONNECTOR] Workbench connected to export panel")
+
             self._connect_export_panel_updates()
 
     def _connect_export_panel_updates(self):
@@ -158,37 +170,9 @@ class ComponentConnector(QObject):
 
     def _handle_current_sequence_export(self, options: dict):
         """Handle current sequence export (replaces old save image button) (NEW)."""
-        print("🔤 [COMPONENT_CONNECTOR] Handling current sequence export...")
-
-        if not self.workbench:
-            print("⚠️ No workbench available for export")
-            return
-
-        # Get current sequence
-        current_sequence = self.workbench.get_sequence()
-        if not current_sequence or current_sequence.length == 0:
-            print("⚠️ No sequence available to export")
-            return
-
-        # Use the workbench's operation coordinator to handle export
-        # This maintains consistency with other workbench operations
-        try:
-            if hasattr(self.workbench, "_operation_coordinator"):
-                result = self.workbench._operation_coordinator.save_image()
-
-                if result.success:
-                    print(f"✅ Export successful: {result.message}")
-                    # Update export panel with success feedback
-                    if self.export_panel and hasattr(
-                        self.export_panel, "_reset_export_button"
-                    ):
-                        self.export_panel._reset_export_button()
-                else:
-                    print(f"❌ Export failed: {result.message}")
-            else:
-                print("⚠️ No operation coordinator available in workbench")
-        except Exception as e:
-            print(f"❌ Export error: {e}")
+        print("🔤 [COMPONENT_CONNECTOR] Export request delegated to export panel...")
+        # The export panel now handles this directly with its workbench connection
+        # No need to duplicate logic here
 
     def _handle_all_pictographs_export(self, options: dict):
         """Handle export all pictographs functionality (NEW)."""
@@ -197,13 +181,11 @@ class ComponentConnector(QObject):
 
     def _on_sequence_changed_for_export(self, sequence):
         """Handle sequence changes to update export panel preview (NEW)."""
-        if self.export_panel and hasattr(
-            self.export_panel, "update_preview_from_external"
-        ):
+        if self.export_panel and hasattr(self.export_panel, "_update_preview"):
             print(
                 "🔄 [COMPONENT_CONNECTOR] Updating export panel preview after sequence change"
             )
-            self.export_panel.update_preview_from_external()
+            self.export_panel._update_preview()
 
     def _on_graph_beat_modified(self, beat_index: int, beat_data):
         """Handle beat modification from graph editor."""
@@ -211,10 +193,8 @@ class ComponentConnector(QObject):
         self.graph_beat_modified.emit(beat_index, beat_data)
 
         # Update export panel preview if available
-        if self.export_panel and hasattr(
-            self.export_panel, "update_preview_from_external"
-        ):
-            self.export_panel.update_preview_from_external()
+        if self.export_panel and hasattr(self.export_panel, "_update_preview"):
+            self.export_panel._update_preview()
 
     def notify_generation_completed(self, success: bool, error_message: str):
         """Notify the generate panel that generation has completed."""
@@ -246,8 +226,8 @@ class ComponentConnector(QObject):
             pass
         elif target_mode == "export_panel" and self.export_panel:
             # Prepare export panel for transition
-            if hasattr(self.export_panel, "update_preview_from_external"):
-                self.export_panel.update_preview_from_external()
+            if hasattr(self.export_panel, "_update_preview"):
+                self.export_panel._update_preview()
 
     def finalize_transition(self, target_mode: str):
         """Finalize transition cleanup."""

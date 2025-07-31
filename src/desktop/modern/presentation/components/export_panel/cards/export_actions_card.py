@@ -1,7 +1,7 @@
 """
 Export Actions Card - Export buttons component
 
-Handles the export action buttons for current sequence and all pictographs.
+Handles the export action button for current sequence.
 Part of the refactored export panel system.
 """
 
@@ -12,24 +12,21 @@ from PyQt6.QtWidgets import QFrame, QLabel, QPushButton, QVBoxLayout
 
 class ExportActionsCard(QFrame):
     """
-    Export actions card containing export buttons.
+    Export actions card containing export button.
 
-    Provides buttons for:
-    - Export current sequence
-    - Export all pictographs
+    Provides button for:
+    - Export current sequence (replaces the save image button)
     """
 
     # Signals
     export_current_requested = pyqtSignal()
-    export_all_requested = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("export_actions_card")
 
-        # Button references
+        # Button reference
         self.export_current_btn = None
-        self.export_all_btn = None
 
         self._setup_ui()
         self._setup_connections()
@@ -53,16 +50,9 @@ class ExportActionsCard(QFrame):
         self.export_current_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         layout.addWidget(self.export_current_btn)
 
-        # Export all pictographs button
-        self.export_all_btn = QPushButton("📚 Export All Pictographs")
-        self.export_all_btn.setObjectName("secondary_button")
-        self.export_all_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        layout.addWidget(self.export_all_btn)
-
     def _setup_connections(self):
         """Setup signal connections."""
         self.export_current_btn.clicked.connect(self.export_current_requested.emit)
-        self.export_all_btn.clicked.connect(self.export_all_requested.emit)
 
     def _apply_styling(self):
         """Apply glassmorphism styling."""
@@ -145,12 +135,3 @@ class ExportActionsCard(QFrame):
         else:
             self.export_current_btn.setText("🔤 Export Current Sequence")
             self.export_current_btn.setEnabled(True)
-
-    def set_export_all_loading(self, loading: bool):
-        """Set the export all button to loading state."""
-        if loading:
-            self.export_all_btn.setText("🔄 Exporting All...")
-            self.export_all_btn.setEnabled(False)
-        else:
-            self.export_all_btn.setText("📚 Export All Pictographs")
-            self.export_all_btn.setEnabled(True)

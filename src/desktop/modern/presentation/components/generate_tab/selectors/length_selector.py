@@ -33,7 +33,7 @@ class LengthSelector(GenerationControlBase):
 
         # Slider
         self._slider = QSlider(Qt.Orientation.Horizontal)
-        self._slider.setMinimum(4)
+        self._slider.setMinimum(1)
         self._slider.setMaximum(32)
         self._slider.setValue(16)
         self._slider.setTickPosition(QSlider.TickPosition.TicksBelow)

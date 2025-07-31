@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QPushButton, QWidget
 
 from desktop.modern.core.interfaces.generation_services import GenerationMode
 
-from .selectors.generation_control_base import GenerationControlBase
+from .generation_control_base import GenerationControlBase
 
 
 class GenerationModeToggle(GenerationControlBase):

@@ -12,6 +12,7 @@ Each selector follows the GenerationControlBase pattern and provides:
 """
 
 from .cap_type_selector import CAPTypeSelector
+from .generation_mode_toggle import GenerationModeToggle
 from .grid_mode_selector import ModernGridModeSelector
 from .length_selector import LengthSelector
 from .letter_type_selector import LetterTypeSelector
@@ -22,6 +23,7 @@ from .turn_intensity_selector import TurnIntensitySelector
 
 __all__ = [
     "CAPTypeSelector",
+    "GenerationModeToggle",
     "ModernGridModeSelector",
     "LengthSelector",
     "LetterTypeSelector",

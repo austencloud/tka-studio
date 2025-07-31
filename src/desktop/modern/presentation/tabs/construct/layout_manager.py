@@ -345,10 +345,8 @@ class ConstructTabLayoutManager:
             )
 
             # Update export panel preview when switching to it
-            if self.export_panel and hasattr(
-                self.export_panel, "update_preview_from_external"
-            ):
-                self.export_panel.update_preview_from_external()
+            if self.export_panel and hasattr(self.export_panel, "_update_preview"):
+                self.export_panel._update_preview()
 
     def _update_tab_active_state(self, tab_index: int):
         """Update the tab widget to reflect the current panel."""

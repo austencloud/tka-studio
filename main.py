@@ -18,9 +18,19 @@ def main():
         os.chdir(tka_root)
 
         # Import after path setup - modern main.py is in src/desktop/modern/
-        # Since src/desktop/modern is in sys.path, we can import main directly
-        sys.path.insert(0, str(tka_root / "src" / "desktop" / "modern"))
-        from main import main as modern_main
+        # Add the modern directory to path and import the modern main
+        modern_path = str(tka_root / "src" / "desktop" / "modern")
+        sys.path.insert(0, modern_path)
+
+        # Import the modern main module
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "modern_main", tka_root / "src" / "desktop" / "modern" / "main.py"
+        )
+        modern_main_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modern_main_module)
+        modern_main = modern_main_module.main
 
         # Launch the modern TKA application
         modern_main()
