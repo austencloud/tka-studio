@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional
 
 from objects.motion.prefloat_state_updater import PrefloatStateUpdater
 
@@ -10,7 +10,7 @@ from data.constants import ANTI, FLOAT, PREFLOAT_MOTION_TYPE, PREFLOAT_PROP_ROT_
 class MotionState:
     color: Optional[str] = None
     motion_type: Optional[str] = None
-    turns: Union[int, float, str] = 0
+    turns: int | float | str = 0
     start_loc: Optional[str] = None
     end_loc: Optional[str] = None
     start_ori: Optional[str] = None

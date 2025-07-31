@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtSvg import QSvgRenderer
@@ -19,8 +19,8 @@ class TurnsNumber(QGraphicsSvgItem):
         self.blank_svg_path = turns_column.blank_svg_path
         self.number_svg_cache = {}
 
-        self.current_color: Union[str, None] = None
-        self.last_number: Union[str, None] = None
+        self.current_color: str | None = None
+        self.last_number: str | None = None
 
     def set_color(self, color: str):
         self.current_color = color
@@ -42,7 +42,7 @@ class TurnsNumber(QGraphicsSvgItem):
   <text x="50" y="60" font-family="Arial" font-size="40" text-anchor="middle" fill="black">?</text>
 </svg>"""
 
-    def load_number_svg(self, number: Union[int, float, str]) -> None:
+    def load_number_svg(self, number: int | float | str) -> None:
         self.last_number = number
 
         try:

@@ -7,7 +7,7 @@ selection and availability checking.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtTest import QTest
 
@@ -84,7 +84,7 @@ class StartPositionPickerPage(BasePage):
             logger.error(f"Failed to select position {position}: {e}")
             return False
 
-    def get_available_positions(self) -> List[str]:
+    def get_available_positions(self) -> list[str]:
         """
         Get list of available start positions.
 
@@ -272,7 +272,7 @@ class StartPositionPickerPage(BasePage):
         current = self.get_current_position()
         return current == position if current else True
 
-    def _extract_positions_from_ui(self, picker) -> List[str]:
+    def _extract_positions_from_ui(self, picker) -> list[str]:
         """
         Extract available positions from UI elements.
 
@@ -286,7 +286,7 @@ class StartPositionPickerPage(BasePage):
         # For now, return empty list to fall back to defaults
         return []
 
-    def _get_default_positions(self) -> List[str]:
+    def _get_default_positions(self) -> list[str]:
         """
         Get default test positions for fallback.
 

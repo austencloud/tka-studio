@@ -20,7 +20,6 @@ Architecture:
 """
 
 import logging
-from typing import List
 
 from PyQt6.QtCore import (
     QEasingCurve,
@@ -89,7 +88,7 @@ class AnimationMixin:
         return animation
 
     def create_stagger_group(
-        self, animations: List[QPropertyAnimation], stagger_delay: int = 50
+        self, animations: list[QPropertyAnimation], stagger_delay: int = 50
     ) -> QSequentialAnimationGroup:
         """Create a staggered animation group."""
         group = QSequentialAnimationGroup()
@@ -269,7 +268,7 @@ class EntranceAnimationMixin(AnimationMixin):
 
     def animate_staggered_entrance(
         self,
-        widgets: List[QWidget],
+        widgets: list[QWidget],
         stagger_delay: int = 50,
         animation_type: str = "fade_slide",
     ):

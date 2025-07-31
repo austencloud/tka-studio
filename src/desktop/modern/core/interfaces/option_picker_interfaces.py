@@ -6,7 +6,7 @@ functionality, following TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -16,7 +16,7 @@ class IOptionServiceSignals(ABC):
     """Interface for option service signal emission."""
 
     @abstractmethod
-    def emit_options_loaded(self, options: List[PictographData]) -> None:
+    def emit_options_loaded(self, options: list[PictographData]) -> None:
         """
         Emit signal when options are loaded.
 
@@ -34,8 +34,8 @@ class IOptionProvider(ABC):
 
     @abstractmethod
     def load_options_from_sequence(
-        self, sequence_data: List[Dict[str, Any]]
-    ) -> List[PictographData]:
+        self, sequence_data: list[dict[str, Any]]
+    ) -> list[PictographData]:
         """
         Load pictograph options based on legacy sequence data.
 
@@ -49,7 +49,7 @@ class IOptionProvider(ABC):
     @abstractmethod
     def load_options_from_modern_sequence(
         self, sequence: SequenceData
-    ) -> List[PictographData]:
+    ) -> list[PictographData]:
         """
         Load pictograph options based on modern sequence data.
 
@@ -61,7 +61,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def get_current_options(self) -> List[PictographData]:
+    def get_current_options(self) -> list[PictographData]:
         """
         Get the currently loaded pictograph options.
 
@@ -95,7 +95,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def filter_options_by_letter(self, letter: str) -> List[PictographData]:
+    def filter_options_by_letter(self, letter: str) -> list[PictographData]:
         """
         Filter current options by letter.
 
@@ -107,7 +107,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def get_available_letters(self) -> List[str]:
+    def get_available_letters(self) -> list[str]:
         """
         Get list of available letters in current options.
 

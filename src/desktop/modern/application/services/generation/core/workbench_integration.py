@@ -6,7 +6,6 @@ Direct, focused integration - around 80 lines.
 """
 
 import logging
-from typing import List
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 
@@ -27,7 +26,7 @@ class WorkbenchIntegrator:
         self._initialize_arrow_positioning()
 
     def update_workbench_with_sequence(
-        self, sequence: List[PictographData], clear_existing: bool = True
+        self, sequence: list[PictographData], clear_existing: bool = True
     ) -> bool:
         """
         Update workbench with a generated sequence.
@@ -280,8 +279,8 @@ class WorkbenchIntegrator:
             self._try_fallback_arrow_positioning()
 
     def _apply_arrow_positioning_to_sequence(
-        self, sequence: List[PictographData]
-    ) -> List[PictographData]:
+        self, sequence: list[PictographData]
+    ) -> list[PictographData]:
         """
         Apply proper arrow positioning and rotation to all pictographs in sequence.
 

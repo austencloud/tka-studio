@@ -1,4 +1,4 @@
-from typing import Any, Dict, Type, TypeVar, cast
+from typing import Any, TypeVar, cast
 
 from interfaces.json_manager_interface import IJsonManager
 from interfaces.settings_manager_interface import ISettingsManager
@@ -10,7 +10,7 @@ class AppContextDI:
     """Transitional AppContext implementation that uses dependency injection."""
 
     _instance = None
-    _services: Dict[Type, Any] = {}
+    _services: dict[type, Any] = {}
 
     @classmethod
     def init(cls, **services):
@@ -19,7 +19,7 @@ class AppContextDI:
         cls._instance = cls()
 
     @classmethod
-    def get_service(cls, service_type: Type[T]) -> T:
+    def get_service(cls, service_type: type[T]) -> T:
         """Get a service by type."""
         if service_type in cls._services:
             return cast(T, cls._services[service_type])

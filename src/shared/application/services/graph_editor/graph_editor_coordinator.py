@@ -5,7 +5,7 @@ Provides graph editor functionality for the modern TKA desktop application.
 Manages graph editor state, beat selection, and UI interactions.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
@@ -105,12 +105,12 @@ class GraphEditorCoordinator(IGraphEditorService):
         if self.ui_state_service:
             self.ui_state_service.set_setting("graph_editor_selected_arrow", arrow_id)
 
-    def get_available_turns(self, arrow_color: str) -> List[float]:
+    def get_available_turns(self, arrow_color: str) -> list[float]:
         """Get available turn values for specified arrow color"""
         # Standard turn values - these are common turn increments
         return [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0]
 
-    def get_available_orientations(self, arrow_color: str) -> List[str]:
+    def get_available_orientations(self, arrow_color: str) -> list[str]:
         """Get available orientation values for specified arrow color"""
         # Standard orientations based on motion types
         return ["pro", "anti", "float", "dash", "static"]
@@ -275,7 +275,7 @@ class GraphEditorCoordinator(IGraphEditorService):
         except Exception:
             return None
 
-    def list_graphs(self) -> List[any]:
+    def list_graphs(self) -> list[any]:
         """List all available graphs."""
         # For now, return the current sequence if available
         try:

@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.graph_editor.graph_editor import (
@@ -46,36 +46,36 @@ class GraphEditorAutoTransformService:
         }
 
         # Platform-agnostic event callbacks
-        self._transform_started_callbacks: List[
-            Callable[[str, Dict[str, Any]], None]
+        self._transform_started_callbacks: list[
+            Callable[[str, dict[str, Any]], None]
         ] = []
-        self._transform_completed_callbacks: List[
-            Callable[[str, Dict[str, Any]], None]
+        self._transform_completed_callbacks: list[
+            Callable[[str, dict[str, Any]], None]
         ] = []
-        self._transform_progress_callbacks: List[
-            Callable[[str, float, Dict[str, Any]], None]
+        self._transform_progress_callbacks: list[
+            Callable[[str, float, dict[str, Any]], None]
         ] = []
-        self._settings_changed_callbacks: List[Callable[[Dict[str, Any]], None]] = []
+        self._settings_changed_callbacks: list[Callable[[dict[str, Any]], None]] = []
 
     def add_transform_started_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a transform starts."""
         self._transform_started_callbacks.append(callback)
 
     def add_transform_completed_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a transform completes."""
         self._transform_completed_callbacks.append(callback)
 
     def add_transform_progress_callback(
-        self, callback: Callable[[str, float, Dict[str, Any]], None]
+        self, callback: Callable[[str, float, dict[str, Any]], None]
     ):
         """Add callback for transform progress updates."""
         self._transform_progress_callbacks.append(callback)
 
-    def add_settings_changed_callback(self, callback: Callable[[Dict[str, Any]], None]):
+    def add_settings_changed_callback(self, callback: Callable[[dict[str, Any]], None]):
         """Add callback for when settings change."""
         self._settings_changed_callbacks.append(callback)
 
@@ -88,20 +88,20 @@ class GraphEditorAutoTransformService:
         """Check if auto-transform is enabled."""
         return self._auto_transform_enabled
 
-    def update_transform_settings(self, settings: Dict[str, Any]):
+    def update_transform_settings(self, settings: dict[str, Any]):
         """Update transform settings."""
         self._transform_settings.update(settings)
         self._notify_settings_changed()
 
-    def get_transform_settings(self) -> Dict[str, Any]:
+    def get_transform_settings(self) -> dict[str, Any]:
         """Get current transform settings."""
         return self._transform_settings.copy()
 
     def auto_align_elements(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         alignment_type: str = "center",
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically align elements.
@@ -147,9 +147,9 @@ class GraphEditorAutoTransformService:
 
     def auto_distribute_elements(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         distribution_type: str = "horizontal",
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically distribute elements.
@@ -195,9 +195,9 @@ class GraphEditorAutoTransformService:
 
     def auto_resize_elements(
         self,
-        element_ids: List[str],
-        target_size: Optional[Dict[str, float]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        element_ids: list[str],
+        target_size: Optional[dict[str, float]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically resize elements.
@@ -241,9 +241,9 @@ class GraphEditorAutoTransformService:
 
     def snap_to_grid(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         grid_size: Optional[int] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Snap elements to grid.
@@ -291,8 +291,8 @@ class GraphEditorAutoTransformService:
     def auto_layout(
         self,
         layout_type: str = "flow",
-        element_ids: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        element_ids: Optional[list[str]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Apply automatic layout to elements.
@@ -338,7 +338,7 @@ class GraphEditorAutoTransformService:
         self,
         transform_id: str,
         duration: Optional[int] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Animate a transform operation.
@@ -381,7 +381,7 @@ class GraphEditorAutoTransformService:
         self,
         transform_id: str,
         duration: int,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ):
         """Simulate progress updates for animation."""
         # This would typically be handled by an animation system
@@ -398,18 +398,18 @@ class GraphEditorAutoTransformService:
             if i == steps:
                 self._notify_transform_completed(f"animate_{transform_id}", context)
 
-    def _notify_transform_started(self, transform_id: str, context: Dict[str, Any]):
+    def _notify_transform_started(self, transform_id: str, context: dict[str, Any]):
         """Notify callbacks that a transform started."""
         for callback in self._transform_started_callbacks:
             callback(transform_id, context)
 
-    def _notify_transform_completed(self, transform_id: str, context: Dict[str, Any]):
+    def _notify_transform_completed(self, transform_id: str, context: dict[str, Any]):
         """Notify callbacks that a transform completed."""
         for callback in self._transform_completed_callbacks:
             callback(transform_id, context)
 
     def _notify_transform_progress(
-        self, transform_id: str, progress: float, context: Dict[str, Any]
+        self, transform_id: str, progress: float, context: dict[str, Any]
     ):
         """Notify callbacks of transform progress."""
         for callback in self._transform_progress_callbacks:

@@ -11,7 +11,7 @@ Handles:
 
 import inspect
 import logging
-from typing import Any, Dict, List, Set, Type, get_type_hints
+from typing import Any, get_type_hints
 
 try:
     from ..exceptions import DependencyInjectionError
@@ -23,7 +23,7 @@ except ImportError:
             message: str,
             interface_name: str = None,
             dependency_chain: list = None,
-            context: Dict[str, Any] = None,
+            context: dict[str, Any] = None,
         ):
             super().__init__(message)
             self.interface_name = interface_name
@@ -42,9 +42,9 @@ class ValidationEngine:
     """
 
     def __init__(self):
-        self._validation_cache: Dict[Type, bool] = {}
+        self._validation_cache: dict[type, bool] = {}
 
-    def validate_registration(self, interface: Type, implementation: Type) -> None:
+    def validate_registration(self, interface: type, implementation: type) -> None:
         """Validate that implementation can fulfill interface contract."""
         if not inspect.isclass(implementation):
             raise DependencyInjectionError(
@@ -69,7 +69,7 @@ class ValidationEngine:
                 )
 
     def validate_protocol_implementation(
-        self, protocol: Type, implementation: Type
+        self, protocol: type, implementation: type
     ) -> None:
         """Validate implementation fulfills Protocol contract."""
         if not hasattr(protocol, "_is_protocol") or not protocol._is_protocol:
@@ -93,7 +93,7 @@ class ValidationEngine:
                     interface_name=protocol.__name__,
                 )
 
-    def validate_dependency_chain(self, implementation: Type, registry: Any) -> None:
+    def validate_dependency_chain(self, implementation: type, registry: Any) -> None:
         """Validate that all constructor dependencies can be resolved."""
         signature = inspect.signature(implementation.__init__)
         type_hints = get_type_hints(implementation.__init__)
@@ -145,7 +145,7 @@ class ValidationEngine:
             )
 
     def _validate_single_registration(
-        self, interface: Type, implementation: Type, registry: Any
+        self, interface: type, implementation: type, registry: Any
     ) -> None:
         """Validate a single registration without creating instances."""
         # Check if implementation is a class
@@ -197,7 +197,7 @@ class ValidationEngine:
             ) from e
 
     def detect_circular_dependencies(
-        self, start_type: Type, registry: Any, visited: Set[Type] = None
+        self, start_type: type, registry: Any, visited: set[type] = None
     ) -> None:
         """Detect circular dependencies in the service graph."""
         if visited is None:
@@ -220,7 +220,7 @@ class ValidationEngine:
             for dep in dependencies:
                 self.detect_circular_dependencies(dep, registry, visited.copy())
 
-    def _get_constructor_dependencies(self, implementation: Type) -> List[Type]:
+    def _get_constructor_dependencies(self, implementation: type) -> list[type]:
         """Get list of constructor dependencies for a class."""
         try:
             signature = inspect.signature(implementation.__init__)
@@ -252,7 +252,7 @@ class ValidationEngine:
         except Exception:
             return []
 
-    def is_primitive_type(self, param_type: Type) -> bool:
+    def is_primitive_type(self, param_type: type) -> bool:
         """Check if a type is a primitive type that should not be resolved as a dependency."""
         from datetime import datetime, timedelta
         from pathlib import Path
@@ -298,7 +298,7 @@ class ValidationEngine:
         return param_type in primitive_types
 
     def auto_register_with_validation(
-        self, interface: Type, implementation: Type, registry: Any
+        self, interface: type, implementation: type, registry: Any
     ) -> None:
         """Register service with comprehensive validation."""
         # Step 1: Validate Protocol implementation

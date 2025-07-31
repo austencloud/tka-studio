@@ -3,7 +3,7 @@ Utility functions for working with mirrored entries.
 """
 
 import logging
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from enums.letter.letter import Letter
 from legacy_settings_manager.global_settings.app_context import AppContext
@@ -133,7 +133,7 @@ class MirroredEntryUtils:
     @staticmethod
     def get_keys_for_mixed_start_ori(
         grid_mode: str, letter: Letter, ori_key: str
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> tuple[str, dict[str, Any]]:
         """
         Get the keys and data for mixed start orientation.
 
@@ -154,7 +154,7 @@ class MirroredEntryUtils:
     @staticmethod
     def _get_letter_data(
         grid_mode: str, ori_key: str, letter: Letter
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get the letter data for the given grid mode, orientation key, and letter.
 

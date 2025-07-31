@@ -8,7 +8,7 @@ Builds on existing error handling with circuit breaker state management.
 from dataclasses import dataclass
 from enum import Enum
 import time
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 
@@ -123,7 +123,7 @@ class CircuitBreaker:
         self.stats.state_changes += 1
         logger.info(f"Circuit breaker {self.name}: {old_state.value} → CLOSED")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get circuit breaker statistics."""
         return {
             "name": self.name,
@@ -322,7 +322,7 @@ class ResilientPanelFactory:
 
         return widget, None
 
-    def get_circuit_breaker_status(self) -> Dict[str, Dict[str, Any]]:
+    def get_circuit_breaker_status(self) -> dict[str, dict[str, Any]]:
         """Get status of all circuit breakers."""
         return {
             name: breaker.get_stats() for name, breaker in self.circuit_breakers.items()

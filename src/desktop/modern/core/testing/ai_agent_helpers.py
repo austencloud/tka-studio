@@ -7,7 +7,7 @@ using the existing sophisticated TKA architecture.
 
 from dataclasses import dataclass
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Import your existing architecture
 from desktop.modern.core.application.application_factory import ApplicationFactory
@@ -34,9 +34,9 @@ class AITestResult:
 
     success: bool
     data: Optional[Any] = None
-    errors: List[str] = None
+    errors: list[str] = None
     execution_time: float = 0.0
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         """Initialize default values."""
@@ -61,7 +61,7 @@ class TKAAITestHelper:
         else:
             self.container = ApplicationFactory.create_headless_app()
 
-        self.execution_history: List[tuple] = []
+        self.execution_history: list[tuple] = []
 
         # Cache frequently used services
         self._sequence_service = None
@@ -542,7 +542,7 @@ class TKAAITestHelper:
         self.execution_history.append(("comprehensive_test", result))
         return result
 
-    def get_execution_summary(self) -> Dict[str, Any]:
+    def get_execution_summary(self) -> dict[str, Any]:
         """Get summary of all executed tests."""
         total_commands = len(self.execution_history)
         successful_commands = len([r for _, r in self.execution_history if r.success])
@@ -572,7 +572,7 @@ class TKAAITestHelper:
 
 
 # Simple convenience functions for AI agents
-def ai_test_tka_comprehensive() -> Dict[str, Any]:
+def ai_test_tka_comprehensive() -> dict[str, Any]:
     """One-line comprehensive test for AI agents."""
     helper = TKAAITestHelper()
     result = helper.run_comprehensive_test_suite()
@@ -585,7 +585,7 @@ def ai_test_tka_comprehensive() -> Dict[str, Any]:
     }
 
 
-def ai_test_sequence_workflow() -> Dict[str, Any]:
+def ai_test_sequence_workflow() -> dict[str, Any]:
     """Test sequence creation workflow for AI agents."""
     helper = TKAAITestHelper()
     result = helper.test_existing_command_pattern()
@@ -599,7 +599,7 @@ def ai_test_sequence_workflow() -> Dict[str, Any]:
     }
 
 
-def ai_test_pictograph_workflow() -> Dict[str, Any]:
+def ai_test_pictograph_workflow() -> dict[str, Any]:
     """Test pictograph creation workflow for AI agents."""
     helper = TKAAITestHelper()
     result = helper.test_pictograph_from_beat()

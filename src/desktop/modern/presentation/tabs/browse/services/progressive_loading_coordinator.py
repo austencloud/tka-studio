@@ -6,7 +6,7 @@ Handles the orchestration between progressive loading service and display compon
 """
 
 import logging
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QApplication
@@ -44,12 +44,12 @@ class ProgressiveLoadingCoordinator(QObject):
         """
         super().__init__()
         self.progressive_loading_service = progressive_loading_service
-        self.all_loaded_sequences: List[SequenceData] = []
+        self.all_loaded_sequences: list[SequenceData] = []
         self._loading_cancelled = False
 
         # Callbacks for chunk processing
         self.chunk_display_callback: Optional[
-            Callable[[List[SequenceData], str], None]
+            Callable[[list[SequenceData], str], None]
         ] = None
         self.navigation_update_callback: Optional[Callable[[], None]] = None
 
@@ -75,7 +75,7 @@ class ProgressiveLoadingCoordinator(QObject):
             )
 
     def set_chunk_display_callback(
-        self, callback: Callable[[List[SequenceData], str], None]
+        self, callback: Callable[[list[SequenceData], str], None]
     ) -> None:
         """Set callback for displaying chunks of sequences."""
         self.chunk_display_callback = callback
@@ -132,7 +132,7 @@ class ProgressiveLoadingCoordinator(QObject):
         )
         self.loading_started.emit(total_count)
 
-    def _on_service_chunk_loaded(self, chunk_sequences: List[SequenceData]) -> None:
+    def _on_service_chunk_loaded(self, chunk_sequences: list[SequenceData]) -> None:
         """Handle chunk loading from service with coordination."""
         if self._loading_cancelled:
             logger.info("⛔ [COORDINATOR] Loading cancelled, skipping chunk")
@@ -168,7 +168,7 @@ class ProgressiveLoadingCoordinator(QObject):
         self.loading_progress.emit(current, total)
 
     def _on_service_loading_completed(
-        self, final_sequences: List[SequenceData]
+        self, final_sequences: list[SequenceData]
     ) -> None:
         """Handle loading completion from service."""
         if self._loading_cancelled:
@@ -189,7 +189,7 @@ class ProgressiveLoadingCoordinator(QObject):
         self._loading_cancelled = True
         self.loading_cancelled.emit()
 
-    def get_loaded_sequences(self) -> List[SequenceData]:
+    def get_loaded_sequences(self) -> list[SequenceData]:
         """Get all currently loaded sequences."""
         return self.all_loaded_sequences.copy()
 

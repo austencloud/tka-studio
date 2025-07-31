@@ -7,7 +7,7 @@ framework independence.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -43,9 +43,9 @@ class QtAnimationServiceAdapter(QObject):
         self._core_service = create_animation_service()
 
         # Qt-specific animation management
-        self._active_animations: Dict[str, QPropertyAnimation] = {}
-        self._widget_references: Dict[str, QWidget] = {}
-        self._timers: Dict[str, QTimer] = {}
+        self._active_animations: dict[str, QPropertyAnimation] = {}
+        self._widget_references: dict[str, QWidget] = {}
+        self._timers: dict[str, QTimer] = {}
 
         # Performance tracking
         self._animation_count = 0
@@ -128,7 +128,7 @@ class QtAnimationServiceAdapter(QObject):
 
     def animate_fade_transition(
         self, from_widget: QWidget, to_widget: QWidget, duration: int = 300
-    ) -> List[str]:
+    ) -> list[str]:
         """Animate fade transition between widgets."""
         try:
             # Create animation sequence using core service
@@ -329,7 +329,7 @@ class QtAnimationServiceAdapter(QObject):
         }
         return property_map.get(property_name, AnimationType.CUSTOM)
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         core_stats = self._core_service.get_performance_stats()
         return {

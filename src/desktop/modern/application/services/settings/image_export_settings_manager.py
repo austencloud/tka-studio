@@ -6,7 +6,6 @@ quality presets, and QSettings persistence.
 """
 
 import logging
-from typing import Dict, List, Tuple
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -124,7 +123,7 @@ class ImageExportSettingsManager(QObject):
             logger.error(f"Failed to set export format {format_name}: {e}")
             return False
 
-    def get_supported_formats(self) -> List[str]:
+    def get_supported_formats(self) -> list[str]:
         """
         Get list of supported export formats.
 
@@ -185,7 +184,7 @@ class ImageExportSettingsManager(QObject):
             logger.error(f"Failed to set export quality {quality}: {e}")
             return False
 
-    def get_export_dimensions(self) -> Tuple[int, int]:
+    def get_export_dimensions(self) -> tuple[int, int]:
         """
         Get export dimensions (width, height).
 
@@ -340,7 +339,7 @@ class ImageExportSettingsManager(QObject):
             logger.error(f"Failed to set scale factor {scale}: {e}")
             return False
 
-    def get_quality_presets(self) -> Dict[str, int]:
+    def get_quality_presets(self) -> dict[str, int]:
         """
         Get available quality presets.
 
@@ -371,7 +370,7 @@ class ImageExportSettingsManager(QObject):
             logger.error(f"Failed to apply quality preset {preset_name}: {e}")
             return False
 
-    def get_dimension_presets(self) -> Dict[str, Tuple[int, int]]:
+    def get_dimension_presets(self) -> dict[str, tuple[int, int]]:
         """
         Get available dimension presets.
 
@@ -402,7 +401,7 @@ class ImageExportSettingsManager(QObject):
             logger.error(f"Failed to apply dimension preset {preset_name}: {e}")
             return False
 
-    def get_format_recommendations(self, format_name: str = None) -> Dict[str, str]:
+    def get_format_recommendations(self, format_name: str = None) -> dict[str, str]:
         """
         Get recommendations for optimal settings for a format.
 

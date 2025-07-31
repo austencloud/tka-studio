@@ -6,7 +6,7 @@ Coordinates specialized helper components for layout and loading management.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QCoreApplication, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -47,7 +47,7 @@ class SequenceCardContentComponent(QWidget):
         self.cache_service = cache_service
         self.layout_service = layout_service
 
-        self.current_sequences: List[SequenceCardData] = []
+        self.current_sequences: list[SequenceCardData] = []
         self.current_column_count = 2
 
         # Create image loader for async loading
@@ -200,7 +200,7 @@ class SequenceCardContentComponent(QWidget):
         """Stop any ongoing progressive loading."""
         self.progressive_loading_manager.stop_progressive_loading()
 
-    def _on_sequences_loaded(self, sequences: List[SequenceCardData]) -> None:
+    def _on_sequences_loaded(self, sequences: list[SequenceCardData]) -> None:
         """Handle sequences loaded signal with immediate UI response."""
         logger.info(f"Content component: {len(sequences)} sequences loaded")
         self.current_sequences = sequences

@@ -7,7 +7,6 @@ Replicates legacy system's exact page sizing and grid layout specifications.
 
 from enum import Enum
 import logging
-from typing import Tuple
 
 from PyQt6.QtCore import QRect, QSize
 
@@ -52,7 +51,7 @@ class PrintablePageLayout:
         self,
         paper_size: PaperSize = PaperSize.LETTER,  # Legacy uses LETTER by default
         orientation: PaperOrientation = PaperOrientation.PORTRAIT,
-        margins: Tuple[int, int, int, int] = DEFAULT_MARGINS,
+        margins: tuple[int, int, int, int] = DEFAULT_MARGINS,
         screen_dpi: int = SCREEN_DPI,
         print_dpi: int = PRINT_DPI,
     ):
@@ -137,7 +136,7 @@ class SequenceCardLayoutService(ISequenceCardLayoutService):
 
     def calculate_page_size(
         self, available_width: int, column_count: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """Calculate optimal page size based on letter-sized pages and available width."""
         # Get the base letter-sized page dimensions
         base_page_size = self.page_layout.get_page_size_px()
@@ -171,7 +170,7 @@ class SequenceCardLayoutService(ISequenceCardLayoutService):
         return self.page_layout.get_content_rect_px()
 
     def calculate_scale_factor(
-        self, original_size: Tuple[int, int], target_size: Tuple[int, int]
+        self, original_size: tuple[int, int], target_size: tuple[int, int]
     ) -> float:
         """Calculate appropriate scale factor."""
         orig_width, orig_height = original_size

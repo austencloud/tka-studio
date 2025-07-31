@@ -6,7 +6,7 @@ that manages smaller, focused components.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QDialog
@@ -53,8 +53,8 @@ class SettingsDialogCoordinator(QObject):
         self.event_coordinator = None
 
         # Component references
-        self.components: Dict[str, Any] = {}
-        self.tabs: Dict[str, Any] = {}
+        self.components: dict[str, Any] = {}
+        self.tabs: dict[str, Any] = {}
 
         # Drag functionality for frameless window
         self.drag_position = None

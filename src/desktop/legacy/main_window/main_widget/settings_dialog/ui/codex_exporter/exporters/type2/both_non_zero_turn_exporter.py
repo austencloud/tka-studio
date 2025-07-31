@@ -5,7 +5,7 @@ This module handles the export of Type 2 pictographs when both turn values are n
 """
 
 import os
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any
 
 from ...turn_applier import TurnApplier
 from .base_exporter import Type2BaseExporter
@@ -20,7 +20,7 @@ class BothNonZeroTurnExporter(Type2BaseExporter):
     def _export_single_variation_set(
         self,
         letter: str,
-        pictograph_data: Dict[str, Any],
+        pictograph_data: dict[str, Any],
         grid_mode: str,
         blue_prop_rot_dir: str,
         current_turns1: float,
@@ -55,7 +55,7 @@ class BothNonZeroTurnExporter(Type2BaseExporter):
         directory: str,
         turns1: float,
         turns2: float,
-        matching_pictographs: List[Dict[str, Any]],
+        matching_pictographs: list[dict[str, Any]],
         grid_mode: str = "diamond",
     ) -> int:
         """Exports Type 2 pictographs when both turn values are non-zero.

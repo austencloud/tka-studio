@@ -6,7 +6,7 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 
 import gc
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 class CachePerformanceMonitor:
@@ -110,8 +110,8 @@ class CachePerformanceMonitor:
             return 0.0
 
     def get_performance_stats(
-        self, disk_cache_stats: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, disk_cache_stats: Optional[dict] = None
+    ) -> dict[str, Any]:
         """
         Get comprehensive performance statistics.
 
@@ -143,7 +143,7 @@ class CachePerformanceMonitor:
 
         return stats
 
-    def log_performance_stats(self, cache_stats: Dict[str, Any]) -> None:
+    def log_performance_stats(self, cache_stats: dict[str, Any]) -> None:
         """
         Log current performance statistics.
 

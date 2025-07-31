@@ -3,7 +3,7 @@ Core animation components for the modern fade system.
 """
 
 import asyncio
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -27,7 +27,7 @@ class GraphicsEffectManager(IGraphicsEffectManager):
     """Manages graphics effects lifecycle with automatic cleanup."""
 
     def __init__(self):
-        self._managed_effects: Dict[QWidget, QGraphicsOpacityEffect] = {}
+        self._managed_effects: dict[QWidget, QGraphicsOpacityEffect] = {}
 
     def apply_fade_effect(self, widget: QWidget) -> QGraphicsOpacityEffect:
         """Apply a fade effect to a widget, reusing existing effects when possible."""
@@ -46,7 +46,7 @@ class GraphicsEffectManager(IGraphicsEffectManager):
         self._managed_effects[widget] = effect
         return effect
 
-    def remove_effects(self, widgets: List[QWidget]) -> None:
+    def remove_effects(self, widgets: list[QWidget]) -> None:
         """Safely remove graphics effects from widgets."""
         for widget in widgets:
             if widget and hasattr(widget, "setGraphicsEffect"):

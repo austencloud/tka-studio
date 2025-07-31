@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from main_window.main_widget.sequence_properties_manager.sequence_properties_manager import (
     SequencePropertiesManager,
@@ -30,7 +30,7 @@ class JsonTurnsUpdater:
         self,
         index: int,
         color: str,
-        turns: Union[int, float],
+        turns: int | float,
     ) -> None:
         beat_frame = self._get_sequence_beat_frame()
         sequence = self.json_manager.loader_saver.load_current_sequence()

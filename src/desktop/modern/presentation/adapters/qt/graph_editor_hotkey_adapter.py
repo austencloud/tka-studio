@@ -5,7 +5,7 @@ This adapter wraps the pure GraphEditorHotkeyService to provide Qt-specific sign
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -57,7 +57,7 @@ class QtGraphEditorHotkeyAdapter(QObject):
         self,
         hotkey: str,
         beat_data: Optional[object] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Process a hotkey action.
@@ -97,7 +97,7 @@ class QtGraphEditorHotkeyAdapter(QObject):
         """Handle arrow moved callback from service."""
         self.arrow_moved.emit(arrow_id, delta_x, delta_y)
 
-    def _on_hotkey_processed(self, action: str, context: Dict[str, Any]):
+    def _on_hotkey_processed(self, action: str, context: dict[str, Any]):
         """Handle hotkey processed callback from service."""
         self.hotkey_processed.emit(action, context)
 
@@ -121,7 +121,7 @@ class QtGraphEditorHotkeyAdapter(QObject):
         self.service.add_arrow_moved_callback(callback)
 
     def add_hotkey_processed_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a hotkey is processed."""
         self.service.add_hotkey_processed_callback(callback)

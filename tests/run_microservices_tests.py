@@ -10,7 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 
 class MicroservicesTestRunner:
@@ -30,7 +30,7 @@ class MicroservicesTestRunner:
         self.start_time = None
         self.end_time = None
 
-    def run_pytest_file(self, test_file: str, phase_name: str) -> Dict[str, Any]:
+    def run_pytest_file(self, test_file: str, phase_name: str) -> dict[str, Any]:
         """Run a specific pytest file and capture results."""
         print(f"\n{'=' * 60}")
         print(f"Running {phase_name}: {test_file}")
@@ -138,7 +138,7 @@ class MicroservicesTestRunner:
                 "error": str(e),
             }
 
-    def run_manual_tests(self) -> Dict[str, Any]:
+    def run_manual_tests(self) -> dict[str, Any]:
         """Run manual testing suite."""
         print(f"\n{'=' * 60}")
         print("Running Manual Verification Tests")

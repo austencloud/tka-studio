@@ -6,7 +6,6 @@ across different UI frameworks (Qt, Web, etc.).
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Tuple
 
 from desktop.modern.domain.models import Location, MotionData
 
@@ -17,7 +16,7 @@ class IDirectionalTupleCalculator(ABC):
     @abstractmethod
     def calculate_directional_tuple(
         self, motion: MotionData, location: Location
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Calculate directional tuple for arrow positioning.
 
@@ -32,7 +31,7 @@ class IDirectionalTupleCalculator(ABC):
     @abstractmethod
     def generate_directional_tuples(
         self, motion: MotionData, base_x: float, base_y: float
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """
         Generate directional tuples for the given motion and base adjustment.
 

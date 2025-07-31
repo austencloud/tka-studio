@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from desktop.modern.core.interfaces.sequence_data_services import (
     ISequenceStartPositionManager,
@@ -57,8 +57,8 @@ class SequenceStartPositionService(ISequenceStartPositionManager):
         self.persistence_service = persistence_service or SequencePersister()
 
         # Platform-agnostic event callbacks
-        self._start_position_set_callbacks: List[Callable[[BeatData], None]] = []
-        self._start_position_updated_callbacks: List[Callable[[BeatData], None]] = []
+        self._start_position_set_callbacks: list[Callable[[BeatData], None]] = []
+        self._start_position_updated_callbacks: list[Callable[[BeatData], None]] = []
 
     def add_start_position_set_callback(self, callback: Callable[[BeatData], None]):
         """Add callback for when start position is set."""

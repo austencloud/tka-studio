@@ -11,7 +11,7 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.session_services import SessionState
 from desktop.modern.domain.models.beat_data import BeatData
@@ -28,7 +28,7 @@ class ISequenceRestorer(ABC):
         """Restore sequence from session data."""
 
     @abstractmethod
-    def calculate_sequence_name(self, beat_objects: List[BeatData]) -> str:
+    def calculate_sequence_name(self, beat_objects: list[BeatData]) -> str:
         """Calculate sequence name from beat letters."""
 
 
@@ -88,7 +88,7 @@ class SequenceRestorer(ISequenceRestorer):
             print(f"⚠️ Failed to restore sequence from session: {e}")
             return None
 
-    def calculate_sequence_name(self, beat_objects: List[BeatData]) -> str:
+    def calculate_sequence_name(self, beat_objects: list[BeatData]) -> str:
         """Calculate sequence word from beat letters exactly like legacy SequencePropertiesManager"""
         if not beat_objects:
             return ""

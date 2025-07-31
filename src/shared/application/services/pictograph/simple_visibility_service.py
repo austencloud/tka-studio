@@ -9,7 +9,7 @@ Just simple state management.
 """
 
 import logging
-from typing import Dict, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -232,7 +232,7 @@ class PictographVisibilityService:
             if element_name in self._other_visibility:
                 self._other_visibility[element_name] = visible
 
-    def get_all_visibility_states(self) -> Dict[str, Dict[str, bool]]:
+    def get_all_visibility_states(self) -> dict[str, dict[str, bool]]:
         """Get all current visibility states."""
         return {
             "glyphs": dict(self._glyph_visibility),

@@ -8,7 +8,7 @@ Replaces the monolithic UIStateManager with a composition of focused managers.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from shared.application.services.ui.settings.settings_manager import SettingsManager
 from shared.application.services.ui.state.component_visibility_manager import (
@@ -96,7 +96,7 @@ class UICoordinator(IUIStateManager):
         if self._session_service:
             self._session_service.mark_interaction()
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
         return self.settings.get_all_settings()
 
@@ -121,20 +121,20 @@ class UICoordinator(IUIStateManager):
                 component_visibility=self.component_visibility.get_all_component_visibility(),
             )
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab."""
         return self.tab_state.get_tab_state(tab_name)
 
-    def update_tab_state(self, tab_name: str, state: Dict[str, Any]) -> None:
+    def update_tab_state(self, tab_name: str, state: dict[str, Any]) -> None:
         """Update state for a specific tab."""
         self.tab_state.update_tab_state(tab_name, state)
 
     # Window state delegation
-    def get_window_geometry(self) -> Dict[str, int]:
+    def get_window_geometry(self) -> dict[str, int]:
         """Get window geometry."""
         return self.window_state.get_window_geometry()
 
-    def set_window_geometry(self, geometry: Dict[str, int]) -> None:
+    def set_window_geometry(self, geometry: dict[str, int]) -> None:
         """Set window geometry."""
         self.window_state.set_window_geometry(geometry)
 
@@ -165,7 +165,7 @@ class UICoordinator(IUIStateManager):
         return self.hotkey_registry.handle_hotkey(key_combination)
 
     # Graph editor state delegation
-    def get_graph_editor_state(self) -> Dict[str, Any]:
+    def get_graph_editor_state(self) -> dict[str, Any]:
         """Get graph editor state."""
         return self.graph_editor_state.get_graph_editor_state()
 
@@ -178,7 +178,7 @@ class UICoordinator(IUIStateManager):
         self.graph_editor_state.set_graph_editor_height(height)
 
     # Option picker state delegation
-    def get_option_picker_state(self) -> Dict[str, Any]:
+    def get_option_picker_state(self) -> dict[str, Any]:
         """Get option picker state."""
         return self.option_picker_state.get_option_picker_state()
 
@@ -186,7 +186,7 @@ class UICoordinator(IUIStateManager):
         """Set option picker selection."""
         self.option_picker_state.set_option_picker_selection(selection)
 
-    def update_option_picker_filters(self, filters: Dict[str, Any]) -> None:
+    def update_option_picker_filters(self, filters: dict[str, Any]) -> None:
         """Update option picker filters."""
         self.option_picker_state.update_option_picker_filters(filters)
 
@@ -317,12 +317,12 @@ class UICoordinator(IUIStateManager):
     def update_ui_state_with_session(
         self,
         active_tab: Optional[str] = None,
-        beat_layout: Optional[Dict[str, Any]] = None,
-        component_visibility: Optional[Dict[str, bool]] = None,
+        beat_layout: Optional[dict[str, Any]] = None,
+        component_visibility: Optional[dict[str, bool]] = None,
         graph_editor_visible: Optional[bool] = None,
         graph_editor_height: Optional[int] = None,
         option_picker_selection: Optional[str] = None,
-        option_picker_filters: Optional[Dict[str, Any]] = None,
+        option_picker_filters: Optional[dict[str, Any]] = None,
     ) -> None:
         """Update UI state and save to session."""
         # Update local state

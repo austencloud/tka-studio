@@ -7,7 +7,7 @@ for the learning module.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict
+from typing import Any
 
 
 class LessonType(Enum):
@@ -40,7 +40,7 @@ class LessonConfig:
     quiz_description: str
     question_prompt: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Serialize configuration to dictionary for session state.
 
@@ -56,7 +56,7 @@ class LessonConfig:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "LessonConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "LessonConfig":
         """
         Deserialize configuration from dictionary.
 

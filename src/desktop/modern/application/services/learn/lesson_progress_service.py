@@ -6,7 +6,7 @@ for quiz sessions.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.learn_services import (
     IAnswerValidationService,
@@ -43,7 +43,7 @@ class LessonProgressService(ILessonProgressService):
 
         logger.info("Lesson progress service initialized")
 
-    def get_progress_info(self, session_id: str) -> Dict[str, Any]:
+    def get_progress_info(self, session_id: str) -> dict[str, Any]:
         """
         Get current progress information for display.
 
@@ -263,7 +263,7 @@ class LessonProgressService(ILessonProgressService):
             logger.error(f"Failed to format time display: {e}")
             return "0:00"
 
-    def get_performance_summary(self, session_id: str) -> Dict[str, Any]:
+    def get_performance_summary(self, session_id: str) -> dict[str, Any]:
         """
         Get performance summary for a completed session.
 

@@ -5,7 +5,7 @@ Simple stack widget for switching between filter selection and sequence browser.
 Handles smooth transitions between the two main browse modes.
 """
 
-from typing import Dict, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget, QWidget
@@ -26,7 +26,7 @@ class BrowseNavigationStack(QStackedWidget):
         """Initialize the navigation stack."""
         super().__init__(parent)
 
-        self._panels: Dict[str, QWidget] = {}
+        self._panels: dict[str, QWidget] = {}
         self._current_panel: Optional[str] = None
 
         # Setup animations

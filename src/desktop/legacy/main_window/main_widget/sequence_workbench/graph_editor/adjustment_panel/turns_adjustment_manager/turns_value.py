@@ -1,8 +1,5 @@
-from typing import Union
-
-
 class TurnsValue:
-    def __init__(self, value: Union[int, float, str]):
+    def __init__(self, value: int | float | str):
         self._validate(value)
         self.raw_value = value
 
@@ -23,7 +20,7 @@ class TurnsValue:
             else str(float(self.raw_value)).rstrip("0").rstrip(".")
         )
 
-    def adjust(self, delta: Union[int, float]) -> "TurnsValue":
+    def adjust(self, delta: int | float) -> "TurnsValue":
         if self.raw_value == "fl":
             new_value = 0
         else:

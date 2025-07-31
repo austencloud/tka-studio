@@ -6,7 +6,6 @@ No over-engineered strategy patterns - around 200 lines.
 """
 
 import logging
-from typing import List
 
 from desktop.modern.core.interfaces.generation_services import CAPType, SliceSize
 from desktop.modern.domain.models.generation_models import GenerationConfig
@@ -28,7 +27,7 @@ class CircularGenerator:
     def __init__(self, workbench_manager=None):
         self.freeform_generator = FreeformGenerator(workbench_manager)
 
-    def generate_sequence(self, config: GenerationConfig) -> List[PictographData]:
+    def generate_sequence(self, config: GenerationConfig) -> list[PictographData]:
         """
         Generate a circular sequence with CAP transformations.
 
@@ -121,8 +120,8 @@ class CircularGenerator:
         )
 
     def _apply_cap_transformation(
-        self, base_pattern: List[PictographData], cap_type: CAPType
-    ) -> List[PictographData]:
+        self, base_pattern: list[PictographData], cap_type: CAPType
+    ) -> list[PictographData]:
         """
         Apply CAP transformation using direct methods.
         No over-engineered strategy pattern - just direct transformation logic.
@@ -143,8 +142,8 @@ class CircularGenerator:
             return []
 
     def _apply_rotated_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply 180-degree rotation transformation."""
         transformed = []
 
@@ -168,8 +167,8 @@ class CircularGenerator:
         return transformed
 
     def _apply_mirrored_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply horizontal mirror transformation."""
         transformed = []
 
@@ -195,8 +194,8 @@ class CircularGenerator:
         return transformed
 
     def _apply_swapped_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply blue/red prop swap transformation."""
         transformed = []
 
@@ -228,8 +227,8 @@ class CircularGenerator:
         return transformed
 
     def _apply_complementary_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply complementary transformation (combination of rotated + mirrored)."""
         # First apply rotation
         rotated = self._apply_rotated_transformation(pattern)

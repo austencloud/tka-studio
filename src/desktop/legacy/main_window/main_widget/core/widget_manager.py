@@ -5,7 +5,7 @@ This component follows SRP by focusing solely on widget lifecycle management.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -39,7 +39,7 @@ class WidgetManager(QObject):
 
         self.coordinator = coordinator
         self.app_context = app_context
-        self._widgets: Dict[str, QWidget] = {}
+        self._widgets: dict[str, QWidget] = {}
         self._widget_factories = {}
 
         # Register widget factories

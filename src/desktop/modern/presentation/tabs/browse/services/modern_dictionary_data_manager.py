@@ -8,7 +8,7 @@ Simplified to use SequenceData directly instead of separate SequenceRecord.
 from datetime import datetime
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PIL import Image
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -32,9 +32,9 @@ class ModernDictionaryDataManager(QObject):
         super().__init__()
         self.data_directory = data_directory or self._find_data_directory()
         self.dictionary_dir = self.data_directory / "dictionary"
-        self._loaded_sequences: List[SequenceData] = []
+        self._loaded_sequences: list[SequenceData] = []
         self._has_loaded = False
-        self._loading_errors: List[str] = []
+        self._loading_errors: list[str] = []
 
     def _find_data_directory(self) -> Path:
         """Find the data directory using the same logic as legacy."""
@@ -141,7 +141,7 @@ class ModernDictionaryDataManager(QObject):
 
         self.data_loaded.emit(loaded_count)
 
-    def _find_thumbnails(self, sequence_dir: Path) -> List[str]:
+    def _find_thumbnails(self, sequence_dir: Path) -> list[str]:
         """Find all thumbnail files in a sequence directory."""
         thumbnails = []
 
@@ -157,7 +157,7 @@ class ModernDictionaryDataManager(QObject):
 
     def _extract_metadata_from_thumbnail(
         self, thumbnail_path: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """Extract metadata from a thumbnail image."""
         try:
             with Image.open(thumbnail_path) as img:
@@ -202,7 +202,7 @@ class ModernDictionaryDataManager(QObject):
 
         return None
 
-    def _generate_deterministic_id(self, word: str, thumbnails: List[str]) -> str:
+    def _generate_deterministic_id(self, word: str, thumbnails: list[str]) -> str:
         """
         Generate a deterministic ID based on word and thumbnail paths.
 
@@ -246,12 +246,12 @@ class ModernDictionaryDataManager(QObject):
 
     # Query methods for filtering - now return SequenceData directly
 
-    def get_all_sequences(self) -> List[SequenceData]:
+    def get_all_sequences(self) -> list[SequenceData]:
         """Get all sequence data."""
         self.load_all_sequences()
         return self._loaded_sequences.copy()
 
-    def get_sequences_by_starting_letter(self, letter: str) -> List[SequenceData]:
+    def get_sequences_by_starting_letter(self, letter: str) -> list[SequenceData]:
         """Get sequences starting with the specified letter."""
         self.load_all_sequences()
         return [
@@ -261,8 +261,8 @@ class ModernDictionaryDataManager(QObject):
         ]
 
     def get_sequences_by_starting_letters(
-        self, letters: List[str]
-    ) -> List[SequenceData]:
+        self, letters: list[str]
+    ) -> list[SequenceData]:
         """Get sequences starting with any of the specified letters."""
         self.load_all_sequences()
         letter_set = {letter.upper() for letter in letters}
@@ -272,12 +272,12 @@ class ModernDictionaryDataManager(QObject):
             if s.word and s.word[0].upper() in letter_set
         ]
 
-    def get_sequences_by_length(self, length: int) -> List[SequenceData]:
+    def get_sequences_by_length(self, length: int) -> list[SequenceData]:
         """Get sequences with the specified length."""
         self.load_all_sequences()
         return [s for s in self._loaded_sequences if s.sequence_length == length]
 
-    def get_sequences_by_difficulty(self, difficulty: str) -> List[SequenceData]:
+    def get_sequences_by_difficulty(self, difficulty: str) -> list[SequenceData]:
         """Get sequences with the specified difficulty level."""
         self.load_all_sequences()
         return [
@@ -286,34 +286,34 @@ class ModernDictionaryDataManager(QObject):
             if s.difficulty_level == difficulty.lower()
         ]
 
-    def get_sequences_by_level(self, level: int) -> List[SequenceData]:
+    def get_sequences_by_level(self, level: int) -> list[SequenceData]:
         """Get sequences with the specified numeric level."""
         self.load_all_sequences()
         return [s for s in self._loaded_sequences if s.level == level]
 
-    def get_sequences_by_starting_position(self, position: str) -> List[SequenceData]:
+    def get_sequences_by_starting_position(self, position: str) -> list[SequenceData]:
         """Get sequences with the specified starting position."""
         self.load_all_sequences()
         return [
             s for s in self._loaded_sequences if s.starting_position == position.lower()
         ]
 
-    def get_sequences_by_author(self, author: str) -> List[SequenceData]:
+    def get_sequences_by_author(self, author: str) -> list[SequenceData]:
         """Get sequences by the specified author."""
         self.load_all_sequences()
         return [s for s in self._loaded_sequences if s.author == author]
 
-    def get_sequences_by_grid_mode(self, grid_mode: str) -> List[SequenceData]:
+    def get_sequences_by_grid_mode(self, grid_mode: str) -> list[SequenceData]:
         """Get sequences with the specified grid mode."""
         self.load_all_sequences()
         return [s for s in self._loaded_sequences if s.grid_mode == grid_mode.lower()]
 
-    def get_favorite_sequences(self) -> List[SequenceData]:
+    def get_favorite_sequences(self) -> list[SequenceData]:
         """Get all favorite sequences."""
         self.load_all_sequences()
         return [s for s in self._loaded_sequences if s.is_favorite]
 
-    def get_recent_sequences(self, limit: int = 20) -> List[SequenceData]:
+    def get_recent_sequences(self, limit: int = 20) -> list[SequenceData]:
         """Get the most recently added sequences."""
         self.load_all_sequences()
 
@@ -326,8 +326,8 @@ class ModernDictionaryDataManager(QObject):
         return dated_sequences[:limit]
 
     def get_sequences_containing_letters(
-        self, letters: List[str]
-    ) -> List[SequenceData]:
+        self, letters: list[str]
+    ) -> list[SequenceData]:
         """Get sequences containing any of the specified letters."""
         self.load_all_sequences()
         letter_set = {letter.upper() for letter in letters}
@@ -339,19 +339,19 @@ class ModernDictionaryDataManager(QObject):
 
     # Utility methods
 
-    def get_distinct_authors(self) -> List[str]:
+    def get_distinct_authors(self) -> list[str]:
         """Get list of all unique authors."""
         self.load_all_sequences()
         authors = {s.author for s in self._loaded_sequences if s.author}
         return sorted(authors)
 
-    def get_distinct_levels(self) -> List[int]:
+    def get_distinct_levels(self) -> list[int]:
         """Get list of all unique levels."""
         self.load_all_sequences()
         levels = {s.level for s in self._loaded_sequences if s.level is not None}
         return sorted(levels)
 
-    def get_distinct_lengths(self) -> List[int]:
+    def get_distinct_lengths(self) -> list[int]:
         """Get list of all unique sequence lengths."""
         self.load_all_sequences()
         lengths = {
@@ -361,7 +361,7 @@ class ModernDictionaryDataManager(QObject):
         }
         return sorted(lengths)
 
-    def get_distinct_starting_positions(self) -> List[str]:
+    def get_distinct_starting_positions(self) -> list[str]:
         """Get list of all unique starting positions."""
         self.load_all_sequences()
         positions = {
@@ -369,7 +369,7 @@ class ModernDictionaryDataManager(QObject):
         }
         return sorted(positions)
 
-    def get_distinct_grid_modes(self) -> List[str]:
+    def get_distinct_grid_modes(self) -> list[str]:
         """Get list of all unique grid modes."""
         self.load_all_sequences()
         modes = {s.grid_mode for s in self._loaded_sequences if s.grid_mode}
@@ -379,7 +379,7 @@ class ModernDictionaryDataManager(QObject):
         """Get total number of loaded sequences."""
         return len(self._loaded_sequences)
 
-    def get_loading_errors(self) -> List[str]:
+    def get_loading_errors(self) -> list[str]:
         """Get list of errors that occurred during loading."""
         return self._loading_errors.copy()
 
@@ -391,50 +391,50 @@ class ModernDictionaryDataManager(QObject):
         self.load_all_sequences()
 
     # Backward compatibility methods (renamed from get_records_* to get_sequences_*)
-    def get_all_records(self) -> List[SequenceData]:
+    def get_all_records(self) -> list[SequenceData]:
         """Backward compatibility - use get_all_sequences instead."""
         return self.get_all_sequences()
 
-    def get_records_by_starting_letter(self, letter: str) -> List[SequenceData]:
+    def get_records_by_starting_letter(self, letter: str) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_starting_letter instead."""
         return self.get_sequences_by_starting_letter(letter)
 
-    def get_records_by_starting_letters(self, letters: List[str]) -> List[SequenceData]:
+    def get_records_by_starting_letters(self, letters: list[str]) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_starting_letters instead."""
         return self.get_sequences_by_starting_letters(letters)
 
-    def get_records_by_length(self, length: int) -> List[SequenceData]:
+    def get_records_by_length(self, length: int) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_length instead."""
         return self.get_sequences_by_length(length)
 
-    def get_records_by_difficulty(self, difficulty: str) -> List[SequenceData]:
+    def get_records_by_difficulty(self, difficulty: str) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_difficulty instead."""
         return self.get_sequences_by_difficulty(difficulty)
 
-    def get_records_by_level(self, level: int) -> List[SequenceData]:
+    def get_records_by_level(self, level: int) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_level instead."""
         return self.get_sequences_by_level(level)
 
-    def get_records_by_starting_position(self, position: str) -> List[SequenceData]:
+    def get_records_by_starting_position(self, position: str) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_starting_position instead."""
         return self.get_sequences_by_starting_position(position)
 
-    def get_records_by_author(self, author: str) -> List[SequenceData]:
+    def get_records_by_author(self, author: str) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_author instead."""
         return self.get_sequences_by_author(author)
 
-    def get_records_by_grid_mode(self, grid_mode: str) -> List[SequenceData]:
+    def get_records_by_grid_mode(self, grid_mode: str) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_by_grid_mode instead."""
         return self.get_sequences_by_grid_mode(grid_mode)
 
-    def get_favorite_records(self) -> List[SequenceData]:
+    def get_favorite_records(self) -> list[SequenceData]:
         """Backward compatibility - use get_favorite_sequences instead."""
         return self.get_favorite_sequences()
 
-    def get_recent_records(self, limit: int = 20) -> List[SequenceData]:
+    def get_recent_records(self, limit: int = 20) -> list[SequenceData]:
         """Backward compatibility - use get_recent_sequences instead."""
         return self.get_recent_sequences(limit)
 
-    def get_records_containing_letters(self, letters: List[str]) -> List[SequenceData]:
+    def get_records_containing_letters(self, letters: list[str]) -> list[SequenceData]:
         """Backward compatibility - use get_sequences_containing_letters instead."""
         return self.get_sequences_containing_letters(letters)

@@ -22,7 +22,7 @@ class VariationNumberLabel(QLabel):
             )
         else:
             self.hide()
-        self.parent: Union[ThumbnailBox, SequenceViewer] = parent
+        self.parent: ThumbnailBox | SequenceViewer = parent
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def update_index(self, index: int):

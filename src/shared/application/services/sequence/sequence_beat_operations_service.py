@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.beat_data import BeatData
@@ -46,11 +46,11 @@ class SequenceBeatOperationsService:
         self.persistence_service = persistence_service or SequencePersister()
 
         # Platform-agnostic event callbacks
-        self._beat_added_callbacks: List[
+        self._beat_added_callbacks: list[
             Callable[[BeatData, int, SequenceData], None]
         ] = []
-        self._beat_removed_callbacks: List[Callable[[int], None]] = []
-        self._beat_updated_callbacks: List[Callable[[BeatData, int], None]] = []
+        self._beat_removed_callbacks: list[Callable[[int], None]] = []
+        self._beat_updated_callbacks: list[Callable[[BeatData, int], None]] = []
 
     def add_beat_added_callback(
         self, callback: Callable[[BeatData, int, SequenceData], None]

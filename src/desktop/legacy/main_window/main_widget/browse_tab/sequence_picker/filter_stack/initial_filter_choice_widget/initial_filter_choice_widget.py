@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from functools import partial
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QResizeEvent
@@ -24,7 +24,7 @@ class InitialFilterChoiceWidget(QWidget):
         date_string = one_week_ago.strftime("%B %d")
         return date_string.replace(" 0", " ")
 
-    FILTER_OPTIONS: dict[str, tuple[str, Union[str, dict[str, Any]]]] = {
+    FILTER_OPTIONS: dict[str, tuple[str, str | dict[str, Any]]] = {
         "Start Letter": (
             "Sequences starting with a specific letter.",
             "starting_letter",

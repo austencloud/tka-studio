@@ -11,7 +11,7 @@ Presentation Layer → OptionServiceQtAdapter → OptionService
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from desktop.modern.core.interfaces.option_picker_interfaces import (
     IOptionProvider,
@@ -44,7 +44,7 @@ class OptionProvider(IOptionProvider):
         Args:
             signal_emitter: Optional signal emitter for notifications
         """
-        self._pictograph_options: List[PictographData] = []
+        self._pictograph_options: list[PictographData] = []
         self._position_service = None
         self._signal_emitter = signal_emitter
         self._initialize_position_service()
@@ -64,8 +64,8 @@ class OptionProvider(IOptionProvider):
             self._position_service = None
 
     def load_options_from_sequence(
-        self, sequence_data: List[Dict[str, Any]]
-    ) -> List[PictographData]:
+        self, sequence_data: list[dict[str, Any]]
+    ) -> list[PictographData]:
         """
         Load pictograph options based on legacy sequence data.
 
@@ -111,7 +111,7 @@ class OptionProvider(IOptionProvider):
 
     def load_options_from_modern_sequence(
         self, sequence: "SequenceData"
-    ) -> List[PictographData]:
+    ) -> list[PictographData]:
         """
         Load pictograph options based on modern sequence data.
 
@@ -167,7 +167,7 @@ class OptionProvider(IOptionProvider):
             logger.error(f"Error loading options from modern sequence: {e}")
             return self._clear_and_return_empty()
 
-    def get_current_options(self) -> List[PictographData]:
+    def get_current_options(self) -> list[PictographData]:
         """Get the currently loaded pictograph options."""
         return self._pictograph_options.copy()
 
@@ -188,16 +188,16 @@ class OptionProvider(IOptionProvider):
             return self._pictograph_options[index]
         return None
 
-    def filter_options_by_letter(self, letter: str) -> List[PictographData]:
+    def filter_options_by_letter(self, letter: str) -> list[PictographData]:
         """Filter current options by letter."""
         return [opt for opt in self._pictograph_options if opt.letter == letter]
 
-    def get_available_letters(self) -> List[str]:
+    def get_available_letters(self) -> list[str]:
         """Get list of available letters in current options."""
         letters = {opt.letter for opt in self._pictograph_options if opt.letter}
         return sorted(list(letters))
 
-    def _clear_and_return_empty(self) -> List[PictographData]:
+    def _clear_and_return_empty(self) -> list[PictographData]:
         """Clear options and return empty list."""
         self._pictograph_options = []
         if self._signal_emitter:

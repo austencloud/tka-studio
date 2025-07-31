@@ -6,7 +6,7 @@ import copy
 import json
 import logging
 import time
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -27,11 +27,11 @@ class SettingsStateManager(QObject):
     def __init__(self, settings_manager):
         super().__init__()
         self.settings_manager = settings_manager
-        self._original_state: Dict[str, Any] = {}
-        self._current_state: Dict[str, Any] = {}
-        self._modified_keys: Set[str] = set()
-        self._validators: Dict[str, Callable] = {}
-        self._change_callbacks: Dict[str, list] = {}
+        self._original_state: dict[str, Any] = {}
+        self._current_state: dict[str, Any] = {}
+        self._modified_keys: set[str] = set()
+        self._validators: dict[str, Callable] = {}
+        self._change_callbacks: dict[str, list] = {}
 
         # Initialize state
         self._capture_original_state()
@@ -142,11 +142,11 @@ class SettingsStateManager(QObject):
             return setting_key in self._modified_keys
         return len(self._modified_keys) > 0
 
-    def get_modified_keys(self) -> Set[str]:
+    def get_modified_keys(self) -> set[str]:
         """Get set of all modified setting keys."""
         return self._modified_keys.copy()
 
-    def get_changes(self) -> Dict[str, Dict[str, Any]]:
+    def get_changes(self) -> dict[str, dict[str, Any]]:
         """Get dictionary of all changes with old and new values."""
         changes = {}
         for key in self._modified_keys:

@@ -7,7 +7,7 @@ calculations without any Qt dependencies.
 
 from functools import lru_cache
 import logging
-from typing import Optional, Set
+from typing import Optional
 
 from desktop.modern.core.interfaces.arrow_rendering_services import (
     IArrowRenderingService,
@@ -26,7 +26,7 @@ class ArrowRenderingService(IArrowRenderingService):
     calculations without any Qt dependencies.
     """
 
-    _cached_files: Set[str] = set()
+    _cached_files: set[str] = set()
 
     def __init__(
         self,

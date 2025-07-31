@@ -4,7 +4,7 @@ Sequence Display Coordinator Service
 Service for coordinating the display of sequences using other services.
 """
 
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtWidgets import QApplication
 
@@ -50,7 +50,7 @@ class SequenceDisplayCoordinatorService:
         self.thumbnail_click_callback = callback
 
     def display_sequences_with_stable_layout(
-        self, sequences: List[SequenceData], sort_method: str
+        self, sequences: list[SequenceData], sort_method: str
     ) -> None:
         """Display sequences using stable layout with sections."""
         # Sort sequences
@@ -109,7 +109,7 @@ class SequenceDisplayCoordinatorService:
         self.layout_manager.set_row_stretch(self.layout_manager.get_row_count(), 1)
 
     def add_sequences_progressively(
-        self, sequences: List[SequenceData], sort_method: str
+        self, sequences: list[SequenceData], sort_method: str
     ) -> None:
         """Add sequences using true progressive loading approach with proper headers."""
         if not sequences:
@@ -186,7 +186,7 @@ class SequenceDisplayCoordinatorService:
         print(f"🎨 Layout initialized for {sort_method} sorting")
 
     def finalize_progressive_layout(
-        self, all_sequences: List[SequenceData], sort_method: str
+        self, all_sequences: list[SequenceData], sort_method: str
     ) -> None:
         """Finalize the layout after progressive loading is complete."""
         if not all_sequences:

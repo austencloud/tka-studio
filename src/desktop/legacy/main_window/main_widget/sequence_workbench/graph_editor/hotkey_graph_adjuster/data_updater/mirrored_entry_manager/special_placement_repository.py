@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Any, Dict
+from typing import Any
 
 from enums.letter.letter import Letter
 from legacy_settings_manager.global_settings.app_context import AppContext
@@ -16,7 +16,7 @@ class SpecialPlacementRepository:
         """Initialize the repository with the given grid mode."""
         self.grid_mode = grid_mode
 
-    def get_letter_data(self, letter: Letter, ori_key: str) -> Dict[str, Any]:
+    def get_letter_data(self, letter: Letter, ori_key: str) -> dict[str, Any]:
         """Get the letter data for the given letter and orientation key."""
         try:
             placements = (
@@ -31,7 +31,7 @@ class SpecialPlacementRepository:
             return {}
 
     def save_letter_data(
-        self, letter: Letter, ori_key: str, letter_data: Dict[str, Any]
+        self, letter: Letter, ori_key: str, letter_data: dict[str, Any]
     ) -> bool:
         """Save the letter data for the given letter and orientation key."""
         try:
@@ -61,7 +61,7 @@ class SpecialPlacementRepository:
             )
         )
 
-    def clean_placement_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def clean_placement_data(self, data: dict[str, Any]) -> dict[str, Any]:
         """Clean the placement data by removing empty dictionaries and normalizing values."""
         if not isinstance(data, dict):
             return data

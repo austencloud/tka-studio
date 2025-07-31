@@ -5,7 +5,7 @@ This adapter wraps the pure GraphEditorAutoTransformService to provide Qt-specif
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -64,19 +64,19 @@ class QtGraphEditorAutoTransformAdapter(QObject):
         """Check if auto-transform is enabled."""
         return self.service.is_auto_transform_enabled()
 
-    def update_transform_settings(self, settings: Dict[str, Any]):
+    def update_transform_settings(self, settings: dict[str, Any]):
         """Update transform settings."""
         self.service.update_transform_settings(settings)
 
-    def get_transform_settings(self) -> Dict[str, Any]:
+    def get_transform_settings(self) -> dict[str, Any]:
         """Get current transform settings."""
         return self.service.get_transform_settings()
 
     def auto_align_elements(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         alignment_type: str = "center",
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically align elements.
@@ -97,9 +97,9 @@ class QtGraphEditorAutoTransformAdapter(QObject):
 
     def auto_distribute_elements(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         distribution_type: str = "horizontal",
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically distribute elements.
@@ -122,9 +122,9 @@ class QtGraphEditorAutoTransformAdapter(QObject):
 
     def auto_resize_elements(
         self,
-        element_ids: List[str],
-        target_size: Optional[Dict[str, float]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        element_ids: list[str],
+        target_size: Optional[dict[str, float]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Automatically resize elements.
@@ -145,9 +145,9 @@ class QtGraphEditorAutoTransformAdapter(QObject):
 
     def snap_to_grid(
         self,
-        element_ids: List[str],
+        element_ids: list[str],
         grid_size: Optional[int] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Snap elements to grid.
@@ -173,8 +173,8 @@ class QtGraphEditorAutoTransformAdapter(QObject):
     def auto_layout(
         self,
         layout_type: str = "flow",
-        element_ids: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        element_ids: Optional[list[str]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Apply automatic layout to elements.
@@ -197,7 +197,7 @@ class QtGraphEditorAutoTransformAdapter(QObject):
         self,
         transform_id: str,
         duration: Optional[int] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Animate a transform operation.
@@ -212,43 +212,43 @@ class QtGraphEditorAutoTransformAdapter(QObject):
         """
         return self.service.animate_transform(transform_id, duration, context)
 
-    def _on_transform_started(self, transform_id: str, context: Dict[str, Any]):
+    def _on_transform_started(self, transform_id: str, context: dict[str, Any]):
         """Handle transform started callback from service."""
         self.transform_started.emit(transform_id, context)
 
-    def _on_transform_completed(self, transform_id: str, context: Dict[str, Any]):
+    def _on_transform_completed(self, transform_id: str, context: dict[str, Any]):
         """Handle transform completed callback from service."""
         self.transform_completed.emit(transform_id, context)
 
     def _on_transform_progress(
-        self, transform_id: str, progress: float, context: Dict[str, Any]
+        self, transform_id: str, progress: float, context: dict[str, Any]
     ):
         """Handle transform progress callback from service."""
         self.transform_progress.emit(transform_id, progress, context)
 
-    def _on_settings_changed(self, settings: Dict[str, Any]):
+    def _on_settings_changed(self, settings: dict[str, Any]):
         """Handle settings changed callback from service."""
         self.settings_changed.emit(settings)
 
     # Pass-through methods for direct service access
     def add_transform_started_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a transform starts."""
         self.service.add_transform_started_callback(callback)
 
     def add_transform_completed_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a transform completes."""
         self.service.add_transform_completed_callback(callback)
 
     def add_transform_progress_callback(
-        self, callback: Callable[[str, float, Dict[str, Any]], None]
+        self, callback: Callable[[str, float, dict[str, Any]], None]
     ):
         """Add callback for transform progress updates."""
         self.service.add_transform_progress_callback(callback)
 
-    def add_settings_changed_callback(self, callback: Callable[[Dict[str, Any]], None]):
+    def add_settings_changed_callback(self, callback: Callable[[dict[str, Any]], None]):
         """Add callback for when settings change."""
         self.service.add_settings_changed_callback(callback)

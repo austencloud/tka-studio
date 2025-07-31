@@ -2,8 +2,6 @@
 Background service for managing background settings.
 """
 
-from typing import List
-
 from desktop.modern.core.interfaces.background_interfaces import IBackgroundService
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 
@@ -21,7 +19,7 @@ class BackgroundSettingsManager(IBackgroundService):
             "Starfield",
         ]
 
-    def get_available_backgrounds(self) -> List[str]:
+    def get_available_backgrounds(self) -> list[str]:
         """Get list of available background types."""
         return self._available_backgrounds.copy()
 

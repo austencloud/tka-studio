@@ -6,7 +6,6 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 """
 
 import logging
-from typing import Dict
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
@@ -53,7 +52,7 @@ class MotionControlsSection(QFrame):
         self.simple_visibility_service = simple_visibility_service
 
         # UI components
-        self.motion_toggles: Dict[str, MotionToggle] = {}
+        self.motion_toggles: dict[str, MotionToggle] = {}
 
         self._setup_ui()
         self._setup_connections()
@@ -135,7 +134,7 @@ class MotionControlsSection(QFrame):
             if toggle.get_is_active() != visible:
                 toggle.set_active(visible)
 
-    def get_motion_states(self) -> Dict[str, bool]:
+    def get_motion_states(self) -> dict[str, bool]:
         """
         Get current motion visibility states.
 

@@ -7,7 +7,7 @@ that were generating excessive verbosity in the original logs.
 
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from .smart_logger import LoggingConfig, LogLevel, SmartLogger
 
@@ -41,7 +41,7 @@ class ArrowPositioningLogger:
         self.smart_logger = SmartLogger("positioning.arrows", arrow_config)
 
         # Track operations per letter for batching
-        self.letter_operations: Dict[str, Dict[str, Any]] = {}
+        self.letter_operations: dict[str, dict[str, Any]] = {}
         self.current_letter = None
         self.current_letter_start_time = None
 
@@ -227,7 +227,7 @@ class ArrowPositioningLogger:
 
         return VerboseMessageFilter()
 
-    def get_positioning_performance_report(self) -> Dict[str, Any]:
+    def get_positioning_performance_report(self) -> dict[str, Any]:
         """Generate performance report for positioning operations."""
         total_letters = len(self.letter_operations)
         total_duration = 0

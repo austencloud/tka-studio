@@ -6,7 +6,6 @@ and styling support for the learn tab components.
 """
 
 import logging
-from typing import Dict, Tuple
 
 from desktop.modern.core.interfaces.learn_services import ILearnUIService
 
@@ -25,7 +24,7 @@ class LearnUIService(ILearnUIService):
         """Initialize learn UI service."""
         logger.info("Learn UI service initialized")
 
-    def get_font_sizes(self, widget_width: int, widget_height: int) -> Dict[str, int]:
+    def get_font_sizes(self, widget_width: int, widget_height: int) -> dict[str, int]:
         """
         Calculate responsive font sizes based on widget dimensions.
 
@@ -71,7 +70,7 @@ class LearnUIService(ILearnUIService):
 
     def get_component_sizes(
         self, widget_width: int, widget_height: int
-    ) -> Dict[str, Tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """
         Calculate responsive component sizes based on widget dimensions.
 
@@ -117,7 +116,7 @@ class LearnUIService(ILearnUIService):
 
     def get_layout_spacing(
         self, widget_width: int, widget_height: int
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """
         Calculate responsive layout spacing based on widget dimensions.
 
@@ -155,7 +154,7 @@ class LearnUIService(ILearnUIService):
             logger.error(f"Failed to calculate layout spacing: {e}")
             return self._get_default_spacing()
 
-    def get_color_scheme(self, background_type: str = "default") -> Dict[str, str]:
+    def get_color_scheme(self, background_type: str = "default") -> dict[str, str]:
         """
         Get color scheme for learn tab components.
 
@@ -203,7 +202,7 @@ class LearnUIService(ILearnUIService):
 
     def calculate_responsive_dimensions(
         self, parent_width: int, parent_height: int, aspect_ratio: float = 1.0
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate responsive dimensions maintaining aspect ratio.
 
@@ -236,7 +235,7 @@ class LearnUIService(ILearnUIService):
             logger.error(f"Failed to calculate responsive dimensions: {e}")
             return (200, 200)
 
-    def _get_default_font_sizes(self) -> Dict[str, int]:
+    def _get_default_font_sizes(self) -> dict[str, int]:
         """Get default font sizes as fallback."""
         return {
             "title": 20,
@@ -256,7 +255,7 @@ class LearnUIService(ILearnUIService):
             "results_stat": 14,
         }
 
-    def _get_default_component_sizes(self) -> Dict[str, Tuple[int, int]]:
+    def _get_default_component_sizes(self) -> dict[str, tuple[int, int]]:
         """Get default component sizes as fallback."""
         return {
             "lesson_button": (200, 60),
@@ -272,7 +271,7 @@ class LearnUIService(ILearnUIService):
             "results_stat": (200, 30),
         }
 
-    def _get_default_spacing(self) -> Dict[str, int]:
+    def _get_default_spacing(self) -> dict[str, int]:
         """Get default spacing as fallback."""
         return {
             "main_layout": 10,
@@ -287,7 +286,7 @@ class LearnUIService(ILearnUIService):
             "progress_area": 5,
         }
 
-    def _get_default_colors(self) -> Dict[str, str]:
+    def _get_default_colors(self) -> dict[str, str]:
         """Get default colors as fallback."""
         return {
             "text_primary": "white",

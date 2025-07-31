@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Callable, List
+from typing import TYPE_CHECKING, Any, Callable
 
 from base_widgets.pictograph.elements.views.lesson_pictograph_view import (
     LessonPictographView,
@@ -32,7 +32,7 @@ class PictographAnswersRenderer:
 
     def create_answer_options(
         self,
-        answers: List[Any],
+        answers: list[Any],
         check_callback: Callable[[Any, Any], None],
         correct_answer: Any,
     ) -> None:
@@ -55,7 +55,7 @@ class PictographAnswersRenderer:
 
     def update_answer_options(
         self,
-        answers: List[Any],
+        answers: list[Any],
         check_callback: Callable[[Any, Any], None],
         correct_answer: Any,
         parent: "AnswersWidget",

@@ -7,7 +7,7 @@ without having to inject the container everywhere.
 """
 
 import logging
-from typing import Optional, Type, TypeVar
+from typing import Optional, TypeVar
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def is_initialized() -> bool:
     return _container is not None
 
 
-def get_service(service_type: Type[T]) -> Optional[T]:
+def get_service(service_type: type[T]) -> Optional[T]:
     """
     Get a service from the DI container.
 

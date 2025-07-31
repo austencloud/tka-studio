@@ -7,7 +7,7 @@ This module defines the interfaces for image export functionality in the modern 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QFont, QImage, QPainter
@@ -51,7 +51,7 @@ class ExportResult:
     success: bool
     output_path: Optional[Path] = None
     error_message: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None
 
 
 @dataclass
@@ -74,7 +74,7 @@ class ISequenceImageExporter(ABC):
     @abstractmethod
     def export_sequence_image(
         self,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         word: str,
         output_path: Path,
         options: ImageExportOptions,
@@ -99,7 +99,7 @@ class ISequenceImageExporter(ABC):
         export_directory: Path,
         options: ImageExportOptions,
         progress_callback: Optional[callable] = None,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Export all sequences from a directory.
 
@@ -116,7 +116,7 @@ class ISequenceImageExporter(ABC):
     @abstractmethod
     def create_sequence_image(
         self,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         word: str,
         options: ImageExportOptions,
     ) -> QImage:
@@ -140,7 +140,7 @@ class ISequenceImageRenderer(ABC):
     def render_sequence_beats(
         self,
         image: QImage,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         options: ImageExportOptions,
     ) -> None:
         """Render sequence beats onto the image."""
@@ -166,15 +166,15 @@ class ISequenceMetadataExtractor(ABC):
     """Interface for extracting metadata from sequence files."""
 
     @abstractmethod
-    def extract_sequence_data(self, file_path: Path) -> Optional[List[Dict[str, Any]]]:
+    def extract_sequence_data(self, file_path: Path) -> Optional[list[dict[str, Any]]]:
         """Extract sequence data from a file."""
 
     @abstractmethod
-    def extract_metadata(self, file_path: Path) -> Optional[Dict[str, Any]]:
+    def extract_metadata(self, file_path: Path) -> Optional[dict[str, Any]]:
         """Extract metadata from a sequence file."""
 
     @abstractmethod
-    def get_difficulty_level(self, sequence_data: List[Dict[str, Any]]) -> int:
+    def get_difficulty_level(self, sequence_data: list[dict[str, Any]]) -> int:
         """Calculate difficulty level for a sequence."""
 
 
@@ -283,7 +283,7 @@ class IBeatDrawer(ABC):
     def draw_beats(
         self,
         image: QImage,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         columns: int,
         rows: int,
         options: ImageExportOptions,
@@ -415,7 +415,7 @@ class IImageTextRenderer(ABC):
         self,
         image: "QImage",
         options: ImageExportOptions,
-        fonts: Dict[str, "QFont"],
+        fonts: dict[str, "QFont"],
     ) -> None:
         """
         Render user information text onto the image.
@@ -450,7 +450,7 @@ class IBeatRenderer(ABC):
     def render_beat_at_position(
         self,
         painter: "QPainter",
-        beat_data: Dict[str, Any],
+        beat_data: dict[str, Any],
         x: int,
         y: int,
         size: int,

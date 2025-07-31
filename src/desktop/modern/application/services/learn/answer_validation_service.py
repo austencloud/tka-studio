@@ -6,7 +6,7 @@ and progress tracking.
 """
 
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from desktop.modern.core.interfaces.learn_services import (
     IAnswerValidationService,
@@ -35,7 +35,7 @@ class AnswerValidationService(IAnswerValidationService):
         self.session_service = session_service
 
         # Track answer history per session
-        self._answer_history: Dict[str, List[Tuple[str, bool]]] = {}
+        self._answer_history: dict[str, list[tuple[str, bool]]] = {}
 
         logger.info("Answer validation service initialized")
 
@@ -109,7 +109,7 @@ class AnswerValidationService(IAnswerValidationService):
             logger.error(f"Failed to compare answers: {e}")
             return False
 
-    def _compare_pictographs(self, correct: Dict, selected: Dict) -> bool:
+    def _compare_pictographs(self, correct: dict, selected: dict) -> bool:
         """
         Compare pictograph dictionaries for equality.
 
@@ -184,7 +184,7 @@ class AnswerValidationService(IAnswerValidationService):
         except Exception as e:
             logger.error(f"Failed to record answer for session {session_id}: {e}")
 
-    def get_answer_history(self, session_id: str) -> List[Tuple[str, bool]]:
+    def get_answer_history(self, session_id: str) -> list[tuple[str, bool]]:
         """
         Get answer history for a session.
 
@@ -306,7 +306,7 @@ class AnswerValidationService(IAnswerValidationService):
             logger.error(f"Failed to clear history for session {session_id}: {e}")
             return False
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """
         Get service statistics for monitoring.
 

@@ -5,7 +5,7 @@ Manages progressive image loading with immediate UI response and background load
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QCoreApplication, QTimer
 
@@ -21,7 +21,7 @@ class ProgressiveLoadingManager:
     def __init__(self, image_loader: ImageLoader, parent_component=None):
         self.image_loader = image_loader
         self.parent_component = parent_component
-        self.page_widgets: List[SequenceCardPageWidget] = []
+        self.page_widgets: list[SequenceCardPageWidget] = []
 
         # Progressive loading state
         self._progressive_timer: Optional[QTimer] = None
@@ -30,7 +30,7 @@ class ProgressiveLoadingManager:
         self._current_batch_name = ""
         self._is_priority_batch = False
 
-    def set_page_widgets(self, page_widgets: List[SequenceCardPageWidget]):
+    def set_page_widgets(self, page_widgets: list[SequenceCardPageWidget]):
         """Set the page widgets to manage loading for."""
         self.page_widgets = page_widgets
 

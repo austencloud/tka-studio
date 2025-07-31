@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
@@ -18,7 +18,7 @@ class VisibilityController:
         self.manager = manager
 
     def fade_and_toggle_visibility(
-        self, item: Union[Glyph, NonRadialPointsGroup], new_visibility: bool
+        self, item: Glyph | NonRadialPointsGroup, new_visibility: bool
     ) -> None:
         """Fade an item to a new visibility state with callback handling."""
         target_opacity = 1.0 if new_visibility else 0.1
@@ -40,7 +40,7 @@ class VisibilityController:
         )
 
     def _process_after_fade(
-        self, item: Union[Glyph, NonRadialPointsGroup], new_visibility: bool
+        self, item: Glyph | NonRadialPointsGroup, new_visibility: bool
     ) -> None:
         """Process actions after fade animation completes."""
         if not hasattr(item, "name"):

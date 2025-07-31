@@ -5,7 +5,6 @@ Tests graph editor interactions and provides clear guidance for AI agents.
 """
 
 import time
-from typing import List
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
@@ -350,7 +349,7 @@ class GraphEditorTester:
         return state
 
     def _create_failure_result(
-        self, control_name: str, errors: List[str], start_time: float
+        self, control_name: str, errors: list[str], start_time: float
     ) -> AITestResult:
         """Create a failure result with control guidance."""
         self._print_control_guidance(control_name)

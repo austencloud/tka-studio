@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QRectF, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QRegion
@@ -265,7 +265,7 @@ class SettingsDialog(QDialog, StyleMixin):
         self.action_buttons.apply_requested.connect(self._apply_settings)
         self.action_buttons.ok_requested.connect(self.accept)
 
-    def _handle_codex_export(self, config: Dict[str, Any]):
+    def _handle_codex_export(self, config: dict[str, Any]):
         """Handle codex export request."""
         # For now, just save the configuration
         # In a full implementation, this would trigger the actual export process

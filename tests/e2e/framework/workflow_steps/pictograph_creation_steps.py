@@ -6,7 +6,7 @@ including prop placement, arrow configuration, and glyph management.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtWidgets import QWidget
 
@@ -80,7 +80,7 @@ class PictographCreationSteps:
             return False
 
     def create_pictograph_with_props(
-        self, letter: str, prop_config: Dict[str, Any]
+        self, letter: str, prop_config: dict[str, Any]
     ) -> bool:
         """
         Create a pictograph with props.
@@ -127,7 +127,7 @@ class PictographCreationSteps:
             self.logger.error(f"❌ Error creating pictograph with props: {e}")
             return False
 
-    def create_complex_pictograph(self, config: Dict[str, Any]) -> bool:
+    def create_complex_pictograph(self, config: dict[str, Any]) -> bool:
         """
         Create a complex pictograph with all elements.
 
@@ -207,7 +207,7 @@ class PictographCreationSteps:
             self.logger.error(f"❌ Error modifying pictograph positions: {e}")
             return False
 
-    def add_prop_to_pictograph(self, color: str, prop_config: Dict[str, Any]) -> bool:
+    def add_prop_to_pictograph(self, color: str, prop_config: dict[str, Any]) -> bool:
         """Add a prop to an existing pictograph."""
         self.logger.info(f"🎨 Adding {color} prop to pictograph")
 
@@ -231,7 +231,7 @@ class PictographCreationSteps:
     # PICTOGRAPH VALIDATION WORKFLOWS
     # ========================================
 
-    def validate_pictograph_completeness(self) -> Dict[str, bool]:
+    def validate_pictograph_completeness(self) -> dict[str, bool]:
         """
         Validate that a pictograph is complete and valid.
 
@@ -301,7 +301,7 @@ class PictographCreationSteps:
         self.logger.debug(f"Setting end position: {position}")
         return True  # Placeholder implementation
 
-    def _add_prop(self, color: str, prop_config: Dict[str, Any]) -> bool:
+    def _add_prop(self, color: str, prop_config: dict[str, Any]) -> bool:
         """Add a prop to the pictograph."""
         # This would interact with the prop configuration UI
         self.logger.debug(f"Adding {color} prop: {prop_config}")
@@ -313,19 +313,19 @@ class PictographCreationSteps:
         self.logger.debug(f"Removing {color} prop")
         return True  # Placeholder implementation
 
-    def _add_arrow(self, arrow_config: Dict[str, Any]) -> bool:
+    def _add_arrow(self, arrow_config: dict[str, Any]) -> bool:
         """Add an arrow to the pictograph."""
         # This would interact with the arrow configuration UI
         self.logger.debug(f"Adding arrow: {arrow_config}")
         return True  # Placeholder implementation
 
-    def _add_glyph(self, glyph_config: Dict[str, Any]) -> bool:
+    def _add_glyph(self, glyph_config: dict[str, Any]) -> bool:
         """Add a glyph to the pictograph."""
         # This would interact with the glyph configuration UI
         self.logger.debug(f"Adding glyph: {glyph_config}")
         return True  # Placeholder implementation
 
-    def _apply_transformations(self, transformations: Dict[str, Any]) -> bool:
+    def _apply_transformations(self, transformations: dict[str, Any]) -> bool:
         """Apply transformations to the pictograph."""
         # This would interact with the transformation UI
         self.logger.debug(f"Applying transformations: {transformations}")

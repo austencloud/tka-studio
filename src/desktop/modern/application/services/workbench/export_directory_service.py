@@ -10,7 +10,7 @@ from datetime import datetime
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.export_services import IExportDirectoryService
 
@@ -105,7 +105,7 @@ class ExportDirectoryService(IExportDirectoryService):
             fallback_filename = f"export_{timestamp}{file_extension}"
             return str(Path(self._base_directory) / fallback_filename)
 
-    def get_directory_stats(self, directory_path: str) -> Dict[str, Any]:
+    def get_directory_stats(self, directory_path: str) -> dict[str, Any]:
         """Get statistics about the directory for debugging purposes."""
         try:
             export_path = Path(directory_path)

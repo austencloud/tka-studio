@@ -6,7 +6,7 @@ Emits events for user interactions and updates UI based on external state.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
@@ -194,8 +194,8 @@ class LessonSelectorView(QWidget):
         self.setObjectName("lesson_selector")
 
         # UI components
-        self.lesson_buttons: Dict[LessonType, LessonButton] = {}
-        self.description_labels: Dict[LessonType, QLabel] = {}
+        self.lesson_buttons: dict[LessonType, LessonButton] = {}
+        self.description_labels: dict[LessonType, QLabel] = {}
 
         self._setup_ui()
         self._connect_signals()
@@ -316,7 +316,7 @@ class LessonSelectorView(QWidget):
         self.lesson_requested.emit(lesson_type, selected_mode)
 
     # Public interface for external state updates
-    def update_lesson_availability(self, available_lessons: List[LessonType]) -> None:
+    def update_lesson_availability(self, available_lessons: list[LessonType]) -> None:
         """Update which lessons are available."""
         for lesson_type, button in self.lesson_buttons.items():
             button.setEnabled(lesson_type in available_lessons)

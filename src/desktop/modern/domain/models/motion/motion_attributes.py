@@ -7,7 +7,7 @@ type-safe, immutable domain model.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional
 
 from ..enums import Location, MotionType, Orientation, PropRotationDirection
 
@@ -27,7 +27,7 @@ class MotionAttributes:
     start_loc: Location
     end_loc: Location
     prop_rot_dir: PropRotationDirection
-    turns: Union[int, float, str]  # Can be 'fl' for float transitions
+    turns: int | float | str  # Can be 'fl' for float transitions
 
     # Prefloat attributes for handling float state transitions
     prefloat_motion_type: Optional[MotionType] = None
@@ -75,7 +75,7 @@ class MotionAttributes:
             return self.prefloat_prop_rot_dir
         return self.prop_rot_dir
 
-    def with_turns(self, new_turns: Union[int, float, str]) -> "MotionAttributes":
+    def with_turns(self, new_turns: int | float | str) -> "MotionAttributes":
         """Create a new MotionAttributes with different turns value."""
         from dataclasses import replace
 

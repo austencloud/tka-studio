@@ -7,7 +7,7 @@ pictograph system while maintaining exact legacy positioning and layout logic.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
@@ -54,7 +54,7 @@ class BeatDrawer(IBeatDrawer):
     def draw_beats(
         self,
         image: QImage,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         columns: int,
         rows: int,
         options: ImageExportOptions,
@@ -169,7 +169,7 @@ class BeatDrawer(IBeatDrawer):
     def _render_single_beat(
         self,
         painter: QPainter,
-        beat_data: Dict[str, Any],
+        beat_data: dict[str, Any],
         x: int,
         y: int,
         size: int,
@@ -209,7 +209,7 @@ class BeatDrawer(IBeatDrawer):
             self._draw_placeholder_beat(painter, x, y, size, str(beat_number))
 
     def _convert_beat_data_to_pictograph(
-        self, beat_data: Dict[str, Any]
+        self, beat_data: dict[str, Any]
     ) -> Optional[PictographData]:
         """
         Convert sequence beat data to PictographData.

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from data.constants import COLOR, LOC, MOTION_TYPE, TURNS
 
@@ -12,7 +12,7 @@ class ArrowAttrManager:
         self.arrow.state.color = self.arrow.arrow_data[COLOR]
         self.arrow.turns = self.arrow.arrow_data[TURNS]
 
-    def update_attributes(self, arrow_data: dict[str, Union[str, int, float]]) -> None:
+    def update_attributes(self, arrow_data: dict[str, str | int | float]) -> None:
         arrow_attributes = [COLOR, LOC, MOTION_TYPE, TURNS]
         for attr in arrow_attributes:
             value = arrow_data.get(attr)
@@ -25,6 +25,6 @@ class ArrowAttrManager:
         for attr in arrow_attributes:
             setattr(self.arrow, attr, None)
 
-    def get_arrow_attributes(self) -> dict[str, Union[str, str, str]]:
+    def get_arrow_attributes(self) -> dict[str, str | str | str]:
         arrow_attributes = [COLOR, LOC]
         return {attr: getattr(self.arrow, attr) for attr in arrow_attributes}

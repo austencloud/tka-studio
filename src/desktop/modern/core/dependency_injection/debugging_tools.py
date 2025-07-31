@@ -12,7 +12,7 @@ Provides:
 from datetime import datetime
 import inspect
 import logging
-from typing import Any, Dict, List, Type, get_type_hints
+from typing import Any, get_type_hints
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +26,10 @@ class DebuggingTools:
     """
 
     def __init__(self):
-        self._resolution_history: List[Dict[str, Any]] = []
-        self._performance_metrics: Dict[str, Any] = {}
+        self._resolution_history: list[dict[str, Any]] = []
+        self._performance_metrics: dict[str, Any] = {}
 
-    def get_dependency_graph(self, registry: Any) -> Dict[str, List[str]]:
+    def get_dependency_graph(self, registry: Any) -> dict[str, list[str]]:
         """
         Generate dependency graph for debugging.
 
@@ -59,7 +59,7 @@ class DebuggingTools:
 
         return graph
 
-    def _get_service_dependencies(self, implementation: Type) -> List[Type]:
+    def _get_service_dependencies(self, implementation: type) -> list[type]:
         """Get list of dependencies for a service implementation."""
         dependencies = []
 
@@ -93,7 +93,7 @@ class DebuggingTools:
 
         return dependencies
 
-    def _is_primitive_type(self, param_type: Type) -> bool:
+    def _is_primitive_type(self, param_type: type) -> bool:
         """Check if a type is a primitive type."""
         from datetime import datetime, timedelta
         from pathlib import Path
@@ -132,7 +132,7 @@ class DebuggingTools:
 
         return param_type in primitive_types
 
-    def analyze_service_registrations(self, registry: Any) -> Dict[str, Any]:
+    def analyze_service_registrations(self, registry: Any) -> dict[str, Any]:
         """Analyze service registrations and provide detailed statistics."""
         all_registrations = registry.get_all_registrations()
 
@@ -171,12 +171,12 @@ class DebuggingTools:
 
         return analysis
 
-    def trace_resolution_path(self, service_type: Type, registry: Any) -> List[str]:
+    def trace_resolution_path(self, service_type: type, registry: Any) -> list[str]:
         """Trace the resolution path for a service type."""
         path = []
         visited = set()
 
-        def _trace_recursive(current_type: Type, depth: int = 0):
+        def _trace_recursive(current_type: type, depth: int = 0):
             if current_type in visited:
                 path.append(f"{'  ' * depth}CIRCULAR: {current_type.__name__}")
                 return
@@ -194,7 +194,7 @@ class DebuggingTools:
         return path
 
     def record_resolution(
-        self, service_type: Type, resolution_time: float, success: bool
+        self, service_type: type, resolution_time: float, success: bool
     ) -> None:
         """Record a service resolution for performance analysis."""
         self._resolution_history.append(
@@ -210,7 +210,7 @@ class DebuggingTools:
         if len(self._resolution_history) > 1000:
             self._resolution_history = self._resolution_history[-1000:]
 
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get performance metrics for service resolution."""
         if not self._resolution_history:
             return {"message": "No resolution history available"}
@@ -239,7 +239,7 @@ class DebuggingTools:
             "most_resolved_services": self._get_most_resolved_services(),
         }
 
-    def _get_most_resolved_services(self) -> List[Dict[str, Any]]:
+    def _get_most_resolved_services(self) -> list[dict[str, Any]]:
         """Get the most frequently resolved services."""
         service_counts = {}
         for resolution in self._resolution_history:
@@ -254,7 +254,7 @@ class DebuggingTools:
             {"service": name, "count": count} for name, count in sorted_services[:10]
         ]
 
-    def find_potential_issues(self, registry: Any) -> List[Dict[str, Any]]:
+    def find_potential_issues(self, registry: Any) -> list[dict[str, Any]]:
         """Find potential issues in the DI configuration."""
         issues = []
         all_registrations = registry.get_all_registrations()

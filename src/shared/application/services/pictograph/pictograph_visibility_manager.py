@@ -7,7 +7,7 @@ visibility settings for elemental, VTG, TKA, and position glyphs.
 """
 
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.enums import LetterType
 from desktop.modern.domain.models.pictograph_utils import (
@@ -29,7 +29,7 @@ class PictographVisibilityState:
     show_tka: bool = True
     show_positions: bool = True
 
-    def to_dict(self) -> Dict[str, bool]:
+    def to_dict(self) -> dict[str, bool]:
         """Convert to dictionary for serialization."""
         return {
             "show_elemental": self.show_elemental,
@@ -39,7 +39,7 @@ class PictographVisibilityState:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, bool]) -> "PictographVisibilityState":
+    def from_dict(cls, data: dict[str, bool]) -> "PictographVisibilityState":
         """Create from dictionary."""
         return cls(
             show_elemental=data.get("show_elemental", True),
@@ -81,10 +81,10 @@ class PictographVisibilityManager:
     def __init__(self):
         """Initialize the visibility manager."""
         # Per-pictograph visibility state
-        self._pictograph_visibility: Dict[str, PictographVisibilityState] = {}
+        self._pictograph_visibility: dict[str, PictographVisibilityState] = {}
 
         # Global visibility overrides (from settings)
-        self._global_visibility: Dict[str, bool] = {
+        self._global_visibility: dict[str, bool] = {
             "elemental": True,
             "vtg": True,
             "tka": True,
@@ -219,7 +219,7 @@ class PictographVisibilityManager:
         """Clear all pictograph visibility states."""
         self._pictograph_visibility.clear()
 
-    def get_all_visibility_states(self) -> Dict[str, PictographVisibilityState]:
+    def get_all_visibility_states(self) -> dict[str, PictographVisibilityState]:
         """
         Get all pictograph visibility states.
 

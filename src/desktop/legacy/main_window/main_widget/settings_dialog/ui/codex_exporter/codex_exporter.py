@@ -2,7 +2,7 @@
 Main class for the codex pictograph exporter.
 """
 
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 from .exporters.main_exporter import MainExporter
 from .pictograph_data_manager import PictographDataManager
@@ -75,7 +75,7 @@ class CodexExporter:
 
     def export_pictographs(
         self,
-        selected_types: List[str],
+        selected_types: list[str],
         red_turns: float,
         blue_turns: float,
         generate_all: bool = False,

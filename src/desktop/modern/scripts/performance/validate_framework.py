@@ -11,7 +11,7 @@ import logging
 from pathlib import Path
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -49,7 +49,7 @@ class PerformanceFrameworkValidator:
         self.integration = get_performance_integration()
         self.storage = get_performance_storage()
 
-        self.validation_results: Dict[str, Dict[str, Any]] = {}
+        self.validation_results: dict[str, dict[str, Any]] = {}
 
     def run_validation(self) -> bool:
         """
@@ -107,7 +107,7 @@ class PerformanceFrameworkValidator:
 
         return all_passed
 
-    def _validate_configuration(self) -> Dict[str, Any]:
+    def _validate_configuration(self) -> dict[str, Any]:
         """Validate configuration system."""
         try:
             # Test configuration loading
@@ -136,7 +136,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_core_profiler(self) -> Dict[str, Any]:
+    def _validate_core_profiler(self) -> dict[str, Any]:
         """Validate core profiler functionality."""
         try:
             # Test session lifecycle
@@ -186,7 +186,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_memory_tracker(self) -> Dict[str, Any]:
+    def _validate_memory_tracker(self) -> dict[str, Any]:
         """Validate memory tracker functionality."""
         try:
             # Test memory tracking start/stop
@@ -224,7 +224,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_qt_profiler(self) -> Dict[str, Any]:
+    def _validate_qt_profiler(self) -> dict[str, Any]:
         """Validate Qt profiler functionality."""
         try:
             # Test Qt profiler initialization
@@ -252,7 +252,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_storage_system(self) -> Dict[str, Any]:
+    def _validate_storage_system(self) -> dict[str, Any]:
         """Validate storage system functionality."""
         try:
             from datetime import datetime
@@ -308,7 +308,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_integration(self) -> Dict[str, Any]:
+    def _validate_integration(self) -> dict[str, Any]:
         """Validate integration functionality."""
         try:
             # Test integration initialization
@@ -342,7 +342,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_performance_targets(self) -> Dict[str, Any]:
+    def _validate_performance_targets(self) -> dict[str, Any]:
         """Validate performance targets are met."""
         try:
             # Test profiler overhead
@@ -403,7 +403,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_error_handling(self) -> Dict[str, Any]:
+    def _validate_error_handling(self) -> dict[str, Any]:
         """Validate error handling."""
         try:
             # Test invalid session operations
@@ -431,7 +431,7 @@ class PerformanceFrameworkValidator:
         except Exception as e:
             return {"passed": False, "error": str(e)}
 
-    def _validate_thread_safety(self) -> Dict[str, Any]:
+    def _validate_thread_safety(self) -> dict[str, Any]:
         """Validate thread safety."""
         try:
             import queue

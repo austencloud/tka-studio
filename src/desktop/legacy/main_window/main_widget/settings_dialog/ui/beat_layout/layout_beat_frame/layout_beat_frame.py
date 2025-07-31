@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
@@ -25,7 +25,7 @@ class LayoutBeatFrame(QFrame):
     rows = 0
     cols = 0
     current_num_beats = 16
-    beat_views: list[Union[LegacyBeatView]] = []
+    beat_views: list[LegacyBeatView] = []
     start_pos_view: StartPositionBeatView = None
     current_layout: tuple[int, int] = (4, 4)
 

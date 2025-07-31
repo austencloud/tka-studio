@@ -6,7 +6,7 @@ lesson management, quiz sessions, question generation, and UI services.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.domain.models.learn import (
     LessonConfig,
@@ -22,7 +22,7 @@ class ILessonConfigurationService(ABC):
     """Service for managing lesson configurations and types."""
 
     @abstractmethod
-    def get_all_lesson_configs(self) -> Dict[str, LessonConfig]:
+    def get_all_lesson_configs(self) -> dict[str, LessonConfig]:
         """
         Get all available lesson configurations.
 
@@ -43,7 +43,7 @@ class ILessonConfigurationService(ABC):
         """
 
     @abstractmethod
-    def get_lesson_names(self) -> List[str]:
+    def get_lesson_names(self) -> list[str]:
         """
         Get list of all lesson display names.
 
@@ -106,7 +106,7 @@ class IQuizSessionService(ABC):
         """
 
     @abstractmethod
-    def get_active_sessions(self) -> List[QuizSession]:
+    def get_active_sessions(self) -> list[QuizSession]:
         """
         Get all currently active sessions.
 
@@ -134,7 +134,7 @@ class IQuestionGenerationService(ABC):
         """
 
     @abstractmethod
-    def get_pictograph_dataset(self) -> Dict[Any, List[Dict]]:
+    def get_pictograph_dataset(self) -> dict[Any, list[dict]]:
         """
         Get pictograph dataset for question generation.
 
@@ -183,7 +183,7 @@ class IAnswerValidationService(ABC):
         """
 
     @abstractmethod
-    def get_answer_history(self, session_id: str) -> List[Tuple[str, bool]]:
+    def get_answer_history(self, session_id: str) -> list[tuple[str, bool]]:
         """
         Get answer history for a session.
 
@@ -199,7 +199,7 @@ class ILessonProgressService(ABC):
     """Service for tracking lesson progress and completion."""
 
     @abstractmethod
-    def get_progress_info(self, session_id: str) -> Dict[str, Any]:
+    def get_progress_info(self, session_id: str) -> dict[str, Any]:
         """
         Get current progress information for display.
 
@@ -251,7 +251,7 @@ class ILearnUIService(ABC):
     """Service for learn tab UI state management."""
 
     @abstractmethod
-    def get_font_sizes(self, widget_width: int, widget_height: int) -> Dict[str, int]:
+    def get_font_sizes(self, widget_width: int, widget_height: int) -> dict[str, int]:
         """
         Calculate responsive font sizes.
 
@@ -266,7 +266,7 @@ class ILearnUIService(ABC):
     @abstractmethod
     def get_component_sizes(
         self, widget_width: int, widget_height: int
-    ) -> Dict[str, Tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """
         Calculate responsive component sizes.
 
@@ -281,7 +281,7 @@ class ILearnUIService(ABC):
     @abstractmethod
     def get_layout_spacing(
         self, widget_width: int, widget_height: int
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """
         Calculate responsive layout spacing.
 
@@ -343,7 +343,7 @@ class ILearnDataService(ABC):
 
     @abstractmethod
     def save_lesson_progress(
-        self, session_id: str, progress_data: Dict[str, Any]
+        self, session_id: str, progress_data: dict[str, Any]
     ) -> bool:
         """
         Save lesson progress to persistent storage.
@@ -357,7 +357,7 @@ class ILearnDataService(ABC):
         """
 
     @abstractmethod
-    def load_lesson_progress(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def load_lesson_progress(self, session_id: str) -> Optional[dict[str, Any]]:
         """
         Load lesson progress from persistent storage.
 
@@ -383,7 +383,7 @@ class ILearnDataService(ABC):
     @abstractmethod
     def get_lesson_history(
         self, lesson_type: LessonType, limit: int = 10
-    ) -> List[LessonResults]:
+    ) -> list[LessonResults]:
         """
         Get lesson history for a specific lesson type.
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from main_window.main_widget.sequence_workbench.graph_editor.hotkey_graph_adjuster.rotation_angle_override_key_generator import (
     ArrowRotAngleOverrideKeyGenerator,
@@ -41,7 +41,7 @@ class RotationAngleProcessor:
     def remove_rotation_angle_override(
         self,
         arrow: Arrow,
-        mirrored_data: Dict[str, Any],
+        mirrored_data: dict[str, Any],
         mirrored_turns_tuple: str,
         hybrid_key: str,
     ) -> None:
@@ -60,7 +60,7 @@ class RotationAngleProcessor:
     def _should_handle_rotation_angle(self, arrow: Arrow) -> bool:
         return arrow.motion.state.motion_type in [STATIC, DASH]
 
-    def _find_rotation_angle_override(self, data: Dict[str, Any]) -> Optional[Any]:
+    def _find_rotation_angle_override(self, data: dict[str, Any]) -> Optional[Any]:
         for key, value in data.items():
             if "rot_angle_override" in key:
                 return value

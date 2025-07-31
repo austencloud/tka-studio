@@ -9,7 +9,7 @@ import logging
 import os
 from pathlib import Path
 import shutil
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QWidget
@@ -50,7 +50,7 @@ class SequenceDeletionService(QObject):
     def delete_variation(
         self,
         word: str,
-        thumbnails: List[str],
+        thumbnails: list[str],
         variation_index: int,
         parent_widget: Optional[QWidget] = None,
     ) -> bool:
@@ -270,7 +270,7 @@ class SequenceDeletionService(QObject):
         except OSError:
             return False
 
-    def _fix_variation_numbering(self, word: str, remaining_thumbnails: List[str]):
+    def _fix_variation_numbering(self, word: str, remaining_thumbnails: list[str]):
         """
         Fix variation numbering after deletion to ensure sequential numbering.
 

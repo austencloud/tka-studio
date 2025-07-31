@@ -6,7 +6,6 @@ supporting pictograph validation, beat validation, and sequence validation.
 """
 
 from abc import ABC, abstractmethod
-from typing import List
 
 from desktop.modern.domain.models.motion_data import MotionData
 
@@ -112,7 +111,7 @@ class ISequenceValidator(ABC):
         """
 
     @abstractmethod
-    def validate_sequence_letters(self, sequence_data) -> List[str]:
+    def validate_sequence_letters(self, sequence_data) -> list[str]:
         """
         Validate sequence letter combinations and return any issues.
 
@@ -140,7 +139,7 @@ class IBeatValidator(ABC):
     """Interface for individual beat validation operations."""
 
     @abstractmethod
-    def validate_beat_data(self, beat_data) -> List[str]:
+    def validate_beat_data(self, beat_data) -> list[str]:
         """
         Validate individual beat data and return any issues.
 

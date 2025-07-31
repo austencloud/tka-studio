@@ -1,6 +1,6 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_page_renderer.py
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QFont, QImage, QImageReader, QPainter, QPixmap
@@ -235,7 +235,7 @@ class ExportPageRenderer:
     def _render_sequence_item(
         self,
         painter: QPainter,
-        sequence_data: Dict[str, Any],
+        sequence_data: dict[str, Any],
         cell_x: int,
         cell_y: int,
         cell_width: int,

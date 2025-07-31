@@ -6,8 +6,6 @@ Eliminates type mixing in positioning services.
 
 """
 
-from typing import Union
-
 from desktop.modern.core.types.geometry import Point
 
 # Conditional PyQt6 imports for testing compatibility
@@ -57,7 +55,7 @@ def point_to_qpoint(point: Point) -> QPointF:
     return QPointF(point.x, point.y)
 
 
-def safe_qpoint_to_point(qpoint: Union[QPointF, None]) -> Point:
+def safe_qpoint_to_point(qpoint: QPointF | None) -> Point:
     """
     Safely convert QPointF to Point with error handling.
 
@@ -79,7 +77,7 @@ def safe_qpoint_to_point(qpoint: Union[QPointF, None]) -> Point:
         raise ValueError(f"Failed to convert QPointF to Point: {e}") from e
 
 
-def safe_point_to_qpoint(point: Union[Point, None]) -> QPointF:
+def safe_point_to_qpoint(point: Point | None) -> QPointF:
     """
     Safely convert Point to QPointF with error handling.
 

@@ -4,7 +4,7 @@ Settings dialog services initialization.
 Handles the creation and initialization of all services required by the settings dialog.
 """
 
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 
@@ -82,11 +82,11 @@ class UISettingsManager(IUIStateManager):
         """Set a setting value (interface implementation)."""
         self.ui_state_service.set_setting(key, value)
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab (interface implementation)."""
         return self.ui_state_service.get_tab_state(tab_name)
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings (interface implementation)."""
         return self.ui_state_service.get_all_settings()
 

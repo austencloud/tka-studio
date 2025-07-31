@@ -10,8 +10,6 @@ Handles the complex content loading logic for OptionPickerSection including:
 Extracted from OptionPickerSection to simplify the main class.
 """
 
-from typing import List
-
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_picker_section_animation_handler import (
     OptionPickerSectionAnimationHandler,
@@ -57,7 +55,7 @@ class OptionPickerSectionContentLoader:
         self._animation_handler = animation_handler
 
     def load_options_from_sequence(
-        self, pictographs_for_section: List[PictographData]
+        self, pictographs_for_section: list[PictographData]
     ) -> None:
         """
         Load options for this section with animation transitions.
@@ -105,13 +103,13 @@ class OptionPickerSectionContentLoader:
             # Always clear loading state
             self._state_manager.set_loading_state(False)
 
-    def _should_use_animation(self, existing_widgets: List) -> bool:
+    def _should_use_animation(self, existing_widgets: list) -> bool:
         """Determine if animation should be used for this load operation."""
         # Use animation if we have existing widgets and animation handler is available
         return len(existing_widgets) > 0 and not self._animation_handler.is_animating()
 
     def _load_with_animation(
-        self, pictographs_for_section: List[PictographData], existing_widgets: List
+        self, pictographs_for_section: list[PictographData], existing_widgets: list
     ) -> None:
         """Load content with fade animation."""
 
@@ -132,7 +130,7 @@ class OptionPickerSectionContentLoader:
         if not animation_started:
             self._load_directly(pictographs_for_section)
 
-    def _load_directly(self, pictographs_for_section: List[PictographData]) -> None:
+    def _load_directly(self, pictographs_for_section: list[PictographData]) -> None:
         """Load content directly without animation."""
         self._clear_existing_content()
         self._update_content_directly(pictographs_for_section)
@@ -146,7 +144,7 @@ class OptionPickerSectionContentLoader:
         self._widget_manager.clear_all_widgets()
 
     def _update_content_directly(
-        self, pictographs_for_section: List[PictographData]
+        self, pictographs_for_section: list[PictographData]
     ) -> None:
         """Update content directly (used by both animated and direct loading)."""
         # NOTE: Cleanup is handled by the caller (_load_directly or animation workflow)

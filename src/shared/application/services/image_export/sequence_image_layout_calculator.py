@@ -7,7 +7,6 @@ replicating the legacy system's layout logic exactly.
 
 import logging
 import math
-from typing import Tuple
 
 from desktop.modern.core.interfaces.image_export_services import (
     ISequenceImageLayoutCalculator,
@@ -58,7 +57,7 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
 
     def calculate_layout(
         self, num_beats: int, include_start_position: bool
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate optimal layout (columns, rows) for the given number of beats.
 
@@ -101,7 +100,7 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
 
     def calculate_image_dimensions(
         self, columns: int, rows: int, beat_size: int, additional_height: int = 0
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate image dimensions based on layout.
 
@@ -122,7 +121,7 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
         logger.debug(f"Calculated dimensions: {width}x{height}")
         return (width, height)
 
-    def _calculate_dynamic_layout(self, total_positions: int) -> Tuple[int, int]:
+    def _calculate_dynamic_layout(self, total_positions: int) -> tuple[int, int]:
         """
         Calculate layout dynamically for sequences larger than predefined mappings.
 
@@ -163,7 +162,7 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
 
         return (best_columns, best_rows)
 
-    def get_layout_for_sequence_length(self, sequence_length: int) -> Tuple[int, int]:
+    def get_layout_for_sequence_length(self, sequence_length: int) -> tuple[int, int]:
         """
         Get the standard layout for a given sequence length.
 
@@ -173,7 +172,7 @@ class SequenceImageLayoutCalculator(ISequenceImageLayoutCalculator):
 
     def calculate_beat_positions(
         self, num_beats: int, columns: int, rows: int, beat_size: int, margin: int = 10
-    ) -> list[Tuple[int, int]]:
+    ) -> list[tuple[int, int]]:
         """
         Calculate the pixel positions for each beat in the layout.
 

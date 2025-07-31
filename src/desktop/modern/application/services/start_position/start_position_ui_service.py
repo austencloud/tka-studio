@@ -6,7 +6,7 @@ Extracts UI logic from presentation components while keeping it separate from bu
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionUIService,
@@ -138,7 +138,7 @@ class StartPositionUIService(IStartPositionUIService):
 
     def get_grid_layout_config(
         self, grid_mode: str, is_advanced: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get grid layout configuration for positioning options.
 
@@ -193,7 +193,7 @@ class StartPositionUIService(IStartPositionUIService):
 
     def get_positions_for_mode(
         self, grid_mode: str, is_advanced: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get the list of positions to display for a given mode.
 
@@ -230,7 +230,7 @@ class StartPositionUIService(IStartPositionUIService):
 
     def calculate_responsive_layout(
         self, container_size: QSize, position_count: int
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate responsive layout parameters for position options.
 
@@ -342,7 +342,7 @@ class StartPositionUIService(IStartPositionUIService):
             logger.error(f"Error checking single row layout: {e}")
             return position_count <= 3  # Safe fallback
 
-    def get_layout_style_config(self, is_advanced: bool = False) -> Dict[str, str]:
+    def get_layout_style_config(self, is_advanced: bool = False) -> dict[str, str]:
         """
         Get style configuration for layout components.
 

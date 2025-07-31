@@ -15,7 +15,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 import uuid
 
 
@@ -162,7 +162,7 @@ class PropPositioningEventPublisher(IPropPositioningEventPublisher):
         )
 
     def _publish_event(
-        self, positioning_type: str, position_data: Dict[str, Any]
+        self, positioning_type: str, position_data: dict[str, Any]
     ) -> None:
         """Publish a prop positioned event."""
         if not self._can_publish_events():

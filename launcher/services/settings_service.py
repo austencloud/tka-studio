@@ -8,7 +8,7 @@ with proper defaults following TKA patterns.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces import ISettingsService
 
@@ -38,7 +38,7 @@ class SettingsService(ISettingsService):
                 self._settings_file = (
                     Path.cwd() / "launcher" / "config" / "settings.json"
                 )
-        self._settings: Dict[str, Any] = {}
+        self._settings: dict[str, Any] = {}
         self._defaults = self._create_default_settings()
 
         # Ensure settings directory exists
@@ -65,7 +65,7 @@ class SettingsService(ISettingsService):
         if old_value != value:
             logger.debug(f"Setting changed: {key} = {value}")
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings as a dictionary."""
         # Merge defaults with current settings
         all_settings = self._defaults.copy()
@@ -116,7 +116,7 @@ class SettingsService(ISettingsService):
             logger.error(f"Failed to import settings: {e}")
             return False
 
-    def validate_settings(self) -> List[str]:
+    def validate_settings(self) -> list[str]:
         """Validate current settings and return any errors."""
         return self._validate_settings_dict(self._settings)
 
@@ -151,7 +151,7 @@ class SettingsService(ISettingsService):
         except Exception as e:
             logger.error(f"Failed to save settings: {e}")
 
-    def _create_default_settings(self) -> Dict[str, Any]:
+    def _create_default_settings(self) -> dict[str, Any]:
         """Create default settings."""
         return {
             # UI Settings
@@ -188,7 +188,7 @@ class SettingsService(ISettingsService):
             "last_version": "2.0.0",
         }
 
-    def _validate_settings_dict(self, settings: Dict[str, Any]) -> List[str]:
+    def _validate_settings_dict(self, settings: dict[str, Any]) -> list[str]:
         """Validate a settings dictionary and return errors."""
         errors = []
 

@@ -5,7 +5,7 @@ Orchestrates layout operations and spacing management.
 Handles Qt layout management and widget organization.
 """
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
@@ -36,8 +36,8 @@ class OptionPickerLayoutOrchestrator:
         self._container = container
         self._option_config_service = option_config_service
         self._header_widget: Optional[QWidget] = None
-        self._section_widgets: List[QWidget] = []
-        self._group_widgets: List[QWidget] = []
+        self._section_widgets: list[QWidget] = []
+        self._group_widgets: list[QWidget] = []
 
     def add_header_widget(self, header_widget: QWidget) -> None:
         """Add a header widget at the top of the layout."""
@@ -113,7 +113,7 @@ class OptionPickerLayoutOrchestrator:
             or "OptionPickerSection" in widget_type
         )
 
-    def _find_header_index(self, all_widgets: List[tuple]) -> int:
+    def _find_header_index(self, all_widgets: list[tuple]) -> int:
         """Find the index of the header widget in the layout."""
         for i, (index, widget) in enumerate(all_widgets):
             if widget == self._header_widget:

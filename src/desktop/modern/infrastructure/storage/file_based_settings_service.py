@@ -8,7 +8,7 @@ from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.core_services import ISettingsCoordinator
 
@@ -33,12 +33,12 @@ class FileBasedSettingsService(ISettingsCoordinator):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.settings_file = self.data_dir / "settings.json"
-        self.settings: Dict[str, Any] = self._load_initial_settings()
+        self.settings: dict[str, Any] = self._load_initial_settings()
         logger.info(
             f"FileBasedSettingsService initialized with data_dir: {self.data_dir}"
         )
 
-    def _load_initial_settings(self) -> Dict[str, Any]:
+    def _load_initial_settings(self) -> dict[str, Any]:
         """Load initial settings from file or create defaults."""
         if self.settings_file.exists():
             try:
@@ -65,7 +65,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
         self._save_to_file(default_settings)
         return default_settings
 
-    def _save_to_file(self, settings: Dict[str, Any]) -> bool:
+    def _save_to_file(self, settings: dict[str, Any]) -> bool:
         """Save settings to file."""
         try:
             # Add timestamp
@@ -121,7 +121,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
         else:
             logger.warning(f"Settings file not found: {self.settings_file}")
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings as a dictionary."""
         return self.settings.copy()
 

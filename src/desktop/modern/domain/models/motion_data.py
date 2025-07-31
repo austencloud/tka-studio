@@ -7,7 +7,7 @@ Handles prop and arrow motion data with type safety and serialization.
 
 from dataclasses import dataclass, fields
 import json
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional
 
 from ._shared_utils import process_field_value
 from .enums import Location, MotionType, Orientation, RotationDirection
@@ -27,7 +27,7 @@ class MotionData:
     prop_rot_dir: RotationDirection
     start_loc: Location
     end_loc: Location
-    turns: Union[float, str] = 0.0  # Can be 'fl' for float motions
+    turns: float | str = 0.0  # Can be 'fl' for float motions
     start_ori: Orientation = Orientation.IN
     end_ori: Orientation = Orientation.IN
     is_visible: bool = True
@@ -213,7 +213,7 @@ class MotionData:
             return location_map.get(value_lower, Location.NORTH)
         return Location.NORTH
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary with snake_case keys."""
         result = {
             "motion_type": (
@@ -254,7 +254,7 @@ class MotionData:
 
         return result
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -270,7 +270,7 @@ class MotionData:
             return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "MotionData":
+    def from_dict(cls, data: dict[str, Any]) -> "MotionData":
         """Create instance from dictionary."""
         # Handle nested dataclasses and enums
         field_types = {f.name: f.type for f in fields(cls)}

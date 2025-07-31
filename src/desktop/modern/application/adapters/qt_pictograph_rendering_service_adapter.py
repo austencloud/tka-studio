@@ -7,7 +7,7 @@ enabling framework independence.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
@@ -236,7 +236,7 @@ class QtPictographRenderingServiceAdapter:
         self,
         scene: QGraphicsScene,
         pictograph_data: PictographData,
-        options: Optional[Dict] = None,
+        options: Optional[dict] = None,
     ) -> bool:
         """
         Render complete pictograph using core service.
@@ -279,7 +279,7 @@ class QtPictographRenderingServiceAdapter:
             logger.error(f"❌ [QT_ADAPTER] Failed to render complete pictograph: {e}")
             return False
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         core_stats = self._core_service.get_performance_stats()
         return {
@@ -298,7 +298,7 @@ class QtPictographRenderingServiceAdapter:
 
     def _convert_pictograph_data_to_dict(
         self, pictograph_data: PictographData
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Convert PictographData to dictionary format for core service."""
         try:
             result = {
@@ -350,7 +350,7 @@ class QtPictographRenderingServiceAdapter:
 
     def _generate_props_from_motions(
         self, pictograph_data: PictographData
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Generate props from motion data using positioning services."""
         props = []
 

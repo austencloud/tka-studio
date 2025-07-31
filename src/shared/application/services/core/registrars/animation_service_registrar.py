@@ -6,7 +6,6 @@ Registers the modern animation system with the DI container.
 """
 
 import logging
-from typing import List
 
 from ..service_registration_manager import BaseServiceRegistrar
 
@@ -73,7 +72,7 @@ class AnimationServiceRegistrar(BaseServiceRegistrar):
                 "Animation Services", e, "Widget fade transitions will not be available"
             )
 
-    def get_registered_services(self) -> List[str]:
+    def get_registered_services(self) -> list[str]:
         """Get list of service names registered by this registrar."""
         return [
             "IAnimationOrchestrator",

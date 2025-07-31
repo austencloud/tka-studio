@@ -7,7 +7,7 @@ for the learning module.
 
 from datetime import datetime
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import IQuizSessionService
 from desktop.modern.domain.models.learn import LessonType, QuizMode, QuizSession
@@ -25,8 +25,8 @@ class QuizSessionService(IQuizSessionService):
 
     def __init__(self):
         """Initialize quiz session service."""
-        self._active_sessions: Dict[str, QuizSession] = {}
-        self._completed_sessions: Dict[str, QuizSession] = {}
+        self._active_sessions: dict[str, QuizSession] = {}
+        self._completed_sessions: dict[str, QuizSession] = {}
 
         logger.info("Quiz session service initialized")
 
@@ -191,7 +191,7 @@ class QuizSessionService(IQuizSessionService):
             logger.error(f"Failed to end session {session_id}: {e}")
             return False
 
-    def get_active_sessions(self) -> List[QuizSession]:
+    def get_active_sessions(self) -> list[QuizSession]:
         """
         Get all currently active sessions.
 
@@ -204,7 +204,7 @@ class QuizSessionService(IQuizSessionService):
             logger.error(f"Failed to get active sessions: {e}")
             return []
 
-    def get_completed_sessions(self) -> List[QuizSession]:
+    def get_completed_sessions(self) -> list[QuizSession]:
         """
         Get all completed sessions.
 
@@ -264,7 +264,7 @@ class QuizSessionService(IQuizSessionService):
             logger.error(f"Failed to cleanup old sessions: {e}")
             return 0
 
-    def get_session_statistics(self) -> Dict[str, int]:
+    def get_session_statistics(self) -> dict[str, int]:
         """
         Get session statistics for monitoring.
 

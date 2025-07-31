@@ -1,6 +1,6 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/sequence_loader.py
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 
@@ -19,7 +19,7 @@ class SequenceLoader:
     def __init__(self):
         self.metadata_extractor = MetaDataExtractor()
 
-    def get_all_sequences(self, images_path: str) -> List[Dict[str, Any]]:
+    def get_all_sequences(self, images_path: str) -> list[dict[str, Any]]:
         """
         Get all sequences from the sequence_card_images directory.
 
@@ -78,8 +78,8 @@ class SequenceLoader:
         return sequences
 
     def filter_sequences_by_length(
-        self, sequences: List[Dict[str, Any]], length: int
-    ) -> List[Dict[str, Any]]:
+        self, sequences: list[dict[str, Any]], length: int
+    ) -> list[dict[str, Any]]:
         """
         Filter sequences by the specified length.
 

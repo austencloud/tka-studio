@@ -12,7 +12,7 @@ from functools import lru_cache
 import logging
 import os
 import re
-from typing import Dict, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.pictograph_rendering_services import (
     IPictographAssetManager,
@@ -44,7 +44,7 @@ class PictographAssetManager(IPictographAssetManager):
         }
 
         # Cached colored SVG data to avoid repeated transformations
-        self._colored_svg_cache: Dict[str, str] = {}
+        self._colored_svg_cache: dict[str, str] = {}
 
         # Performance statistics
         self._stats = {
@@ -187,7 +187,7 @@ class PictographAssetManager(IPictographAssetManager):
         self._colored_svg_cache.clear()
         logger.info("🧹 [ASSET_MANAGER] Cleared color transformation cache")
 
-    def get_asset_stats(self) -> Dict[str, int]:
+    def get_asset_stats(self) -> dict[str, int]:
         """Get asset management statistics."""
         return {
             "svg_files_loaded": self._stats["svg_files_loaded"],

@@ -12,7 +12,7 @@ Following established patterns:
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.workbench_services import (
     IWorkbenchSessionManager,
@@ -56,7 +56,7 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
 
         # Restoration state
         self._current_phase = SessionRestorationPhase.NOT_STARTED
-        self._restoration_errors: List[str] = []
+        self._restoration_errors: list[str] = []
         self._restoration_completed = False
         self._pending_session_data = None
 
@@ -287,12 +287,12 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
         """Check if there's pending restoration data."""
         return self._pending_session_data is not None
 
-    def get_restoration_errors(self) -> List[str]:
+    def get_restoration_errors(self) -> list[str]:
         """Get list of restoration errors."""
         return self._restoration_errors.copy()
 
     # Event Subscription Management
-    def setup_event_subscriptions(self) -> List[str]:
+    def setup_event_subscriptions(self) -> list[str]:
         """
         Setup event subscriptions for session restoration.
 
@@ -342,7 +342,7 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
             logger.error(f"Error handling sequence restoration event: {e}")
 
     # Cleanup and Reset
-    def cleanup_event_subscriptions(self, subscription_ids: List[str]) -> None:
+    def cleanup_event_subscriptions(self, subscription_ids: list[str]) -> None:
         """Clean up event subscriptions."""
         if self._event_bus:
             for sub_id in subscription_ids:
@@ -406,7 +406,7 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
             logger.error(f"Failed to load session {session_name}: {e}")
             return False
 
-    def get_available_sessions(self) -> List[str]:
+    def get_available_sessions(self) -> list[str]:
         """Get list of available sessions."""
         try:
             # Delegate to session coordinator if available
@@ -429,7 +429,7 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
             logger.error(f"Failed to delete session {session_name}: {e}")
             return False
 
-    def get_session_info(self, session_name: str) -> Optional[Dict[str, Any]]:
+    def get_session_info(self, session_name: str) -> Optional[dict[str, Any]]:
         """Get session information."""
         try:
             # Delegate to session coordinator if available

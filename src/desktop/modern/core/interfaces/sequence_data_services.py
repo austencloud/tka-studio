@@ -8,7 +8,7 @@ and transformation that must work identically across desktop and web platforms.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -72,7 +72,7 @@ class ISequenceRepository(ABC):
         """
 
     @abstractmethod
-    def list_sequences(self, directory: str = "") -> List[str]:
+    def list_sequences(self, directory: str = "") -> list[str]:
         """
         List available sequence files.
 
@@ -87,7 +87,7 @@ class ISequenceRepository(ABC):
         """
 
     @abstractmethod
-    def get_sequence_metadata(self, filepath: str) -> Optional[Dict[str, Any]]:
+    def get_sequence_metadata(self, filepath: str) -> Optional[dict[str, Any]]:
         """
         Get metadata for a sequence file.
 
@@ -134,7 +134,7 @@ class ISequenceRepository(ABC):
         """
 
     @abstractmethod
-    def get_recent_sequences(self, limit: int = 10) -> List[str]:
+    def get_recent_sequences(self, limit: int = 10) -> list[str]:
         """
         Get list of recently accessed sequences.
 
@@ -154,7 +154,7 @@ class ISequenceTransformer(ABC):
 
     @abstractmethod
     def transform_sequence(
-        self, sequence: SequenceData, transformation: str, parameters: Dict[str, Any]
+        self, sequence: SequenceData, transformation: str, parameters: dict[str, Any]
     ) -> SequenceData:
         """
         Transform sequence data.
@@ -222,7 +222,7 @@ class ISequenceTransformer(ABC):
 
     @abstractmethod
     def merge_sequences(
-        self, sequences: List[SequenceData], merge_type: str = "concatenate"
+        self, sequences: list[SequenceData], merge_type: str = "concatenate"
     ) -> SequenceData:
         """
         Merge multiple sequences.
@@ -240,8 +240,8 @@ class ISequenceTransformer(ABC):
 
     @abstractmethod
     def split_sequence(
-        self, sequence: SequenceData, split_points: List[int]
-    ) -> List[SequenceData]:
+        self, sequence: SequenceData, split_points: list[int]
+    ) -> list[SequenceData]:
         """
         Split sequence at specified points.
 
@@ -258,7 +258,7 @@ class ISequenceTransformer(ABC):
 
     @abstractmethod
     def filter_beats(
-        self, sequence: SequenceData, filter_criteria: Dict[str, Any]
+        self, sequence: SequenceData, filter_criteria: dict[str, Any]
     ) -> SequenceData:
         """
         Filter beats based on criteria.
@@ -275,7 +275,7 @@ class ISequenceTransformer(ABC):
         """
 
     @abstractmethod
-    def get_available_transformations(self) -> List[str]:
+    def get_available_transformations(self) -> list[str]:
         """
         Get list of available transformations.
 
@@ -288,7 +288,7 @@ class IPictographDataManager(ABC):
     """Interface for pictograph data management operations."""
 
     @abstractmethod
-    def get_pictograph_data(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+    def get_pictograph_data(self, pictograph_id: str) -> Optional[dict[str, Any]]:
         """
         Get pictograph data by ID.
 
@@ -303,7 +303,7 @@ class IPictographDataManager(ABC):
         """
 
     @abstractmethod
-    def save_pictograph_data(self, pictograph_id: str, data: Dict[str, Any]) -> bool:
+    def save_pictograph_data(self, pictograph_id: str, data: dict[str, Any]) -> bool:
         """
         Save pictograph data.
 
@@ -334,7 +334,7 @@ class IPictographDataManager(ABC):
         """
 
     @abstractmethod
-    def list_pictographs(self, category: Optional[str] = None) -> List[str]:
+    def list_pictographs(self, category: Optional[str] = None) -> list[str]:
         """
         List available pictographs.
 
@@ -349,7 +349,7 @@ class IPictographDataManager(ABC):
         """
 
     @abstractmethod
-    def get_pictograph_metadata(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+    def get_pictograph_metadata(self, pictograph_id: str) -> Optional[dict[str, Any]]:
         """
         Get metadata for a pictograph.
 
@@ -365,8 +365,8 @@ class IPictographDataManager(ABC):
 
     @abstractmethod
     def search_pictographs(
-        self, query: str, filters: Optional[Dict[str, Any]] = None
-    ) -> List[str]:
+        self, query: str, filters: Optional[dict[str, Any]] = None
+    ) -> list[str]:
         """
         Search pictographs by query.
 
@@ -382,7 +382,7 @@ class IPictographDataManager(ABC):
         """
 
     @abstractmethod
-    def get_pictograph_categories(self) -> List[str]:
+    def get_pictograph_categories(self) -> list[str]:
         """
         Get list of pictograph categories.
 
@@ -413,7 +413,7 @@ class IDataValidationService(ABC):
     """Interface for data validation operations."""
 
     @abstractmethod
-    def validate_sequence_data(self, sequence: SequenceData) -> Tuple[bool, List[str]]:
+    def validate_sequence_data(self, sequence: SequenceData) -> tuple[bool, list[str]]:
         """
         Validate sequence data.
 
@@ -428,7 +428,7 @@ class IDataValidationService(ABC):
         """
 
     @abstractmethod
-    def validate_beat_data(self, beat_data: BeatData) -> Tuple[bool, List[str]]:
+    def validate_beat_data(self, beat_data: BeatData) -> tuple[bool, list[str]]:
         """
         Validate beat data.
 
@@ -444,8 +444,8 @@ class IDataValidationService(ABC):
 
     @abstractmethod
     def validate_pictograph_data(
-        self, pictograph_data: Dict[str, Any]
-    ) -> Tuple[bool, List[str]]:
+        self, pictograph_data: dict[str, Any]
+    ) -> tuple[bool, list[str]]:
         """
         Validate pictograph data.
 
@@ -462,7 +462,7 @@ class IDataValidationService(ABC):
     @abstractmethod
     def validate_data_format(
         self, data: Any, format_type: str
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate data format.
 
@@ -478,7 +478,7 @@ class IDataValidationService(ABC):
         """
 
     @abstractmethod
-    def get_validation_schema(self, schema_type: str) -> Dict[str, Any]:
+    def get_validation_schema(self, schema_type: str) -> dict[str, Any]:
         """
         Get validation schema.
 
@@ -496,7 +496,7 @@ class IDataValidationService(ABC):
     def register_custom_validator(
         self,
         validator_name: str,
-        validator_func: Callable[[Any], Tuple[bool, List[str]]],
+        validator_func: Callable[[Any], tuple[bool, list[str]]],
     ) -> None:
         """
         Register custom validator function.
@@ -510,7 +510,7 @@ class IDataValidationService(ABC):
         """
 
     @abstractmethod
-    def get_available_validators(self) -> List[str]:
+    def get_available_validators(self) -> list[str]:
         """
         Get list of available validators.
 
@@ -562,7 +562,7 @@ class IDataExportService(ABC):
 
     @abstractmethod
     def export_pictograph_data(
-        self, pictograph_data: Dict[str, Any], format_type: str, filepath: str
+        self, pictograph_data: dict[str, Any], format_type: str, filepath: str
     ) -> bool:
         """
         Export pictograph data.
@@ -580,7 +580,7 @@ class IDataExportService(ABC):
         """
 
     @abstractmethod
-    def get_supported_formats(self) -> List[str]:
+    def get_supported_formats(self) -> list[str]:
         """
         Get list of supported export formats.
 
@@ -589,7 +589,7 @@ class IDataExportService(ABC):
         """
 
     @abstractmethod
-    def get_format_options(self, format_type: str) -> Dict[str, Any]:
+    def get_format_options(self, format_type: str) -> dict[str, Any]:
         """
         Get options for export format.
 
@@ -641,7 +641,7 @@ class IDataImportService(ABC):
     @abstractmethod
     def import_pictograph_data(
         self, filepath: str, format_type: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """
         Import pictograph data.
 
@@ -657,7 +657,7 @@ class IDataImportService(ABC):
         """
 
     @abstractmethod
-    def get_supported_import_formats(self) -> List[str]:
+    def get_supported_import_formats(self) -> list[str]:
         """
         Get list of supported import formats.
 
@@ -668,7 +668,7 @@ class IDataImportService(ABC):
     @abstractmethod
     def validate_import_file(
         self, filepath: str, format_type: str
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate import file.
 

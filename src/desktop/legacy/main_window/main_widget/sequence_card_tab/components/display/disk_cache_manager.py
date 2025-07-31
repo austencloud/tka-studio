@@ -5,7 +5,7 @@ import logging
 import os
 from pathlib import Path
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QPixmap
@@ -288,7 +288,7 @@ class DiskCacheManager:
         except Exception as e:
             logging.warning(f"Error during cache cleanup: {e}")
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache statistics."""
         try:
             total_size = sum(

@@ -12,7 +12,7 @@ PROVIDES:
 
 from dataclasses import dataclass
 import inspect
-from typing import Callable, Dict, List
+from typing import Callable
 
 
 @dataclass
@@ -22,8 +22,8 @@ class MethodAnalysis:
     name: str
     line_count: int
     complexity_score: int
-    responsibilities: List[str]
-    suggested_extractions: List[str]
+    responsibilities: list[str]
+    suggested_extractions: list[str]
     is_too_long: bool
 
 
@@ -89,7 +89,7 @@ class MethodExtractor:
             )
 
     @staticmethod
-    def _calculate_complexity(source_lines: List[str]) -> int:
+    def _calculate_complexity(source_lines: list[str]) -> int:
         """Calculate basic complexity score based on control structures."""
         complexity = 1  # Base complexity
 
@@ -118,7 +118,7 @@ class MethodExtractor:
         return int(complexity)
 
     @staticmethod
-    def _identify_responsibilities(source_lines: List[str]) -> List[str]:
+    def _identify_responsibilities(source_lines: list[str]) -> list[str]:
         """Identify different responsibilities in the method."""
         responsibilities = []
 
@@ -145,8 +145,8 @@ class MethodExtractor:
 
     @staticmethod
     def _suggest_extractions(
-        source_lines: List[str], responsibilities: List[str]
-    ) -> List[str]:
+        source_lines: list[str], responsibilities: list[str]
+    ) -> list[str]:
         """Suggest method extractions based on identified responsibilities."""
         suggestions = []
 
@@ -301,7 +301,7 @@ class RefactoredMethodPatterns:
         return self._get_safe_default_for_operation(operation_name)
 
 
-def extract_method_suggestions(class_obj) -> Dict[str, MethodAnalysis]:
+def extract_method_suggestions(class_obj) -> dict[str, MethodAnalysis]:
     """
     Analyze all methods in a class and provide extraction suggestions.
 

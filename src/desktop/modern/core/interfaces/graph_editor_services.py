@@ -8,7 +8,7 @@ and state coordination that must work identically across desktop and web platfor
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import MotionType
@@ -116,7 +116,7 @@ class IGraphEditorDataFlowManager(ABC):
         """
 
     @abstractmethod
-    def get_change_history(self) -> List[Dict[str, Any]]:
+    def get_change_history(self) -> list[dict[str, Any]]:
         """
         Get history of changes made in current session.
 
@@ -217,7 +217,7 @@ class IGraphEditorCoordinator(ABC):
         """
 
     @abstractmethod
-    def get_available_actions(self) -> List[str]:
+    def get_available_actions(self) -> list[str]:
         """
         Get available actions for current context.
 
@@ -229,7 +229,7 @@ class IGraphEditorCoordinator(ABC):
         """
 
     @abstractmethod
-    def execute_action(self, action_name: str, parameters: Dict[str, Any]) -> bool:
+    def execute_action(self, action_name: str, parameters: dict[str, Any]) -> bool:
         """
         Execute an editor action.
 
@@ -245,7 +245,7 @@ class IGraphEditorCoordinator(ABC):
         """
 
     @abstractmethod
-    def get_editor_statistics(self) -> Dict[str, Any]:
+    def get_editor_statistics(self) -> dict[str, Any]:
         """
         Get statistics about editor usage.
 
@@ -327,7 +327,7 @@ class IGraphEditorStateManager(ABC):
         """
 
     @abstractmethod
-    def get_editor_state(self) -> Dict[str, Any]:
+    def get_editor_state(self) -> dict[str, Any]:
         """
         Get complete editor state.
 
@@ -339,7 +339,7 @@ class IGraphEditorStateManager(ABC):
         """
 
     @abstractmethod
-    def set_editor_state(self, state: Dict[str, Any]) -> None:
+    def set_editor_state(self, state: dict[str, Any]) -> None:
         """
         Set complete editor state.
 
@@ -410,7 +410,7 @@ class IGraphEditorHotkeyManager(ABC):
         """
 
     @abstractmethod
-    def get_registered_hotkeys(self) -> Dict[str, str]:
+    def get_registered_hotkeys(self) -> dict[str, str]:
         """
         Get all registered hotkeys.
 
@@ -449,7 +449,7 @@ class IGraphEditorHotkeyManager(ABC):
         """
 
     @abstractmethod
-    def get_hotkey_help(self) -> List[Tuple[str, str]]:
+    def get_hotkey_help(self) -> list[tuple[str, str]]:
         """
         Get help information for all hotkeys.
 
@@ -505,7 +505,7 @@ class IGraphEditorEventManager(ABC):
         """
 
     @abstractmethod
-    def get_event_history(self) -> List[Dict[str, Any]]:
+    def get_event_history(self) -> list[dict[str, Any]]:
         """
         Get history of events.
 
@@ -530,7 +530,7 @@ class IGraphEditorValidationService(ABC):
     """Interface for graph editor validation operations."""
 
     @abstractmethod
-    def validate_beat_data(self, beat_data: BeatData) -> Tuple[bool, List[str]]:
+    def validate_beat_data(self, beat_data: BeatData) -> tuple[bool, list[str]]:
         """
         Validate beat data for consistency.
 
@@ -545,7 +545,7 @@ class IGraphEditorValidationService(ABC):
         """
 
     @abstractmethod
-    def validate_sequence_data(self, sequence: SequenceData) -> Tuple[bool, List[str]]:
+    def validate_sequence_data(self, sequence: SequenceData) -> tuple[bool, list[str]]:
         """
         Validate sequence data for consistency.
 
@@ -561,8 +561,8 @@ class IGraphEditorValidationService(ABC):
 
     @abstractmethod
     def validate_change(
-        self, current_data: BeatData, proposed_change: Dict[str, Any]
-    ) -> Tuple[bool, List[str]]:
+        self, current_data: BeatData, proposed_change: dict[str, Any]
+    ) -> tuple[bool, list[str]]:
         """
         Validate a proposed change.
 
@@ -578,7 +578,7 @@ class IGraphEditorValidationService(ABC):
         """
 
     @abstractmethod
-    def get_validation_rules(self) -> Dict[str, Any]:
+    def get_validation_rules(self) -> dict[str, Any]:
         """
         Get validation rules.
 

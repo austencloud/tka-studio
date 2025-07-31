@@ -6,7 +6,7 @@ Interface definitions for workbench-related services following TKA's clean archi
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple
+from typing import Any, NamedTuple, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -162,7 +162,7 @@ class IWorkbenchStateManager(ABC):
         """Reset restoration state."""
 
     @abstractmethod
-    def validate_state_consistency(self) -> Tuple[bool, List[str]]:
+    def validate_state_consistency(self) -> tuple[bool, list[str]]:
         """
         Validate current state consistency.
 
@@ -171,7 +171,7 @@ class IWorkbenchStateManager(ABC):
         """
 
     @abstractmethod
-    def get_state_summary(self) -> Dict[str, Any]:
+    def get_state_summary(self) -> dict[str, Any]:
         """Get comprehensive state summary for debugging."""
 
 
@@ -193,7 +193,7 @@ class IWorkbenchClipboardService(ABC):
         """Paste beat from clipboard."""
 
     @abstractmethod
-    def paste_sequence_section(self, target_index: int) -> Optional[List[BeatData]]:
+    def paste_sequence_section(self, target_index: int) -> Optional[list[BeatData]]:
         """Paste sequence section from clipboard."""
 
     @abstractmethod
@@ -227,7 +227,7 @@ class IWorkbenchExportService(ABC):
         """Export individual beat as image file."""
 
     @abstractmethod
-    def get_supported_export_formats(self) -> List[str]:
+    def get_supported_export_formats(self) -> list[str]:
         """Get list of supported export formats."""
 
 
@@ -250,7 +250,7 @@ class SessionRestorationResult(NamedTuple):
     phase: SessionRestorationPhase
     sequence_restored: bool
     start_position_restored: bool
-    errors: List[str]
+    errors: list[str]
 
     @classmethod
     def success_result(
@@ -263,7 +263,7 @@ class SessionRestorationResult(NamedTuple):
         return cls(True, phase, sequence_restored, start_position_restored, [])
 
     @classmethod
-    def failure_result(cls, phase: SessionRestorationPhase, errors: List[str]):
+    def failure_result(cls, phase: SessionRestorationPhase, errors: list[str]):
         """Create a failed restoration result."""
         return cls(False, phase, False, False, errors)
 
@@ -351,7 +351,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def get_restoration_errors(self) -> List[str]:
+    def get_restoration_errors(self) -> list[str]:
         """
         Get list of restoration errors.
 
@@ -360,7 +360,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def setup_event_subscriptions(self) -> List[str]:
+    def setup_event_subscriptions(self) -> list[str]:
         """
         Setup event subscriptions for session restoration.
 
@@ -369,7 +369,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def cleanup_event_subscriptions(self, subscription_ids: List[str]) -> None:
+    def cleanup_event_subscriptions(self, subscription_ids: list[str]) -> None:
         """
         Clean up event subscriptions.
 
@@ -399,7 +399,7 @@ class IWorkbenchSessionManager(ABC):
         """Load workbench session."""
 
     @abstractmethod
-    def get_available_sessions(self) -> List[str]:
+    def get_available_sessions(self) -> list[str]:
         """Get list of available sessions."""
 
     @abstractmethod
@@ -407,7 +407,7 @@ class IWorkbenchSessionManager(ABC):
         """Delete a session."""
 
     @abstractmethod
-    def get_session_info(self, session_name: str) -> Optional[Dict[str, Any]]:
+    def get_session_info(self, session_name: str) -> Optional[dict[str, Any]]:
         """Get session information."""
 
 
@@ -419,7 +419,7 @@ class IBeatSelectionService(ABC):
         """Select a beat by index."""
 
     @abstractmethod
-    def select_multiple_beats(self, beat_indices: List[int]) -> bool:
+    def select_multiple_beats(self, beat_indices: list[int]) -> bool:
         """Select multiple beats."""
 
     @abstractmethod
@@ -427,7 +427,7 @@ class IBeatSelectionService(ABC):
         """Deselect all beats."""
 
     @abstractmethod
-    def get_selected_beats(self) -> List[int]:
+    def get_selected_beats(self) -> list[int]:
         """Get list of selected beat indices."""
 
     @abstractmethod
@@ -463,7 +463,7 @@ class IGraphEditorService(ABC):
         """Get graph by ID."""
 
     @abstractmethod
-    def list_graphs(self) -> List[Any]:
+    def list_graphs(self) -> list[Any]:
         """List all available graphs."""
 
 
@@ -495,7 +495,7 @@ class IBeatDeletionService(ABC):
         """Delete a beat at the specified index."""
 
     @abstractmethod
-    def delete_beats(self, beat_indices: List[int]) -> bool:
+    def delete_beats(self, beat_indices: list[int]) -> bool:
         """Delete multiple beats."""
 
     @abstractmethod
@@ -515,15 +515,15 @@ class IDictionaryService(ABC):
         """Get pictograph by letter."""
 
     @abstractmethod
-    def get_all_pictographs(self) -> List[Any]:
+    def get_all_pictographs(self) -> list[Any]:
         """Get all available pictographs."""
 
     @abstractmethod
-    def search_pictographs(self, query: str) -> List[Any]:
+    def search_pictographs(self, query: str) -> list[Any]:
         """Search pictographs by query."""
 
     @abstractmethod
-    def get_pictograph_variations(self, base_letter: str) -> List[Any]:
+    def get_pictograph_variations(self, base_letter: str) -> list[Any]:
         """Get variations of a pictograph."""
 
 

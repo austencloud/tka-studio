@@ -1,5 +1,3 @@
-from typing import List
-
 from ..shared.animation_types import FishState
 
 
@@ -9,7 +7,7 @@ class FishMovement:
     def __init__(self):
         pass
 
-    def update_fish_positions(self, fish_list: List[FishState]) -> None:
+    def update_fish_positions(self, fish_list: list[FishState]) -> None:
         """Update positions of all fish"""
         for fish in fish_list:
             fish.position.x += fish.velocity.dx * fish.speed

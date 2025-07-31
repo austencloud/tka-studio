@@ -7,7 +7,7 @@ Focused solely on attribute transformation logic.
 
 from enum import Enum
 import logging
-from typing import Any, Dict, Union
+from typing import Any
 
 from desktop.modern.core.interfaces.data_builder_services import (
     IPositionAttributeMapper,
@@ -44,7 +44,7 @@ class PositionAttributeMapper(IPositionAttributeMapper):
         # Do NOT convert "alpha", "beta", "gamma" - those are position TYPES, not locations
         return str(loc_str)
 
-    def convert_orientation(self, ori_value: Union[str, int, float]) -> str:
+    def convert_orientation(self, ori_value: str | int | float) -> str:
         """
         Convert legacy orientation values to valid Orientation enum values.
 
@@ -183,11 +183,11 @@ class PositionAttributeMapper(IPositionAttributeMapper):
         return validated
 
     # Interface implementation methods
-    def map_position_attributes(self, position_data: Dict[str, Any]) -> Dict[str, Any]:
+    def map_position_attributes(self, position_data: dict[str, Any]) -> dict[str, Any]:
         """Map position attributes between formats (interface implementation)."""
         return self.validate_and_convert_attributes(position_data)
 
-    def validate_position_data(self, position_data: Dict[str, Any]) -> bool:
+    def validate_position_data(self, position_data: dict[str, Any]) -> bool:
         """Validate position data structure (interface implementation)."""
         try:
             # Check for required position attributes
@@ -202,7 +202,7 @@ class PositionAttributeMapper(IPositionAttributeMapper):
         except Exception:
             return False
 
-    def get_default_position_attributes(self) -> Dict[str, Any]:
+    def get_default_position_attributes(self) -> dict[str, Any]:
         """Get default position attributes (interface implementation)."""
         return {
             "start_pos": "alpha1",

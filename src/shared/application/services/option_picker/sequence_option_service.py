@@ -6,7 +6,7 @@ Extracted from option_picker_scroll.py to maintain clean architecture.
 """
 
 import logging
-from typing import Any, Dict, List, Union
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +55,8 @@ class SequenceOptionService(ISequenceOptionService):
         self._sequence_orientation_validator = SequenceOrientationValidator()
 
     def get_options_for_sequence(
-        self, sequence_data: Union[SequenceData, List[dict]]
-    ) -> Dict[LetterType, List[PictographData]]:
+        self, sequence_data: SequenceData | list[dict]
+    ) -> dict[LetterType, list[PictographData]]:
         """
         Get options organized by letter type for given sequence state.
 
@@ -191,7 +191,7 @@ class SequenceOptionService(ISequenceOptionService):
             return "alpha1"
 
     def _extract_end_orientations(
-        self, sequence_data: Union[SequenceData, List[dict]]
+        self, sequence_data: SequenceData | list[dict]
     ) -> dict:
         """Extract the end orientations from the last beat in the sequence.
 
@@ -283,8 +283,8 @@ class SequenceOptionService(ISequenceOptionService):
             return {"blue": "in", "red": "out"}
 
     def _update_option_orientations(
-        self, options: List[PictographData], end_orientations: dict
-    ) -> List[PictographData]:
+        self, options: list[PictographData], end_orientations: dict
+    ) -> list[PictographData]:
         """Update all option orientations to match the sequence's end state."""
         try:
             updated_options = []
@@ -404,8 +404,8 @@ class SequenceOptionService(ISequenceOptionService):
             return start_ori
 
     def _group_options_by_type(
-        self, options: List[PictographData]
-    ) -> Dict[LetterType, List[PictographData]]:
+        self, options: list[PictographData]
+    ) -> dict[LetterType, list[PictographData]]:
         """
         Group options by their letter type.
 
@@ -471,7 +471,7 @@ class SequenceOptionService(ISequenceOptionService):
             return False
 
     # Interface implementation methods
-    def get_sequence_options(self, sequence_state: Any) -> List[Any]:
+    def get_sequence_options(self, sequence_state: Any) -> list[Any]:
         """Get options for sequence state (interface implementation)."""
         if isinstance(sequence_state, SequenceData):
             return self.get_options_for_sequence(sequence_state)
@@ -480,8 +480,8 @@ class SequenceOptionService(ISequenceOptionService):
             return []
 
     def filter_options_by_continuity(
-        self, options: List[Any], last_beat: Any
-    ) -> List[Any]:
+        self, options: list[Any], last_beat: Any
+    ) -> list[Any]:
         """Filter options to maintain sequence continuity (interface implementation)."""
         if not last_beat or not options:
             return options

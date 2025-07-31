@@ -11,7 +11,7 @@ PROVIDES:
 - Dataset indexing
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 import uuid
 
 from desktop.modern.core.interfaces.data_services import IDatasetManager
@@ -35,7 +35,7 @@ class DatasetManager(IDatasetManager):
         """Initialize dataset management service with unified cache."""
         # Use unified cache manager for pictograph caching
         self.cache_manager = cache_manager or DataCacheManager()
-        self._dataset_index: Dict[str, List[str]] = {}
+        self._dataset_index: dict[str, list[str]] = {}
 
     def add_to_dataset(
         self, pictograph: PictographData, category: str = "user_created"
@@ -53,7 +53,7 @@ class DatasetManager(IDatasetManager):
 
         return pictograph_id
 
-    def search_dataset(self, query: PictographSearchQuery) -> List[PictographData]:
+    def search_dataset(self, query: PictographSearchQuery) -> list[PictographData]:
         """Search pictograph dataset with query."""
         results = []
 
@@ -78,11 +78,11 @@ class DatasetManager(IDatasetManager):
 
         return results
 
-    def get_dataset_categories(self) -> List[str]:
+    def get_dataset_categories(self) -> list[str]:
         """Get all available dataset categories."""
         return list(self._dataset_index.keys())
 
-    def get_pictographs_by_category(self, category: str) -> List[PictographData]:
+    def get_pictographs_by_category(self, category: str) -> list[PictographData]:
         """Get all pictographs in a category."""
         pictograph_ids = self._dataset_index.get(category, [])
         results = []
@@ -128,7 +128,7 @@ class DatasetManager(IDatasetManager):
         self.cache_manager.clear_pictograph_cache()
         self._dataset_index.clear()
 
-    def get_dataset_stats(self) -> Dict[str, Any]:
+    def get_dataset_stats(self) -> dict[str, Any]:
         """Get dataset statistics."""
         # Count total pictographs from index
         total_pictographs = sum(len(ids) for ids in self._dataset_index.values())

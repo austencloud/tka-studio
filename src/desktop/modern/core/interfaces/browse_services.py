@@ -5,7 +5,7 @@ Interfaces for browse-related services following clean architecture patterns.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtWidgets import QWidget
 
@@ -19,7 +19,7 @@ class ISequenceDeletionService(ABC):
     def delete_variation(
         self,
         word: str,
-        thumbnails: List[str],
+        thumbnails: list[str],
         variation_index: int,
         parent_widget: Optional[QWidget] = None,
     ) -> bool:
@@ -144,8 +144,8 @@ class ISequenceSorter(ABC):
 
     @abstractmethod
     def sort_sequences(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> list[SequenceData]:
         """
         Sort sequences based on the selected method.
 
@@ -159,8 +159,8 @@ class ISequenceSorter(ABC):
 
     @abstractmethod
     def group_sequences_into_sections(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> Dict[str, List[SequenceData]]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> dict[str, list[SequenceData]]:
         """
         Group sequences into sections based on sort method.
 
@@ -200,7 +200,7 @@ class INavigationHandler(ABC):
 
     @abstractmethod
     def update_navigation_sections(
-        self, section_names: List[str], sort_method: str
+        self, section_names: list[str], sort_method: str
     ) -> None:
         """
         Update the navigation sidebar with new sections.
@@ -217,11 +217,11 @@ class IBrowseService(ABC):
     @abstractmethod
     def get_sequences_by_filter(
         self, filter_type: str, filter_value: any
-    ) -> List[SequenceData]:
+    ) -> list[SequenceData]:
         """Get sequences filtered by type and value."""
 
     @abstractmethod
-    def get_all_sequences(self) -> List[SequenceData]:
+    def get_all_sequences(self) -> list[SequenceData]:
         """Get all available sequences."""
 
 
@@ -229,15 +229,15 @@ class IDictionaryDataManager(ABC):
     """Interface for dictionary data management."""
 
     @abstractmethod
-    def get_sequences_by_starting_letter(self, letter: str) -> List[SequenceData]:
+    def get_sequences_by_starting_letter(self, letter: str) -> list[SequenceData]:
         """Get sequences starting with specified letter."""
 
     @abstractmethod
-    def get_sequences_by_length(self, length: int) -> List[SequenceData]:
+    def get_sequences_by_length(self, length: int) -> list[SequenceData]:
         """Get sequences of specified length."""
 
     @abstractmethod
-    def get_all_sequences(self) -> List[SequenceData]:
+    def get_all_sequences(self) -> list[SequenceData]:
         """Get all sequences from dictionary."""
 
 
@@ -245,7 +245,7 @@ class IProgressiveLoadingService(ABC):
     """Interface for progressive loading service."""
 
     @abstractmethod
-    def start_progressive_loading(self, sequences: List[SequenceData]) -> None:
+    def start_progressive_loading(self, sequences: list[SequenceData]) -> None:
         """Start progressive loading of sequences."""
 
     @abstractmethod
@@ -257,7 +257,7 @@ class IBrowseDataManager(ABC):
     """Interface for browse data management."""
 
     @abstractmethod
-    def apply_filter(self, filter_type: str, filter_value: any) -> List[SequenceData]:
+    def apply_filter(self, filter_type: str, filter_value: any) -> list[SequenceData]:
         """Apply filter and return matching sequences."""
 
     @abstractmethod

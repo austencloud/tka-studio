@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List, Tuple
 
 
 @dataclass
@@ -65,7 +64,7 @@ class ShootingStarState:
     velocity: Velocity2D
     size: float
     speed: float
-    tail: List[Tuple[float, float, float]]  # (x, y, size) tuples
+    tail: list[tuple[float, float, float]]  # (x, y, size) tuples
     tail_length: int
     tail_opacity: float
     off_screen: bool
@@ -76,7 +75,7 @@ class ShootingStarState:
 class StarState:
     position: Position2D
     size: float
-    color: Tuple[int, int, int, int]  # RGBA
+    color: tuple[int, int, int, int]  # RGBA
     spikiness: int
     twinkle_speed: float
     twinkle_phase: float
@@ -89,8 +88,8 @@ class CometState:
     velocity: Velocity2D
     size: float
     speed: float
-    tail: List[Tuple[float, float, float]]
-    color: Tuple[int, int, int]
+    tail: list[tuple[float, float, float]]
+    color: tuple[int, int, int]
     active: bool
     fading: bool
     off_screen: bool

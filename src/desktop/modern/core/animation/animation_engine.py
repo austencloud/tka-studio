@@ -7,7 +7,7 @@ import asyncio
 from dataclasses import dataclass, field
 import math
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 import uuid
 
 from desktop.modern.core.interfaces.animation_core_interfaces import (
@@ -27,7 +27,7 @@ class SimpleEventBus(IEventBus):
     """Simple in-memory event bus implementation."""
 
     def __init__(self):
-        self._subscribers: Dict[str, Dict[str, Callable]] = {}
+        self._subscribers: dict[str, dict[str, Callable]] = {}
         self._subscription_counter = 0
 
     def emit(self, event_type: str, data: Any) -> None:
@@ -128,7 +128,7 @@ class ActiveAnimation:
     current_progress: float = 0.0
     pause_time: Optional[float] = None
     total_paused_duration: float = 0.0
-    completion_callbacks: List[Callable] = field(default_factory=list)
+    completion_callbacks: list[Callable] = field(default_factory=list)
 
     def get_elapsed_time(self, current_time: float) -> float:
         """Get elapsed time accounting for pauses."""
@@ -223,8 +223,8 @@ class CoreAnimationEngine(IAnimationEngine):
         self.event_bus = event_bus
         self.scheduler = scheduler
         self.settings_provider = settings_provider
-        self.active_animations: Dict[str, ActiveAnimation] = {}
-        self._animation_tasks: Dict[str, asyncio.Task] = {}
+        self.active_animations: dict[str, ActiveAnimation] = {}
+        self._animation_tasks: dict[str, asyncio.Task] = {}
 
     async def animate_target(
         self, target: AnimationTarget, config: AnimationConfig
@@ -253,8 +253,8 @@ class CoreAnimationEngine(IAnimationEngine):
         return animation_id
 
     async def animate_targets(
-        self, targets: List[AnimationTarget], config: AnimationConfig
-    ) -> List[str]:
+        self, targets: list[AnimationTarget], config: AnimationConfig
+    ) -> list[str]:
         """Animate multiple targets simultaneously."""
         tasks = []
         animation_ids = []

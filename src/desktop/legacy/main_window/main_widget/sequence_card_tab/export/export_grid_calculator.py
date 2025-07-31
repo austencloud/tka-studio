@@ -1,7 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_grid_calculator.py
 import logging
 import math
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from .export_config import ExportConfig
 
@@ -31,7 +31,7 @@ class ExportGridCalculator:
 
     def calculate_optimal_grid_dimensions(
         self, item_count: int, sequence_length: Optional[int] = None
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate the optimal grid dimensions based on the number of items and sequence length.
 
@@ -121,7 +121,7 @@ class ExportGridCalculator:
 
     def calculate_cell_position(
         self, row: int, col: int, cell_width: int, cell_height: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate the position of a cell in the grid.
 
@@ -143,7 +143,7 @@ class ExportGridCalculator:
 
         return x, y
 
-    def calculate_cell_dimensions(self, rows: int, cols: int) -> Dict[str, int]:
+    def calculate_cell_dimensions(self, rows: int, cols: int) -> dict[str, int]:
         """
         Calculate the dimensions of each cell in the grid.
 
@@ -164,7 +164,7 @@ class ExportGridCalculator:
         cell_height: int,
         image_width: int,
         image_height: int,
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate the position of an image within a cell, centering it.
 
@@ -187,7 +187,7 @@ class ExportGridCalculator:
 
     def calculate_image_dimensions(
         self, original_width: int, original_height: int, max_width: int, max_height: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate the dimensions of an image, scaling it to fit within max dimensions.
 
@@ -222,7 +222,7 @@ class ExportGridCalculator:
 
     def calculate_available_cell_space(
         self, cell_width: int, cell_height: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate the available space within a cell, accounting for padding.
 

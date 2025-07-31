@@ -6,7 +6,6 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 """
 
 import logging
-from typing import Dict
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
@@ -53,7 +52,7 @@ class ElementVisibilitySection(QFrame):
         self.simple_visibility_service = simple_visibility_service
 
         # UI components
-        self.element_toggles: Dict[str, ElementToggle] = {}
+        self.element_toggles: dict[str, ElementToggle] = {}
 
         self._setup_ui()
         self._setup_connections()
@@ -143,7 +142,7 @@ class ElementVisibilitySection(QFrame):
             if toggle.get_is_dependent():
                 toggle.set_motions_visible(all_motions_visible)
 
-    def get_element_states(self) -> Dict[str, bool]:
+    def get_element_states(self) -> dict[str, bool]:
         """
         Get current element visibility states.
 
@@ -154,7 +153,7 @@ class ElementVisibilitySection(QFrame):
             name: toggle.isChecked() for name, toggle in self.element_toggles.items()
         }
 
-    def get_dependent_elements(self) -> Dict[str, bool]:
+    def get_dependent_elements(self) -> dict[str, bool]:
         """
         Get elements that depend on motion visibility.
 

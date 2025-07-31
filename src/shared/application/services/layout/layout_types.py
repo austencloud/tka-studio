@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 import logging
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -84,8 +84,8 @@ class LayoutConfig:
     scaling_mode: ScalingMode = ScalingMode.MAINTAIN_ASPECT
     padding: int = 10
     spacing: int = 5
-    min_item_size: Tuple[int, int] = (100, 100)
-    max_item_size: Tuple[int, int] = (300, 300)
+    min_item_size: tuple[int, int] = (100, 100)
+    max_item_size: tuple[int, int] = (300, 300)
     items_per_row: Optional[int] = None
     maintain_aspect_ratio: bool = True
 
@@ -94,8 +94,8 @@ class LayoutConfig:
 class LayoutResult:
     """Result of layout calculations."""
 
-    item_positions: Dict[str, Tuple[int, int]]
-    item_sizes: Dict[str, Tuple[int, int]]
-    total_size: Tuple[int, int]
+    item_positions: dict[str, tuple[int, int]]
+    item_sizes: dict[str, tuple[int, int]]
+    total_size: tuple[int, int]
     scaling_factor: float
     overflow: bool = False

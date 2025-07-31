@@ -2,7 +2,7 @@
 Settings for the codex exporter.
 """
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from legacy_settings_manager.legacy_settings_manager import (
@@ -40,7 +40,7 @@ class CodexExporterSettings:
             type=float,
         )
 
-    def set_last_red_turns(self, turns: Union[int, float]) -> None:
+    def set_last_red_turns(self, turns: int | float) -> None:
         """Set the last used red turns value.
 
         Args:
@@ -61,7 +61,7 @@ class CodexExporterSettings:
             type=float,
         )
 
-    def set_last_blue_turns(self, turns: Union[int, float]) -> None:
+    def set_last_blue_turns(self, turns: int | float) -> None:
         """Set the last used blue turns value.
 
         Args:

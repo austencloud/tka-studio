@@ -12,7 +12,6 @@ from pathlib import Path
 import sys
 import time
 import traceback
-from typing import List, Tuple
 
 # Add src to path for imports
 project_root = Path(__file__).parent
@@ -28,7 +27,7 @@ class QuickValidator:
     """
 
     def __init__(self):
-        self.results: List[Tuple[str, bool, str]] = []
+        self.results: list[tuple[str, bool, str]] = []
 
     def validate_all_fixes(self, quick_mode: bool = False) -> bool:
         """
@@ -94,7 +93,7 @@ class QuickValidator:
 
         return all_passed
 
-    def _check_error_handling(self) -> Tuple[bool, str]:
+    def _check_error_handling(self) -> tuple[bool, str]:
         """Check that StandardErrorHandler is properly implemented."""
         try:
             from desktop.modern.core.error_handling import (
@@ -135,7 +134,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_circular_dependencies(self) -> Tuple[bool, str]:
+    def _check_circular_dependencies(self) -> tuple[bool, str]:
         """Check that circular dependencies are resolved."""
         try:
             # Try importing ApplicationOrchestrator - should not have circular import issues
@@ -163,7 +162,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Creation failed: {e}"
 
-    def _check_service_registration(self) -> Tuple[bool, str]:
+    def _check_service_registration(self) -> tuple[bool, str]:
         """Check that ServiceRegistrationHelper eliminates duplication."""
         try:
             from desktop.modern.core.application.service_registration_helper import (
@@ -193,7 +192,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_di_container_safety(self) -> Tuple[bool, str]:
+    def _check_di_container_safety(self) -> tuple[bool, str]:
         """Check that DI container global state management is safe."""
         try:
             from desktop.modern.core.dependency_injection.di_container import (
@@ -234,7 +233,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_ui_fallback(self) -> Tuple[bool, str]:
+    def _check_ui_fallback(self) -> tuple[bool, str]:
         """Check that meaningful UI fallback is implemented."""
         try:
             from desktop.modern.application.services.ui.ui_setup_manager import (
@@ -266,7 +265,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_background_init(self) -> Tuple[bool, str]:
+    def _check_background_init(self) -> tuple[bool, str]:
         """Check that background initialization is implemented."""
         try:
             from desktop.modern.application.services.core.application_orchestrator import (
@@ -286,7 +285,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_method_extraction(self) -> Tuple[bool, str]:
+    def _check_method_extraction(self) -> tuple[bool, str]:
         """Check that method extraction tools are available."""
         try:
             from desktop.modern.core.refactoring import (
@@ -308,7 +307,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_application_factory(self) -> Tuple[bool, str]:
+    def _check_application_factory(self) -> tuple[bool, str]:
         """Check that ApplicationFactory uses ServiceRegistrationHelper."""
         try:
             from desktop.modern.core.application.application_factory import (
@@ -340,7 +339,7 @@ class QuickValidator:
         except Exception as e:
             return False, f"Validation error: {e}"
 
-    def _check_test_files(self) -> Tuple[bool, str]:
+    def _check_test_files(self) -> tuple[bool, str]:
         """Check that test files exist."""
         test_files = [
             "tests/fixes/test_critical_fixes.py",

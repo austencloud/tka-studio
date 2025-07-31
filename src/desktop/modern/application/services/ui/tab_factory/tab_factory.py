@@ -7,7 +7,7 @@ Replaces complex on-demand tab creation in TabManagementService.
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from PyQt6.QtWidgets import QWidget
 
@@ -46,7 +46,7 @@ class TabFactory:
 
     def __init__(self):
         self.error_recovery = UIErrorRecoveryService()
-        self.created_tabs: Dict[str, QWidget] = {}
+        self.created_tabs: dict[str, QWidget] = {}
 
         # Define all available tabs
         self.tab_definitions = [
@@ -63,7 +63,7 @@ class TabFactory:
             ),
         ]
 
-    def create_all_tabs(self, container: "DIContainer") -> Dict[str, Dict[str, any]]:
+    def create_all_tabs(self, container: "DIContainer") -> dict[str, dict[str, any]]:
         """
         Create all tabs upfront with consistent error handling.
 
@@ -225,7 +225,7 @@ class TabFactory:
         """Add a new tab definition (for extensions)."""
         self.tab_definitions.append(tab_def)
 
-    def get_creation_status(self) -> Dict[str, bool]:
+    def get_creation_status(self) -> dict[str, bool]:
         """Get creation status for all tabs."""
         return {
             tab_id: tab_id in self.created_tabs

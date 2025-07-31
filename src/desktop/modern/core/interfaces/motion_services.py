@@ -7,7 +7,7 @@ that must behave identically across desktop and web platforms.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
 
 from desktop.modern.domain.models.enums import MotionType, Orientation
 from desktop.modern.domain.models.motion_data import MotionData
@@ -53,7 +53,7 @@ class IOrientationCalculator(ABC):
     def calculate_orientation_for_motion_type(
         self,
         motion_type: MotionType,
-        turns: Union[int, float],
+        turns: int | float,
         start_orientation: Orientation,
     ) -> Orientation:
         """
@@ -72,7 +72,7 @@ class IOrientationCalculator(ABC):
         """
 
     @abstractmethod
-    def get_orientation_flip_rules(self) -> Dict[str, Any]:
+    def get_orientation_flip_rules(self) -> dict[str, Any]:
         """
         Get orientation flip rules configuration.
 
@@ -112,7 +112,7 @@ class ITurnIntensityManager(ABC):
     @abstractmethod
     def allocate_turns_for_blue_and_red(
         self,
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+    ) -> tuple[list[int | float | str], list[int | float | str]]:
         """
         Allocate turns for blue and red based on level and intensity.
 
@@ -124,7 +124,7 @@ class ITurnIntensityManager(ABC):
         """
 
     @abstractmethod
-    def get_possible_turns_for_level(self, level: int) -> List[Union[int, float, str]]:
+    def get_possible_turns_for_level(self, level: int) -> list[int | float | str]:
         """
         Get possible turn values for a given level.
 
@@ -140,7 +140,7 @@ class ITurnIntensityManager(ABC):
 
     @abstractmethod
     def validate_turn_intensity(
-        self, turn_value: Union[int, float, str], max_intensity: float
+        self, turn_value: int | float | str, max_intensity: float
     ) -> bool:
         """
         Validate if a turn value is within the maximum intensity limit.
@@ -157,7 +157,7 @@ class ITurnIntensityManager(ABC):
         """
 
     @abstractmethod
-    def get_turn_distribution_stats(self) -> Dict[str, Any]:
+    def get_turn_distribution_stats(self) -> dict[str, Any]:
         """
         Get statistics about turn distribution in current allocation.
 
@@ -230,7 +230,7 @@ class ITurnIntensityManagerFactory(ABC):
     @abstractmethod
     def allocate_turns_for_blue_and_red(
         self, length: int, level: int, turn_intensity: float
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+    ) -> tuple[list[int | float | str], list[int | float | str]]:
         """
         Convenience method to allocate turns without creating manager instance.
 
@@ -247,7 +247,7 @@ class ITurnIntensityManagerFactory(ABC):
         """
 
     @abstractmethod
-    def get_default_parameters(self) -> Dict[str, Any]:
+    def get_default_parameters(self) -> dict[str, Any]:
         """
         Get default parameters for turn intensity management.
 

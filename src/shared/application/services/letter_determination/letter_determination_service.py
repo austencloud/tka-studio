@@ -6,7 +6,7 @@ Direct port of legacy LetterDeterminer with exact same behavior.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     ILetterDeterminationService,
@@ -108,7 +108,7 @@ class LetterDeterminationService(ILetterDeterminationService):
         return self._fallback_search(pictograph_data, dataset, context)
 
     def update_pictograph_dataset(
-        self, dataset: Dict[Letter, List["PictographData"]]
+        self, dataset: dict[Letter, list["PictographData"]]
     ) -> None:
         """
         Update the pictograph dataset and refresh dependencies.
@@ -119,7 +119,7 @@ class LetterDeterminationService(ILetterDeterminationService):
         # The dataset provider handles the actual update
         # This method exists for interface compliance
 
-    def get_available_strategies(self) -> List[str]:
+    def get_available_strategies(self) -> list[str]:
         """Get list of available determination strategies."""
         return [strategy.get_strategy_name() for strategy in self._strategies]
 
@@ -182,7 +182,7 @@ class LetterDeterminationService(ILetterDeterminationService):
     def _fallback_search(
         self,
         pictograph_data: "PictographData",
-        dataset: Dict[Letter, List["PictographData"]],
+        dataset: dict[Letter, list["PictographData"]],
         context: "MotionComparisonContext",
     ) -> "LetterDeterminationResult":
         """
@@ -268,7 +268,7 @@ class LetterDeterminationService(ILetterDeterminationService):
         """Swap a single prop rotation direction."""
         return self._comparison_service.reverse_prop_rot_dir(prop_rot_dir.value)
 
-    def get_determination_statistics(self) -> Dict[str, any]:
+    def get_determination_statistics(self) -> dict[str, any]:
         """
         Get statistics about letter determination usage.
 
@@ -282,8 +282,8 @@ class LetterDeterminationService(ILetterDeterminationService):
         }
 
     def test_strategy_coverage(
-        self, test_data: List["PictographData"]
-    ) -> Dict[str, any]:
+        self, test_data: list["PictographData"]
+    ) -> dict[str, any]:
         """
         Test strategy coverage against a set of test data.
 

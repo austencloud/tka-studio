@@ -5,7 +5,7 @@ Provides the RotationDeterminer and other utilities that SequenceGenerator needs
 """
 
 import random
-from typing import Optional, Tuple
+from typing import Optional
 
 
 class RotationDeterminer:
@@ -16,7 +16,7 @@ class RotationDeterminer:
     """
 
     @staticmethod
-    def get_rotation_dirs(prop_continuity: str) -> Tuple[Optional[str], Optional[str]]:
+    def get_rotation_dirs(prop_continuity: str) -> tuple[Optional[str], Optional[str]]:
         """
         Get rotation directions based on prop continuity setting.
 

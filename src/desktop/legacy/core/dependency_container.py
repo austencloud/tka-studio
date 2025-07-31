@@ -6,7 +6,7 @@ following the Dependency Inversion Principle.
 """
 
 import logging
-from typing import Any, Callable, Dict, Optional, Protocol, Type, TypeVar
+from typing import Any, Callable, Optional, Protocol, TypeVar
 
 T = TypeVar("T")
 
@@ -16,19 +16,19 @@ logger = logging.getLogger(__name__)
 class IDependencyContainer(Protocol):
     """Protocol defining the dependency container interface."""
 
-    def register_singleton(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_singleton(self, interface: type[T], implementation: type[T]) -> None:
         """Register a singleton service."""
         ...
 
-    def register_transient(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_transient(self, interface: type[T], implementation: type[T]) -> None:
         """Register a transient service."""
         ...
 
-    def register_instance(self, interface: Type[T], instance: T) -> None:
+    def register_instance(self, interface: type[T], instance: T) -> None:
         """Register a specific instance."""
         ...
 
-    def resolve(self, interface: Type[T]) -> T:
+    def resolve(self, interface: type[T]) -> T:
         """Resolve a service instance."""
         ...
 
@@ -46,8 +46,8 @@ class ServiceDescriptor:
 
     def __init__(
         self,
-        interface: Type,
-        implementation: Optional[Type] = None,
+        interface: type,
+        implementation: Optional[type] = None,
         instance: Optional[Any] = None,
         factory: Optional[Callable] = None,
         lifetime: str = ServiceLifetime.TRANSIENT,
@@ -72,11 +72,11 @@ class DependencyContainer:
     """
 
     def __init__(self):
-        self._services: Dict[Type, ServiceDescriptor] = {}
-        self._singletons: Dict[Type, Any] = {}
+        self._services: dict[type, ServiceDescriptor] = {}
+        self._singletons: dict[type, Any] = {}
         self._resolution_stack: set = set()
 
-    def register_singleton(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_singleton(self, interface: type[T], implementation: type[T]) -> None:
         """Register a service as singleton (one instance per container)."""
         self._services[interface] = ServiceDescriptor(
             interface=interface,
@@ -87,7 +87,7 @@ class DependencyContainer:
             f"Registered singleton: {interface.__name__} -> {implementation.__name__}"
         )
 
-    def register_transient(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_transient(self, interface: type[T], implementation: type[T]) -> None:
         """Register a service as transient (new instance each time)."""
         self._services[interface] = ServiceDescriptor(
             interface=interface,
@@ -98,21 +98,21 @@ class DependencyContainer:
             f"Registered transient: {interface.__name__} -> {implementation.__name__}"
         )
 
-    def register_instance(self, interface: Type[T], instance: T) -> None:
+    def register_instance(self, interface: type[T], instance: T) -> None:
         """Register a specific instance."""
         self._services[interface] = ServiceDescriptor(
             interface=interface, instance=instance, lifetime=ServiceLifetime.INSTANCE
         )
         logger.debug(f"Registered instance: {interface.__name__}")
 
-    def register_factory(self, interface: Type[T], factory: Callable[[], T]) -> None:
+    def register_factory(self, interface: type[T], factory: Callable[[], T]) -> None:
         """Register a factory function for creating instances."""
         self._services[interface] = ServiceDescriptor(
             interface=interface, factory=factory, lifetime=ServiceLifetime.TRANSIENT
         )
         logger.debug(f"Registered factory: {interface.__name__}")
 
-    def resolve(self, interface: Type[T]) -> T:
+    def resolve(self, interface: type[T]) -> T:
         """
         Resolve a service instance.
 
@@ -171,7 +171,7 @@ class DependencyContainer:
         finally:
             self._resolution_stack.discard(interface)
 
-    def _instantiate_with_injection(self, implementation: Type) -> Any:
+    def _instantiate_with_injection(self, implementation: type) -> Any:
         """
         Instantiate a class with constructor dependency injection.
 
@@ -190,7 +190,7 @@ class DependencyContainer:
                 f"constructor injection not fully implemented yet"
             )
 
-    def is_registered(self, interface: Type) -> bool:
+    def is_registered(self, interface: type) -> bool:
         """Check if a service is registered."""
         return interface in self._services
 

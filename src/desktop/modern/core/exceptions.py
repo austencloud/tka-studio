@@ -14,7 +14,7 @@ EXCEPTION HIERARCHY:
   - DataProcessingError: Data transformation and processing errors
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 class TKABaseException(Exception):
@@ -25,7 +25,7 @@ class TKABaseException(Exception):
     consistent error handling and logging capabilities.
     """
 
-    def __init__(self, message: str, context: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, context: Optional[dict[str, Any]] = None):
         """
         Initialize TKA base exception.
 
@@ -58,7 +58,7 @@ class ServiceOperationError(TKABaseException):
         message: str,
         service_name: Optional[str] = None,
         operation: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize service operation error.
@@ -93,7 +93,7 @@ class ValidationError(TKABaseException):
         message: str,
         field: Optional[str] = None,
         value: Optional[Any] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize validation error.
@@ -128,7 +128,7 @@ class DependencyInjectionError(TKABaseException):
         message: str,
         interface_name: Optional[str] = None,
         dependency_chain: Optional[list] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize dependency injection error.
@@ -165,7 +165,7 @@ class PerformanceError(TKABaseException):
         threshold: Optional[float] = None,
         actual: Optional[float] = None,
         metric_type: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize performance error.
@@ -208,7 +208,7 @@ class ConfigurationError(TKABaseException):
         message: str,
         config_file: Optional[str] = None,
         setting_name: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize configuration error.
@@ -243,7 +243,7 @@ class DataProcessingError(TKABaseException):
         message: str,
         data_type: Optional[str] = None,
         processing_stage: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Initialize data processing error.

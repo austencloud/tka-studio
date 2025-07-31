@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional
 
 
 class CacheLevel(Enum):
@@ -26,11 +26,11 @@ class SequenceCardData:
     path: Path
     word: str
     length: int
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     thumbnail_path: Optional[Path] = None
     high_res_path: Optional[Path] = None
     is_favorite: bool = False
-    tags: List[str] = None
+    tags: list[str] = None
 
     def __post_init__(self):
         if self.tags is None:
@@ -82,15 +82,15 @@ class ISequenceCardDataService(ABC):
     @abstractmethod
     def get_sequences_by_length(
         self, base_path: Path, length: int
-    ) -> List[SequenceCardData]:
+    ) -> list[SequenceCardData]:
         """Get all sequences of specified length."""
 
     @abstractmethod
-    def get_all_sequences(self, base_path: Path) -> List[SequenceCardData]:
+    def get_all_sequences(self, base_path: Path) -> list[SequenceCardData]:
         """Get all sequences regardless of length."""
 
     @abstractmethod
-    def extract_metadata(self, image_path: Path) -> Dict[str, Any]:
+    def extract_metadata(self, image_path: Path) -> dict[str, Any]:
         """Extract metadata from sequence image."""
 
     @abstractmethod
@@ -100,7 +100,7 @@ class ISequenceCardDataService(ABC):
         """Watch for directory changes."""
 
     @abstractmethod
-    def validate_sequence_data(self, data: SequenceCardData) -> Tuple[bool, List[str]]:
+    def validate_sequence_data(self, data: SequenceCardData) -> tuple[bool, list[str]]:
         """Validate sequence data."""
 
 
@@ -138,12 +138,12 @@ class ISequenceCardLayoutService(ABC):
     @abstractmethod
     def calculate_page_size(
         self, available_width: int, column_count: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """Calculate optimal page size."""
 
     @abstractmethod
     def calculate_scale_factor(
-        self, original_size: Tuple[int, int], target_size: Tuple[int, int]
+        self, original_size: tuple[int, int], target_size: tuple[int, int]
     ) -> float:
         """Calculate appropriate scale factor."""
 

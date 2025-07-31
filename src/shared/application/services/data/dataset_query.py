@@ -7,7 +7,7 @@ Focused solely on data retrieval and filtering logic.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -43,17 +43,17 @@ class IDatasetQuery(ABC):
     @abstractmethod
     def find_pictographs_by_letter(
         self, letter: str, grid_mode: str = "diamond"
-    ) -> List[BeatData]:
+    ) -> list[BeatData]:
         """Find all pictographs with a specific letter."""
 
     @abstractmethod
     def find_pictographs_by_position_range(
-        self, start_positions: List[str], grid_mode: str = "diamond"
-    ) -> List[BeatData]:
+        self, start_positions: list[str], grid_mode: str = "diamond"
+    ) -> list[BeatData]:
         """Find pictographs within a range of start positions."""
 
     @abstractmethod
-    def get_available_letters(self, grid_mode: str = "diamond") -> List[str]:
+    def get_available_letters(self, grid_mode: str = "diamond") -> list[str]:
         """Get all available letters in the dataset."""
 
     @abstractmethod
@@ -228,7 +228,7 @@ class DatasetQuery(IDatasetQuery):
 
     def find_pictographs_by_letter(
         self, letter: str, grid_mode: str = "diamond"
-    ) -> List[BeatData]:
+    ) -> list[BeatData]:
         """
         Find all pictographs with a specific letter.
 
@@ -275,8 +275,8 @@ class DatasetQuery(IDatasetQuery):
             return []
 
     def find_pictographs_by_position_range(
-        self, start_positions: List[str], grid_mode: str = "diamond"
-    ) -> List[BeatData]:
+        self, start_positions: list[str], grid_mode: str = "diamond"
+    ) -> list[BeatData]:
         """
         Find pictographs within a range of start positions.
 
@@ -322,7 +322,7 @@ class DatasetQuery(IDatasetQuery):
             logger.error(f"Error finding pictographs by position range: {e}")
             return []
 
-    def get_available_letters(self, grid_mode: str = "diamond") -> List[str]:
+    def get_available_letters(self, grid_mode: str = "diamond") -> list[str]:
         """
         Get all available letters in the dataset.
 

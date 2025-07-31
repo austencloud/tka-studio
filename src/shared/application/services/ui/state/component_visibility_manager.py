@@ -6,7 +6,6 @@ Uses Qt signals for communication instead of event bus.
 """
 
 import logging
-from typing import Dict
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -35,7 +34,7 @@ class ComponentVisibilityManager(QObject):
         super().__init__()
 
         # Component visibility state
-        self._component_visibility: Dict[str, bool] = {}
+        self._component_visibility: dict[str, bool] = {}
 
     def is_component_visible(self, component: str) -> bool:
         """Check if component is visible."""
@@ -71,12 +70,12 @@ class ComponentVisibilityManager(QObject):
         self.set_component_visibility(component, new_state)
         return new_state
 
-    def get_all_component_visibility(self) -> Dict[str, bool]:
+    def get_all_component_visibility(self) -> dict[str, bool]:
         """Get visibility state for all components."""
         return self._component_visibility.copy()
 
     def set_multiple_component_visibility(
-        self, visibility_states: Dict[str, bool]
+        self, visibility_states: dict[str, bool]
     ) -> None:
         """Set visibility for multiple components at once."""
         for component, visible in visibility_states.items():
@@ -89,11 +88,11 @@ class ComponentVisibilityManager(QObject):
         # Emit Qt signal for component visibility reset
         self.visibility_reset.emit()
 
-    def get_state_for_persistence(self) -> Dict[str, bool]:
+    def get_state_for_persistence(self) -> dict[str, bool]:
         """Get state data for persistence."""
         return self._component_visibility.copy()
 
-    def load_state_from_persistence(self, state: Dict[str, bool]) -> None:
+    def load_state_from_persistence(self, state: dict[str, bool]) -> None:
         """Load state from persistence data."""
         if isinstance(state, dict):
             self._component_visibility = state.copy()

@@ -1,5 +1,5 @@
 # button_answers_renderer.py
-from typing import TYPE_CHECKING, Any, Callable, List
+from typing import TYPE_CHECKING, Any, Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout
@@ -15,7 +15,7 @@ from main_window.main_widget.learn_tab.letter_answer_button import (
 
 class ButtonAnswersRenderer:
     def __init__(self):
-        self.buttons: List[LetterAnswerButton] = []
+        self.buttons: list[LetterAnswerButton] = []
         self.layout = QHBoxLayout()
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -24,7 +24,7 @@ class ButtonAnswersRenderer:
 
     def update_answer_options(
         self,
-        answers: List[Any],
+        answers: list[Any],
         check_callback: Callable[[Any, Any], None],
         correct_answer: Any,
         answers_widget: "AnswersWidget",

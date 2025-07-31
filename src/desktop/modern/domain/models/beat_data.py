@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 import json
 
 # Forward reference for PictographData to avoid circular imports
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 import uuid
 
 from .motion_data import MotionData
@@ -37,7 +37,7 @@ class BeatData:
     # NEW: Optional pictograph data
     pictograph_data: Optional["PictographData"] = None
 
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate beat data."""
@@ -96,7 +96,7 @@ class BeatData:
             },
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         result = {
             "id": self.id,
@@ -115,7 +115,7 @@ class BeatData:
         return result
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BeatData":
+    def from_dict(cls, data: dict[str, Any]) -> "BeatData":
         """Create from dictionary."""
         # Handle pictograph data
         pictograph_data = None
@@ -135,7 +135,7 @@ class BeatData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 

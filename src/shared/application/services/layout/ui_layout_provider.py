@@ -7,8 +7,6 @@ main window sizing, workbench/picker ratio calculations,
 and component size calculations.
 """
 
-from typing import Tuple
-
 from desktop.modern.core.interfaces.ui_services import IUILayoutProvider
 from desktop.modern.core.types import Size
 
@@ -22,7 +20,7 @@ class UILayoutProvider(IUILayoutProvider):
     and component size calculations.
     """
 
-    def __init__(self, main_window_size: Size, layout_ratio: Tuple[int, int]):
+    def __init__(self, main_window_size: Size, layout_ratio: tuple[int, int]):
         """Initialize with window size and layout ratio."""
         self._main_window_size = main_window_size
         self._layout_ratio = layout_ratio
@@ -63,11 +61,11 @@ class UILayoutProvider(IUILayoutProvider):
 
         return Size(picker_width, usable_height)
 
-    def get_layout_ratio(self) -> Tuple[int, int]:
+    def get_layout_ratio(self) -> tuple[int, int]:
         """Get the layout ratio (workbench:picker)."""
         return self._layout_ratio
 
-    def set_layout_ratio(self, ratio: Tuple[int, int]) -> None:
+    def set_layout_ratio(self, ratio: tuple[int, int]) -> None:
         """Set the layout ratio."""
         self._layout_ratio = ratio
 

@@ -3,7 +3,7 @@ State Manager for TKA Unified Launcher.
 Manages application state and window state persistence.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -17,7 +17,7 @@ class StateManager(QObject):
     def __init__(self, settings_manager):
         super().__init__()
         self.settings_manager = settings_manager
-        self._state: Dict[str, Any] = {}
+        self._state: dict[str, Any] = {}
 
         # Load initial state
         self._load_state()
@@ -61,7 +61,7 @@ class StateManager(QObject):
         current = self.get(key, 0)
         self.set(key, current + amount, persist)
 
-    def get_window_state(self) -> Dict[str, Any]:
+    def get_window_state(self) -> dict[str, Any]:
         """Get current window state."""
         return {
             "mode": self.get("mode", "window"),
@@ -72,7 +72,7 @@ class StateManager(QObject):
         }
 
     def save_window_state(
-        self, geometry: Dict[str, int], mode: str, screen_index: int = 0
+        self, geometry: dict[str, int], mode: str, screen_index: int = 0
     ):
         """Save window state."""
         self.set("mode", mode)

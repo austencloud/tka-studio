@@ -5,7 +5,7 @@ Implements sophisticated beat sizing logic with precise
 dimension calculations and intelligent responsive behavior.
 """
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
@@ -67,7 +67,7 @@ class BeatResizer(IBeatResizer):
         self.configure_scroll_behavior(beat_frame, num_rows)
         return beat_size
 
-    def calculate_dimensions(self, beat_frame: "SequenceBeatFrame") -> Tuple[int, int]:
+    def calculate_dimensions(self, beat_frame: "SequenceBeatFrame") -> tuple[int, int]:
         """
         Calculate available container dimensions using validated logic.
 
@@ -241,7 +241,7 @@ class BeatResizer(IBeatResizer):
         self._last_calculated_size = None
 
     # Interface implementation methods
-    def resize_beat(self, beat_data: Any, new_size: Tuple[int, int]) -> Any:
+    def resize_beat(self, beat_data: Any, new_size: tuple[int, int]) -> Any:
         """Resize beat to new dimensions (interface implementation)."""
         # For Qt-based implementation, this would resize the actual widget
         # For web implementation, this would update CSS dimensions
@@ -263,8 +263,8 @@ class BeatResizer(IBeatResizer):
     def calculate_optimal_size(
         self,
         beat_data: Any,
-        container_size: Tuple[int, int],  # noqa: ARG002
-    ) -> Tuple[int, int]:
+        container_size: tuple[int, int],  # noqa: ARG002
+    ) -> tuple[int, int]:
         """Calculate optimal size for beat within container (interface implementation)."""
         # Note: beat_data parameter is part of interface but not used in this implementation
         container_width, container_height = container_size
@@ -281,7 +281,7 @@ class BeatResizer(IBeatResizer):
             ensure_positive_size(optimal_height),
         )
 
-    def validate_size_constraints(self, size: Tuple[int, int]) -> bool:
+    def validate_size_constraints(self, size: tuple[int, int]) -> bool:
         """Validate size constraints (interface implementation)."""
         width, height = size
 

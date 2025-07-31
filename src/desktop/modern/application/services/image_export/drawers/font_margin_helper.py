@@ -7,7 +7,6 @@ and ensure consistent sizing across different sequence lengths.
 """
 
 import logging
-from typing import Tuple
 
 from PyQt6.QtGui import QFont
 
@@ -34,7 +33,7 @@ class FontMarginHelper(IFontMarginHelper):
         num_filled_beats: int,
         base_margin: int,
         beat_scale: float = 1.0,
-    ) -> Tuple[QFont, int]:
+    ) -> tuple[QFont, int]:
         """
         Adjust font and margin based on number of beats - EXACT LEGACY LOGIC.
 

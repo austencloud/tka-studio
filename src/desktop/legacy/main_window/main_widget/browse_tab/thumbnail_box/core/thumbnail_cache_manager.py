@@ -10,7 +10,7 @@ import logging
 import os
 from pathlib import Path
 import time  # ← add this at the top
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QPixmap
@@ -33,7 +33,7 @@ class ThumbnailCacheManager:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self._cache_metadata: Dict[str, Any] = {}
+        self._cache_metadata: dict[str, Any] = {}
 
         # Initialize cache system
         self._ensure_cache_directory()

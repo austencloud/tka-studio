@@ -8,7 +8,7 @@ Features:
 - Responsive layout
 """
 
-from typing import List, Optional, Tuple, Union
+from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -34,7 +34,7 @@ class FilterCategorySection(QFrame):
         self,
         title: str,
         filter_type: FilterType,
-        options: List[Union[str, Tuple[str, str, str]]],
+        options: list[str | tuple[str, str, str]],
         grid_columns: int = 3,
         parent: Optional[QWidget] = None,
     ):

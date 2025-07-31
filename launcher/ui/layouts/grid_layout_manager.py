@@ -16,7 +16,7 @@ Architecture:
 """
 
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from domain.models import ApplicationCategory, ApplicationData
 
@@ -60,8 +60,8 @@ class GridLayoutManager:
             return 0
 
     def calculate_card_dimensions_for_3_rows(
-        self, container_width: int, applications: List[ApplicationData]
-    ) -> Dict[str, int]:
+        self, container_width: int, applications: list[ApplicationData]
+    ) -> dict[str, int]:
         """Calculate card dimensions optimized for 3-row layout."""
         if container_width <= 0:
             return {"width": self.min_card_width, "height": self.card_height}
@@ -84,8 +84,8 @@ class GridLayoutManager:
         return {"width": card_width, "height": self.card_height}
 
     def organize_apps_by_category(
-        self, applications: List[ApplicationData]
-    ) -> Dict[str, List[ApplicationData]]:
+        self, applications: list[ApplicationData]
+    ) -> dict[str, list[ApplicationData]]:
         """Organize applications into 3 rows by category."""
         # Initialize organized structure
         organized = {"Desktop Apps": [], "Web Apps": [], "Development Tools": []}
@@ -105,8 +105,8 @@ class GridLayoutManager:
         return organized
 
     def calculate_grid_positions(
-        self, organized_apps: Dict[str, List[ApplicationData]]
-    ) -> List[Tuple[int, int, ApplicationData]]:
+        self, organized_apps: dict[str, list[ApplicationData]]
+    ) -> list[tuple[int, int, ApplicationData]]:
         """Calculate grid positions for organized applications."""
         positions = []
 
@@ -117,8 +117,8 @@ class GridLayoutManager:
         return positions
 
     def get_layout_metrics(
-        self, container_width: int, applications: List[ApplicationData]
-    ) -> Dict[str, Any]:
+        self, container_width: int, applications: list[ApplicationData]
+    ) -> dict[str, Any]:
         """Get comprehensive layout metrics for debugging and optimization."""
         organized_apps = self.organize_apps_by_category(applications)
         card_dimensions = self.calculate_card_dimensions_for_3_rows(
@@ -145,7 +145,7 @@ class GridLayoutManager:
         return metrics
 
     def validate_layout(
-        self, container_width: int, applications: List[ApplicationData]
+        self, container_width: int, applications: list[ApplicationData]
     ) -> bool:
         """Validate that the layout will work with current parameters."""
         if container_width <= 0:
@@ -167,7 +167,7 @@ class GridLayoutManager:
 
         return True
 
-    def get_responsive_breakpoints(self) -> Dict[str, int]:
+    def get_responsive_breakpoints(self) -> dict[str, int]:
         """Get responsive breakpoints for different layout modes."""
         return {
             "mobile": 480,
@@ -177,8 +177,8 @@ class GridLayoutManager:
         }
 
     def suggest_layout_adjustments(
-        self, container_width: int, applications: List[ApplicationData]
-    ) -> Dict[str, Any]:
+        self, container_width: int, applications: list[ApplicationData]
+    ) -> dict[str, Any]:
         """Suggest layout adjustments based on current conditions."""
         suggestions = {"adjustments": [], "warnings": [], "optimizations": []}
 

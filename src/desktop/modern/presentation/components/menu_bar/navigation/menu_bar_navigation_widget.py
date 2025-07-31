@@ -5,7 +5,7 @@ Navigation component for the TKA modern desktop app with tab management.
 Provides clean button-based navigation between different application sections.
 """
 
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -38,7 +38,7 @@ class MenuBarNavigationWidget(QWidget):
             {"name": "sequence_card", "label": "Sequence Card 📋"},
         ]
 
-        self.tab_buttons: Dict[str, StyledButton] = {}
+        self.tab_buttons: dict[str, StyledButton] = {}
 
         self._setup_ui()
         self._setup_styling()
@@ -163,7 +163,7 @@ class MenuBarNavigationWidget(QWidget):
         """Get the currently active tab name."""
         return self._current_tab
 
-    def get_available_tabs(self) -> List[str]:
+    def get_available_tabs(self) -> list[str]:
         """Get list of available tab names."""
         return [tab["name"] for tab in self.tab_config]
 

@@ -1,7 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/export/color_manager.py
 import logging
 import re
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtGui import QColor, QImage
 
@@ -20,7 +20,7 @@ class ColorManager:
     5. Color space transformations for print-optimized output
     """
 
-    def __init__(self, config_settings: Dict[str, Any]):
+    def __init__(self, config_settings: dict[str, Any]):
         """
         Initialize the ColorManager with configuration settings.
 

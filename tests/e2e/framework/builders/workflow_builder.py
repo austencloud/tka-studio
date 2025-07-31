@@ -6,7 +6,7 @@ for creating readable, chainable test workflows that combine multiple operations
 """
 
 import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class WorkflowBuilder:
                    .execute())Very good this time it worked
     """
 
-    def __init__(self, workflow_steps: Dict[str, Any]):
+    def __init__(self, workflow_steps: dict[str, Any]):
         """
         Initialize the workflow builder.
 
@@ -40,9 +40,9 @@ class WorkflowBuilder:
         self.sequence = workflow_steps["sequence"]
         self.validation = workflow_steps["validation"]
 
-        self._operations: List[Callable] = []
-        self._validations: List[Callable] = []
-        self._metadata: Dict[str, Any] = {}
+        self._operations: list[Callable] = []
+        self._validations: list[Callable] = []
+        self._metadata: dict[str, Any] = {}
 
         logger.debug("WorkflowBuilder initialized")
 
@@ -174,7 +174,7 @@ class WorkflowBuilder:
         logger.debug(f"Workflow: Added sequence rebuilding (length {new_length})")
         return self
 
-    def add_specific_options(self, options: List[str]) -> "WorkflowBuilder":
+    def add_specific_options(self, options: list[str]) -> "WorkflowBuilder":
         """
         Add specific option selection to workflow.
 
@@ -463,8 +463,8 @@ class WorkflowResult:
         """Initialize workflow result."""
         self.successful = False
         self.error_message: Optional[str] = None
-        self.operation_results: Dict[int, bool] = {}
-        self.validation_results: Dict[int, bool] = {}
+        self.operation_results: dict[int, bool] = {}
+        self.validation_results: dict[int, bool] = {}
 
     def add_operation_result(self, index: int, success: bool):
         """Add operation result."""

@@ -3,7 +3,7 @@ Main exporter class for the codex pictograph exporter.
 """
 
 import os
-from typing import TYPE_CHECKING, List, Tuple, Union
+from typing import TYPE_CHECKING, Union
 
 from .base_exporter import BaseExporter
 from .hybrid_exporter import HybridExporter
@@ -63,7 +63,7 @@ class MainExporter(BaseExporter):
 
     def export_pictographs(
         self,
-        selected_types: List[str],
+        selected_types: list[str],
         red_turns: float,
         blue_turns: float,
         generate_all: bool = False,
@@ -151,7 +151,7 @@ class MainExporter(BaseExporter):
         return exported_count
 
     def _calculate_total_count(
-        self, selected_types: List[str], turn_combinations: List[Tuple[float, float]]
+        self, selected_types: list[str], turn_combinations: list[tuple[float, float]]
     ) -> int:
         """Calculate the total number of pictographs to export.
 

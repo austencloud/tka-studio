@@ -13,7 +13,7 @@ Handles tab switching and registration - tab creation is handled by TabFactory.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QTabWidget, QWidget
 
@@ -53,8 +53,8 @@ class TabManagementService(ITabManagementService):
 
     def __init__(self):
         self._tab_widget: Optional[QTabWidget] = None
-        self._tabs: Dict[str, QWidget] = {}
-        self._tab_index_map: Dict[str, int] = {}
+        self._tabs: dict[str, QWidget] = {}
+        self._tab_index_map: dict[str, int] = {}
         self._current_tab = "construct"  # Default tab
 
     def initialize_tabs(self, tab_widget: QTabWidget, container: "DIContainer") -> None:

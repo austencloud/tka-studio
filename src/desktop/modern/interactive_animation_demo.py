@@ -5,7 +5,7 @@ Showcases the modern animation system with actual TKA pictograph data.
 
 import asyncio
 import sys
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
@@ -64,7 +64,7 @@ class InteractiveAnimationDemo(QMainWindow):
         self.pictograph_factory = PictographFactory()
 
         # Store pictographs and their components
-        self.pictographs: List[PictographWidget] = []
+        self.pictographs: list[PictographWidget] = []
         self.current_pictograph_index = 0
 
         # Animation state

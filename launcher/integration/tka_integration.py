@@ -21,7 +21,6 @@ Architecture:
 import logging
 from pathlib import Path
 import sys
-from typing import List
 
 # Add paths for TKA imports
 launcher_dir = Path(__file__).parent
@@ -94,7 +93,7 @@ class TKAIntegrationService:
 
         logger.info("✅ Fallback services initialized")
 
-    def get_applications(self) -> List:
+    def get_applications(self) -> list:
         """Get the list of available applications."""
         try:
             if self.app_service:

@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 import logging
 import os
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
@@ -81,7 +81,7 @@ class SequenceDisplayManager:
             self.page_factory, self.layout_calculator, self.config, self.preview_grid
         )
 
-        self.pages: List[QWidget] = []
+        self.pages: list[QWidget] = []
         self.current_page_index = -1
         self.current_position = 0
 
@@ -325,7 +325,7 @@ class SequenceDisplayManager:
                 if hasattr(self.sequence_card_tab.header, "progress_container"):
                     self.sequence_card_tab.header.progress_container.setVisible(False)
 
-    def _check_cache_availability(self, sequences: List[Dict[str, Any]]) -> float:
+    def _check_cache_availability(self, sequences: list[dict[str, Any]]) -> float:
         """
         Check what percentage of the sequences are available in the cache.
 

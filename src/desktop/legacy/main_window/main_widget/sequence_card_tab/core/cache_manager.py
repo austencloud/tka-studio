@@ -4,7 +4,7 @@ from pathlib import Path
 import shutil
 import threading
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class SequenceCardCacheManager:
@@ -52,7 +52,7 @@ class SequenceCardCacheManager:
             / f"sequence_cache_v{self.cache_version}_length_{length}.json"
         )
 
-    def save_to_cache(self, length: int, sequences: List[Dict[str, Any]]) -> bool:
+    def save_to_cache(self, length: int, sequences: list[dict[str, Any]]) -> bool:
         """
         Save sequence data to cache file.
 
@@ -92,7 +92,7 @@ class SequenceCardCacheManager:
             print(f"Error saving to cache: {e}")
             return False
 
-    def load_from_cache(self, length: int) -> Optional[List[Dict[str, Any]]]:
+    def load_from_cache(self, length: int) -> Optional[list[dict[str, Any]]]:
         """
         Load sequence data from cache file if it exists and is valid.
 
@@ -139,7 +139,7 @@ class SequenceCardCacheManager:
             print(f"Error loading from cache: {e}")
             return None
 
-    def preload_common_lengths(self, sequences: List[Dict[str, Any]]) -> None:
+    def preload_common_lengths(self, sequences: list[dict[str, Any]]) -> None:
         """
         Preload cache for common sequence lengths in a background thread.
 
@@ -152,7 +152,7 @@ class SequenceCardCacheManager:
         )
         thread.start()
 
-    def _preload_thread(self, sequences: List[Dict[str, Any]]) -> None:
+    def _preload_thread(self, sequences: list[dict[str, Any]]) -> None:
         """
         Background thread for preloading common sequence lengths.
 
@@ -249,7 +249,7 @@ class SequenceCardCacheManager:
             # Silently handle cache clearing errors
             pass
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """
         Get statistics about the cache.
 

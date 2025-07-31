@@ -8,7 +8,7 @@ without dealing with the actual launching process.
 import logging
 from pathlib import Path
 import sys
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces import IApplicationService, ILauncherStateService
 from desktop.modern.domain.models import (
@@ -36,7 +36,7 @@ class ApplicationService(IApplicationService):
         if self._state_service:
             self._initialize_applications()
 
-    def get_all_applications(self) -> List[ApplicationData]:
+    def get_all_applications(self) -> list[ApplicationData]:
         """Get all available applications."""
         if self._state_service:
             state = self._state_service.get_current_state()
@@ -58,7 +58,7 @@ class ApplicationService(IApplicationService):
 
     def get_applications_by_category(
         self, category: ApplicationCategory
-    ) -> List[ApplicationData]:
+    ) -> list[ApplicationData]:
         """Get applications in a specific category."""
         if self._state_service:
             state = self._state_service.get_current_state()
@@ -70,7 +70,7 @@ class ApplicationService(IApplicationService):
                 if app.category == category and app.enabled
             ]
 
-    def get_categories(self) -> List[ApplicationCategory]:
+    def get_categories(self) -> list[ApplicationCategory]:
         """Get all available categories."""
         apps = self.get_all_applications()
         categories = set(app.category for app in apps)
@@ -113,7 +113,7 @@ class ApplicationService(IApplicationService):
             ]
             logger.info(f"Removed application from defaults: {app_id}")
 
-    def search_applications(self, query: str) -> List[ApplicationData]:
+    def search_applications(self, query: str) -> list[ApplicationData]:
         """Search applications by title, description, or category."""
         if not query.strip():
             return self.get_all_applications()
@@ -132,7 +132,7 @@ class ApplicationService(IApplicationService):
 
         return matching_apps
 
-    def get_favorite_applications(self) -> List[ApplicationData]:
+    def get_favorite_applications(self) -> list[ApplicationData]:
         """Get all favorite applications."""
         if self._state_service:
             state = self._state_service.get_current_state()
@@ -173,7 +173,7 @@ class ApplicationService(IApplicationService):
             f"Initialized {len(self._default_applications)} default applications"
         )
 
-    def _create_default_applications(self) -> List[ApplicationData]:
+    def _create_default_applications(self) -> list[ApplicationData]:
         """Create the default set of applications."""
         # Get TKA root directory (launcher's parent)
         tka_root = Path(__file__).parent.parent.parent

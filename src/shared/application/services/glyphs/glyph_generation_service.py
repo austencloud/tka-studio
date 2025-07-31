@@ -13,7 +13,7 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 from desktop.modern.domain.models import (
     BeatData,
@@ -143,7 +143,7 @@ class GlyphGenerationService(IGlyphGenerationService):
 
     def _determine_positions(
         self, beat_data: BeatData
-    ) -> Tuple[Optional[str], Optional[str]]:
+    ) -> tuple[Optional[str], Optional[str]]:
         """Determine start and end positions from beat data."""
         # Extract from metadata if available
         start_pos = beat_data.metadata.get("start_pos")
@@ -176,7 +176,7 @@ class GlyphGenerationService(IGlyphGenerationService):
 
         return vtg_to_elemental_map.get(vtg_mode)
 
-    def _build_letter_type_map(self) -> Dict[str, LetterType]:
+    def _build_letter_type_map(self) -> dict[str, LetterType]:
         """Build letter type mapping."""
         return {
             # Type 1 letters (show elemental and VTG glyphs)
@@ -234,7 +234,7 @@ class GlyphGenerationService(IGlyphGenerationService):
             "Γ": LetterType.TYPE6,
         }
 
-    def _build_glyph_mappings(self) -> Dict[str, str]:
+    def _build_glyph_mappings(self) -> dict[str, str]:
         """Build glyph symbol mappings."""
         return {
             "blue_pro_red_anti": "⚡",

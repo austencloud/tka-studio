@@ -16,7 +16,7 @@ import argparse
 from pathlib import Path
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(
@@ -29,10 +29,10 @@ class InterfaceCoverageTestRunner:
 
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
-        self.results: Dict[str, Any] = {}
+        self.results: dict[str, Any] = {}
         self.start_time = time.time()
 
-    def run_phase_1_tests(self) -> Dict[str, Any]:
+    def run_phase_1_tests(self) -> dict[str, Any]:
         """Run Phase 1: Interface Coverage Verification tests."""
         print("🔍 Phase 1: Interface Coverage Verification")
         print("=" * 50)
@@ -90,7 +90,7 @@ class InterfaceCoverageTestRunner:
 
         return phase_results
 
-    def run_phase_2_tests(self) -> Dict[str, Any]:
+    def run_phase_2_tests(self) -> dict[str, Any]:
         """Run Phase 2: Interface Quality and Compatibility tests."""
         print("\n📝 Phase 2: Interface Quality and Compatibility")
         print("=" * 50)
@@ -151,7 +151,7 @@ class InterfaceCoverageTestRunner:
 
         return phase_results
 
-    def run_phase_3_tests(self) -> Dict[str, Any]:
+    def run_phase_3_tests(self) -> dict[str, Any]:
         """Run Phase 3: Service Implementation and DI tests."""
         print("\n🔧 Phase 3: Service Implementation and DI")
         print("=" * 50)
@@ -213,7 +213,7 @@ class InterfaceCoverageTestRunner:
 
         return phase_results
 
-    def run_phase_4_tests(self) -> Dict[str, Any]:
+    def run_phase_4_tests(self) -> dict[str, Any]:
         """Run Phase 4: Cross-Platform Web Compatibility tests."""
         print("\n🌐 Phase 4: Cross-Platform Web Compatibility")
         print("=" * 50)
@@ -274,7 +274,7 @@ class InterfaceCoverageTestRunner:
 
         return phase_results
 
-    def run_phase_5_tests(self) -> Dict[str, Any]:
+    def run_phase_5_tests(self) -> dict[str, Any]:
         """Run Phase 5: Integration and Workflow tests."""
         print("\n🔄 Phase 5: Integration and Workflow Tests")
         print("=" * 50)
@@ -335,7 +335,7 @@ class InterfaceCoverageTestRunner:
 
         return phase_results
 
-    def run_all_phases(self, specific_phase: int = None) -> Dict[str, Any]:
+    def run_all_phases(self, specific_phase: int = None) -> dict[str, Any]:
         """Run all test phases or a specific phase."""
         print("🚀 TKA Interface Coverage Test Suite")
         print("=" * 60)
@@ -373,7 +373,7 @@ class InterfaceCoverageTestRunner:
 
         return all_results
 
-    def generate_report(self, results: Dict[str, Any]) -> str:
+    def generate_report(self, results: dict[str, Any]) -> str:
         """Generate a comprehensive test report."""
         report = []
         report.append("🎯 TKA INTERFACE COVERAGE TEST REPORT")

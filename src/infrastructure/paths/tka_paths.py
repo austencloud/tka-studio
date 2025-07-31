@@ -26,13 +26,13 @@ FEATURES:
 import os
 from pathlib import Path
 import sys
-from typing import List, Optional, Set
+from typing import Optional
 import warnings
 
 # Global state
 _PATHS_CONFIGURED = False
 _TKA_ROOT: Optional[Path] = None
-_CONFIGURED_PATHS: Set[str] = set()
+_CONFIGURED_PATHS: set[str] = set()
 
 
 def find_tka_root(start_path: Optional[Path] = None) -> Path:
@@ -90,7 +90,7 @@ def find_tka_root(start_path: Optional[Path] = None) -> Path:
     raise RuntimeError(f"Could not find TKA root starting from {start_path}")
 
 
-def get_all_tka_paths(tka_root: Path) -> List[Path]:
+def get_all_tka_paths(tka_root: Path) -> list[Path]:
     """
     Get ALL TKA paths that should be in sys.path.
 
@@ -142,7 +142,7 @@ def get_all_tka_paths(tka_root: Path) -> List[Path]:
     return [p for p in paths if p.exists()]
 
 
-def setup_sys_path(paths: List[Path]) -> int:
+def setup_sys_path(paths: list[Path]) -> int:
     """
     Add paths to sys.path safely (no duplicates, correct order).
 
@@ -172,7 +172,7 @@ def setup_sys_path(paths: List[Path]) -> int:
     return added_count
 
 
-def setup_pythonpath_env(paths: List[Path]) -> None:
+def setup_pythonpath_env(paths: list[Path]) -> None:
     """
     Set PYTHONPATH environment variable for subprocess consistency.
 
@@ -195,7 +195,7 @@ def setup_pythonpath_env(paths: List[Path]) -> None:
     os.environ["PYTHONPATH"] = os.pathsep.join(all_parts)
 
 
-def verify_critical_imports() -> List[str]:
+def verify_critical_imports() -> list[str]:
     """
     Verify that critical TKA imports work correctly.
 

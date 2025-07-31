@@ -8,7 +8,7 @@ Updated to work directly with SequenceData (no more SequenceRecord conversion).
 """
 
 import logging
-from typing import Any, List
+from typing import Any
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication
@@ -48,8 +48,8 @@ class ProgressiveLoadingService(QObject):
 
         # Loading state
         self._is_loading = False
-        self._pending_sequences: List[SequenceData] = []
-        self._processed_sequences: List[SequenceData] = []
+        self._pending_sequences: list[SequenceData] = []
+        self._processed_sequences: list[SequenceData] = []
         self._chunk_size = 10  # Process 10 sequences at a time
         self._current_chunk_index = 0
 
@@ -168,7 +168,7 @@ class ProgressiveLoadingService(QObject):
 
     def _get_filtered_sequences(
         self, filter_type: FilterType, filter_value: Any
-    ) -> List[SequenceData]:
+    ) -> list[SequenceData]:
         """Get filtered sequences from dictionary manager."""
         logger.info(
             f"🔍 [PROGRESSIVE] Getting filtered sequences: {filter_type.value} = {filter_value} (type: {type(filter_value)})"
@@ -211,7 +211,7 @@ class ProgressiveLoadingService(QObject):
             logger.error(f"❌ [PROGRESSIVE] Error filtering sequences: {e}")
             raise DataLoadError(f"Failed to filter sequences: {e}") from e
 
-    def _apply_starting_letter_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_starting_letter_filter(self, filter_value) -> list[SequenceData]:
         """Apply starting letter filter logic."""
         if isinstance(filter_value, str):
             if "-" in filter_value and len(filter_value) == 3:
@@ -241,7 +241,7 @@ class ProgressiveLoadingService(QObject):
             )
             return []
 
-    def _apply_length_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_length_filter(self, filter_value) -> list[SequenceData]:
         """Apply length filter logic."""
         if isinstance(filter_value, str):
             if filter_value == "All":
@@ -266,7 +266,7 @@ class ProgressiveLoadingService(QObject):
             )
             return []
 
-    def _apply_difficulty_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_difficulty_filter(self, filter_value) -> list[SequenceData]:
         """Apply difficulty filter logic."""
         if filter_value == "All" or filter_value == "All Levels":
             return self.dictionary_manager.get_all_sequences()
@@ -274,14 +274,14 @@ class ProgressiveLoadingService(QObject):
             logger.info(f"📊 [PROGRESSIVE] Filtering by difficulty: {filter_value}")
             return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
 
-    def _apply_author_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_author_filter(self, filter_value) -> list[SequenceData]:
         """Apply author filter logic."""
         if filter_value == "All Authors":
             return self.dictionary_manager.get_all_sequences()
         else:
             return self.dictionary_manager.get_sequences_by_author(filter_value)
 
-    def _apply_grid_mode_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_grid_mode_filter(self, filter_value) -> list[SequenceData]:
         """Apply grid mode filter logic."""
         if filter_value == "All" or filter_value == "All Styles":
             return self.dictionary_manager.get_all_sequences()

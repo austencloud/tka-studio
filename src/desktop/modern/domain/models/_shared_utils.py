@@ -8,7 +8,7 @@ to avoid code duplication and ensure consistency.
 from dataclasses import fields, is_dataclass
 from enum import Enum
 import json
-from typing import Any, Dict, Union
+from typing import Any, Union
 
 
 def process_field_value(value: Any, field_type: Any) -> Any:
@@ -72,13 +72,13 @@ def add_serialization_methods(cls):
             field: str
     """
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary with snake_case keys."""
         from dataclasses import asdict
 
         return asdict(self)
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -94,7 +94,7 @@ def add_serialization_methods(cls):
             return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]):
+    def from_dict(cls, data: dict[str, Any]):
         """Create instance from dictionary."""
         # Handle nested dataclasses and enums
         field_types = {f.name: f.type for f in fields(cls)}

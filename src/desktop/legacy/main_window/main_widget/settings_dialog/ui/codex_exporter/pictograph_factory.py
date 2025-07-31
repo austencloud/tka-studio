@@ -2,7 +2,7 @@
 Creates pictographs for the codex exporter.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 
@@ -126,7 +126,7 @@ class PictographFactory:
         self.main_widget = parent.main_widget
 
     def create_pictograph_from_data(
-        self, pictograph_data: Dict[str, Any], grid_mode: str
+        self, pictograph_data: dict[str, Any], grid_mode: str
     ) -> LegacyPictograph:
         """Create a pictograph from the given data.
 

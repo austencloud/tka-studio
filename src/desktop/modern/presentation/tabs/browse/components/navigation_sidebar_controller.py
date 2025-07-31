@@ -6,7 +6,7 @@ Manages section navigation, scrolling, and progressive updates.
 """
 
 import logging
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QScrollArea
@@ -46,8 +46,8 @@ class NavigationSidebarController:
         self.scroll_area = scroll_area
 
         # Section tracking
-        self.current_sections: Dict[str, int] = {}  # section_name -> sequence_count
-        self.section_positions: Dict[str, int] = {}  # section_name -> scroll_position
+        self.current_sections: dict[str, int] = {}  # section_name -> sequence_count
+        self.section_positions: dict[str, int] = {}  # section_name -> scroll_position
 
         # Progressive update timer
         self.update_timer = QTimer()
@@ -69,7 +69,7 @@ class NavigationSidebarController:
         self.section_selected_callback = callback
 
     def update_navigation_sections(
-        self, sequences: List[SequenceData], sort_method: str
+        self, sequences: list[SequenceData], sort_method: str
     ) -> None:
         """
         Update navigation sections based on loaded sequences.
@@ -166,8 +166,8 @@ class NavigationSidebarController:
             self.section_selected_callback(section_name)
 
     def _group_sequences_by_section(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> Dict[str, List[SequenceData]]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> dict[str, list[SequenceData]]:
         """
         Group sequences by section based on sort method.
 
@@ -178,7 +178,7 @@ class NavigationSidebarController:
         Returns:
             Dictionary mapping section names to sequence lists
         """
-        sections: Dict[str, List[SequenceData]] = {}
+        sections: dict[str, list[SequenceData]] = {}
 
         for sequence in sequences:
             section_name = self._get_section_name(sequence, sort_method)
@@ -223,7 +223,7 @@ class NavigationSidebarController:
         if self.navigation_sidebar:
             self.navigation_sidebar.clear_sections()
 
-    def get_current_sections(self) -> Dict[str, int]:
+    def get_current_sections(self) -> dict[str, int]:
         """Get the current sections and their counts."""
         return self.current_sections.copy()
 

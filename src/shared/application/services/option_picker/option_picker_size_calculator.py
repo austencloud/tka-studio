@@ -5,8 +5,6 @@ Handles sizing calculations without Qt dependencies.
 Extracted from multiple presentation files to maintain clean architecture.
 """
 
-from typing import Dict
-
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
@@ -28,7 +26,7 @@ class OptionPickerSizeCalculator:
         self,
         letter_type: LetterType,
         main_window_width: int,
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """
         Calculate section layout dimensions.
 
@@ -136,7 +134,7 @@ class OptionPickerSizeCalculator:
 
     def calculate_frame_dimensions(
         self, main_window_size, option_picker_width: int, spacing: int = 3
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """
         Calculate complete frame dimensions including padding.
 

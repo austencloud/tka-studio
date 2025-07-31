@@ -5,7 +5,7 @@ Handles event coordination and signal management.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -48,7 +48,7 @@ class SettingsEventCoordinator(QObject):
         self.tab_manager = tab_manager
         self.app_context = app_context
 
-    def setup_connections(self, components: Dict[str, Any], tabs: Dict[str, QWidget]):
+    def setup_connections(self, components: dict[str, Any], tabs: dict[str, QWidget]):
         """
         Setup all signal connections.
 

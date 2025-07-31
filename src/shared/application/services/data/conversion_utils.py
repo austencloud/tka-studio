@@ -4,7 +4,7 @@ Conversion Utilities
 Data conversion operations implemented as a service class.
 """
 
-from typing import Any, Tuple
+from typing import Any
 
 from desktop.modern.core.interfaces.data_builder_services import IConversionUtils
 
@@ -33,8 +33,8 @@ class ConversionUtils(IConversionUtils):
 
     # Interface implementation methods
     def convert_coordinates(
-        self, coords: Tuple[float, float], from_system: str, to_system: str
-    ) -> Tuple[float, float]:
+        self, coords: tuple[float, float], from_system: str, to_system: str
+    ) -> tuple[float, float]:
         """Convert coordinates between systems (interface implementation)."""
         x, y = coords
 

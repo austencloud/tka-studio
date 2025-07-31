@@ -21,7 +21,7 @@ Architecture:
 from dataclasses import dataclass
 from enum import Enum
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QPalette
@@ -251,7 +251,7 @@ class ThemeManager(QObject):
         self.theme_changed.emit(self.get_current_theme())
         logger.info(f"🎨 Accent color changed to: {accent.value}")
 
-    def get_current_theme(self) -> Dict[str, Any]:
+    def get_current_theme(self) -> dict[str, Any]:
         """Get the current theme configuration."""
         return {
             "accent": self.tokens.ACCENT_VARIANTS[self.current_accent],
@@ -265,7 +265,7 @@ class ThemeManager(QObject):
             "z_index": self.tokens.Z_INDEX,
         }
 
-    def get_accent_variants(self) -> Dict[AccentColor, Dict[str, str]]:
+    def get_accent_variants(self) -> dict[AccentColor, dict[str, str]]:
         """Get all available accent color variants."""
         return self.tokens.ACCENT_VARIANTS
 
@@ -284,7 +284,7 @@ class StyleBuilder:
         # Update theme when it changes
         theme_manager.theme_changed.connect(self._update_theme)
 
-    def _update_theme(self, new_theme: Dict[str, Any]):
+    def _update_theme(self, new_theme: dict[str, Any]):
         """Update internal theme reference."""
         self.theme = new_theme
 

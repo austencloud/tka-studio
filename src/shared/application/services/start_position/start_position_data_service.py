@@ -7,7 +7,7 @@ Extracts data access logic from presentation components.
 
 from functools import lru_cache
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
@@ -76,7 +76,7 @@ class StartPositionDataService(IStartPositionDataService):
             logger.error(f"Error retrieving position data for {position_key}: {e}")
             return None
 
-    def get_available_positions(self, grid_mode: str = "diamond") -> List[str]:
+    def get_available_positions(self, grid_mode: str = "diamond") -> list[str]:
         """
         Get all available start positions for a grid mode.
 

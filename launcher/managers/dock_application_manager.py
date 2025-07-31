@@ -16,7 +16,7 @@ Architecture:
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from domain.models import ApplicationData, ApplicationStatus
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
@@ -61,7 +61,7 @@ class DockApplicationManager(QObject):
             self.applications = []
             return False
 
-    def update_dock_icons(self, icons_layout: QVBoxLayout) -> List[DockApplicationIcon]:
+    def update_dock_icons(self, icons_layout: QVBoxLayout) -> list[DockApplicationIcon]:
         """Update dock icons display."""
         # Clear existing icons
         self.clear_icons(icons_layout)
@@ -120,7 +120,7 @@ class DockApplicationManager(QObject):
         """Get total number of applications."""
         return len(self.applications)
 
-    def get_applications(self) -> List[ApplicationData]:
+    def get_applications(self) -> list[ApplicationData]:
         """Get all applications."""
         return self.applications.copy()
 

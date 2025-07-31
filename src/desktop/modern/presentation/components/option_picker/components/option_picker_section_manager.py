@@ -5,7 +5,7 @@ Manages section lifecycle, updates, and coordination.
 Handles section creation, updates, and inter-section communication.
 """
 
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QTimer
 
@@ -31,13 +31,13 @@ class OptionPickerSectionManager:
     - Managing section animations
     """
 
-    def __init__(self, sections: Dict[LetterType, "OptionPickerSection"]):
+    def __init__(self, sections: dict[LetterType, "OptionPickerSection"]):
         self._sections = sections
         self._update_in_progress = False
-        self._pending_updates: List[tuple] = []
+        self._pending_updates: list[tuple] = []
 
     def update_all_sections_directly(
-        self, sequence_data: SequenceData, options_by_type: Dict[LetterType, List]
+        self, sequence_data: SequenceData, options_by_type: dict[LetterType, list]
     ) -> None:
         """Update all sections directly without animation."""
         if self._update_in_progress:
@@ -100,7 +100,7 @@ class OptionPickerSectionManager:
             if hasattr(section, "clear_pictographs"):
                 section.clear_pictographs()
 
-    def get_all_pictograph_frames(self) -> List:
+    def get_all_pictograph_frames(self) -> list:
         """Get all pictograph frames from all sections."""
         frames = []
         for section in self._sections.values():
@@ -133,7 +133,7 @@ class OptionPickerSectionManager:
                         spacing=layout_config.get("spacing", 10),
                     )
 
-    def get_sections_with_content(self) -> List["OptionPickerSection"]:
+    def get_sections_with_content(self) -> list["OptionPickerSection"]:
         """Get sections that have pictograph content."""
         return [
             section

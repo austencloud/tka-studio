@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 
 from desktop.modern.core.interfaces.core_services import (
     ISettingsCoordinator,
@@ -11,7 +11,7 @@ class SettingsCoordinator(ISettingsCoordinator):
 
     def __init__(self, ui_state_service: IUIStateManager):
         self.ui_state_service = ui_state_service
-        self._change_listeners: List[Callable[[str, Any], None]] = []
+        self._change_listeners: list[Callable[[str, Any], None]] = []
 
     def get_setting(self, key: str, default: Any = None) -> Any:
         """Get a setting value"""
@@ -49,7 +49,7 @@ class SettingsCoordinator(ISettingsCoordinator):
                 # Log error but don't let one listener break others
                 print(f"Error notifying settings change listener: {e}")
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings"""
         return self.ui_state_service.get_all_settings()
 

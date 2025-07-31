@@ -6,7 +6,7 @@ Focused solely on object creation and data transformation logic.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -311,7 +311,7 @@ class PictographFactory(IPictographFactory):
         )
 
     # Interface implementation methods
-    def create_pictograph(self, pictograph_type: str, config: Dict[str, Any]) -> Any:
+    def create_pictograph(self, pictograph_type: str, config: dict[str, Any]) -> Any:
         """Create pictograph instance (interface implementation)."""
         if pictograph_type == "from_entry":
             entry = config.get("entry", {})
@@ -326,12 +326,12 @@ class PictographFactory(IPictographFactory):
         else:
             raise ValueError(f"Unknown pictograph type: {pictograph_type}")
 
-    def get_available_types(self) -> List[str]:
+    def get_available_types(self) -> list[str]:
         """Get available pictograph types (interface implementation)."""
         return ["from_entry", "start_position"]
 
     def validate_pictograph_config(
-        self, pictograph_type: str, config: Dict[str, Any]
+        self, pictograph_type: str, config: dict[str, Any]
     ) -> bool:
         """Validate pictograph configuration (interface implementation)."""
         if pictograph_type not in self.get_available_types():

@@ -3,7 +3,7 @@
 from dataclasses import is_dataclass
 from enum import Enum
 import json
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
 
 from .camel_case import dataclass_to_camel_dict, dict_from_camel_case
 
@@ -28,7 +28,7 @@ def domain_model_to_json(obj: Any, **kwargs) -> str:
     return json.dumps(obj, **kwargs)
 
 
-def domain_model_from_json(json_str: str, model_class: Type[T]) -> T:
+def domain_model_from_json(json_str: str, model_class: type[T]) -> T:
     """Deserialize camelCase JSON to domain model."""
     data = json.loads(json_str)
     snake_case_data = dict_from_camel_case(data)

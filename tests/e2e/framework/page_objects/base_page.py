@@ -8,7 +8,7 @@ wait conditions, and error handling.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtTest import QTest
@@ -39,7 +39,7 @@ class BasePage(ABC):
             parent_widget: The parent Qt widget that contains this page's elements
         """
         self.parent = parent_widget
-        self._elements: Dict[str, QWidget] = {}
+        self._elements: dict[str, QWidget] = {}
         self._loaded = False
 
         logger.debug(f"Initialized {self.__class__.__name__} page object")
@@ -183,7 +183,7 @@ class BasePage(ABC):
         logger.debug(f"No widget found containing class name: {class_name_contains}")
         return None
 
-    def _find_widgets_by_class_name(self, class_name_contains: str) -> List[QWidget]:
+    def _find_widgets_by_class_name(self, class_name_contains: str) -> list[QWidget]:
         """
         Helper to find all widgets matching a class name pattern.
 

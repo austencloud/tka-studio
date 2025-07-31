@@ -5,7 +5,6 @@ Extracted from GlassmorphismStyler to follow Single Responsibility Principle.
 """
 
 import logging
-from typing import Dict
 
 
 class ColorManager:
@@ -128,7 +127,7 @@ class ColorManager:
         end = self.get_color(end_color, end_alpha)
         return (start, end)
 
-    def get_theme_colors(self) -> Dict[str, str]:
+    def get_theme_colors(self) -> dict[str, str]:
         """
         Get all theme colors for external use.
 
@@ -167,7 +166,7 @@ class ColorManager:
         else:
             return self.get_color("text_secondary")
 
-    def create_color_scheme(self, primary_color: str) -> Dict[str, str]:
+    def create_color_scheme(self, primary_color: str) -> dict[str, str]:
         """
         Create a color scheme based on a primary color.
 

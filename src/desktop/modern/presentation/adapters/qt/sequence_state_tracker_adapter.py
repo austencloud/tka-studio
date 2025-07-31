@@ -5,7 +5,7 @@ This adapter wraps the pure SequenceStateTrackerService to provide Qt-specific s
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -71,7 +71,7 @@ class QtSequenceStateTrackerAdapter(QObject):
         """Set start position directly (for loading scenarios, bypasses commands)"""
         self.service.set_start_position_direct(start_position)
 
-    def get_state_summary(self) -> Dict[str, Any]:
+    def get_state_summary(self) -> dict[str, Any]:
         """Get a summary of current state."""
         return self.service.get_state_summary()
 

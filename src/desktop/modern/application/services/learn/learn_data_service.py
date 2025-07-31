@@ -9,7 +9,7 @@ from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.learn_services import ILearnDataService
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
@@ -75,7 +75,7 @@ class LearnDataService(ILearnDataService):
             self.sessions_dir = temp_dir / "sessions"
 
     def save_lesson_progress(
-        self, session_id: str, progress_data: Dict[str, Any]
+        self, session_id: str, progress_data: dict[str, Any]
     ) -> bool:
         """
         Save lesson progress to persistent storage.
@@ -115,7 +115,7 @@ class LearnDataService(ILearnDataService):
             )
             return False
 
-    def load_lesson_progress(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def load_lesson_progress(self, session_id: str) -> Optional[dict[str, Any]]:
         """
         Load lesson progress from persistent storage.
 
@@ -199,7 +199,7 @@ class LearnDataService(ILearnDataService):
 
     def get_lesson_history(
         self, lesson_type: LessonType, limit: int = 10
-    ) -> List[LessonResults]:
+    ) -> list[LessonResults]:
         """
         Get lesson history for a specific lesson type.
 
@@ -252,7 +252,7 @@ class LearnDataService(ILearnDataService):
             logger.error(f"Failed to get lesson history for {lesson_type}: {e}")
             return []
 
-    def get_all_lesson_results(self, limit: int = 50) -> List[LessonResults]:
+    def get_all_lesson_results(self, limit: int = 50) -> list[LessonResults]:
         """
         Get all lesson results across all lesson types.
 
@@ -382,7 +382,7 @@ class LearnDataService(ILearnDataService):
             logger.error(f"Failed to cleanup old data: {e}")
             return 0
 
-    def get_data_statistics(self) -> Dict[str, Any]:
+    def get_data_statistics(self) -> dict[str, Any]:
         """
         Get statistics about stored learn data.
 

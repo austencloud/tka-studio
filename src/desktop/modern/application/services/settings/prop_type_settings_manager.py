@@ -6,7 +6,7 @@ asset verification, and QSettings persistence.
 """
 
 import logging
-from typing import Any, List
+from typing import Any
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -87,7 +87,7 @@ class PropTypeSettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to set prop type {prop_type}: {e}")
 
-    def get_available_prop_types(self) -> List[PropType]:
+    def get_available_prop_types(self) -> list[PropType]:
         """
         Get all available prop types.
 

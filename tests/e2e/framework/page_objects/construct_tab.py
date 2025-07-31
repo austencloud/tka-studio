@@ -7,7 +7,7 @@ including navigation and access to child components.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QPushButton, QTabWidget, QWidget
@@ -245,7 +245,7 @@ class ConstructTabPage(BasePage):
     # START POSITION METHODS
     # ========================================
 
-    def get_available_start_positions(self) -> List[str]:
+    def get_available_start_positions(self) -> list[str]:
         """
         Get list of available start positions.
 
@@ -424,7 +424,7 @@ class ConstructTabPage(BasePage):
     # OPTION PICKER METHODS
     # ========================================
 
-    def get_available_options(self) -> List[str]:
+    def get_available_options(self) -> list[str]:
         """
         Get list of available options from the option picker.
 

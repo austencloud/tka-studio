@@ -5,7 +5,7 @@ This adapter wraps the pure GraphEditorDataFlowService and provides Qt signal co
 This maintains the separation between platform-agnostic services and Qt-specific presentation logic.
 """
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -72,7 +72,7 @@ class QtGraphEditorDataFlowManagerAdapter(QObject):
         self,
         sequence_data: SequenceData,
         modification_type: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
     ) -> SequenceData:
         """Modify sequence based on graph editor changes."""
         return self._service.modify_sequence(sequence_data, modification_type, details)

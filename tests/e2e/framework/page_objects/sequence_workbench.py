@@ -7,7 +7,7 @@ management, validation, and state tracking.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtTest import QTest
@@ -188,7 +188,7 @@ class SequenceWorkbenchPage(BasePage):
             logger.error(f"Failed to clear sequence: {e}")
             return False
 
-    def get_sequence_data(self) -> Optional[Dict[str, Any]]:
+    def get_sequence_data(self) -> Optional[dict[str, Any]]:
         """
         Get detailed sequence data.
 
@@ -263,7 +263,7 @@ class SequenceWorkbenchPage(BasePage):
         logger.debug("Sequence workbench not found")
         return None
 
-    def _find_beat_widgets(self) -> List[QWidget]:
+    def _find_beat_widgets(self) -> list[QWidget]:
         """
         Find all VISIBLE beat widgets in the workbench display area only.
 

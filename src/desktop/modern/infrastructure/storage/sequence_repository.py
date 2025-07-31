@@ -4,7 +4,7 @@ Provides in-memory storage for sequences with CRUD operations.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -22,7 +22,7 @@ class SequenceRepository:
 
     def __init__(self):
         """Initialize the repository with empty storage."""
-        self._sequences: Dict[str, SequenceData] = {}
+        self._sequences: dict[str, SequenceData] = {}
         self._current_sequence_id: Optional[str] = None
         logger.info("SequenceRepository initialized")
 
@@ -53,7 +53,7 @@ class SequenceRepository:
             logger.debug(f"Sequence {sequence_id} not found")
         return sequence
 
-    def get_all(self) -> List[SequenceData]:
+    def get_all(self) -> list[SequenceData]:
         """
         Get all sequences in the repository.
 

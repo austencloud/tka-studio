@@ -5,7 +5,7 @@ These services provide real business logic but without UI components.
 Perfect for server-side processing or CI/CD environments.
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
 from desktop.modern.core.types import Size
@@ -67,8 +67,8 @@ class HeadlessLayoutService(ILayoutService):
             return Size(parent_size.width // 2, parent_size.height // 2)
 
     def calculate_beat_frame_layout(
-        self, sequence: Any, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: Any, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """Calculate real beat frame layout."""
         sequence_length = getattr(sequence, "length", 16)
         container_width, container_height = container_size
@@ -93,7 +93,7 @@ class HeadlessLayoutService(ILayoutService):
         }
 
     def calculate_responsive_scaling(
-        self, content_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, content_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """Calculate real responsive scaling."""
         content_width, content_height = content_size
@@ -107,8 +107,8 @@ class HeadlessLayoutService(ILayoutService):
         return min(width_scale, height_scale, 1.0)  # Don't scale up beyond 1.0
 
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Calculate optimal grid layout."""
         if item_count <= 0:
             return (0, 0)
@@ -135,8 +135,8 @@ class HeadlessLayoutService(ILayoutService):
         return (best_rows, best_cols)
 
     def calculate_component_positions(
-        self, layout_config: Dict[str, Any]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, layout_config: dict[str, Any]
+    ) -> dict[str, tuple[int, int]]:
         """Calculate real component positions."""
         positions = {}
 
@@ -162,12 +162,12 @@ class HeadlessUIStateManagementService(IUIStateManager):
     """Headless UI state management without actual UI."""
 
     def __init__(self):
-        self.settings: Dict[str, Any] = {
+        self.settings: dict[str, Any] = {
             "theme": "default",
             "auto_save": True,
             "last_sequence": None,
         }
-        self.tab_states: Dict[str, Dict[str, Any]] = {
+        self.tab_states: dict[str, dict[str, Any]] = {
             "sequence_builder": {"active": True, "scroll_position": 0},
             "pictograph_editor": {"active": False, "selected_pictograph": None},
             "animation_player": {"active": False, "playing": False},
@@ -182,7 +182,7 @@ class HeadlessUIStateManagementService(IUIStateManager):
         """Set UI setting."""
         self.settings[key] = value
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get tab state."""
         if tab_name not in self.tab_states:
             self.tab_states[tab_name] = {"active": False}

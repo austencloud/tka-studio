@@ -6,8 +6,6 @@ that updates as options are toggled, following the legacy functionality but with
 clean architecture and glassmorphism design.
 """
 
-from typing import Dict, Union
-
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
 from PyQt6.QtWidgets import (
@@ -80,7 +78,7 @@ class ImageExportPreviewPanel(QFrame):
 class ExportToggle(QCheckBox):
     """Enhanced export toggle with modern styling."""
 
-    def __init__(self, label: str, tooltip: Union[str, None] = None, parent=None):
+    def __init__(self, label: str, tooltip: str | None = None, parent=None):
         super().__init__(label, parent)
         if tooltip:
             self.setToolTip(tooltip)
@@ -144,7 +142,7 @@ class ImageExportTab(QWidget):
     def __init__(self, export_service: IImageExporter, parent=None):
         super().__init__(parent)
         self.export_service = export_service
-        self.option_toggles: Dict[str, ExportToggle] = {}
+        self.option_toggles: dict[str, ExportToggle] = {}
 
         # Create preview panel
         self.preview_panel = ImageExportPreviewPanel(self)
@@ -500,7 +498,7 @@ class ImageExportTab(QWidget):
         except Exception as e:
             print(f"Error updating preview: {e}")
 
-    def _get_current_export_options(self) -> Dict[str, Union[bool, str]]:
+    def _get_current_export_options(self) -> dict[str, bool | str]:
         """Get current export options as a dictionary."""
         options = {}
         for option_key, toggle in self.option_toggles.items():
@@ -512,9 +510,7 @@ class ImageExportTab(QWidget):
 
         return options
 
-    def _create_placeholder_preview(
-        self, options: Dict[str, Union[bool, str]]
-    ) -> QPixmap:
+    def _create_placeholder_preview(self, options: dict[str, bool | str]) -> QPixmap:
         """Create a placeholder preview image."""
         pixmap = QPixmap(400, 300)
         pixmap.fill(Qt.GlobalColor.darkGray)

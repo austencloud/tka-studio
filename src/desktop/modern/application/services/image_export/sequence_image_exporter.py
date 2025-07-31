@@ -7,7 +7,7 @@ while following clean architecture patterns and using modern data types.
 
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QImage
@@ -53,7 +53,7 @@ class SequenceImageExporter(ISequenceImageExporter):
 
     def export_sequence_image(
         self,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         word: str,
         output_path: Path,
         options: ImageExportOptions,
@@ -96,7 +96,7 @@ class SequenceImageExporter(ISequenceImageExporter):
         export_directory: Path,
         options: ImageExportOptions,
         progress_callback: Optional[Callable[[ExportProgress], None]] = None,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export all sequences from a directory."""
         logger.info(
             f"Starting export of all sequences from {source_directory} to {export_directory}"
@@ -195,7 +195,7 @@ class SequenceImageExporter(ISequenceImageExporter):
 
     def create_sequence_image(
         self,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         word: str,
         options: ImageExportOptions,
     ) -> QImage:
@@ -255,7 +255,7 @@ class SequenceImageExporter(ISequenceImageExporter):
         logger.debug(f"Created image with dimensions {width}x{height}")
         return image
 
-    def _collect_sequence_files(self, source_directory: Path) -> List[tuple[str, Path]]:
+    def _collect_sequence_files(self, source_directory: Path) -> list[tuple[str, Path]]:
         """Collect all sequence files from the source directory."""
         sequence_files = []
 
@@ -283,7 +283,7 @@ class SequenceImageExporter(ISequenceImageExporter):
         source_directory: Path,
         export_directory: Path,
         options: ImageExportOptions,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Process a single sequence file."""
         try:
             # Create output path

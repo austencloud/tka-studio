@@ -7,7 +7,7 @@ that support the testing framework and make tests more reliable and maintainable
 
 import logging
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 from PyQt6.QtTest import QTest
 
@@ -125,7 +125,7 @@ class TestDataHelpers:
     """
 
     @staticmethod
-    def get_test_positions() -> List[str]:
+    def get_test_positions() -> list[str]:
         """
         Get standard test positions.
 
@@ -135,7 +135,7 @@ class TestDataHelpers:
         return ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11", "delta15_delta15"]
 
     @staticmethod
-    def get_test_sequence_lengths() -> List[int]:
+    def get_test_sequence_lengths() -> list[int]:
         """
         Get standard test sequence lengths.
 
@@ -145,7 +145,7 @@ class TestDataHelpers:
         return [1, 2, 3, 5, 8]
 
     @staticmethod
-    def create_test_metadata(test_name: str, **kwargs) -> Dict[str, Any]:
+    def create_test_metadata(test_name: str, **kwargs) -> dict[str, Any]:
         """
         Create test metadata dictionary.
 
@@ -230,7 +230,7 @@ class LoggingHelpers:
     """
 
     @staticmethod
-    def log_test_start(test_name: str, parameters: Optional[Dict[str, Any]] = None):
+    def log_test_start(test_name: str, parameters: Optional[dict[str, Any]] = None):
         """
         Log test start with parameters.
 
@@ -339,7 +339,7 @@ class PerformanceHelpers:
             raise
 
     @staticmethod
-    def measure_workflow_performance(workflow_builder) -> Dict[str, Any]:
+    def measure_workflow_performance(workflow_builder) -> dict[str, Any]:
         """
         Measure workflow performance metrics.
 

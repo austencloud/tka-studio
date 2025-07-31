@@ -9,7 +9,7 @@ Handles:
 """
 
 import logging
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any, Callable, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +23,10 @@ class LifecycleManager:
     """
 
     def __init__(self):
-        self.cleanup_handlers: List[Callable] = []
-        self._scoped_instances: Dict[str, Dict[Type, Any]] = {}
+        self.cleanup_handlers: list[Callable] = []
+        self._scoped_instances: dict[str, dict[type, Any]] = {}
         self._current_scope: Optional[str] = None
-        self._initialized_services: List[Any] = []
+        self._initialized_services: list[Any] = []
 
     def create_with_lifecycle(self, instance: Any) -> Any:
         """Create instance with proper lifecycle management."""
@@ -101,14 +101,14 @@ class LifecycleManager:
 
         logger.debug(f"Disposed scope: {scope_id}")
 
-    def get_scoped_instance(self, scope_id: str, service_type: Type) -> Optional[Any]:
+    def get_scoped_instance(self, scope_id: str, service_type: type) -> Optional[Any]:
         """Get an instance from a specific scope."""
         if scope_id not in self._scoped_instances:
             return None
         return self._scoped_instances[scope_id].get(service_type)
 
     def set_scoped_instance(
-        self, scope_id: str, service_type: Type, instance: Any
+        self, scope_id: str, service_type: type, instance: Any
     ) -> None:
         """Store an instance in a specific scope."""
         if scope_id not in self._scoped_instances:
@@ -142,7 +142,7 @@ class LifecycleManager:
         """Get total number of scoped instances across all scopes."""
         return sum(len(instances) for instances in self._scoped_instances.values())
 
-    def get_active_scopes(self) -> List[str]:
+    def get_active_scopes(self) -> list[str]:
         """Get list of all active scope IDs."""
         return list(self._scoped_instances.keys())
 
@@ -192,7 +192,7 @@ class LifecycleManager:
         )
         return False
 
-    def get_lifecycle_stats(self) -> Dict[str, Any]:
+    def get_lifecycle_stats(self) -> dict[str, Any]:
         """Get comprehensive lifecycle statistics."""
         return {
             "cleanup_handlers": len(self.cleanup_handlers),

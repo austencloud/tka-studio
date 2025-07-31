@@ -6,7 +6,6 @@ and other UI elements with QSettings persistence.
 """
 
 import logging
-from typing import Dict
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -208,7 +207,7 @@ class VisibilitySettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to set grid visibility: {e}")
 
-    def get_all_visibility_settings(self) -> Dict[str, bool]:
+    def get_all_visibility_settings(self) -> dict[str, bool]:
         """
         Get all visibility settings as a dictionary.
 
@@ -236,7 +235,7 @@ class VisibilitySettingsManager(QObject):
             logger.error(f"Failed to get all visibility settings: {e}")
             return self.DEFAULT_VISIBILITY.copy()
 
-    def set_all_visibility_settings(self, visibility_dict: Dict[str, bool]) -> bool:
+    def set_all_visibility_settings(self, visibility_dict: dict[str, bool]) -> bool:
         """
         Set multiple visibility settings at once.
 

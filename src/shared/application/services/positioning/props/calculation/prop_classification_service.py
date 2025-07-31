@@ -12,7 +12,6 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List
 
 from desktop.modern.domain.models import BeatData, Location, MotionData, Orientation
 from desktop.modern.domain.models.enums import PropType
@@ -22,12 +21,12 @@ class IPropClassificationService(ABC):
     """Interface for prop classification operations."""
 
     @abstractmethod
-    def classify_props_by_size(self, beat_data: BeatData) -> Dict[str, List]:
+    def classify_props_by_size(self, beat_data: BeatData) -> dict[str, list]:
         """Classify props by size categories (big, small, hands)."""
 
     @abstractmethod
     def get_repositioning_strategy(
-        self, beat_data: BeatData, prop_classification: Dict[str, List]
+        self, beat_data: BeatData, prop_classification: dict[str, list]
     ) -> str:
         """Determine repositioning strategy based on prop classification and letter."""
 
@@ -88,7 +87,7 @@ class PropClassificationService(IPropClassificationService):
             PropType.HAND,
         }
 
-    def classify_props_by_size(self, beat_data: BeatData) -> Dict[str, List]:
+    def classify_props_by_size(self, beat_data: BeatData) -> dict[str, list]:
         """
         Classify props by size categories (big, small, hands).
 
@@ -124,7 +123,7 @@ class PropClassificationService(IPropClassificationService):
         return classification
 
     def get_repositioning_strategy(
-        self, beat_data: BeatData, prop_classification: Dict[str, List]
+        self, beat_data: BeatData, prop_classification: dict[str, list]
     ) -> str:
         """
         Determine repositioning strategy based on prop classification and letter.

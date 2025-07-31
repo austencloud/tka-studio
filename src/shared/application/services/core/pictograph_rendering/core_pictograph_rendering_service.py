@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 import logging
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Optional, Protocol
 
 from desktop.modern.core.types import Point, Size
 from desktop.modern.domain.models import MotionData, PictographData
@@ -45,7 +45,7 @@ class RenderCommand:
     rotation: float = 0.0
     opacity: float = 1.0
     z_index: int = 0
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[dict[str, Any]] = None
 
 
 @dataclass
@@ -66,7 +66,7 @@ class IRenderCommandGenerator(Protocol):
 
     def generate_render_commands(
         self, pictograph_data: PictographData, context: RenderContext
-    ) -> List[RenderCommand]:
+    ) -> list[RenderCommand]:
         """Generate render commands for the pictograph."""
         ...
 
@@ -83,12 +83,12 @@ class IAssetProvider(ABC):
         """Get prop SVG content with color applied."""
 
     @abstractmethod
-    def get_arrow_svg(self, arrow_data: Dict[str, Any]) -> Optional[str]:
+    def get_arrow_svg(self, arrow_data: dict[str, Any]) -> Optional[str]:
         """Get arrow SVG content."""
 
     @abstractmethod
     def get_glyph_svg(
-        self, glyph_type: str, glyph_data: Dict[str, Any]
+        self, glyph_type: str, glyph_data: dict[str, Any]
     ) -> Optional[str]:
         """Get glyph SVG content."""
 
@@ -113,7 +113,7 @@ class CorePictographRenderingService:
 
     def generate_complete_pictograph_commands(
         self, pictograph_data: PictographData, context: RenderContext
-    ) -> List[RenderCommand]:
+    ) -> list[RenderCommand]:
         """
         Generate all render commands for a complete pictograph.
 
@@ -190,7 +190,7 @@ class CorePictographRenderingService:
         pictograph_data: PictographData,
         context: RenderContext,
         start_counter: int,
-    ) -> List[RenderCommand]:
+    ) -> list[RenderCommand]:
         """Generate prop render commands for all motions."""
         commands = []
 
@@ -258,7 +258,7 @@ class CorePictographRenderingService:
         pictograph_data: PictographData,
         context: RenderContext,
         start_counter: int,
-    ) -> List[RenderCommand]:
+    ) -> list[RenderCommand]:
         """Generate arrow render commands."""
         commands = []
 
@@ -324,7 +324,7 @@ class CorePictographRenderingService:
         pictograph_data: PictographData,
         context: RenderContext,
         start_counter: int,
-    ) -> List[RenderCommand]:
+    ) -> list[RenderCommand]:
         """Generate glyph render commands."""
         commands = []
 

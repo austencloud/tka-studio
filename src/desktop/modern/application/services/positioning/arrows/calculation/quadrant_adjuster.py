@@ -12,7 +12,6 @@ Ported from legacy quadrant adjustment logic.
 """
 
 import logging
-from typing import Dict, List, Tuple
 
 from desktop.modern.domain.models import Location, MotionType
 
@@ -128,7 +127,7 @@ class QuadrantAdjuster:
 
         return QPointF(adjustment[0], adjustment[1])
 
-    def _load_quadrant_adjustments(self) -> Dict[str, Dict[str, Tuple[float, float]]]:
+    def _load_quadrant_adjustments(self) -> dict[str, dict[str, tuple[float, float]]]:
         """
         Load quadrant adjustment mappings.
 
@@ -181,7 +180,7 @@ class QuadrantAdjuster:
 
     def get_position_specific_adjustments(
         self, location: Location, motion_type: MotionType
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """
         Get position-specific adjustments for fine-tuning.
 
@@ -228,7 +227,7 @@ class QuadrantAdjuster:
         return adjustments
 
     def apply_position_specific_adjustments(
-        self, base_position: QPointF, adjustments: List[Tuple[float, float]]
+        self, base_position: QPointF, adjustments: list[tuple[float, float]]
     ) -> QPointF:
         """
         Apply a list of position adjustments to a base position.

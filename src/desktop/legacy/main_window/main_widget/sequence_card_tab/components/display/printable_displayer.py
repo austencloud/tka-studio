@@ -4,7 +4,7 @@ Refactored PrintableDisplayer that uses the new component-based architecture.
 This class now delegates most of its functionality to the SequenceDisplayManager.
 """
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QWidget
 
@@ -99,6 +99,6 @@ class PrintableDisplayer:
 
     # For backward compatibility, expose the pages property
     @property
-    def pages(self) -> List[QWidget]:
+    def pages(self) -> list[QWidget]:
         """Get the list of pages."""
         return self.manager.pages

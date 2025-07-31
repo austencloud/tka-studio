@@ -16,7 +16,7 @@ ARCHITECTURE:
 import logging
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Import framework-agnostic core services
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
@@ -128,7 +128,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
     def render_sequence_beats(
         self,
         image: QImage,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         options: ImageExportOptions,
     ) -> None:
         """
@@ -222,7 +222,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
     def render_sequence_image(
         self,
         image: QImage,
-        sequence_data: List[Dict[str, Any]],
+        sequence_data: list[dict[str, Any]],
         word: str,
         columns: int,
         rows: int,
@@ -335,7 +335,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
 
     def _convert_legacy_options(
         self, options: ImageExportOptions, beat_count: int
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Convert legacy ImageExportOptions to framework-agnostic format."""
         try:
             return {
@@ -481,7 +481,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
         """Get the Qt adapter service."""
         return self._qt_adapter
 
-    def get_export_statistics(self) -> Dict[str, Any]:
+    def get_export_statistics(self) -> dict[str, Any]:
         """Get export statistics from both core and adapter."""
         return {
             "core_stats": self._core_service.get_performance_stats(),

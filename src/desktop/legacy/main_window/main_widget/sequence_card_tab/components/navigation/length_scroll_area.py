@@ -1,5 +1,4 @@
 # src/main_window/main_widget/sequence_card_tab/components/navigation/sidebar.py
-from typing import Dict
 
 from main_window.main_widget.sequence_card_tab.components.navigation.length_option_frame import (
     LengthOptionFrame,
@@ -18,7 +17,7 @@ class LengthScrollArea(QScrollArea):
 
     def __init__(self):
         super().__init__()
-        self.length_frames: Dict[int, LengthOptionFrame] = {}
+        self.length_frames: dict[int, LengthOptionFrame] = {}
         self.setup_ui()
 
     def setup_ui(self):

@@ -10,7 +10,7 @@ This service handles:
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtSvg import QSvgRenderer
 
@@ -45,13 +45,13 @@ class PictographCacheManager(IPictographCacheManager):
         }
 
         # Renderer caches by category
-        self._grid_renderer_cache: Dict[str, QSvgRenderer] = {}
-        self._prop_renderer_cache: Dict[str, QSvgRenderer] = {}
-        self._glyph_renderer_cache: Dict[str, QSvgRenderer] = {}
-        self._arrow_renderer_cache: Dict[str, QSvgRenderer] = {}
+        self._grid_renderer_cache: dict[str, QSvgRenderer] = {}
+        self._prop_renderer_cache: dict[str, QSvgRenderer] = {}
+        self._glyph_renderer_cache: dict[str, QSvgRenderer] = {}
+        self._arrow_renderer_cache: dict[str, QSvgRenderer] = {}
 
         # SVG data cache
-        self._svg_data_cache: Dict[str, str] = {}
+        self._svg_data_cache: dict[str, str] = {}
 
         # Access tracking for LRU eviction
         self._renderer_access_order: list[str] = []
@@ -243,7 +243,7 @@ class PictographCacheManager(IPictographCacheManager):
 
         logger.info("🧹 [CACHE_MANAGER] Cleared all caches")
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get comprehensive cache statistics."""
         total_requests = self._stats["cache_hits"] + self._stats["cache_misses"]
         hit_rate = (

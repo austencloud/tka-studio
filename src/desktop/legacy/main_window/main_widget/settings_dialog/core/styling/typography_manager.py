@@ -5,7 +5,7 @@ Extracted from GlassmorphismStyler to follow Single Responsibility Principle.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtGui import QFont
 
@@ -202,7 +202,7 @@ class TypographyManager:
 
         return line_heights.get(font_type, 1.5)
 
-    def get_typography_scale(self) -> Dict[str, Any]:
+    def get_typography_scale(self) -> dict[str, Any]:
         """
         Get the complete typography scale.
 

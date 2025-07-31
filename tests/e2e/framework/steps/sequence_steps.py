@@ -7,7 +7,7 @@ readable and maintainable.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtTest import QTest
 
@@ -189,7 +189,7 @@ class SequenceSteps:
             return False
 
     def build_sequence_with_specific_options(
-        self, option_identifiers: List[str]
+        self, option_identifiers: list[str]
     ) -> bool:
         """
         Build sequence using specific options in order.
@@ -231,7 +231,7 @@ class SequenceSteps:
             )
             return False
 
-    def get_sequence_info(self) -> Dict[str, Any]:
+    def get_sequence_info(self) -> dict[str, Any]:
         """
         Get comprehensive information about the current sequence.
 

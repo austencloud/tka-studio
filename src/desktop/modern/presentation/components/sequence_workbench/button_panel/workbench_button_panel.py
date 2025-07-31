@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -26,7 +26,7 @@ class SequenceWorkbenchButtonPanel(QWidget):
 
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
-        self._buttons: Dict[str, QPushButton] = {}
+        self._buttons: dict[str, QPushButton] = {}
         self._setup_ui()
         self._apply_styling()
 

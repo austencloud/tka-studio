@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 import subprocess
 import time
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 @dataclass
@@ -34,7 +34,7 @@ class ComprehensiveTestValidator:
 
     def __init__(self, tka_root: Path):
         self.tka_root = tka_root
-        self.results: List[TestResult] = []
+        self.results: list[TestResult] = []
         self.summary = {
             "total_tests": 0,
             "passed": 0,
@@ -45,7 +45,7 @@ class ComprehensiveTestValidator:
             "total_execution_time": 0.0,
         }
 
-    def discover_all_tests(self) -> List[str]:
+    def discover_all_tests(self) -> list[str]:
         """Discover all test items using pytest."""
         print("🔍 Discovering all tests...")
 
@@ -233,7 +233,7 @@ class ComprehensiveTestValidator:
                 return line.strip()
         return "Test failed (details not found)"
 
-    def validate_all_tests(self) -> Dict:
+    def validate_all_tests(self) -> dict:
         """Execute comprehensive validation of all tests."""
         print("🚀 Starting Comprehensive Test Validation")
         print("=" * 60)
@@ -326,7 +326,7 @@ class ComprehensiveTestValidator:
 
         return "\n".join(report)
 
-    def _add_category_breakdown(self, report: List[str], title: str, status: str):
+    def _add_category_breakdown(self, report: list[str], title: str, status: str):
         """Add category breakdown to report."""
         category_results = [r for r in self.results if r.status == status]
 

@@ -6,7 +6,7 @@ These interfaces complete the coverage for data building and factory operations.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import ElementalType, VTGMode
@@ -21,7 +21,7 @@ class IBeatDataBuilder(ABC):
     """Interface for beat data building operations."""
 
     @abstractmethod
-    def build_beat_data(self, beat_config: Dict[str, Any]) -> Any:
+    def build_beat_data(self, beat_config: dict[str, Any]) -> Any:
         """
         Build beat data from configuration.
 
@@ -36,7 +36,7 @@ class IBeatDataBuilder(ABC):
         """
 
     @abstractmethod
-    def validate_beat_config(self, beat_config: Dict[str, Any]) -> bool:
+    def validate_beat_config(self, beat_config: dict[str, Any]) -> bool:
         """
         Validate beat configuration.
 
@@ -48,7 +48,7 @@ class IBeatDataBuilder(ABC):
         """
 
     @abstractmethod
-    def get_default_beat_config(self) -> Dict[str, Any]:
+    def get_default_beat_config(self) -> dict[str, Any]:
         """
         Get default beat configuration.
 
@@ -57,7 +57,7 @@ class IBeatDataBuilder(ABC):
         """
 
     @abstractmethod
-    def build_from_legacy_data(self, legacy_data: Dict[str, Any]) -> Any:
+    def build_from_legacy_data(self, legacy_data: dict[str, Any]) -> Any:
         """
         Build beat data from legacy format.
 
@@ -73,7 +73,7 @@ class IPictographFactory(ABC):
     """Interface for pictograph factory operations."""
 
     @abstractmethod
-    def create_pictograph(self, pictograph_type: str, config: Dict[str, Any]) -> Any:
+    def create_pictograph(self, pictograph_type: str, config: dict[str, Any]) -> Any:
         """
         Create pictograph instance.
 
@@ -86,7 +86,7 @@ class IPictographFactory(ABC):
         """
 
     @abstractmethod
-    def get_available_types(self) -> List[str]:
+    def get_available_types(self) -> list[str]:
         """
         Get available pictograph types.
 
@@ -96,7 +96,7 @@ class IPictographFactory(ABC):
 
     @abstractmethod
     def validate_pictograph_config(
-        self, pictograph_type: str, config: Dict[str, Any]
+        self, pictograph_type: str, config: dict[str, Any]
     ) -> bool:
         """
         Validate pictograph configuration.
@@ -127,8 +127,8 @@ class IConversionUtils(ABC):
 
     @abstractmethod
     def convert_coordinates(
-        self, coords: Tuple[float, float], from_system: str, to_system: str
-    ) -> Tuple[float, float]:
+        self, coords: tuple[float, float], from_system: str, to_system: str
+    ) -> tuple[float, float]:
         """
         Convert coordinates between systems.
 
@@ -187,7 +187,7 @@ class IDatasetQuery(ABC):
     """Interface for dataset query operations."""
 
     @abstractmethod
-    def query_pictographs(self, query_params: Dict[str, Any]) -> List[Any]:
+    def query_pictographs(self, query_params: dict[str, Any]) -> list[Any]:
         """
         Query pictographs based on parameters.
 
@@ -200,8 +200,8 @@ class IDatasetQuery(ABC):
 
     @abstractmethod
     def filter_by_attributes(
-        self, dataset: List[Any], attributes: Dict[str, Any]
-    ) -> List[Any]:
+        self, dataset: list[Any], attributes: dict[str, Any]
+    ) -> list[Any]:
         """
         Filter dataset by attributes.
 
@@ -215,8 +215,8 @@ class IDatasetQuery(ABC):
 
     @abstractmethod
     def sort_dataset(
-        self, dataset: List[Any], sort_key: str, reverse: bool = False
-    ) -> List[Any]:
+        self, dataset: list[Any], sort_key: str, reverse: bool = False
+    ) -> list[Any]:
         """
         Sort dataset by key.
 
@@ -230,7 +230,7 @@ class IDatasetQuery(ABC):
         """
 
     @abstractmethod
-    def search_text(self, dataset: List[Any], search_term: str) -> List[Any]:
+    def search_text(self, dataset: list[Any], search_term: str) -> list[Any]:
         """
         Search dataset for text matches.
 
@@ -244,8 +244,8 @@ class IDatasetQuery(ABC):
 
     @abstractmethod
     def aggregate_data(
-        self, dataset: List[Any], group_by: str, aggregation_func: str
-    ) -> Dict[str, Any]:
+        self, dataset: list[Any], group_by: str, aggregation_func: str
+    ) -> dict[str, Any]:
         """
         Aggregate dataset by grouping criteria.
 
@@ -260,8 +260,8 @@ class IDatasetQuery(ABC):
 
     @abstractmethod
     def apply_filters(
-        self, dataset: List[Any], filters: List[Dict[str, Any]]
-    ) -> List[Any]:
+        self, dataset: list[Any], filters: list[dict[str, Any]]
+    ) -> list[Any]:
         """
         Apply multiple filters to dataset.
 
@@ -293,7 +293,7 @@ class IPictographDataService(ABC):
         """
 
     @abstractmethod
-    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
+    def get_pictograph_dataset(self) -> dict[str, list[dict[str, Any]]]:
         """
         Get the complete pictograph dataset for question generation.
 
@@ -315,15 +315,15 @@ class IPositionAttributeMapper(ABC):
     """Interface for position attribute mapping services."""
 
     @abstractmethod
-    def map_position_attributes(self, position_data: Dict[str, Any]) -> Dict[str, Any]:
+    def map_position_attributes(self, position_data: dict[str, Any]) -> dict[str, Any]:
         """Map position attributes between formats."""
 
     @abstractmethod
-    def validate_position_data(self, position_data: Dict[str, Any]) -> bool:
+    def validate_position_data(self, position_data: dict[str, Any]) -> bool:
         """Validate position data structure."""
 
     @abstractmethod
-    def get_default_position_attributes(self) -> Dict[str, Any]:
+    def get_default_position_attributes(self) -> dict[str, Any]:
         """Get default position attributes."""
 
 
@@ -335,7 +335,7 @@ class IPositionResolver(ABC):
         """Resolve position from key."""
 
     @abstractmethod
-    def get_valid_positions(self) -> List[str]:
+    def get_valid_positions(self) -> list[str]:
         """Get list of valid position keys."""
 
     @abstractmethod
@@ -410,5 +410,5 @@ class IGlyphDataService(ABC):
     @abstractmethod
     def _determine_positions(
         self, pictograph_data: "PictographData"
-    ) -> Tuple[Optional[str], Optional[str]]:
+    ) -> tuple[Optional[str], Optional[str]]:
         """Determine start and end positions from pictograph data."""

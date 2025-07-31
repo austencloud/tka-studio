@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -136,7 +136,7 @@ class OptionPicker(ViewableComponentBase):
         except Exception as e:
             self.emit_error(f"Error during cleanup: {e}", e)
 
-    def load_motion_combinations(self, sequence_data: List[Dict[str, Any]]) -> None:
+    def load_motion_combinations(self, sequence_data: list[dict[str, Any]]) -> None:
         """Load motion combinations using simplified picker."""
         if self.option_picker_widget:
             self.option_picker_widget.load_motion_combinations(sequence_data)
@@ -152,7 +152,7 @@ class OptionPicker(ViewableComponentBase):
             self.option_picker_widget.refresh_options()
 
     def refresh_options_from_sequence(
-        self, sequence_data: List[Dict[str, Any]]
+        self, sequence_data: list[dict[str, Any]]
     ) -> None:
         """Refresh options based on sequence state (DEPRECATED - compatibility)."""
         # Delegate to load_motion_combinations for compatibility

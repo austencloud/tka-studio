@@ -5,7 +5,6 @@ Direct port of legacy turn allocation algorithm with proper interface.
 """
 
 import random
-from typing import List, Tuple, Union
 
 
 class TurnIntensityManagerFactory:
@@ -18,7 +17,7 @@ class TurnIntensityManagerFactory:
     @staticmethod
     def allocate_turns_for_blue_and_red(
         length: int, level: int, turn_intensity: float
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+    ) -> tuple[list[int | float | str], list[int | float | str]]:
         """
         CRITICAL FIX: Port exact legacy turn allocation algorithm.
 
@@ -77,8 +76,8 @@ class TurnIntensityManagerFactory:
 
     @staticmethod
     def _adjust_weights_for_intensity(
-        weights: List[float], intensity_factor: float
-    ) -> List[float]:
+        weights: list[float], intensity_factor: float
+    ) -> list[float]:
         """Adjust weights based on intensity - higher intensity favors higher turns."""
         if intensity_factor <= 0.5:
             # Low intensity - favor lower turns
@@ -92,7 +91,7 @@ class TurnIntensityManagerFactory:
         return [w / total for w in adjusted] if total > 0 else weights
 
     @staticmethod
-    def _weighted_choice(choices: List, weights: List[float]):
+    def _weighted_choice(choices: list, weights: list[float]):
         """Make weighted random choice."""
         total = sum(weights)
         r = random.uniform(0, total)
@@ -116,7 +115,7 @@ class TurnIntensityManager:
 
     def allocate_turns_for_blue_and_red(
         self,
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+    ) -> tuple[list[int | float | str], list[int | float | str]]:
         """Allocate turns using the factory method."""
         return TurnIntensityManagerFactory.allocate_turns_for_blue_and_red(
             self.word_length, self.level, self.max_turn_intensity

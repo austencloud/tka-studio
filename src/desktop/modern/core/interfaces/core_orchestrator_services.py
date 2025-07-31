@@ -6,7 +6,7 @@ These interfaces handle application lifecycle and coordination operations.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional
 
 
 class IApplicationOrchestrator(ABC):
@@ -42,7 +42,7 @@ class IApplicationOrchestrator(ABC):
         """
 
     @abstractmethod
-    def get_initialization_status(self) -> Dict[str, Any]:
+    def get_initialization_status(self) -> dict[str, Any]:
         """
         Get current initialization status.
 
@@ -164,7 +164,7 @@ class IApplicationInitializationOrchestrator(ABC):
         """
 
     @abstractmethod
-    def validate_dependencies(self) -> Tuple[bool, List[str]]:
+    def validate_dependencies(self) -> tuple[bool, list[str]]:
         """
         Validate all required dependencies.
 
@@ -176,7 +176,7 @@ class IApplicationInitializationOrchestrator(ABC):
         """
 
     @abstractmethod
-    def get_initialization_order(self) -> List[str]:
+    def get_initialization_order(self) -> list[str]:
         """
         Get the order of initialization steps.
 
@@ -252,7 +252,7 @@ class IServiceRegistrationManager(ABC):
         """
 
     @abstractmethod
-    def get_registered_services(self) -> List[str]:
+    def get_registered_services(self) -> list[str]:
         """
         Get list of registered service names.
 
@@ -264,7 +264,7 @@ class IServiceRegistrationManager(ABC):
         """
 
     @abstractmethod
-    def validate_service_dependencies(self) -> Tuple[bool, List[str]]:
+    def validate_service_dependencies(self) -> tuple[bool, list[str]]:
         """
         Validate service dependency chain.
 
@@ -295,7 +295,7 @@ class IWindowManagementService(ABC):
     """Interface for window management operations."""
 
     @abstractmethod
-    def create_main_window(self, config: Dict[str, Any]) -> Any:
+    def create_main_window(self, config: dict[str, Any]) -> Any:
         """
         Create main application window.
 
@@ -334,7 +334,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def resize_window(self, window: Any, size: Tuple[int, int]) -> None:
+    def resize_window(self, window: Any, size: tuple[int, int]) -> None:
         """
         Resize window.
 
@@ -372,7 +372,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def get_window_geometry(self, window: Any) -> Dict[str, int]:
+    def get_window_geometry(self, window: Any) -> dict[str, int]:
         """
         Get window geometry.
 
@@ -387,7 +387,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def set_window_geometry(self, window: Any, geometry: Dict[str, int]) -> None:
+    def set_window_geometry(self, window: Any, geometry: dict[str, int]) -> None:
         """
         Set window geometry.
 
@@ -466,7 +466,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def save_window_state(self, window: Any) -> Dict[str, Any]:
+    def save_window_state(self, window: Any) -> dict[str, Any]:
         """
         Save window state.
 
@@ -481,7 +481,7 @@ class IWindowManagementService(ABC):
         """
 
     @abstractmethod
-    def restore_window_state(self, window: Any, state: Dict[str, Any]) -> None:
+    def restore_window_state(self, window: Any, state: dict[str, Any]) -> None:
         """
         Restore window state.
 

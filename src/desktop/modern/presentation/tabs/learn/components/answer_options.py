@@ -6,7 +6,7 @@ Handles buttons, pictographs, and other option types with clean interfaces.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QGridLayout, QPushButton, QVBoxLayout, QWidget
@@ -112,7 +112,7 @@ class AnswerLayoutManager:
 
     @staticmethod
     def arrange_options(
-        widgets: List[QWidget], container: QWidget, format_type: str
+        widgets: list[QWidget], container: QWidget, format_type: str
     ) -> None:
         """Arrange option widgets in appropriate layout."""
         # Clear existing layout
@@ -129,7 +129,7 @@ class AnswerLayoutManager:
             AnswerLayoutManager._arrange_button_list(widgets, container)
 
     @staticmethod
-    def _arrange_button_list(widgets: List[QWidget], container: QWidget) -> None:
+    def _arrange_button_list(widgets: list[QWidget], container: QWidget) -> None:
         """Arrange buttons in vertical list."""
         layout = QVBoxLayout(container)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -139,7 +139,7 @@ class AnswerLayoutManager:
             layout.addWidget(widget)
 
     @staticmethod
-    def _arrange_pictograph_grid(widgets: List[QWidget], container: QWidget) -> None:
+    def _arrange_pictograph_grid(widgets: list[QWidget], container: QWidget) -> None:
         """Arrange pictographs in grid layout."""
         layout = QGridLayout(container)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -178,8 +178,8 @@ class AnswerOptions(QWidget):
 
         self.current_question: Optional[QuestionData] = None
         self.current_format: str = ""
-        self.option_widgets: List[QWidget] = []
-        self.option_to_widget: Dict[Any, QWidget] = {}
+        self.option_widgets: list[QWidget] = []
+        self.option_to_widget: dict[Any, QWidget] = {}
 
         self._setup_ui()
 
@@ -226,7 +226,7 @@ class AnswerOptions(QWidget):
             logger.error(f"Failed to show options: {e}")
             self._show_error_message(f"Failed to display options: {e}")
 
-    def _create_option_widgets(self, options: List[Any], format_type: str) -> None:
+    def _create_option_widgets(self, options: list[Any], format_type: str) -> None:
         """Create widgets for answer options."""
         self.option_widgets = []
         self.option_to_widget = {}
@@ -358,7 +358,7 @@ class AnswerOptions(QWidget):
         except Exception as e:
             logger.error(f"Failed to update responsive styling: {e}")
 
-    def get_current_options(self) -> List[Any]:
+    def get_current_options(self) -> list[Any]:
         """Get current answer options."""
         if self.current_question:
             return self.current_question.answer_options

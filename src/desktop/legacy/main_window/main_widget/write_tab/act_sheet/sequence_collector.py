@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main_window.main_widget.write_tab.act_sheet.act_sheet import ActSheet
@@ -14,7 +14,7 @@ class SequenceCollector:
         total_rows = self.act_sheet.DEFAULT_ROWS
 
         for row in range(total_rows):
-            sequence_data: dict[str, Union[str, int, list[dict]]] = {
+            sequence_data: dict[str, str | int | list[dict]] = {
                 "sequence_start_marker": row == 0,
                 "cue": "",
                 "timestamp": "",

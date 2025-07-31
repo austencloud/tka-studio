@@ -8,7 +8,7 @@ Provides auto-save/restore functionality for user workflow continuity.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import uuid
 
 
@@ -24,12 +24,12 @@ class SessionState:
 
     # Current sequence data
     current_sequence_id: Optional[str] = None
-    current_sequence_data: Optional[Dict[str, Any]] = None
+    current_sequence_data: Optional[dict[str, Any]] = None
 
     # Workbench state
     selected_beat_index: Optional[int] = None
-    selected_beat_data: Optional[Dict[str, Any]] = None
-    start_position_data: Optional[Dict[str, Any]] = None
+    selected_beat_data: Optional[dict[str, Any]] = None
+    start_position_data: Optional[dict[str, Any]] = None
 
     # Graph editor state
     graph_editor_visible: bool = False
@@ -39,10 +39,10 @@ class SessionState:
 
     # Active tab and workbench configuration
     active_tab: str = "sequence_builder"
-    beat_layout: Dict[str, Any] = field(default_factory=dict)
+    beat_layout: dict[str, Any] = field(default_factory=dict)
 
     # Component visibility states
-    component_visibility: Dict[str, bool] = field(default_factory=dict)
+    component_visibility: dict[str, bool] = field(default_factory=dict)
 
     # Last interaction timestamp for staleness detection
     last_interaction: datetime = field(default_factory=datetime.now)
@@ -157,8 +157,8 @@ class ISessionStateTracker(ABC):
     def update_ui_state(
         self,
         active_tab: str,
-        beat_layout: Optional[Dict[str, Any]] = None,
-        component_visibility: Optional[Dict[str, bool]] = None,
+        beat_layout: Optional[dict[str, Any]] = None,
+        component_visibility: Optional[dict[str, bool]] = None,
     ) -> None:
         """
         Update UI state information.

@@ -2,7 +2,7 @@
 Container component that combines all turn configuration components.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from legacy_settings_manager.legacy_settings_manager import (
     LegacySettingsManager,
@@ -159,7 +159,7 @@ class TurnConfigContainer(QWidget):
         self.second_turn_slider.set_enabled(enabled)
         self.turn_pair_display.set_enabled(enabled)
 
-    def get_turn_values(self) -> Dict[str, Any]:
+    def get_turn_values(self) -> dict[str, Any]:
         """Get the selected turn values and configuration.
 
         Returns:

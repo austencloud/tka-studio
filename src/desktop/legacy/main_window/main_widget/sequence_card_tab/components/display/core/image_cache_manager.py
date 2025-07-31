@@ -5,7 +5,7 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QImage, QPixmap
@@ -145,7 +145,7 @@ class ImageCacheManager:
         except Exception as e:
             self.logger.debug(f"Failed to cache image to disk: {e}")
 
-    def clear_all_caches(self) -> Dict[str, int]:
+    def clear_all_caches(self) -> dict[str, int]:
         """
         Clear all caches.
 
@@ -164,7 +164,7 @@ class ImageCacheManager:
             "scaled_items_cleared": scaled_count,
         }
 
-    def cleanup_memory(self, cleanup_ratio: float = 0.5) -> Dict[str, int]:
+    def cleanup_memory(self, cleanup_ratio: float = 0.5) -> dict[str, int]:
         """
         Cleanup memory caches by removing oldest items.
 
@@ -189,7 +189,7 @@ class ImageCacheManager:
             "scaled_items_removed": scaled_removed,
         }
 
-    def get_comprehensive_stats(self) -> Dict[str, Any]:
+    def get_comprehensive_stats(self) -> dict[str, Any]:
         """
         Get comprehensive cache statistics.
 

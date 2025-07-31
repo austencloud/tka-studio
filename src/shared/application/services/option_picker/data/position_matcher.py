@@ -7,7 +7,7 @@ using the extracted business service.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
 
@@ -43,7 +43,7 @@ class PositionMatcher:
         self._position_service = position_service
 
     def extract_end_position(
-        self, last_beat: Dict[str, Any], position_service: "PictographPositionMatcher"
+        self, last_beat: dict[str, Any], position_service: "PictographPositionMatcher"
     ) -> Optional[str]:
         """
         Extract end position from last beat data using Legacy-compatible logic.
@@ -79,7 +79,7 @@ class PositionMatcher:
         # Delegate to business service
         return self._position_service.extract_modern_end_position(beat_data)
 
-    def has_motion_attributes(self, beat_data: Dict[str, Any]) -> bool:
+    def has_motion_attributes(self, beat_data: dict[str, Any]) -> bool:
         """
         Check if beat data has motion attributes for end position calculation.
 

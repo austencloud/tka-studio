@@ -6,7 +6,7 @@ and testability. These interfaces define the contracts for launcher services.
 """
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Optional, Protocol
 
 from desktop.modern.domain.models import (
     ApplicationCategory,
@@ -66,7 +66,7 @@ class IApplicationService(Protocol):
     without dealing with the actual launching process.
     """
 
-    def get_all_applications(self) -> List[ApplicationData]:
+    def get_all_applications(self) -> list[ApplicationData]:
         """Get all available applications."""
 
     def get_application(self, app_id: str) -> Optional[ApplicationData]:
@@ -74,10 +74,10 @@ class IApplicationService(Protocol):
 
     def get_applications_by_category(
         self, category: ApplicationCategory
-    ) -> List[ApplicationData]:
+    ) -> list[ApplicationData]:
         """Get applications in a specific category."""
 
-    def get_categories(self) -> List[ApplicationCategory]:
+    def get_categories(self) -> list[ApplicationCategory]:
         """Get all available categories."""
 
     def add_application(self, app: ApplicationData) -> None:
@@ -89,10 +89,10 @@ class IApplicationService(Protocol):
     def remove_application(self, app_id: str) -> None:
         """Remove an application."""
 
-    def search_applications(self, query: str) -> List[ApplicationData]:
+    def search_applications(self, query: str) -> list[ApplicationData]:
         """Search applications by title, description, or category."""
 
-    def get_favorite_applications(self) -> List[ApplicationData]:
+    def get_favorite_applications(self) -> list[ApplicationData]:
         """Get all favorite applications."""
 
     def toggle_favorite(self, app_id: str) -> Optional[ApplicationData]:
@@ -116,7 +116,7 @@ class IApplicationLaunchService(Protocol):
     def is_application_running(self, app_id: str) -> bool:
         """Check if an application is currently running."""
 
-    def get_running_applications(self) -> List[ApplicationData]:
+    def get_running_applications(self) -> list[ApplicationData]:
         """Get all currently running applications."""
 
     def get_application_process_id(self, app_id: str) -> Optional[int]:
@@ -137,7 +137,7 @@ class IScreenService(Protocol):
     and intelligent screen selection for launcher positioning.
     """
 
-    def get_available_screens(self) -> List[ScreenData]:
+    def get_available_screens(self) -> list[ScreenData]:
         """Get all available screens/monitors."""
 
     def get_primary_screen(self) -> ScreenData:
@@ -222,7 +222,7 @@ class ISettingsService(Protocol):
     def set_setting(self, key: str, value: Any) -> None:
         """Set a setting value."""
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings as a dictionary."""
 
     def reset_to_defaults(self) -> None:
@@ -234,7 +234,7 @@ class ISettingsService(Protocol):
     def import_settings(self, file_path: Path) -> bool:
         """Import settings from a file."""
 
-    def validate_settings(self) -> List[str]:
+    def validate_settings(self) -> list[str]:
         """Validate current settings and return any errors."""
 
 

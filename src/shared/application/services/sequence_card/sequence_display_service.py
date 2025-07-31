@@ -7,7 +7,7 @@ Framework-agnostic service layer.
 
 import logging
 from pathlib import Path
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     DisplayState,
@@ -48,11 +48,11 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         self.display_state = DisplayState()
         self.progress_callback: Optional[Callable[[int, int], None]] = None
         self.sequences_loaded_callback: Optional[
-            Callable[[List[SequenceCardData]], None]
+            Callable[[list[SequenceCardData]], None]
         ] = None
         self.loading_state_callback: Optional[Callable[[bool], None]] = None
         self._cancel_requested = False
-        self._current_sequences: List[SequenceCardData] = []
+        self._current_sequences: list[SequenceCardData] = []
 
         # Batch processing settings
         self.batch_size = 20
@@ -125,7 +125,7 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         self.progress_callback = callback
 
     def set_sequences_loaded_callback(
-        self, callback: Callable[[List[SequenceCardData]], None]
+        self, callback: Callable[[list[SequenceCardData]], None]
     ) -> None:
         """Set callback for when sequences are loaded."""
         self.sequences_loaded_callback = callback
@@ -134,11 +134,11 @@ class SequenceCardDisplayService(ISequenceCardDisplayService):
         """Set callback for loading state changes."""
         self.loading_state_callback = callback
 
-    def get_current_sequences(self) -> List[SequenceCardData]:
+    def get_current_sequences(self) -> list[SequenceCardData]:
         """Get currently loaded sequences."""
         return self._current_sequences
 
-    def _process_sequences_in_batches(self, sequences: List[SequenceCardData]) -> None:
+    def _process_sequences_in_batches(self, sequences: list[SequenceCardData]) -> None:
         """Process sequences with legacy-style responsiveness."""
         if self._cancel_requested:
             return

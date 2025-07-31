@@ -1,5 +1,3 @@
-from typing import List
-
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.tab_settings_interfaces import (
     IPropTypeSettingsManager,
@@ -36,7 +34,7 @@ class PropTypeSettingsManager(IPropTypeSettingsManager):
         """Set the current prop type"""
         self.ui_state_service.set_setting("prop_type", prop_type.value)
 
-    def get_available_prop_types(self) -> List[PropType]:
+    def get_available_prop_types(self) -> list[PropType]:
         """Get all available prop types"""
         return self._available_prop_types.copy()
 

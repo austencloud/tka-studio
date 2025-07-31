@@ -13,7 +13,7 @@ PROVIDES:
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import pandas as pd
 
@@ -38,7 +38,7 @@ class ICSVReader(ABC):
         """Convert CSV row to BeatData."""
 
     @abstractmethod
-    def get_pictographs_by_letter(self, letter: str) -> List[BeatData]:
+    def get_pictographs_by_letter(self, letter: str) -> list[BeatData]:
         """Get all pictographs for a specific letter."""
 
 
@@ -128,7 +128,7 @@ class CSVReader(ICSVReader):
             red_motion=red_motion,
         )
 
-    def get_pictographs_by_letter(self, letter: str) -> List[BeatData]:
+    def get_pictographs_by_letter(self, letter: str) -> list[BeatData]:
         """Get all pictographs for a specific letter."""
         df = self._load_cached_data()
         letter_data = df[df["letter"] == letter]

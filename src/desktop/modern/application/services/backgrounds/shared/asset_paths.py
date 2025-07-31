@@ -1,5 +1,4 @@
 import os
-from typing import Dict, List
 
 from PyQt6.QtGui import QPixmap
 
@@ -8,7 +7,7 @@ class AssetPathResolver:
     """Centralized asset path resolution for all background animations"""
 
     def __init__(self):
-        self._cached_images: Dict[str, QPixmap] = {}
+        self._cached_images: dict[str, QPixmap] = {}
         self._asset_root = self._find_asset_root()
 
     def get_image_path(self, filename: str) -> str:
@@ -35,7 +34,7 @@ class AssetPathResolver:
 
         return QPixmap()  # Return empty pixmap if not found
 
-    def preload_assets(self, asset_list: List[str]) -> None:
+    def preload_assets(self, asset_list: list[str]) -> None:
         """Preload a list of assets"""
         for asset_path in asset_list:
             self.get_cached_image(asset_path)

@@ -1,5 +1,5 @@
 import os
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from main_window.main_widget.grid_mode_checker import GridModeChecker
@@ -159,7 +159,7 @@ class PictographDatasetExporter:
         return directory
 
     def _create_pictograph_from_data(
-        self, pictograph_data: Dict[str, Any], grid_mode: str
+        self, pictograph_data: dict[str, Any], grid_mode: str
     ) -> LegacyPictograph:
         """
         Create a pictograph instance from pictograph data.

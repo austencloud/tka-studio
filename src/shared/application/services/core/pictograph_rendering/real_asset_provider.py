@@ -8,7 +8,7 @@ existing asset infrastructure.
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from shared.application.services.core.types import Size, SvgAsset
 
@@ -33,7 +33,7 @@ class RealAssetProvider(IAssetProvider):
             if assets_base_path
             else self._get_default_assets_path()
         )
-        self._svg_cache: Dict[str, str] = {}
+        self._svg_cache: dict[str, str] = {}
 
     def get_grid_svg(self, grid_mode: str) -> Optional[str]:
         """Get grid SVG content."""
@@ -83,7 +83,7 @@ class RealAssetProvider(IAssetProvider):
             logger.error(f"Failed to load prop SVG for {prop_type}/{color}: {e}")
             return None
 
-    def get_arrow_svg(self, arrow_data: Dict[str, Any]) -> Optional[str]:
+    def get_arrow_svg(self, arrow_data: dict[str, Any]) -> Optional[str]:
         """Get arrow SVG content."""
         try:
             # Create cache key from arrow data
@@ -116,7 +116,7 @@ class RealAssetProvider(IAssetProvider):
             return None
 
     def get_glyph_svg(
-        self, glyph_type: str, glyph_data: Dict[str, Any]
+        self, glyph_type: str, glyph_data: dict[str, Any]
     ) -> Optional[str]:
         """Get glyph SVG content."""
         try:
@@ -245,7 +245,7 @@ class RealAssetProvider(IAssetProvider):
         """Clear the SVG cache."""
         self._svg_cache.clear()
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache statistics."""
         return {
             "cached_items": len(self._svg_cache),
@@ -257,7 +257,7 @@ class RealAssetProvider(IAssetProvider):
     # ============================================================================
 
     def get_prop_asset(
-        self, prop_type: str, color: str, pictograph_data: Optional[Dict] = None
+        self, prop_type: str, color: str, pictograph_data: Optional[dict] = None
     ) -> Optional[SvgAsset]:
         """Get prop asset as SvgAsset object (IPictographAssetProvider compatibility)."""
         try:

@@ -12,7 +12,7 @@ PROVIDES:
 """
 
 import logging
-from typing import TYPE_CHECKING, List, Tuple, Type
+from typing import TYPE_CHECKING
 
 from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
 
@@ -328,7 +328,7 @@ class ServiceRegistrationHelper:
     @staticmethod
     def _register_services_batch(
         container: "DIContainer",
-        registrations: List[Tuple[Type, Type]],
+        registrations: list[tuple[type, type]],
         batch_name: str,
     ) -> None:
         """

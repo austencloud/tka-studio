@@ -1,6 +1,6 @@
 from functools import partial
 import os
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QEvent, QObject, Qt
 from PyQt6.QtGui import QPainter, QPen, QPixmap
@@ -141,7 +141,7 @@ class StartingPositionSection(FilterSectionBase):
         """Handle clicks on position images."""
         self.handle_position_click(position)
 
-    def _get_all_sequences_with_positions(self) -> list[Tuple[str, list[str], str]]:
+    def _get_all_sequences_with_positions(self) -> list[tuple[str, list[str], str]]:
         """Retrieve and cache all sequences along with their starting positions."""
         if hasattr(self, "_all_sequences_with_positions"):
             return self._all_sequences_with_positions
@@ -186,7 +186,7 @@ class StartingPositionSection(FilterSectionBase):
 
     def get_sequences_that_are_a_specific_position(
         self, position: str
-    ) -> list[Tuple[str, list[str]]]:
+    ) -> list[tuple[str, list[str]]]:
         """Retrieve sequences that correspond to a specific starting position."""
         sequences_with_positions = self._get_all_sequences_with_positions()
         return [

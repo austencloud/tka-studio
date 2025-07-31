@@ -5,7 +5,6 @@ Tests buttons and provides clear guidance for AI agents when buttons fail.
 """
 
 import time
-from typing import List
 
 from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtTest import QTest
@@ -254,9 +253,9 @@ class ButtonTester:
     def _create_failure_result(
         self,
         button_name: str,
-        errors: List[str],
+        errors: list[str],
         start_time: float,
-        warnings: List[str] = None,
+        warnings: list[str] = None,
     ) -> AITestResult:
         """Create a failure result with legacy guidance."""
         self._print_legacy_guidance(button_name)

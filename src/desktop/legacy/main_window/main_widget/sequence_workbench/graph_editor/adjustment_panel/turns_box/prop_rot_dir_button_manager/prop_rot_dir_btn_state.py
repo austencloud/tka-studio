@@ -1,5 +1,4 @@
 # === prop_rot_dir_button_manager/core.py ===
-from typing import Dict
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -13,7 +12,7 @@ class PropRotationState(QObject):
 
     def __init__(self):
         super().__init__()
-        self._state: Dict[str, bool] = {CLOCKWISE: False, COUNTER_CLOCKWISE: False}
+        self._state: dict[str, bool] = {CLOCKWISE: False, COUNTER_CLOCKWISE: False}
 
     def update_state(self, direction: str, value: bool):
         """Atomic state update with validation"""

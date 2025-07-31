@@ -1,5 +1,5 @@
 # src/main_window/main_widget/sequence_card_tab/components/pages/printable_factory.py
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
@@ -181,7 +181,7 @@ class PrintablePageFactory:
         """Get the size of each grid cell based on current settings."""
         return self.page_layout.get_grid_cell_size(self.rows, self.columns)
 
-    def get_grid_positions(self) -> list[Tuple[int, int]]:
+    def get_grid_positions(self) -> list[tuple[int, int]]:
         """Get all grid positions as (row, column) tuples."""
         positions = []
         for row in range(self.rows):

@@ -9,14 +9,10 @@ import logging
 from typing import (
     Any,
     Callable,
-    Dict,
     Generic,
-    List,
     Optional,
     Protocol,
-    Tuple,
     TypeVar,
-    Union,
     runtime_checkable,
 )
 
@@ -79,7 +75,7 @@ def calc_font_size(
     return calculated_size
 
 
-def calc_label_size(text: str, font: QFont) -> Tuple[int, int]:
+def calc_label_size(text: str, font: QFont) -> tuple[int, int]:
     """
     Calculate the size needed for a text label with proper type safety.
 
@@ -109,7 +105,7 @@ def calc_label_size(text: str, font: QFont) -> Tuple[int, int]:
 
 
 def safe_get_dict_value(
-    dictionary: Dict[K, V],
+    dictionary: dict[K, V],
     key: K,
     default: Optional[V] = None,
     expected_type: Optional[type] = None,
@@ -276,7 +272,7 @@ class TypedEventHandler(Generic[T]):
         return self._enabled
 
 
-def ensure_list(value: Union[T, List[T]]) -> List[T]:
+def ensure_list(value: T | list[T]) -> list[T]:
     """
     Ensure a value is a list.
 
@@ -291,7 +287,7 @@ def ensure_list(value: Union[T, List[T]]) -> List[T]:
     return [value]
 
 
-def filter_none_values(dictionary: Dict[K, Optional[V]]) -> Dict[K, V]:
+def filter_none_values(dictionary: dict[K, Optional[V]]) -> dict[K, V]:
     """
     Filter out None values from a dictionary.
 
@@ -304,7 +300,7 @@ def filter_none_values(dictionary: Dict[K, Optional[V]]) -> Dict[K, V]:
     return {k: v for k, v in dictionary.items() if v is not None}
 
 
-def merge_dicts_safely(*dicts: Dict[K, V]) -> Dict[K, V]:
+def merge_dicts_safely(*dicts: dict[K, V]) -> dict[K, V]:
     """
     Safely merge multiple dictionaries.
 
@@ -314,7 +310,7 @@ def merge_dicts_safely(*dicts: Dict[K, V]) -> Dict[K, V]:
     Returns:
         Merged dictionary
     """
-    result: Dict[K, V] = {}
+    result: dict[K, V] = {}
 
     for d in dicts:
         if isinstance(d, dict):

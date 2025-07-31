@@ -12,7 +12,7 @@ while maintaining the proven orientation calculation algorithms.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, NamedTuple
+from typing import Any, NamedTuple
 
 from desktop.modern.domain.models.enums import MotionType, Orientation
 
@@ -123,7 +123,7 @@ class OrientationCalculator(IOrientationCalculator):
 
     # Private data loading methods
 
-    def _load_orientation_flip_rules(self) -> Dict[str, Any]:
+    def _load_orientation_flip_rules(self) -> dict[str, Any]:
         """Load orientation flip rules for complex calculations."""
         # In production, this would load from JSON/database
         return {

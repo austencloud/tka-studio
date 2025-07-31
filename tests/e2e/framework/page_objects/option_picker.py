@@ -7,7 +7,7 @@ including option selection and availability checking.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtTest import QTest
 
@@ -92,7 +92,7 @@ class OptionPickerPage(BasePage):
             logger.error(f"Failed to select option {option_identifier}: {e}")
             return False
 
-    def get_available_options(self) -> List[str]:
+    def get_available_options(self) -> list[str]:
         """
         Get list of available options.
 
@@ -151,7 +151,7 @@ class OptionPickerPage(BasePage):
         logger.debug(f"Option count: {count}")
         return count
 
-    def get_option_details(self, option_identifier: str) -> Optional[Dict[str, Any]]:
+    def get_option_details(self, option_identifier: str) -> Optional[dict[str, Any]]:
         """
         Get detailed information about a specific option.
 
@@ -312,7 +312,7 @@ class OptionPickerPage(BasePage):
         logger.debug(f"Verifying selection of option: {option_identifier}")
         return True
 
-    def _extract_options_from_ui(self, picker) -> List[str]:
+    def _extract_options_from_ui(self, picker) -> list[str]:
         """
         Extract available options from UI elements.
 
@@ -326,7 +326,7 @@ class OptionPickerPage(BasePage):
         # For now, return empty list to fall back to defaults
         return []
 
-    def _get_default_options(self) -> List[str]:
+    def _get_default_options(self) -> list[str]:
         """
         Get default test options for fallback.
 

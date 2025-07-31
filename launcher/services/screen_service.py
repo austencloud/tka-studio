@@ -6,7 +6,7 @@ and intelligent screen selection for launcher positioning.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QRect
 from PyQt6.QtWidgets import QApplication
@@ -33,7 +33,7 @@ class ScreenService(IScreenService):
                 "No QApplication instance found, screen detection may be limited"
             )
 
-    def get_available_screens(self) -> List[ScreenData]:
+    def get_available_screens(self) -> list[ScreenData]:
         """Get all available screens/monitors."""
         if not self._app:
             # Fallback for testing without QApplication

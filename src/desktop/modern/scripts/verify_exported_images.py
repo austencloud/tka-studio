@@ -8,7 +8,6 @@ with the modern sequence card tab and display correctly.
 import logging
 from pathlib import Path
 import sys
-from typing import List
 
 # Add the modern src directory to the path
 modern_src_path = Path(__file__).parent.parent / "src"
@@ -143,7 +142,7 @@ class ExportedImageVerifier:
             logger.error(f"Error during image verification: {e}", exc_info=True)
             return False
 
-    def _collect_image_files(self, export_path: Path) -> List[tuple[str, Path]]:
+    def _collect_image_files(self, export_path: Path) -> list[tuple[str, Path]]:
         """Collect all image files from the export directory."""
         image_files = []
 

@@ -6,7 +6,7 @@ Replaces conversion methods with direct construction.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -21,7 +21,7 @@ class IBeatFactory(ABC):
         pictograph_data: PictographData,
         beat_number: int,
         duration: float = 1.0,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
     ) -> BeatData:
         """Create BeatData with embedded pictograph."""
 
@@ -44,7 +44,7 @@ class BeatFactory(IBeatFactory):
         pictograph_data: PictographData,
         beat_number: int,
         duration: float = 1.0,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
     ) -> BeatData:
         """
         Create BeatData with embedded pictograph.

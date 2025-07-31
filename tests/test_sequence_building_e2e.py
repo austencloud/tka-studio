@@ -9,7 +9,7 @@ works correctly in practice.
 import logging
 from pathlib import Path
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -432,7 +432,7 @@ class SequenceBuildingE2ETest(QObject):
             traceback.print_exc()
             return False
 
-    def _get_available_start_positions(self) -> List[str]:
+    def _get_available_start_positions(self) -> list[str]:
         """Get list of available start positions."""
         try:
             # Try to find start position items in the UI
@@ -527,7 +527,7 @@ class SequenceBuildingE2ETest(QObject):
             logger.error(f"❌ Error verifying option picker population: {e}")
             return False
 
-    def _get_available_options(self) -> List[str]:
+    def _get_available_options(self) -> list[str]:
         """Get list of available options from option picker."""
         try:
             # Strategy 1: Direct method call
@@ -611,7 +611,7 @@ class SequenceBuildingE2ETest(QObject):
             logger.error(f"❌ Error getting sequence length: {e}")
             return 0
 
-    def _get_current_sequence_data(self) -> Dict[str, Any]:
+    def _get_current_sequence_data(self) -> dict[str, Any]:
         """Get the current sequence data."""
         try:
             if hasattr(self.workbench, "get_sequence_data"):
@@ -630,7 +630,7 @@ class SequenceBuildingE2ETest(QObject):
             logger.error(f"❌ Error getting sequence data: {e}")
             return {}
 
-    def _validate_sequence_data(self, sequence_data: Dict[str, Any]) -> bool:
+    def _validate_sequence_data(self, sequence_data: dict[str, Any]) -> bool:
         """Validate that sequence data is properly formatted."""
         try:
             if not sequence_data:

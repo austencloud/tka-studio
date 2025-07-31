@@ -14,7 +14,7 @@ DECORATORS:
 import functools
 import logging
 import time
-from typing import Any, Callable, Optional, Type, Union
+from typing import Any, Callable, Optional
 
 from .exceptions import (
     TKABaseException,
@@ -235,7 +235,7 @@ def retry_on_failure(
     max_attempts: int = 3,
     delay_seconds: float = 1.0,
     backoff_multiplier: float = 2.0,
-    exceptions: Union[Type[Exception], tuple] = Exception,
+    exceptions: type[Exception] | tuple = Exception,
 ) -> Callable:
     """
     Decorator for retrying operations on failure.

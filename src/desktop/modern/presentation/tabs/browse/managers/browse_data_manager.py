@@ -12,7 +12,7 @@ returns SequenceData directly.
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.tabs.browse.errors import DataLoadError, FilterError
@@ -48,7 +48,7 @@ class BrowseDataManager:
             self.dictionary_manager = ModernDictionaryDataManager(data_dir)
 
         # Mapping from sequence UUID to word (for quick lookup)
-        self.sequence_id_to_word: Dict[str, str] = {}
+        self.sequence_id_to_word: dict[str, str] = {}
 
         # Connect to dictionary manager signals
         self.dictionary_manager.data_loaded.connect(self._on_data_loaded)
@@ -69,7 +69,7 @@ class BrowseDataManager:
         except Exception as e:
             raise DataLoadError(f"Failed to refresh data: {e}") from e
 
-    def apply_filter(self, filter_type: FilterType, filter_value) -> List[SequenceData]:
+    def apply_filter(self, filter_type: FilterType, filter_value) -> list[SequenceData]:
         """
         Apply filter using the dictionary data manager.
 
@@ -124,7 +124,7 @@ class BrowseDataManager:
         except Exception as e:
             raise FilterError(f"Failed to apply filter {filter_type.value}: {e}") from e
 
-    def _apply_starting_letter_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_starting_letter_filter(self, filter_value) -> list[SequenceData]:
         """Apply starting letter filter logic."""
         if isinstance(filter_value, str):
             # Handle letter ranges like "A-D"
@@ -151,7 +151,7 @@ class BrowseDataManager:
         else:
             return self.dictionary_manager.get_all_sequences()
 
-    def _apply_length_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_length_filter(self, filter_value) -> list[SequenceData]:
         """Apply length filter logic."""
         if isinstance(filter_value, str):
             if filter_value == "All":
@@ -171,7 +171,7 @@ class BrowseDataManager:
         else:
             return self.dictionary_manager.get_all_sequences()
 
-    def _apply_difficulty_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_difficulty_filter(self, filter_value) -> list[SequenceData]:
         """Apply difficulty filter logic."""
         if filter_value == "All" or filter_value == "All Levels":
             return self.dictionary_manager.get_all_sequences()
@@ -179,21 +179,21 @@ class BrowseDataManager:
             logger.info(f"📊 Filtering by difficulty: {filter_value}")
             return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
 
-    def _apply_author_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_author_filter(self, filter_value) -> list[SequenceData]:
         """Apply author filter logic."""
         if filter_value == "All Authors":
             return self.dictionary_manager.get_all_sequences()
         else:
             return self.dictionary_manager.get_sequences_by_author(filter_value)
 
-    def _apply_grid_mode_filter(self, filter_value) -> List[SequenceData]:
+    def _apply_grid_mode_filter(self, filter_value) -> list[SequenceData]:
         """Apply grid mode filter logic."""
         if filter_value == "All" or filter_value == "All Styles":
             return self.dictionary_manager.get_all_sequences()
         else:
             return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
 
-    def _update_id_mappings(self, sequences: List[SequenceData]) -> None:
+    def _update_id_mappings(self, sequences: list[SequenceData]) -> None:
         """Update ID to word mappings for given sequences."""
         for sequence in sequences:
             if sequence.word:
@@ -246,11 +246,11 @@ class BrowseDataManager:
 
         return None
 
-    def get_loading_errors(self) -> List[str]:
+    def get_loading_errors(self) -> list[str]:
         """Get any loading errors from the dictionary manager."""
         return self.dictionary_manager.get_loading_errors()
 
-    def get_all_sequences(self) -> List[SequenceData]:
+    def get_all_sequences(self) -> list[SequenceData]:
         """
         Get all sequences as SequenceData objects.
 

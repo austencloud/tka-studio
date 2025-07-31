@@ -8,7 +8,7 @@ solely on data access and storage operations.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -31,7 +31,7 @@ class ISequenceRepository(ABC):
         """Retrieve a sequence by its ID."""
 
     @abstractmethod
-    def get_all(self) -> List[SequenceData]:
+    def get_all(self) -> list[SequenceData]:
         """Retrieve all sequences."""
 
     @abstractmethod
@@ -251,7 +251,7 @@ class SequenceRepository(ISequenceRepository):
 
         return False
 
-    def get_all(self) -> List[SequenceData]:
+    def get_all(self) -> list[SequenceData]:
         """
         Get all sequences.
 
@@ -280,7 +280,7 @@ class SequenceRepository(ISequenceRepository):
         logger.info(f"Retrieved {len(sequences)} sequences")
         return sequences
 
-    def find_by_name(self, name: str) -> List[SequenceData]:
+    def find_by_name(self, name: str) -> list[SequenceData]:
         """
         Find sequences by name (partial match).
 
@@ -344,7 +344,7 @@ class SequenceRepository(ISequenceRepository):
         logger.info(f"Current sequence set to: {sequence_id}")
         return True
 
-    def get_sequences_by_length(self, length: int) -> List[SequenceData]:
+    def get_sequences_by_length(self, length: int) -> list[SequenceData]:
         """
         Get sequences by their length.
 

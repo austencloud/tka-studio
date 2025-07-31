@@ -5,7 +5,7 @@ Provides quick navigation to different sections of the filtered results.
 Based on the Legacy SequencePickerNavSidebar architecture.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont
@@ -33,8 +33,8 @@ class ModernNavigationSidebar(QWidget):
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
 
-        self.current_sections: List[str] = []
-        self.section_buttons: List[QPushButton] = []
+        self.current_sections: list[str] = []
+        self.section_buttons: list[QPushButton] = []
         self.selected_button: Optional[QPushButton] = None
         self.current_sort_order: str = "alphabetical"
 
@@ -114,7 +114,7 @@ class ModernNavigationSidebar(QWidget):
         )
 
     def update_sections(
-        self, sections: List[str], sort_order: str = "alphabetical"
+        self, sections: list[str], sort_order: str = "alphabetical"
     ) -> None:
         """
         Update the navigation sections.
@@ -144,7 +144,7 @@ class ModernNavigationSidebar(QWidget):
         # Add stretch to push buttons to top
         self.content_layout.addStretch()
 
-    def show_skeleton_sections(self, expected_sections: List[str]) -> None:
+    def show_skeleton_sections(self, expected_sections: list[str]) -> None:
         """
         Show skeleton placeholders for expected sections during loading.
 
@@ -271,7 +271,7 @@ class ModernNavigationSidebar(QWidget):
         )
         self.content_layout.addWidget(separator)
 
-    def _create_navigation_buttons(self, sections: List[str]) -> None:
+    def _create_navigation_buttons(self, sections: list[str]) -> None:
         """Create navigation buttons for each section."""
         self.section_buttons.clear()
 
@@ -285,7 +285,7 @@ class ModernNavigationSidebar(QWidget):
                 self.section_buttons.append(button)
                 self.content_layout.addWidget(button)
 
-    def _create_date_navigation_buttons(self, sections: List[str]) -> None:
+    def _create_date_navigation_buttons(self, sections: list[str]) -> None:
         """Create date navigation buttons grouped by year (like legacy system)."""
         # Parse dates and group by year
         parsed_dates = []
@@ -498,7 +498,7 @@ class ModernNavigationSidebar(QWidget):
         self.setMinimumWidth(width)
         self.setMaximumWidth(width * 2)  # Allow some flexibility
 
-    def get_current_sections(self) -> List[str]:
+    def get_current_sections(self) -> list[str]:
         """Get the current section list."""
         return self.current_sections.copy()
 

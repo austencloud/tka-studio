@@ -8,7 +8,6 @@ suppressing almost all settings logs during normal operation.
 import logging
 import re
 from re import Pattern
-from typing import List, Set
 
 
 class SettingsFilter(logging.Filter):
@@ -26,14 +25,14 @@ class SettingsFilter(logging.Filter):
         self.filter_all_settings = True
 
         # Settings that are allowed to be logged (critical settings)
-        self.allowed_settings: Set[str] = {
+        self.allowed_settings: set[str] = {
             # Add only critical settings here that should always be logged
             "global/prop_type",  # Prop type changes are important
             "global/grid_mode",  # Grid mode changes are important
         }
 
         # Patterns for messages that should always be filtered
-        self.always_filter_patterns: List[Pattern] = [
+        self.always_filter_patterns: list[Pattern] = [
             re.compile(r"Get setting:"),
             re.compile(r"Value is .+, returning:"),
             re.compile(r"Initial turns value:"),

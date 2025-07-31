@@ -15,7 +15,7 @@ from dataclasses import dataclass
 import logging
 import threading
 import time
-from typing import Any, Callable, Dict, List, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 # Import Qt modules with compatibility
 try:
@@ -86,8 +86,8 @@ class QtAsyncBridge(QObject):
 
         self.max_workers = max_workers
         self._thread_pool = ThreadPoolExecutor(max_workers=max_workers)
-        self._pending_operations: Dict[str, Future] = {}
-        self._operation_callbacks: Dict[str, Callable] = {}
+        self._pending_operations: dict[str, Future] = {}
+        self._operation_callbacks: dict[str, Callable] = {}
         self._metrics = ThreadingMetrics()
         self._mutex = QMutex() if QMutex != object else threading.Lock()
 
@@ -252,8 +252,8 @@ class AsyncQtWidget(QWidget):
         super().__init__(parent)
 
         self._async_bridge = qt_async_bridge()
-        self._async_operations: List[asyncio.Task] = []
-        self._cleanup_handlers: List[Callable] = []
+        self._async_operations: list[asyncio.Task] = []
+        self._cleanup_handlers: list[Callable] = []
 
         logger.debug(f"AsyncQtWidget created: {self.__class__.__name__}")
 
@@ -350,8 +350,8 @@ class QtThreadManager:
 
     def __init__(self):
         """Initialize Qt thread manager."""
-        self._active_threads: Dict[str, QThread] = {}
-        self._thread_metrics: Dict[str, Dict[str, Any]] = {}
+        self._active_threads: dict[str, QThread] = {}
+        self._thread_metrics: dict[str, dict[str, Any]] = {}
         self._lock = threading.Lock()
 
         logger.info("Qt thread manager initialized")
@@ -444,7 +444,7 @@ class QtThreadManager:
                 self._thread_metrics[thread_name]["status"] = "finished"
                 self._thread_metrics[thread_name]["finished_at"] = time.time()
 
-    def get_thread_metrics(self) -> Dict[str, Any]:
+    def get_thread_metrics(self) -> dict[str, Any]:
         """Get thread management metrics."""
         with self._lock:
             return {

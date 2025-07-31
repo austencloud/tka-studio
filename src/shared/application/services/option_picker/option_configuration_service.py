@@ -5,8 +5,6 @@ Manages configuration and business rules without UI dependencies.
 Extracted from hardcoded values in presentation components.
 """
 
-from typing import Dict
-
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
@@ -66,7 +64,7 @@ class OptionConfigurationService:
         """Get performance logging threshold in milliseconds."""
         return self._config["performance_logging_threshold_ms"]
 
-    def get_layout_config(self) -> Dict[str, int]:
+    def get_layout_config(self) -> dict[str, int]:
         """Get layout configuration values."""
         return {
             "column_count": self._config["column_count"],
@@ -74,7 +72,7 @@ class OptionConfigurationService:
             "min_frame_size": self._config["min_frame_size"],
         }
 
-    def get_sizing_config(self) -> Dict[str, float]:
+    def get_sizing_config(self) -> dict[str, float]:
         """Get sizing calculation configuration."""
         return {
             "border_ratio": self._config["border_ratio"],
@@ -105,7 +103,7 @@ class OptionConfigurationService:
         """Get list of letter types that should be individual."""
         return self._config["individual_types"].copy()
 
-    def update_config(self, config_updates: Dict[str, any]) -> None:
+    def update_config(self, config_updates: dict[str, any]) -> None:
         """
         Update configuration values.
 
@@ -127,7 +125,7 @@ class OptionConfigurationService:
         except Exception as e:
             print(f"❌ [CONFIG] Error updating configuration: {e}")
 
-    def get_section_config(self, letter_type: LetterType) -> Dict[str, any]:
+    def get_section_config(self, letter_type: LetterType) -> dict[str, any]:
         """
         Get complete configuration for a specific letter type section.
 
@@ -151,7 +149,7 @@ class OptionConfigurationService:
         except Exception:
             return False
 
-    def get_all_config(self) -> Dict[str, any]:
+    def get_all_config(self) -> dict[str, any]:
         """Get complete configuration dictionary (read-only copy)."""
         return self._config.copy()
 

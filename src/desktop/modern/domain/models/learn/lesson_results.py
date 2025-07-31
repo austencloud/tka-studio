@@ -7,7 +7,7 @@ including scoring, timing, and performance metrics.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from .lesson_config import LessonType, QuizMode
 
@@ -45,7 +45,7 @@ class LessonResults:
     average_time_per_question: Optional[float] = None
     streak_longest_correct: Optional[int] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Serialize results to dictionary with proper enum handling.
 
@@ -68,7 +68,7 @@ class LessonResults:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "LessonResults":
+    def from_dict(cls, data: dict[str, Any]) -> "LessonResults":
         """
         Deserialize results from dictionary.
 

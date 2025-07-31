@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from objects.prop.prop_state import PropState
 
@@ -23,9 +23,7 @@ class PropAttrManager:
     def __init__(self, prop: "Prop") -> None:
         self.prop = prop
 
-    def update_attributes(
-        self, prop_data: dict[str, Union[str, str, str, int]]
-    ) -> None:
+    def update_attributes(self, prop_data: dict[str, str | str | str | int]) -> None:
         self.prop.state.update_from_dict(prop_data)
         if PROP_TYPE in prop_data:
             value = prop_data[PROP_TYPE]
@@ -47,7 +45,7 @@ class PropAttrManager:
         if self.prop.state.ori in ori_map:
             self.prop.state.ori = ori_map[self.prop.state.ori]
 
-    def get_attributes(self) -> dict[str, Union[str, str, str]]:
+    def get_attributes(self) -> dict[str, str | str | str]:
         return {
             attr: getattr(self.prop.state, attr, None)
             for attr in PropAttribute._member_names_

@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QRect
 
@@ -126,7 +126,7 @@ class LauncherConfig:
             window=WindowConfig(), theme=ThemeConfig(), application=ApplicationConfig()
         )
 
-    def _validate_and_migrate(self, data: Dict[str, Any]) -> LauncherConfiguration:
+    def _validate_and_migrate(self, data: dict[str, Any]) -> LauncherConfiguration:
         """Validate and migrate configuration data."""
         try:
             # Check version and migrate if needed
@@ -151,8 +151,8 @@ class LauncherConfig:
             return self._create_default_configuration()
 
     def _migrate_configuration(
-        self, data: Dict[str, Any], from_version: str
-    ) -> Dict[str, Any]:
+        self, data: dict[str, Any], from_version: str
+    ) -> dict[str, Any]:
         """Migrate configuration from older versions."""
         logger.info(f"🔄 Migrating configuration from {from_version} to 3.0.0")
 
@@ -270,11 +270,11 @@ class LauncherConfig:
         """Get launch timeout in seconds."""
         return self.config.application.launch_timeout_seconds
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert configuration to dictionary."""
         return asdict(self.config)
 
-    def update_from_dict(self, data: Dict[str, Any]):
+    def update_from_dict(self, data: dict[str, Any]):
         """Update configuration from dictionary."""
         try:
             # Update individual sections

@@ -6,7 +6,7 @@ that follow TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.core.types import Point
 from desktop.modern.domain.models.arrow_data import ArrowData
@@ -102,7 +102,7 @@ class IArrowPositioningOrchestrator(ABC):
         arrow_data: ArrowData,
         pictograph_data: PictographData,
         motion_data: Optional[MotionData] = None,
-    ) -> Tuple[float, float, float]:
+    ) -> tuple[float, float, float]:
         """
         Calculate complete arrow position using the positioning pipeline.
 
@@ -159,12 +159,12 @@ class IPositionMapper(ABC):
     """Interface for position matching and calculation services."""
 
     @abstractmethod
-    def extract_end_position(self, last_beat: Dict[str, Any]) -> Optional[str]:
+    def extract_end_position(self, last_beat: dict[str, Any]) -> Optional[str]:
         """Extract end position from beat data."""
 
     @abstractmethod
     def calculate_end_position_from_motions(
-        self, beat_data: Dict[str, Any]
+        self, beat_data: dict[str, Any]
     ) -> Optional[str]:
         """Calculate end position from motion attributes."""
 
@@ -175,7 +175,7 @@ class IPositionMapper(ABC):
         """Get position key from start and end locations."""
 
     @abstractmethod
-    def has_motion_attributes(self, beat_data: Dict[str, Any]) -> bool:
+    def has_motion_attributes(self, beat_data: dict[str, Any]) -> bool:
         """Check if beat data has motion attributes."""
 
     @abstractmethod
@@ -229,7 +229,7 @@ class IDirectionalTupleCalculator(ABC):
     @abstractmethod
     def calculate_directional_tuple(
         self, motion: MotionData, location: Location
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Calculate directional tuple for arrow positioning.
 
@@ -349,7 +349,7 @@ class IOrientationCalculator(ABC):
         """Calculate orientation based on motion and context."""
 
     @abstractmethod
-    def get_orientation_adjustments(self, orientation: Any) -> Dict[str, Any]:
+    def get_orientation_adjustments(self, orientation: Any) -> dict[str, Any]:
         """Get adjustments for orientation."""
 
     @abstractmethod

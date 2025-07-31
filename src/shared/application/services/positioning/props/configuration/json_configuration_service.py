@@ -16,7 +16,7 @@ import json
 import logging
 from pathlib import Path
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 
@@ -25,7 +25,7 @@ class IJSONConfigurator(ABC):
     """Interface for JSON configuration operations."""
 
     @abstractmethod
-    def load_special_placements(self) -> Dict[str, Any]:
+    def load_special_placements(self) -> dict[str, Any]:
         """Load special placement data from JSON configuration files."""
 
     @abstractmethod
@@ -37,7 +37,7 @@ class IJSONConfigurator(ABC):
         """Check if beat has manual swap override in special placements."""
 
     @abstractmethod
-    def get_swap_override_data(self, beat_data: BeatData) -> Dict[str, Any]:
+    def get_swap_override_data(self, beat_data: BeatData) -> dict[str, Any]:
         """Get swap override data for beat."""
 
 
@@ -68,7 +68,7 @@ class JSONConfigurator(IJSONConfigurator):
         logger = logging.getLogger(__name__)
 
         self._config_paths = config_paths or self._get_default_config_paths()
-        self._special_placements: Optional[Dict[str, Any]] = None
+        self._special_placements: Optional[dict[str, Any]] = None
 
         # Eager load special placements during initialization
         self._load_special_placements()
@@ -81,7 +81,7 @@ class JSONConfigurator(IJSONConfigurator):
 
         self._initialized = True
 
-    def load_special_placements(self) -> Dict[str, Any]:
+    def load_special_placements(self) -> dict[str, Any]:
         """Load special placement data from JSON configuration files."""
         if self._special_placements is not None:
             return self._special_placements
@@ -114,7 +114,7 @@ class JSONConfigurator(IJSONConfigurator):
         override_key = self.generate_override_key(beat_data)
         return override_key in placements
 
-    def get_swap_override_data(self, beat_data: BeatData) -> Dict[str, Any]:
+    def get_swap_override_data(self, beat_data: BeatData) -> dict[str, Any]:
         """Get swap override data for beat."""
         placements = self.load_special_placements()
         override_key = self.generate_override_key(beat_data)
@@ -129,7 +129,7 @@ class JSONConfigurator(IJSONConfigurator):
         except Exception:
             return False
 
-    def get_configuration_status(self) -> Dict[str, Any]:
+    def get_configuration_status(self) -> dict[str, Any]:
         """Get status of configuration loading."""
         return {
             "special_placements_loaded": self._special_placements is not None,
@@ -137,7 +137,7 @@ class JSONConfigurator(IJSONConfigurator):
             "config_paths": self._config_paths,
         }
 
-    def validate_configuration(self) -> Dict[str, Any]:
+    def validate_configuration(self) -> dict[str, Any]:
         """Validate loaded configuration data."""
         validation_result = {
             "valid": True,

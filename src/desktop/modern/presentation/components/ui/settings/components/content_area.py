@@ -4,8 +4,6 @@ Settings dialog content area component.
 Manages the stacked widget that displays different settings tabs.
 """
 
-from typing import Dict
-
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 
@@ -15,7 +13,7 @@ class SettingsContentArea(QStackedWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setMinimumWidth(500)
-        self.tabs: Dict[str, QWidget] = {}
+        self.tabs: dict[str, QWidget] = {}
         self.tab_order: list = []
 
     def add_tab(self, tab_name: str, tab_widget: QWidget):

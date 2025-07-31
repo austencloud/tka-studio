@@ -6,7 +6,7 @@ but using modern service patterns and immutable domain models.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     ILetterDeterminationStrategy,
@@ -68,7 +68,7 @@ class DualFloatStrategy(ILetterDeterminationStrategy):
     def execute(
         self,
         pictograph_data: "PictographData",
-        dataset: Dict[Letter, List["PictographData"]],
+        dataset: dict[Letter, list["PictographData"]],
         comparison_service: IMotionComparisonService,
         context: Optional["MotionComparisonContext"] = None,
     ) -> "LetterDeterminationResult":
@@ -166,7 +166,7 @@ class DualFloatStrategy(ILetterDeterminationStrategy):
 
         return True
 
-    def get_debug_info(self, motion_data) -> Dict[str, any]:
+    def get_debug_info(self, motion_data) -> dict[str, any]:
         """
         Get debug information for this strategy.
 

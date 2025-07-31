@@ -10,7 +10,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.generation_models import (
@@ -62,15 +62,15 @@ class GenerationMetadata:
     generation_time_ms: int
     algorithm_used: str
     parameters_hash: str
-    warnings: Optional[List[str]] = None
+    warnings: Optional[list[str]] = None
 
 
 @dataclass(frozen=True)
 class ValidationResult:
     is_valid: bool
-    errors: Optional[List[str]] = None
-    warnings: Optional[List[str]] = None
-    suggestions: Optional[List[str]] = None
+    errors: Optional[list[str]] = None
+    warnings: Optional[list[str]] = None
+    suggestions: Optional[list[str]] = None
 
 
 class IGenerationService(ABC):
@@ -99,7 +99,7 @@ class ISequenceConfigurationService(ABC):
         pass
 
     @abstractmethod
-    def update_config(self, updates: Dict[str, Any]) -> None:
+    def update_config(self, updates: dict[str, Any]) -> None:
         pass
 
     @abstractmethod
@@ -115,7 +115,7 @@ class ISequenceConfigurationService(ABC):
         pass
 
     @abstractmethod
-    def get_preset_names(self) -> List[str]:
+    def get_preset_names(self) -> list[str]:
         pass
 
 
@@ -134,7 +134,7 @@ class IGenerationValidationService(ABC):
 
     @abstractmethod
     def validate_letter_combination(
-        self, letters: Set[LetterType], mode: GenerationMode
+        self, letters: set[LetterType], mode: GenerationMode
     ) -> ValidationResult:
         pass
 
@@ -151,11 +151,11 @@ class IGenerationHistoryService(ABC):
         pass
 
     @abstractmethod
-    def get_recent_configs(self, limit: int = 10) -> List[GenerationConfig]:
+    def get_recent_configs(self, limit: int = 10) -> list[GenerationConfig]:
         pass
 
     @abstractmethod
-    def get_generation_stats(self) -> Dict[str, Any]:
+    def get_generation_stats(self) -> dict[str, Any]:
         pass
 
     @abstractmethod
@@ -199,7 +199,7 @@ class ITurnIntensityManager(ABC):
         """
 
     @abstractmethod
-    def get_intensity_range(self, level: int) -> Tuple[float, float]:
+    def get_intensity_range(self, level: int) -> tuple[float, float]:
         """
         Get valid intensity range for level.
 

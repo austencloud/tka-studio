@@ -10,7 +10,7 @@ import os
 
 # Import framework-agnostic core
 import sys
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
@@ -73,7 +73,7 @@ class QtImageLoader(IThumbnailImageLoader):
             logger.error(f"Qt image loading failed for {image_path}: {e}")
             return None
 
-    def create_placeholder_image(self, text: str, size: Size, style: Dict) -> ImageData:
+    def create_placeholder_image(self, text: str, size: Size, style: dict) -> ImageData:
         """Create placeholder image using QT."""
         try:
             # Create QPixmap for placeholder
@@ -305,8 +305,8 @@ class QtThumbnailFactoryAdapter:
     # ========================================================================
 
     def batch_create_thumbnails(
-        self, sequences: List, thumbnail_width: int, sort_method: str = "alphabetical"
-    ) -> List[QWidget]:
+        self, sequences: list, thumbnail_width: int, sort_method: str = "alphabetical"
+    ) -> list[QWidget]:
         """Create multiple thumbnails efficiently using core service."""
         try:
             # Convert all sequences to specs

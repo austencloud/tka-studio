@@ -7,7 +7,7 @@ to monitor toggle functionality and identify production-specific failures.
 """
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -40,7 +40,7 @@ class ProductionToggleDebugger(QObject):
         self._workbench: Optional[QWidget] = None
 
         # State tracking
-        self._event_sequence: List[Dict[str, Any]] = []
+        self._event_sequence: list[dict[str, Any]] = []
         self._last_click_time: Optional[float] = None
 
         production_log("Production Toggle Debugger initialized")
@@ -245,7 +245,7 @@ class ProductionToggleDebugger(QObject):
 
         self._last_state = current_state
 
-    def _get_current_state(self) -> Dict[str, Any]:
+    def _get_current_state(self) -> dict[str, Any]:
         """Get current state of all monitored components"""
         state = {
             "timestamp": time.time(),
@@ -283,7 +283,7 @@ class ProductionToggleDebugger(QObject):
         return state
 
     def _state_changed(
-        self, old_state: Dict[str, Any], new_state: Dict[str, Any]
+        self, old_state: dict[str, Any], new_state: dict[str, Any]
     ) -> bool:
         """Check if state has changed significantly"""
         # Check for visibility changes
@@ -305,7 +305,7 @@ class ProductionToggleDebugger(QObject):
 
         return False
 
-    def _log_event(self, event_type: str, data: Dict[str, Any]) -> None:
+    def _log_event(self, event_type: str, data: dict[str, Any]) -> None:
         """Log a debug event"""
         event = {"type": event_type, "timestamp": time.time(), "data": data}
         self._event_sequence.append(event)
@@ -342,7 +342,7 @@ class ProductionToggleDebugger(QObject):
             {"is_visible": is_visible, "current_state": self._get_current_state()},
         )
 
-    def get_event_sequence(self) -> List[Dict[str, Any]]:
+    def get_event_sequence(self) -> list[dict[str, Any]]:
         """Get the complete event sequence"""
         return self._event_sequence.copy()
 
@@ -460,7 +460,7 @@ def attach_to_application(main_window: QWidget) -> bool:
     return debugger.attach_to_application(main_window)
 
 
-def get_debug_events() -> List[Dict[str, Any]]:
+def get_debug_events() -> list[dict[str, Any]]:
     """Get all debug events from the production debugger"""
     debugger = get_production_debugger()
     return debugger.get_event_sequence()

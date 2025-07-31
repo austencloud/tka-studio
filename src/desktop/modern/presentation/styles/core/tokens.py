@@ -3,7 +3,6 @@ Design tokens for typography, spacing, shadows, and other design primitives.
 """
 
 from dataclasses import dataclass
-from typing import Dict
 
 from ..glassmorphism_styles import GlassmorphismEffects
 
@@ -14,22 +13,22 @@ class DesignTokens:
 
     # Typography
     font_family: str = '"Inter", "Segoe UI", sans-serif'
-    font_sizes: Dict[str, str] = None
-    font_weights: Dict[str, int] = None
-    line_heights: Dict[str, str] = None
-    letter_spacings: Dict[str, str] = None
+    font_sizes: dict[str, str] = None
+    font_weights: dict[str, int] = None
+    line_heights: dict[str, str] = None
+    letter_spacings: dict[str, str] = None
 
     # Spacing
-    spacing: Dict[str, str] = None
+    spacing: dict[str, str] = None
 
     # Border radius
-    radius: Dict[str, str] = None
+    radius: dict[str, str] = None
 
     # Shadows
-    shadows: Dict[str, str] = None
+    shadows: dict[str, str] = None
 
     # Transitions
-    transitions: Dict[str, str] = None
+    transitions: dict[str, str] = None
 
     def __post_init__(self):
         """Initialize default values for design tokens."""

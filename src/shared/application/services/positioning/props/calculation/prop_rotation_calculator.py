@@ -12,7 +12,6 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict
 
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.enums import Location
@@ -28,7 +27,7 @@ class IPropRotationCalculator(ABC):
         """Calculate rotation angle for prop."""
 
     @abstractmethod
-    def get_rotation_angle_map(self) -> Dict[Orientation, Dict[Location, float]]:
+    def get_rotation_angle_map(self) -> dict[Orientation, dict[Location, float]]:
         """Get rotation angle mapping for orientations and locations."""
 
 
@@ -62,11 +61,11 @@ class PropRotationCalculator(IPropRotationCalculator):
         rotation_angle = orientation_map.get(location, 0)
         return float(rotation_angle)
 
-    def get_rotation_angle_map(self) -> Dict[Orientation, Dict[Location, float]]:
+    def get_rotation_angle_map(self) -> dict[Orientation, dict[Location, float]]:
         """Get rotation angle mapping for orientations and locations."""
         return self._angle_map.copy()
 
-    def _build_rotation_angle_map(self) -> Dict[Orientation, Dict[Location, float]]:
+    def _build_rotation_angle_map(self) -> dict[Orientation, dict[Location, float]]:
         """Build rotation angle mapping for diamond grid orientations."""
         return {
             Orientation.IN: {

@@ -12,7 +12,7 @@ Replaces complex orchestration logic previously embedded in OptionPickerSection.
 
 import logging
 import time
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 
 from desktop.modern.application.services.option_picker.frame_pool_service import (
     FramePoolService,
@@ -54,9 +54,9 @@ class OptionLoader(IOptionLoader):
     def load_section_options(
         self,
         letter_type: LetterType,
-        pictographs: List[PictographData],
+        pictographs: list[PictographData],
         selection_callback: Callable[[PictographData], None],
-    ) -> List["OptionPictograph"]:
+    ) -> list["OptionPictograph"]:
         """
         Load pictographs into frames for a section.
 
@@ -149,7 +149,7 @@ class OptionLoader(IOptionLoader):
             logger.error(f"Error loading single option for {letter_type}[{index}]: {e}")
             return None
 
-    def unload_section_options(self, frames: List["OptionPictograph"]) -> None:
+    def unload_section_options(self, frames: list["OptionPictograph"]) -> None:
         """
         Unload options and return frames to pool.
 
@@ -176,9 +176,9 @@ class OptionLoader(IOptionLoader):
 
     def batch_load_all_sections(
         self,
-        sections_data: dict[LetterType, List[PictographData]],
+        sections_data: dict[LetterType, list[PictographData]],
         selection_callback: Callable[[PictographData], None],
-    ) -> dict[LetterType, List["OptionPictograph"]]:
+    ) -> dict[LetterType, list["OptionPictograph"]]:
         """
         Load options for all sections in batch.
 
@@ -210,7 +210,7 @@ class OptionLoader(IOptionLoader):
         return loaded_sections
 
     def clear_all_sections(
-        self, sections_frames: dict[LetterType, List["OptionPictograph"]]
+        self, sections_frames: dict[LetterType, list["OptionPictograph"]]
     ) -> None:
         """
         Clear all loaded sections and return frames to pool.
@@ -261,7 +261,7 @@ class OptionLoader(IOptionLoader):
         return required_frames <= pool_size
 
     # Interface implementation methods
-    def load_options(self, criteria: Dict[str, Any]) -> List[Any]:
+    def load_options(self, criteria: dict[str, Any]) -> list[Any]:
         """Load options based on criteria (interface implementation)."""
         pictographs = criteria.get("pictographs", [])
         letter_type = criteria.get("letter_type", LetterType.Type1)
@@ -272,12 +272,12 @@ class OptionLoader(IOptionLoader):
         # Return loaded pictographs
         return pictographs
 
-    def get_available_options(self, context: str) -> List[Any]:
+    def get_available_options(self, context: str) -> list[Any]:
         """Get available options for context (interface implementation)."""
         # Return empty list for now - would be populated based on context
         return []
 
-    def validate_option_criteria(self, criteria: Dict[str, Any]) -> bool:
+    def validate_option_criteria(self, criteria: dict[str, Any]) -> bool:
         """Validate option loading criteria (interface implementation)."""
         try:
             # Check required fields

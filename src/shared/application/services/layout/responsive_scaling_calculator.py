@@ -7,8 +7,6 @@ context-aware scaling with specific configurations for different contexts,
 and screen size-based layout selection.
 """
 
-from typing import Tuple
-
 from .layout_types import LayoutConfig, LayoutMode, ScalingMode
 
 try:
@@ -50,7 +48,7 @@ class ResponsiveScalingCalculator:
         }
 
     def calculate_responsive_scaling(
-        self, content_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, content_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """Calculate responsive scaling factor."""
         content_width, content_height = content_size
@@ -72,7 +70,7 @@ class ResponsiveScalingCalculator:
     @handle_service_errors("calculate_context_aware_scaling")
     @monitor_performance("context_aware_scaling")
     def calculate_context_aware_scaling(
-        self, context: str, base_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, context: str, base_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """Calculate scaling based on context."""
         context_configs = {
@@ -115,7 +113,7 @@ class ResponsiveScalingCalculator:
         # Clamp to context bounds
         return max(min_scale, min(max_scale, scale))
 
-    def get_layout_for_screen_size(self, screen_size: Tuple[int, int]) -> LayoutConfig:
+    def get_layout_for_screen_size(self, screen_size: tuple[int, int]) -> LayoutConfig:
         """Get appropriate layout configuration for screen size."""
         width, _ = screen_size
 

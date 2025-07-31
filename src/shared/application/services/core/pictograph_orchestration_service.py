@@ -8,7 +8,7 @@ and web services.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from .pictograph_renderer import CorePictographRenderer, IPictographAssetProvider
 from .types import Point, RenderCommand, Size
@@ -22,10 +22,10 @@ class IPictographOrchestrationService(ABC):
     @abstractmethod
     def create_pictograph_commands(
         self,
-        pictograph_data: Dict[str, Any],
+        pictograph_data: dict[str, Any],
         target_size: Size,
-        options: Optional[Dict] = None,
-    ) -> List[RenderCommand]:
+        options: Optional[dict] = None,
+    ) -> list[RenderCommand]:
         """Create render commands for complete pictograph."""
 
     @abstractmethod
@@ -38,15 +38,15 @@ class IPictographOrchestrationService(ABC):
     def create_prop_command(
         self,
         color: str,
-        motion_data: Dict[str, Any],
+        motion_data: dict[str, Any],
         position: Point,
-        pictograph_data: Optional[Dict] = None,
+        pictograph_data: Optional[dict] = None,
     ) -> RenderCommand:
         """Create render command for prop."""
 
     @abstractmethod
     def create_glyph_command(
-        self, glyph_type: str, glyph_data: Dict[str, Any], position: Point, size: Size
+        self, glyph_type: str, glyph_data: dict[str, Any], position: Point, size: Size
     ) -> RenderCommand:
         """Create render command for glyph."""
 
@@ -66,10 +66,10 @@ class CorePictographOrchestrationService(IPictographOrchestrationService):
 
     def create_pictograph_commands(
         self,
-        pictograph_data: Dict[str, Any],
+        pictograph_data: dict[str, Any],
         target_size: Size,
-        options: Optional[Dict] = None,
-    ) -> List[RenderCommand]:
+        options: Optional[dict] = None,
+    ) -> list[RenderCommand]:
         """
         Create render commands for complete pictograph.
 
@@ -139,23 +139,23 @@ class CorePictographOrchestrationService(IPictographOrchestrationService):
     def create_prop_command(
         self,
         color: str,
-        motion_data: Dict[str, Any],
+        motion_data: dict[str, Any],
         position: Point,
-        pictograph_data: Optional[Dict] = None,
+        pictograph_data: Optional[dict] = None,
     ) -> RenderCommand:
         """Create render command for prop."""
         prop_type = motion_data.get("prop_type", "staff")
         return self.core_renderer.render_prop(prop_type, color, position, motion_data)
 
     def create_glyph_command(
-        self, glyph_type: str, glyph_data: Dict[str, Any], position: Point, size: Size
+        self, glyph_type: str, glyph_data: dict[str, Any], position: Point, size: Size
     ) -> RenderCommand:
         """Create render command for glyph."""
         glyph_id = glyph_data.get("id", "")
         return self.core_renderer.render_glyph(glyph_type, glyph_id, position, size)
 
     def _calculate_prop_position(
-        self, motion_data: Dict[str, Any], target_size: Size
+        self, motion_data: dict[str, Any], target_size: Size
     ) -> Point:
         """Calculate prop position from motion data."""
         # Extract position from motion data or use defaults
@@ -163,7 +163,7 @@ class CorePictographOrchestrationService(IPictographOrchestrationService):
         y = motion_data.get("end_y", target_size.height / 2)
         return Point(x, y)
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         return self._performance_stats.copy()
 

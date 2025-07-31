@@ -7,7 +7,7 @@ Integrates with real TKA data and workbench - around 180 lines.
 
 import logging
 import random
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QCoreApplication
 
@@ -47,7 +47,7 @@ class FreeformGenerator:
         self.blue_rot_dir: Optional[RotationDirection] = None
         self.red_rot_dir: Optional[RotationDirection] = None
 
-    def generate_sequence(self, config: GenerationConfig) -> List[PictographData]:
+    def generate_sequence(self, config: GenerationConfig) -> list[PictographData]:
         """
         Generate a freeform sequence using real TKA data.
 
@@ -161,7 +161,7 @@ class FreeformGenerator:
         )
 
     def _generate_next_beat(
-        self, available_data: List[dict], config: GenerationConfig, beat_num: int
+        self, available_data: list[dict], config: GenerationConfig, beat_num: int
     ) -> Optional[PictographData]:
         """Generate the next beat in the sequence."""
 

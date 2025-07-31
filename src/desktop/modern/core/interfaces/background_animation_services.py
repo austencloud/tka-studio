@@ -6,7 +6,7 @@ These interfaces support the animated background system with cross-platform comp
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 
 class IBlobAnimation(ABC):
@@ -25,7 +25,7 @@ class IBlobAnimation(ABC):
         """
 
     @abstractmethod
-    def get_blob_positions(self) -> List[Dict[str, Any]]:
+    def get_blob_positions(self) -> list[dict[str, Any]]:
         """
         Get current blob positions and properties.
 
@@ -69,7 +69,7 @@ class ISparkleAnimation(ABC):
         """
 
     @abstractmethod
-    def add_sparkle(self, position: Tuple[float, float]) -> None:
+    def add_sparkle(self, position: tuple[float, float]) -> None:
         """
         Add sparkle at position.
 
@@ -81,7 +81,7 @@ class ISparkleAnimation(ABC):
         """
 
     @abstractmethod
-    def get_sparkle_positions(self) -> List[Dict[str, Any]]:
+    def get_sparkle_positions(self) -> list[dict[str, Any]]:
         """
         Get current sparkle positions and properties.
 
@@ -113,7 +113,7 @@ class IWaveEffects(ABC):
         """
 
     @abstractmethod
-    def get_wave_parameters(self) -> Dict[str, Any]:
+    def get_wave_parameters(self) -> dict[str, Any]:
         """
         Get current wave parameters.
 
@@ -153,7 +153,7 @@ class IBubblePhysics(ABC):
         """
 
     @abstractmethod
-    def add_bubble(self, position: Tuple[float, float], size: float) -> str:
+    def add_bubble(self, position: tuple[float, float], size: float) -> str:
         """
         Add bubble to simulation.
 
@@ -184,7 +184,7 @@ class IBubblePhysics(ABC):
         """
 
     @abstractmethod
-    def get_bubble_positions(self) -> List[Dict[str, Any]]:
+    def get_bubble_positions(self) -> list[dict[str, Any]]:
         """
         Get current bubble positions and properties.
 
@@ -224,7 +224,7 @@ class IFishMovement(ABC):
         """
 
     @abstractmethod
-    def get_fish_positions(self) -> List[Dict[str, Any]]:
+    def get_fish_positions(self) -> list[dict[str, Any]]:
         """
         Get current fish positions and states.
 
@@ -253,7 +253,7 @@ class IFishSpawning(ABC):
 
     @abstractmethod
     def spawn_fish(
-        self, fish_type: str, position: Optional[Tuple[float, float]] = None
+        self, fish_type: str, position: Optional[tuple[float, float]] = None
     ) -> str:
         """
         Spawn a new fish.
@@ -322,7 +322,7 @@ class ISnowflakePhysics(ABC):
         """
 
     @abstractmethod
-    def add_snowflake(self, position: Optional[Tuple[float, float]] = None) -> str:
+    def add_snowflake(self, position: Optional[tuple[float, float]] = None) -> str:
         """
         Add snowflake to simulation.
 
@@ -337,7 +337,7 @@ class ISnowflakePhysics(ABC):
         """
 
     @abstractmethod
-    def get_snowflake_positions(self) -> List[Dict[str, Any]]:
+    def get_snowflake_positions(self) -> list[dict[str, Any]]:
         """
         Get current snowflake positions.
 
@@ -349,7 +349,7 @@ class ISnowflakePhysics(ABC):
         """
 
     @abstractmethod
-    def set_wind_force(self, force: Tuple[float, float]) -> None:
+    def set_wind_force(self, force: tuple[float, float]) -> None:
         """
         Set wind force affecting snowflakes.
 
@@ -377,7 +377,7 @@ class ISantaMovement(ABC):
         """
 
     @abstractmethod
-    def get_santa_position(self) -> Dict[str, Any]:
+    def get_santa_position(self) -> dict[str, Any]:
         """
         Get Santa's current position and state.
 
@@ -389,7 +389,7 @@ class ISantaMovement(ABC):
         """
 
     @abstractmethod
-    def set_santa_path(self, waypoints: List[Tuple[float, float]]) -> None:
+    def set_santa_path(self, waypoints: list[tuple[float, float]]) -> None:
         """
         Set Santa's movement path.
 
@@ -433,7 +433,7 @@ class IShootingStar(ABC):
         """
 
     @abstractmethod
-    def get_shooting_star_positions(self) -> List[Dict[str, Any]]:
+    def get_shooting_star_positions(self) -> list[dict[str, Any]]:
         """
         Get current shooting star positions.
 
@@ -461,7 +461,7 @@ class IStarTwinkling(ABC):
         """
 
     @abstractmethod
-    def get_star_states(self) -> List[Dict[str, Any]]:
+    def get_star_states(self) -> list[dict[str, Any]]:
         """
         Get current star twinkling states.
 
@@ -501,7 +501,7 @@ class ICometTrajectory(ABC):
         """
 
     @abstractmethod
-    def get_comet_position(self) -> Dict[str, Any]:
+    def get_comet_position(self) -> dict[str, Any]:
         """
         Get current comet position and properties.
 
@@ -545,7 +545,7 @@ class IMoonPositioning(ABC):
         """
 
     @abstractmethod
-    def get_moon_position(self) -> Dict[str, Any]:
+    def get_moon_position(self) -> dict[str, Any]:
         """
         Get current moon position.
 
@@ -585,7 +585,7 @@ class IUfoBehavior(ABC):
         """
 
     @abstractmethod
-    def get_ufo_position(self) -> Dict[str, Any]:
+    def get_ufo_position(self) -> dict[str, Any]:
         """
         Get current UFO position and state.
 

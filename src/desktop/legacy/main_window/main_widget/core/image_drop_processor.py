@@ -10,7 +10,7 @@ import logging
 import os
 from pathlib import Path
 import shutil
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QPixmap
@@ -56,7 +56,7 @@ class ImageDropProcessor(QObject):
         super().__init__()
 
         self.app_context = app_context
-        self.processing_queue: List[str] = []
+        self.processing_queue: list[str] = []
         self.is_processing = False
 
         # Processing options
@@ -89,7 +89,7 @@ class ImageDropProcessor(QObject):
         # Show processing options dialog
         self._show_processing_options_dialog(image_path)
 
-    def process_multiple_images(self, image_paths: List[str]) -> None:
+    def process_multiple_images(self, image_paths: list[str]) -> None:
         """
         Process multiple dropped images.
 
@@ -165,7 +165,7 @@ class ImageDropProcessor(QObject):
             selected_option = dialog.get_selected_option()
             self._execute_processing_option(image_path, selected_option)
 
-    def _show_batch_processing_dialog(self, image_paths: List[str]) -> None:
+    def _show_batch_processing_dialog(self, image_paths: list[str]) -> None:
         """Show dialog for choosing how to process multiple images."""
         dialog = BatchImageProcessingDialog(image_paths, self.processing_options)
 
@@ -250,7 +250,7 @@ class ImageDropProcessor(QObject):
 class ImageProcessingDialog(QDialog):
     """Dialog for choosing how to process a single dropped image."""
 
-    def __init__(self, image_path: str, options: Dict[str, str]):
+    def __init__(self, image_path: str, options: dict[str, str]):
         super().__init__()
 
         self.image_path = image_path
@@ -299,7 +299,7 @@ class ImageProcessingDialog(QDialog):
 class BatchImageProcessingDialog(QDialog):
     """Dialog for choosing how to process multiple dropped images."""
 
-    def __init__(self, image_paths: List[str], options: Dict[str, str]):
+    def __init__(self, image_paths: list[str], options: dict[str, str]):
         super().__init__()
 
         self.image_paths = image_paths

@@ -2,7 +2,7 @@
 Base class for the codex pictograph exporter.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from PyQt6.QtGui import QImage
@@ -29,7 +29,7 @@ class BaseCodexExporter:
         self.main_widget = image_export_tab.main_widget
 
     def _create_pictograph_from_data(
-        self, pictograph_data: Dict[str, Any], grid_mode: str
+        self, pictograph_data: dict[str, Any], grid_mode: str
     ) -> LegacyPictograph:
         """Create a pictograph from the given data.
 

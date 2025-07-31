@@ -6,7 +6,7 @@ QPainter-based rendering system, maintaining backward compatibility.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
@@ -43,7 +43,7 @@ class QtImageExportServiceAdapter:
         logger.debug("🖼️ [QT_EXPORT_ADAPTER] Initialized Qt image export adapter")
 
     def render_sequence_image(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
     ) -> QImage:
         """
         Render sequence image using core service + Qt execution.
@@ -88,7 +88,7 @@ class QtImageExportServiceAdapter:
             return error_image
 
     def _execute_render_commands(
-        self, painter: QPainter, commands: List[Dict[str, Any]]
+        self, painter: QPainter, commands: list[dict[str, Any]]
     ):
         """Execute render commands using Qt painter."""
         try:
@@ -105,7 +105,7 @@ class QtImageExportServiceAdapter:
                 f"❌ [QT_EXPORT_ADAPTER] Failed to execute render commands: {e}"
             )
 
-    def _execute_single_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _execute_single_command(self, painter: QPainter, command: dict[str, Any]):
         """Execute a single render command."""
         try:
             command_type = command.get("type", "unknown")
@@ -126,7 +126,7 @@ class QtImageExportServiceAdapter:
                 f"❌ [QT_EXPORT_ADAPTER] Failed to execute command {command.get('type')}: {e}"
             )
 
-    def _render_background(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_background(self, painter: QPainter, command: dict[str, Any]):
         """Render background command."""
         try:
             position = command.get("position", Point(0, 0))
@@ -146,7 +146,7 @@ class QtImageExportServiceAdapter:
         except Exception as e:
             logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render background: {e}")
 
-    def _render_text(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_text(self, painter: QPainter, command: dict[str, Any]):
         """Render text command."""
         try:
             text = command.get("text", "")
@@ -172,7 +172,7 @@ class QtImageExportServiceAdapter:
         except Exception as e:
             logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render text: {e}")
 
-    def _render_beat(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_beat(self, painter: QPainter, command: dict[str, Any]):
         """Render beat command."""
         try:
             beat_data = command.get("beat_data", {})
@@ -219,7 +219,7 @@ class QtImageExportServiceAdapter:
         except Exception:
             return QColor("#FFFFFF")
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         core_stats = self._core_service.get_performance_stats()
         return {**core_stats, "qt_renders": self._render_count}

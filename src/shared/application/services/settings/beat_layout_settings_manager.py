@@ -1,5 +1,3 @@
-from typing import Dict, Tuple
-
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.tab_settings_interfaces import IBeatLayoutService
 
@@ -23,7 +21,7 @@ class BeatLayoutSettingsManager(IBeatLayoutService):
             16: (4, 4),  # 16 beats: 4 rows, 4 columns
         }
 
-    def get_layout_for_length(self, sequence_length: int) -> Tuple[int, int]:
+    def get_layout_for_length(self, sequence_length: int) -> tuple[int, int]:
         """Get the layout (rows, cols) for a given sequence length"""
         layout_key = f"beat_layout_{sequence_length}"
         stored_layout = self.ui_state_service.get_setting(layout_key)
@@ -45,7 +43,7 @@ class BeatLayoutSettingsManager(IBeatLayoutService):
         layout_key = f"beat_layout_{sequence_length}"
         self.ui_state_service.set_setting(layout_key, (rows, cols))
 
-    def _calculate_layout(self, length: int) -> Tuple[int, int]:
+    def _calculate_layout(self, length: int) -> tuple[int, int]:
         """Calculate a reasonable layout for any sequence length"""
         if length <= 0:
             return (1, 1)
@@ -70,7 +68,7 @@ class BeatLayoutSettingsManager(IBeatLayoutService):
 
     def get_layout_options_for_length(
         self, sequence_length: int
-    ) -> Dict[str, Tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """Get available layout options for a sequence length"""
         options = {}
 

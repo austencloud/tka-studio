@@ -8,7 +8,7 @@ arrow positioning with comprehensive adjustment data.
 import codecs
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 # Use framework-agnostic types from desktop.modern.core.types
 from desktop.modern.core.types import Point
@@ -20,7 +20,7 @@ class DefaultPlacementService:
 
     def __init__(self):
         self.root_path = self._find_project_root()
-        self.all_defaults: Dict[str, Dict[str, Dict[str, Any]]] = {
+        self.all_defaults: dict[str, dict[str, dict[str, Any]]] = {
             "diamond": {},
             "box": {},
         }
@@ -63,7 +63,7 @@ class DefaultPlacementService:
                     str(filepath)
                 )
 
-    def _load_json(self, path: str) -> Dict[str, Any]:
+    def _load_json(self, path: str) -> dict[str, Any]:
         """Load JSON file with error handling."""
         try:
             with codecs.open(path, "r", encoding="utf-8") as file:
@@ -137,7 +137,7 @@ class DefaultPlacementService:
 
     def get_placement_data(
         self, motion_type: MotionType, placement_key: str, grid_mode: str = "diamond"
-    ) -> Dict[str, tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """Get complete placement data for a specific key."""
         motion_type_str = motion_type.value
         default_placements = self.all_defaults.get(grid_mode, {}).get(

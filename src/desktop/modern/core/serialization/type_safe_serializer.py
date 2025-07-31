@@ -9,7 +9,7 @@ from dataclasses import is_dataclass
 from datetime import datetime
 import json
 import logging
-from typing import Any, Dict, Type, TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class TypeSafeSerializer:
     """
 
     @staticmethod
-    def serialize(obj: Any) -> Dict[str, Any]:
+    def serialize(obj: Any) -> dict[str, Any]:
         """
         Serialize with full type information.
 
@@ -71,7 +71,7 @@ class TypeSafeSerializer:
             raise SerializationError(f"Failed to serialize {type(obj)}: {e}")
 
     @staticmethod
-    def deserialize(data: Dict[str, Any], expected_type: Type[T]) -> T:
+    def deserialize(data: dict[str, Any], expected_type: type[T]) -> T:
         """
         Deserialize with type validation.
 
@@ -137,7 +137,7 @@ class TypeSafeSerializer:
         return json.dumps(serialized, indent=indent, ensure_ascii=False)
 
     @staticmethod
-    def deserialize_from_json(json_str: str, expected_type: Type[T]) -> T:
+    def deserialize_from_json(json_str: str, expected_type: type[T]) -> T:
         """
         Deserialize object from JSON string.
 
@@ -197,7 +197,7 @@ class TypeSafeSerializer:
             raise SerializationError(f"Schema validation failed: {e}")
 
     @staticmethod
-    def _validate_serialized_data(data: Dict[str, Any]) -> None:
+    def _validate_serialized_data(data: dict[str, Any]) -> None:
         """Validate serialized data structure."""
         required_metadata = ["__type__", "__version__", "__serialized_at__"]
 
@@ -226,7 +226,7 @@ class BatchSerializer:
     """Utility for serializing collections of objects efficiently."""
 
     @staticmethod
-    def serialize_list(objects: list, object_type: Type[T]) -> Dict[str, Any]:
+    def serialize_list(objects: list, object_type: type[T]) -> dict[str, Any]:
         """Serialize a list of objects with batch metadata."""
         if not objects:
             return {
@@ -253,7 +253,7 @@ class BatchSerializer:
         }
 
     @staticmethod
-    def deserialize_list(data: Dict[str, Any], object_type: Type[T]) -> list[T]:
+    def deserialize_list(data: dict[str, Any], object_type: type[T]) -> list[T]:
         """Deserialize a list of objects from batch data."""
         if data.get("__batch_type__") != "list":
             raise SerializationError("Data is not a serialized list")

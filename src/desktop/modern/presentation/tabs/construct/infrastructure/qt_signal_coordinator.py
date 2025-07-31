@@ -6,7 +6,7 @@ Provides clean signal/slot communication between ConstructTab components.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -58,7 +58,7 @@ class ConstructTabSignalCoordinator(QObject):
         self.logger = logging.getLogger(__name__)
 
         # Component references for direct method calls when needed
-        self.components: Dict[str, Any] = {}
+        self.components: dict[str, Any] = {}
 
         self.logger.info("Qt signal coordinator initialized")
 

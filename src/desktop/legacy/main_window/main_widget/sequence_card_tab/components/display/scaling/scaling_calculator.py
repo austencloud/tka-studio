@@ -5,7 +5,6 @@ Extracted from the monolithic ImageProcessor class to follow SRP.
 """
 
 import logging
-from typing import Tuple
 
 from PyQt6.QtCore import QSize
 
@@ -26,7 +25,7 @@ class ScalingCalculator:
 
     def calculate_screen_scaling_params(
         self, cell_size: QSize, columns_per_row: int, page_scale_factor: float
-    ) -> Tuple[int, int, int]:
+    ) -> tuple[int, int, int]:
         """
         Calculate scaling parameters for screen display.
 
@@ -63,7 +62,7 @@ class ScalingCalculator:
         original_height: int,
         export_target_width: int,
         export_target_height: int,
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate scaling parameters for export.
 
@@ -118,7 +117,7 @@ class ScalingCalculator:
         original_height: int,
         target_width: int,
         target_height: int,
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate dimensions that fit within target while maintaining aspect ratio.
 

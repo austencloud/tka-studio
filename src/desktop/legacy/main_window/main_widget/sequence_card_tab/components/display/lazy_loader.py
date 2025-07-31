@@ -1,6 +1,6 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/lazy_loader.py
 import logging
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap
@@ -42,10 +42,10 @@ class LazyImageLoader(QObject):
         self.buffer_pixels = buffer_pixels
 
         # Track image states
-        self.pending_images: Dict[str, Dict[str, Any]] = {}  # path -> load_params
-        self.loaded_images: Set[str] = set()
-        self.loading_images: Set[str] = set()
-        self.visible_images: Set[str] = set()
+        self.pending_images: dict[str, dict[str, Any]] = {}  # path -> load_params
+        self.loaded_images: set[str] = set()
+        self.loading_images: set[str] = set()
+        self.visible_images: set[str] = set()
 
         # Placeholder pixmap for unloaded images
         self.placeholder_pixmap: Optional[QPixmap] = None
@@ -285,7 +285,7 @@ class LazyImageLoader(QObject):
         if self.load_timer.isActive():
             self.load_timer.stop()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get lazy loading statistics."""
         return {
             "pending_images": len(self.pending_images),

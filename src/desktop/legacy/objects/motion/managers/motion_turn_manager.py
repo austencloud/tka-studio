@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from data.constants import BLUE, RED, TURNS
 
@@ -15,20 +15,20 @@ class MotionTurnsManager:
         new_turns = MotionTurnsManager.clamp_turns(self.motion.state.turns + adjustment)
         self.motion.state.turns_manager.set_motion_turns(new_turns)
 
-    def set_turns(self, new_turns: Union[int, float, str]) -> None:
+    def set_turns(self, new_turns: int | float | str) -> None:
         """set the turns for a given motion object"""
         clamped_turns = MotionTurnsManager.clamp_turns(new_turns)
         self.motion.state.turns_manager.set_motion_turns(clamped_turns)
 
     @staticmethod
-    def clamp_turns(turns: Union[int, float, str]) -> Union[int, float, str]:
+    def clamp_turns(turns: int | float | str) -> int | float | str:
         """Clamp the turns value to be within allowable range"""
         return max(0, min(3, turns))
 
     @staticmethod
     def convert_turn_floats_to_ints(
-        turns: Union[int, float, str],
-    ) -> Union[int, float, str]:
+        turns: int | float | str,
+    ) -> int | float | str:
         """Convert turn values that are whole numbers from float to int"""
         return int(turns) if turns in [0.0, 1.0, 2.0, 3.0] else turns
 
@@ -48,7 +48,7 @@ class MotionTurnsManager:
         """Subtract a full turn from the motion"""
         self.adjust_turns(-1)
 
-    def set_motion_turns(self, turns: Union[str, int, float]) -> None:
+    def set_motion_turns(self, turns: str | int | float) -> None:
         self.motion.state.turns = turns
         self.motion.arrow.motion.state.turns = turns
         other_motion_color = RED if self.motion.state.color == BLUE else BLUE

@@ -6,7 +6,7 @@ These provide type-safe, immutable representations of letter determination opera
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from ..enums import Letter
 
@@ -23,8 +23,8 @@ class LetterDeterminationResult:
     letter: Optional[Letter]
     confidence: float
     strategy_used: str
-    attributes_compared: Dict[str, Any] = field(default_factory=dict)
-    warnings: List[str] = field(default_factory=list)
+    attributes_compared: dict[str, Any] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         """Validate result after initialization."""
@@ -59,7 +59,7 @@ class LetterDeterminationResult:
         letter: Letter,
         confidence: float,
         strategy: str,
-        attributes: Dict[str, Any] = None,
+        attributes: dict[str, Any] = None,
     ) -> "LetterDeterminationResult":
         """Create a successful determination result."""
         return cls(
@@ -175,8 +175,8 @@ class AttributeComparisonResult:
     overall_match: bool
 
     # Detailed comparison data
-    differences: Dict[str, Any] = field(default_factory=dict)
-    transformations_applied: List[str] = field(default_factory=list)
+    differences: dict[str, Any] = field(default_factory=dict)
+    transformations_applied: list[str] = field(default_factory=list)
 
     @property
     def match_score(self) -> float:
@@ -216,7 +216,7 @@ class AttributeComparisonResult:
 
     @classmethod
     def no_match(
-        cls, differences: Dict[str, Any] = None
+        cls, differences: dict[str, Any] = None
     ) -> "AttributeComparisonResult":
         """Create a no match result."""
         return cls(

@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
@@ -48,8 +48,8 @@ class SequenceLoaderService(ISequenceLoader):
         self.persistence_service = SequencePersister()
 
         # Platform-agnostic event callbacks
-        self._sequence_loaded_callbacks: List[Callable[[SequenceData], None]] = []
-        self._start_position_loaded_callbacks: List[Callable[[object, str], None]] = []
+        self._sequence_loaded_callbacks: list[Callable[[SequenceData], None]] = []
+        self._start_position_loaded_callbacks: list[Callable[[object, str], None]] = []
 
     def add_sequence_loaded_callback(self, callback: Callable[[SequenceData], None]):
         """Add callback for when sequence is loaded."""

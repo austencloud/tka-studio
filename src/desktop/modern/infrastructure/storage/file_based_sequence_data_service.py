@@ -8,7 +8,7 @@ from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.core_services import ISequenceDataService
 
@@ -58,7 +58,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
         """Get file path for a sequence ID."""
         return self.data_dir / f"{sequence_id}.json"
 
-    def get_all_sequences(self) -> List[Dict[str, Any]]:
+    def get_all_sequences(self) -> list[dict[str, Any]]:
         """Get all sequences from files."""
         sequences = []
 
@@ -77,7 +77,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
         logger.debug(f"Loaded {len(sequences)} sequences from {self.data_dir}")
         return sequences
 
-    def get_sequence_by_id(self, sequence_id: str) -> Optional[Dict[str, Any]]:
+    def get_sequence_by_id(self, sequence_id: str) -> Optional[dict[str, Any]]:
         """Get sequence by ID from file."""
         file_path = self._get_file_path(sequence_id)
 
@@ -94,7 +94,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
             logger.error(f"Failed to load sequence {sequence_id}: {e}")
             return None
 
-    def save_sequence(self, sequence_data: Dict[str, Any]) -> bool:
+    def save_sequence(self, sequence_data: dict[str, Any]) -> bool:
         """Save sequence to file."""
         try:
             # Ensure sequence has an ID
@@ -138,7 +138,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
             logger.error(f"Failed to delete sequence {sequence_id}: {e}")
             return False
 
-    def create_new_sequence(self, name: str) -> Dict[str, Any]:
+    def create_new_sequence(self, name: str) -> dict[str, Any]:
         """Create new empty sequence."""
         sequence = {
             "id": f"seq_{self._id_counter}",

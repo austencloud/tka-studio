@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
@@ -18,7 +18,7 @@ class EventHandlerFactory:
     def __init__(self, manager: "VisibilityPictographInteractionManager") -> None:
         self.manager = manager
 
-    def create_hover_enter_handler(self, item: "Union[Glyph, NonRadialPointsGroup]"):
+    def create_hover_enter_handler(self, item: "Glyph | NonRadialPointsGroup"):
         """Create a hover enter event handler for any item."""
 
         def hover_enter_event(event):
@@ -43,7 +43,7 @@ class EventHandlerFactory:
 
         return hover_enter_event
 
-    def create_hover_leave_handler(self, item: Union[Glyph, NonRadialPointsGroup]):
+    def create_hover_leave_handler(self, item: Glyph | NonRadialPointsGroup):
         """Create a hover leave event handler for any item."""
 
         def hover_leave_event(event):

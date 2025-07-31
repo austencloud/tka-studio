@@ -9,7 +9,7 @@ from functools import lru_cache
 import logging
 import os
 import re
-from typing import Dict, Optional, Set
+from typing import Optional
 
 from desktop.modern.core.interfaces.core_services import IAssetManager
 from desktop.modern.domain.models import MotionData, MotionType
@@ -27,10 +27,10 @@ class AssetManager(IAssetManager):
     """
 
     # Class-level cache statistics for monitoring
-    _cache_stats: Dict[str, int] = {"hits": 0, "misses": 0, "total_files_cached": 0}
+    _cache_stats: dict[str, int] = {"hits": 0, "misses": 0, "total_files_cached": 0}
 
     # Track cached files for cache management
-    _cached_files: Set[str] = set()
+    _cached_files: set[str] = set()
 
     # Color mapping for SVG transformations
     COLOR_MAP = {
@@ -250,7 +250,7 @@ class AssetManager(IAssetManager):
             logger.warning(f"Failed to pre-load common SVG files: {e}")
 
     @classmethod
-    def get_cache_stats(cls) -> Dict[str, int]:
+    def get_cache_stats(cls) -> dict[str, int]:
         """Get current cache statistics for monitoring."""
         return cls._cache_stats.copy()
 

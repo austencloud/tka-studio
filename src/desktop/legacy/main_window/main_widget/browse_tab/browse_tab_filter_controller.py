@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
@@ -23,7 +23,7 @@ class BrowseTabFilterController:
             self.fade_manager = getattr(browse_tab.main_widget, "fade_manager", None)
         self.metadata_extractor = browse_tab.metadata_extractor
 
-    def apply_filter(self, filter_criteria: Union[str, dict], fade=True):
+    def apply_filter(self, filter_criteria: str | dict, fade=True):
         # FILTER RESPONSIVENESS FIX: Check actual current tab state, not just settings
         current_tab = self._get_actual_current_tab()
         description = self._get_filter_description(filter_criteria)
@@ -320,7 +320,7 @@ class BrowseTabFilterController:
                 base_words.append((w, thumbs))
         return base_words
 
-    def _get_filter_description(self, filter_criteria: Union[str, dict]) -> str:
+    def _get_filter_description(self, filter_criteria: str | dict) -> str:
         if isinstance(filter_criteria, str):
             if filter_criteria == "all":
                 return "all sequences"

@@ -6,7 +6,7 @@ including complex direction-aware prefloat matching.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     ILetterDeterminationStrategy,
@@ -75,7 +75,7 @@ class NonHybridShiftStrategy(ILetterDeterminationStrategy):
     def execute(
         self,
         motion_data: "PictographData",
-        dataset: Dict[Letter, List["PictographData"]],
+        dataset: dict[Letter, list["PictographData"]],
         comparison_service: IMotionComparisonService,
         context: Optional["MotionComparisonContext"] = None,
     ) -> "LetterDeterminationResult":
@@ -125,7 +125,7 @@ class NonHybridShiftStrategy(ILetterDeterminationStrategy):
 
     def _identify_components(
         self, data: "PictographData"
-    ) -> Tuple[Optional["MotionAttributes"], Optional["MotionAttributes"], str]:
+    ) -> tuple[Optional["MotionAttributes"], Optional["MotionAttributes"], str]:
         """
         Identify float and shift attributes.
 
@@ -218,7 +218,7 @@ class NonHybridShiftStrategy(ILetterDeterminationStrategy):
         pictograph: "PictographData",
         float_attrs: "MotionAttributes",
         non_float_attrs: "MotionAttributes",
-        dataset: Dict[Letter, List["PictographData"]],
+        dataset: dict[Letter, list["PictographData"]],
     ) -> "LetterDeterminationResult":
         """
         Match using prefloat-aware comparison.
@@ -312,7 +312,7 @@ class NonHybridShiftStrategy(ILetterDeterminationStrategy):
 
         return float_match and non_float_match
 
-    def get_debug_info(self, motion_data: "PictographData") -> Dict[str, any]:
+    def get_debug_info(self, motion_data: "PictographData") -> dict[str, any]:
         """
         Get debug information for this strategy.
 

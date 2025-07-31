@@ -7,7 +7,7 @@ profile-specific settings, and QSettings persistence.
 
 import json
 import logging
-from typing import Any, List
+from typing import Any
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -95,7 +95,7 @@ class UserProfileSettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to set current user {username}: {e}")
 
-    def get_all_users(self) -> List[str]:
+    def get_all_users(self) -> list[str]:
         """
         Get all available user profiles.
 
@@ -400,7 +400,7 @@ class UserProfileSettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to ensure default user: {e}")
 
-    def _save_user_list(self, users: List[str]) -> None:
+    def _save_user_list(self, users: list[str]) -> None:
         """Save the user list to settings."""
         try:
             users_json = json.dumps(users)

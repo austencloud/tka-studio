@@ -59,7 +59,7 @@ class PictographElements:
     arrows: dict[str, Arrow] = None
     motion_set: dict[str, Motion] = None
     props: dict[str, Prop] = None
-    pictograph_dict: dict[str, Union[str, dict[str, str]]] = None
+    pictograph_dict: dict[str, str | dict[str, str]] = None
     locations: dict[str, tuple[int, int, int, int]] = None
     grid: Optional[Grid] = None
 

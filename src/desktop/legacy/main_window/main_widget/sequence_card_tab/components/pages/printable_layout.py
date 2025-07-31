@@ -1,6 +1,5 @@
 # src/main_window/main_widget/sequence_card_tab/components/pages/printable_layout.py
 from enum import Enum
-from typing import Tuple
 
 from PyQt6.QtCore import QRect, QSize
 
@@ -50,7 +49,7 @@ class PrintablePageLayout:
         self,
         paper_size: PaperSize = PaperSize.A4,
         orientation: PaperOrientation = PaperOrientation.PORTRAIT,
-        margins: Tuple[int, int, int, int] = DEFAULT_MARGINS,
+        margins: tuple[int, int, int, int] = DEFAULT_MARGINS,
         screen_dpi: int = SCREEN_DPI,
         print_dpi: int = PRINT_DPI,
     ):
@@ -113,7 +112,7 @@ class PrintablePageLayout:
         cell_height = content_rect.height() // rows
         return QSize(cell_width, cell_height)
 
-    def calculate_optimal_grid(self, card_aspect_ratio: float) -> Tuple[int, int]:
+    def calculate_optimal_grid(self, card_aspect_ratio: float) -> tuple[int, int]:
         """
         Calculate the optimal grid layout (rows x columns) for the given card aspect ratio.
 

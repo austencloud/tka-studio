@@ -6,7 +6,7 @@ Interface definitions for UI-related services following TKA's clean architecture
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -68,7 +68,7 @@ class IUISetupManager(ABC):
         """
 
     @abstractmethod
-    def get_available_themes(self) -> List[str]:
+    def get_available_themes(self) -> list[str]:
         """
         Get list of available themes.
 
@@ -81,7 +81,7 @@ class ISequenceStateReader(ABC):
     """Interface for reading sequence state information."""
 
     @abstractmethod
-    def get_current_sequence_state(self) -> Dict[str, Any]:
+    def get_current_sequence_state(self) -> dict[str, Any]:
         """
         Get current sequence state.
 
@@ -90,7 +90,7 @@ class ISequenceStateReader(ABC):
         """
 
     @abstractmethod
-    def get_beat_state(self, beat_index: int) -> Optional[Dict[str, Any]]:
+    def get_beat_state(self, beat_index: int) -> Optional[dict[str, Any]]:
         """
         Get state for specific beat.
 
@@ -102,7 +102,7 @@ class ISequenceStateReader(ABC):
         """
 
     @abstractmethod
-    def get_selection_state(self) -> Dict[str, Any]:
+    def get_selection_state(self) -> dict[str, Any]:
         """
         Get current selection state.
 
@@ -133,7 +133,7 @@ class IWindowDiscoveryService(ABC):
         """
 
     @abstractmethod
-    def discover_child_windows(self, parent_window: Any) -> List[Any]:
+    def discover_child_windows(self, parent_window: Any) -> list[Any]:
         """
         Discover child windows of parent.
 
@@ -207,7 +207,7 @@ class IComponentVisibilityManager(ABC):
         """
 
     @abstractmethod
-    def get_all_component_states(self) -> Dict[str, bool]:
+    def get_all_component_states(self) -> dict[str, bool]:
         """
         Get visibility states for all components.
 
@@ -246,7 +246,7 @@ class ITabStateManager(ABC):
         """
 
     @abstractmethod
-    def get_tab_state(self, tab_id: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_id: str) -> dict[str, Any]:
         """
         Get state for specific tab.
 
@@ -258,7 +258,7 @@ class ITabStateManager(ABC):
         """
 
     @abstractmethod
-    def set_tab_state(self, tab_id: str, state: Dict[str, Any]) -> None:
+    def set_tab_state(self, tab_id: str, state: dict[str, Any]) -> None:
         """
         Set state for specific tab.
 
@@ -268,7 +268,7 @@ class ITabStateManager(ABC):
         """
 
     @abstractmethod
-    def get_all_tab_states(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_tab_states(self) -> dict[str, dict[str, Any]]:
         """
         Get states for all tabs.
 
@@ -318,7 +318,7 @@ class IHotkeyRegistry(ABC):
         """
 
     @abstractmethod
-    def get_registered_hotkeys(self) -> Dict[str, str]:
+    def get_registered_hotkeys(self) -> dict[str, str]:
         """
         Get all registered hotkeys.
 
@@ -343,7 +343,7 @@ class IWindowStateManager(ABC):
     """Interface for window state management."""
 
     @abstractmethod
-    def save_window_state(self, window_id: str, state: Dict[str, Any]) -> None:
+    def save_window_state(self, window_id: str, state: dict[str, Any]) -> None:
         """
         Save window state.
 
@@ -353,7 +353,7 @@ class IWindowStateManager(ABC):
         """
 
     @abstractmethod
-    def load_window_state(self, window_id: str) -> Optional[Dict[str, Any]]:
+    def load_window_state(self, window_id: str) -> Optional[dict[str, Any]]:
         """
         Load window state.
 
@@ -365,7 +365,7 @@ class IWindowStateManager(ABC):
         """
 
     @abstractmethod
-    def get_default_window_state(self, window_id: str) -> Dict[str, Any]:
+    def get_default_window_state(self, window_id: str) -> dict[str, Any]:
         """
         Get default window state.
 
@@ -406,11 +406,11 @@ class IUILayoutProvider(ABC):
         """Get the option picker size."""
 
     @abstractmethod
-    def get_layout_ratio(self) -> Tuple[int, int]:
+    def get_layout_ratio(self) -> tuple[int, int]:
         """Get the layout ratio (workbench:picker)."""
 
     @abstractmethod
-    def set_layout_ratio(self, ratio: Tuple[int, int]) -> None:
+    def set_layout_ratio(self, ratio: tuple[int, int]) -> None:
         """Set the layout ratio."""
 
     @abstractmethod

@@ -5,7 +5,7 @@ This component follows SRP by focusing solely on state management.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -39,7 +39,7 @@ class StateManager(QObject):
         self.coordinator = coordinator
         self.app_context = app_context
         self._current_tab: Optional[str] = None
-        self._state_data: Dict[str, Any] = {}
+        self._state_data: dict[str, Any] = {}
 
         # Initialize default state
         self._initialize_default_state()
@@ -188,7 +188,7 @@ class StateManager(QObject):
         except Exception as e:
             logger.error(f"Failed to persist state key '{key}': {e}")
 
-    def update_ui_state(self, ui_updates: Dict[str, Any]) -> None:
+    def update_ui_state(self, ui_updates: dict[str, Any]) -> None:
         """
         Update UI state with multiple values.
 
@@ -216,7 +216,7 @@ class StateManager(QObject):
 
         return ui_state.get(key)
 
-    def save_session_data(self, session_data: Dict[str, Any]) -> None:
+    def save_session_data(self, session_data: dict[str, Any]) -> None:
         """
         Save session-specific data.
 
@@ -225,7 +225,7 @@ class StateManager(QObject):
         """
         self.set_state("session_data", session_data, persist=False)
 
-    def get_session_data(self) -> Dict[str, Any]:
+    def get_session_data(self) -> dict[str, Any]:
         """Get session-specific data."""
         return self._state_data.get("session_data", {}).copy()
 

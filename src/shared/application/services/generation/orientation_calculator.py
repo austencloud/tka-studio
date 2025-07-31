@@ -5,7 +5,7 @@ Direct port of legacy orientation calculation logic.
 Critical for ensuring beats flow correctly together.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 
 class OrientationCalculationService:
@@ -16,7 +16,7 @@ class OrientationCalculationService:
     Essential for sequence beat flow correctness.
     """
 
-    def calculate_end_ori(self, beat_data: Dict[str, Any], color: str) -> str:
+    def calculate_end_ori(self, beat_data: dict[str, Any], color: str) -> str:
         """
         Calculate end orientation for a beat and color.
 
@@ -168,7 +168,7 @@ class OrientationCalculationService:
         return flip_map.get(orientation, orientation)
 
     def validate_orientation_continuity(
-        self, previous_beat: Dict[str, Any], next_beat: Dict[str, Any], color: str
+        self, previous_beat: dict[str, Any], next_beat: dict[str, Any], color: str
     ) -> bool:
         """
         Validate that orientations flow correctly between beats.

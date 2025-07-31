@@ -12,7 +12,6 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Tuple
 
 from desktop.modern.domain.models import MotionData, MotionType
 from desktop.modern.domain.models.enums import Location, Orientation
@@ -26,7 +25,7 @@ class ILetterIPositioningService(ABC):
     @abstractmethod
     def calculate_letter_i_directions(
         self, blue_motion: MotionData, red_motion: MotionData
-    ) -> Tuple[SeparationDirection, SeparationDirection]:
+    ) -> tuple[SeparationDirection, SeparationDirection]:
         """Calculate directions for letter I using PRO/ANTI coordination."""
 
     @abstractmethod
@@ -52,7 +51,7 @@ class LetterIPositioningService(ILetterIPositioningService):
 
     def calculate_letter_i_directions(
         self, blue_motion: MotionData, red_motion: MotionData
-    ) -> Tuple[SeparationDirection, SeparationDirection]:
+    ) -> tuple[SeparationDirection, SeparationDirection]:
         """
         Calculate directions for letter I using PRO/ANTI coordination.
 

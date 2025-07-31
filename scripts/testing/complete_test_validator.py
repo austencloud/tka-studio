@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 import subprocess
 import time
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 @dataclass
@@ -33,7 +33,7 @@ class CompleteTestValidator:
 
     def __init__(self, tka_root: Path):
         self.tka_root = tka_root
-        self.results: List[TestResult] = []
+        self.results: list[TestResult] = []
 
         # Define test categories to run separately to avoid resource conflicts
         self.test_categories = {
@@ -57,7 +57,7 @@ class CompleteTestValidator:
             "modern_root_tests": "src/desktop/modern/tests/test_*.py",
         }
 
-    def discover_tests_in_category(self, category: str, path: str) -> List[str]:
+    def discover_tests_in_category(self, category: str, path: str) -> list[str]:
         """Discover all test items in a specific category."""
         try:
             result = subprocess.run(
@@ -88,7 +88,7 @@ class CompleteTestValidator:
             print(f"❌ Error discovering tests in {category}: {e}")
             return []
 
-    def execute_test_category(self, category: str, path: str) -> List[TestResult]:
+    def execute_test_category(self, category: str, path: str) -> list[TestResult]:
         """Execute all tests in a category and return results."""
         print(f"\n🔍 Executing category: {category} ({path})")
 
@@ -159,7 +159,7 @@ class CompleteTestValidator:
 
         return category_results
 
-    def _execute_launcher_tests_safely(self, test_items: List[str]) -> List[TestResult]:
+    def _execute_launcher_tests_safely(self, test_items: list[str]) -> list[TestResult]:
         """Execute launcher tests individually to avoid segfaults."""
         print("🛡️ Executing launcher tests individually to avoid segfaults...")
 
@@ -220,8 +220,8 @@ class CompleteTestValidator:
         return results
 
     def _parse_category_results(
-        self, test_items: List[str], output: str, avg_time: float
-    ) -> List[TestResult]:
+        self, test_items: list[str], output: str, avg_time: float
+    ) -> list[TestResult]:
         """Parse category execution results."""
         results = []
 
@@ -326,7 +326,7 @@ class CompleteTestValidator:
                 return line.strip()
         return "Test failed (details not found)"
 
-    def validate_all_tests(self) -> Dict:
+    def validate_all_tests(self) -> dict:
         """Execute comprehensive validation of all tests."""
         print("🚀 Starting Complete Test Suite Validation")
         print("=" * 60)
@@ -353,7 +353,7 @@ class CompleteTestValidator:
         summary = self._generate_summary(total_execution_time)
         return summary
 
-    def _generate_summary(self, total_time: float) -> Dict:
+    def _generate_summary(self, total_time: float) -> dict:
         """Generate comprehensive summary."""
         total_tests = len(self.results)
         passed = len([r for r in self.results if r.status == "PASS"])
@@ -376,7 +376,7 @@ class CompleteTestValidator:
             "detailed_results": [asdict(r) for r in self.results],
         }
 
-    def print_comprehensive_summary(self, summary: Dict):
+    def print_comprehensive_summary(self, summary: dict):
         """Print comprehensive validation summary."""
         print("\n" + "=" * 60)
         print("🎯 COMPLETE TEST SUITE VALIDATION RESULTS")

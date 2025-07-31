@@ -8,7 +8,6 @@ to suppress warnings about unsupported CSS properties and other non-critical mes
 import logging
 import re
 from re import Pattern
-from typing import List
 
 from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
 
@@ -21,7 +20,7 @@ class QtMessageFilter:
     def __init__(self):
         """Initialize the message filter with default patterns."""
         # Compile regex patterns for better performance
-        self.suppressed_patterns: List[Pattern] = [
+        self.suppressed_patterns: list[Pattern] = [
             # CSS property warnings
             re.compile(r"Unknown property\s+.*", re.IGNORECASE),
             re.compile(r"unknown property\s+.*", re.IGNORECASE),

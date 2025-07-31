@@ -6,7 +6,7 @@ Replaces brittle string matching with explicit context declaration and service-b
 """
 
 import logging
-from typing import Any, Dict, Optional, Protocol, runtime_checkable
+from typing import Any, Optional, Protocol, runtime_checkable
 
 from desktop.modern.core.interfaces.core_services import IPictographContextDetector
 from desktop.modern.core.interfaces.pictograph_services import RenderingContext
@@ -32,8 +32,8 @@ class PictographContextDetector(IPictographContextDetector):
 
     def __init__(self):
         """Initialize the context service."""
-        self._component_contexts: Dict[str, RenderingContext] = {}
-        self._context_providers: Dict[str, IPictographContextProvider] = {}
+        self._component_contexts: dict[str, RenderingContext] = {}
+        self._context_providers: dict[str, IPictographContextProvider] = {}
 
     def register_context_provider(self, component_id: str, context: Any) -> None:
         """

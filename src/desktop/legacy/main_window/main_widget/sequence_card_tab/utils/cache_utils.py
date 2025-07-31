@@ -1,7 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/utils/cache_utils.py
 import hashlib
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QPixmap
@@ -25,9 +25,9 @@ class ThumbnailCache:
         Args:
             max_size: Maximum number of thumbnails to cache (default: 100)
         """
-        self.cache: Dict[str, Dict[str, Any]] = {}
+        self.cache: dict[str, dict[str, Any]] = {}
         self.max_size = max_size
-        self.access_times: Dict[str, float] = {}
+        self.access_times: dict[str, float] = {}
 
     def get(self, path: str, size: QSize) -> Optional[QPixmap]:
         """

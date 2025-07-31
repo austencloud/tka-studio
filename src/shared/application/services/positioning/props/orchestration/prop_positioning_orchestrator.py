@@ -15,7 +15,7 @@ PROVIDES:
 from abc import ABC, abstractmethod
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -90,7 +90,7 @@ class IPropPositioningOrchestrator(ABC):
     @abstractmethod
     def calculate_separation_offsets(
         self, pictograph_data: PictographData
-    ) -> Tuple[Point, Point]:
+    ) -> tuple[Point, Point]:
         """Calculate separation offsets for blue and red props."""
 
     @abstractmethod
@@ -174,7 +174,7 @@ class PropPositioningOrchestrator(IPropPositioningOrchestrator):
 
     def calculate_separation_offsets(
         self, pictograph_data: PictographData
-    ) -> Tuple[Point, Point]:
+    ) -> tuple[Point, Point]:
         """
         Calculate separation offsets for blue and red props.
 

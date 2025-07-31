@@ -11,7 +11,7 @@ Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
 import asyncio
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -58,7 +58,7 @@ class OptionPickerSectionAnimationHandler:
 
     def animate_content_update(
         self,
-        existing_frames: List[OptionPictograph],
+        existing_frames: list[OptionPictograph],
         update_callback: Callable[[], None],
         fade_in_callback: Callable[[], None],
     ) -> bool:
@@ -88,7 +88,7 @@ class OptionPickerSectionAnimationHandler:
 
     def _start_qt_fade_animation(
         self,
-        existing_frames: List[OptionPictograph],
+        existing_frames: list[OptionPictograph],
         update_callback: Callable[[], None],
         fade_in_callback: Callable[[], None],
     ) -> bool:
@@ -157,7 +157,7 @@ class OptionPickerSectionAnimationHandler:
             )
             return False
 
-    def fade_in_frames(self, frames: List[OptionPictograph]) -> None:
+    def fade_in_frames(self, frames: list[OptionPictograph]) -> None:
         """Fade in newly loaded frames."""
         if not frames:
             return
@@ -214,10 +214,10 @@ class OptionPickerSectionAnimationHandler:
 
     async def animate_with_async_orchestrator(
         self,
-        pictographs_for_section: List[PictographData],
-        existing_frames: List[OptionPictograph],
-        update_callback: Callable[[List[PictographData]], None],
-        get_new_frames_callback: Callable[[], List[OptionPictograph]],
+        pictographs_for_section: list[PictographData],
+        existing_frames: list[OptionPictograph],
+        update_callback: Callable[[list[PictographData]], None],
+        get_new_frames_callback: Callable[[], list[OptionPictograph]],
     ) -> None:
         """
         Animate using async animation orchestrator.

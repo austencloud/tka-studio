@@ -1,7 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/background_processor.py
 import logging
 import time
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication
@@ -40,8 +40,8 @@ class BackgroundImageProcessor(QObject):
         self.interval_ms = interval_ms
 
         # Processing queue with priority support
-        self.processing_queue: List[Dict[str, Any]] = []
-        self.current_batch: List[Dict[str, Any]] = []
+        self.processing_queue: list[dict[str, Any]] = []
+        self.current_batch: list[dict[str, Any]] = []
 
         # Timer for background processing
         self.process_timer = QTimer()
@@ -62,7 +62,7 @@ class BackgroundImageProcessor(QObject):
         # Performance monitoring
         self.max_batch_time_ms = 0
         self.avg_batch_time_ms = 0
-        self.batch_times: List[float] = []
+        self.batch_times: list[float] = []
 
         logging.info("Background image processor initialized")
 
@@ -167,7 +167,7 @@ class BackgroundImageProcessor(QObject):
             logging.error(f"Error in batch processing: {e}")
             self._stop_processing()
 
-    def _process_single_task(self, task: Dict[str, Any]) -> None:
+    def _process_single_task(self, task: dict[str, Any]) -> None:
         """Process a single image task."""
         image_path = task["image_path"]
         callback = task["callback"]
@@ -268,7 +268,7 @@ class BackgroundImageProcessor(QObject):
         if cleared_count > 0:
             logging.info(f"Cleared {cleared_count} pending processing tasks")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get background processing statistics."""
         queue_size = len(self.processing_queue)
         is_active = self.process_timer.isActive()

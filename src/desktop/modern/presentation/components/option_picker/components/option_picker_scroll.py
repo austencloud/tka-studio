@@ -11,7 +11,7 @@ Key principles:
 - Coordination between UI and services
 """
 
-from typing import TYPE_CHECKING, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from PyQt6.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
@@ -137,7 +137,7 @@ class OptionPickerScroll(QScrollArea):
         self._animator = OptionPickerAnimator(self.container)
 
         # Initialize widget pool with lazy loading for better memory efficiency
-        self._widget_pool: Dict[int, OptionPictograph] = {}
+        self._widget_pool: dict[int, OptionPictograph] = {}
         self._max_widgets = self._option_config_service.get_total_max_pictographs()
 
         # OPTIMIZED: Use lazy initialization instead of pre-creating all widgets
@@ -197,7 +197,7 @@ class OptionPickerScroll(QScrollArea):
             OptionPickerGroupWidget,
         )
 
-        self.sections: Dict[LetterType, OptionPickerSection] = {}
+        self.sections: dict[LetterType, OptionPickerSection] = {}
         individual_sections = []
         grouped_sections = []
 

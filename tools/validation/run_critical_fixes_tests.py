@@ -23,7 +23,7 @@ import subprocess
 import sys
 import time
 import traceback
-from typing import List, Optional
+from typing import Optional
 
 # Add src to path for imports
 project_root = Path(__file__).parent
@@ -73,8 +73,8 @@ class TKAFixesTestRunner:
     def __init__(self, verbose: bool = False, report_file: Optional[str] = None):
         self.verbose = verbose
         self.report_file = report_file
-        self.test_results: List[TestResult] = []
-        self.fix_validations: List[FixValidationResult] = []
+        self.test_results: list[TestResult] = []
+        self.fix_validations: list[FixValidationResult] = []
 
     def run_all_tests(self) -> bool:
         """

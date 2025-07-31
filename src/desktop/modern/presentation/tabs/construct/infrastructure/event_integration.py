@@ -6,7 +6,7 @@ Provides bridge between PyQt signals and modern event system.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.commands.command_system import CommandProcessor
 from desktop.modern.core.events.domain_events import (
@@ -38,16 +38,16 @@ class ConstructTabEventIntegration:
         self.logger = logging.getLogger(__name__)
 
         # Component references
-        self.components: Dict[str, Any] = {}
+        self.components: dict[str, Any] = {}
 
         # Event subscription IDs for cleanup
-        self.subscription_ids: Dict[str, str] = {}
+        self.subscription_ids: dict[str, str] = {}
 
         # State tracking
         self._handling_sequence_modification = False
         self._current_operation_type = None
 
-    def setup_event_handlers(self, components: Dict[str, Any]):
+    def setup_event_handlers(self, components: dict[str, Any]):
         """Setup event handlers for all components."""
         self.components = components
         self._subscribe_to_events()
@@ -140,7 +140,7 @@ class ConstructTabEventIntegration:
         self.event_bus.publish(event)
         self.logger.info(f"Published start position selected: {position_key}")
 
-    def _publish_pictograph_selected(self, pictograph_data: Dict[str, Any]):
+    def _publish_pictograph_selected(self, pictograph_data: dict[str, Any]):
         """Publish pictograph selection event."""
         event = UIStateChangedEvent(
             component="option_picker",
@@ -304,7 +304,7 @@ class ConstructTabEventIntegration:
 
     # Helper Methods
 
-    def _smart_picker_transition(self, sequence_state: Optional[Dict[str, Any]]):
+    def _smart_picker_transition(self, sequence_state: Optional[dict[str, Any]]):
         """Smart transition logic based on sequence state."""
         layout_manager = self.components.get("layout_manager")
         if not layout_manager:

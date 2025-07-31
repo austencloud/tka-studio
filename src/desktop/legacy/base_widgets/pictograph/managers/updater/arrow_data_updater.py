@@ -1,5 +1,5 @@
 import logging
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 from enums.letter.letter_type import LetterType
 
@@ -44,7 +44,7 @@ class ArrowDataUpdater:
                 blue_arrow_data
             )
 
-    def _extract_arrow_datasets(self, pictograph_data: dict) -> Tuple[dict, dict]:
+    def _extract_arrow_datasets(self, pictograph_data: dict) -> tuple[dict, dict]:
         red_data = (
             self._get_arrow_data_from_pictograph_data(pictograph_data, RED)
             if pictograph_data.get(RED_ATTRS, {})

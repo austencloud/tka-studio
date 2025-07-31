@@ -5,7 +5,7 @@ Handles Qt-specific events and visual updates for beat selection.
 Delegates all business logic to BeatSelectionService.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -37,14 +37,14 @@ class BeatSelector(QObject):
 
         self._selection_service = selection_service
         self._parent_widget = parent_widget
-        self._beat_views: List[BeatView] = []
+        self._beat_views: list[BeatView] = []
         self._start_position_view = None
 
         # Configure parent widget for keyboard navigation
         self._parent_widget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
     # Configuration Methods
-    def register_beat_views(self, beat_views: List[BeatView]):
+    def register_beat_views(self, beat_views: list[BeatView]):
         """Register beat views and update service."""
         self._beat_views = beat_views
         self._selection_service.set_beat_count(len(beat_views))
@@ -122,7 +122,7 @@ class BeatSelector(QObject):
         """Get the currently selected beat index."""
         return self._selection_service.get_selected_index()
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         """Get all selected beat indices."""
         return self._selection_service.get_selected_indices()
 

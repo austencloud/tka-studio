@@ -2,7 +2,7 @@
 Manages pictograph data for the codex exporter.
 """
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from enums.letter.letter import Letter
 
@@ -29,7 +29,7 @@ class PictographDataManager:
 
     def get_pictograph_data_for_letter(
         self, letter: str, start_pos: str, end_pos: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """Get pictograph data for a letter with specific start and end positions.
 
         Args:
@@ -132,7 +132,7 @@ class PictographDataManager:
 
         return matching_pictographs
 
-    def create_minimal_data_for_letter(self, letter: str) -> Dict[str, Any]:
+    def create_minimal_data_for_letter(self, letter: str) -> dict[str, Any]:
         """Create minimal data for a letter.
 
         Args:
@@ -143,7 +143,7 @@ class PictographDataManager:
         """
         # Determine the correct start and end positions based on the letter
         # Define position groups for all letter types
-        _POSITION_GROUPS: Dict[Tuple[str, str], List[str]] = {
+        _POSITION_GROUPS: dict[tuple[str, str], list[str]] = {
             # Type 1 letters
             ("alpha1", "alpha3"): ["A", "B", "C"],
             ("beta1", "alpha3"): ["D", "E", "F"],

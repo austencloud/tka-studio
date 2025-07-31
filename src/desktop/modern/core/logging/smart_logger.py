@@ -14,7 +14,7 @@ from enum import Enum
 import functools
 import logging
 import time
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 
 class LogLevel(Enum):
@@ -54,9 +54,9 @@ class SmartLogger:
     def __init__(self, name: str, config: LoggingConfig = None):
         self.logger = logging.getLogger(name)
         self.config = config or LoggingConfig()
-        self.repeated_log_counts: Dict[str, int] = {}
-        self.last_log_messages: Dict[str, str] = {}
-        self.performance_stats: Dict[str, list] = {}
+        self.repeated_log_counts: dict[str, int] = {}
+        self.last_log_messages: dict[str, str] = {}
+        self.performance_stats: dict[str, list] = {}
 
     def log_operation(self, operation_name: str, level: LogLevel = LogLevel.NORMAL):
         """Decorator for logging operations with smart verbosity."""
@@ -167,7 +167,7 @@ class SmartLogger:
             self.repeated_log_counts[suppress_key] = 1
             self.logger.log(level, message)
 
-    def get_performance_summary(self) -> Dict[str, Dict[str, float]]:
+    def get_performance_summary(self) -> dict[str, dict[str, float]]:
         """Get performance statistics summary."""
         summary = {}
         for operation_id, times in self.performance_stats.items():
@@ -233,7 +233,7 @@ def create_smart_logger(name: str, config: LoggingConfig = None) -> SmartLogger:
 
 
 # Global registry of smart loggers for easy management
-_smart_logger_registry: Dict[str, SmartLogger] = {}
+_smart_logger_registry: dict[str, SmartLogger] = {}
 
 
 def get_smart_logger(name: str, config: LoggingConfig = None) -> SmartLogger:
@@ -249,7 +249,7 @@ def reset_all_smart_loggers():
         logger.reset_performance_stats()
 
 
-def get_all_performance_stats() -> Dict[str, Dict[str, Dict[str, float]]]:
+def get_all_performance_stats() -> dict[str, dict[str, dict[str, float]]]:
     """Get performance statistics from all smart loggers."""
     all_stats = {}
     for name, logger in _smart_logger_registry.items():

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable, Dict, List
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from legacy_settings_manager.legacy_settings_manager import (
@@ -16,7 +16,7 @@ class VisibilityStateManager:
         self.settings_manager = settings_manager
         self.settings = settings_manager.settings
 
-        self._observers: Dict[str, List[Callable]] = {
+        self._observers: dict[str, list[Callable]] = {
             "glyph": [],
             "motion": [],
             "non_radial": [],
@@ -24,7 +24,7 @@ class VisibilityStateManager:
             "buttons": [],  # Added category for button updates
         }
 
-    def register_observer(self, callback: Callable, categories: List[str] = ["all"]):
+    def register_observer(self, callback: Callable, categories: list[str] = ["all"]):
         """Register a component to be notified when specific visibility states change."""
         for category in categories:
             if category in self._observers:
@@ -36,7 +36,7 @@ class VisibilityStateManager:
             if callback in self._observers[category]:
                 self._observers[category].remove(callback)
 
-    def _notify_observers(self, categories: List[str]):
+    def _notify_observers(self, categories: list[str]):
         """Notify all relevant observers of state changes."""
         callbacks_to_notify = set()
 

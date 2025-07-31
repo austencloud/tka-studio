@@ -6,7 +6,7 @@ the Learn Tab functionality without requiring the full file system infrastructur
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class MockFileSystemService:
 
     def __init__(self):
         """Initialize mock service with in-memory storage."""
-        self._mock_files: Dict[str, Any] = {}
+        self._mock_files: dict[str, Any] = {}
         logger.info("Mock file system service initialized")
 
     def read_file(self, file_path: str) -> Optional[str]:
@@ -90,7 +90,7 @@ class MockFileSystemService:
         # Mock implementation - always succeeds
         return True
 
-    def list_files(self, dir_path: str) -> List[str]:
+    def list_files(self, dir_path: str) -> list[str]:
         """
         List files in directory.
 

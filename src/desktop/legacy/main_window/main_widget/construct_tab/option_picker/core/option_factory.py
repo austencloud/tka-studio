@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable, List
+from typing import TYPE_CHECKING, Callable
 
 from base_widgets.pictograph.elements.views.option_view import OptionView
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
@@ -21,8 +21,8 @@ class OptionFactory:
         # Build the option pool upon instantiation.
         self.option_picker.option_pool = self.create_options()
 
-    def create_options(self) -> List[LegacyPictograph]:
-        options: List[LegacyPictograph] = []
+    def create_options(self) -> list[LegacyPictograph]:
+        options: list[LegacyPictograph] = []
         for _ in range(self.MAX_PICTOGRAPHS):
             opt = LegacyPictograph()
             # Construct the view using OptionView, passing the picker and size provider.

@@ -16,7 +16,6 @@ Architecture:
 """
 
 import logging
-from typing import List
 
 from domain.models import ApplicationData, ApplicationStatus
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -41,7 +40,7 @@ class DockContextMenuManager(QObject):
         super().__init__(parent)
 
     def create_context_menu(
-        self, app_id: str, applications: List[ApplicationData], position
+        self, app_id: str, applications: list[ApplicationData], position
     ) -> QMenu:
         """Create and show context menu for an application."""
         # Find the application
@@ -170,7 +169,7 @@ class DockContextMenuManager(QObject):
         """
 
     def show_context_menu(
-        self, app_id: str, applications: List[ApplicationData], position
+        self, app_id: str, applications: list[ApplicationData], position
     ):
         """Create and show context menu at the specified position."""
         menu = self.create_context_menu(app_id, applications, position)

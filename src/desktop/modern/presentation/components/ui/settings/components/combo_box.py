@@ -2,7 +2,7 @@
 Modern combo box component with glassmorphism styling.
 """
 
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QModelIndex, QPointF, Qt
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter
@@ -40,7 +40,7 @@ class ComboBoxDelegate(QStyledItemDelegate):
 class ComboBox(QComboBox):
     """Modern combo box with glassmorphism styling."""
 
-    def __init__(self, items: Optional[List[str]] = None, parent=None):
+    def __init__(self, items: Optional[list[str]] = None, parent=None):
         super().__init__(parent)
 
         if items:
@@ -115,7 +115,7 @@ class ComboBox(QComboBox):
         """
         )
 
-    def set_items(self, items: List[str]):
+    def set_items(self, items: list[str]):
         """Set combo box items."""
         self.clear()
         self.addItems(items)

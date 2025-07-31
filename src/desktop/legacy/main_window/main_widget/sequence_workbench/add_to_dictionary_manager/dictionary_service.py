@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 from legacy_settings_manager.global_settings.app_context import AppContext
 from utils.path_helpers import get_data_path
@@ -49,7 +49,7 @@ class DictionaryService:
 
     def add_variation(
         self, sequence_data: list[dict], base_word: str
-    ) -> dict[str, Union[str, int]]:
+    ) -> dict[str, str | int]:
         """Add a variation of a sequence to the dictionary."""
         if len(sequence_data) <= 1:
             return {"status": "invalid"}

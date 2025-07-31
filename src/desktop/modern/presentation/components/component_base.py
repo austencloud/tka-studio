@@ -15,7 +15,7 @@ PROVIDES: Clean component architecture with dependency injection
 
 from abc import ABC, ABCMeta, abstractmethod
 import logging
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -109,7 +109,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         # Component state
         self._widget: Optional[QWidget] = None
         self._initialized = False
-        self._cleanup_handlers: List[callable] = []
+        self._cleanup_handlers: list[callable] = []
 
         # A+ Enhancement: Register with Qt integration - Temporarily disabled
         # if QT_INTEGRATION_AVAILABLE:

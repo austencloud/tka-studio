@@ -8,7 +8,7 @@ by any rendering framework.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Dict, Optional
+from typing import Optional
 
 from desktop.modern.domain.models import MotionData, PictographData
 from shared.application.services.core.pictograph_renderer import (
@@ -278,7 +278,7 @@ class CorePropRenderingService(IPropRenderingService):
             },
         )
 
-    def get_performance_stats(self) -> Dict[str, int]:
+    def get_performance_stats(self) -> dict[str, int]:
         """Get performance statistics."""
         return self._performance_stats.copy()
 

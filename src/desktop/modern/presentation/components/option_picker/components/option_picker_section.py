@@ -12,7 +12,7 @@ Architecture:
 - OptionPickerSectionContentLoader: Orchestrates content loading
 """
 
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QGroupBox
@@ -129,7 +129,7 @@ class OptionPickerSection(QGroupBox):
         self.header.type_button.clicked.connect(self.toggle_section)
 
     def load_options_from_sequence(
-        self, pictographs_for_section: List[PictographData]
+        self, pictographs_for_section: list[PictographData]
     ) -> None:
         """Load options for this section."""
         self._content_loader.load_options_from_sequence(pictographs_for_section)
@@ -164,7 +164,7 @@ class OptionPickerSection(QGroupBox):
         return self._widget_manager.get_widgets_dict()
 
     @property
-    def pictograph_frames(self) -> List:
+    def pictograph_frames(self) -> list:
         """Get list of pictograph frames for compatibility."""
         return self._widget_manager.get_active_widgets()
 

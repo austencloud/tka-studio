@@ -5,7 +5,7 @@ This component provides the core beat grid system with dynamic layout,
 replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 """
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
@@ -94,12 +94,12 @@ class SequenceBeatFrame(QScrollArea):
         self.event_bus = event_bus or (
             get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
         )
-        self._subscription_ids: List[str] = []
+        self._subscription_ids: list[str] = []
 
         # Current state
         self._current_sequence: Optional[SequenceData] = None
-        self._beat_views: List[BeatView] = []
-        self._current_layout: Dict[str, int] = {"rows": 1, "columns": 8}
+        self._beat_views: list[BeatView] = []
+        self._current_layout: dict[str, int] = {"rows": 1, "columns": 8}
 
         # UI components (will be initialized in _setup_ui)
         self._container_widget: QWidget

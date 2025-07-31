@@ -11,7 +11,6 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Dict, Tuple
 
 
 def setup_python_path():
@@ -40,7 +39,7 @@ def setup_python_path():
         return False
 
 
-def run_test_category(category_name: str, test_path: str) -> Dict:
+def run_test_category(category_name: str, test_path: str) -> dict:
     """Run a category of tests with proper environment setup."""
     print(f"\n🧪 Running {category_name}: {test_path}")
 
@@ -144,7 +143,7 @@ def run_test_category(category_name: str, test_path: str) -> Dict:
         }
 
 
-def parse_pytest_output(output: str) -> Tuple[int, int, int, int]:
+def parse_pytest_output(output: str) -> tuple[int, int, int, int]:
     """Parse pytest output to extract test counts."""
     passed = failed = errors = skipped = 0
 

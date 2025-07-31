@@ -3,7 +3,7 @@ Manages the generation and manipulation of turns patterns.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from data.constants import BLUE_ATTRS, RED_ATTRS, TURNS
 
@@ -19,7 +19,7 @@ class TurnsPatternManager:
     for both normal and mirrored entries.
     """
 
-    def extract_turns_from_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def extract_turns_from_data(self, data: dict[str, Any]) -> dict[str, Any]:
         """
         Extract turns values from pictograph data.
 

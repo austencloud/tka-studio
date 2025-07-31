@@ -23,7 +23,6 @@ USAGE:
 """
 
 import logging
-from typing import List, Tuple
 
 from desktop.modern.core.types.coordinates import point_to_qpoint
 from desktop.modern.core.types.geometry import Point
@@ -96,7 +95,7 @@ class DirectionalTupleProcessor:
 
     def _generate_directional_tuples(
         self, motion: MotionData, base_adjustment: Point
-    ) -> List[Tuple[int, int]]:
+    ) -> list[tuple[int, int]]:
         """
         Generate directional tuples using rotation matrices.
 
@@ -142,7 +141,7 @@ class DirectionalTupleProcessor:
             raise RuntimeError(f"Quadrant index calculation failed: {e}") from e
 
     def _select_from_tuples(
-        self, directional_tuples: List[Tuple[int, int]], quadrant_index: int
+        self, directional_tuples: list[tuple[int, int]], quadrant_index: int
     ) -> Point:
         """
         Select final adjustment from directional tuples using quadrant index.

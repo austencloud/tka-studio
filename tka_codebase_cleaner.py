@@ -22,7 +22,7 @@ import ast
 from collections import Counter, defaultdict
 from pathlib import Path
 import re
-from typing import Dict, List, NamedTuple, Set, Tuple
+from typing import NamedTuple
 
 
 class CleanupOpportunity(NamedTuple):
@@ -41,19 +41,19 @@ class TKACodebaseAnalyzer:
 
     def __init__(self, root_directory: str):
         self.root_dir = Path(root_directory)
-        self.opportunities: List[CleanupOpportunity] = []
+        self.opportunities: list[CleanupOpportunity] = []
         self.files_analyzed = 0
 
         # Track various code patterns
-        self.imports_by_file: Dict[str, Set[str]] = defaultdict(set)
-        self.function_calls_by_file: Dict[str, Set[str]] = defaultdict(set)
-        self.class_definitions: Dict[str, List[str]] = defaultdict(list)
-        self.event_bus_usage: List[Tuple[str, str]] = []
-        self.signal_usage: List[Tuple[str, str]] = []
-        self.todo_comments: List[Tuple[str, int, str]] = []
-        self.large_functions: List[Tuple[str, str, int]] = []
+        self.imports_by_file: dict[str, set[str]] = defaultdict(set)
+        self.function_calls_by_file: dict[str, set[str]] = defaultdict(set)
+        self.class_definitions: dict[str, list[str]] = defaultdict(list)
+        self.event_bus_usage: list[tuple[str, str]] = []
+        self.signal_usage: list[tuple[str, str]] = []
+        self.todo_comments: list[tuple[str, int, str]] = []
+        self.large_functions: list[tuple[str, str, int]] = []
 
-    def analyze_codebase(self, focus_areas: List[str] = None) -> None:
+    def analyze_codebase(self, focus_areas: list[str] = None) -> None:
         """Analyze the entire codebase for cleanup opportunities."""
         print(f"🔍 Analyzing TKA codebase in {self.root_dir}")
 
@@ -84,7 +84,7 @@ class TKACodebaseAnalyzer:
 
         print(f"✅ Analyzed {self.files_analyzed} files")
 
-    def _analyze_file(self, file_path: Path, focus_areas: List[str]) -> None:
+    def _analyze_file(self, file_path: Path, focus_areas: list[str]) -> None:
         """Analyze a single Python file."""
         try:
             with open(file_path, encoding="utf-8") as f:
@@ -496,10 +496,10 @@ class CodePatternVisitor(ast.NodeVisitor):
 
     def __init__(self, file_path: str):
         self.file_path = file_path
-        self.imports: Set[str] = set()
-        self.function_calls: Set[str] = set()
-        self.class_names: List[str] = []
-        self.function_line_counts: Dict[str, int] = {}
+        self.imports: set[str] = set()
+        self.function_calls: set[str] = set()
+        self.class_names: list[str] = []
+        self.function_line_counts: dict[str, int] = {}
         self.current_function_start = None
 
     def visit_Import(self, node):

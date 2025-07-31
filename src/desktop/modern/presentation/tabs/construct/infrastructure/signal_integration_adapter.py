@@ -6,7 +6,7 @@ Maintains the same interface as ConstructTabEventIntegration but uses Qt signals
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject
 
@@ -31,7 +31,7 @@ class SignalIntegrationAdapter(QObject):
         self.logger = logging.getLogger(__name__)
 
         # Component references
-        self.components: Dict[str, Any] = {}
+        self.components: dict[str, Any] = {}
 
         # Connect to coordinator signals for handling
         self._connect_coordinator_signals()
@@ -65,7 +65,7 @@ class SignalIntegrationAdapter(QObject):
             self._handle_layout_transition
         )
 
-    def setup_event_handlers(self, components: Dict[str, Any]):
+    def setup_event_handlers(self, components: dict[str, Any]):
         """Setup event handlers for all components (maintains interface compatibility)."""
         self.components = components
 

@@ -6,7 +6,7 @@ grid layouts, component positioning, and responsive scaling operations.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -16,8 +16,8 @@ class IBeatLayoutCalculator(ABC):
 
     @abstractmethod
     def calculate_beat_frame_layout(
-        self, sequence: SequenceData, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: SequenceData, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """
         Calculate layout for beat frames in a sequence.
 
@@ -31,8 +31,8 @@ class IBeatLayoutCalculator(ABC):
 
     @abstractmethod
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """
         Get optimal grid layout (rows, cols) for items.
 
@@ -50,8 +50,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def calculate_component_positions(
-        self, layout_config: Dict[str, Any]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, layout_config: dict[str, Any]
+    ) -> dict[str, tuple[int, int]]:
         """
         Calculate positions for UI components based on layout configuration.
 
@@ -64,8 +64,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def calculate_center_position(
-        self, item_size: Tuple[int, int], container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_size: tuple[int, int], container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """
         Calculate centered position for an item within a container.
 
@@ -83,11 +83,11 @@ class IComponentPositionCalculator(ABC):
         item_count: int,
         rows: int,
         columns: int,
-        container_size: Tuple[int, int],
-        item_size: Tuple[int, int],
+        container_size: tuple[int, int],
+        item_size: tuple[int, int],
         spacing: int = 0,
         padding: int = 0,
-    ) -> Dict[int, Tuple[int, int]]:
+    ) -> dict[int, tuple[int, int]]:
         """
         Calculate positions for items in a grid layout.
 
@@ -110,7 +110,7 @@ class IResponsiveScalingCalculator(ABC):
 
     @abstractmethod
     def calculate_responsive_scaling(
-        self, content_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, content_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """
         Calculate responsive scaling factor for content within container.
@@ -126,10 +126,10 @@ class IResponsiveScalingCalculator(ABC):
     @abstractmethod
     def calculate_aspect_aware_scaling(
         self,
-        content_size: Tuple[int, int],
-        container_size: Tuple[int, int],
+        content_size: tuple[int, int],
+        container_size: tuple[int, int],
         maintain_aspect_ratio: bool = True,
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Calculate scaling factors that may be aspect-aware.
 
@@ -166,8 +166,8 @@ class IComponentSizer(ABC):
 
     @abstractmethod
     def calculate_component_size(
-        self, component_type: str, parent_size: Tuple[int, int], **kwargs
-    ) -> Tuple[int, int]:
+        self, component_type: str, parent_size: tuple[int, int], **kwargs
+    ) -> tuple[int, int]:
         """
         Calculate size for a component based on its type and parent.
 
@@ -181,7 +181,7 @@ class IComponentSizer(ABC):
         """
 
     @abstractmethod
-    def calculate_minimum_size(self, component_type: str) -> Tuple[int, int]:
+    def calculate_minimum_size(self, component_type: str) -> tuple[int, int]:
         """
         Calculate minimum size for a component type.
 
@@ -194,8 +194,8 @@ class IComponentSizer(ABC):
 
     @abstractmethod
     def calculate_preferred_size(
-        self, component_type: str, available_space: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, component_type: str, available_space: tuple[int, int]
+    ) -> tuple[int, int]:
         """
         Calculate preferred size for a component within available space.
 
@@ -215,11 +215,11 @@ class IDimensionCalculator(ABC):
     def calculate_total_dimensions(
         self,
         item_count: int,
-        item_size: Tuple[int, int],
-        layout: Tuple[int, int],
+        item_size: tuple[int, int],
+        layout: tuple[int, int],
         spacing: int = 0,
         padding: int = 0,
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate total dimensions needed for a layout.
 
@@ -236,8 +236,8 @@ class IDimensionCalculator(ABC):
 
     @abstractmethod
     def calculate_available_space(
-        self, container_size: Tuple[int, int], reserved_space: Dict[str, int]
-    ) -> Tuple[int, int]:
+        self, container_size: tuple[int, int], reserved_space: dict[str, int]
+    ) -> tuple[int, int]:
         """
         Calculate available space after reserving space for other elements.
 
@@ -250,7 +250,7 @@ class IDimensionCalculator(ABC):
         """
 
     @abstractmethod
-    def get_aspect_ratio(self, size: Tuple[int, int]) -> float:
+    def get_aspect_ratio(self, size: tuple[int, int]) -> float:
         """
         Calculate aspect ratio from size.
 

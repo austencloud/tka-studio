@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 import random
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
     LegacyStartPositionBeat,
@@ -139,7 +139,7 @@ class SequenceBuilderStartPosManager:
                     return
         raise LookupError(f"No matching start position found for key: {chosen_key}")
 
-    def _set_orientation_in(self, pictograph_data: Dict[str, Any]) -> None:
+    def _set_orientation_in(self, pictograph_data: dict[str, Any]) -> None:
         """
         Sets all relevant orientation attributes to 'in'.
         """

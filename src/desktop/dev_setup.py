@@ -17,10 +17,9 @@ import argparse
 from pathlib import Path
 import shutil
 import sys
-from typing import List, Tuple
 
 
-def create_missing_init_files() -> List[Path]:
+def create_missing_init_files() -> list[Path]:
     """
     Create __init__.py files in directories that should be Python packages.
 
@@ -59,7 +58,7 @@ def create_missing_init_files() -> List[Path]:
     return created_files
 
 
-def test_critical_imports() -> List[Tuple[str, bool, str]]:
+def test_critical_imports() -> list[tuple[str, bool, str]]:
     """
     Test imports that are critical for the application.
 

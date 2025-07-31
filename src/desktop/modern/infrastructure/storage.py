@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import List, Optional
+from typing import Optional
 
 
 class CacheManager:
@@ -35,7 +35,7 @@ class AssetManager:
     def asset_exists(self, filename: str) -> bool:
         return os.path.exists(self.get_asset_path(filename))
 
-    def list_assets(self, extension: Optional[str] = None) -> List[str]:
+    def list_assets(self, extension: Optional[str] = None) -> list[str]:
         assets = []
         for filename in os.listdir(self.assets_path):
             if extension is None or filename.endswith(extension):

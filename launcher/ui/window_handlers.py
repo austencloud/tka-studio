@@ -7,7 +7,7 @@ Keeps the main window class clean and focused.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from config.config.launcher_config import LauncherConfig
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
@@ -230,7 +230,7 @@ class LauncherEventHandler(QObject):
         except Exception as e:
             logger.error(f"Launch notification failed: {e}")
 
-    def _on_selection_changed(self, selected_apps: List):
+    def _on_selection_changed(self, selected_apps: list):
         """Handle application selection changes."""
         try:
             count = len(selected_apps)

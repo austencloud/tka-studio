@@ -18,7 +18,7 @@ The goal is to split this large manager into focused, domain-specific registrars
 
 from abc import ABC, abstractmethod
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -48,7 +48,7 @@ class IServiceRegistrar(ABC):
         """Get the name of the service domain this registrar handles."""
 
     @abstractmethod
-    def get_registered_services(self) -> List[str]:
+    def get_registered_services(self) -> list[str]:
         """Get list of service names registered by this registrar."""
 
     @abstractmethod
@@ -70,14 +70,14 @@ class BaseServiceRegistrar(IServiceRegistrar):
     def __init__(self, progress_callback: Optional[callable] = None):
         """Initialize with optional progress callback."""
         self.progress_callback = progress_callback
-        self._service_availability: Dict[str, bool] = {}
-        self._registered_services: List[str] = []
+        self._service_availability: dict[str, bool] = {}
+        self._registered_services: list[str] = []
 
-    def get_registered_services(self) -> List[str]:
+    def get_registered_services(self) -> list[str]:
         """Get list of service names registered by this registrar."""
         return self._registered_services.copy()
 
-    def get_service_availability(self) -> Dict[str, bool]:
+    def get_service_availability(self) -> dict[str, bool]:
         """Get availability status of services in this domain."""
         return self._service_availability.copy()
 
@@ -135,7 +135,7 @@ class ServiceRegistrationCoordinator:
     def __init__(self, progress_callback: Optional[callable] = None):
         """Initialize coordinator with optional progress callback."""
         self.progress_callback = progress_callback
-        self._registrars: List[IServiceRegistrar] = []
+        self._registrars: list[IServiceRegistrar] = []
         self._initialize_registrars()
 
     def _initialize_registrars(self) -> None:

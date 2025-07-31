@@ -8,7 +8,7 @@ These are the mathematical transformations that make circular sequences work.
 from abc import ABC, abstractmethod
 from enum import Enum
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -130,7 +130,7 @@ class StrictRotatedCAP(CAPOperation):
 
     def _calculate_rotation_mapping(
         self, start_position: str, slice_size: str
-    ) -> Dict[str, str]:
+    ) -> dict[str, str]:
         """
         Calculate position rotation mapping.
 
@@ -166,7 +166,7 @@ class StrictRotatedCAP(CAPOperation):
             return {}
 
     def _apply_rotation_to_beat(
-        self, beat: BeatData, rotation_mapping: Dict[str, str]
+        self, beat: BeatData, rotation_mapping: dict[str, str]
     ) -> BeatData:
         """Apply rotation mapping to a single beat."""
         try:
@@ -260,7 +260,7 @@ class StrictMirroredCAP(CAPOperation):
         """Check if sequence can have mirrored CAP applied."""
         return sequence.length >= 2
 
-    def _get_mirror_mapping(self) -> Dict[str, str]:
+    def _get_mirror_mapping(self) -> dict[str, str]:
         """Get position mirror mapping."""
         # Simplified mirror mapping (legacy had complete mirror position maps)
         return {
@@ -275,7 +275,7 @@ class StrictMirroredCAP(CAPOperation):
         }
 
     def _apply_mirror_to_beat(
-        self, beat: BeatData, mirror_mapping: Dict[str, str]
+        self, beat: BeatData, mirror_mapping: dict[str, str]
     ) -> BeatData:
         """Apply mirror mapping to a single beat."""
         try:
@@ -349,7 +349,7 @@ class CAPExecutorFactory:
         return cls._executors[cap_type]
 
     @classmethod
-    def get_available_cap_types(cls) -> List[CAPType]:
+    def get_available_cap_types(cls) -> list[CAPType]:
         """Get list of implemented CAP types."""
         return list(cls._executors.keys())
 

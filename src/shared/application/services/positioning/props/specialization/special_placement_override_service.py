@@ -12,7 +12,7 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models import BeatData
 
@@ -35,7 +35,7 @@ class ISpecialPlacementOverrideService(ABC):
         """Generate key for swap override lookup."""
 
     @abstractmethod
-    def get_override_data(self, beat_data: BeatData) -> Dict[str, Any]:
+    def get_override_data(self, beat_data: BeatData) -> dict[str, Any]:
         """Get override data for beat configuration."""
 
 
@@ -100,7 +100,7 @@ class SpecialPlacementOverrideService(ISpecialPlacementOverrideService):
         # Generate key in standard format
         return f"{letter}_{blue_type}_{red_type}"
 
-    def get_override_data(self, beat_data: BeatData) -> Dict[str, Any]:
+    def get_override_data(self, beat_data: BeatData) -> dict[str, Any]:
         """Get override data for beat configuration."""
         override_key = self.generate_override_key(beat_data)
         special_placements = self._get_special_placements()
@@ -129,6 +129,6 @@ class SpecialPlacementOverrideService(ISpecialPlacementOverrideService):
 
             return JSONConfigurator()
 
-    def _get_special_placements(self) -> Dict[str, Any]:
+    def _get_special_placements(self) -> dict[str, Any]:
         """Get special placements using JSONConfigurator singleton."""
         return self._json_configurator.load_special_placements()

@@ -4,7 +4,7 @@ Single responsibility: Hold and provide service instances
 """
 
 import logging
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Optional, TypeVar
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")
@@ -19,9 +19,9 @@ class ServiceContainer:
     """
 
     def __init__(self):
-        self._services: Dict[Type, Any] = {}
-        self._singletons: Dict[Type, Any] = {}
-        self._instances: Dict[Type, Any] = {}
+        self._services: dict[type, Any] = {}
+        self._singletons: dict[type, Any] = {}
+        self._instances: dict[type, Any] = {}
 
     def register_core_services(self):
         """Register all core services in simple, clear order"""
@@ -112,7 +112,7 @@ class ServiceContainer:
             # Continue anyway - app should work with minimal services
 
     def register(
-        self, interface: Type[T], implementation: Type[T] = None, instance: T = None
+        self, interface: type[T], implementation: type[T] = None, instance: T = None
     ) -> None:
         """Register a service class or instance"""
         if instance:
@@ -124,23 +124,23 @@ class ServiceContainer:
             # If no implementation provided, assume interface is the implementation
             self._services[interface] = interface
 
-    def register_singleton(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_singleton(self, interface: type[T], implementation: type[T]) -> None:
         """Register as singleton - compatible with old DI system"""
         self.register(interface, implementation)
 
-    def register_transient(self, interface: Type[T], implementation: Type[T]) -> None:
+    def register_transient(self, interface: type[T], implementation: type[T]) -> None:
         """Register as transient - compatible with old DI system"""
         self.register(interface, implementation)
 
-    def register_instance(self, interface: Type[T], instance: T) -> None:
+    def register_instance(self, interface: type[T], instance: T) -> None:
         """Register specific instance - compatible with old DI system"""
         self.register(interface, instance=instance)
 
-    def resolve(self, service_class: Type[T]) -> T:
+    def resolve(self, service_class: type[T]) -> T:
         """Get a service instance - compatible with old DI system"""
         return self.get(service_class)
 
-    def get(self, service_class: Type[T]) -> T:
+    def get(self, service_class: type[T]) -> T:
         """Get a service instance"""
 
         # Return existing singleton if available
@@ -180,11 +180,11 @@ class ServiceContainer:
             logger.error(f"❌ Failed to create {service_class.__name__}: {e}")
             raise
 
-    def get_registrations(self) -> Dict[Type, Any]:
+    def get_registrations(self) -> dict[type, Any]:
         """Get all registered services for debugging - compatible with old DI system"""
         return self._services.copy()
 
-    def get_all_services(self) -> Dict[Type, Any]:
+    def get_all_services(self) -> dict[type, Any]:
         """Get all registered services for debugging"""
         return self._services.copy()
 

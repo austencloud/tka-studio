@@ -10,7 +10,7 @@ import os
 
 # Import framework-agnostic core services
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
@@ -74,7 +74,7 @@ class QtImageExportEngine:
 
     def __init__(self):
         """Initialize Qt image export engine."""
-        self._font_cache: Dict[str, QFont] = {}
+        self._font_cache: dict[str, QFont] = {}
         logger.info("Qt image export engine initialized")
 
     def render_to_qt_image(self, image_data: ImageData) -> QImage:
@@ -117,7 +117,7 @@ class QtImageExportEngine:
             return error_image
 
     def _execute_render_commands(
-        self, painter: QPainter, commands: List[Dict[str, Any]]
+        self, painter: QPainter, commands: list[dict[str, Any]]
     ):
         """Execute all render commands on the painter."""
         # Sort commands by layer order
@@ -145,7 +145,7 @@ class QtImageExportEngine:
                     f"Failed to execute command {command.get('type', 'unknown')}: {e}"
                 )
 
-    def _render_background_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_background_command(self, painter: QPainter, command: dict[str, Any]):
         """Render background command."""
         try:
             # Background is already filled during image creation
@@ -154,7 +154,7 @@ class QtImageExportEngine:
         except Exception as e:
             logger.error(f"Failed to render background: {e}")
 
-    def _render_text_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_text_command(self, painter: QPainter, command: dict[str, Any]):
         """Render text command."""
         try:
             text = command.get("text", "")
@@ -181,7 +181,7 @@ class QtImageExportEngine:
         except Exception as e:
             logger.error(f"Failed to render text: {e}")
 
-    def _render_beat_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_beat_command(self, painter: QPainter, command: dict[str, Any]):
         """Render beat command."""
         try:
             beat_data = command.get("beat_data", {})
@@ -211,7 +211,7 @@ class QtImageExportEngine:
         except Exception as e:
             logger.error(f"Failed to render beat: {e}")
 
-    def _render_rectangle_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_rectangle_command(self, painter: QPainter, command: dict[str, Any]):
         """Render rectangle command."""
         try:
             position = command.get("position", Point(0, 0))
@@ -246,7 +246,7 @@ class QtImageExportEngine:
         except Exception as e:
             logger.error(f"Failed to render rectangle: {e}")
 
-    def _render_border_command(self, painter: QPainter, command: Dict[str, Any]):
+    def _render_border_command(self, painter: QPainter, command: dict[str, Any]):
         """Render border command."""
         try:
             position = command.get("position", Point(0, 0))
@@ -314,7 +314,7 @@ class QtImageExportAdapter:
     # ========================================================================
 
     def render_sequence_image(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
     ) -> QImage:
         """
         Render sequence image using core service + Qt execution (legacy interface).
@@ -345,7 +345,7 @@ class QtImageExportAdapter:
             return error_image
 
     def calculate_image_dimensions(
-        self, beat_count: int, export_options: Dict[str, Any]
+        self, beat_count: int, export_options: dict[str, Any]
     ) -> tuple[int, int]:
         """Calculate image dimensions (legacy interface)."""
         try:
@@ -362,12 +362,12 @@ class QtImageExportAdapter:
     # ========================================================================
 
     def generate_export_data(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
     ) -> ImageData:
         """Generate framework-agnostic export data (useful for testing/debugging)."""
         return self.core_service.generate_export_data(sequence_data, export_options)
 
-    def get_export_statistics(self) -> Dict[str, Any]:
+    def get_export_statistics(self) -> dict[str, Any]:
         """Get export statistics."""
         return {
             "core_service_stats": self.core_service.get_performance_stats(),

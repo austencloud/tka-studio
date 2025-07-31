@@ -5,7 +5,7 @@ This component follows SRP by focusing solely on tab-related functionality.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -39,7 +39,7 @@ class TabManager(QObject):
 
         self.coordinator = coordinator
         self.app_context = app_context
-        self._tabs: Dict[str, QWidget] = {}
+        self._tabs: dict[str, QWidget] = {}
         self._current_tab: Optional[str] = None
         self._tab_factories = {}
 

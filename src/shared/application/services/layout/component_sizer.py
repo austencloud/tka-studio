@@ -7,7 +7,7 @@ Framework-agnostic service for responsive component sizing.
 
 from enum import Enum
 import logging
-from typing import Any, Dict, NamedTuple, Optional, Tuple
+from typing import Any, NamedTuple, Optional
 
 from desktop.modern.core.interfaces.core_services import IComponentSizer
 
@@ -197,8 +197,8 @@ class ComponentSizer(IComponentSizer):
 
     # Interface implementation methods
     def calculate_component_size(
-        self, component_type: str, content_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, component_type: str, content_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Calculate component size based on content (interface implementation)."""
         content_width, content_height = content_size
 
@@ -213,7 +213,7 @@ class ComponentSizer(IComponentSizer):
         dimensions = self.calculate_size(comp_type, content_width, content_height)
         return (dimensions.width, dimensions.height)
 
-    def get_size_constraints(self, component_type: str) -> Dict[str, Any]:
+    def get_size_constraints(self, component_type: str) -> dict[str, Any]:
         """Get size constraints for component type (interface implementation)."""
         return {
             "min_width": 50,
@@ -226,8 +226,8 @@ class ComponentSizer(IComponentSizer):
         }
 
     def apply_responsive_sizing(
-        self, base_size: Tuple[int, int], viewport_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, base_size: tuple[int, int], viewport_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Apply responsive sizing rules (interface implementation)."""
         base_width, base_height = base_size
         viewport_width, viewport_height = viewport_size

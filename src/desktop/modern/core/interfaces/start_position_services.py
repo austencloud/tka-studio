@@ -6,7 +6,7 @@ that follow TKA's clean architecture principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.commands.start_position_commands import SetStartPositionCommand
 from desktop.modern.core.types import Size
@@ -33,7 +33,7 @@ class IStartPositionDataService(ABC):
         """
 
     @abstractmethod
-    def get_available_positions(self, grid_mode: str = "diamond") -> List[str]:
+    def get_available_positions(self, grid_mode: str = "diamond") -> list[str]:
         """
         Get all available start positions for a grid mode.
 
@@ -121,7 +121,7 @@ class IStartPositionUIService(ABC):
     @abstractmethod
     def get_grid_layout_config(
         self, grid_mode: str, is_advanced: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get grid layout configuration for positioning options.
 
@@ -136,7 +136,7 @@ class IStartPositionUIService(ABC):
     @abstractmethod
     def get_positions_for_mode(
         self, grid_mode: str, is_advanced: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get the list of positions to display for a given mode.
 
@@ -182,7 +182,7 @@ class IStartPositionOrchestrator(ABC):
     @abstractmethod
     def calculate_responsive_layout(
         self, container_size: Size, position_count: int
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate responsive layout parameters for position options.
 

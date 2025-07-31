@@ -7,7 +7,6 @@ Fixed to match how the legacy TurnIntensityManager really works.
 
 import logging
 import random
-from typing import List, Tuple, Union
 
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -26,8 +25,8 @@ class TurnApplicator:
     def apply_turns_to_pictograph(
         self,
         pictograph: PictographData,
-        blue_turns: Union[int, float, str],
-        red_turns: Union[int, float, str],
+        blue_turns: int | float | str,
+        red_turns: int | float | str,
     ) -> PictographData:
         """
         Apply specific turn values to a pictograph.
@@ -70,7 +69,7 @@ class TurnApplicator:
 
     def allocate_turns_for_sequence(
         self, sequence_length: int, level: int, turn_intensity: float
-    ) -> Tuple[List[Union[int, float, str]], List[Union[int, float, str]]]:
+    ) -> tuple[list[int | float | str], list[int | float | str]]:
         """
         Allocate turns for entire sequence using REAL legacy logic.
 

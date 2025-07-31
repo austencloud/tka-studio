@@ -8,7 +8,7 @@ JSON serialization and formatting.
 
 import json
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from desktop.modern.core.interfaces.export_services import (
     ISequenceDataTransformer,
@@ -40,7 +40,7 @@ class SequenceJsonExporter(ISequenceJsonExporter):
         self._data_transformer = data_transformer
         logger.debug("SequenceJsonExporter initialized")
 
-    def export_to_json_string(self, sequence: SequenceData) -> Tuple[bool, str]:
+    def export_to_json_string(self, sequence: SequenceData) -> tuple[bool, str]:
         """
         Export sequence as JSON string in legacy-compatible format.
 
@@ -72,7 +72,7 @@ class SequenceJsonExporter(ISequenceJsonExporter):
             logger.error(f"JSON export failed: {e}")
             return False, f"JSON export failed: {e}"
 
-    def format_json_output(self, data: List[Dict[str, Any]]) -> str:
+    def format_json_output(self, data: list[dict[str, Any]]) -> str:
         """
         Format the data as a properly formatted JSON string.
 

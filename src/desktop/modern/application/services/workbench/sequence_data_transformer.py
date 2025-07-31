@@ -7,7 +7,7 @@ data format conversion.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.export_services import ISequenceDataTransformer
 from desktop.modern.domain.models import BeatData, PictographData, SequenceData
@@ -26,7 +26,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
     - Handle position and motion data extraction
     """
 
-    def to_image_export_format(self, sequence: SequenceData) -> List[Dict[str, Any]]:
+    def to_image_export_format(self, sequence: SequenceData) -> list[dict[str, Any]]:
         """Convert SequenceData to format expected by image export services."""
         sequence_data = []
 
@@ -54,7 +54,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
 
         return sequence_data
 
-    def to_legacy_json_format(self, sequence: SequenceData) -> List[Dict[str, Any]]:
+    def to_legacy_json_format(self, sequence: SequenceData) -> list[dict[str, Any]]:
         """Convert SequenceData to legacy-compatible JSON format."""
         sequence_json = []
 
@@ -95,7 +95,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
 
     def extract_beat_attributes(
         self, pictograph_data: Optional["PictographData"], color: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract motion attributes for a specific color from beat data."""
         attributes = {}
 
@@ -137,7 +137,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
 
     def _convert_beat_to_legacy_format(
         self, beat: "BeatData"
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """Convert modern BeatData to legacy JSON format."""
         try:
             if not beat.pictograph_data:

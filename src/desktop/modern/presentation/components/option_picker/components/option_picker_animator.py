@@ -5,7 +5,7 @@ Handles smooth fade animations for option picker content.
 Manages fade transitions and graphics effects cleanup.
 """
 
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -26,7 +26,7 @@ class OptionPickerAnimator:
         self._parent = parent
         self._is_animating = False
         self._pending_fade_callback: Optional[Callable] = None
-        self._pending_fade_frames: List[QWidget] = []
+        self._pending_fade_frames: list[QWidget] = []
 
     def is_animating(self) -> bool:
         """Check if an animation is currently in progress."""
@@ -34,7 +34,7 @@ class OptionPickerAnimator:
 
     def fade_out_and_update(
         self,
-        pictograph_frames: List[QWidget],
+        pictograph_frames: list[QWidget],
         update_callback: Callable,
         fade_in_callback: Optional[Callable] = None,
     ) -> None:
@@ -94,7 +94,7 @@ class OptionPickerAnimator:
             update_callback()
 
     def _complete_fade_transition(
-        self, old_frames: List[QWidget], update_callback: Callable
+        self, old_frames: list[QWidget], update_callback: Callable
     ):
         """Complete the fade transition after fade out is done."""
         try:
@@ -168,7 +168,7 @@ class OptionPickerAnimator:
             print(f"❌ [ANIMATOR] Fade in failed: {e}")
             self._is_animating = False
 
-    def _get_current_pictograph_frames(self) -> List[QWidget]:
+    def _get_current_pictograph_frames(self) -> list[QWidget]:
         """Get current pictograph frames from parent sections."""
         frames = []
         if hasattr(self._parent, "sections"):

@@ -6,7 +6,7 @@ from the SequenceBrowserPanel to keep it lightweight.
 """
 
 import logging
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtWidgets import QApplication
 
@@ -44,8 +44,8 @@ class ProgressiveLoadingEventHandler:
 
         # State tracking
         self._loading_cancelled = False
-        self.all_loaded_sequences: List[SequenceData] = []
-        self.current_sequences: List[SequenceData] = []
+        self.all_loaded_sequences: list[SequenceData] = []
+        self.current_sequences: list[SequenceData] = []
 
         # Callbacks
         self.get_current_sort_method: Optional[Callable[[], str]] = None
@@ -68,7 +68,7 @@ class ProgressiveLoadingEventHandler:
         self.loading_state_manager.hide_loading_state()
         logger.info(f"🚀 Started progressive loading: {total_count} sequences to load")
 
-    def on_sequences_chunk_loaded(self, chunk_sequences: List[SequenceData]) -> None:
+    def on_sequences_chunk_loaded(self, chunk_sequences: list[SequenceData]) -> None:
         """Handle chunk loading with progressive layout addition."""
         logger.info(f"📦 Processing chunk of {len(chunk_sequences)} sequences")
 
@@ -105,7 +105,7 @@ class ProgressiveLoadingEventHandler:
         """Handle loading progress update."""
         self.loading_state_manager.update_progress(current, total)
 
-    def on_loading_completed(self, final_sequences: List[SequenceData]) -> None:
+    def on_loading_completed(self, final_sequences: list[SequenceData]) -> None:
         """Handle loading completion."""
         if self._loading_cancelled:
             return
@@ -146,11 +146,11 @@ class ProgressiveLoadingEventHandler:
         """Cancel the current loading operation."""
         self._loading_cancelled = True
 
-    def get_current_sequences(self) -> List[SequenceData]:
+    def get_current_sequences(self) -> list[SequenceData]:
         """Get the current sequences."""
         return self.current_sequences
 
-    def get_all_loaded_sequences(self) -> List[SequenceData]:
+    def get_all_loaded_sequences(self) -> list[SequenceData]:
         """Get all loaded sequences."""
         return self.all_loaded_sequences
 

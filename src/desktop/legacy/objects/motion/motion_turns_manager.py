@@ -17,5 +17,5 @@ class MotionTurnsManager:
             return turns
         return max(0, min(3, turns))
 
-    def set_motion_turns(self, turns: Union[str, int, float]) -> None:
+    def set_motion_turns(self, turns: str | int | float) -> None:
         self.motion.state.turns = turns

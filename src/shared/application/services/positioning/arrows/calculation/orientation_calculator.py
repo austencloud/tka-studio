@@ -13,7 +13,7 @@ Ported from legacy MotionOriCalculator for accuracy.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.positioning_services import IOrientationCalculator
 from desktop.modern.domain.models import (
@@ -303,7 +303,7 @@ class OrientationCalculator(IOrientationCalculator):
             # Handle other motion data formats
             return Orientation.IN
 
-    def get_orientation_adjustments(self, orientation: Any) -> Dict[str, Any]:
+    def get_orientation_adjustments(self, orientation: Any) -> dict[str, Any]:
         """Get adjustments for orientation (interface implementation)."""
         if isinstance(orientation, Orientation):
             return {

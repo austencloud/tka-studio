@@ -7,7 +7,7 @@ that maintains backward compatibility while using the new architecture.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtGui import QPixmap
 
@@ -88,7 +88,7 @@ class ImageProcessor:
             image_path, page_scale_factor, current_page_index
         )
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics."""
         return self.coordinator.get_performance_stats()
 
@@ -126,7 +126,7 @@ class ImageProcessor:
         return perf_stats.get("disk_cache_misses", 0)
 
     @property
-    def raw_image_cache(self) -> Dict[str, Any]:
+    def raw_image_cache(self) -> dict[str, Any]:
         """Get raw image cache for backward compatibility."""
 
         # Return a dict-like interface that supports 'in' operator

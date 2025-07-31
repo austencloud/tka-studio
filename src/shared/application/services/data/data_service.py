@@ -6,7 +6,7 @@ Uses simple exceptions for error handling and configuration injection.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 
@@ -80,7 +80,7 @@ class DataManager(IDataManager):
         logger.info(f"Combined dataset created with {len(combined)} records")
         return combined
 
-    def validate_data_files(self) -> Dict[str, Any]:
+    def validate_data_files(self) -> dict[str, Any]:
         """Validate data files and return status information."""
         validation_results = {
             "diamond_csv_exists": self.config.diamond_csv_path.exists(),
@@ -127,7 +127,7 @@ class DataManager(IDataManager):
         self._box_dataset = None
         logger.info(f"Reloaded data service with new config: {new_config.data_dir}")
 
-    def get_dataset_info(self) -> Dict[str, Any]:
+    def get_dataset_info(self) -> dict[str, Any]:
         """Get information about loaded datasets."""
         info = {
             "diamond_loaded": self._diamond_dataset is not None,

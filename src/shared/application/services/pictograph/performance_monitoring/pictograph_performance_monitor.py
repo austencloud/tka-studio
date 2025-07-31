@@ -11,7 +11,7 @@ This service handles:
 
 import logging
 import time
-from typing import Any, Dict, List
+from typing import Any
 import uuid
 
 from desktop.modern.core.interfaces.pictograph_rendering_services import (
@@ -36,13 +36,13 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
     def __init__(self):
         """Initialize the performance monitor."""
         # Active timers
-        self._active_timers: Dict[str, Dict[str, Any]] = {}
+        self._active_timers: dict[str, dict[str, Any]] = {}
 
         # Completed operation history
-        self._operation_history: List[Dict[str, Any]] = []
+        self._operation_history: list[dict[str, Any]] = []
 
         # Cache performance tracking
-        self._cache_stats: Dict[str, Dict[str, int]] = {
+        self._cache_stats: dict[str, dict[str, int]] = {
             "grid": {"hits": 0, "misses": 0},
             "prop": {"hits": 0, "misses": 0},
             "glyph": {"hits": 0, "misses": 0},
@@ -146,7 +146,7 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
         self._system_stats["error_count"] += 1
         logger.error(f"❌ [PERFORMANCE_MONITOR] Error in {operation}: {error_message}")
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get comprehensive performance report."""
         # Calculate cache hit rates
         cache_performance = {}
@@ -185,13 +185,13 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
             "recommendations": self._generate_recommendations(),
         }
 
-    def _analyze_operation_performance(self) -> Dict[str, Any]:
+    def _analyze_operation_performance(self) -> dict[str, Any]:
         """Analyze performance of different operation types."""
         if not self._operation_history:
             return {}
 
         # Group operations by type
-        operation_groups: Dict[str, List[float]] = {}
+        operation_groups: dict[str, list[float]] = {}
         for record in self._operation_history:
             op_type = record["operation"]
             if op_type not in operation_groups:
@@ -212,7 +212,7 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
 
         return performance_data
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate performance optimization recommendations."""
         recommendations = []
 
@@ -278,7 +278,7 @@ class PictographPerformanceMonitor(IPictographPerformanceMonitor):
 
         logger.info("🔄 [PERFORMANCE_MONITOR] Reset all performance statistics")
 
-    def get_recent_operations(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_operations(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get the most recent operations for debugging."""
         return self._operation_history[-limit:] if self._operation_history else []
 

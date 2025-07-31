@@ -1,6 +1,6 @@
 from copy import deepcopy
 from functools import partial
-from typing import TYPE_CHECKING, Callable, List
+from typing import TYPE_CHECKING, Callable
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from PyQt6.QtWidgets import QGridLayout, QHBoxLayout, QVBoxLayout
@@ -97,7 +97,7 @@ class AdvancedStartPosPicker(BaseStartPosPicker):
                 self.grid_layout.addWidget(pictograph.elements.view, row, col)
 
     def generate_pictographs(self) -> None:
-        self.all_variations: dict[str, List[LegacyPictograph]] = {BOX: [], DIAMOND: []}
+        self.all_variations: dict[str, list[LegacyPictograph]] = {BOX: [], DIAMOND: []}
         for grid_mode in [BOX, DIAMOND]:
             pictographs = (
                 self.get_box_pictographs()

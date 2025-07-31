@@ -13,7 +13,7 @@ import importlib.util
 import os
 from pathlib import Path
 import sys
-from typing import List, Optional
+from typing import Optional
 
 
 class CoreImportFinder:
@@ -22,7 +22,7 @@ class CoreImportFinder:
     def __init__(self):
         self.core_directories = self._find_all_core_directories()
 
-    def _find_all_core_directories(self) -> List[Path]:
+    def _find_all_core_directories(self) -> list[Path]:
         """Find all 'core' directories in the project."""
         core_dirs = []
 
@@ -38,7 +38,7 @@ class CoreImportFinder:
 
         return core_dirs
 
-    def find_spec(self, fullname: str, path: Optional[List[str]], target=None):
+    def find_spec(self, fullname: str, path: Optional[list[str]], target=None):
         """Find the module spec for core.* imports."""
         if not fullname.startswith("core."):
             return None

@@ -6,7 +6,7 @@ Focuses on core functionality without unnecessary abstraction layers.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QResizeEvent
@@ -276,7 +276,7 @@ class SequenceBrowserPanel(QWidget):
         self.navigation_handler.scroll_to_section(section_name)
 
     def update_navigation_sections(
-        self, section_names: List[str], sort_method: str
+        self, section_names: list[str], sort_method: str
     ) -> None:
         """Update the navigation sidebar with new sections."""
         if self.navigation_sidebar:
@@ -321,7 +321,7 @@ class SequenceBrowserPanel(QWidget):
 
     def show_sequences(
         self,
-        sequences: List[SequenceData],
+        sequences: list[SequenceData],
         filter_type: Optional[FilterType] = None,
         filter_values: any = None,
     ) -> None:

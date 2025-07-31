@@ -7,7 +7,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 
 from dataclasses import dataclass
 import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -17,21 +17,21 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 @dataclass
 class CommandExecutedEvent:
     command_type: str
-    command_data: Dict[str, Any]
+    command_data: dict[str, Any]
     timestamp: float = 0.0
 
 
 @dataclass
 class CommandUndoneEvent:
     command_type: str
-    command_data: Dict[str, Any]
+    command_data: dict[str, Any]
     timestamp: float = 0.0
 
 
 @dataclass
 class CommandRedoneEvent:
     command_type: str
-    command_data: Dict[str, Any]
+    command_data: dict[str, Any]
     timestamp: float = 0.0
 
 
@@ -61,13 +61,13 @@ class SequenceStateTrackerService:
         self.start_position: Optional[BeatData] = None
 
         # Platform-agnostic event callbacks
-        self._sequence_updated_callbacks: List[
+        self._sequence_updated_callbacks: list[
             Callable[[Optional[SequenceData]], None]
         ] = []
-        self._start_position_updated_callbacks: List[
+        self._start_position_updated_callbacks: list[
             Callable[[Optional[BeatData]], None]
         ] = []
-        self._state_changed_callbacks: List[Callable[[], None]] = []
+        self._state_changed_callbacks: list[Callable[[], None]] = []
 
         # Event bus subscriptions removed - using direct Qt signals instead
 
@@ -167,7 +167,7 @@ class SequenceStateTrackerService:
         """Set start position directly (for loading scenarios, bypasses commands)"""
         self._update_start_position(start_position)
 
-    def get_state_summary(self) -> Dict[str, Any]:
+    def get_state_summary(self) -> dict[str, Any]:
         """Get a summary of current state."""
         return {
             "has_sequence": self.has_sequence(),

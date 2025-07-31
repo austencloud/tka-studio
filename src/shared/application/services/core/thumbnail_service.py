@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Protocol
+from typing import Optional, Protocol
 
 # Import framework-agnostic types
 from shared.application.services.core.types import (
@@ -35,8 +35,8 @@ class ThumbnailSpec:
     beat_count: int
     thumbnail_size: Size
     word: Optional[str] = None
-    thumbnail_paths: Optional[List[str]] = None
-    metadata: Dict = None
+    thumbnail_paths: Optional[list[str]] = None
+    metadata: dict = None
 
 
 @dataclass
@@ -65,7 +65,7 @@ class IThumbnailImageLoader(Protocol):
         """Load and resize image from path."""
         ...
 
-    def create_placeholder_image(self, text: str, size: Size, style: Dict) -> ImageData:
+    def create_placeholder_image(self, text: str, size: Size, style: dict) -> ImageData:
         """Create placeholder image with text."""
         ...
 
@@ -75,14 +75,14 @@ class IThumbnailFactory(ABC):
 
     @abstractmethod
     def create_thumbnail_data(
-        self, sequence_spec: ThumbnailSpec, options: Optional[Dict] = None
+        self, sequence_spec: ThumbnailSpec, options: Optional[dict] = None
     ) -> ThumbnailData:
         """Create thumbnail data (framework-agnostic)."""
 
     @abstractmethod
     def batch_create_thumbnails(
-        self, sequence_specs: List[ThumbnailSpec], options: Optional[Dict] = None
-    ) -> List[ThumbnailData]:
+        self, sequence_specs: list[ThumbnailSpec], options: Optional[dict] = None
+    ) -> list[ThumbnailData]:
         """Create multiple thumbnails efficiently."""
 
 
@@ -106,7 +106,7 @@ class CoreThumbnailService(IThumbnailFactory):
         logger.info("Core thumbnail service initialized")
 
     def create_thumbnail_data(
-        self, sequence_spec: ThumbnailSpec, options: Optional[Dict] = None
+        self, sequence_spec: ThumbnailSpec, options: Optional[dict] = None
     ) -> ThumbnailData:
         """
         Create thumbnail data from sequence specification.
@@ -156,8 +156,8 @@ class CoreThumbnailService(IThumbnailFactory):
             )
 
     def batch_create_thumbnails(
-        self, sequence_specs: List[ThumbnailSpec], options: Optional[Dict] = None
-    ) -> List[ThumbnailData]:
+        self, sequence_specs: list[ThumbnailSpec], options: Optional[dict] = None
+    ) -> list[ThumbnailData]:
         """Create multiple thumbnails efficiently."""
         try:
             thumbnails = []
@@ -213,7 +213,7 @@ class CoreThumbnailService(IThumbnailFactory):
             return f"📄\nSequence\n{spec.beat_count} beats"
 
     def _create_placeholder_thumbnail(
-        self, text: str, size: Size, style: Dict
+        self, text: str, size: Size, style: dict
     ) -> ImageData:
         """Create placeholder thumbnail image."""
         try:
@@ -282,7 +282,7 @@ class FileSystemImageLoader(IThumbnailImageLoader):
             logger.error(f"Failed to load image {image_path}: {e}")
             return None
 
-    def create_placeholder_image(self, text: str, size: Size, style: Dict) -> ImageData:
+    def create_placeholder_image(self, text: str, size: Size, style: dict) -> ImageData:
         """Create simple placeholder image data."""
         try:
             # Create minimal SVG placeholder
@@ -359,7 +359,7 @@ def convert_sequence_data_to_spec(sequence_data, thumbnail_width: int) -> Thumbn
 
 
 def batch_convert_sequences_to_specs(
-    sequences: List, thumbnail_width: int
-) -> List[ThumbnailSpec]:
+    sequences: list, thumbnail_width: int
+) -> list[ThumbnailSpec]:
     """Convert multiple sequence data objects to specs."""
     return [convert_sequence_data_to_spec(seq, thumbnail_width) for seq in sequences]

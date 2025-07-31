@@ -7,7 +7,7 @@ readable and maintainable.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QTabWidget, QWidget
@@ -186,7 +186,7 @@ class NavigationSteps:
         )
         return False
 
-    def get_available_positions(self) -> List[str]:
+    def get_available_positions(self) -> list[str]:
         """
         Get list of available start positions.
 

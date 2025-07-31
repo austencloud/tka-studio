@@ -1,6 +1,6 @@
 # src/main_window/main_widget/sequence_card_tab/export/export_config.py
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import Qt
 
@@ -87,7 +87,7 @@ class ExportConfig:
 
     def get_grid_dimensions(
         self, sequence_length: Optional[int] = None
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         if sequence_length is None:
             return (
                 self.get_export_setting("grid_rows", 3),
@@ -106,7 +106,7 @@ class ExportConfig:
         else:
             return (4, 4)
 
-    def get_content_area(self) -> Dict[str, int]:
+    def get_content_area(self) -> dict[str, int]:
         page_width = self.get_print_setting("page_width_pixels")
         page_height = self.get_print_setting("page_height_pixels")
         margin_left = self.get_export_setting("page_margin_left")
@@ -124,7 +124,7 @@ class ExportConfig:
             "height": content_height,
         }
 
-    def get_cell_dimensions(self, rows: int, cols: int) -> Dict[str, int]:
+    def get_cell_dimensions(self, rows: int, cols: int) -> dict[str, int]:
         content_area = self.get_content_area()
         cell_spacing = self.get_export_setting("cell_spacing")
 

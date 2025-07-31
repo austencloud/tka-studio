@@ -8,7 +8,7 @@ onto the application window.
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from PyQt6.QtCore import QMimeData, QObject, pyqtSignal
 from PyQt6.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
@@ -70,7 +70,7 @@ class ImageDragDropHandler(QObject):
 
         # Callbacks for different drop scenarios
         self.single_image_callback: Optional[Callable[[str], None]] = None
-        self.multiple_images_callback: Optional[Callable[[List[str]], None]] = None
+        self.multiple_images_callback: Optional[Callable[[list[str]], None]] = None
 
         # Enable drag and drop on the parent widget
         self._setup_drag_drop()
@@ -96,7 +96,7 @@ class ImageDragDropHandler(QObject):
         self.single_image_callback = callback
 
     def set_multiple_images_callback(
-        self, callback: Callable[[List[str]], None]
+        self, callback: Callable[[list[str]], None]
     ) -> None:
         """Set callback for when multiple images are dropped."""
         self.multiple_images_callback = callback
@@ -194,7 +194,7 @@ class ImageDragDropHandler(QObject):
             self._show_error_message("Drop Error", error_msg)
             event.ignore()
 
-    def _extract_image_files(self, mime_data: QMimeData) -> List[str]:
+    def _extract_image_files(self, mime_data: QMimeData) -> list[str]:
         """Extract image file paths from mime data."""
         image_files = []
 
@@ -225,7 +225,7 @@ class ImageDragDropHandler(QObject):
             or mime_data.hasFormat("image/bmp")
         )
 
-    def _process_dropped_images(self, image_files: List[str]) -> None:
+    def _process_dropped_images(self, image_files: list[str]) -> None:
         """Process a list of dropped image files."""
         if not image_files:
             return

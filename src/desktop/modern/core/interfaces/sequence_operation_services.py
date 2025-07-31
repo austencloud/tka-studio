@@ -6,14 +6,14 @@ These interfaces handle sequence manipulation, validation, and transformation op
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 
 class IBeatFactory(ABC):
     """Interface for beat factory operations."""
 
     @abstractmethod
-    def create_beat(self, beat_config: Dict[str, Any]) -> Any:
+    def create_beat(self, beat_config: dict[str, Any]) -> Any:
         """
         Create beat from configuration.
 
@@ -58,7 +58,7 @@ class IBeatFactory(ABC):
         """
 
     @abstractmethod
-    def validate_beat(self, beat: Any) -> Tuple[bool, List[str]]:
+    def validate_beat(self, beat: Any) -> tuple[bool, list[str]]:
         """
         Validate beat object.
 
@@ -70,7 +70,7 @@ class IBeatFactory(ABC):
         """
 
     @abstractmethod
-    def get_beat_types(self) -> List[str]:
+    def get_beat_types(self) -> list[str]:
         """
         Get available beat types.
 
@@ -116,7 +116,7 @@ class ISequenceLoader(ABC):
         """
 
     @abstractmethod
-    def load_sequence_from_data(self, sequence_data: Dict[str, Any]) -> Optional[Any]:
+    def load_sequence_from_data(self, sequence_data: dict[str, Any]) -> Optional[Any]:
         """
         Load sequence from raw data.
 
@@ -131,7 +131,7 @@ class ISequenceLoader(ABC):
         """
 
     @abstractmethod
-    def validate_sequence_format(self, data: Any) -> Tuple[bool, List[str]]:
+    def validate_sequence_format(self, data: Any) -> tuple[bool, list[str]]:
         """
         Validate sequence data format.
 
@@ -143,7 +143,7 @@ class ISequenceLoader(ABC):
         """
 
     @abstractmethod
-    def get_supported_formats(self) -> List[str]:
+    def get_supported_formats(self) -> list[str]:
         """
         Get supported sequence file formats.
 
@@ -324,7 +324,7 @@ class ISequenceDictionaryManager(ABC):
         """
 
     @abstractmethod
-    def get_dictionary_words(self) -> List[str]:
+    def get_dictionary_words(self) -> list[str]:
         """
         Get all words in dictionary.
 
@@ -351,7 +351,7 @@ class ISequenceDictionaryManager(ABC):
         """
 
     @abstractmethod
-    def search_dictionary(self, search_term: str) -> List[str]:
+    def search_dictionary(self, search_term: str) -> list[str]:
         """
         Search dictionary for matching words.
 
@@ -371,7 +371,7 @@ class ISequenceGenerator(ABC):
 
     @abstractmethod
     def generate_random_sequence(
-        self, length: int, constraints: Optional[Dict[str, Any]] = None
+        self, length: int, constraints: Optional[dict[str, Any]] = None
     ) -> Any:
         """
         Generate random sequence.
@@ -419,7 +419,7 @@ class ISequenceGenerator(ABC):
         """
 
     @abstractmethod
-    def get_generation_parameters(self) -> Dict[str, Any]:
+    def get_generation_parameters(self) -> dict[str, Any]:
         """
         Get available generation parameters.
 
@@ -468,7 +468,7 @@ class ISequenceStartPositionManager(ABC):
     @abstractmethod
     def validate_start_position(
         self, start_position: Any, sequence: Any
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate start position for sequence.
 
@@ -481,7 +481,7 @@ class ISequenceStartPositionManager(ABC):
         """
 
     @abstractmethod
-    def get_available_start_positions(self) -> List[Any]:
+    def get_available_start_positions(self) -> list[Any]:
         """
         Get available start position options.
 
@@ -584,7 +584,7 @@ class ISequenceValidator(ABC):
     """Interface for sequence validation operations."""
 
     @abstractmethod
-    def validate_sequence(self, sequence: Any) -> Tuple[bool, List[str]]:
+    def validate_sequence(self, sequence: Any) -> tuple[bool, list[str]]:
         """
         Validate complete sequence.
 
@@ -596,7 +596,7 @@ class ISequenceValidator(ABC):
         """
 
     @abstractmethod
-    def validate_beat_transitions(self, sequence: Any) -> Tuple[bool, List[str]]:
+    def validate_beat_transitions(self, sequence: Any) -> tuple[bool, list[str]]:
         """
         Validate transitions between beats.
 
@@ -608,7 +608,7 @@ class ISequenceValidator(ABC):
         """
 
     @abstractmethod
-    def validate_sequence_consistency(self, sequence: Any) -> Tuple[bool, List[str]]:
+    def validate_sequence_consistency(self, sequence: Any) -> tuple[bool, list[str]]:
         """
         Validate sequence internal consistency.
 
@@ -620,7 +620,7 @@ class ISequenceValidator(ABC):
         """
 
     @abstractmethod
-    def check_sequence_completeness(self, sequence: Any) -> Tuple[bool, List[str]]:
+    def check_sequence_completeness(self, sequence: Any) -> tuple[bool, list[str]]:
         """
         Check if sequence is complete.
 
@@ -632,7 +632,7 @@ class ISequenceValidator(ABC):
         """
 
     @abstractmethod
-    def get_validation_rules(self) -> List[Dict[str, Any]]:
+    def get_validation_rules(self) -> list[dict[str, Any]]:
         """
         Get available validation rules.
 
@@ -645,8 +645,8 @@ class ISequenceValidator(ABC):
 
     @abstractmethod
     def validate_with_custom_rules(
-        self, sequence: Any, rules: List[Dict[str, Any]]
-    ) -> Tuple[bool, List[str]]:
+        self, sequence: Any, rules: list[dict[str, Any]]
+    ) -> tuple[bool, list[str]]:
         """
         Validate sequence with custom rules.
 
@@ -663,15 +663,15 @@ class IOptionLoader(ABC):
     """Interface for option loading operations."""
 
     @abstractmethod
-    def load_options(self, criteria: Dict[str, Any]) -> List[Any]:
+    def load_options(self, criteria: dict[str, Any]) -> list[Any]:
         """Load options based on criteria."""
 
     @abstractmethod
-    def get_available_options(self, context: str) -> List[Any]:
+    def get_available_options(self, context: str) -> list[Any]:
         """Get available options for context."""
 
     @abstractmethod
-    def validate_option_criteria(self, criteria: Dict[str, Any]) -> bool:
+    def validate_option_criteria(self, criteria: dict[str, Any]) -> bool:
         """Validate option loading criteria."""
 
 
@@ -679,13 +679,13 @@ class ISequenceOptionService(ABC):
     """Interface for sequence option services."""
 
     @abstractmethod
-    def get_sequence_options(self, sequence_state: Any) -> List[Any]:
+    def get_sequence_options(self, sequence_state: Any) -> list[Any]:
         """Get options for sequence state."""
 
     @abstractmethod
     def filter_options_by_continuity(
-        self, options: List[Any], last_beat: Any
-    ) -> List[Any]:
+        self, options: list[Any], last_beat: Any
+    ) -> list[Any]:
         """Filter options to maintain sequence continuity."""
 
     @abstractmethod
@@ -705,7 +705,7 @@ class ISequenceStateTracker(ABC):
         """Set current sequence."""
 
     @abstractmethod
-    def get_sequence_state(self) -> Dict[str, Any]:
+    def get_sequence_state(self) -> dict[str, Any]:
         """Get complete sequence state."""
 
     @abstractmethod

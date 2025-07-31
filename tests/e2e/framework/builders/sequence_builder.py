@@ -13,7 +13,7 @@ The Builder pattern allows for fluent, chainable test data creation:
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ class SequenceBuilder:
         logger.debug(f"SequenceBuilder: length set to {length}")
         return self
 
-    def with_specific_options(self, options: List[str]):
+    def with_specific_options(self, options: list[str]):
         """
         Set specific options to use for building the sequence.
 
@@ -101,7 +101,7 @@ class SequenceBuilder:
         logger.debug(f"SequenceBuilder: specific options set: {options}")
         return self
 
-    def with_validation_rules(self, rules: Dict[str, Any]):
+    def with_validation_rules(self, rules: dict[str, Any]):
         """
         Set validation rules for the sequence.
 
@@ -116,7 +116,7 @@ class SequenceBuilder:
         logger.debug(f"SequenceBuilder: validation rules updated: {rules}")
         return self
 
-    def with_metadata(self, metadata: Dict[str, Any]):
+    def with_metadata(self, metadata: dict[str, Any]):
         """
         Set metadata for the sequence specification.
 
@@ -235,7 +235,7 @@ class SequenceBuilder:
             {"test_type": "error_case", "priority": "high"}
         )
 
-    def build(self) -> Dict[str, Any]:
+    def build(self) -> dict[str, Any]:
         """
         Build and return the sequence specification.
 
@@ -256,7 +256,7 @@ class SequenceBuilder:
         logger.debug(f"SequenceBuilder: built specification: {spec}")
         return spec
 
-    def build_and_reset(self) -> Dict[str, Any]:
+    def build_and_reset(self) -> dict[str, Any]:
         """
         Build the specification and reset the builder.
 
@@ -297,7 +297,7 @@ class WorkflowBuilder:
         logger.debug("WorkflowBuilder reset to defaults")
         return self
 
-    def add_navigation_step(self, position: str, criteria: Optional[Dict] = None):
+    def add_navigation_step(self, position: str, criteria: Optional[dict] = None):
         """
         Add a navigation step to the workflow.
 
@@ -313,7 +313,7 @@ class WorkflowBuilder:
         logger.debug(f"WorkflowBuilder: added navigation step: {step}")
         return self
 
-    def add_sequence_step(self, sequence_spec: Dict[str, Any]):
+    def add_sequence_step(self, sequence_spec: dict[str, Any]):
         """
         Add a sequence building step to the workflow.
 
@@ -328,7 +328,7 @@ class WorkflowBuilder:
         logger.debug("WorkflowBuilder: added sequence step")
         return self
 
-    def add_validation_step(self, validation_rules: Dict[str, Any]):
+    def add_validation_step(self, validation_rules: dict[str, Any]):
         """
         Add a validation step to the workflow.
 
@@ -343,7 +343,7 @@ class WorkflowBuilder:
         logger.debug(f"WorkflowBuilder: added validation step: {validation_rules}")
         return self
 
-    def add_custom_step(self, step_type: str, step_data: Dict[str, Any]):
+    def add_custom_step(self, step_type: str, step_data: dict[str, Any]):
         """
         Add a custom step to the workflow.
 
@@ -359,7 +359,7 @@ class WorkflowBuilder:
         logger.debug(f"WorkflowBuilder: added custom step: {step_type}")
         return self
 
-    def with_metadata(self, metadata: Dict[str, Any]):
+    def with_metadata(self, metadata: dict[str, Any]):
         """
         Set metadata for the workflow.
 
@@ -387,7 +387,7 @@ class WorkflowBuilder:
         logger.debug(f"WorkflowBuilder: timeout set to {timeout}s")
         return self
 
-    def build(self) -> Dict[str, Any]:
+    def build(self) -> dict[str, Any]:
         """
         Build and return the workflow specification.
 
@@ -404,7 +404,7 @@ class WorkflowBuilder:
         logger.debug(f"WorkflowBuilder: built workflow with {len(self._steps)} steps")
         return workflow
 
-    def build_and_reset(self) -> Dict[str, Any]:
+    def build_and_reset(self) -> dict[str, Any]:
         """
         Build the workflow and reset the builder.
 
@@ -417,7 +417,7 @@ class WorkflowBuilder:
 
 
 # Convenience functions for common patterns
-def simple_sequence(length: int, position: str = "alpha1_alpha1") -> Dict[str, Any]:
+def simple_sequence(length: int, position: str = "alpha1_alpha1") -> dict[str, Any]:
     """
     Create a simple sequence specification.
 
@@ -431,7 +431,7 @@ def simple_sequence(length: int, position: str = "alpha1_alpha1") -> Dict[str, A
     return SequenceBuilder().with_start_position(position).with_length(length).build()
 
 
-def performance_sequence(length: int = 10) -> Dict[str, Any]:
+def performance_sequence(length: int = 10) -> dict[str, Any]:
     """
     Create a performance test sequence specification.
 
@@ -444,7 +444,7 @@ def performance_sequence(length: int = 10) -> Dict[str, Any]:
     return SequenceBuilder().with_length(length).for_performance_test().build()
 
 
-def error_test_sequence() -> Dict[str, Any]:
+def error_test_sequence() -> dict[str, Any]:
     """
     Create an error case test sequence specification.
 
@@ -456,7 +456,7 @@ def error_test_sequence() -> Dict[str, Any]:
 
 def complete_workflow(
     position: str = "alpha1_alpha1", length: int = 3
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Create a complete test workflow specification.
 

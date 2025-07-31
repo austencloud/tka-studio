@@ -6,7 +6,7 @@ Converts existing pictograph data to letter determination format.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     IPictographDatasetProvider,
@@ -38,13 +38,13 @@ class PictographDatasetProvider(IPictographDatasetProvider):
         self._csv_manager = csv_manager or PictographCSVManager()
         self._dataset_query = dataset_query or DatasetQuery()
         self._cached_dataset: Optional[
-            Dict[Letter, List[LetterDeterminationPictographData]]
+            dict[Letter, list[LetterDeterminationPictographData]]
         ] = None
-        self._dataset_metadata: Dict[str, any] = {}
+        self._dataset_metadata: dict[str, any] = {}
 
     def get_pictograph_dataset(
         self,
-    ) -> Dict[Letter, List[PictographData]]:
+    ) -> dict[Letter, list[PictographData]]:
         """
         Get the complete pictograph dataset for letter matching.
 
@@ -146,7 +146,7 @@ class PictographDatasetProvider(IPictographDatasetProvider):
         # Reload dataset
         self.get_pictograph_dataset()
 
-    def get_dataset_metadata(self) -> Dict[str, any]:
+    def get_dataset_metadata(self) -> dict[str, any]:
         """
         Get metadata about the current dataset.
 

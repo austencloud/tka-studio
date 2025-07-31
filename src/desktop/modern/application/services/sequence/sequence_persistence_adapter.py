@@ -5,7 +5,7 @@ Single Responsibility: Saving and loading sequences with format conversion.
 Extracted from SequenceBeatOperations God Object.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.data.modern_to_legacy_converter import (
@@ -75,7 +75,7 @@ class SequencePersistenceAdapter:
 
             traceback.print_exc()
 
-    def _convert_beats_to_legacy(self, sequence: SequenceData) -> List[Dict[str, Any]]:
+    def _convert_beats_to_legacy(self, sequence: SequenceData) -> list[dict[str, Any]]:
         """
         Convert modern beats to legacy format.
 
@@ -105,7 +105,7 @@ class SequencePersistenceAdapter:
 
     def _create_sequence_metadata(
         self, sequence: SequenceData, word: str = ""
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Create metadata for the sequence.
 
@@ -124,7 +124,7 @@ class SequencePersistenceAdapter:
             "grid_mode": "diamond",
         }
 
-    def load_current_sequence(self) -> List[Dict[str, Any]]:
+    def load_current_sequence(self) -> list[dict[str, Any]]:
         """
         Load the current sequence from persistence.
 
@@ -134,8 +134,8 @@ class SequencePersistenceAdapter:
         return self.persister.load_current_sequence()
 
     def preserve_start_position_from_existing(
-        self, existing_sequence: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, existing_sequence: list[dict[str, Any]]
+    ) -> Optional[dict[str, Any]]:
         """
         Extract start position from existing sequence if present.
 

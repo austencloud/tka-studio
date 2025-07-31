@@ -7,7 +7,7 @@ including timing, scoring, and progression data.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import uuid
 
 from .lesson_config import LessonType, QuizMode
@@ -45,7 +45,7 @@ class QuizSession:
     is_active: bool = True
     is_completed: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Serialize session to dictionary with proper enum handling.
 
@@ -69,7 +69,7 @@ class QuizSession:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "QuizSession":
+    def from_dict(cls, data: dict[str, Any]) -> "QuizSession":
         """
         Deserialize session from dictionary.
 

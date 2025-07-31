@@ -6,7 +6,7 @@ These interfaces handle efficient object pooling for performance optimization.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Generic, List, TypeVar
+from typing import Any, Generic, TypeVar
 
 T = TypeVar("T")
 
@@ -84,7 +84,7 @@ class IPoolManager(ABC, Generic[T]):
         """
 
     @abstractmethod
-    def get_pool_statistics(self) -> Dict[str, Any]:
+    def get_pool_statistics(self) -> dict[str, Any]:
         """
         Get pool performance statistics.
 
@@ -130,7 +130,7 @@ class IPictographPoolManager(ABC):
         """
 
     @abstractmethod
-    def preload_pictographs(self, pictograph_types: List[str], count: int) -> None:
+    def preload_pictographs(self, pictograph_types: list[str], count: int) -> None:
         """
         Preload pictographs into pool.
 
@@ -155,7 +155,7 @@ class IPictographPoolManager(ABC):
         """
 
     @abstractmethod
-    def configure_pictograph(self, pictograph: Any, config: Dict[str, Any]) -> None:
+    def configure_pictograph(self, pictograph: Any, config: dict[str, Any]) -> None:
         """
         Configure pictograph with properties.
 
@@ -199,7 +199,7 @@ class IFramePoolService(ABC):
         """
 
     @abstractmethod
-    def preload_frames(self, frame_types: List[str], count: int) -> None:
+    def preload_frames(self, frame_types: list[str], count: int) -> None:
         """
         Preload frames into pool.
 
@@ -212,7 +212,7 @@ class IFramePoolService(ABC):
         """
 
     @abstractmethod
-    def configure_frame(self, frame: Any, config: Dict[str, Any]) -> None:
+    def configure_frame(self, frame: Any, config: dict[str, Any]) -> None:
         """
         Configure frame with properties.
 
@@ -225,7 +225,7 @@ class IFramePoolService(ABC):
         """
 
     @abstractmethod
-    def get_frame_template(self, frame_type: str) -> Dict[str, Any]:
+    def get_frame_template(self, frame_type: str) -> dict[str, Any]:
         """
         Get template configuration for frame type.
 
@@ -271,7 +271,7 @@ class IOptionPoolService(ABC):
         """
 
     @abstractmethod
-    def preload_options(self, option_types: List[str], count: int) -> None:
+    def preload_options(self, option_types: list[str], count: int) -> None:
         """
         Preload options into pool.
 
@@ -284,7 +284,7 @@ class IOptionPoolService(ABC):
         """
 
     @abstractmethod
-    def get_available_option_types(self) -> List[str]:
+    def get_available_option_types(self) -> list[str]:
         """
         Get list of available option types.
 

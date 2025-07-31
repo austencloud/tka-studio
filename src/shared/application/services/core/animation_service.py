@@ -9,7 +9,7 @@ by any animation framework.
 from abc import ABC, abstractmethod
 from enum import Enum
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -45,11 +45,11 @@ class AnimationCommand:
         target_id: str,
         animation_type: AnimationType,
         duration: float,
-        start_values: Dict[str, Any],
-        end_values: Dict[str, Any],
+        start_values: dict[str, Any],
+        end_values: dict[str, Any],
         easing: EasingType = EasingType.EASE_IN_OUT,
         delay: float = 0.0,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
     ):
         self.command_id = command_id
         self.target_id = target_id
@@ -71,22 +71,22 @@ class IAnimationService(ABC):
         target_id: str,
         animation_type: AnimationType,
         duration: float,
-        start_values: Dict[str, Any],
-        end_values: Dict[str, Any],
+        start_values: dict[str, Any],
+        end_values: dict[str, Any],
         **kwargs,
     ) -> AnimationCommand:
         """Create an animation command."""
 
     @abstractmethod
     def create_animation_sequence(
-        self, commands: List[AnimationCommand]
-    ) -> List[AnimationCommand]:
+        self, commands: list[AnimationCommand]
+    ) -> list[AnimationCommand]:
         """Create a sequence of animation commands."""
 
     @abstractmethod
     def calculate_animation_values(
         self, command: AnimationCommand, progress: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate intermediate animation values."""
 
 
@@ -116,11 +116,11 @@ class CoreAnimationService(IAnimationService):
         target_id: str,
         animation_type: AnimationType,
         duration: float,
-        start_values: Dict[str, Any],
-        end_values: Dict[str, Any],
+        start_values: dict[str, Any],
+        end_values: dict[str, Any],
         easing: EasingType = EasingType.EASE_IN_OUT,
         delay: float = 0.0,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
     ) -> AnimationCommand:
         """
         Create an animation command.
@@ -169,8 +169,8 @@ class CoreAnimationService(IAnimationService):
             raise
 
     def create_animation_sequence(
-        self, commands: List[AnimationCommand]
-    ) -> List[AnimationCommand]:
+        self, commands: list[AnimationCommand]
+    ) -> list[AnimationCommand]:
         """
         Create a sequence of animation commands.
 
@@ -200,7 +200,7 @@ class CoreAnimationService(IAnimationService):
 
     def calculate_animation_values(
         self, command: AnimationCommand, progress: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate intermediate animation values.
 
@@ -338,7 +338,7 @@ class CoreAnimationService(IAnimationService):
         except Exception:
             return start_color  # Fallback to start color
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         return self._performance_stats.copy()
 

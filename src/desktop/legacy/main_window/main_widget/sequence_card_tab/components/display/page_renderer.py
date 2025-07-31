@@ -1,6 +1,6 @@
 # src/main_window/main_widget/sequence_card_tab/components/display/page_renderer.py
 import logging
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
@@ -40,7 +40,7 @@ class PageRenderer:
         self.layout_calculator = layout_calculator
         self.config = config
         self.preview_grid = preview_grid
-        self.pages: List[QWidget] = []
+        self.pages: list[QWidget] = []
 
         if self.preview_grid is None:
             logging.warning(
@@ -218,7 +218,7 @@ class PageRenderer:
 
         return new_page
 
-    def create_image_label(self, sequence: Dict[str, Any], pixmap: QPixmap) -> QLabel:
+    def create_image_label(self, sequence: dict[str, Any], pixmap: QPixmap) -> QLabel:
         """
         Create a label for displaying the image without redundant header.
 

@@ -1,5 +1,4 @@
 import random
-from typing import List
 
 from ..shared.animation_types import FishState, Position2D, Velocity2D
 
@@ -8,7 +7,7 @@ class FishSpawning:
     """Pure business logic for fish spawning - extracted from BubblesBackground"""
 
     def __init__(self, num_fish_images: int = 7):
-        self.fish: List[FishState] = []
+        self.fish: list[FishState] = []
         self.num_fish_images = num_fish_images
         self._timer = 0
         self._spawn_interval = random.randint(50, 100)
@@ -47,7 +46,7 @@ class FishSpawning:
         )
         self.fish.append(fish)
 
-    def get_active_fish(self) -> List[FishState]:
+    def get_active_fish(self) -> list[FishState]:
         """Get currently active fish"""
         return self.fish.copy()
 

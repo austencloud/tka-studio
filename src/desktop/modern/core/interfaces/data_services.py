@@ -5,7 +5,7 @@ Interface definitions for data management services following TKA's clean archite
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class IDataCacheManager(ABC):
@@ -120,7 +120,7 @@ class IDataCacheManager(ABC):
         """Clear only conversion cache."""
 
     @abstractmethod
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """
         Return comprehensive cache statistics.
 
@@ -158,7 +158,7 @@ class IDatasetManager(ABC):
         """
 
     @abstractmethod
-    def search_dataset(self, query: Any) -> List[Any]:
+    def search_dataset(self, query: Any) -> list[Any]:
         """
         Search dataset with query.
 
@@ -170,7 +170,7 @@ class IDatasetManager(ABC):
         """
 
     @abstractmethod
-    def get_dataset_by_category(self, category: str) -> List[Any]:
+    def get_dataset_by_category(self, category: str) -> list[Any]:
         """
         Get all pictographs in a category.
 
@@ -182,7 +182,7 @@ class IDatasetManager(ABC):
         """
 
     @abstractmethod
-    def get_all_categories(self) -> List[str]:
+    def get_all_categories(self) -> list[str]:
         """
         Get all available categories.
 
@@ -203,7 +203,7 @@ class IDatasetManager(ABC):
         """
 
     @abstractmethod
-    def get_dataset_stats(self) -> Dict[str, Any]:
+    def get_dataset_stats(self) -> dict[str, Any]:
         """
         Get dataset statistics.
 
@@ -232,7 +232,7 @@ class ICsvReader(ABC):
     """Interface for CSV reading operations."""
 
     @abstractmethod
-    def read_csv(self, file_path: str) -> Optional[List[Dict[str, Any]]]:
+    def read_csv(self, file_path: str) -> Optional[list[dict[str, Any]]]:
         """
         Read CSV file and return data.
 
@@ -244,7 +244,7 @@ class ICsvReader(ABC):
         """
 
     @abstractmethod
-    def read_csv_with_headers(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def read_csv_with_headers(self, file_path: str) -> Optional[dict[str, Any]]:
         """
         Read CSV file with header processing.
 
@@ -257,7 +257,7 @@ class ICsvReader(ABC):
 
     @abstractmethod
     def validate_csv_structure(
-        self, file_path: str, expected_columns: List[str]
+        self, file_path: str, expected_columns: list[str]
     ) -> bool:
         """
         Validate CSV file structure.
@@ -275,7 +275,7 @@ class IPositionResolver(ABC):
     """Interface for position resolution operations."""
 
     @abstractmethod
-    def resolve_position(self, position_data: Dict[str, Any]) -> Optional[Any]:
+    def resolve_position(self, position_data: dict[str, Any]) -> Optional[Any]:
         """
         Resolve position from position data.
 
@@ -288,7 +288,7 @@ class IPositionResolver(ABC):
 
     @abstractmethod
     def resolve_start_position(
-        self, start_position_data: Dict[str, Any]
+        self, start_position_data: dict[str, Any]
     ) -> Optional[Any]:
         """
         Resolve start position from data.
@@ -301,7 +301,7 @@ class IPositionResolver(ABC):
         """
 
     @abstractmethod
-    def resolve_end_position(self, end_position_data: Dict[str, Any]) -> Optional[Any]:
+    def resolve_end_position(self, end_position_data: dict[str, Any]) -> Optional[Any]:
         """
         Resolve end position from data.
 
@@ -313,7 +313,7 @@ class IPositionResolver(ABC):
         """
 
     @abstractmethod
-    def get_available_positions(self) -> List[str]:
+    def get_available_positions(self) -> list[str]:
         """
         Get list of available position identifiers.
 
@@ -326,7 +326,7 @@ class IPositionAttributeMapper(ABC):
     """Interface for position attribute mapping operations."""
 
     @abstractmethod
-    def map_attributes(self, position_data: Dict[str, Any]) -> Dict[str, Any]:
+    def map_attributes(self, position_data: dict[str, Any]) -> dict[str, Any]:
         """
         Map position attributes to standard format.
 
@@ -338,7 +338,7 @@ class IPositionAttributeMapper(ABC):
         """
 
     @abstractmethod
-    def reverse_map_attributes(self, mapped_data: Dict[str, Any]) -> Dict[str, Any]:
+    def reverse_map_attributes(self, mapped_data: dict[str, Any]) -> dict[str, Any]:
         """
         Reverse map attributes back to original format.
 
@@ -350,7 +350,7 @@ class IPositionAttributeMapper(ABC):
         """
 
     @abstractmethod
-    def get_attribute_mapping(self) -> Dict[str, str]:
+    def get_attribute_mapping(self) -> dict[str, str]:
         """
         Get current attribute mapping configuration.
 
@@ -363,7 +363,7 @@ class ILegacyToModernConverter(ABC):
     """Interface for legacy to modern data conversion."""
 
     @abstractmethod
-    def convert_sequence(self, legacy_sequence: List[Dict[str, Any]]) -> Optional[Any]:
+    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Optional[Any]:
         """
         Convert legacy sequence to modern format.
 
@@ -375,7 +375,7 @@ class ILegacyToModernConverter(ABC):
         """
 
     @abstractmethod
-    def convert_beat(self, legacy_beat: Dict[str, Any]) -> Optional[Any]:
+    def convert_beat(self, legacy_beat: dict[str, Any]) -> Optional[Any]:
         """
         Convert legacy beat to modern format.
 
@@ -387,7 +387,7 @@ class ILegacyToModernConverter(ABC):
         """
 
     @abstractmethod
-    def convert_pictograph(self, legacy_pictograph: Dict[str, Any]) -> Optional[Any]:
+    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Optional[Any]:
         """
         Convert legacy pictograph to modern format.
 
@@ -405,7 +405,7 @@ class IModernToLegacyConverter(ABC):
     @abstractmethod
     def convert_beat_data_to_legacy_format(
         self, beat: Any, beat_number: int
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """
         Convert modern BeatData to legacy format.
 
@@ -420,7 +420,7 @@ class IModernToLegacyConverter(ABC):
     @abstractmethod
     def convert_start_position_to_legacy_format(
         self, start_position_beat_data: Any
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """
         Convert start position BeatData to legacy format.
 
@@ -448,7 +448,7 @@ class IDataManager(ABC):
         """Load and combine both diamond and box datasets."""
 
     @abstractmethod
-    def validate_data_files(self) -> Dict[str, Any]:
+    def validate_data_files(self) -> dict[str, Any]:
         """Validate data files and return status information."""
 
     @abstractmethod
@@ -460,5 +460,5 @@ class IDataManager(ABC):
         """Reload with new configuration."""
 
     @abstractmethod
-    def get_dataset_info(self) -> Dict[str, Any]:
+    def get_dataset_info(self) -> dict[str, Any]:
         """Get information about loaded datasets."""

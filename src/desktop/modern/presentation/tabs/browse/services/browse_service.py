@@ -7,7 +7,7 @@ difficulty levels, and other categorized options.
 """
 
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.tabs.browse.models import FilterType, SortMethod
@@ -27,9 +27,9 @@ class BrowseService:
     def __init__(self, sequences_dir: Path):
         """Initialize with sequence directory path."""
         self.sequences_dir = sequences_dir
-        self._cached_sequences: Optional[List[SequenceData]] = None
+        self._cached_sequences: Optional[list[SequenceData]] = None
 
-    def load_sequences(self) -> List[SequenceData]:
+    def load_sequences(self) -> list[SequenceData]:
         """
         Load all sequences from the sequences directory.
 
@@ -64,7 +64,7 @@ class BrowseService:
 
     def apply_filter(
         self, filter_type: FilterType, filter_value: Any
-    ) -> List[SequenceData]:
+    ) -> list[SequenceData]:
         """
         Apply filter to sequences - enhanced for organized filter structure.
 
@@ -115,8 +115,8 @@ class BrowseService:
             return sequences
 
     def _filter_by_starting_letter(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by starting letter, supporting ranges like A-D."""
         if filter_value is None or filter_value == "All Letters":
             return sequences
@@ -137,8 +137,8 @@ class BrowseService:
             ]
 
     def _filter_by_length(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by sequence length, supporting 'All' option."""
         if filter_value is None or filter_value == "All":
             return sequences
@@ -150,8 +150,8 @@ class BrowseService:
             return sequences
 
     def _filter_by_difficulty(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by difficulty level, supporting 'All Levels' option."""
         if (
             filter_value is None
@@ -163,8 +163,8 @@ class BrowseService:
         return [s for s in sequences if s.difficulty_level == filter_value]
 
     def _filter_by_starting_position(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by starting position, supporting 'All Positions' option."""
         if filter_value is None or filter_value == "All Positions":
             return sequences
@@ -174,8 +174,8 @@ class BrowseService:
         ]
 
     def _filter_by_author(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by author, supporting 'All Authors' option."""
         if filter_value is None or filter_value == "All Authors":
             return sequences
@@ -183,8 +183,8 @@ class BrowseService:
         return [s for s in sequences if s.author == filter_value]
 
     def _filter_by_grid_mode(
-        self, sequences: List[SequenceData], filter_value: Any
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], filter_value: Any
+    ) -> list[SequenceData]:
         """Filter by grid mode, supporting 'All Styles' option."""
         if (
             filter_value is None
@@ -196,8 +196,8 @@ class BrowseService:
         return [s for s in sequences if self._matches_grid_mode(s, filter_value)]
 
     def sort_sequences(
-        self, sequences: List[SequenceData], sort_method: SortMethod
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], sort_method: SortMethod
+    ) -> list[SequenceData]:
         """
         Sort sequences according to the specified method.
 
@@ -240,7 +240,7 @@ class BrowseService:
                 return sequence
         return None
 
-    def get_filter_options(self, filter_type: FilterType) -> List[Any]:
+    def get_filter_options(self, filter_type: FilterType) -> list[Any]:
         """
         Get available options for a specific filter type.
 
@@ -331,7 +331,7 @@ class BrowseService:
         """Clear the cached sequences to force reload."""
         self._cached_sequences = None
 
-    def _create_test_sequences(self) -> List[SequenceData]:
+    def _create_test_sequences(self) -> list[SequenceData]:
         """Create enhanced test sequences for demo purposes."""
         test_sequences = []
 

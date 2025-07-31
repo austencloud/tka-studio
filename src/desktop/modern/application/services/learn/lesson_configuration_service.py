@@ -6,7 +6,7 @@ Manages static lesson data and configuration parameters.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import ILessonConfigurationService
 from desktop.modern.domain.models.learn import LessonConfig, LessonType
@@ -24,7 +24,7 @@ class LessonConfigurationService(ILessonConfigurationService):
 
     def __init__(self):
         """Initialize lesson configuration service."""
-        self._lesson_configs: Dict[str, LessonConfig] = {}
+        self._lesson_configs: dict[str, LessonConfig] = {}
         self._setup_lesson_configs()
 
     def _setup_lesson_configs(self) -> None:
@@ -65,7 +65,7 @@ class LessonConfigurationService(ILessonConfigurationService):
             logger.error(f"Failed to setup lesson configurations: {e}")
             raise
 
-    def get_all_lesson_configs(self) -> Dict[str, LessonConfig]:
+    def get_all_lesson_configs(self) -> dict[str, LessonConfig]:
         """
         Get all available lesson configurations.
 
@@ -97,7 +97,7 @@ class LessonConfigurationService(ILessonConfigurationService):
             logger.error(f"Failed to get lesson config for {lesson_type}: {e}")
             return None
 
-    def get_lesson_names(self) -> List[str]:
+    def get_lesson_names(self) -> list[str]:
         """
         Get list of all lesson display names.
 

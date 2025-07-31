@@ -6,7 +6,7 @@ the Learn Tab functionality without requiring the full pictograph system.
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.data_builder_services import IPictographDataService
 
@@ -23,7 +23,7 @@ class MockPictographDataService(IPictographDataService):
 
     def __init__(self):
         """Initialize mock service with test data."""
-        self._mock_data: Dict[str, Any] = {}
+        self._mock_data: dict[str, Any] = {}
         self._initialize_test_data()
         logger.info("Mock pictograph data service initialized")
 
@@ -68,7 +68,7 @@ class MockPictographDataService(IPictographDataService):
             return True
         return False
 
-    def list_pictograph_ids(self) -> List[str]:
+    def list_pictograph_ids(self) -> list[str]:
         """
         List all pictograph IDs.
 
@@ -77,7 +77,7 @@ class MockPictographDataService(IPictographDataService):
         """
         return list(self._mock_data.keys())
 
-    def search_pictographs(self, search_criteria: Dict[str, Any]) -> List[Any]:
+    def search_pictographs(self, search_criteria: dict[str, Any]) -> list[Any]:
         """
         Search pictographs by criteria.
 
@@ -101,7 +101,7 @@ class MockPictographDataService(IPictographDataService):
 
         return results
 
-    def validate_pictograph_data(self, data: Any) -> Tuple[bool, List[str]]:
+    def validate_pictograph_data(self, data: Any) -> tuple[bool, list[str]]:
         """
         Validate pictograph data.
 
@@ -123,7 +123,7 @@ class MockPictographDataService(IPictographDataService):
 
         return len(errors) == 0, errors
 
-    def get_pictograph_metadata(self, pictograph_id: str) -> Optional[Dict[str, Any]]:
+    def get_pictograph_metadata(self, pictograph_id: str) -> Optional[dict[str, Any]]:
         """
         Get pictograph metadata.
 
@@ -139,7 +139,7 @@ class MockPictographDataService(IPictographDataService):
         return None
 
     def update_pictograph_metadata(
-        self, pictograph_id: str, metadata: Dict[str, Any]
+        self, pictograph_id: str, metadata: dict[str, Any]
     ) -> bool:
         """
         Update pictograph metadata.
@@ -158,11 +158,11 @@ class MockPictographDataService(IPictographDataService):
             return True
         return False
 
-    def get_all_pictograph_ids(self) -> List[str]:
+    def get_all_pictograph_ids(self) -> list[str]:
         """Get all available pictograph IDs for testing."""
         return list(self._mock_data.keys())
 
-    def get_pictographs_by_letter(self, letter: str) -> List[Dict[str, Any]]:
+    def get_pictographs_by_letter(self, letter: str) -> list[dict[str, Any]]:
         """Get mock pictographs for a specific letter with proper PictographData objects."""
         # Import required classes
         try:
@@ -258,7 +258,7 @@ class MockPictographDataService(IPictographDataService):
         )
         return pictographs
 
-    def _get_fallback_pictographs(self, letter: str) -> List[Dict[str, Any]]:
+    def _get_fallback_pictographs(self, letter: str) -> list[dict[str, Any]]:
         """Fallback method when PictographData creation fails."""
         # Simple fallback without PictographData objects
         pictographs = []
@@ -274,7 +274,7 @@ class MockPictographDataService(IPictographDataService):
             pictographs.append(pictograph)
         return pictographs
 
-    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
+    def get_pictograph_dataset(self) -> dict[str, list[dict[str, Any]]]:
         """
         Get the complete pictograph dataset for question generation.
 

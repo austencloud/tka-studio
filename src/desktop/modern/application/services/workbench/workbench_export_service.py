@@ -9,7 +9,7 @@ rather than handling all responsibilities itself.
 from datetime import datetime
 import logging
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 from PyQt6.QtCore import QObject
 
@@ -85,7 +85,7 @@ class WorkbenchExportService(QObject):
 
     def export_sequence_image(
         self, sequence: SequenceData, file_path: Optional[str] = None
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """
         Export sequence as image file using the modern image export service.
 
@@ -162,7 +162,7 @@ class WorkbenchExportService(QObject):
             logger.error(f"Image export failed: {e}")
             return False, f"Image export failed: {e}"
 
-    def export_sequence_json(self, sequence: SequenceData) -> Tuple[bool, str]:
+    def export_sequence_json(self, sequence: SequenceData) -> tuple[bool, str]:
         """
         Export sequence as JSON string in legacy-compatible format.
 
@@ -194,7 +194,7 @@ class WorkbenchExportService(QObject):
 
     def _create_fallback_placeholder(
         self, file_path: str, word: str, beat_count: int, error: Exception
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Create a fallback placeholder file when export fails."""
         try:
             with open(file_path, "w") as f:

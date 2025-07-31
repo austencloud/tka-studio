@@ -4,7 +4,7 @@ These adapters connect the core animation engine to Qt widgets.
 """
 
 import asyncio
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QStackedWidget, QWidget
@@ -132,7 +132,7 @@ class QtAnimationScheduler(IAnimationScheduler):
     def __init__(self, fps: int = 60):
         self.fps = fps
         self.frame_interval_ms = int(1000 / fps)
-        self._timers: Dict[str, QTimer] = {}
+        self._timers: dict[str, QTimer] = {}
 
     async def schedule_animation(
         self, animation_id: str, config: AnimationConfig, frame_callback: callable
@@ -244,7 +244,7 @@ class QtGraphicsEffectManager:
     """Manager for Qt graphics effects used in animations."""
 
     def __init__(self):
-        self._managed_effects: Dict[QWidget, QGraphicsOpacityEffect] = {}
+        self._managed_effects: dict[QWidget, QGraphicsOpacityEffect] = {}
 
     def ensure_opacity_effect(self, widget: QWidget) -> QGraphicsOpacityEffect:
         """Ensure widget has an opacity effect and return it."""
@@ -262,7 +262,7 @@ class QtGraphicsEffectManager:
         self._managed_effects[widget] = effect
         return effect
 
-    def remove_effects(self, widgets: List[QWidget]) -> None:
+    def remove_effects(self, widgets: list[QWidget]) -> None:
         """Remove graphics effects from widgets."""
         for widget in widgets:
             if widget and hasattr(widget, "setGraphicsEffect"):

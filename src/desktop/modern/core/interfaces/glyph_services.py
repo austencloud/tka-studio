@@ -7,7 +7,7 @@ that must behave identically across desktop and web platforms.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.domain.models import (
     BeatData,
@@ -83,7 +83,7 @@ class IGlyphDataService(ABC):
         """
 
     @abstractmethod
-    def get_letter_type_map(self) -> Dict[str, LetterType]:
+    def get_letter_type_map(self) -> dict[str, LetterType]:
         """
         Get complete mapping from letters to letter types.
 
@@ -110,7 +110,7 @@ class IGlyphDataService(ABC):
         """
 
     @abstractmethod
-    def get_glyph_characteristics(self, glyph_data: GlyphData) -> Dict[str, Any]:
+    def get_glyph_characteristics(self, glyph_data: GlyphData) -> dict[str, Any]:
         """
         Get characteristics of a glyph based on its data.
 
@@ -159,7 +159,7 @@ class IGlyphGenerationService(ABC):
     """Interface for glyph generation operations."""
 
     @abstractmethod
-    def generate_glyph(self, specifications: Dict[str, Any]) -> GlyphData:
+    def generate_glyph(self, specifications: dict[str, Any]) -> GlyphData:
         """
         Generate a glyph based on specifications.
 
@@ -175,8 +175,8 @@ class IGlyphGenerationService(ABC):
 
     @abstractmethod
     def generate_glyph_sequence(
-        self, length: int, constraints: Dict[str, Any]
-    ) -> List[GlyphData]:
+        self, length: int, constraints: dict[str, Any]
+    ) -> list[GlyphData]:
         """
         Generate a sequence of glyphs with constraints.
 
@@ -193,8 +193,8 @@ class IGlyphGenerationService(ABC):
 
     @abstractmethod
     def validate_glyph_sequence(
-        self, glyphs: List[GlyphData]
-    ) -> Tuple[bool, List[str]]:
+        self, glyphs: list[GlyphData]
+    ) -> tuple[bool, list[str]]:
         """
         Validate a sequence of glyphs for consistency.
 
@@ -209,7 +209,7 @@ class IGlyphGenerationService(ABC):
         """
 
     @abstractmethod
-    def get_generation_constraints(self) -> Dict[str, Any]:
+    def get_generation_constraints(self) -> dict[str, Any]:
         """
         Get available generation constraints.
 
@@ -222,8 +222,8 @@ class IGlyphGenerationService(ABC):
 
     @abstractmethod
     def apply_generation_filter(
-        self, glyphs: List[GlyphData], filter_criteria: Dict[str, Any]
-    ) -> List[GlyphData]:
+        self, glyphs: list[GlyphData], filter_criteria: dict[str, Any]
+    ) -> list[GlyphData]:
         """
         Apply filter criteria to a list of glyphs.
 
@@ -239,7 +239,7 @@ class IGlyphGenerationService(ABC):
         """
 
     @abstractmethod
-    def get_generation_statistics(self) -> Dict[str, Any]:
+    def get_generation_statistics(self) -> dict[str, Any]:
         """
         Get statistics about generation operations.
 
@@ -256,8 +256,8 @@ class IGlyphClassificationService(ABC):
 
     @abstractmethod
     def classify_by_vtg_mode(
-        self, glyphs: List[GlyphData]
-    ) -> Dict[VTGMode, List[GlyphData]]:
+        self, glyphs: list[GlyphData]
+    ) -> dict[VTGMode, list[GlyphData]]:
         """
         Classify glyphs by VTG mode.
 
@@ -273,8 +273,8 @@ class IGlyphClassificationService(ABC):
 
     @abstractmethod
     def classify_by_elemental_type(
-        self, glyphs: List[GlyphData]
-    ) -> Dict[ElementalType, List[GlyphData]]:
+        self, glyphs: list[GlyphData]
+    ) -> dict[ElementalType, list[GlyphData]]:
         """
         Classify glyphs by elemental type.
 
@@ -290,8 +290,8 @@ class IGlyphClassificationService(ABC):
 
     @abstractmethod
     def classify_by_letter_type(
-        self, glyphs: List[GlyphData]
-    ) -> Dict[LetterType, List[GlyphData]]:
+        self, glyphs: list[GlyphData]
+    ) -> dict[LetterType, list[GlyphData]]:
         """
         Classify glyphs by letter type.
 
@@ -306,7 +306,7 @@ class IGlyphClassificationService(ABC):
         """
 
     @abstractmethod
-    def get_classification_statistics(self, glyphs: List[GlyphData]) -> Dict[str, Any]:
+    def get_classification_statistics(self, glyphs: list[GlyphData]) -> dict[str, Any]:
         """
         Get classification statistics for a list of glyphs.
 
@@ -324,9 +324,9 @@ class IGlyphClassificationService(ABC):
     def find_similar_glyphs(
         self,
         target_glyph: GlyphData,
-        candidates: List[GlyphData],
+        candidates: list[GlyphData],
         threshold: float = 0.8,
-    ) -> List[GlyphData]:
+    ) -> list[GlyphData]:
         """
         Find glyphs similar to a target glyph.
 
@@ -363,7 +363,7 @@ class IGlyphRenderingService(ABC):
     """Interface for glyph rendering and visualization operations."""
 
     @abstractmethod
-    def render_glyph(self, glyph_data: GlyphData, size: Tuple[int, int]) -> Any:
+    def render_glyph(self, glyph_data: GlyphData, size: tuple[int, int]) -> Any:
         """
         Render a glyph to a visual representation.
 
@@ -380,7 +380,7 @@ class IGlyphRenderingService(ABC):
 
     @abstractmethod
     def render_glyph_sequence(
-        self, glyphs: List[GlyphData], layout: Dict[str, Any]
+        self, glyphs: list[GlyphData], layout: dict[str, Any]
     ) -> Any:
         """
         Render a sequence of glyphs with layout.
@@ -397,7 +397,7 @@ class IGlyphRenderingService(ABC):
         """
 
     @abstractmethod
-    def get_glyph_bounds(self, glyph_data: GlyphData) -> Tuple[int, int, int, int]:
+    def get_glyph_bounds(self, glyph_data: GlyphData) -> tuple[int, int, int, int]:
         """
         Get bounding box for a glyph.
 
@@ -431,7 +431,7 @@ class IGlyphRenderingService(ABC):
         """
 
     @abstractmethod
-    def get_supported_formats(self) -> List[str]:
+    def get_supported_formats(self) -> list[str]:
         """
         Get supported image formats for export.
 
@@ -484,7 +484,7 @@ class IGlyphCacheService(ABC):
         """
 
     @abstractmethod
-    def get_cache_statistics(self) -> Dict[str, Any]:
+    def get_cache_statistics(self) -> dict[str, Any]:
         """
         Get cache usage statistics.
 

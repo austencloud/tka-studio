@@ -2,7 +2,7 @@
 Settings dialog coordinator for managing settings state and updates.
 """
 
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -19,7 +19,7 @@ class SettingsCoordinator(QObject):
     def __init__(self, settings_service: SettingsCoordinator):
         super().__init__()
         self.settings_service = settings_service
-        self._callbacks: Dict[str, list[Callable]] = {}
+        self._callbacks: dict[str, list[Callable]] = {}
 
     def register_callback(self, setting_key: str, callback: Callable):
         """Register callback for setting changes."""
@@ -41,7 +41,7 @@ class SettingsCoordinator(QObject):
         """Get a setting value."""
         return self.settings_service.get_setting(key, default)
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
         return self.settings_service.get_all_settings()
 

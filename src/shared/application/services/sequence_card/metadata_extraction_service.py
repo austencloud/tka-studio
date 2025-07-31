@@ -8,7 +8,7 @@ Replaces the legacy MetaDataExtractor with a clean, modern implementation.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from PIL import Image, PngImagePlugin
 
@@ -21,7 +21,7 @@ class SequenceMetadataExtractionService:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def extract_metadata_from_image(self, image_path: str) -> Dict[str, Any]:
+    def extract_metadata_from_image(self, image_path: str) -> dict[str, Any]:
         """
         Extract all metadata from a sequence image file.
 
@@ -49,8 +49,8 @@ class SequenceMetadataExtractionService:
             return self._extract_fallback_metadata(image_path)
 
     def _process_raw_metadata(
-        self, raw_metadata: Dict[str, Any], image_path: str
-    ) -> Dict[str, Any]:
+        self, raw_metadata: dict[str, Any], image_path: str
+    ) -> dict[str, Any]:
         """Process raw metadata into standardized format."""
         processed = {
             "sequence_length": self._extract_sequence_length(raw_metadata),
@@ -66,14 +66,14 @@ class SequenceMetadataExtractionService:
 
         return processed
 
-    def _extract_sequence_length(self, metadata: Dict[str, Any]) -> int:
+    def _extract_sequence_length(self, metadata: dict[str, Any]) -> int:
         """Extract sequence length from metadata."""
         if "sequence" in metadata and isinstance(metadata["sequence"], list):
             # Sequence length is total beats minus start/end positions
             return max(0, len(metadata["sequence"]) - 2)
         return 0
 
-    def _extract_level(self, metadata: Dict[str, Any]) -> Optional[int]:
+    def _extract_level(self, metadata: dict[str, Any]) -> Optional[int]:
         """Extract difficulty level from metadata."""
         if "sequence" in metadata and isinstance(metadata["sequence"], list):
             if len(metadata["sequence"]) > 0:
@@ -82,7 +82,7 @@ class SequenceMetadataExtractionService:
                     return first_beat.get("level")
         return None
 
-    def _extract_start_position(self, metadata: Dict[str, Any]) -> Optional[str]:
+    def _extract_start_position(self, metadata: dict[str, Any]) -> Optional[str]:
         """Extract start position (alpha, beta, gamma) from metadata."""
         if "sequence" in metadata and isinstance(metadata["sequence"], list):
             if len(metadata["sequence"]) > 1:
@@ -101,7 +101,7 @@ class SequenceMetadataExtractionService:
                                     return pos
         return None
 
-    def _extract_grid_mode(self, metadata: Dict[str, Any]) -> str:
+    def _extract_grid_mode(self, metadata: dict[str, Any]) -> str:
         """Extract grid mode from metadata."""
         if "sequence" in metadata and isinstance(metadata["sequence"], list):
             if len(metadata["sequence"]) > 0:
@@ -116,7 +116,7 @@ class SequenceMetadataExtractionService:
         # Word is typically the parent directory name
         return path.parent.name if path.parent.name != "." else path.stem
 
-    def _extract_fallback_metadata(self, image_path: str) -> Dict[str, Any]:
+    def _extract_fallback_metadata(self, image_path: str) -> dict[str, Any]:
         """Extract metadata using filename patterns when no embedded metadata exists."""
         path = Path(image_path)
         filename = path.stem
@@ -150,7 +150,7 @@ class SequenceMetadataExtractionService:
                 return length
         return 16  # Default fallback
 
-    def _get_default_metadata(self) -> Dict[str, Any]:
+    def _get_default_metadata(self) -> dict[str, Any]:
         """Get default metadata structure."""
         return {
             "sequence_length": 0,
@@ -169,7 +169,7 @@ class SequenceMetadataExtractionService:
         metadata = self.extract_metadata_from_image(image_path)
         return metadata.get("sequence_length", 0)
 
-    def get_tags(self, image_path: str) -> List[str]:
+    def get_tags(self, image_path: str) -> list[str]:
         """Get tags from an image."""
         metadata = self.extract_metadata_from_image(image_path)
         return metadata.get("tags", [])
@@ -189,7 +189,7 @@ class SequenceMetadataExtractionService:
         metadata = self.extract_metadata_from_image(image_path)
         return metadata.get("start_position")
 
-    def set_tags(self, image_path: str, tags: List[str]) -> bool:
+    def set_tags(self, image_path: str, tags: list[str]) -> bool:
         """
         Set tags in image metadata.
 

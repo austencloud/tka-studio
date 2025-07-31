@@ -8,7 +8,7 @@ by any image processing framework.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from shared.application.services.core.types import (
     Color,
@@ -26,19 +26,19 @@ class IImageExportService(ABC):
 
     @abstractmethod
     def create_export_commands(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Create image export commands."""
 
     @abstractmethod
     def calculate_layout_dimensions(
-        self, beat_count: int, export_options: Dict[str, Any]
-    ) -> Tuple[Size, Dict[str, Any]]:
+        self, beat_count: int, export_options: dict[str, Any]
+    ) -> tuple[Size, dict[str, Any]]:
         """Calculate layout dimensions for export."""
 
     @abstractmethod
     def generate_export_data(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
     ) -> ImageData:
         """Generate image export data."""
 
@@ -63,8 +63,8 @@ class CoreImageExportService(IImageExportService):
         }
 
     def create_export_commands(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """
         Create image export commands.
 
@@ -119,8 +119,8 @@ class CoreImageExportService(IImageExportService):
             return []
 
     def calculate_layout_dimensions(
-        self, beat_count: int, export_options: Dict[str, Any]
-    ) -> Tuple[Size, Dict[str, Any]]:
+        self, beat_count: int, export_options: dict[str, Any]
+    ) -> tuple[Size, dict[str, Any]]:
         """
         Calculate layout dimensions for export.
 
@@ -176,7 +176,7 @@ class CoreImageExportService(IImageExportService):
             return Size(800, 600), {}
 
     def generate_export_data(
-        self, sequence_data: Dict[str, Any], export_options: Dict[str, Any]
+        self, sequence_data: dict[str, Any], export_options: dict[str, Any]
     ) -> ImageData:
         """
         Generate image export data.
@@ -230,8 +230,8 @@ class CoreImageExportService(IImageExportService):
             )
 
     def _create_background_command(
-        self, canvas_size: Size, export_options: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, canvas_size: Size, export_options: dict[str, Any]
+    ) -> dict[str, Any]:
         """Create background drawing command."""
         return {
             "type": "background",
@@ -243,10 +243,10 @@ class CoreImageExportService(IImageExportService):
 
     def _create_header_commands(
         self,
-        sequence_data: Dict[str, Any],
-        layout_info: Dict[str, Any],
-        export_options: Dict[str, Any],
-    ) -> List[Dict[str, Any]]:
+        sequence_data: dict[str, Any],
+        layout_info: dict[str, Any],
+        export_options: dict[str, Any],
+    ) -> list[dict[str, Any]]:
         """Create header drawing commands (title, difficulty, etc.)."""
         commands = []
 
@@ -279,10 +279,10 @@ class CoreImageExportService(IImageExportService):
 
     def _create_beat_commands(
         self,
-        beats: List[Dict[str, Any]],
-        layout_info: Dict[str, Any],
-        export_options: Dict[str, Any],
-    ) -> List[Dict[str, Any]]:
+        beats: list[dict[str, Any]],
+        layout_info: dict[str, Any],
+        export_options: dict[str, Any],
+    ) -> list[dict[str, Any]]:
         """Create beat drawing commands."""
         commands = []
 
@@ -313,10 +313,10 @@ class CoreImageExportService(IImageExportService):
 
     def _create_footer_commands(
         self,
-        sequence_data: Dict[str, Any],
-        layout_info: Dict[str, Any],
-        export_options: Dict[str, Any],
-    ) -> List[Dict[str, Any]]:
+        sequence_data: dict[str, Any],
+        layout_info: dict[str, Any],
+        export_options: dict[str, Any],
+    ) -> list[dict[str, Any]]:
         """Create footer drawing commands."""
         commands = []
 
@@ -340,7 +340,7 @@ class CoreImageExportService(IImageExportService):
 
         return commands
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics."""
         return self._performance_stats.copy()
 

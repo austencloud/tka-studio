@@ -6,7 +6,6 @@ Provides clipboard functionality without direct Qt dependencies in the service l
 """
 
 import logging
-from typing import Tuple
 
 from desktop.modern.core.interfaces.workbench_services import IClipboardAdapter
 
@@ -33,7 +32,7 @@ class WorkbenchClipboardService:
         self._clipboard_adapter = clipboard_adapter
         logger.debug("WorkbenchClipboardService initialized")
 
-    def copy_text_to_clipboard(self, text: str) -> Tuple[bool, str]:
+    def copy_text_to_clipboard(self, text: str) -> tuple[bool, str]:
         """
         Copy text to system clipboard.
 
@@ -69,7 +68,7 @@ class WorkbenchClipboardService:
             logger.error(f"Clipboard copy operation failed: {e}")
             return False, f"Clipboard operation failed: {e}"
 
-    def get_clipboard_text(self) -> Tuple[bool, str]:
+    def get_clipboard_text(self) -> tuple[bool, str]:
         """
         Get text from system clipboard.
 

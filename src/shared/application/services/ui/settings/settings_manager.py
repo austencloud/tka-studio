@@ -8,7 +8,7 @@ Extracted from UIStateManager to follow single responsibility principle.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 # Use PyQt6 signals instead of event bus
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -44,7 +44,7 @@ class SettingsManager(QObject):
             self._settings_file = settings_file_path
 
         # Settings storage
-        self._user_settings: Dict[str, Any] = {}
+        self._user_settings: dict[str, Any] = {}
         self._default_settings = self._load_default_settings()
 
         # Load saved settings
@@ -69,7 +69,7 @@ class SettingsManager(QObject):
         if self._event_bus:
             self._event_bus.publish(event)
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
         # Merge defaults with user settings, user settings take precedence
         all_settings = self._default_settings.copy()
@@ -174,7 +174,7 @@ class SettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to save settings: {e}")
 
-    def _load_default_settings(self) -> Dict[str, Any]:
+    def _load_default_settings(self) -> dict[str, Any]:
         """Load default settings."""
         return {
             "background_type": "Aurora",

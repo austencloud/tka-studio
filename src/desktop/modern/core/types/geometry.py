@@ -6,7 +6,7 @@ allowing the core layer to remain UI framework independent.
 """
 
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Union
 
 
 @dataclass(frozen=True)
@@ -16,12 +16,12 @@ class Size:
     width: int
     height: int
 
-    def to_tuple(self) -> Tuple[int, int]:
+    def to_tuple(self) -> tuple[int, int]:
         """Convert to tuple format."""
         return (self.width, self.height)
 
     @classmethod
-    def from_tuple(cls, size_tuple: Tuple[int, int]) -> "Size":
+    def from_tuple(cls, size_tuple: tuple[int, int]) -> "Size":
         """Create from tuple format."""
         return cls(width=size_tuple[0], height=size_tuple[1])
 
@@ -70,12 +70,12 @@ class Point:
     x: float
     y: float
 
-    def to_tuple(self) -> Tuple[float, float]:
+    def to_tuple(self) -> tuple[float, float]:
         """Convert to tuple format."""
         return (self.x, self.y)
 
     @classmethod
-    def from_tuple(cls, point_tuple: Tuple[float, float]) -> "Point":
+    def from_tuple(cls, point_tuple: tuple[float, float]) -> "Point":
         """Create from tuple format."""
         return cls(x=point_tuple[0], y=point_tuple[1])
 
@@ -186,7 +186,7 @@ class Widget:
 
 
 # Type aliases for common use cases
-SizeType = Union[Size, Tuple[int, int]]
-PointType = Union[Point, Tuple[float, float]]
-RectType = Union[Rect, Tuple[int, int, int, int]]
+SizeType = Union[Size, tuple[int, int]]
+PointType = Union[Point, tuple[float, float]]
+RectType = Union[Rect, tuple[int, int, int, int]]
 WidgetType = Union[Widget, str]  # Widget object or element ID

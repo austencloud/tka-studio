@@ -5,8 +5,6 @@ Handles Qt-specific border rendering while delegating business logic
 to PictographBorderService.
 """
 
-from typing import Tuple
-
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen
 
@@ -68,7 +66,7 @@ class PictographBorderManager:
         """Get size adjusted for border width."""
         return self._border_service.get_border_adjusted_size(target_size)
 
-    def get_border_dimensions(self, view_width: int) -> Tuple[float, float]:
+    def get_border_dimensions(self, view_width: int) -> tuple[float, float]:
         """Get border dimensions for drawing."""
         dimensions = self._border_service.calculate_floating_dimensions(view_width)
         return (dimensions.outer_width, dimensions.inner_width)
@@ -131,7 +129,7 @@ class PictographBorderManager:
         """Check if borders are enabled."""
         return self._border_service.is_borders_enabled()
 
-    def get_current_colors(self) -> Tuple[str, str]:
+    def get_current_colors(self) -> tuple[str, str]:
         """Get current border colors."""
         return self._border_service.get_current_colors()
 

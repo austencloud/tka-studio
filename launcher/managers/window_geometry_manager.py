@@ -16,7 +16,7 @@ Architecture:
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from config.config.launcher_config import LauncherConfig
 from PyQt6.QtCore import QRect
@@ -171,7 +171,7 @@ class WindowGeometryManager:
             logger.error(f"❌ Failed to optimize window position: {e}")
             return False
 
-    def get_screen_info(self) -> Dict[str, Any]:
+    def get_screen_info(self) -> dict[str, Any]:
         """Get information about available screens."""
         screens_info = []
 
@@ -220,7 +220,7 @@ class WindowGeometryManager:
         logger.warning(f"⚠️ Geometry outside all screens: {geometry}")
         return False
 
-    def get_geometry_info(self, window: QWidget) -> Dict[str, Any]:
+    def get_geometry_info(self, window: QWidget) -> dict[str, Any]:
         """Get detailed geometry information for debugging."""
         current_geometry = window.geometry()
 

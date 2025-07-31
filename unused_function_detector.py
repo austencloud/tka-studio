@@ -17,7 +17,7 @@ import ast
 from collections import defaultdict
 import json
 from pathlib import Path
-from typing import Dict, List, NamedTuple, Set
+from typing import NamedTuple
 
 
 class FunctionInfo(NamedTuple):
@@ -38,7 +38,7 @@ class UnusedFunctionDetector:
     def __init__(
         self,
         root_directory: str,
-        exclude_patterns: List[str] = None,
+        exclude_patterns: list[str] = None,
         exclude_tests: bool = True,
         exclude_migrations: bool = True,
     ):
@@ -48,9 +48,9 @@ class UnusedFunctionDetector:
         self.exclude_migrations = exclude_migrations
 
         # Storage for analysis results
-        self.function_definitions: Dict[str, List[FunctionInfo]] = defaultdict(list)
-        self.function_calls: Set[str] = set()
-        self.method_calls: Set[str] = set()
+        self.function_definitions: dict[str, list[FunctionInfo]] = defaultdict(list)
+        self.function_calls: set[str] = set()
+        self.method_calls: set[str] = set()
         self.files_analyzed = 0
         self.files_skipped = 0
 
@@ -140,7 +140,7 @@ class UnusedFunctionDetector:
 
         print(f"✅ Analyzed {self.files_analyzed} files, skipped {self.files_skipped}")
 
-    def find_unused_functions(self) -> List[FunctionInfo]:
+    def find_unused_functions(self) -> list[FunctionInfo]:
         """Find functions that are defined but never called."""
         unused_functions = []
 
@@ -238,7 +238,7 @@ class UnusedFunctionDetector:
         return func_name in common_dynamic_names
 
     def generate_report(
-        self, unused_functions: List[FunctionInfo], output_file: str = None
+        self, unused_functions: list[FunctionInfo], output_file: str = None
     ) -> str:
         """Generate a detailed report of unused functions."""
         if not unused_functions:
@@ -328,7 +328,7 @@ class UnusedFunctionDetector:
         return report
 
     def export_json(
-        self, unused_functions: List[FunctionInfo], output_file: str
+        self, unused_functions: list[FunctionInfo], output_file: str
     ) -> None:
         """Export results as JSON for programmatic processing."""
         data = {
@@ -363,9 +363,9 @@ class FunctionVisitor(ast.NodeVisitor):
 
     def __init__(self, file_path: Path):
         self.file_path = str(file_path)
-        self.function_definitions: List[FunctionInfo] = []
-        self.function_calls: Set[str] = set()
-        self.method_calls: Set[str] = set()
+        self.function_definitions: list[FunctionInfo] = []
+        self.function_calls: set[str] = set()
+        self.method_calls: set[str] = set()
         self.current_class = None
 
     def visit_ClassDef(self, node):

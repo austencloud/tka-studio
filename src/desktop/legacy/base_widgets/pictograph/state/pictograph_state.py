@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Optional, Union
+from typing import Optional
 
 from enums.letter.letter import Letter
 from enums.letter.letter_type import LetterType
@@ -11,7 +11,7 @@ from data.constants import BLUE_ATTRS, LETTER, RED_ATTRS
 
 @dataclass
 class PictographState:
-    pictograph_data: dict[str, Union[str, dict[str, str]]] = field(default_factory=dict)
+    pictograph_data: dict[str, str | dict[str, str]] = field(default_factory=dict)
     is_blank: bool = False
     disable_gold_overlay: bool = False
     disable_borders: bool = False  # Added flag to disable borders
@@ -31,7 +31,7 @@ class PictographState:
     grid_mode: str = ""
 
     def update_pictograph_state(
-        self, pictograph_data: dict[str, Union[str, dict[str, str]]]
+        self, pictograph_data: dict[str, str | dict[str, str]]
     ) -> None:
         copied_data = deepcopy(pictograph_data)  # Deep copy the entire structure
 

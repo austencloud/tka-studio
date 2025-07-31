@@ -17,7 +17,7 @@ from pathlib import Path
 
 # Import framework-agnostic core services
 import sys
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -237,7 +237,7 @@ class PictographRenderingService:
             logger.error(f"❌ [RENDERING_SERVICE] Glyph rendering failed: {e}")
             return None
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache performance statistics from core and adapter services."""
         try:
             # Get stats from legacy services (for compatibility)

@@ -5,7 +5,7 @@ These interfaces define the contracts for core services, replacing tightly-coupl
 """
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from desktop.modern.core.types import Size
 
@@ -49,26 +49,26 @@ class ILayoutService(ABC):
     # Advanced Layout Methods (formerly ILayoutManagementService)
     @abstractmethod
     def calculate_beat_frame_layout(
-        self, sequence: Any, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: Any, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """Calculate layout for beat frames in a sequence."""
 
     @abstractmethod
     def calculate_responsive_scaling(
-        self, content_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, content_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """Calculate responsive scaling factor."""
 
     @abstractmethod
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Get optimal grid layout (rows, cols) for items."""
 
     @abstractmethod
     def calculate_component_positions(
-        self, layout_config: Dict[str, Any]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, layout_config: dict[str, Any]
+    ) -> dict[str, tuple[int, int]]:
         """Calculate positions for UI components."""
 
 
@@ -96,7 +96,7 @@ class ISettingsCoordinator(ABC):
         """Remove a listener for setting changes."""
 
     @abstractmethod
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
 
     @abstractmethod
@@ -116,15 +116,15 @@ class ISequenceDataService(ABC):
     """Interface for sequence data management."""
 
     @abstractmethod
-    def get_all_sequences(self) -> List[Dict[str, Any]]:
+    def get_all_sequences(self) -> list[dict[str, Any]]:
         """Get all available sequences."""
 
     @abstractmethod
-    def get_sequence_by_id(self, sequence_id: str) -> Optional[Dict[str, Any]]:
+    def get_sequence_by_id(self, sequence_id: str) -> Optional[dict[str, Any]]:
         """Get a specific sequence by ID."""
 
     @abstractmethod
-    def save_sequence(self, sequence_data: Dict[str, Any]) -> bool:
+    def save_sequence(self, sequence_data: dict[str, Any]) -> bool:
         """Save sequence data."""
 
     @abstractmethod
@@ -132,7 +132,7 @@ class ISequenceDataService(ABC):
         """Delete a sequence."""
 
     @abstractmethod
-    def create_new_sequence(self, name: str) -> Dict[str, Any]:
+    def create_new_sequence(self, name: str) -> dict[str, Any]:
         """Create a new empty sequence."""
 
 
@@ -140,19 +140,19 @@ class IValidationService(ABC):
     """Interface for validation services."""
 
     @abstractmethod
-    def validate_sequence(self, sequence_data: Dict[str, Any]) -> bool:
+    def validate_sequence(self, sequence_data: dict[str, Any]) -> bool:
         """Validate a sequence."""
 
     @abstractmethod
-    def validate_beat(self, beat_data: Dict[str, Any]) -> bool:
+    def validate_beat(self, beat_data: dict[str, Any]) -> bool:
         """Validate a beat."""
 
     @abstractmethod
-    def validate_motion(self, motion_data: Dict[str, Any]) -> bool:
+    def validate_motion(self, motion_data: dict[str, Any]) -> bool:
         """Validate a motion."""
 
     @abstractmethod
-    def get_validation_errors(self, data: Dict[str, Any]) -> List[str]:
+    def get_validation_errors(self, data: dict[str, Any]) -> list[str]:
         """Get validation errors for data."""
 
 
@@ -162,7 +162,7 @@ class IArrowManagementService(ABC):
     @abstractmethod
     def calculate_arrow_position(
         self, arrow_data: Any, pictograph_data: Any
-    ) -> Tuple[float, float, float]:
+    ) -> tuple[float, float, float]:
         """Calculate complete arrow position and rotation."""
 
     @abstractmethod
@@ -220,7 +220,7 @@ class IPictographManager(ABC):
         """Create pictograph from beat data."""
 
     @abstractmethod
-    def search_dataset(self, query: Dict[str, Any]) -> List[Any]:
+    def search_dataset(self, query: dict[str, Any]) -> list[Any]:
         """Search pictograph dataset with query."""
 
 
@@ -236,11 +236,11 @@ class IUIStateManager(ABC):
         """Set a setting value."""
 
     @abstractmethod
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab."""
 
     @abstractmethod
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
 
     @abstractmethod
@@ -312,7 +312,7 @@ class IPictographBorderManager(ABC):
         """Reset border colors to original values."""
 
     @abstractmethod
-    def get_current_colors(self) -> Tuple[str, str]:
+    def get_current_colors(self) -> tuple[str, str]:
         """Get current border colors as (primary, secondary) tuple."""
 
     @abstractmethod
@@ -377,11 +377,11 @@ class IUIStateManagementService(ABC):
         """Set a setting value."""
 
     @abstractmethod
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab."""
 
     @abstractmethod
-    def set_tab_state(self, tab_name: str, state: Dict[str, Any]) -> None:
+    def set_tab_state(self, tab_name: str, state: dict[str, Any]) -> None:
         """Set state for a specific tab."""
 
     @abstractmethod
@@ -413,7 +413,7 @@ class IDataServiceRegistrar(ABC):
         """Get the name of the service domain this registrar handles."""
 
     @abstractmethod
-    def get_registered_services(self) -> List[str]:
+    def get_registered_services(self) -> list[str]:
         """Get list of service names registered by this registrar."""
 
     @abstractmethod
@@ -421,7 +421,7 @@ class IDataServiceRegistrar(ABC):
         """Return True if this registrar's services are critical for application startup."""
 
     @abstractmethod
-    def get_service_availability(self) -> Dict[str, bool]:
+    def get_service_availability(self) -> dict[str, bool]:
         """Get availability status of services in this domain."""
 
 
@@ -457,7 +457,7 @@ class IAssetManager(ABC):
         """Load and cache SVG asset with proper error handling."""
 
     @abstractmethod
-    def get_cache_stats(self) -> Dict[str, int]:
+    def get_cache_stats(self) -> dict[str, int]:
         """Get cache statistics for monitoring."""
 
     @abstractmethod
@@ -489,17 +489,17 @@ class IBeatResizer(ABC):
     """Interface for beat resizing operations."""
 
     @abstractmethod
-    def resize_beat(self, beat_data: Any, new_size: Tuple[int, int]) -> Any:
+    def resize_beat(self, beat_data: Any, new_size: tuple[int, int]) -> Any:
         """Resize beat to new dimensions."""
 
     @abstractmethod
     def calculate_optimal_size(
-        self, beat_data: Any, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, beat_data: Any, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Calculate optimal size for beat within container."""
 
     @abstractmethod
-    def validate_size_constraints(self, size: Tuple[int, int]) -> bool:
+    def validate_size_constraints(self, size: tuple[int, int]) -> bool:
         """Validate size constraints."""
 
 
@@ -508,18 +508,18 @@ class IComponentSizer(ABC):
 
     @abstractmethod
     def calculate_component_size(
-        self, component_type: str, content_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, component_type: str, content_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Calculate component size based on content."""
 
     @abstractmethod
-    def get_size_constraints(self, component_type: str) -> Dict[str, Any]:
+    def get_size_constraints(self, component_type: str) -> dict[str, Any]:
         """Get size constraints for component type."""
 
     @abstractmethod
     def apply_responsive_sizing(
-        self, base_size: Tuple[int, int], viewport_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, base_size: tuple[int, int], viewport_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Apply responsive sizing rules."""
 
 
@@ -528,18 +528,18 @@ class IDimensionCalculator(ABC):
 
     @abstractmethod
     def calculate_dimensions(
-        self, content: Any, constraints: Dict[str, Any]
-    ) -> Tuple[int, int]:
+        self, content: Any, constraints: dict[str, Any]
+    ) -> tuple[int, int]:
         """Calculate dimensions for content with constraints."""
 
     @abstractmethod
-    def get_aspect_ratio(self, dimensions: Tuple[int, int]) -> float:
+    def get_aspect_ratio(self, dimensions: tuple[int, int]) -> float:
         """Get aspect ratio from dimensions."""
 
     @abstractmethod
     def scale_dimensions(
-        self, dimensions: Tuple[int, int], scale_factor: float
-    ) -> Tuple[int, int]:
+        self, dimensions: tuple[int, int], scale_factor: float
+    ) -> tuple[int, int]:
         """Scale dimensions by factor."""
 
 

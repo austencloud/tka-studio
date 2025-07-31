@@ -5,7 +5,7 @@ Handles tab creation, organization, and management.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QListWidget, QStackedWidget, QVBoxLayout, QWidget
@@ -51,12 +51,12 @@ class SettingsTabManager:
             "Codex Exporter",
         ]
 
-        self.tabs: Dict[str, QWidget] = {}
+        self.tabs: dict[str, QWidget] = {}
         self._real_tabs_available = self._check_real_tabs_availability()
 
     def create_tabs(
         self, sidebar: QListWidget, content_area: QStackedWidget
-    ) -> Dict[str, QWidget]:
+    ) -> dict[str, QWidget]:
         """
         Create all tab widgets and populate sidebar and content area.
 
@@ -95,7 +95,7 @@ class SettingsTabManager:
             self.tabs = self._create_fallback_tabs()
             logger.debug("Created tabs using placeholder implementations")
 
-    def _create_real_tabs(self) -> Dict[str, QWidget]:
+    def _create_real_tabs(self) -> dict[str, QWidget]:
         """Create tabs using real implementations."""
         try:
             # Import real tab implementations
@@ -120,7 +120,7 @@ class SettingsTabManager:
             logger.warning(f"Failed to import real tabs: {e}")
             return self._create_fallback_tabs()
 
-    def _create_fallback_tabs(self) -> Dict[str, QWidget]:
+    def _create_fallback_tabs(self) -> dict[str, QWidget]:
         """Create fallback placeholder tabs."""
         try:
             from ..ui.enhanced_general.enhanced_general_tab import EnhancedGeneralTab
@@ -184,7 +184,7 @@ class SettingsTabManager:
         except ImportError:
             return False
 
-    def get_tab_order(self) -> List[str]:
+    def get_tab_order(self) -> list[str]:
         """Get the tab order list."""
         return self.tab_order.copy()
 

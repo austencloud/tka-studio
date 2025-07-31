@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -58,22 +58,22 @@ class UIState:
     """Complete UI state representation."""
 
     # Window state
-    window_geometry: Dict[str, int] = field(default_factory=dict)
+    window_geometry: dict[str, int] = field(default_factory=dict)
     window_maximized: bool = False
 
     # Component visibility
-    component_visibility: Dict[str, bool] = field(default_factory=dict)
+    component_visibility: dict[str, bool] = field(default_factory=dict)
 
     # Tab states
     active_tab: str = "sequence_builder"
-    tab_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    tab_states: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     # Option picker state
     option_picker_selection: Optional[str] = None
-    option_picker_filters: Dict[str, Any] = field(default_factory=dict)
+    option_picker_filters: dict[str, Any] = field(default_factory=dict)
 
     # Settings
-    user_settings: Dict[str, Any] = field(default_factory=dict)
+    user_settings: dict[str, Any] = field(default_factory=dict)
 
 
 class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
@@ -116,7 +116,7 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
         self._default_settings = self._load_default_settings()
 
         # Hotkey bindings
-        self._hotkey_bindings: Dict[str, Callable] = {}
+        self._hotkey_bindings: dict[str, Callable] = {}
 
         # Load saved state
         self._load_state()
@@ -139,11 +139,11 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
         # Emit Qt signal for setting change
         self.setting_changed.emit(key, value)
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab."""
         return self._ui_state.tab_states.get(tab_name, {})
 
-    def update_tab_state(self, tab_name: str, state: Dict[str, Any]) -> None:
+    def update_tab_state(self, tab_name: str, state: dict[str, Any]) -> None:
         """Update state for a specific tab."""
         if tab_name not in self._ui_state.tab_states:
             self._ui_state.tab_states[tab_name] = {}
@@ -234,11 +234,11 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
                 print(f"Error executing hotkey {hotkey_name}: {e}")
         return False
 
-    def get_window_geometry(self) -> Dict[str, int]:
+    def get_window_geometry(self) -> dict[str, int]:
         """Get window geometry."""
         return self._ui_state.window_geometry.copy()
 
-    def set_window_geometry(self, geometry: Dict[str, int]) -> None:
+    def set_window_geometry(self, geometry: dict[str, int]) -> None:
         """Set window geometry."""
         self._ui_state.window_geometry.update(geometry)
         self._save_state()
@@ -281,8 +281,8 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
     def update_ui_state_with_session(
         self,
         active_tab: Optional[str] = None,
-        beat_layout: Optional[Dict[str, Any]] = None,
-        component_visibility: Optional[Dict[str, bool]] = None,
+        beat_layout: Optional[dict[str, Any]] = None,
+        component_visibility: Optional[dict[str, bool]] = None,
     ) -> None:
         """Update UI state and save to session."""
         if active_tab:
@@ -323,7 +323,7 @@ class UIStateManager(QObject, IUIStateManager, metaclass=QObjectABCMeta):
         """Set the session service for integration (used by DI container)."""
         self._session_service = session_service
 
-    def _load_default_settings(self) -> Dict[str, Any]:
+    def _load_default_settings(self) -> dict[str, Any]:
         """Load default settings configuration."""
         return {
             "theme": "default",

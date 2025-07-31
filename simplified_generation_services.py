@@ -10,7 +10,7 @@ import csv
 import logging
 from pathlib import Path
 import random
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Optional
 
 
 # Mock imports for demonstration
@@ -42,9 +42,9 @@ class SimpleDataLoader:
     """
 
     def __init__(self):
-        self.diamond_data: List[Dict[str, Any]] = []
-        self.box_data: List[Dict[str, Any]] = []
-        self.all_data: List[Dict[str, Any]] = []
+        self.diamond_data: list[dict[str, Any]] = []
+        self.box_data: list[dict[str, Any]] = []
+        self.all_data: list[dict[str, Any]] = []
         self._load_data()
 
     def _load_data(self):
@@ -75,15 +75,15 @@ class SimpleDataLoader:
             logger.error(f"Failed to load data: {e}")
             self.all_data = []
 
-    def get_all_data(self) -> List[Dict[str, Any]]:
+    def get_all_data(self) -> list[dict[str, Any]]:
         """Get all pictograph data."""
         return self.all_data
 
-    def get_diamond_data(self) -> List[Dict[str, Any]]:
+    def get_diamond_data(self) -> list[dict[str, Any]]:
         """Get diamond pictograph data."""
         return self.diamond_data
 
-    def get_box_data(self) -> List[Dict[str, Any]]:
+    def get_box_data(self) -> list[dict[str, Any]]:
         """Get box pictograph data."""
         return self.box_data
 
@@ -95,7 +95,7 @@ class SimpleCSVConverter:
     """
 
     def convert(
-        self, csv_row: Dict[str, Any], beat_number: int
+        self, csv_row: dict[str, Any], beat_number: int
     ) -> Optional[PictographData]:
         """Convert CSV row to PictographData - simple and direct."""
         try:
@@ -110,7 +110,7 @@ class SimpleCSVConverter:
             logger.error(f"Failed to convert CSV row: {e}")
             return None
 
-    def _extract_motions(self, csv_row: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_motions(self, csv_row: dict[str, Any]) -> dict[str, Any]:
         """Extract motion data from CSV row."""
         motions = {}
 
@@ -143,11 +143,11 @@ class SimpleFilter:
 
     def filter_options(
         self,
-        options: List[Dict[str, Any]],
+        options: list[dict[str, Any]],
         config: GenerationConfig,
         current_end_position: Optional[str] = None,
         grid_mode: Optional[str] = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Filter options based on config - simple sequential filtering."""
 
         filtered = deepcopy(options)
@@ -185,7 +185,7 @@ class SimpleFilter:
 
         return filtered
 
-    def _get_letters_for_types(self, letter_types: Set) -> Set[str]:
+    def _get_letters_for_types(self, letter_types: set) -> set[str]:
         """Get letters for specified types - simplified mapping."""
         # Simplified version of original letter type mapping
         all_letters = set()
@@ -270,7 +270,7 @@ class SimpleFreeformGenerator:
         self.current_end_position: Optional[str] = None
         self.grid_mode: Optional[str] = None
 
-    def generate_sequence(self, config: GenerationConfig) -> List[PictographData]:
+    def generate_sequence(self, config: GenerationConfig) -> list[PictographData]:
         """Generate freeform sequence - simple and direct."""
 
         # Simple validation
@@ -332,7 +332,7 @@ class SimpleCircularGenerator:
     def __init__(self):
         self.freeform_generator = SimpleFreeformGenerator()
 
-    def generate_sequence(self, config: GenerationConfig) -> List[PictographData]:
+    def generate_sequence(self, config: GenerationConfig) -> list[PictographData]:
         """Generate circular sequence with CAP transformations."""
 
         # Calculate word length (simplified)
@@ -360,8 +360,8 @@ class SimpleCircularGenerator:
         return full_sequence[: config.length]
 
     def _apply_cap_transformation(
-        self, base_pattern: List[PictographData], cap_type: str
-    ) -> List[PictographData]:
+        self, base_pattern: list[PictographData], cap_type: str
+    ) -> list[PictographData]:
         """Apply CAP transformation - simplified version."""
 
         if cap_type == "rotated":
@@ -373,8 +373,8 @@ class SimpleCircularGenerator:
         return base_pattern  # Fallback
 
     def _apply_rotated_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply 180-degree rotation transformation."""
         # Simplified rotation logic
         transformed = []
@@ -391,8 +391,8 @@ class SimpleCircularGenerator:
         return transformed
 
     def _apply_mirrored_transformation(
-        self, pattern: List[PictographData]
-    ) -> List[PictographData]:
+        self, pattern: list[PictographData]
+    ) -> list[PictographData]:
         """Apply horizontal mirror transformation."""
         # Simplified mirror logic
         transformed = []

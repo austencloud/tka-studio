@@ -6,7 +6,7 @@ Uses Qt signals for clean communication.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -71,14 +71,14 @@ class GraphEditorStateManager(QObject):
         if previous_height != clamped_height:
             self.height_changed.emit(clamped_height)
 
-    def get_graph_editor_state(self) -> Dict[str, Any]:
+    def get_graph_editor_state(self) -> dict[str, Any]:
         """Get complete graph editor state."""
         return {
             "visible": self._graph_editor_visible,
             "height": self._graph_editor_height,
         }
 
-    def set_graph_editor_state(self, state: Dict[str, Any]) -> None:
+    def set_graph_editor_state(self, state: dict[str, Any]) -> None:
         """Set complete graph editor state."""
         if "visible" in state:
             self.set_graph_editor_visible(state["visible"])
@@ -93,14 +93,14 @@ class GraphEditorStateManager(QObject):
         # Emit signal for state reset
         self.state_reset.emit()
 
-    def get_state_for_persistence(self) -> Dict[str, Any]:
+    def get_state_for_persistence(self) -> dict[str, Any]:
         """Get state data for persistence."""
         return {
             "graph_editor_visible": self._graph_editor_visible,
             "graph_editor_height": self._graph_editor_height,
         }
 
-    def load_state_from_persistence(self, state: Dict[str, Any]) -> None:
+    def load_state_from_persistence(self, state: dict[str, Any]) -> None:
         """Load state from persistence data."""
         if "graph_editor_visible" in state:
             self._graph_editor_visible = state["graph_editor_visible"]

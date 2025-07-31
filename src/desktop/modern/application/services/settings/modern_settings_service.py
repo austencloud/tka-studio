@@ -16,7 +16,7 @@ from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Optional, TypeVar
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -48,8 +48,8 @@ class ApplicationStateMemento:
         current_tab: str,
         window_geometry: Optional[bytes] = None,
         window_state: Optional[bytes] = None,
-        session_data: Optional[Dict] = None,
-        settings_snapshot: Optional[Dict] = None,
+        session_data: Optional[dict] = None,
+        settings_snapshot: Optional[dict] = None,
     ):
         self.current_tab = current_tab
         self.window_geometry = window_geometry
@@ -74,7 +74,7 @@ class ApplicationStateMemento:
         else:
             return data
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert memento to dictionary for persistence."""
         # Handle QByteArray conversion to hex string
         window_geometry_hex = None
@@ -132,7 +132,7 @@ class ApplicationStateMemento:
         return json.dumps(self.to_dict(), indent=2, default=datetime_serializer)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ApplicationStateMemento":
+    def from_dict(cls, data: dict[str, Any]) -> "ApplicationStateMemento":
         """Create memento from dictionary."""
         timestamp_str = data.get("timestamp")
         timestamp = (
@@ -282,7 +282,7 @@ class ModernSettingsService(QObject):
             return False
 
     def execute_bulk_setting_command(
-        self, settings_dict: Dict[str, Dict[str, Any]]
+        self, settings_dict: dict[str, dict[str, Any]]
     ) -> bool:
         """
         Execute multiple setting commands atomically.
@@ -326,7 +326,7 @@ class ModernSettingsService(QObject):
     # ============================================================================
 
     def query_setting(
-        self, section: str, key: str, default: Any = None, type_hint: Type[T] = None
+        self, section: str, key: str, default: Any = None, type_hint: type[T] = None
     ) -> T:
         """
         Query a setting value (CQRS query side).
@@ -352,7 +352,7 @@ class ModernSettingsService(QObject):
             logger.error(f"Failed to query setting {section}/{key}: {e}")
             return default
 
-    def query_section(self, section: str) -> Dict[str, Any]:
+    def query_section(self, section: str) -> dict[str, Any]:
         """
         Query all settings in a section.
 
@@ -377,7 +377,7 @@ class ModernSettingsService(QObject):
             logger.error(f"Failed to query section {section}: {e}")
             return {}
 
-    def query_all_settings(self) -> Dict[str, Dict[str, Any]]:
+    def query_all_settings(self) -> dict[str, dict[str, Any]]:
         """
         Query all settings from all sections.
 
@@ -413,7 +413,7 @@ class ModernSettingsService(QObject):
         current_tab: str,
         window_geometry: Optional[bytes] = None,
         window_state: Optional[bytes] = None,
-        session_data: Optional[Dict[str, Any]] = None,
+        session_data: Optional[dict[str, Any]] = None,
     ) -> ApplicationStateMemento:
         """
         Create a state memento for the current application state.

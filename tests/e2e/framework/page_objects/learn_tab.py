@@ -6,7 +6,7 @@ including lesson selection, quiz functionality, and progress tracking.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
@@ -79,7 +79,7 @@ class LearnTabPageObject(BasePageObject):
     # LESSON SELECTION METHODS
     # ========================================
 
-    def get_available_lessons(self) -> List[str]:
+    def get_available_lessons(self) -> list[str]:
         """Get list of available lessons."""
         logger.debug("Getting available lessons")
 
@@ -196,7 +196,7 @@ class LearnTabPageObject(BasePageObject):
             logger.warning(f"Error getting current question: {e}")
             return None
 
-    def get_available_answers(self) -> List[str]:
+    def get_available_answers(self) -> list[str]:
         """Get available answer options for current question."""
         logger.debug("Getting available answers")
 
@@ -282,7 +282,7 @@ class LearnTabPageObject(BasePageObject):
                 return components[0]
         return None
 
-    def _find_lesson_elements(self) -> List[QWidget]:
+    def _find_lesson_elements(self) -> list[QWidget]:
         """Find all lesson elements."""
         elements = []
 
@@ -334,7 +334,7 @@ class LearnTabPageObject(BasePageObject):
                         return child
         return None
 
-    def _find_answer_elements(self) -> List[QWidget]:
+    def _find_answer_elements(self) -> list[QWidget]:
         """Find lesson-specific answer option elements."""
         elements = []
 
@@ -438,7 +438,7 @@ class LearnTabPageObject(BasePageObject):
         element_text = self._extract_lesson_name(element) or ""
         return name.lower() in element_text.lower()
 
-    def _find_components_by_class_name(self, class_name: str) -> List[QWidget]:
+    def _find_components_by_class_name(self, class_name: str) -> list[QWidget]:
         """Find components by class name."""
         components = []
 

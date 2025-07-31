@@ -6,7 +6,6 @@ without any Qt dependencies.
 """
 
 import logging
-from typing import Dict, Tuple
 
 from desktop.modern.core.interfaces.core_services import IPictographBorderManager
 from desktop.modern.domain.models import LetterType
@@ -123,7 +122,7 @@ class PictographBorderManager(IPictographBorderManager):
     # Color Management
     def determine_colors_for_letter_type(
         self, letter_type: LetterType
-    ) -> Tuple[str, str]:
+    ) -> tuple[str, str]:
         """
         Determine border colors based on letter type.
 
@@ -273,7 +272,7 @@ class PictographBorderManager(IPictographBorderManager):
         """
         return self._config.enabled
 
-    def get_current_colors(self) -> Tuple[str, str]:
+    def get_current_colors(self) -> tuple[str, str]:
         """
         Get the current border colors.
 
@@ -282,7 +281,7 @@ class PictographBorderManager(IPictographBorderManager):
         """
         return (self._config.primary_color, self._config.secondary_color)
 
-    def get_original_colors(self) -> Tuple[str, str]:
+    def get_original_colors(self) -> tuple[str, str]:
         """
         Get the original border colors.
 
@@ -311,7 +310,7 @@ class PictographBorderManager(IPictographBorderManager):
 
         return True
 
-    def get_service_summary(self) -> Dict[str, any]:
+    def get_service_summary(self) -> dict[str, any]:
         """
         Get a summary of the service state.
 

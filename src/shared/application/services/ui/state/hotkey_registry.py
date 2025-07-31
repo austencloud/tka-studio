@@ -6,7 +6,7 @@ Uses Qt signals for clean communication.
 """
 
 import logging
-from typing import Callable, Dict
+from typing import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -34,7 +34,7 @@ class HotkeyRegistry(QObject):
         super().__init__()
 
         # Hotkey bindings storage
-        self._hotkey_bindings: Dict[str, Callable] = {}
+        self._hotkey_bindings: dict[str, Callable] = {}
 
     def register_hotkey(self, key_combination: str, callback: Callable) -> None:
         """Register a hotkey binding."""
@@ -84,7 +84,7 @@ class HotkeyRegistry(QObject):
         """Check if a hotkey is registered."""
         return key_combination in self._hotkey_bindings
 
-    def get_all_hotkeys(self) -> Dict[str, str]:
+    def get_all_hotkeys(self) -> dict[str, str]:
         """Get all registered hotkeys (returns key combinations and callback names)."""
         return {
             key: callback.__name__ if hasattr(callback, "__name__") else str(callback)
@@ -102,12 +102,12 @@ class HotkeyRegistry(QObject):
         """Get the number of registered hotkeys."""
         return len(self._hotkey_bindings)
 
-    def register_multiple_hotkeys(self, hotkey_bindings: Dict[str, Callable]) -> None:
+    def register_multiple_hotkeys(self, hotkey_bindings: dict[str, Callable]) -> None:
         """Register multiple hotkeys at once."""
         for key_combination, callback in hotkey_bindings.items():
             self.register_hotkey(key_combination, callback)
 
-    def get_state_for_persistence(self) -> Dict[str, str]:
+    def get_state_for_persistence(self) -> dict[str, str]:
         """Get state data for persistence (only key combinations, not callbacks)."""
         # Note: We can't persist callbacks, only the key combinations
         return {
@@ -115,7 +115,7 @@ class HotkeyRegistry(QObject):
             for key, callback in self._hotkey_bindings.items()
         }
 
-    def load_state_from_persistence(self, state: Dict[str, str]) -> None:
+    def load_state_from_persistence(self, state: dict[str, str]) -> None:
         """Load state from persistence data."""
         # Note: This method is mainly for documentation purposes
         # Hotkey callbacks need to be re-registered by the application

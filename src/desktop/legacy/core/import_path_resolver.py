@@ -9,7 +9,7 @@ import importlib.util
 import logging
 from pathlib import Path
 import sys
-from typing import Dict, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class CoreImportResolver:
     """
 
     _instance = None
-    _core_mappings: Dict[str, Path] = {}
+    _core_mappings: dict[str, Path] = {}
     _initialized = False
 
     def __new__(cls):
@@ -168,7 +168,7 @@ class CoreImportResolver:
         sys.meta_path.insert(0, CoreImportFinder(self))
         logger.info("Core import hook installed successfully")
 
-    def get_mappings(self) -> Dict[str, Path]:
+    def get_mappings(self) -> dict[str, Path]:
         """Get all current core module mappings for debugging."""
         return self._core_mappings.copy()
 
@@ -207,7 +207,7 @@ def install_core_import_resolver():
     return _resolver
 
 
-def get_core_mappings() -> Dict[str, Path]:
+def get_core_mappings() -> dict[str, Path]:
     """Get all core module mappings for debugging."""
     global _resolver
     return _resolver.get_mappings()

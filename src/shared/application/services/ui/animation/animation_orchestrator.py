@@ -7,7 +7,7 @@ The shared package should not depend on desktop.modern at module level.
 """
 
 import asyncio
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Optional
 
 # FIXED: Import only framework-agnostic components at module level
 from desktop.modern.core.animation.animation_engine import (
@@ -53,7 +53,7 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
         self.settings_integration = settings_integration
 
         # Command history for undo functionality
-        self._command_history: List[IAnimationCommand] = []
+        self._command_history: list[IAnimationCommand] = []
         self._max_history = 50
 
         # Subscribe to animation events to apply frames
@@ -82,10 +82,10 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
 
     async def fade_targets(
         self,
-        targets: List[Any],
+        targets: list[Any],
         fade_in: bool,
         config: Optional[AnimationConfig] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """Fade multiple targets simultaneously."""
         if not targets:
             return []
@@ -104,7 +104,7 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
 
     async def transition_targets(
         self,
-        targets: List[Any],
+        targets: list[Any],
         update_callback: Callable[[], None],
         config: Optional[AnimationConfig] = None,
     ) -> None:
@@ -251,7 +251,7 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
         """Check if animations are enabled."""
         return self.settings_integration.get_animations_enabled()
 
-    def cleanup_effects(self, targets: List[Any]) -> None:
+    def cleanup_effects(self, targets: list[Any]) -> None:
         """Clean up graphics effects for targets."""
         qt_widgets = []
         for target in targets:

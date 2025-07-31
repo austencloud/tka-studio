@@ -8,7 +8,7 @@ and state persistence that must work identically across desktop and web platform
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import LetterType, MotionType
@@ -27,7 +27,7 @@ class IOptionPickerStateManager(ABC):
     """Interface for option picker state management operations."""
 
     @abstractmethod
-    def get_current_options(self) -> Dict[str, Any]:
+    def get_current_options(self) -> dict[str, Any]:
         """
         Get current option picker options.
 
@@ -39,7 +39,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def set_current_options(self, options: Dict[str, Any]) -> None:
+    def set_current_options(self, options: dict[str, Any]) -> None:
         """
         Set current option picker options.
 
@@ -97,7 +97,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def get_option_filters(self) -> Dict[str, Any]:
+    def get_option_filters(self) -> dict[str, Any]:
         """
         Get current option filters.
 
@@ -109,7 +109,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def set_option_filters(self, filters: Dict[str, Any]) -> None:
+    def set_option_filters(self, filters: dict[str, Any]) -> None:
         """
         Set option filters.
 
@@ -130,7 +130,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def get_state_snapshot(self) -> Dict[str, Any]:
+    def get_state_snapshot(self) -> dict[str, Any]:
         """
         Get snapshot of current state.
 
@@ -142,7 +142,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def restore_state_snapshot(self, snapshot: Dict[str, Any]) -> None:
+    def restore_state_snapshot(self, snapshot: dict[str, Any]) -> None:
         """
         Restore state from snapshot.
 
@@ -159,7 +159,7 @@ class IThumbnailGenerator(ABC):
 
     @abstractmethod
     def generate_beat_thumbnail(
-        self, beat_data: BeatData, size: Tuple[int, int]
+        self, beat_data: BeatData, size: tuple[int, int]
     ) -> bytes:
         """
         Generate thumbnail image for beat data.
@@ -177,7 +177,7 @@ class IThumbnailGenerator(ABC):
 
     @abstractmethod
     def generate_sequence_thumbnail(
-        self, sequence: SequenceData, size: Tuple[int, int]
+        self, sequence: SequenceData, size: tuple[int, int]
     ) -> bytes:
         """
         Generate thumbnail image for sequence data.
@@ -195,7 +195,7 @@ class IThumbnailGenerator(ABC):
 
     @abstractmethod
     def generate_motion_thumbnail(
-        self, motion_type: MotionType, size: Tuple[int, int]
+        self, motion_type: MotionType, size: tuple[int, int]
     ) -> bytes:
         """
         Generate thumbnail for motion type.
@@ -213,7 +213,7 @@ class IThumbnailGenerator(ABC):
 
     @abstractmethod
     def generate_letter_thumbnail(
-        self, letter_type: LetterType, size: Tuple[int, int]
+        self, letter_type: LetterType, size: tuple[int, int]
     ) -> bytes:
         """
         Generate thumbnail for letter type.
@@ -230,7 +230,7 @@ class IThumbnailGenerator(ABC):
         """
 
     @abstractmethod
-    def get_thumbnail_cache_stats(self) -> Dict[str, Any]:
+    def get_thumbnail_cache_stats(self) -> dict[str, Any]:
         """
         Get thumbnail cache statistics.
 
@@ -267,7 +267,7 @@ class IMainWindowStateManager(ABC):
     """Interface for main window state management operations."""
 
     @abstractmethod
-    def get_window_state(self) -> Dict[str, Any]:
+    def get_window_state(self) -> dict[str, Any]:
         """
         Get current window state.
 
@@ -279,7 +279,7 @@ class IMainWindowStateManager(ABC):
         """
 
     @abstractmethod
-    def set_window_state(self, state: Dict[str, Any]) -> None:
+    def set_window_state(self, state: dict[str, Any]) -> None:
         """
         Set window state.
 
@@ -388,7 +388,7 @@ class IMainWindowStateManager(ABC):
         """
 
     @abstractmethod
-    def get_available_layouts(self) -> List[str]:
+    def get_available_layouts(self) -> list[str]:
         """
         Get list of available layouts.
 
@@ -405,7 +405,7 @@ class IDialogStateManager(ABC):
 
     @abstractmethod
     def show_dialog(
-        self, dialog_id: str, data: Optional[Dict[str, Any]] = None
+        self, dialog_id: str, data: Optional[dict[str, Any]] = None
     ) -> None:
         """
         Show a dialog.
@@ -443,7 +443,7 @@ class IDialogStateManager(ABC):
         """
 
     @abstractmethod
-    def get_dialog_data(self, dialog_id: str) -> Optional[Dict[str, Any]]:
+    def get_dialog_data(self, dialog_id: str) -> Optional[dict[str, Any]]:
         """
         Get data for a dialog.
 
@@ -455,7 +455,7 @@ class IDialogStateManager(ABC):
         """
 
     @abstractmethod
-    def set_dialog_data(self, dialog_id: str, data: Dict[str, Any]) -> None:
+    def set_dialog_data(self, dialog_id: str, data: dict[str, Any]) -> None:
         """
         Set data for a dialog.
 
@@ -493,7 +493,7 @@ class IDialogStateManager(ABC):
         """
 
     @abstractmethod
-    def get_active_dialogs(self) -> List[str]:
+    def get_active_dialogs(self) -> list[str]:
         """
         Get list of active dialog IDs.
 
@@ -562,7 +562,7 @@ class IProgressStateManager(ABC):
         """
 
     @abstractmethod
-    def get_progress_status(self, operation_id: str) -> Optional[Dict[str, Any]]:
+    def get_progress_status(self, operation_id: str) -> Optional[dict[str, Any]]:
         """
         Get status of a progress operation.
 
@@ -574,7 +574,7 @@ class IProgressStateManager(ABC):
         """
 
     @abstractmethod
-    def get_active_operations(self) -> List[str]:
+    def get_active_operations(self) -> list[str]:
         """
         Get list of active operation IDs.
 

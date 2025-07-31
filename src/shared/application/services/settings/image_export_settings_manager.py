@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.core.interfaces.tab_settings_interfaces import IImageExporter
@@ -52,7 +52,7 @@ class ImageExportSettingsManager(IImageExporter):
         self.ui_state_service.set_setting("export_quality", quality)
         return True
 
-    def get_export_dimensions(self) -> Tuple[int, int]:
+    def get_export_dimensions(self) -> tuple[int, int]:
         """Get export dimensions (width, height)"""
         width = self.ui_state_service.get_setting("export_width", 1920)
         height = self.ui_state_service.get_setting("export_height", 1080)
@@ -87,7 +87,7 @@ class ImageExportSettingsManager(IImageExporter):
         self.ui_state_service.set_setting("export_scale_factor", scale)
         return True
 
-    def get_quality_presets(self) -> Dict[str, int]:
+    def get_quality_presets(self) -> dict[str, int]:
         """Get available quality presets"""
         return self._quality_presets.copy()
 
@@ -132,7 +132,7 @@ class ImageExportSettingsManager(IImageExporter):
         """Set the filename template for auto-generation"""
         self.ui_state_service.set_setting("export_filename_template", template)
 
-    def get_all_export_settings(self) -> Dict[str, Any]:
+    def get_all_export_settings(self) -> dict[str, Any]:
         """Get all export settings as a dictionary"""
         width, height = self.get_export_dimensions()
 
@@ -159,7 +159,7 @@ class ImageExportSettingsManager(IImageExporter):
         """Set a specific export option"""
         self.ui_state_service.set_setting(f"image_export/{option}", value)
 
-    def get_all_export_options(self) -> Dict[str, Any]:
+    def get_all_export_options(self) -> dict[str, Any]:
         """Get all export options as a dictionary"""
         return {
             key: self.get_export_option(key)

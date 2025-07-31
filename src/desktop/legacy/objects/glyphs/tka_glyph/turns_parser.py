@@ -1,11 +1,9 @@
-from typing import Tuple, Union
-
 from data.constants import CLOCKWISE, COUNTER_CLOCKWISE, OPP, SAME
 
 
 def parse_turns_tuple_string(
     turns_str: str,
-) -> Tuple[Union[str, None], Union[int, float, str], Union[int, float, str]]:
+) -> tuple[str | None, int | float | str, int | float | str]:
     """Parses a turns tuple string and returns a tuple of direction, top turn, and bottom turn."""
     parts = turns_str.strip("()").split(",")
     turns_list = [

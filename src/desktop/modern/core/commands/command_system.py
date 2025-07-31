@@ -6,7 +6,7 @@ Provides type-safe, undoable commands with event integration.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
 
 if TYPE_CHECKING:
     pass
@@ -76,7 +76,7 @@ class CommandProcessor:
 
     def __init__(self, max_history: int = 100):
         self.max_history = max_history
-        self._history: List[ICommand] = []
+        self._history: list[ICommand] = []
         self._current_index = -1
         self._logger = logging.getLogger(__name__)
 
@@ -209,7 +209,7 @@ class CommandProcessor:
         self._current_index = -1
         self._logger.info("Command history cleared")
 
-    def get_history_summary(self) -> List[Dict[str, Any]]:
+    def get_history_summary(self) -> list[dict[str, Any]]:
         """Get summary of command history for debugging."""
         return [
             {

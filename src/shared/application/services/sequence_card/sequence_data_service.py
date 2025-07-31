@@ -6,7 +6,7 @@ Handles file system operations, metadata extraction, and data validation.
 
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDataService,
@@ -28,7 +28,7 @@ class SequenceCardDataService(ISequenceCardDataService):
 
     def get_sequences_by_length(
         self, base_path: Path, length: int
-    ) -> List[SequenceCardData]:
+    ) -> list[SequenceCardData]:
         """Get all sequences of specified length."""
         try:
             sequences = self.get_all_sequences(base_path)
@@ -39,7 +39,7 @@ class SequenceCardDataService(ISequenceCardDataService):
             logger.error(f"Error getting sequences by length {length}: {e}")
             return []
 
-    def get_all_sequences(self, base_path: Path) -> List[SequenceCardData]:
+    def get_all_sequences(self, base_path: Path) -> list[SequenceCardData]:
         """Get all sequences regardless of length."""
         sequences = []
         try:
@@ -74,7 +74,7 @@ class SequenceCardDataService(ISequenceCardDataService):
 
         return sequences
 
-    def extract_metadata(self, image_path: Path) -> Dict[str, Any]:
+    def extract_metadata(self, image_path: Path) -> dict[str, Any]:
         """Extract metadata from sequence image."""
         try:
             return self.metadata_extractor.extract_metadata_from_image(str(image_path))
@@ -91,7 +91,7 @@ class SequenceCardDataService(ISequenceCardDataService):
         self._file_watchers[str(path)] = callback
         logger.info(f"Directory watcher registered for {path}")
 
-    def validate_sequence_data(self, data: SequenceCardData) -> Tuple[bool, List[str]]:
+    def validate_sequence_data(self, data: SequenceCardData) -> tuple[bool, list[str]]:
         """Validate sequence data."""
         errors = []
 

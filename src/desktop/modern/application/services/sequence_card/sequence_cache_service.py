@@ -8,7 +8,7 @@ import gc
 import logging
 from pathlib import Path
 import time
-from typing import Dict, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     CacheLevel,
@@ -24,7 +24,7 @@ class LRUCache:
 
     def __init__(self, max_size: int):
         self.max_size = max_size
-        self.cache: Dict[str, any] = {}
+        self.cache: dict[str, any] = {}
         self.access_order = []
 
     def get(self, key: str) -> Optional[any]:

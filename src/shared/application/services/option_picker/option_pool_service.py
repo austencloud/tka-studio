@@ -5,7 +5,7 @@ Manages pool item availability and lifecycle without Qt dependencies.
 Extracted from option_factory.py to maintain clean architecture.
 """
 
-from typing import Dict, Optional, Set
+from typing import Optional
 
 
 class OptionPoolService:
@@ -18,8 +18,8 @@ class OptionPoolService:
     def __init__(self, max_items: int = 100):
         """Initialize pool with specified maximum items."""
         self._max_items = max_items
-        self._available_ids: Set[int] = set(range(max_items))
-        self._in_use_ids: Set[int] = set()
+        self._available_ids: set[int] = set(range(max_items))
+        self._in_use_ids: set[int] = set()
 
     def checkout_item(self) -> Optional[int]:
         """
@@ -53,7 +53,7 @@ class OptionPoolService:
         self._available_ids = set(range(self._max_items))
         self._in_use_ids.clear()
 
-    def get_usage_stats(self) -> Dict[str, int]:
+    def get_usage_stats(self) -> dict[str, int]:
         """Get pool usage statistics."""
         return {
             "available": len(self._available_ids),

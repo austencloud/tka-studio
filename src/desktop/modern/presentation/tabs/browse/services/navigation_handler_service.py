@@ -4,7 +4,7 @@ Navigation Handler Service
 Service for handling navigation and scrolling within the sequence browser.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QPoint
 from PyQt6.QtWidgets import QGridLayout, QLabel, QScrollArea
@@ -57,7 +57,7 @@ class NavigationHandlerService(INavigationHandler):
         self.scroll_area.verticalScrollBar().setValue(0)
 
     def update_navigation_sections(
-        self, section_names: List[str], sort_method: str
+        self, section_names: list[str], sort_method: str
     ) -> None:
         """Update the navigation sidebar with new sections."""
         if self.navigation_sidebar:

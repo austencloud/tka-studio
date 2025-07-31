@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import uuid
 
 # Conditional PyQt6 imports for testing compatibility
@@ -324,8 +324,8 @@ class SessionStateTracker(ISessionStateTracker):
     def update_ui_state(
         self,
         active_tab: str,
-        beat_layout: Optional[Dict[str, Any]] = None,
-        component_visibility: Optional[Dict[str, bool]] = None,
+        beat_layout: Optional[dict[str, Any]] = None,
+        component_visibility: Optional[dict[str, bool]] = None,
     ) -> None:
         """Update UI state information."""
         try:
@@ -437,7 +437,7 @@ class SessionStateTracker(ISessionStateTracker):
         )
         return last_interaction > staleness_threshold
 
-    def _parse_session_data(self, session_data: Dict[str, Any]) -> SessionState:
+    def _parse_session_data(self, session_data: dict[str, Any]) -> SessionState:
         """Parse session data from JSON into SessionState object."""
         try:
             # Parse metadata

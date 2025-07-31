@@ -6,7 +6,7 @@ duplicate cache implementations and provide consistent cache behavior.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.data_services import IDataCacheManager
 
@@ -29,10 +29,10 @@ class DataCacheManager(IDataCacheManager):
             max_size: Maximum number of items per cache namespace
         """
         self.max_size = max_size
-        self._position_cache: Dict[str, Any] = {}
-        self._sequence_cache: Dict[str, Any] = {}
-        self._pictograph_cache: Dict[str, Any] = {}
-        self._conversion_cache: Dict[str, Any] = {}
+        self._position_cache: dict[str, Any] = {}
+        self._sequence_cache: dict[str, Any] = {}
+        self._pictograph_cache: dict[str, Any] = {}
+        self._conversion_cache: dict[str, Any] = {}
 
         # Track access order for LRU eviction
         self._position_access_order: list[str] = []
@@ -136,7 +136,7 @@ class DataCacheManager(IDataCacheManager):
         self._conversion_access_order.clear()
         logger.info("Conversion cache cleared")
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """
         Return comprehensive cache statistics.
 
@@ -162,7 +162,7 @@ class DataCacheManager(IDataCacheManager):
         }
 
     def _get_from_cache(
-        self, cache: Dict[str, Any], access_order: list[str], key: str, cache_type: str
+        self, cache: dict[str, Any], access_order: list[str], key: str, cache_type: str
     ) -> Optional[Any]:
         """Internal method to get from a specific cache with LRU tracking."""
         if key in cache:
@@ -179,7 +179,7 @@ class DataCacheManager(IDataCacheManager):
 
     def _set_in_cache(
         self,
-        cache: Dict[str, Any],
+        cache: dict[str, Any],
         access_order: list[str],
         key: str,
         value: Any,

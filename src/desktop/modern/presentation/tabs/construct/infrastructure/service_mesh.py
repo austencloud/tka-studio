@@ -10,7 +10,7 @@ from enum import Enum
 from functools import wraps
 import logging
 import time
-from typing import Any, Callable, Dict, List, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 from desktop.modern.core.events.domain_events import UIStateChangedEvent
 from desktop.modern.core.events.event_bus import IEventBus, get_event_bus
@@ -225,7 +225,7 @@ class ServiceRegistry:
     """Registry for service discovery."""
 
     def __init__(self, event_bus: IEventBus):
-        self.services: Dict[str, ServiceProxy] = {}
+        self.services: dict[str, ServiceProxy] = {}
         self.event_bus = event_bus
 
     def register(self, service_name: str, service_instance: Any) -> ServiceProxy:
@@ -251,11 +251,11 @@ class ServiceRegistry:
         """Get service proxy by name."""
         return self.services.get(service_name)
 
-    def list_services(self) -> List[str]:
+    def list_services(self) -> list[str]:
         """List all registered service names."""
         return list(self.services.keys())
 
-    def get_health_status(self) -> Dict[str, ServiceHealth]:
+    def get_health_status(self) -> dict[str, ServiceHealth]:
         """Get health status of all services."""
         return {name: proxy.get_health() for name, proxy in self.services.items()}
 
@@ -292,8 +292,8 @@ class ComponentServiceMesh:
         return self.registry.get(service_name)
 
     def setup_mesh_for_construct_tab(
-        self, components: Dict[str, Any]
-    ) -> Dict[str, ServiceProxy]:
+        self, components: dict[str, Any]
+    ) -> dict[str, ServiceProxy]:
         """Setup service mesh for all ConstructTab components."""
         proxied_components = {}
 
@@ -316,7 +316,7 @@ class ComponentServiceMesh:
         )
         return proxied_components
 
-    def get_mesh_status(self) -> Dict[str, Any]:
+    def get_mesh_status(self) -> dict[str, Any]:
         """Get overall mesh status and health."""
         health_status = self.registry.get_health_status()
 
@@ -343,7 +343,7 @@ class ComponentServiceMesh:
 
 # Factory function for easy integration
 def create_service_mesh_for_construct_tab(
-    components: Dict[str, Any],
+    components: dict[str, Any],
 ) -> ComponentServiceMesh:
     """Factory function to create and setup service mesh for ConstructTab."""
     mesh = ComponentServiceMesh()

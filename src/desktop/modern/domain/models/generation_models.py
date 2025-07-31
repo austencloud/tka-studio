@@ -6,7 +6,7 @@ for sequence generation, following Modern's clean architecture principles.
 """
 
 from dataclasses import dataclass, replace
-from typing import List, Optional, Set
+from typing import Optional
 
 # Import enums and data classes for runtime use
 from desktop.modern.core.interfaces.generation_services import (
@@ -30,7 +30,7 @@ class GenerationConfig:
     turn_intensity: float = 1.0
     grid_mode: "GridMode" = None
     prop_continuity: "PropContinuity" = None
-    letter_types: Optional[Set["LetterType"]] = None
+    letter_types: Optional[set["LetterType"]] = None
     slice_size: "SliceSize" = None
     cap_type: Optional["CAPType"] = None
     start_position_key: Optional[str] = None
@@ -81,11 +81,11 @@ class GenerationResult:
     """Result of a sequence generation operation"""
 
     success: bool
-    sequence_data: Optional[List[dict]] = None
+    sequence_data: Optional[list[dict]] = None
     start_position_data: Optional[dict] = None
     metadata: Optional["GenerationMetadata"] = None
     error_message: Optional[str] = None
-    warnings: Optional[List[str]] = None
+    warnings: Optional[list[str]] = None
 
     def __post_init__(self):
         if self.warnings is None:
@@ -99,7 +99,7 @@ class GenerationState:
     config: GenerationConfig
     is_generating: bool = False
     last_result: Optional[GenerationResult] = None
-    validation_errors: Optional[List[str]] = None
+    validation_errors: Optional[list[str]] = None
 
     def __post_init__(self):
         if self.validation_errors is None:

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
 
 
 class PropType(Enum):
@@ -23,7 +23,7 @@ class IUserProfileService(ABC):
         pass
 
     @abstractmethod
-    def get_all_users(self) -> List[str]:
+    def get_all_users(self) -> list[str]:
         pass
 
 
@@ -37,7 +37,7 @@ class IPropTypeSettingsManager(ABC):
         pass
 
     @abstractmethod
-    def get_available_prop_types(self) -> List[PropType]:
+    def get_available_prop_types(self) -> list[PropType]:
         pass
 
 
@@ -107,5 +107,5 @@ class IImageExporter(ABC):
         pass
 
     @abstractmethod
-    def get_all_export_options(self) -> Dict[str, Any]:
+    def get_all_export_options(self) -> dict[str, Any]:
         pass

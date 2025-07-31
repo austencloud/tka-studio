@@ -14,7 +14,7 @@ PROVIDES:
 import os
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 import uuid
 
 
@@ -36,7 +36,7 @@ sys.path.insert(0, str(_project_root / "src"))
 from abc import ABC, abstractmethod
 from datetime import datetime
 import sys
-from typing import Any, List
+from typing import Any
 
 # Add project root to path (following established pattern)
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
@@ -95,7 +95,7 @@ class IPropOrchestrator(ABC):
     @abstractmethod
     def calculate_separation_offsets(
         self, beat_data: BeatData
-    ) -> Tuple[QPointF, QPointF]:
+    ) -> tuple[QPointF, QPointF]:
         """Calculate separation offsets for blue and red props."""
 
     @abstractmethod
@@ -154,7 +154,7 @@ class PropOrchestrator(IPropOrchestrator):
         self.event_bus = event_bus or (
             get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
         )
-        self._subscription_ids: List[str] = []
+        self._subscription_ids: list[str] = []
 
     def should_apply_beta_positioning(self, beat_data: BeatData) -> bool:
         """
@@ -209,7 +209,7 @@ class PropOrchestrator(IPropOrchestrator):
 
     def calculate_separation_offsets(
         self, beat_data: BeatData
-    ) -> Tuple[QPointF, QPointF]:
+    ) -> tuple[QPointF, QPointF]:
         """
         Calculate separation offsets for blue and red props.
 
@@ -274,12 +274,12 @@ class PropOrchestrator(IPropOrchestrator):
 
         return overlap_detected
 
-    def classify_props_by_size(self, beat_data: BeatData) -> Dict[str, list]:
+    def classify_props_by_size(self, beat_data: BeatData) -> dict[str, list]:
         """Classify props by size categories using classification service."""
         return self.classification_service.classify_props_by_size(beat_data)
 
     def get_repositioning_strategy(
-        self, beat_data: BeatData, prop_classification: Dict[str, list]
+        self, beat_data: BeatData, prop_classification: dict[str, list]
     ) -> str:
         """Get repositioning strategy using classification service."""
         return self.classification_service.get_repositioning_strategy(
@@ -327,7 +327,7 @@ class PropOrchestrator(IPropOrchestrator):
         return PropType.HAND  # Default to smallest offset
 
     def _publish_positioning_event(
-        self, positioning_type: str, position_data: Dict[str, Any]
+        self, positioning_type: str, position_data: dict[str, Any]
     ) -> None:
         """Publish positioning event if event system is available."""
         if self.event_bus and PropPositionedEvent:

@@ -11,7 +11,6 @@ PROVIDES:
 """
 
 from abc import ABC, abstractmethod
-from typing import List
 
 from desktop.modern.domain.models import BeatData
 
@@ -28,7 +27,7 @@ class IBetaPositioningDetector(ABC):
         """Check if letter ends at beta positions."""
 
     @abstractmethod
-    def get_beta_ending_letters(self) -> List[str]:
+    def get_beta_ending_letters(self) -> list[str]:
         """Get list of letters that end at beta positions."""
 
 
@@ -78,6 +77,6 @@ class BetaPositioningDetector(IBetaPositioningDetector):
 
         return letter in self._beta_ending_letters
 
-    def get_beta_ending_letters(self) -> List[str]:
+    def get_beta_ending_letters(self) -> list[str]:
         """Get list of letters that end at beta positions."""
         return self._beta_ending_letters.copy()

@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 try:
     from desktop.modern.domain.serialization.json_serializers import DomainJSONEncoder
@@ -22,11 +22,11 @@ class ISequencePersister(ABC):
     """Interface for sequence persistence operations."""
 
     @abstractmethod
-    def load_current_sequence(self) -> List[Dict[str, Any]]:
+    def load_current_sequence(self) -> list[dict[str, Any]]:
         """Load current sequence from JSON file."""
 
     @abstractmethod
-    def save_current_sequence(self, sequence: List[Dict[str, Any]]) -> None:
+    def save_current_sequence(self, sequence: list[dict[str, Any]]) -> None:
         """Save current sequence to JSON file."""
 
     @abstractmethod
@@ -34,7 +34,7 @@ class ISequencePersister(ABC):
         """Clear the current sequence."""
 
     @abstractmethod
-    def get_default_sequence(self) -> List[Dict[str, Any]]:
+    def get_default_sequence(self) -> list[dict[str, Any]]:
         """Return default sequence metadata."""
 
 
@@ -54,7 +54,7 @@ class SequencePersister(ISequencePersister):
             return obj.value
         raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
-    def load_current_sequence(self) -> List[Dict[str, Any]]:
+    def load_current_sequence(self) -> list[dict[str, Any]]:
         """Load current sequence from JSON file - exactly like legacy."""
         try:
             if not self.current_sequence_json.exists():
@@ -78,7 +78,7 @@ class SequencePersister(ISequencePersister):
             self.save_current_sequence(default_sequence)
             return default_sequence
 
-    def save_current_sequence(self, sequence: List[Dict[str, Any]]) -> None:
+    def save_current_sequence(self, sequence: list[dict[str, Any]]) -> None:
         """Save current sequence to JSON file - exactly like legacy."""
         # Removed repetitive debug log
 
@@ -125,7 +125,7 @@ class SequencePersister(ISequencePersister):
         """Clear the current sequence - exactly like legacy."""
         self.save_current_sequence(self.get_default_sequence())
 
-    def get_default_sequence(self) -> List[Dict[str, Any]]:
+    def get_default_sequence(self) -> list[dict[str, Any]]:
         """Return default sequence metadata - exactly like legacy."""
         return [
             {
@@ -144,7 +144,7 @@ class SequencePersister(ISequencePersister):
             }
         ]
 
-    def update_current_sequence_with_beat(self, beat_data: Dict[str, Any]) -> None:
+    def update_current_sequence_with_beat(self, beat_data: dict[str, Any]) -> None:
         """Add a beat to the current sequence - exactly like legacy."""
         sequence = self.load_current_sequence()
 
@@ -169,13 +169,13 @@ class SequencePersister(ISequencePersister):
         sequence = [sequence_metadata] + sequence_beats
         self.save_current_sequence(sequence)
 
-    def get_next_beat_number(self, sequence_beats: List[Dict[str, Any]]) -> int:
+    def get_next_beat_number(self, sequence_beats: list[dict[str, Any]]) -> int:
         """Get the next beat number - exactly like legacy."""
         if not sequence_beats:
             return 1
         return max(beat.get("beat", 0) for beat in sequence_beats) + 1
 
-    def update_sequence_metadata(self, metadata: Dict[str, Any]) -> None:
+    def update_sequence_metadata(self, metadata: dict[str, Any]) -> None:
         """Update sequence metadata - exactly like legacy."""
         sequence = self.load_current_sequence()
 

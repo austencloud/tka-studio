@@ -1,6 +1,5 @@
 import math
 import random
-from typing import List
 
 from ..shared.animation_types import Position2D, StarState
 
@@ -9,8 +8,8 @@ class StarTwinkling:
     """Pure business logic for star twinkling - extracted from StarManager"""
 
     def __init__(self, num_stars: int = 150):
-        self.stars: List[StarState] = []
-        self.twinkle_state: List[float] = []
+        self.stars: list[StarState] = []
+        self.twinkle_state: list[float] = []
         self._create_stars(num_stars)
 
     def _create_stars(self, num_stars: int) -> None:
@@ -45,11 +44,11 @@ class StarTwinkling:
             twinkle_intensity = (math.sin(star.twinkle_phase) + 1) / 2
             self.twinkle_state[i] = 0.6 + (twinkle_intensity * 0.4)  # Range: 0.6 to 1.0
 
-    def get_star_states(self) -> List[StarState]:
+    def get_star_states(self) -> list[StarState]:
         """Get current star states for rendering"""
         return self.stars.copy()
 
-    def get_twinkle_states(self) -> List[float]:
+    def get_twinkle_states(self) -> list[float]:
         """Get current twinkle intensities"""
         return self.twinkle_state.copy()
 

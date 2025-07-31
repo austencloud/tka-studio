@@ -6,7 +6,7 @@ the Single Responsibility Principle.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -42,7 +42,7 @@ class IExportDirectoryService(ABC):
         ...
 
     @abstractmethod
-    def get_directory_stats(self, directory_path: str) -> Dict[str, Any]:
+    def get_directory_stats(self, directory_path: str) -> dict[str, Any]:
         """Get statistics about the directory for debugging purposes."""
         ...
 
@@ -51,12 +51,12 @@ class ISequenceDataTransformer(ABC):
     """Interface for transforming sequence data between different formats."""
 
     @abstractmethod
-    def to_image_export_format(self, sequence: SequenceData) -> List[Dict[str, Any]]:
+    def to_image_export_format(self, sequence: SequenceData) -> list[dict[str, Any]]:
         """Convert SequenceData to format expected by image export services."""
         ...
 
     @abstractmethod
-    def to_legacy_json_format(self, sequence: SequenceData) -> List[Dict[str, Any]]:
+    def to_legacy_json_format(self, sequence: SequenceData) -> list[dict[str, Any]]:
         """Convert SequenceData to legacy-compatible JSON format."""
         ...
 
@@ -65,7 +65,7 @@ class ISequenceJsonExporter(ABC):
     """Interface for JSON export operations."""
 
     @abstractmethod
-    def export_to_json_string(self, sequence: SequenceData) -> Tuple[bool, str]:
+    def export_to_json_string(self, sequence: SequenceData) -> tuple[bool, str]:
         """Export sequence as JSON string in legacy-compatible format."""
         ...
 
@@ -100,12 +100,12 @@ class IWorkbenchExportOrchestrator(ABC):
     @abstractmethod
     def export_sequence_image(
         self, sequence: SequenceData, file_path: Optional[str] = None
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Export sequence as image file."""
         ...
 
     @abstractmethod
-    def export_sequence_json(self, sequence: SequenceData) -> Tuple[bool, str]:
+    def export_sequence_json(self, sequence: SequenceData) -> tuple[bool, str]:
         """Export sequence as JSON string."""
         ...
 
@@ -120,6 +120,6 @@ class IWorkbenchExportOrchestrator(ABC):
         ...
 
     @abstractmethod
-    def get_export_stats(self) -> Dict[str, Any]:
+    def get_export_stats(self) -> dict[str, Any]:
         """Get statistics about exports for debugging."""
         ...

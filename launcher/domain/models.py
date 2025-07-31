@@ -8,7 +8,7 @@ These models represent the core business entities without any UI coupling.
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 import uuid
 
 
@@ -70,7 +70,7 @@ class ApplicationData:
     # Launch configuration
     command: Optional[str] = None
     working_dir: Optional[Path] = None
-    environment_vars: Dict[str, str] = field(default_factory=dict)
+    environment_vars: dict[str, str] = field(default_factory=dict)
 
     # State and metadata
     enabled: bool = True
@@ -123,12 +123,12 @@ class WindowGeometry:
         """Create a new instance with updated fields."""
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, int]:
+    def to_dict(self) -> dict[str, int]:
         """Convert to dictionary for serialization."""
         return {"x": self.x, "y": self.y, "width": self.width, "height": self.height}
 
     @classmethod
-    def from_dict(cls, data: Dict[str, int]) -> "WindowGeometry":
+    def from_dict(cls, data: dict[str, int]) -> "WindowGeometry":
         """Create from dictionary."""
         return cls(x=data["x"], y=data["y"], width=data["width"], height=data["height"])
 
@@ -154,7 +154,7 @@ class DockConfiguration:
         """Create a new instance with updated fields."""
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "position": self.position.value,
@@ -168,7 +168,7 @@ class DockConfiguration:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "DockConfiguration":
+    def from_dict(cls, data: dict[str, Any]) -> "DockConfiguration":
         """Create from dictionary."""
         return cls(
             position=DockPosition(data.get("position", DockPosition.BOTTOM_LEFT.value)),
@@ -216,10 +216,10 @@ class LauncherState:
 
     # Screen configuration
     target_screen_index: int = 0
-    available_screens: List[ScreenData] = field(default_factory=list)
+    available_screens: list[ScreenData] = field(default_factory=list)
 
     # Application state
-    applications: Dict[str, ApplicationData] = field(default_factory=dict)
+    applications: dict[str, ApplicationData] = field(default_factory=dict)
 
     # UI state
     search_query: str = ""
@@ -285,7 +285,7 @@ class LauncherState:
 
     def get_applications_by_category(
         self, category: ApplicationCategory
-    ) -> List[ApplicationData]:
+    ) -> list[ApplicationData]:
         """Get all applications in a category."""
         return [
             app
@@ -293,7 +293,7 @@ class LauncherState:
             if app.category == category and app.enabled
         ]
 
-    def get_running_applications(self) -> List[ApplicationData]:
+    def get_running_applications(self) -> list[ApplicationData]:
         """Get all currently running applications."""
         return [
             app
@@ -301,7 +301,7 @@ class LauncherState:
             if app.status == ApplicationStatus.RUNNING
         ]
 
-    def get_favorite_applications(self) -> List[ApplicationData]:
+    def get_favorite_applications(self) -> list[ApplicationData]:
         """Get all favorite applications."""
         return [
             app for app in self.applications.values() if app.is_favorite and app.enabled
@@ -316,7 +316,7 @@ class LaunchRequest:
     timestamp: str
     session_id: str
     user_initiated: bool = True
-    launch_options: Dict[str, Any] = field(default_factory=dict)
+    launch_options: dict[str, Any] = field(default_factory=dict)
 
     def update(self, **kwargs) -> "LaunchRequest":
         """Create a new instance with updated fields."""

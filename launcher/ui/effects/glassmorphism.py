@@ -18,7 +18,7 @@ Architecture:
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import (
     QEasingCurve,
@@ -261,7 +261,7 @@ class EdgeLightingEffect(QObject):
             r, g, b, a = map(float, rgba_part.split(","))
             self.glow_color = QColor(int(r), int(g), int(b), int(a * 255))
 
-    def _on_theme_changed(self, new_theme: Dict[str, Any]):
+    def _on_theme_changed(self, new_theme: dict[str, Any]):
         """Handle theme changes."""
         self._update_glow_color()
         if self._current_intensity > 0:

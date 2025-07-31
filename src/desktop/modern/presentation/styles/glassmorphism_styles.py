@@ -6,7 +6,7 @@ across the application. This system maintains the app's modern glass aesthetic
 with subtle transparency, blur effects, and elegant interactions.
 """
 
-from typing import Dict, Optional
+from typing import Optional
 
 
 class GlassmorphismColors:
@@ -81,7 +81,7 @@ class GlassmorphismStyleGenerator:
     def create_button_style(
         variant: str = "default",
         size: str = "medium",
-        custom_properties: Optional[Dict[str, str]] = None,
+        custom_properties: Optional[dict[str, str]] = None,
     ) -> str:
         """
         Generate glassmorphism button styling.
@@ -257,7 +257,7 @@ class GlassmorphismStyleGenerator:
     def create_container_style(
         variant: str = "default",
         blur_effect: bool = True,
-        custom_properties: Optional[Dict[str, str]] = None,
+        custom_properties: Optional[dict[str, str]] = None,
     ) -> str:
         """
         Generate glassmorphism container styling.

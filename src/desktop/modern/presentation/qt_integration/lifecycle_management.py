@@ -11,7 +11,7 @@ smart cleanup registration, resource tracking, and automatic memory management.
 from dataclasses import dataclass
 import logging
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 import weakref
 
 # Import Qt modules with compatibility
@@ -62,9 +62,9 @@ class QtObjectFactory:
 
     def __init__(self):
         """Initialize Qt object factory."""
-        self._tracked_objects: Dict[int, weakref.ReferenceType] = {}
-        self._cleanup_handlers: Dict[int, List[Callable]] = {}
-        self._object_metadata: Dict[int, Dict[str, Any]] = {}
+        self._tracked_objects: dict[int, weakref.ReferenceType] = {}
+        self._cleanup_handlers: dict[int, list[Callable]] = {}
+        self._object_metadata: dict[int, dict[str, Any]] = {}
         self._metrics = LifecycleMetrics()
         self._lock = Lock()
 
@@ -73,7 +73,7 @@ class QtObjectFactory:
 
         logger.info("Qt object factory initialized with automatic lifecycle management")
 
-    def create_widget(self, widget_class: Type[T], *args, **kwargs) -> T:
+    def create_widget(self, widget_class: type[T], *args, **kwargs) -> T:
         """
         Create a widget with automatic lifecycle management.
 
@@ -100,7 +100,7 @@ class QtObjectFactory:
         logger.debug(f"Created widget: {widget_class.__name__} (id: {id(widget)})")
         return widget
 
-    def create_object(self, object_class: Type[T], *args, **kwargs) -> T:
+    def create_object(self, object_class: type[T], *args, **kwargs) -> T:
         """
         Create a QObject with automatic lifecycle management.
 
@@ -218,7 +218,7 @@ class QtObjectFactory:
             )
             return self._metrics
 
-    def get_tracked_objects_info(self) -> List[Dict[str, Any]]:
+    def get_tracked_objects_info(self) -> list[dict[str, Any]]:
         """Get information about currently tracked objects."""
         with self._lock:
             info = []
@@ -260,8 +260,8 @@ class AutoManagedWidget(QWidget):
         super().__init__(parent)
 
         # Track resources
-        self._managed_resources: List[Any] = []
-        self._cleanup_callbacks: List[Callable] = []
+        self._managed_resources: list[Any] = []
+        self._cleanup_callbacks: list[Callable] = []
         self._factory_registered = False
 
         logger.debug(f"AutoManagedWidget created: {self.__class__.__name__}")

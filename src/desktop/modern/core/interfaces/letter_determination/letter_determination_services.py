@@ -6,7 +6,7 @@ These interfaces work with the enhanced PictographData and MotionData models.
 """
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.enums import Letter
@@ -46,7 +46,7 @@ class ILetterDeterminationService(ABC):
 
     @abstractmethod
     def update_pictograph_dataset(
-        self, dataset: Dict["Letter", List["PictographData"]]
+        self, dataset: dict["Letter", list["PictographData"]]
     ) -> None:
         """
         Update the reference dataset used for letter matching.
@@ -56,7 +56,7 @@ class ILetterDeterminationService(ABC):
         """
 
     @abstractmethod
-    def get_available_strategies(self) -> List[str]:
+    def get_available_strategies(self) -> list[str]:
         """
         Get list of available determination strategies.
 
@@ -173,7 +173,7 @@ class ILetterDeterminationStrategy(ABC):
     def execute(
         self,
         motion_data: "PictographData",
-        dataset: Dict["Letter", List["PictographData"]],
+        dataset: dict["Letter", list["PictographData"]],
         comparison_service: "IMotionComparisonService",
         context: Optional["MotionComparisonContext"] = None,
     ) -> "LetterDeterminationResult":
@@ -252,7 +252,7 @@ class IMotionAttributeService(ABC):
     @abstractmethod
     def extract_prefloat_attributes(
         self, pictograph_data: "PictographData"
-    ) -> Dict[str, "MotionData"]:
+    ) -> dict[str, "MotionData"]:
         """
         Extract prefloat attributes from pictograph data.
 
@@ -272,7 +272,7 @@ class IPictographDatasetProvider(ABC):
     """
 
     @abstractmethod
-    def get_pictograph_dataset(self) -> Dict["Letter", List["PictographData"]]:
+    def get_pictograph_dataset(self) -> dict["Letter", list["PictographData"]]:
         """
         Get the complete pictograph dataset for letter matching.
 
@@ -287,7 +287,7 @@ class IPictographDatasetProvider(ABC):
         """
 
     @abstractmethod
-    def get_dataset_metadata(self) -> Dict[str, any]:
+    def get_dataset_metadata(self) -> dict[str, any]:
         """
         Get metadata about the current dataset.
 

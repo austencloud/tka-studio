@@ -6,7 +6,7 @@ high-performance rendering of pictograph elements.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
@@ -77,7 +77,7 @@ class IPictographRenderingService(ABC):
         """
 
     @abstractmethod
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """
         Get cache performance statistics.
 
@@ -229,7 +229,7 @@ class IPictographPerformanceMonitor(ABC):
         """Record a cache miss."""
 
     @abstractmethod
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """Get comprehensive performance report."""
 
     @abstractmethod

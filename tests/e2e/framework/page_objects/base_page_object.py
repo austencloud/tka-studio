@@ -5,7 +5,7 @@ Provides common functionality for all page objects in the E2E testing framework.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
@@ -27,7 +27,7 @@ class BasePageObject:
     def __init__(self, parent: QWidget):
         self.parent = parent
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
-        self.element_selectors: Dict[str, str] = {}
+        self.element_selectors: dict[str, str] = {}
 
     # ========================================
     # ELEMENT FINDING METHODS
@@ -282,7 +282,7 @@ class BasePageObject:
             self.logger.error(f"Error taking screenshot: {e}")
             return False
 
-    def get_all_child_elements(self) -> List[QWidget]:
+    def get_all_child_elements(self) -> list[QWidget]:
         """
         Get all child elements of the parent widget.
 
@@ -340,8 +340,8 @@ class BasePageObject:
         return self.parent is not None
 
     def validate_required_elements(
-        self, required_elements: List[str]
-    ) -> Dict[str, bool]:
+        self, required_elements: list[str]
+    ) -> dict[str, bool]:
         """
         Validate that required elements are present.
 

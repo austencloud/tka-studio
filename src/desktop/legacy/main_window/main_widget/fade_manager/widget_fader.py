@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
@@ -103,7 +103,7 @@ class WidgetFader:
     def fade_and_update(
         self,
         widgets: list[QWidget],
-        callback: Union[callable, tuple[callable, callable]] = None,
+        callback: callable | tuple[callable, callable] = None,
         duration: int = 250,
     ) -> None:
         fade_enabled = self.manager.fades_enabled()
@@ -149,7 +149,7 @@ class WidgetFader:
 
     def fade_visibility_items_to_opacity(
         self,
-        visibility_element: Union[Glyph, NonRadialPointsGroup],
+        visibility_element: Glyph | NonRadialPointsGroup,
         opacity: float,
         duration: int = 300,
         callback: Optional[callable] = None,
@@ -181,8 +181,8 @@ class WidgetFader:
         anim_group.start()
 
     def _get_corresponding_items(
-        self, element: Union[Glyph, NonRadialPointsGroup, QGraphicsItem]
-    ) -> list[Union[Glyph, NonRadialPointsGroup, QGraphicsItem]]:
+        self, element: Glyph | NonRadialPointsGroup | QGraphicsItem
+    ) -> list[Glyph | NonRadialPointsGroup | QGraphicsItem]:
         if not hasattr(element, "name"):
             return [element]
 
@@ -200,7 +200,7 @@ class WidgetFader:
     def fade_widgets_and_element(
         self,
         widgets: list[QWidget],
-        element: Union[Glyph, NonRadialPointsGroup],
+        element: Glyph | NonRadialPointsGroup,
         opacity: float,
         duration: int = 300,
         callback: Optional[callable] = None,

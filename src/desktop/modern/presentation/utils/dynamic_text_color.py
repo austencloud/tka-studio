@@ -5,13 +5,11 @@ This utility provides simple, reliable methods to automatically adjust text colo
 based on the background color to ensure optimal readability.
 """
 
-from typing import Tuple, Union
-
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QWidget
 
 
-def calculate_luminance(color: Union[QColor, Tuple[int, int, int]]) -> float:
+def calculate_luminance(color: QColor | tuple[int, int, int]) -> float:
     """
     Calculate the relative luminance of a color using the standard formula.
 
@@ -47,7 +45,7 @@ def calculate_luminance(color: Union[QColor, Tuple[int, int, int]]) -> float:
 
 
 def get_contrasting_text_color(
-    background_color: Union[QColor, Tuple[int, int, int]], threshold: float = 0.5
+    background_color: QColor | tuple[int, int, int], threshold: float = 0.5
 ) -> str:
     """
     Get a contrasting text color (black or white) based on background luminance.
@@ -90,7 +88,7 @@ def get_widget_background_color(widget: QWidget) -> QColor:
 
 def get_glassmorphism_text_color(
     widget: QWidget,
-    glassmorphism_base_color: Tuple[int, int, int] = (255, 255, 255),
+    glassmorphism_base_color: tuple[int, int, int] = (255, 255, 255),
     glassmorphism_opacity: float = 0.2,
 ) -> str:
     """
@@ -121,7 +119,7 @@ def get_glassmorphism_text_color(
 
 def apply_dynamic_text_color(
     widget: QWidget,
-    background_color: Union[QColor, Tuple[int, int, int], None] = None,
+    background_color: QColor | tuple[int, int, int] | None = None,
     threshold: float = 0.5,
 ) -> str:
     """
@@ -163,7 +161,7 @@ class DynamicTextColorMixin:
     """
 
     def update_text_color_for_background(
-        self, background_color: Union[QColor, Tuple[int, int, int], None] = None
+        self, background_color: QColor | tuple[int, int, int] | None = None
     ):
         """Update text color based on background."""
         if hasattr(self, "styleSheet") and hasattr(self, "setStyleSheet"):
@@ -171,7 +169,7 @@ class DynamicTextColorMixin:
 
     def set_glassmorphism_text_color(
         self,
-        glassmorphism_base_color: Tuple[int, int, int] = (255, 255, 255),
+        glassmorphism_base_color: tuple[int, int, int] = (255, 255, 255),
         glassmorphism_opacity: float = 0.2,
     ):
         """Set text color optimized for glassmorphism backgrounds."""

@@ -5,7 +5,7 @@ Handles launching and managing TKA applications.
 
 from pathlib import Path
 import subprocess
-from typing import Dict, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -21,7 +21,7 @@ class ApplicationManager(QObject):
     def __init__(self, app_definitions):
         super().__init__()
         self.app_definitions = app_definitions
-        self.running_processes: Dict[str, subprocess.Popen] = {}
+        self.running_processes: dict[str, subprocess.Popen] = {}
 
     def launch_application(self, app_id: str) -> bool:
         """Launch an application by ID."""

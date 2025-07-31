@@ -9,7 +9,7 @@ resize events with automatic layout recalculation.
 
 from datetime import datetime
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any
 import uuid
 
 from desktop.modern.core.types import Size
@@ -67,7 +67,7 @@ class LayoutEventHandler:
         """Initialize with references to calculator and window size."""
         self._beat_layout_calculator = beat_layout_calculator
         self._main_window_size = main_window_size
-        self._subscription_ids: List[str] = []
+        self._subscription_ids: list[str] = []
 
     def setup_event_subscriptions(self, event_bus):
         """Subscribe to events that require layout recalculation."""
@@ -220,8 +220,8 @@ class LayoutEventHandler:
         # This ensures responsive design works automatically
 
     def _recalculate_beat_frame_layout(
-        self, beat_count: int, container_size: Tuple[int, int], trigger_reason: str
-    ) -> Dict[str, Any]:
+        self, beat_count: int, container_size: tuple[int, int], trigger_reason: str
+    ) -> dict[str, Any]:
         """Recalculate beat frame layout and return result."""
         if beat_count == 0:
             return {"positions": {}, "sizes": {}, "total_size": (0, 0)}

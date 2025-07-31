@@ -7,7 +7,6 @@ for TKA's smart logging system.
 
 import logging
 import os
-from typing import Dict
 
 from .arrow_positioning_logger import get_arrow_positioning_logger
 from .smart_logger import LoggingConfig
@@ -210,7 +209,7 @@ def _configure_root_logger(environment: str) -> None:
         root_logger.setLevel(logging.INFO)
 
 
-def get_logging_performance_report() -> Dict[str, any]:
+def get_logging_performance_report() -> dict[str, any]:
     """Get performance report from all smart loggers."""
     from .arrow_positioning_logger import get_arrow_positioning_logger
     from .smart_logger import get_all_performance_stats

@@ -7,7 +7,7 @@ and component-specific styling into a unified system.
 """
 
 from functools import lru_cache
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from .core.types import ComponentType, StyleVariant
 from .glassmorphism_styles import (
@@ -33,7 +33,7 @@ class DesignSystem:
         self._style_generator = GlassmorphismStyleGenerator()
         self._component_styles = self._initialize_component_styles()
 
-    def _initialize_component_styles(self) -> Dict[ComponentType, Dict[str, Any]]:
+    def _initialize_component_styles(self) -> dict[ComponentType, dict[str, Any]]:
         """Initialize the component style definitions."""
         return {
             ComponentType.BUTTON: self._get_button_styles(),
@@ -86,7 +86,7 @@ class DesignSystem:
 
         return self._convert_style_dict_to_css(final_styles)
 
-    def _convert_style_dict_to_css(self, style_dict: Dict[str, str]) -> str:
+    def _convert_style_dict_to_css(self, style_dict: dict[str, str]) -> str:
         """Convert a dictionary of CSS properties to a CSS string."""
         css_rules = []
         for property_name, value in style_dict.items():
@@ -102,7 +102,7 @@ class DesignSystem:
         return " ".join(css_rules)
 
     # Component Style Definitions
-    def _get_button_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_button_styles(self) -> dict[str, dict[str, str]]:
         """Get button component styles for all variants."""
         return {
             "default": {
@@ -139,7 +139,7 @@ class DesignSystem:
             },
         }
 
-    def _get_tab_button_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_tab_button_styles(self) -> dict[str, dict[str, str]]:
         """Get tab button component styles for all variants."""
         return {
             "default": {
@@ -160,7 +160,7 @@ class DesignSystem:
             },
         }
 
-    def _get_menu_bar_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_menu_bar_styles(self) -> dict[str, dict[str, str]]:
         """Get menu bar component styles."""
         return {
             "default": {
@@ -170,7 +170,7 @@ class DesignSystem:
             },
         }
 
-    def _get_tab_container_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_tab_container_styles(self) -> dict[str, dict[str, str]]:
         """Get tab container component styles."""
         return {
             "default": {
@@ -180,7 +180,7 @@ class DesignSystem:
             },
         }
 
-    def _get_panel_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_panel_styles(self) -> dict[str, dict[str, str]]:
         """Get panel component styles for all variants."""
         return {
             "default": {
@@ -203,7 +203,7 @@ class DesignSystem:
             },
         }
 
-    def _get_dialog_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_dialog_styles(self) -> dict[str, dict[str, str]]:
         """Get dialog component styles."""
         return {
             "default": {
@@ -214,7 +214,7 @@ class DesignSystem:
             },
         }
 
-    def _get_container_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_container_styles(self) -> dict[str, dict[str, str]]:
         """Get container component styles."""
         return {
             "default": {
@@ -229,7 +229,7 @@ class DesignSystem:
             },
         }
 
-    def _get_input_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_input_styles(self) -> dict[str, dict[str, str]]:
         """Get input component styles for all variants."""
         return {
             "default": {
@@ -250,7 +250,7 @@ class DesignSystem:
             },
         }
 
-    def _get_checkbox_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_checkbox_styles(self) -> dict[str, dict[str, str]]:
         """Get checkbox component styles."""
         return {
             "default": {
@@ -262,7 +262,7 @@ class DesignSystem:
             },
         }
 
-    def _get_slider_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_slider_styles(self) -> dict[str, dict[str, str]]:
         """Get slider component styles."""
         return {
             "default": {
@@ -273,7 +273,7 @@ class DesignSystem:
             },
         }
 
-    def _get_label_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_label_styles(self) -> dict[str, dict[str, str]]:
         """Get label component styles for all variants."""
         return {
             "default": {
@@ -298,7 +298,7 @@ class DesignSystem:
             },
         }
 
-    def _get_card_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_card_styles(self) -> dict[str, dict[str, str]]:
         """Get card component styles for all variants."""
         return {
             "default": {
@@ -315,7 +315,7 @@ class DesignSystem:
             },
         }
 
-    def _get_list_item_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_list_item_styles(self) -> dict[str, dict[str, str]]:
         """Get list item component styles."""
         return {
             "default": {
@@ -332,7 +332,7 @@ class DesignSystem:
             },
         }
 
-    def _get_overlay_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_overlay_styles(self) -> dict[str, dict[str, str]]:
         """Get overlay component styles."""
         return {
             "default": {
@@ -340,7 +340,7 @@ class DesignSystem:
             },
         }
 
-    def _get_tooltip_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_tooltip_styles(self) -> dict[str, dict[str, str]]:
         """Get tooltip component styles."""
         return {
             "default": {
@@ -353,7 +353,7 @@ class DesignSystem:
             },
         }
 
-    def _get_sequence_viewer_styles(self) -> Dict[str, Dict[str, str]]:
+    def _get_sequence_viewer_styles(self) -> dict[str, dict[str, str]]:
         """Get sequence viewer component styles."""
         return {
             "default": {

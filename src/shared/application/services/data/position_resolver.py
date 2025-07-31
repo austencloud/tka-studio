@@ -6,7 +6,7 @@ Focused solely on position-related operations and mappings.
 """
 
 import logging
-from typing import Any, List, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.data_builder_services import IPositionResolver
 
@@ -28,7 +28,7 @@ class PositionResolver(IPositionResolver):
     DIAMOND_START_POSITIONS = ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"]
     BOX_START_POSITIONS = ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"]
 
-    def parse_position_key(self, position_key: str) -> Optional[Tuple[str, str]]:
+    def parse_position_key(self, position_key: str) -> Optional[tuple[str, str]]:
         """
         Parse a position key into start and end positions.
 
@@ -66,7 +66,7 @@ class PositionResolver(IPositionResolver):
             logger.error(f"Error parsing position key {position_key}: {e}")
             return None
 
-    def get_start_positions(self, grid_mode: str) -> List[str]:
+    def get_start_positions(self, grid_mode: str) -> list[str]:
         """
         Get available start position keys for a grid mode.
 
@@ -96,7 +96,7 @@ class PositionResolver(IPositionResolver):
             }
         return None
 
-    def get_valid_positions(self) -> List[str]:
+    def get_valid_positions(self) -> list[str]:
         """Get list of valid position keys (interface implementation)."""
         # Return all diamond positions as default
         return self.get_start_positions("diamond")

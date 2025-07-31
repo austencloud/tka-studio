@@ -9,7 +9,6 @@ import json
 import logging
 from pathlib import Path
 import time
-from typing import Dict, List
 
 from PyQt6.QtWidgets import QApplication
 
@@ -43,7 +42,7 @@ class SimpleUITester:
         self.workbench = None
         self.graph_editor = None
 
-    def _load_real_sequence_data(self) -> List[Dict]:
+    def _load_real_sequence_data(self) -> list[dict]:
         """Load the real current_sequence.json data."""
         try:
             if self.current_sequence_path.exists():
@@ -58,7 +57,7 @@ class SimpleUITester:
             print(f"❌ Error loading sequence data: {e}")
             return self._create_minimal_sequence()
 
-    def _create_minimal_sequence(self) -> List[Dict]:
+    def _create_minimal_sequence(self) -> list[dict]:
         """Create minimal sequence data if file not found."""
         return [
             {"word": "TEST", "author": "tester", "level": 1, "prop_type": "staff"},

@@ -1,6 +1,6 @@
 import json
 import os
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from main_window.main_widget.sequence_workbench.workbench_button import WorkbenchButton
 from PyQt6.QtCore import Qt
@@ -173,7 +173,7 @@ class SequenceWorkbenchButtonPanel(QFrame):
         )
 
     def _create_button(
-        self, icon_path: Union[str, None], callback, tooltip: str
+        self, icon_path: str | None, callback, tooltip: str
     ) -> WorkbenchButton:
         # Allow None for icon_path
         button = WorkbenchButton(icon_path, tooltip, callback)

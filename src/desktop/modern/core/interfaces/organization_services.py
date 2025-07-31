@@ -8,7 +8,6 @@ code organization, following TKA's clean architecture principles.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Union
 
 
 @dataclass
@@ -20,8 +19,8 @@ class ImportAnalysis:
     relative_imports: int
     absolute_imports: int
     src_prefix_imports: int
-    inconsistent_imports: List[str]
-    recommendations: List[str]
+    inconsistent_imports: list[str]
+    recommendations: list[str]
     compliance_score: float
 
 
@@ -34,9 +33,9 @@ class ImportStandardizationReport:
     compliant_files: int
     non_compliant_files: int
     average_compliance_score: float
-    common_violations: Dict[str, int]
-    files_needing_fixes: List[Path]
-    standardization_recommendations: List[str]
+    common_violations: dict[str, int]
+    files_needing_fixes: list[Path]
+    standardization_recommendations: list[str]
 
 
 @dataclass
@@ -48,8 +47,8 @@ class ComponentHierarchyAnalysis:
     class_count: int
     method_count: int
     complexity_score: float
-    responsibilities: List[str]
-    recommendations: List[str]
+    responsibilities: list[str]
+    recommendations: list[str]
 
 
 class IImportAnalysisService(ABC):
@@ -94,9 +93,7 @@ class IImportStandardizationService(ABC):
         """
 
     @abstractmethod
-    def standardize_codebase(
-        self, dry_run: bool = True
-    ) -> Dict[str, Union[int, float]]:
+    def standardize_codebase(self, dry_run: bool = True) -> dict[str, int | float]:
         """
         Standardize imports across the entire codebase.
 
@@ -112,7 +109,7 @@ class IComponentHierarchyAnalysisService(ABC):
     """Interface for analyzing component hierarchy structure."""
 
     @abstractmethod
-    def analyze_component_hierarchy(self) -> List[ComponentHierarchyAnalysis]:
+    def analyze_component_hierarchy(self) -> list[ComponentHierarchyAnalysis]:
         """
         Analyze component hierarchy across presentation layer.
 
@@ -121,7 +118,7 @@ class IComponentHierarchyAnalysisService(ABC):
         """
 
     @abstractmethod
-    def generate_optimization_recommendations(self) -> List[str]:
+    def generate_optimization_recommendations(self) -> list[str]:
         """
         Generate optimization recommendations for component hierarchy.
 
@@ -156,7 +153,7 @@ class IFileSystemService(ABC):
         """
 
     @abstractmethod
-    def find_python_files(self, root_path: Path) -> List[Path]:
+    def find_python_files(self, root_path: Path) -> list[Path]:
         """
         Find all Python files in a directory tree.
 

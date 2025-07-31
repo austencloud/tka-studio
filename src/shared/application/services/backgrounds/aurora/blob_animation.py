@@ -1,5 +1,4 @@
 import random
-from typing import List
 
 from ..shared.animation_types import BlobState, Position2D, Velocity2D
 
@@ -8,7 +7,7 @@ class AuroraBlobAnimation:
     """Pure business logic for aurora blob animation - extracted from BlobManager"""
 
     def __init__(self, num_blobs: int = 3):
-        self.blobs: List[BlobState] = []
+        self.blobs: list[BlobState] = []
         self._create_blobs(num_blobs)
 
     def _create_blobs(self, num_blobs: int) -> None:
@@ -51,7 +50,7 @@ class AuroraBlobAnimation:
             if blob.opacity < 0.1 or blob.opacity > 0.5:
                 blob.opacity_delta *= -1
 
-    def get_blob_states(self) -> List[BlobState]:
+    def get_blob_states(self) -> list[BlobState]:
         """Get current blob states for rendering"""
         return self.blobs.copy()
 

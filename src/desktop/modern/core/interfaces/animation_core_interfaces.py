@@ -6,7 +6,7 @@ These interfaces define the canonical animation system that can be adapted to an
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 
 class EasingType(Enum):
@@ -49,7 +49,7 @@ class AnimationTarget:
 
     id: str
     element_type: str
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
 
     def __hash__(self):
         return hash(self.id)
@@ -79,7 +79,7 @@ class AnimationEvent:
     state: AnimationState
     progress: float = 0.0
     timestamp: float = 0.0
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
 
 class IAnimationCommand(ABC):
@@ -130,8 +130,8 @@ class IAnimationEngine(ABC):
 
     @abstractmethod
     async def animate_targets(
-        self, targets: List[AnimationTarget], config: AnimationConfig
-    ) -> List[str]:
+        self, targets: list[AnimationTarget], config: AnimationConfig
+    ) -> list[str]:
         """Animate multiple targets. Returns list of animation IDs."""
 
     @abstractmethod
@@ -270,11 +270,11 @@ class TransitionCommand(IAnimationCommand):
     """Command to transition between two states."""
 
     target: AnimationTarget
-    from_state: Dict[str, Any]
-    to_state: Dict[str, Any]
+    from_state: dict[str, Any]
+    to_state: dict[str, Any]
     config: AnimationConfig
     engine: IAnimationEngine
-    _animation_ids: List[str] = None
+    _animation_ids: list[str] = None
 
     @property
     def command_id(self) -> str:
@@ -353,16 +353,16 @@ class IAnimationOrchestrator(ABC):
     @abstractmethod
     async def fade_targets(
         self,
-        targets: List[Any],
+        targets: list[Any],
         fade_in: bool,
         config: Optional[AnimationConfig] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """Fade multiple targets."""
 
     @abstractmethod
     async def transition_targets(
         self,
-        targets: List[Any],
+        targets: list[Any],
         update_callback: Callable[[], None],
         config: Optional[AnimationConfig] = None,
     ) -> None:

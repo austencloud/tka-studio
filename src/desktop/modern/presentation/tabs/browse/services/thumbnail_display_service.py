@@ -6,7 +6,7 @@ Manages the coordination between thumbnail factory and grid layout positioning.
 """
 
 import logging
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Optional
 
 from PyQt6.QtWidgets import QApplication, QWidget
 
@@ -62,7 +62,7 @@ class ThumbnailDisplayService:
         self.thumbnail_width = width
 
     def display_sequences_with_stable_layout(
-        self, sequences: List[SequenceData], sort_method: str
+        self, sequences: list[SequenceData], sort_method: str
     ) -> None:
         """
         Display sequences with stable layout (all at once).
@@ -85,7 +85,7 @@ class ThumbnailDisplayService:
         self._display_sections(sections, sort_method)
 
     def add_sequences_progressively(
-        self, chunk_sequences: List[SequenceData], sort_method: str
+        self, chunk_sequences: list[SequenceData], sort_method: str
     ) -> None:
         """
         Add sequences progressively to the layout.
@@ -139,7 +139,7 @@ class ThumbnailDisplayService:
                 QApplication.processEvents()
 
     def _display_sections(
-        self, sections: Dict[str, List[SequenceData]], sort_method: str
+        self, sections: dict[str, list[SequenceData]], sort_method: str
     ) -> None:
         """Display all sections in the grid."""
         current_row = 0
@@ -181,8 +181,8 @@ class ThumbnailDisplayService:
         return thumbnail
 
     def _group_sequences_by_section(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> Dict[str, List[SequenceData]]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> dict[str, list[SequenceData]]:
         """
         Group sequences by section based on sort method.
 
@@ -193,7 +193,7 @@ class ThumbnailDisplayService:
         Returns:
             Dictionary mapping section names to sequence lists
         """
-        sections: Dict[str, List[SequenceData]] = {}
+        sections: dict[str, list[SequenceData]] = {}
 
         for sequence in sequences:
             section_name = self._get_section_name(sequence, sort_method)

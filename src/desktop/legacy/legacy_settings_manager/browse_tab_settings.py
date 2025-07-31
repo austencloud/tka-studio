@@ -1,5 +1,5 @@
 import json
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from main_window.main_widget.browse_tab.browse_tab_filter_controller import datetime
 
@@ -38,7 +38,7 @@ class BrowseTabSettings:
     def set_sort_method(self, sort_method: str) -> None:
         self.settings.setValue("browse/sort_method", sort_method)
 
-    def get_current_filter(self) -> Union[str, dict, datetime]:
+    def get_current_filter(self) -> str | dict | datetime:
         json_string = self.settings.value("browse/current_filter", "")
         if not json_string:
             return {}
@@ -64,7 +64,7 @@ class BrowseTabSettings:
                 return data
         return data
 
-    def set_current_filter(self, filter_criteria: Union[str, dict, datetime]) -> None:
+    def set_current_filter(self, filter_criteria: str | dict | datetime) -> None:
         def default_serializer(obj):
             if isinstance(obj, datetime):
                 return {"__datetime__": obj.isoformat()}

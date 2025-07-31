@@ -1,7 +1,7 @@
 # src/main_window/main_widget/sequence_card_tab/export/page_image_data_extractor.py
 import logging
 import os
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from PyQt6.QtWidgets import QGridLayout, QLabel, QWidget
@@ -27,7 +27,7 @@ class PageImageDataExtractor:
         self.logger = logging.getLogger(__name__)
         self.metadata_extractor = MetaDataExtractor()
 
-    def extract_sequence_data_from_page(self, page: QWidget) -> List[Dict[str, Any]]:
+    def extract_sequence_data_from_page(self, page: QWidget) -> list[dict[str, Any]]:
         """
         Extract sequence data from a page widget.
 
@@ -73,7 +73,7 @@ class PageImageDataExtractor:
         self.logger.debug(f"Total sequence items found: {len(sequence_items)}")
         return sequence_items
 
-    def _extract_sequence_data_from_layout(self, page: QWidget) -> List[Dict[str, Any]]:
+    def _extract_sequence_data_from_layout(self, page: QWidget) -> list[dict[str, Any]]:
         """
         Extract sequence data from the page's layout.
 
@@ -143,7 +143,7 @@ class PageImageDataExtractor:
 
     def _find_widget_grid_position(
         self, layout: QGridLayout, widget: QWidget
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """
         Find the grid position (row, column) of a widget in a QGridLayout.
 
@@ -175,7 +175,7 @@ class PageImageDataExtractor:
 
     def _extract_sequence_data_recursively(
         self, parent_widget: QWidget
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Recursively extract sequence data from all child widgets.
 
@@ -255,7 +255,7 @@ class PageImageDataExtractor:
 
     def _extract_sequence_data_from_widget(
         self, widget: QWidget
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Optional[dict[str, Any]]:
         """
         Extract sequence data from a widget.
 
@@ -360,7 +360,7 @@ class PageImageDataExtractor:
         return None
 
     def _extract_word_from_path_or_metadata(
-        self, image_path: str, metadata: Dict[str, Any]
+        self, image_path: str, metadata: dict[str, Any]
     ) -> str:
         """
         Extract the word from the image path or metadata.
@@ -400,7 +400,7 @@ class PageImageDataExtractor:
 
         return "unknown"
 
-    def _find_original_image(self, sequence_data: Dict[str, Any]) -> Optional[str]:
+    def _find_original_image(self, sequence_data: dict[str, Any]) -> Optional[str]:
         """
         Find the original high-resolution image for a sequence.
 

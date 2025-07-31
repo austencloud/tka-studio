@@ -35,7 +35,6 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import List
 
 
 @dataclass
@@ -48,7 +47,7 @@ class TestResult:
     failed: int
     skipped: int
     execution_time: float
-    errors: List[str]
+    errors: list[str]
     output: str
 
 
@@ -98,7 +97,7 @@ class TKATestDiscovery:
             "other": [],  # Default category
         }
 
-    def discover_all_tests(self) -> List[TestFile]:
+    def discover_all_tests(self) -> list[TestFile]:
         """
         Discover ALL test files across the entire codebase.
 
@@ -115,7 +114,7 @@ class TKATestDiscovery:
         unique_tests = self._deduplicate_tests(discovered_tests)
         return sorted(unique_tests, key=lambda t: (t.priority, t.relative_path))
 
-    def _scan_directory(self, directory: Path) -> List[TestFile]:
+    def _scan_directory(self, directory: Path) -> list[TestFile]:
         """Recursively scan directory for test files."""
         tests = []
 
@@ -234,7 +233,7 @@ class TKATestDiscovery:
 
         return max(1, base_priority)
 
-    def _deduplicate_tests(self, tests: List[TestFile]) -> List[TestFile]:
+    def _deduplicate_tests(self, tests: list[TestFile]) -> list[TestFile]:
         """Remove duplicate test files based on path."""
         seen_paths = set()
         unique_tests = []
@@ -287,7 +286,7 @@ class TKATestExecutor:
             os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
     def run_all_tests(
-        self, tests: List[TestFile], parallel: bool = False, fast_only: bool = False
+        self, tests: list[TestFile], parallel: bool = False, fast_only: bool = False
     ) -> TestResult:
         """
         Execute all discovered tests with optimizations.
@@ -313,7 +312,7 @@ class TKATestExecutor:
         result.execution_time = time.time() - start_time
         return result
 
-    def _run_sequential_tests(self, tests: List[TestFile]) -> TestResult:
+    def _run_sequential_tests(self, tests: list[TestFile]) -> TestResult:
         """Run tests sequentially using pytest."""
         if not tests:
             return TestResult(
@@ -433,7 +432,7 @@ class TKATestExecutor:
                 output="",
             )
 
-    def _run_parallel_tests(self, tests: List[TestFile]) -> TestResult:
+    def _run_parallel_tests(self, tests: list[TestFile]) -> TestResult:
         """Run tests in parallel for faster execution."""
         # Group tests by category to avoid conflicts
         test_groups = self._group_tests_for_parallel(tests)
@@ -467,7 +466,7 @@ class TKATestExecutor:
 
         return self._merge_results(all_results)
 
-    def _group_tests_for_parallel(self, tests: List[TestFile]) -> List[List[TestFile]]:
+    def _group_tests_for_parallel(self, tests: list[TestFile]) -> list[list[TestFile]]:
         """Group tests to avoid conflicts in parallel execution."""
         # Group by category to prevent Qt application conflicts
         groups = {}
@@ -479,7 +478,7 @@ class TKATestExecutor:
 
         return list(groups.values())
 
-    def _run_test_group(self, test_group: List[TestFile]) -> TestResult:
+    def _run_test_group(self, test_group: list[TestFile]) -> TestResult:
         """Run a group of tests sequentially."""
         return self._run_sequential_tests(test_group)
 
@@ -514,7 +513,7 @@ class TKATestExecutor:
             output=output,
         )
 
-    def _merge_results(self, results: List[TestResult]) -> TestResult:
+    def _merge_results(self, results: list[TestResult]) -> TestResult:
         """Merge multiple test results into one."""
         total_tests = sum(r.total_tests for r in results)
         passed = sum(r.passed for r in results)

@@ -8,10 +8,9 @@ Removes duplicates and debug scaffolding while preserving any unique valuable te
 """
 
 from pathlib import Path
-from typing import Dict, List
 
 
-def analyze_root_tests() -> Dict[str, str]:
+def analyze_root_tests() -> dict[str, str]:
     """Analyze root test files and categorize them."""
 
     # Files that were migrated and can be safely deleted (duplicates)
@@ -51,7 +50,7 @@ def analyze_root_tests() -> Dict[str, str]:
     return categorization
 
 
-def cleanup_root_tests(dry_run: bool = False) -> Dict[str, List[str]]:
+def cleanup_root_tests(dry_run: bool = False) -> dict[str, list[str]]:
     """Clean up root test files."""
 
     categorization = analyze_root_tests()

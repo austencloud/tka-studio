@@ -14,7 +14,7 @@ import logging
 import os
 from threading import Lock
 import time
-from typing import Any, Callable, Dict, Generic, List, Optional, Set, TypeVar
+from typing import Any, Callable, Generic, Optional, TypeVar
 import weakref
 
 # Import Qt modules with compatibility
@@ -61,11 +61,11 @@ class LeakReport:
     """Memory leak detection report."""
 
     detection_time: float
-    suspected_leaks: List[Dict[str, Any]]
+    suspected_leaks: list[dict[str, Any]]
     memory_growth_mb: float
     object_growth_count: int
     leak_severity: str  # 'low', 'medium', 'high', 'critical'
-    recommendations: List[str]
+    recommendations: list[str]
 
 
 class SmartQtPointer(Generic[T]):
@@ -87,7 +87,7 @@ class SmartQtPointer(Generic[T]):
         self._obj_ref = weakref.ref(obj, self._on_object_deleted)
         self._obj_id = id(obj)
         self._auto_delete = auto_delete
-        self._cleanup_handlers: List[Callable] = []
+        self._cleanup_handlers: list[Callable] = []
         self._is_deleted = False
 
         # Register with memory detector
@@ -173,9 +173,9 @@ class QtMemoryLeakDetector:
             monitoring_interval: Interval in seconds between memory checks
         """
         self.monitoring_interval = monitoring_interval
-        self._snapshots: List[MemorySnapshot] = []
-        self._smart_pointers: Set[SmartQtPointer] = set()
-        self._tracked_objects: Dict[int, weakref.ReferenceType] = {}
+        self._snapshots: list[MemorySnapshot] = []
+        self._smart_pointers: set[SmartQtPointer] = set()
+        self._tracked_objects: dict[int, weakref.ReferenceType] = {}
         self._lock = Lock()
         self._monitoring_active = False
         self._timer: Optional[QTimer] = None
@@ -399,7 +399,7 @@ class QtMemoryLeakDetector:
             logger.error(f"Error analyzing for leaks: {e}")
             return None
 
-    def get_memory_report(self) -> Dict[str, Any]:
+    def get_memory_report(self) -> dict[str, Any]:
         """Get comprehensive memory usage report."""
         with self._lock:
             # Simplified report to avoid hanging issues

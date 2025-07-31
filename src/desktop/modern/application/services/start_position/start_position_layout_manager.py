@@ -6,7 +6,6 @@ Contains Qt-specific layout manipulation logic.
 """
 
 import logging
-from typing import List
 
 from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
 
@@ -44,7 +43,7 @@ class StartPositionLayoutManager:
     def arrange_positions_in_layout(
         self,
         grid_layout: QGridLayout,
-        position_widgets: List[QWidget],
+        position_widgets: list[QWidget],
         layout_mode: LayoutMode,
     ) -> bool:
         """
@@ -79,7 +78,7 @@ class StartPositionLayoutManager:
             return False
 
     def _arrange_horizontal_layout(
-        self, grid_layout: QGridLayout, position_widgets: List[QWidget], config: dict
+        self, grid_layout: QGridLayout, position_widgets: list[QWidget], config: dict
     ) -> bool:
         """
         Arrange positions horizontally in a single row.
@@ -116,7 +115,7 @@ class StartPositionLayoutManager:
             return False
 
     def _arrange_grid_layout(
-        self, grid_layout: QGridLayout, position_widgets: List[QWidget], config: dict
+        self, grid_layout: QGridLayout, position_widgets: list[QWidget], config: dict
     ) -> bool:
         """
         Arrange positions in a grid layout.

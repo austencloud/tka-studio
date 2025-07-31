@@ -20,7 +20,7 @@ Architecture:
 from abc import abstractmethod
 import datetime
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtGui import QPalette
@@ -52,7 +52,7 @@ class BaseTheme(QObject):
         self._is_dark_mode = True  # TKA Launcher is primarily dark
 
     @abstractmethod
-    def generate_palette(self) -> Dict[str, Any]:
+    def generate_palette(self) -> dict[str, Any]:
         """Generate the theme color palette."""
 
     def apply_theme(self):
@@ -62,7 +62,7 @@ class BaseTheme(QObject):
         self.theme_changed.emit(palette)
         logger.info(f"🎨 Applied theme: {self.name}")
 
-    def get_current_palette(self) -> Dict[str, Any]:
+    def get_current_palette(self) -> dict[str, Any]:
         """Get the current theme palette."""
         return self._current_palette.copy()
 
@@ -148,7 +148,7 @@ class TimeBasedTheme(BaseTheme):
         self._update_timer.timeout.connect(self._update_time_based_colors)
         self._update_timer.start(60000)  # Update every minute
 
-    def generate_palette(self) -> Dict[str, Any]:
+    def generate_palette(self) -> dict[str, Any]:
         """Generate time-based color palette."""
         current_hour = datetime.datetime.now().hour
 
@@ -182,8 +182,8 @@ class TimeBasedTheme(BaseTheme):
         }
 
     def _apply_temperature_shift(
-        self, palette: Dict[str, str], shift: float
-    ) -> Dict[str, str]:
+        self, palette: dict[str, str], shift: float
+    ) -> dict[str, str]:
         """Apply color temperature shift to palette."""
         adjusted = {}
 
@@ -230,7 +230,7 @@ class AccessibilityTheme(BaseTheme):
         self.high_contrast = high_contrast
         self.reduced_motion = reduced_motion
 
-    def generate_palette(self) -> Dict[str, Any]:
+    def generate_palette(self) -> dict[str, Any]:
         """Generate accessibility-compliant palette."""
         base_tokens = DesignTokens()
 
@@ -339,7 +339,7 @@ class SmartThemeManager(QObject):
         """Get the current active theme."""
         return self.current_theme
 
-    def get_available_themes(self) -> Dict[str, BaseTheme]:
+    def get_available_themes(self) -> dict[str, BaseTheme]:
         """Get all available themes."""
         return self.available_themes.copy()
 

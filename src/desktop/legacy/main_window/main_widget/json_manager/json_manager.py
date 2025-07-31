@@ -1,5 +1,5 @@
 import logging
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from main_window.main_widget.json_manager.json_act_saver import JsonActSaver
 from main_window.main_widget.json_manager.json_sequence_updater.json_sequence_updater import (
@@ -38,11 +38,11 @@ class JsonManager:  # IJsonManager is a Protocol, no need to inherit
         self.act_saver.save_act(act_data)
 
     # IJsonManager interface implementation
-    def save_sequence(self, sequence_data: List[Dict[str, Any]]) -> bool:
+    def save_sequence(self, sequence_data: list[dict[str, Any]]) -> bool:
         """Save the current sequence to the default location."""
         return self.loader_saver.save_sequence(sequence_data)
 
-    def load_sequence(self, file_path: Optional[str] = None) -> List[Dict[str, Any]]:
+    def load_sequence(self, file_path: Optional[str] = None) -> list[dict[str, Any]]:
         """Load a sequence from the specified file path or the default location."""
         return self.loader_saver.load_sequence(file_path)
 

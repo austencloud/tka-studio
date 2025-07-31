@@ -10,7 +10,6 @@ from dataclasses import dataclass
 import os
 from pathlib import Path
 import re
-from typing import Dict, List, Set
 
 
 @dataclass
@@ -20,8 +19,8 @@ class ServiceInfo:
     name: str
     file_path: str
     category: str
-    methods: List[str]
-    dependencies: List[str]
+    methods: list[str]
+    dependencies: list[str]
     priority: str = "Unknown"
     has_interface: bool = False
     interface_file: str = ""
@@ -32,8 +31,8 @@ class ServiceAnalyzer:
 
     def __init__(self, src_path: str):
         self.src_path = Path(src_path)
-        self.services: Dict[str, ServiceInfo] = {}
-        self.existing_interfaces: Set[str] = set()
+        self.services: dict[str, ServiceInfo] = {}
+        self.existing_interfaces: set[str] = set()
         self.service_categories = {
             "settings": ["settings"],
             "workbench": ["workbench"],
@@ -54,7 +53,7 @@ class ServiceAnalyzer:
             "core": ["core"],
         }
 
-    def analyze_all_services(self) -> Dict[str, List[ServiceInfo]]:
+    def analyze_all_services(self) -> dict[str, list[ServiceInfo]]:
         """Analyze all services and categorize them."""
         # First, identify existing interfaces
         self._identify_existing_interfaces()
@@ -195,7 +194,7 @@ class ServiceAnalyzer:
         return "misc"
 
     def _determine_priority(
-        self, class_name: str, category: str, methods: List[str]
+        self, class_name: str, category: str, methods: list[str]
     ) -> str:
         """Determine the priority level for interfacing this service."""
         # High priority services
@@ -262,7 +261,7 @@ class ServiceAnalyzer:
         else:
             return "MEDIUM"  # Default to medium
 
-    def _extract_dependencies(self, content: str) -> List[str]:
+    def _extract_dependencies(self, content: str) -> list[str]:
         """Extract dependencies from service content."""
         dependencies = []
 
@@ -275,7 +274,7 @@ class ServiceAnalyzer:
 
         return dependencies
 
-    def _categorize_services(self) -> Dict[str, List[ServiceInfo]]:
+    def _categorize_services(self) -> dict[str, list[ServiceInfo]]:
         """Categorize services by interface status and priority."""
         result = {
             "needs_interface_high": [],

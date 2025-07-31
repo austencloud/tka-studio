@@ -6,7 +6,7 @@ Enhanced with state persistence and smart initialization.
 from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -20,7 +20,7 @@ class LauncherSettings:
     window_x: Optional[int] = None
     window_y: Optional[int] = None
     target_screen_index: int = 0  # Which screen to use (0 = primary)
-    last_window_geometry: Optional[Dict[str, int]] = None  # x, y, width, height
+    last_window_geometry: Optional[dict[str, int]] = None  # x, y, width, height
 
     # Docked Mode Settings
     dock_position: str = "left"  # "left", "right", "top", "bottom"
@@ -29,7 +29,7 @@ class LauncherSettings:
     dock_offset_ratio: float = 0.0  # Position ratio along screen edge (0 = top/left)
     dock_auto_hide: bool = False
     dock_icon_size: int = 48
-    dock_last_geometry: Optional[Dict[str, int]] = None  # Store last dock position
+    dock_last_geometry: Optional[dict[str, int]] = None  # Store last dock position
 
     # Behavior Settings
     auto_start_docked: bool = True  # Start in dock mode by default
@@ -102,7 +102,7 @@ class SettingsManager:
         self.save_settings()
 
     def save_window_state(
-        self, geometry: Dict[str, int], mode: str, screen_index: int = 0
+        self, geometry: dict[str, int], mode: str, screen_index: int = 0
     ):
         """Save current window state for restoration."""
         if mode == "window":
@@ -119,7 +119,7 @@ class SettingsManager:
         self.set("target_screen_index", screen_index)
         self.save_settings()
 
-    def get_window_state(self) -> Dict[str, Any]:
+    def get_window_state(self) -> dict[str, Any]:
         """Get saved window state for restoration."""
         return {
             "mode": self.get("launch_mode", "docked"),

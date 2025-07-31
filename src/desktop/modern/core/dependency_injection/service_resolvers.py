@@ -10,7 +10,7 @@ Contains all resolver implementations using the Strategy Pattern:
 from abc import ABC, abstractmethod
 import inspect
 import logging
-from typing import Any, Dict, Type, get_type_hints
+from typing import Any, get_type_hints
 
 logger = logging.getLogger(__name__)
 
@@ -19,22 +19,22 @@ class IServiceResolver(ABC):
     """Abstract base class for service resolvers using Strategy Pattern."""
 
     @abstractmethod
-    def can_resolve(self, service_type: Type, registry: Any) -> bool:
+    def can_resolve(self, service_type: type, registry: Any) -> bool:
         """Check if this resolver can handle the given service type."""
 
     @abstractmethod
-    def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
+    def resolve(self, service_type: type, registry: Any, container: Any) -> Any:
         """Resolve the service instance."""
 
 
 class SingletonResolver(IServiceResolver):
     """Resolver for singleton instances."""
 
-    def can_resolve(self, service_type: Type, registry: Any) -> bool:
+    def can_resolve(self, service_type: type, registry: Any) -> bool:
         """Check if singleton instance exists."""
         return registry.has_singleton_instance(service_type)
 
-    def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
+    def resolve(self, service_type: type, registry: Any, container: Any) -> Any:
         """Return existing singleton instance."""
         return registry.get_singleton_instance(service_type)
 
@@ -43,15 +43,15 @@ class ConstructorResolver(IServiceResolver):
     """Resolver for constructor-based dependency injection with signature caching."""
 
     # Class-level caches for constructor signatures and type hints
-    _signature_cache: Dict[Type, inspect.Signature] = {}
-    _type_hints_cache: Dict[Type, Dict[str, Type]] = {}
-    _cache_stats: Dict[str, int] = {"hits": 0, "misses": 0, "total_cached": 0}
+    _signature_cache: dict[type, inspect.Signature] = {}
+    _type_hints_cache: dict[type, dict[str, type]] = {}
+    _cache_stats: dict[str, int] = {"hits": 0, "misses": 0, "total_cached": 0}
 
-    def can_resolve(self, service_type: Type, registry: Any) -> bool:
+    def can_resolve(self, service_type: type, registry: Any) -> bool:
         """Check if service is registered for constructor injection."""
         return registry.has_service_registration(service_type)
 
-    def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
+    def resolve(self, service_type: type, registry: Any, container: Any) -> Any:
         """Resolve singleton service with constructor injection."""
         implementation = registry.get_service_implementation(service_type)
         instance = self._create_with_constructor_injection(implementation, container)
@@ -59,7 +59,7 @@ class ConstructorResolver(IServiceResolver):
         return instance
 
     def _create_with_constructor_injection(
-        self, implementation_class: Type, container: Any
+        self, implementation_class: type, container: Any
     ) -> Any:
         """Create instance with constructor injection using cached signatures."""
         # Use cached signature and type hints for performance
@@ -90,7 +90,7 @@ class ConstructorResolver(IServiceResolver):
 
         return implementation_class(**dependencies)
 
-    def _get_cached_signature(self, implementation_class: Type) -> inspect.Signature:
+    def _get_cached_signature(self, implementation_class: type) -> inspect.Signature:
         """Get cached constructor signature for the implementation class."""
         if implementation_class not in self._signature_cache:
             self._cache_stats["misses"] += 1
@@ -107,7 +107,7 @@ class ConstructorResolver(IServiceResolver):
 
         return self._signature_cache[implementation_class]
 
-    def _get_cached_type_hints(self, implementation_class: Type) -> Dict[str, Type]:
+    def _get_cached_type_hints(self, implementation_class: type) -> dict[str, type]:
         """Get cached type hints for the implementation class."""
         if implementation_class not in self._type_hints_cache:
             logger.debug(f"Cache miss for type hints: {implementation_class.__name__}")
@@ -122,7 +122,7 @@ class ConstructorResolver(IServiceResolver):
         return self._type_hints_cache[implementation_class]
 
     @classmethod
-    def get_cache_stats(cls) -> Dict[str, int]:
+    def get_cache_stats(cls) -> dict[str, int]:
         """Get current cache statistics for monitoring."""
         return cls._cache_stats.copy()
 
@@ -151,7 +151,7 @@ class ConstructorResolver(IServiceResolver):
             f"type hints cached: {len(cls._type_hints_cache)}"
         )
 
-    def _is_primitive_type(self, param_type: Type) -> bool:
+    def _is_primitive_type(self, param_type: type) -> bool:
         """Check if a type is a primitive type that should not be resolved as a dependency."""
         from datetime import datetime, timedelta
         from pathlib import Path
@@ -200,11 +200,11 @@ class ConstructorResolver(IServiceResolver):
 class FactoryResolver(IServiceResolver):
     """Resolver for factory-based service creation."""
 
-    def can_resolve(self, service_type: Type, registry: Any) -> bool:
+    def can_resolve(self, service_type: type, registry: Any) -> bool:
         """Check if service has a factory registration."""
         return registry.has_factory_registration(service_type)
 
-    def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
+    def resolve(self, service_type: type, registry: Any, container: Any) -> Any:
         """Resolve service using factory or transient creation."""
         factory_or_implementation = registry.get_factory_or_implementation(service_type)
 
@@ -229,7 +229,7 @@ class FactoryResolver(IServiceResolver):
 class LazyProxy:
     """Lazy loading proxy for expensive dependencies."""
 
-    def __init__(self, service_type: Type, container: Any):
+    def __init__(self, service_type: type, container: Any):
         self._service_type = service_type
         self._container = container
         self._instance = None
@@ -267,7 +267,7 @@ class ResolverChain:
         """Add a custom resolver to the chain."""
         self._resolvers.append(resolver)
 
-    def resolve(self, service_type: Type, registry: Any, container: Any) -> Any:
+    def resolve(self, service_type: type, registry: Any, container: Any) -> Any:
         """Attempt resolution through the resolver chain."""
         for resolver in self._resolvers:
             if resolver.can_resolve(service_type, registry):
@@ -276,7 +276,7 @@ class ResolverChain:
         # No resolver could handle this service type
         return None
 
-    def can_resolve(self, service_type: Type, registry: Any) -> bool:
+    def can_resolve(self, service_type: type, registry: Any) -> bool:
         """Check if any resolver in the chain can handle the service type."""
         return any(
             resolver.can_resolve(service_type, registry) for resolver in self._resolvers

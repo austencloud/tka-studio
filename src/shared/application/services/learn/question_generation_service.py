@@ -8,7 +8,7 @@ Handles different question formats and answer generation.
 from datetime import datetime
 import logging
 import random
-from typing import Any, Dict, List, Set
+from typing import Any
 
 from desktop.modern.core.interfaces.learn_services import (
     IQuestionGenerationService,
@@ -44,8 +44,8 @@ class QuestionGenerationService(IQuestionGenerationService):
         self.pictograph_data_service = pictograph_data_service
 
         # Track previous questions to avoid repetition
-        self._previous_correct_letters: Dict[str, Any] = {}
-        self._previous_pictographs: Dict[str, Set[str]] = {}
+        self._previous_correct_letters: dict[str, Any] = {}
+        self._previous_pictographs: dict[str, set[str]] = {}
 
         # Debug: Check what type of pictograph service we got
         service_type = type(self.pictograph_data_service).__name__
@@ -237,7 +237,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to generate valid next pictograph question: {e}")
             raise
 
-    def get_pictograph_dataset(self) -> Dict[Any, List[Dict]]:
+    def get_pictograph_dataset(self) -> dict[Any, list[dict]]:
         """
         Get pictograph dataset for question generation.
 
@@ -268,7 +268,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to validate question: {e}")
             return False
 
-    def _generate_correct_letter(self, session_id: str, dataset: Dict) -> Any:
+    def _generate_correct_letter(self, session_id: str, dataset: dict) -> Any:
         """Generate correct letter avoiding previous."""
         try:
             letters = list(dataset.keys())
@@ -289,7 +289,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             # Fallback to first available letter
             return list(dataset.keys())[0] if dataset else None
 
-    def _generate_wrong_letters(self, correct_letter: Any, dataset: Dict) -> List[str]:
+    def _generate_wrong_letters(self, correct_letter: Any, dataset: dict) -> list[str]:
         """Generate 3 wrong letter answers."""
         try:
             # Handle both string keys (mock service) and enum keys (real service)
@@ -315,8 +315,8 @@ class QuestionGenerationService(IQuestionGenerationService):
             return []
 
     def _generate_wrong_pictographs(
-        self, correct_letter: Any, dataset: Dict
-    ) -> List[Dict]:
+        self, correct_letter: Any, dataset: dict
+    ) -> list[dict]:
         """Generate 3 wrong pictographs with different letters."""
         try:
             available_letters = [
@@ -336,7 +336,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to generate wrong pictographs: {e}")
             return []
 
-    def _generate_initial_pictograph(self, dataset: Dict) -> Dict:
+    def _generate_initial_pictograph(self, dataset: dict) -> dict:
         """Generate initial pictograph for next pictograph questions."""
         try:
             # Find pictographs where start_pos == end_pos
@@ -361,8 +361,8 @@ class QuestionGenerationService(IQuestionGenerationService):
             raise
 
     def _generate_correct_next_pictograph(
-        self, initial_pictograph: Dict, dataset: Dict
-    ) -> Dict:
+        self, initial_pictograph: dict, dataset: dict
+    ) -> dict:
         """Find valid next pictograph that can follow initial."""
         try:
             end_pos = self._get_end_pos(initial_pictograph)
@@ -390,8 +390,8 @@ class QuestionGenerationService(IQuestionGenerationService):
             raise
 
     def _generate_wrong_next_pictographs(
-        self, correct_pictograph: Dict, dataset: Dict
-    ) -> List[Dict]:
+        self, correct_pictograph: dict, dataset: dict
+    ) -> list[dict]:
         """Generate 3 wrong next pictographs."""
         try:
             correct_start_pos = self._get_start_pos(correct_pictograph)
@@ -423,7 +423,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to generate wrong next pictographs: {e}")
             return []
 
-    def _filter_pictograph_dataset_by_grid_mode(self, dataset: Dict) -> Dict:
+    def _filter_pictograph_dataset_by_grid_mode(self, dataset: dict) -> dict:
         """Filter pictograph dataset by grid mode (placeholder implementation)."""
         try:
             # For now, return the full dataset
@@ -433,7 +433,7 @@ class QuestionGenerationService(IQuestionGenerationService):
             logger.error(f"Failed to filter dataset by grid mode: {e}")
             return dataset
 
-    def _get_start_pos(self, pictograph: Dict) -> Any:
+    def _get_start_pos(self, pictograph: dict) -> Any:
         """Get start position from pictograph data."""
         # Import constants to avoid circular imports
         try:
@@ -463,7 +463,7 @@ class QuestionGenerationService(IQuestionGenerationService):
         )
         return 1  # Default fallback
 
-    def _get_end_pos(self, pictograph: Dict) -> Any:
+    def _get_end_pos(self, pictograph: dict) -> Any:
         """Get end position from pictograph data."""
         try:
             from data.constants import END_POS

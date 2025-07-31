@@ -1,5 +1,4 @@
 import random
-from typing import List
 
 from ..shared.animation_types import Position2D, SparkleState
 
@@ -8,7 +7,7 @@ class AuroraSparkleAnimation:
     """Pure business logic for aurora sparkle animation - extracted from SparkleManager"""
 
     def __init__(self, num_sparkles: int = 50):
-        self.sparkles: List[SparkleState] = []
+        self.sparkles: list[SparkleState] = []
         self._create_sparkles(num_sparkles)
 
     def _create_sparkles(self, num_sparkles: int) -> None:
@@ -30,7 +29,7 @@ class AuroraSparkleAnimation:
             if sparkle.opacity > 1.0 or sparkle.opacity < 0.5:
                 sparkle.pulse_speed *= -1  # Reverse the pulse direction
 
-    def get_sparkle_states(self) -> List[SparkleState]:
+    def get_sparkle_states(self) -> list[SparkleState]:
         """Get current sparkle states for rendering"""
         return self.sparkles.copy()
 

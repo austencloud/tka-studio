@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import Tuple
 
 from data.constants import (
     CCW_HANDPATH,
@@ -22,7 +21,7 @@ class HandpathCalculator:
 
     def __init__(self):
         """Initialize hand rotation direction mapping."""
-        self.hand_rot_dir_map: defaultdict[Tuple[str, str], str]
+        self.hand_rot_dir_map: defaultdict[tuple[str, str], str]
 
         clockwise_pairs = [(SOUTH, WEST), (WEST, NORTH), (NORTH, EAST), (EAST, SOUTH)]
         counter_clockwise_pairs = [

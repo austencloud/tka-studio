@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from enums.letter.letter import LetterCondition
 from enums.letter.letter_type import LetterType
@@ -75,13 +75,11 @@ class TurnsTupleGenerator:
             return turns_tuple
         return ""
 
-    def generate_mirrored_tuple(self, arrow: Arrow) -> Union[str, None]:
+    def generate_mirrored_tuple(self, arrow: Arrow) -> str | None:
         mirrored_tuple = self.mirrored_generator.generate(arrow)
         return mirrored_tuple
 
-    def _get_generator_key(
-        self, pictograph: "LegacyPictograph"
-    ) -> Union[str, LetterType]:
+    def _get_generator_key(self, pictograph: "LegacyPictograph") -> str | LetterType:
         letter = pictograph.state.letter
         if letter.value in [
             letter.value

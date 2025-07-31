@@ -11,7 +11,7 @@ These assertions go beyond basic pytest assertions to provide:
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -185,8 +185,8 @@ class TKAAssertions:
 
     def workflow_state_matches(
         self,
-        state_dict: Dict[str, Any],
-        expected_state: Dict[str, Any],
+        state_dict: dict[str, Any],
+        expected_state: dict[str, Any],
         message: Optional[str] = None,
     ):
         """
@@ -217,7 +217,7 @@ class TKAAssertions:
 
         logger.debug("✓ Workflow state assertion passed")
 
-    def no_errors_occurred(self, error_list: List[str], message: Optional[str] = None):
+    def no_errors_occurred(self, error_list: list[str], message: Optional[str] = None):
         """
         Assert that no errors occurred during operation.
 
@@ -241,7 +241,7 @@ class TKAAssertions:
         logger.debug("✓ Error-free assertion passed")
 
     def operation_completed_successfully(
-        self, result: Dict[str, Any], message: Optional[str] = None
+        self, result: dict[str, Any], message: Optional[str] = None
     ):
         """
         Assert that an operation completed successfully.
@@ -347,7 +347,7 @@ def assert_component_ready(component, component_name: str, timeout: int = 5):
 
 
 def assert_state_transition(
-    initial_state: Dict, final_state: Dict, expected_changes: Dict, context: str = ""
+    initial_state: dict, final_state: dict, expected_changes: dict, context: str = ""
 ):
     """
     Assert that state transition occurred as expected.

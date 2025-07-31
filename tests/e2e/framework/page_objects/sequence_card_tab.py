@@ -6,7 +6,7 @@ including card display, navigation, and layout management.
 """
 
 import logging
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
@@ -80,7 +80,7 @@ class SequenceCardTabPageObject(BasePageObject):
     # CARD DISPLAY METHODS
     # ========================================
 
-    def get_displayed_cards(self) -> List[str]:
+    def get_displayed_cards(self) -> list[str]:
         """Get list of currently displayed sequence cards."""
         logger.debug("Getting displayed cards")
 
@@ -273,7 +273,7 @@ class SequenceCardTabPageObject(BasePageObject):
                 return components[0]
         return None
 
-    def _find_card_elements(self) -> List[QWidget]:
+    def _find_card_elements(self) -> list[QWidget]:
         """Find all card elements."""
         elements = []
 
@@ -397,7 +397,7 @@ class SequenceCardTabPageObject(BasePageObject):
             logger.warning(f"Error getting selector value: {e}")
             return None
 
-    def _find_components_by_class_name(self, class_name: str) -> List[QWidget]:
+    def _find_components_by_class_name(self, class_name: str) -> list[QWidget]:
         """Find components by class name."""
         components = []
 

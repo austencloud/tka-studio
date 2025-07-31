@@ -6,7 +6,6 @@ from the legacy FadeManager.
 """
 
 import asyncio
-from typing import List
 
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
@@ -36,7 +35,7 @@ class FadeSystemUsageExamples:
         options = FadeOptions(duration=500, easing=EasingType.IN_OUT_CUBIC)
         await self.fade_orchestrator.fade_widget_in(widget, options)
 
-    async def example_fade_multiple_widgets(self, widgets: List[QWidget]):
+    async def example_fade_multiple_widgets(self, widgets: list[QWidget]):
         """Example: Fade multiple widgets simultaneously."""
         # Fade all out together
         await self.fade_orchestrator.fade_widgets_out(widgets)
@@ -82,7 +81,7 @@ class FadeSystemUsageExamples:
 
     # Advanced operations
 
-    async def example_fade_and_update(self, widgets: List[QWidget]):
+    async def example_fade_and_update(self, widgets: list[QWidget]):
         """Example: Fade out, update content, fade in."""
 
         def update_content():
@@ -94,7 +93,7 @@ class FadeSystemUsageExamples:
 
         await self.fade_orchestrator.fade_widgets_and_update(widgets, update_content)
 
-    async def example_sequential_fades(self, widgets: List[QWidget]):
+    async def example_sequential_fades(self, widgets: list[QWidget]):
         """Example: Sequential fade operations."""
         for i, widget in enumerate(widgets):
             # Stagger the fades with delays
@@ -117,7 +116,7 @@ class LegacyMigrationExamples:
     def __init__(self, fade_orchestrator: IFadeOrchestrator):
         self.fade_orchestrator = fade_orchestrator
 
-    async def migrate_widget_fade(self, widgets: List[QWidget]):
+    async def migrate_widget_fade(self, widgets: list[QWidget]):
         """
         Legacy: fade_manager.widget_fader.fade_widgets(widgets, True, duration=250)
         Modern: await fade_orchestrator.fade_widgets_in(widgets, FadeOptions(duration=250))
@@ -129,7 +128,7 @@ class LegacyMigrationExamples:
         options = FadeOptions(duration=250)
         await self.fade_orchestrator.fade_widgets_in(widgets, options)
 
-    async def migrate_fade_and_update(self, widgets: List[QWidget]):
+    async def migrate_fade_and_update(self, widgets: list[QWidget]):
         """
         Legacy: fade_manager.widget_fader.fade_and_update(widgets, callback)
         Modern: await fade_orchestrator.fade_widgets_and_update(widgets, callback)
@@ -194,7 +193,7 @@ class AsyncPatternExamples:
             print(f"Fade operation failed: {e}")
             # Handle the error appropriately
 
-    async def example_cancellation(self, widgets: List[QWidget]):
+    async def example_cancellation(self, widgets: list[QWidget]):
         """Example: Using asyncio for cancellation."""
         try:
             # Create a task that can be cancelled
@@ -209,7 +208,7 @@ class AsyncPatternExamples:
             print("Fade operation timed out")
             fade_task.cancel()
 
-    async def example_parallel_operations(self, widgets: List[QWidget]):
+    async def example_parallel_operations(self, widgets: list[QWidget]):
         """Example: Running multiple fade operations in parallel."""
         # Create multiple fade tasks
         tasks = [self.fade_orchestrator.fade_widget_in(widget) for widget in widgets]
@@ -217,7 +216,7 @@ class AsyncPatternExamples:
         # Wait for all to complete
         await asyncio.gather(*tasks)
 
-    async def example_sequential_with_delays(self, widgets: List[QWidget]):
+    async def example_sequential_with_delays(self, widgets: list[QWidget]):
         """Example: Sequential operations with controlled timing."""
         for i, widget in enumerate(widgets):
             # Start fades with staggered timing

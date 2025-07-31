@@ -13,7 +13,7 @@ from pathlib import Path
 
 # Import domain models for validation
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 modern_src = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(modern_src))
@@ -31,7 +31,7 @@ class ValidationError(Exception):
         message: str,
         field: str = None,
         value: Any = None,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ):
         self.message = message
         self.field = field
@@ -56,8 +56,8 @@ class ValidationResult:
     """Result of a validation operation."""
 
     is_valid: bool
-    errors: List[ValidationError]
-    warnings: List[str]
+    errors: list[ValidationError]
+    warnings: list[str]
 
     @property
     def has_errors(self) -> bool:
@@ -72,7 +72,7 @@ class ValidationResult:
         message: str,
         field: str = None,
         value: Any = None,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ):
         """Add a validation error."""
         error = ValidationError(message, field, value, context)
@@ -96,7 +96,7 @@ class GraphEditorValidator:
     def validate_beat_data(
         beat_data: Optional[BeatData],
         allow_none: bool = True,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ) -> ValidationResult:
         """
         Validate beat data with comprehensive checks.
@@ -211,7 +211,7 @@ class GraphEditorValidator:
 
     @staticmethod
     def _validate_motion_data(
-        motion_data: Any, field_name: str, context: Dict[str, Any]
+        motion_data: Any, field_name: str, context: dict[str, Any]
     ) -> ValidationResult:
         """Validate motion data structure."""
         result = ValidationResult(is_valid=True, errors=[], warnings=[])
@@ -259,7 +259,7 @@ class GraphEditorValidator:
     def validate_sequence_data(
         sequence_data: Optional[SequenceData],
         allow_none: bool = True,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ) -> ValidationResult:
         """
         Validate sequence data with comprehensive checks.
@@ -349,7 +349,7 @@ class GraphEditorValidator:
         beat_index: int,
         sequence_length: int = None,
         allow_negative: bool = True,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ) -> ValidationResult:
         """
         Validate beat index with bounds checking.
@@ -410,7 +410,7 @@ class GraphEditorValidator:
 
     @staticmethod
     def validate_arrow_id(
-        arrow_id: Optional[str], allow_none: bool = True, context: Dict[str, Any] = None
+        arrow_id: Optional[str], allow_none: bool = True, context: dict[str, Any] = None
     ) -> ValidationResult:
         """
         Validate arrow ID.
@@ -457,7 +457,7 @@ class GraphEditorValidator:
 
     @staticmethod
     def validate_orientation(
-        orientation: Any, allow_none: bool = True, context: Dict[str, Any] = None
+        orientation: Any, allow_none: bool = True, context: dict[str, Any] = None
     ) -> ValidationResult:
         """
         Validate orientation value (enum or string).
@@ -533,7 +533,7 @@ class GraphEditorValidator:
 def validate_beat_data(
     beat_data: Optional[BeatData],
     allow_none: bool = True,
-    context: Dict[str, Any] = None,
+    context: dict[str, Any] = None,
 ) -> ValidationResult:
     """Quick validation function for beat data."""
     return GraphEditorValidator.validate_beat_data(beat_data, allow_none, context)
@@ -542,7 +542,7 @@ def validate_beat_data(
 def validate_sequence_data(
     sequence_data: Optional[SequenceData],
     allow_none: bool = True,
-    context: Dict[str, Any] = None,
+    context: dict[str, Any] = None,
 ) -> ValidationResult:
     """Quick validation function for sequence data."""
     return GraphEditorValidator.validate_sequence_data(
@@ -554,7 +554,7 @@ def validate_beat_index(
     beat_index: int,
     sequence_length: int = None,
     allow_negative: bool = True,
-    context: Dict[str, Any] = None,
+    context: dict[str, Any] = None,
 ) -> ValidationResult:
     """Quick validation function for beat index."""
     return GraphEditorValidator.validate_beat_index(
@@ -563,14 +563,14 @@ def validate_beat_index(
 
 
 def validate_arrow_id(
-    arrow_id: Optional[str], allow_none: bool = True, context: Dict[str, Any] = None
+    arrow_id: Optional[str], allow_none: bool = True, context: dict[str, Any] = None
 ) -> ValidationResult:
     """Quick validation function for arrow ID."""
     return GraphEditorValidator.validate_arrow_id(arrow_id, allow_none, context)
 
 
 def validate_orientation(
-    orientation: Any, allow_none: bool = True, context: Dict[str, Any] = None
+    orientation: Any, allow_none: bool = True, context: dict[str, Any] = None
 ) -> ValidationResult:
     """Quick validation function for orientation."""
     return GraphEditorValidator.validate_orientation(orientation, allow_none, context)

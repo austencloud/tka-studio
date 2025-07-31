@@ -24,7 +24,7 @@ from functools import wraps
 import logging
 import threading
 import time
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any, Callable, Optional
 
 import psutil
 
@@ -39,7 +39,7 @@ class PerformanceMetric:
     duration_ms: float
     memory_mb: float
     timestamp: float
-    context: Dict[str, Any] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -96,15 +96,15 @@ class PerformanceMonitor:
         """
         self.max_metrics = max_metrics
         self.metrics: deque = deque(maxlen=max_metrics)
-        self.operation_stats: Dict[str, OperationStats] = {}
+        self.operation_stats: dict[str, OperationStats] = {}
         self._lock = threading.Lock()
         self._enabled = True
 
         # Enhanced profiling support
         self._profiling_enabled = enable_profiling
-        self._function_metrics: Dict[str, Dict[str, Any]] = {}
-        self._active_sessions: Set[str] = set()
-        self._session_data: Dict[str, Dict[str, Any]] = {}
+        self._function_metrics: dict[str, dict[str, Any]] = {}
+        self._active_sessions: set[str] = set()
+        self._session_data: dict[str, dict[str, Any]] = {}
 
         # Performance thresholds (adjusted for memory delta measurements)
         self.warning_thresholds = {
@@ -129,7 +129,7 @@ class PerformanceMonitor:
         operation: str,
         duration_ms: float,
         memory_mb: float,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """
         Record a performance metric.
@@ -198,18 +198,18 @@ class PerformanceMonitor:
         with self._lock:
             return self.operation_stats.get(operation)
 
-    def get_all_stats(self) -> Dict[str, OperationStats]:
+    def get_all_stats(self) -> dict[str, OperationStats]:
         """Get statistics for all operations."""
         with self._lock:
             return dict(self.operation_stats)
 
-    def get_slowest_operations(self, limit: int = 10) -> List[OperationStats]:
+    def get_slowest_operations(self, limit: int = 10) -> list[OperationStats]:
         """Get the slowest operations by average duration."""
         with self._lock:
             stats = list(self.operation_stats.values())
             return sorted(stats, key=lambda s: s.avg_duration_ms, reverse=True)[:limit]
 
-    def get_memory_intensive_operations(self, limit: int = 10) -> List[OperationStats]:
+    def get_memory_intensive_operations(self, limit: int = 10) -> list[OperationStats]:
         """Get the most memory-intensive operations."""
         with self._lock:
             stats = list(self.operation_stats.values())
@@ -225,7 +225,7 @@ class PerformanceMonitor:
         """Enable or disable performance monitoring."""
         self._enabled = enabled
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """Generate a comprehensive performance report."""
         with self._lock:
             total_operations = sum(
@@ -296,7 +296,7 @@ class PerformanceMonitor:
         logger.info(f"Started profiling session: {session_id}")
         return True
 
-    def stop_profiling_session(self, session_id: str) -> Optional[Dict[str, Any]]:
+    def stop_profiling_session(self, session_id: str) -> Optional[dict[str, Any]]:
         """
         Stop a profiling session and return collected data.
 
@@ -327,7 +327,7 @@ class PerformanceMonitor:
         function_name: str,
         duration_ms: float,
         memory_mb: float,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ):
         """Update function-level metrics for profiling."""
         if function_name not in self._function_metrics:
@@ -365,7 +365,7 @@ class PerformanceMonitor:
             func_data["total_time"] += duration_ms
             func_data["total_memory"] += memory_mb
 
-    def get_function_performance_summary(self) -> Dict[str, Any]:
+    def get_function_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive function performance summary."""
         if not self._profiling_enabled:
             return {"error": "Profiling not enabled"}
@@ -474,7 +474,7 @@ performance_monitor = PerformanceMonitor()
 
 
 def monitor_performance(
-    operation_name: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+    operation_name: Optional[str] = None, context: Optional[dict[str, Any]] = None
 ):
     """
     Decorator to monitor operation performance.
@@ -570,7 +570,7 @@ def set_performance_thresholds(
         performance_monitor.error_thresholds["memory_mb"] = error_memory_mb
 
 
-def get_performance_report() -> Dict[str, Any]:
+def get_performance_report() -> dict[str, Any]:
     """Get a comprehensive performance report."""
     return performance_monitor.generate_report()
 

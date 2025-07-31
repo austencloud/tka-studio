@@ -7,7 +7,7 @@ true framework independence for core services.
 
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Optional, Protocol
 
 # ============================================================================
 # GEOMETRY AND LAYOUT TYPES
@@ -169,7 +169,7 @@ class RenderTarget:
     target_id: str
     target_type: RenderTargetType
     size: Size
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QGraphicsScene, HTML Canvas, etc.)
     native_handle: Optional[Any] = None
@@ -184,7 +184,7 @@ class RenderCommand:
     render_type: str
     position: Point
     size: Size
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
     data: Optional[Any] = None
 
 
@@ -205,9 +205,9 @@ class ImageData:
     height: int
     format: ImageFormat
     data: bytes = b""  # Optional for export specifications
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
     background_color: Optional[Color] = None
-    render_commands: Optional[List[Dict[str, Any]]] = None
+    render_commands: Optional[list[dict[str, Any]]] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -227,7 +227,7 @@ class ComponentHandle:
 
     component_id: str
     component_type: str
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QWidget, HTML Element, etc.)
     native_handle: Optional[Any] = None
@@ -251,7 +251,7 @@ class WindowHandle:
     size: Size
     position: Point
     state: WindowState
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QMainWindow, browser window, etc.)
     native_handle: Optional[Any] = None
@@ -270,7 +270,7 @@ class AssetHandle:
     asset_type: str
     path: str
     size: Optional[Size] = None
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
 
 @dataclass
@@ -280,9 +280,9 @@ class SvgAsset:
     asset_id: str
     svg_content: str
     original_size: Size
-    color_properties: Dict[str, str]  # Map of color attributes to values
+    color_properties: dict[str, str]  # Map of color attributes to values
 
-    def get_colored_svg(self, color_map: Dict[str, Color]) -> str:
+    def get_colored_svg(self, color_map: dict[str, Color]) -> str:
         """Get SVG content with colors replaced."""
         svg_content = self.svg_content
         for property_name, new_color in color_map.items():
@@ -309,7 +309,7 @@ class RenderEngine(Protocol):
         ...
 
     def render_to_image(
-        self, commands: List[RenderCommand], size: Size, format: ImageFormat
+        self, commands: list[RenderCommand], size: Size, format: ImageFormat
     ) -> ImageData:
         """Render commands to an image."""
         ...

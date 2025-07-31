@@ -7,7 +7,7 @@ and session coordination operations within the workbench context.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -32,7 +32,7 @@ class SessionRestorationResult(NamedTuple):
     phase: SessionRestorationPhase
     sequence_restored: bool
     start_position_restored: bool
-    errors: List[str]
+    errors: list[str]
 
     @classmethod
     def success_result(
@@ -45,7 +45,7 @@ class SessionRestorationResult(NamedTuple):
         return cls(True, phase, sequence_restored, start_position_restored, [])
 
     @classmethod
-    def failure_result(cls, phase: SessionRestorationPhase, errors: List[str]):
+    def failure_result(cls, phase: SessionRestorationPhase, errors: list[str]):
         """Create a failed restoration result."""
         return cls(False, phase, False, False, errors)
 
@@ -133,7 +133,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def get_restoration_errors(self) -> List[str]:
+    def get_restoration_errors(self) -> list[str]:
         """
         Get list of restoration errors.
 
@@ -142,7 +142,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def setup_event_subscriptions(self) -> List[str]:
+    def setup_event_subscriptions(self) -> list[str]:
         """
         Setup event subscriptions for session restoration.
 
@@ -151,7 +151,7 @@ class IWorkbenchSessionManager(ABC):
         """
 
     @abstractmethod
-    def cleanup_event_subscriptions(self, subscription_ids: List[str]) -> None:
+    def cleanup_event_subscriptions(self, subscription_ids: list[str]) -> None:
         """
         Clean up event subscriptions.
 

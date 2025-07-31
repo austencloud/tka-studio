@@ -7,7 +7,7 @@ between BeatData and PictographData as needed.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -41,7 +41,7 @@ class OptionDataService:
 
     def get_pictographs_for_letter_type(
         self, letter_type: str, max_count: int = 12
-    ) -> List[PictographData]:
+    ) -> list[PictographData]:
         """
         Get pictographs for a specific letter type.
 
@@ -82,7 +82,7 @@ class OptionDataService:
             )
             return []
 
-    def _get_letters_for_type(self, letter_type: str) -> List[str]:
+    def _get_letters_for_type(self, letter_type: str) -> list[str]:
         """Get the letters that belong to a specific letter type."""
         letter_mappings = {
             LetterType.TYPE1: [
@@ -119,7 +119,7 @@ class OptionDataService:
 
     def _get_pictographs_for_letter(
         self, letter: str, max_count: int
-    ) -> List[PictographData]:
+    ) -> list[PictographData]:
         """Get pictographs for a specific letter."""
         try:
             # Get beat data from dataset
@@ -191,7 +191,7 @@ class OptionDataService:
             )
             return pictograph_data
 
-    def _create_mock_pictographs(self, letter: str, count: int) -> List[PictographData]:
+    def _create_mock_pictographs(self, letter: str, count: int) -> list[PictographData]:
         """Create mock pictographs for testing when real data is not available."""
         from desktop.modern.domain.models.enums import LetterType
         from desktop.modern.domain.models.grid_data import GridData

@@ -6,7 +6,7 @@ for the learning module.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 import uuid
 
 
@@ -26,7 +26,7 @@ class QuestionData:
     question_content: Any = None
 
     # Answer options (list of letters, pictographs, etc.)
-    answer_options: List[Any] = field(default_factory=list)
+    answer_options: list[Any] = field(default_factory=list)
 
     # Correct answer (matches one of the options)
     correct_answer: Any = None
@@ -39,7 +39,7 @@ class QuestionData:
     generation_timestamp: Optional[str] = None
     difficulty_level: Optional[int] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Serialize question to dictionary.
 
@@ -58,7 +58,7 @@ class QuestionData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "QuestionData":
+    def from_dict(cls, data: dict[str, Any]) -> "QuestionData":
         """
         Deserialize question from dictionary.
 
@@ -95,7 +95,7 @@ class QuestionData:
         # Check if correct answer is in the options
         return self.correct_answer in self.answer_options
 
-    def get_incorrect_options(self) -> List[Any]:
+    def get_incorrect_options(self) -> list[Any]:
         """
         Get list of incorrect answer options.
 

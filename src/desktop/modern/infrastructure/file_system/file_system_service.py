@@ -14,7 +14,6 @@ No business logic, completely testable in isolation.
 
 import logging
 from pathlib import Path
-from typing import List
 
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
 
@@ -92,7 +91,7 @@ class FileSystemService(IFileSystemService):
             logger.error(f"OS error writing file {file_path}: {e}")
             raise
 
-    def find_python_files(self, root_path: Path) -> List[Path]:
+    def find_python_files(self, root_path: Path) -> list[Path]:
         """
         Find all Python files in a directory tree.
 

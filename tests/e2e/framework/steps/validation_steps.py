@@ -7,7 +7,7 @@ readable and maintainable.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -167,7 +167,7 @@ class ValidationSteps:
             logger.error(f"Workbench functionality validation failed: {e}")
             return False
 
-    def validate_sequence_state(self, expected_state: Dict[str, Any]) -> bool:
+    def validate_sequence_state(self, expected_state: dict[str, Any]) -> bool:
         """
         Validate multiple aspects of sequence state.
 
@@ -278,7 +278,7 @@ class ValidationSteps:
         assert length > 0, message
         logger.debug(f"Sequence non-empty assertion passed: length {length}")
 
-    def get_validation_summary(self) -> Dict[str, Any]:
+    def get_validation_summary(self) -> dict[str, Any]:
         """
         Get a comprehensive validation summary of current sequence state.
 

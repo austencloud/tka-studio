@@ -8,7 +8,7 @@ solely on sequence transformations and spatial operations.
 
 from enum import Enum
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.sequence_operation_services import (
     ISequenceTransformer,
@@ -174,7 +174,7 @@ class SequenceTransformer(ISequenceTransformer):
         logger.debug(f"Applying transformation matrix to beat {beat.beat_number}")
         return beat
 
-    def _load_transformation_matrices(self) -> Dict[str, Any]:
+    def _load_transformation_matrices(self) -> dict[str, Any]:
         """Load transformation matrices for workbench operations."""
         return {
             "rotation_90": [[0, -1], [1, 0]],

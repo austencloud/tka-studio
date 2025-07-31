@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from objects.glyphs.reversal_glyph import ReversalGlyph
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class ActBeat(LegacyPictograph):
-    def __init__(self, beat_frame: "ActBeatFrame", duration: Union[int, float] = 1):
+    def __init__(self, beat_frame: "ActBeatFrame", duration: int | float = 1):
         super().__init__()
         self.reversal_glyph = ReversalGlyph(self)
         self.view: ActBeatView = None

@@ -6,7 +6,7 @@ clean architecture patterns and service composition principles.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QSettings
 
@@ -266,10 +266,10 @@ def create_configured_settings_container(
             def set_setting(self, key: str, value: Any) -> None:
                 self._settings[key] = value
 
-            def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+            def get_tab_state(self, tab_name: str) -> dict[str, Any]:
                 return self._state.get(f"tab_{tab_name}", {})
 
-            def get_all_settings(self) -> Dict[str, Any]:
+            def get_all_settings(self) -> dict[str, Any]:
                 return self._settings.copy()
 
             def clear_settings(self) -> None:

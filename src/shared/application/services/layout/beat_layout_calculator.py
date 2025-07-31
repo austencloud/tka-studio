@@ -1,5 +1,5 @@
 import math
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from desktop.modern.core.decorators import handle_service_errors
 from desktop.modern.core.interfaces.layout_services import IBeatLayoutCalculator
@@ -23,8 +23,8 @@ class BeatLayoutCalculator(IBeatLayoutCalculator):
     @handle_service_errors("calculate_beat_frame_layout")
     @monitor_performance("layout_calculation")
     def calculate_beat_frame_layout(
-        self, sequence: SequenceData, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: SequenceData, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """Calculate layout for beat frames using your original carefully designed algorithm."""
         beat_count = len(sequence.beats) if sequence else 0
 
@@ -116,8 +116,8 @@ class BeatLayoutCalculator(IBeatLayoutCalculator):
     @handle_service_errors("get_optimal_grid_layout")
     @monitor_performance("grid_layout_optimization")
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Get optimal grid layout (rows, cols) for items."""
         if item_count <= 0:
             return (0, 0)
@@ -141,11 +141,11 @@ class BeatLayoutCalculator(IBeatLayoutCalculator):
     def calculate_horizontal_beat_layout(
         self,
         beat_count: int,
-        container_size: Tuple[int, int],
-        base_size: Tuple[int, int],
+        container_size: tuple[int, int],
+        base_size: tuple[int, int],
         padding: int,
         spacing: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate horizontal layout for beats."""
         width, height = container_size
         beat_width, beat_height = base_size
@@ -171,11 +171,11 @@ class BeatLayoutCalculator(IBeatLayoutCalculator):
     def calculate_grid_beat_layout(
         self,
         beat_count: int,
-        container_size: Tuple[int, int],
-        base_size: Tuple[int, int],
+        container_size: tuple[int, int],
+        base_size: tuple[int, int],
         padding: int,
         spacing: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate grid layout for beats."""
         rows, cols = self.get_optimal_grid_layout(beat_count, container_size)
         beat_width, beat_height = base_size
@@ -194,8 +194,8 @@ class BeatLayoutCalculator(IBeatLayoutCalculator):
         }
 
     def _recalculate_beat_frame_layout(
-        self, beat_count: int, container_size: Tuple[int, int], trigger_reason: str
-    ) -> Dict[str, Any]:
+        self, beat_count: int, container_size: tuple[int, int], trigger_reason: str
+    ) -> dict[str, Any]:
         """Recalculate beat frame layout and return result."""
         if beat_count == 0:
             return {"positions": {}, "sizes": {}, "total_size": (0, 0)}

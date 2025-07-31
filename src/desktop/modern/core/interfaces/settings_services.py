@@ -8,7 +8,7 @@ being tied to specific storage implementations (file system vs web storage).
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 class PropType(Enum):
@@ -27,7 +27,7 @@ class IBackgroundSettingsManager(ABC):
     """Interface for background settings management operations."""
 
     @abstractmethod
-    def get_available_backgrounds(self) -> List[str]:
+    def get_available_backgrounds(self) -> list[str]:
         """
         Get list of available background types.
 
@@ -153,7 +153,7 @@ class IVisibilitySettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_all_visibility_settings(self) -> Dict[str, bool]:
+    def get_all_visibility_settings(self) -> dict[str, bool]:
         """
         Get all visibility settings as a dictionary.
 
@@ -196,7 +196,7 @@ class IBeatLayoutSettingsManager(ABC):
     """Interface for beat frame layout settings management operations."""
 
     @abstractmethod
-    def get_layout_for_length(self, sequence_length: int) -> Tuple[int, int]:
+    def get_layout_for_length(self, sequence_length: int) -> tuple[int, int]:
         """
         Get the layout (rows, cols) for a given sequence length.
 
@@ -245,7 +245,7 @@ class IBeatLayoutSettingsManager(ABC):
     @abstractmethod
     def get_layout_options_for_length(
         self, sequence_length: int
-    ) -> Dict[str, Tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """
         Get available layout options for a sequence length.
 
@@ -288,7 +288,7 @@ class IPropTypeSettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_available_prop_types(self) -> List[PropType]:
+    def get_available_prop_types(self) -> list[PropType]:
         """
         Get all available prop types.
 
@@ -366,7 +366,7 @@ class IUserProfileSettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_all_users(self) -> List[str]:
+    def get_all_users(self) -> list[str]:
         """
         Get all available user profiles.
 
@@ -472,7 +472,7 @@ class IImageExportSettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_supported_formats(self) -> List[str]:
+    def get_supported_formats(self) -> list[str]:
         """
         Get list of supported export formats.
 
@@ -505,7 +505,7 @@ class IImageExportSettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_export_dimensions(self) -> Tuple[int, int]:
+    def get_export_dimensions(self) -> tuple[int, int]:
         """
         Get export dimensions (width, height).
 
@@ -566,7 +566,7 @@ class IImageExportSettingsManager(ABC):
         """
 
     @abstractmethod
-    def get_quality_presets(self) -> Dict[str, int]:
+    def get_quality_presets(self) -> dict[str, int]:
         """
         Get available quality presets.
 

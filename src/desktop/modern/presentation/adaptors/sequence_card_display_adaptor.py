@@ -6,7 +6,7 @@ Converts service callbacks to Qt signals for UI communication.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -60,7 +60,7 @@ class SequenceCardDisplayAdaptor(QObject):
         # Set callback for progress updates
         self.display_service.set_progress_callback(self._on_progress_updated)
 
-    def _on_sequences_loaded(self, sequences: List[SequenceCardData]) -> None:
+    def _on_sequences_loaded(self, sequences: list[SequenceCardData]) -> None:
         """Handle sequences loaded callback from service."""
         logger.info(
             f"Adaptor: sequences loaded, emitting signal with {len(sequences)} sequences"
@@ -92,6 +92,6 @@ class SequenceCardDisplayAdaptor(QObject):
         """Cancel current loading operation."""
         self.display_service.cancel_current_operation()
 
-    def get_current_sequences(self) -> List[SequenceCardData]:
+    def get_current_sequences(self) -> list[SequenceCardData]:
         """Get currently loaded sequences."""
         return self.display_service.get_current_sequences()

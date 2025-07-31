@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from enums.letter.letter import Letter
 from enums.letter.letter_condition import LetterCondition
@@ -22,7 +21,7 @@ class OrientationHandler:
     def is_mixed_orientation(self) -> bool:
         return self.pictograph.managers.check.starts_from_mixed_orientation()
 
-    def get_hybrid_letters(self) -> List[Letter]:
+    def get_hybrid_letters(self) -> list[Letter]:
         return Letter.get_letters_by_condition(LetterCondition.HYBRID)
 
     def get_mixed_attribute_key(self) -> str:

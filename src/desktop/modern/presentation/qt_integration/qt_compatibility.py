@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 import sys
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class QtVersion:
     version_string: str
 
     @property
-    def version_tuple(self) -> Tuple[int, int, int]:
+    def version_tuple(self) -> tuple[int, int, int]:
         """Get version as tuple for comparison."""
         return (self.major, self.minor, self.patch)
 
@@ -51,8 +51,8 @@ class QtEnvironment:
     """Complete Qt environment information."""
 
     version: QtVersion
-    features: Dict[str, bool]
-    modules: List[str]
+    features: dict[str, bool]
+    modules: list[str]
     platform: str
     high_dpi_support: bool
     opengl_support: bool
@@ -70,8 +70,8 @@ class QtCompatibilityManager:
     def __init__(self):
         """Initialize Qt compatibility manager."""
         self._environment: Optional[QtEnvironment] = None
-        self._feature_cache: Dict[str, bool] = {}
-        self._compatibility_warnings: List[str] = []
+        self._feature_cache: dict[str, bool] = {}
+        self._compatibility_warnings: list[str] = []
 
         # Detect Qt environment on initialization
         self._detect_qt_environment()
@@ -185,7 +185,7 @@ class QtCompatibilityManager:
             variant=QtVariant.UNKNOWN, major=0, minor=0, patch=0, version_string="0.0.0"
         )
 
-    def _detect_qt_features(self, version: QtVersion) -> Dict[str, bool]:
+    def _detect_qt_features(self, version: QtVersion) -> dict[str, bool]:
         """Detect available Qt features based on version."""
         features = {}
 
@@ -223,7 +223,7 @@ class QtCompatibilityManager:
 
         return features
 
-    def _detect_qt_modules(self, version: QtVersion) -> List[str]:
+    def _detect_qt_modules(self, version: QtVersion) -> list[str]:
         """Detect available Qt modules."""
         modules = []
 
@@ -325,16 +325,16 @@ class QtCompatibilityManager:
 
         return False
 
-    def get_compatibility_warnings(self) -> List[str]:
+    def get_compatibility_warnings(self) -> list[str]:
         """Get list of compatibility warnings."""
         return self._compatibility_warnings.copy()
 
-    def is_compatible_version(self, min_version: Tuple[int, int, int]) -> bool:
+    def is_compatible_version(self, min_version: tuple[int, int, int]) -> bool:
         """Check if current Qt version meets minimum requirements."""
         current_version = self._environment.version.version_tuple
         return current_version >= min_version
 
-    def get_recommended_settings(self) -> Dict[str, Any]:
+    def get_recommended_settings(self) -> dict[str, Any]:
         """Get recommended Qt settings for current environment."""
         settings = {}
 

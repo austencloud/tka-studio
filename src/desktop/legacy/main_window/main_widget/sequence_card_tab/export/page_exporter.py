@@ -2,7 +2,7 @@
 import logging
 import os
 import time
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QApplication, QWidget
 
@@ -70,7 +70,7 @@ class SequenceCardPageExporter:
         # Export the pages
         self._export_pages(pages, export_dir)
 
-    def _get_pages_to_export(self) -> List[QWidget]:
+    def _get_pages_to_export(self) -> list[QWidget]:
         """
         Get the pages to export from the sequence card tab.
 
@@ -93,7 +93,7 @@ class SequenceCardPageExporter:
 
         return pages
 
-    def _export_pages(self, pages: List[QWidget], export_dir: str):
+    def _export_pages(self, pages: list[QWidget], export_dir: str):
         """
         Export the sequence card pages as high-quality print-ready images.
 

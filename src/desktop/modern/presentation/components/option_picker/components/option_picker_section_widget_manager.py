@@ -10,7 +10,7 @@ Handles all widget management and pooling logic for OptionPickerSection includin
 Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
@@ -54,11 +54,11 @@ class OptionPickerSectionWidgetManager:
         self._selection_callback = selection_callback
 
         # Widget tracking (no pooling)
-        self._active_widgets: Dict[str, OptionPictograph] = {}
+        self._active_widgets: dict[str, OptionPictograph] = {}
 
     def create_widgets_for_pictographs(
-        self, pictographs_for_section: List[PictographData]
-    ) -> List[OptionPictograph]:
+        self, pictographs_for_section: list[PictographData]
+    ) -> list[OptionPictograph]:
         """
         Create and setup widgets for the given pictographs.
 
@@ -167,7 +167,7 @@ class OptionPickerSectionWidgetManager:
         # Destroy the widget instead of returning to pool
         widget.deleteLater()
 
-    def get_active_widgets(self) -> List[OptionPictograph]:
+    def get_active_widgets(self) -> list[OptionPictograph]:
         """Get list of currently active widgets."""
         return list(self._active_widgets.values())
 
@@ -191,7 +191,7 @@ class OptionPickerSectionWidgetManager:
             widget.update_pictograph(pictograph_data)
             self._setup_widget_letter_type(widget)
 
-    def get_widgets_dict(self) -> Dict[str, OptionPictograph]:
+    def get_widgets_dict(self) -> dict[str, OptionPictograph]:
         """Get the widgets dictionary for compatibility."""
         return self._active_widgets.copy()
 

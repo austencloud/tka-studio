@@ -1,10 +1,10 @@
 import os
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Optional
 
 
 class TurnConfiguration:
     @staticmethod
-    def get_turn_combinations() -> List[Tuple[float, float]]:
+    def get_turn_combinations() -> list[tuple[float, float]]:
         """Get all possible turn combinations.
 
         Returns:
@@ -121,7 +121,7 @@ class TurnConfiguration:
         return f"{letter}.png"
 
     # Group letters by their start/end positions to reduce repetition in definition
-    _POSITION_GROUPS: Dict[Tuple[str, str], List[str]] = {
+    _POSITION_GROUPS: dict[tuple[str, str], list[str]] = {
         # Type 1 letters
         ("alpha1", "alpha3"): ["A", "B", "C"],
         ("beta1", "alpha3"): ["D", "E", "F"],
@@ -144,14 +144,14 @@ class TurnConfiguration:
 
     # Create the reverse map (letter -> positions) for efficient lookups
     # This is generated once when the class is defined.
-    _LETTER_POSITIONS_MAP: Dict[str, Tuple[str, str]] = {
+    _LETTER_POSITIONS_MAP: dict[str, tuple[str, str]] = {
         letter: positions
         for positions, letters in _POSITION_GROUPS.items()
         for letter in letters
     }
 
     # Define hybrid letters using a set for efficient O(1) average time complexity lookup
-    _HYBRID_LETTERS: Set[str] = {
+    _HYBRID_LETTERS: set[str] = {
         "C",
         "F",
         "I",
@@ -173,8 +173,8 @@ class TurnConfiguration:
     }
 
     # Define Type 2 letters that need special handling
-    _TYPE2_LETTERS: Set[str] = {"W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"}
-    _TYPE3_LETTERS: Set[str] = {"W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"}
+    _TYPE2_LETTERS: set[str] = {"W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"}
+    _TYPE3_LETTERS: set[str] = {"W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"}
 
     @staticmethod
     def is_hybrid_letter(letter: str) -> bool:
@@ -192,7 +192,7 @@ class TurnConfiguration:
         return letter in TurnConfiguration._TYPE3_LETTERS
 
     @staticmethod
-    def get_letter_positions(letter: str) -> Optional[Tuple[str, str]]:
+    def get_letter_positions(letter: str) -> Optional[tuple[str, str]]:
         """Returns the start and end positions for a given letter using an efficient map lookup."""
         # O(1) average time complexity lookup
         return TurnConfiguration._LETTER_POSITIONS_MAP.get(letter)

@@ -6,7 +6,7 @@ including sequence browsing, filtering, and viewing functionality.
 """
 
 import logging
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
@@ -77,7 +77,7 @@ class BrowseTabPageObject(BasePageObject):
     # SEQUENCE BROWSING METHODS
     # ========================================
 
-    def get_available_sequences(self) -> List[str]:
+    def get_available_sequences(self) -> list[str]:
         """Get list of available sequences in the browse tab."""
         logger.debug("Getting available sequences")
 
@@ -214,7 +214,7 @@ class BrowseTabPageObject(BasePageObject):
                 return components[0]
         return None
 
-    def _find_sequence_elements(self) -> List[QWidget]:
+    def _find_sequence_elements(self) -> list[QWidget]:
         """Find all sequence elements in the list."""
         elements = []
 
@@ -285,7 +285,7 @@ class BrowseTabPageObject(BasePageObject):
         logger.debug(f"Applying filter: {key}={value}")
         return True
 
-    def _find_components_by_class_name(self, class_name: str) -> List[QWidget]:
+    def _find_components_by_class_name(self, class_name: str) -> list[QWidget]:
         """Find components by class name."""
         components = []
 

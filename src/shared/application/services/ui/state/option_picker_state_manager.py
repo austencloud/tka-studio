@@ -6,7 +6,7 @@ Uses Qt signals for clean communication.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -35,7 +35,7 @@ class OptionPickerStateManager(QObject):
 
         # Option picker state
         self._option_picker_selection: Optional[str] = None
-        self._option_picker_filters: Dict[str, Any] = {}
+        self._option_picker_filters: dict[str, Any] = {}
 
     def get_option_picker_selection(self) -> Optional[str]:
         """Get option picker selection."""
@@ -54,11 +54,11 @@ class OptionPickerStateManager(QObject):
         """Clear option picker selection."""
         self.set_option_picker_selection(None)
 
-    def get_option_picker_filters(self) -> Dict[str, Any]:
+    def get_option_picker_filters(self) -> dict[str, Any]:
         """Get option picker filters."""
         return self._option_picker_filters.copy()
 
-    def update_option_picker_filters(self, filters: Dict[str, Any]) -> None:
+    def update_option_picker_filters(self, filters: dict[str, Any]) -> None:
         """Update option picker filters."""
         previous_filters = self._option_picker_filters.copy()
         self._option_picker_filters.update(filters)
@@ -90,14 +90,14 @@ class OptionPickerStateManager(QObject):
         # Emit Qt signal for state reset (covers filter clearing)
         self.state_reset.emit()
 
-    def get_option_picker_state(self) -> Dict[str, Any]:
+    def get_option_picker_state(self) -> dict[str, Any]:
         """Get complete option picker state."""
         return {
             "selection": self._option_picker_selection,
             "filters": self._option_picker_filters.copy(),
         }
 
-    def set_option_picker_state(self, state: Dict[str, Any]) -> None:
+    def set_option_picker_state(self, state: dict[str, Any]) -> None:
         """Set complete option picker state."""
         if "selection" in state:
             self.set_option_picker_selection(state["selection"])
@@ -112,14 +112,14 @@ class OptionPickerStateManager(QObject):
         # Emit Qt signal for state reset
         self.state_reset.emit()
 
-    def get_state_for_persistence(self) -> Dict[str, Any]:
+    def get_state_for_persistence(self) -> dict[str, Any]:
         """Get state data for persistence."""
         return {
             "option_picker_selection": self._option_picker_selection,
             "option_picker_filters": self._option_picker_filters.copy(),
         }
 
-    def load_state_from_persistence(self, state: Dict[str, Any]) -> None:
+    def load_state_from_persistence(self, state: dict[str, Any]) -> None:
         """Load state from persistence data."""
         if "option_picker_selection" in state:
             self._option_picker_selection = state["option_picker_selection"]

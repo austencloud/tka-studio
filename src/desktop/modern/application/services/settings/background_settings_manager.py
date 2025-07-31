@@ -6,7 +6,6 @@ event-driven updates, and asset validation.
 """
 
 import logging
-from typing import List
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -46,7 +45,7 @@ class BackgroundSettingsManager(QObject):
         self.settings = settings
         logger.debug("Initialized BackgroundSettingsManager")
 
-    def get_available_backgrounds(self) -> List[str]:
+    def get_available_backgrounds(self) -> list[str]:
         """
         Get list of available background types.
 

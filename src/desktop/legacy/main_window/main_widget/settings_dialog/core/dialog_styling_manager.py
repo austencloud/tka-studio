@@ -5,7 +5,7 @@ Handles glassmorphism styling and theming.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtWidgets import QDialog, QWidget
 
@@ -31,7 +31,7 @@ class DialogStylingManager:
         self.app_context = app_context
 
     def apply_styling(
-        self, components: Dict[str, Any], tabs: Dict[str, QWidget] = None
+        self, components: dict[str, Any], tabs: dict[str, QWidget] = None
     ):
         """
         Apply complete styling to the dialog and its components.
@@ -137,7 +137,7 @@ class DialogStylingManager:
 
         self.dialog.setStyleSheet(dialog_style)
 
-    def _apply_shadow_effects(self, components: Dict[str, Any]):
+    def _apply_shadow_effects(self, components: dict[str, Any]):
         """Apply shadow effects to components."""
         try:
             # Import glassmorphism styler
@@ -160,7 +160,7 @@ class DialogStylingManager:
         except Exception as e:
             logger.error(f"Error applying shadow effects: {e}")
 
-    def _apply_tab_content_styling(self, tabs: Dict[str, QWidget]):
+    def _apply_tab_content_styling(self, tabs: dict[str, QWidget]):
         """Apply styling to tab content widgets."""
         try:
             # Import glassmorphism styler

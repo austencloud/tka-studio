@@ -3,14 +3,13 @@ Background service interfaces for dependency injection.
 """
 
 from abc import ABC, abstractmethod
-from typing import List
 
 
 class IBackgroundService(ABC):
     """Interface for background management service."""
 
     @abstractmethod
-    def get_available_backgrounds(self) -> List[str]:
+    def get_available_backgrounds(self) -> list[str]:
         """Get list of available background types."""
 
     @abstractmethod

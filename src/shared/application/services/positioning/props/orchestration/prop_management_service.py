@@ -14,7 +14,7 @@ to avoid overlaps, particularly for beta-ending letters.
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 import uuid
 
 from desktop.modern.core.types import Point
@@ -75,7 +75,7 @@ class IPropManagementService(ABC):
         """Apply beta prop positioning if conditions are met."""
 
     @abstractmethod
-    def calculate_separation_offsets(self, beat_data: BeatData) -> Tuple[Point, Point]:
+    def calculate_separation_offsets(self, beat_data: BeatData) -> tuple[Point, Point]:
         """Calculate separation offsets for blue and red props."""
 
     @abstractmethod
@@ -99,7 +99,7 @@ class PropManagementService(IPropManagementService):
         self.event_bus = event_bus or (
             get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
         )
-        self._subscription_ids: List[str] = []
+        self._subscription_ids: list[str] = []
 
         # Beta prop positioning constants
         self._large_offset_divisor = 60
@@ -281,7 +281,7 @@ class PropManagementService(IPropManagementService):
 
     def calculate_separation_offsets(
         self, pictograph_data: PictographData
-    ) -> Tuple[Point, Point]:
+    ) -> tuple[Point, Point]:
         """
         Calculate separation offsets for blue and red props.
 
@@ -762,11 +762,11 @@ class PropManagementService(IPropManagementService):
 
             return JSONConfigurator()
 
-    def _get_special_placements(self) -> Dict[str, Any]:
+    def _get_special_placements(self) -> dict[str, Any]:
         """Get special placements using JSONConfigurator singleton."""
         return self._json_configurator.load_special_placements()
 
-    def classify_props_by_size(self, beat_data: BeatData) -> Dict[str, list]:
+    def classify_props_by_size(self, beat_data: BeatData) -> dict[str, list]:
         """
         Classify props by size categories (big, small, hands).
 
@@ -784,7 +784,7 @@ class PropManagementService(IPropManagementService):
         return classification
 
     def get_repositioning_strategy(
-        self, beat_data: BeatData, prop_classification: Dict[str, list]
+        self, beat_data: BeatData, prop_classification: dict[str, list]
     ) -> str:
         """
         Determine repositioning strategy based on prop classification and letter.

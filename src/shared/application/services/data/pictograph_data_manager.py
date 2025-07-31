@@ -13,7 +13,7 @@ while maintaining the proven data management algorithms.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.pictograph_services import IPictographDataManager
 from desktop.modern.domain.models.beat_data import BeatData
@@ -71,10 +71,10 @@ class PictographDataManager(IPictographDataManager):
     ):
         # Use unified cache manager for pictograph caching
         self.cache_manager = cache_manager or DataCacheManager()
-        self._dataset_index: Dict[str, List[str]] = {}
+        self._dataset_index: dict[str, list[str]] = {}
         self._dataset_query = dataset_query
-        self._pictograph_cache: Dict[str, Any] = {}
-        self._dataset_cache: Optional[Dict[str, List[Dict[str, Any]]]] = None
+        self._pictograph_cache: dict[str, Any] = {}
+        self._dataset_cache: Optional[dict[str, list[dict[str, Any]]]] = None
 
     def create_pictograph(
         self, grid_mode: GridMode = GridMode.DIAMOND
@@ -107,11 +107,11 @@ class PictographDataManager(IPictographDataManager):
             },
         )
 
-    def get_dataset_categories(self) -> List[str]:
+    def get_dataset_categories(self) -> list[str]:
         """Get all available dataset categories."""
         return list(self._dataset_index.keys())
 
-    def get_pictographs_by_category(self, category: str) -> List[PictographData]:
+    def get_pictographs_by_category(self, category: str) -> list[PictographData]:
         """Get all pictographs in a category."""
         pictograph_ids = self._dataset_index.get(category, [])
         return [
@@ -139,7 +139,7 @@ class PictographDataManager(IPictographDataManager):
 
         return True
 
-    def get_dataset_stats(self) -> Dict[str, Any]:
+    def get_dataset_stats(self) -> dict[str, Any]:
         """Get dataset statistics."""
         return {
             "total_pictographs": len(self._pictograph_cache),
@@ -197,7 +197,7 @@ class PictographDataManager(IPictographDataManager):
             logger.error(f"Failed to get pictograph data for {pictograph_id}: {e}")
             return None
 
-    def get_pictograph_dataset(self) -> Dict[str, List[Dict[str, Any]]]:
+    def get_pictograph_dataset(self) -> dict[str, list[dict[str, Any]]]:
         """
         Get the complete pictograph dataset for question generation.
 
@@ -244,7 +244,7 @@ class PictographDataManager(IPictographDataManager):
             # Return empty dataset to prevent crashes
             return {}
 
-    def _get_pictographs_by_letter(self, letter: str) -> List[Dict[str, Any]]:
+    def _get_pictographs_by_letter(self, letter: str) -> list[dict[str, Any]]:
         """
         Get pictographs for a specific letter.
 
@@ -281,7 +281,7 @@ class PictographDataManager(IPictographDataManager):
 
     # Private helper methods
 
-    def _matches_query(self, pictograph: PictographData, query: Dict[str, Any]) -> bool:
+    def _matches_query(self, pictograph: PictographData, query: dict[str, Any]) -> bool:
         """Check if pictograph matches search query."""
         # Letter matching
         if "letter" in query:

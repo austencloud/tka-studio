@@ -5,7 +5,6 @@ Service for sorting sequences and grouping them into sections.
 """
 
 from datetime import datetime
-from typing import Dict, List
 
 from desktop.modern.core.interfaces.browse_services import ISequenceSorter
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -15,8 +14,8 @@ class SequenceSorterService(ISequenceSorter):
     """Service for sorting sequences and organizing them into sections."""
 
     def sort_sequences(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> List[SequenceData]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> list[SequenceData]:
         """Sort sequences based on the selected method."""
         print(f"🔄 Sorting {len(sequences)} sequences by {sort_method}")
 
@@ -44,8 +43,8 @@ class SequenceSorterService(ISequenceSorter):
         return result
 
     def group_sequences_into_sections(
-        self, sequences: List[SequenceData], sort_method: str
-    ) -> Dict[str, List[SequenceData]]:
+        self, sequences: list[SequenceData], sort_method: str
+    ) -> dict[str, list[SequenceData]]:
         """Group sequences into sections based on sort method."""
         sections = {}
 
@@ -77,7 +76,7 @@ class SequenceSorterService(ISequenceSorter):
         else:
             return sequence.word[0].upper() if sequence.word else "?"
 
-    def get_section_display_order(self, sort_method: str) -> List[str]:
+    def get_section_display_order(self, sort_method: str) -> list[str]:
         """Get the preferred display order for sections based on sort method."""
         if sort_method == "alphabetical":
             # Return alphabetical order A-Z, with special characters at end

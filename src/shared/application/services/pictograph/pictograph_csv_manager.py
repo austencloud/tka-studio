@@ -18,7 +18,7 @@ PROVIDES:
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Optional, TypedDict
+from typing import Optional, TypedDict
 
 import pandas as pd
 
@@ -40,7 +40,7 @@ class PictographSearchQuery(TypedDict, total=False):
     motion_type: Optional[str]
     start_position: Optional[str]
     max_results: Optional[int]
-    categories: Optional[List[str]]
+    categories: Optional[list[str]]
 
 
 class PictographCSVManager(IPictographCSVManager):
@@ -56,8 +56,8 @@ class PictographCSVManager(IPictographCSVManager):
     """
 
     def __init__(self):
-        self._pictograph_cache: Dict[str, PictographData] = {}
-        self._dataset_index: Dict[str, List[str]] = {}
+        self._pictograph_cache: dict[str, PictographData] = {}
+        self._dataset_index: dict[str, list[str]] = {}
 
         self._csv_data = None
         self._data_path = (

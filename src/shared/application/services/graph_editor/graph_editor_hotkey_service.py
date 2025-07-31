@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 
@@ -38,9 +38,9 @@ class GraphEditorHotkeyService:
         self.graph_editor_getter = graph_editor_getter
 
         # Platform-agnostic event callbacks
-        self._arrow_moved_callbacks: List[Callable[[str, int, int], None]] = []
-        self._hotkey_processed_callbacks: List[
-            Callable[[str, Dict[str, Any]], None]
+        self._arrow_moved_callbacks: list[Callable[[str, int, int], None]] = []
+        self._hotkey_processed_callbacks: list[
+            Callable[[str, dict[str, Any]], None]
         ] = []
 
     def add_arrow_moved_callback(self, callback: Callable[[str, int, int], None]):
@@ -48,7 +48,7 @@ class GraphEditorHotkeyService:
         self._arrow_moved_callbacks.append(callback)
 
     def add_hotkey_processed_callback(
-        self, callback: Callable[[str, Dict[str, Any]], None]
+        self, callback: Callable[[str, dict[str, Any]], None]
     ):
         """Add callback for when a hotkey is processed."""
         self._hotkey_processed_callbacks.append(callback)
@@ -57,7 +57,7 @@ class GraphEditorHotkeyService:
         self,
         hotkey: str,
         beat_data: Optional[BeatData] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> bool:
         """
         Process a hotkey action.
@@ -135,7 +135,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to move arrow {arrow_id}: {e}")
             return False
 
-    def _select_all(self, context: Dict[str, Any]) -> bool:
+    def _select_all(self, context: dict[str, Any]) -> bool:
         """Select all elements in the graph editor."""
         try:
             if self.graph_editor_getter:
@@ -149,7 +149,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to select all: {e}")
             return False
 
-    def _copy(self, beat_data: Optional[BeatData], context: Dict[str, Any]) -> bool:
+    def _copy(self, beat_data: Optional[BeatData], context: dict[str, Any]) -> bool:
         """Copy selected elements."""
         try:
             if self.graph_editor_getter:
@@ -163,7 +163,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to copy: {e}")
             return False
 
-    def _paste(self, context: Dict[str, Any]) -> bool:
+    def _paste(self, context: dict[str, Any]) -> bool:
         """Paste copied elements."""
         try:
             if self.graph_editor_getter:
@@ -177,7 +177,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to paste: {e}")
             return False
 
-    def _delete_selected(self, context: Dict[str, Any]) -> bool:
+    def _delete_selected(self, context: dict[str, Any]) -> bool:
         """Delete selected elements."""
         try:
             if self.graph_editor_getter:
@@ -192,7 +192,7 @@ class GraphEditorHotkeyService:
             return False
 
     def _process_shift_hotkey(
-        self, hotkey: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, hotkey: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process shift-based hotkeys."""
         try:
@@ -210,7 +210,7 @@ class GraphEditorHotkeyService:
             return False
 
     def _process_ctrl_hotkey(
-        self, hotkey: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, hotkey: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process ctrl-based hotkeys."""
         try:
@@ -228,7 +228,7 @@ class GraphEditorHotkeyService:
             return False
 
     def _process_arrow_key(
-        self, hotkey: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, hotkey: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process arrow key movements."""
         try:
@@ -255,7 +255,7 @@ class GraphEditorHotkeyService:
             return False
 
     def _process_custom_hotkey(
-        self, hotkey: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, hotkey: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process custom hotkeys."""
         try:
@@ -267,7 +267,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to process custom hotkey {hotkey}: {e}")
             return False
 
-    def _extend_selection(self, direction: str, context: Dict[str, Any]) -> bool:
+    def _extend_selection(self, direction: str, context: dict[str, Any]) -> bool:
         """Extend selection in the specified direction."""
         try:
             if self.graph_editor_getter:
@@ -281,7 +281,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to extend selection: {e}")
             return False
 
-    def _move_cursor(self, delta_x: int, delta_y: int, context: Dict[str, Any]) -> bool:
+    def _move_cursor(self, delta_x: int, delta_y: int, context: dict[str, Any]) -> bool:
         """Move cursor by the specified delta."""
         try:
             if self.graph_editor_getter:
@@ -295,7 +295,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to move cursor: {e}")
             return False
 
-    def _undo(self, context: Dict[str, Any]) -> bool:
+    def _undo(self, context: dict[str, Any]) -> bool:
         """Undo last action."""
         try:
             if self.graph_editor_getter:
@@ -309,7 +309,7 @@ class GraphEditorHotkeyService:
             logger.error(f"Failed to undo: {e}")
             return False
 
-    def _redo(self, context: Dict[str, Any]) -> bool:
+    def _redo(self, context: dict[str, Any]) -> bool:
         """Redo last undone action."""
         try:
             if self.graph_editor_getter:
@@ -324,20 +324,20 @@ class GraphEditorHotkeyService:
             return False
 
     def _process_custom_shift_hotkey(
-        self, key: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, key: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process custom shift hotkeys."""
         logger.info(f"Custom shift hotkey not implemented: Shift+{key}")
         return False
 
     def _process_custom_ctrl_hotkey(
-        self, key: str, beat_data: Optional[BeatData], context: Dict[str, Any]
+        self, key: str, beat_data: Optional[BeatData], context: dict[str, Any]
     ) -> bool:
         """Process custom ctrl hotkeys."""
         logger.info(f"Custom ctrl hotkey not implemented: Ctrl+{key}")
         return False
 
-    def _notify_hotkey_processed(self, action: str, context: Dict[str, Any]):
+    def _notify_hotkey_processed(self, action: str, context: dict[str, Any]):
         """Notify callbacks that a hotkey was processed."""
         for callback in self._hotkey_processed_callbacks:
             callback(action, context)

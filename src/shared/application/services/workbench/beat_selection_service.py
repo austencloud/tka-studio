@@ -7,7 +7,7 @@ and validation without any Qt dependencies.
 
 from enum import Enum
 import logging
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple, Optional
 
 from desktop.modern.core.interfaces.workbench_services import IBeatSelectionService
 
@@ -28,8 +28,8 @@ class SelectionChangeResult(NamedTuple):
     changed: bool
     selection_type: SelectionType
     selected_index: Optional[int]
-    previous_indices: List[int]
-    current_indices: List[int]
+    previous_indices: list[int]
+    current_indices: list[int]
 
     @classmethod
     def no_change(cls):
@@ -37,12 +37,12 @@ class SelectionChangeResult(NamedTuple):
         return cls(False, SelectionType.NONE, None, [], [])
 
     @classmethod
-    def beat_selected(cls, index: int, previous: List[int], current: List[int]):
+    def beat_selected(cls, index: int, previous: list[int], current: list[int]):
         """Create a beat selection result."""
         return cls(True, SelectionType.BEAT, index, previous, current)
 
     @classmethod
-    def start_position_selected(cls, previous: List[int]):
+    def start_position_selected(cls, previous: list[int]):
         """Create a start position selection result."""
         return cls(True, SelectionType.START_POSITION, -1, previous, [])
 
@@ -60,7 +60,7 @@ class BeatSelectionService(IBeatSelectionService):
     def __init__(self):
         """Initialize the selection service with default values."""
         self._selected_index: Optional[int] = None
-        self._selected_indices: List[int] = []
+        self._selected_indices: list[int] = []
         self._multi_selection_enabled = False
         self._start_position_selected = False
         self._keyboard_navigation_enabled = True
@@ -300,7 +300,7 @@ class BeatSelectionService(IBeatSelectionService):
         """Get the primary selected beat index."""
         return self._selected_index
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         """Get all selected beat indices."""
         return self._selected_indices.copy()
 
@@ -390,7 +390,7 @@ class BeatSelectionService(IBeatSelectionService):
         }
 
     # Missing interface methods implementation
-    def select_multiple_beats(self, beat_indices: List[int]) -> bool:
+    def select_multiple_beats(self, beat_indices: list[int]) -> bool:
         """Select multiple beats (interface implementation)."""
         try:
             # Clear current selection first
@@ -425,7 +425,7 @@ class BeatSelectionService(IBeatSelectionService):
         except Exception as e:
             logger.error(f"❌ [SELECTION] Error in deselect_all: {e}")
 
-    def get_selected_beats(self) -> List[int]:
+    def get_selected_beats(self) -> list[int]:
         """Get list of selected beat indices (interface implementation)."""
         return sorted(list(self._selected_beats))
 

@@ -8,7 +8,7 @@ providing the data needed for image export.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.image_export_services import (
     ISequenceMetadataExtractor,
@@ -28,7 +28,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
     def __init__(self):
         pass
 
-    def extract_sequence_data(self, file_path: Path) -> Optional[List[Dict[str, Any]]]:
+    def extract_sequence_data(self, file_path: Path) -> Optional[list[dict[str, Any]]]:
         """Extract sequence data from a file."""
         try:
             logger.debug(f"Extracting sequence data from {file_path}")
@@ -63,7 +63,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
             )
             return None
 
-    def extract_metadata(self, file_path: Path) -> Optional[Dict[str, Any]]:
+    def extract_metadata(self, file_path: Path) -> Optional[dict[str, Any]]:
         """Extract metadata from a sequence file."""
         try:
             logger.debug(f"Extracting metadata from {file_path}")
@@ -100,7 +100,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
             )
             return None
 
-    def get_difficulty_level(self, sequence_data: List[Dict[str, Any]]) -> int:
+    def get_difficulty_level(self, sequence_data: list[dict[str, Any]]) -> int:
         """Calculate difficulty level for a sequence."""
         try:
             if not sequence_data:
@@ -144,7 +144,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
             logger.error(f"Error calculating difficulty level: {e}", exc_info=True)
             return 1  # Default to easiest difficulty on error
 
-    def _extract_from_json(self, json_path: Path) -> Optional[List[Dict[str, Any]]]:
+    def _extract_from_json(self, json_path: Path) -> Optional[list[dict[str, Any]]]:
         """Extract sequence data from a JSON file."""
         try:
             with open(json_path, encoding="utf-8") as f:
@@ -171,7 +171,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
         # Word is typically the parent directory name
         return file_path.parent.name
 
-    def _calculate_difficulty_from_data(self, data: Dict[str, Any]) -> int:
+    def _calculate_difficulty_from_data(self, data: dict[str, Any]) -> int:
         """Calculate difficulty level from JSON data."""
         # If difficulty is explicitly stored, use it
         if "difficulty_level" in data:
@@ -181,7 +181,7 @@ class SequenceMetadataExtractor(ISequenceMetadataExtractor):
         sequence = data.get("sequence", [])
         return self.get_difficulty_level(sequence)
 
-    def _calculate_complexity_score(self, sequence_data: List[Dict[str, Any]]) -> float:
+    def _calculate_complexity_score(self, sequence_data: list[dict[str, Any]]) -> float:
         """
         Calculate complexity score for a sequence.
 

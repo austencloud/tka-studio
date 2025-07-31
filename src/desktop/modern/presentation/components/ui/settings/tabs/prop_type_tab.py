@@ -1,5 +1,3 @@
-from typing import Dict
-
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QIcon
 from PyQt6.QtWidgets import QGridLayout, QLabel, QPushButton, QVBoxLayout, QWidget
@@ -98,7 +96,7 @@ class PropTypeTab(QWidget):
     def __init__(self, prop_service: IPropTypeSettingsManager, parent=None):
         super().__init__(parent)
         self.prop_service = prop_service
-        self.buttons: Dict[str, PropButton] = {}
+        self.buttons: dict[str, PropButton] = {}
         self._setup_ui()
         self._load_current_prop()
         self._setup_connections()

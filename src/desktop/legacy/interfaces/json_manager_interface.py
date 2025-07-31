@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+from typing import Any, Optional, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -7,11 +7,11 @@ class ISequenceDataLoaderSaver(Protocol):
     """Interface for sequence data loading and saving operations."""
 
     @abstractmethod
-    def load_current_sequence(self) -> List[Dict[str, Any]]:
+    def load_current_sequence(self) -> list[dict[str, Any]]:
         """Load the current sequence."""
 
     @abstractmethod
-    def save_current_sequence(self, sequence: List[Dict[str, Any]]) -> None:
+    def save_current_sequence(self, sequence: list[dict[str, Any]]) -> None:
         """Save the current sequence."""
 
 
@@ -20,11 +20,11 @@ class IJsonManager(Protocol):
     """Interface for the JSON manager."""
 
     @abstractmethod
-    def save_sequence(self, sequence_data: List[Dict[str, Any]]) -> bool:
+    def save_sequence(self, sequence_data: list[dict[str, Any]]) -> bool:
         """Save the current sequence to the default location."""
 
     @abstractmethod
-    def load_sequence(self, file_path: Optional[str] = None) -> List[Dict[str, Any]]:
+    def load_sequence(self, file_path: Optional[str] = None) -> list[dict[str, Any]]:
         """Load a sequence from the specified file path or the default location."""
 
     @abstractmethod

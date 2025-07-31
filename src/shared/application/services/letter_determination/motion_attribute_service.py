@@ -6,7 +6,7 @@ Direct port of legacy attribute management logic.
 """
 
 import logging
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 from desktop.modern.core.interfaces.letter_determination.letter_determination_services import (
     IMotionAttributeService,
@@ -154,7 +154,7 @@ class MotionAttributeService(IMotionAttributeService):
 
     def extract_prefloat_attributes(
         self, pictograph_data: "PictographData"
-    ) -> Dict[str, "MotionAttributes"]:
+    ) -> dict[str, "MotionAttributes"]:
         """
         Extract prefloat attributes from pictograph data.
 
@@ -254,7 +254,7 @@ class MotionAttributeService(IMotionAttributeService):
 
     def get_attribute_summary(
         self, pictograph_data: "PictographData"
-    ) -> Dict[str, any]:
+    ) -> dict[str, any]:
         """
         Get summary of motion attributes for debugging.
 

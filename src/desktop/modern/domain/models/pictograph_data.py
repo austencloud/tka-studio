@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import uuid
 
 from desktop.modern.domain.models.arrow_data import ArrowData
@@ -35,9 +35,9 @@ class PictographData:
     grid_data: GridData = field(default_factory=GridData)
 
     # Arrows, props, and motions (consistent dictionary approach)
-    arrows: Dict[str, ArrowData] = field(default_factory=dict)  # "blue", "red"
-    props: Dict[str, PropData] = field(default_factory=dict)  # "blue", "red"
-    motions: Dict[str, MotionData] = field(default_factory=dict)  # "blue", "red"
+    arrows: dict[str, ArrowData] = field(default_factory=dict)  # "blue", "red"
+    props: dict[str, PropData] = field(default_factory=dict)  # "blue", "red"
+    motions: dict[str, MotionData] = field(default_factory=dict)  # "blue", "red"
 
     # Letter and position data
     letter: Optional[str] = None
@@ -56,7 +56,7 @@ class PictographData:
     is_mirrored: bool = False
 
     # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate pictograph data."""
@@ -145,7 +145,7 @@ class PictographData:
 
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "id": self.id,
@@ -162,7 +162,7 @@ class PictographData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "PictographData":
+    def from_dict(cls, data: dict[str, Any]) -> "PictographData":
         """Create from dictionary."""
         grid_data = GridData.from_dict(data.get("grid_data", {}))
 
@@ -192,7 +192,7 @@ class PictographData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 

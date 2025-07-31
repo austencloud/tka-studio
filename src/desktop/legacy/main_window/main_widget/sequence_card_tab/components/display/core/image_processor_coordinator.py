@@ -6,7 +6,7 @@ architecture that follows the Single Responsibility Principle.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QPixmap
@@ -224,7 +224,7 @@ class ImageProcessorCoordinator:
             f"{stats['scaled_items_cleared']} scaled items"
         )
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """
         Get comprehensive performance statistics.
 

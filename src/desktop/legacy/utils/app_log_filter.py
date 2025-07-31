@@ -8,7 +8,6 @@ throughout the application, creating a cleaner console output.
 import logging
 import re
 from re import Pattern
-from typing import List, Set
 
 
 class AppLogFilter(logging.Filter):
@@ -23,7 +22,7 @@ class AppLogFilter(logging.Filter):
         super().__init__(name)
 
         # Patterns for messages that should always be filtered
-        self.always_filter_patterns: List[Pattern] = [
+        self.always_filter_patterns: list[Pattern] = [
             # UI-related patterns
             re.compile(r"Unknown property cursor"),
             re.compile(r"DEBUG: MenuBarNavWidget"),
@@ -40,13 +39,13 @@ class AppLogFilter(logging.Filter):
         ]
 
         # Module prefixes to filter at DEBUG level
-        self.debug_filter_modules: Set[str] = {
+        self.debug_filter_modules: set[str] = {
             "main_window.main_widget.sequence_card_tab",
             "main_window.main_widget.browse_tab",
         }
 
         # Specific messages to allow even if they match patterns
-        self.allowed_messages: Set[str] = {
+        self.allowed_messages: set[str] = {
             # Add specific messages that should be allowed despite matching patterns
         }
 

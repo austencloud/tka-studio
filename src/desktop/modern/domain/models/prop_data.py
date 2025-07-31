@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import uuid
 
 from desktop.modern.domain.models.enums import Orientation, PropType, RotationDirection
@@ -32,7 +32,7 @@ class PropData:
     is_visible: bool = True
     is_selected: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         # Handle both enum and string values for prop_type
         prop_type_value = (
@@ -53,7 +53,7 @@ class PropData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "PropData":
+    def from_dict(cls, data: dict[str, Any]) -> "PropData":
         """Create from dictionary."""
         return cls(
             id=data.get("id", str(uuid.uuid4())),
@@ -68,7 +68,7 @@ class PropData:
             is_selected=data.get("is_selected", False),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 

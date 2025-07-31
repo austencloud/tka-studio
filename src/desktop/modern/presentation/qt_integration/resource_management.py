@@ -13,7 +13,7 @@ from dataclasses import dataclass
 import hashlib
 import logging
 from threading import Lock
-from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
+from typing import Any, Callable, Generic, Optional, TypeVar
 
 # Import Qt modules with compatibility
 try:
@@ -91,9 +91,9 @@ class ResourcePool(Generic[T]):
         self.cleanup_threshold = cleanup_threshold
 
         # Pool storage
-        self._available: List[T] = []
-        self._in_use: Dict[int, T] = {}
-        self._resource_cache: Dict[str, T] = {}
+        self._available: list[T] = []
+        self._in_use: dict[int, T] = {}
+        self._resource_cache: dict[str, T] = {}
 
         # Metrics and management
         self._metrics = ResourcePoolMetrics()
@@ -222,7 +222,7 @@ class ResourcePool(Generic[T]):
         # Rough estimate: assume each reused object saves ~100 bytes
         return self._metrics.objects_reused * 100
 
-    def get_pool_info(self) -> Dict[str, Any]:
+    def get_pool_info(self) -> dict[str, Any]:
         """Get detailed pool information."""
         with self._lock:
             return {
@@ -390,7 +390,7 @@ class QtResourceManager:
         """Return font to pool."""
         self.font_pool.return_resource(font)
 
-    def get_comprehensive_metrics(self) -> Dict[str, Any]:
+    def get_comprehensive_metrics(self) -> dict[str, Any]:
         """Get comprehensive metrics for all resource pools."""
         with self._lock:
             return {

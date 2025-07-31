@@ -11,7 +11,7 @@ import os
 
 # Import the framework-agnostic core services
 import sys
-from typing import Dict, List, Optional
+from typing import Optional
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
@@ -39,7 +39,7 @@ class WebAssetProvider(IPictographAssetProvider):
     def __init__(self, assets_base_url: str = "/static/assets/"):
         """Initialize with base URL for assets."""
         self.assets_base_url = assets_base_url
-        self._asset_cache: Dict[str, SvgAsset] = {}
+        self._asset_cache: dict[str, SvgAsset] = {}
         logger.info(f"Web asset provider initialized with base URL: {assets_base_url}")
 
     def get_grid_asset(self, grid_mode: str) -> Optional[SvgAsset]:
@@ -186,7 +186,7 @@ class WebAssetProvider(IPictographAssetProvider):
 class WebRenderEngine:
     """Web-specific render engine that converts commands to web formats."""
 
-    def render_to_svg(self, commands: List[RenderCommand], canvas_size: Size) -> str:
+    def render_to_svg(self, commands: list[RenderCommand], canvas_size: Size) -> str:
         """Render commands to a complete SVG document."""
         try:
             # Create SVG document
@@ -222,7 +222,7 @@ class WebRenderEngine:
             return f'<svg><text x="10" y="20">Render Error: {e}</text></svg>'
 
     def render_to_html_canvas(
-        self, commands: List[RenderCommand], canvas_size: Size
+        self, commands: list[RenderCommand], canvas_size: Size
     ) -> str:
         """Render commands to HTML5 Canvas JavaScript code."""
         try:
@@ -342,10 +342,10 @@ class WebPictographService:
 
     def render_pictograph_svg(
         self,
-        pictograph_data: Dict,
+        pictograph_data: dict,
         width: int = 400,
         height: int = 400,
-        options: Optional[Dict] = None,
+        options: Optional[dict] = None,
     ) -> str:
         """
         Render pictograph as SVG for web display.
@@ -379,10 +379,10 @@ class WebPictographService:
 
     def render_pictograph_canvas_js(
         self,
-        pictograph_data: Dict,
+        pictograph_data: dict,
         width: int = 400,
         height: int = 400,
-        options: Optional[Dict] = None,
+        options: Optional[dict] = None,
     ) -> str:
         """
         Render pictograph as HTML5 Canvas JavaScript.
@@ -405,7 +405,7 @@ class WebPictographService:
             logger.error(f"Failed to render Canvas JS: {e}")
             return f"console.error('Render Error: {e}');"
 
-    def create_thumbnail_svg(self, pictograph_data: Dict, size: int = 150) -> str:
+    def create_thumbnail_svg(self, pictograph_data: dict, size: int = 150) -> str:
         """Create small thumbnail SVG for sequence browsing."""
         return self.render_pictograph_svg(
             pictograph_data,
@@ -414,7 +414,7 @@ class WebPictographService:
             options={"thumbnail_mode": True, "simplified": True},
         )
 
-    def get_pictograph_metadata(self, pictograph_data: Dict) -> Dict:
+    def get_pictograph_metadata(self, pictograph_data: dict) -> dict:
         """Extract metadata from pictograph data."""
         try:
             return {
@@ -428,7 +428,7 @@ class WebPictographService:
             logger.error(f"Failed to extract metadata: {e}")
             return {"error": str(e)}
 
-    def _calculate_complexity_score(self, pictograph_data: Dict) -> int:
+    def _calculate_complexity_score(self, pictograph_data: dict) -> int:
         """Calculate complexity score for caching/optimization decisions."""
         score = 0
         score += len(pictograph_data.get("props", [])) * 2

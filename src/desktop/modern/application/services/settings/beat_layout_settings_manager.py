@@ -7,7 +7,6 @@ calculation and QSettings persistence.
 
 import logging
 import math
-from typing import Dict, Tuple
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 
@@ -63,7 +62,7 @@ class BeatLayoutSettingsManager(QObject):
         self.settings = settings
         logger.debug("Initialized BeatLayoutSettingsManager")
 
-    def get_layout_for_length(self, sequence_length: int) -> Tuple[int, int]:
+    def get_layout_for_length(self, sequence_length: int) -> tuple[int, int]:
         """
         Get the layout (rows, cols) for a given sequence length.
 
@@ -171,7 +170,7 @@ class BeatLayoutSettingsManager(QObject):
 
     def get_layout_options_for_length(
         self, sequence_length: int
-    ) -> Dict[str, Tuple[int, int]]:
+    ) -> dict[str, tuple[int, int]]:
         """
         Get available layout options for a sequence length.
 
@@ -223,7 +222,7 @@ class BeatLayoutSettingsManager(QObject):
             )
             return {"1x1": (1, 1)}
 
-    def _get_custom_layout(self, sequence_length: int) -> Tuple[int, int] | None:
+    def _get_custom_layout(self, sequence_length: int) -> tuple[int, int] | None:
         """Get custom layout setting if it exists."""
         try:
             key = f"layout/custom_{sequence_length}"
@@ -242,7 +241,7 @@ class BeatLayoutSettingsManager(QObject):
             logger.error(f"Failed to get custom layout for {sequence_length}: {e}")
             return None
 
-    def _calculate_optimal_layout(self, sequence_length: int) -> Tuple[int, int]:
+    def _calculate_optimal_layout(self, sequence_length: int) -> tuple[int, int]:
         """Calculate optimal layout for a sequence length."""
         try:
             # Find the factors closest to square root for best aspect ratio
@@ -328,7 +327,7 @@ class BeatLayoutSettingsManager(QObject):
             logger.error(f"Failed to remove custom layout for {sequence_length}: {e}")
             return False
 
-    def get_all_custom_layouts(self) -> Dict[int, Tuple[int, int]]:
+    def get_all_custom_layouts(self) -> dict[int, tuple[int, int]]:
         """
         Get all custom layout settings.
 

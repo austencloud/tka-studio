@@ -6,7 +6,7 @@ These interfaces define the contracts for fade and animation services.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 from desktop.modern.core.types import (
     AnimationGroupType,
@@ -61,11 +61,11 @@ class IGraphicsEffectManager(ABC):
     """Interface for managing graphics effects lifecycle."""
 
     @abstractmethod
-    def apply_fade_effect(self, widget: WidgetType) -> Dict[str, Any]:
+    def apply_fade_effect(self, widget: WidgetType) -> dict[str, Any]:
         """Apply a fade effect to a widget."""
 
     @abstractmethod
-    def remove_effects(self, widgets: List[WidgetType]) -> None:
+    def remove_effects(self, widgets: list[WidgetType]) -> None:
         """Remove graphics effects from widgets."""
 
     @abstractmethod
@@ -119,7 +119,7 @@ class IAnimationService(ABC):
     @abstractmethod
     async def fade_widgets(
         self,
-        widgets: List[WidgetType],
+        widgets: list[WidgetType],
         fade_in: bool,
         options: Optional[FadeOptions] = None,
     ) -> None:
@@ -170,7 +170,7 @@ class IFadeOrchestrator(ABC):
     @abstractmethod
     async def fade_widgets_and_update(
         self,
-        widgets: List[WidgetType],
+        widgets: list[WidgetType],
         update_callback: Callable[[], None],
         options: Optional[FadeOptions] = None,
     ) -> None:

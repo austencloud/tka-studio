@@ -17,7 +17,7 @@ BUSINESS LOGIC DELEGATED TO:
 - BeatSelectionService: Beat selection logic
 """
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -109,7 +109,7 @@ class SequenceWorkbench(ViewableComponentBase):
         self._button_interface: Optional[WorkbenchButtonInterfaceAdapter] = None
 
         # Session restoration tracking
-        self._subscription_ids: List[str] = []
+        self._subscription_ids: list[str] = []
 
         # Helper instances for extracted functionality
         self._ui_setup = UISetupHelper(self)

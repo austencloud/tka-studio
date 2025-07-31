@@ -6,7 +6,7 @@ Uses Qt signals for clean communication.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -32,14 +32,14 @@ class WindowStateManager(QObject):
         super().__init__()
 
         # Window state
-        self._window_geometry: Dict[str, int] = {}
+        self._window_geometry: dict[str, int] = {}
         self._window_maximized: bool = False
 
-    def get_window_geometry(self) -> Dict[str, int]:
+    def get_window_geometry(self) -> dict[str, int]:
         """Get window geometry."""
         return self._window_geometry.copy()
 
-    def set_window_geometry(self, geometry: Dict[str, int]) -> None:
+    def set_window_geometry(self, geometry: dict[str, int]) -> None:
         """Set window geometry."""
         self._window_geometry = geometry.copy()
 
@@ -69,14 +69,14 @@ class WindowStateManager(QObject):
         )
         # self._event_bus.publish(event)  # Converted to Qt signals
 
-    def get_window_state(self) -> Dict[str, any]:
+    def get_window_state(self) -> dict[str, any]:
         """Get complete window state."""
         return {
             "geometry": self.get_window_geometry(),
             "maximized": self.is_window_maximized(),
         }
 
-    def set_window_state(self, state: Dict[str, any]) -> None:
+    def set_window_state(self, state: dict[str, any]) -> None:
         """Set complete window state."""
         if "geometry" in state:
             self.set_window_geometry(state["geometry"])
@@ -97,14 +97,14 @@ class WindowStateManager(QObject):
         )
         # self._event_bus.publish(event)  # Converted to Qt signals
 
-    def get_state_for_persistence(self) -> Dict[str, any]:
+    def get_state_for_persistence(self) -> dict[str, any]:
         """Get state data for persistence."""
         return {
             "window_geometry": self._window_geometry,
             "window_maximized": self._window_maximized,
         }
 
-    def load_state_from_persistence(self, state: Dict[str, any]) -> None:
+    def load_state_from_persistence(self, state: dict[str, any]) -> None:
         """Load state from persistence data."""
         if "window_geometry" in state:
             self._window_geometry = state["window_geometry"]
@@ -127,12 +127,12 @@ class WindowStateManager(QObject):
         elif key == "window_maximized":
             self._window_maximized = value
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get state for a specific tab."""
         # Window state manager doesn't handle tabs
         return {}
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
         return {
             "window_geometry": self._window_geometry,

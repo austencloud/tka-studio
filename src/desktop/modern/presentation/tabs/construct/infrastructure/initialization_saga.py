@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import logging
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 from uuid import uuid4
 
 from desktop.modern.core.events.domain_events import UIStateChangedEvent
@@ -49,7 +49,7 @@ class SagaStepResult:
     result: Optional[Any] = None
     error_message: Optional[str] = None
     execution_time_ms: float = 0.0
-    compensation_data: Optional[Dict[str, Any]] = None
+    compensation_data: Optional[dict[str, Any]] = None
 
 
 @dataclass
@@ -57,8 +57,8 @@ class SagaContext:
     """Context passed to saga steps."""
 
     saga_id: str
-    step_results: Dict[str, SagaStepResult] = field(default_factory=dict)
-    shared_data: Dict[str, Any] = field(default_factory=dict)
+    step_results: dict[str, SagaStepResult] = field(default_factory=dict)
+    shared_data: dict[str, Any] = field(default_factory=dict)
     progress_callback: Optional[Callable[[int, str], None]] = None
 
 
@@ -391,8 +391,8 @@ class ConstructTabInitializationSaga:
         self.saga_id = str(uuid4())
         self.event_bus = event_bus or get_event_bus()
         self.status = SagaStatus.PENDING
-        self.steps: List[SagaStep] = []
-        self.executed_steps: List[SagaStep] = []
+        self.steps: list[SagaStep] = []
+        self.executed_steps: list[SagaStep] = []
         self.logger = logging.getLogger(__name__)
 
     def add_step(self, step: SagaStep):

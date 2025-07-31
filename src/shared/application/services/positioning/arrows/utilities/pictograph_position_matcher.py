@@ -8,7 +8,7 @@ REFACTORED: Now works with PictographData directly instead of BeatData, followin
 the principle that pictographs should be standalone without beat-specific fields.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -41,7 +41,7 @@ class PictographPositionMatcher:
         """Initialize position matching service with Modern's native dataset."""
         self.pictograph_manager = PictographCSVManager()
 
-        self.pictograph_dataset: Optional[Dict[str, List[Dict[str, Any]]]] = None
+        self.pictograph_dataset: Optional[dict[str, list[dict[str, Any]]]] = None
         self._load_dataset()
 
     def _load_dataset(self):
@@ -71,7 +71,7 @@ class PictographPositionMatcher:
 
     def _convert_dataframe_to_grouped_dict(
         self, df: pd.DataFrame
-    ) -> Dict[str, List[Dict[str, Any]]]:
+    ) -> dict[str, list[dict[str, Any]]]:
         """
         Convert pandas DataFrame to grouped dictionary format for position matching.
 
@@ -116,7 +116,7 @@ class PictographPositionMatcher:
 
         return grouped_dict
 
-    def get_next_options(self, last_beat_end_pos: str) -> List[PictographData]:
+    def get_next_options(self, last_beat_end_pos: str) -> list[PictographData]:
         """
         Validated algorithm: find all pictographs where start_pos matches.
 
@@ -167,7 +167,7 @@ class PictographPositionMatcher:
 
         return next_opts
 
-    def _convert_dict_to_pictograph_data(self, item: Dict[str, Any]) -> PictographData:
+    def _convert_dict_to_pictograph_data(self, item: dict[str, Any]) -> PictographData:
         """Convert dictionary item to PictographData using actual motion data from the dictionary."""
         letter = item.get("letter", "")
 
@@ -299,7 +299,7 @@ class PictographPositionMatcher:
         }
         return location_map.get(location_str.lower(), Location.SOUTH)
 
-    def get_alpha1_options(self) -> List[PictographData]:
+    def get_alpha1_options(self) -> list[PictographData]:
         """
         Convenience method to get Alpha 1 options (the canonical test case).
 
@@ -308,7 +308,7 @@ class PictographPositionMatcher:
         """
         return self.get_next_options("alpha1")
 
-    def get_available_start_positions(self) -> List[str]:
+    def get_available_start_positions(self) -> list[str]:
         """
         Get all available start positions in the dataset.
 
@@ -327,7 +327,7 @@ class PictographPositionMatcher:
 
         return sorted(list(start_positions))
 
-    def get_position_statistics(self, position: str) -> Dict[str, Any]:
+    def get_position_statistics(self, position: str) -> dict[str, Any]:
         """
         Get statistics for a specific position.
 
@@ -367,7 +367,7 @@ class PictographPositionMatcher:
             "unique_letters": len(set(letters)),
         }
 
-    def validate_dataset_integrity(self) -> Dict[str, Any]:
+    def validate_dataset_integrity(self) -> dict[str, Any]:
         """
         Validate the integrity of the loaded dataset.
 

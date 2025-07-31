@@ -5,7 +5,7 @@ Manages the layout and organization of sequence card pages.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QCoreApplication, QSize
 from PyQt6.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
@@ -36,7 +36,7 @@ class PageLayoutManager:
         self.content_layout = content_layout
         self.image_loader = image_loader
         self.cache_service = cache_service
-        self.page_widgets: List[SequenceCardPageWidget] = []
+        self.page_widgets: list[SequenceCardPageWidget] = []
         self.current_page_row_layout: Optional[QHBoxLayout] = None
 
     def _get_scroll_area_width(self) -> int:
@@ -99,8 +99,8 @@ class PageLayoutManager:
         )
 
     def display_sequences_in_pages(
-        self, sequences: List[SequenceCardData], column_count: int
-    ) -> List[SequenceCardPageWidget]:
+        self, sequences: list[SequenceCardData], column_count: int
+    ) -> list[SequenceCardPageWidget]:
         """Display sequences organized into pages."""
         if not sequences:
             logger.warning("No sequences to display")
@@ -213,8 +213,8 @@ class PageLayoutManager:
         return self.page_widgets
 
     def display_page_structure_immediately(
-        self, sequences: List[SequenceCardData], column_count: int
-    ) -> List[SequenceCardPageWidget]:
+        self, sequences: list[SequenceCardData], column_count: int
+    ) -> list[SequenceCardPageWidget]:
         """Display page structure immediately with placeholder cards for instant UI response."""
         if not sequences:
             logger.warning("No sequences to display")

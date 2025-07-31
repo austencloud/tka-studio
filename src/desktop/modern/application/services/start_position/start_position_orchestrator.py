@@ -6,7 +6,7 @@ Handles complex workflows and service interactions.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
@@ -149,7 +149,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
 
     def calculate_responsive_layout(
         self, container_size: QSize, position_count: int
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate responsive layout parameters for position options.
 
@@ -187,7 +187,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
 
     def get_positions_and_layout_for_mode(
         self, grid_mode: str, is_advanced: bool, container_size: QSize
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get both position list and layout configuration for a specific mode.
 

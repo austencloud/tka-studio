@@ -6,7 +6,7 @@ These models represent settings data without any UI coupling.
 """
 
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.domain.models.enums import BackgroundType, GridMode, PropType
 
@@ -18,7 +18,7 @@ class UserProfileData:
     name: str
     created_at: Optional[str] = None
     last_used: Optional[str] = None
-    preferences: Dict[str, Any] = field(default_factory=dict)
+    preferences: dict[str, Any] = field(default_factory=dict)
 
     def update(self, **kwargs) -> "UserProfileData":
         """Create a new instance with updated values."""
@@ -152,11 +152,11 @@ class SettingsData:
 
     # User management
     current_user: str = "Default User"
-    user_profiles: Dict[str, UserProfileData] = field(default_factory=dict)
+    user_profiles: dict[str, UserProfileData] = field(default_factory=dict)
 
     # Tab-specific settings
     visibility: VisibilitySettingsData = field(default_factory=VisibilitySettingsData)
-    beat_layouts: Dict[int, BeatLayoutData] = field(
+    beat_layouts: dict[int, BeatLayoutData] = field(
         default_factory=dict
     )  # keyed by sequence length
     image_export: ImageExportSettingsData = field(
@@ -167,7 +167,7 @@ class SettingsData:
     )
 
     # Custom settings
-    custom_settings: Dict[str, Any] = field(default_factory=dict)
+    custom_settings: dict[str, Any] = field(default_factory=dict)
 
     def update(self, **kwargs) -> "SettingsData":
         """Create a new instance with updated values."""

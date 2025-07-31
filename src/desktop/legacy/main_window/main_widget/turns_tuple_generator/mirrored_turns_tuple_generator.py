@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from enums.letter.letter_type import LetterType
 from objects.arrow.arrow import Arrow
@@ -13,7 +13,7 @@ class MirroredTurnsTupleGenerator:
     def __init__(self, turns_tuple_generator: "TurnsTupleGenerator"):
         self.turns_tuple_generator = turns_tuple_generator
 
-    def generate(self, arrow: "Arrow") -> Union[str, None]:
+    def generate(self, arrow: "Arrow") -> str | None:
         letter = arrow.pictograph.state.letter
         letter_type = LetterType.get_letter_type(arrow.pictograph.state.letter)
 

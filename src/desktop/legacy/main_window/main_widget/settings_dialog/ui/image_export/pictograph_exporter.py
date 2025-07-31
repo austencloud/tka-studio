@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
 from PyQt6.QtCore import Qt
@@ -83,8 +83,8 @@ class PictographExporter:
         return directory
 
     def _filter_pictographs(
-        self, pictographs: List[LegacyPictograph]
-    ) -> List[LegacyPictograph]:
+        self, pictographs: list[LegacyPictograph]
+    ) -> list[LegacyPictograph]:
         """
         Filter out blank pictographs and duplicates.
 
@@ -119,7 +119,7 @@ class PictographExporter:
         return valid_pictographs
 
     def _export_pictographs(
-        self, pictographs: List[LegacyPictograph], directory: str
+        self, pictographs: list[LegacyPictograph], directory: str
     ) -> int:
         """
         Export pictographs as individual images.

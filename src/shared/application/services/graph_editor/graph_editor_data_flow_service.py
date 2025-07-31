@@ -6,7 +6,7 @@ Qt-specific signal coordination is handled by adapters in the presentation layer
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -39,10 +39,10 @@ class GraphEditorDataFlowService:
         self.graph_editor_getter = graph_editor_getter
 
         # Platform-agnostic event callbacks
-        self._beat_data_updated_callbacks: List[
+        self._beat_data_updated_callbacks: list[
             Callable[[BeatData, int, SequenceData], None]
         ] = []
-        self._sequence_modified_callbacks: List[Callable[[SequenceData], None]] = []
+        self._sequence_modified_callbacks: list[Callable[[SequenceData], None]] = []
 
     def add_beat_data_updated_callback(
         self, callback: Callable[[BeatData, int, SequenceData], None]
@@ -101,7 +101,7 @@ class GraphEditorDataFlowService:
         self,
         sequence_data: SequenceData,
         modification_type: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
     ) -> SequenceData:
         """
         Modify sequence based on graph editor changes.
@@ -225,7 +225,7 @@ class GraphEditorDataFlowService:
             logger.error(f"Failed to sync data to graph editor: {e}")
 
     def _apply_graph_data_to_sequence(
-        self, sequence_data: SequenceData, graph_data: Dict[str, Any]
+        self, sequence_data: SequenceData, graph_data: dict[str, Any]
     ) -> SequenceData:
         """
         Apply graph editor data to sequence data.
@@ -296,7 +296,7 @@ class GraphEditorDataFlowService:
             return False
 
     def _compare_graph_and_sequence_data(
-        self, sequence_data: SequenceData, graph_data: Dict[str, Any]
+        self, sequence_data: SequenceData, graph_data: dict[str, Any]
     ) -> bool:
         """
         Compare graph editor data with sequence data.

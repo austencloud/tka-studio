@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Dict, List, Optional
+from typing import Optional
 
 from desktop.modern.core.interfaces import (
     IApplicationLaunchService,
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class ApplicationLaunchService(IApplicationLaunchService):
     def __init__(self, state_service: Optional[ILauncherStateService] = None):
         self._state_service = state_service
-        self._running_processes: Dict[str, subprocess.Popen] = {}
+        self._running_processes: dict[str, subprocess.Popen] = {}
 
     def launch_application(self, request: LaunchRequest) -> LaunchResult:
         start_time = time.time()
@@ -276,7 +276,7 @@ class ApplicationLaunchService(IApplicationLaunchService):
                 )
             return False
 
-    def get_running_applications(self) -> List[ApplicationData]:
+    def get_running_applications(self) -> list[ApplicationData]:
         if not self._state_service:
             return []
         state = self._state_service.get_current_state()

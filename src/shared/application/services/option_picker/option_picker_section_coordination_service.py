@@ -6,7 +6,7 @@ Contains pure business logic extracted from OptionPickerSectionManager.
 """
 
 import copy
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
@@ -30,8 +30,8 @@ class OptionPickerSectionCoordinationService:
 
     def __init__(self):
         self._update_in_progress = False
-        self._pending_updates: List[tuple] = []
-        self._section_state_cache: Dict[LetterType, Dict[str, Any]] = {}
+        self._pending_updates: list[tuple] = []
+        self._section_state_cache: dict[LetterType, dict[str, Any]] = {}
 
     def can_start_update(self) -> bool:
         """Check if a section update can be started."""
@@ -53,7 +53,7 @@ class OptionPickerSectionCoordinationService:
         return None
 
     def queue_update(
-        self, sequence_data: SequenceData, options_by_type: Dict[LetterType, List]
+        self, sequence_data: SequenceData, options_by_type: dict[LetterType, list]
     ) -> None:
         """Queue an update for later processing."""
         self._pending_updates.append((sequence_data, options_by_type))
@@ -67,12 +67,12 @@ class OptionPickerSectionCoordinationService:
         self._pending_updates.clear()
 
     def cache_section_state(
-        self, letter_type: LetterType, state: Dict[str, Any]
+        self, letter_type: LetterType, state: dict[str, Any]
     ) -> None:
         """Cache section state for coordination."""
         self._section_state_cache[letter_type] = copy.deepcopy(state)
 
-    def get_cached_section_state(self, letter_type: LetterType) -> Dict[str, Any]:
+    def get_cached_section_state(self, letter_type: LetterType) -> dict[str, Any]:
         """Get cached section state."""
         return self._section_state_cache.get(letter_type, {})
 
@@ -80,7 +80,7 @@ class OptionPickerSectionCoordinationService:
         """Clear all cached section states."""
         self._section_state_cache.clear()
 
-    def get_update_strategy(self, sequence_data: SequenceData) -> Dict[str, Any]:
+    def get_update_strategy(self, sequence_data: SequenceData) -> dict[str, Any]:
         """Get update strategy based on sequence data."""
         return {
             "use_animation": len(sequence_data.beats)
@@ -96,13 +96,13 @@ class OptionPickerSectionCoordinationService:
         }
 
     def should_disable_animations(
-        self, options_by_type: Dict[LetterType, List]
+        self, options_by_type: dict[LetterType, list]
     ) -> bool:
         """Determine if animations should be disabled for performance."""
         total_options = sum(len(options) for options in options_by_type.values())
         return total_options > 50  # Disable animations for large datasets
 
-    def get_section_priorities(self) -> List[LetterType]:
+    def get_section_priorities(self) -> list[LetterType]:
         """Get section update priorities."""
         return [
             LetterType.TYPE1,  # Highest priority
@@ -112,8 +112,8 @@ class OptionPickerSectionCoordinationService:
         ]
 
     def validate_section_data(
-        self, options_by_type: Dict[LetterType, List]
-    ) -> Dict[str, Any]:
+        self, options_by_type: dict[LetterType, list]
+    ) -> dict[str, Any]:
         """Validate section data and return validation results."""
         validation_results = {"valid": True, "errors": [], "warnings": [], "stats": {}}
 

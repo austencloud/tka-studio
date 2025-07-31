@@ -12,7 +12,7 @@ PROVIDES:
 """
 
 import logging
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 
 class ErrorSeverity:
@@ -37,7 +37,7 @@ class StandardErrorHandler:
         error: Exception,
         logger: logging.Logger,
         severity: str = ErrorSeverity.ERROR,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> None:
         """
         Handle service-related errors with consistent logging format.
@@ -71,7 +71,7 @@ class StandardErrorHandler:
         error: Exception,
         logger: logging.Logger,
         fallback_action: Optional[Callable] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> Any:
         """
         Handle UI-related errors with optional fallback action.

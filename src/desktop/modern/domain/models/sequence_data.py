@@ -8,7 +8,7 @@ Handles sequence composition, beat management, and validation.
 from dataclasses import dataclass, field
 from datetime import datetime
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 import uuid
 
 from .beat_data import BeatData
@@ -29,11 +29,11 @@ class SequenceData:
     word: str = ""  # Generated word from sequence
 
     # Business data
-    beats: List[BeatData] = field(default_factory=list)
+    beats: list[BeatData] = field(default_factory=list)
     start_position: BeatData = None
 
     # Browse tab data (for sequence browsing and filtering)
-    thumbnails: List[str] = field(default_factory=list)  # Changed from thumbnail_paths
+    thumbnails: list[str] = field(default_factory=list)  # Changed from thumbnail_paths
     sequence_length: Optional[int] = (
         None  # Cached length for filtering (may differ from len(beats))
     )
@@ -46,10 +46,10 @@ class SequenceData:
     is_circular: bool = False
     starting_position: Optional[str] = None
     difficulty_level: Optional[str] = None
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
 
     # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate sequence data."""
@@ -162,7 +162,7 @@ class SequenceData:
 
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "id": self.id,
@@ -182,7 +182,7 @@ class SequenceData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SequenceData":
+    def from_dict(cls, data: dict[str, Any]) -> "SequenceData":
         """Create from dictionary."""
         beats = [BeatData.from_dict(beat_data) for beat_data in data.get("beats", [])]
 
@@ -205,7 +205,7 @@ class SequenceData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 

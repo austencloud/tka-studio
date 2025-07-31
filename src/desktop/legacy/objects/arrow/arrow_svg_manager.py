@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from objects.arrow.arrow import Arrow
 from PyQt6.QtSvg import QSvgRenderer
@@ -37,7 +37,7 @@ class ArrowSvgManager:
     def _get_float_svg_file(self) -> str:
         return get_image_path("arrows/float.svg")
 
-    def _get_turns(self, arrow_turns: Union[str, int, float]) -> float:
+    def _get_turns(self, arrow_turns: str | int | float) -> float:
         if isinstance(arrow_turns, (int, float)):
             return float(arrow_turns)
         return arrow_turns

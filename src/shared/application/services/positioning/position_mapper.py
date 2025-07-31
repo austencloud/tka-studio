@@ -18,7 +18,7 @@ USAGE:
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
 from desktop.modern.domain.models.beat_data import BeatData
@@ -76,7 +76,7 @@ class PositionMapper(IPositionMapper):
         self._location_to_position_map = self.POSITIONS_MAP.copy()
         logger.debug("Position matching service initialized")
 
-    def extract_end_position(self, last_beat: Dict[str, Any]) -> Optional[str]:
+    def extract_end_position(self, last_beat: dict[str, Any]) -> Optional[str]:
         """
         Extract end position from beat data using Legacy-compatible logic.
 
@@ -117,7 +117,7 @@ class PositionMapper(IPositionMapper):
             return None
 
     def calculate_end_position_from_motions(
-        self, beat_data: Dict[str, Any]
+        self, beat_data: dict[str, Any]
     ) -> Optional[str]:
         """
         Calculate end position from motion attributes.
@@ -182,7 +182,7 @@ class PositionMapper(IPositionMapper):
             logger.error(f"Error getting position from locations: {e}")
             return None
 
-    def has_motion_attributes(self, beat_data: Dict[str, Any]) -> bool:
+    def has_motion_attributes(self, beat_data: dict[str, Any]) -> bool:
         """
         Check if beat data has motion attributes for end position calculation.
 

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from base_widgets.base_beat_frame import BaseBeatFrame
 from PyQt6.QtCore import QEvent
@@ -39,9 +39,7 @@ class ActBeatFrame(BaseBeatFrame):
         self.setAcceptDrops(True)
         self.installEventFilter(self)
 
-    def eventFilter(
-        self, source, event: Union[QDragEnterEvent, QDragMoveEvent, QDropEvent]
-    ):
+    def eventFilter(self, source, event: QDragEnterEvent | QDragMoveEvent | QDropEvent):
         """Delegate drag-and-drop events to the drag-drop handler."""
         if event.type() in (
             QEvent.Type.DragEnter,
@@ -52,7 +50,7 @@ class ActBeatFrame(BaseBeatFrame):
         return super().eventFilter(source, event)
 
     def _handle_drag_event(
-        self, event: Union[QDragEnterEvent, QDragMoveEvent, QDropEvent]
+        self, event: QDragEnterEvent | QDragMoveEvent | QDropEvent
     ) -> bool:
         if event.type() == QEvent.Type.DragEnter:
             self.drag_drop_handler.dragEnterEvent(event)

@@ -8,7 +8,7 @@ and cross-platform layout operations.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -57,8 +57,8 @@ class IBeatLayoutCalculator(ABC):
 
     @abstractmethod
     def calculate_beat_frame_layout(
-        self, sequence: SequenceData, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: SequenceData, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """
         Calculate layout for beat frames using carefully designed algorithm.
 
@@ -72,8 +72,8 @@ class IBeatLayoutCalculator(ABC):
 
     @abstractmethod
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """
         Get optimal grid layout (rows, cols) for items.
 
@@ -89,11 +89,11 @@ class IBeatLayoutCalculator(ABC):
     def calculate_horizontal_beat_layout(
         self,
         beat_count: int,
-        container_size: Tuple[int, int],
-        base_size: Tuple[int, int],
+        container_size: tuple[int, int],
+        base_size: tuple[int, int],
         padding: int,
         spacing: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate horizontal layout for beats.
 
@@ -112,11 +112,11 @@ class IBeatLayoutCalculator(ABC):
     def calculate_grid_beat_layout(
         self,
         beat_count: int,
-        container_size: Tuple[int, int],
-        base_size: Tuple[int, int],
+        container_size: tuple[int, int],
+        base_size: tuple[int, int],
         padding: int,
         spacing: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Calculate grid layout for beats.
 
@@ -239,7 +239,7 @@ class IBeatResizer(ABC):
         """
 
     @abstractmethod
-    def resize_beat_frames(self, beat_frames: List[Any], new_size: Size) -> None:
+    def resize_beat_frames(self, beat_frames: list[Any], new_size: Size) -> None:
         """
         Resize multiple beat frames to new size.
 
@@ -254,7 +254,7 @@ class IBeatResizer(ABC):
     @abstractmethod
     def calculate_scroll_requirements(
         self, content_size: Size, container_size: Size
-    ) -> Dict[str, bool]:
+    ) -> dict[str, bool]:
         """
         Calculate if scrolling is needed and in which directions.
 
@@ -318,7 +318,7 @@ class IComponentSizer(ABC):
         """
 
     @abstractmethod
-    def get_size_constraints(self, component_type: ComponentType) -> Dict[str, Any]:
+    def get_size_constraints(self, component_type: ComponentType) -> dict[str, Any]:
         """
         Get size constraints for a component type.
 
@@ -335,7 +335,7 @@ class IComponentSizer(ABC):
     @abstractmethod
     def calculate_optimal_grid_size(
         self, item_count: int, container_size: Size
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate optimal grid dimensions for item count and container.
 
@@ -374,8 +374,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def calculate_component_positions(
-        self, layout_config: Dict[str, Any]
-    ) -> Dict[str, Position]:
+        self, layout_config: dict[str, Any]
+    ) -> dict[str, Position]:
         """
         Calculate positions for UI components based on layout configuration.
 
@@ -392,7 +392,7 @@ class IComponentPositionCalculator(ABC):
     @abstractmethod
     def calculate_grid_positions(
         self, rows: int, cols: int, container_size: Size
-    ) -> List[Position]:
+    ) -> list[Position]:
         """
         Calculate positions for grid layout.
 
@@ -410,8 +410,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def calculate_flow_positions(
-        self, items: List[Any], container_size: Size
-    ) -> List[Position]:
+        self, items: list[Any], container_size: Size
+    ) -> list[Position]:
         """
         Calculate positions for flow layout.
 
@@ -428,8 +428,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def get_layout_bounds(
-        self, positions: List[Position], sizes: List[Size]
-    ) -> Dict[str, int]:
+        self, positions: list[Position], sizes: list[Size]
+    ) -> dict[str, int]:
         """
         Get bounds of a layout based on positions and sizes.
 
@@ -446,8 +446,8 @@ class IComponentPositionCalculator(ABC):
 
     @abstractmethod
     def apply_spacing_constraints(
-        self, positions: List[Position], spacing: int
-    ) -> List[Position]:
+        self, positions: list[Position], spacing: int
+    ) -> list[Position]:
         """
         Apply spacing constraints to positions.
 
@@ -467,7 +467,7 @@ class IDimensionCalculator(ABC):
     """Interface for dimension calculation operations."""
 
     @abstractmethod
-    def calculate_optimal_size(self, constraints: Dict[str, Any]) -> Size:
+    def calculate_optimal_size(self, constraints: dict[str, Any]) -> Size:
         """
         Calculate optimal size based on constraints.
 

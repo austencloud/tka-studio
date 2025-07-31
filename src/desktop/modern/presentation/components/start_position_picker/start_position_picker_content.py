@@ -6,7 +6,7 @@ Extracted from the main StartPositionPicker for better maintainability.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QGridLayout, QScrollArea, QVBoxLayout, QWidget
@@ -55,7 +55,7 @@ class StartPositionPickerContent(QWidget):
         self._animation_orchestrator = animation_orchestrator
 
         # State
-        self.position_options: List[StartPositionOption] = []
+        self.position_options: list[StartPositionOption] = []
         self._current_load_params = (
             None  # Track current load parameters to prevent duplicate loads
         )
@@ -229,7 +229,7 @@ class StartPositionPickerContent(QWidget):
         """Reset the load parameters after a delay."""
         self._current_load_params = None
 
-    def _create_position_options(self, position_keys: List[str], grid_mode: str):
+    def _create_position_options(self, position_keys: list[str], grid_mode: str):
         """Create position option widgets - EXACT logic from original."""
         # Clear existing options and properly cleanup pool resources
         for option in self.position_options:

@@ -9,7 +9,6 @@ missing from the modern arrow positioning system.
 """
 
 import logging
-from typing import List, Tuple
 
 from desktop.modern.core.interfaces.positioning_services import (
     IDirectionalTupleCalculator,
@@ -201,7 +200,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
 
     def calculate_directional_tuple(
         self, motion: MotionData, location: Location
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Calculate directional tuple for arrow positioning.
 
@@ -227,7 +226,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
 
     def generate_directional_tuples(
         self, motion: MotionData, base_x: float, base_y: float
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """
         Generate directional tuples for the given motion and base adjustment.
 
@@ -295,7 +294,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
         grid_mode: str,
         x: float,
         y: float,
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """Handle PRO and ANTI motion directional tuples."""
         if grid_mode == "diamond":
             mapping = self._shift_mapping_diamond.get(motion_type, {})
@@ -312,7 +311,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
 
     def _handle_dash_tuples(
         self, prop_rot_dir: RotationDirection, grid_mode: str, x: float, y: float
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """Handle DASH motion directional tuples."""
         mapping = self._dash_mapping.get(grid_mode, {})
         transform_func = mapping.get(prop_rot_dir, lambda x, y: [(x, y)] * 4)
@@ -323,7 +322,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
 
     def _handle_static_tuples(
         self, prop_rot_dir: RotationDirection, grid_mode: str, x: float, y: float
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """Handle STATIC motion directional tuples."""
         if prop_rot_dir == RotationDirection.NO_ROTATION:
             result = [(x, y), (-x, -y), (-y, x), (y, -x)]
@@ -337,7 +336,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
 
     def _handle_float_tuples(
         self, motion: MotionData, x: float, y: float
-    ) -> List[Tuple[float, float]]:
+    ) -> list[tuple[float, float]]:
         """Handle FLOAT motion directional tuples."""
         # For FLOAT motions, we need to determine handpath direction
         # This is a simplified version - in full implementation would use HandpathCalculator

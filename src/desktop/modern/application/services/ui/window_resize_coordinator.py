@@ -5,7 +5,7 @@ Coordinates pictograph re-scaling when the main window is resized.
 Ensures all pictograph components use the correct main window width for scaling calculations.
 """
 
-from typing import List, Optional, Protocol, runtime_checkable
+from typing import Optional, Protocol, runtime_checkable
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -33,7 +33,7 @@ class WindowResizeCoordinator(QObject):
 
     def __init__(self):
         super().__init__()
-        self._registered_components: List[IPictographRescalable] = []
+        self._registered_components: list[IPictographRescalable] = []
         self._current_window_width: Optional[int] = None
         self._resize_threshold = 50  # Minimum change to trigger re-scaling
 

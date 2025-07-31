@@ -1,5 +1,4 @@
 import random
-from typing import List
 
 from ..shared.animation_types import BubbleState, Position2D
 
@@ -8,7 +7,7 @@ class BubblePhysics:
     """Pure business logic for bubble physics - extracted from BubblesBackground"""
 
     def __init__(self, num_bubbles: int = 100):
-        self.bubbles: List[BubbleState] = []
+        self.bubbles: list[BubbleState] = []
         self._initialize_bubbles(num_bubbles)
 
     def _initialize_bubbles(self, num_bubbles: int) -> None:
@@ -34,7 +33,7 @@ class BubblePhysics:
                 bubble.size = random.uniform(5, 15)
                 bubble.highlight_factor = random.uniform(0.7, 1.0)
 
-    def get_bubble_states(self) -> List[BubbleState]:
+    def get_bubble_states(self) -> list[BubbleState]:
         """Get current bubble states for rendering"""
         return self.bubbles.copy()
 

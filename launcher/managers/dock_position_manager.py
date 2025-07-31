@@ -16,7 +16,6 @@ Architecture:
 """
 
 import logging
-from typing import List
 
 from domain.models import (
     ApplicationData,
@@ -54,7 +53,7 @@ class DockPositionManager:
         # Fallback to default icon size plus padding
         return self.base_height + self.icon_size + self.icon_spacing
 
-    def calculate_actual_dock_height(self, applications: List[ApplicationData]) -> int:
+    def calculate_actual_dock_height(self, applications: list[ApplicationData]) -> int:
         """Calculate dock height based on actual number of applications."""
         # Use same logic as calculate_dock_height
         screen = QApplication.primaryScreen()
@@ -119,7 +118,7 @@ class DockPositionManager:
 
         return True
 
-    def get_available_positions(self) -> List[DockPosition]:
+    def get_available_positions(self) -> list[DockPosition]:
         """Get list of available dock positions."""
         return [
             DockPosition.BOTTOM_LEFT,

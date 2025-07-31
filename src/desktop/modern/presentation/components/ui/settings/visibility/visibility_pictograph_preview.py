@@ -6,7 +6,7 @@ that updates in real-time as visibility settings change.
 """
 
 import logging
-from typing import Dict, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -43,7 +43,7 @@ class VisibilityPictographPreview(QWidget):
         self.sample_beat_data: Optional[BeatData] = None
 
         # Animation properties
-        self._fade_animations: Dict[str, QPropertyAnimation] = {}
+        self._fade_animations: dict[str, QPropertyAnimation] = {}
         self._update_timer = QTimer()
         self._update_timer.setSingleShot(True)
         self._update_timer.timeout.connect(self._perform_delayed_update)

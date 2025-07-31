@@ -6,7 +6,6 @@ to reduce console noise, and then restore them to their normal levels later.
 """
 
 import logging
-from typing import Dict, List
 
 
 class StartupSilencer:
@@ -19,10 +18,10 @@ class StartupSilencer:
 
     def __init__(self):
         # Store original log levels to restore later
-        self.original_levels: Dict[str, int] = {}
+        self.original_levels: dict[str, int] = {}
 
         # Loggers to silence during startup
-        self.startup_loggers: List[str] = [
+        self.startup_loggers: list[str] = [
             # Settings-related loggers
             "settings_manager",
             # UI-related loggers

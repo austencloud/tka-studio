@@ -6,7 +6,7 @@ Focused solely on modern-to-legacy data transformation.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from desktop.modern.core.interfaces.data_services import IModernToLegacyConverter
 from desktop.modern.domain.models.beat_data import BeatData
@@ -221,7 +221,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             return "in"
 
     # Interface implementation methods
-    def convert_modern_data(self, modern_data: Any) -> Dict[str, Any]:
+    def convert_modern_data(self, modern_data: Any) -> dict[str, Any]:
         """Convert modern data to legacy format (interface implementation)."""
         if hasattr(modern_data, "beats"):
             return self.convert_sequence_to_legacy(modern_data)
@@ -240,7 +240,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
         except Exception:
             return False
 
-    def get_conversion_metadata(self, modern_data: Any) -> Dict[str, Any]:
+    def get_conversion_metadata(self, modern_data: Any) -> dict[str, Any]:
         """Get metadata about conversion (interface implementation)."""
         return {
             "source_format": "modern",
@@ -251,7 +251,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
         }
 
     # Interface implementation methods
-    def convert_sequence(self, modern_sequence: Any) -> Optional[List[Dict[str, Any]]]:
+    def convert_sequence(self, modern_sequence: Any) -> Optional[list[dict[str, Any]]]:
         """Convert modern sequence to legacy format."""
         try:
             if hasattr(modern_sequence, "beats"):
@@ -266,7 +266,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             logger.error(f"Error converting sequence: {e}")
             return None
 
-    def convert_beat(self, modern_beat: Any) -> Optional[Dict[str, Any]]:
+    def convert_beat(self, modern_beat: Any) -> Optional[dict[str, Any]]:
         """Convert modern beat to legacy format."""
         try:
             if hasattr(modern_beat, "beat_number"):
@@ -278,7 +278,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             logger.error(f"Error converting beat: {e}")
             return None
 
-    def convert_pictograph(self, modern_pictograph: Any) -> Optional[Dict[str, Any]]:
+    def convert_pictograph(self, modern_pictograph: Any) -> Optional[dict[str, Any]]:
         """Convert modern pictograph to legacy format."""
         try:
             # TODO: Implement pictograph conversion

@@ -20,7 +20,7 @@ PROVIDES:
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from desktop.modern.core.types import Point
 from desktop.modern.domain.models import MotionData
@@ -42,7 +42,7 @@ class SpecialPlacementService:
 
     def __init__(self):
         self.root_path = self._find_project_root()
-        self.special_placements: Dict[str, Dict[str, Dict[str, Any]]] = {}
+        self.special_placements: dict[str, dict[str, dict[str, Any]]] = {}
         self._load_special_placements()
 
     def _find_project_root(self) -> Path:
@@ -87,7 +87,7 @@ class SpecialPlacementService:
         turns_tuple = self._generate_turns_tuple(pictograph_data)
 
         # Look up special placement data
-        letter_data: Dict[str, Dict[Tuple[int], Dict[str, float]]] = (
+        letter_data: dict[str, dict[tuple[int], dict[str, float]]] = (
             self.special_placements.get(grid_mode, {}).get(ori_key, {}).get(letter, {})
         )
 
@@ -175,7 +175,7 @@ class SpecialPlacementService:
         # For now, return a default key
         return "from_layer1"
 
-    def _generate_turns_tuple(self, pictograph_data: PictographData) -> Tuple[int, ...]:
+    def _generate_turns_tuple(self, pictograph_data: PictographData) -> tuple[int, ...]:
         """Generate turns tuple for special placement lookup."""
         # This is a simplified version - in full implementation would use TurnsTupleKeyGenerator
         # For now, return a default tuple

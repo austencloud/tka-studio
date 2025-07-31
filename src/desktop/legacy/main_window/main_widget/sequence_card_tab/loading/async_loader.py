@@ -2,7 +2,7 @@
 import os
 import queue
 import threading
-from typing import Dict, List, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QImage, QPixmap
@@ -49,11 +49,11 @@ class AsyncImageLoader(QObject):
         self.stop_requested = False
 
         # Worker threads
-        self.threads: List[threading.Thread] = []
+        self.threads: list[threading.Thread] = []
         self.max_threads = max_threads
 
         # Cache of loaded images
-        self.cache: Dict[str, QPixmap] = {}
+        self.cache: dict[str, QPixmap] = {}
 
         # Lock for thread safety
         self.lock = threading.Lock()
@@ -107,7 +107,7 @@ class AsyncImageLoader(QObject):
         # Add to queue
         self.queue.put((request.priority, request))
 
-    def queue_images(self, requests: List[ImageLoadRequest]):
+    def queue_images(self, requests: list[ImageLoadRequest]):
         """
         Queue multiple images for loading.
 

@@ -11,7 +11,7 @@ from the actual sequence context.
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import Orientation
@@ -38,7 +38,7 @@ class SequenceOrientationValidator:
 
     def get_sequence_end_orientations(
         self, sequence: SequenceData
-    ) -> Dict[str, Orientation]:
+    ) -> dict[str, Orientation]:
         """
         Extract the actual end orientations from the last valid beat in the sequence.
 
@@ -83,7 +83,7 @@ class SequenceOrientationValidator:
 
     def validate_sequence_orientation_continuity(
         self, sequence: SequenceData
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate that orientations flow correctly throughout the entire sequence.
 
@@ -125,8 +125,8 @@ class SequenceOrientationValidator:
         return is_valid, errors
 
     def calculate_option_start_orientations(
-        self, sequence: SequenceData, options: List[PictographData]
-    ) -> List[PictographData]:
+        self, sequence: SequenceData, options: list[PictographData]
+    ) -> list[PictographData]:
         """
         Update pictograph options with correct start orientations based on sequence context.
 
@@ -183,7 +183,7 @@ class SequenceOrientationValidator:
 
         return None
 
-    def _extract_beat_end_orientations(self, beat: BeatData) -> Dict[str, Orientation]:
+    def _extract_beat_end_orientations(self, beat: BeatData) -> dict[str, Orientation]:
         """
         Extract end orientations from a beat's pictograph data.
 
@@ -206,7 +206,7 @@ class SequenceOrientationValidator:
 
     def _validate_beat_continuity(
         self, previous_beat: BeatData, current_beat: BeatData
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Validate orientation continuity between two consecutive beats.
 
@@ -244,7 +244,7 @@ class SequenceOrientationValidator:
         return errors
 
     def _update_option_start_orientations(
-        self, option: PictographData, sequence_end_orientations: Dict[str, Orientation]
+        self, option: PictographData, sequence_end_orientations: dict[str, Orientation]
     ) -> PictographData:
         """
         Update a single pictograph option with correct start orientations.
@@ -308,7 +308,7 @@ class SequenceOrientationValidator:
 
     def validate_and_fix_sequence_orientations(
         self, sequence: SequenceData
-    ) -> Tuple[SequenceData, List[str]]:
+    ) -> tuple[SequenceData, list[str]]:
         """
         Validate sequence orientation continuity and fix any issues found.
 
@@ -358,7 +358,7 @@ class SequenceOrientationValidator:
 
     def _fix_beat_orientations(
         self, previous_beat: BeatData, current_beat: BeatData
-    ) -> Tuple[BeatData, List[str]]:
+    ) -> tuple[BeatData, list[str]]:
         """
         Fix orientation continuity issues in a single beat.
 

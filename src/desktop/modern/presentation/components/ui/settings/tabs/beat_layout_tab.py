@@ -1,5 +1,3 @@
-from typing import Dict
-
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -22,7 +20,7 @@ class BeatLayoutTab(QWidget):
     def __init__(self, layout_service: IBeatLayoutService, parent=None):
         super().__init__(parent)
         self.layout_service = layout_service
-        self.layout_controls: Dict[int, tuple[QSpinBox, QSpinBox]] = {}
+        self.layout_controls: dict[int, tuple[QSpinBox, QSpinBox]] = {}
         self._setup_ui()
         self._load_settings()
         self._setup_connections()

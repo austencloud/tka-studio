@@ -13,7 +13,6 @@ Import this at the top of any script that needs reliable imports:
 import os
 from pathlib import Path
 import sys
-from typing import List
 
 # Global flag to prevent duplicate setup
 _SETUP_COMPLETED = False
@@ -30,7 +29,7 @@ def get_project_root() -> Path:
     return Path(__file__).parent.absolute()
 
 
-def get_import_paths() -> List[Path]:
+def get_import_paths() -> list[Path]:
     """
     Get all required Python import paths for the project.
 

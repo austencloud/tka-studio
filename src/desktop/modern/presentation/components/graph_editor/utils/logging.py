@@ -11,7 +11,7 @@ from datetime import datetime
 import functools
 import logging
 import traceback
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 
 class GraphEditorLogger:
@@ -38,7 +38,7 @@ class GraphEditorLogger:
             self.logger.addHandler(handler)
             self.logger.setLevel(logging.INFO)
 
-    def _format_context(self, context: Dict[str, Any]) -> str:
+    def _format_context(self, context: dict[str, Any]) -> str:
         """Format context dictionary for logging."""
         if not context:
             return ""
@@ -54,14 +54,14 @@ class GraphEditorLogger:
 
         return f" | Context: {', '.join(context_parts)}"
 
-    def info(self, message: str, context: Dict[str, Any] = None):
+    def info(self, message: str, context: dict[str, Any] = None):
         """Log info message with context."""
         full_message = (
             f"[{self.component_name}] {message}{self._format_context(context)}"
         )
         self.logger.info(full_message)
 
-    def warning(self, message: str, context: Dict[str, Any] = None):
+    def warning(self, message: str, context: dict[str, Any] = None):
         """Log warning message with context."""
         full_message = (
             f"[{self.component_name}] {message}{self._format_context(context)}"
@@ -69,7 +69,7 @@ class GraphEditorLogger:
         self.logger.warning(full_message)
 
     def error(
-        self, message: str, context: Dict[str, Any] = None, exception: Exception = None
+        self, message: str, context: dict[str, Any] = None, exception: Exception = None
     ):
         """Log error message with context and optional exception."""
         full_message = (
@@ -84,7 +84,7 @@ class GraphEditorLogger:
         else:
             self.logger.error(full_message)
 
-    def debug(self, message: str, context: Dict[str, Any] = None):
+    def debug(self, message: str, context: dict[str, Any] = None):
         """Log debug message with context."""
         full_message = (
             f"[{self.component_name}] {message}{self._format_context(context)}"
@@ -92,7 +92,7 @@ class GraphEditorLogger:
         self.logger.debug(full_message)
 
     def method_call(
-        self, method_name: str, args: Dict[str, Any] = None, result: Any = None
+        self, method_name: str, args: dict[str, Any] = None, result: Any = None
     ):
         """Log method call with arguments and result."""
         context = {"method": method_name}
@@ -104,7 +104,7 @@ class GraphEditorLogger:
         self.debug(f"Method call: {method_name}", context)
 
     def validation_error(
-        self, field: str, value: Any, error_message: str, context: Dict[str, Any] = None
+        self, field: str, value: Any, error_message: str, context: dict[str, Any] = None
     ):
         """Log validation error with structured information."""
         validation_context = {
@@ -118,7 +118,7 @@ class GraphEditorLogger:
         self.error(f"Validation failed for {field}", validation_context)
 
     def state_change(
-        self, from_state: Any, to_state: Any, context: Dict[str, Any] = None
+        self, from_state: Any, to_state: Any, context: dict[str, Any] = None
     ):
         """Log state change with before/after information."""
         state_context = {"from_state": from_state, "to_state": to_state}
@@ -132,7 +132,7 @@ class GraphEditorLogger:
         operation: str,
         duration_ms: float,
         threshold_ms: float = 100,
-        context: Dict[str, Any] = None,
+        context: dict[str, Any] = None,
     ):
         """Log performance warning for slow operations."""
         perf_context = {
@@ -230,7 +230,7 @@ def log_method_call(logger: GraphEditorLogger, include_result: bool = False):
 
 
 def log_error_with_context(
-    logger: GraphEditorLogger, operation: str, context: Dict[str, Any] = None
+    logger: GraphEditorLogger, operation: str, context: dict[str, Any] = None
 ):
     """
     Decorator to log errors with context information.

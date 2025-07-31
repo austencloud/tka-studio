@@ -6,7 +6,6 @@ session creation, and state management. Coordinates between view and services.
 """
 
 import logging
-from typing import List
 
 from PyQt6.QtCore import QObject
 
@@ -78,7 +77,7 @@ class LessonSelectorController(QObject):
             logger.error(f"Failed to initialize lesson selector: {e}")
             self.state_manager.set_error(LessonNotAvailable("initialization", str(e)))
 
-    def _get_available_lessons(self) -> List[LessonType]:
+    def _get_available_lessons(self) -> list[LessonType]:
         """Get list of available lesson types."""
         try:
             configs = self.config_service.get_all_lesson_configs()

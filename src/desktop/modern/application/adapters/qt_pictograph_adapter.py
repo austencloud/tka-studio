@@ -12,7 +12,7 @@ from pathlib import Path
 import sys
 
 # Import the framework-agnostic core services
-from typing import Dict, Optional
+from typing import Optional
 
 from PyQt6.QtCore import QPointF, QSizeF
 from PyQt6.QtGui import QColor
@@ -101,7 +101,7 @@ class QtRenderEngine:
 
     def __init__(self):
         """Initialize QT render engine."""
-        self._created_items: Dict[str, QGraphicsItem] = {}
+        self._created_items: dict[str, QGraphicsItem] = {}
 
     def execute_command(self, command: RenderCommand, target: RenderTarget) -> bool:
         """Execute a render command on QT graphics scene."""
@@ -276,7 +276,7 @@ class QtAssetProvider(IPictographAssetProvider):
             return None
 
     def get_prop_asset(
-        self, prop_type: str, color: str, pictograph_data: Optional[Dict] = None
+        self, prop_type: str, color: str, pictograph_data: Optional[dict] = None
     ) -> Optional["SvgAsset"]:
         """Get prop asset from existing QT asset management with color transformation and beta positioning support."""
         try:
@@ -668,7 +668,7 @@ class QtAssetProvider(IPictographAssetProvider):
             logger.warning(f"Failed to check beta positioning: {e}")
             return False
 
-    def _extract_color_properties(self, svg_content: str) -> Dict[str, str]:
+    def _extract_color_properties(self, svg_content: str) -> dict[str, str]:
         """Extract color properties from SVG content."""
         # Simple extraction - you might want to use proper XML parsing
         color_properties = {}
@@ -753,8 +753,8 @@ class QtPictographRenderingAdapter:
         self,
         scene: QGraphicsScene,
         color: str,
-        motion_data: Dict,
-        pictograph_data: Optional[Dict] = None,
+        motion_data: dict,
+        pictograph_data: Optional[dict] = None,
     ) -> Optional[QGraphicsItem]:
         """Render prop using core service + QT execution (legacy interface)."""
         try:
@@ -784,7 +784,7 @@ class QtPictographRenderingAdapter:
             return None
 
     def render_glyph(
-        self, scene: QGraphicsScene, glyph_type: str, glyph_data: Dict
+        self, scene: QGraphicsScene, glyph_type: str, glyph_data: dict
     ) -> Optional[QGraphicsItem]:
         """Render glyph using core service + QT execution (legacy interface)."""
         try:
@@ -816,8 +816,8 @@ class QtPictographRenderingAdapter:
     def render_complete_pictograph(
         self,
         scene: QGraphicsScene,
-        pictograph_data: Dict,
-        options: Optional[Dict] = None,
+        pictograph_data: dict,
+        options: Optional[dict] = None,
     ) -> bool:
         """Render complete pictograph using core service."""
         try:
@@ -849,7 +849,7 @@ class QtPictographRenderingAdapter:
         """Clear all items rendered by this adapter."""
         self.qt_engine.clear_created_items(scene)
 
-    def get_render_statistics(self) -> Dict:
+    def get_render_statistics(self) -> dict:
         """Get rendering statistics."""
         return {
             "items_created": len(self.qt_engine._created_items),

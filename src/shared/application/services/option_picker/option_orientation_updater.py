@@ -11,7 +11,7 @@ rather than using default "in,in" orientations.
 
 from dataclasses import replace
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -34,8 +34,8 @@ class OptionOrientationUpdater:
         """Initialize the orientation update service."""
 
     def update_option_orientations(
-        self, sequence: SequenceData, options: List[PictographData]
-    ) -> List[PictographData]:
+        self, sequence: SequenceData, options: list[PictographData]
+    ) -> list[PictographData]:
         """
         Update orientations for pictograph options based on sequence context.
 

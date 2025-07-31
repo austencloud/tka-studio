@@ -1,5 +1,3 @@
-from typing import Dict, Type
-
 from .aurora_background import AuroraBackground
 from .aurora_borealis_background import AuroraBorealisBackground
 from .base_background import BaseBackground
@@ -9,7 +7,7 @@ from .starfield_background import StarfieldBackground
 
 
 class BackgroundFactory:
-    _backgrounds: Dict[str, Type[BaseBackground]] = {
+    _backgrounds: dict[str, type[BaseBackground]] = {
         "Aurora": AuroraBackground,
         "AuroraBorealis": AuroraBorealisBackground,
         "Bubbles": BubblesBackground,

@@ -3,7 +3,7 @@
 from dataclasses import fields, is_dataclass
 from enum import Enum
 import re
-from typing import Any, Dict
+from typing import Any
 
 
 def to_camel_case(snake_str: str) -> str:
@@ -18,7 +18,7 @@ def to_snake_case(camel_str: str) -> str:
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
-def dataclass_to_camel_dict(obj: Any) -> Dict[str, Any]:
+def dataclass_to_camel_dict(obj: Any) -> dict[str, Any]:
     """Convert dataclass to dict with camelCase keys."""
     if not is_dataclass(obj):
         raise ValueError("Object must be a dataclass")
@@ -45,7 +45,7 @@ def dataclass_to_camel_dict(obj: Any) -> Dict[str, Any]:
     return result
 
 
-def dict_from_camel_case(data: Dict[str, Any]) -> Dict[str, Any]:
+def dict_from_camel_case(data: dict[str, Any]) -> dict[str, Any]:
     """Convert dict with camelCase keys to snake_case keys."""
 
     def convert_value(value: Any) -> Any:
