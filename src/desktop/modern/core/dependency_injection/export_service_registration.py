@@ -6,7 +6,6 @@ Follows the Single Responsibility Principle by providing focused service registr
 """
 
 import logging
-from typing import Optional
 
 from desktop.modern.application.services.workbench.export_container_manager import (
     ExportContainerManager,
@@ -38,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 def register_export_services(
-    container: DIContainer, base_export_directory: Optional[str] = None
+    container: DIContainer, base_export_directory: str | None = None
 ) -> None:
     """
     Register all export services with the dependency injection container.
@@ -93,7 +92,7 @@ def register_export_services(
 
 
 def create_export_service_container(
-    base_export_directory: Optional[str] = None,
+    base_export_directory: str | None = None,
 ) -> DIContainer:
     """
     Create a new container with all export services registered.

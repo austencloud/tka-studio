@@ -6,7 +6,6 @@ Extracted from the main StartPositionPicker for better maintainability.
 """
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QGridLayout, QScrollArea, QVBoxLayout, QWidget
@@ -45,7 +44,7 @@ class StartPositionPickerContent(QWidget):
         data_service: IStartPositionDataService,
         ui_service: IStartPositionUIService,
         parent=None,
-        animation_orchestrator: Optional[IAnimationOrchestrator] = None,
+        animation_orchestrator: IAnimationOrchestrator | None = None,
     ):
         super().__init__(parent)
 
@@ -59,7 +58,7 @@ class StartPositionPickerContent(QWidget):
         self._current_load_params = (
             None  # Track current load parameters to prevent duplicate loads
         )
-        self._is_in_transition = False  # Track transition state
+        self._is_transitioning = False  # Track transition state
 
         # UI components
         self.main_container = None
@@ -121,7 +120,7 @@ class StartPositionPickerContent(QWidget):
         if (
             self._animation_orchestrator
             and self.position_options
-            and not self._is_in_transition
+            and not self._is_transitioning
         ):
             self._load_positions_with_fade_transition(grid_mode, is_advanced)
         else:
@@ -130,7 +129,7 @@ class StartPositionPickerContent(QWidget):
     def _load_positions_with_fade_transition(self, grid_mode: str, is_advanced: bool):
         """Load positions with smooth fade transition."""
         try:
-            self._is_in_transition = True
+            self._is_transitioning = True
 
             mode_str = "advanced" if is_advanced else "basic"
             logger.debug(f"Starting fade transition to {mode_str} mode")
@@ -168,15 +167,15 @@ class StartPositionPickerContent(QWidget):
                     # Fallback to direct update
                     update_callback()
                 finally:
-                    self._is_in_transition = False
+                    self._is_transitioning = False
                     self._current_load_params = None
 
             # Run the async fade transition
             asyncio.create_task(run_fade_transition())
 
         except Exception as e:
-            logger.error(f"Error in fade transition: {e}")
-            self._is_in_transition = False
+            logger.error(f"Error in fade: {e}")
+            self._is_transitioning = False
             self._load_positions_directly(grid_mode, is_advanced)
 
     def _load_positions_directly(self, grid_mode: str, is_advanced: bool):
@@ -221,7 +220,7 @@ class StartPositionPickerContent(QWidget):
             # Create fallback options
             self._create_fallback_options(grid_mode)
         finally:
-            if not self._is_in_transition:
+            if not self._is_transitioning:
                 # Reset load parameters after a short delay to allow for legitimate new requests
                 QTimer.singleShot(50, self._reset_load_params)
 

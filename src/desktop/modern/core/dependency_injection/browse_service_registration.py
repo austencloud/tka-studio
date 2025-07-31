@@ -64,14 +64,14 @@ def register_browse_services(
         register_image_export_services(container)
 
         # Register browse service
-        from desktop.modern.presentation.tabs.browse.services.browse_service import (
+        from desktop.modern.application.services.browse.browse_service import (
             BrowseService,
         )
 
         container.register_factory(IBrowseService, lambda: BrowseService(sequences_dir))
 
         # Register dictionary data manager
-        from desktop.modern.presentation.tabs.browse.services.modern_dictionary_data_manager import (
+        from desktop.modern.application.services.browse.modern_dictionary_data_manager import (
             ModernDictionaryDataManager,
         )
 
@@ -80,7 +80,7 @@ def register_browse_services(
         )
 
         # Register progressive loading service
-        from desktop.modern.presentation.tabs.browse.services.progressive_loading_service import (
+        from desktop.modern.application.services.browse.progressive_loading_service import (
             ProgressiveLoadingService,
         )
 
@@ -90,7 +90,7 @@ def register_browse_services(
         )
 
         # Register data manager
-        from desktop.modern.presentation.tabs.browse.managers.browse_data_manager import (
+        from desktop.modern.presentation.managers.browse.browse_data_manager import (
             BrowseDataManager,
         )
 
@@ -102,7 +102,7 @@ def register_browse_services(
         # Register navigation manager if stacked widget provided
         # NOTE: viewer_panel will be set later via set_viewer_panel() after creation
         if stacked_widget is not None:
-            from desktop.modern.presentation.tabs.browse.managers.browse_navigation_manager import (
+            from desktop.modern.presentation.managers.browse.browse_navigation_manager import (
                 BrowseNavigationManager,
             )
 
@@ -121,7 +121,7 @@ def register_browse_services(
 
         # Register action handler if parent widget provided
         if parent_widget:
-            from desktop.modern.presentation.tabs.browse.managers.browse_action_handler import (
+            from desktop.modern.presentation.managers.browse.browse_action_handler import (
                 BrowseActionHandler,
             )
 

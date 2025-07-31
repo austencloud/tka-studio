@@ -6,6 +6,27 @@ Register browse panel services with the dependency injection container.
 
 import logging
 
+from desktop.modern.application.services.browse.layout_manager_service import (
+    LayoutManagerService,
+)
+from desktop.modern.application.services.browse.loading_state_manager_service import (
+    LoadingStateManagerService,
+)
+from desktop.modern.application.services.browse.navigation_handler_service import (
+    NavigationHandlerService,
+)
+from desktop.modern.application.services.browse.progressive_loading_event_handler import (
+    ProgressiveLoadingEventHandler,
+)
+from desktop.modern.application.services.browse.sequence_display_coordinator_service import (
+    SequenceDisplayCoordinatorService,
+)
+from desktop.modern.application.services.browse.sequence_sorter_service import (
+    SequenceSorterService,
+)
+from desktop.modern.application.services.browse.thumbnail_factory_service import (
+    ThumbnailFactoryService,
+)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.browse_services import (
     ILayoutManager,
@@ -13,27 +34,6 @@ from desktop.modern.core.interfaces.browse_services import (
     INavigationHandler,
     ISequenceSorter,
     IThumbnailFactory,
-)
-from desktop.modern.presentation.tabs.browse.services.layout_manager_service import (
-    LayoutManagerService,
-)
-from desktop.modern.presentation.tabs.browse.services.loading_state_manager_service import (
-    LoadingStateManagerService,
-)
-from desktop.modern.presentation.tabs.browse.services.navigation_handler_service import (
-    NavigationHandlerService,
-)
-from desktop.modern.presentation.tabs.browse.services.progressive_loading_event_handler import (
-    ProgressiveLoadingEventHandler,
-)
-from desktop.modern.presentation.tabs.browse.services.sequence_display_coordinator_service import (
-    SequenceDisplayCoordinatorService,
-)
-from desktop.modern.presentation.tabs.browse.services.sequence_sorter_service import (
-    SequenceSorterService,
-)
-from desktop.modern.presentation.tabs.browse.services.thumbnail_factory_service import (
-    ThumbnailFactoryService,
 )
 
 logger = logging.getLogger(__name__)

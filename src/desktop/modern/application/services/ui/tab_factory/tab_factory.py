@@ -6,8 +6,9 @@ Replaces complex on-demand tab creation in TabManagementService.
 """
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QWidget
 
@@ -122,13 +123,13 @@ class TabFactory:
         logger.info(f"📋 Tab creation complete: {len(results)} tabs created")
         return results
 
-    def get_created_tab(self, tab_id: str) -> Optional[QWidget]:
+    def get_created_tab(self, tab_id: str) -> QWidget | None:
         """Get a previously created tab by ID."""
         return self.created_tabs.get(tab_id)
 
     def _create_construct_tab(self, container: "DIContainer") -> QWidget:
         """Create the construct tab."""
-        from desktop.modern.presentation.tabs.construct.construct_tab import (
+        from desktop.modern.presentation.views.construct.construct_tab import (
             ConstructTab,
         )
 
@@ -136,7 +137,7 @@ class TabFactory:
 
     def _create_browse_tab(self, container: "DIContainer") -> QWidget:
         """Create the browse tab."""
-        from desktop.modern.presentation.tabs.browse.browse_tab import BrowseTab
+        from desktop.modern.presentation.views.browse.browse_tab import BrowseTab
 
         # Get TKA root directory
         tka_root = Path(__file__).parent.parent.parent.parent.parent.parent
@@ -155,7 +156,7 @@ class TabFactory:
     def _create_learn_tab(self, container: "DIContainer") -> QWidget:
         """Create the learn tab."""
         try:
-            from desktop.modern.presentation.tabs.learn import LearnTab
+            from desktop.modern.presentation.views.learn import LearnTab
 
             return container.resolve(LearnTab)
         except Exception:
@@ -165,7 +166,7 @@ class TabFactory:
     def _create_sequence_card_tab(self, container: "DIContainer") -> QWidget:
         """Create the sequence card tab."""
         try:
-            from desktop.modern.presentation.tabs.sequence_card import SequenceCardTab
+            from desktop.modern.presentation.views.sequence_card import SequenceCardTab
 
             return container.resolve(SequenceCardTab)
         except Exception:

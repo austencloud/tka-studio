@@ -32,7 +32,7 @@ from desktop.modern.core.interfaces.pictograph_services import IPictographDataMa
 from desktop.modern.infrastructure.file_system.file_system_service import (
     FileSystemService,
 )
-from desktop.modern.presentation.tabs.learn import LearnTab
+from desktop.modern.presentation.views.learn import LearnTab
 from shared.application.services.data.dataset_query import IDatasetQuery
 from shared.application.services.learn.question_generation_service import (
     QuestionGenerationService,

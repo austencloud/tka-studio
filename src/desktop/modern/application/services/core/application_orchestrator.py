@@ -18,9 +18,9 @@ PROVIDES:
 - Progress tracking and error handling
 """
 
-from abc import ABC, abstractmethod
 import logging
-from typing import Callable, Optional
+from abc import ABC, abstractmethod
+from collections.abc import Callable
 
 from presentation.components.ui.splash_screen import SplashScreen
 from PyQt6.QtCore import QTimer
@@ -72,10 +72,10 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
     def __init__(
         self,
-        service_manager: Optional[IServiceRegistrationManager] = None,
-        ui_manager: Optional[IUISetupManager] = None,
-        background_manager: Optional[IBackgroundManager] = None,
-        lifecycle_manager: Optional[IApplicationInitializationOrchestrator] = None,
+        service_manager: IServiceRegistrationManager | None = None,
+        ui_manager: IUISetupManager | None = None,
+        background_manager: IBackgroundManager | None = None,
+        lifecycle_manager: IApplicationInitializationOrchestrator | None = None,
     ):
         """Initialize with simplified dependency injection."""
         self.service_manager = service_manager or ServiceRegistrationManager()
@@ -194,7 +194,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
                 main_window, "application initialization failure"
             )
 
-    def _configure_services(self, progress_callback: Optional[Callable]) -> None:
+    def _configure_services(self, progress_callback: Callable | None) -> None:
         """Configure dependency injection services."""
         try:
             if progress_callback:
@@ -215,7 +215,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             raise
 
     def _setup_ui(
-        self, main_window: QMainWindow, progress_callback: Optional[Callable]
+        self, main_window: QMainWindow, progress_callback: Callable | None
     ) -> None:
         """Setup user interface."""
         try:
@@ -242,7 +242,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             raise
 
     def _setup_background(
-        self, main_window: QMainWindow, progress_callback: Optional[Callable]
+        self, main_window: QMainWindow, progress_callback: Callable | None
     ) -> None:
         """Setup background elements."""
         try:
@@ -266,7 +266,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
             )
 
     def _start_background_initialization(
-        self, progress_callback: Optional[Callable]
+        self, progress_callback: Callable | None
     ) -> None:
         """
         Start background initialization tasks (non-blocking).
@@ -294,7 +294,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         QTimer.singleShot(200, background_init)
 
     def _finalize_initialization(
-        self, main_window: QMainWindow, progress_callback: Optional[Callable]
+        self, main_window: QMainWindow, progress_callback: Callable | None
     ) -> None:
         """Finalize initialization with session restoration and layout."""
         try:
@@ -355,7 +355,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
     def _create_progress_callback(
         self, splash_screen: "SplashScreen"
-    ) -> Optional[Callable]:
+    ) -> Callable | None:
         """Create progress callback for splash screen updates."""
 
         def progress_callback(progress: int, message: str):

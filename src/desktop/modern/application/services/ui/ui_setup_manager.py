@@ -15,9 +15,10 @@ PROVIDES:
 - Testable components
 """
 
-from abc import ABC, abstractmethod
 import logging
-from typing import TYPE_CHECKING, Callable, Optional
+from abc import ABC, abstractmethod
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
@@ -42,7 +43,7 @@ class IUISetupManager(ABC):
         self,
         main_window: QMainWindow,
         container: "DIContainer",
-        progress_callback: Optional[Callable] = None,
+        progress_callback: Callable | None = None,
         session_service=None,
     ) -> QTabWidget:
         """Setup the main UI components and return the tab widget."""
@@ -57,8 +58,8 @@ class UISetupManager(IUISetupManager):
 
     def __init__(self):
         """Initialize with focused services."""
-        self.tab_widget: Optional[QTabWidget] = None
-        self.menu_bar: Optional[MenuBarWidget] = None
+        self.tab_widget: QTabWidget | None = None
+        self.menu_bar: MenuBarWidget | None = None
         self.tab_management_service: ITabManagementService = TabManagementService()
         self.tab_factory = TabFactory()
         self.error_recovery = UIErrorRecoveryService()
@@ -67,7 +68,7 @@ class UISetupManager(IUISetupManager):
         self,
         main_window: QMainWindow,
         container: "DIContainer",
-        progress_callback: Optional[Callable] = None,
+        progress_callback: Callable | None = None,
         session_service=None,
     ) -> QTabWidget:
         """
@@ -105,7 +106,7 @@ class UISetupManager(IUISetupManager):
             )
 
     def _create_main_structure(
-        self, main_window: QMainWindow, progress_callback: Optional[Callable] = None
+        self, main_window: QMainWindow, progress_callback: Callable | None = None
     ) -> None:
         """Create the basic UI structure."""
         try:
@@ -154,7 +155,7 @@ class UISetupManager(IUISetupManager):
         return tab_widget
 
     def _initialize_tab_management(
-        self, container: "DIContainer", progress_callback: Optional[Callable] = None
+        self, container: "DIContainer", progress_callback: Callable | None = None
     ) -> None:
         """Initialize tab management service."""
         try:
@@ -172,7 +173,7 @@ class UISetupManager(IUISetupManager):
         self,
         container: "DIContainer",
         session_service,
-        progress_callback: Optional[Callable] = None,
+        progress_callback: Callable | None = None,
     ) -> None:
         """
         Load all UI components using TabFactory.
@@ -231,7 +232,7 @@ class UISetupManager(IUISetupManager):
         except Exception as e:
             logger.error(f"❌ Even emergency tab creation failed: {e}")
 
-    def _connect_signals(self, progress_callback: Optional[Callable] = None) -> None:
+    def _connect_signals(self, progress_callback: Callable | None = None) -> None:
         """Connect UI signals."""
         try:
             if progress_callback:

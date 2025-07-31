@@ -6,8 +6,6 @@ Provides 3 tabs for switching between Picker, Graph Editor, and Generate Control
 Uses the centralized glassmorphism style system for consistent modern aesthetics.
 """
 
-from typing import Optional
-
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QSizePolicy, QWidget
 
@@ -33,7 +31,7 @@ class RightPanelTabWidget(QWidget):
     generate_controls_tab_clicked = pyqtSignal()
     export_tab_clicked = pyqtSignal()  # NEW: Export tab signal
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
         self._current_tab = 0  # 0=Build, 1=Generate, 2=Edit, 3=Export
         self._tab_buttons = []
@@ -129,7 +127,7 @@ class RightPanelTabWidget(QWidget):
             background: rgba(255, 255, 255, 0.05);
             border: none;
             border-radius: 12px;
-            margin: 4px;
+            margin: 0px;
         }
         """
 

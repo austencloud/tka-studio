@@ -24,7 +24,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
 )
 
 # Import the actual tab component
-from desktop.modern.presentation.tabs.sequence_card.sequence_card_tab import (
+from desktop.modern.presentation.views.sequence_card.sequence_card_tab import (
     SequenceCardTab,
 )
 from shared.application.services.sequence_card.sequence_cache_service import (

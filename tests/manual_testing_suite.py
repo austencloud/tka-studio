@@ -21,15 +21,15 @@ try:
         UIStateChangedEvent,
     )
     from desktop.modern.core.events.event_bus import TypeSafeEventBus, get_event_bus
-    from desktop.modern.presentation.tabs.construct.infrastructure.event_integration import (
+    from desktop.modern.presentation.views.construct.infrastructure.event_integration import (
         ConstructTabEventIntegration,
         create_event_integration,
     )
-    from desktop.modern.presentation.tabs.construct.infrastructure.resilient_panel_factory import (
+    from desktop.modern.presentation.views.construct.infrastructure.resilient_panel_factory import (
         CircuitBreakerState,
         ResilientPanelFactory,
     )
-    from desktop.modern.presentation.tabs.construct.infrastructure.service_mesh import (
+    from desktop.modern.presentation.views.construct.infrastructure.service_mesh import (
         ComponentServiceMesh,
     )
 except ImportError as e:
@@ -106,7 +106,7 @@ def test_component_creation_resilience():
     """Test A: Component Creation Resilience."""
     try:
         from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.modern.presentation.tabs.construct.infrastructure.resilient_panel_factory import (
+        from desktop.modern.presentation.views.construct.infrastructure.resilient_panel_factory import (
             ResilientPanelFactory,
         )
 
@@ -263,7 +263,7 @@ def test_event_throughput():
 def test_circuit_breaker_functionality():
     """Circuit Breaker Functionality Test."""
     try:
-        from desktop.modern.presentation.tabs.construct.infrastructure.resilient_panel_factory import (
+        from desktop.modern.presentation.views.construct.infrastructure.resilient_panel_factory import (
             CircuitBreaker,
             CircuitBreakerConfig,
         )
@@ -450,7 +450,7 @@ def run_performance_benchmark():
 
     # Circuit Breaker Performance
     try:
-        from desktop.modern.presentation.tabs.construct.infrastructure.resilient_panel_factory import (
+        from desktop.modern.presentation.views.construct.infrastructure.resilient_panel_factory import (
             CircuitBreaker,
             CircuitBreakerConfig,
         )

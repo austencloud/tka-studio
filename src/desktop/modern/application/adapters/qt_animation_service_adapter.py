@@ -163,14 +163,12 @@ class QtAnimationServiceAdapter(QObject):
                 animation_ids.append(command.command_id)
 
             logger.debug(
-                f"🎬 [QT_ANIMATION_ADAPTER] Started fade transition with {len(animation_ids)} animations"
+                f"🎬 [QT_ANIMATION_ADAPTER] Started fade with {len(animation_ids)} animations"
             )
             return animation_ids
 
         except Exception as e:
-            logger.error(
-                f"❌ [QT_ANIMATION_ADAPTER] Failed to animate fade transition: {e}"
-            )
+            logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate fade: {e}")
             return []
 
     def stop_animation(self, animation_id: str):

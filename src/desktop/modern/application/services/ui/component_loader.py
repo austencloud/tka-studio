@@ -19,14 +19,13 @@ PROVIDES:
 """
 
 from pathlib import Path
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QTabWidget, QVBoxLayout, QWidget
 
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
-from desktop.modern.presentation.tabs.browse.browse_tab import BrowseTab
-from desktop.modern.presentation.tabs.construct.construct_tab import ConstructTab
+from desktop.modern.presentation.views.browse.browse_tab import BrowseTab
+from desktop.modern.presentation.views.construct.construct_tab import ConstructTab
 
 from .tab_management import ITabManagementService
 
@@ -44,7 +43,7 @@ class ComponentLoader:
         tab_widget: QTabWidget,
         tab_management_service: ITabManagementService,
         container,
-        session_service: Optional[ISessionStateTracker] = None,
+        session_service: ISessionStateTracker | None = None,
     ) -> None:
         """
         Load construct tab - SINGLE method replaces 6 complex methods.

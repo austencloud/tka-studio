@@ -5,7 +5,7 @@ Handles smooth fade animations for option picker content.
 Manages fade transitions and graphics effects cleanup.
 """
 
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -25,7 +25,7 @@ class OptionPickerAnimator:
     def __init__(self, parent: QWidget):
         self._parent = parent
         self._is_animating = False
-        self._pending_fade_callback: Optional[Callable] = None
+        self._pending_fade_callback: Callable | None = None
         self._pending_fade_frames: list[QWidget] = []
 
     def is_animating(self) -> bool:
@@ -36,7 +36,7 @@ class OptionPickerAnimator:
         self,
         pictograph_frames: list[QWidget],
         update_callback: Callable,
-        fade_in_callback: Optional[Callable] = None,
+        fade_in_callback: Callable | None = None,
     ) -> None:
         """
         Fade out pictographs, call update callback, then fade in new content.
@@ -117,8 +117,7 @@ class OptionPickerAnimator:
                 # Fallback to automatic fade in
                 self._fade_in_new_content()
 
-        except Exception as e:
-            print(f"❌ [ANIMATOR] Failed to complete fade transition: {e}")
+        except Exception:
             self._is_animating = False
 
     def _fade_in_new_content(self):

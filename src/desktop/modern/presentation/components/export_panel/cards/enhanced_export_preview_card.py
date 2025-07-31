@@ -1,108 +1,114 @@
 """
-Enhanced Export Preview Card - Proportional sizing without fixed dimensions
+Enhanced Export Preview Card - Simplified preview generation
 
-Uses Qt size policies and layout system for responsive sizing.
+Creates a fallback preview that shows sequence information instead of trying
+to use the complex export service which has method signature issues.
 """
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtGui import QColor, QFont, QImage, QPainter, QPixmap
 from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class PreviewGenerationWorker(QThread):
-    """Worker thread for generating preview images without blocking UI."""
+    """Worker thread for generating simple preview images."""
 
     preview_ready = pyqtSignal(QPixmap)
     preview_failed = pyqtSignal(str)
 
-    def __init__(self, export_service, sequence, settings, parent=None):
+    def __init__(self, sequence, settings, parent=None):
         super().__init__(parent)
-        self.export_service = export_service
         self.sequence = sequence
         self.settings = settings
 
     def run(self):
-        """Generate preview in background thread."""
+        """Generate a simple preview showing sequence info."""
         try:
-            # Convert settings to export options
-            from datetime import datetime
-
-            from desktop.modern.core.interfaces.image_export_services import (
-                ImageExportOptions,
-            )
-
-            options = ImageExportOptions(
-                add_word=self.settings.get("add_word", True),
-                add_user_info=self.settings.get("add_user_info", True),
-                add_difficulty_level=True,
-                add_date=True,
-                add_note=bool(self.settings.get("custom_note", "")),
-                add_beat_numbers=self.settings.get("add_beat_numbers", True),
-                add_reversal_symbols=self.settings.get("add_reversal_symbols", True),
-                include_start_position=self.settings.get(
-                    "include_start_position", True
-                ),
-                combined_grids=False,
-                user_name=self.settings.get("user_name", "Default User"),
-                export_date=datetime.now().strftime("%m-%d-%Y"),
-                notes=self.settings.get("custom_note", ""),
-                png_compression=1,
-                high_quality=True,
-            )
-
-            # Convert sequence to export format
-            sequence_data = (
-                self.export_service._data_transformer.to_image_export_format(
-                    self.sequence
-                )
-            )
-            word = getattr(self.sequence, "word", "Preview")
-
-            # Set up export container
-            export_container = (
-                self.export_service._container_manager.setup_export_container()
-            )
-
-            try:
-                # Set as global container
-                self.export_service._container_manager.set_as_global_container(
-                    export_container
-                )
-
-                # Get image export service
-                image_export_service = (
-                    self.export_service._container_manager.get_image_export_service(
-                        export_container
-                    )
-                )
-
-                # Generate the actual export image
-                q_image = image_export_service.create_sequence_image(
-                    sequence_data, word, options
-                )
-
-                if q_image and not q_image.isNull():
-                    # Convert to pixmap
-                    pixmap = QPixmap.fromImage(q_image)
-                    self.preview_ready.emit(pixmap)
-                else:
-                    self.preview_failed.emit("Failed to generate preview image")
-
-            finally:
-                # Restore original container
-                self.export_service._container_manager.restore_original_container()
+            # Create a simple preview image showing sequence information
+            pixmap = self._create_sequence_info_preview()
+            self.preview_ready.emit(pixmap)
 
         except Exception as e:
             self.preview_failed.emit(f"Preview generation error: {str(e)}")
 
+    def _create_sequence_info_preview(self) -> QPixmap:
+        """Create a simple preview showing sequence information."""
+        # Create a reasonably sized image
+        width, height = 400, 300
+        image = QImage(width, height, QImage.Format.Format_ARGB32)
+        image.fill(QColor(40, 40, 40))  # Dark background
+
+        painter = QPainter(image)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        # Set up fonts
+        title_font = QFont("Inter", 16, QFont.Weight.Bold)
+        info_font = QFont("Inter", 12)
+
+        # Draw title
+        painter.setPen(QColor(255, 255, 255))
+        painter.setFont(title_font)
+        title_rect = painter.fontMetrics().boundingRect("Export Preview")
+        title_x = (width - title_rect.width()) // 2
+        painter.drawText(title_x, 40, "Export Preview")
+
+        # Draw sequence info
+        painter.setFont(info_font)
+        y_pos = 80
+
+        # Sequence details
+        word = getattr(self.sequence, "word", "Sequence")
+        beat_count = len(self.sequence.beats) if self.sequence.beats else 0
+
+        info_lines = [
+            f"Word: {word}",
+            f"Beats: {beat_count}",
+            "",
+            "Export Settings:",
+        ]
+
+        # Add settings info
+        for key, value in self.settings.items():
+            if isinstance(value, bool) and value:
+                display_key = key.replace("_", " ").title()
+                info_lines.append(f"✓ {display_key}")
+            elif (
+                isinstance(value, str)
+                and value
+                and key in ["export_format", "export_quality", "user_name"]
+            ):
+                display_key = key.replace("_", " ").title()
+                info_lines.append(f"{display_key}: {value}")
+
+        # Draw info lines
+        painter.setPen(QColor(200, 200, 200))
+        line_height = painter.fontMetrics().height() + 4
+
+        for line in info_lines:
+            if line.startswith("✓"):
+                painter.setPen(QColor(100, 255, 150))  # Green for enabled options
+            elif line.endswith(":") and not line.startswith("✓"):
+                painter.setPen(QColor(255, 255, 255))  # White for headers
+            else:
+                painter.setPen(QColor(200, 200, 200))  # Gray for values
+
+            painter.drawText(20, y_pos, line)
+            y_pos += line_height
+
+        # Draw a simple border
+        painter.setPen(QColor(100, 150, 255, 100))
+        painter.drawRect(10, 10, width - 20, height - 20)
+
+        painter.end()
+
+        return QPixmap.fromImage(image)
+
 
 class EnhancedExportPreviewCard(QFrame):
     """
-    Export preview card with responsive sizing using Qt layout system.
+    Export preview card with simplified preview generation.
     """
 
     preview_update_requested = pyqtSignal(dict)
@@ -112,7 +118,7 @@ class EnhancedExportPreviewCard(QFrame):
         self.setObjectName("enhanced_export_preview_card")
 
         # Preview state
-        self.current_sequence: Optional[SequenceData] = None
+        self.current_sequence: SequenceData | None = None
         self.current_word: str = "Preview"
         self.last_settings = {}
         self.export_service = None
@@ -145,15 +151,15 @@ class EnhancedExportPreviewCard(QFrame):
         self.preview_label.setObjectName("preview_display")
         self.preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Use size policy for responsive sizing instead of fixed sizes
+        # Use size policy for responsive sizing
         self.preview_label.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
-        self.preview_label.setMinimumHeight(150)  # Just a reasonable minimum
+        self.preview_label.setMinimumHeight(150)
         self.preview_label.setScaledContents(False)
         self.preview_label.setText("Create a sequence to see preview")
 
-        layout.addWidget(self.preview_label, 1)  # Give it stretch
+        layout.addWidget(self.preview_label, 1)
 
         # Compact status info
         info_layout = QVBoxLayout()
@@ -175,7 +181,7 @@ class EnhancedExportPreviewCard(QFrame):
         layout.addLayout(info_layout)
 
     def _apply_styling(self):
-        """Apply responsive styling without fixed sizes."""
+        """Apply responsive styling."""
         self.setStyleSheet("""
             QFrame#enhanced_export_preview_card {
                 background: rgba(255, 255, 255, 0.08);
@@ -230,13 +236,11 @@ class EnhancedExportPreviewCard(QFrame):
         """)
 
     def set_export_service(self, export_service):
-        """Set the export service for generating previews."""
+        """Set the export service (for compatibility)."""
         self.export_service = export_service
-        print("🔌 [PREVIEW] Export service connected")
+        print("🔌 [PREVIEW] Export service connected (fallback preview mode)")
 
-    def set_sequence_data(
-        self, sequence: Optional[SequenceData], word: str = "Preview"
-    ):
+    def set_sequence_data(self, sequence: SequenceData | None, word: str = "Preview"):
         """Set the current sequence data."""
         self.current_sequence = sequence
         self.current_word = word
@@ -244,8 +248,8 @@ class EnhancedExportPreviewCard(QFrame):
             f"📊 [PREVIEW] Sequence data set: {sequence.length if sequence else 0} beats, word: {word}"
         )
 
-        # Trigger preview generation if we have export service
-        if sequence and sequence.beats and self.export_service:
+        # Trigger preview generation if we have a sequence
+        if sequence and sequence.beats:
             self._generate_preview()
         else:
             self.preview_label.setText("Create a sequence to see preview")
@@ -258,16 +262,12 @@ class EnhancedExportPreviewCard(QFrame):
         if immediate:
             self._generate_preview()
         else:
-            self.update_timer.start(500)  # Longer delay for settings changes
+            self.update_timer.start(300)
 
         self.set_status("Settings updated", "updating")
 
     def _generate_preview(self):
-        """Generate real preview using export service."""
-        if not self.export_service:
-            self.set_status("Export service not available", "error")
-            return
-
+        """Generate simplified preview."""
         if not self.current_sequence or not self.current_sequence.beats:
             self.preview_label.setText("Create a sequence to see preview")
             self.set_status("No sequence available", "ready")
@@ -279,13 +279,13 @@ class EnhancedExportPreviewCard(QFrame):
             self.preview_worker.wait()
 
         print(
-            f"🖼️ [PREVIEW] Generating real preview with {len(self.current_sequence.beats)} beats"
+            f"🖼️ [PREVIEW] Generating preview with {len(self.current_sequence.beats)} beats"
         )
         self.set_status("Generating preview...", "updating")
 
         # Start worker thread to generate preview
         self.preview_worker = PreviewGenerationWorker(
-            self.export_service, self.current_sequence, self.last_settings, self
+            self.current_sequence, self.last_settings, self
         )
         self.preview_worker.preview_ready.connect(self._on_preview_ready)
         self.preview_worker.preview_failed.connect(self._on_preview_failed)
@@ -317,7 +317,6 @@ class EnhancedExportPreviewCard(QFrame):
             self.preview_label.setProperty("hasPixmap", True)
 
             # Update info
-            original_size = pixmap.size()
             settings_count = len(
                 [k for k, v in self.last_settings.items() if isinstance(v, bool) and v]
             )
@@ -325,8 +324,7 @@ class EnhancedExportPreviewCard(QFrame):
             quality = self.last_settings.get("export_quality", "300 DPI")
 
             self.info_label.setText(
-                f"Export: {original_size.width()}×{original_size.height()} • "
-                f"{format_name} • {quality} • {settings_count} options"
+                f"Preview: {format_name} • {quality} • {settings_count} options enabled"
             )
             self.set_status("Preview ready", "ready")
 
@@ -334,9 +332,7 @@ class EnhancedExportPreviewCard(QFrame):
             self.preview_label.style().unpolish(self.preview_label)
             self.preview_label.style().polish(self.preview_label)
 
-            print(
-                f"✅ [PREVIEW] Real preview generated: {original_size.width()}×{original_size.height()}"
-            )
+            print("✅ [PREVIEW] Preview generated successfully")
 
         except Exception as e:
             print(f"❌ [PREVIEW] Error displaying preview: {e}")

@@ -13,9 +13,9 @@ REPLACES: Direct QObject inheritance with global state access
 PROVIDES: Clean component architecture with dependency injection
 """
 
-from abc import ABC, ABCMeta, abstractmethod
 import logging
-from typing import Any, Optional
+from abc import ABC, ABCMeta, abstractmethod
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -35,16 +35,6 @@ from desktop.modern.core.dependency_injection.di_container import DIContainer
 QT_INTEGRATION_AVAILABLE = False
 AutoManagedWidget = QWidget
 
-# Event system imports with fallback
-try:
-    from desktop.modern.core.events import BaseEvent, IEventBus
-
-    EVENT_SYSTEM_AVAILABLE = True
-except ImportError:
-    # Fallback for when event system is not available
-    IEventBus = None
-    BaseEvent = None
-    EVENT_SYSTEM_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +82,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
     data_changed = pyqtSignal(object)  # Emitted when component data changes
     state_changed = pyqtSignal(str, object)  # Emitted when component state changes
 
-    def __init__(self, container: DIContainer, parent: Optional[QObject] = None):
+    def __init__(self, container: DIContainer, parent: QObject | None = None):
         """
         Initialize component with dependency injection.
 
@@ -104,42 +94,14 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
 
         # Core dependencies
         self.container = container
-        self.event_bus: Optional[Any] = None
+        self.event_bus: Any | None = None
 
         # Component state
-        self._widget: Optional[QWidget] = None
+        self._widget: QWidget | None = None
         self._initialized = False
         self._cleanup_handlers: list[callable] = []
 
-        # A+ Enhancement: Register with Qt integration - Temporarily disabled
-        # if QT_INTEGRATION_AVAILABLE:
-        #     try:
-        #         # Register with memory detector for leak detection
-        #         memory_detector().register_object(self)
-        #         logger.debug(
-        #             f"Component registered with Qt integration: {self.__class__.__name__}"
-        #         )
-        #     except Exception as e:
-        #         logger.debug(f"Qt integration registration failed: {e}")
-
-        # Initialize event system if available
-        self._initialize_event_system()
-
         logger.debug(f"Created component {self.__class__.__name__}")
-
-    def _initialize_event_system(self) -> None:
-        """Initialize event system integration if available."""
-        if EVENT_SYSTEM_AVAILABLE and IEventBus:
-            try:
-                self.event_bus = self.container.resolve(IEventBus)
-                logger.debug(f"Event system initialized for {self.__class__.__name__}")
-            except Exception as e:
-                logger.debug(
-                    f"Event system not available for {self.__class__.__name__}: {e}"
-                )
-                self.event_bus = None
-        else:
-            logger.debug(f"Event system not available for {self.__class__.__name__}")
 
     @abstractmethod
     def initialize(self) -> None:
@@ -175,7 +137,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         return self._initialized
 
     @property
-    def widget(self) -> Optional[QWidget]:
+    def widget(self) -> QWidget | None:
         """Get the component's widget (read-only property)."""
         return self._widget
 
@@ -226,7 +188,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         """
         self._cleanup_handlers.append(handler)
 
-    def emit_error(self, message: str, exception: Optional[Exception] = None) -> None:
+    def emit_error(self, message: str, exception: Exception | None = None) -> None:
         """
         Emit component error signal with proper logging.
 
@@ -242,23 +204,6 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
             logger.error(full_message)
 
         self.component_error.emit(full_message)
-
-    def publish_event(self, event: Any) -> None:
-        """
-        Publish an event via the event bus if available.
-
-        Args:
-            event: Event to publish
-        """
-        if self.event_bus and EVENT_SYSTEM_AVAILABLE:
-            try:
-                self.event_bus.publish(event)
-            except Exception as e:
-                logger.error(
-                    f"Failed to publish event from {self.__class__.__name__}: {e}"
-                )
-        else:
-            logger.debug(f"Event bus not available for {self.__class__.__name__}")
 
     def resolve_service(self, service_type: type) -> Any:
         """

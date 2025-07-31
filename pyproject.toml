@@ -1,80 +1,7 @@
-# This file now contains the configuration for Ruff (replaces Pylint, Black, and isort)
-
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "tka"
-version = "1.0.0"
-description = "The Kinetic Alphabet"
-authors = [{ name = "Austen Cloud", email = "tkaflowarts@gmail.com" }]
-dependencies = [
-    "PyQt6>=6.4.0",
-    "requests>=2.31.0",
-    "pydantic>=2.0.0",
-    "sqlalchemy>=2.0.0",
-    "pytest>=7.4.0",
-    "pytest-qt>=4.2.0",
-    "pytest-mock>=3.10.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-benchmark>=4.0.0",
-    "pytest-cov>=4.1.0",
-    "pytest-html>=3.1.0",
-    "pytest-metadata>=3.0.0",
-    "pytest-xvfb>=3.0.0",
-    "hypothesis>=6.0.0",
-    "Faker>=18.0.0",
-    "anyio>=3.6.0",
-]
-
-[project.optional-dependencies]
-# Replaced old tools with Ruff
-dev = ["ruff>=0.1.0", "mypy>=1.5.0"]
-test-automation = [
-    "pre-commit>=3.0.0",
-    "watchdog>=3.0.0",
-    "schedule>=1.2.0",
-    "pytest-xdist>=3.0.0",
-    "plyer>=2.1.0",
-]
-
-# ===================================================================
-# PYTEST CONFIGURATION
-# ===================================================================
-
-[tool.pytest.ini_options]
-minversion = "7.0"
-addopts = [
-    "--import-mode=importlib",
-    "--strict-markers",
-    "--strict-config",
-    "--disable-warnings",
-    "-ra",
-]
-testpaths = ["tests", "tests/unit", "tests/integration", "tests/e2e"]
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-markers = [
-    "unit: Unit tests (fast, isolated)",
-    "integration: Integration tests",
-    "modern: Modern codebase tests",
-    "legacy: Legacy codebase tests",
-    "launcher: Launcher tests",
-    "slow: Tests taking >5 seconds",
-    "gui: GUI tests requiring display",
-    "skip_if_no_pyqt6: Skip if PyQt6 unavailable",
-]
-
-# ===================================================================
-# RUFF CONFIGURATION (REPLACES BLACK + ISORT + PYLINT)
-# ===================================================================
-
 [tool.ruff]
-# Same line length as your previous Black config
+# Update to py310 for better pyupgrade support
+target-version = "py310"
 line-length = 88
-target-version = "py39"
 
 # Include and exclude patterns
 include = ["*.py", "*.pyi"]
@@ -92,93 +19,28 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-# Enable these rule sets (but make them non-blocking)
+# Enable these rule sets with W included for W293
 select = [
-    "E",      # pycodestyle errors (auto-fixable)
-    "W",      # pycodestyle warnings (auto-fixable)
-    "F",      # pyflakes (auto-fixable)
-    "I",      # isort (import sorting - auto-fixable)
-    "UP",     # pyupgrade (auto-fixable)
+    "E",  # pycodestyle errors (auto-fixable)
+    "W",  # pycodestyle warnings (auto-fixable) - includes W293
+    "F",  # pyflakes (auto-fixable)
+    "I",  # isort (import sorting - auto-fixable)
+    "UP", # pyupgrade (auto-fixable)
 ]
+
+# Make all rules auto-fixable
+fixable = ["ALL"]
+
+# Optional: enable more aggressive pyupgrade fixes
+# unsafe-fixes = true
 
 # Only ignore rules that cause real problems in Qt/PyQt6 codebases
 ignore = [
-    "E501",   # Line too long (handled by formatter)
-    "N802",   # Function name should be lowercase (Qt uses camelCase)
-    "N803",   # Argument name should be lowercase (Qt uses camelCase)
-    "N806",   # Variable in function should be lowercase (Qt uses camelCase)
-    "N812",   # Lowercase imported as non-lowercase (PyQt6 modules)
-    "N815",   # mixedCase variable in class scope (Qt widgets)
-    "N816",   # mixedCase variable in global scope
+    "E501", # Line too long (handled by formatter)
+    "N802", # Function name should be lowercase (Qt uses camelCase)
+    "N803", # Argument name should be lowercase (Qt uses camelCase)
+    "N806", # Variable in function should be lowercase (Qt uses camelCase)
+    "N812", # Lowercase imported as non-lowercase (PyQt6 modules)
+    "N815", # mixedCase variable in class scope (Qt widgets)
+    "N816", # mixedCase variable in global scope
 ]
-
-# Allow specific variable names (from your old Pylint config)
-[tool.ruff.lint.per-file-ignores]
-# Test files can have longer lines and more flexibility
-"test_*.py" = ["E501", "N801", "N802", "N803"]
-"*_test.py" = ["E501", "N801", "N802", "N803"]
-"tests/*" = ["E501", "N801", "N802", "N803"]
-
-# Allow unused imports in __init__.py files
-"__init__.py" = ["F401"]
-
-[tool.ruff.lint.isort]
-# Configure import sorting (replaces your old isort config)
-case-sensitive = false
-force-single-line = false
-force-sort-within-sections = true
-known-first-party = ["tka"]
-split-on-trailing-comma = true
-
-[tool.ruff.lint.mccabe]
-# Complexity threshold (more lenient than default)
-max-complexity = 15
-
-[tool.ruff.lint.pycodestyle]
-max-doc-length = 120
-
-[tool.ruff.format]
-# Formatting options (replaces Black)
-quote-style = "double"
-indent-style = "space"
-line-ending = "auto"
-
-# ===================================================================
-# MYPY CONFIGURATION (KEEPING MINIMAL TYPE CHECKING)
-# ===================================================================
-
-[tool.mypy]
-python_version = "3.12"
-warn_return_any = false
-warn_unused_configs = true
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_redundant_casts = false
-warn_unused_ignores = false
-warn_no_return = false
-warn_unreachable = false
-ignore_missing_imports = true
-strict = false
-
-# Exclude patterns
-exclude = [
-    "build",
-    "dist",
-    ".venv",
-    "venv",
-    "__pycache__",
-    ".pytest_cache",
-    "node_modules",
-]
-
-# --- SETUPTOOLS CONFIGURATION ---
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["*"]
-exclude = ["tests*", "*tests*", "test_*"]
-
-[tool.setuptools.package-dir]
-"" = "src"

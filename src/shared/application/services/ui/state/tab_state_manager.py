@@ -33,6 +33,8 @@ class TabStateManager(QObject):
     tab_switched = pyqtSignal(str, str)  # new_tab, previous_tab
     tab_state_changed = pyqtSignal(str, dict)  # tab_name, state
     tab_state_updated = pyqtSignal(str, dict)  # tab_name, updates
+    state_save_requested = pyqtSignal(dict)  # state_data
+    state_load_requested = pyqtSignal()
 
     def __init__(self):
         """Initialize tab state manager."""
@@ -66,13 +68,8 @@ class TabStateManager(QObject):
 
         self._tab_states[tab_name].update(state)
 
-        # Publish tab state change event
-        event = UIEvent(
-            component="tab",
-            action="state_updated",
-            state_data={"tab_name": tab_name, "state": state},
-            source="tab_state_manager",
-        )
+        # Emit Qt signal for tab state change
+        self.tab_state_updated.emit(tab_name, state)
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def clear_tab_state(self, tab_name: str) -> None:
@@ -80,13 +77,8 @@ class TabStateManager(QObject):
         if tab_name in self._tab_states:
             del self._tab_states[tab_name]
 
-        # Publish tab state cleared event
-        event = UIEvent(
-            component="tab",
-            action="state_cleared",
-            state_data={"tab_name": tab_name},
-            source="tab_state_manager",
-        )
+        # Emit Qt signal for tab state cleared
+        self.tab_state_changed.emit(tab_name, {})
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_all_tab_states(self) -> dict[str, dict[str, Any]]:
@@ -98,13 +90,8 @@ class TabStateManager(QObject):
         self._tab_states.clear()
         self._active_tab = "sequence_builder"
 
-        # Publish tab states reset event
-        event = UIEvent(
-            component="tab",
-            action="states_reset",
-            state_data={},
-            source="tab_state_manager",
-        )
+        # Emit Qt signal for tab states reset
+        self.tab_state_changed.emit("all", {})
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_state_for_persistence(self) -> dict[str, Any]:
@@ -143,13 +130,13 @@ class TabStateManager(QObject):
     def save_state(self) -> None:
         """Save current state to persistent storage (interface implementation)."""
         state_data = {"active_tab": self._active_tab, "tab_states": self._tab_states}
-        # Emit save event
-        get_event_bus().emit(UIEvent("tab_state_save_requested", state_data))
+        # Emit Qt signal for save request
+        self.state_save_requested.emit(state_data)
 
     def load_state(self) -> None:
         """Load state from persistent storage (interface implementation)."""
-        # Emit load event
-        get_event_bus().emit(UIEvent("tab_state_load_requested", {}))
+        # Emit Qt signal for load request
+        self.state_load_requested.emit()
 
     def toggle_graph_editor(self) -> bool:
         """Toggle graph editor visibility (interface implementation)."""

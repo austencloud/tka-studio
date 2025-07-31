@@ -43,13 +43,8 @@ class WindowStateManager(QObject):
         """Set window geometry."""
         self._window_geometry = geometry.copy()
 
-        # Publish window geometry change event
-        event = UIEvent(
-            component="window",
-            action="geometry_changed",
-            state_data={"geometry": geometry},
-            source="window_state_service",
-        )
+        # Emit Qt signal for geometry change
+        self.geometry_changed.emit(geometry)
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def is_window_maximized(self) -> bool:
@@ -60,13 +55,8 @@ class WindowStateManager(QObject):
         """Set window maximized state."""
         self._window_maximized = maximized
 
-        # Publish window maximized state change event
-        event = UIEvent(
-            component="window",
-            action="maximized_changed",
-            state_data={"maximized": maximized},
-            source="window_state_service",
-        )
+        # Emit Qt signal for maximized state change
+        self.maximized_changed.emit(maximized)
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_window_state(self) -> dict[str, any]:
@@ -88,13 +78,9 @@ class WindowStateManager(QObject):
         self._window_geometry = {}
         self._window_maximized = False
 
-        # Publish window state reset event
-        event = UIEvent(
-            component="window",
-            action="state_reset",
-            state_data={},
-            source="window_state_service",
-        )
+        # Emit Qt signals for state reset
+        self.geometry_changed.emit({})
+        self.maximized_changed.emit(False)
         # self._event_bus.publish(event)  # Converted to Qt signals
 
     def get_state_for_persistence(self) -> dict[str, any]:

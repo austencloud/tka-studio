@@ -6,8 +6,8 @@ This script tests the business logic of the manager classes
 without requiring Qt widgets.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).resolve().parent.parent
@@ -19,8 +19,8 @@ def test_browse_data_manager_logic():
     print("🧪 Testing BrowseDataManager logic...")
 
     try:
-        from desktop.modern.presentation.tabs.browse.managers import BrowseDataManager
-        from desktop.modern.presentation.tabs.browse.models import FilterType
+        from desktop.modern.presentation.views.browse.managers import BrowseDataManager
+        from desktop.modern.presentation.views.browse.models import FilterType
 
         # Create test data directory
         data_dir = Path("data")
@@ -53,7 +53,7 @@ def test_browse_navigation_manager_logic():
     print("🧪 Testing BrowseNavigationManager logic...")
 
     try:
-        from desktop.modern.presentation.tabs.browse.managers import (
+        from desktop.modern.presentation.views.browse.managers import (
             BrowseNavigationManager,
             BrowsePanel,
         )
@@ -107,7 +107,9 @@ def test_browse_action_handler_logic():
 
     try:
         from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.modern.presentation.tabs.browse.managers import BrowseActionHandler
+        from desktop.modern.presentation.views.browse.managers import (
+            BrowseActionHandler,
+        )
 
         # Create test parameters
         container = DIContainer()
@@ -143,7 +145,7 @@ def test_manager_integration():
 
     try:
         from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.modern.presentation.tabs.browse.managers import (
+        from desktop.modern.presentation.views.browse.managers import (
             BrowseActionHandler,
             BrowseDataManager,
             BrowseNavigationManager,

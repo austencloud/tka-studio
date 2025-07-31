@@ -24,9 +24,9 @@ except ImportError:
         def __init__(
             self,
             message: str,
-            interface_name: Optional[str] = None,
-            dependency_chain: Optional[list] = None,
-            context: Optional[dict[str, Any]] = None,
+            interface_name: str | None = None,
+            dependency_chain: list | None = None,
+            context: dict[str, Any] | None = None,
         ):
             super().__init__(message)
             self.interface_name = interface_name

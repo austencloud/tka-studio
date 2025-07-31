@@ -8,7 +8,7 @@ Extracted from UIStateManager to follow single responsibility principle.
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Use PyQt6 signals instead of event bus
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -32,7 +32,7 @@ class SettingsManager(QObject):
     settings_loaded = pyqtSignal(dict)  # all_settings
     settings_saved = pyqtSignal(str)  # file_path
 
-    def __init__(self, settings_file_path: Optional[Path] = None):
+    def __init__(self, settings_file_path: Path | None = None):
         """Initialize settings service."""
         super().__init__()
 
@@ -59,15 +59,8 @@ class SettingsManager(QObject):
         self._user_settings[key] = value
         self._save_settings()
 
-        # Publish setting change event
-        event = UIEvent(
-            component="settings",
-            action="updated",
-            state_data={"key": key, "value": value},
-            source="settings_service",
-        )
-        if self._event_bus:
-            self._event_bus.publish(event)
+        # Emit Qt signal for setting change
+        self.setting_changed.emit(key, value)
 
     def get_all_settings(self) -> dict[str, Any]:
         """Get all settings."""
@@ -81,15 +74,8 @@ class SettingsManager(QObject):
         self._user_settings.clear()
         self._save_settings()
 
-        # Publish settings cleared event
-        event = UIEvent(
-            component="settings",
-            action="cleared",
-            state_data={},
-            source="settings_service",
-        )
-        if self._event_bus:
-            self._event_bus.publish(event)
+        # Emit Qt signal for settings cleared
+        self.settings_loaded.emit(self.get_all_settings())
 
     def reset_to_defaults(self) -> None:
         """Reset all settings to defaults."""
@@ -125,15 +111,8 @@ class SettingsManager(QObject):
             self._user_settings.update(imported_settings)
             self._save_settings()
 
-            # Publish settings imported event
-            event = UIEvent(
-                component="settings",
-                action="imported",
-                state_data={"file_path": str(file_path)},
-                source="settings_service",
-            )
-            if self._event_bus:
-                self._event_bus.publish(event)
+            # Emit Qt signal for settings imported
+            self.settings_loaded.emit(self.get_all_settings())
 
             logger.info(f"Settings imported from {file_path}")
             return True
