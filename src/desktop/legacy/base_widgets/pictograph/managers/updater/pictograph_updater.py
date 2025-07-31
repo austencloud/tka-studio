@@ -1,7 +1,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.grid_mode_checker import GridModeChecker
 
 from data.constants import LEADING, TRAILING
@@ -53,17 +52,6 @@ class PictographUpdater:
         self.pictograph.elements.reversal_glyph.update_reversal_symbols()
 
         logger.debug("Data update (partial or complete) applied successfully.")
-
-    def get_prop_data(self, pictograph_data: dict, color: str) -> dict:
-        motion = self.pictograph.managers.get.motion_by_color(color)
-        return {
-            "color": color,
-            "loc": pictograph_data[f"{color}_attributes"]["end_loc"],
-            "motion": motion,
-            "prop_type": AppContext.settings_manager()
-            .global_settings.get_prop_type()
-            .name,
-        }
 
     def update_grid_mode_if_changed(self):
         new_grid_mode = GridModeChecker.get_grid_mode(

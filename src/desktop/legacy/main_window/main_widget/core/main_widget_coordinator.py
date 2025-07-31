@@ -5,7 +5,7 @@ This replaces the monolithic MainWidget class with a coordinator that manages
 smaller, focused components following the Single Responsibility Principle.
 """
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from main_window.main_widget.core.image_drag_drop_handler import ImageDragDropHandler
 from main_window.main_widget.core.image_drop_processor import ImageDropProcessor
@@ -545,7 +545,7 @@ class MainWidgetCoordinator(QWidget):
         self.tab_manager.on_widget_ready(widget_name)
 
     # Public interface methods
-    def get_current_tab(self) -> Optional[str]:
+    def get_current_tab(self) -> str | None:
         """Get the currently active tab."""
         return self.state_manager.current_tab
 
@@ -553,7 +553,7 @@ class MainWidgetCoordinator(QWidget):
         """Switch to a specific tab."""
         self.tab_manager.switch_to_tab(tab_name)
 
-    def get_tab_widget(self, tab_name: str) -> Optional[QWidget]:
+    def get_tab_widget(self, tab_name: str) -> QWidget | None:
         """Get a specific tab widget."""
         return self.tab_manager.get_tab_widget(tab_name)
 
@@ -605,11 +605,7 @@ class MainWidgetCoordinator(QWidget):
         self.main_content_stack.setCurrentIndex(tab_index)
         self._current_layout_mode = "full_widget"
 
-    def get_current_layout_mode(self) -> str:
-        """Get the current layout mode ('stack' or 'full_widget')."""
-        return self._current_layout_mode
-
-    def get_widget(self, widget_name: str) -> Optional[QWidget]:
+    def get_widget(self, widget_name: str) -> QWidget | None:
         """Get a specific widget."""
         return self.widget_manager.get_widget(widget_name)
 
@@ -618,22 +614,6 @@ class MainWidgetCoordinator(QWidget):
         settings_dialog = self.widget_manager.get_widget("settings_dialog")
         if settings_dialog:
             settings_dialog.show()
-
-    def show_full_screen_overlay(self, image_data) -> None:
-        """Show the full screen image overlay."""
-        overlay = self.widget_manager.get_widget("full_screen_overlay")
-        if overlay:
-            overlay.show_image(image_data)
-
-    def enable_image_drag_drop(self) -> None:
-        """Enable image drag and drop functionality."""
-        if hasattr(self, "image_drag_drop_handler"):
-            self.image_drag_drop_handler.enable()
-
-    def disable_image_drag_drop(self) -> None:
-        """Disable image drag and drop functionality."""
-        if hasattr(self, "image_drag_drop_handler"):
-            self.image_drag_drop_handler.disable()
 
     # Cleanup methods
     def cleanup(self) -> None:

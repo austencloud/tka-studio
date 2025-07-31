@@ -95,18 +95,6 @@ class PictographChecker:
             for prop in self.pictograph.elements.props.values()
         )
 
-    def has_a_dash(self) -> bool:
-        for motion in self.pictograph.elements.motion_set.values():
-            if motion.state.motion_type == DASH:
-                return True
-        return False
-
-    def has_a_static_motion(self) -> bool:
-        for motion in self.pictograph.elements.motion_set.values():
-            if motion.state.motion_type == STATIC:
-                return True
-        return False
-
     def is_pictograph_data_complete(self, pictograph_data: dict) -> bool:
         required_keys = [
             LETTER,
@@ -181,18 +169,6 @@ class PictographChecker:
             and self.pictograph.elements.blue_motion.state.start_ori in [CLOCK, COUNTER]
         )
 
-    def starts_from_radial_orientation(self) -> bool:
-        return self.pictograph.elements.red_motion.state.start_ori in [
-            IN,
-            OUT,
-        ] and self.pictograph.elements.blue_motion.state.start_ori in [IN, OUT]
-
-    def starts_from_nonradial_orientation(self) -> bool:
-        return self.pictograph.elements.red_motion.state.start_ori in [
-            CLOCK,
-            COUNTER,
-        ] and self.pictograph.elements.blue_motion.state.start_ori in [CLOCK, COUNTER]
-
     def has_hybrid_motions(self) -> bool:
         return (
             self.pictograph.elements.red_motion.state.motion_type
@@ -215,12 +191,6 @@ class PictographChecker:
 
     def has_one_float(self) -> bool:
         return any(
-            motion.state.motion_type == FLOAT
-            for motion in self.pictograph.elements.motion_set.values()
-        )
-
-    def has_two_floats(self) -> bool:
-        return all(
             motion.state.motion_type == FLOAT
             for motion in self.pictograph.elements.motion_set.values()
         )

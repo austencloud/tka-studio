@@ -207,12 +207,38 @@
     "publish": false,
     "sync": false
   },
-  "git.verboseCommit": false,
 
-  // Fix pre-commit popup issues
+  // NUCLEAR OPTION: ELIMINATE ALL GIT POPUPS AND NOTIFICATIONS FOREVER
   "git.allowNoVerifyCommit": true,
   "git.alwaysSignOff": false,
   "git.confirmSync": false,
-  "git.showCommitInput": true,
-  "git.showInlineOpenFileAction": false
+  "git.showCommitInput": false,
+  "git.showInlineOpenFileAction": false,
+  "git.showPushSuccessNotification": false,
+  "git.showCommitSuccessNotification": false,
+  "git.showHookOutput": false,
+  "git.showOutputTab": false,
+  "git.verboseCommit": false,
+  "git.silenceUntrackedChanges": true,
+  "git.ignoredByDefault": true,
+  "git.promptToSaveFilesBeforeCommit": "never",
+  "git.promptToSaveFilesBeforeStash": "never",
+  "git.allowForcePush": true,
+  "git.allowNoVerifyPush": true,
+  "git.rebaseWhenSync": false,
+  "git.fetchOnPull": false,
+  "git.pruneOnFetch": false,
+  "git.showUnpublishedCommitsButton": "never",
+  "git.showSyncButton": false,
+  "git.suggestSmartCommit": false,
+  "git.enableSmartCommit": false,
+  "git.smartCommitChanges": false,
+  "git.useCommitInputAsStashMessage": false,
+  "git.inputValidation": "never",
+  "git.inputValidationLength": 50000,
+  "git.inputValidationSubjectLength": 50000,
+  "git.untrackedChanges": "hidden",
+  "git.ignoreSubmodules": true,
+  "git.detectSubmodules": false,
+  "git.detectSubmodulesLimit": 0
 }

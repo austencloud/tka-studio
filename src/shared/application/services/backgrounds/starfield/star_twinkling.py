@@ -51,7 +51,3 @@ class StarTwinkling:
     def get_twinkle_states(self) -> list[float]:
         """Get current twinkle intensities"""
         return self.twinkle_state.copy()
-
-    def reset(self) -> None:
-        """Reset stars to initial state"""
-        self._create_stars(len(self.stars))

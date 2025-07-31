@@ -435,28 +435,22 @@ class PooledResource:
         self.return_func(self.resource)
 
 
-def pooled_pen(
-    color: QColor, width: int = 1, style: Qt.PenStyle = Qt.PenStyle.SolidLine
-) -> PooledResource:
+def get_pooled_pen(color: Any, width: int = 1, style: Any = None) -> PooledResource:
     """Get pooled pen with automatic return."""
     pen = qt_resources().get_pen(color, width, style)
     return PooledResource(pen, qt_resources().pen_pool, qt_resources().return_pen)
 
 
-def pooled_brush(
-    color: QColor, style: Qt.BrushStyle = Qt.BrushStyle.SolidPattern
-) -> PooledResource:
+def get_pooled_brush(color: Any, style: Any = None) -> PooledResource:
     """Get pooled brush with automatic return."""
-    brush = qt_resources.get_brush(color, style)
-    return PooledResource(brush, qt_resources.brush_pool, qt_resources.return_brush)
+    brush = qt_resources().get_brush(color, style)
+    return PooledResource(brush, qt_resources().brush_pool, qt_resources().return_brush)
 
 
-def pooled_font(
-    family: str, size: int, weight: int = 50, italic: bool = False
-) -> PooledResource:
+def get_pooled_font(family: str, size: int, weight: int = 50, italic: bool = False) -> PooledResource:
     """Get pooled font with automatic return."""
-    font = qt_resources.get_font(family, size, weight, italic)
-    return PooledResource(font, qt_resources.font_pool, qt_resources.return_font)
+    font = qt_resources().get_font(family, size, weight, italic)
+    return PooledResource(font, qt_resources().font_pool, qt_resources().return_font)
 
 
 # Global Qt resource manager instance

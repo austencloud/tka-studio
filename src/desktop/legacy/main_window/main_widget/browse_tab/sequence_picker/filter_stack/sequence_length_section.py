@@ -96,29 +96,6 @@ class SequenceLengthSection(FilterSectionBase):
 
         return length_counts
 
-    def display_only_thumbnails_with_sequence_length(self, length: int):
-        """Display sequences of a specific length."""
-        self.filter_selector.browse_tab.browse_settings.set_current_filter(
-            {"sequence_length": length}
-        )
-        self.browse_tab.filter_controller._prepare_ui_for_filtering(
-            f"sequences of length {length}"
-        )
-
-        base_words = self.get_sorted_base_words("sequence_length")
-        matching_sequences = [
-            (word, thumbnails, seq_length)
-            for word, thumbnails, seq_length in base_words
-            if seq_length == length
-        ]
-
-        total_sequences = len(matching_sequences) or 1  # Prevent division by zero
-        self.browse_tab.sequence_picker.currently_displayed_sequences = (
-            matching_sequences
-        )
-
-        self.browse_tab.ui_updater.update_and_display_ui(total_sequences)
-
     def resizeEvent(self, event):
         self.resize_buttons()
         self.resize_widget_font(self.header_label, 100)

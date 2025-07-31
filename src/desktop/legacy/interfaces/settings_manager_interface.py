@@ -101,11 +101,7 @@ class IGlobalSettings(Protocol):
 @runtime_checkable
 class IConstructTabSettings(Protocol):
     @abstractmethod
-    def get_auto_builder_enabled(self) -> bool:
-        pass
-
-    @abstractmethod
-    def set_auto_builder_enabled(self, enabled: bool) -> None:
+    def get_level(self) -> int:
         pass
 
 
@@ -142,9 +138,6 @@ class IBrowseTabSettings(Protocol):
 @runtime_checkable
 class IWriteTabSettings(Protocol):
     @abstractmethod
-    def get_auto_save_enabled(self) -> bool:
-        pass
-
     @abstractmethod
     def set_auto_save_enabled(self, enabled: bool) -> None:
         pass

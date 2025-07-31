@@ -12,7 +12,6 @@ from shared.application.services.backgrounds.snowfall.snowflake_physics import (
     SnowflakePhysics,
 )
 
-from .asset_utils import get_image_path
 from .base_background import BaseBackground
 
 if TYPE_CHECKING:
@@ -33,8 +32,9 @@ class SnowfallBackground(BaseBackground):
             self.widget_width = parent.width()
             self.widget_height = parent.height()
 
+        asset_resolver = AssetPathResolver()
         self.snowflake_images = [
-            QPixmap(get_image_path(f"snowflakes/snowflake{i}.png"))
+            QPixmap(asset_resolver.get_image_path(f"snowflakes/snowflake{i}.png"))
             for i in range(1, 21)
         ]
 

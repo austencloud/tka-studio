@@ -221,18 +221,6 @@ class SequenceTransformer(ISequenceTransformer):
         else:
             return sequence
 
-    def scale_sequence(self, sequence: Any, scale_factor: float) -> Any:
-        """Scale sequence (interface implementation)."""
-        # Scaling not implemented in current transformer
-        return sequence
-
     def reverse_sequence(self, sequence: Any) -> Any:
         """Reverse sequence order (interface implementation)."""
         return self.apply_transformation(sequence, WorkbenchOperation.SEQUENCE_REVERSAL)
-
-    def interpolate_beats(
-        self, sequence: Any, start_index: int, end_index: int, num_interpolated: int
-    ) -> Any:
-        """Interpolate beats between positions (interface implementation)."""
-        # Interpolation not implemented in current transformer
-        return sequence

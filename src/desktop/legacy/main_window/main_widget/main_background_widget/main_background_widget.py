@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from interfaces.settings_manager_interface import ISettingsManager
 from PyQt6.QtCore import Qt
@@ -19,19 +19,8 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def use_painter(paint_device):
-    painter = QPainter()
-    if painter.begin(paint_device):
-        try:
-            yield painter
-        finally:
-            painter.end()
-    else:
-        yield None
-
-
 class MainBackgroundWidget(QWidget):
-    background: Optional[BaseBackground] = None
+    background: BaseBackground | None = None
 
     def __init__(self, main_widget: "MainWidget", settings_manager: ISettingsManager):
         super().__init__(main_widget)
@@ -43,7 +32,7 @@ class MainBackgroundWidget(QWidget):
         self.setFixedSize(main_widget.size())
         self.apply_background()
 
-        self._cached_background_pixmap: Optional[QPixmap] = None
+        self._cached_background_pixmap: QPixmap | None = None
 
     def paintEvent(self, event):
         if getattr(self, "_painting_active", False):  # Prevent recursion
@@ -91,7 +80,7 @@ class MainBackgroundWidget(QWidget):
 
         self._cached_background_pixmap = None
 
-    def _get_background(self, bg_type: str) -> Optional[BaseBackground]:
+    def _get_background(self, bg_type: str) -> BaseBackground | None:
         background_map = {
             "Starfield": StarfieldBackground,
             "Aurora": AuroraBackground,

@@ -138,11 +138,6 @@ class DictionaryDataManager:
     # Now come the query methods that each filter can use
     # -----------------------------------------------------------------
 
-    def get_all_records(self) -> list[SequenceRecord]:
-        """Return everything, or if not yet loaded, load them."""
-        self.load_all_sequences()
-        return self._loaded_records
-
     def get_records_by_author(self, author: str) -> list[SequenceRecord]:
         self.load_all_sequences()
         return [r for r in self._loaded_records if r.author == author]
@@ -155,33 +150,9 @@ class DictionaryDataManager:
                 authors.add(r.author)
         return sorted(authors)
 
-    def get_records_by_level(self, level: int) -> list[SequenceRecord]:
-        self.load_all_sequences()
-        return [r for r in self._loaded_records if r.level == level]
-
-    def get_distinct_levels(self) -> list[int]:
-        self.load_all_sequences()
-        lvls = set()
-        for r in self._loaded_records:
-            if r.level is not None:
-                lvls.add(r.level)
-        return sorted(lvls)
-
-    def get_records_by_grid_mode(self, mode: str) -> list[SequenceRecord]:
-        self.load_all_sequences()
-        return [r for r in self._loaded_records if r.grid_mode == mode]
-
     # etc. for "starting_position", "contains_letter", etc.
     # The main idea: you have a single data set, and each filter is just a "query" on it.
 
     def get_all_words(self) -> list[str]:
         self.load_all_sequences()
         return [r.word for r in self._loaded_records]
-
-    def get_distinct_sequence_lengths(self) -> list[int]:
-        self.load_all_sequences()
-        return [len(r.word) for r in self._loaded_records]
-
-    def get_records_by_length(self, length: int) -> list[SequenceRecord]:
-        self.load_all_sequences()
-        return [r for r in self._loaded_records if len(r.word) == length]

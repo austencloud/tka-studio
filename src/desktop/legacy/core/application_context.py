@@ -22,7 +22,7 @@ class ApplicationContext:
     This replaces the global AppContext singleton with a proper, testable design.
     """
 
-    def __init__(self, container: Optional[DependencyContainer] = None):
+    def __init__(self, container: DependencyContainer | None = None):
         """
         Initialize the application context.
 
@@ -30,7 +30,7 @@ class ApplicationContext:
             container: Dependency container. If None, uses the global container.
         """
         self._container = container or get_container()
-        self._selected_arrow: Optional[Arrow] = None
+        self._selected_arrow: Arrow | None = None
 
     @property
     def settings_manager(self) -> "ISettingsManager":
@@ -71,7 +71,7 @@ class ApplicationContext:
 
 # Factory function for creating application context
 def create_application_context(
-    container: Optional[DependencyContainer] = None,
+    container: DependencyContainer | None = None,
 ) -> ApplicationContext:
     """
     Create a new application context.
@@ -116,6 +116,3 @@ class LegacyAppContextAdapter:
 
 
 # Migration helper
-def create_legacy_adapter(app_context: ApplicationContext) -> LegacyAppContextAdapter:
-    """Create a legacy adapter for gradual migration."""
-    return LegacyAppContextAdapter(app_context)

@@ -1,0 +1,223 @@
+{
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "python.terminal.activateEnvironment": true,
+  "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.debugging.noDebugAdapterPath": false,
+  "python.experiments.enabled": false,
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.pythonPath": "./.venv/Scripts/python.exe",
+  "debug.terminal.clearBeforeReusing": true,
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": false,
+
+  // === RUFF CONFIGURATION (REPLACES BLACK + ISORT + PYLINT) ===
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  // === DISABLE OLD TOOLS TO SAVE MEMORY ===
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.formatting.provider": "none",
+  "python.formatting.blackEnabled": false,
+  "isort.check": false,
+
+  // === PERFORMANCE OPTIMIZATIONS ===
+  // Reduce Python analysis memory usage
+  "python.analysis.memory.keepLibraryAst": false,
+  "python.analysis.autoImportCompletions": false,
+  "python.analysis.indexing": false,
+  "python.analysis.diagnosticMode": "openFilesOnly",
+
+  // === WEB/JS FORMATTERS ===
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // === MEMORY-SAVING FILE EXCLUSIONS ===
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    // TKA specific - exclude heavy directories
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true
+  },
+
+  // === AGGRESSIVE FILE WATCHER EXCLUSIONS ===
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.venv/**": true,
+    "**/env/**": true,
+    "**/venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.mypy_cache/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    // TKA specific heavy directories
+    "**/images/**": true,
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true,
+    "**/test_reports/**": true
+  },
+
+  // === SEARCH EXCLUSIONS ===
+  "search.exclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.venv/**": true,
+    "**/venv/**": true,
+    "**/env/**": true,
+    // TKA specific
+    "**/images/**": true,
+    "**/image_cache/**": true,
+    "**/exports/**": true,
+    "**/.benchmarks/**": true
+  },
+
+  // === GIT PERFORMANCE & COMMIT SMOOTHNESS ===
+  "git.autoRepositoryDetection": "subFolders",
+  "git.autofetch": false,
+  "git.enableStatusBarSync": false,
+  // Reduce Git commit interruptions
+  "git.allowNoVerifyCommit": false,
+  "git.alwaysSignOff": false,
+  "git.confirmSync": false,
+  "git.showCommitInput": true,
+  "git.showInlineOpenFileAction": false,
+  "git.showProgress": false,
+  "git.verboseCommit": false,
+  "git.postCommitCommand": "none",
+  "git.showActionButton": {
+    "commit": true,
+    "publish": false,
+    "sync": false
+  },
+
+  // === DISABLE HEAVY EXTENSIONS ===
+  "cSpell.enabled": false,
+  "cSpell.ignorePaths": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/.venv/**",
+    "**/__pycache__/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.dll",
+    "**/*.pyd",
+    "**/*.pyc"
+  ],
+
+  // === TESTING CONFIGURATION ===
+  "python.testing.pytestArgs": [".", "-v", "--tb=short"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.testing.cwd": "${workspaceFolder}",
+  "python.testing.autoTestDiscoverOnSaveEnabled": false,
+  "python.testing.pytestPath": "./.venv/Scripts/pytest.exe",
+
+  // === TYPESCRIPT PERFORMANCE (for web components) ===
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.suggest.autoImports": false,
+  "typescript.disableAutomaticTypeAcquisition": true,
+
+  // === ADDITIONAL PERFORMANCE OPTIMIZATIONS ===
+  // Reduce VS Code's own resource usage
+  "workbench.enableExperiments": false,
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+  "update.enableWindowsBackgroundUpdates": false,
+  "telemetry.telemetryLevel": "off",
+
+  // Optimize file operations
+  "files.hotExit": "onExitAndWindowClose",
+  "files.enableTrash": false,
+  "files.simpleDialog.enable": true,
+  "files.maxMemoryForLargeFilesMB": 4096,
+
+  // Reduce editor overhead
+  "editor.hover.delay": 1000,
+  "editor.quickSuggestions": {
+    "other": false,
+    "comments": false,
+    "strings": false
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.wordBasedSuggestions": "off",
+  "editor.parameterHints.enabled": false,
+  "editor.renderWhitespace": "none",
+  "editor.renderControlCharacters": false,
+  "editor.minimap.enabled": false,
+  "editor.codeLens": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": false,
+
+  // Disable heavy IntelliSense features
+  "editor.inlineSuggest.enabled": false,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+
+  // Window performance
+  "window.titleBarStyle": "custom",
+  "window.experimentalControlOverlay": false,
+
+  // Git performance improvements
+  "git.decorations.enabled": false,
+  "git.enableCommitSigning": false,
+  "scm.diffDecorations": "none",
+
+  // Disable resource-heavy features
+  "problems.decorations.enabled": false,
+  "outline.problems.enabled": false,
+  "breadcrumbs.enabled": false,
+
+  // === RUFF-SPECIFIC GIT INTEGRATION ===
+  // Auto-stage files that ruff fixes
+  "git.autoStash": false,
+  "git.smartCommitChanges": true,
+  "git.enableSmartCommit": true,
+  "git.suggestSmartCommit": false
+}

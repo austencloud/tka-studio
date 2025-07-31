@@ -49,7 +49,3 @@ class SnowflakePhysics:
         self.width = width
         self.height = height
         self._initialize_snowflakes()
-
-    def reset(self) -> None:
-        """Reset all snowflakes"""
-        self._initialize_snowflakes()

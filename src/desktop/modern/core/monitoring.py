@@ -574,13 +574,3 @@ def set_performance_thresholds(
 def get_performance_report() -> dict[str, Any]:
     """Get a comprehensive performance report."""
     return performance_monitor.generate_report()
-
-
-def clear_performance_data():
-    """Clear all performance monitoring data."""
-    performance_monitor.clear_metrics()
-
-
-def enable_performance_monitoring(enabled: bool = True):
-    """Enable or disable performance monitoring globally."""
-    performance_monitor.set_enabled(enabled)

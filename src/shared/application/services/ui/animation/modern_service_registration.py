@@ -67,18 +67,3 @@ def setup_modern_animation_services(container: DIContainer) -> None:
     Call this from your main DI configuration.
     """
     ModernAnimationServiceRegistration.register_services(container)
-
-
-# For testing and simple usage without DI
-def create_simple_animation_orchestrator(
-    settings_coordinator=None,
-) -> IAnimationOrchestrator:
-    """Create animation orchestrator without DI container."""
-    orchestrator, _ = create_modern_animation_system(settings_coordinator)
-    return orchestrator
-
-
-def create_legacy_adapter(settings_coordinator=None) -> LegacyFadeManagerWrapper:
-    """Create legacy adapter without DI container."""
-    _, legacy_wrapper = create_modern_animation_system(settings_coordinator)
-    return legacy_wrapper

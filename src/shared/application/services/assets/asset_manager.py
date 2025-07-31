@@ -238,7 +238,11 @@ class AssetManager(IAssetManager):
                 for pattern in common_patterns:
                     relative_path = pattern.format(color=color)
                     full_path = get_image_path(relative_path)
-                    if os.path.exists(full_path):
+                    if (
+                        full_path
+                        and isinstance(full_path, str)
+                        and os.path.exists(full_path)
+                    ):
                         # Pre-load into cache
                         self._load_svg_file_cached(full_path)
                         preloaded_count += 1

@@ -24,17 +24,3 @@ class AuroraWaveEffects:
     def get_color_hue(self, base_hue: int, color_index: int) -> int:
         """Calculate animated color hue"""
         return int((self.color_shift + color_index * 120) % 360)
-
-    def get_current_state(self) -> dict:
-        """Get current wave state for debugging"""
-        return {
-            "wave_phase": self.wave_phase,
-            "gradient_shift": self.gradient_shift,
-            "color_shift": self.color_shift,
-        }
-
-    def reset(self) -> None:
-        """Reset wave effects to initial state"""
-        self.wave_phase = 0
-        self.gradient_shift = 0
-        self.color_shift = 0

@@ -7,7 +7,7 @@ and component-specific styling into a unified system.
 """
 
 from functools import lru_cache
-from typing import Any, Optional
+from typing import Any
 
 from .core.types import ComponentType, StyleVariant
 from .glassmorphism_styles import (
@@ -384,7 +384,7 @@ class DesignSystem:
 
 
 # Global design system instance
-_design_system_instance: Optional[DesignSystem] = None
+_design_system_instance: DesignSystem | None = None
 
 
 @lru_cache(maxsize=1)
@@ -404,35 +404,4 @@ def get_design_system() -> DesignSystem:
     return _design_system_instance
 
 
-def reset_design_system() -> None:
-    """
-    Reset the global design system instance.
-
-    This is mainly useful for testing or when configuration changes require
-    a fresh design system instance.
-    """
-    global _design_system_instance
-    _design_system_instance = None
-    get_design_system.cache_clear()
-
-
 # Convenience functions for quick styling
-def get_button_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
-    """Quick function to get button styling."""
-    return get_design_system().create_component_style(
-        ComponentType.BUTTON, variant, **kwargs
-    )
-
-
-def get_panel_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
-    """Quick function to get panel styling."""
-    return get_design_system().create_component_style(
-        ComponentType.PANEL, variant, **kwargs
-    )
-
-
-def get_label_style(variant: StyleVariant = StyleVariant.DEFAULT, **kwargs) -> str:
-    """Quick function to get label styling."""
-    return get_design_system().create_component_style(
-        ComponentType.LABEL, variant, **kwargs
-    )

@@ -326,28 +326,3 @@ class BrowseTab(QWidget):
         except Exception:
             # If we can't determine visibility, assume it's visible
             return True
-
-    def force_reload_all_thumbnails(self):
-        """Force reload all visible thumbnails - simplified without cache."""
-        import logging
-
-        logger = logging.getLogger(__name__)
-
-        try:
-            logger.info("🔄 Force reloading all visible thumbnails...")
-
-            scroll_widget = self.sequence_picker.scroll_widget
-            reloaded_count = 0
-
-            for word, thumbnail_box in scroll_widget.thumbnail_boxes.items():
-                if self._is_thumbnail_visible(thumbnail_box):
-                    # Force thumbnail reload (no cache)
-                    thumbnail_box.image_label.update_thumbnail_async(
-                        thumbnail_box.state.current_index
-                    )
-                    reloaded_count += 1
-
-            logger.info(f"✅ Force reloaded {reloaded_count} visible thumbnails")
-
-        except Exception as e:
-            logger.error(f"❌ Force reload error: {e}")

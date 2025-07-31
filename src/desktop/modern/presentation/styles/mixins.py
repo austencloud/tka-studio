@@ -99,21 +99,6 @@ def apply_style_to_widget(
     widget.setStyleSheet(style)
 
 
-def apply_button_style_to_widget(
-    widget: QWidget,
-    variant: StyleVariant = StyleVariant.DEFAULT,
-    size: str = "medium",
-    **kwargs,
-) -> None:
-    """Apply button styling to any widget."""
-    apply_style_to_widget(widget, ComponentType.BUTTON, variant, size=size, **kwargs)
-
-
-def apply_menu_bar_style_to_widget(widget: QWidget, **kwargs) -> None:
-    """Apply menu bar styling to any widget."""
-    apply_style_to_widget(widget, ComponentType.MENU_BAR, **kwargs)
-
-
 def apply_dialog_style_to_widget(widget: QWidget, **kwargs) -> None:
     """Apply dialog styling to any widget."""
     apply_style_to_widget(widget, ComponentType.DIALOG, **kwargs)

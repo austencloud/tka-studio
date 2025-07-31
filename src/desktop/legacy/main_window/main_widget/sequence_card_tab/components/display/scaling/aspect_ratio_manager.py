@@ -64,26 +64,6 @@ class AspectRatioManager:
             except Exception as e:
                 self.logger.warning(f"Failed to update page aspect ratio: {e}")
 
-    def validate_aspect_ratio(self, aspect_ratio: float) -> bool:
-        """
-        Validate aspect ratio is reasonable.
-
-        Args:
-            aspect_ratio: Aspect ratio to validate
-
-        Returns:
-            True if valid, False otherwise
-        """
-        # Reasonable aspect ratio bounds (very wide or very tall images)
-        min_ratio = 0.1  # Very tall
-        max_ratio = 10.0  # Very wide
-
-        if aspect_ratio < min_ratio or aspect_ratio > max_ratio:
-            self.logger.warning(f"Unusual aspect ratio: {aspect_ratio:.3f}")
-            return False
-
-        return True
-
     def constrain_aspect_ratio(self, aspect_ratio: float) -> float:
         """
         Constrain aspect ratio to reasonable bounds.

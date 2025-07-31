@@ -144,16 +144,6 @@ class SequenceViewerActionButtonPanel(QWidget):
         self.export_manager = self.temp_beat_frame.export_manager
         self.export_manager.export_image_directly(sequence_json["sequence"])
 
-    def hide_buttons(self):
-        self.save_image_button.hide()
-        self.delete_variation_button.hide()
-        self.edit_sequence_button.hide()
-
-    def show_buttons(self):
-        self.save_image_button.show()
-        self.delete_variation_button.show()
-        self.edit_sequence_button.show()
-
     def resizeEvent(self, event: QResizeEvent) -> None:
         btn_size = int(self.sequence_viewer.main_widget.width() // 30)
         icon_size = int(btn_size * 0.8)

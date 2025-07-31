@@ -53,7 +53,3 @@ class AuroraBlobAnimation:
     def get_blob_states(self) -> list[BlobState]:
         """Get current blob states for rendering"""
         return self.blobs.copy()
-
-    def reset(self) -> None:
-        """Reset blobs to initial state"""
-        self._create_blobs(len(self.blobs))

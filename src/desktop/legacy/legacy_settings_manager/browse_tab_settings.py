@@ -26,15 +26,6 @@ class BrowseTabSettings:
             "browse/sort_method", self.DEFAULT_BROWSE_SETTINGS["sort_method"]
         )
 
-    def get_date_sub_sort_method(self) -> str:
-        """Returns 'year', 'month', 'day', or 'full'."""
-        return self.settings.value("browse/date_sub_sort_method", "full")
-
-    def set_date_sub_sort_method(self, sub_method: str) -> None:
-        """Stores the user's sub-sorting choice for date-based sorts."""
-        # sub_method should be one of: 'year', 'month', 'day', 'full'
-        self.settings.setValue("browse/date_sub_sort_method", sub_method)
-
     def set_sort_method(self, sort_method: str) -> None:
         self.settings.setValue("browse/sort_method", sort_method)
 
@@ -87,9 +78,6 @@ class BrowseTabSettings:
 
     def set_current_section(self, section: str) -> None:
         self.settings.setValue("browse/current_section", section)
-
-    def get_browse_left_stack_index(self) -> int:
-        return self.settings.value("browse/browse_left_stack_index", 4, type=int)
 
     def set_browse_left_stack_index(self, index: int) -> None:
         self.settings.setValue("browse/browse_left_stack_index", index)

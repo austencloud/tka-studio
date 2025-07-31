@@ -32,7 +32,3 @@ class AuroraSparkleAnimation:
     def get_sparkle_states(self) -> list[SparkleState]:
         """Get current sparkle states for rendering"""
         return self.sparkles.copy()
-
-    def reset(self) -> None:
-        """Reset sparkles to initial state"""
-        self._create_sparkles(len(self.sparkles))

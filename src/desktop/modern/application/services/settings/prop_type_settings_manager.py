@@ -317,29 +317,3 @@ class PropTypeSettingsManager(QObject):
         except Exception as e:
             logger.error(f"Failed to clear prop-specific settings for {prop_type}: {e}")
             return 0
-
-    def validate_prop_assets_available(self, prop_type: PropType = None) -> bool:
-        """
-        Validate that assets are available for the prop type.
-
-        Args:
-            prop_type: Prop type to validate (uses current if None)
-
-        Returns:
-            True if assets appear to be available
-
-        Note:
-            This is a basic validation - actual asset verification would
-            require integration with the asset management system.
-        """
-        try:
-            if prop_type is None:
-                prop_type = self.get_current_prop_type()
-
-            # Basic validation - just check if it's a valid enum value
-            # More sophisticated validation could check for actual asset files
-            return self.is_valid_prop_type(prop_type)
-
-        except Exception as e:
-            logger.error(f"Failed to validate prop assets for {prop_type}: {e}")
-            return False

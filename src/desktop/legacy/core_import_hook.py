@@ -116,12 +116,5 @@ def install_core_import_hook():
     sys.meta_path.insert(0, CoreImportFinder())
 
 
-def uninstall_core_import_hook():
-    """Remove the core import hook from Python's import system."""
-    sys.meta_path = [
-        finder for finder in sys.meta_path if not isinstance(finder, CoreImportFinder)
-    ]
-
-
 # Auto-install the hook when this module is imported
 install_core_import_hook()

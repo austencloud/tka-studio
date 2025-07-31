@@ -227,25 +227,6 @@ class GridModeSection(FilterSectionBase):
                 return grid_mode
         return None
 
-    def display_only_thumbnails_with_grid_mode(self, grid_mode: str):
-        """Display only the thumbnails that match the selected grid mode."""
-        self.filter_selector.browse_tab.settings.set_current_filter(
-            {GRID_MODE: grid_mode.lower()}
-        )
-        self.browse_tab.filter_manager.prepare_ui_for_filtering(
-            f"{grid_mode.capitalize()} mode sequences."
-        )
-
-        sequences = self.get_sequences_by_grid_mode(grid_mode)
-        total_sequences = len(sequences)
-
-        self.browse_tab.sequence_picker.currently_displayed_sequences = [
-            (word, thumbnails, self.get_sequence_length_from_thumbnails(thumbnails))
-            for word, thumbnails in sequences
-        ]
-
-        self.browse_tab.ui_updater.update_and_display_ui(total_sequences)
-
     def get_sequence_length_from_thumbnails(self, thumbnails: list[str]) -> int:
         """Extract the sequence length from the thumbnails' metadata."""
         for thumbnail in thumbnails:

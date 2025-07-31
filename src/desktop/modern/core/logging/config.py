@@ -209,31 +209,6 @@ def _configure_root_logger(environment: str) -> None:
         root_logger.setLevel(logging.INFO)
 
 
-def get_logging_performance_report() -> dict[str, any]:
-    """Get performance report from all smart loggers."""
-    from .arrow_positioning_logger import get_arrow_positioning_logger
-    from .smart_logger import get_all_performance_stats
-
-    report = {
-        "smart_logger_stats": get_all_performance_stats(),
-        "arrow_positioning_stats": get_arrow_positioning_logger().get_positioning_performance_report(),
-        "environment": _detect_environment(),
-    }
-
-    return report
-
-
-def reset_all_logging_stats() -> None:
-    """Reset all logging performance statistics."""
-    from .arrow_positioning_logger import reset_arrow_positioning_logger
-    from .smart_logger import reset_all_smart_loggers
-
-    reset_all_smart_loggers()
-    reset_arrow_positioning_logger()
-
-    print("🔄 All logging statistics reset")
-
-
 # Quick setup functions for common scenarios
 
 

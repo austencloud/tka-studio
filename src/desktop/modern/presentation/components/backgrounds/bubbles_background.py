@@ -13,7 +13,6 @@ from shared.application.services.backgrounds.bubbles.bubble_physics import Bubbl
 from shared.application.services.backgrounds.bubbles.fish_movement import FishMovement
 from shared.application.services.backgrounds.bubbles.fish_spawning import FishSpawning
 
-from .asset_utils import get_image_path
 from .base_background import BaseBackground
 
 
@@ -27,7 +26,8 @@ class BubblesBackground(BaseBackground):
         # Check if the fish images are already cached
         if BubblesBackground._cached_fish_images is None:
             # Define the backgrounds folder path
-            backgrounds_folder = get_image_path("backgrounds/")
+            asset_resolver = AssetPathResolver()
+            backgrounds_folder = asset_resolver.get_image_path("backgrounds/")
 
             # Load the fish images and store them in the class variable
             BubblesBackground._cached_fish_images = [

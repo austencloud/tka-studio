@@ -9,8 +9,6 @@ It imports from the shared animation system to avoid code duplication.
 from shared.application.services.ui.animation.modern_service_registration import (
     AnimationSystemFactory,
     ModernAnimationServiceRegistration,
-    create_legacy_adapter,
-    create_simple_animation_orchestrator,
     setup_modern_animation_services,
 )
 
@@ -19,6 +17,4 @@ __all__ = [
     "AnimationSystemFactory",
     "ModernAnimationServiceRegistration",
     "setup_modern_animation_services",
-    "create_simple_animation_orchestrator",
-    "create_legacy_adapter",
 ]

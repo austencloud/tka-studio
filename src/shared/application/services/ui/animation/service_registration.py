@@ -55,26 +55,4 @@ class AnimationServiceRegistration:
         )
 
 
-def setup_animation_services(container: DIContainer) -> None:
-    """
-    Convenience function to set up all animation services.
-
-    Call this from your main DI configuration setup.
-    """
-    AnimationServiceRegistration.register_services(container)
-
-
 # For testing purposes, create a simple factory function
-def create_fade_orchestrator_for_testing(settings_coordinator) -> IFadeOrchestrator:
-    """Create a fade orchestrator with minimal dependencies for testing."""
-    effect_manager = GraphicsEffectManager()
-    animation_factory = AnimationFactory()
-    settings_provider = FadeSettingsProvider(settings_coordinator)
-    animation_service = AnimationService(
-        effect_manager, animation_factory, settings_provider
-    )
-    stack_animation_service = StackAnimationService(animation_service)
-
-    return FadeOrchestrator(
-        animation_service, stack_animation_service, settings_provider
-    )

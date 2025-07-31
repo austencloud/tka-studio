@@ -41,33 +41,3 @@ def log_setting_set(setting_name: str, value):
     """
     if logger.isEnabledFor(logging.DEBUG):
         logger.debug(f"Set setting: {setting_name} = {value}")
-
-
-def log_settings_load(source: str, success: bool, error=None):
-    """
-    Log a settings load operation.
-
-    Args:
-        source: The source of the settings (file path, etc.)
-        success: Whether the operation was successful
-        error: Error message if the operation failed
-    """
-    if success:
-        logger.info(f"Settings loaded successfully from {source}")
-    else:
-        logger.error(f"Failed to load settings from {source}: {error}")
-
-
-def log_settings_save(destination: str, success: bool, error=None):
-    """
-    Log a settings save operation.
-
-    Args:
-        destination: The destination of the settings (file path, etc.)
-        success: Whether the operation was successful
-        error: Error message if the operation failed
-    """
-    if success:
-        logger.info(f"Settings saved successfully to {destination}")
-    else:
-        logger.error(f"Failed to save settings to {destination}: {error}")

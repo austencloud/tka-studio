@@ -16,15 +16,9 @@ try:
 except ImportError:
 
     def handle_service_errors(*args, **kwargs):
-        def decorator(func):
-            return func
-
         return decorator
 
     def monitor_performance(*args, **kwargs):
-        def decorator(func):
-            return func
-
         return decorator
 
 

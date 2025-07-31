@@ -343,9 +343,7 @@ class ComponentServiceMesh:
 
 
 # Factory function for easy integration
-def create_service_mesh_for_construct_tab(
-    components: dict[str, Any],
-) -> ComponentServiceMesh:
+def create_construct_tab_service_mesh(components: dict[str, Any]) -> ComponentServiceMesh:
     """Factory function to create and setup service mesh for ConstructTab."""
     mesh = ComponentServiceMesh()
     mesh.setup_mesh_for_construct_tab(components)

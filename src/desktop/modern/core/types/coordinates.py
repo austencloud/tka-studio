@@ -55,50 +55,6 @@ def point_to_qpoint(point: Point) -> QPointF:
     return QPointF(point.x, point.y)
 
 
-def safe_qpoint_to_point(qpoint: QPointF | None) -> Point:
-    """
-    Safely convert QPointF to Point with error handling.
-
-    Args:
-        qpoint: PyQt6 QPointF instance or None
-
-    Returns:
-        Domain Point instance
-
-    Raises:
-        ValueError: If qpoint is None or conversion fails
-    """
-    if qpoint is None:
-        raise ValueError("Cannot convert None to Point")
-
-    try:
-        return qpoint_to_point(qpoint)
-    except Exception as e:
-        raise ValueError(f"Failed to convert QPointF to Point: {e}") from e
-
-
-def safe_point_to_qpoint(point: Point | None) -> QPointF:
-    """
-    Safely convert Point to QPointF with error handling.
-
-    Args:
-        point: Domain Point instance or None
-
-    Returns:
-        PyQt6 QPointF instance
-
-    Raises:
-        ValueError: If point is None or conversion fails
-    """
-    if point is None:
-        raise ValueError("Cannot convert None to QPointF")
-
-    try:
-        return point_to_qpoint(point)
-    except Exception as e:
-        raise ValueError(f"Failed to convert Point to QPointF: {e}") from e
-
-
 # Type aliases removed - using simple Point and QPointF types directly
 
 # Default values for fallback scenarios
@@ -107,7 +63,7 @@ DEFAULT_QPOINT = QPointF(0.0, 0.0)
 
 
 def get_default_point() -> Point:
-    """Get default Point for fallback scenarios."""
+    """Get default point for fallback scenarios."""
     return DEFAULT_POINT
 
 

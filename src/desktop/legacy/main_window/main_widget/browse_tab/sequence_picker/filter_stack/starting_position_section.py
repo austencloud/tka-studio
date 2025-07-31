@@ -184,17 +184,6 @@ class StartingPositionSection(FilterSectionBase):
             position_counts[position] = position_counts.get(position, 0) + 1
         return position_counts
 
-    def get_sequences_that_are_a_specific_position(
-        self, position: str
-    ) -> list[tuple[str, list[str]]]:
-        """Retrieve sequences that correspond to a specific starting position."""
-        sequences_with_positions = self._get_all_sequences_with_positions()
-        return [
-            (word, thumbnails)
-            for word, thumbnails, seq_position in sequences_with_positions
-            if seq_position == position.lower()
-        ]
-
     def get_sequence_starting_position(self, thumbnails: list[str]) -> str:
         """Extract the starting position from the metadata of the thumbnails."""
         for thumbnail in thumbnails:

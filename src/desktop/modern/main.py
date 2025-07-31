@@ -120,31 +120,5 @@ def main():
         return 1
 
 
-def create_application():
-    """
-    Create application for testing purposes.
-
-    Returns:
-        Tuple of (QApplication, TKAMainWindow) for test compatibility
-    """
-    from PyQt6.QtWidgets import QApplication
-
-    from desktop.modern.core.application.application_factory import ApplicationFactory
-
-    # Create Qt app
-    app = QApplication.instance() or QApplication([])
-
-    # Create container
-    container = ApplicationFactory.create_app("production")
-
-    # Create main window
-    window = TKAMainWindow(container)
-
-    # Position window on secondary monitor if available
-    _position_window_on_secondary_monitor(window)
-
-    return app, window
-
-
 if __name__ == "__main__":
     sys.exit(main())

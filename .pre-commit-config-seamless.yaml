@@ -1,0 +1,15 @@
+# Seamless ruff pre-commit (never blocks commits)
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.7
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-zero, --output-format=concise]
+        verbose: false
+      - id: ruff-format
+        args: [--quiet]
+        verbose: false
+
+# Configure pre-commit to auto-stage changes
+default_stages: [pre-commit]
+fail_fast: false

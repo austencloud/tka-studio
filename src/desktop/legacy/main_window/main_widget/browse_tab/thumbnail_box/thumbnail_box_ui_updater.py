@@ -19,10 +19,6 @@ class ThumbnailBoxUIUpdater:
         self._update_timer.setSingleShot(True)
         self._update_timer.timeout.connect(self._process_pending_updates)
 
-    def update_thumbnail_image(self, thumbnail_box: "ThumbnailBox"):
-        """Updates the thumbnail image of a given thumbnail box (synchronous)."""
-        thumbnail_box.image_label.update_thumbnail(thumbnail_box.state.current_index)
-
     def update_thumbnail_image_async(self, thumbnail_box: "ThumbnailBox"):
         """Updates the thumbnail image asynchronously to prevent UI blocking."""
         # Add to pending updates queue

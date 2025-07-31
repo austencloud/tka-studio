@@ -148,16 +148,6 @@ class QtTypeConverter:
 
 
 # Convenience functions for common conversions
-def to_qsize(size: Size) -> QSize:
-    """Quick conversion from Size to QSize."""
-    return QtGeometryAdapter.size_to_qsize(size)
-
-
-def from_qsize(qsize: QSize) -> Size:
-    """Quick conversion from QSize to Size."""
-    return QtGeometryAdapter.qsize_to_size(qsize)
-
-
 def to_qpointf(point: Point) -> QPointF:
     """Quick conversion from Point to QPointF."""
     return QtGeometryAdapter.point_to_qpointf(point)

@@ -228,20 +228,8 @@ class SmartLogger:
             return f"<{type(obj).__name__} object>"
 
 
-def create_smart_logger(name: str, config: LoggingConfig = None) -> SmartLogger:
-    """Factory function to create smart loggers."""
-    return SmartLogger(name, config)
-
-
 # Global registry of smart loggers for easy management
 _smart_logger_registry: dict[str, SmartLogger] = {}
-
-
-def get_smart_logger(name: str, config: LoggingConfig = None) -> SmartLogger:
-    """Get or create a smart logger with the given name."""
-    if name not in _smart_logger_registry:
-        _smart_logger_registry[name] = SmartLogger(name, config)
-    return _smart_logger_registry[name]
 
 
 def reset_all_smart_loggers():

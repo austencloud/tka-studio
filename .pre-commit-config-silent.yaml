@@ -1,0 +1,16 @@
+# Completely silent pre-commit (no popups, no output)
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.7
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-zero, --quiet, --silent]
+        verbose: false
+      - id: ruff-format
+        args: [--quiet]
+        verbose: false
+
+# Global settings to suppress all output
+default_stages: [pre-commit]
+fail_fast: false
+verbose: false

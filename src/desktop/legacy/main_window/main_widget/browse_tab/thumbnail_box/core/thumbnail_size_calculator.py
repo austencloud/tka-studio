@@ -80,9 +80,7 @@ class ThumbnailSizeCalculator:
         # Could be adjusted based on grid layout or zoom level
         return self._clamp_size(base_size)
 
-    def calculate_display_size(
-        self, target_size: QSize, available_size: QSize
-    ) -> QSize:
+    def calculate_display_size(self, target_size: QSize, available_size: QSize) -> QSize:
         """
         Calculate the actual display size within available space.
 
@@ -109,9 +107,7 @@ class ThumbnailSizeCalculator:
             self.logger.warning(f"Error calculating display size: {e}")
             return target_size
 
-    def calculate_aspect_ratio_size(
-        self, original_size: QSize, target_size: QSize
-    ) -> QSize:
+    def calculate_aspect_ratio_size(self, original_size: QSize, target_size: QSize) -> QSize:
         """
         Calculate size maintaining aspect ratio within target bounds.
 
@@ -195,27 +191,3 @@ class ThumbnailSizeCalculator:
 
         return QSize(width, height)
 
-    def get_size_for_zoom_level(self, base_size: QSize, zoom_factor: float) -> QSize:
-        """
-        Calculate size for a given zoom level.
-
-        Args:
-            base_size: Base size before zoom
-            zoom_factor: Zoom factor (1.0 = no zoom)
-
-        Returns:
-            Zoomed size
-        """
-        try:
-            zoom_factor = max(0.1, min(zoom_factor, 5.0))  # Clamp zoom factor
-
-            zoomed_size = QSize(
-                int(base_size.width() * zoom_factor),
-                int(base_size.height() * zoom_factor),
-            )
-
-            return self._clamp_size(zoomed_size)
-
-        except Exception as e:
-            self.logger.warning(f"Error calculating zoom size: {e}")
-            return base_size

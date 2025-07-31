@@ -250,8 +250,3 @@ class SignalIntegrationAdapter(QObject):
         self.signal_coordinator.cleanup()
         self.components.clear()
         self.logger.info("Signal integration adapter shutdown complete")
-
-
-def create_signal_integration() -> SignalIntegrationAdapter:
-    """Factory function to create signal integration adapter."""
-    return SignalIntegrationAdapter()

@@ -1,0 +1,21 @@
+# Auto-staging pre-commit configuration
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.7
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-zero]
+        stages: [pre-commit]
+      - id: ruff-format
+        stages: [pre-commit]
+
+  # Auto-stage any changes made by ruff
+  - repo: local
+    hooks:
+      - id: auto-stage-ruff-changes
+        name: Auto-stage ruff changes
+        entry: git add -u
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true

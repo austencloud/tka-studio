@@ -5,7 +5,7 @@ This component follows SRP by focusing solely on state management.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -38,7 +38,7 @@ class StateManager(QObject):
 
         self.coordinator = coordinator
         self.app_context = app_context
-        self._current_tab: Optional[str] = None
+        self._current_tab: str | None = None
         self._state_data: dict[str, Any] = {}
 
         # Initialize default state
@@ -134,7 +134,7 @@ class StateManager(QObject):
             logger.error(f"Failed to persist current tab: {e}")
 
     @property
-    def current_tab(self) -> Optional[str]:
+    def current_tab(self) -> str | None:
         """Get the current active tab."""
         return self._current_tab
 
@@ -198,23 +198,6 @@ class StateManager(QObject):
         ui_state = self._state_data.get("ui_state", {})
         ui_state.update(ui_updates)
         self.set_state("ui_state", ui_state)
-
-    def get_ui_state(self, key: str = None) -> Any:
-        """
-        Get UI state data.
-
-        Args:
-            key: Specific UI state key. If None, returns all UI state.
-
-        Returns:
-            The requested UI state data
-        """
-        ui_state = self._state_data.get("ui_state", {})
-
-        if key is None:
-            return ui_state.copy()
-
-        return ui_state.get(key)
 
     def save_session_data(self, session_data: dict[str, Any]) -> None:
         """

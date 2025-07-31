@@ -36,10 +36,7 @@ arrow_logger = get_arrow_positioning_logger()
 from .arrow_positioning_logger import (
     ArrowPositioningLogger,
     get_arrow_positioning_logger,
-    log_adjustment_lookup,
-    log_arrow_adjustment,
     log_directional_processing,
-    reset_arrow_positioning_logger,
 )
 
 # Configuration and setup
@@ -48,8 +45,6 @@ from .config import (
     configure_from_environment,
     enable_performance_monitoring,
     enable_verbose_mode,
-    get_logging_performance_report,
-    reset_all_logging_stats,
     setup_smart_logging,
 )
 
@@ -65,9 +60,7 @@ from .smart_logger import (
     LoggingConfig,
     LogLevel,
     SmartLogger,
-    create_smart_logger,
     get_all_performance_stats,
-    get_smart_logger,
     reset_all_smart_loggers,
 )
 
@@ -84,8 +77,6 @@ __all__ = [
     "ArrowPositioningLogger",
     "LoggingEnvironments",
     # Factory functions
-    "create_smart_logger",
-    "get_smart_logger",
     "get_arrow_positioning_logger",
     # Setup functions (most commonly used)
     "setup_smart_logging",
@@ -97,38 +88,12 @@ __all__ = [
     "get_qt_message_filter_stats",
     "disable_qt_message_filter",
     # Decorators for services
-    "log_arrow_adjustment",
     "log_directional_processing",
-    "log_adjustment_lookup",
     # Utilities
-    "get_logging_performance_report",
     "reset_all_logging_stats",
     "reset_all_smart_loggers",
-    "reset_arrow_positioning_logger",
     "get_all_performance_stats",
 ]
-
-
-def quick_setup(mode: str = "auto") -> None:
-    """
-    Quick setup function for common use cases.
-
-    Args:
-        mode: 'quiet', 'normal', 'verbose', or 'auto' (default)
-    """
-    if mode == "auto":
-        # Auto-detect and configure
-        configure_from_environment()
-        setup_smart_logging()
-
-    elif mode == "normal":
-        setup_smart_logging("development")
-    elif mode == "verbose":
-        enable_verbose_mode()
-    else:
-        raise ValueError(
-            f"Unknown mode: {mode}. Use 'auto', 'quiet', 'normal', or 'verbose'"
-        )
 
 
 # Auto-configure if environment variables are set

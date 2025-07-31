@@ -31,13 +31,6 @@ class BrowseTabState:
         self.browse_settings.set_current_filter(self._current_filter)
         self.browse_settings.set_selected_sequence(self._selected_sequence)
 
-    def clear_state(self):
-        """Clears the browse tab state."""
-        self._current_section = ""
-        self._current_filter = ""
-        self._selected_sequence = {}
-        self.save_state()
-
     def set_current_section(self, section_name: str):
         """Sets the current section name."""
         self._current_section = section_name

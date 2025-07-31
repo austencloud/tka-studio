@@ -6,7 +6,7 @@ duplicate cache implementations and provide consistent cache behavior.
 """
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.data_services import IDataCacheManager
 
@@ -42,7 +42,7 @@ class DataCacheManager(IDataCacheManager):
 
         logger.info(f"DataCacheManager initialized with max_size={max_size}")
 
-    def get_position_cache(self, key: str) -> Optional[Any]:
+    def get_position_cache(self, key: str) -> Any | None:
         """Get item from position cache."""
         return self._get_from_cache(
             self._position_cache, self._position_access_order, key, "position"
@@ -54,7 +54,7 @@ class DataCacheManager(IDataCacheManager):
             self._position_cache, self._position_access_order, key, value, "position"
         )
 
-    def get_sequence_cache(self, key: str) -> Optional[Any]:
+    def get_sequence_cache(self, key: str) -> Any | None:
         """Get item from sequence cache."""
         return self._get_from_cache(
             self._sequence_cache, self._sequence_access_order, key, "sequence"
@@ -66,7 +66,7 @@ class DataCacheManager(IDataCacheManager):
             self._sequence_cache, self._sequence_access_order, key, value, "sequence"
         )
 
-    def get_pictograph_cache(self, key: str) -> Optional[Any]:
+    def get_pictograph_cache(self, key: str) -> Any | None:
         """Get item from pictograph cache."""
         return self._get_from_cache(
             self._pictograph_cache, self._pictograph_access_order, key, "pictograph"
@@ -82,7 +82,7 @@ class DataCacheManager(IDataCacheManager):
             "pictograph",
         )
 
-    def get_conversion_cache(self, key: str) -> Optional[Any]:
+    def get_conversion_cache(self, key: str) -> Any | None:
         """Get item from conversion cache."""
         return self._get_from_cache(
             self._conversion_cache, self._conversion_access_order, key, "conversion"
@@ -163,7 +163,7 @@ class DataCacheManager(IDataCacheManager):
 
     def _get_from_cache(
         self, cache: dict[str, Any], access_order: list[str], key: str, cache_type: str
-    ) -> Optional[Any]:
+    ) -> Any | None:
         """Internal method to get from a specific cache with LRU tracking."""
         if key in cache:
             # Move to end of access order (most recently used)

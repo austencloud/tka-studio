@@ -130,10 +130,3 @@ class QtAnimationGroupAdapter:
 
 
 # Factory functions for creating adapters
-
-
-def create_property_animation_adapter(
-    qt_animation: QPropertyAnimation,
-) -> QtPropertyAnimationAdapter:
-    """Create a property animation adapter for the given Qt animation."""
-    return QtPropertyAnimationAdapter(qt_animation)

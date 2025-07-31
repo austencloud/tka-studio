@@ -393,27 +393,3 @@ class SequenceValidator(ISequenceValidator):
         max_length = self._sequence_validation_rules["max_length"]
 
         return min_length <= length <= max_length
-
-    def validate_sequence_continuity(self, sequence: SequenceData) -> bool:
-        """
-        Validate that beats flow correctly in sequence.
-
-        Args:
-            sequence: The sequence to validate
-
-        Returns:
-            bool: True if continuity is correct
-
-        Raises:
-            ValidationError: If continuity validation fails
-        """
-        regular_beats = [beat for beat in sequence.beats if beat.beat_number > 0]
-        if not regular_beats:
-            return True  # No regular beats to validate
-
-        expected_numbers = list(range(1, len(regular_beats) + 1))
-        actual_numbers = sorted([beat.beat_number for beat in regular_beats])
-        if actual_numbers != expected_numbers:
-            raise ValidationError(f"Beat numbers are not sequential: {actual_numbers}")
-
-        return True

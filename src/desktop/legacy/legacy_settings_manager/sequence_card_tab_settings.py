@@ -38,18 +38,6 @@ class SequenceCardTabSettings:
 
         self.settings.setValue("sequence_card_tab/column_count", count)
 
-    def get_last_length(self) -> int:
-        """Get the last selected sequence length."""
-        return int(
-            self.settings.value(
-                "sequence_card_tab/last_length", self.DEFAULT_SETTINGS["last_length"]
-            )
-        )
-
-    def set_last_length(self, length: int) -> None:
-        """Set the last selected sequence length."""
-        self.settings.setValue("sequence_card_tab/last_length", length)
-
     def get_auto_cache(self) -> bool:
         """Get whether to automatically cache sequence card pages."""
         return bool(

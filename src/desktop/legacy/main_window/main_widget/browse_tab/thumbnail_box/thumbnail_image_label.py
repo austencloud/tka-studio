@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, Final, Optional
+from typing import TYPE_CHECKING, Final
 
 from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from PyQt6.QtCore import QRect, QSize, Qt, QTimer
@@ -29,13 +29,13 @@ class ThumbnailImageLabel(QLabel):
         self.thumbnail_box = thumbnail_box
         self.metadata_extractor = MetaDataExtractor()
         self.selected = False
-        self.current_path: Optional[str] = None
+        self.current_path: str | None = None
 
         # Private attributes
         self._border_width = 4
-        self._border_color: Optional[str] = None
-        self._original_pixmap: Optional[QPixmap] = None
-        self._cached_available_size: Optional[QSize] = None
+        self._border_color: str | None = None
+        self._original_pixmap: QPixmap | None = None
+        self._cached_available_size: QSize | None = None
 
         # Initialize coordinator to handle complex operations
         self.coordinator = ThumbnailCoordinator(thumbnail_box)
@@ -56,14 +56,6 @@ class ThumbnailImageLabel(QLabel):
         return self.thumbnail_box.in_sequence_viewer
 
     @property
-    def aspect_ratio(self) -> float:
-        """Get aspect ratio of the original image"""
-        return (
-            self._original_pixmap.width() / self._original_pixmap.height()
-            if self._original_pixmap and self._original_pixmap.height() > 0
-            else 1
-        )
-
     def update_thumbnail(self, index: int) -> None:
         """Update the displayed image based on the given index (synchronous)."""
         thumbnails = self.thumbnail_box.state.thumbnails

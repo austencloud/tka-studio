@@ -271,29 +271,6 @@ class SequencePickerGoBackButton(StyledButton):
 
         return super().event(event)
 
-    def test_button_functionality(self):
-        """Test method to verify button functionality programmatically."""
-        import logging
-
-        logger = logging.getLogger(__name__)
-
-        logger.info("🧪 TESTING BUTTON FUNCTIONALITY PROGRAMMATICALLY")
-        logger.info(f"Button enabled: {self.isEnabled()}")
-        logger.info(f"Button visible: {self.isVisible()}")
-        logger.info(f"Button size: {self.size()}")
-        logger.info(f"Button position: {self.pos()}")
-        logger.info(f"Button parent: {self.parent()}")
-
-        # Test signal emission
-        logger.info("🔄 Emitting clicked signal manually...")
-        self.clicked.emit()
-        logger.info("✅ Clicked signal emitted")
-
-        # Test direct method call
-        logger.info("🔄 Calling switch_to_initial_filter_selection directly...")
-        self.switch_to_initial_filter_selection()
-        logger.info("✅ Direct method call completed")
-
     def resizeEvent(self, event) -> None:
         """Handle resizing to update styles dynamically."""
         # GO BACK BUTTON SIZING FIX: Add proper initialization checks

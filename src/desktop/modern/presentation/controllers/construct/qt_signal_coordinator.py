@@ -186,8 +186,3 @@ class ConstructTabSignalCoordinator(QObject):
         """Cleanup coordinator resources."""
         self.components.clear()
         self.logger.info("Qt signal coordinator cleaned up")
-
-
-def create_signal_coordinator() -> ConstructTabSignalCoordinator:
-    """Factory function to create signal coordinator."""
-    return ConstructTabSignalCoordinator()

@@ -1,5 +1,3 @@
-import hashlib
-import json
 import os
 
 from base_widgets.pictograph.managers.pictograph_checker import (
@@ -11,11 +9,6 @@ from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from utils.path_helpers import get_data_path
 
 from data.constants import BLUE_ATTRS, RED_ATTRS
-
-
-def hash_sequence(sequence):
-    seq_str = json.dumps(sequence, sort_keys=True)
-    return hashlib.sha256(seq_str.encode()).hexdigest()
 
 
 class StructuralVariationChecker:

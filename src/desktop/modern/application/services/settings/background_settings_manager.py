@@ -136,12 +136,3 @@ class BackgroundSettingsManager(QObject):
             "black" or "white" depending on current background
         """
         return self.get_font_color_for_background()
-
-    def reset_to_default(self) -> bool:
-        """
-        Reset background to default value.
-
-        Returns:
-            True if successful
-        """
-        return self.set_background("Snowfall")

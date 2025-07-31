@@ -5,7 +5,7 @@ Extracted from ThumbnailImageLabel to follow Single Responsibility Principle.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
@@ -34,7 +34,7 @@ class ThumbnailEventHandler:
         # State tracking
         self._is_selected = False
         self._is_hovered = False
-        self._border_color: Optional[str] = None
+        self._border_color: str | None = None
 
     def handle_mouse_press(self, event) -> None:
         """
@@ -124,7 +124,7 @@ class ThumbnailEventHandler:
         self._update_visual_state()
         self.logger.debug(f"Selection state changed: selected={selected}")
 
-    def get_border_color(self) -> Optional[str]:
+    def get_border_color(self) -> str | None:
         """
         Get the current border color based on state.
 
@@ -141,15 +141,6 @@ class ThumbnailEventHandler:
             True if selected, False otherwise
         """
         return self._is_selected
-
-    def is_hovered(self) -> bool:
-        """
-        Check if thumbnail is currently hovered.
-
-        Returns:
-            True if hovered, False otherwise
-        """
-        return self._is_hovered
 
     def _update_visual_state(self) -> None:
         """Update the visual state of the thumbnail based on current state."""

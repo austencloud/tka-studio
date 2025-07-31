@@ -34,15 +34,6 @@ class AssetPathResolver:
 
         return QPixmap()  # Return empty pixmap if not found
 
-    def preload_assets(self, asset_list: list[str]) -> None:
-        """Preload a list of assets"""
-        for asset_path in asset_list:
-            self.get_cached_image(asset_path)
-
-    def clear_cache(self) -> None:
-        """Clear asset cache"""
-        self._cached_images.clear()
-
     def _find_asset_root(self) -> str:
         """Find the root images directory"""
         current_dir = os.path.dirname(os.path.abspath(__file__))

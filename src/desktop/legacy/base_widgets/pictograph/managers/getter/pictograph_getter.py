@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from base_widgets.pictograph.elements.grid.non_radial_points_group import (
     NonRadialPointsGroup,
@@ -19,7 +19,6 @@ from data.constants import *
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
-    from objects.prop.prop import Prop
 
 
 class PictographGetter:
@@ -40,24 +39,13 @@ class PictographGetter:
     def motion_by_color(self, color: str) -> Motion:
         return self.pictograph.elements.motion_set.get(color)
 
-    def prop_by_color(self, color: str) -> "Prop":
-        """Get a prop by its color."""
-        return self.pictograph.elements.props.get(color)
-
-    def letter_type(self, letter: Letter) -> Optional[str]:
+    def letter_type(self, letter: Letter) -> str | None:
         letter_type_map = {
             letter: letter_type.description
             for letter_type in LetterType
             for letter in letter_type.letters
         }
         return letter_type_map.get(letter)
-
-    def motions_by_type(self, motion_type: str) -> list[Motion]:
-        return [
-            motion
-            for motion in self.pictograph.elements.motion_set.values()
-            if motion.state.motion_type == motion_type
-        ]
 
     def trailing_motion(self) -> Motion:
         return self.lead_state_determiner.trailing_motion()
@@ -95,10 +83,6 @@ class PictographGetter:
     def static(self) -> Motion:
         static_map = {True: self.red_motion, False: self.blue_motion}
         return static_map.get(self.red_motion.check.is_static())
-
-    def float_motion(self) -> Motion:
-        float_map = {True: self.red_motion, False: self.blue_motion}
-        return float_map.get(self.red_motion.check.is_float())
 
     def grid_mode(self) -> str:
         return self.pictograph.elements.grid.grid_mode

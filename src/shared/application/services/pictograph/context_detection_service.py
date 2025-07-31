@@ -6,7 +6,7 @@ Replaces brittle string matching with explicit context declaration and service-b
 """
 
 import logging
-from typing import Any, Optional, Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 from desktop.modern.core.interfaces.core_services import IPictographContextDetector
 from desktop.modern.core.interfaces.pictograph_services import RenderingContext
@@ -173,50 +173,3 @@ class PictographContextDetector(IPictographContextDetector):
         except Exception as e:
             logger.error(f"Fallback detection failed: {e}")
             return RenderingContext.UNKNOWN
-
-
-class ContextAwareComponent:
-    """
-    Mixin class for components that need to declare their rendering context.
-
-    Components can inherit from this to easily provide context information.
-    """
-
-    def __init__(
-        self, rendering_context: RenderingContext, component_id: Optional[str] = None
-    ):
-        """
-        Initialize context-aware component.
-
-        Args:
-            rendering_context: The rendering context for this component
-            component_id: Optional unique identifier for registration
-        """
-        self.rendering_context = rendering_context
-        self.component_id = component_id or f"{self.__class__.__name__}_{id(self)}"
-
-    def get_rendering_context(self) -> RenderingContext:
-        """Return the rendering context for this component."""
-        return self.rendering_context
-
-
-def create_context_aware_scene(
-    rendering_context: RenderingContext, scene_class: type, *args, **kwargs
-):
-    """
-    Factory function to create context-aware pictograph scenes.
-
-    Args:
-        rendering_context: The rendering context for the scene
-        scene_class: The scene class to instantiate
-        *args, **kwargs: Arguments to pass to the scene constructor
-
-    Returns:
-        Scene instance with explicit rendering context
-    """
-    scene = scene_class(*args, **kwargs)
-    scene.rendering_context = rendering_context
-    scene.component_id = f"{scene_class.__name__}_{id(scene)}"
-
-    logger.debug(f"Created context-aware scene with context: {rendering_context.value}")
-    return scene

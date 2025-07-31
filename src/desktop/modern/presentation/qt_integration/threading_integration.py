@@ -475,11 +475,3 @@ def qt_async_bridge() -> QtAsyncBridge:
     if _qt_async_bridge is None:
         _qt_async_bridge = QtAsyncBridge()
     return _qt_async_bridge
-
-
-def qt_thread_manager() -> QtThreadManager:
-    """Get global Qt thread manager instance."""
-    global _qt_thread_manager
-    if _qt_thread_manager is None:
-        _qt_thread_manager = QtThreadManager()
-    return _qt_thread_manager

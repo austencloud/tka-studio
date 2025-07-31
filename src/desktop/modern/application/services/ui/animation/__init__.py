@@ -139,8 +139,6 @@ from .fade_orchestrator import FadeOrchestrator as LegacyFadeOrchestrator
 # DI registration
 from .modern_service_registration import (
     ModernAnimationServiceRegistration,
-    create_legacy_adapter,
-    create_simple_animation_orchestrator,
     setup_modern_animation_services,
 )
 
@@ -180,8 +178,6 @@ __all__ = [
     # DI setup
     "setup_modern_animation_services",
     "ModernAnimationServiceRegistration",
-    "create_simple_animation_orchestrator",
-    "create_legacy_adapter",
     # Legacy compatibility
     "LegacyFadeOrchestrator",
     "LegacyAnimationService",

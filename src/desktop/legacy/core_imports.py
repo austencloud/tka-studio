@@ -37,10 +37,3 @@ except Exception as e:
     import traceback
 
     traceback.print_exc()
-
-
-def enable_core_imports():
-    """
-    Enable core import resolution - call this function early in your application.
-    """
-    # The resolver is already installed on module import

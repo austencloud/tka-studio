@@ -11,9 +11,7 @@ This service is responsible for determining when and how to separate props
 to avoid overlaps, particularly for beta-ending letters.
 """
 
-import uuid
 from abc import ABC, abstractmethod
-from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -94,11 +92,9 @@ class PropManagementService(IPropManagementService):
     - Prop overlap detection and resolution
     """
 
-    def __init__(self, event_bus: IEventBus | None = None):
+    def __init__(self):
         # Event system integration
-        self.event_bus = event_bus or (
-            get_event_bus() if EVENT_SYSTEM_AVAILABLE else None
-        )
+
         self._subscription_ids: list[str] = []
 
         # Beta prop positioning constants
@@ -208,24 +204,6 @@ class PropManagementService(IPropManagementService):
         # Props overlap if they end at same location with same orientation
         overlap_detected = blue_end_ori == red_end_ori
 
-        # Publish overlap detection event
-        if self.event_bus and PropPositionedEvent and overlap_detected:
-            self.event_bus.publish(
-                PropPositionedEvent(
-                    event_id=str(uuid.uuid4()),
-                    timestamp=datetime.now(),
-                    source="PropManagementService",
-                    positioning_type="overlap_detected",
-                    position_data={
-                        "blue_end_location": blue_motion.end_loc.value,
-                        "red_end_location": red_motion.end_loc.value,
-                        "blue_end_orientation": blue_end_ori.value,
-                        "red_end_orientation": red_end_ori.value,
-                        "letter": beat_data.letter,
-                    },
-                )
-            )
-
         return overlap_detected
 
     def apply_beta_positioning(self, beat_data: BeatData) -> BeatData:
@@ -240,42 +218,9 @@ class PropManagementService(IPropManagementService):
         # Check for swap overrides first
         if self._has_swap_override(beat_data):
             result = self._apply_swap_override(beat_data)
-            positioning_method = "swap_override"
         else:
             # Apply algorithmic beta positioning
             result = self._apply_algorithmic_beta_positioning(beat_data)
-            positioning_method = "algorithmic"
-
-        # Publish beta positioning event
-        if self.event_bus and PropPositionedEvent:
-            self.event_bus.publish(
-                PropPositionedEvent(
-                    event_id=str(uuid.uuid4()),
-                    timestamp=datetime.now(),
-                    source="PropManagementService",
-                    positioning_type="beta_positioning",
-                    position_data={
-                        "letter": beat_data.letter,
-                        "positioning_method": positioning_method,
-                        "blue_motion_type": (
-                            beat_data.pictograph_data.motions.get(
-                                "blue"
-                            ).motion_type.value
-                            if beat_data.pictograph_data
-                            and beat_data.pictograph_data.motions.get("blue")
-                            else None
-                        ),
-                        "red_motion_type": (
-                            beat_data.pictograph_data.motions.get(
-                                "red"
-                            ).motion_type.value
-                            if beat_data.pictograph_data
-                            and beat_data.pictograph_data.motions.get("red")
-                            else None
-                        ),
-                    },
-                )
-            )
 
         return result
 
@@ -319,25 +264,6 @@ class PropManagementService(IPropManagementService):
         red_offset = self.calculate_directional_offset(
             red_direction, self._get_current_prop_type()
         )
-
-        # Publish separation calculation event
-        if self.event_bus and PropPositionedEvent:
-            self.event_bus.publish(
-                PropPositionedEvent(
-                    event_id=str(uuid.uuid4()),
-                    timestamp=datetime.now(),
-                    source="PropManagementService",
-                    positioning_type="separation",
-                    position_data={
-                        "blue_offset": {"x": blue_offset.x, "y": blue_offset.y},
-                        "red_offset": {"x": red_offset.x, "y": red_offset.y},
-                        "blue_direction": blue_direction.value,
-                        "red_direction": red_direction.value,
-                        "letter": pictograph_data.letter,
-                        "prop_type": self._get_current_prop_type().value,
-                    },
-                )
-            )
 
         return blue_offset, red_offset
 
@@ -476,11 +402,9 @@ class PropManagementService(IPropManagementService):
         if red_motion.motion_type == MotionType.PRO:
             pro_motion = red_motion
             pro_color = "red"
-            anti_motion = blue_motion
         elif blue_motion.motion_type == MotionType.PRO:
             pro_motion = blue_motion
             pro_color = "blue"
-            anti_motion = red_motion
         else:
             # Fallback if neither is PRO (shouldn't happen in letter I)
             # Use standard directions
@@ -701,7 +625,6 @@ class PropManagementService(IPropManagementService):
         """
         override_key = self._generate_override_key(beat_data)
         special_placements = self._get_special_placements()
-        override_data = special_placements.get(override_key, {})
 
         # Apply override adjustments
         # TODO: Implement specific override application logic

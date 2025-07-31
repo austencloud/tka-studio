@@ -1,0 +1,28 @@
+# Git aliases for seamless ruff integration
+# Add these to your .gitconfig or run as commands
+
+# Auto-fix and commit in one step
+[alias]
+    ruff-commit = "!f() { \
+        echo 'Running ruff fixes...'; \
+        ruff check --fix .; \
+        ruff format .; \
+        git add -u; \
+        git commit -m \"$1\"; \
+    }; f"
+    
+    # Quick add-all and ruff-commit
+    ac = "!f() { \
+        git add .; \
+        ruff check --fix .; \
+        ruff format .; \
+        git add .; \
+        git commit -m \"$1\"; \
+    }; f"
+    
+    # Status after ruff fixes
+    rs = "!f() { \
+        ruff check --fix .; \
+        ruff format .; \
+        git status; \
+    }; f"

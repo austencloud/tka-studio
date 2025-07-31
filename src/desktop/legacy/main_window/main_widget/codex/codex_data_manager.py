@@ -1,6 +1,6 @@
 # pictograph_data_manager.py
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from enums.letter.letter import Letter
 
@@ -20,11 +20,11 @@ class CodexDataManager:
 
     def __init__(self, codex: "Codex"):
         self.main_widget = codex.main_widget
-        self.pictograph_data: dict[str, Optional[dict]] = (
+        self.pictograph_data: dict[str, dict | None] = (
             self._initialize_pictograph_data()
         )
 
-    def _initialize_pictograph_data(self) -> dict[str, Optional[dict]]:
+    def _initialize_pictograph_data(self) -> dict[str, dict | None]:
         """Initializes the pictograph data for all letters."""
         letters = [letter.value for letter in Letter]
 
@@ -59,7 +59,7 @@ class CodexDataManager:
 
         return pictograph_data
 
-    def _get_pictograph_data(self, letter: str) -> Optional[dict]:
+    def _get_pictograph_data(self, letter: str) -> dict | None:
         """Returns the parameters for a given letter."""
         params_map = {
             "A": {
@@ -348,7 +348,3 @@ class CodexDataManager:
         }
 
         return params_map.get(letter)
-
-    def get_pictograph_data(self) -> dict[str, Optional[dict]]:
-        """Returns the initialized pictograph data."""
-        return self.pictograph_data

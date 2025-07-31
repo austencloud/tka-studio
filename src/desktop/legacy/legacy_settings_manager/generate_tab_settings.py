@@ -26,11 +26,5 @@ class GenerateTabSettings:
         prefix = "generator/"
         self.settings.setValue(prefix + key, value)
 
-    def get_current_mode(self) -> str:
-        return self.settings.value("generator/current_mode", "freeform")
-
-    def set_current_mode(self, mode: str):
-        self.settings.setValue("generator/current_mode", mode)
-
     def get_CAP_type(self) -> str:
         return CAPType.from_str(self.get_setting("CAP_type"))

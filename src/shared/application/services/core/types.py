@@ -7,7 +7,7 @@ true framework independence for core services.
 
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 
 # ============================================================================
 # GEOMETRY AND LAYOUT TYPES
@@ -26,9 +26,6 @@ class Size:
             raise ValueError("Size dimensions must be non-negative")
 
     @property
-    def area(self) -> int:
-        return self.width * self.height
-
     def scale(self, factor: float) -> "Size":
         """Scale size by factor while maintaining aspect ratio."""
         return Size(width=int(self.width * factor), height=int(self.height * factor))
@@ -56,10 +53,6 @@ class Point:
         """Translate point by offset."""
         return Point(self.x + dx, self.y + dy)
 
-    def distance_to(self, other: "Point") -> float:
-        """Calculate distance to another point."""
-        return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5
-
 
 @dataclass(frozen=True)
 class Rect:
@@ -71,9 +64,6 @@ class Rect:
     height: int
 
     @property
-    def top_left(self) -> Point:
-        return Point(self.x, self.y)
-
     @property
     def center(self) -> Point:
         return Point(self.x + self.width // 2, self.y + self.height // 2)
@@ -172,7 +162,7 @@ class RenderTarget:
     properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QGraphicsScene, HTML Canvas, etc.)
-    native_handle: Optional[Any] = None
+    native_handle: Any | None = None
 
 
 @dataclass
@@ -185,7 +175,7 @@ class RenderCommand:
     position: Point
     size: Size
     properties: dict[str, Any]
-    data: Optional[Any] = None
+    data: Any | None = None
 
 
 class ImageFormat(Enum):
@@ -206,8 +196,8 @@ class ImageData:
     format: ImageFormat
     data: bytes = b""  # Optional for export specifications
     metadata: dict[str, Any] = None
-    background_color: Optional[Color] = None
-    render_commands: Optional[list[dict[str, Any]]] = None
+    background_color: Color | None = None
+    render_commands: list[dict[str, Any]] | None = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -230,7 +220,7 @@ class ComponentHandle:
     properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QWidget, HTML Element, etc.)
-    native_handle: Optional[Any] = None
+    native_handle: Any | None = None
 
 
 class WindowState(Enum):
@@ -254,7 +244,7 @@ class WindowHandle:
     properties: dict[str, Any]
 
     # Framework-specific handle (e.g., QMainWindow, browser window, etc.)
-    native_handle: Optional[Any] = None
+    native_handle: Any | None = None
 
 
 # ============================================================================
@@ -269,7 +259,7 @@ class AssetHandle:
     asset_id: str
     asset_type: str
     path: str
-    size: Optional[Size] = None
+    size: Size | None = None
     metadata: dict[str, Any] = None
 
 
@@ -318,11 +308,11 @@ class RenderEngine(Protocol):
 class AssetLoader(Protocol):
     """Protocol for loading and caching assets."""
 
-    def load_svg_asset(self, path: str) -> Optional[SvgAsset]:
+    def load_svg_asset(self, path: str) -> SvgAsset | None:
         """Load an SVG asset from path."""
         ...
 
-    def get_cached_asset(self, asset_id: str) -> Optional[AssetHandle]:
+    def get_cached_asset(self, asset_id: str) -> AssetHandle | None:
         """Get cached asset by ID."""
         ...
 
@@ -330,15 +320,3 @@ class AssetLoader(Protocol):
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
-
-
-def scale_size_to_fit(original: Size, container: Size) -> Size:
-    """Scale size to fit within container while maintaining aspect ratio."""
-    return original.fit_within(container)
-
-
-def calculate_center_position(item_size: Size, container_size: Size) -> Point:
-    """Calculate position to center item within container."""
-    x = (container_size.width - item_size.width) // 2
-    y = (container_size.height - item_size.height) // 2
-    return Point(max(0, x), max(0, y))

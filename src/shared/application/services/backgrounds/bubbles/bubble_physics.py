@@ -36,7 +36,3 @@ class BubblePhysics:
     def get_bubble_states(self) -> list[BubbleState]:
         """Get current bubble states for rendering"""
         return self.bubbles.copy()
-
-    def reset(self) -> None:
-        """Reset all bubbles"""
-        self._initialize_bubbles(len(self.bubbles))

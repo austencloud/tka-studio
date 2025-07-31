@@ -54,10 +54,6 @@ class LessonSelectorButton(QPushButton):
     def leaveEvent(self, event):
         self._update_style(shadow=False)
 
-    def set_rounded_button_style(self, radius: int):
-        self._radius = radius
-        self._update_style()
-
     def mousePressEvent(self, event):
         self._update_style(background_color="#aaaaaa")
         super().mousePressEvent(event)

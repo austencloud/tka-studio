@@ -11,7 +11,6 @@ import os
 
 # Import the framework-agnostic core services
 import sys
-from typing import Optional
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 
@@ -42,7 +41,7 @@ class WebAssetProvider(IPictographAssetProvider):
         self._asset_cache: dict[str, SvgAsset] = {}
         logger.info(f"Web asset provider initialized with base URL: {assets_base_url}")
 
-    def get_grid_asset(self, grid_mode: str) -> Optional[SvgAsset]:
+    def get_grid_asset(self, grid_mode: str) -> SvgAsset | None:
         """Get grid asset for web rendering."""
         asset_key = f"grid_{grid_mode}"
 
@@ -51,7 +50,7 @@ class WebAssetProvider(IPictographAssetProvider):
 
         return self._asset_cache[asset_key]
 
-    def get_prop_asset(self, prop_type: str, color: str) -> Optional[SvgAsset]:
+    def get_prop_asset(self, prop_type: str, color: str) -> SvgAsset | None:
         """Get prop asset for web rendering."""
         asset_key = f"prop_{prop_type}"
 
@@ -60,7 +59,7 @@ class WebAssetProvider(IPictographAssetProvider):
 
         return self._asset_cache[asset_key]
 
-    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> Optional[SvgAsset]:
+    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> SvgAsset | None:
         """Get glyph asset for web rendering."""
         asset_key = f"glyph_{glyph_type}_{glyph_id}"
 
@@ -71,7 +70,7 @@ class WebAssetProvider(IPictographAssetProvider):
 
         return self._asset_cache[asset_key]
 
-    def get_arrow_asset(self, arrow_type: str) -> Optional[SvgAsset]:
+    def get_arrow_asset(self, arrow_type: str) -> SvgAsset | None:
         """Get arrow asset for web rendering."""
         asset_key = f"arrow_{arrow_type}"
 
@@ -251,7 +250,7 @@ class WebRenderEngine:
             logger.error(f"Failed to render to Canvas JS: {e}")
             return f"console.error('Render Error: {e}');"
 
-    def _command_to_svg_element(self, command: RenderCommand) -> Optional[str]:
+    def _command_to_svg_element(self, command: RenderCommand) -> str | None:
         """Convert render command to SVG element."""
         try:
             svg_content = command.properties.get("svg_content", "")
@@ -281,7 +280,7 @@ class WebRenderEngine:
             f'fill="red" fill-opacity="0.3" stroke="red" stroke-width="2"/>'
         )
 
-    def _command_to_canvas_js(self, command: RenderCommand) -> Optional[str]:
+    def _command_to_canvas_js(self, command: RenderCommand) -> str | None:
         """Convert render command to Canvas JavaScript."""
         try:
             if command.render_type == "error":
@@ -345,7 +344,7 @@ class WebPictographService:
         pictograph_data: dict,
         width: int = 400,
         height: int = 400,
-        options: Optional[dict] = None,
+        options: dict | None = None,
     ) -> str:
         """
         Render pictograph as SVG for web display.
@@ -382,7 +381,7 @@ class WebPictographService:
         pictograph_data: dict,
         width: int = 400,
         height: int = 400,
-        options: Optional[dict] = None,
+        options: dict | None = None,
     ) -> str:
         """
         Render pictograph as HTML5 Canvas JavaScript.
@@ -444,82 +443,6 @@ class WebPictographService:
 # ============================================================================
 # FASTAPI INTEGRATION EXAMPLE
 # ============================================================================
-
-
-def create_fastapi_pictograph_endpoints():
-    """
-    Example of how to integrate with FastAPI web framework.
-
-    This shows how the framework-agnostic service can be used in a real web API.
-    """
-
-    # This would be in a separate file in a real application
-    pictograph_service = WebPictographService()
-
-    # Example endpoint implementations:
-    example_endpoints = '''
-    from fastapi import FastAPI, HTTPException
-    from pydantic import BaseModel
-    from typing import Dict, Optional
-
-    app = FastAPI()
-    pictograph_service = WebPictographService()
-
-    class PictographRequest(BaseModel):
-        pictograph_data: Dict
-        width: Optional[int] = 400
-        height: Optional[int] = 400
-        format: Optional[str] = "svg"  # "svg" or "canvas_js"
-        options: Optional[Dict] = None
-
-    @app.post("/render/pictograph")
-    async def render_pictograph(request: PictographRequest):
-        """Render pictograph in requested format."""
-        try:
-            if request.format == "svg":
-                result = pictograph_service.render_pictograph_svg(
-                    request.pictograph_data,
-                    request.width,
-                    request.height,
-                    request.options
-                )
-                return {"format": "svg", "content": result}
-
-            elif request.format == "canvas_js":
-                result = pictograph_service.render_pictograph_canvas_js(
-                    request.pictograph_data,
-                    request.width,
-                    request.height,
-                    request.options
-                )
-                return {"format": "canvas_js", "content": result}
-
-            else:
-                raise HTTPException(status_code=400, detail="Invalid format")
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
-
-    @app.post("/render/thumbnail")
-    async def render_thumbnail(pictograph_data: Dict, size: Optional[int] = 150):
-        """Render small thumbnail."""
-        try:
-            svg_content = pictograph_service.create_thumbnail_svg(pictograph_data, size)
-            return {"format": "svg", "content": svg_content}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
-
-    @app.post("/analyze/pictograph")
-    async def analyze_pictograph(pictograph_data: Dict):
-        """Get pictograph metadata and analysis."""
-        try:
-            metadata = pictograph_service.get_pictograph_metadata(pictograph_data)
-            return metadata
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
-    '''
-
-    return example_endpoints
 
 
 # ============================================================================

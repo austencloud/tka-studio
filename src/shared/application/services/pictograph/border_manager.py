@@ -309,21 +309,3 @@ class PictographBorderManager(IPictographBorderManager):
                 return False
 
         return True
-
-    def get_service_summary(self) -> dict[str, any]:
-        """
-        Get a summary of the service state.
-
-        Returns:
-            Dict: Service state information
-        """
-        return {
-            "borders_enabled": self._config.enabled,
-            "width_percentage": self._config.width_percentage,
-            "minimum_width": self._config.minimum_width,
-            "current_primary_color": self._config.primary_color,
-            "current_secondary_color": self._config.secondary_color,
-            "original_primary_color": self._original_primary_color,
-            "original_secondary_color": self._original_secondary_color,
-            "configuration_valid": self.validate_configuration(),
-        }

@@ -511,9 +511,7 @@ class ConstructTabInitializationSaga:
         self.event_bus.publish(event)
 
 
-def create_construct_tab_initialization_saga(
-    panel_factory, service_mesh, event_integration, container
-) -> ConstructTabInitializationSaga:
+def create_construct_tab_initialization_saga(panel_factory, container) -> ConstructTabInitializationSaga:
     """Factory function to create initialization saga with all steps."""
     saga = ConstructTabInitializationSaga()
 

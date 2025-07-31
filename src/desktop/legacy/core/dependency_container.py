@@ -245,25 +245,6 @@ def _register_core_services(container: DependencyContainer) -> None:
         from interfaces.json_manager_interface import IJsonManager
 
         # Create a factory function to avoid circular dependencies
-        def create_json_manager():
-            try:
-                from main_window.main_widget.json_manager.json_manager import (
-                    JsonManager,
-                )
-
-                # Always create JsonManager without app_context to avoid circular dependency
-                # The SequencePropertiesManager will handle the AppContextAdapter check gracefully
-                logger.debug(
-                    "Creating JsonManager without app_context to avoid circular dependency"
-                )
-                return JsonManager(None)
-
-            except ImportError as e:
-                logger.error(f"Failed to import JsonManager: {e}")
-                raise ImportError(
-                    "JsonManager could not be imported from main_window.main_widget.json_manager.json_manager"
-                )
-
         container.register_factory(IJsonManager, create_json_manager)
     except ImportError as e:
         logger.warning(f"Failed to register JSON Manager: {e}")
@@ -277,11 +258,8 @@ def _register_managers(container: DependencyContainer) -> None:
             DictionaryDataManager,
         )
 
-        def create_dictionary_data_manager():
-            return DictionaryDataManager()
-
         container.register_factory(
-            DictionaryDataManager, create_dictionary_data_manager
+            DictionaryDataManager, lambda: DictionaryDataManager()
         )
     except ImportError as e:
         logger.warning(f"Failed to register Dictionary Data Manager: {e}")
@@ -304,12 +282,9 @@ def _register_data_services(container: DependencyContainer) -> None:
     try:
         from main_window.main_widget.pictograph_data_loader import PictographDataLoader
 
-        def create_pictograph_data_loader():
-            # For now, create with None - this will be updated when main_widget is available
-            # The actual usage will need to provide the main_widget parameter
-            return PictographDataLoader(None)
-
-        container.register_factory(PictographDataLoader, create_pictograph_data_loader)
+        container.register_factory(
+            PictographDataLoader, lambda: PictographDataLoader(None)
+        )
     except ImportError as e:
         logger.warning(f"Failed to register Pictograph Data Loader: {e}")
 
@@ -340,31 +315,4 @@ def _register_data_services(container: DependencyContainer) -> None:
     # The sequence validation functionality appears to be integrated into other components
     logger.info(
         "Sequence Validator skipped - functionality integrated into other components"
-    )
-
-
-def register_additional_service(
-    container: DependencyContainer,
-    interface: type,
-    implementation: type,
-    lifetime: str = ServiceLifetime.SINGLETON,
-) -> None:
-    """
-    Helper function to register additional services after initial configuration.
-
-    Args:
-        container: The dependency container
-        interface: The interface/type to register
-        implementation: The implementation class
-        lifetime: Service lifetime (singleton, transient, instance)
-    """
-    if lifetime == ServiceLifetime.SINGLETON:
-        container.register_singleton(interface, implementation)
-    elif lifetime == ServiceLifetime.TRANSIENT:
-        container.register_transient(interface, implementation)
-    else:
-        raise ValueError(f"Unsupported lifetime: {lifetime}")
-
-    logger.info(
-        f"Registered additional service: {interface.__name__} -> {implementation.__name__}"
     )

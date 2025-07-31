@@ -358,11 +358,3 @@ class QtCompatibilityManager:
 
 # Global compatibility manager instance
 _qt_compat_manager: QtCompatibilityManager | None = None
-
-
-def qt_compat() -> QtCompatibilityManager:
-    """Get global Qt compatibility manager instance."""
-    global _qt_compat_manager
-    if _qt_compat_manager is None:
-        _qt_compat_manager = QtCompatibilityManager()
-    return _qt_compat_manager

@@ -7,7 +7,7 @@ that were generating excessive verbosity in the original logs.
 
 import logging
 import time
-from typing import Any, Optional
+from typing import Any
 
 from .smart_logger import LoggingConfig, LogLevel, SmartLogger
 
@@ -257,7 +257,7 @@ class ArrowPositioningLogger:
 
 
 # Global instance for easy access throughout the positioning services
-_global_arrow_logger: Optional[ArrowPositioningLogger] = None
+_global_arrow_logger: ArrowPositioningLogger | None = None
 
 
 def get_arrow_positioning_logger(
@@ -272,26 +272,8 @@ def get_arrow_positioning_logger(
     return _global_arrow_logger
 
 
-def reset_arrow_positioning_logger():
-    """Reset the global arrow positioning logger."""
-    global _global_arrow_logger
-    _global_arrow_logger = None
-
-
 # Convenience decorators for easy use in services
-def log_arrow_adjustment(func):
-    """Decorator for arrow adjustment calculations."""
-    logger = get_arrow_positioning_logger()
-    return logger.log_adjustment_calculation("arrow_adjustment")(func)
-
-
 def log_directional_processing(func):
     """Decorator for directional tuple processing."""
     logger = get_arrow_positioning_logger()
     return logger.log_directional_processing("directional_processing")(func)
-
-
-def log_adjustment_lookup(func):
-    """Decorator for adjustment lookup operations."""
-    logger = get_arrow_positioning_logger()
-    return logger.log_lookup_operation("adjustment_lookup")(func)

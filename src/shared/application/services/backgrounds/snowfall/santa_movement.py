@@ -1,5 +1,4 @@
 import random
-from typing import Optional
 
 from ..shared.animation_types import SantaState
 
@@ -8,7 +7,7 @@ class SantaMovement:
     """Pure business logic for Santa movement - extracted from SantaManager"""
 
     def __init__(self):
-        self.santa: Optional[SantaState] = None
+        self.santa: SantaState | None = None
         self._timer = 0
         self._spawn_interval = random.randint(500, 1000)
 
@@ -43,12 +42,6 @@ class SantaMovement:
         )
         self._spawn_interval = random.randint(500, 1000)
 
-    def get_santa_state(self) -> Optional[SantaState]:
+    def get_santa_state(self) -> SantaState | None:
         """Get current Santa state for rendering"""
         return self.santa if self.santa and self.santa.active else None
-
-    def reset(self) -> None:
-        """Reset Santa to initial state"""
-        self.santa = None
-        self._timer = 0
-        self._spawn_interval = random.randint(500, 1000)

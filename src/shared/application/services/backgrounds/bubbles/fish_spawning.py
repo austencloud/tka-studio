@@ -57,9 +57,3 @@ class FishSpawning:
             for fish in self.fish
             if -0.2 <= fish.position.x <= 1.2 and -0.2 <= fish.position.y <= 1.2
         ]
-
-    def reset(self) -> None:
-        """Reset fish spawning"""
-        self.fish.clear()
-        self._timer = 0
-        self._spawn_interval = random.randint(50, 100)
