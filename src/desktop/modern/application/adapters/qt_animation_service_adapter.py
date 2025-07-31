@@ -10,7 +10,7 @@ import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
-from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
+from PyQt6.QtWidgets import QWidget
 
 from shared.application.services.core.animation_service import (
     AnimationCommand,
@@ -108,69 +108,6 @@ class QtAnimationServiceAdapter(QObject):
             logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate widget: {e}")
             return ""
 
-    def animate_opacity(
-        self, widget: QWidget, start_opacity: float, end_opacity: float, duration: int
-    ) -> str:
-        """Animate widget opacity (common use case)."""
-        try:
-            # Set up opacity effect if not present
-            if not widget.graphicsEffect():
-                opacity_effect = QGraphicsOpacityEffect()
-                widget.setGraphicsEffect(opacity_effect)
-
-            return self.animate_widget(
-                widget, "opacity", start_opacity, end_opacity, duration
-            )
-
-        except Exception as e:
-            logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate opacity: {e}")
-            return ""
-
-    def animate_fade_transition(
-        self, from_widget: QWidget, to_widget: QWidget, duration: int = 300
-    ) -> list[str]:
-        """Animate fade transition between widgets."""
-        try:
-            # Create animation sequence using core service
-            fade_out_cmd = self._core_service.create_animation_command(
-                target_id=f"widget_{id(from_widget)}",
-                animation_type=AnimationType.FADE,
-                duration=duration / 1000.0,
-                start_values={"opacity": 1.0},
-                end_values={"opacity": 0.0},
-                delay=0.0,
-            )
-
-            fade_in_cmd = self._core_service.create_animation_command(
-                target_id=f"widget_{id(to_widget)}",
-                animation_type=AnimationType.FADE,
-                duration=duration / 1000.0,
-                start_values={"opacity": 0.0},
-                end_values={"opacity": 1.0},
-                delay=0.1,  # Slight delay for smooth transition
-            )
-
-            # Create sequence
-            sequence = self._core_service.create_animation_sequence(
-                [fade_out_cmd, fade_in_cmd]
-            )
-
-            # Execute animations
-            animation_ids = []
-            for command in sequence:
-                widget = from_widget if "fade_out" in command.command_id else to_widget
-                self._execute_qt_animation(command, widget, "opacity")
-                animation_ids.append(command.command_id)
-
-            logger.debug(
-                f"🎬 [QT_ANIMATION_ADAPTER] Started fade with {len(animation_ids)} animations"
-            )
-            return animation_ids
-
-        except Exception as e:
-            logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate fade: {e}")
-            return []
-
     def stop_animation(self, animation_id: str):
         """Stop a running animation."""
         try:
@@ -189,19 +126,6 @@ class QtAnimationServiceAdapter(QObject):
 
         except Exception as e:
             logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to stop animation: {e}")
-
-    def stop_all_animations(self):
-        """Stop all running animations."""
-        try:
-            for animation_id in list(self._active_animations.keys()):
-                self.stop_animation(animation_id)
-
-            logger.debug("🎬 [QT_ANIMATION_ADAPTER] Stopped all animations")
-
-        except Exception as e:
-            logger.error(
-                f"❌ [QT_ANIMATION_ADAPTER] Failed to stop all animations: {e}"
-            )
 
     def _execute_qt_animation(
         self,
@@ -336,14 +260,3 @@ class QtAnimationServiceAdapter(QObject):
             "active_animations": len(self._active_animations),
             "active_timers": len(self._timers),
         }
-
-
-# Factory function for drop-in replacement
-def create_qt_animation_service(parent=None) -> QtAnimationServiceAdapter:
-    """
-    Create Qt animation service adapter.
-
-    This can be used as a drop-in replacement for Qt-dependent
-    animation components.
-    """
-    return QtAnimationServiceAdapter(parent)

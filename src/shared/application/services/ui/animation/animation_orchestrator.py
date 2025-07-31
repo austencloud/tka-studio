@@ -223,31 +223,6 @@ class ModernAnimationOrchestrator(IAnimationOrchestrator):
             print(f"Command execution failed: {e}")
             return False
 
-    async def undo_last_command(self) -> bool:
-        """Undo the last executed command."""
-        if not self._command_history:
-            return False
-
-        last_command = self._command_history.pop()
-
-        try:
-            return await last_command.undo()
-        except Exception as e:
-            print(f"Command undo failed: {e}")
-            return False
-
-    def pause_animation(self, animation_id: str) -> bool:
-        """Pause a running animation."""
-        return self.animation_engine.pause_animation(animation_id)
-
-    def resume_animation(self, animation_id: str) -> bool:
-        """Resume a paused animation."""
-        return self.animation_engine.resume_animation(animation_id)
-
-    def cancel_animation(self, animation_id: str) -> bool:
-        """Cancel an animation."""
-        return self.animation_engine.cancel_animation(animation_id)
-
     def get_animations_enabled(self) -> bool:
         """Check if animations are enabled."""
         return self.settings_integration.get_animations_enabled()

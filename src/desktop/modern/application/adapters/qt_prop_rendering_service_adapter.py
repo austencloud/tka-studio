@@ -6,7 +6,6 @@ while using the framework-agnostic core service internally.
 """
 
 import logging
-from typing import Optional
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
@@ -55,8 +54,8 @@ class QtPropRenderingServiceAdapter:
         scene: QGraphicsScene,
         color: str,
         motion_data: MotionData,
-        pictograph_data: Optional[PictographData] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        pictograph_data: PictographData | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render prop using core service + Qt execution (legacy interface).
 
@@ -104,14 +103,3 @@ class QtPropRenderingServiceAdapter:
     def clear_scene_items(self, scene: QGraphicsScene):
         """Clear all items created by this adapter."""
         self._qt_render_engine.clear_created_items(scene)
-
-
-# Factory function for drop-in replacement
-def create_qt_prop_rendering_service() -> QtPropRenderingServiceAdapter:
-    """
-    Create Qt prop rendering service adapter.
-
-    This can be used as a drop-in replacement for the original
-    Qt-dependent PropRenderingService.
-    """
-    return QtPropRenderingServiceAdapter()

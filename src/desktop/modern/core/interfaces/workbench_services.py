@@ -6,7 +6,7 @@ Interface definitions for workbench-related services following TKA's clean archi
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, NamedTuple, Optional
+from typing import Any, NamedTuple
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -61,7 +61,7 @@ class IWorkbenchStateManager(ABC):
 
     @abstractmethod
     def set_sequence(
-        self, sequence: Optional[SequenceData], from_restoration: bool = False
+        self, sequence: SequenceData | None, from_restoration: bool = False
     ) -> StateChangeResult:
         """
         Set current sequence and update workbench state.
@@ -76,7 +76,7 @@ class IWorkbenchStateManager(ABC):
 
     @abstractmethod
     def set_start_position(
-        self, start_position: Optional[BeatData], from_restoration: bool = False
+        self, start_position: BeatData | None, from_restoration: bool = False
     ) -> StateChangeResult:
         """
         Set start position and update workbench state.
@@ -94,11 +94,11 @@ class IWorkbenchStateManager(ABC):
         """Clear all workbench state."""
 
     @abstractmethod
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """Get current sequence."""
 
     @abstractmethod
-    def get_start_position(self) -> Optional[BeatData]:
+    def get_start_position(self) -> BeatData | None:
         """Get current start position."""
 
     @abstractmethod
@@ -146,7 +146,7 @@ class IWorkbenchStateManager(ABC):
         """Check if auto-save should be prevented (during restoration)."""
 
     @abstractmethod
-    def get_complete_sequence_with_start_position(self) -> Optional[SequenceData]:
+    def get_complete_sequence_with_start_position(self) -> SequenceData | None:
         """Get sequence with start position included if both exist."""
 
     @abstractmethod
@@ -189,11 +189,11 @@ class IWorkbenchClipboardService(ABC):
         """Copy sequence section to clipboard."""
 
     @abstractmethod
-    def paste_beat(self, target_index: int) -> Optional[BeatData]:
+    def paste_beat(self, target_index: int) -> BeatData | None:
         """Paste beat from clipboard."""
 
     @abstractmethod
-    def paste_sequence_section(self, target_index: int) -> Optional[list[BeatData]]:
+    def paste_sequence_section(self, target_index: int) -> list[BeatData] | None:
         """Paste sequence section from clipboard."""
 
     @abstractmethod
@@ -390,26 +390,6 @@ class IWorkbenchSessionManager(ABC):
             dict: Status summary with restoration details
         """
 
-    @abstractmethod
-    def save_session(self, session_name: str) -> bool:
-        """Save current workbench session."""
-
-    @abstractmethod
-    def load_session(self, session_name: str) -> bool:
-        """Load workbench session."""
-
-    @abstractmethod
-    def get_available_sessions(self) -> list[str]:
-        """Get list of available sessions."""
-
-    @abstractmethod
-    def delete_session(self, session_name: str) -> bool:
-        """Delete a session."""
-
-    @abstractmethod
-    def get_session_info(self, session_name: str) -> Optional[dict[str, Any]]:
-        """Get session information."""
-
 
 class IBeatSelectionService(ABC):
     """Interface for beat selection operations."""
@@ -431,7 +411,7 @@ class IBeatSelectionService(ABC):
         """Get list of selected beat indices."""
 
     @abstractmethod
-    def get_primary_selection(self) -> Optional[int]:
+    def get_primary_selection(self) -> int | None:
         """Get primary selected beat index."""
 
     @abstractmethod
@@ -459,7 +439,7 @@ class IGraphEditorService(ABC):
         """Delete a graph."""
 
     @abstractmethod
-    def get_graph(self, graph_id: str) -> Optional[Any]:
+    def get_graph(self, graph_id: str) -> Any | None:
         """Get graph by ID."""
 
     @abstractmethod
@@ -511,7 +491,7 @@ class IDictionaryService(ABC):
     """Interface for dictionary operations."""
 
     @abstractmethod
-    def get_pictograph(self, letter: str) -> Optional[Any]:
+    def get_pictograph(self, letter: str) -> Any | None:
         """Get pictograph by letter."""
 
     @abstractmethod
@@ -535,7 +515,7 @@ class ISequenceWorkbenchService(ABC):
         """Create a new sequence."""
 
     @abstractmethod
-    def load_sequence(self, sequence_id: str) -> Optional[Any]:
+    def load_sequence(self, sequence_id: str) -> Any | None:
         """Load an existing sequence."""
 
     @abstractmethod
@@ -543,7 +523,7 @@ class ISequenceWorkbenchService(ABC):
         """Save a sequence."""
 
     @abstractmethod
-    def get_current_sequence(self) -> Optional[Any]:
+    def get_current_sequence(self) -> Any | None:
         """Get the currently active sequence."""
 
     @abstractmethod

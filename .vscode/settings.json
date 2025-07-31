@@ -234,7 +234,7 @@
   "git.enableSmartCommit": false,
   "git.smartCommitChanges": false,
   "git.useCommitInputAsStashMessage": false,
-  "git.inputValidation": "never",
+  "git.inputValidation": true,
   "git.inputValidationLength": 50000,
   "git.inputValidationSubjectLength": 50000,
   "git.untrackedChanges": "hidden",

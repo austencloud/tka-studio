@@ -88,30 +88,3 @@ class LoadingStateManagerService(ILoadingStateManager):
     def is_loading(self) -> bool:
         """Check if currently loading."""
         return self._is_progressive_loading
-
-    @property
-    def is_cancelled(self) -> bool:
-        """Check if loading was cancelled."""
-        return self._loading_cancelled
-
-    def set_loading_started(self, total_count: int) -> None:
-        """Handle loading started."""
-
-        if self.loading_progress_bar:
-            self.loading_progress_bar.setMaximum(total_count)
-            self.loading_progress_bar.setValue(0)
-
-        if self.loading_label:
-            self.loading_label.setText(f"Loading {total_count} sequences...")
-
-    def set_loading_completed(self, total_loaded: int) -> None:
-        """Handle loading completion."""
-        if self._loading_cancelled:
-            return
-        self.hide_loading_state()
-
-    def set_loading_cancelled(self) -> None:
-        """Handle loading cancellation."""
-
-        self.hide_loading_state()
-        self._loading_cancelled = True

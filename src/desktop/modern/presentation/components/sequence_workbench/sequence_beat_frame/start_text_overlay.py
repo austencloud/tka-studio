@@ -8,8 +8,6 @@ natural scene integration without visual styling artifacts.
 Unified with BeatNumberOverlay approach, replacing the problematic QGraphicsTextItem version.
 """
 
-from typing import Optional
-
 from PyQt6.QtWidgets import QWidget
 
 from .text_overlay_base import (
@@ -27,7 +25,7 @@ class StartTextOverlay(TextOverlayBase):
     and natural integration with the start position appearance.
     """
 
-    def __init__(self, parent_widget: Optional[QWidget] = None):
+    def __init__(self, parent_widget: QWidget | None = None):
         # Initialize with "Start" text (not "START" like legacy)
         super().__init__("Start", parent_widget)
 
@@ -54,7 +52,7 @@ class StartTextOverlay(TextOverlayBase):
 
 def add_start_text_to_view(
     start_position_view: QWidget,
-) -> Optional[StartTextOverlay]:
+) -> StartTextOverlay | None:
     """
     Add start text overlay to a start position view widget.
 
@@ -91,68 +89,3 @@ def remove_start_text_from_view(
     """
     # Use unified helper function
     remove_text_overlay_from_view(start_position_view, start_text_overlay)
-
-
-def clear_all_start_text_from_view(start_position_view: QWidget):
-    """
-    Clear all start text overlays from a start position view widget.
-
-    Args:
-        start_position_view: StartPositionView widget instance
-    """
-    from .text_overlay_base import clear_all_text_overlays_from_view
-
-    # Use unified helper function with specific type
-    clear_all_text_overlays_from_view(start_position_view, StartTextOverlay)
-
-
-# Legacy compatibility functions for pictograph components
-def add_start_text_to_pictograph(pictograph_component) -> Optional[StartTextOverlay]:
-    """
-    Add START text overlay to a pictograph component (legacy compatibility).
-
-    Args:
-        pictograph_component: SimplePictographComponent instance
-
-    Returns:
-        StartTextOverlay instance if successful, None otherwise
-    """
-    # For pictograph components, we need to find the parent widget
-    # This maintains compatibility with existing code
-    if hasattr(pictograph_component, "parent") and pictograph_component.parent():
-        return add_start_text_to_view(pictograph_component.parent())
-    elif (
-        hasattr(pictograph_component, "parentWidget")
-        and pictograph_component.parentWidget()
-    ):
-        return add_start_text_to_view(pictograph_component.parentWidget())
-    else:
-        print("Warning: Could not find parent widget for pictograph component")
-        return None
-
-
-def remove_start_text_from_pictograph(
-    pictograph_component, start_text_overlay: StartTextOverlay
-):
-    """
-    Remove START text overlay from a pictograph component (legacy compatibility).
-
-    Args:
-        pictograph_component: SimplePictographComponent instance
-        start_text_overlay: StartTextOverlay instance to remove
-    """
-    # For pictograph components, we need to find the parent widget
-    if hasattr(pictograph_component, "parent") and pictograph_component.parent():
-        remove_start_text_from_view(pictograph_component.parent(), start_text_overlay)
-    elif (
-        hasattr(pictograph_component, "parentWidget")
-        and pictograph_component.parentWidget()
-    ):
-        remove_start_text_from_view(
-            pictograph_component.parentWidget(), start_text_overlay
-        )
-    else:
-        # Fallback - just hide and delete
-        if start_text_overlay:
-            start_text_overlay.hide_overlay()
-            start_text_overlay.deleteLater()

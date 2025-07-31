@@ -8,14 +8,11 @@ natural scene integration without visual styling artifacts.
 Based on successful testing and unified with StartTextOverlay approach.
 """
 
-from typing import Optional
-
 from PyQt6.QtWidgets import QWidget
 
 from .text_overlay_base import (
     TextOverlayBase,
     add_text_overlay_to_view,
-    remove_text_overlay_from_view,
 )
 
 
@@ -27,7 +24,7 @@ class BeatNumberOverlay(TextOverlayBase):
     and natural integration with the beat frame appearance.
     """
 
-    def __init__(self, beat_number: int, parent_widget: Optional[QWidget] = None):
+    def __init__(self, beat_number: int, parent_widget: QWidget | None = None):
         # Set beat number specific base size
         self.beat_number = beat_number
 
@@ -61,7 +58,7 @@ class BeatNumberOverlay(TextOverlayBase):
 
 def add_beat_number_to_view(
     beat_view: QWidget, beat_number: int
-) -> Optional[BeatNumberOverlay]:
+) -> BeatNumberOverlay | None:
     """
     Add beat number overlay to a beat view widget.
 
@@ -85,30 +82,3 @@ def add_beat_number_to_view(
     except Exception as e:
         print(f"Failed to add beat number overlay: {e}")
         return None
-
-
-def remove_beat_number_from_view(
-    beat_view: QWidget, beat_number_overlay: BeatNumberOverlay
-):
-    """
-    Remove beat number overlay from a beat view widget.
-
-    Args:
-        beat_view: BeatView widget instance
-        beat_number_overlay: BeatNumberOverlay instance to remove
-    """
-    # Use unified helper function
-    remove_text_overlay_from_view(beat_view, beat_number_overlay)
-
-
-def clear_all_beat_numbers_from_view(beat_view: QWidget):
-    """
-    Clear all beat number overlays from a beat view widget.
-
-    Args:
-        beat_view: BeatView widget instance
-    """
-    from .text_overlay_base import clear_all_text_overlays_from_view
-
-    # Use unified helper function with specific type
-    clear_all_text_overlays_from_view(beat_view, BeatNumberOverlay)

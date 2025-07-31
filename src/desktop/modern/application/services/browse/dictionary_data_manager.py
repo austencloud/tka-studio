@@ -345,36 +345,6 @@ class DictionaryDataManager(QObject):
         authors = {s.author for s in self._loaded_sequences if s.author}
         return sorted(authors)
 
-    def get_distinct_levels(self) -> list[int]:
-        """Get list of all unique levels."""
-        self.load_all_sequences()
-        levels = {s.level for s in self._loaded_sequences if s.level is not None}
-        return sorted(levels)
-
-    def get_distinct_lengths(self) -> list[int]:
-        """Get list of all unique sequence lengths."""
-        self.load_all_sequences()
-        lengths = {
-            s.sequence_length
-            for s in self._loaded_sequences
-            if s.sequence_length is not None
-        }
-        return sorted(lengths)
-
-    def get_distinct_starting_positions(self) -> list[str]:
-        """Get list of all unique starting positions."""
-        self.load_all_sequences()
-        positions = {
-            s.starting_position for s in self._loaded_sequences if s.starting_position
-        }
-        return sorted(positions)
-
-    def get_distinct_grid_modes(self) -> list[str]:
-        """Get list of all unique grid modes."""
-        self.load_all_sequences()
-        modes = {s.grid_mode for s in self._loaded_sequences if s.grid_mode}
-        return sorted(modes)
-
     def get_sequence_count(self) -> int:
         """Get total number of loaded sequences."""
         return len(self._loaded_sequences)
@@ -389,52 +359,3 @@ class DictionaryDataManager(QObject):
         self._loading_errors.clear()
         self._has_loaded = False
         self.load_all_sequences()
-
-    # Backward compatibility methods (renamed from get_records_* to get_sequences_*)
-    def get_all_records(self) -> list[SequenceData]:
-        """Backward compatibility - use get_all_sequences instead."""
-        return self.get_all_sequences()
-
-    def get_records_by_starting_letter(self, letter: str) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_starting_letter instead."""
-        return self.get_sequences_by_starting_letter(letter)
-
-    def get_records_by_starting_letters(self, letters: list[str]) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_starting_letters instead."""
-        return self.get_sequences_by_starting_letters(letters)
-
-    def get_records_by_length(self, length: int) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_length instead."""
-        return self.get_sequences_by_length(length)
-
-    def get_records_by_difficulty(self, difficulty: str) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_difficulty instead."""
-        return self.get_sequences_by_difficulty(difficulty)
-
-    def get_records_by_level(self, level: int) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_level instead."""
-        return self.get_sequences_by_level(level)
-
-    def get_records_by_starting_position(self, position: str) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_starting_position instead."""
-        return self.get_sequences_by_starting_position(position)
-
-    def get_records_by_author(self, author: str) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_author instead."""
-        return self.get_sequences_by_author(author)
-
-    def get_records_by_grid_mode(self, grid_mode: str) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_by_grid_mode instead."""
-        return self.get_sequences_by_grid_mode(grid_mode)
-
-    def get_favorite_records(self) -> list[SequenceData]:
-        """Backward compatibility - use get_favorite_sequences instead."""
-        return self.get_favorite_sequences()
-
-    def get_recent_records(self, limit: int = 20) -> list[SequenceData]:
-        """Backward compatibility - use get_recent_sequences instead."""
-        return self.get_recent_sequences(limit)
-
-    def get_records_containing_letters(self, letters: list[str]) -> list[SequenceData]:
-        """Backward compatibility - use get_sequences_containing_letters instead."""
-        return self.get_sequences_containing_letters(letters)

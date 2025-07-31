@@ -123,19 +123,6 @@ class BrowseStateService:
         )
         self.save_browse_state(updated_state)
 
-    def set_navigation_mode(self, mode: NavigationMode) -> None:
-        """Update navigation mode and save state."""
-        current_state = self.load_browse_state()
-        updated_state = BrowseState(
-            filter_type=current_state.filter_type,
-            filter_values=current_state.filter_values,
-            selected_sequence=current_state.selected_sequence,
-            selected_variation=current_state.selected_variation,
-            navigation_mode=mode.value,
-            sort_method=current_state.sort_method,
-        )
-        self.save_browse_state(updated_state)
-
     def set_sort_method(self, sort_method: SortMethod) -> None:
         """Update sort method and save state."""
         current_state = self.load_browse_state()
@@ -148,25 +135,6 @@ class BrowseStateService:
             sort_method=sort_method.value,
         )
         self.save_browse_state(updated_state)
-
-    def get_current_filter(self) -> tuple[FilterType | None, Any]:
-        """Get current filter type and values."""
-        state = self.load_browse_state()
-        filter_type = None
-        if state.filter_type:
-            try:
-                filter_type = FilterType(state.filter_type)
-            except ValueError:
-                pass
-        return filter_type, state.filter_values
-
-    def get_current_navigation_mode(self) -> NavigationMode:
-        """Get current navigation mode."""
-        state = self.load_browse_state()
-        try:
-            return NavigationMode(state.navigation_mode)
-        except ValueError:
-            return NavigationMode.FILTER_SELECTION
 
     def get_current_sort_method(self) -> SortMethod:
         """Get current sort method."""
@@ -191,7 +159,3 @@ class BrowseStateService:
     def clear_selection(self) -> None:
         """Clear selected sequence."""
         self.set_selected_sequence(None, None)
-
-    def clear_filter(self) -> None:
-        """Clear current filter."""
-        self.set_filter(None, None)

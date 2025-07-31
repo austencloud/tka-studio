@@ -227,14 +227,3 @@ class QtImageExportServiceAdapter:
     def clear_cache(self):
         """Clear any caches."""
         self._core_service.reset_performance_stats()
-
-
-# Factory function for drop-in replacement
-def create_qt_image_export_service(container=None) -> QtImageExportServiceAdapter:
-    """
-    Create Qt image export service adapter.
-
-    This can be used as a drop-in replacement for the original
-    Qt-dependent SequenceImageRenderer.
-    """
-    return QtImageExportServiceAdapter(container)

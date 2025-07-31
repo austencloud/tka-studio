@@ -1,8 +1,15 @@
-# Minimal pre-commit - Ruff only (no blocking hooks)
+# TKA Pre-commit Configuration - Simple & Clean
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.7
     hooks:
       - id: ruff-check
-        args: [--fix, --exit-zero]
+        args: [--fix, --exit-zero, --quiet]
+        verbose: false
       - id: ruff-format
+        args: [--quiet]
+        verbose: false
+
+# Global settings - never block commits
+fail_fast: false
+default_stages: [pre-commit]

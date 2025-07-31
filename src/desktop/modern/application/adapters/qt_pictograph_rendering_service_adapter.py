@@ -7,7 +7,7 @@ enabling framework independence.
 """
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
@@ -81,7 +81,7 @@ class QtPictographRenderingServiceAdapter:
 
     def render_grid(
         self, scene: QGraphicsScene, grid_mode: str = "diamond"
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render grid using core service + Qt execution (legacy interface).
 
@@ -122,8 +122,8 @@ class QtPictographRenderingServiceAdapter:
         scene: QGraphicsScene,
         color: str,
         motion_data: MotionData,
-        pictograph_data: Optional[PictographData] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        pictograph_data: PictographData | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render prop using core service + Qt execution (legacy interface).
 
@@ -189,7 +189,7 @@ class QtPictographRenderingServiceAdapter:
 
     def render_glyph(
         self, scene: QGraphicsScene, glyph_type: str, glyph_data: Any
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render glyph using core service + Qt execution (legacy interface).
 
@@ -236,7 +236,7 @@ class QtPictographRenderingServiceAdapter:
         self,
         scene: QGraphicsScene,
         pictograph_data: PictographData,
-        options: Optional[dict] = None,
+        options: dict | None = None,
     ) -> bool:
         """
         Render complete pictograph using core service.
@@ -498,14 +498,3 @@ class QtPictographRenderingServiceAdapter:
         except Exception as e:
             logger.error(f"Failed to calculate prop position: {e}")
             return Point(475.0, 475.0)  # Fallback to center
-
-
-# Factory function for drop-in replacement
-def create_qt_pictograph_rendering_service() -> QtPictographRenderingServiceAdapter:
-    """
-    Create Qt pictograph rendering service adapter.
-
-    This can be used as a drop-in replacement for the original
-    Qt-dependent PictographRenderingService.
-    """
-    return QtPictographRenderingServiceAdapter()

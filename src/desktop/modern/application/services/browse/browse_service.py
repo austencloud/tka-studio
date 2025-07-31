@@ -224,54 +224,6 @@ class BrowseService:
         else:
             return sequences
 
-    def get_sequence_metadata(self, sequence_id: str) -> SequenceData | None:
-        """
-        Get detailed metadata for a specific sequence.
-
-        Args:
-            sequence_id: ID of the sequence to get metadata for
-
-        Returns:
-            SequenceData object or None if not found
-        """
-        sequences = self.load_sequences()
-        for sequence in sequences:
-            if sequence.id == sequence_id:
-                return sequence
-        return None
-
-    def get_filter_options(self, filter_type: FilterType) -> list[Any]:
-        """
-        Get available options for a specific filter type.
-
-        Args:
-            filter_type: Type of filter to get options for
-
-        Returns:
-            List of available filter values
-        """
-        sequences = self.load_sequences()
-
-        if filter_type == FilterType.STARTING_LETTER:
-            letters = set()
-            for seq in sequences:
-                if seq.word:
-                    letters.add(seq.word[0].upper())
-            return sorted(list(letters))
-        elif filter_type == FilterType.LENGTH:
-            lengths = set(seq.sequence_length for seq in sequences)
-            return sorted(list(lengths))
-        elif filter_type == FilterType.DIFFICULTY:
-            levels = set(
-                seq.difficulty_level for seq in sequences if seq.difficulty_level
-            )
-            return sorted(list(levels))
-        elif filter_type == FilterType.AUTHOR:
-            authors = set(seq.author for seq in sequences if seq.author)
-            return sorted(list(authors))
-        else:
-            return []
-
     def _load_sequence_from_folder(self, folder_path: Path) -> SequenceData | None:
         """
         Load a single sequence from its folder.

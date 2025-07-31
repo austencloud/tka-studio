@@ -63,19 +63,6 @@ class NavigationHandlerService(INavigationHandler):
         if self.navigation_sidebar:
             self.navigation_sidebar.update_sections(section_names, sort_method)
 
-    def scroll_to_top(self) -> None:
-        """Scroll to the top of the content."""
-        self.scroll_area.verticalScrollBar().setValue(0)
-
-    def scroll_to_bottom(self) -> None:
-        """Scroll to the bottom of the content."""
-        scrollbar = self.scroll_area.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
-
-    def get_current_scroll_position(self) -> int:
-        """Get the current vertical scroll position."""
-        return self.scroll_area.verticalScrollBar().value()
-
     def set_scroll_position(self, position: int) -> None:
         """Set the vertical scroll position."""
         self.scroll_area.verticalScrollBar().setValue(position)

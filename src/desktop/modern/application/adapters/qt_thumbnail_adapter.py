@@ -10,7 +10,6 @@ import os
 
 # Import framework-agnostic core
 import sys
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
@@ -38,7 +37,7 @@ logger = logging.getLogger(__name__)
 class QtImageLoader(IThumbnailImageLoader):
     """QT-specific image loader implementation."""
 
-    def load_image(self, image_path: str, target_size: Size) -> Optional[ImageData]:
+    def load_image(self, image_path: str, target_size: Size) -> ImageData | None:
         """Load and resize image using QT."""
         try:
             # Load with QPixmap
@@ -264,8 +263,8 @@ class QtThumbnailFactoryAdapter:
 
     def __init__(
         self,
-        core_service: Optional[CoreThumbnailService] = None,
-        image_loader: Optional[QtImageLoader] = None,
+        core_service: CoreThumbnailService | None = None,
+        image_loader: QtImageLoader | None = None,
     ):
         """Initialize the adapter."""
         self.image_loader = image_loader or QtImageLoader()
@@ -360,51 +359,3 @@ class QtThumbnailFactoryAdapter:
 # ============================================================================
 # FACTORY FUNCTION FOR EASY INTEGRATION
 # ============================================================================
-
-
-def create_qt_thumbnail_adapter() -> QtThumbnailFactoryAdapter:
-    """
-    Factory function to create QT thumbnail adapter.
-
-    Returns:
-        Configured QT adapter ready for use
-    """
-    image_loader = QtImageLoader()
-    core_service = CoreThumbnailService(image_loader)
-
-    adapter = QtThumbnailFactoryAdapter(core_service, image_loader)
-
-    logger.info("Created QT thumbnail adapter with core service integration")
-    return adapter
-
-
-# ============================================================================
-# MIGRATION GUIDE EXAMPLE
-# ============================================================================
-
-
-def demonstrate_migration():
-    """Show how to migrate from old QT service to new adapter."""
-
-    migration_example = """
-    # OLD WAY - Direct QT dependency:
-    from desktop.modern.src.presentation.tabs.browse.services.thumbnail_factory_service import ThumbnailFactoryService
-
-    old_factory = ThumbnailFactoryService()
-    thumbnail_widget = old_factory.create_thumbnail(sequence, 150, "alphabetical")
-
-    # NEW WAY - Framework-agnostic with QT adapter:
-    from desktop.modern.src.application.adapters.qt_thumbnail_adapter import create_qt_thumbnail_adapter
-
-    new_adapter = create_qt_thumbnail_adapter()
-    thumbnail_widget = new_adapter.create_thumbnail(sequence, 150, "alphabetical")  # Same interface!
-
-    # NEW CAPABILITIES - Batch processing:
-    thumbnail_widgets = new_adapter.batch_create_thumbnails(sequences, 150, "alphabetical")
-
-    # DEBUGGING - Get framework-agnostic data:
-    thumbnail_data = new_adapter.get_thumbnail_data(sequence, 150)
-    print(f"Thumbnail has image: {thumbnail_data.has_image}")
-    """
-
-    return migration_example

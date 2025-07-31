@@ -186,6 +186,47 @@ current_sequence.json
 user_settings.json
 settings.ini
 
+# Prevent root directory clutter
+debug_*.py
+unused_function_detector.py
+aggressive_function_remover.py
+bulk_function_remover.py
+migrate_*.py
+complete_browse_migration.py
+eliminate_tabs_structure.py
+replace_event_bus.py
+tka_codebase_cleaner.py
+analyze_cleanup_opportunities.py
+simplified_generation_services.py
+test_grid_mode.py
+quick_safety_check.py
+debug_output.txt
+test_*.log
+modern_unused_functions.txt
+*.cleanup
+*.migration
+*_backup/
+todo.md
+*_PLAN.md
+*_GUIDE.md
+*_ANALYSIS.md
+*-cleanup*.bat
+*-elimination*.bat
+mega-cleanup.bat
+clean*.sh
+eliminate*.bat
+vscode-*-settings.json
+scripts-annihilation.bat
+
+# Prevent scripts directory bloat
+scripts/testing/
+scripts/validation/
+scripts/*test_runner*.py
+scripts/*test_validator*.py
+scripts/README_*TESTING*.md
+scripts/git-hooks/
+scripts/results/
+
 # Build artifacts
 apps/*/build/
 apps/*/dist/

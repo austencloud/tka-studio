@@ -74,16 +74,6 @@ class ProgressiveLoadingCoordinator(QObject):
                 self._on_service_loading_cancelled
             )
 
-    def set_chunk_display_callback(
-        self, callback: Callable[[list[SequenceData], str], None]
-    ) -> None:
-        """Set callback for displaying chunks of sequences."""
-        self.chunk_display_callback = callback
-
-    def set_navigation_update_callback(self, callback: Callable[[], None]) -> None:
-        """Set callback for updating navigation during progressive loading."""
-        self.navigation_update_callback = callback
-
     def start_progressive_loading(
         self,
         filter_type: FilterType,
@@ -188,15 +178,3 @@ class ProgressiveLoadingCoordinator(QObject):
         logger.info("⛔ [COORDINATOR] Loading cancelled by service")
         self._loading_cancelled = True
         self.loading_cancelled.emit()
-
-    def get_loaded_sequences(self) -> list[SequenceData]:
-        """Get all currently loaded sequences."""
-        return self.all_loaded_sequences.copy()
-
-    def get_loaded_count(self) -> int:
-        """Get the count of currently loaded sequences."""
-        return len(self.all_loaded_sequences)
-
-    def is_loading_cancelled(self) -> bool:
-        """Check if loading was cancelled."""
-        return self._loading_cancelled

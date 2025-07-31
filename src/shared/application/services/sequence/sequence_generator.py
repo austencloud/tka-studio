@@ -392,11 +392,68 @@ class SequenceGenerator(ISequenceGenerator):
             return options
 
         try:
-            from shared.application.services.generation.freeform_generation_service import (
-                LetterTypeMapper,
+            # Use existing letter type classification
+            from desktop.modern.domain.models.letter_type_classifier import (
+                LetterTypeClassifier,
             )
 
-            valid_letters = set(LetterTypeMapper.get_letters_for_types(letter_types))
+            valid_letters = set()
+            for letter_type in letter_types:
+                # Get all letters for this type from the existing classifier
+                # This is a simplified approach - could be enhanced
+                all_letters = [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "J",
+                    "K",
+                    "L",
+                    "M",
+                    "N",
+                    "O",
+                    "P",
+                    "Q",
+                    "R",
+                    "S",
+                    "T",
+                    "U",
+                    "V",
+                    "W",
+                    "X",
+                    "Y",
+                    "Z",
+                    "Σ",
+                    "Δ",
+                    "θ",
+                    "Ω",
+                    "W-",
+                    "X-",
+                    "Y-",
+                    "Z-",
+                    "Σ-",
+                    "Δ-",
+                    "θ-",
+                    "Ω-",
+                    "Φ",
+                    "Ψ",
+                    "Λ",
+                    "Φ-",
+                    "Ψ-",
+                    "Λ-",
+                    "α",
+                    "β",
+                    "Γ",
+                ]
+
+                for letter in all_letters:
+                    if LetterTypeClassifier.get_letter_type(letter) == letter_type:
+                        valid_letters.add(letter)
 
             filtered = [
                 opt for opt in options if getattr(opt, "letter", "") in valid_letters

@@ -12,7 +12,6 @@ Following established patterns:
 """
 
 import logging
-from typing import Any, Optional
 
 from desktop.modern.core.interfaces.workbench_services import (
     IWorkbenchSessionManager,
@@ -378,64 +377,3 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
             "session_coordinator_available": self._session_coordinator is not None,
             "event_bus_available": self._event_bus is not None,
         }
-
-    # Legacy Session Management Methods (for backward compatibility)
-    def save_session(self, session_name: str) -> bool:
-        """Save current workbench session."""
-        try:
-            # This is a basic implementation - could be enhanced
-            # to use a more sophisticated session storage system
-            logger.info(f"Session save requested: {session_name}")
-            # Delegate to session coordinator if available
-            if self._session_coordinator:
-                return self._session_coordinator.save_named_session(session_name)
-            return False
-        except Exception as e:
-            logger.error(f"Failed to save session {session_name}: {e}")
-            return False
-
-    def load_session(self, session_name: str) -> bool:
-        """Load workbench session."""
-        try:
-            logger.info(f"Session load requested: {session_name}")
-            # Delegate to session coordinator if available
-            if self._session_coordinator:
-                return self._session_coordinator.load_named_session(session_name)
-            return False
-        except Exception as e:
-            logger.error(f"Failed to load session {session_name}: {e}")
-            return False
-
-    def get_available_sessions(self) -> list[str]:
-        """Get list of available sessions."""
-        try:
-            # Delegate to session coordinator if available
-            if self._session_coordinator:
-                return self._session_coordinator.get_available_sessions()
-            return []
-        except Exception as e:
-            logger.error(f"Failed to get available sessions: {e}")
-            return []
-
-    def delete_session(self, session_name: str) -> bool:
-        """Delete a session."""
-        try:
-            logger.info(f"Session delete requested: {session_name}")
-            # Delegate to session coordinator if available
-            if self._session_coordinator:
-                return self._session_coordinator.delete_named_session(session_name)
-            return False
-        except Exception as e:
-            logger.error(f"Failed to delete session {session_name}: {e}")
-            return False
-
-    def get_session_info(self, session_name: str) -> Optional[dict[str, Any]]:
-        """Get session information."""
-        try:
-            # Delegate to session coordinator if available
-            if self._session_coordinator:
-                return self._session_coordinator.get_session_info(session_name)
-            return None
-        except Exception as e:
-            logger.error(f"Failed to get session info for {session_name}: {e}")
-            return None
