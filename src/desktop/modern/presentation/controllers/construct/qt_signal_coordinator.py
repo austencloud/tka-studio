@@ -5,12 +5,15 @@ Replaces event bus architecture with pure PyQt6 signals for component coordinati
 Provides clean signal/slot communication between ConstructTab components.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from desktop.modern.domain.models.beat_data import BeatData
+
 
 logger = logging.getLogger(__name__)
 

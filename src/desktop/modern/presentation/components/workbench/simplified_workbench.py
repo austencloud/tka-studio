@@ -5,10 +5,21 @@ Dramatically reduced workbench component that delegates to focused services.
 This replaces the 469-line workbench with a clean, focused component.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
+from shared.application.services.workbench.workbench_operation_coordinator import (
+    WorkbenchOperationCoordinator,
+)
+from shared.application.services.workbench.workbench_session_manager import (
+    WorkbenchSessionManager,
+)
+from shared.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
+)
 
 from desktop.modern.application.services.workbench.workbench_coordination_service import (
     WorkbenchCoordinationService,
@@ -20,15 +31,7 @@ from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService
 from desktop.modern.domain.models import BeatData, SequenceData
 from desktop.modern.presentation.components.component_base import ViewableComponentBase
-from shared.application.services.workbench.workbench_operation_coordinator import (
-    WorkbenchOperationCoordinator,
-)
-from shared.application.services.workbench.workbench_session_manager import (
-    WorkbenchSessionManager,
-)
-from shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
-)
+
 
 if TYPE_CHECKING:
     from shared.application.services.workbench.beat_selection_service import (
@@ -58,7 +61,7 @@ class SimplifiedSequenceWorkbench(ViewableComponentBase):
         self,
         container: DIContainer,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
+        beat_selection_service: BeatSelectionService,
         parent: QWidget | None = None,
     ):
         """Initialize workbench with injected services."""

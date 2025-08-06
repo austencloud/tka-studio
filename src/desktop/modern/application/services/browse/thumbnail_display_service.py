@@ -5,8 +5,10 @@ Handles thumbnail creation, positioning, and display logic for the sequence brow
 Manages the coordination between thumbnail factory and grid layout positioning.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtWidgets import QApplication, QWidget
 
@@ -17,6 +19,7 @@ from desktop.modern.application.services.browse.thumbnail_factory_service import
     ThumbnailFactoryService,
 )
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -219,15 +222,14 @@ class ThumbnailDisplayService:
         """
         if sort_method == "difficulty":
             return sequence.difficulty or "Unknown Difficulty"
-        elif sort_method == "length":
+        if sort_method == "length":
             return f"Length {sequence.length or 'Unknown'}"
-        elif sort_method == "alphabetical":
+        if sort_method == "alphabetical":
             if sequence.word:
                 first_letter = sequence.word[0].upper()
                 return f"Starting with {first_letter}"
             return "Unknown"
-        else:
-            return "All Sequences"
+        return "All Sequences"
 
     def add_empty_state(self) -> None:
         """Add empty state to the display."""

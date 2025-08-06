@@ -5,6 +5,8 @@ Handles smooth fade animations for option picker content.
 Manages fade transitions and graphics effects cleanup.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation, QTimer
@@ -175,6 +177,7 @@ class OptionPickerAnimator:
                 if hasattr(section, "pictographs") and section.pictographs:
                     frames.extend(section.pictographs.values())
         return frames
+
     def cleanup(self):
         """Clean up any ongoing animations."""
         self._is_animating = False

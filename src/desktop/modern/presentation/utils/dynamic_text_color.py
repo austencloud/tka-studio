@@ -5,6 +5,8 @@ This utility provides simple, reliable methods to automatically adjust text colo
 based on the background color to ensure optimal readability.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QWidget
 

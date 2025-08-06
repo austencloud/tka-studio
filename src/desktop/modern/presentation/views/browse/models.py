@@ -11,6 +11,8 @@ This file now imports from the domain layer.
 
 # Import from domain layer to avoid circular imports
 # Additional enums specific to presentation layer
+from __future__ import annotations
+
 from enum import Enum
 
 from desktop.modern.domain.models.browse_models import (

@@ -11,10 +11,13 @@ Key principles from Legacy:
 - No complex business logic or orchestration
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QWidget
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
@@ -33,7 +36,7 @@ class OptionPickerGroupWidget(QWidget):
     FIXED: Added proper width constraints to prevent pictograph alignment issues.
     """
 
-    def __init__(self, scroll_area: "OptionPickerScroll") -> None:
+    def __init__(self, scroll_area: OptionPickerScroll) -> None:
         super().__init__(scroll_area)
         self.scroll_area = scroll_area
 
@@ -47,7 +50,7 @@ class OptionPickerGroupWidget(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.setLayout(self.layout)
 
-    def add_section_widget(self, section: "OptionPickerSection") -> None:
+    def add_section_widget(self, section: OptionPickerSection) -> None:
         """Add a section widget to the group exactly like Legacy."""
         # FIXED: Use Fixed size policy and set exact constraints to prevent stretching
         section.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)

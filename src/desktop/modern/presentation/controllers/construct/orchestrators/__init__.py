@@ -8,8 +8,11 @@ high-level logic:
 - ProgressReporter: Manages initialization progress reporting
 """
 
+from __future__ import annotations
+
 from .layout_orchestrator import LayoutOrchestrator
 from .progress_reporter import ProgressReporter
+
 
 __all__ = [
     "LayoutOrchestrator",

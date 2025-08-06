@@ -5,6 +5,8 @@ This module contains the main window class that simply holds the UI.
 Focused on window lifecycle only - no business logic.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QMainWindow
 
 

@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 # src/main_window/main_widget/sequence_card_tab/tab.py
 import logging
 from typing import TYPE_CHECKING
 
-from interfaces.json_manager_interface import IJsonManager
-from interfaces.settings_manager_interface import ISettingsManager
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
+
+from interfaces.json_manager_interface import IJsonManager
+from interfaces.settings_manager_interface import ISettingsManager
 
 from .components.display.printable_displayer import PrintableDisplayer
 from .components.navigation.sidebar import SequenceCardNavSidebar
@@ -154,33 +156,11 @@ class SequenceCardTab(QWidget):
             pass
 
     def regenerate_all_images(self):
-        self.setCursor(Qt.CursorShape.WaitCursor)
-        original_text = self.header.description_label.text()
-        self.header.description_label.setText("Regenerating images... Please wait")
-        QApplication.processEvents()
+        """Show the regenerate images dialog for selective regeneration."""
+        from .dialogs import RegenerateImagesDialog
 
-        try:
-            if hasattr(self.image_exporter, "export_all_images"):
-                self.image_exporter.export_all_images()
-
-            selected_length = self.nav_sidebar.selected_length
-
-            if USE_PRINTABLE_LAYOUT and hasattr(self, "printable_displayer"):
-                self.printable_displayer.display_sequences(selected_length)
-                self._sync_pages_from_displayer()
-
-            self.header.description_label.setText("Images regenerated successfully!")
-            QTimer.singleShot(
-                3000, lambda: self.header.description_label.setText(original_text)
-            )
-
-        except Exception as e:
-            self.header.description_label.setText(f"Error regenerating: {str(e)}")
-            QTimer.singleShot(
-                5000, lambda: self.header.description_label.setText(original_text)
-            )
-        finally:
-            self.setCursor(Qt.CursorShape.ArrowCursor)
+        dialog = RegenerateImagesDialog(self)
+        dialog.exec()
 
     def _sync_pages_from_displayer(self):
         if USE_PRINTABLE_LAYOUT and hasattr(self, "printable_displayer"):

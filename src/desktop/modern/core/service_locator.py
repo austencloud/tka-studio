@@ -6,8 +6,11 @@ This is a façade pattern implementation that makes service access easier
 without having to inject the container everywhere.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TypeVar
+
 
 logger = logging.getLogger(__name__)
 

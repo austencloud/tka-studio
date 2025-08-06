@@ -4,6 +4,8 @@ Navigation Handler Service
 Service for handling navigation and scrolling within the sequence browser.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QPoint

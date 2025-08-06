@@ -6,9 +6,12 @@ This script checks what's actually happening in the modern learn tab
 to help debug why Lesson3 is only showing 1 answer option.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Add src to Python path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -117,10 +120,11 @@ def diagnose_learn_tab():
         question_service = container.resolve(IQuestionGenerationService)
 
         # Test Lesson3 specifically
-        from desktop.modern.domain.models.learn import LessonType, QuizMode
         from shared.application.services.learn.lesson_configuration_service import (
             LessonConfigurationService,
         )
+
+        from desktop.modern.domain.models.learn import LessonType, QuizMode
 
         # Get Lesson3 config
         config_service = LessonConfigurationService()

@@ -5,8 +5,11 @@ Defines the contracts for letter determination services using the existing moder
 These interfaces work with the enhanced PictographData and MotionData models.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
+
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.enums import Letter
@@ -30,9 +33,9 @@ class ILetterDeterminationService(ABC):
     @abstractmethod
     def determine_letter(
         self,
-        pictograph_data: "PictographData",
-        context: Optional["MotionComparisonContext"] = None,
-    ) -> "LetterDeterminationResult":
+        pictograph_data: PictographData,
+        context: Optional[MotionComparisonContext] = None,
+    ) -> LetterDeterminationResult:
         """
         Determine the letter for given pictograph motion data.
 
@@ -46,7 +49,7 @@ class ILetterDeterminationService(ABC):
 
     @abstractmethod
     def update_pictograph_dataset(
-        self, dataset: dict["Letter", list["PictographData"]]
+        self, dataset: dict[Letter, list[PictographData]]
     ) -> None:
         """
         Update the reference dataset used for letter matching.
@@ -65,7 +68,7 @@ class ILetterDeterminationService(ABC):
         """
 
     @abstractmethod
-    def validate_pictograph_data(self, pictograph_data: "PictographData") -> bool:
+    def validate_pictograph_data(self, pictograph_data: PictographData) -> bool:
         """
         Validate that pictograph data is suitable for letter determination.
 
@@ -88,9 +91,9 @@ class IMotionComparisonService(ABC):
     @abstractmethod
     def compare_motions(
         self,
-        motion1: "PictographData",
-        motion2: "PictographData",
-        context: Optional["MotionComparisonContext"] = None,
+        motion1: PictographData,
+        motion2: PictographData,
+        context: Optional[MotionComparisonContext] = None,
     ) -> float:
         """
         Compare two complete motion pictographs.
@@ -107,10 +110,10 @@ class IMotionComparisonService(ABC):
     @abstractmethod
     def compare_attributes(
         self,
-        attrs1: "MotionData",
-        attrs2: "MotionData",
-        context: Optional["MotionComparisonContext"] = None,
-    ) -> "AttributeComparisonResult":
+        attrs1: MotionData,
+        attrs2: MotionData,
+        context: Optional[MotionComparisonContext] = None,
+    ) -> AttributeComparisonResult:
         """
         Compare motion attributes with detailed breakdown.
 
@@ -158,7 +161,7 @@ class ILetterDeterminationStrategy(ABC):
     """
 
     @abstractmethod
-    def applies_to(self, motion_data: "PictographData") -> bool:
+    def applies_to(self, motion_data: PictographData) -> bool:
         """
         Check if this strategy applies to the given motion data.
 
@@ -172,11 +175,11 @@ class ILetterDeterminationStrategy(ABC):
     @abstractmethod
     def execute(
         self,
-        motion_data: "PictographData",
-        dataset: dict["Letter", list["PictographData"]],
-        comparison_service: "IMotionComparisonService",
-        context: Optional["MotionComparisonContext"] = None,
-    ) -> "LetterDeterminationResult":
+        motion_data: PictographData,
+        dataset: dict[Letter, list[PictographData]],
+        comparison_service: IMotionComparisonService,
+        context: Optional[MotionComparisonContext] = None,
+    ) -> LetterDeterminationResult:
         """
         Execute the letter determination strategy.
 
@@ -208,7 +211,7 @@ class IMotionAttributeService(ABC):
     """
 
     @abstractmethod
-    def sync_attributes(self, pictograph_data: "PictographData") -> "PictographData":
+    def sync_attributes(self, pictograph_data: PictographData) -> PictographData:
         """
         Synchronize and validate motion attributes.
 
@@ -221,8 +224,8 @@ class IMotionAttributeService(ABC):
 
     @abstractmethod
     def apply_prefloat_transformations(
-        self, attributes: "MotionData", reference_attributes: "MotionData"
-    ) -> "MotionData":
+        self, attributes: MotionData, reference_attributes: MotionData
+    ) -> MotionData:
         """
         Apply prefloat motion transformations.
 
@@ -236,7 +239,7 @@ class IMotionAttributeService(ABC):
 
     @abstractmethod
     def validate_attribute_consistency(
-        self, blue_attrs: "MotionData", red_attrs: "MotionData"
+        self, blue_attrs: MotionData, red_attrs: MotionData
     ) -> bool:
         """
         Validate consistency between blue and red attributes.
@@ -251,8 +254,8 @@ class IMotionAttributeService(ABC):
 
     @abstractmethod
     def extract_prefloat_attributes(
-        self, pictograph_data: "PictographData"
-    ) -> dict[str, "MotionData"]:
+        self, pictograph_data: PictographData
+    ) -> dict[str, MotionData]:
         """
         Extract prefloat attributes from pictograph data.
 
@@ -272,7 +275,7 @@ class IPictographDatasetProvider(ABC):
     """
 
     @abstractmethod
-    def get_pictograph_dataset(self) -> dict["Letter", list["PictographData"]]:
+    def get_pictograph_dataset(self) -> dict[Letter, list[PictographData]]:
         """
         Get the complete pictograph dataset for letter matching.
 

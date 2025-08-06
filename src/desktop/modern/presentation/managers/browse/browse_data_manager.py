@@ -10,12 +10,15 @@ Simplified: No more conversion between data formats since dictionary manager
 returns SequenceData directly.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.views.browse.errors import DataLoadError, FilterError
 from desktop.modern.presentation.views.browse.models import FilterType
+
 
 logger = logging.getLogger(__name__)
 
@@ -136,35 +139,30 @@ class BrowseDataManager:
                 return self.dictionary_manager.get_sequences_by_starting_letters(
                     letters
                 )
-            elif filter_value == "All Letters":
+            if filter_value == "All Letters":
                 return self.dictionary_manager.get_all_sequences()
-            else:
-                # Single letter
-                return self.dictionary_manager.get_sequences_by_starting_letter(
-                    filter_value
-                )
-        elif isinstance(filter_value, list):
+            # Single letter
+            return self.dictionary_manager.get_sequences_by_starting_letter(
+                filter_value
+            )
+        if isinstance(filter_value, list):
             return self.dictionary_manager.get_sequences_by_starting_letters(
                 filter_value
             )
-        else:
-            return self.dictionary_manager.get_all_sequences()
+        return self.dictionary_manager.get_all_sequences()
 
     def _apply_length_filter(self, filter_value) -> list[SequenceData]:
         """Apply length filter logic."""
         if isinstance(filter_value, str):
             if filter_value == "All":
                 return self.dictionary_manager.get_all_sequences()
-            else:
-                try:
-                    length_value = int(filter_value)
-                    logger.info(
-                        f"📏 Converting length '{filter_value}' to {length_value}"
-                    )
-                    return self.dictionary_manager.get_sequences_by_length(length_value)
-                except ValueError:
-                    logger.warning(f"⚠️ Invalid length value: {filter_value}")
-                    return []
+            try:
+                length_value = int(filter_value)
+                logger.info(f"📏 Converting length '{filter_value}' to {length_value}")
+                return self.dictionary_manager.get_sequences_by_length(length_value)
+            except ValueError:
+                logger.warning(f"⚠️ Invalid length value: {filter_value}")
+                return []
         elif isinstance(filter_value, int):
             return self.dictionary_manager.get_sequences_by_length(filter_value)
         else:
@@ -174,23 +172,20 @@ class BrowseDataManager:
         """Apply difficulty filter logic."""
         if filter_value == "All" or filter_value == "All Levels":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            logger.info(f"📊 Filtering by difficulty: {filter_value}")
-            return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
+        logger.info(f"📊 Filtering by difficulty: {filter_value}")
+        return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
 
     def _apply_author_filter(self, filter_value) -> list[SequenceData]:
         """Apply author filter logic."""
         if filter_value == "All Authors":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            return self.dictionary_manager.get_sequences_by_author(filter_value)
+        return self.dictionary_manager.get_sequences_by_author(filter_value)
 
     def _apply_grid_mode_filter(self, filter_value) -> list[SequenceData]:
         """Apply grid mode filter logic."""
         if filter_value == "All" or filter_value == "All Styles":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
+        return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
 
     def _update_id_mappings(self, sequences: list[SequenceData]) -> None:
         """Update ID to word mappings for given sequences."""

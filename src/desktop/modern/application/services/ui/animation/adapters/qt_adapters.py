@@ -3,15 +3,16 @@ Qt/PyQt6 adapters for the framework-agnostic animation system.
 These adapters connect the core animation engine to Qt widgets.
 """
 
+from __future__ import annotations
+
 import asyncio
 from typing import Any, Optional
 
-from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QStackedWidget, QWidget
 
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
-    AnimationEvent,
     AnimationTarget,
     IAnimationRenderer,
     IAnimationScheduler,
@@ -74,12 +75,11 @@ class QtTargetAdapter(ITargetAdapter):
                 widget.resize(widget.width(), int(value))
             elif property_name == "scale":
                 self._apply_scale(widget, value)
+            # Try to set as widget property
+            elif hasattr(widget, property_name):
+                setattr(widget, property_name, value)
             else:
-                # Try to set as widget property
-                if hasattr(widget, property_name):
-                    setattr(widget, property_name, value)
-                else:
-                    return False
+                return False
 
             return True
         except Exception as e:

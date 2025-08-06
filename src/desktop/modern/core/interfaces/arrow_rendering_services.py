@@ -5,6 +5,8 @@ Interface for arrow rendering business logic to ensure proper separation
 of concerns and enable testing.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Optional
 

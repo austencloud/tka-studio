@@ -5,6 +5,8 @@ Qt-specific wrapper for OptionPickerSizeService.
 Handles Qt widget interactions and timing.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QSize, QTimer
@@ -85,9 +87,8 @@ class OptionPickerSizeManager:
                     return False
 
                 return True
-            else:
-                # Fallback to absolute values if main window size unavailable
-                return 200 <= picker_width <= 2000
+            # Fallback to absolute values if main window size unavailable
+            return 200 <= picker_width <= 2000
 
         except Exception:
             # Fallback to absolute values on error
@@ -174,10 +175,9 @@ class OptionPickerSizeManager:
             if self._sizing_deferred_count < self._max_deferred_attempts:
                 QTimer.singleShot(100, sizing_callback)
                 return True
-            else:
-                print("⚠️ [SIZING] Max deferred attempts reached, proceeding anyway")
-                self._sizing_deferred_count = 0
-                return False
+            print("⚠️ [SIZING] Max deferred attempts reached, proceeding anyway")
+            self._sizing_deferred_count = 0
+            return False
 
         current_width = self._widget.width()
         if not self.is_width_accurate(current_width):
@@ -187,10 +187,9 @@ class OptionPickerSizeManager:
             if self._sizing_deferred_count < self._max_deferred_attempts:
                 QTimer.singleShot(200, sizing_callback)
                 return True
-            else:
-                print("⚠️ [SIZING] Max deferred attempts reached, proceeding anyway")
-                self._sizing_deferred_count = 0
-                return False
+            print("⚠️ [SIZING] Max deferred attempts reached, proceeding anyway")
+            self._sizing_deferred_count = 0
+            return False
 
         # Ready to proceed
         self._sizing_deferred_count = 0

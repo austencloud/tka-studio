@@ -5,6 +5,8 @@ Coordinates the overall layout structure and component organization.
 This is Qt-agnostic and focuses on coordination logic.
 """
 
+from __future__ import annotations
+
 
 class LayoutOrchestrator:
     """
@@ -38,6 +40,7 @@ class LayoutOrchestrator:
     def register_component(self, name: str, component):
         """Register a component with the orchestrator."""
         self.components[name] = component
+
     def get_component_dependencies(self, component_name: str) -> list[str]:
         """
         Get the dependencies for a specific component.

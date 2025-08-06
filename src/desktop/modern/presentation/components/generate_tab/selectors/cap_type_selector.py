@@ -1,104 +1,138 @@
 """
 CAP type selector component.
 
-Provides a dropdown for selecting circular arrangement pattern types.
+Grid of buttons for selecting circular arrangement pattern types.
 """
 
-from typing import Optional
+from __future__ import annotations
 
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QComboBox, QWidget
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import (
+    QButtonGroup,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from desktop.modern.core.interfaces.generation_services import CAPType
 
-from .generation_control_base import GenerationControlBase
 
-
-class CAPTypeSelector(GenerationControlBase):
-    """Selector for CAP type (circular mode)"""
+class CAPTypeSelector(QWidget):
+    """Grid selector for CAP type (circular mode)"""
 
     value_changed = pyqtSignal(CAPType)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__("CAP Type", "Circular arrangement pattern type", parent)
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = CAPType.STRICT_ROTATED
+        self._button_group = QButtonGroup(self)
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup CAP type controls"""
-        combo = QComboBox()
-        combo.setMinimumHeight(32)
-        combo.setStyleSheet(
-            """
-            QComboBox {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 6px;
-                padding: 4px 8px;
-                color: rgba(255, 255, 255, 0.9);
-            }
-            QComboBox:hover {
-                background: rgba(255, 255, 255, 0.15);
-                border-color: rgba(255, 255, 255, 0.3);
-            }
-            QComboBox:focus {
-                border-color: rgba(70, 130, 255, 0.8);
-            }
-            QComboBox::drop-down {
-                border: none;
-                width: 20px;
-            }
-            QComboBox::down-arrow {
-                image: none;
-                border-left: 4px solid transparent;
-                border-right: 4px solid transparent;
-                border-top: 4px solid rgba(255, 255, 255, 0.6);
-                margin-right: 6px;
-            }
-            QComboBox QAbstractItemView {
-                background: rgba(40, 40, 60, 0.95);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 6px;
-                color: rgba(255, 255, 255, 0.9);
-                selection-background-color: rgba(70, 130, 255, 0.7);
-            }
-        """
-        )
+        """Setup CAP type grid"""
+        # Main vertical layout
+        layout = QVBoxLayout(self)
+        layout.setSpacing(8)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Add all Legacy CAP types
+        # Header label
+        header_layout = QHBoxLayout()
+        header_label = QLabel("CAP Type:")
+        header_label.setStyleSheet("""
+            QLabel {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+                font-weight: 500;
+            }
+        """)
+        header_layout.addWidget(header_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addLayout(header_layout)
+
+        # Grid layout for buttons
+        grid_layout = QGridLayout()
+        grid_layout.setSpacing(4)
+
+        # CAP type data: (cap_type, display_text, row, col)
         cap_types = [
-            ("Strict Rotated", CAPType.STRICT_ROTATED),
-            ("Strict Mirrored", CAPType.STRICT_MIRRORED),
-            ("Strict Swapped", CAPType.STRICT_SWAPPED),
-            ("Strict Complementary", CAPType.STRICT_COMPLEMENTARY),
-            ("Swapped Complementary", CAPType.SWAPPED_COMPLEMENTARY),
-            ("Rotated Complementary", CAPType.ROTATED_COMPLEMENTARY),
-            ("Mirrored Swapped", CAPType.MIRRORED_SWAPPED),
-            ("Mirrored Complementary", CAPType.MIRRORED_COMPLEMENTARY),
-            ("Rotated Swapped", CAPType.ROTATED_SWAPPED),
-            ("Mirrored Rotated", CAPType.MIRRORED_ROTATED),
-            ("Mirrored Complementary Rotated", CAPType.MIRRORED_COMPLEMENTARY_ROTATED),
+            (CAPType.STRICT_ROTATED, "Rotated", 0, 0),
+            (CAPType.STRICT_MIRRORED, "Mirrored", 0, 1),
+            (CAPType.STRICT_SWAPPED, "Swapped", 0, 2),
+            (CAPType.STRICT_COMPLEMENTARY, "Complementary", 0, 3),
+            (CAPType.MIRRORED_SWAPPED, "Mirrored / Swapped", 1, 0),
+            (CAPType.SWAPPED_COMPLEMENTARY, "Swapped / Complementary", 1, 1),
+            (CAPType.ROTATED_COMPLEMENTARY, "Rotated / Complementary", 1, 2),
+            (CAPType.MIRRORED_COMPLEMENTARY, "Mirrored / Complementary", 1, 3),
+            (CAPType.ROTATED_SWAPPED, "Rotated / Swapped", 2, 0),
+            (CAPType.MIRRORED_ROTATED, "Mirrored / Rotated", 2, 1),
+            (CAPType.MIRRORED_COMPLEMENTARY_ROTATED, "Mir / Comp / Rot", 2, 2),
         ]
 
-        for name, cap_type in cap_types:
-            combo.addItem(name, cap_type)
+        for i, (cap_type, text, row, col) in enumerate(cap_types):
+            button = QPushButton(text)
+            button.setCheckable(True)
+            button.setFixedSize(120, 32)
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        combo.currentIndexChanged.connect(self._on_combo_changed)
-        self._combo = combo
+            # Apply styling
+            button.setStyleSheet("""
+                QPushButton {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 6px;
+                    color: rgba(255, 255, 255, 0.9);
+                    font-size: 10px;
+                    font-weight: 500;
+                    padding: 4px 8px;
+                }
+                QPushButton:hover {
+                    background: rgba(255, 255, 255, 0.15);
+                    border-color: rgba(255, 255, 255, 0.3);
+                }
+                QPushButton:checked {
+                    background: rgba(70, 130, 255, 0.8);
+                    border-color: rgba(70, 130, 255, 0.9);
+                    color: white;
+                    font-weight: 600;
+                }
+            """)
 
-        self._content_layout.addWidget(combo)
+            if cap_type == CAPType.STRICT_ROTATED:  # Default selection
+                button.setChecked(True)
 
-    def _on_combo_changed(self, index: int):
-        """Handle combo box change"""
-        value = self._combo.itemData(index)
-        if value != self._current_value:
-            self._current_value = value
-            self.value_changed.emit(value)
+            # Use integer index as button ID, store cap_type separately
+            self._button_group.addButton(button, i)
+            button.cap_type = cap_type  # Store the actual cap_type on the button
+            grid_layout.addWidget(button, row, col)
+
+        # Center the grid
+        grid_container = QHBoxLayout()
+        grid_container.addStretch()
+        grid_container.addLayout(grid_layout)
+        grid_container.addStretch()
+        layout.addLayout(grid_container)
+
+        # Connect signals
+        self._button_group.buttonClicked.connect(self._on_button_clicked)
+
+    def _on_button_clicked(self, button):
+        """Handle button click"""
+        cap_type = button.cap_type  # Get the stored cap_type from the button
+        if cap_type != self._current_value:
+            self._current_value = cap_type
+            self.value_changed.emit(cap_type)
 
     def set_value(self, value: CAPType):
         """Set the current value"""
         self._current_value = value
-        for i in range(self._combo.count()):
-            if self._combo.itemData(i) == value:
-                self._combo.setCurrentIndex(i)
+        # Find the button with the matching cap_type
+        for button in self._button_group.buttons():
+            if hasattr(button, "cap_type") and button.cap_type == value:
+                button.setChecked(True)
                 break
+
+    def get_value(self) -> CAPType:
+        """Get the current value"""
+        return self._current_value

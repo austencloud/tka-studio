@@ -5,6 +5,8 @@ Immutable state models for the learn tab following modern reactive patterns.
 These models represent the complete state of the learn tab at any point in time.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -160,6 +162,7 @@ class LearnState:
             and not self.ui_state.is_paused
             and not self.ui_state.show_feedback
         )
+
     def needs_horizontal_layout(self) -> bool:
         """Check if current lesson needs horizontal layout."""
         if not self.current_session:

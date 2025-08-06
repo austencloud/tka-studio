@@ -5,6 +5,8 @@ Defines contracts for shared rendering services that provide cached,
 high-performance rendering of pictograph elements.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

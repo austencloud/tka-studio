@@ -5,8 +5,11 @@ This script validates that the services can be properly imported and instantiate
 Run this to verify the basic structure is correct.
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add src to path for imports
 modern_src_path = Path(__file__).parent / "src"

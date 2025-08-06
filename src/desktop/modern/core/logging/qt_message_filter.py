@@ -5,11 +5,14 @@ This module provides Qt message filtering specifically for PyQt6 applications
 to suppress warnings about unsupported CSS properties and other non-critical messages.
 """
 
+from __future__ import annotations
+
 import logging
 import re
 from re import Pattern
 
 from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
+
 
 logger = logging.getLogger(__name__)
 

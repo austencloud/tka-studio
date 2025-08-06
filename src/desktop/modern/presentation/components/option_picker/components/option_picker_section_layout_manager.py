@@ -11,11 +11,19 @@ Handles all layout management and sizing calculations for OptionPickerSection in
 Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QFrame, QGridLayout, QGroupBox, QSizePolicy, QVBoxLayout
+from shared.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
+from shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
 
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
@@ -23,12 +31,7 @@ from desktop.modern.presentation.components.option_picker.components.option_pict
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
-from shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
@@ -52,7 +55,7 @@ class OptionPickerSectionLayoutManager:
         self,
         section_widget: QGroupBox,
         letter_type: LetterType,
-        scroll_area: "OptionPickerScroll",
+        scroll_area: OptionPickerScroll,
         option_config_service: OptionConfigurationService,
         size_calculator: OptionPickerSizeCalculator,
         mw_size_provider: Callable[[], QSize] | None = None,

@@ -5,16 +5,16 @@ Thin adapter that delegates business logic to GraphEditorStateService
 while handling Qt-specific concerns (signals, UI state).
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.graph_editor.graph_editor_state_manager import (
     GraphEditorStateManager as GraphEditorStateService,
 )
+
 
 if TYPE_CHECKING:
     from ..graph_editor import GraphEditor
@@ -38,7 +38,7 @@ class GraphEditorStateManager(QObject):
 
     def __init__(
         self,
-        graph_editor: "GraphEditor",
+        graph_editor: GraphEditor,
         state_service: Optional[GraphEditorStateService] = None,
         parent: Optional[QObject] = None,
     ):

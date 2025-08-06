@@ -6,6 +6,8 @@ that updates as options are toggled, following the legacy functionality but with
 clean architecture and glassmorphism design.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter, QPixmap
 from PyQt6.QtWidgets import (

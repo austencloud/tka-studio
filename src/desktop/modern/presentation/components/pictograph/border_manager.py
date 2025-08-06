@@ -5,6 +5,8 @@ Handles Qt-specific border rendering while delegating business logic
 to PictographBorderService.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPen
 

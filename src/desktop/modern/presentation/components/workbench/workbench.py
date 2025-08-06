@@ -17,22 +17,12 @@ BUSINESS LOGIC DELEGATED TO:
 - BeatSelectionService: Beat selection logic
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
-
-from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.interfaces.core_services import ILayoutService
-from desktop.modern.domain.models import BeatData, SequenceData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.component_base import ViewableComponentBase
-from desktop.modern.presentation.components.sequence_workbench.button_interface import (
-    WorkbenchButtonInterfaceAdapter,
-)
-from desktop.modern.presentation.components.sequence_workbench.indicator_section import (
-    WorkbenchIndicatorSection,
-)
 from shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
@@ -45,7 +35,20 @@ from shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
 
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.interfaces.core_services import ILayoutService
+from desktop.modern.domain.models import BeatData, SequenceData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.presentation.components.component_base import ViewableComponentBase
+from desktop.modern.presentation.components.sequence_workbench.button_interface import (
+    WorkbenchButtonInterfaceAdapter,
+)
+from desktop.modern.presentation.components.sequence_workbench.indicator_section import (
+    WorkbenchIndicatorSection,
+)
+
 from .beat_frame_section import WorkbenchBeatFrameSection
+
 
 if TYPE_CHECKING:
     from shared.application.services.workbench.beat_selection_service import (
@@ -72,7 +75,7 @@ class SequenceWorkbench(ViewableComponentBase):
         self,
         container: DIContainer,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
+        beat_selection_service: BeatSelectionService,
         parent: Optional[QWidget] = None,
     ):
         """Initialize workbench with injected services."""
@@ -269,7 +272,7 @@ class SequenceWorkbench(ViewableComponentBase):
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional["PictographData"] = None,
+        pictograph_data: Optional[PictographData] = None,
         from_restoration: bool = False,
     ):
         """Set the start position via state manager."""
@@ -319,6 +322,7 @@ class SequenceWorkbench(ViewableComponentBase):
         self._state_manager.set_start_position(None)
         if self._beat_frame_section:
             self._beat_frame_section.initialize_cleared_start_position()
+
     # Event Handlers - Delegation to Business Logic
     def _execute_operation(self, operation_type: OperationType):
         """Execute operation via operation coordinator."""

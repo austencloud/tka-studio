@@ -5,8 +5,10 @@ Handles all progressive loading events and callbacks, removing this responsibili
 from the SequenceBrowserPanel to keep it lightweight.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtWidgets import QApplication
 
@@ -20,6 +22,7 @@ from desktop.modern.application.services.browse.sequence_sorter_service import (
     SequenceSorterService,
 )
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 

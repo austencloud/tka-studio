@@ -10,6 +10,8 @@ Key principles:
 - No business logic - pure widget composition
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
@@ -139,6 +141,7 @@ class OptionPickerWidget(QWidget):
     def refresh_options(self) -> None:
         """Refresh options - clear all sections."""
         self.option_picker_scroll.clear_all_sections()
+
     def get_widget(self) -> QWidget:
         """Get the main widget for integration."""
         return self

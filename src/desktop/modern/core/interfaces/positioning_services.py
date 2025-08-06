@@ -5,6 +5,8 @@ These interfaces define the contracts for the refactored positioning services
 that follow TKA's clean architecture principles.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -261,7 +263,7 @@ class IAttributeKeyGenerator(ABC):
 
     @abstractmethod
     def get_key_from_arrow(
-        self, arrow_data: "ArrowData", pictograph_data: PictographData
+        self, arrow_data: ArrowData, pictograph_data: PictographData
     ) -> str:
         """
         Get attribute key from arrow data.
@@ -309,7 +311,7 @@ class IPlacementKeyGenerator(ABC):
 
     @abstractmethod
     def get_key_from_arrow(
-        self, arrow_data: "ArrowData", pictograph_data: PictographData
+        self, arrow_data: ArrowData, pictograph_data: PictographData
     ) -> str:
         """
         Get placement key from arrow data.

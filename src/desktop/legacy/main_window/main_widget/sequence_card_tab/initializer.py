@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 # src/main_window/main_widget/sequence_card_tab/tab.py
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
+
 from utils.path_helpers import get_sequence_card_image_exporter_path
 
 if TYPE_CHECKING:
@@ -31,6 +33,8 @@ class SequenceCardInitializer:
                 )
                 QApplication.processEvents()
 
+                # Re-enable image generation to test the arrow fix
+                print("DEBUG: Starting image generation with arrow fix...")
                 if hasattr(self.parent.image_exporter, "export_all_images"):
                     self.parent.image_exporter.export_all_images()
 

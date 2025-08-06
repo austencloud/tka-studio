@@ -5,6 +5,8 @@ Simple stack widget for switching between filter selection and sequence browser.
 Handles smooth transitions between the two main browse modes.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
@@ -31,6 +33,7 @@ class BrowseNavigationStack(QStackedWidget):
         self._animation = QPropertyAnimation(self, b"geometry")
         self._animation.setDuration(300)
         self._animation.setEasingCurve(QEasingCurve.Type.OutCubic)
+
     def get_current_panel(self) -> str | None:
         """Get the name of the currently visible panel."""
         return self._current_panel

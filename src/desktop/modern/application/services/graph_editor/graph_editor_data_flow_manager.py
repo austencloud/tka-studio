@@ -5,6 +5,8 @@ Handles the complete beat selection → modification → propagation flow for th
 This service bridges graph editor changes to beat repository and UI components with real-time propagation.
 """
 
+from __future__ import annotations
+
 from dataclasses import replace
 from typing import TYPE_CHECKING, Optional
 
@@ -13,6 +15,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import MotionType
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.interfaces.core_services import ISequenceManager
@@ -32,6 +35,7 @@ class GraphEditorDataFlowManager(QObject):
         self._current_sequence: Optional[SequenceData] = None
         self._current_beat_index: Optional[int] = None
         self._sequence_service: Optional[ISequenceManager] = None
+
     def process_turn_change(
         self, beat_data: BeatData, arrow_color: str, new_turns: float
     ) -> BeatData:
@@ -105,6 +109,7 @@ class GraphEditorDataFlowManager(QObject):
             self.sequence_modified.emit(self._current_sequence)
 
         return updated_beat
+
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence"""
         return self._current_sequence

@@ -6,6 +6,8 @@ eliminating widget wrapper complexity and ensuring proper scaling
 and positioning like the legacy system.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtGui import QResizeEvent
 from PyQt6.QtWidgets import QSizePolicy
 

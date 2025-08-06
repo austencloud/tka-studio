@@ -5,14 +5,17 @@ Immutable data structures for individual beats in kinetic sequences.
 Handles beat data, motion references, and glyph information.
 """
 
-import json
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+import json
 
 # Forward reference for PictographData to avoid circular imports
 from typing import TYPE_CHECKING, Any, Optional
+import uuid
 
 from .motion_data import MotionData
+
 
 if TYPE_CHECKING:
     from .pictograph_data import PictographData
@@ -35,7 +38,7 @@ class BeatData:
     is_blank: bool = False
 
     # NEW: Optional pictograph data
-    pictograph_data: Optional["PictographData"] = None
+    pictograph_data: Optional[PictographData] = None
 
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -46,7 +49,7 @@ class BeatData:
         if self.beat_number < 0:
             raise ValueError("Beat number must be non-negative")
 
-    def update(self, **kwargs) -> "BeatData":
+    def update(self, **kwargs) -> BeatData:
         """Create a new BeatData with updated fields."""
         from dataclasses import replace
 
@@ -69,14 +72,14 @@ class BeatData:
         return self.metadata.get("letter")
 
     @property
-    def blue_motion(self) -> Optional["MotionData"]:
+    def blue_motion(self) -> Optional[MotionData]:
         """Get blue motion from pictograph data if available."""
         if self.has_pictograph and self.pictograph_data.motions:
             return self.pictograph_data.motions.get("blue")
         return None
 
     @property
-    def red_motion(self) -> Optional["MotionData"]:
+    def red_motion(self) -> Optional[MotionData]:
         """Get red motion from pictograph data if available."""
         if self.has_pictograph and self.pictograph_data.motions:
             return self.pictograph_data.motions.get("red")
@@ -84,8 +87,8 @@ class BeatData:
 
     @classmethod
     def from_pictograph(
-        cls, pictograph_data: "PictographData", beat_number: int
-    ) -> "BeatData":
+        cls, pictograph_data: PictographData, beat_number: int
+    ) -> BeatData:
         """Create BeatData from PictographData."""
         return cls(
             beat_number=beat_number,
@@ -115,7 +118,7 @@ class BeatData:
         return result
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "BeatData":
+    def from_dict(cls, data: dict[str, Any]) -> BeatData:
         """Create from dictionary."""
         # Handle pictograph data
         pictograph_data = None
@@ -147,21 +150,19 @@ class BeatData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "BeatData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> BeatData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
     @classmethod
-    def empty(cls) -> "BeatData":
+    def empty(cls) -> BeatData:
         """Create an empty beat data."""
         return cls(is_blank=True)

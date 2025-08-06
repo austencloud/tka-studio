@@ -5,6 +5,8 @@ This provides direct scaling like the legacy StartPosPickerPictographView
 without widget wrapper complexity.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtGui import QResizeEvent
 
 from .base_pictograph_view import BasePictographView

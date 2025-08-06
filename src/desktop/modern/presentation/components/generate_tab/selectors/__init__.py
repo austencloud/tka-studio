@@ -11,6 +11,8 @@ Each selector follows the GenerationControlBase pattern and provides:
 - Modern UI appearance matching the overall design
 """
 
+from __future__ import annotations
+
 from .cap_type_selector import CAPTypeSelector
 from .generation_mode_toggle import GenerationModeToggle
 from .grid_mode_selector import ModernGridModeSelector
@@ -21,13 +23,14 @@ from .prop_continuity_toggle import PropContinuityToggle
 from .slice_size_selector import SliceSizeSelector
 from .turn_intensity_selector import TurnIntensitySelector
 
+
 __all__ = [
     "CAPTypeSelector",
     "GenerationModeToggle",
-    "ModernGridModeSelector",
     "LengthSelector",
     "LetterTypeSelector",
     "LevelSelector",
+    "ModernGridModeSelector",
     "PropContinuityToggle",
     "SliceSizeSelector",
     "TurnIntensitySelector",

@@ -2,6 +2,8 @@
 Background service interfaces for dependency injection.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 

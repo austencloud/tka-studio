@@ -5,9 +5,12 @@ Framework-agnostic implementation of clipboard operations for workbench.
 Provides clipboard functionality without direct Qt dependencies in the service layer.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.workbench_services import IClipboardAdapter
+
 
 logger = logging.getLogger(__name__)
 
@@ -60,9 +63,8 @@ class WorkbenchClipboardService:
             if success:
                 logger.info(f"Text copied to clipboard: {len(text)} characters")
                 return True, "Text copied to clipboard"
-            else:
-                logger.error("Clipboard adapter failed to copy text")
-                return False, "Failed to copy text to clipboard"
+            logger.error("Clipboard adapter failed to copy text")
+            return False, "Failed to copy text to clipboard"
 
         except Exception as e:
             logger.error(f"Clipboard copy operation failed: {e}")
@@ -86,9 +88,8 @@ class WorkbenchClipboardService:
             if text is not None:
                 logger.info(f"Text retrieved from clipboard: {len(text)} characters")
                 return True, text
-            else:
-                logger.warning("No text available in clipboard")
-                return False, "No text in clipboard"
+            logger.warning("No text available in clipboard")
+            return False, "No text in clipboard"
 
         except Exception as e:
             logger.error(f"Clipboard get operation failed: {e}")

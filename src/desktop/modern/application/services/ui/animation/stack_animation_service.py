@@ -3,6 +3,8 @@ Stack animation service for QStackedWidget transitions.
 Handles single and parallel stack fade operations.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtWidgets import QStackedWidget

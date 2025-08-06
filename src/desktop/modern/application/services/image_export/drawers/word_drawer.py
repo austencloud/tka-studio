@@ -6,6 +6,8 @@ Renders word text onto exported images using exact legacy font scaling logic
 to prevent "humongous" text issues and ensure consistent visual output.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
 
@@ -16,6 +18,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     ImageExportOptions,
     IWordDrawer,
 )
+
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -31,7 +34,7 @@ class WordDrawer(IWordDrawer):
     including font scaling based on sequence length and kerning adjustments.
     """
 
-    def __init__(self, font_margin_helper: "FontMarginHelper"):
+    def __init__(self, font_margin_helper: FontMarginHelper):
         """
         Initialize the word drawer.
 

@@ -11,9 +11,12 @@ Key principles from Legacy:
 - No complex height calculations or business logic
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QHBoxLayout, QWidget
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
@@ -28,7 +31,7 @@ class OptionPickerSectionHeader(QWidget):
     Direct copy of Legacy OptionPickerSectionHeader with minimal changes.
     """
 
-    def __init__(self, section: "OptionPickerSection") -> None:
+    def __init__(self, section: OptionPickerSection) -> None:
         super().__init__()
         self.section = section
         self._setup_layout()

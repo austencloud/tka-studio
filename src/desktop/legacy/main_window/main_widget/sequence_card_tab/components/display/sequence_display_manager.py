@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 # src/main_window/main_widget/sequence_card_tab/components/display/sequence_display_manager.py
 import logging
 import os
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any,Optional
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
+
 from utils.path_helpers import get_sequence_card_image_exporter_path
 
 from ..pages.printable_layout import PaperOrientation, PaperSize
@@ -198,10 +200,15 @@ class SequenceDisplayManager:
 
         try:
             images_path = get_sequence_card_image_exporter_path()
+            images_path = get_sequence_card_image_exporter_path()
             sequences = self.sequence_loader.get_all_sequences(images_path)
             filtered_sequences = self.sequence_loader.filter_sequences_by_length(
                 sequences, selected_length
             )
+
+            # Check if we have any sequences to process
+            if not filtered_sequences:
+                return
 
             total_sequences = len(filtered_sequences)
             if total_sequences == 0:

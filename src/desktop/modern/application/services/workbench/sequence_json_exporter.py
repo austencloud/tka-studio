@@ -6,6 +6,8 @@ Follows the Single Responsibility Principle by focusing solely on
 JSON serialization and formatting.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 from typing import Any
@@ -15,6 +17,7 @@ from desktop.modern.core.interfaces.export_services import (
     ISequenceJsonExporter,
 )
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 

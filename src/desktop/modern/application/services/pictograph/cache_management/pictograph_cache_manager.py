@@ -9,6 +9,8 @@ This service handles:
 - Cache performance statistics
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional
 
@@ -17,6 +19,7 @@ from PyQt6.QtSvg import QSvgRenderer
 from desktop.modern.core.interfaces.pictograph_rendering_services import (
     IPictographCacheManager,
 )
+
 
 logger = logging.getLogger(__name__)
 

@@ -6,6 +6,8 @@ Renders user information (name, date, notes) onto exported images using
 exact legacy positioning and font scaling logic.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
 
@@ -16,6 +18,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     ImageExportOptions,
     IUserInfoDrawer,
 )
+
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -31,7 +34,7 @@ class UserInfoDrawer(IUserInfoDrawer):
     including font scaling and positioning for user name, date, and notes.
     """
 
-    def __init__(self, font_margin_helper: "FontMarginHelper"):
+    def __init__(self, font_margin_helper: FontMarginHelper):
         """
         Initialize the user info drawer.
 

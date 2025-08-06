@@ -3,13 +3,15 @@ Core Animation Engine - Framework Agnostic Implementation
 This is the canonical animation system that works across platforms.
 """
 
+from __future__ import annotations
+
 import asyncio
-import math
-import time
-import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
+import math
+import time
 from typing import Any
+import uuid
 
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     AnimationConfig,
@@ -36,8 +38,7 @@ class EasingFunctions:
         """Ease in-out cubic easing."""
         if t < 0.5:
             return 4 * t * t * t
-        else:
-            return 1 - pow(-2 * t + 2, 3) / 2
+        return 1 - pow(-2 * t + 2, 3) / 2
 
     @staticmethod
     def ease_in(t: float) -> float:
@@ -63,8 +64,8 @@ class EasingFunctions:
         if zeta < 1:  # Underdamped
             omega_d = omega * math.sqrt(1 - zeta * zeta)
             return 1 - math.exp(-zeta * omega * t) * math.cos(omega_d * t)
-        else:  # Critically damped or overdamped
-            return 1 - math.exp(-omega * t) * (1 + omega * t)
+        # Critically damped or overdamped
+        return 1 - math.exp(-omega * t) * (1 + omega * t)
 
     @classmethod
     def get_easing_function(cls, easing_type: EasingType) -> Callable[[float], float]:

@@ -5,14 +5,17 @@ Main menu bar component for the TKA modern desktop app.
 Provides navigation, settings access, and social media integration.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from ..ui.buttons.styled_button import ButtonContext, StyledButton
 from .navigation.menu_bar_navigation_widget import MenuBarNavigationWidget
+from ..ui.buttons.styled_button import ButtonContext, StyledButton
+
 
 if TYPE_CHECKING:
     pass

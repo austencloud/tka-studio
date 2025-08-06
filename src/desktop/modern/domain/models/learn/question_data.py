@@ -5,9 +5,11 @@ Represents quiz questions with content, options, and metadata
 for the learning module.
 """
 
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Any
+import uuid
 
 
 @dataclass
@@ -58,7 +60,7 @@ class QuestionData:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "QuestionData":
+    def from_dict(cls, data: dict[str, Any]) -> QuestionData:
         """
         Deserialize question from dictionary.
 

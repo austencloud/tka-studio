@@ -11,6 +11,8 @@ This provides better maintainability and testability while preserving the same
 public interface and functionality.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -31,6 +33,7 @@ from desktop.modern.presentation.views.browse.managers import (
     BrowseTabController,
 )
 from desktop.modern.presentation.views.browse.models import FilterType
+
 
 logger = logging.getLogger(__name__)
 
@@ -352,4 +355,5 @@ class BrowseTab(QWidget):
         logger.info(
             f"🎯 Immediately switched to stable sequence browser for {filter_type.value}: {filter_value}"
         )
+
     # Connect controller signals after initialization

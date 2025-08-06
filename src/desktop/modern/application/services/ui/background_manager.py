@@ -11,10 +11,13 @@ PROVIDES:
 - Background positioning and resizing
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QMainWindow
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -30,9 +33,9 @@ class IBackgroundManager(ABC):
     def setup_background(
         self,
         main_window: QMainWindow,
-        container: "DIContainer",
+        container: DIContainer,
         progress_callback: Optional[callable] = None,
-    ) -> "MainBackgroundWidget":
+    ) -> MainBackgroundWidget:
         """Setup background widget for the main window."""
 
     @abstractmethod
@@ -42,7 +45,7 @@ class IBackgroundManager(ABC):
         """Apply a background change immediately."""
 
     @abstractmethod
-    def cleanup_background(self, background_widget: "MainBackgroundWidget") -> None:
+    def cleanup_background(self, background_widget: MainBackgroundWidget) -> None:
         """Clean up background widget resources."""
 
 
@@ -61,9 +64,9 @@ class BackgroundManager(IBackgroundManager):
     def setup_background(
         self,
         main_window: QMainWindow,
-        container: "DIContainer",
+        container: DIContainer,
         progress_callback: Optional[callable] = None,
-    ) -> "MainBackgroundWidget":
+    ) -> MainBackgroundWidget:
         """Setup background widget for the main window."""
         # Don't override progress - let orchestrator handle it
 
@@ -111,7 +114,7 @@ class BackgroundManager(IBackgroundManager):
         except Exception as e:
             print(f"⚠️ Failed to change background: {e}")
 
-    def cleanup_background(self, background_widget: "MainBackgroundWidget") -> None:
+    def cleanup_background(self, background_widget: MainBackgroundWidget) -> None:
         """Clean up background widget resources."""
         if background_widget:
             # Call cleanup method if available
@@ -123,7 +126,7 @@ class BackgroundManager(IBackgroundManager):
             background_widget.deleteLater()
 
     def handle_window_resize(
-        self, main_window: QMainWindow, background_widget: "MainBackgroundWidget"
+        self, main_window: QMainWindow, background_widget: MainBackgroundWidget
     ) -> None:
         """Handle main window resize events for background positioning."""
         if background_widget:
@@ -165,7 +168,7 @@ class BackgroundManager(IBackgroundManager):
 
     def _create_background_widget(
         self, main_window: QMainWindow, background_type: str
-    ) -> "MainBackgroundWidget":
+    ) -> MainBackgroundWidget:
         """Create background widget of specified type."""
         from desktop.modern.presentation.components.backgrounds.background_widget import (
             MainBackgroundWidget,
@@ -174,7 +177,7 @@ class BackgroundManager(IBackgroundManager):
         return MainBackgroundWidget(main_window, background_type)
 
     def _position_background(
-        self, main_window: QMainWindow, background_widget: "MainBackgroundWidget"
+        self, main_window: QMainWindow, background_widget: MainBackgroundWidget
     ) -> None:
         """Position background widget to cover the main window."""
         background_widget.setGeometry(main_window.rect())

@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional
 
+
 if TYPE_CHECKING:
     from desktop.modern.domain.models.generation_models import (
         GenerationConfig,

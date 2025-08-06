@@ -5,6 +5,8 @@ This component represents a single start position choice with contemporary styli
 hover effects, and improved user interaction feedback.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QRectF, Qt, pyqtSignal
@@ -27,6 +29,7 @@ from desktop.modern.presentation.components.pictograph.views import (
 from desktop.modern.presentation.components.sequence_workbench.sequence_beat_frame.selection_overlay import (
     SelectionOverlay,
 )
+
 
 logger = logging.getLogger(__name__)
 

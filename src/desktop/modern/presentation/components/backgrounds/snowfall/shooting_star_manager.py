@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 
 from PyQt6.QtCore import Qt
@@ -77,7 +79,7 @@ class ShootingStarManager:
             if len(star["tail"]) > star["tail_length"]:
                 star["tail"].pop(0)
 
-    def draw_shooting_star(self, painter: QPainter, widget: "QWidget"):
+    def draw_shooting_star(self, painter: QPainter, widget: QWidget):
         """Draw the shooting star and its smooth tail."""
         if not self.shooting_star:
             return

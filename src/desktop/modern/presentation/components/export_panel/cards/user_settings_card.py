@@ -5,6 +5,8 @@ Handles user name and notes input for export.
 Part of the refactored export panel system.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QComboBox, QFrame, QLabel, QLineEdit, QVBoxLayout

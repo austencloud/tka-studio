@@ -122,15 +122,7 @@ class SequenceViewer(QWidget):
             box = self.browse_tab.sequence_picker.scroll_widget.thumbnail_boxes[word]
             if 0 <= var_index < len(box.state.thumbnails):
                 box.state.current_index = var_index
-                selected_thumbnail = box.state.thumbnails[var_index]
-                metadata = (
-                    self.browse_tab.metadata_extractor.extract_metadata_from_file(
-                        selected_thumbnail
-                    )
-                )
-                self.browse_tab.selection_handler.on_thumbnail_clicked(
-                    box.image_label, metadata
-                )
+                self.browse_tab.selection_handler.on_thumbnail_clicked(box.image_label)
                 return
 
         print(
@@ -146,7 +138,6 @@ class SequenceViewer(QWidget):
 
             if thumbnails:
                 var_index = max(0, min(var_index, len(thumbnails) - 1))
-                selected_thumbnail = thumbnails[var_index]
 
                 self.update_thumbnails(thumbnails)
                 self.update_preview(var_index)
@@ -198,12 +189,6 @@ class SequenceViewer(QWidget):
             # Recalculate size constraints for the thumbnail box
             if hasattr(self.thumbnail_box, "recalculate_size_constraints"):
                 self.thumbnail_box.recalculate_size_constraints()
-
-            # Recalculate image label sizing if it has the method
-            if hasattr(
-                self.thumbnail_box.image_label, "recalculate_size_for_layout_change"
-            ):
-                self.thumbnail_box.image_label.recalculate_size_for_layout_change()
 
         except Exception as e:
             import logging

@@ -6,6 +6,8 @@ Renders difficulty level indicators onto exported images using exact legacy
 sizing, positioning, and gradient logic.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QRect, Qt
@@ -15,6 +17,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     IDifficultyLevelDrawer,
     ImageExportOptions,
 )
+
 
 logger = logging.getLogger(__name__)
 

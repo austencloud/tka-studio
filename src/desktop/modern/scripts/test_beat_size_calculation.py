@@ -4,8 +4,11 @@ Test script to determine the correct beat size for modern image export
 by simulating legacy beat size calculations.
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the Python path
 src_dir = Path(__file__).parent.parent / "src"

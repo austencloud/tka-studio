@@ -5,9 +5,11 @@ Manages state transitions and validation for the learn tab following reactive pa
 Provides a single source of truth for state with proper validation and event emission.
 """
 
-import logging
+from __future__ import annotations
+
 from dataclasses import replace
 from datetime import datetime
+import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -25,6 +27,7 @@ from desktop.modern.presentation.controllers.learn.state.learn_state import (
     LearnView,
     ProgressState,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -359,19 +362,18 @@ class LearnStateManager(QObject):
 
         if isinstance(error, LessonNotAvailable):
             return ErrorType.LESSON_UNAVAILABLE
-        elif isinstance(error, SessionCreationError):
+        if isinstance(error, SessionCreationError):
             return ErrorType.SESSION_CREATION_FAILED
-        elif isinstance(error, QuestionGenerationError):
+        if isinstance(error, QuestionGenerationError):
             return ErrorType.QUESTION_GENERATION_FAILED
-        elif isinstance(error, AnswerValidationError):
+        if isinstance(error, AnswerValidationError):
             return ErrorType.ANSWER_VALIDATION_FAILED
-        elif isinstance(error, ProgressCalculationError):
+        if isinstance(error, ProgressCalculationError):
             return ErrorType.PROGRESS_CALCULATION_FAILED
-        elif isinstance(error, UIRenderingError):
+        if isinstance(error, UIRenderingError):
             return ErrorType.UI_RENDERING_FAILED
-        elif isinstance(error, NetworkError):
+        if isinstance(error, NetworkError):
             return ErrorType.NETWORK_ERROR
-        elif isinstance(error, DataCorruptionError):
+        if isinstance(error, DataCorruptionError):
             return ErrorType.DATA_CORRUPTION
-        else:
-            return ErrorType.UI_RENDERING_FAILED  # Default fallback
+        return ErrorType.UI_RENDERING_FAILED  # Default fallback

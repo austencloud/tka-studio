@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class LetterType:
     TYPE1 = "Type1"
     TYPE2 = "Type2"
@@ -42,15 +45,15 @@ class LetterType:
 
         if letter in type1_letters:
             return cls.TYPE1
-        elif letter in type2_letters:
+        if letter in type2_letters:
             return cls.TYPE2
-        elif letter in type3_letters:
+        if letter in type3_letters:
             return cls.TYPE3
-        elif letter in type4_letters:
+        if letter in type4_letters:
             return cls.TYPE4
-        elif letter in type5_letters:
+        if letter in type5_letters:
             return cls.TYPE5
-        elif letter in type6_letters:
+        if letter in type6_letters:
             return cls.TYPE6
         return cls.TYPE1
 

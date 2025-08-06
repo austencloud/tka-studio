@@ -4,11 +4,14 @@ Image Loading Components for Sequence Cards
 Handles background image loading for sequence card widgets.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
 from PyQt6.QtCore import QThread, pyqtSignal
 from PyQt6.QtGui import QPixmap
+
 
 logger = logging.getLogger(__name__)
 

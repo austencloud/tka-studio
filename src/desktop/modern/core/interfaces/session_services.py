@@ -5,11 +5,13 @@ Defines interfaces for session state management in TKA applications.
 Provides auto-save/restore functionality for user workflow continuity.
 """
 
-import uuid
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
+import uuid
 
 
 @dataclass

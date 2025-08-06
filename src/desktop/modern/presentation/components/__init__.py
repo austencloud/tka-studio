@@ -5,6 +5,8 @@ This module provides the foundation classes and utilities for all modern UI comp
 in the TKA Desktop application.
 """
 
+from __future__ import annotations
+
 from .component_base import (
     AsyncViewableComponentBase,
     ComponentBase,
@@ -12,9 +14,10 @@ from .component_base import (
     ViewableComponentBase,
 )
 
+
 __all__ = [
-    "ViewableComponentBase",
     "AsyncViewableComponentBase",
     "ComponentBase",
     "IComponent",
+    "ViewableComponentBase",
 ]

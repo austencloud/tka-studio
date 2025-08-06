@@ -3,9 +3,12 @@
 Test script to debug letter type determination.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Use the same path setup as the main application
 current_file = Path(__file__).resolve()

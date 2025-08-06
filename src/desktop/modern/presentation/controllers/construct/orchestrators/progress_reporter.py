@@ -5,6 +5,8 @@ Manages initialization progress reporting across components.
 This is Qt-agnostic and focuses on progress coordination.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 
@@ -67,12 +69,9 @@ class ProgressReporter:
             mapped_progress = int(76 + (progress_percent * 6))
             if self.progress_callback:
                 self.progress_callback(mapped_progress, f"Option picker: {message}")
-        else:
-            # Use current phase for other components
-            if self.current_phase:
-                self.update_phase_progress(
-                    self.current_phase, progress_percent, message
-                )
+        # Use current phase for other components
+        elif self.current_phase:
+            self.update_phase_progress(self.current_phase, progress_percent, message)
 
     def report_error(self, component_name: str, error_message: str):
         """Report an error during component initialization."""

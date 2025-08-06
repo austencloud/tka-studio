@@ -5,20 +5,22 @@ Handles start position operations and management.
 Responsible for setting, updating, and managing start positions in sequences.
 """
 
+from __future__ import annotations
+
 from abc import ABCMeta
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
+from shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.sequence_data_services import (
     ISequenceStartPositionManager,
 )
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.beat_data import BeatData
-from shared.application.services.data.modern_to_legacy_converter import (
-    ModernToLegacyConverter,
-)
-from shared.application.services.sequence.sequence_persister import SequencePersister
 
 
 class QObjectABCMeta(type(QObject), ABCMeta):

@@ -5,17 +5,19 @@ Single Responsibility: Coordinating beat operations using focused services.
 Replaces the monolithic SequenceBeatOperations God Object.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
 from shared.application.services.sequence.sequence_persister import SequencePersister
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 from .beat_creation_service import BeatCreationService
 from .beat_sequence_service import BeatSequenceService
@@ -331,8 +333,7 @@ class BeatOperationCoordinator(QObject):
                     if sequence:
                         print(f"   Sequence length: {sequence.length}")
                     return sequence
-                else:
-                    print("   ❌ Workbench is None or has no get_sequence method")
+                print("   ❌ Workbench is None or has no get_sequence method")
             except Exception as e:
                 print(f"❌ Error getting current sequence: {e}")
                 import traceback

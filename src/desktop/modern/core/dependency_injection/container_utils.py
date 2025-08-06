@@ -5,7 +5,10 @@ Provides utility functions for working with the dependency injection container,
 including initialization helpers for testing and development.
 """
 
+from __future__ import annotations
+
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -166,10 +169,11 @@ def create_test_container():
         RuntimeError: If container creation or service registration fails
     """
     try:
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
         from shared.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
+
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         # Create fresh container
         container = DIContainer()

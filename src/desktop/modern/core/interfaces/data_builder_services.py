@@ -5,6 +5,8 @@ Interface definitions for data building and factory services following TKA's cle
 These interfaces complete the coverage for data building and factory operations.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -347,7 +349,7 @@ class IGlyphDataService(ABC):
     """Interface for glyph data services."""
 
     @abstractmethod
-    def determine_glyph_data(self, pictograph_data: "PictographData") -> None:
+    def determine_glyph_data(self, pictograph_data: PictographData) -> None:
         """
         Determine glyph data from pictograph information.
 
@@ -359,7 +361,7 @@ class IGlyphDataService(ABC):
         """
 
     @abstractmethod
-    def determine_glyph_data_from_beat(self, beat_data: "BeatData") -> None:
+    def determine_glyph_data_from_beat(self, beat_data: BeatData) -> None:
         """
         Backward compatibility method to determine glyph data from beat data.
 
@@ -371,17 +373,15 @@ class IGlyphDataService(ABC):
         """
 
     @abstractmethod
-    def _beat_data_to_pictograph_data(self, beat_data: "BeatData") -> "PictographData":
+    def _beat_data_to_pictograph_data(self, beat_data: BeatData) -> PictographData:
         """Convert BeatData to PictographData for glyph processing."""
 
     @abstractmethod
-    def _determine_letter_type(self, letter: str) -> Optional["LetterType"]:
+    def _determine_letter_type(self, letter: str) -> Optional[LetterType]:
         """Determine the letter type from the letter string."""
 
     @abstractmethod
-    def _determine_vtg_mode(
-        self, pictograph_data: "PictographData"
-    ) -> Optional["VTGMode"]:
+    def _determine_vtg_mode(self, pictograph_data: PictographData) -> Optional[VTGMode]:
         """
         Determine VTG mode from motion data.
 
@@ -391,24 +391,20 @@ class IGlyphDataService(ABC):
 
     @abstractmethod
     def _motions_same_direction(
-        self, blue_motion: "MotionData", red_motion: "MotionData"
+        self, blue_motion: MotionData, red_motion: MotionData
     ) -> bool:
         """Check if two motions are in the same direction."""
 
     @abstractmethod
-    def _determine_timing(
-        self, blue_motion: "MotionData", red_motion: "MotionData"
-    ) -> str:
+    def _determine_timing(self, blue_motion: MotionData, red_motion: MotionData) -> str:
         """Determine if motions are split, together, or quarter pattern."""
 
     @abstractmethod
-    def _vtg_to_elemental(
-        self, vtg_mode: Optional["VTGMode"]
-    ) -> Optional["ElementalType"]:
+    def _vtg_to_elemental(self, vtg_mode: Optional[VTGMode]) -> Optional[ElementalType]:
         """Convert VTG mode to elemental type."""
 
     @abstractmethod
     def _determine_positions(
-        self, pictograph_data: "PictographData"
+        self, pictograph_data: PictographData
     ) -> tuple[Optional[str], Optional[str]]:
         """Determine start and end positions from pictograph data."""

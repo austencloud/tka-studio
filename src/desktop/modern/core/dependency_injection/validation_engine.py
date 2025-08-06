@@ -9,9 +9,12 @@ Handles:
 - Type safety validation
 """
 
+from __future__ import annotations
+
 import inspect
 import logging
 from typing import Any, get_type_hints
+
 
 try:
     from ..exceptions import DependencyInjectionError

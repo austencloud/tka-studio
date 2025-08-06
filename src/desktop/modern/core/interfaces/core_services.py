@@ -4,11 +4,14 @@ Core service interfaces for Kinetic Constructor.
 These interfaces define the contracts for core services, replacing tightly-coupled dependencies.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from desktop.modern.core.types import Size
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -406,7 +409,7 @@ class IDataServiceRegistrar(ABC):
     """
 
     @abstractmethod
-    def register_services(self, container: "DIContainer") -> None:
+    def register_services(self, container: DIContainer) -> None:
         """Register all data services in the DI container."""
 
     @abstractmethod

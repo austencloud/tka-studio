@@ -5,6 +5,8 @@ These interfaces define the contracts for start position services
 that follow TKA's clean architecture principles.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

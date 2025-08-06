@@ -2,8 +2,10 @@
 Layout component style providers (menu bar, tabs, dialogs, panels).
 """
 
-from ..core.types import StyleVariant
+from __future__ import annotations
+
 from . import StyleProvider
+from ..core.types import StyleVariant
 
 
 class MenuBarStyleProvider(StyleProvider):

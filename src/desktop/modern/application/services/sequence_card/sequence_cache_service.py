@@ -4,16 +4,19 @@ Sequence Card Cache Service Implementation
 Multi-level LRU caching with memory management.
 """
 
+from __future__ import annotations
+
 import gc
 import logging
-import time
 from pathlib import Path
+import time
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     CacheLevel,
     CacheStats,
     ISequenceCardCacheService,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -72,16 +75,14 @@ class SequenceCardCacheService(ISequenceCardCacheService):
             if result:
                 self.stats.raw_cache_hits += 1
                 return result
-            else:
-                self.stats.raw_cache_misses += 1
+            self.stats.raw_cache_misses += 1
         else:
             # Check scaled cache
             result = self.scaled_cache.get(cache_key)
             if result:
                 self.stats.scaled_cache_hits += 1
                 return result
-            else:
-                self.stats.scaled_cache_misses += 1
+            self.stats.scaled_cache_misses += 1
 
         return None
 

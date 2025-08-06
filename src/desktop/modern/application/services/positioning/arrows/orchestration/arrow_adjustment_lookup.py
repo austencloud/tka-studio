@@ -20,12 +20,10 @@ USAGE:
     adjustment = lookup_service.get_base_adjustment(pictograph_data, motion_data, letter)
 """
 
+from __future__ import annotations
+
 import logging
 
-from desktop.modern.core.types.coordinates import qpoint_to_point
-from desktop.modern.core.types.geometry import Point
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
 from shared.application.services.positioning.arrows.key_generators.attribute_key_generator import (
     AttributeKeyGenerator,
 )
@@ -46,6 +44,12 @@ from shared.application.services.positioning.arrows.placement.special_placement_
 from shared.application.services.positioning.arrows.placement.special_placement_service import (
     SpecialPlacementService,
 )
+
+from desktop.modern.core.types.coordinates import qpoint_to_point
+from desktop.modern.core.types.geometry import Point
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 

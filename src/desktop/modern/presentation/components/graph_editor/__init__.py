@@ -23,6 +23,8 @@ Usage:
 """
 
 # Main public API
+from __future__ import annotations
+
 from .components.adjustment_panel import AdjustmentPanel
 
 # UI components (for compatibility)
@@ -33,6 +35,7 @@ from .managers.layout_manager import GraphEditorLayoutManager
 # Individual components (for advanced usage and testing)
 from .managers.signal_coordinator import GraphEditorSignalCoordinator
 from .managers.state_manager import GraphEditorStateManager
+
 
 __all__ = [
     # Main public API

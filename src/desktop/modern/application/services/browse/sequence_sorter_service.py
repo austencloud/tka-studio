@@ -4,6 +4,8 @@ Sequence Sorter Service
 Service for sorting sequences and grouping them into sections.
 """
 
+from __future__ import annotations
+
 from datetime import datetime
 
 from desktop.modern.core.interfaces.browse_services import ISequenceSorter
@@ -60,21 +62,19 @@ class SequenceSorterService(ISequenceSorter):
         """Get the section key for a sequence based on sort method."""
         if sort_method == "alphabetical":
             return sequence.word[0].upper() if sequence.word else "?"
-        elif sort_method == "length":
+        if sort_method == "length":
             return (
                 f"Length {sequence.sequence_length}"
                 if sequence.sequence_length
                 else "Unknown Length"
             )
-        elif sort_method == "level":
+        if sort_method == "level":
             return f"Level {sequence.level}" if sequence.level else "Unknown Level"
-        elif sort_method == "date_added":
+        if sort_method == "date_added":
             if sequence.date_added:
                 return sequence.date_added.strftime("%m-%d-%Y")
-            else:
-                return "Unknown"
-        else:
-            return sequence.word[0].upper() if sequence.word else "?"
+            return "Unknown"
+        return sequence.word[0].upper() if sequence.word else "?"
 
     def get_section_display_order(self, sort_method: str) -> list[str]:
         """Get the preferred display order for sections based on sort method."""
@@ -82,15 +82,14 @@ class SequenceSorterService(ISequenceSorter):
             # Return alphabetical order A-Z, with special characters at end
             letters = [chr(i) for i in range(ord("A"), ord("Z") + 1)]
             return letters + ["?"]
-        elif sort_method == "length":
+        if sort_method == "length":
             # Return numerical order for lengths
             # This would need to be determined dynamically from actual data
             return []  # Let natural dict order handle this
-        elif sort_method == "level":
+        if sort_method == "level":
             # Return level order 1, 2, 3, etc.
             return [f"Level {i}" for i in range(1, 11)] + ["Unknown Level"]
-        elif sort_method == "date_added":
+        if sort_method == "date_added":
             # Return reverse chronological order (most recent first)
             return []  # Let natural dict order handle this
-        else:
-            return []
+        return []

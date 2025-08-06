@@ -5,8 +5,10 @@ Handles layout calculations and responsive design.
 Replicates legacy system's exact page sizing and grid layout specifications.
 """
 
-import logging
+from __future__ import annotations
+
 from enum import Enum
+import logging
 
 from PyQt6.QtCore import QRect, QSize
 
@@ -14,6 +16,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
     GridDimensions,
     ISequenceCardLayoutService,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -127,12 +130,9 @@ class SequenceCardLayoutService(ISequenceCardLayoutService):
         if sequence_length in self.GRID_MAPPINGS:
             cols, rows = self.GRID_MAPPINGS[sequence_length]
             return GridDimensions(columns=cols, rows=rows, total_positions=cols * rows)
-        else:
-            # Default fallback for unknown lengths
-            logger.warning(
-                f"Unknown sequence length {sequence_length}, using default grid"
-            )
-            return GridDimensions(columns=4, rows=4, total_positions=16)
+        # Default fallback for unknown lengths
+        logger.warning(f"Unknown sequence length {sequence_length}, using default grid")
+        return GridDimensions(columns=4, rows=4, total_positions=16)
 
     def calculate_page_size(
         self, available_width: int, column_count: int

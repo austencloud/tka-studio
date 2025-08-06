@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from PyQt6.QtGui import QPixmap
 
 from ..shared.asset_paths import AssetPathResolver

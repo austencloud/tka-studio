@@ -7,13 +7,8 @@ Supports both snake_case (Python) and camelCase (JSON/TypeScript) conventions.
 """
 
 # Import serialization utilities
+from __future__ import annotations
 
-from ..serialization import (
-    dataclass_to_camel_dict,
-    dict_from_camel_case,
-    domain_model_from_json,
-    domain_model_to_json,
-)
 from .arrow_data import ArrowData, ArrowType  # Export pictograph models
 from .beat_data import BeatData
 
@@ -45,6 +40,13 @@ from .positioning_results import (  # Export positioning models
 )
 from .prop_data import PropData, PropType
 from .sequence_data import SequenceData
+from ..serialization import (
+    dataclass_to_camel_dict,
+    dict_from_camel_case,
+    domain_model_from_json,
+    domain_model_to_json,
+)
+
 
 # Import serialization utilities
 try:
@@ -125,14 +127,14 @@ if _GENERATION_AVAILABLE:
 if _SETTINGS_AVAILABLE:
     __all__.extend(
         [
-            "UserProfileData",
-            "VisibilitySettingsData",
-            "BeatLayoutData",
-            "ImageExportSettingsData",
-            "CodexExportSettingsData",
-            "GlobalSettingsData",
-            "SettingsData",
             "DEFAULT_SETTINGS",
             "BackgroundType",
+            "BeatLayoutData",
+            "CodexExportSettingsData",
+            "GlobalSettingsData",
+            "ImageExportSettingsData",
+            "SettingsData",
+            "UserProfileData",
+            "VisibilitySettingsData",
         ]
     )

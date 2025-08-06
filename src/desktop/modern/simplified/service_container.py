@@ -3,8 +3,11 @@ Simple Service Container - Replaces complex DI system
 Single responsibility: Hold and provide service instances
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Any, Optional, TypeVar
+from typing import Any, TypeVar
+
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")
@@ -58,16 +61,18 @@ class ServiceContainer:
             self.register(ISequenceDataService, FileBasedSequenceDataService)
 
             # Layout services
-            from desktop.modern.core.interfaces.core_services import ILayoutService
             from shared.application.services.layout.layout_manager import LayoutManager
+
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             self.register(ILayoutService, LayoutManager)
 
             # Pictograph services
-            from desktop.modern.core.interfaces.core_services import IPictographManager
             from shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
+
+            from desktop.modern.core.interfaces.core_services import IPictographManager
 
             self.register(IPictographManager, PictographCSVManager)
 
@@ -80,10 +85,11 @@ class ServiceContainer:
             self.register(ISequenceManager, SequenceBeatOperations)
 
             # UI services
-            from desktop.modern.core.interfaces.core_services import IUIStateManager
             from shared.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
+
+            from desktop.modern.core.interfaces.core_services import IUIStateManager
 
             self.register(IUIStateManager, UICoordinator)
 
@@ -179,4 +185,6 @@ class ServiceContainer:
         except Exception as e:
             logger.error(f"❌ Failed to create {service_class.__name__}: {e}")
             raise
+
+
 # Global container instance for backward compatibility

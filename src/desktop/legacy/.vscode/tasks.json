@@ -2,33 +2,38 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Format with Ruff + autopep8",
+            "label": "Fix Line Length",
             "type": "shell",
             "command": "C:/Users/Austen/AppData/Local/Programs/Python/Python313/python.exe",
             "args": [
-                "-m", "autopep8",
-                "--in-place",
-                "--select=E501",
-                "--max-line-length=88",
+                "fix_line_length.py",
                 "${file}"
             ],
             "group": "build",
             "presentation": {
                 "echo": true,
-                "reveal": "silent",
+                "reveal": "always",
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false
             },
-            "dependsOn": "Ruff Format",
             "problemMatcher": []
+        },
+        {
+            "label": "Format with Ruff + Fix Lines",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Ruff Format",
+                "Fix Line Length"
+            ]
         },
         {
             "label": "Ruff Format",
             "type": "shell",
-            "command": "ruff",
+            "command": "C:/Users/Austen/AppData/Local/Programs/Python/Python313/python.exe",
             "args": [
+                "-m", "ruff",
                 "format",
                 "${file}"
             ],

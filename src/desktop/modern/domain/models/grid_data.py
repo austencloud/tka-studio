@@ -1,5 +1,7 @@
-import json
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+import json
 from typing import Any
 
 from desktop.modern.domain.models.enums import GridMode
@@ -33,7 +35,7 @@ class GridData:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "GridData":
+    def from_dict(cls, data: dict[str, Any]) -> GridData:
         """Create from dictionary."""
         return cls(
             grid_mode=GridMode(data.get("grid_mode", "diamond")),
@@ -55,16 +57,14 @@ class GridData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "GridData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> GridData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

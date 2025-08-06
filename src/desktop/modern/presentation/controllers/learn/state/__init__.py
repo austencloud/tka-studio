@@ -6,6 +6,8 @@ This package implements modern state management patterns with clear separation
 of concerns and predictable state transitions.
 """
 
+from __future__ import annotations
+
 from desktop.modern.presentation.managers.learn.learn_state_manager import (
     LearnStateManager,
 )
@@ -33,6 +35,7 @@ from .learn_state import (
     ProgressState,
     UIState,
 )
+
 
 __all__ = [
     # State models

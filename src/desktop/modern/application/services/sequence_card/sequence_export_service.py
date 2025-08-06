@@ -4,14 +4,17 @@ Sequence Card Export Service Implementation
 Handles export and regeneration of sequence card images.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardExportService,
 )
+
 
 logger = logging.getLogger(__name__)
 

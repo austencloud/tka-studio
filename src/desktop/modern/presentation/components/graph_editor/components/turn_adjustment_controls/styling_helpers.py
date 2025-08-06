@@ -7,6 +7,9 @@ and turn adjustment controls with modern 2025 design principles.
 """
 
 # Unified Design Constants
+from __future__ import annotations
+
+
 UNIFIED_BUTTON_WIDTH = 75
 UNIFIED_BUTTON_HEIGHT = 55
 UNIFIED_BORDER_RADIUS = 10
@@ -24,14 +27,14 @@ def get_unified_color_scheme(color: str) -> dict:
             "gradient_end": "rgba(74, 144, 226, 0.2)",
             "border_color": "rgba(74, 144, 226, 0.6)",
         }
-    else:  # red
-        return {
-            "base_rgb": "231, 76, 60",
-            "hover_rgb": "251, 96, 80",
-            "gradient_start": "rgba(231, 76, 60, 0.5)",
-            "gradient_end": "rgba(231, 76, 60, 0.2)",
-            "border_color": "rgba(231, 76, 60, 0.6)",
-        }
+    # red
+    return {
+        "base_rgb": "231, 76, 60",
+        "hover_rgb": "251, 96, 80",
+        "gradient_start": "rgba(231, 76, 60, 0.5)",
+        "gradient_end": "rgba(231, 76, 60, 0.2)",
+        "border_color": "rgba(231, 76, 60, 0.6)",
+    }
 
 
 def apply_modern_panel_styling(panel, color):

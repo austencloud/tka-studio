@@ -5,8 +5,10 @@ Handles all tab creation in a consistent, upfront manner.
 Replaces complex on-demand tab creation in TabManagementService.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -15,6 +17,7 @@ from PyQt6.QtWidgets import QWidget
 from desktop.modern.core.error_handling import StandardErrorHandler
 
 from ..error_recovery.ui_error_recovery_service import UIErrorRecoveryService
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -55,6 +58,7 @@ class TabFactory:
                 "construct", "🔧 Construct", self._create_construct_tab, True
             ),
             TabDefinition("browse", "🔍 Browse", self._create_browse_tab, True),
+            TabDefinition("write", "✍️ Write", self._create_write_tab, True),
             TabDefinition("learn", "🧠 Learn", self._create_learn_tab, False),
             TabDefinition(
                 "sequence_card",
@@ -64,7 +68,7 @@ class TabFactory:
             ),
         ]
 
-    def create_all_tabs(self, container: "DIContainer") -> dict[str, dict[str, any]]:
+    def create_all_tabs(self, container: DIContainer) -> dict[str, dict[str, any]]:
         """
         Create all tabs upfront with consistent error handling.
 
@@ -127,7 +131,7 @@ class TabFactory:
         """Get a previously created tab by ID."""
         return self.created_tabs.get(tab_id)
 
-    def _create_construct_tab(self, container: "DIContainer") -> QWidget:
+    def _create_construct_tab(self, container: DIContainer) -> QWidget:
         """Create the construct tab using the new simplified architecture."""
         try:
             # Try to use the new simplified construct tab
@@ -149,7 +153,7 @@ class TabFactory:
 
             return ConstructTab(container=container)
 
-    def _create_browse_tab(self, container: "DIContainer") -> QWidget:
+    def _create_browse_tab(self, container: DIContainer) -> QWidget:
         """Create the browse tab."""
         from desktop.modern.presentation.views.browse.browse_tab import BrowseTab
 
@@ -167,7 +171,13 @@ class TabFactory:
             container=container,
         )
 
-    def _create_learn_tab(self, container: "DIContainer") -> QWidget:
+    def _create_write_tab(self, container: DIContainer) -> QWidget:
+        """Create the write tab."""
+        from desktop.modern.presentation.views.write import WriteTab
+
+        return WriteTab(container=container)
+
+    def _create_learn_tab(self, container: DIContainer) -> QWidget:
         """Create the learn tab."""
         try:
             from desktop.modern.presentation.views.learn import LearnTab
@@ -177,7 +187,7 @@ class TabFactory:
             # If learn tab can't be resolved, create placeholder
             return self._create_placeholder_tab("learn")
 
-    def _create_sequence_card_tab(self, container: "DIContainer") -> QWidget:
+    def _create_sequence_card_tab(self, container: DIContainer) -> QWidget:
         """Create the sequence card tab."""
         try:
             from desktop.modern.presentation.views.sequence_card import SequenceCardTab
@@ -224,13 +234,40 @@ class TabFactory:
             return self.error_recovery.create_fallback_construct_tab(
                 f"Failed to create full {tab_def.tab_id} tab"
             )
-        elif tab_def.tab_id == "browse":
+        if tab_def.tab_id == "browse":
             return self.error_recovery.create_fallback_browse_tab(
                 f"Failed to create full {tab_def.tab_id} tab"
             )
-        else:
-            # For other tabs, create placeholder
-            return self._create_placeholder_tab(tab_def.tab_id)
+        if tab_def.tab_id == "write":
+            # For write, create a basic fallback with error message
+            from PyQt6.QtCore import Qt
+            from PyQt6.QtGui import QFont
+            from PyQt6.QtWidgets import QLabel, QVBoxLayout
+
+            fallback = QWidget()
+            layout = QVBoxLayout(fallback)
+            layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            label = QLabel("⚠️ Write Tab Error\n\nFailed to load write tab services")
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            label.setFont(QFont("Segoe UI", 16, QFont.Weight.Medium))
+            label.setStyleSheet(
+                """
+                QLabel {
+                    color: rgba(255, 255, 255, 0.8);
+                    background: rgba(40, 40, 40, 0.3);
+                    border: 2px dashed rgba(255, 100, 100, 0.5);
+                    border-radius: 10px;
+                    padding: 40px;
+                    margin: 20px;
+                }
+            """
+            )
+
+            layout.addWidget(label)
+            return fallback
+        # For other tabs, create placeholder
+        return self._create_placeholder_tab(tab_def.tab_id)
 
     def get_tab_definitions(self) -> list[TabDefinition]:
         """Get all tab definitions."""

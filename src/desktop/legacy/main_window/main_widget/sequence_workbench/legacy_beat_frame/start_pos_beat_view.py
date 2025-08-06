@@ -1,5 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QGraphicsTextItem
 
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
@@ -7,18 +12,13 @@ from base_widgets.pictograph.elements.views.beat_view import (
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
     LegacyStartPositionBeat,
 )
-from PyQt6.QtCore import QPointF
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QGraphicsTextItem
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
-        LegacyBeatFrame,
-    )
+    from base_widgets.base_beat_frame import BaseBeatFrame
 
 
 class StartPositionBeatView(LegacyBeatView):
-    def __init__(self, beat_frame: "LegacyBeatFrame") -> None:
+    def __init__(self, beat_frame: "BaseBeatFrame") -> None:
         self.beat_frame = beat_frame
         super().__init__(beat_frame)
         self.is_start_pos = True

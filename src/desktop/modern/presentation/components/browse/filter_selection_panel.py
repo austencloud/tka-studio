@@ -9,9 +9,8 @@ Features:
 - Maintains all existing filter functionality
 """
 
-from application.services.browse.dictionary_data_manager import (
-    DictionaryDataManager,
-)
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont, QResizeEvent
 from PyQt6.QtWidgets import (
@@ -24,6 +23,9 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from application.services.browse.dictionary_data_manager import (
+    DictionaryDataManager,
+)
 from desktop.modern.application.services.browse.browse_service import (
     BrowseService,
 )

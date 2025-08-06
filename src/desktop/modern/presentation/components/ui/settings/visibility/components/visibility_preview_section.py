@@ -5,6 +5,8 @@ Focused component handling interactive pictograph preview management.
 Extracted from the monolithic visibility tab following TKA clean architecture principles.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -15,6 +17,7 @@ from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 from desktop.modern.presentation.components.ui.settings.visibility.visibility_pictograph_preview import (
     VisibilityPictographPreview,
 )
+
 
 logger = logging.getLogger(__name__)
 

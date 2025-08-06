@@ -6,18 +6,13 @@ with Qt-specific presentation, maintaining backward compatibility while
 enabling framework independence.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
-
-# Import the Qt render engine from existing adapter
-from desktop.modern.application.adapters.qt_pictograph_adapter import (
-    QtRenderEngine,
-    QtTypeConverter,
-)
-from desktop.modern.domain.models import MotionData, PictographData
 
 # Import the framework-agnostic services
 from shared.application.services.core.pictograph_orchestration_service import (
@@ -27,6 +22,14 @@ from shared.application.services.core.pictograph_rendering.real_asset_provider i
     create_real_asset_provider,
 )
 from shared.application.services.core.types import Point, Size
+
+# Import the Qt render engine from existing adapter
+from desktop.modern.application.adapters.qt_pictograph_adapter import (
+    QtRenderEngine,
+    QtTypeConverter,
+)
+from desktop.modern.domain.models import MotionData, PictographData
+
 
 logger = logging.getLogger(__name__)
 

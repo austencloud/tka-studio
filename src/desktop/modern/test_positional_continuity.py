@@ -4,9 +4,12 @@ Test script to verify positional continuity in sequence generation.
 This script tests that generated sequences have proper positional flow.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Use the same path setup as the main application
 current_file = Path(__file__).resolve()
@@ -22,6 +25,7 @@ from desktop.modern.application.services.generation.freeform_generation_service 
 )
 from desktop.modern.core.interfaces.generation_services import PropContinuity
 from desktop.modern.domain.models.generation_models import GenerationConfig
+
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
@@ -100,39 +104,36 @@ def test_positional_continuity():
             for error in continuity_errors:
                 print(f"   - {error}")
             return False
-        else:
-            print("✅ POSITIONAL CONTINUITY TEST PASSED")
+        print("✅ POSITIONAL CONTINUITY TEST PASSED")
+        print(f"   All {len(generated_beats)} beats maintain proper positional flow!")
+
+        # Additional test: Check if pictograph data has all required fields for rendering
+        print("\n4. Checking pictograph data completeness for rendering...")
+        for i, beat in enumerate(generated_beats):
+            print(f"   Beat {i + 1} ({beat.letter}):")
+            print(f"     - Letter: {beat.letter}")
+            print(f"     - Letter Type: {beat.letter_type}")
+            print(f"     - Start Position: {beat.start_position}")
+            print(f"     - End Position: {beat.end_position}")
             print(
-                f"   All {len(generated_beats)} beats maintain proper positional flow!"
+                f"     - Motions: {list(beat.motions.keys()) if beat.motions else 'None'}"
             )
+            print(
+                f"     - Arrows: {list(beat.arrows.keys()) if beat.arrows else 'None'}"
+            )
+            print(f"     - Grid Data: {'Present' if beat.grid_data else 'Missing'}")
 
-            # Additional test: Check if pictograph data has all required fields for rendering
-            print("\n4. Checking pictograph data completeness for rendering...")
-            for i, beat in enumerate(generated_beats):
-                print(f"   Beat {i + 1} ({beat.letter}):")
-                print(f"     - Letter: {beat.letter}")
-                print(f"     - Letter Type: {beat.letter_type}")
-                print(f"     - Start Position: {beat.start_position}")
-                print(f"     - End Position: {beat.end_position}")
-                print(
-                    f"     - Motions: {list(beat.motions.keys()) if beat.motions else 'None'}"
-                )
-                print(
-                    f"     - Arrows: {list(beat.arrows.keys()) if beat.arrows else 'None'}"
-                )
-                print(f"     - Grid Data: {'Present' if beat.grid_data else 'Missing'}")
+            # Check if motion data is complete
+            if beat.motions:
+                for color, motion in beat.motions.items():
+                    if motion:
+                        print(
+                            f"     - {color.title()} Motion: {motion.motion_type} from {motion.start_loc} to {motion.end_loc}"
+                        )
+                    else:
+                        print(f"     - {color.title()} Motion: None")
 
-                # Check if motion data is complete
-                if beat.motions:
-                    for color, motion in beat.motions.items():
-                        if motion:
-                            print(
-                                f"     - {color.title()} Motion: {motion.motion_type} from {motion.start_loc} to {motion.end_loc}"
-                            )
-                        else:
-                            print(f"     - {color.title()} Motion: None")
-
-            return True
+        return True
 
     except Exception as e:
         print(f"❌ Test failed with exception: {e}")

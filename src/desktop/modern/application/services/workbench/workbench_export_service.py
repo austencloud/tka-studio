@@ -6,8 +6,10 @@ Now acts as an orchestrator that coordinates specialized export services
 rather than handling all responsibilities itself.
 """
 
-import logging
+from __future__ import annotations
+
 from datetime import datetime
+import logging
 from pathlib import Path
 
 from PyQt6.QtCore import QObject
@@ -27,6 +29,7 @@ from .export_container_manager import ExportContainerManager
 from .export_directory_service import ExportDirectoryService
 from .sequence_data_transformer import SequenceDataTransformer
 from .sequence_json_exporter import SequenceJsonExporter
+
 
 logger = logging.getLogger(__name__)
 
@@ -143,9 +146,8 @@ class WorkbenchExportService(QObject):
                 if result.success:
                     logger.info(f"Sequence image exported to: {file_path}")
                     return True, file_path
-                else:
-                    logger.error(f"Image export failed: {result.error_message}")
-                    return False, result.error_message
+                logger.error(f"Image export failed: {result.error_message}")
+                return False, result.error_message
 
             except Exception as e:
                 logger.error(f"Image export failed with exception: {e}")
@@ -160,9 +162,11 @@ class WorkbenchExportService(QObject):
         except Exception as e:
             logger.error(f"Image export failed: {e}")
             return False, f"Image export failed: {e}"
+
     def get_export_directory(self) -> str:
         """Get the directory where exports are saved."""
         return self._directory_service.get_export_directory()
+
     def _create_fallback_placeholder(
         self, file_path: str, word: str, beat_count: int, error: Exception
     ) -> tuple[bool, str]:

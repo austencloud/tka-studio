@@ -4,8 +4,10 @@ Sequence Card Data Service Implementation
 Handles file system operations, metadata extraction, and data validation.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +15,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDataService,
     SequenceCardData,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -86,9 +89,8 @@ class SequenceCardDataService(ISequenceCardDataService):
                 return self.metadata_extractor.extract_metadata_from_image(
                     str(image_path)
                 )
-            else:
-                # Mock metadata extraction
-                return self._extract_mock_metadata(image_path)
+            # Mock metadata extraction
+            return self._extract_mock_metadata(image_path)
         except Exception as e:
             logger.warning(f"Error extracting metadata from {image_path}: {e}")
             return {"sequence_length": 0, "is_favorite": False, "tags": []}

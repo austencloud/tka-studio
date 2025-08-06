@@ -5,6 +5,8 @@ Navigation component for the TKA modern desktop app with tab management.
 Provides clean button-based navigation between different application sections.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
@@ -13,6 +15,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from ...ui.buttons.styled_button import ButtonContext, StyledButton
+
 
 if TYPE_CHECKING:
     pass
@@ -33,6 +36,7 @@ class MenuBarNavigationWidget(QWidget):
         self.tab_config = [
             {"name": "construct", "label": "Construct ⚒️"},
             {"name": "browse", "label": "Browse 🔍"},
+            {"name": "write", "label": "Write ✍️"},
             {"name": "learn", "label": "Learn 🧠"},
             {"name": "sequence_card", "label": "Sequence Card 📋"},
         ]

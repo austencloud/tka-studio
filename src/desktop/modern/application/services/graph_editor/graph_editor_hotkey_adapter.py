@@ -8,12 +8,15 @@ This adapter implements the Adapter Pattern to bridge between Qt signals
 and the pure service layer, maintaining proper service separation.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 
 from .graph_editor_hotkey_manager import GraphEditorHotkeyManager
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
@@ -33,7 +36,7 @@ class GraphEditorHotkeyAdapter(QObject):
     special_placement_removal_requested = pyqtSignal(str)  # arrow_id
     prop_placement_override_requested = pyqtSignal(str)  # arrow_id
 
-    def __init__(self, graph_service: "IGraphEditorService", parent=None):
+    def __init__(self, graph_service: IGraphEditorService, parent=None):
         super().__init__(parent)
 
         # Create callback handler that bridges to Qt signals

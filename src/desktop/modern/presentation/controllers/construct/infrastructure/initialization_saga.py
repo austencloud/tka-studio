@@ -5,17 +5,20 @@ Implements saga pattern using existing command system for transactional
 initialization with compensation and rollback capabilities.
 """
 
-import logging
-import time
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
+import logging
+import time
 from typing import Any
 from uuid import uuid4
 
 from desktop.modern.core.events.domain_events import UIStateChangedEvent
 from desktop.modern.core.events.event_bus import IEventBus, get_event_bus
+
 
 logger = logging.getLogger(__name__)
 
@@ -511,7 +514,9 @@ class ConstructTabInitializationSaga:
         self.event_bus.publish(event)
 
 
-def create_construct_tab_initialization_saga(panel_factory, container) -> ConstructTabInitializationSaga:
+def create_construct_tab_initialization_saga(
+    panel_factory, container
+) -> ConstructTabInitializationSaga:
     """Factory function to create initialization saga with all steps."""
     saga = ConstructTabInitializationSaga()
 

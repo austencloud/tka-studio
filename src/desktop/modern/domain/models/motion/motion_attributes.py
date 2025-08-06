@@ -6,6 +6,8 @@ This replaces the legacy dictionary-based motion attribute storage with a
 type-safe, immutable domain model.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -75,7 +77,7 @@ class MotionAttributes:
             return self.prefloat_prop_rot_dir
         return self.prop_rot_dir
 
-    def with_turns(self, new_turns: int | float | str) -> "MotionAttributes":
+    def with_turns(self, new_turns: int | float | str) -> MotionAttributes:
         """Create a new MotionAttributes with different turns value."""
         from dataclasses import replace
 
@@ -83,7 +85,7 @@ class MotionAttributes:
 
     def with_orientations(
         self, start_ori: Orientation, end_ori: Orientation
-    ) -> "MotionAttributes":
+    ) -> MotionAttributes:
         """Create a new MotionAttributes with different orientations."""
         from dataclasses import replace
 
@@ -93,7 +95,7 @@ class MotionAttributes:
         self,
         prefloat_motion_type: MotionType,
         prefloat_prop_rot_dir: PropRotationDirection,
-    ) -> "MotionAttributes":
+    ) -> MotionAttributes:
         """Convert this motion to float state with prefloat attributes."""
         from dataclasses import replace
 

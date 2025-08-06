@@ -20,6 +20,8 @@ Architecture:
 - Supports dependency injection for service integration
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -40,6 +42,7 @@ from desktop.modern.presentation.components.graph_editor.components.turn_adjustm
     apply_modern_panel_styling,
     apply_turn_button_styling,
 )
+
 
 logger = logging.getLogger(__name__)
 

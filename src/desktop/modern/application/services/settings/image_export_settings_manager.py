@@ -5,9 +5,12 @@ Implements image export settings management with format validation,
 quality presets, and QSettings persistence.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

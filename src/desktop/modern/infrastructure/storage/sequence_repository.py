@@ -3,10 +3,13 @@ Sequence Repository for TKA Modern API
 Provides in-memory storage for sequences with CRUD operations.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -78,9 +81,8 @@ class SequenceRepository:
             self._sequences[sequence.id] = sequence
             logger.debug(f"Updated sequence {sequence.id}: {sequence.name}")
             return True
-        else:
-            logger.warning(f"Attempted to update non-existent sequence {sequence.id}")
-            return False
+        logger.warning(f"Attempted to update non-existent sequence {sequence.id}")
+        return False
 
     def delete(self, sequence_id: str) -> bool:
         """
@@ -102,9 +104,8 @@ class SequenceRepository:
                 logger.debug("Cleared current sequence (was deleted)")
 
             return True
-        else:
-            logger.warning(f"Attempted to delete non-existent sequence {sequence_id}")
-            return False
+        logger.warning(f"Attempted to delete non-existent sequence {sequence_id}")
+        return False
 
     def set_current_sequence(self, sequence_id: str) -> bool:
         """
@@ -120,11 +121,10 @@ class SequenceRepository:
             self._current_sequence_id = sequence_id
             logger.debug(f"Set current sequence to {sequence_id}")
             return True
-        else:
-            logger.warning(
-                f"Attempted to set non-existent sequence {sequence_id} as current"
-            )
-            return False
+        logger.warning(
+            f"Attempted to set non-existent sequence {sequence_id} as current"
+        )
+        return False
 
     def get_current_sequence(self) -> Optional[SequenceData]:
         """

@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from objects.arrow.arrow import Arrow
 from PyQt6.QtCore import QPointF
 
 from data.constants import ANTI, DASH, FLOAT, PRO, STATIC
+from objects.arrow.arrow import Arrow
 
 if TYPE_CHECKING:
     from base_widgets.pictograph.legacy_pictograph import LegacyPictograph

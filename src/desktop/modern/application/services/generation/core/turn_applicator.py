@@ -5,11 +5,14 @@ Handles turn application using the ACTUAL legacy turn logic.
 Fixed to match how the legacy TurnIntensityManager really works.
 """
 
+from __future__ import annotations
+
 import logging
 import random
 
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 

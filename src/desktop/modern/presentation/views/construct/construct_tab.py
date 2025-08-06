@@ -19,6 +19,8 @@ PROVIDES:
 - Testable components
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
@@ -89,6 +91,10 @@ class ConstructTab(QWidget):
             print("🔧 ConstructTab: Creating signal coordinator with services...")
 
             # Import required services and components
+            from shared.application.services.data.legacy_to_modern_converter import (
+                LegacyToModernConverter,
+            )
+
             from desktop.modern.application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
@@ -109,9 +115,6 @@ class ConstructTab(QWidget):
             )
             from desktop.modern.presentation.controllers.construct.signal_coordinator import (
                 SignalCoordinator,
-            )
-            from shared.application.services.data.legacy_to_modern_converter import (
-                LegacyToModernConverter,
             )
 
             # Resolve core services from DI container

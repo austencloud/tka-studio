@@ -8,17 +8,20 @@ ARCHITECTURE: Provides threading bridge for Qt applications with async/await
 support, thread-safe operations, and automatic resource management.
 """
 
+from __future__ import annotations
+
 import asyncio
-import logging
-import threading
-import time
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass
+import logging
+import threading
+import time
 from typing import Any, TypeVar
 
 from PyQt6.QtCore import QMutex, QObject, QThread, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -368,13 +371,12 @@ class QtThreadManager:
                 self._cleanup_thread(thread_name)
                 logger.info(f"Thread stopped gracefully: {thread_name}")
                 return True
-            else:
-                # Force termination if timeout
-                thread.terminate()
-                thread.wait(1000)  # Wait 1 second for termination
-                self._cleanup_thread(thread_name)
-                logger.warning(f"Thread terminated forcefully: {thread_name}")
-                return False
+            # Force termination if timeout
+            thread.terminate()
+            thread.wait(1000)  # Wait 1 second for termination
+            self._cleanup_thread(thread_name)
+            logger.warning(f"Thread terminated forcefully: {thread_name}")
+            return False
 
     def _cleanup_thread(self, thread_name: str) -> None:
         """Cleanup thread resources."""

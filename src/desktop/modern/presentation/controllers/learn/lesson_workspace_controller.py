@@ -5,6 +5,8 @@ Orchestrates lesson execution including question generation, answer validation,
 progress tracking, and state management. Coordinates between view and services.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
 
@@ -26,6 +28,7 @@ from desktop.modern.presentation.controllers.learn.state import (
     QuestionGenerationError,
 )
 
+
 if TYPE_CHECKING:
     from desktop.modern.presentation.views.learn.lesson_workspace_view import (
         LessonWorkspaceView,
@@ -44,7 +47,7 @@ class LessonWorkspaceController(QObject):
 
     def __init__(
         self,
-        view: "LessonWorkspaceView",
+        view: LessonWorkspaceView,
         question_service: IQuestionGenerationService,
         validation_service: IAnswerValidationService,
         progress_service: ILessonProgressService,
@@ -166,8 +169,7 @@ class LessonWorkspaceController(QObject):
 
         if lesson_type == LessonType.VALID_NEXT_PICTOGRAPH:
             return LayoutMode.HORIZONTAL
-        else:
-            return LayoutMode.VERTICAL
+        return LayoutMode.VERTICAL
 
     def _generate_first_question(self, session: QuizSession, config) -> None:
         """Generate the first question for the lesson."""
@@ -210,7 +212,7 @@ class LessonWorkspaceController(QObject):
             raise QuestionGenerationError(
                 session.session_id,
                 session.lesson_type.value,
-                f"First question generation failed: {str(e)}",
+                f"First question generation failed: {e!s}",
             )
 
     def _generate_next_question(self) -> None:

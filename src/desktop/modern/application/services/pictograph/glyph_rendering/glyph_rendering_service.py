@@ -10,6 +10,8 @@ This service handles:
 - Glyph-specific caching and performance optimization
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional
 
@@ -17,16 +19,17 @@ from PyQt6.QtCore import QByteArray
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
-
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
-)
 from shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
 from shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
+
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
+
 
 logger = logging.getLogger(__name__)
 
@@ -258,9 +261,8 @@ class GlyphRenderingService:
                     f"🔤 [GLYPH_RENDERER] Created {glyph_type} glyph renderer from {glyph_svg_path}"
                 )
                 return renderer
-            else:
-                logger.error(f"❌ [GLYPH_RENDERER] Invalid SVG for {glyph_type} glyph")
-                return self._create_fallback_glyph_renderer(glyph_type)
+            logger.error(f"❌ [GLYPH_RENDERER] Invalid SVG for {glyph_type} glyph")
+            return self._create_fallback_glyph_renderer(glyph_type)
 
         except Exception as e:
             logger.error(
@@ -290,11 +292,8 @@ class GlyphRenderingService:
                     f"🔧 [GLYPH_RENDERER] Created fallback {glyph_type} glyph renderer"
                 )
                 return renderer
-            else:
-                logger.error(
-                    "❌ [GLYPH_RENDERER] Failed to create fallback glyph renderer"
-                )
-                return None
+            logger.error("❌ [GLYPH_RENDERER] Failed to create fallback glyph renderer")
+            return None
 
         except Exception as e:
             logger.error(

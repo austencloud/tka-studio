@@ -5,12 +5,17 @@ Streamlined coordinator that manages decomposed visibility components following
 TKA clean architecture principles. Reduced from 631 lines to focused coordination.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from shared.application.services.pictograph.simple_visibility_service import (
+    get_visibility_service,
+)
 
 from desktop.modern.core.interfaces.tab_settings_interfaces import (
     IVisibilitySettingsManager,
@@ -21,9 +26,7 @@ from desktop.modern.presentation.components.ui.settings.visibility.components im
     MotionControlsSection,
     VisibilityPreviewSection,
 )
-from shared.application.services.pictograph.simple_visibility_service import (
-    get_visibility_service,
-)
+
 
 logger = logging.getLogger(__name__)
 
@@ -363,6 +366,7 @@ class VisibilityTab(QWidget):
     def _on_preview_updated(self):
         """Handle preview update notifications."""
         logger.debug("Preview updated")
+
     def cleanup(self):
         """Clean up resources when tab is destroyed."""
         try:

@@ -5,6 +5,8 @@ Displays the start position in the sequence workbench beat frame,
 integrating with Modern's start position picker and pictograph system.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
@@ -13,10 +15,10 @@ from PyQt6.QtWidgets import QFrame, QVBoxLayout
 from desktop.modern.domain.models import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 
-from ...pictograph.views import create_beat_view
-from ...pictograph.views.beat_pictograph_view import BeatPictographView
 from .selection_overlay import SelectionOverlay
 from .start_text_overlay import StartTextOverlay, add_start_text_to_view
+from ...pictograph.views import create_beat_view
+from ...pictograph.views.beat_pictograph_view import BeatPictographView
 
 
 class StartPositionView(QFrame):
@@ -116,11 +118,13 @@ class StartPositionView(QFrame):
         if self._beat_data != beat_data:
             self._beat_data = beat_data
             self._update_display()
-    def set_pictograph_data(self, pictograph_data: Optional["PictographData"]):
+
+    def set_pictograph_data(self, pictograph_data: Optional[PictographData]):
         """Set pictograph data for direct rendering (separate approach)"""
         if self._pictograph_data != pictograph_data:
             self._pictograph_data = pictograph_data
             self._update_display()
+
     def set_selected(self, selected: bool):
         """Set selection state"""
         if self._is_selected != selected:
@@ -138,7 +142,7 @@ class StartPositionView(QFrame):
         return self._is_selected
 
     def set_position_data(
-        self, beat_data: BeatData, pictograph_data: Optional["PictographData"] = None
+        self, beat_data: BeatData, pictograph_data: Optional[PictographData] = None
     ):
         """
         Set the start position data and update display.
@@ -154,6 +158,7 @@ class StartPositionView(QFrame):
         else:
             # Legacy mode: clear pictograph data to force reconstruction
             self._pictograph_data = None
+
     def _add_start_text_overlay(self):
         """Add START text overlay using the unified widget approach"""
         self._cleanup_existing_overlay()
@@ -219,9 +224,11 @@ class StartPositionView(QFrame):
     def sizeHint(self) -> QSize:
         """Provide size hint for layout management"""
         return QSize(120, 120)
+
     def get_position_data(self) -> Optional[BeatData]:
         """Get the current position data"""
         return self._beat_data
+
     def clear_position_data(self):
         """Clear position data and show only START text (V1-style clear behavior)"""
         self._beat_data = None
@@ -362,6 +369,7 @@ class StartPositionView(QFrame):
             self.cleanup()
         except Exception:
             pass
+
     def set_loading_state(self, loading: bool):
         """Set loading state while position is being processed"""
         if loading:

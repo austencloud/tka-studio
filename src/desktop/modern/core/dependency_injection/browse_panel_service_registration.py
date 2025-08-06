@@ -4,6 +4,8 @@ Browse Panel Service Registration
 Register browse panel services with the dependency injection container.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.application.services.browse.layout_manager_service import (
@@ -35,6 +37,7 @@ from desktop.modern.core.interfaces.browse_services import (
     ISequenceSorter,
     IThumbnailFactory,
 )
+
 
 logger = logging.getLogger(__name__)
 

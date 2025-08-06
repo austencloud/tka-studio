@@ -5,11 +5,14 @@ Manages quiz sessions, state tracking, and session lifecycle
 for the learning module.
 """
 
-import logging
+from __future__ import annotations
+
 from datetime import datetime
+import logging
 
 from desktop.modern.core.interfaces.learn_services import IQuizSessionService
 from desktop.modern.domain.models.learn import LessonType, QuizMode, QuizSession
+
 
 logger = logging.getLogger(__name__)
 

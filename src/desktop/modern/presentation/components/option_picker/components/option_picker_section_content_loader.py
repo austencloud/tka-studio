@@ -10,6 +10,8 @@ Handles the complex content loading logic for OptionPickerSection including:
 Extracted from OptionPickerSection to simplify the main class.
 """
 
+from __future__ import annotations
+
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_picker_section_animation_handler import (
     OptionPickerSectionAnimationHandler,

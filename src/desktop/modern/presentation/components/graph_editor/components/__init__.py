@@ -21,6 +21,8 @@ Architecture:
 
 # Refactored component imports
 # Legacy component imports (for backward compatibility)
+from __future__ import annotations
+
 from .adjustment_panel import AdjustmentPanel
 from .detailed_info_panel import DetailedInfoPanel
 from .dual_orientation_picker import DualOrientationPicker
@@ -29,6 +31,7 @@ from .orientation_picker import OrientationPickerWidget
 from .pictograph_container import GraphEditorPictographContainer
 from .pictograph_display_section import PictographDisplaySection
 from .turn_adjustment_controls.turn_adjustment_controls import TurnAdjustmentControls
+
 
 __all__ = [
     # Refactored components (primary)

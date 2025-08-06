@@ -5,16 +5,19 @@ Implements service mesh pattern using existing event bus infrastructure.
 Provides communication layer, circuit breaking, and observability.
 """
 
-import logging
-import time
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from functools import wraps
+import logging
+import time
 from typing import Any, TypeVar
 
 from desktop.modern.core.events.domain_events import UIStateChangedEvent
 from desktop.modern.core.events.event_bus import IEventBus, get_event_bus
+
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")
@@ -133,8 +136,7 @@ class ServiceProxy:
 
             if callable(original_method):
                 return self._wrap_method(original_method, name)
-            else:
-                return original_method
+            return original_method
 
         raise AttributeError(f"'{self.service_name}' has no attribute '{name}'")
 
@@ -287,6 +289,7 @@ class ComponentServiceMesh:
             self.logger.error(f"Failed to register component {service_name}: {e}")
             # Return original component as fallback
             return component
+
     def setup_mesh_for_construct_tab(
         self, components: dict[str, Any]
     ) -> dict[str, ServiceProxy]:
@@ -322,8 +325,12 @@ class ComponentServiceMesh:
             "service_health": health_status,
             "service_names": self.registry.list_services(),
         }
+
+
 # Factory function for easy integration
-def create_construct_tab_service_mesh(components: dict[str, Any]) -> ComponentServiceMesh:
+def create_construct_tab_service_mesh(
+    components: dict[str, Any],
+) -> ComponentServiceMesh:
     """Factory function to create and setup service mesh for ConstructTab."""
     mesh = ComponentServiceMesh()
     mesh.setup_mesh_for_construct_tab(components)

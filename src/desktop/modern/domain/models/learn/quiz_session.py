@@ -5,10 +5,12 @@ Represents the state and progress of an active quiz session,
 including timing, scoring, and progression data.
 """
 
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
+import uuid
 
 from .lesson_config import LessonType, QuizMode
 
@@ -69,7 +71,7 @@ class QuizSession:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "QuizSession":
+    def from_dict(cls, data: dict[str, Any]) -> QuizSession:
         """
         Deserialize session from dictionary.
 

@@ -5,6 +5,8 @@ Validates quiz answers and tracks answer history for scoring
 and progress tracking.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -13,6 +15,7 @@ from desktop.modern.core.interfaces.learn_services import (
     IQuizSessionService,
 )
 from desktop.modern.domain.models.learn import QuestionData
+
 
 logger = logging.getLogger(__name__)
 

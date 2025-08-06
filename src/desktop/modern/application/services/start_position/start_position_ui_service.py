@@ -5,12 +5,15 @@ Handles UI state management and layout calculations for start position component
 Extracts UI logic from presentation components while keeping it separate from business logic.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionUIService,
 )
+
 
 try:
     from PyQt6.QtCore import QSize
@@ -211,12 +214,11 @@ class StartPositionUIService(IStartPositionUIService):
                     positions = self.DIAMOND_ADVANCED_POSITIONS
                 else:
                     positions = self.BOX_ADVANCED_POSITIONS
+            # Basic picker shows 3 positions
+            elif grid_mode == "diamond":
+                positions = self.DIAMOND_START_POSITIONS
             else:
-                # Basic picker shows 3 positions
-                if grid_mode == "diamond":
-                    positions = self.DIAMOND_START_POSITIONS
-                else:
-                    positions = self.BOX_START_POSITIONS
+                positions = self.BOX_START_POSITIONS
 
             logger.debug(
                 f"Retrieved {len(positions)} positions for {grid_mode} mode (advanced={is_advanced})"
@@ -268,14 +270,13 @@ class StartPositionUIService(IStartPositionUIService):
                 else:
                     cols = 1
                     rows = position_count
+            # Basic picker: prefer single row, but adapt if needed
+            elif max_cols >= position_count:
+                cols = position_count
+                rows = 1
             else:
-                # Basic picker: prefer single row, but adapt if needed
-                if max_cols >= position_count:
-                    cols = position_count
-                    rows = 1
-                else:
-                    cols = max_cols
-                    rows = (position_count + cols - 1) // cols
+                cols = max_cols
+                rows = (position_count + cols - 1) // cols
 
             layout_params = {
                 "rows": rows,
@@ -361,14 +362,13 @@ class StartPositionUIService(IStartPositionUIService):
                     "option_spacing": "12px",
                     "container_padding": "12px",
                 }
-            else:
-                # Basic picker has more spacious layout
-                return {
-                    "container_style": "background: rgba(255,255,255,0.18); border-radius: 28px;",
-                    "scroll_style": "background: transparent; border: none; border-radius: 16px;",
-                    "option_spacing": "20px",
-                    "container_padding": "18px",
-                }
+            # Basic picker has more spacious layout
+            return {
+                "container_style": "background: rgba(255,255,255,0.18); border-radius: 28px;",
+                "scroll_style": "background: transparent; border: none; border-radius: 16px;",
+                "option_spacing": "20px",
+                "container_padding": "18px",
+            }
 
         except Exception as e:
             logger.error(f"Error getting layout style config: {e}")

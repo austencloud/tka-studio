@@ -14,12 +14,15 @@ This service complements WindowManagementService by focusing on discovery
 rather than positioning/management.
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QApplication, QWidget
+
 
 logger = logging.getLogger(__name__)
 

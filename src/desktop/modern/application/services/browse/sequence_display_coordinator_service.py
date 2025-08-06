@@ -4,6 +4,8 @@ Sequence Display Coordinator Service
 Service for coordinating the display of sequences using other services.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtWidgets import QApplication

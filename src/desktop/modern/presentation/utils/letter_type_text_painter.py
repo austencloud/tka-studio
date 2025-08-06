@@ -5,6 +5,8 @@ Provides colored HTML text for letter types, matching the legacy implementation.
 Used for styling section headers in the option picker.
 """
 
+from __future__ import annotations
+
 
 class LetterTypeTextPainter:
     """

@@ -6,9 +6,12 @@ A simple tool to quickly generate sequences and export them as images for testin
 This tool can grab example sequences from metadata or create custom ones.
 """
 
-import sys
+from __future__ import annotations
+
 from datetime import datetime
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the Python path
 src_dir = Path(__file__).parent.parent / "src"
@@ -279,9 +282,8 @@ def generate_quick_sequence(
             print(f"✅ Saved to: {output_path}")
             print(f"📁 Open folder: {output_dir}")
             return True
-        else:
-            print("❌ Failed to save image")
-            return False
+        print("❌ Failed to save image")
+        return False
 
     except Exception as e:
         print(f"❌ Error generating sequence: {e}")

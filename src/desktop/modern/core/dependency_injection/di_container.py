@@ -5,6 +5,8 @@ This is the main container that coordinates all DI operations using focused modu
 The container has been refactored into specialized components for better maintainability.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional, TypeVar
 
@@ -15,6 +17,7 @@ from .lifecycle_manager import LifecycleManager
 from .service_registry import ServiceRegistry, ServiceScope
 from .service_resolvers import LazyProxy, ResolverChain
 from .validation_engine import ValidationEngine
+
 
 try:
     from ..exceptions import DependencyInjectionError, di_error
@@ -42,7 +45,7 @@ T = TypeVar("T")
 logger = logging.getLogger(__name__)
 
 # Global container instance
-_container: Optional["DIContainer"] = None
+_container: Optional[DIContainer] = None
 _container_initialized: bool = False
 
 

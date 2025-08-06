@@ -5,9 +5,12 @@ Provides UI state management, responsive sizing calculations,
 and styling support for the learn tab components.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.learn_services import ILearnUIService
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,8 @@ Provides registration helpers for the new focused services that replaced Sequenc
 This ensures proper dependency injection setup for the refactored architecture.
 """
 
+from __future__ import annotations
+
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 
 from .beat_creation_service import BeatCreationService

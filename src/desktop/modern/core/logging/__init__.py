@@ -33,6 +33,8 @@ arrow_logger = get_arrow_positioning_logger()
 """
 
 # Specialized arrow positioning logger
+from __future__ import annotations
+
 from .arrow_positioning_logger import (
     ArrowPositioningLogger,
     get_arrow_positioning_logger,
@@ -63,6 +65,7 @@ from .smart_logger import (
     get_all_performance_stats,
     reset_all_smart_loggers,
 )
+
 
 # Version info
 __version__ = "1.0.0"
@@ -98,6 +101,7 @@ __all__ = [
 
 # Auto-configure if environment variables are set
 import os
+
 
 if os.getenv("TKA_AUTO_CONFIGURE_LOGGING", "").lower() in ["true", "1", "yes"]:
     configure_from_environment()

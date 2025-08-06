@@ -1,116 +1,101 @@
 """
 Length selector component.
 
-Provides a slider and spinbox for selecting sequence length.
+Simple increment/decrement control for sequence length.
 """
 
-from typing import Optional
+from __future__ import annotations
 
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QHBoxLayout, QSlider, QSpinBox, QWidget
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
-from .generation_control_base import GenerationControlBase
+from .increment_adjuster_button import IncrementAdjusterButton
 
 
-class LengthSelector(GenerationControlBase):
-    """Selector for sequence length"""
+class LengthSelector(QWidget):
+    """Simple length adjuster with +/- buttons"""
 
     value_changed = pyqtSignal(int)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__(
-            "Sequence Length",
-            "Number of beats in the generated sequence (4-32)",
-            parent,
-        )
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = 16
+        self._min_value = 4
+        self._max_value = 64
+        self._adjustment_amount = 2
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup length selector controls"""
-        control_layout = QHBoxLayout()
-        control_layout.setSpacing(12)
+        """Setup simple length controls"""
+        # Main horizontal layout
+        layout = QHBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setSpacing(12)
 
-        # Slider
-        self._slider = QSlider(Qt.Orientation.Horizontal)
-        self._slider.setMinimum(1)
-        self._slider.setMaximum(32)
-        self._slider.setValue(16)
-        self._slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self._slider.setTickInterval(4)
-        self._slider.setStyleSheet(
-            """
-            QSlider::groove:horizontal {
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                height: 4px;
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 2px;
-            }
-            QSlider::handle:horizontal {
-                background: rgba(70, 130, 255, 0.8);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                width: 16px;
-                margin: -6px 0;
-                border-radius: 8px;
-            }
-            QSlider::handle:horizontal:hover {
-                background: rgba(80, 140, 255, 0.9);
-            }
-            QSlider::sub-page:horizontal {
-                background: rgba(70, 130, 255, 0.5);
-                border-radius: 2px;
-            }
-        """
-        )
-        control_layout.addWidget(self._slider, 1)
-
-        # Value display/input
-        self._spinbox = QSpinBox()
-        self._spinbox.setMinimum(4)
-        self._spinbox.setMaximum(32)
-        self._spinbox.setValue(16)
-        self._spinbox.setMinimumWidth(60)
-        self._spinbox.setStyleSheet(
-            """
-            QSpinBox {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
-                padding: 4px 8px;
+        # Label
+        self._label = QLabel("Length:")
+        self._label.setStyleSheet("""
+            QLabel {
                 color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+                font-weight: 500;
             }
-            QSpinBox:hover {
-                background: rgba(255, 255, 255, 0.15);
-                border-color: rgba(255, 255, 255, 0.3);
+        """)
+
+        # Minus button
+        self._minus_button = IncrementAdjusterButton("-")
+        self._minus_button.clicked.connect(self._decrease_length)
+
+        # Value display
+        self._value_label = QLabel(str(self._current_value))
+        self._value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._value_label.setFont(QFont("Georgia", 14, QFont.Weight.Bold))
+        self._value_label.setStyleSheet("""
+            QLabel {
+                color: white;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                padding: 6px 12px;
+                min-width: 30px;
             }
-            QSpinBox:focus {
-                border-color: rgba(70, 130, 255, 0.8);
-            }
-        """
-        )
-        control_layout.addWidget(self._spinbox)
+        """)
 
-        self._content_layout.addLayout(control_layout)
+        # Plus button
+        self._plus_button = IncrementAdjusterButton("+")
+        self._plus_button.clicked.connect(self._increase_length)
 
-        # Connect signals
-        self._slider.valueChanged.connect(self._on_value_changed)
-        self._spinbox.valueChanged.connect(self._on_value_changed)
+        # Add to layout
+        layout.addWidget(self._label)
+        layout.addWidget(self._minus_button)
+        layout.addWidget(self._value_label)
+        layout.addWidget(self._plus_button)
 
-    def _on_value_changed(self, value: int):
-        """Handle value change"""
-        if value != self._current_value:
-            self._current_value = value
+    def _increase_length(self):
+        """Increase length"""
+        if self._current_value < self._max_value:
+            self._current_value += self._adjustment_amount
+            self._value_label.setText(str(self._current_value))
+            self.value_changed.emit(self._current_value)
 
-            # Sync controls
-            self._slider.blockSignals(True)
-            self._spinbox.blockSignals(True)
-            self._slider.setValue(value)
-            self._spinbox.setValue(value)
-            self._slider.blockSignals(False)
-            self._spinbox.blockSignals(False)
-
-            self.value_changed.emit(value)
+    def _decrease_length(self):
+        """Decrease length"""
+        if self._current_value > self._min_value:
+            self._current_value -= self._adjustment_amount
+            self._value_label.setText(str(self._current_value))
+            self.value_changed.emit(self._current_value)
 
     def set_value(self, value: int):
         """Set the current value"""
-        self._on_value_changed(value)
+        if self._min_value <= value <= self._max_value:
+            self._current_value = value
+            self._value_label.setText(str(value))
+
+    def get_value(self) -> int:
+        """Get the current value"""
+        return self._current_value
+
+    def set_adjustment_amount(self, amount: int):
+        """Set the increment/decrement amount"""
+        self._adjustment_amount = amount

@@ -5,6 +5,8 @@ These interfaces define contracts for layout calculations, including beat layout
 grid layouts, component positioning, and responsive scaling operations.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 

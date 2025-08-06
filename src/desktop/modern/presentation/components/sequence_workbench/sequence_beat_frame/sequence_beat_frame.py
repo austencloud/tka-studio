@@ -5,6 +5,8 @@ This component provides the core beat grid system with dynamic layout,
 replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -20,12 +22,14 @@ from .beat_selector import BeatSelector
 from .beat_view import BeatView
 from .start_position_view import StartPositionView
 
+
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from desktop.modern.core.events import IEventBus
     from shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
+
+    from desktop.modern.core.events import IEventBus
 
 try:
     from desktop.modern.core.events import (
@@ -81,8 +85,8 @@ class SequenceBeatFrame(QScrollArea):
     def __init__(
         self,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
-        event_bus: Optional["IEventBus"] = None,
+        beat_selection_service: BeatSelectionService,
+        event_bus: Optional[IEventBus] = None,
         parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)  # Injected dependencies
@@ -273,7 +277,7 @@ class SequenceBeatFrame(QScrollArea):
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional["PictographData"] = None,
+        pictograph_data: Optional[PictographData] = None,
     ):
         """
         Set the start position data (separate from sequence beats like legacy).

@@ -5,6 +5,8 @@ Self-sufficient arrow that handles its own rendering logic by calling the busine
 Eliminates the need for orchestrator classes while maintaining clean separation.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import traceback
@@ -14,6 +16,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
+from shared.application.services.pictograph.arrow_rendering_service import (
+    ArrowRenderingService,
+)
 
 from desktop.modern.core.dependency_injection.di_container import get_container
 from desktop.modern.core.interfaces.positioning_services import (
@@ -23,9 +28,7 @@ from desktop.modern.core.interfaces.positioning_services import (
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from shared.application.services.pictograph.arrow_rendering_service import (
-    ArrowRenderingService,
-)
+
 
 logger = logging.getLogger(__name__)
 
@@ -319,6 +322,7 @@ class ArrowItem(QGraphicsSvgItem):
             logger.warning(
                 f"⚠️ SETUP SKIPPED - {self.arrow_color}: color={self.arrow_color}, motion_data={self.motion_data is not None}"
             )
+
     # =============================================================================
     # SELECTION AND INTERACTION METHODS (Preserved from original)
     # =============================================================================
@@ -331,10 +335,9 @@ class ArrowItem(QGraphicsSvgItem):
                     self.scene().arrow_selected.emit(self.arrow_color)
                 event.accept()
                 return
-            else:
-                # Arrow not selectable - pass through
-                event.ignore()
-                return
+            # Arrow not selectable - pass through
+            event.ignore()
+            return
 
         # For non-left clicks, use default behavior if selectable
         if self.flags() & self.GraphicsItemFlag.ItemIsSelectable:
@@ -369,6 +372,7 @@ class ArrowItem(QGraphicsSvgItem):
             self.highlight_color = color
         self.is_highlighted = True
         self.update()
+
     def paint(self, painter, option, widget=None):
         """Custom paint to show selection highlight."""
         # Draw the SVG first

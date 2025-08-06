@@ -5,6 +5,8 @@ A clean, modern sequence viewer with glassmorphism styling.
 Displays selected sequences with image preview, metadata, and action buttons.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import (

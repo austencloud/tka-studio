@@ -5,6 +5,8 @@ Interface definitions for core orchestration services following TKA's clean arch
 These interfaces handle application lifecycle and coordination operations.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import Any

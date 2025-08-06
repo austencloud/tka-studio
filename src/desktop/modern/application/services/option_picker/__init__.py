@@ -7,6 +7,8 @@ extracted from presentation layer to maintain clean architecture.
 All services are Qt-free and return pure domain data.
 """
 
+from __future__ import annotations
+
 from shared.application.services.option_picker.option_configuration_service import (
     OptionConfigurationService,
 )
@@ -20,9 +22,10 @@ from shared.application.services.option_picker.sequence_option_service import (
     SequenceOptionService,
 )
 
+
 __all__ = [
-    "SequenceOptionService",
-    "OptionPoolService",
-    "OptionPickerSizeCalculator",
     "OptionConfigurationService",
+    "OptionPickerSizeCalculator",
+    "OptionPoolService",
+    "SequenceOptionService",
 ]

@@ -6,6 +6,8 @@ by both Qt desktop components and web browser elements, enabling
 seamless cross-platform animation support.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any, Protocol, Union
 

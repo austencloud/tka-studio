@@ -5,6 +5,8 @@ Single Responsibility: Adding, removing, and updating beats within sequences.
 Extracted from SequenceBeatOperations God Object.
 """
 
+from __future__ import annotations
+
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
 

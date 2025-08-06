@@ -18,7 +18,11 @@ USAGE:
             self.data_config = data_config
 """
 
+from __future__ import annotations
+
 import logging
+
+from shared.application.services.data.data_service import DataManager
 
 from desktop.modern.core.config.app_config import (
     AppConfig,
@@ -30,7 +34,7 @@ from desktop.modern.core.config.app_config import (
 from desktop.modern.core.config.data_config import DataConfig, create_data_config
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
-from shared.application.services.data.data_service import DataManager
+
 
 # Removed Result pattern imports - using simple exceptions
 
@@ -118,7 +122,7 @@ def register_data_config_only(container, data_config: DataConfig | None = None) 
 
 
 def register_positioning_services_with_config(
-    container: "DIContainer", positioning_config: PositioningConfig | None = None
+    container: DIContainer, positioning_config: PositioningConfig | None = None
 ) -> None:
     """
     Register positioning services with configuration injection.
@@ -245,6 +249,14 @@ def register_start_position_services(container: DIContainer) -> None:
     """
     try:
         # Import start position interfaces
+        # Import start position service implementations
+        from shared.application.services.start_position.start_position_data_service import (
+            StartPositionDataService,
+        )
+        from shared.application.services.start_position.start_position_selection_service import (
+            StartPositionSelectionService,
+        )
+
         from desktop.modern.application.services.start_position import (
             StartPositionOrchestrator,
             StartPositionSelectionService,
@@ -255,14 +267,6 @@ def register_start_position_services(container: DIContainer) -> None:
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
             IStartPositionUIService,
-        )
-
-        # Import start position service implementations
-        from shared.application.services.start_position.start_position_data_service import (
-            StartPositionDataService,
-        )
-        from shared.application.services.start_position.start_position_selection_service import (
-            StartPositionSelectionService,
         )
 
         # Register individual services

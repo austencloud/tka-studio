@@ -5,6 +5,8 @@ Uses modern PictographScene with modular renderers to show actual pictograph
 that updates in real-time as visibility settings change.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -25,6 +27,7 @@ from desktop.modern.presentation.components.pictograph.views import (
     BasePictographView,
     create_pictograph_view,
 )
+
 
 logger = logging.getLogger(__name__)
 

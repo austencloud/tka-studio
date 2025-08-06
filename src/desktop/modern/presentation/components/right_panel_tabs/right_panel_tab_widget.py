@@ -6,6 +6,8 @@ Provides 3 tabs for switching between Picker, Graph Editor, and Generate Control
 Uses the centralized glassmorphism style system for consistent modern aesthetics.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QSizePolicy, QWidget
 
@@ -114,6 +116,7 @@ class RightPanelTabWidget(QWidget):
     def set_active_tab(self, index: int):
         """Public method to set the active tab from external code."""
         self._set_active_tab(index)
+
     def _apply_styling(self):
         """Apply modern glassmorphism tab styling using the centralized style system."""
         # Container styling

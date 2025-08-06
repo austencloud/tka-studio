@@ -8,9 +8,12 @@ Handles:
 - Lifecycle event coordination
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 from typing import Any
+
 
 logger = logging.getLogger(__name__)
 

@@ -3,10 +3,13 @@ Command pattern implementation for undoable operations.
 Provides type-safe, undoable commands with event integration.
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+import logging
 from typing import TYPE_CHECKING, Any, Generic, TypeVar
+
 
 if TYPE_CHECKING:
     pass
@@ -113,7 +116,7 @@ class CommandProcessor:
             return CommandResult(success=True, result=result, command_id=command_id)
 
         except Exception as e:
-            error_msg = f"Command execution failed: {command.description} - {str(e)}"
+            error_msg = f"Command execution failed: {command.description} - {e!s}"
             self._logger.error(error_msg, exc_info=True)
             return CommandResult(
                 success=False, error_message=error_msg, command_id=command_id
@@ -144,7 +147,7 @@ class CommandProcessor:
             return CommandResult(success=True, result=result, command_id=command_id)
 
         except Exception as e:
-            error_msg = f"Command undo failed: {command.description} - {str(e)}"
+            error_msg = f"Command undo failed: {command.description} - {e!s}"
             self._logger.error(error_msg, exc_info=True)
             return CommandResult(
                 success=False, error_message=error_msg, command_id=command_id
@@ -177,7 +180,7 @@ class CommandProcessor:
 
         except Exception as e:
             self._current_index -= 1  # Revert on failure
-            error_msg = f"Command redo failed: {command.description} - {str(e)}"
+            error_msg = f"Command redo failed: {command.description} - {e!s}"
             self._logger.error(error_msg, exc_info=True)
             return CommandResult(
                 success=False, error_message=error_msg, command_id=command_id

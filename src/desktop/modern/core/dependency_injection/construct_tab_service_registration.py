@@ -5,6 +5,8 @@ Registers all construct tab services with the DI container.
 Enables proper dependency injection for the refactored architecture.
 """
 
+from __future__ import annotations
+
 from desktop.modern.application.services.construct_tab.construct_tab_component_factory import (
     ConstructTabComponentFactory,
 )

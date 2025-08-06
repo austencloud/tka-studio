@@ -153,9 +153,11 @@ class ServiceRegistrationCoordinator:
             OptionPickerServiceRegistrar,
             PictographServiceRegistrar,
             PositioningServiceRegistrar,
+            SequenceCardServiceRegistrar,
             SequenceServiceRegistrar,
             StartPositionServiceRegistrar,
             WorkbenchServiceRegistrar,
+            WriteServiceRegistrar,
         )
 
         # Initialize registrars in dependency order
@@ -182,6 +184,8 @@ class ServiceRegistrationCoordinator:
             GraphEditorServiceRegistrar(self.progress_callback),
             AnimationServiceRegistrar(self.progress_callback),
             LearnServiceRegistrar(self.progress_callback),
+            SequenceCardServiceRegistrar(self.progress_callback),
+            WriteServiceRegistrar(self.progress_callback),
         ]
 
     def register_all_services(self, container: DIContainer) -> None:

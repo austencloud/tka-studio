@@ -3,6 +3,8 @@ Interactive Animation Demo with Real Pictographs
 Showcases the modern animation system with actual TKA pictograph data.
 """
 
+from __future__ import annotations
+
 import asyncio
 import sys
 
@@ -22,8 +24,14 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+
 # Add src to path for imports
 sys.path.insert(0, "src")
+
+from shared.application.services.data.pictograph_factory import PictographFactory
+from shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
 
 from desktop.modern.application.services.ui.animation.modern_service_registration import (
     setup_modern_animation_services,
@@ -36,10 +44,6 @@ from desktop.modern.core.interfaces.animation_core_interfaces import (
 )
 from desktop.modern.presentation.components.pictograph.pictograph_widget import (
     PictographWidget,
-)
-from shared.application.services.data.pictograph_factory import PictographFactory
-from shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
 )
 
 

@@ -2,6 +2,8 @@
 Core types module for framework-agnostic data structures.
 """
 
+from __future__ import annotations
+
 from .animation import (
     AnimationGroup,
     AnimationGroupType,
@@ -24,6 +26,7 @@ from .geometry import (
     Widget,
     WidgetType,
 )
+
 
 __all__ = [
     # Geometry types

@@ -5,6 +5,8 @@ This module provides functions to compute derived values that were previously
 stored redundantly in GlyphData, such as VTG mode, elemental type, and dash status.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from .enums import Direction, ElementalType, LetterType, Timing, VTGMode
@@ -31,12 +33,12 @@ def compute_vtg_mode(pictograph_data: PictographData) -> Optional[VTGMode]:
     if timing == Timing.SPLIT:
         if direction == Direction.SAME:
             return VTGMode.SPLIT_SAME
-        elif direction == Direction.OPP:
+        if direction == Direction.OPP:
             return VTGMode.SPLIT_OPP
     elif timing == Timing.TOG:
         if direction == Direction.SAME:
             return VTGMode.TOG_SAME
-        elif direction == Direction.OPP:
+        if direction == Direction.OPP:
             return VTGMode.TOG_OPP
 
     # Default fallback

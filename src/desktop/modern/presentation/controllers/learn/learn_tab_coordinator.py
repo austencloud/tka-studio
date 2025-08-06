@@ -5,6 +5,8 @@ Main coordinator for the learn tab following modern architecture patterns.
 Orchestrates views, controllers, and state management with clean separation of concerns.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import pyqtSignal
@@ -40,6 +42,7 @@ from .lesson_results_controller import LessonResultsController
 from .lesson_selector_controller import LessonSelectorController
 from .lesson_workspace_controller import LessonWorkspaceController
 from .state import LearnStateManager, LearnView
+
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +222,7 @@ class LearnTabCoordinator(QWidget):
             logger.error(f"❌ Failed to initialize coordinator: {e}")
             # Don't emit error for missing services in test environments
             if "Service" not in str(e):
-                self.error_occurred.emit(f"Failed to initialize learn tab: {str(e)}")
+                self.error_occurred.emit(f"Failed to initialize learn tab: {e!s}")
 
     def _create_controllers(self) -> None:
         """Create controllers with dependency injection."""

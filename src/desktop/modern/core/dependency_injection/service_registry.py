@@ -10,11 +10,14 @@ Handles all service registration operations including:
 - Lazy registration
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+import logging
 from typing import Any, TypeVar
+
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +131,7 @@ class ServiceRegistry:
         """Get the implementation type for a service interface."""
         if interface in self.services:
             return self.services[interface]
-        elif interface in self._factories:
+        if interface in self._factories:
             return self._factories[interface]
         return None
 

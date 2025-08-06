@@ -5,13 +5,11 @@ This adapter wraps the pure SequenceStartPositionService and provides Qt signal 
 This maintains the separation between platform-agnostic services and Qt-specific presentation logic.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.data.modern_to_legacy_converter import (
     ModernToLegacyConverter,
 )
@@ -20,6 +18,10 @@ from shared.application.services.sequence.sequence_persister import SequencePers
 from shared.application.services.sequence.sequence_start_position_service import (
     SequenceStartPositionService,
 )
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class QtSequenceStartPositionManagerAdapter(QObject):

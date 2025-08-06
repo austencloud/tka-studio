@@ -6,6 +6,8 @@ the platform-agnostic animation protocols, enabling seamless integration
 with the existing Qt desktop infrastructure.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation

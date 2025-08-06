@@ -17,6 +17,8 @@ Registrars:
 - LearnServiceRegistrar: Learn Tab services and components
 """
 
+from __future__ import annotations
+
 from .animation_service_registrar import AnimationServiceRegistrar
 from .core_service_registrar import CoreServiceRegistrar
 from .data_service_registrar import DataServiceRegistrar
@@ -31,18 +33,19 @@ from .sequence_service_registrar import SequenceServiceRegistrar
 from .start_position_service_registrar import StartPositionServiceRegistrar
 from .workbench_service_registrar import WorkbenchServiceRegistrar
 
+
 __all__ = [
     "AnimationServiceRegistrar",
-    "MotionServiceRegistrar",
-    "GraphEditorServiceRegistrar",
-    "DataServiceRegistrar",
     "CoreServiceRegistrar",
-    "SequenceServiceRegistrar",
-    "PictographServiceRegistrar",
+    "DataServiceRegistrar",
     "EventSystemRegistrar",
-    "PositioningServiceRegistrar",
-    "OptionPickerServiceRegistrar",
-    "WorkbenchServiceRegistrar",
-    "StartPositionServiceRegistrar",
+    "GraphEditorServiceRegistrar",
     "LearnServiceRegistrar",
+    "MotionServiceRegistrar",
+    "OptionPickerServiceRegistrar",
+    "PictographServiceRegistrar",
+    "PositioningServiceRegistrar",
+    "SequenceServiceRegistrar",
+    "StartPositionServiceRegistrar",
+    "WorkbenchServiceRegistrar",
 ]

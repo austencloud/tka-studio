@@ -4,8 +4,11 @@ Final Comprehensive Validation
 Tests all components of the start position service refactoring.
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add src to path
 modern_src_path = Path(__file__).parent / "src"
@@ -189,9 +192,8 @@ def run_final_validation():
         print("🎉 ALL VALIDATIONS PASSED!")
         print("✅ START POSITION SERVICE REFACTORING COMPLETE - ALL TESTS PASSED")
         return True
-    else:
-        print("❌ Some validations failed!")
-        return False
+    print("❌ Some validations failed!")
+    return False
 
 
 if __name__ == "__main__":

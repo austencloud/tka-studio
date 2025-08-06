@@ -16,6 +16,8 @@ DOES NOT HANDLE:
 - State management (that's the controller)
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtWidgets import QWidget
@@ -72,6 +74,7 @@ class ConstructTabView(QWidget):
             self._layout_manager, "force_picker_update"
         ):
             self._layout_manager.force_picker_update()
+
     def update_layout(self) -> None:
         """Update the layout - called on resize events."""
         self.update()

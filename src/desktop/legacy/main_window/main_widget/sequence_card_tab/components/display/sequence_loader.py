@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 # src/main_window/main_widget/sequence_card_tab/components/display/sequence_loader.py
 import os
 from typing import Any
@@ -56,6 +57,28 @@ class SequenceLoader:
                     try:
                         # Get the sequence length from the metadata
                         sequence_length = self.metadata_extractor.get_length(file_path)
+
+                        # Debug: Print what we found
+                        print(
+                            f"DEBUG: File {file} - extracted length: {sequence_length}"
+                        )
+
+                        # Also check if we can extract raw metadata
+                        raw_metadata = (
+                            self.metadata_extractor.extract_metadata_from_file(
+                                file_path
+                            )
+                        )
+                        if raw_metadata:
+                            print(
+                                f"DEBUG: Raw metadata keys: {list(raw_metadata.keys())}"
+                            )
+                            if "sequence" in raw_metadata:
+                                print(
+                                    f"DEBUG: Sequence length in metadata: {len(raw_metadata['sequence'])}"
+                                )
+                        else:
+                            print(f"DEBUG: No metadata found in {file}")
 
                         # If we couldn't get the length from metadata, default to 0
                         if sequence_length is None:

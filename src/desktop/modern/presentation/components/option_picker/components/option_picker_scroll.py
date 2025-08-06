@@ -11,13 +11,24 @@ Key principles:
 - Coordination between UI and services
 """
 
+from __future__ import annotations
+
+from collections.abc import Callable
 import logging
 import traceback
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+from shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
+from shared.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
+from shared.application.services.option_picker.sequence_option_service import (
+    SequenceOptionService,
+)
 
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     IAnimationOrchestrator,
@@ -30,15 +41,6 @@ from desktop.modern.presentation.components.option_picker.components.option_pict
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
-from shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
-)
-from shared.application.services.option_picker.sequence_option_service import (
-    SequenceOptionService,
-)
 
 # Import our new focused components
 from .option_picker_animator import OptionPickerAnimator
@@ -47,12 +49,14 @@ from .option_picker_refresh_orchestrator import OptionPickerRefreshOrchestrator
 from .option_picker_section_manager import OptionPickerSectionManager
 from .option_picker_size_manager import OptionPickerSizeManager
 
+
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
-        OptionPickerSection,
-    )
     from shared.application.services.option_picker.option_configuration_service import (
         OptionConfigurationService,
+    )
+
+    from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
+        OptionPickerSection,
     )
 
 
@@ -71,7 +75,7 @@ class OptionPickerScroll(QScrollArea):
         sequence_option_service: SequenceOptionService,
         option_pool_service: OptionPoolService,
         option_sizing_service: OptionPickerSizeCalculator,
-        option_config_service: "OptionConfigurationService",
+        option_config_service: OptionConfigurationService,
         parent=None,
         mw_size_provider: Callable[[], QSize] = None,
         animation_orchestrator: IAnimationOrchestrator | None = None,
@@ -91,7 +95,9 @@ class OptionPickerScroll(QScrollArea):
         if self._animation_orchestrator:
             logger.info("✅ OptionPickerScroll initialized WITH animation orchestrator")
         else:
-            logger.warning("⚠️ OptionPickerScroll initialized WITHOUT animation orchestrator")
+            logger.warning(
+                "⚠️ OptionPickerScroll initialized WITHOUT animation orchestrator"
+            )
 
         self._mw_size_provider = mw_size_provider or self._default_size_provider
 
@@ -264,6 +270,7 @@ class OptionPickerScroll(QScrollArea):
         """Clear all pictographs from all sections using section manager."""
         self._section_manager.clear_all_sections()
         self._option_pool_service.reset_pool()
+
     def _reset_widget_cache(self) -> None:
         """Reset widget pool by hiding and cleaning up all widgets."""
         for widget in self._widget_pool.values():
@@ -372,7 +379,9 @@ class OptionPickerScroll(QScrollArea):
             ]
 
             # DEBUG: Log animation decision
-            logger.debug(f"Animation orchestrator available: {self._animation_orchestrator is not None}")
+            logger.debug(
+                f"Animation orchestrator available: {self._animation_orchestrator is not None}"
+            )
             logger.debug(f"Existing sections count: {len(existing_sections)}")
 
             if self._animation_orchestrator and existing_sections:

@@ -31,6 +31,8 @@ Usage:
 """
 
 # Import main services for easy access
+from __future__ import annotations
+
 from .background_settings_manager import BackgroundSettingsManager
 from .beat_layout_settings_manager import BeatLayoutSettingsManager
 from .image_export_settings_manager import ImageExportSettingsManager
@@ -39,15 +41,16 @@ from .prop_type_settings_manager import PropTypeSettingsManager
 from .user_profile_settings_manager import UserProfileSettingsManager
 from .visibility_settings_manager import VisibilitySettingsManager
 
+
 __all__ = [
-    "ModernSettingsService",
     "ApplicationStateMemento",
     "BackgroundSettingsManager",
-    "VisibilitySettingsManager",
     "BeatLayoutSettingsManager",
+    "ImageExportSettingsManager",
+    "ModernSettingsService",
     "PropTypeSettingsManager",
     "UserProfileSettingsManager",
-    "ImageExportSettingsManager",
+    "VisibilitySettingsManager",
 ]
 
 __version__ = "1.0.0"

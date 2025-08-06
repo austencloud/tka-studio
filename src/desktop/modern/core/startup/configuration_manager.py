@@ -12,9 +12,11 @@ This class centralizes all configuration concerns including:
 - Parallel testing configuration
 """
 
+from __future__ import annotations
+
+from dataclasses import dataclass
 import logging
 import sys
-from dataclasses import dataclass
 
 from desktop.modern.core.application.application_factory import ApplicationMode
 from desktop.modern.core.error_handling import StandardErrorHandler
@@ -77,8 +79,7 @@ class ConfigurationManager:
         """
         if "--test" in sys.argv:
             return ApplicationMode.TEST
-        else:
-            return ApplicationMode.PRODUCTION
+        return ApplicationMode.PRODUCTION
 
     def _configure_logging(self) -> None:
         """Configure application logging for quiet startup."""

@@ -9,9 +9,12 @@ This script validates:
 4. Application functionality is preserved
 """
 
+from __future__ import annotations
+
 import os
-import sys
 from pathlib import Path
+import sys
+
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -105,9 +108,8 @@ def validate_cleanup():
             "🎉 ✅ CLEANUP SUCCESSFUL! All legacy components removed and unified picker working."
         )
         return True
-    else:
-        print("❌ CLEANUP INCOMPLETE! Some issues remain.")
-        return False
+    print("❌ CLEANUP INCOMPLETE! Some issues remain.")
+    return False
 
 
 if __name__ == "__main__":

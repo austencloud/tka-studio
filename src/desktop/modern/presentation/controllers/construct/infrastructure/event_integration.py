@@ -5,6 +5,8 @@ Replaces signal_coordinator.py with event-driven architecture using existing Typ
 Provides bridge between PyQt signals and modern event system.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -20,6 +22,7 @@ from desktop.modern.core.events.domain_events import (
 )
 from desktop.modern.core.events.event_bus import TypeSafeEventBus, get_event_bus
 from desktop.modern.domain.models import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -376,4 +379,5 @@ class ConstructTabEventIntegration:
         else:
             self.logger.error(f"Undo failed: {result.error_message}")
         return result
+
     # Cleanup

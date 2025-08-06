@@ -8,6 +8,8 @@ approach that provides consistent visibility and natural scene integration.
 Unified approach based on successful BeatNumberOverlay implementation.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import Qt

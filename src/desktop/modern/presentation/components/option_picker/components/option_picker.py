@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -142,7 +144,7 @@ class OptionPicker(ViewableComponentBase):
         if self.option_picker_widget:
             self.option_picker_widget.load_motion_combinations(sequence_data)
 
-    def get_pictograph_for_option(self, option_id: str) -> Optional["PictographData"]:
+    def get_pictograph_for_option(self, option_id: str) -> Optional[PictographData]:
         """Get PictographData for a specific option ID - simplified stub."""
         # For now, return None - can be enhanced later if needed
         return None

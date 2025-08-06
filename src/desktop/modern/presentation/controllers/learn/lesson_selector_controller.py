@@ -5,6 +5,8 @@ Handles business logic for lesson selection including validation,
 session creation, and state management. Coordinates between view and services.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject
@@ -22,6 +24,7 @@ from desktop.modern.presentation.controllers.learn.state import (
 from desktop.modern.presentation.views.learn.lesson_selector_view import (
     LessonSelectorView,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -195,7 +198,7 @@ class LessonSelectorController(QObject):
                 SessionCreationError(
                     lesson_type.value if "lesson_type" in locals() else "unknown",
                     quiz_mode.value if "quiz_mode" in locals() else "unknown",
-                    f"Unexpected error: {str(e)}",
+                    f"Unexpected error: {e!s}",
                 )
             )
 
@@ -242,6 +245,7 @@ class LessonSelectorController(QObject):
 
         except Exception as e:
             logger.error(f"Failed to refresh available lessons: {e}")
+
     def activate(self) -> None:
         """Activate the controller (called when view becomes active)."""
         # Refresh available lessons when activated

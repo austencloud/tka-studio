@@ -5,6 +5,8 @@ Manages the UI layout and panel creation for the construct tab.
 Now uses specialized components for different responsibilities.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
@@ -30,6 +32,7 @@ from desktop.modern.presentation.controllers.construct.orchestrators.layout_orch
 from desktop.modern.presentation.controllers.construct.orchestrators.progress_reporter import (
     ProgressReporter,
 )
+
 
 if TYPE_CHECKING:
     pass

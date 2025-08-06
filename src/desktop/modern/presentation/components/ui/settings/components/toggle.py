@@ -2,6 +2,8 @@
 Toggle switch component with glassmorphism styling.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QRect, Qt
 from PyQt6.QtGui import QBrush, QColor, QPainter, QPen
 from PyQt6.QtWidgets import QCheckBox

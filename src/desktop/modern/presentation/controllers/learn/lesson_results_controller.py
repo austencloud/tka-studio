@@ -5,6 +5,8 @@ Handles business logic for lesson results display including result calculation,
 performance analysis, and navigation. Coordinates between view and services.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject
@@ -22,6 +24,7 @@ from desktop.modern.presentation.controllers.learn.state import (
 from desktop.modern.presentation.views.learn.lesson_results_view import (
     LessonResultsView,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -164,7 +167,7 @@ class LessonResultsController(QObject):
             logger.error(f"Unexpected error restarting lesson: {e}")
             self.state_manager.set_error(
                 SessionCreationError(
-                    lesson_type.value, "unknown", f"Unexpected error: {str(e)}"
+                    lesson_type.value, "unknown", f"Unexpected error: {e!s}"
                 )
             )
 
@@ -205,6 +208,7 @@ class LessonResultsController(QObject):
     def _on_loading_changed(self, is_loading: bool) -> None:
         """Handle loading state changes."""
         self.view.set_loading_state(is_loading)
+
     def activate(self) -> None:
         """Activate the controller (called when view becomes active)."""
         # Display current results if available

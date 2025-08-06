@@ -11,11 +11,13 @@ PROVIDES:
 - Event-driven prop positioning
 """
 
+from __future__ import annotations
+
 import os
-import sys
-import uuid
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Optional
+import uuid
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -33,18 +35,16 @@ def _get_project_root() -> Path:
 _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
+import sys
 from typing import Any
+
 
 # Add project root to path (following established pattern)
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
 
 from PyQt6.QtCore import QPointF
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.enums import PropType
 from shared.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
@@ -61,6 +61,10 @@ from shared.application.services.positioning.props.configuration.json_configurat
     IJSONConfigurator,
     JSONConfigurator,
 )
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import PropType
+
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
@@ -117,7 +121,7 @@ class PropOrchestrator(IPropOrchestrator):
         offset_service: IOffsetCalculationService | None = None,
         config_service: IJSONConfigurator | None = None,
         classification_service: IPropClassificationService | None = None,
-        event_bus: Optional["IEventBus"] = None,
+        event_bus: Optional[IEventBus] = None,
     ):
         """Initialize with dependency injection."""
         self.direction_service = direction_service or DirectionCalculationService()

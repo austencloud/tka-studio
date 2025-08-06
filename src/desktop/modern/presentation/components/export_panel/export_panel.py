@@ -4,6 +4,8 @@ Export Panel - Proper proportional layout without fixed sizes
 Uses Qt layout system properly with stretch factors and size policies.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QTimer, pyqtSignal
@@ -318,6 +320,7 @@ class ExportPanel(QWidget):
             f"📊 [EXPORT_PANEL] Sequence changed: {sequence.length if sequence else 0} beats"
         )
         self._update_preview()
+
     def update_preview_from_external(self, pixmap=None):
         """Update preview (for compatibility)."""
         self._update_preview()

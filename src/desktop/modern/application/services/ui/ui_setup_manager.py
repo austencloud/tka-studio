@@ -15,9 +15,11 @@ PROVIDES:
 - Testable components
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+import logging
 from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QVBoxLayout, QWidget
@@ -28,6 +30,7 @@ from desktop.modern.presentation.components.menu_bar import MenuBarWidget
 from .error_recovery import UIErrorRecoveryService
 from .tab_factory import TabFactory
 from .tab_management import ITabManagementService, TabManagementService
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -42,7 +45,7 @@ class IUISetupManager(ABC):
     def setup_main_ui(
         self,
         main_window: QMainWindow,
-        container: "DIContainer",
+        container: DIContainer,
         progress_callback: Callable | None = None,
         session_service=None,
     ) -> QTabWidget:
@@ -67,7 +70,7 @@ class UISetupManager(IUISetupManager):
     def setup_main_ui(
         self,
         main_window: QMainWindow,
-        container: "DIContainer",
+        container: DIContainer,
         progress_callback: Callable | None = None,
         session_service=None,
     ) -> QTabWidget:
@@ -157,7 +160,7 @@ class UISetupManager(IUISetupManager):
         return tab_widget
 
     def _initialize_tab_management(
-        self, container: "DIContainer", progress_callback: Callable | None = None
+        self, container: DIContainer, progress_callback: Callable | None = None
     ) -> None:
         """Initialize tab management service."""
         try:
@@ -173,7 +176,7 @@ class UISetupManager(IUISetupManager):
 
     def _load_components(
         self,
-        container: "DIContainer",
+        container: DIContainer,
         session_service,
         progress_callback: Callable | None = None,
     ) -> None:

@@ -10,6 +10,8 @@ Handles all animation logic for OptionPickerSection including:
 Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
+from __future__ import annotations
+
 import asyncio
 from collections.abc import Callable
 

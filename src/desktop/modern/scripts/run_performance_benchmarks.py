@@ -13,10 +13,13 @@ Options:
     --detailed  Run detailed benchmarks with extended analysis
 """
 
+from __future__ import annotations
+
 import argparse
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
+
 
 # Add src to path for imports
 modern_src_path = Path(__file__).parent.parent / "src"
@@ -221,10 +224,9 @@ def main():
             print("✅ Component architecture meets world-class performance standards")
             print("✅ Ready for production deployment")
             return 0
-        else:
-            print("\n⚠️ Some performance benchmarks failed")
-            print("❌ Architecture performance needs optimization")
-            return 1
+        print("\n⚠️ Some performance benchmarks failed")
+        print("❌ Architecture performance needs optimization")
+        return 1
 
     except KeyboardInterrupt:
         print("\n\nBenchmarks interrupted by user")

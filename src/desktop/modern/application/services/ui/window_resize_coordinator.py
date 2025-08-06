@@ -5,6 +5,8 @@ Coordinates pictograph re-scaling when the main window is resized.
 Ensures all pictograph components use the correct main window width for scaling calculations.
 """
 
+from __future__ import annotations
+
 from typing import Optional, Protocol, runtime_checkable
 
 from PyQt6.QtCore import QObject, pyqtSignal

@@ -7,18 +7,22 @@ Provides comprehensive input validation for graph editor components
 following TKA architectural patterns and error handling best practices.
 """
 
+from __future__ import annotations
+
+from dataclasses import dataclass
 import logging
+from pathlib import Path
 
 # Import domain models for validation
 import sys
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
+
 
 modern_src = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(modern_src))
 
 from desktop.modern.domain.models import BeatData, Orientation, SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -201,7 +205,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Unexpected error validating beat data: {str(e)}",
+                f"Unexpected error validating beat data: {e!s}",
                 "beat_data",
                 beat_data,
                 ctx,
@@ -247,7 +251,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Error validating motion data: {str(e)}",
+                f"Error validating motion data: {e!s}",
                 field_name,
                 motion_data,
                 context,
@@ -336,7 +340,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Unexpected error validating sequence data: {str(e)}",
+                f"Unexpected error validating sequence data: {e!s}",
                 "sequence_data",
                 sequence_data,
                 ctx,
@@ -386,7 +390,7 @@ class GraphEditorValidator:
 
             # Check bounds if sequence length provided
             if sequence_length is not None:
-                if beat_index >= sequence_length and sequence_length > 0:
+                if beat_index >= sequence_length > 0:
                     result.add_error(
                         f"Beat index {beat_index} exceeds sequence length {sequence_length}",
                         "beat_index",
@@ -403,7 +407,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Error validating beat index: {str(e)}", "beat_index", beat_index, ctx
+                f"Error validating beat index: {e!s}", "beat_index", beat_index, ctx
             )
 
         return result
@@ -450,7 +454,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Error validating arrow ID: {str(e)}", "arrow_id", arrow_id, ctx
+                f"Error validating arrow ID: {e!s}", "arrow_id", arrow_id, ctx
             )
 
         return result
@@ -520,7 +524,7 @@ class GraphEditorValidator:
 
         except Exception as e:
             result.add_error(
-                f"Error validating orientation: {str(e)}",
+                f"Error validating orientation: {e!s}",
                 "orientation",
                 orientation,
                 ctx,

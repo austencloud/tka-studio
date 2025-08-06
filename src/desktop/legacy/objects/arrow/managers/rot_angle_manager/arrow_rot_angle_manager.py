@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from data.constants import *
@@ -27,7 +28,11 @@ class ArrowRotAngleManager:
             STATIC: StaticRotAngleCalculator,
             FLOAT: FloatRotAngleCalculator,
         }
-        return calculator_class_map.get(self.arrow.motion.state.motion_type)
+        # Use StaticRotAngleCalculator as fallback instead of None
+        # This prevents TypeError when motion_type is not set
+        return calculator_class_map.get(
+            self.arrow.motion.state.motion_type, StaticRotAngleCalculator
+        )
 
     def update_rotation(self) -> None:
         self.calculator_class = self._select_calculator_class()

@@ -5,9 +5,12 @@ Controls the loading and browsing state transitions for the sequence browser pan
 Manages visibility of loading widgets, progress updates, and state coordination.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtWidgets import QLabel, QProgressBar, QWidget
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,8 @@ Main learn tab implementation following the browse tab pattern.
 Integrates with the existing tab system while using modern architecture internally.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import pyqtSignal
@@ -14,6 +16,7 @@ from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.presentation.controllers.learn.learn_tab_coordinator import (
     LearnTabCoordinator,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +64,7 @@ class LearnTab(QWidget):
 
         except Exception as e:
             logger.error(f"Failed to setup learn tab UI: {e}")
-            self.error_occurred.emit(f"Failed to initialize learn tab: {str(e)}")
+            self.error_occurred.emit(f"Failed to initialize learn tab: {e!s}")
 
     def resizeEvent(self, event) -> None:
         """Handle resize events."""
@@ -94,6 +97,7 @@ class LearnTab(QWidget):
         if self.coordinator:
             return self.coordinator.get_current_view().value
         return "lesson_selector"
+
     def is_lesson_active(self) -> bool:
         """Check if a lesson is currently active."""
         if self.coordinator:

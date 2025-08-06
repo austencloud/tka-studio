@@ -4,6 +4,8 @@ Workbench Service Interfaces
 Interface definitions for workbench-related services following TKA's clean architecture.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, NamedTuple

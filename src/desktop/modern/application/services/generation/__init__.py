@@ -12,14 +12,17 @@ Simplified generation system using practical generators:
 This package provides clean, focused generation functionality without over-engineering.
 """
 
+from __future__ import annotations
+
 from .generation_service import GenerationService
 from .generation_service_registration import (
     GenerationServiceRegistrationHelper,
     register_generation_services,
 )
 
+
 __all__ = [
     "GenerationService",
-    "register_generation_services",
     "GenerationServiceRegistrationHelper",
+    "register_generation_services",
 ]

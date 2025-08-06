@@ -6,6 +6,8 @@ Eliminates type mixing in positioning services.
 
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QPointF
 
 from desktop.modern.core.types.geometry import Point

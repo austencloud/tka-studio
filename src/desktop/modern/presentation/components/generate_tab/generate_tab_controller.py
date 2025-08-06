@@ -5,6 +5,8 @@ Coordinates between the GeneratePanel UI and the generation services.
 Handles user interactions and manages the generation workflow.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING, Optional
 
@@ -21,6 +23,7 @@ from desktop.modern.domain.models.generation_models import (
     GenerationResult,
     GenerationState,
 )
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -43,7 +46,7 @@ class GenerateTabController(QObject):
     generation_completed = pyqtSignal(GenerationResult)
     config_changed = pyqtSignal(GenerationConfig)
 
-    def __init__(self, container: "DIContainer", parent: Optional[QObject] = None):
+    def __init__(self, container: DIContainer, parent: Optional[QObject] = None):
         super().__init__(parent)
         self.container = container
 
@@ -72,7 +75,7 @@ class GenerateTabController(QObject):
             logger.info("✅ Generation tab controller services initialized")
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize generation services: {str(e)}")
+            logger.error(f"❌ Failed to initialize generation services: {e!s}")
             # Create mock services as fallback
             self._create_fallback_services()
 
@@ -89,7 +92,7 @@ class GenerateTabController(QObject):
         self.generation_service = MockGenerationService(self.container)
         self.config_service = MockSequenceConfigurationService(self.container)
 
-    def set_generate_panel(self, panel: "GeneratePanel") -> None:
+    def set_generate_panel(self, panel: GeneratePanel) -> None:
         """
         Set the generate panel and connect signals.
 
@@ -147,11 +150,11 @@ class GenerateTabController(QObject):
                 self._show_error_message(result.error_message)
 
         except Exception as e:
-            logger.error(f"❌ Generation request failed: {str(e)}", exc_info=True)
+            logger.error(f"❌ Generation request failed: {e!s}", exc_info=True)
 
             # Create error result
             error_result = GenerationResult(
-                success=False, error_message=f"Generation failed: {str(e)}"
+                success=False, error_message=f"Generation failed: {e!s}"
             )
 
             self._current_state = self._current_state.with_result(error_result)
@@ -187,7 +190,7 @@ class GenerateTabController(QObject):
                 self._show_error_message(result.error_message)
 
         except Exception as e:
-            logger.error(f"❌ Auto-complete request failed: {str(e)}", exc_info=True)
+            logger.error(f"❌ Auto-complete request failed: {e!s}", exc_info=True)
             self._show_error_message(str(e))
 
     def handle_config_change(self, config: GenerationConfig) -> None:
@@ -222,7 +225,7 @@ class GenerateTabController(QObject):
             logger.debug(f"Configuration updated: {config.mode.value}")
 
         except Exception as e:
-            logger.error(f"❌ Config update failed: {str(e)}", exc_info=True)
+            logger.error(f"❌ Config update failed: {e!s}", exc_info=True)
 
     def save_config_as_preset(self, name: str) -> None:
         """
@@ -236,8 +239,8 @@ class GenerateTabController(QObject):
             logger.info(f"✅ Configuration saved as preset: {name}")
 
         except Exception as e:
-            logger.error(f"❌ Failed to save preset: {str(e)}")
-            self._show_error_message(f"Failed to save preset: {str(e)}")
+            logger.error(f"❌ Failed to save preset: {e!s}")
+            self._show_error_message(f"Failed to save preset: {e!s}")
 
     def load_config_preset(self, name: str) -> None:
         """
@@ -254,16 +257,17 @@ class GenerateTabController(QObject):
             logger.info(f"✅ Configuration preset loaded: {name}")
 
         except Exception as e:
-            logger.error(f"❌ Failed to load preset: {str(e)}")
-            self._show_error_message(f"Failed to load preset: {str(e)}")
+            logger.error(f"❌ Failed to load preset: {e!s}")
+            self._show_error_message(f"Failed to load preset: {e!s}")
 
     def get_preset_names(self) -> list[str]:
         """Get list of available preset names."""
         try:
             return self.config_service.get_preset_names()
         except Exception as e:
-            logger.error(f"❌ Failed to get preset names: {str(e)}")
+            logger.error(f"❌ Failed to get preset names: {e!s}")
             return []
+
     def _update_ui_if_available(self) -> None:
         """Update UI if panel is available."""
         if self._generate_panel:

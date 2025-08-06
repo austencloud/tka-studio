@@ -6,11 +6,14 @@ Renders sequence beats and pictographs onto exported images using the modern
 pictograph system while maintaining exact legacy positioning and layout logic.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
+from shared.application.services.data.pictograph_factory import PictographFactory
 
 from desktop.modern.core.interfaces.image_export_services import (
     IBeatDrawer,
@@ -20,7 +23,7 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.pictograph_scene import (
     PictographScene,
 )
-from shared.application.services.data.pictograph_factory import PictographFactory
+
 
 if TYPE_CHECKING:
     from .font_margin_helper import FontMarginHelper
@@ -36,7 +39,7 @@ class BeatDrawer(IBeatDrawer):
     system while maintaining exact legacy positioning and layout calculations.
     """
 
-    def __init__(self, font_margin_helper: "FontMarginHelper", container=None):
+    def __init__(self, font_margin_helper: FontMarginHelper, container=None):
         """
         Initialize the beat drawer.
 

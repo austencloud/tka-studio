@@ -5,9 +5,12 @@ Implements background settings management with QSettings persistence,
 event-driven updates, and asset validation.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

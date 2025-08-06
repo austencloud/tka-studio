@@ -5,6 +5,8 @@ Creates a fallback preview that shows sequence information instead of trying
 to use the complex export service which has method signature issues.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QColor, QFont, QImage, QPainter, QPixmap
 from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout
@@ -31,7 +33,7 @@ class PreviewGenerationWorker(QThread):
             self.preview_ready.emit(pixmap)
 
         except Exception as e:
-            self.preview_failed.emit(f"Preview generation error: {str(e)}")
+            self.preview_failed.emit(f"Preview generation error: {e!s}")
 
     def _create_sequence_info_preview(self) -> QPixmap:
         """Create a simple preview showing sequence information."""
@@ -336,7 +338,7 @@ class EnhancedExportPreviewCard(QFrame):
 
         except Exception as e:
             print(f"❌ [PREVIEW] Error displaying preview: {e}")
-            self._on_preview_failed(f"Display error: {str(e)}")
+            self._on_preview_failed(f"Display error: {e!s}")
 
     @pyqtSlot(str)
     def _on_preview_failed(self, error_message):

@@ -5,10 +5,13 @@ Focused component for displaying lesson progress including progress bar,
 question counter, and accuracy tracking with clean visual design.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QProgressBar, QVBoxLayout, QWidget
+
 
 logger = logging.getLogger(__name__)
 

@@ -14,6 +14,8 @@ FIXES APPLIED:
 - ✅ Better separation of concerns
 """
 
+from __future__ import annotations
+
 import logging
 import sys
 
@@ -24,6 +26,7 @@ from .service_registration_helper import (
     ServiceRegistrationHelper,
     TestDoubleRegistrationHelper,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -253,6 +256,10 @@ class ApplicationFactory:
     def _register_headless_business_services(container: DIContainer) -> None:
         """Register real business logic services for headless mode."""
         try:
+            from shared.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
+            )
+
             from desktop.modern.application.services.core.session_state_tracker import (
                 SessionStateTracker,
             )
@@ -265,9 +272,6 @@ class ApplicationFactory:
             )
             from desktop.modern.core.interfaces.session_services import (
                 ISessionStateTracker,
-            )
-            from shared.application.services.pictograph.pictograph_csv_manager import (
-                PictographCSVManager,
             )
 
             container.register_singleton(ISequenceManager, SequenceBeatOperations)

@@ -5,6 +5,8 @@ Individual beat widget for the Modern sequence workbench, replacing Legacy's Bea
 with modern architecture patterns and Modern pictograph integration.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
@@ -13,11 +15,11 @@ from PyQt6.QtWidgets import QFileDialog, QFrame, QMenu, QMessageBox, QVBoxLayout
 
 from desktop.modern.domain.models import BeatData
 
-from ...pictograph.views import create_beat_view
-from ...pictograph.views.beat_pictograph_view import BeatPictographView
 from .beat_number_overlay import BeatNumberOverlay, add_beat_number_to_view
 from .selection_overlay import SelectionOverlay
 from .start_text_overlay import StartTextOverlay
+from ...pictograph.views import create_beat_view
+from ...pictograph.views.beat_pictograph_view import BeatPictographView
 
 
 class BeatView(QFrame):
@@ -120,6 +122,7 @@ class BeatView(QFrame):
         if self._beat_data != beat_data:
             self._beat_data = beat_data
             self._update_display()
+
     def set_selected(self, selected: bool):
         """Set selection state"""
         if self._is_selected != selected:
@@ -135,11 +138,13 @@ class BeatView(QFrame):
     def is_selected(self) -> bool:
         """Check if view is selected"""
         return self._is_selected
+
     def set_beat_number_visible(self, visible: bool):
         """Set whether beat number overlay should be visible"""
         if self._show_beat_number != visible:
             self._show_beat_number = visible
             self._update_beat_number_overlay()
+
     # Display updates
     def _update_display(self):
         """Update the visual display based on beat data"""
@@ -354,7 +359,7 @@ class BeatView(QFrame):
             QMessageBox.critical(
                 self,
                 "Export Error",
-                f"An error occurred while exporting the beat:\n{str(e)}",
+                f"An error occurred while exporting the beat:\n{e!s}",
             )
 
     def _update_cursor(self):
@@ -382,6 +387,7 @@ class BeatView(QFrame):
     def sizeHint(self) -> QSize:
         """Provide size hint for layout management"""
         return QSize(120, 120)
+
     def cleanup(self):
         """Cleanup resources when the view is being destroyed"""
         # Clean up selection overlay

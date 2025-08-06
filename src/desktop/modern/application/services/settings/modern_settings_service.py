@@ -12,9 +12,11 @@ Architecture:
 - QSettings integration: Platform-independent persistence
 """
 
+from __future__ import annotations
+
+from datetime import datetime
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
 from typing import Any, TypeVar
 
@@ -30,6 +32,7 @@ from desktop.modern.core.interfaces.settings_services import (
     IUserProfileSettingsManager,
     IVisibilitySettingsManager,
 )
+
 
 T = TypeVar("T")
 logger = logging.getLogger(__name__)
@@ -64,15 +67,14 @@ class ApplicationStateMemento:
 
         if isinstance(data, datetime):
             return data.isoformat()
-        elif isinstance(data, dict):
+        if isinstance(data, dict):
             return {key: self._serialize_data(value) for key, value in data.items()}
-        elif isinstance(data, list):
+        if isinstance(data, list):
             return [self._serialize_data(item) for item in data]
-        elif hasattr(data, "__dict__"):
+        if hasattr(data, "__dict__"):
             # Handle dataclass or object with attributes
             return self._serialize_data(data.__dict__)
-        else:
-            return data
+        return data
 
     def to_dict(self) -> dict[str, Any]:
         """Convert memento to dictionary for persistence."""
@@ -119,11 +121,11 @@ class ApplicationStateMemento:
     def to_json(self) -> str:
         """Convert memento to JSON string for serialization."""
         import json
-        from datetime import datetime
+
         return json.dumps(self.to_dict(), indent=2, default=datetime_serializer)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "ApplicationStateMemento":
+    def from_dict(cls, data: dict[str, Any]) -> ApplicationStateMemento:
         """Create memento from dictionary."""
         timestamp_str = data.get("timestamp")
         timestamp = (
@@ -336,8 +338,7 @@ class ModernSettingsService(QObject):
 
             if type_hint:
                 return self.settings.value(full_key, default, type=type_hint)
-            else:
-                return self.settings.value(full_key, default)
+            return self.settings.value(full_key, default)
 
         except Exception as e:
             logger.error(f"Failed to query setting {section}/{key}: {e}")
@@ -572,9 +573,8 @@ class ModernSettingsService(QObject):
             if success and session_success:
                 logger.info("Successfully saved complete application state")
                 return True
-            else:
-                logger.warning("Partial failure saving application state")
-                return False
+            logger.warning("Partial failure saving application state")
+            return False
 
         except Exception as e:
             logger.error(f"Failed to save application state: {e}")
@@ -598,8 +598,7 @@ class ModernSettingsService(QObject):
                 if success:
                     logger.info("Successfully restored complete application state")
                     return memento
-                else:
-                    logger.warning("Failed to restore application state from memento")
+                logger.warning("Failed to restore application state from memento")
 
             return None
 

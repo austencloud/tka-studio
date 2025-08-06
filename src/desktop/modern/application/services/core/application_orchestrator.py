@@ -18,13 +18,18 @@ PROVIDES:
 - Progress tracking and error handling
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+import logging
 
-from presentation.components.ui.splash_screen import SplashScreen
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
+from shared.application.services.core.service_registration_manager import (
+    IServiceRegistrationManager,
+    ServiceRegistrationManager,
+)
 
 from desktop.modern.application.services.core.application_initialization_orchestrator import (
     ApplicationInitializationOrchestrator,
@@ -32,13 +37,11 @@ from desktop.modern.application.services.core.application_initialization_orchest
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
-from shared.application.services.core.service_registration_manager import (
-    IServiceRegistrationManager,
-    ServiceRegistrationManager,
-)
+from presentation.components.ui.splash_screen import SplashScreen
 
 from ..ui.background_manager import BackgroundManager, IBackgroundManager
 from ..ui.ui_setup_manager import IUISetupManager, UISetupManager
+
 
 logger = logging.getLogger(__name__)
 
@@ -104,14 +107,15 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
         try:
             # Try to create with default services
+            from shared.application.services.core.session_restoration_coordinator import (
+                SessionRestorationCoordinator,
+            )
+
             from desktop.modern.application.services.core.window_management_service import (
                 WindowManagementService,
             )
             from desktop.modern.application.services.ui.window_discovery_service import (
                 WindowDiscoveryService,
-            )
-            from shared.application.services.core.session_restoration_coordinator import (
-                SessionRestorationCoordinator,
             )
 
             window_service = WindowManagementService()
@@ -353,9 +357,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
                 "Window resize handling", e, logger, ErrorSeverity.WARNING
             )
 
-    def _create_progress_callback(
-        self, splash_screen: "SplashScreen"
-    ) -> Callable | None:
+    def _create_progress_callback(self, splash_screen: SplashScreen) -> Callable | None:
         """Create progress callback for splash screen updates."""
 
         def progress_callback(progress: int, message: str):

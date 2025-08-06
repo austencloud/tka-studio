@@ -3,9 +3,12 @@
 Simple test runner for Start Position Services.
 """
 
+from __future__ import annotations
+
 import os
-import sys
 from pathlib import Path
+import sys
+
 
 # Add src to path
 src_path = Path(__file__).parent / "src"
@@ -107,9 +110,8 @@ def run_start_position_service_tests():
         if failed == 0:
             print("✅ ALL TESTS PASSED!")
             return True
-        else:
-            print(f"❌ {failed} tests failed")
-            return False
+        print(f"❌ {failed} tests failed")
+        return False
 
     except Exception as e:
         print(f"❌ Test setup failed: {e}")

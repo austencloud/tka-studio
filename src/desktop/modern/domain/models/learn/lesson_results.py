@@ -5,6 +5,8 @@ Represents completion results and statistics for a finished lesson,
 including scoring, timing, and performance metrics.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Optional
@@ -68,7 +70,7 @@ class LessonResults:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "LessonResults":
+    def from_dict(cls, data: dict[str, Any]) -> LessonResults:
         """
         Deserialize results from dictionary.
 
@@ -98,28 +100,26 @@ class LessonResults:
         """Calculate letter grade based on accuracy percentage."""
         if self.accuracy_percentage >= 90:
             return "A"
-        elif self.accuracy_percentage >= 80:
+        if self.accuracy_percentage >= 80:
             return "B"
-        elif self.accuracy_percentage >= 70:
+        if self.accuracy_percentage >= 70:
             return "C"
-        elif self.accuracy_percentage >= 60:
+        if self.accuracy_percentage >= 60:
             return "D"
-        else:
-            return "F"
+        return "F"
 
     @property
     def performance_level(self) -> str:
         """Get performance level description."""
         if self.accuracy_percentage >= 95:
             return "Excellent"
-        elif self.accuracy_percentage >= 85:
+        if self.accuracy_percentage >= 85:
             return "Good"
-        elif self.accuracy_percentage >= 70:
+        if self.accuracy_percentage >= 70:
             return "Fair"
-        elif self.accuracy_percentage >= 50:
+        if self.accuracy_percentage >= 50:
             return "Needs Improvement"
-        else:
-            return "Poor"
+        return "Poor"
 
     @property
     def minutes_taken(self) -> float:

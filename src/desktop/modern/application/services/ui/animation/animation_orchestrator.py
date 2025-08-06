@@ -5,6 +5,8 @@ This module provides the animation orchestrator implementation for the desktop m
 """
 
 # Use the local implementation from modern_service_registration
+from __future__ import annotations
+
 from .modern_service_registration import ModernAnimationOrchestrator
 
 

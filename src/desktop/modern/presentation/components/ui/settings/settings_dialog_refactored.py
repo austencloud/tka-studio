@@ -32,6 +32,8 @@ Note: Import errors in IDE are expected due to relative imports - all services
 and tabs exist and will resolve correctly at runtime.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from PyQt6.QtCore import QRectF, Qt, pyqtSignal

@@ -5,6 +5,8 @@ This module provides the fade orchestrator implementation for the desktop modern
 """
 
 # Use the local implementation
+from __future__ import annotations
+
 from .animation_orchestrator import LegacyFadeManagerWrapper
 from .modern_service_registration import ModernAnimationOrchestrator
 

@@ -5,6 +5,8 @@ This module provides the letter condition classifications used by the legacy sys
 for placement key generation and pictograph validation.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 
 

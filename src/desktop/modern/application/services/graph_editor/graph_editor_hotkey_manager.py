@@ -7,10 +7,13 @@ Shift/Ctrl modifiers, and X/Z/C special commands.
 This is a pure service implementation that follows TKA testing patterns.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.interfaces.workbench_services import IGraphEditorService
@@ -24,7 +27,7 @@ class GraphEditorHotkeyManager:
     making it easier to test and more service-layer appropriate.
     """
 
-    def __init__(self, graph_service: "IGraphEditorService", callback_handler=None):
+    def __init__(self, graph_service: IGraphEditorService, callback_handler=None):
         self.graph_service = graph_service
 
         # Movement increment settings
@@ -66,15 +69,15 @@ class GraphEditorHotkeyManager:
             return self._handle_arrow_movement(key, modifiers, selected_arrow)
 
         # Special commands
-        elif key == Qt.Key.Key_X:
+        if key == Qt.Key.Key_X:
             if self.on_rotation_override:
                 self.on_rotation_override(selected_arrow)
             return True
-        elif key == Qt.Key.Key_Z:
+        if key == Qt.Key.Key_Z:
             if self.on_special_placement_removal:
                 self.on_special_placement_removal(selected_arrow)
             return True
-        elif key == Qt.Key.Key_C:
+        if key == Qt.Key.Key_C:
             if self.on_prop_placement_override:
                 self.on_prop_placement_override(selected_arrow)
             return True

@@ -4,6 +4,8 @@ Modern Animation Service Registration for Desktop Application
 This module provides service registration for the modern animation system in the desktop application.
 """
 
+from __future__ import annotations
+
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     IAnimationEngine,
@@ -31,7 +33,6 @@ class ModernAnimationOrchestrator:
         # Execute the update callback immediately for now
         if update_callback:
             update_callback()
-        return None
 
     async def execute_command(self, command):
         """Execute an animation command."""

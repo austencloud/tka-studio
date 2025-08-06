@@ -5,6 +5,8 @@ Focused component for displaying answer options in different formats.
 Handles buttons, pictographs, and other option types with clean interfaces.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -14,6 +16,7 @@ from PyQt6.QtWidgets import QGridLayout, QPushButton, QVBoxLayout, QWidget
 from desktop.modern.domain.models.learn import QuestionData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.views import create_learn_view
+
 
 logger = logging.getLogger(__name__)
 
@@ -282,6 +285,7 @@ class AnswerOptions(QWidget):
         """
         )
         layout.addWidget(error_label)
+
     def show_placeholder(
         self, message: str = "Select a question to see answer options"
     ) -> None:

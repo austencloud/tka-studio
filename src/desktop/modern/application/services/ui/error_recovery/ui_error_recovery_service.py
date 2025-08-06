@@ -5,6 +5,8 @@ Consolidates all fallback UI creation logic into a single, consistent approach.
 Replaces scattered error recovery patterns across ApplicationOrchestrator and UISetupManager.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt
@@ -21,6 +23,7 @@ from PyQt6.QtWidgets import (
 )
 
 from desktop.modern.core.error_handling import StandardErrorHandler
+
 
 logger = logging.getLogger(__name__)
 

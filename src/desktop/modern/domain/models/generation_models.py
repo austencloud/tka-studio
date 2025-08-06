@@ -5,6 +5,8 @@ These immutable data classes represent the core business entities
 for sequence generation, following Modern's clean architecture principles.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, replace
 from typing import Optional
 
@@ -24,15 +26,15 @@ from desktop.modern.domain.models.enums import GridMode
 class GenerationConfig:
     """Immutable configuration for sequence generation"""
 
-    mode: "GenerationMode" = None
+    mode: GenerationMode = None
     length: int = 16
     level: int = 1
     turn_intensity: float = 1.0
-    grid_mode: "GridMode" = None
-    prop_continuity: "PropContinuity" = None
-    letter_types: Optional[set["LetterType"]] = None
-    slice_size: "SliceSize" = None
-    cap_type: Optional["CAPType"] = None
+    grid_mode: GridMode = None
+    prop_continuity: PropContinuity = None
+    letter_types: Optional[set[LetterType]] = None
+    slice_size: SliceSize = None
+    cap_type: Optional[CAPType] = None
     start_position_key: Optional[str] = None
 
     def __post_init__(self):
@@ -61,7 +63,7 @@ class GenerationConfig:
                 },
             )
 
-    def with_updates(self, **kwargs) -> "GenerationConfig":
+    def with_updates(self, **kwargs) -> GenerationConfig:
         """Create a new config with updated values"""
         return replace(self, **kwargs)
 
@@ -83,7 +85,7 @@ class GenerationResult:
     success: bool
     sequence_data: Optional[list[dict]] = None
     start_position_data: Optional[dict] = None
-    metadata: Optional["GenerationMetadata"] = None
+    metadata: Optional[GenerationMetadata] = None
     error_message: Optional[str] = None
     warnings: Optional[list[str]] = None
 
@@ -105,14 +107,14 @@ class GenerationState:
         if self.validation_errors is None:
             object.__setattr__(self, "validation_errors", [])
 
-    def with_config(self, config: GenerationConfig) -> "GenerationState":
+    def with_config(self, config: GenerationConfig) -> GenerationState:
         """Create new state with updated config"""
         return replace(self, config=config)
 
-    def with_result(self, result: GenerationResult) -> "GenerationState":
+    def with_result(self, result: GenerationResult) -> GenerationState:
         """Create new state with generation result"""
         return replace(self, last_result=result, is_generating=False)
 
-    def start_generation(self) -> "GenerationState":
+    def start_generation(self) -> GenerationState:
         """Create new state marking generation as started"""
         return replace(self, is_generating=True)

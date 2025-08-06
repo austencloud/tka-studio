@@ -5,6 +5,8 @@ Creates construct tab components with proper dependency injection.
 Replaces the None initialization pattern with proper factory creation.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
@@ -15,6 +17,7 @@ from desktop.modern.core.interfaces.construct_tab_services import (
     IConstructTabComponentFactory,
 )
 from desktop.modern.core.interfaces.core_services import ILayoutService
+
 
 if TYPE_CHECKING:
     from shared.application.services.workbench.beat_selection_service import (

@@ -178,5 +178,65 @@
     "mtime": 1750484674.8416905,
     "target_size": "223x223",
     "cached_at": 1754504686.8299243
+  },
+  "f0ab1b51e180ada6a8b55efc180d54b1": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\R\u039b\u0393\\R\u039b\u0393_ver1.png",
+    "mtime": 1750484672.7619627,
+    "target_size": "748x748",
+    "cached_at": 1754512103.8189743
+  },
+  "75f313883b841aca44c02d18df34b6ed": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u0394-W-\u03b8-Y-\\\u0394-W-\u03b8-Y-_ver1.png",
+    "mtime": 1750484673.6768165,
+    "target_size": "748x748",
+    "cached_at": 1754512118.1248174
+  },
+  "723db77ad2a02bf21810d363a6921de9": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u0394-W-\u03b8-Y-\\\u0394-W-\u03b8-Y-_ver1.png",
+    "mtime": 1750484673.6768165,
+    "target_size": "766x751",
+    "cached_at": 1754512118.579042
+  },
+  "b71beed8bd395f14b02186ef9eeeb2a3": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u0394-Z\u03a9Z-\\\u0394-Z\u03a9Z-_ver1.png",
+    "mtime": 1750484673.715454,
+    "target_size": "784x751",
+    "cached_at": 1754512121.3991315
+  },
+  "d6fae7b757b4ad591aa5fb04e4c76af7": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u0394-Z\u03a9Z-\\\u0394-Z\u03a9Z-_ver1.png",
+    "mtime": 1750484673.715454,
+    "target_size": "802x751",
+    "cached_at": 1754512121.931995
+  },
+  "11d6eda70899b2729194bb2b18c70b34": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u03b8-W-\\\u03b8-W-_ver1.png",
+    "mtime": 1750484674.9998503,
+    "target_size": "820x751",
+    "cached_at": 1754512123.856684
+  },
+  "9a14d70fd9ef35f24bf300f6d76e2eb4": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u03b8-W-\\\u03b8-W-_ver1.png",
+    "mtime": 1750484674.9998503,
+    "target_size": "838x751",
+    "cached_at": 1754512123.9197283
+  },
+  "406d8be7c1348395f7e5b80367405d61": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u03b8-Y-\u03a3-W-\\\u03b8-Y-\u03a3-W-_ver1.png",
+    "mtime": 1750484675.0589037,
+    "target_size": "856x751",
+    "cached_at": 1754512125.2563355
+  },
+  "c54b98869a065ff441ab205a3b536eef": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u03b8-Y-\u03a3-W-\\\u03b8-Y-\u03a3-W-_ver1.png",
+    "mtime": 1750484675.0589037,
+    "target_size": "874x751",
+    "cached_at": 1754512125.3184402
+  },
+  "8033ff209196c908eb759535fa623910": {
+    "image_path": "F:\\CODE\\TKA\\src\\desktop\\legacy\\data\\dictionary\\\u03b8-X-\u03a9-W-\\\u03b8-X-\u03a9-W-_ver1.png",
+    "mtime": 1750484675.0473964,
+    "target_size": "892x751",
+    "cached_at": 1754512126.389627
   }
 }

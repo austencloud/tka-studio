@@ -8,16 +8,19 @@ ARCHITECTURE: Provides smart pointer management, memory leak detection,
 and automatic cleanup for Qt objects to prevent memory leaks.
 """
 
-import logging
-import os
-import time
-import weakref
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
+import logging
+import os
 from threading import Lock
+import time
 from typing import Any, Generic, TypeVar
+import weakref
 
 from PyQt6.QtCore import QObject, QTimer
+
 
 logger = logging.getLogger(__name__)
 

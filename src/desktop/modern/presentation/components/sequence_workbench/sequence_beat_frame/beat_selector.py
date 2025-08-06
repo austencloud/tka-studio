@@ -5,11 +5,12 @@ Handles Qt-specific events and visual updates for beat selection.
 Delegates all business logic to BeatSelectionService.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
-
 from shared.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
     SelectionChangeResult,
@@ -110,6 +111,7 @@ class BeatSelector(QObject):
         """Select the previous beat (keyboard navigation)."""
         result = self._selection_service.select_previous_beat()
         self._handle_selection_change(result)
+
     # Query Methods
     def get_selected_index(self) -> Optional[int]:
         """Get the currently selected beat index."""

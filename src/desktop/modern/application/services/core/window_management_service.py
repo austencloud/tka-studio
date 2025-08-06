@@ -11,6 +11,8 @@ PROVIDES:
 - Screen validation
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 from PyQt6.QtGui import QGuiApplication
@@ -113,7 +115,7 @@ class WindowManagementService(IWindowManagementService):
                         "🔄 Modern forced to RIGHT monitor (primary) for parallel testing"
                     )
                 return target_screen
-            elif monitor in ["primary", "left"]:
+            if monitor in ["primary", "left"]:
                 # Force to left monitor
                 primary_screen = screens[0]
                 secondary_screen = screens[1]

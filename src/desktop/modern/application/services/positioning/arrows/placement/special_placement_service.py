@@ -17,6 +17,8 @@ PROVIDES:
 - Special adjustment calculation with fallback to default
 """
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
@@ -26,6 +28,7 @@ from PyQt6.QtCore import QPointF
 
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -212,14 +215,13 @@ class SpecialPlacementService:
 
                 if blue_layer == 1 and red_layer == 1:
                     return "from_layer1"
-                elif blue_layer == 2 and red_layer == 2:
+                if blue_layer == 2 and red_layer == 2:
                     return "from_layer2"
-                elif blue_layer == 1 and red_layer == 2:
+                if blue_layer == 1 and red_layer == 2:
                     return "from_layer3_blue1_red2"
-                elif blue_layer == 2 and red_layer == 1:
+                if blue_layer == 2 and red_layer == 1:
                     return "from_layer3_blue2_red1"
-                else:
-                    return "from_layer1"
+                return "from_layer1"
 
         except Exception:
             pass

@@ -8,6 +8,8 @@ This service handles:
 - Grid-specific caching and performance optimization
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -15,16 +17,17 @@ from PyQt6.QtCore import QByteArray
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
-
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
-)
 from shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
 from shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
+
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
+
 
 logger = logging.getLogger(__name__)
 
@@ -141,9 +144,8 @@ class GridRenderingService:
                     f"🔲 [GRID_RENDERER] Created {grid_mode} grid renderer from {grid_svg_path}"
                 )
                 return renderer
-            else:
-                logger.error(f"❌ [GRID_RENDERER] Invalid SVG for {grid_mode} grid")
-                return self._create_fallback_grid_renderer(grid_mode)
+            logger.error(f"❌ [GRID_RENDERER] Invalid SVG for {grid_mode} grid")
+            return self._create_fallback_grid_renderer(grid_mode)
 
         except Exception as e:
             logger.error(
@@ -165,11 +167,8 @@ class GridRenderingService:
                     f"🔧 [GRID_RENDERER] Created fallback {grid_mode} grid renderer"
                 )
                 return renderer
-            else:
-                logger.error(
-                    "❌ [GRID_RENDERER] Failed to create fallback grid renderer"
-                )
-                return None
+            logger.error("❌ [GRID_RENDERER] Failed to create fallback grid renderer")
+            return None
 
         except Exception as e:
             logger.error(

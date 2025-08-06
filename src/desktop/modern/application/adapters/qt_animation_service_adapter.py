@@ -6,18 +6,20 @@ animation system, maintaining backward compatibility while enabling
 framework independence.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
-
 from shared.application.services.core.animation_service import (
     AnimationCommand,
     AnimationType,
     EasingType,
     create_animation_service,
 )
+
 
 logger = logging.getLogger(__name__)
 

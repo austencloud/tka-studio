@@ -5,6 +5,8 @@ Defines lesson types, quiz modes, and configuration data structures
 for the learning module.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -56,7 +58,7 @@ class LessonConfig:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "LessonConfig":
+    def from_dict(cls, data: dict[str, Any]) -> LessonConfig:
         """
         Deserialize configuration from dictionary.
 

@@ -2,6 +2,8 @@
 Background settings tab with animated clickable preview tiles.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont, QPainter
 from PyQt6.QtWidgets import (

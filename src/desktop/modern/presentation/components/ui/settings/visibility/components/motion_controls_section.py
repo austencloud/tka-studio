@@ -5,6 +5,8 @@ Focused component handling motion visibility controls with validation and glassm
 Extracted from the monolithic visibility tab following TKA clean architecture principles.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import pyqtSignal
@@ -17,6 +19,7 @@ from desktop.modern.core.interfaces.tab_settings_interfaces import (
 from desktop.modern.presentation.components.ui.settings.components.motion_toggle import (
     MotionToggle,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +129,7 @@ class MotionControlsSection(QFrame):
             toggle = self.motion_toggles.get(color)
             if toggle:
                 toggle.set_active(not visible)
+
     def get_motion_states(self) -> dict[str, bool]:
         """
         Get current motion visibility states.

@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Union
+
 from typing import TYPE_CHECKING
 
-from objects.arrow.arrow import Arrow
 from PyQt6.QtSvg import QSvgRenderer
-from utils.path_helpers import get_image_path
 
 from data.constants import CLOCK, COUNTER, FLOAT, IN, OUT
+from objects.arrow.arrow import Arrow
+from utils.path_helpers import get_image_path
 
 if TYPE_CHECKING:
     from svg_manager.svg_manager import SvgManager
@@ -25,16 +25,23 @@ class ArrowSvgManager:
         self._setup_arrow_svg_renderer(arrow, colored_svg_data)
 
     def _get_arrow_svg_file(self, arrow: "Arrow") -> str:
-        if arrow.motion.state.motion_type == FLOAT:
-            return self._get_float_svg_file()
-
-        turns = self._get_turns(arrow.motion.state.turns)
+        # Debug: Print arrow state information
+        motion_type = arrow.motion.state.motion_type
+        turns = arrow.motion.state.turns
         start_ori = arrow.motion.state.start_ori
 
+        if motion_type == FLOAT:
+            return self._get_float_svg_file()
+
+        turns = self._get_turns(turns)
+
         if start_ori in [IN, OUT]:
-            return self._get_radial_svg_file(arrow.motion.state.motion_type, turns)
+            return self._get_radial_svg_file(motion_type, turns)
         elif start_ori in [CLOCK, COUNTER]:
-            return self._get_nonradial_svg_file(arrow.motion.state.motion_type, turns)
+            return self._get_nonradial_svg_file(motion_type, turns)
+        else:
+            # Return a default SVG path instead of None
+            return self._get_float_svg_file()  # Use float as fallback
 
     def _get_float_svg_file(self) -> str:
         return get_image_path("arrows/float.svg")

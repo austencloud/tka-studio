@@ -2,6 +2,8 @@
 Style mixins for easy component integration with the design system.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QWidget
 
 from .core.types import ComponentType, StyleVariant

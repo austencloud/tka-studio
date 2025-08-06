@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from objects.arrow.arrow_svg_manager import ArrowSvgManager
@@ -36,7 +37,12 @@ class SvgManager:
     def _create_placeholder_svg(self, svg_path: str) -> str:
         """Create a simple placeholder SVG when the requested file is not found."""
         # Extract the filename from the path
-        filename = svg_path.split("/")[-1].split("\\")[-1]
+        # Handle case where svg_path is None - this should not happen
+        if svg_path is None:
+            print("ERROR: _create_placeholder_svg called with None svg_path")
+            filename = "error_none_path"
+        else:
+            filename = svg_path.split("/")[-1].split("\\")[-1]
 
         # Create a simple placeholder SVG
         placeholder_svg = f"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>

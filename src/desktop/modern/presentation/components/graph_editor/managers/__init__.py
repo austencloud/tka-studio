@@ -11,12 +11,15 @@ This package contains only the core managers needed for:
 """
 
 # Essential manager imports only
+from __future__ import annotations
+
 from .layout_manager import GraphEditorLayoutManager
 from .signal_coordinator import GraphEditorSignalCoordinator
 from .state_manager import GraphEditorStateManager
 
+
 __all__ = [
     "GraphEditorLayoutManager",
-    "GraphEditorStateManager",
     "GraphEditorSignalCoordinator",
+    "GraphEditorStateManager",
 ]

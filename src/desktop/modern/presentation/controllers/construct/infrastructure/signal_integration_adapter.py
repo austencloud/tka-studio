@@ -5,12 +5,15 @@ Provides a drop-in replacement for event bus integration using Qt signals.
 Maintains the same interface as ConstructTabEventIntegration but uses Qt signals internally.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject
 
 from .qt_signal_coordinator import ConstructTabSignalCoordinator
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,15 +5,19 @@ Manages layout and UI transitions for the construct tab.
 Extracted from the large LayoutManager to provide focused responsibility.
 """
 
-from typing import Dict, Any, Optional, Callable
+from __future__ import annotations
 
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QStackedWidget
+from typing import Any, Callable, Dict, Optional
+
 from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QVBoxLayout, QWidget
 
-from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.interfaces.construct_tab_services import IConstructTabLayoutService
 from desktop.modern.application.services.construct_tab.construct_tab_component_factory import (
     ConstructTabComponentFactory,
+)
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.interfaces.construct_tab_services import (
+    IConstructTabLayoutService,
 )
 from desktop.modern.presentation.components.right_panel_tabs.right_panel_tab_widget import (
     RightPanelTabWidget,
@@ -23,7 +27,7 @@ from desktop.modern.presentation.components.right_panel_tabs.right_panel_tab_wid
 class ConstructTabLayoutService(IConstructTabLayoutService):
     """
     Service for managing construct tab layout and transitions.
-    
+
     Responsibilities:
     - Layout setup and management
     - Component placement
@@ -63,7 +67,9 @@ class ConstructTabLayoutService(IConstructTabLayoutService):
 
         # Create workbench panel
         self._report_progress(20, "Creating workbench...")
-        self._workbench_widget, workbench_component = self._component_factory.create_workbench()
+        self._workbench_widget, workbench_component = (
+            self._component_factory.create_workbench()
+        )
         main_layout.addWidget(self._workbench_widget, 1)
         self._components["workbench"] = workbench_component
 
@@ -105,12 +111,16 @@ class ConstructTabLayoutService(IConstructTabLayoutService):
     def _create_all_panels(self):
         """Create all panels in the correct order."""
         # Start position picker (index 0)
-        start_pos_widget, start_pos_component = self._component_factory.create_start_position_picker()
+        start_pos_widget, start_pos_component = (
+            self._component_factory.create_start_position_picker()
+        )
         self._picker_stack.addWidget(start_pos_widget)
         self._components["start_position_picker"] = start_pos_component
 
         # Option picker (index 1) - create placeholder first, then real component
-        option_placeholder = self._component_factory.create_placeholder_widget("Loading option picker...")
+        option_placeholder = self._component_factory.create_placeholder_widget(
+            "Loading option picker..."
+        )
         self._picker_stack.addWidget(option_placeholder)
         self._components["option_picker"] = None  # Will be set later
 
@@ -123,7 +133,9 @@ class ConstructTabLayoutService(IConstructTabLayoutService):
         self._components["graph_editor"] = graph_component
 
         # Generate panel (index 3)
-        generate_widget, generate_component = self._component_factory.create_generate_panel()
+        generate_widget, generate_component = (
+            self._component_factory.create_generate_panel()
+        )
         self._picker_stack.addWidget(generate_widget)
         self._components["generate_panel"] = generate_component
 
@@ -135,23 +147,33 @@ class ConstructTabLayoutService(IConstructTabLayoutService):
     def _create_real_option_picker(self):
         """Create the real option picker component (deferred)."""
         try:
-            option_widget, option_component = self._component_factory.create_option_picker()
-            
+            option_widget, option_component = (
+                self._component_factory.create_option_picker()
+            )
+
             # Replace placeholder with real component
             self._picker_stack.removeWidget(self._picker_stack.widget(1))
             self._picker_stack.insertWidget(1, option_widget)
             self._components["option_picker"] = option_component
-            
+
         except Exception as e:
             print(f"❌ Failed to create option picker: {e}")
 
     def _connect_tab_signals(self):
         """Connect tab widget signals to transition methods."""
         if self._tab_widget:
-            self._tab_widget.picker_tab_clicked.connect(self.transition_to_start_position_picker)
-            self._tab_widget.option_picker_tab_clicked.connect(self.transition_to_option_picker)
-            self._tab_widget.graph_editor_tab_clicked.connect(self.transition_to_graph_editor)
-            self._tab_widget.generate_tab_clicked.connect(self.transition_to_generate_controls)
+            self._tab_widget.picker_tab_clicked.connect(
+                self.transition_to_start_position_picker
+            )
+            self._tab_widget.option_picker_tab_clicked.connect(
+                self.transition_to_option_picker
+            )
+            self._tab_widget.graph_editor_tab_clicked.connect(
+                self.transition_to_graph_editor
+            )
+            self._tab_widget.generate_tab_clicked.connect(
+                self.transition_to_generate_controls
+            )
             self._tab_widget.export_tab_clicked.connect(self.transition_to_export_panel)
 
     # Transition methods

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import (
     QColor,
@@ -8,7 +10,6 @@ from PyQt6.QtGui import (
     QTransform,
 )
 from PyQt6.QtWidgets import QWidget
-
 from shared.application.services.backgrounds.bubbles.bubble_physics import BubblePhysics
 from shared.application.services.backgrounds.bubbles.fish_movement import FishMovement
 from shared.application.services.backgrounds.bubbles.fish_spawning import FishSpawning

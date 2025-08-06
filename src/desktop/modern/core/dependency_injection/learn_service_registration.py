@@ -5,7 +5,14 @@ Registers all learn tab services with the DI container following
 the established patterns for service registration.
 """
 
+from __future__ import annotations
+
 import logging
+
+from shared.application.services.data.dataset_query import IDatasetQuery
+from shared.application.services.learn.question_generation_service import (
+    QuestionGenerationService,
+)
 
 from desktop.modern.application.services.learn import (
     AnswerValidationService,
@@ -33,10 +40,7 @@ from desktop.modern.infrastructure.file_system.file_system_service import (
     FileSystemService,
 )
 from desktop.modern.presentation.views.learn import LearnTab
-from shared.application.services.data.dataset_query import IDatasetQuery
-from shared.application.services.learn.question_generation_service import (
-    QuestionGenerationService,
-)
+
 
 logger = logging.getLogger(__name__)
 

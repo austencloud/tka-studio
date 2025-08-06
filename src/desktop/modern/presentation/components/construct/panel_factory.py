@@ -6,6 +6,8 @@ Handles the creation of workbench, start position picker, option picker,
 graph editor, and generate controls panels.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import Qt

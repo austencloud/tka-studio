@@ -8,6 +8,8 @@ natural scene integration without visual styling artifacts.
 Unified with BeatNumberOverlay approach, replacing the problematic QGraphicsTextItem version.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QWidget
 
 from .text_overlay_base import (

@@ -8,6 +8,8 @@ This service provides the core directional tuple generation that was
 missing from the modern arrow positioning system.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.positioning_services import (
@@ -19,6 +21,7 @@ from desktop.modern.domain.models import (
     MotionType,
     RotationDirection,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -201,8 +204,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
         # In a full implementation, you would map the location to a specific tuple
         if tuples:
             return tuples[0]
-        else:
-            return (base_x, base_y)
+        return (base_x, base_y)
 
     def generate_directional_tuples(
         self, motion: MotionData, base_x: float, base_y: float
@@ -234,15 +236,14 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
             return self._handle_shift_tuples(
                 motion_type, prop_rot_dir, grid_mode, base_x, base_y
             )
-        elif motion_type == MotionType.DASH:
+        if motion_type == MotionType.DASH:
             return self._handle_dash_tuples(prop_rot_dir, grid_mode, base_x, base_y)
-        elif motion_type == MotionType.STATIC:
+        if motion_type == MotionType.STATIC:
             return self._handle_static_tuples(prop_rot_dir, grid_mode, base_x, base_y)
-        elif motion_type == MotionType.FLOAT:
+        if motion_type == MotionType.FLOAT:
             return self._handle_float_tuples(motion, base_x, base_y)
-        else:
-            logger.warning(f"Unknown motion type: {motion_type}, using default")
-            return [(base_x, base_y)] * 4
+        logger.warning(f"Unknown motion type: {motion_type}, using default")
+        return [(base_x, base_y)] * 4
 
     def _determine_grid_mode(self, motion: MotionData) -> str:
         """
@@ -264,8 +265,7 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
             Location.NORTHWEST,
         ]:
             return "box"
-        else:
-            return "diamond"
+        return "diamond"
 
     def _handle_shift_tuples(
         self,

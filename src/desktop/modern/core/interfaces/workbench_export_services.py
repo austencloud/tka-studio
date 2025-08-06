@@ -6,6 +6,8 @@ These interfaces define contracts for export functionality without
 being tied to specific implementations or UI frameworks.
 """
 
+from __future__ import annotations
+
 from typing import Optional, Protocol
 
 from desktop.modern.domain.models.sequence_data import SequenceData

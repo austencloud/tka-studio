@@ -4,9 +4,12 @@ Integration Script: Replace Browse Tab with Service-Enabled Version
 This script integrates the new service-enabled browse tab into the modern architecture.
 """
 
+from __future__ import annotations
+
 import logging
-import shutil
 from pathlib import Path
+import shutil
+
 
 logger = logging.getLogger(__name__)
 

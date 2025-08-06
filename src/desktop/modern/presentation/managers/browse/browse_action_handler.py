@@ -8,6 +8,8 @@ This class is responsible for:
 - Providing feedback to users on action results
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -24,6 +26,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.ui.full_screen.full_screen_overlay import (
     FullScreenOverlay,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -168,14 +171,13 @@ class BrowseActionHandler:
                         f"Image saved successfully to:\n{output_path}",
                     )
                     return True
-                else:
-                    QMessageBox.critical(
-                        self.parent_widget,
-                        "Export Failed",
-                        f"Failed to export image:\n{result.error_message}",
-                    )
-                    logger.error(f"❌ Failed to export image: {result.error_message}")
-                    return False
+                QMessageBox.critical(
+                    self.parent_widget,
+                    "Export Failed",
+                    f"Failed to export image:\n{result.error_message}",
+                )
+                logger.error(f"❌ Failed to export image: {result.error_message}")
+                return False
 
             return False  # User cancelled dialog
 
@@ -184,7 +186,7 @@ class BrowseActionHandler:
             QMessageBox.critical(
                 self.parent_widget,
                 "Export Error",
-                f"An error occurred while saving the image:\n{str(e)}",
+                f"An error occurred while saving the image:\n{e!s}",
             )
             return False
 
@@ -233,7 +235,7 @@ class BrowseActionHandler:
             QMessageBox.critical(
                 self.parent_widget,
                 "Deletion Error",
-                f"An error occurred while deleting the variation:\n{str(e)}",
+                f"An error occurred while deleting the variation:\n{e!s}",
             )
             return False
 
@@ -285,7 +287,7 @@ class BrowseActionHandler:
             QMessageBox.critical(
                 self.parent_widget,
                 "Fullscreen Error",
-                f"An error occurred while opening fullscreen view:\n{str(e)}",
+                f"An error occurred while opening fullscreen view:\n{e!s}",
             )
             return False
 
@@ -294,11 +296,12 @@ class BrowseActionHandler:
         logger.warning("Initializing fallback services")
 
         # Create basic fallback implementations
-        from desktop.modern.application.services.browse.sequence_deletion_service import (
-            SequenceDeletionService,
-        )
         from shared.application.services.image_export.sequence_metadata_extractor import (
             SequenceMetadataExtractor,
+        )
+
+        from desktop.modern.application.services.browse.sequence_deletion_service import (
+            SequenceDeletionService,
         )
 
         self.metadata_extractor = SequenceMetadataExtractor()

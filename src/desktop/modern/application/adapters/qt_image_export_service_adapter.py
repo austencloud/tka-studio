@@ -5,16 +5,18 @@ This adapter bridges the framework-agnostic image export service with Qt's
 QPainter-based rendering system, maintaining backward compatibility.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
-
 from shared.application.services.core.image_export_service import (
     create_image_export_service,
 )
 from shared.application.services.core.types import Point, Size
+
 
 logger = logging.getLogger(__name__)
 
@@ -212,10 +214,9 @@ class QtImageExportServiceAdapter:
         try:
             if hasattr(color, "to_hex"):
                 return QColor(color.to_hex())
-            elif isinstance(color, str):
+            if isinstance(color, str):
                 return QColor(color)
-            else:
-                return QColor("#FFFFFF")  # Default white
+            return QColor("#FFFFFF")  # Default white
         except Exception:
             return QColor("#FFFFFF")
 

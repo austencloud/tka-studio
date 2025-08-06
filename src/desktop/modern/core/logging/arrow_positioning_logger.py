@@ -5,6 +5,8 @@ This module provides optimized logging for the arrow positioning services
 that were generating excessive verbosity in the original logs.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from typing import Any
@@ -145,7 +147,7 @@ class ArrowPositioningLogger:
                         )
 
                     self.smart_logger.logger.error(
-                        f"❌ Directional processing failed: {str(e)}"
+                        f"❌ Directional processing failed: {e!s}"
                     )
                     raise
 

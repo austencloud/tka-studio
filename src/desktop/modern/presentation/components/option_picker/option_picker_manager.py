@@ -5,19 +5,21 @@ Manages option picker initialization, population, and option selection for the c
 Responsible for coordinating between the option picker component and sequence management.
 """
 
+from __future__ import annotations
+
 import time
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
+from shared.application.services.data.conversion_utils import (
+    extract_end_position_from_position_key,
+)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.components.option_picker import (
     OptionPicker,
-)
-from shared.application.services.data.conversion_utils import (
-    extract_end_position_from_position_key,
 )
 
 
@@ -51,6 +53,7 @@ class OptionPickerManager(QObject):
             self.option_picker.pictograph_selected.connect(
                 self._handle_pictograph_selected
             )
+
     def populate_from_start_position(
         self, position_key: str, start_position_beat_data: BeatData
     ):

@@ -6,7 +6,10 @@ It imports from the shared animation system to avoid code duplication.
 """
 
 # Import the shared implementation
+from __future__ import annotations
+
 from shared.application.services.ui.animation.animation_service import AnimationService
+
 
 # Re-export for local imports
 __all__ = ["AnimationService"]

@@ -2,8 +2,10 @@
 Content component style providers (labels, overlays).
 """
 
-from ..core.types import StyleVariant
+from __future__ import annotations
+
 from . import StyleProvider
+from ..core.types import StyleVariant
 
 
 class LabelStyleProvider(StyleProvider):

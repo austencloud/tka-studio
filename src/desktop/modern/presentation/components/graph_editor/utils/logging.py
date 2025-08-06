@@ -7,11 +7,13 @@ Provides structured logging utilities for graph editor components
 with context information and consistent formatting.
 """
 
+from __future__ import annotations
+
+from collections.abc import Callable
+from datetime import datetime
 import functools
 import logging
 import traceback
-from collections.abc import Callable
-from datetime import datetime
 from typing import Any
 
 
@@ -78,9 +80,7 @@ class GraphEditorLogger:
         )
 
         if exception:
-            full_message += (
-                f" | Exception: {type(exception).__name__}: {str(exception)}"
-            )
+            full_message += f" | Exception: {type(exception).__name__}: {exception!s}"
             self.logger.error(full_message, exc_info=True)
         else:
             self.logger.error(full_message)

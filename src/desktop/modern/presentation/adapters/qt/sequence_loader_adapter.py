@@ -11,18 +11,20 @@ Benefits:
 - Proper dependency injection patterns
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
 from shared.application.services.sequence.sequence_loader_service import (
     SequenceLoaderService,
 )
+
+from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class QtSequenceLoaderAdapter(QObject):

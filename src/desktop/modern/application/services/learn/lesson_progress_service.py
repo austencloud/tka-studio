@@ -5,6 +5,8 @@ Tracks lesson progress, completion status, and calculates results
 for quiz sessions.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -14,6 +16,7 @@ from desktop.modern.core.interfaces.learn_services import (
     IQuizSessionService,
 )
 from desktop.modern.domain.models.learn import LessonResults, QuizMode
+
 
 logger = logging.getLogger(__name__)
 
@@ -243,8 +246,7 @@ class LessonProgressService(ILessonProgressService):
             if session.quiz_mode == QuizMode.COUNTDOWN:
                 minutes, seconds = divmod(session.quiz_time, 60)
                 return f"Time Remaining: {minutes}:{seconds:02d}"
-            else:
-                return f"{session.current_question}/{session.total_questions}"
+            return f"{session.current_question}/{session.total_questions}"
         except Exception as e:
             logger.error(f"Failed to format progress text: {e}")
             return "Progress: N/A"
@@ -255,10 +257,9 @@ class LessonProgressService(ILessonProgressService):
             if session.quiz_mode == QuizMode.COUNTDOWN:
                 minutes, seconds = divmod(max(0, session.quiz_time), 60)
                 return f"{minutes}:{seconds:02d}"
-            else:
-                elapsed_minutes = int(session.elapsed_time_seconds // 60)
-                elapsed_seconds = int(session.elapsed_time_seconds % 60)
-                return f"{elapsed_minutes}:{elapsed_seconds:02d}"
+            elapsed_minutes = int(session.elapsed_time_seconds // 60)
+            elapsed_seconds = int(session.elapsed_time_seconds % 60)
+            return f"{elapsed_minutes}:{elapsed_seconds:02d}"
         except Exception as e:
             logger.error(f"Failed to format time display: {e}")
             return "0:00"

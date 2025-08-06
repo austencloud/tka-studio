@@ -5,10 +5,13 @@ Manages navigation state and transitions for the learn tab,
 following the stack-based navigation pattern.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import ILearnNavigationService
+
 
 logger = logging.getLogger(__name__)
 
@@ -157,10 +160,9 @@ class LearnNavigationService(ILearnNavigationService):
 
                 logger.debug(f"Navigated back to {previous_view}")
                 return True
-            else:
-                # Fallback to lesson selector
-                self.navigate_to_lesson_selector()
-                return True
+            # Fallback to lesson selector
+            self.navigate_to_lesson_selector()
+            return True
 
         except Exception as e:
             logger.error(f"Failed to navigate back: {e}")

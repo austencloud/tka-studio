@@ -5,6 +5,8 @@ Focused component for displaying quiz questions in different formats.
 Handles pictographs, letters, and text with appropriate rendering.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -14,6 +16,7 @@ from PyQt6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 from desktop.modern.domain.models.learn import QuestionData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.views import create_learn_view
+
 
 logger = logging.getLogger(__name__)
 
@@ -63,13 +66,10 @@ class PictographQuestionRenderer(QuestionRenderer):
         """Extract PictographData from question content."""
         if isinstance(question_content, dict) and "data" in question_content:
             return question_content["data"]
-        elif isinstance(question_content, PictographData):
+        if isinstance(question_content, PictographData):
             return question_content
-        else:
-            logger.warning(
-                f"Unexpected pictograph data format: {type(question_content)}"
-            )
-            return None
+        logger.warning(f"Unexpected pictograph data format: {type(question_content)}")
+        return None
 
     def _create_error_widget(self, message: str, parent: QWidget) -> QWidget:
         """Create error display widget."""
@@ -227,6 +227,7 @@ class QuestionDisplay(QWidget):
         error_renderer = TextQuestionRenderer()
         self.content_widget = error_renderer.render(message, self)
         self.layout.addWidget(self.content_widget)
+
     def update_responsive_styling(self, parent_width: int, parent_height: int) -> None:
         """Update styling based on parent widget size."""
         if not self.content_widget:
@@ -257,6 +258,7 @@ class QuestionDisplay(QWidget):
 
         except Exception as e:
             logger.error(f"Failed to update responsive styling: {e}")
+
     def get_current_format(self) -> str:
         """Get current display format."""
         return self.current_format

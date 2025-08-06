@@ -12,12 +12,15 @@ Features:
 - Responsive layout that adapts to container size
 """
 
-import logging
+from __future__ import annotations
+
 from datetime import datetime
 from enum import Enum
+import logging
 
-from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QSize, QTimer, pyqtSignal
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
 
 # Event bus removed - using Qt signals instead
 EVENT_BUS_AVAILABLE = False
@@ -36,6 +39,7 @@ from desktop.modern.presentation.components.start_position_picker.start_position
 from desktop.modern.presentation.components.start_position_picker.start_position_picker_header import (
     StartPositionPickerHeader,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -305,6 +309,7 @@ class StartPositionPicker(QWidget):
         self.transition_animation = QPropertyAnimation(self, b"windowOpacity")
         self.transition_animation.setDuration(300)
         self.transition_animation.setEasingCurve(QEasingCurve.Type.OutCubic)
+
     def set_transition_mode(self, in_transition: bool):
         """Set transition mode to prevent sizing updates during fade transitions."""
         self._is_in_transition = in_transition

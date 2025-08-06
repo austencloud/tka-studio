@@ -5,6 +5,8 @@ Handles the actual layout operations for start position picker components.
 Contains Qt-specific layout manipulation logic.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtWidgets import QApplication, QGridLayout, QWidget
@@ -13,6 +15,7 @@ from desktop.modern.application.services.start_position.start_position_layout_se
     LayoutMode,
     StartPositionLayoutService,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -67,11 +70,10 @@ class StartPositionLayoutManager:
                 return self._arrange_horizontal_layout(
                     grid_layout, position_widgets, config
                 )
-            elif config["type"] == "grid":
+            if config["type"] == "grid":
                 return self._arrange_grid_layout(grid_layout, position_widgets, config)
-            else:
-                logger.warning(f"Unknown layout type: {config['type']}")
-                return False
+            logger.warning(f"Unknown layout type: {config['type']}")
+            return False
 
         except Exception as e:
             logger.error(f"Error arranging positions in layout: {e}")

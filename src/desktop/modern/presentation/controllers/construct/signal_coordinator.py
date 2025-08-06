@@ -5,9 +5,12 @@ Manages signal connections, emissions, and coordination between construct tab co
 Responsible for connecting signals between components and handling signal routing.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

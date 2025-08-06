@@ -5,6 +5,8 @@ These adapters are used in the UI layer to bridge between the clean architecture
 core types and the PyQt6 framework types.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QPointF, QRect, QSize
 
 from desktop.modern.core.types import Point, Rect, Size

@@ -6,6 +6,8 @@ These interfaces define contracts for sequence operations, data management,
 and transformation that must work identically across desktop and web platforms.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import Enum

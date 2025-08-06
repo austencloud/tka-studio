@@ -40,7 +40,7 @@ await orchestrator.fade_targets([widget1, widget2], fade_in=False)
 # Fade and update pattern
 await orchestrator.transition_targets(
     widgets=[content_widget],
-    update_callback=lambda: content_widget.setText("New content")
+    update_callback=lambda: content_widget.setText("New content"),
 )
 
 # Stack transitions
@@ -71,7 +71,10 @@ fade_manager.stack_fader.fade_stack(stack, 1, duration=300)
 
 1. Add to DI container:
    ```python
-   from desktop.modern.application.services.ui.animation import setup_modern_animation_services
+   from desktop.modern.application.services.ui.animation import (
+       setup_modern_animation_services,
+   )
+
    setup_modern_animation_services(container)
    ```
 
@@ -93,6 +96,8 @@ fade_manager.stack_fader.fade_stack(stack, 1, duration=300)
 
 # Core interfaces
 # Core engine
+from __future__ import annotations
+
 from desktop.modern.core.animation.animation_engine import (
     CoreAnimationEngine,
     DefaultSettingsProvider,
@@ -139,6 +144,7 @@ from .modern_service_registration import (
     ModernAnimationServiceRegistration,
     setup_modern_animation_services,
 )
+
 
 __all__ = [
     # Main interfaces

@@ -11,13 +11,16 @@ of the Browse tab functionality:
 Note: BrowseTabController moved to controllers package.
 """
 
+from __future__ import annotations
+
 from .browse_action_handler import BrowseActionHandler
 from .browse_data_manager import BrowseDataManager
 from .browse_navigation_manager import BrowseNavigationManager, BrowsePanel
 
+
 __all__ = [
-    "BrowseDataManager",
     "BrowseActionHandler",
+    "BrowseDataManager",
     "BrowseNavigationManager",
     "BrowsePanel",
 ]

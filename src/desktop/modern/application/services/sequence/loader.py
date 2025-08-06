@@ -5,20 +5,23 @@ Handles sequence loading from persistence and startup restoration.
 Responsible for loading sequences from current_sequence.json and managing startup workflows.
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABCMeta
 from collections.abc import Callable
+import logging
 from typing import TYPE_CHECKING
 
 # Removed circular import - workbench should be passed as parameter if needed
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
 from shared.application.services.sequence.sequence_persister import SequencePersister
+
+from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
+from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.pictograph_data import PictographData
@@ -147,16 +150,17 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
 
     def _create_start_position_pictograph_data(
         self, position_key: str, end_pos: str
-    ) -> "PictographData":
+    ) -> PictographData:
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
+            from shared.application.services.data.dataset_query import IDatasetQuery
+
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.domain.models.grid_data import GridData
             from desktop.modern.domain.models.pictograph_data import PictographData
-            from shared.application.services.data.dataset_query import IDatasetQuery
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -176,21 +180,20 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
                 )
 
                 return pictograph_data
-            else:
-                print(
-                    f"⚠️ [SEQUENCE_LOADING] No real data found for position {position_key}, using fallback"
-                )
-                # Fallback PictographData
-                return PictographData(
-                    letter=position_key,
-                    start_position=position_key,
-                    end_position=end_pos,
-                    grid_data=GridData(),
-                    arrows={},
-                    props={},
-                    is_blank=False,
-                    metadata={"source": "fallback_sequence_loading"},
-                )
+            print(
+                f"⚠️ [SEQUENCE_LOADING] No real data found for position {position_key}, using fallback"
+            )
+            # Fallback PictographData
+            return PictographData(
+                letter=position_key,
+                start_position=position_key,
+                end_position=end_pos,
+                grid_data=GridData(),
+                arrows={},
+                props={},
+                is_blank=False,
+                metadata={"source": "fallback_sequence_loading"},
+            )
 
         except Exception as e:
             print(f"❌ [SEQUENCE_LOADING] Error creating PictographData: {e}")

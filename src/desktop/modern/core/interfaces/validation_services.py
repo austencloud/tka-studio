@@ -5,6 +5,8 @@ These interfaces define contracts for validation operations across the applicati
 supporting pictograph validation, beat validation, and sequence validation.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 from desktop.modern.domain.models.motion_data import MotionData

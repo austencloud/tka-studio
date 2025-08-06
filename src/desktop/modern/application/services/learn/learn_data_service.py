@@ -5,15 +5,18 @@ Handles data persistence and retrieval for the learning module,
 including lesson progress, results, and session data.
 """
 
+from __future__ import annotations
+
+from datetime import datetime
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from desktop.modern.core.interfaces.learn_services import ILearnDataService
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
 from desktop.modern.domain.models.learn import LessonResults, LessonType
+
 
 logger = logging.getLogger(__name__)
 

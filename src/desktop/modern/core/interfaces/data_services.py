@@ -4,6 +4,8 @@ Data Service Interfaces
 Interface definitions for data management services following TKA's clean architecture.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

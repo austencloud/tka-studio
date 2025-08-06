@@ -13,6 +13,8 @@ Architecture follows clean separation:
 All domain/application/presentation absolute imports are preserved.
 """
 
+from __future__ import annotations
+
 from shared.application.services.option_picker.option_provider import OptionProvider
 
 # Core components (primary public API)
@@ -21,6 +23,7 @@ from .components.option_picker_widget import OptionPickerWidget
 
 # Types
 from .types.letter_types import LetterType
+
 
 # Services (for advanced usage)
 # Note: PictographPoolManager has been moved to application.services.option_picker.data.pool_manager

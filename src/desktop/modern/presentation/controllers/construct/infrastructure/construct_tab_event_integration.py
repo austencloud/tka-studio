@@ -5,6 +5,8 @@ Integrates the existing TypeSafeEventBus into ConstructTab components,
 replacing signal coordination with event-driven architecture.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from desktop.modern.core.commands.command_system import CommandProcessor
@@ -19,6 +21,7 @@ from desktop.modern.core.events.domain_events import (
 )
 from desktop.modern.core.events.event_bus import IEventBus
 
+
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
 
@@ -30,7 +33,7 @@ class ConstructTabEventIntegration:
     Replaces signal_coordinator.py with event bus integration.
     """
 
-    def __init__(self, container: "DIContainer"):
+    def __init__(self, container: DIContainer):
         """Initialize with existing event infrastructure."""
         # Get existing event bus from DI container
         self.event_bus: IEventBus = container.resolve(IEventBus)

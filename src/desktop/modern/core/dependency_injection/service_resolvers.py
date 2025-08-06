@@ -7,10 +7,13 @@ Contains all resolver implementations using the Strategy Pattern:
 - FactoryResolver: Handles factory-based service creation
 """
 
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
 import inspect
 import logging
-from abc import ABC, abstractmethod
 from typing import Any, get_type_hints
+
 
 logger = logging.getLogger(__name__)
 

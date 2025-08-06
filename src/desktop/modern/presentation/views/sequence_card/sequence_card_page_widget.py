@@ -4,6 +4,8 @@ Sequence Card Page Widget
 Widget representing a page of sequence cards with letter-sized dimensions.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -20,6 +22,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
 from .image_loader import ImageLoader
 from .sequence_card_widget import SequenceCardWidget
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,7 +36,7 @@ class SequenceCardPageWidget(QFrame):
         layout_service: ISequenceCardLayoutService,
         image_loader: ImageLoader | None = None,
         cache_service: ISequenceCardCacheService | None = None,
-        parent: Optional["QWidget"] = None,
+        parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)
         self.sequences: list[SequenceCardData] = sequences
@@ -165,6 +168,7 @@ class SequenceCardPageWidget(QFrame):
         super().resizeEvent(event)
         if hasattr(self, "grid_layout"):
             self._update_layout_margins()
+
     def _apply_styling(self) -> None:
         """Apply letter-sized page styling to match legacy system."""
         self.setStyleSheet(

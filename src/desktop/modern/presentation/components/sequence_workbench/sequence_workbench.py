@@ -17,6 +17,8 @@ BUSINESS LOGIC DELEGATED TO:
 - BeatSelectionService: Beat selection logic
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
@@ -45,6 +47,7 @@ from .event_handler_helper import EventHandlerHelper
 from .indicator_section import WorkbenchIndicatorSection
 from .signal_connection_helper import SignalConnectionHelper
 from .ui_setup_helper import UISetupHelper
+
 
 if TYPE_CHECKING:
     from shared.application.services.workbench.beat_selection_service import (
@@ -79,7 +82,7 @@ class SequenceWorkbench(ViewableComponentBase):
         self,
         container: DIContainer,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
+        beat_selection_service: BeatSelectionService,
         parent: QWidget | None = None,
     ):
         """Initialize workbench with injected services."""
@@ -292,7 +295,7 @@ class SequenceWorkbench(ViewableComponentBase):
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional["PictographData"] = None,
+        pictograph_data: Optional[PictographData] = None,
         from_restoration: bool = False,
     ):
         """Set the start position via state manager."""

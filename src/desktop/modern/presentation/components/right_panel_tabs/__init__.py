@@ -6,6 +6,9 @@ in the construct tab, providing a clean tab-based interface for
 switching between different panel modes.
 """
 
+from __future__ import annotations
+
 from .right_panel_tab_widget import RightPanelTabWidget
+
 
 __all__ = ["RightPanelTabWidget"]

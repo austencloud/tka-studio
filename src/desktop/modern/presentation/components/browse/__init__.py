@@ -1,5 +1,7 @@
 """Browse Components Package"""
 
+from __future__ import annotations
+
 from .browse_navigation_stack import BrowseNavigationStack
 from .filter_selection_panel import FilterSelectionPanel
 from .loading_state_controller import LoadingStateController
@@ -11,6 +13,7 @@ from .sequence_browser_panel import SequenceBrowserPanel
 from .sequence_viewer_panel import SequenceViewerPanel
 from .ui_setup import SequenceBrowserUISetup
 
+
 __all__ = [
     "BrowseNavigationStack",
     "FilterSelectionPanel",
@@ -20,6 +23,6 @@ __all__ = [
     "ModernSequenceViewerPanel",
     "NavigationSidebarController",
     "SequenceBrowserPanel",
-    "SequenceViewerPanel",
     "SequenceBrowserUISetup",
+    "SequenceViewerPanel",
 ]

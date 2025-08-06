@@ -1,101 +1,162 @@
 """
 Prop continuity toggle component.
 
-Provides a toggle between continuous and random prop behavior.
+Simple toggle between random and continuous prop behavior.
 """
 
-from typing import Optional
+from __future__ import annotations
 
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QPushButton, QWidget
+from PyQt6.QtCore import QEvent, Qt, pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 from desktop.modern.core.interfaces.generation_services import PropContinuity
+from desktop.modern.presentation.components.ui.pytoggle import PyToggle
 
-from .generation_control_base import GenerationControlBase
 
-
-class PropContinuityToggle(GenerationControlBase):
-    """Toggle for prop continuity setting"""
+class PropContinuityToggle(QWidget):
+    """Simple toggle for prop continuity setting"""
 
     value_changed = pyqtSignal(PropContinuity)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__(
-            "Prop Continuity", "How props should behave throughout the sequence", parent
-        )
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = PropContinuity.CONTINUOUS
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup prop continuity controls"""
-        button_layout = QHBoxLayout()
-        button_layout.setSpacing(8)
+        """Setup simple prop continuity toggle"""
+        from PyQt6.QtWidgets import QVBoxLayout
 
-        self._button_group = QButtonGroup(self)
+        # Main vertical layout
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(8)
+        main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Continuous button
-        self._continuous_button = QPushButton("Continuous")
-        self._continuous_button.setCheckable(True)
-        self._continuous_button.setChecked(True)
-        self._continuous_button.setMinimumHeight(32)
-        self._continuous_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self._button_group.addButton(self._continuous_button, 0)
-        button_layout.addWidget(self._continuous_button)
-
-        # Random button
-        self._random_button = QPushButton("Random")
-        self._random_button.setCheckable(True)
-        self._random_button.setMinimumHeight(32)
-        self._random_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self._button_group.addButton(self._random_button, 1)
-        button_layout.addWidget(self._random_button)
-
-        self._content_layout.addLayout(button_layout)
-
-        # Connect signals
-        self._button_group.buttonClicked.connect(self._on_button_clicked)
-
-        # Apply styling
-        self._apply_toggle_styling()
-
-    def _apply_toggle_styling(self):
-        """Apply toggle button styling"""
-        button_style = """
-            QPushButton {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 6px;
-                padding: 6px 12px;
-                font-weight: 500;
-                color: rgba(255, 255, 255, 0.8);
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-                border-color: rgba(255, 255, 255, 0.3);
+        # Header label
+        header_label = QLabel("Prop Continuity:")
+        header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        header_label.setStyleSheet("""
+            QLabel {
                 color: rgba(255, 255, 255, 0.9);
+                font-size: 16px;
+                font-weight: 500;
             }
-            QPushButton:checked {
-                background: rgba(76, 175, 80, 0.7);
-                border-color: rgba(76, 175, 80, 0.8);
+        """)
+        main_layout.addWidget(header_label)
+
+        # Horizontal layout for toggle controls
+        layout = QHBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setSpacing(12)
+
+        # Left label (Random)
+        self._left_label = QLabel("Random")
+        self._left_label.setStyleSheet("""
+            QLabel {
+                color: gray;
+                font-size: 18px;
+                font-weight: normal;
+                background: transparent;
+            }
+        """)
+        self._left_label.setAttribute(Qt.WidgetAttribute.WA_Hover, True)
+        self._left_label.installEventFilter(self)
+
+        # Toggle switch
+        self._toggle = PyToggle(
+            width=60,
+            bg_color="#00BCff",
+            active_color="#00BCff",
+            circle_color="#DDD",
+            change_bg_on_state=False,
+        )
+        self._toggle.setChecked(True)  # Default to Continuous (checked)
+        self._toggle.stateChanged.connect(self._on_toggle_changed)
+
+        # Right label (Continuous)
+        self._right_label = QLabel("Continuous")
+        self._right_label.setStyleSheet("""
+            QLabel {
                 color: white;
+                font-size: 18px;
+                font-weight: bold;
+                background: transparent;
             }
-        """
-        self._continuous_button.setStyleSheet(button_style)
-        self._random_button.setStyleSheet(button_style)
+        """)
+        self._right_label.setAttribute(Qt.WidgetAttribute.WA_Hover, True)
+        self._right_label.installEventFilter(self)
 
-    def _on_button_clicked(self, button):
-        """Handle button click"""
-        if button == self._continuous_button:
-            self._current_value = PropContinuity.CONTINUOUS
-        else:
-            self._current_value = PropContinuity.RANDOM
+        # Add to horizontal layout
+        layout.addWidget(self._left_label)
+        layout.addWidget(self._toggle)
+        layout.addWidget(self._right_label)
 
+        # Add horizontal layout to main layout
+        main_layout.addLayout(layout)
+
+    def eventFilter(self, source, event):
+        """Handle label clicks"""
+        if event.type() == QEvent.Type.MouseButtonPress:
+            if source == self._left_label:
+                self.set_value(PropContinuity.RANDOM)
+            elif source == self._right_label:
+                self.set_value(PropContinuity.CONTINUOUS)
+            return True
+        return super().eventFilter(source, event)
+
+    def _on_toggle_changed(self, state: bool):
+        """Handle toggle state change"""
+        self._current_value = (
+            PropContinuity.CONTINUOUS if state else PropContinuity.RANDOM
+        )
+        self._update_label_styles()
         self.value_changed.emit(self._current_value)
+
+    def _update_label_styles(self):
+        """Update label styles based on current value"""
+        if self._current_value == PropContinuity.RANDOM:
+            self._left_label.setStyleSheet("""
+                QLabel {
+                    color: white;
+                    font-size: 18px;
+                    font-weight: bold;
+                    background: transparent;
+                }
+            """)
+            self._right_label.setStyleSheet("""
+                QLabel {
+                    color: gray;
+                    font-size: 18px;
+                    font-weight: normal;
+                    background: transparent;
+                }
+            """)
+        else:
+            self._left_label.setStyleSheet("""
+                QLabel {
+                    color: gray;
+                    font-size: 18px;
+                    font-weight: normal;
+                    background: transparent;
+                }
+            """)
+            self._right_label.setStyleSheet("""
+                QLabel {
+                    color: white;
+                    font-size: 18px;
+                    font-weight: bold;
+                    background: transparent;
+                }
+            """)
 
     def set_value(self, value: PropContinuity):
         """Set the current value"""
         self._current_value = value
-        if value == PropContinuity.CONTINUOUS:
-            self._continuous_button.setChecked(True)
-        else:
-            self._random_button.setChecked(True)
+        self._toggle.blockSignals(True)
+        self._toggle.setChecked(value == PropContinuity.CONTINUOUS)
+        self._toggle.blockSignals(False)
+        self._update_label_styles()
+
+    def get_value(self) -> PropContinuity:
+        """Get the current value"""
+        return self._current_value

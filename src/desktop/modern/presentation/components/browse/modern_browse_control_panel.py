@@ -5,6 +5,8 @@ The control panel that sits above the browser area and navigation panel.
 Provides sort controls, filter description, and sequence count display.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -300,25 +302,24 @@ class ModernBrowseControlPanel(QFrame):
         """Update the filter description label."""
         if filter_type is None:
             description = "All sequences"
+        elif filter_type == FilterType.STARTING_LETTER:
+            description = f"Sequences starting with {filter_values}"
+        elif filter_type == FilterType.CONTAINS_LETTERS:
+            description = f"Sequences containing {filter_values}"
+        elif filter_type == FilterType.LENGTH:
+            description = f"Sequences of length {filter_values}"
+        elif filter_type == FilterType.DIFFICULTY:
+            description = f"Level {filter_values} sequences"
+        elif filter_type == FilterType.STARTING_POSITION:
+            description = f"Sequences starting in {filter_values}"
+        elif filter_type == FilterType.AUTHOR:
+            description = f"Sequences by {filter_values}"
+        elif filter_type == FilterType.FAVORITES:
+            description = "Favorite sequences"
+        elif filter_type == FilterType.RECENT:
+            description = "Recently added sequences"
         else:
-            if filter_type == FilterType.STARTING_LETTER:
-                description = f"Sequences starting with {filter_values}"
-            elif filter_type == FilterType.CONTAINS_LETTERS:
-                description = f"Sequences containing {filter_values}"
-            elif filter_type == FilterType.LENGTH:
-                description = f"Sequences of length {filter_values}"
-            elif filter_type == FilterType.DIFFICULTY:
-                description = f"Level {filter_values} sequences"
-            elif filter_type == FilterType.STARTING_POSITION:
-                description = f"Sequences starting in {filter_values}"
-            elif filter_type == FilterType.AUTHOR:
-                description = f"Sequences by {filter_values}"
-            elif filter_type == FilterType.FAVORITES:
-                description = "Favorite sequences"
-            elif filter_type == FilterType.RECENT:
-                description = "Recently added sequences"
-            else:
-                description = f"Filtered sequences ({filter_type.value})"
+            description = f"Filtered sequences ({filter_type.value})"
 
         self.current_filter_description = description
         self.filter_label.setText(description)

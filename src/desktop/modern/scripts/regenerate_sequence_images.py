@@ -5,10 +5,13 @@ This script uses the modern image exporter to regenerate all sequence card image
 with complete information, replacing the legacy exported images.
 """
 
-import logging
-import sys
+from __future__ import annotations
+
 from datetime import datetime
+import logging
 from pathlib import Path
+import sys
+
 
 # Add the modern src directory to the path
 modern_src_path = Path(__file__).parent.parent / "src"
@@ -25,6 +28,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     IImageExportService,
     ImageExportOptions,
 )
+
 
 # Configure logging
 logging.basicConfig(

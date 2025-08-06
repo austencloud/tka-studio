@@ -1,10 +1,13 @@
 """Core Services."""
 
 # Import shared src modules to make them available in the modern src namespace
+from __future__ import annotations
+
+
 try:
     # Import from shared src - these modules exist in the TKA/src directory
-    import sys
     from pathlib import Path
+    import sys
 
     # Find and add shared src to path if not already there
     current_file = Path(__file__).resolve()

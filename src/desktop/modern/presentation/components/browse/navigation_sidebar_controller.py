@@ -5,8 +5,10 @@ Controls the navigation sidebar for the sequence browser panel.
 Manages section navigation, scrolling, and progressive updates.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QScrollArea
@@ -15,6 +17,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.browse.modern_navigation_sidebar import (
     ModernNavigationSidebar as NavigationSidebar,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -203,15 +206,14 @@ class NavigationSidebarController:
         """
         if sort_method == "difficulty":
             return sequence.difficulty or "Unknown Difficulty"
-        elif sort_method == "length":
+        if sort_method == "length":
             return f"Length {sequence.length or 'Unknown'}"
-        elif sort_method == "alphabetical":
+        if sort_method == "alphabetical":
             if sequence.word:
                 first_letter = sequence.word[0].upper()
                 return f"Starting with {first_letter}"
             return "Unknown"
-        else:
-            return "All Sequences"
+        return "All Sequences"
 
     def clear_sections(self) -> None:
         """Clear all sections from navigation."""

@@ -6,6 +6,8 @@ implementing a beautiful glassmorphism design with translucent backgrounds,
 proper borders, and smooth hover effects.
 """
 
+from __future__ import annotations
+
 
 class GlassmorphismStyles:
     """Central repository for all glassmorphism styling used in the settings dialog."""

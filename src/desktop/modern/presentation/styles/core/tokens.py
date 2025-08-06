@@ -2,6 +2,8 @@
 Design tokens for typography, spacing, shadows, and other design primitives.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from ..glassmorphism_styles import GlassmorphismEffects

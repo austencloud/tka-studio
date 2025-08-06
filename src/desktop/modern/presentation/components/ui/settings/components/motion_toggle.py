@@ -5,6 +5,8 @@ Reusable motion toggle button with color coding and glassmorphism styling.
 Extracted from the monolithic visibility tab for better component organization.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QPushButton
 

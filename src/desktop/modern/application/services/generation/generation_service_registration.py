@@ -5,8 +5,11 @@ Registers all generation-related services in the dependency injection container.
 Part of the modern TKA application's service registration system.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -14,7 +17,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_generation_services(container: "DIContainer") -> None:
+def register_generation_services(container: DIContainer) -> None:
     """
     Register all generation services in the dependency injection container.
 
@@ -25,10 +28,14 @@ def register_generation_services(container: "DIContainer") -> None:
         # Import service interfaces
         from desktop.modern.core.interfaces.generation_services import (
             IGenerationService,
+            ISequenceConfigurationService,
         )
 
         # Import service implementations
         from .generation_service import GenerationService
+        from .test_doubles.mock_generation_service import (
+            MockSequenceConfigurationService,
+        )
 
         # Register core generation services with container injection
         # Create a wrapper class that the DI container can instantiate
@@ -50,14 +57,19 @@ def register_generation_services(container: "DIContainer") -> None:
             IGenerationService, ContainerAwareGenerationService
         )
 
+        # Register sequence configuration service (using mock for now)
+        container.register_singleton(
+            ISequenceConfigurationService, MockSequenceConfigurationService
+        )
+
         logger.info("✅ Generation services registered successfully")
 
     except Exception as e:
-        logger.error(f"❌ Failed to register generation services: {str(e)}")
+        logger.exception(f"❌ Failed to register generation services: {e!s}")
         raise
 
 
-def register_generation_test_doubles(container: "DIContainer") -> None:
+def register_generation_test_doubles(container: DIContainer) -> None:
     """
     Register test doubles for generation services.
 
@@ -69,12 +81,19 @@ def register_generation_test_doubles(container: "DIContainer") -> None:
         # Import service interfaces
         from desktop.modern.core.interfaces.generation_services import (
             IGenerationService,
+            ISequenceConfigurationService,
         )
 
-        from .test_doubles.mock_generation_service import MockGenerationService
+        from .test_doubles.mock_generation_service import (
+            MockGenerationService,
+            MockSequenceConfigurationService,
+        )
 
         # Register test doubles
         container.register_singleton(IGenerationService, MockGenerationService)
+        container.register_singleton(
+            ISequenceConfigurationService, MockSequenceConfigurationService
+        )
 
         logger.info("✅ Generation test doubles registered successfully")
 
@@ -85,7 +104,7 @@ def register_generation_test_doubles(container: "DIContainer") -> None:
         )
         register_generation_services(container)
     except Exception as e:
-        logger.error(f"❌ Failed to register generation test doubles: {str(e)}")
+        logger.exception(f"❌ Failed to register generation test doubles: {e!s}")
         raise
 
 
@@ -98,17 +117,17 @@ class GenerationServiceRegistrationHelper:
     """
 
     @staticmethod
-    def register_for_production(container: "DIContainer") -> None:
+    def register_for_production(container: DIContainer) -> None:
         """Register production generation services."""
         register_generation_services(container)
 
     @staticmethod
-    def register_for_testing(container: "DIContainer") -> None:
+    def register_for_testing(container: DIContainer) -> None:
         """Register test double generation services."""
         register_generation_test_doubles(container)
 
     @staticmethod
-    def validate_registration(container: "DIContainer") -> bool:
+    def validate_registration(container: DIContainer) -> bool:
         """
         Validate that generation services are properly registered.
 
@@ -130,7 +149,7 @@ class GenerationServiceRegistrationHelper:
             return True
 
         except Exception as e:
-            logger.error(
-                f"❌ Generation service registration validation failed: {str(e)}"
+            logger.exception(
+                f"❌ Generation service registration validation failed: {e!s}"
             )
             return False

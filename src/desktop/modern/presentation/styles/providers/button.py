@@ -2,9 +2,11 @@
 Button style provider implementation.
 """
 
+from __future__ import annotations
+
+from . import StyleProvider
 from ..core.types import StyleVariant
 from ..glassmorphism_styles import GlassmorphismStyleGenerator
-from . import StyleProvider
 
 
 class ButtonStyleProvider(StyleProvider):

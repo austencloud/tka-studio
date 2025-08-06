@@ -5,6 +5,8 @@ Integrates the modern settings service with the existing TKA application
 architecture, providing seamless state persistence and restoration.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 from typing import Optional
@@ -20,6 +22,7 @@ from desktop.modern.core.dependency_injection.settings_service_registration impo
     register_settings_services,
 )
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
+
 
 logger = logging.getLogger(__name__)
 
@@ -86,9 +89,8 @@ class ApplicationStateManager:
                     pass  # Session restored successfully
 
                 return True
-            else:
-                logger.info("🆕 Starting with clean application state")
-                return False
+            logger.info("🆕 Starting with clean application state")
+            return False
 
         except Exception as e:
             logger.error(f"❌ Failed to initialize application state: {e}")

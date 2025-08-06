@@ -5,14 +5,16 @@ Manages start position selection, data creation, and related operations for the 
 Responsible for handling start position picker interactions and creating start position data.
 """
 
-from PyQt6.QtCore import QObject, pyqtSignal
+from __future__ import annotations
 
-from desktop.modern.domain.models.grid_data import GridData
-from desktop.modern.domain.models.pictograph_data import PictographData
+from PyQt6.QtCore import QObject, pyqtSignal
 from shared.application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
 from shared.application.services.sequence.beat_factory import BeatFactory
+
+from desktop.modern.domain.models.grid_data import GridData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 class StartPositionSelectionHandler(QObject):
@@ -77,10 +79,11 @@ class StartPositionSelectionHandler(QObject):
         """Create start position data from position key using real dataset (separate from sequence beats)"""
         try:
             # Use dependency injection to get shared services
+            from shared.application.services.data.dataset_query import IDatasetQuery
+
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
-            from shared.application.services.data.dataset_query import IDatasetQuery
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -103,16 +106,11 @@ class StartPositionSelectionHandler(QObject):
                 )
 
                 return pictograph_data
-            else:
-                print(
-                    f"⚠️ No real data found for position {position_key}, using fallback"
-                )
-                # Fallback start position as PictographData
-                specific_end_pos = extract_end_position_from_position_key(position_key)
+            print(f"⚠️ No real data found for position {position_key}, using fallback")
+            # Fallback start position as PictographData
+            specific_end_pos = extract_end_position_from_position_key(position_key)
 
-                return self._create_fallback_pictograph_data(
-                    position_key, specific_end_pos
-                )
+            return self._create_fallback_pictograph_data(position_key, specific_end_pos)
 
         except Exception as e:
             print(f"❌ Error loading real start position data: {e}")

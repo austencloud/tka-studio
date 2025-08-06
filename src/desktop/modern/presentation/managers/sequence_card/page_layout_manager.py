@@ -4,6 +4,8 @@ Page Layout Manager
 Manages the layout and organization of sequence card pages.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QCoreApplication, QSize
@@ -18,6 +20,7 @@ from desktop.modern.presentation.views.sequence_card.image_loader import ImageLo
 from desktop.modern.presentation.views.sequence_card.sequence_card_page_widget import (
     SequenceCardPageWidget,
 )
+
 
 logger = logging.getLogger(__name__)
 

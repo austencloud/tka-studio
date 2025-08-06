@@ -6,6 +6,8 @@ eliminate the widget wrapper complexity and provide immediate, consistent
 scaling like the legacy system.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import Optional
 
@@ -50,20 +52,19 @@ def create_pictograph_view(context: str, parent=None, **kwargs) -> BasePictograp
             parent=parent, main_window_size_provider=main_window_size_provider
         )
 
-    elif context == "start_position":
+    if context == "start_position":
         is_advanced = kwargs.get("is_advanced", False)
         return StartPositionView(parent=parent, is_advanced=is_advanced)
 
-    elif context == "learn":
+    if context == "learn":
         learn_context = kwargs.get("learn_context", "question")
         return LearnPictographView(parent=parent, context=learn_context)
 
-    elif context == "beat":
+    if context == "beat":
         return BeatPictographView(parent=parent)
 
-    else:
-        # Base view for other contexts
-        return BasePictographView(parent=parent)
+    # Base view for other contexts
+    return BasePictographView(parent=parent)
 
 
 def create_option_view(
@@ -100,11 +101,11 @@ def create_beat_view(parent=None) -> BeatPictographView:
 # Export all view classes
 __all__ = [
     "BasePictographView",
+    "LearnPictographView",
     "OptionPictographView",
     "StartPositionView",
-    "LearnPictographView",
-    "create_pictograph_view",
-    "create_option_view",
-    "create_start_position_view",
     "create_learn_view",
+    "create_option_view",
+    "create_pictograph_view",
+    "create_start_position_view",
 ]

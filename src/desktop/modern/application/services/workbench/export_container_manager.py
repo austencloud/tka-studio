@@ -6,6 +6,8 @@ Follows the Single Responsibility Principle by focusing solely on
 container lifecycle management.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -15,6 +17,7 @@ from desktop.modern.core.dependency_injection.image_export_service_registration 
 )
 from desktop.modern.core.interfaces.export_services import IExportContainerManager
 from desktop.modern.core.interfaces.image_export_services import ISequenceImageExporter
+
 
 logger = logging.getLogger(__name__)
 

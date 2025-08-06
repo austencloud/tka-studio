@@ -5,6 +5,8 @@ Coordinates start position operations between multiple services.
 Handles complex workflows and service interactions.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional
 
@@ -17,6 +19,7 @@ from desktop.modern.core.interfaces.start_position_services import (
 
 # Command processor removed - using Qt signals instead
 from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 try:
     from PyQt6.QtCore import QSize
@@ -137,11 +140,8 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
                 # TODO: Apply any display-specific optimizations here
                 # For now, return the data as-is
                 return pictograph_data
-            else:
-                logger.warning(
-                    f"No position data available for display: {position_key}"
-                )
-                return None
+            logger.warning(f"No position data available for display: {position_key}")
+            return None
 
         except Exception as e:
             logger.error(f"Error getting position data for display: {e}")

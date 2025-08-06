@@ -4,6 +4,8 @@ Sequence Card Widget
 Individual sequence card display widget with optimized image loading.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt
@@ -16,6 +18,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
 )
 
 from .image_loader import ImageLoader
+
 
 logger = logging.getLogger(__name__)
 

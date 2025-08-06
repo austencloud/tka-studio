@@ -13,16 +13,19 @@ Each drawer is responsible for a specific aspect of image rendering:
 - FontMarginHelper: Provides font and margin calculations using exact legacy logic
 """
 
+from __future__ import annotations
+
 from .beat_drawer import BeatDrawer
 from .difficulty_level_drawer import DifficultyLevelDrawer
 from .font_margin_helper import FontMarginHelper
 from .user_info_drawer import UserInfoDrawer
 from .word_drawer import WordDrawer
 
+
 __all__ = [
-    "WordDrawer",
-    "UserInfoDrawer",
-    "DifficultyLevelDrawer",
     "BeatDrawer",
+    "DifficultyLevelDrawer",
     "FontMarginHelper",
+    "UserInfoDrawer",
+    "WordDrawer",
 ]

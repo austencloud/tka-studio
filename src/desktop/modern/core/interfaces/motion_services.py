@@ -6,6 +6,8 @@ These interfaces define contracts for motion calculation and management operatio
 that must behave identically across desktop and web platforms.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 

@@ -21,10 +21,13 @@ MODES:
 - debug: Minimal suppression (for debugging positioning)
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path for imports
 src_path = (

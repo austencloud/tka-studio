@@ -6,6 +6,8 @@ Modern 2025 design with large, easily pressable turn value buttons.
 Features glassmorphism styling and direct turn value selection.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -22,6 +24,7 @@ from desktop.modern.presentation.components.graph_editor.components.turn_adjustm
 from desktop.modern.presentation.components.graph_editor.components.turn_adjustment_controls.turn_value_button_grid import (
     TurnValueButtonGrid,
 )
+
 
 logger = logging.getLogger(__name__)
 

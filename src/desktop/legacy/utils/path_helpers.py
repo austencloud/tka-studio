@@ -26,6 +26,11 @@ def get_data_path(filename) -> str:
 
 
 def get_image_path(filename) -> str:
+    # Handle case where filename is None
+    if filename is None:
+        print("WARNING: get_image_path called with None filename")
+        return ""
+
     filename = filename.replace("\\", "/")
 
     if hasattr(sys, "_MEIPASS"):
@@ -105,17 +110,15 @@ def get_user_editable_resource_path(filename) -> str:
 
 
 def get_dictionary_path() -> str:
-    if getattr(sys, "frozen", False):
-        dictionary_path = os.path.join(
-            os.getenv("LOCALAPPDATA"), "The Kinetic Alphabet", "dictionary"
-        )
-    else:
-        # Always use root data/dictionary directory
-        dictionary_path = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__), "..", "..", "..", "data", "dictionary"
-            )
-        )
+    if hasattr(sys, "_MEIPASS"):
+        base_dir = os.path.join(sys._MEIPASS, "src", "data", "dictionary")
+        if os.path.exists(base_dir):
+            return base_dir
+
+    # Use legacy dictionary directory
+    dictionary_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "data", "dictionary")
+    )
 
     os.makedirs(dictionary_path, exist_ok=True)
     return dictionary_path

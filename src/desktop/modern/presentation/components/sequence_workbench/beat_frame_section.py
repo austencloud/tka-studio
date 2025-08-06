@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
@@ -10,6 +12,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 
 from .button_panel import SequenceWorkbenchButtonPanel
 from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
+
 
 if TYPE_CHECKING:
     from shared.application.services.workbench.beat_selection_service import (
@@ -41,7 +44,7 @@ class WorkbenchBeatFrameSection(QWidget):
     def __init__(
         self,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
+        beat_selection_service: BeatSelectionService,
         parent: Optional[QWidget] = None,
     ):
         super().__init__(parent)
@@ -164,7 +167,7 @@ class WorkbenchBeatFrameSection(QWidget):
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional["PictographData"] = None,
+        pictograph_data: Optional[PictographData] = None,
     ):
         """
         Set the start position with optional separate pictograph data.

@@ -5,6 +5,8 @@ Reusable element visibility checkbox with dependency awareness and glassmorphism
 Extracted from the monolithic visibility tab for better component organization.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtWidgets import QCheckBox

@@ -10,6 +10,8 @@ This service extracts object lifecycle management from presentation components t
 Replaces object management logic previously embedded in OptionFactory.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -18,6 +20,7 @@ from PyQt6.QtWidgets import QWidget
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +91,8 @@ class FramePoolService:
         except Exception as e:
             logger.error(f"Failed to initialize frame pool: {e}")
             self._pool = []
-    def checkin_frame(self, frame: "OptionPictograph") -> None:
+
+    def checkin_frame(self, frame: OptionPictograph) -> None:
         """
         Return frame to pool.
 
@@ -133,6 +137,7 @@ class FramePoolService:
 
         except Exception as e:
             logger.error(f"Error resetting frames: {e}")
+
     def cleanup(self) -> None:
         """
         Cleanup pool resources.

@@ -16,6 +16,8 @@ Currently empty - will be populated with future type safety improvements.
 # Future type definitions will be added here
 # from .graph_editor_types import AnimationTarget, AnimationState
 # from .animation_types import AnimationConfig, AnimationPhase
+from __future__ import annotations
+
 
 __all__ = [
     # Will be populated with future type definitions

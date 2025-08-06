@@ -5,8 +5,11 @@ TKA UI Testing Framework - Validation Script
 Validates that the UI testing framework is properly installed and working.
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the Python path
 current_dir = Path(__file__).parent

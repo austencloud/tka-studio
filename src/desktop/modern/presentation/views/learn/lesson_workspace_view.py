@@ -5,12 +5,15 @@ Pure UI component for lesson workspace with dynamic layout support.
 Handles only UI rendering and layout - no business logic.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from desktop.modern.presentation.controllers.learn.state import LayoutMode
+
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,9 @@
 Modern combo box component with glassmorphism styling.
 """
 
-from typing import Any, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from PyQt6.QtCore import QModelIndex, QPointF, Qt
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter

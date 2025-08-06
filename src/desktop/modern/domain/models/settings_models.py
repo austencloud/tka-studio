@@ -5,6 +5,8 @@ Following TKA's clean architecture patterns with frozen dataclasses and .update(
 These models represent settings data without any UI coupling.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field, replace
 from typing import Any, Optional
 
@@ -20,7 +22,7 @@ class UserProfileData:
     last_used: Optional[str] = None
     preferences: dict[str, Any] = field(default_factory=dict)
 
-    def update(self, **kwargs) -> "UserProfileData":
+    def update(self, **kwargs) -> UserProfileData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -43,7 +45,7 @@ class VisibilitySettingsData:
     # Special elements
     non_radial_visible: bool = True
 
-    def update(self, **kwargs) -> "VisibilitySettingsData":
+    def update(self, **kwargs) -> VisibilitySettingsData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -71,7 +73,7 @@ class BeatLayoutData:
     grow_sequence: bool = True
     auto_adjust: bool = True
 
-    def update(self, **kwargs) -> "BeatLayoutData":
+    def update(self, **kwargs) -> BeatLayoutData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -94,7 +96,7 @@ class ImageExportSettingsData:
     combined_grids: bool = False
     quality: int = 95
 
-    def update(self, **kwargs) -> "ImageExportSettingsData":
+    def update(self, **kwargs) -> ImageExportSettingsData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -110,7 +112,7 @@ class CodexExportSettingsData:
     quality: int = 95
     include_metadata: bool = True
 
-    def update(self, **kwargs) -> "CodexExportSettingsData":
+    def update(self, **kwargs) -> CodexExportSettingsData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -138,7 +140,7 @@ class GlobalSettingsData:
     current_tab: str = "construct"
     current_settings_dialog_tab: str = "General"
 
-    def update(self, **kwargs) -> "GlobalSettingsData":
+    def update(self, **kwargs) -> GlobalSettingsData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -169,7 +171,7 @@ class SettingsData:
     # Custom settings
     custom_settings: dict[str, Any] = field(default_factory=dict)
 
-    def update(self, **kwargs) -> "SettingsData":
+    def update(self, **kwargs) -> SettingsData:
         """Create a new instance with updated values."""
         return replace(self, **kwargs)
 
@@ -189,19 +191,19 @@ class SettingsData:
 
     def set_beat_layout(
         self, sequence_length: int, layout: BeatLayoutData
-    ) -> "SettingsData":
+    ) -> SettingsData:
         """Set beat layout for a specific sequence length."""
         new_layouts = self.beat_layouts.copy()
         new_layouts[sequence_length] = layout
         return self.update(beat_layouts=new_layouts)
 
-    def add_user_profile(self, name: str, profile: UserProfileData) -> "SettingsData":
+    def add_user_profile(self, name: str, profile: UserProfileData) -> SettingsData:
         """Add a new user profile."""
         new_profiles = self.user_profiles.copy()
         new_profiles[name] = profile
         return self.update(user_profiles=new_profiles)
 
-    def remove_user_profile(self, name: str) -> "SettingsData":
+    def remove_user_profile(self, name: str) -> SettingsData:
         """Remove a user profile."""
         if name not in self.user_profiles or len(self.user_profiles) <= 1:
             return self  # Don't remove if it's the only profile

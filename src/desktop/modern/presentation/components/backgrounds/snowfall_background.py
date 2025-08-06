@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
-
 from shared.application.services.backgrounds.snowfall.santa_movement import (
     SantaMovement,
 )
@@ -13,6 +14,7 @@ from shared.application.services.backgrounds.snowfall.snowflake_physics import (
 )
 
 from .base_background import BaseBackground
+
 
 if TYPE_CHECKING:
     pass

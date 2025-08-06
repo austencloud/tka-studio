@@ -1,5 +1,7 @@
 """Settings UI components."""
 
+from __future__ import annotations
+
 from .action_buttons import SettingsActionButtons
 from .animations import SettingsAnimations
 from .card import SettingCard
@@ -12,9 +14,12 @@ from .sidebar import SettingsSidebar
 from .styles import GlassmorphismStyles
 from .toggle import Toggle
 
+
 __all__ = [
     "ComboBox",
+    "ElementToggle",
     "GlassmorphismStyles",
+    "MotionToggle",
     "SettingCard",
     "SettingsActionButtons",
     "SettingsAnimations",
@@ -22,6 +27,4 @@ __all__ = [
     "SettingsHeader",
     "SettingsSidebar",
     "Toggle",
-    "MotionToggle",
-    "ElementToggle",
 ]

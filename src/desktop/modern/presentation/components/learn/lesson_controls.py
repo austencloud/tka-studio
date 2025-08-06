@@ -5,10 +5,13 @@ Focused component for lesson navigation and control buttons including
 back, pause/resume, and restart functionality with consistent styling.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +171,7 @@ class LessonControls(QWidget):
         # Note: Back button is handled by the workspace view
         self.pause_button.clicked.connect(self.pause_clicked.emit)
         self.restart_button.clicked.connect(self.restart_clicked.emit)
+
     def enable_controls(self, enabled: bool) -> None:
         """
         Enable or disable all controls.
@@ -179,6 +183,7 @@ class LessonControls(QWidget):
         self.pause_button.setEnabled(enabled)
         self.restart_button.setEnabled(enabled)
         logger.debug(f"Controls enabled: {enabled}")
+
     def update_responsive_styling(self, parent_width: int, parent_height: int) -> None:
         """Update styling based on parent widget size."""
         try:
@@ -199,6 +204,7 @@ class LessonControls(QWidget):
 
         except Exception as e:
             logger.error(f"Failed to update responsive styling: {e}")
+
     def is_restart_button_visible(self) -> bool:
         """Check if restart button is visible."""
         return self.restart_button.isVisible()

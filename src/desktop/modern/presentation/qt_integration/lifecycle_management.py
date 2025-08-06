@@ -8,15 +8,18 @@ ARCHITECTURE: Provides automatic lifecycle management for Qt objects with
 smart cleanup registration, resource tracking, and automatic memory management.
 """
 
-import logging
-import weakref
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
+import logging
 from threading import Lock
 from typing import Any, TypeVar
+import weakref
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
+
 
 # Note: Removed qt_compat import to avoid circular dependencies
 

@@ -5,6 +5,8 @@ Bridges between the framework-agnostic display service and Qt UI components.
 Converts service callbacks to Qt signals for UI communication.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -15,6 +17,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDisplayService,
     SequenceCardData,
 )
+
 
 logger = logging.getLogger(__name__)
 

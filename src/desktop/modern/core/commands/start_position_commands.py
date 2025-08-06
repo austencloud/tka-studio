@@ -5,13 +5,16 @@ Commands for handling start position operations with undo/redo support.
 These replace the complex signal chains in the original architecture.
 """
 
-import logging
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass
+import logging
 from typing import Any
+import uuid
 
 from desktop.modern.core.commands.command_system import ICommand
 from desktop.modern.domain.models.beat_data import BeatData
+
 
 logger = logging.getLogger(__name__)
 
@@ -84,11 +87,10 @@ class SetStartPositionCommand(ICommand[BeatData]):
                     f"✅ Start position undone, restored: {self._previous_position.letter}"
                 )
                 return self._previous_position
-            else:
-                # Clear start position
-                self._clear_from_persistence()
-                logger.info("✅ Start position undone, cleared")
-                return None
+            # Clear start position
+            self._clear_from_persistence()
+            logger.info("✅ Start position undone, cleared")
+            return None
 
         except Exception as e:
             logger.error(f"❌ Error undoing SetStartPositionCommand: {e}")
@@ -109,10 +111,11 @@ class SetStartPositionCommand(ICommand[BeatData]):
         """Create start position data using existing business logic"""
         try:
             # Get the dataset query service via dependency injection
+            from shared.application.services.data.dataset_query import IDatasetQuery
+
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
-            from shared.application.services.data.dataset_query import IDatasetQuery
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -140,12 +143,11 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 )
 
                 return start_pos_beat_data
-            else:
-                # Fallback: Create start position data using the handler's logic
-                logger.warning(
-                    f"No dataset entry found for {self.position_key}, using fallback"
-                )
-                return self._create_fallback_start_position_data()
+            # Fallback: Create start position data using the handler's logic
+            logger.warning(
+                f"No dataset entry found for {self.position_key}, using fallback"
+            )
+            return self._create_fallback_start_position_data()
 
         except Exception as e:
             logger.error(f"❌ Error creating start position data: {e}")
@@ -182,11 +184,12 @@ class SetStartPositionCommand(ICommand[BeatData]):
     def _create_fallback_start_position_data(self) -> BeatData:
         """Create fallback start position data when dataset lookup fails"""
         try:
-            from desktop.modern.domain.models.pictograph_data import PictographData
             from shared.application.services.data.conversion_utils import (
                 extract_end_position_from_position_key,
             )
             from shared.application.services.sequence.beat_factory import BeatFactory
+
+            from desktop.modern.domain.models.pictograph_data import PictographData
 
             # Extract end position from position key
             specific_end_pos = extract_end_position_from_position_key(self.position_key)

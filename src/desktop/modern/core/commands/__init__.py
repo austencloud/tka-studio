@@ -1,5 +1,7 @@
 """Command pattern infrastructure for undoable operations."""
 
+from __future__ import annotations
+
 from .command_system import (
     CommandError,
     CommandProcessor,
@@ -7,12 +9,13 @@ from .command_system import (
     ICommand,
 )
 
+
 __all__ = [
-    "ICommand",
+    "AddBeatCommand",
+    "CommandError",
     "CommandProcessor",
     "CommandResult",
-    "CommandError",
-    "AddBeatCommand",
+    "ICommand",
     "RemoveBeatCommand",
     "UpdateBeatCommand",
 ]

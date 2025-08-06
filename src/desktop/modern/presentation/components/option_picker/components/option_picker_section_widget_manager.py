@@ -10,8 +10,14 @@ Handles all widget management and pooling logic for OptionPickerSection includin
 Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
+
+from shared.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
@@ -20,9 +26,7 @@ from desktop.modern.presentation.components.option_picker.components.option_pict
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
-)
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
@@ -44,7 +48,7 @@ class OptionPickerSectionWidgetManager:
     def __init__(
         self,
         letter_type: LetterType,
-        scroll_area: "OptionPickerScroll",
+        scroll_area: OptionPickerScroll,
         option_pool_service: OptionPoolService,
         selection_callback: Callable[[PictographData], None],
     ):

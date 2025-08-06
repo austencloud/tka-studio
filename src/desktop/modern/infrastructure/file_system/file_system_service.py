@@ -12,10 +12,13 @@ This service handles:
 No business logic, completely testable in isolation.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
+
 
 logger = logging.getLogger(__name__)
 

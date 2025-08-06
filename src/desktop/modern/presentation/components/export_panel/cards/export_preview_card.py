@@ -5,6 +5,8 @@ Handles the live preview of export output with real-time updates.
 Part of the refactored export panel system.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import Qt, QTimer

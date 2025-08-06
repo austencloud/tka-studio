@@ -5,6 +5,8 @@ Pure UI component for displaying lesson completion results.
 Handles only UI rendering and event emission - no business logic.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -18,6 +20,7 @@ from PyQt6.QtWidgets import (
 )
 
 from desktop.modern.domain.models.learn import LessonResults
+
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +91,8 @@ class ResultsStatsWidget(QWidget):
 
         # Store references
         self.stat_labels[label] = (stat_label, value_label)
+
+
 class LessonResultsView(QWidget):
     """
     Pure UI component for lesson results display.

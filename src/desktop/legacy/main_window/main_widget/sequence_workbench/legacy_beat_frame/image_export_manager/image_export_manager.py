@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -10,9 +11,7 @@ from .image_export_layout_handler import ImageExportLayoutHandler
 from .image_saver import ImageSaver
 
 if TYPE_CHECKING:
-    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
-        LegacyBeatFrame,
-    )
+    from base_widgets.base_beat_frame import BaseBeatFrame
 
 
 class ImageExportManager:
@@ -21,7 +20,7 @@ class ImageExportManager:
 
     def __init__(
         self,
-        beat_frame: "LegacyBeatFrame",
+        beat_frame: "BaseBeatFrame",
         beat_frame_class: type,
     ) -> None:
         self.beat_frame = beat_frame

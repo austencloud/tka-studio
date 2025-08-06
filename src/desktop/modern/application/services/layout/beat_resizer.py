@@ -5,12 +5,15 @@ Implements sophisticated beat sizing logic with precise
 dimension calculations and intelligent responsive behavior.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
 
 from desktop.modern.core.interfaces.core_services import IBeatResizer
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.graph_editor.graph_editor import (
@@ -43,12 +46,12 @@ class BeatResizer(IBeatResizer):
         # Graph editor reference for accurate height calculations
         self._graph_editor_ref: Optional[GraphEditor] = None
 
-    def set_graph_editor_reference(self, graph_editor: "GraphEditor"):
+    def set_graph_editor_reference(self, graph_editor: GraphEditor):
         """Set reference to graph editor for accurate height calculations"""
         self._graph_editor_ref = graph_editor
 
     def resize_beat_frame(
-        self, beat_frame: "SequenceBeatFrame", num_rows: int, num_columns: int
+        self, beat_frame: SequenceBeatFrame, num_rows: int, num_columns: int
     ) -> int:
         """
         Complete beat frame resize using validated algorithm.
@@ -67,7 +70,7 @@ class BeatResizer(IBeatResizer):
         self.configure_scroll_behavior(beat_frame, num_rows)
         return beat_size
 
-    def calculate_dimensions(self, beat_frame: "SequenceBeatFrame") -> tuple[int, int]:
+    def calculate_dimensions(self, beat_frame: SequenceBeatFrame) -> tuple[int, int]:
         """
         Calculate available container dimensions using validated logic.
 
@@ -131,7 +134,7 @@ class BeatResizer(IBeatResizer):
         self._size_cache[cache_key] = beat_size
         return beat_size
 
-    def resize_beats(self, beat_frame: "SequenceBeatFrame", beat_size: int):
+    def resize_beats(self, beat_frame: SequenceBeatFrame, beat_size: int):
         """
         Resize beat views using validated logic.
 
@@ -158,7 +161,7 @@ class BeatResizer(IBeatResizer):
             if hasattr(start_position_view, "setMinimumSize"):
                 start_position_view.setMinimumSize(min_size, min_size)
 
-    def configure_scroll_behavior(self, beat_frame: "SequenceBeatFrame", num_rows: int):
+    def configure_scroll_behavior(self, beat_frame: SequenceBeatFrame, num_rows: int):
         """
         Configure scroll bar behavior using validated logic.
 
@@ -254,16 +257,15 @@ class BeatResizer(IBeatResizer):
         # Return updated beat data with new size
         if hasattr(beat_data, "update"):
             return beat_data.update(width=width, height=height)
-        else:
-            # For dict-like beat data
-            updated_data = dict(beat_data) if hasattr(beat_data, "items") else {}
-            updated_data.update({"width": width, "height": height})
-            return updated_data
+        # For dict-like beat data
+        updated_data = dict(beat_data) if hasattr(beat_data, "items") else {}
+        updated_data.update({"width": width, "height": height})
+        return updated_data
 
     def calculate_optimal_size(
         self,
         beat_data: Any,
-        container_size: tuple[int, int],  # noqa: ARG002
+        container_size: tuple[int, int],
     ) -> tuple[int, int]:
         """Calculate optimal size for beat within container (interface implementation)."""
         # Note: beat_data parameter is part of interface but not used in this implementation

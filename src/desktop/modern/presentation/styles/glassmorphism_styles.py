@@ -6,6 +6,8 @@ across the application. This system maintains the app's modern glass aesthetic
 with subtle transparency, blur effects, and elegant interactions.
 """
 
+from __future__ import annotations
+
 
 class GlassmorphismColors:
     """Central color palette for glassmorphism effects."""

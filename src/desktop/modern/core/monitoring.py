@@ -16,18 +16,21 @@ INTEGRATION:
 - Provides foundation for advanced profiling capabilities
 """
 
-import logging
-import threading
-import time
+from __future__ import annotations
+
 from collections import deque
 from collections.abc import Callable
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
+import logging
+import threading
+import time
 from typing import Any
 
 import psutil
+
 
 logger = logging.getLogger(__name__)
 

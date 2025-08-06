@@ -5,11 +5,11 @@ Handles coordination between workbench components and external systems.
 Extracted from the large workbench component and signal coordinator.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.domain.models import BeatData, SequenceData
 from shared.application.services.workbench.workbench_operation_coordinator import (
     OperationType,
     WorkbenchOperationCoordinator,
@@ -17,6 +17,9 @@ from shared.application.services.workbench.workbench_operation_coordinator impor
 from shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
+
+from desktop.modern.domain.models import BeatData, SequenceData
+
 
 if TYPE_CHECKING:
     from desktop.modern.application.services.workbench.workbench_ui_service import (
@@ -45,7 +48,7 @@ class WorkbenchCoordinationService(QObject):
         self,
         state_manager: WorkbenchStateManager,
         operation_coordinator: WorkbenchOperationCoordinator,
-        ui_service: "WorkbenchUIService",
+        ui_service: WorkbenchUIService,
     ):
         super().__init__()
         self._state_manager = state_manager

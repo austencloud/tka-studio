@@ -4,16 +4,19 @@ Qt Adapter for Sequence State Tracker Service
 This adapter wraps the pure SequenceStateTrackerService to provide Qt-specific signal coordination.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.sequence.sequence_state_tracker_service import (
     SequenceStateTrackerService,
 )
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 

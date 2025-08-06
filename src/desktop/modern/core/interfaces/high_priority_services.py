@@ -6,6 +6,8 @@ These interfaces define contracts for critical operations that must work identic
 across desktop and web platforms for complete coverage.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Optional

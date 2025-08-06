@@ -4,6 +4,8 @@ Progressive Loading Manager
 Manages progressive image loading with immediate UI response and background loading.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QCoreApplication, QTimer
@@ -12,6 +14,7 @@ from desktop.modern.presentation.views.sequence_card.image_loader import ImageLo
 from desktop.modern.presentation.views.sequence_card.sequence_card_page_widget import (
     SequenceCardPageWidget,
 )
+
 
 logger = logging.getLogger(__name__)
 

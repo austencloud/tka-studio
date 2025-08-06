@@ -5,9 +5,12 @@ This script verifies that the newly exported sequence card images are compatible
 with the modern sequence card tab and display correctly.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the modern src directory to the path
 modern_src_path = Path(__file__).parent.parent / "src"
@@ -24,6 +27,7 @@ from desktop.modern.core.dependency_injection.service_registration import (
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardCacheService,
 )
+
 
 # Configure logging
 logging.basicConfig(

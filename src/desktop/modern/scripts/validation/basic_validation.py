@@ -2,6 +2,8 @@
 Basic validation script to test service structure without PyQt6 dependencies.
 """
 
+from __future__ import annotations
+
 
 def test_basic_structure():
     """Test basic service structure and interfaces."""
@@ -116,8 +118,8 @@ if __name__ == "__main__":
     print("🚀 Start Position Services - Basic Structure Validation")
     print("=" * 60)
 
-    import sys
     from pathlib import Path
+    import sys
 
     # Add src to path
     modern_src_path = Path(__file__).parent / "src"

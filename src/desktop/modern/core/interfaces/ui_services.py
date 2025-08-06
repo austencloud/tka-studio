@@ -4,6 +4,8 @@ UI Service Interfaces
 Interface definitions for UI-related services following TKA's clean architecture.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from pathlib import Path

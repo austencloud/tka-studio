@@ -6,24 +6,21 @@
     "python.linting.flake8Enabled": false,
     "python.formatting.provider": "none",
     "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.codeActionsOnSave": {
             "source.fixAll.ruff": "explicit",
             "source.organizeImports.ruff": "explicit"
         },
-        "editor.rulers": [88]
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 88
     },
     "ruff.fixAll": true,
     "ruff.organizeImports": true,
     "ruff.lint.enable": true,
     "ruff.format.enable": true,
+    "ruff.nativeServer": "on",
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit"
-    },
-    // Alternative: Use autopep8 for line length fixing after Ruff
-    "autopep8.args": [
-        "--select=E501",
-        "--max-line-length=88"
-    ]
+    }
 }

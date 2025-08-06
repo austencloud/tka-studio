@@ -2,6 +2,8 @@
 Style provider base classes and interfaces.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 from ..core.types import StyleVariant

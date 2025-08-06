@@ -4,6 +4,8 @@ Core interfaces for image export services.
 This module defines the interfaces for image export functionality in the modern TKA system.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
@@ -308,11 +310,11 @@ class IFontMarginHelper(ABC):
     @abstractmethod
     def adjust_font_and_margin(
         self,
-        base_font: "QFont",
+        base_font: QFont,
         num_filled_beats: int,
         base_margin: int,
         beat_scale: float = 1.0,
-    ) -> tuple["QFont", int]:
+    ) -> tuple[QFont, int]:
         """
         Adjust font and margin based on number of beats using exact legacy logic.
 
@@ -358,8 +360,8 @@ class IImageFontManager(ABC):
 
     @abstractmethod
     def adjust_font_for_beats(
-        self, base_font: "QFont", num_beats: int, beat_scale: float = 1.0
-    ) -> "QFont":
+        self, base_font: QFont, num_beats: int, beat_scale: float = 1.0
+    ) -> QFont:
         """
         Adjust font size based on number of beats using legacy logic.
 
@@ -395,9 +397,9 @@ class IImageTextRenderer(ABC):
     @abstractmethod
     def render_word_text(
         self,
-        image: "QImage",
+        image: QImage,
         word: str,
-        font: "QFont",
+        font: QFont,
         options: ImageExportOptions,
     ) -> None:
         """
@@ -413,9 +415,9 @@ class IImageTextRenderer(ABC):
     @abstractmethod
     def render_user_info_text(
         self,
-        image: "QImage",
+        image: QImage,
         options: ImageExportOptions,
-        fonts: dict[str, "QFont"],
+        fonts: dict[str, QFont],
     ) -> None:
         """
         Render user information text onto the image.
@@ -429,7 +431,7 @@ class IImageTextRenderer(ABC):
     @abstractmethod
     def render_difficulty_indicator(
         self,
-        image: "QImage",
+        image: QImage,
         difficulty_level: int,
         options: ImageExportOptions,
     ) -> None:
@@ -449,7 +451,7 @@ class IBeatRenderer(ABC):
     @abstractmethod
     def render_beat_at_position(
         self,
-        painter: "QPainter",
+        painter: QPainter,
         beat_data: dict[str, Any],
         x: int,
         y: int,
@@ -473,7 +475,7 @@ class IBeatRenderer(ABC):
     @abstractmethod
     def render_start_position(
         self,
-        painter: "QPainter",
+        painter: QPainter,
         x: int,
         y: int,
         size: int,
@@ -497,9 +499,9 @@ class IVisualElementRenderer(ABC):
     @abstractmethod
     def render_pictograph_elements(
         self,
-        painter: "QPainter",
-        pictograph_data: "PictographData",
-        rect: "QRect",
+        painter: QPainter,
+        pictograph_data: PictographData,
+        rect: QRect,
         options: ImageExportOptions,
     ) -> None:
         """
@@ -515,7 +517,7 @@ class IVisualElementRenderer(ABC):
     @abstractmethod
     def add_text_overlay(
         self,
-        painter: "QPainter",
+        painter: QPainter,
         text: str,
         x: int,
         y: int,

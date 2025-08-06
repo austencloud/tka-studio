@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from data.constants import *
+from data.constants import ANTI, DASH, FLOAT, PRO, STATIC
 
 from .calculators.base_location_calculator import BaseLocationCalculator
 from .calculators.dash_location_calculator import DashLocationCalculator
@@ -24,12 +25,18 @@ class ArrowLocationManager:
             DASH: DashLocationCalculator,
             STATIC: StaticLocationCalculator,
         }
-        calculator_class = calculator_map.get(
-            self.arrow.motion.state.motion_type, BaseLocationCalculator
-        )
+
+        motion_type = self.arrow.motion.state.motion_type
+        if motion_type is None:
+            motion_type = ""
+
+        # Use StaticLocationCalculator as fallback instead of BaseLocationCalculator
+        # This prevents NotImplementedError when motion_type is not set
+        calculator_class = calculator_map.get(motion_type, StaticLocationCalculator)
+
         return calculator_class(self.arrow)
 
-    def update_location(self, location: str = None) -> None:
+    def update_location(self, location: str | None = None) -> None:
         self.calculator = self._select_calculator()
         if location:
             self.arrow.state.loc = location

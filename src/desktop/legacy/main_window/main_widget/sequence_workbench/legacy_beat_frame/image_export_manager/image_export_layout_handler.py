@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -34,17 +35,23 @@ class ImageExportLayoutHandler:
         """
         # Get the current layout from the beat frame
         # Note: beat_frame_layout_manager.calculate_layout returns (rows, columns)
+        # So we need to assign them correctly to swap for image creator
         rows, columns = self.get_current_beat_frame_layout(filled_beat_count)
 
         # If including start position and it's not already accounted for in the layout,
         # adjust the layout to accommodate it
         if include_start_pos:
             # Add an extra column for the start position if needed
-            # Return in (columns, rows) format for the image creator
+            # Beat frame gives us (rows, columns), image creator expects (columns, rows)
+            # So we need to swap: return (columns, rows)
             return (columns + 1, rows) if filled_beat_count > 0 else (1, 1)
 
         # Return in (columns, rows) format for the image creator
-        return (columns, rows)
+        # Beat frame returns (rows, columns), image creator expects (columns, rows)
+        # So we swap: return (columns, rows) to get wide layouts for wide sequences
+        result = (columns, rows)
+
+        return result
 
     def calculate_layout_with_start(self, filled_beat_count: int) -> tuple[int, int]:
         """
@@ -70,6 +77,22 @@ class ImageExportLayoutHandler:
         if beat_count in layout_options:
             return layout_options[beat_count]
         return self.get_fallback_layout(beat_count)
+
+    def get_fallback_layout(self, beat_count: int) -> tuple[int, int]:
+        """
+        Provide a fallback layout when beat_count is not in layout_options.
+        """
+        # Simple fallback: try to make a roughly square layout
+        if beat_count <= 4:
+            return (1, beat_count)
+        elif beat_count <= 16:
+            rows = int(beat_count**0.5)
+            cols = (beat_count + rows - 1) // rows
+            return (rows, cols)
+        else:
+            # For larger counts, use a 4-column layout
+            rows = (beat_count + 3) // 4
+            return (rows, 4)
 
     def get_layout_options_with_start(self) -> dict[int, tuple[int, int]]:
         """
@@ -145,73 +168,9 @@ class ImageExportLayoutHandler:
 
     def get_layout_options_without_start(self) -> dict[int, tuple[int, int]]:
         """
-        Define or adjust layout options for various counts of filled beats without the start position.
-        Customize this as needed if different from layouts with start position.
+        Use the same layout source as TempBeatFrameLayoutManager for consistency.
+        This ensures there's only ONE source of truth for layouts.
         """
-        return {
-            0: (1, 1),
-            1: (1, 1),
-            2: (2, 1),
-            3: (3, 1),
-            4: (4, 1),
-            5: (3, 2),
-            6: (3, 2),
-            7: (4, 2),
-            8: (4, 2),
-            9: (3, 3),
-            10: (5, 2),
-            11: (4, 3),
-            12: (3, 4),
-            13: (4, 4),
-            14: (4, 4),
-            15: (4, 4),
-            16: (4, 4),
-            17: (4, 5),
-            18: (9, 2),
-            19: (4, 5),
-            20: (5, 4),
-            21: (4, 6),
-            22: (4, 6),
-            23: (4, 6),
-            24: (6, 4),
-            25: (4, 7),
-            26: (4, 7),
-            27: (4, 7),
-            28: (7, 4),
-            29: (4, 8),
-            30: (4, 8),
-            31: (4, 8),
-            32: (8, 4),
-            33: (4, 9),
-            34: (4, 9),
-            35: (4, 9),
-            36: (9, 4),
-            37: (4, 10),
-            38: (4, 10),
-            39: (4, 10),
-            40: (10, 4),
-            41: (4, 11),
-            42: (4, 11),
-            43: (4, 11),
-            44: (11, 4),
-            45: (4, 12),
-            46: (4, 12),
-            47: (4, 12),
-            48: (12, 4),
-            49: (4, 13),
-            50: (4, 13),
-            51: (4, 13),
-            52: (13, 4),
-            53: (4, 14),
-            54: (4, 14),
-            55: (4, 14),
-            56: (14, 4),
-            57: (4, 15),
-            58: (4, 15),
-            59: (4, 15),
-            60: (15, 4),
-            61: (4, 16),
-            62: (4, 16),
-            63: (4, 16),
-            64: (16, 4),
-        }
+        from data.beat_frame_layouts import sequence_workbench_BEAT_FRAME_LAYOUTS
+
+        return sequence_workbench_BEAT_FRAME_LAYOUTS

@@ -19,6 +19,8 @@ Architecture:
 - Supports dependency injection for future extensibility
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -26,6 +28,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from desktop.modern.domain.models import BeatData
+
 
 logger = logging.getLogger(__name__)
 

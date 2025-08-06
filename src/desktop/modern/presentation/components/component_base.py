@@ -13,8 +13,10 @@ REPLACES: Direct QObject inheritance with global state access
 PROVIDES: Clean component architecture with dependency injection
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, ABCMeta, abstractmethod
+import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -22,6 +24,7 @@ from PyQt6.QtWidgets import QWidget
 
 # Type imports
 from desktop.modern.core.dependency_injection.di_container import DIContainer
+
 
 # A+ Enhancement: Import Qt integration - Temporarily disabled due to import issues
 # try:

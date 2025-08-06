@@ -5,6 +5,8 @@ Handles view-specific state and logic, decoupled from business logic.
 Provides data binding between the view and model layers.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -72,6 +74,7 @@ class BrowseViewModel(QObject):
         """Update the sequence list and notify views."""
         self._current_sequences = sequences.copy()
         self.sequences_changed.emit(sequences)
+
     def clear_sequences(self) -> None:
         """Clear all sequences."""
         self._current_sequences.clear()
@@ -114,6 +117,7 @@ class BrowseViewModel(QObject):
             if sequence.id == sequence_id:
                 return sequence
         return None
+
     def reset(self) -> None:
         """Reset all view state to defaults."""
         self.clear_sequences()

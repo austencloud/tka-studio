@@ -5,8 +5,10 @@ Coordinates progressive loading of sequences with chunk processing.
 Handles the orchestration between progressive loading service and display components.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QApplication
@@ -16,6 +18,7 @@ from desktop.modern.application.services.browse.progressive_loading_service impo
 )
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.views.browse.models import FilterType
+
 
 logger = logging.getLogger(__name__)
 

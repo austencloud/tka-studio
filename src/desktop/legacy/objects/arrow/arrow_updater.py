@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 # objects/arrow/arrow_updater.py
 from typing import TYPE_CHECKING
 
@@ -13,6 +14,7 @@ class ArrowUpdater:
     def update_arrow(self, arrow_data=None) -> None:
         if arrow_data:
             self.arrow.state.update_from_dict(arrow_data)
+
         self.arrow.pictograph.managers.svg_manager.arrow_manager.update_arrow_svg(
             self.arrow
         )

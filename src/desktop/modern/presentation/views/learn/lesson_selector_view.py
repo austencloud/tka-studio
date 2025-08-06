@@ -5,12 +5,15 @@ Pure UI component for lesson selection with no business logic.
 Emits events for user interactions and updates UI based on external state.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from desktop.modern.domain.models.learn import LessonType, QuizMode
+
 
 logger = logging.getLogger(__name__)
 

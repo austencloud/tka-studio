@@ -4,6 +4,8 @@ Settings dialog action buttons component.
 Contains the Reset, Apply, and OK buttons for the settings dialog.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QPushButton
 
@@ -47,6 +49,7 @@ class SettingsActionButtons(QFrame):
         layout.addWidget(self.reset_button)
         layout.addWidget(self.apply_button)
         layout.addWidget(self.ok_button)
+
     def set_reset_enabled(self, enabled: bool):
         """Enable or disable the reset button."""
         self.reset_button.setEnabled(enabled)

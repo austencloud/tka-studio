@@ -21,9 +21,12 @@ USAGE:
             self.config = config
 """
 
-import os
+from __future__ import annotations
+
 from dataclasses import dataclass
+import os
 from pathlib import Path
+
 
 # Removed Result pattern - using simple exceptions instead
 

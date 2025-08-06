@@ -3,6 +3,8 @@
 Run regression tests to ensure window flashing issue doesn't return.
 """
 
+from __future__ import annotations
+
 import os
 import subprocess
 import sys
@@ -31,6 +33,7 @@ def run_regression_tests():
                 "-v",  # Verbose output
                 "--tb=short",  # Short traceback format
             ],
+            check=False,
             capture_output=True,
             text=True,
             cwd=".",
@@ -49,12 +52,11 @@ def run_regression_tests():
             print("✅ Window flashing issue is confirmed fixed!")
             print("=" * 80)
             return True
-        else:
-            print("\n" + "=" * 80)
-            print("❌ REGRESSION TESTS FAILED!")
-            print("❌ Window flashing issue may have returned!")
-            print("=" * 80)
-            return False
+        print("\n" + "=" * 80)
+        print("❌ REGRESSION TESTS FAILED!")
+        print("❌ Window flashing issue may have returned!")
+        print("=" * 80)
+        return False
 
     except Exception as e:
         print(f"❌ Error running tests: {e}")

@@ -9,12 +9,14 @@ This module provides intelligent logging that:
 - Integrates with TKA's service architecture
 """
 
-import functools
-import logging
-import time
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+import functools
+import logging
+import time
 from typing import Any
 
 
@@ -94,12 +96,9 @@ class SmartLogger:
                             self._log_operation_details(
                                 operation_name, args, kwargs, result
                             )
-                    else:
-                        # Fast operation - minimal logging
-                        if level == LogLevel.DEBUG:
-                            self.logger.debug(
-                                f"✅ {operation_name}: {duration_ms:.1f}ms"
-                            )
+                    # Fast operation - minimal logging
+                    elif level == LogLevel.DEBUG:
+                        self.logger.debug(f"✅ {operation_name}: {duration_ms:.1f}ms")
 
                     return result
 
@@ -108,7 +107,7 @@ class SmartLogger:
 
                     # Errors always get verbose logging
                     self.logger.error(
-                        f"❌ FAILED {operation_name}: {duration_ms:.1f}ms - {str(e)}"
+                        f"❌ FAILED {operation_name}: {duration_ms:.1f}ms - {e!s}"
                     )
                     if self.config.error_always_verbose:
                         self._log_operation_details(
@@ -208,7 +207,7 @@ class SmartLogger:
             self.logger.debug(f"   Kwargs: {safe_kwargs}")
 
         if error:
-            self.logger.debug(f"   Error: {type(error).__name__}: {str(error)}")
+            self.logger.debug(f"   Error: {type(error).__name__}: {error!s}")
         elif result is not None:
             self.logger.debug(f"   Result: {self._safe_repr(result)}")
 

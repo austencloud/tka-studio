@@ -10,14 +10,18 @@ Handles all state management for OptionPickerSection including:
 Extracted from OptionPickerSection to follow Single Responsibility Principle.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
+
+from shared.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
 
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
@@ -39,7 +43,7 @@ class OptionPickerSectionStateManager:
     def __init__(
         self,
         letter_type: LetterType,
-        scroll_area: "OptionPickerScroll",
+        scroll_area: OptionPickerScroll,
         option_config_service: OptionConfigurationService,
     ):
         """Initialize state manager."""
@@ -183,23 +187,22 @@ class OptionPickerSectionStateManager:
             if not self.can_handle_resize():
                 if self._loading_options:
                     return False, "Cannot resize while loading options"
-                elif not self._ui_initialized:
+                if not self._ui_initialized:
                     return False, "UI not initialized"
-                elif not self._scroll_area_ready:
+                if not self._scroll_area_ready:
                     return False, "Scroll area not ready"
             return True, ""
 
-        elif operation == "load_options":
+        if operation == "load_options":
             if not self.can_load_options():
                 return False, "UI not initialized"
             return True, ""
 
-        elif operation == "clear":
+        if operation == "clear":
             # Clear can always be performed
             return True, ""
 
-        else:
-            return False, f"Unknown operation: {operation}"
+        return False, f"Unknown operation: {operation}"
 
     def reset_state(self) -> None:
         """Reset all state to initial values."""

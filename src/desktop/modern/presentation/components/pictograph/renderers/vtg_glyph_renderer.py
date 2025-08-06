@@ -5,16 +5,18 @@ Handles rendering of VTG (Vertical/Timing/Grid) glyphs that show the
 classification of pictographs (SS, SO, TS, TO, QS, QO).
 """
 
+from __future__ import annotations
+
 import os
 from typing import Optional
 
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-
-from desktop.modern.domain.models import VTGMode
 from shared.application.services.assets.image_asset_utils import (
     get_image_path,
 )
+
+from desktop.modern.domain.models import VTGMode
 
 
 class VTGGlyphRenderer:

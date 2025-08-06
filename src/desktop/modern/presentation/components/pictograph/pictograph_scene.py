@@ -4,12 +4,17 @@ Simplified pictograph scene using modular renderers.
 This scene coordinates multiple specialized renderers to create the complete pictograph.
 """
 
+from __future__ import annotations
+
 import logging
 import uuid
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtWidgets import QGraphicsScene
+from shared.application.services.pictograph.pictograph_visibility_manager import (
+    get_pictograph_visibility_manager,
+)
 
 from desktop.modern.domain.models import BeatData
 from desktop.modern.domain.models.arrow_data import ArrowData
@@ -21,9 +26,7 @@ from desktop.modern.domain.models.pictograph_utils import (
     should_show_tka,
     should_show_vtg,
 )
-from shared.application.services.pictograph.pictograph_visibility_manager import (
-    get_pictograph_visibility_manager,
-)
+
 
 logger = logging.getLogger(__name__)
 
@@ -172,15 +175,16 @@ class PictographScene(QGraphicsScene):
             return
 
         try:
+            from shared.application.services.pictograph.arrow_rendering_service import (
+                ArrowRenderingService,
+            )
+
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.core.interfaces.positioning_services import (
                 IArrowCoordinateSystemService,
                 IArrowPositioningOrchestrator,
-            )
-            from shared.application.services.pictograph.arrow_rendering_service import (
-                ArrowRenderingService,
             )
 
             container = get_container()
@@ -269,7 +273,7 @@ class PictographScene(QGraphicsScene):
             except Exception as refresh_error:
                 logger.error(f"Even refresh failed: {refresh_error}")
 
-    def render_pictograph(self, pictograph_data: "PictographData") -> None:
+    def render_pictograph(self, pictograph_data: PictographData) -> None:
         """Render a complete pictograph from pictograph data."""
         self._initialize_shared_services()
         self._initialize_glyph_renderers()

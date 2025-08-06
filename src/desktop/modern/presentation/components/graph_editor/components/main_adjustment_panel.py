@@ -20,6 +20,8 @@ Architecture:
 - Supports dependency injection for service integration
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -32,6 +34,7 @@ from desktop.modern.presentation.components.graph_editor.components.turn_adjustm
 )
 
 from .dual_orientation_picker import DualOrientationPicker
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,8 @@ Defines all service interfaces for the learning module including
 lesson management, quiz sessions, question generation, and UI services.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

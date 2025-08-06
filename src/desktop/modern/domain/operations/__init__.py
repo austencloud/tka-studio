@@ -4,6 +4,8 @@ Domain Operations Module
 Contains all domain-level operations including CAP transformations.
 """
 
+from __future__ import annotations
+
 from .cap_operations import (
     CAPExecutorFactory,
     CAPOperation,
@@ -13,11 +15,12 @@ from .cap_operations import (
     apply_cap_to_sequence,
 )
 
+
 __all__ = [
-    "CAPType",
-    "CAPOperation",
-    "StrictRotatedCAP",
-    "StrictMirroredCAP",
     "CAPExecutorFactory",
+    "CAPOperation",
+    "CAPType",
+    "StrictMirroredCAP",
+    "StrictRotatedCAP",
     "apply_cap_to_sequence",
 ]

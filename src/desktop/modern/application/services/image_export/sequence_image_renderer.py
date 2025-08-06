@@ -13,10 +13,13 @@ ARCHITECTURE:
 - Enables web service reuse of the same core logic
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import sys
 from typing import Any
+
 
 # Import framework-agnostic core services
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
@@ -24,17 +27,18 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 # Import Qt types for compatibility (only for interface)
 from PyQt6.QtGui import QImage
 
-from desktop.modern.core.interfaces.image_export_services import (
-    ImageExportOptions,
-    ISequenceImageRenderer,
-)
-
 # Import the Qt adapter for actual rendering
 from shared.application.adapters.qt_image_export_adapter import (
     QtImageExportAdapter,
     create_qt_image_export_adapter,
 )
 from shared.application.services.core.image_export_service import CoreImageExportService
+
+from desktop.modern.core.interfaces.image_export_services import (
+    ImageExportOptions,
+    ISequenceImageRenderer,
+)
+
 
 logger = logging.getLogger(__name__)
 

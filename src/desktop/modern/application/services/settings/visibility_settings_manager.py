@@ -5,9 +5,12 @@ Implements visibility settings management for glyphs, motion arrows,
 and other UI elements with QSettings persistence.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,9 +5,12 @@ Simple workbench integration without over-engineered service layers.
 Direct, focused integration - around 80 lines.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -118,20 +121,19 @@ class WorkbenchIntegrator:
                     update_image_export_preview=False,
                 )
                 return True
-            elif hasattr(self.workbench_manager, "add_beat"):
+            if hasattr(self.workbench_manager, "add_beat"):
                 self.workbench_manager.add_beat(positioned_pictograph)
                 return True
-            elif hasattr(self.workbench_manager, "add_pictograph"):
+            if hasattr(self.workbench_manager, "add_pictograph"):
                 self.workbench_manager.add_pictograph(positioned_pictograph)
                 return True
-            elif hasattr(self.workbench_manager, "update_beat"):
+            if hasattr(self.workbench_manager, "update_beat"):
                 self.workbench_manager.update_beat(beat_number, positioned_pictograph)
                 return True
-            else:
-                logger.warning(
-                    "Workbench manager doesn't support individual beat operations"
-                )
-                return False
+            logger.warning(
+                "Workbench manager doesn't support individual beat operations"
+            )
+            return False
         except Exception as e:
             logger.error(f"Failed to add beat {beat_number} individually: {e}")
             import traceback
@@ -318,9 +320,6 @@ class WorkbenchIntegrator:
         """Try to create arrow positioning orchestrator with fallback initialization."""
         try:
             # Import all required services
-            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
-                ArrowPositioningOrchestrator,
-            )
             from shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
@@ -332,6 +331,10 @@ class WorkbenchIntegrator:
             )
             from shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
                 ArrowAdjustmentCalculator,
+            )
+
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+                ArrowPositioningOrchestrator,
             )
 
             # Create services with default configurations

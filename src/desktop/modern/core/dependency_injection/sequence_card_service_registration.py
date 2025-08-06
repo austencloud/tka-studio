@@ -5,7 +5,22 @@ Registers all sequence card services with the DI container following
 the established patterns for service registration.
 """
 
+from __future__ import annotations
+
 import logging
+
+from shared.application.services.sequence_card.sequence_cache_service import (
+    SequenceCardCacheService,
+)
+from shared.application.services.sequence_card.sequence_data_service import (
+    SequenceCardDataService,
+)
+from shared.application.services.sequence_card.sequence_display_service import (
+    SequenceCardDisplayService,
+)
+from shared.application.services.sequence_card.sequence_settings_service import (
+    SequenceCardSettingsService,
+)
 
 from desktop.modern.application.services.sequence_card.sequence_export_service import (
     SequenceCardExportService,
@@ -27,18 +42,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
 from desktop.modern.presentation.views.sequence_card.sequence_card_tab import (
     SequenceCardTab,
 )
-from shared.application.services.sequence_card.sequence_cache_service import (
-    SequenceCardCacheService,
-)
-from shared.application.services.sequence_card.sequence_data_service import (
-    SequenceCardDataService,
-)
-from shared.application.services.sequence_card.sequence_display_service import (
-    SequenceCardDisplayService,
-)
-from shared.application.services.sequence_card.sequence_settings_service import (
-    SequenceCardSettingsService,
-)
+
 
 logger = logging.getLogger(__name__)
 

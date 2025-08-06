@@ -5,6 +5,8 @@ These interfaces define contracts for session restoration, workbench state manag
 and session coordination operations within the workbench context.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import NamedTuple, Optional

@@ -5,6 +5,8 @@ This eliminates the widget wrapper complexity and provides direct
 QGraphicsView-based pictograph display like the legacy system.
 """
 
+from __future__ import annotations
+
 from typing import Optional
 
 from PyQt6.QtCore import Qt

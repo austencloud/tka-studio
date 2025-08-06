@@ -6,6 +6,8 @@ These interfaces define contracts for all settings management operations without
 being tied to specific storage implementations (file system vs web storage).
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any

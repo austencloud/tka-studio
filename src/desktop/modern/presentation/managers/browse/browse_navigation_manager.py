@@ -8,11 +8,14 @@ This class is responsible for:
 - Maintaining navigation history and state
 """
 
-import logging
+from __future__ import annotations
+
 from enum import Enum
+import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +86,7 @@ class BrowseNavigationManager(QObject):
             import traceback
 
             traceback.print_exc()
+
     def navigate_to_browser(self, filter_data=None) -> None:
         """
         Navigate to the browser panel.
@@ -174,9 +178,11 @@ class BrowseNavigationManager(QObject):
     def get_current_panel(self) -> BrowsePanel:
         """Get the current active panel."""
         return self.current_panel
+
     def can_go_back(self) -> bool:
         """Check if back navigation is possible."""
         return self.previous_panel is not None
+
     def _navigate_to_panel(self, target_panel: BrowsePanel, data=None) -> None:
         """
         Internal method to navigate to a specific panel.

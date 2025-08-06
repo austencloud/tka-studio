@@ -5,6 +5,8 @@ Focused freeform sequence generation without over-engineering.
 Integrates with real TKA data and workbench - around 180 lines.
 """
 
+from __future__ import annotations
+
 import logging
 import random
 from typing import Optional
@@ -22,6 +24,7 @@ from .data_and_filtering import (
     PictographFilter,
 )
 from .turn_applicator import TurnApplicator
+
 
 logger = logging.getLogger(__name__)
 

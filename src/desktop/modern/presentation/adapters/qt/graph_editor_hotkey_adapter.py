@@ -4,15 +4,17 @@ Qt Adapter for Graph Editor Hotkey Service
 This adapter wraps the pure GraphEditorHotkeyService to provide Qt-specific signal coordination.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
 from shared.application.services.graph_editor.graph_editor_hotkey_service import (
     GraphEditorHotkeyService,
 )
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.graph_editor.graph_editor import (
@@ -43,7 +45,7 @@ class QtGraphEditorHotkeyAdapter(QObject):
 
     def __init__(
         self,
-        graph_editor_getter: Callable[[], "GraphEditor"] | None = None,
+        graph_editor_getter: Callable[[], GraphEditor] | None = None,
     ):
         super().__init__()
 

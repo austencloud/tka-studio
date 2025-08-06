@@ -19,6 +19,8 @@ Architecture:
 - Supports signal-based communication with parent components
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -32,6 +34,7 @@ from desktop.modern.presentation.components.pictograph.views import (
 )
 
 from .detailed_info_panel import DetailedInfoPanel
+
 
 logger = logging.getLogger(__name__)
 

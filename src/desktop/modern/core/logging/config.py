@@ -5,6 +5,8 @@ This module provides predefined logging configurations and setup functions
 for TKA's smart logging system.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 
@@ -135,9 +137,9 @@ def _detect_environment() -> str:
     env_var = os.getenv("TKA_ENVIRONMENT", "").lower()
     if env_var in ["production", "prod"]:
         return "production"
-    elif env_var in ["debug", "debugging"]:
+    if env_var in ["debug", "debugging"]:
         return "debug"
-    elif env_var in ["test", "testing"]:
+    if env_var in ["test", "testing"]:
         return "testing"
 
     # Check for testing indicators

@@ -5,6 +5,8 @@ All enumeration types used throughout the TKA domain models.
 Centralized location for type-safe constants and values.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 
 

@@ -5,6 +5,8 @@ Interface definitions for background animation services following TKA's clean ar
 These interfaces support the animated background system with cross-platform compatibility.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

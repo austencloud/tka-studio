@@ -5,9 +5,11 @@ Handles data loading and filtering without over-engineered patterns.
 Focused, testable, and maintainable - around 150 lines.
 """
 
+from __future__ import annotations
+
+from copy import deepcopy
 import csv
 import logging
-from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +24,7 @@ from desktop.modern.domain.models.enums import (
 )
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -274,7 +277,7 @@ class PictographFilter:
         """Determine grid mode from position."""
         if self._is_diamond_position(position):
             return "diamond"
-        elif self._is_box_position(position):
+        if self._is_box_position(position):
             return "box"
         return None
 

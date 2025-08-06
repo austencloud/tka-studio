@@ -9,6 +9,8 @@ Available utilities:
 - logging: Simple logging utilities
 """
 
+from __future__ import annotations
+
 from .logging import (
     create_component_logger,
     log_error_with_context,
@@ -22,6 +24,7 @@ from .validation import (
     validate_beat_index,
     validate_sequence_data,
 )
+
 
 __all__ = [
     # Validation

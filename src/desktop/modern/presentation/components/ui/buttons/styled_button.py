@@ -6,6 +6,8 @@ Adapted for the TKA modern desktop app with dependency injection principles.
 Uses the centralized design system for consistent styling.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 
 from PyQt6.QtCore import (
@@ -234,9 +236,9 @@ class StyledButton(QPushButton, StyleMixin):
         """Get navigation button background based on state."""
         if self._is_selected:
             return "rgba(100, 149, 237, 0.8)"  # Cornflower blue with transparency
-        elif self._state == ButtonState.HOVERED:
+        if self._state == ButtonState.HOVERED:
             return "rgba(255, 255, 255, 0.15)"
-        elif self._state == ButtonState.PRESSED:
+        if self._state == ButtonState.PRESSED:
             return "rgba(255, 255, 255, 0.25)"
         return "rgba(255, 255, 255, 0.1)"
 

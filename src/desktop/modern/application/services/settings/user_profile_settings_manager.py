@@ -5,11 +5,14 @@ Implements user profile management with multi-user support,
 profile-specific settings, and QSettings persistence.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 from typing import Any
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

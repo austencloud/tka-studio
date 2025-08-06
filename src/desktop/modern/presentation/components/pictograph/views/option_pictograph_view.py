@@ -5,6 +5,8 @@ This provides the same direct scaling approach as the legacy OptionView
 without widget wrapper complexity.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QRectF, QSize, Qt

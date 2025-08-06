@@ -8,16 +8,19 @@ ARCHITECTURE: Provides resource pooling for expensive Qt objects (brushes, pens,
 fonts, graphics items) with automatic lifecycle management and performance optimization.
 """
 
-import hashlib
-import logging
+from __future__ import annotations
+
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import dataclass
+import hashlib
+import logging
 from threading import Lock
 from typing import Any, Generic, TypeVar
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QPen
+
 
 logger = logging.getLogger(__name__)
 

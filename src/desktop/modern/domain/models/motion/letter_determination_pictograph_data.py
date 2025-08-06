@@ -5,6 +5,8 @@ Extends the existing PictographData model with letter determination
 functionality without modifying the core domain model.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from desktop.modern.domain.models.enums import Direction, GridPosition, Letter, Timing
@@ -93,7 +95,7 @@ class LetterDeterminationPictographData:
         """Get the float motion if present."""
         if self.blue_motion.is_float:
             return self.blue_motion
-        elif self.red_motion.is_float:
+        if self.red_motion.is_float:
             return self.red_motion
         return None
 
@@ -101,17 +103,17 @@ class LetterDeterminationPictographData:
         """Get the shift motion if present."""
         if self.blue_motion.is_shift:
             return self.blue_motion
-        elif self.red_motion.is_shift:
+        if self.red_motion.is_shift:
             return self.red_motion
         return None
 
-    def with_beat_number(self, beat: int) -> "LetterDeterminationPictographData":
+    def with_beat_number(self, beat: int) -> LetterDeterminationPictographData:
         """Create new instance with different beat number."""
         from dataclasses import replace
 
         return replace(self, beat=beat)
 
-    def with_letter(self, letter: Letter) -> "LetterDeterminationPictographData":
+    def with_letter(self, letter: Letter) -> LetterDeterminationPictographData:
         """Create new instance with different letter."""
         from dataclasses import replace
 
@@ -123,7 +125,7 @@ class LetterDeterminationPictographData:
         blue_end_ori=None,
         red_start_ori=None,
         red_end_ori=None,
-    ) -> "LetterDeterminationPictographData":
+    ) -> LetterDeterminationPictographData:
         """Create new instance with updated orientations."""
         from dataclasses import replace
 
@@ -155,7 +157,7 @@ class LetterDeterminationPictographData:
 
     def with_turns(
         self, blue_turns=None, red_turns=None
-    ) -> "LetterDeterminationPictographData":
+    ) -> LetterDeterminationPictographData:
         """Create new instance with different turns."""
         from dataclasses import replace
 
@@ -180,7 +182,7 @@ class LetterDeterminationPictographData:
 
     def with_prefloat_attributes(
         self, color: str, motion_type, prop_rot_dir
-    ) -> "LetterDeterminationPictographData":
+    ) -> LetterDeterminationPictographData:
         """Create new instance with prefloat attributes."""
         from dataclasses import replace
 
@@ -243,7 +245,7 @@ class LetterDeterminationPictographData:
         return result
 
     @classmethod
-    def from_legacy_dict(cls, data: dict) -> "LetterDeterminationPictographData":
+    def from_legacy_dict(cls, data: dict) -> LetterDeterminationPictographData:
         """Create from legacy dictionary format."""
         from desktop.modern.domain.models.enums import MotionType, RotationDirection
         from desktop.modern.domain.models.motion_data import MotionData
@@ -253,17 +255,11 @@ class LetterDeterminationPictographData:
             base_motion = MotionData.from_dict(attr_dict)
 
             prefloat_motion_type = None
-            if (
-                "prefloat_motion_type" in attr_dict
-                and attr_dict["prefloat_motion_type"]
-            ):
+            if attr_dict.get("prefloat_motion_type"):
                 prefloat_motion_type = MotionType(attr_dict["prefloat_motion_type"])
 
             prefloat_prop_rot_dir = None
-            if (
-                "prefloat_prop_rot_dir" in attr_dict
-                and attr_dict["prefloat_prop_rot_dir"]
-            ):
+            if attr_dict.get("prefloat_prop_rot_dir"):
                 prefloat_prop_rot_dir = RotationDirection(
                     attr_dict["prefloat_prop_rot_dir"]
                 )
@@ -303,6 +299,6 @@ class LetterDeterminationPictographData:
     @classmethod
     def from_pictograph_data(
         cls, pictograph_data: PictographData, **kwargs
-    ) -> "LetterDeterminationPictographData":
+    ) -> LetterDeterminationPictographData:
         """Create from existing PictographData."""
         return cls(pictograph_data=pictograph_data, **kwargs)

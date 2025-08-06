@@ -5,8 +5,11 @@ This script validates that all presentation components can properly use the new 
 and that backward compatibility is maintained, without requiring GUI components.
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add src to path
 modern_src_path = Path(__file__).parent / "src"
@@ -217,10 +220,9 @@ def main():
         print("✅ ALL INTEGRATION TESTS PASSED!")
         print("🎉 Services are properly integrated and ready for use.")
         return True
-    else:
-        print("❌ SOME INTEGRATION TESTS FAILED!")
-        print("🔧 Please check the errors above and fix issues.")
-        return False
+    print("❌ SOME INTEGRATION TESTS FAILED!")
+    print("🔧 Please check the errors above and fix issues.")
+    return False
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ Bridges between the framework-agnostic core thumbnail service and QT-specific
 presentation layer. Converts thumbnail data to QT widgets.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 
@@ -14,6 +16,7 @@ import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
+
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 
@@ -25,6 +28,7 @@ from shared.application.services.core.thumbnail_service import (
     convert_sequence_data_to_spec,
 )
 from shared.application.services.core.types import ImageData, ImageFormat, Size
+
 
 logger = logging.getLogger(__name__)
 

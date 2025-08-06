@@ -5,6 +5,8 @@ Matches the Legacy sequence_viewer component that displays selected sequences.
 Takes up 1/3 of the browse tab width (33.3%).
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget

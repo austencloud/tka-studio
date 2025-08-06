@@ -4,9 +4,12 @@ ComponentConnector
 Handles signal connections and inter-component communication for the construct tab.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.sequence_workbench.sequence_beat_frame.sequence_beat_frame import (

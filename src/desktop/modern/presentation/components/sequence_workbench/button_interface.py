@@ -9,6 +9,8 @@ needs to interact with the sequence workbench without requiring full refactoring
 Phase 0 - Days 2-3: Strategic partial refactoring for Sprint 2 preparation.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 from PyQt6.QtCore import QObject, pyqtSignal

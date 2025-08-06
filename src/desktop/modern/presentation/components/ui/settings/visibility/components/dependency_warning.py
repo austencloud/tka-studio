@@ -5,6 +5,8 @@ Focused component for displaying motion dependency warnings with glassmorphism s
 Extracted from the monolithic visibility tab following TKA clean architecture principles.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel
 

@@ -4,6 +4,8 @@ Sequence Workbench Components
 Modern sequence workbench with modern architecture.
 """
 
+from __future__ import annotations
+
 from desktop.modern.presentation.components.sequence_workbench.sequence_beat_frame import (
     BeatSelector,
     BeatView,
@@ -18,11 +20,12 @@ from .button_interface import (
     ButtonOperationResult,
     IWorkbenchButtonInterface,
     WorkbenchButtonInterfaceAdapter,
+    WorkbenchButtonInterfaceAdapter as ButtonInterface,
     WorkbenchButtonSignals,
 )
-from .button_interface import WorkbenchButtonInterfaceAdapter as ButtonInterface
 from .indicator_section import WorkbenchIndicatorSection
 from .sequence_workbench import SequenceWorkbench
+
 
 __all__ = [
     "SequenceWorkbench",

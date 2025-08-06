@@ -5,17 +5,20 @@ This frame displays a single pictograph option with proper rendering
 and click handling, replacing the placeholder widgets.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
-
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.pictograph.views import create_option_view
 from shared.application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
+
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.presentation.components.pictograph.views import create_option_view
+
 
 logger = logging.getLogger(__name__)
 
@@ -182,6 +185,7 @@ class OptionPictograph(QFrame):
 
         # Clear internal state
         self._pictograph_data = None
+
     def mousePressEvent(self, event):
         """Handle mouse press events for selection with debounce protection."""
         if event.button() == Qt.MouseButton.LeftButton and self._pictograph_data:

@@ -4,11 +4,14 @@ Sequence Card Display Service Implementation
 Handles display logic and UI coordination for sequence cards.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDisplayService,
 )
+
 
 logger = logging.getLogger(__name__)
 

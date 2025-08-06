@@ -5,6 +5,8 @@ Extracted UI setup methods without any changes to functionality.
 Just moves the code to reduce the main file size.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from .beat_frame_section import WorkbenchBeatFrameSection

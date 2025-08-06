@@ -6,6 +6,8 @@ These interfaces define contracts for beat layout calculations, grid layouts, re
 and cross-platform layout operations.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any

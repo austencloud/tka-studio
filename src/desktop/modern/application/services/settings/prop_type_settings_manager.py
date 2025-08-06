@@ -5,6 +5,8 @@ Implements prop type settings management with validation,
 asset verification, and QSettings persistence.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -13,6 +15,7 @@ from PyQt6.QtCore import QObject, QSettings, pyqtSignal
 from desktop.modern.core.interfaces.settings_services import (
     PropType,
 )
+
 
 logger = logging.getLogger(__name__)
 

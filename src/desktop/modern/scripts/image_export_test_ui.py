@@ -5,9 +5,12 @@ Image Export Test UI
 A nice GUI for testing image rendering with different sequences and options.
 """
 
-import sys
+from __future__ import annotations
+
 from datetime import datetime
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the Python path
 src_dir = Path(__file__).parent.parent / "src"

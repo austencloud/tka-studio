@@ -3,6 +3,8 @@ Enhanced Setting Card component with glassmorphism styling.
 Ported from legacy settings dialog with improvements and optimized spacing.
 """
 
+from __future__ import annotations
+
 from typing import Any, Optional
 
 from PyQt6.QtCore import pyqtSignal
@@ -158,6 +160,8 @@ class ToggleCard(SettingCard):
         """Set the toggle value programmatically."""
         self.current_value = value
         self.toggle.setChecked(value)
+
+
 class ComboCard(SettingCard):
     """Setting card with a styled combo box."""
 

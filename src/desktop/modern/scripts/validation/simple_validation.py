@@ -2,8 +2,11 @@
 Simple service validation test
 """
 
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Add src to path
 modern_src_path = Path(__file__).parent / "src"

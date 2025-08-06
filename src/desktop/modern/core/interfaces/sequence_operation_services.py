@@ -5,6 +5,8 @@ Interface definitions for sequence operation services following TKA's clean arch
 These interfaces handle sequence manipulation, validation, and transformation operations.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

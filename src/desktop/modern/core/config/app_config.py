@@ -18,8 +18,10 @@ USAGE:
     container.register_singleton(AppConfig, lambda: app_config)
 """
 
-import os
+from __future__ import annotations
+
 from dataclasses import dataclass
+import os
 
 # Result pattern removed - using simple exceptions
 from desktop.modern.core.config.data_config import DataConfig, create_data_config
@@ -116,7 +118,7 @@ class AppConfig:
         return True
 
     @classmethod
-    def from_environment(cls) -> "AppConfig":
+    def from_environment(cls) -> AppConfig:
         """Load configuration from environment variables and defaults."""
         # Create data configuration
         data_config = create_data_config()

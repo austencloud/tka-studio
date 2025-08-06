@@ -4,7 +4,16 @@ Image Export Service Registration
 This module registers all image export services with the dependency injection container.
 """
 
+from __future__ import annotations
+
 import logging
+
+from shared.application.services.image_export.sequence_image_layout_calculator import (
+    SequenceImageLayoutCalculator,
+)
+from shared.application.services.image_export.sequence_metadata_extractor import (
+    SequenceMetadataExtractor,
+)
 
 from desktop.modern.application.services.image_export.drawers.beat_drawer import (
     BeatDrawer,
@@ -39,12 +48,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     IUserInfoDrawer,
     IWordDrawer,
 )
-from shared.application.services.image_export.sequence_image_layout_calculator import (
-    SequenceImageLayoutCalculator,
-)
-from shared.application.services.image_export.sequence_metadata_extractor import (
-    SequenceMetadataExtractor,
-)
+
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +104,8 @@ def _register_pictograph_services(container: DIContainer) -> None:
     """Register pictograph services needed for real pictograph rendering."""
     try:
         # Temporarily ensure shared src is accessible for imports
-        import sys
         from pathlib import Path
+        import sys
 
         # Find shared src path
         current_file = Path(__file__).resolve()

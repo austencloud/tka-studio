@@ -1,11 +1,24 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGridLayout
 
 from base_widgets.base_beat_frame import BaseBeatFrame
 from base_widgets.pictograph.elements.views.beat_view import (
     LegacyBeatView,
 )
 from base_widgets.pictograph.legacy_pictograph import LegacyPictograph
+from data.constants import (
+    BLUE_ATTRS,
+    END_ORI,
+    END_POS,
+    RED_ATTRS,
+    SEQUENCE_START_POSITION,
+    START_ORI,
+    START_POS,
+)
 from legacy_settings_manager.global_settings.app_context import AppContext
 from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame_layout_manager import (
     TempBeatFrameLayoutManager,
@@ -19,18 +32,6 @@ from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_p
 )
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.start_pos_beat_view import (
     StartPositionBeatView,
-)
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGridLayout
-
-from data.constants import (
-    BLUE_ATTRS,
-    END_ORI,
-    END_POS,
-    RED_ATTRS,
-    SEQUENCE_START_POSITION,
-    START_ORI,
-    START_POS,
 )
 
 if TYPE_CHECKING:
@@ -137,12 +138,11 @@ class TempBeatFrame(BaseBeatFrame):
         # Try to get the construct_tab, but handle the case where it might not be available
         self.construct_tab = self._get_construct_tab()
         if not self.construct_tab:
-            # If we're being called from the sequence card tab image exporter,
-            # the construct_tab might not be available
+            # Instead of using simplified loading, implement the essential functionality directly
             print(
-                "Warning: construct_tab not available, using simplified sequence loading"
+                "Warning: construct_tab not available, implementing essential functionality directly"
             )
-            self._simplified_populate_from_json(current_sequence_json)
+            self._populate_from_json_without_construct_tab(current_sequence_json)
             return
 
         # Clear the current sequence without resetting to start pos picker
@@ -161,13 +161,14 @@ class TempBeatFrame(BaseBeatFrame):
                 continue
             self.populate_sequence(pictograph_data)
 
-        # Update the last beat
-        last_beat = self.get_last_filled_beat().beat
-        self.construct_tab.last_beat = last_beat
+        # Update the last beat if construct_tab is available
+        if self.construct_tab is not None:
+            last_beat = self.get_last_filled_beat().beat
+            self.construct_tab.last_beat = last_beat
 
-        # Update the UI if needed
-        if self.construct_tab.start_pos_picker.isVisible():
-            self.construct_tab.transition_to_option_picker()
+            # Update the UI if needed
+            if self.construct_tab.start_pos_picker.isVisible():
+                self.construct_tab.transition_to_option_picker()
 
     def _simplified_populate_from_json(
         self, current_sequence_json: list[dict[str, str]]
@@ -232,8 +233,8 @@ class TempBeatFrame(BaseBeatFrame):
     def clear_sequence(self, should_reset_to_start_pos_picker=True) -> None:
         self._reset_beat_frame()
 
-        # Check if construct_tab attribute exists before using it
-        if hasattr(self, "construct_tab"):
+        # Check if construct_tab attribute exists and is not None before using it
+        if hasattr(self, "construct_tab") and self.construct_tab is not None:
             if should_reset_to_start_pos_picker:
                 self.construct_tab.transition_to_start_pos_picker()
             self.construct_tab.last_beat = self.start_pos
@@ -255,17 +256,39 @@ class TempBeatFrame(BaseBeatFrame):
     def _get_construct_tab(self):
         """Get the construct tab using the new MVVM architecture with graceful fallbacks."""
         try:
-            # Try to get construct tab through the new coordinator pattern
-            return self.main_widget.get_tab_widget("construct")
+            # Direct attribute access - this is the standard way
+            construct_tab = getattr(self.main_widget, "construct_tab", None)
+            if construct_tab:
+                return construct_tab
         except AttributeError:
-            # Fallback: try through tab_manager for backward compatibility
-            try:
-                return self.main_widget.tab_manager.get_tab_widget("construct")
-            except AttributeError:
-                # Final fallback: try direct access for legacy compatibility
-                try:
-                    if hasattr(self.main_widget, "construct_tab"):
-                        return self.main_widget.construct_tab
-                except AttributeError:
-                    pass
+            pass
+
+        print("DEBUG: Could not find construct tab")
         return None
+
+    def _populate_from_json_without_construct_tab(self, current_sequence_json):
+        """Implement essential sequence loading functionality without requiring construct_tab."""
+        from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_start_pos_beat import (
+            LegacyStartPositionBeat,
+        )
+
+        # Clear the current sequence without resetting to start pos picker
+        self.clear_sequence(should_reset_to_start_pos_picker=False)
+
+        # Create start position beat directly from the first entry
+        if current_sequence_json and len(current_sequence_json) > 0:
+            start_pos_entry = current_sequence_json[0]
+
+            # Create start position beat and update it with the start position data
+            start_pos_beat = LegacyStartPositionBeat(self)
+            start_pos_beat.managers.updater.update_pictograph(start_pos_entry)
+
+            # Set the start position data in the JSON manager
+            self.json_manager.start_pos_handler.set_start_position_data(start_pos_beat)
+            self.start_pos_view.set_start_pos(start_pos_beat)
+
+            # Populate the sequence with the remaining pictographs
+            for pictograph_data in current_sequence_json[1:]:
+                if pictograph_data.get("sequence_start_position"):
+                    continue
+                self.populate_sequence(pictograph_data)

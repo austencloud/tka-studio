@@ -5,6 +5,8 @@ These interfaces define the contracts for services that handle option picker
 functionality, following TKA's clean architecture principles.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import (
     QBrush,
@@ -328,6 +330,7 @@ class SplashScreen(QWidget):
             x = screen_geometry.x() + (screen_geometry.width() - self.width()) // 2
             y = screen_geometry.y() + (screen_geometry.height() - self.height()) // 2
             self.move(x, y)
+
     def update_progress(self, value: int, message: str = ""):
         if self.is_closing:
             return
@@ -348,6 +351,7 @@ class SplashScreen(QWidget):
             from PyQt6.QtWidgets import QApplication
 
             QApplication.processEvents()
+
     def close(self):
         self.is_closing = True
         if hasattr(self, "pulse_timer"):

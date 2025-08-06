@@ -6,17 +6,18 @@ Real-time debugging tool that runs within the actual TKA application
 to monitor toggle functionality and identify production-specific failures.
 """
 
+from __future__ import annotations
+
 import time
 from typing import Any, Optional
 
-from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
 
 # Use simple print statements for production debugging to avoid logging format issues
 def production_log(message: str) -> None:
     """Simple production logging function"""
-    import time
 
     timestamp = time.strftime("%H:%M:%S")
     print(f"🔍 [PROD-DEBUG] {timestamp} - {message}")

@@ -5,8 +5,10 @@ Immutable data structures for motion representation in TKA.
 Handles prop and arrow motion data with type safety and serialization.
 """
 
-import json
+from __future__ import annotations
+
 from dataclasses import dataclass, fields
+import json
 from typing import Any
 
 from ._shared_utils import process_field_value
@@ -159,7 +161,7 @@ class MotionData:
 
     def to_float_state(
         self, prefloat_motion_type: MotionType, prefloat_prop_rot_dir: RotationDirection
-    ) -> "MotionData":
+    ) -> MotionData:
         """Convert this motion to float state with prefloat attributes."""
         return self.update(
             motion_type=MotionType.FLOAT,
@@ -171,7 +173,7 @@ class MotionData:
 
     def with_prefloat_attributes(
         self, motion_type: MotionType, prop_rot_dir: RotationDirection
-    ) -> "MotionData":
+    ) -> MotionData:
         """Create new instance with prefloat attributes."""
         return self.update(
             prefloat_motion_type=motion_type, prefloat_prop_rot_dir=prop_rot_dir
@@ -266,11 +268,10 @@ class MotionData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "MotionData":
+    def from_dict(cls, data: dict[str, Any]) -> MotionData:
         """Create instance from dictionary."""
         # Handle nested dataclasses and enums
         field_types = {f.name: f.type for f in fields(cls)}
@@ -284,19 +285,13 @@ class MotionData:
                 processed_data[key] = value
 
         # Handle prefloat attributes conversion
-        if (
-            "prefloat_motion_type" in processed_data
-            and processed_data["prefloat_motion_type"]
-        ):
+        if processed_data.get("prefloat_motion_type"):
             if isinstance(processed_data["prefloat_motion_type"], str):
                 processed_data["prefloat_motion_type"] = MotionType(
                     processed_data["prefloat_motion_type"]
                 )
 
-        if (
-            "prefloat_prop_rot_dir" in processed_data
-            and processed_data["prefloat_prop_rot_dir"]
-        ):
+        if processed_data.get("prefloat_prop_rot_dir"):
             if isinstance(processed_data["prefloat_prop_rot_dir"], str):
                 processed_data["prefloat_prop_rot_dir"] = RotationDirection(
                     processed_data["prefloat_prop_rot_dir"]
@@ -305,17 +300,16 @@ class MotionData:
         return cls(**processed_data)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "MotionData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> MotionData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
-    def update(self, **kwargs) -> "MotionData":
+    def update(self, **kwargs) -> MotionData:
         """Create a new MotionData with updated fields."""
         from dataclasses import replace
 

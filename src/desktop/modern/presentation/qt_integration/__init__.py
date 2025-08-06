@@ -23,6 +23,8 @@ EXPORTS:
 
 # Qt Compatibility Layer
 # Automatic Lifecycle Management
+from __future__ import annotations
+
 from .lifecycle_management import (
     AutoManagedWidget,
     QtObjectFactory,
@@ -62,6 +64,7 @@ from .threading_integration import (
     QtAsyncBridge,
     qt_async_bridge,
 )
+
 
 __all__ = [
     # Compatibility

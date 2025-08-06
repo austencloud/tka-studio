@@ -5,11 +5,14 @@ Provides lesson configurations and types for the learning module.
 Manages static lesson data and configuration parameters.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import ILessonConfigurationService
 from desktop.modern.domain.models.learn import LessonConfig, LessonType
+
 
 logger = logging.getLogger(__name__)
 

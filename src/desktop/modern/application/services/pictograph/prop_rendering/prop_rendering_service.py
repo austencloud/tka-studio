@@ -15,9 +15,11 @@ ARCHITECTURE:
 - Maintains same public interface for compatibility
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
 
 
 # Add project root to path using pathlib (standardized approach)
@@ -41,12 +43,6 @@ from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 # Qt imports for compatibility
 from PyQt6.QtWidgets import QGraphicsScene
 
-from desktop.modern.application.adapters.qt_prop_rendering_service_adapter import (
-    QtPropRenderingServiceAdapter,
-)
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
-
 # Import framework-agnostic core services (using established import pattern)
 from shared.application.services.core.prop_rendering_service import (
     CorePropRenderingService,
@@ -56,6 +52,13 @@ from shared.application.services.core.prop_rendering_service import (
 from shared.application.services.pictograph.prop_rendering.asset_manager import (
     PropAssetManager,
 )
+
+from desktop.modern.application.adapters.qt_prop_rendering_service_adapter import (
+    QtPropRenderingServiceAdapter,
+)
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -157,14 +160,12 @@ class PropRenderingService:
         logger.warning(
             "_get_prop_renderer() is deprecated - using Qt adapter internally"
         )
-        return  # Qt adapter handles this internally
 
     def _create_prop_renderer(self, color: str):
         """DEPRECATED: Direct Qt renderer creation - use adapter instead."""
         logger.warning(
             "_create_prop_renderer() is deprecated - using Qt adapter internally"
         )
-        return  # Qt adapter handles this internally
 
     def _position_prop(self, prop_item, motion_data, color, pictograph_data=None):
         """DEPRECATED: Direct prop positioning - handled by adapter internally."""

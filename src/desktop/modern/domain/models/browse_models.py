@@ -5,6 +5,8 @@ Domain models for browse functionality, moved here to avoid circular imports
 between application services and presentation layers.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any

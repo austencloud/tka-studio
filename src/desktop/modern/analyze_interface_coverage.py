@@ -5,11 +5,13 @@ This script analyzes all services in the TKA application to identify
 which services need interfaces for complete cross-platform coverage.
 """
 
+from __future__ import annotations
+
 import ast
-import os
-import re
 from dataclasses import dataclass
+import os
 from pathlib import Path
+import re
 
 
 @dataclass
@@ -252,14 +254,11 @@ class ServiceAnalyzer:
 
         if any(pattern.lower() in class_lower for pattern in high_priority_patterns):
             return "HIGH"
-        elif any(
-            pattern.lower() in class_lower for pattern in medium_priority_patterns
-        ):
+        if any(pattern.lower() in class_lower for pattern in medium_priority_patterns):
             return "MEDIUM"
-        elif any(pattern.lower() in class_lower for pattern in low_priority_patterns):
+        if any(pattern.lower() in class_lower for pattern in low_priority_patterns):
             return "LOW"
-        else:
-            return "MEDIUM"  # Default to medium
+        return "MEDIUM"  # Default to medium
 
     def _extract_dependencies(self, content: str) -> list[str]:
         """Extract dependencies from service content."""
@@ -288,13 +287,12 @@ class ServiceAnalyzer:
             # By interface status and priority
             if service.has_interface:
                 result["has_interface"].append(service)
+            elif service.priority == "HIGH":
+                result["needs_interface_high"].append(service)
+            elif service.priority == "MEDIUM":
+                result["needs_interface_medium"].append(service)
             else:
-                if service.priority == "HIGH":
-                    result["needs_interface_high"].append(service)
-                elif service.priority == "MEDIUM":
-                    result["needs_interface_medium"].append(service)
-                else:
-                    result["needs_interface_low"].append(service)
+                result["needs_interface_low"].append(service)
 
             # By category
             if service.category not in result["by_category"]:

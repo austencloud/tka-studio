@@ -5,6 +5,8 @@ Handles the export action button for current sequence.
 Part of the refactored export panel system.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtWidgets import QFrame, QLabel, QPushButton, QVBoxLayout

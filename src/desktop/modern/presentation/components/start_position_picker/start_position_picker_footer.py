@@ -5,11 +5,14 @@ Handles the footer section with variations button.
 Extracted from the main StartPositionPicker for better maintainability.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
+
 
 if TYPE_CHECKING:
     from .start_position_picker import PickerMode
@@ -121,7 +124,7 @@ class StartPositionPickerFooter(QWidget):
             }
         """
 
-    def update_for_mode(self, mode: "PickerMode"):
+    def update_for_mode(self, mode: PickerMode):
         """Update footer elements based on current mode."""
         logger.debug(f"Footer updating for mode: {mode.value}")
 

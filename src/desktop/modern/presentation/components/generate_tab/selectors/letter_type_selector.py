@@ -1,28 +1,30 @@
 """
 Letter type selector component.
 
-Provides multi-select checkboxes for letter types in freeform mode.
+Simple horizontal row of numbered buttons for letter types in freeform mode.
 """
 
-from typing import Optional
+from __future__ import annotations
 
-from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QCheckBox, QVBoxLayout, QWidget
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from desktop.modern.core.interfaces.generation_services import LetterType
 
-from .generation_control_base import GenerationControlBase
 
-
-class LetterTypeSelector(GenerationControlBase):
-    """Multi-select for letter types (freeform mode)"""
+class LetterTypeSelector(QWidget):
+    """Simple horizontal selector for letter types (freeform mode)"""
 
     value_changed = pyqtSignal(set)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__(
-            "Letter Types", "Select which letter types to include in generation", parent
-        )
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = {
             LetterType.TYPE1,
             LetterType.TYPE2,
@@ -31,76 +33,118 @@ class LetterTypeSelector(GenerationControlBase):
             LetterType.TYPE5,
             LetterType.TYPE6,
         }
+        self._buttons = {}
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup letter type controls"""
-        checkbox_layout = QVBoxLayout()
-        checkbox_layout.setSpacing(4)
+        """Setup simple letter type controls"""
+        # Main vertical layout
+        layout = QVBoxLayout(self)
+        layout.setSpacing(8)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self._checkboxes = {}
+        # Header label
+        header_layout = QHBoxLayout()
+        header_label = QLabel("Filter by type:")
+        header_label.setStyleSheet("""
+            QLabel {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+                font-weight: 500;
+            }
+        """)
+        header_layout.addWidget(header_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addLayout(header_layout)
 
-        # Legacy's letter type descriptions
-        letter_type_info = [
-            (LetterType.TYPE1, "Type 1 (Dual-Shift: A-V)"),
-            (LetterType.TYPE2, "Type 2 (Shift: W,X,Y,Z,Σ,Δ,θ,Ω)"),
-            (LetterType.TYPE3, "Type 3 (Cross-Shift: W-,X-,Y-,Z-,Σ-,Δ-,θ-,Ω-)"),
-            (LetterType.TYPE4, "Type 4 (Dash: Φ,Ψ,Λ)"),
-            (LetterType.TYPE5, "Type 5 (Dual-Dash: Φ-,Ψ-,Λ-)"),
-            (LetterType.TYPE6, "Type 6 (Static: α,β,Γ)"),
+        # Horizontal layout for buttons
+        button_layout = QHBoxLayout()
+        button_layout.setSpacing(8)
+        button_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Letter type data: (letter_type, number)
+        letter_types = [
+            (LetterType.TYPE1, "1"),
+            (LetterType.TYPE2, "2"),
+            (LetterType.TYPE3, "3"),
+            (LetterType.TYPE4, "4"),
+            (LetterType.TYPE5, "5"),
+            (LetterType.TYPE6, "6"),
         ]
 
-        for letter_type, description in letter_type_info:
-            checkbox = QCheckBox(description)
-            checkbox.setChecked(True)
-            checkbox.setStyleSheet(
-                """
-                QCheckBox {
-                    color: rgba(255, 255, 255, 0.8);
-                    spacing: 8px;
-                    font-size: 9px;
-                }
-                QCheckBox::indicator {
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 3px;
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.1);
-                }
-                QCheckBox::indicator:hover {
-                    border-color: rgba(255, 255, 255, 0.4);
-                    background: rgba(255, 255, 255, 0.15);
-                }
-                QCheckBox::indicator:checked {
-                    background: rgba(76, 175, 80, 0.7);
-                    border-color: rgba(76, 175, 80, 0.8);
-                }
-                QCheckBox::indicator:checked:hover {
-                    background: rgba(76, 175, 80, 0.8);
-                }
-            """
+        for letter_type, number in letter_types:
+            button = QPushButton(number)
+            button.setCheckable(True)
+            button.setChecked(True)  # All selected by default
+            button.setFixedSize(60, 45)  # Even larger for better usability
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
+
+            # Apply exact legacy double border colors for each type
+            # Each type has primary and secondary colors from legacy
+            legacy_color_pairs = [
+                ("#36c3ff", "#6F2DA8"),  # Type 1: Light blue + Purple
+                ("#6F2DA8", "#6F2DA8"),  # Type 2: Purple + Purple
+                ("#26e600", "#6F2DA8"),  # Type 3: Green + Purple
+                ("#26e600", "#26e600"),  # Type 4: Green + Green
+                ("#00b3ff", "#26e600"),  # Type 5: Blue + Green
+                ("#eb7d00", "#eb7d00"),  # Type 6: Orange + Orange
+            ]
+            primary_color, secondary_color = legacy_color_pairs[int(number) - 1]
+
+            button.setStyleSheet(f"""
+                QPushButton {{
+                    background: white;
+                    border: 2px solid rgba(150, 150, 150, 0.4);
+                    border-radius: 6px;
+                    color: black;
+                    font-size: 14px;
+                    font-weight: bold;
+                }}
+                QPushButton:hover:!checked {{
+                    background: rgba(240, 240, 240, 1.0);
+                    border-color: rgba(180, 180, 180, 0.5);
+                    color: black;
+                }}
+                QPushButton:checked {{
+                    background: white;
+                    border: 3px solid {secondary_color};
+                    color: black;
+                    font-weight: bold;
+                    outline: 2px solid {primary_color};
+                    outline-offset: -1px;
+                }}
+                QPushButton:checked:hover {{
+                    background: rgba(250, 250, 250, 1.0);
+                }}
+            """)
+
+            button.clicked.connect(
+                lambda checked, lt=letter_type: self._on_button_clicked(lt, checked)
             )
-            checkbox.stateChanged.connect(self._on_checkbox_changed)
-            self._checkboxes[letter_type] = checkbox
-            checkbox_layout.addWidget(checkbox)
+            self._buttons[letter_type] = button
+            button_layout.addWidget(button)
 
-        self._content_layout.addLayout(checkbox_layout)
+        layout.addLayout(button_layout)
 
-    def _on_checkbox_changed(self):
-        """Handle checkbox state change"""
-        new_value = set()
-        for letter_type, checkbox in self._checkboxes.items():
-            if checkbox.isChecked():
-                new_value.add(letter_type)
+    def _on_button_clicked(self, letter_type: LetterType, checked: bool):
+        """Handle button click"""
+        if checked:
+            self._current_value.add(letter_type)
+        else:
+            self._current_value.discard(letter_type)
 
-        if new_value != self._current_value:
-            self._current_value = new_value
-            self.value_changed.emit(new_value)
+        # Ensure at least one type is selected
+        if not self._current_value:
+            self._current_value.add(letter_type)
+            self._buttons[letter_type].setChecked(True)
+
+        self.value_changed.emit(self._current_value.copy())
 
     def set_value(self, value: set[LetterType]):
         """Set the current value"""
-        self._current_value = value
-        for letter_type, checkbox in self._checkboxes.items():
-            checkbox.blockSignals(True)
-            checkbox.setChecked(letter_type in value)
-            checkbox.blockSignals(False)
+        self._current_value = value.copy()
+        for letter_type, button in self._buttons.items():
+            button.setChecked(letter_type in value)
+
+    def get_value(self) -> set[LetterType]:
+        """Get the current value"""
+        return self._current_value.copy()

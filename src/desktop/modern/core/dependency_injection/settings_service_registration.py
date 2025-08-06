@@ -5,6 +5,8 @@ Registers all settings services in the DI container following TKA's
 clean architecture patterns and service composition principles.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -43,6 +45,7 @@ from desktop.modern.core.interfaces.settings_services import (
     IUserProfileSettingsManager,
     IVisibilitySettingsManager,
 )
+
 
 logger = logging.getLogger(__name__)
 

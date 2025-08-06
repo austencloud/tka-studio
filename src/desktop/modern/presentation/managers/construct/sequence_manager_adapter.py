@@ -5,6 +5,8 @@ Components that need sequence operations should directly inject and use
 the specific microservices they need instead of going through adapters.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -20,6 +22,7 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.adapters.qt.sequence_loader_adapter import (
     QtSequenceLoaderAdapter,
 )
+
 
 logger = logging.getLogger(__name__)
 

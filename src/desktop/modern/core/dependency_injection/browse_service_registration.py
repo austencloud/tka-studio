@@ -4,6 +4,8 @@ Browse Service Registration
 Register browse-related services with the dependency injection container.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -25,6 +27,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     ISequenceImageRenderer,
     ISequenceMetadataExtractor,
 )
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,8 @@ Handles state saving/loading for browse tab settings, filters, and selections.
 Based on Legacy audit showing complex state management that needs careful porting.
 """
 
+from __future__ import annotations
+
 import json
 from pathlib import Path
 from typing import Any

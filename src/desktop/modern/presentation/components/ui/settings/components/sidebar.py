@@ -4,6 +4,8 @@ Settings dialog sidebar component.
 Provides navigation between different settings tabs.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem

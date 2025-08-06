@@ -5,6 +5,8 @@ Focused, single-responsibility components for the lesson workspace.
 Each component handles one specific aspect of the lesson interface.
 """
 
+from __future__ import annotations
+
 from .answer_options import AnswerLayoutManager, AnswerOptionFactory, AnswerOptions
 from .lesson_controls import LessonControls
 from .lesson_timer import LessonTimer
@@ -16,6 +18,7 @@ from .question_display import (
     QuestionRenderer,
     TextQuestionRenderer,
 )
+
 
 __all__ = [
     # Main components

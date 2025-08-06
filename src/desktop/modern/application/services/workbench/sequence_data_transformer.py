@@ -6,11 +6,14 @@ Follows the Single Responsibility Principle by focusing solely on
 data format conversion.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any, Optional
 
 from desktop.modern.core.interfaces.export_services import ISequenceDataTransformer
 from desktop.modern.domain.models import BeatData, PictographData, SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +97,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
         return sequence_json
 
     def extract_beat_attributes(
-        self, pictograph_data: Optional["PictographData"], color: str
+        self, pictograph_data: Optional[PictographData], color: str
     ) -> dict[str, Any]:
         """Extract motion attributes for a specific color from beat data."""
         attributes = {}
@@ -136,7 +139,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
         return attributes
 
     def _convert_beat_to_legacy_format(
-        self, beat: "BeatData"
+        self, beat: BeatData
     ) -> Optional[dict[str, Any]]:
         """Convert modern BeatData to legacy JSON format."""
         try:
@@ -203,25 +206,25 @@ class SequenceDataTransformer(ISequenceDataTransformer):
             )
             return None
 
-    def _extract_letter_from_beat(self, beat: "BeatData") -> str:
+    def _extract_letter_from_beat(self, beat: BeatData) -> str:
         """Extract letter from beat data."""
         if beat.pictograph_data and hasattr(beat.pictograph_data, "letter"):
             return beat.pictograph_data.letter
         return beat.metadata.get("letter", "A")
 
-    def _extract_start_position_from_beat(self, beat: "BeatData") -> str:
+    def _extract_start_position_from_beat(self, beat: BeatData) -> str:
         """Extract start position from beat data."""
         if beat.pictograph_data and hasattr(beat.pictograph_data, "start_position"):
             return beat.pictograph_data.start_position
         return beat.metadata.get("start_pos", "alpha")
 
-    def _extract_end_position_from_beat(self, beat: "BeatData") -> str:
+    def _extract_end_position_from_beat(self, beat: BeatData) -> str:
         """Extract end position from beat data."""
         if beat.pictograph_data and hasattr(beat.pictograph_data, "end_position"):
             return beat.pictograph_data.end_position
         return beat.metadata.get("end_pos", "beta")
 
-    def _extract_start_position_type(self, pictograph: "PictographData") -> str:
+    def _extract_start_position_type(self, pictograph: PictographData) -> str:
         """Extract start position type (alpha, beta, gamma) from pictograph."""
         if not pictograph.start_position:
             return "alpha"  # Default
@@ -229,12 +232,11 @@ class SequenceDataTransformer(ISequenceDataTransformer):
         position_str = str(pictograph.start_position).lower()
         if "alpha" in position_str:
             return "alpha"
-        elif "beta" in position_str:
+        if "beta" in position_str:
             return "beta"
-        elif "gamma" in position_str:
+        if "gamma" in position_str:
             return "gamma"
-        else:
-            return "alpha"  # Default fallback
+        return "alpha"  # Default fallback
 
     def _extract_position_string(self, position) -> str:
         """Extract position string from position object."""

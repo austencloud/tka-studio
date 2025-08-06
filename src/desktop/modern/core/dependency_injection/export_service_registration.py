@@ -5,6 +5,8 @@ Registers all export-related services with the dependency injection container.
 Follows the Single Responsibility Principle by providing focused service registration.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.application.services.workbench.export_container_manager import (
@@ -32,6 +34,7 @@ from desktop.modern.core.interfaces.export_services import (
     ISequenceJsonExporter,
     IWorkbenchExportOrchestrator,
 )
+
 
 logger = logging.getLogger(__name__)
 

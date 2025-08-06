@@ -5,6 +5,8 @@ Error hierarchy for browse functionality, moved here to avoid circular imports
 between application services and presentation layers.
 """
 
+from __future__ import annotations
+
 
 class BrowseError(Exception):
     """Base exception for browse tab operations."""

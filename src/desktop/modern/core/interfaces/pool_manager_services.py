@@ -5,8 +5,11 @@ Interface definitions for object pool management services following TKA's clean 
 These interfaces handle efficient object pooling for performance optimization.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
+
 
 T = TypeVar("T")
 

@@ -4,7 +4,7 @@ Base class for modern generation controls.
 Provides common UI structure and styling for generation control components.
 """
 
-from typing import Optional
+from __future__ import annotations
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
@@ -19,7 +19,7 @@ class GenerationControlBase(QWidget):
         title: str,
         description: str = "",
         center_title: bool = False,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ):
         super().__init__(parent)
         self._title = title
@@ -28,14 +28,16 @@ class GenerationControlBase(QWidget):
         self._setup_base_ui()
 
     def _setup_base_ui(self):
-        """Setup the base UI structure with minimal styling"""
+        """Setup base UI following 8px grid system and modern design principles"""
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(6)
+        layout.setContentsMargins(0, 0, 0, 0)  # No margins - spacing handled by parent
+        layout.setSpacing(4)  # 0.5x base unit between title and content
 
-        # Title with clean styling
+        # Title with proper typography hierarchy
         title_label = QLabel(self._title)
-        title_font = QFont("Segoe UI", 10, QFont.Weight.Medium)
+        title_font = QFont(
+            "Segoe UI", 12, QFont.Weight.Medium
+        )  # Larger, more readable size
         title_label.setFont(title_font)
 
         # Center title if requested
@@ -45,35 +47,24 @@ class GenerationControlBase(QWidget):
         title_label.setStyleSheet(
             """
             QLabel {
-                color: rgba(255, 255, 255, 0.9);
+                color: rgba(255, 255, 255, 0.95);
                 padding: 0px;
                 background: transparent;
                 border: none;
+                margin-bottom: 4px;
+                font-size: 15px;
+                font-weight: 500;
             }
         """
         )
         layout.addWidget(title_label)
 
-        # Description (if provided) with subtle styling
-        if self._description:
-            desc_label = QLabel(self._description)
-            desc_label.setFont(QFont("Segoe UI", 8))
-            desc_label.setStyleSheet(
-                """
-                QLabel {
-                    color: rgba(255, 255, 255, 0.6);
-                    padding: 0px;
-                    background: transparent;
-                    border: none;
-                }
-            """
-            )
-            desc_label.setWordWrap(True)
-            layout.addWidget(desc_label)
+        # Skip description for compact layout - rely on tooltips instead
+        # This follows the principle of maximizing information density
 
         # Content area (to be filled by subclasses)
         self._content_layout = QVBoxLayout()
-        self._content_layout.setContentsMargins(0, 4, 0, 0)
+        self._content_layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._create_content_widget())
 
         # Remove background and borders for clean look

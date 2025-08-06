@@ -5,6 +5,8 @@ These services provide the same interface as production services
 but use in-memory storage and simplified logic for fast testing.
 """
 
+from __future__ import annotations
+
 from typing import Any, Optional
 
 # Import service interfaces
@@ -94,10 +96,9 @@ class MockLayoutService(ILayoutService):
         """Calculate component size with simple logic."""
         if component_type == "beat_frame":
             return Size(200, 200)
-        elif component_type == "pictograph":
+        if component_type == "pictograph":
             return Size(150, 150)
-        else:
-            return Size(parent_size.width // 2, parent_size.height // 2)
+        return Size(parent_size.width // 2, parent_size.height // 2)
 
     def calculate_beat_frame_layout(
         self, sequence: Any, container_size: tuple[int, int]

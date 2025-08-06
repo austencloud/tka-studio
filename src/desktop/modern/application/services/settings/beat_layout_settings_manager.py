@@ -5,10 +5,13 @@ Implements beat frame layout settings management with dynamic layout
 calculation and QSettings persistence.
 """
 
+from __future__ import annotations
+
 import logging
 import math
 
 from PyQt6.QtCore import QObject, QSettings, pyqtSignal
+
 
 logger = logging.getLogger(__name__)
 

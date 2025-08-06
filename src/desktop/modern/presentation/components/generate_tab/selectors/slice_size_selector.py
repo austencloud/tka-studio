@@ -1,103 +1,132 @@
 """
 Slice size selector component.
 
-Provides a toggle between halved and quartered slice sizes for circular mode.
+Simple toggle between halved and quartered slice sizes for circular mode.
 """
 
-from typing import Optional
+from __future__ import annotations
 
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QPushButton, QWidget
+from PyQt6.QtCore import QEvent, Qt, pyqtSignal
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 from desktop.modern.core.interfaces.generation_services import SliceSize
+from desktop.modern.presentation.components.ui.pytoggle import PyToggle
 
-from .generation_control_base import GenerationControlBase
 
-
-class SliceSizeSelector(GenerationControlBase):
-    """Selector for slice size (circular mode)"""
+class SliceSizeSelector(QWidget):
+    """Simple toggle for slice size (circular mode)"""
 
     value_changed = pyqtSignal(SliceSize)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__(
-            "Slice Size",
-            "Size of circular sequence slices (quartered or halved)",
-            parent,
-        )
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = SliceSize.HALVED
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup slice size controls"""
-        button_layout = QHBoxLayout()
-        button_layout.setSpacing(8)
+        """Setup simple slice size toggle"""
+        # Main horizontal layout
+        layout = QHBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setSpacing(12)
 
-        self._button_group = QButtonGroup(self)
-
-        # Halved button (default)
-        self._halved_button = QPushButton("Halved")
-        self._halved_button.setCheckable(True)
-        self._halved_button.setChecked(True)
-        self._halved_button.setMinimumHeight(32)
-        self._halved_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self._button_group.addButton(self._halved_button, 0)
-        button_layout.addWidget(self._halved_button)
-
-        # Quartered button
-        self._quartered_button = QPushButton("Quartered")
-        self._quartered_button.setCheckable(True)
-        self._quartered_button.setMinimumHeight(32)
-        self._quartered_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self._button_group.addButton(self._quartered_button, 1)
-        button_layout.addWidget(self._quartered_button)
-
-        self._content_layout.addLayout(button_layout)
-
-        # Connect signals
-        self._button_group.buttonClicked.connect(self._on_button_clicked)
-
-        # Apply styling
-        self._apply_button_styling()
-
-    def _apply_button_styling(self):
-        """Apply toggle button styling"""
-        button_style = """
-            QPushButton {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 6px;
-                padding: 6px 12px;
-                font-weight: 500;
-                color: rgba(255, 255, 255, 0.8);
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-                border-color: rgba(255, 255, 255, 0.3);
-                color: rgba(255, 255, 255, 0.9);
-            }
-            QPushButton:checked {
-                background: rgba(156, 39, 176, 0.7);
-                border-color: rgba(156, 39, 176, 0.8);
+        # Left label (Halved)
+        self._left_label = QLabel("Halved")
+        self._left_label.setStyleSheet("""
+            QLabel {
                 color: white;
+                font-size: 14px;
+                font-weight: bold;
             }
-        """
-        self._halved_button.setStyleSheet(button_style)
-        self._quartered_button.setStyleSheet(button_style)
+        """)
+        self._left_label.setAttribute(Qt.WidgetAttribute.WA_Hover, True)
+        self._left_label.installEventFilter(self)
 
-    def _on_button_clicked(self, button):
-        """Handle button click"""
-        if button == self._halved_button:
-            self._current_value = SliceSize.HALVED
-        else:
-            self._current_value = SliceSize.QUARTERED
+        # Toggle switch
+        self._toggle = PyToggle(
+            width=60,
+            bg_color="#00BCff",
+            active_color="#00BCff",
+            circle_color="#DDD",
+            change_bg_on_state=False,
+        )
+        self._toggle.setChecked(False)  # Default to Halved (unchecked)
+        self._toggle.stateChanged.connect(self._on_toggle_changed)
 
+        # Right label (Quartered)
+        self._right_label = QLabel("Quartered")
+        self._right_label.setStyleSheet("""
+            QLabel {
+                color: gray;
+                font-size: 14px;
+                font-weight: normal;
+            }
+        """)
+        self._right_label.setAttribute(Qt.WidgetAttribute.WA_Hover, True)
+        self._right_label.installEventFilter(self)
+
+        # Add to layout
+        layout.addWidget(self._left_label)
+        layout.addWidget(self._toggle)
+        layout.addWidget(self._right_label)
+
+    def eventFilter(self, source, event):
+        """Handle label clicks"""
+        if event.type() == QEvent.Type.MouseButtonPress:
+            if source == self._left_label:
+                self.set_value(SliceSize.HALVED)
+            elif source == self._right_label:
+                self.set_value(SliceSize.QUARTERED)
+            return True
+        return super().eventFilter(source, event)
+
+    def _on_toggle_changed(self, state: bool):
+        """Handle toggle state change"""
+        self._current_value = SliceSize.QUARTERED if state else SliceSize.HALVED
+        self._update_label_styles()
         self.value_changed.emit(self._current_value)
+
+    def _update_label_styles(self):
+        """Update label styles based on current value"""
+        if self._current_value == SliceSize.HALVED:
+            self._left_label.setStyleSheet("""
+                QLabel {
+                    color: white;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+            """)
+            self._right_label.setStyleSheet("""
+                QLabel {
+                    color: gray;
+                    font-size: 14px;
+                    font-weight: normal;
+                }
+            """)
+        else:
+            self._left_label.setStyleSheet("""
+                QLabel {
+                    color: gray;
+                    font-size: 14px;
+                    font-weight: normal;
+                }
+            """)
+            self._right_label.setStyleSheet("""
+                QLabel {
+                    color: white;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+            """)
 
     def set_value(self, value: SliceSize):
         """Set the current value"""
         self._current_value = value
-        if value == SliceSize.HALVED:
-            self._halved_button.setChecked(True)
-        else:
-            self._quartered_button.setChecked(True)
+        self._toggle.blockSignals(True)
+        self._toggle.setChecked(value == SliceSize.QUARTERED)
+        self._toggle.blockSignals(False)
+        self._update_label_styles()
+
+    def get_value(self) -> SliceSize:
+        """Get the current value"""
+        return self._current_value

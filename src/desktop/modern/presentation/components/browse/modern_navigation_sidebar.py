@@ -5,6 +5,8 @@ Provides quick navigation to different sections of the filtered results.
 Based on the Legacy SequencePickerNavSidebar architecture.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtWidgets import (
@@ -141,6 +143,7 @@ class ModernNavigationSidebar(QWidget):
 
         # Add stretch to push buttons to top
         self.content_layout.addStretch()
+
     def _create_skeleton_section_button(self, section: str) -> QWidget:
         """
         Create a skeleton placeholder button for a section.
@@ -443,6 +446,7 @@ class ModernNavigationSidebar(QWidget):
         """Set the minimum width for the sidebar."""
         self.setMinimumWidth(width)
         self.setMaximumWidth(width * 2)  # Allow some flexibility
+
     def clear_selection(self) -> None:
         """Clear the current selection."""
         if self.selected_button:

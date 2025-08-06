@@ -4,6 +4,8 @@ Layout Manager Service
 Service for managing grid layout and section organization.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QWidget

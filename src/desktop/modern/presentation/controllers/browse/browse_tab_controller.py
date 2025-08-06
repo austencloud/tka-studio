@@ -11,6 +11,8 @@ Simplified: View state management moved to BrowseViewModel,
 direct UI manipulation minimized.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -25,6 +27,7 @@ from desktop.modern.presentation.managers.browse.browse_navigation_manager impor
 from desktop.modern.presentation.views.browse.browse_view_model import BrowseViewModel
 from desktop.modern.presentation.views.browse.errors import FilterError, NavigationError
 from desktop.modern.presentation.views.browse.models import FilterType
+
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +99,7 @@ class BrowseTabController(QObject):
             self.data_manager.load_all_sequences()
 
         except Exception as e:
-            error_msg = f"Failed to initialize: {str(e)}"
+            error_msg = f"Failed to initialize: {e!s}"
             logger.error(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
@@ -123,7 +126,7 @@ class BrowseTabController(QObject):
             self._start_progressive_loading(filter_type, filter_value)
 
         except Exception as e:
-            error_msg = f"Failed to apply filter {filter_type.value}: {str(e)}"
+            error_msg = f"Failed to apply filter {filter_type.value}: {e!s}"
             logger.error(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
@@ -152,7 +155,7 @@ class BrowseTabController(QObject):
             logger.info(f"✅ Sequence selected: {sequence_data.word}")
 
         except Exception as e:
-            error_msg = f"Failed to select sequence: {str(e)}"
+            error_msg = f"Failed to select sequence: {e!s}"
             logger.error(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
@@ -261,7 +264,7 @@ class BrowseTabController(QObject):
             logger.info("✅ Data refreshed successfully")
 
         except Exception as e:
-            error_msg = f"Failed to refresh data: {str(e)}"
+            error_msg = f"Failed to refresh data: {e!s}"
             logger.error(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
@@ -333,7 +336,7 @@ class BrowseTabController(QObject):
                 self._update_browser_panel_with_sequences(sequences)
 
         except Exception as e:
-            error_msg = f"Failed to start progressive loading: {str(e)}"
+            error_msg = f"Failed to start progressive loading: {e!s}"
             logger.error(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
 

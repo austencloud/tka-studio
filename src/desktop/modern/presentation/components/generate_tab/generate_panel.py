@@ -6,12 +6,12 @@ A clean, single-card design that fits all controls on one screen
 while maintaining the legacy layout structure with subtle glass effects.
 """
 
-from typing import TYPE_CHECKING, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QFrame,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -36,9 +36,7 @@ from desktop.modern.presentation.components.generate_tab.selectors import (
     SliceSizeSelector,
     TurnIntensitySelector,
 )
-from desktop.modern.presentation.styles.glassmorphism_styles import (
-    GlassmorphismStyleGenerator,
-)
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -60,7 +58,7 @@ class GeneratePanel(QWidget):
 
     def __init__(
         self,
-        container: Optional["DIContainer"] = None,
+        container: DIContainer | None = None,
         parent: QWidget | None = None,
     ):
         super().__init__(parent)
@@ -79,67 +77,61 @@ class GeneratePanel(QWidget):
             self._initialize_controller()
 
     def _setup_ui(self):
-        """Setup UI with single glass container following legacy structure."""
-        # Main layout with minimal padding
+        """Setup clean, elegant UI with minimal visual noise."""
+        # Main layout with better centering and padding
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setContentsMargins(32, 24, 32, 24)  # More padding for centering
         main_layout.setSpacing(0)
 
-        # Single glass container for everything
-        glass_container = QFrame()
-        glass_container.setFrameStyle(QFrame.Shape.StyledPanel)
-        container_layout = QVBoxLayout(glass_container)
-        container_layout.setContentsMargins(24, 24, 24, 24)
-        container_layout.setSpacing(16)
+        # Single clean container without visual noise
+        container = QWidget()
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(
+            24, 20, 24, 20
+        )  # Inner padding for better centering
+        container_layout.setSpacing(8)  # Compact spacing like legacy
 
-        # Header section
+        # Minimal header
         self._setup_header(container_layout)
 
-        # Controls section - follows legacy layout exactly
+        # Controls section - clean and spacious
         self._setup_controls_section(container_layout)
 
-        # Action buttons section
+        # Action buttons - prominent and clear
         self._setup_action_buttons(container_layout)
 
-        # Apply glass styling to container using established system
-        glass_container.setStyleSheet(
-            GlassmorphismStyleGenerator.create_container_style(
-                variant="default", custom_properties={"border-radius": "16px"}
-            )
-        )
+        # Apply subtle glassmorphism without borders or visual noise
+        container.setStyleSheet("""
+            QWidget {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 16px;
+                border: none;
+            }
+        """)
 
-        main_layout.addWidget(glass_container)
+        main_layout.addWidget(container)
 
     def _setup_header(self, layout: QVBoxLayout):
-        """Create header section matching legacy customize sequence label."""
-        header_layout = QHBoxLayout()
-        header_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
+        """Create elegant, readable header."""
         header = QLabel("Customize Your Sequence")
-        header_font = QFont("Segoe UI", 16, QFont.Weight.Bold)
-        header.setFont(header_font)
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        header.setStyleSheet(
-            """
+        header.setStyleSheet("""
             QLabel {
                 color: rgba(255, 255, 255, 0.95);
-                padding: 8px;
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                padding: 0px 0px 12px 0px;
+                margin: 0px;
                 background: transparent;
                 border: none;
             }
-        """
-        )
-
-        header_layout.addWidget(header)
-        layout.addLayout(header_layout)
+        """)
+        layout.addWidget(header)
 
     def _setup_controls_section(self, layout: QVBoxLayout):
-        """Setup controls section with proper spacing allocation."""
-        controls_layout = QVBoxLayout()
-        controls_layout.setSpacing(20)  # Increased spacing between sections
-        controls_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Create all controls matching legacy order
+        """Setup clean, unified controls without visual noise."""
+        # Create all controls
         self._level_selector = LevelSelector()
         self._length_selector = LengthSelector()
         self._turn_intensity_selector = TurnIntensitySelector()
@@ -150,49 +142,104 @@ class GeneratePanel(QWidget):
         self._slice_size_selector = SliceSizeSelector()
         self._cap_type_selector = CAPTypeSelector()
 
-        # Add controls with proper spacing allocation
-        # Level selector gets more space since it has 3 large buttons + descriptions
-        controls_layout.addWidget(
-            self._level_selector, 3
-        )  # More space for 3-level layout
-        controls_layout.addWidget(self._length_selector, 1)
-        controls_layout.addWidget(self._turn_intensity_selector, 1)
-        controls_layout.addWidget(self._grid_mode_selector, 1)
-        controls_layout.addWidget(self._mode_toggle, 1)
-        controls_layout.addWidget(self._prop_continuity_toggle, 1)
-        # Letter type selector needs more space for checkboxes
-        controls_layout.addWidget(self._letter_type_selector, 2)
-        controls_layout.addWidget(self._slice_size_selector, 1)
-        controls_layout.addWidget(self._cap_type_selector, 1)
+        # Apply unified styling to all controls
+        self._apply_unified_control_styling()
 
-        layout.addLayout(controls_layout, 18)  # Increased from 16 to give more room
+        # Simple, clean layout - no groups, no containers, no visual noise
+        controls = [
+            self._level_selector,
+            self._length_selector,
+            self._turn_intensity_selector,
+            self._grid_mode_selector,
+            self._mode_toggle,
+            self._prop_continuity_toggle,
+            self._letter_type_selector,
+            self._slice_size_selector,
+            self._cap_type_selector,
+        ]
+
+        for control in controls:
+            layout.addWidget(control)
+
+        # Connect mode toggle to update visibility
+        self._mode_toggle.mode_changed.connect(self._update_component_visibility)
+
+        # Set initial visibility based on current mode
+        self._update_component_visibility(self._mode_toggle.get_mode())
+
+    def _apply_unified_control_styling(self):
+        """Apply consistent, elegant styling to all controls."""
+        # This method will ensure all controls have consistent appearance
+        # Individual controls will be styled in their own files for now
+        pass
+
+    def _update_component_visibility(self, mode):
+        """Update component visibility based on generation mode"""
+        if mode == GenerationMode.FREEFORM:
+            # Freeform mode: show letter type selector, hide slice size and CAP type
+            self._letter_type_selector.setVisible(True)
+            self._slice_size_selector.setVisible(False)
+            self._cap_type_selector.setVisible(False)
+        else:  # CIRCULAR mode
+            # Circular mode: hide letter type selector, show slice size and CAP type
+            self._letter_type_selector.setVisible(False)
+            self._slice_size_selector.setVisible(True)
+            self._cap_type_selector.setVisible(True)
 
     def _setup_action_buttons(self, layout: QVBoxLayout):
-        """Setup action buttons with proper spacing."""
+        """Setup clean, prominent action buttons."""
         button_layout = QHBoxLayout()
         button_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        button_layout.setSpacing(60)  # More space between buttons
+        button_layout.setSpacing(16)
 
-        # Create buttons using standard QPushButton
+        # Create clean, readable buttons
         self._auto_complete_button = QPushButton("Auto-Complete")
         self._generate_button = QPushButton("Generate New")
 
-        # Apply glassmorphism styling using the established system
-        self._auto_complete_button.setStyleSheet(
-            GlassmorphismStyleGenerator.create_button_style(
-                variant="default",
-                size="large",
-                custom_properties={"min-width": "140px", "min-height": "45px"},
-            )
-        )
+        # Apply clean, unified button styling with larger, more readable text
+        button_style = """
+            QPushButton {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 16px;
+                font-weight: 500;
+                padding: 14px 28px;
+                min-width: 140px;
+            }
+            QPushButton:hover {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
+                color: white;
+            }
+            QPushButton:pressed {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        """
 
-        self._generate_button.setStyleSheet(
-            GlassmorphismStyleGenerator.create_button_style(
-                variant="accent",
-                size="large",
-                custom_properties={"min-width": "140px", "min-height": "45px"},
-            )
-        )
+        accent_button_style = """
+            QPushButton {
+                background: rgba(70, 130, 255, 0.8);
+                border: 1px solid rgba(70, 130, 255, 0.9);
+                border-radius: 8px;
+                color: white;
+                font-size: 16px;
+                font-weight: 600;
+                padding: 14px 28px;
+                min-width: 140px;
+            }
+            QPushButton:hover {
+                background: rgba(80, 140, 255, 0.9);
+                border-color: rgba(80, 140, 255, 1.0);
+            }
+            QPushButton:pressed {
+                background: rgba(60, 120, 245, 0.9);
+            }
+        """
+
+        self._auto_complete_button.setStyleSheet(button_style)
+        self._generate_button.setStyleSheet(accent_button_style)
 
         # Set cursor for better UX
         self._auto_complete_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -201,9 +248,7 @@ class GeneratePanel(QWidget):
         button_layout.addWidget(self._auto_complete_button)
         button_layout.addWidget(self._generate_button)
 
-        layout.addLayout(
-            button_layout, 3
-        )  # Reduced from 4 to give more space to controls
+        layout.addLayout(button_layout)
 
     def _connect_signals(self):
         """Connect all UI signals."""
@@ -378,8 +423,9 @@ class GeneratePanel(QWidget):
             print("✅ Generation controller initialized")
 
         except Exception as e:
-            print(f"❌ Failed to initialize generation controller: {str(e)}")
+            print(f"❌ Failed to initialize generation controller: {e!s}")
             # Continue without controller - panel will work in standalone mode
+
     def _on_generation_completed(self, result: GenerationResult) -> None:
         """Handle generation completion from controller."""
         self.set_generation_result(result)
@@ -395,6 +441,6 @@ class GeneratePanel(QWidget):
         self._current_state = self._current_state.with_config(config)
         self._update_controls_from_config()
 
-    def get_controller(self) -> Optional["GenerateTabController"]:
+    def get_controller(self) -> GenerateTabController | None:
         """Get the current controller instance."""
         return self._controller

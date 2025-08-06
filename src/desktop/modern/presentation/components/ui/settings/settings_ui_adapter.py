@@ -5,6 +5,8 @@ Bridges the gap between Qt-based UI components and the framework-agnostic settin
 This adapter handles the conversion between Qt signals and the observer pattern.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal

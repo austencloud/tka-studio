@@ -5,13 +5,16 @@ Modern service for deleting sequence variations and managing file system cleanup
 Provides confirmation dialogs and maintains data integrity after deletion.
 """
 
+from __future__ import annotations
+
 import logging
 import os
-import shutil
 from pathlib import Path
+import shutil
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -110,22 +113,17 @@ class SequenceDeletionService(QObject):
                     )
                     self.sequence_deleted.emit(word)
                 return success
-            else:
-                # Clean up empty directories and fix numbering
-                self._cleanup_empty_directories()
-                self._fix_variation_numbering(word, remaining_thumbnails)
+            # Clean up empty directories and fix numbering
+            self._cleanup_empty_directories()
+            self._fix_variation_numbering(word, remaining_thumbnails)
 
-                logger.info(
-                    f"Successfully deleted variation {variation_index} of '{word}'"
-                )
-                self.variation_deleted.emit(word, variation_index)
-                return True
+            logger.info(f"Successfully deleted variation {variation_index} of '{word}'")
+            self.variation_deleted.emit(word, variation_index)
+            return True
 
         except Exception as e:
             logger.error(f"Error deleting variation: {e}", exc_info=True)
-            self._show_error_dialog(
-                f"Failed to delete variation: {str(e)}", parent_widget
-            )
+            self._show_error_dialog(f"Failed to delete variation: {e!s}", parent_widget)
             return False
 
     def delete_entire_sequence(
@@ -169,9 +167,7 @@ class SequenceDeletionService(QObject):
 
         except Exception as e:
             logger.error(f"Error deleting sequence: {e}", exc_info=True)
-            self._show_error_dialog(
-                f"Failed to delete sequence: {str(e)}", parent_widget
-            )
+            self._show_error_dialog(f"Failed to delete sequence: {e!s}", parent_widget)
             return False
 
     def _confirm_deletion(
@@ -210,9 +206,8 @@ class SequenceDeletionService(QObject):
                 path.unlink()
                 logger.debug(f"Deleted file: {file_path}")
                 return True
-            else:
-                logger.warning(f"File not found for deletion: {file_path}")
-                return False
+            logger.warning(f"File not found for deletion: {file_path}")
+            return False
         except Exception as e:
             logger.error(f"Failed to delete file {file_path}: {e}")
             return False
@@ -237,9 +232,8 @@ class SequenceDeletionService(QObject):
                 shutil.rmtree(word_directory)
                 logger.debug(f"Deleted directory: {word_directory}")
                 return True
-            else:
-                logger.warning(f"Directory not found for deletion: {word_directory}")
-                return False
+            logger.warning(f"Directory not found for deletion: {word_directory}")
+            return False
         except Exception as e:
             logger.error(f"Failed to delete directory {word_directory}: {e}")
             return False

@@ -5,6 +5,8 @@ Modern implementation of the scrollable content display area.
 Coordinates specialized helper components for layout and loading management.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QCoreApplication, Qt, QTimer, pyqtSignal
@@ -28,6 +30,7 @@ from desktop.modern.presentation.managers.sequence_card.progressive_loading_mana
     ProgressiveLoadingManager,
 )
 from desktop.modern.presentation.views.sequence_card.image_loader import ImageLoader
+
 
 logger = logging.getLogger(__name__)
 

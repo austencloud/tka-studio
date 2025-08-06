@@ -4,6 +4,8 @@ Settings dialog header component.
 Contains the title and close button for the settings dialog.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton
 

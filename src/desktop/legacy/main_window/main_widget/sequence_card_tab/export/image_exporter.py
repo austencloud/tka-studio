@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 # src/main_window/main_widget/sequence_card_tab/export/image_exporter.py
 import gc
 import io
@@ -10,6 +11,11 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import psutil
+from PIL import Image, PngImagePlugin
+from PyQt6.QtCore import QBuffer, Qt
+from PyQt6.QtGui import QImage
+from PyQt6.QtWidgets import QApplication
+
 from main_window.main_widget.browse_tab.temp_beat_frame.temp_beat_frame import (
     TempBeatFrame,
 )
@@ -17,10 +23,6 @@ from main_window.main_widget.metadata_extractor import MetaDataExtractor
 from main_window.main_widget.sequence_workbench.legacy_beat_frame.image_export_manager.image_export_manager import (
     ImageExportManager,
 )
-from PIL import Image, PngImagePlugin
-from PyQt6.QtCore import QBuffer, Qt
-from PyQt6.QtGui import QImage
-from PyQt6.QtWidgets import QApplication
 from utils.path_helpers import (
     get_dictionary_path,
     get_sequence_card_image_exporter_path,
@@ -41,6 +43,7 @@ class SequenceCardImageExporter:
         self.metadata_extractor = MetaDataExtractor()
         self.progress_dialog = None
         self.cancel_requested = False
+        self.force_regenerate = False  # Flag to bypass caching and force regeneration
 
         # Optimized batch processing settings
         self.batch_size = 15  # Process 15 images at a time for better throughput
@@ -51,9 +54,12 @@ class SequenceCardImageExporter:
             "high_quality": True,  # Use high quality rendering
         }
 
-    def export_all_images(self):
+    def export_all_images(self, length_filter: int | None = None):
         """
         Dynamically renders sequences from the dictionary with consistent export settings.
+
+        Args:
+            length_filter: If specified, only export sequences of this length
 
         This method:
         1. Loads sequences directly from the dictionary
@@ -63,16 +69,35 @@ class SequenceCardImageExporter:
         5. Uses smart caching to avoid regenerating unchanged images
         6. Processes images in batches to limit memory usage
         7. Implements memory management to prevent out-of-memory errors
+        8. Optionally filters by sequence length for selective regeneration
         """
         dictionary_path = get_dictionary_path()
         export_path = get_sequence_card_image_exporter_path()
 
+        # Debug: Print the paths
+        print(f"DEBUG: Dictionary path: {dictionary_path}")
+        print(f"DEBUG: Export path: {export_path}")
+        print(f"DEBUG: Current working directory: {os.getcwd()}")
+
         # Create the export directory if it doesn't exist
         if not os.path.exists(export_path):
             os.makedirs(export_path)
+            print(f"DEBUG: Created export directory: {export_path}")
+        else:
+            print(f"DEBUG: Export directory already exists: {export_path}")
 
         print(f"Loading sequences from dictionary: {dictionary_path}")
         print(f"Exporting to: {export_path}")
+
+        # Check if force regeneration is enabled
+        if getattr(self, "force_regenerate", False):
+            print("DEBUG: Force regeneration enabled - all images will be regenerated")
+
+        # Check if length filtering is enabled
+        if length_filter is not None:
+            print(
+                f"DEBUG: Length filtering enabled - only {length_filter}-beat sequences will be processed"
+            )
 
         # Get all word folders in the dictionary
         word_folders = []
@@ -135,6 +160,7 @@ class SequenceCardImageExporter:
                     regenerated_count,
                     skipped_count,
                     failed_count,
+                    length_filter,
                 )
 
                 # Force garbage collection between batches
@@ -143,11 +169,42 @@ class SequenceCardImageExporter:
                 # Process events to keep UI responsive
                 QApplication.processEvents()
 
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"DEBUG: Exception during export: {e}")
         finally:
             # Final memory cleanup
             self._check_and_manage_memory(force_cleanup=True)
+
+            # Debug: Check if any files were actually created
+            print("DEBUG: Checking export directory after completion...")
+            if os.path.exists(export_path):
+                total_files = 0
+                for root, dirs, files in os.walk(export_path):
+                    png_files = [
+                        f
+                        for f in files
+                        if f.endswith(".png") and not f.startswith("__")
+                    ]
+                    total_files += len(png_files)
+                    if (
+                        png_files and len(dirs) < 5
+                    ):  # Only print for first few directories
+                        print(f"DEBUG: Found {len(png_files)} PNG files in {root}")
+                print(
+                    f"DEBUG: Total PNG files found in export directory: {total_files}"
+                )
+            else:
+                print(f"DEBUG: Export directory does not exist: {export_path}")
+
+    def export_images_by_length(self, length: int):
+        """
+        Export images for sequences of a specific length only.
+
+        Args:
+            length: The sequence length to export (e.g., 4 for 4-beat sequences)
+        """
+        print(f"Starting selective export for {length}-beat sequences...")
+        self.export_all_images(length_filter=length)
 
     def get_all_images(self, path: str) -> list[str]:
         images = []
@@ -346,6 +403,10 @@ class SequenceCardImageExporter:
         Returns:
             tuple: (needs_regeneration, reason)
         """
+        # If force_regenerate flag is set, always regenerate
+        if getattr(self, "force_regenerate", False):
+            return True, "Force regeneration requested"
+
         # If output doesn't exist, we need to generate it
         if not os.path.exists(output_path):
             return True, "Output file does not exist"
@@ -399,6 +460,7 @@ class SequenceCardImageExporter:
         regenerated_count: int,
         skipped_count: int,
         failed_count: int,
+        length_filter: int | None = None,
     ) -> tuple[int, int, int, int]:
         """
         Process a batch of sequences to limit memory usage.
@@ -445,6 +507,10 @@ class SequenceCardImageExporter:
 
             output_path = os.path.join(word_export_path, sequence_file)
 
+            # Debug: Print where we're trying to save
+            if processed_sequences < 3:  # Only print for first few to avoid spam
+                print(f"DEBUG: Saving {word}/{sequence_file} to: {output_path}")
+
             # Check memory usage every few images
             if processed_sequences % self.memory_check_interval == 0:
                 self._check_and_manage_memory()
@@ -464,6 +530,17 @@ class SequenceCardImageExporter:
                 )
                 if metadata and "sequence" in metadata:
                     sequence = metadata["sequence"]
+
+                    # Apply length filter if specified
+                    if length_filter is not None:
+                        sequence_length = len(
+                            [beat for beat in sequence if beat.get("beat") != 0]
+                        )
+                        if sequence_length != length_filter:
+                            # Skip this sequence - doesn't match the length filter
+                            skipped_count += 1
+                            processed_sequences += 1
+                            continue
 
                     # Set export options with all required metadata visible
                     options = {
@@ -506,9 +583,25 @@ class SequenceCardImageExporter:
                             pnginfo=png_info,
                         )
 
+                        # Debug: Verify the file was actually saved
+                        if processed_sequences < 3:  # Only check first few
+                            if os.path.exists(output_path):
+                                file_size = os.path.getsize(output_path)
+                                print(
+                                    f"DEBUG: Successfully saved {output_path} ({file_size} bytes)"
+                                )
+                            else:
+                                print(
+                                    f"DEBUG: ERROR - File not found after save: {output_path}"
+                                )
+
                         regenerated_count += 1
 
-                    except Exception:
+                    except Exception as e:
+                        print(f"DEBUG: Exception saving {output_path}: {e}")
+                        import traceback
+
+                        traceback.print_exc()
                         failed_count += 1
                 else:
                     failed_count += 1

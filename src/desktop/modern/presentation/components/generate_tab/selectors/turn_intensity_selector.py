@@ -1,107 +1,111 @@
 """
 Turn intensity selector component.
 
-Provides preset buttons for selecting turn intensity values.
+Simple increment/decrement control for turn intensity values.
 """
 
-from typing import Optional
+from __future__ import annotations
 
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QButtonGroup, QHBoxLayout, QPushButton, QWidget
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
-from .generation_control_base import GenerationControlBase
+from .increment_adjuster_button import IncrementAdjusterButton
 
 
-class TurnIntensitySelector(GenerationControlBase):
-    """Selector for turn intensity"""
+class TurnIntensitySelector(QWidget):
+    """Simple turn intensity adjuster with +/- buttons"""
 
     value_changed = pyqtSignal(float)
 
-    def __init__(self, parent: Optional[QWidget] = None):
-        super().__init__(
-            "Turn Intensity", "How complex the turns should be (0.5-3.0)", parent
-        )
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
         self._current_value = 1.0
+        self._values = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
         self._setup_controls()
 
     def _setup_controls(self):
-        """Setup turn intensity controls"""
-        # Preset buttons for common values
-        preset_layout = QHBoxLayout()
-        preset_layout.setSpacing(6)
+        """Setup simple turn intensity controls"""
+        # Main horizontal layout
+        layout = QHBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setSpacing(12)
 
-        self._preset_group = QButtonGroup(self)
-        presets = [
-            ("0.5", 0.5),
-            ("1", 1.0),
-            ("1.5", 1.5),
-            ("2", 2.0),
-            ("2.5", 2.5),
-            ("3", 3.0),
-        ]
+        # Label
+        self._label = QLabel("Turn Intensity:")
+        self._label.setStyleSheet("""
+            QLabel {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+                font-weight: 500;
+            }
+        """)
 
-        for i, (label, value) in enumerate(presets):
-            button = QPushButton(label)
-            button.setCheckable(True)
-            button.setMinimumSize(32, 28)
-            button.setCursor(Qt.CursorShape.PointingHandCursor)
-            if value == 1.0:
-                button.setChecked(True)
+        # Minus button
+        self._minus_button = IncrementAdjusterButton("-")
+        self._minus_button.clicked.connect(self._decrease_intensity)
 
-            self._preset_group.addButton(button, i)
-            preset_layout.addWidget(button)
-
-        preset_layout.addStretch()
-        self._content_layout.addLayout(preset_layout)
-
-        # Connect signals
-        self._preset_group.buttonClicked.connect(self._on_preset_clicked)
-
-        # Store preset values
-        self._preset_values = [value for _, value in presets]
-
-        # Apply styling
-        self._apply_preset_styling()
-
-    def _apply_preset_styling(self):
-        """Apply styling to preset buttons"""
-        button_style = """
-            QPushButton {
+        # Value display
+        self._value_label = QLabel(str(self._current_value))
+        self._value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._value_label.setFont(QFont("Georgia", 14, QFont.Weight.Bold))
+        self._value_label.setStyleSheet("""
+            QLabel {
+                color: white;
                 background: rgba(255, 255, 255, 0.1);
                 border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
-                font-weight: 500;
-                color: rgba(255, 255, 255, 0.8);
+                border-radius: 6px;
+                padding: 6px 12px;
+                min-width: 30px;
             }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 0.15);
-                border-color: rgba(255, 255, 255, 0.3);
-                color: rgba(255, 255, 255, 0.9);
-            }
-            QPushButton:checked {
-                background: rgba(255, 152, 0, 0.7);
-                border-color: rgba(255, 152, 0, 0.8);
-                color: white;
-            }
-        """
-        for button in self._preset_group.buttons():
-            button.setStyleSheet(button_style)
+        """)
 
-    def _on_preset_clicked(self, button):
-        """Handle preset button click"""
-        preset_index = self._preset_group.id(button)
-        value = self._preset_values[preset_index]
-        if value != self._current_value:
-            self._current_value = value
-            self.value_changed.emit(value)
+        # Plus button
+        self._plus_button = IncrementAdjusterButton("+")
+        self._plus_button.clicked.connect(self._increase_intensity)
+
+        # Add to layout
+        layout.addWidget(self._label)
+        layout.addWidget(self._minus_button)
+        layout.addWidget(self._value_label)
+        layout.addWidget(self._plus_button)
+
+    def _adjust_intensity(self, change: int):
+        """Adjust intensity by change amount"""
+        try:
+            current_index = self._values.index(self._current_value)
+        except ValueError:
+            # Find closest value
+            current_index = min(
+                range(len(self._values)),
+                key=lambda i: abs(self._values[i] - self._current_value),
+            )
+
+        new_index = current_index + change
+        if 0 <= new_index < len(self._values):
+            self._current_value = self._values[new_index]
+            self._value_label.setText(str(self._current_value))
+            self.value_changed.emit(self._current_value)
+
+    def _increase_intensity(self):
+        """Increase turn intensity"""
+        self._adjust_intensity(1)
+
+    def _decrease_intensity(self):
+        """Decrease turn intensity"""
+        self._adjust_intensity(-1)
 
     def set_value(self, value: float):
         """Set the current value"""
-        self._current_value = value
-        # Find closest preset
-        for i, preset_value in enumerate(self._preset_values):
-            if abs(preset_value - value) < 0.01:
-                button = self._preset_group.button(i)
-                if button:
-                    button.setChecked(True)
-                break
+        if value in self._values:
+            self._current_value = value
+            self._value_label.setText(str(value))
+        else:
+            # Find closest value
+            closest = min(self._values, key=lambda x: abs(x - value))
+            self._current_value = closest
+            self._value_label.setText(str(closest))
+
+    def get_value(self) -> float:
+        """Get the current value"""
+        return self._current_value

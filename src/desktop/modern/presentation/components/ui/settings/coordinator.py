@@ -2,11 +2,12 @@
 Settings dialog coordinator for managing settings state and updates.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
 from shared.application.services.settings.settings_coordinator import (
     SettingsCoordinator,
 )

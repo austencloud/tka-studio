@@ -4,6 +4,8 @@ Graph Editor Configuration Constants
 Centralized configuration for all magic numbers and constants used throughout the graph editor.
 """
 
+from __future__ import annotations
+
 
 class AnimationConfig:
     """Animation timing and behavior constants"""

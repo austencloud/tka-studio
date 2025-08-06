@@ -5,9 +5,12 @@ Orchestrates layout operations and spacing management.
 Handles Qt layout management and widget organization.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
+
 
 if TYPE_CHECKING:
     from shared.application.services.option_picker.option_configuration_service import (
@@ -30,7 +33,7 @@ class OptionPickerLayoutOrchestrator:
         self,
         layout: QVBoxLayout,
         container: QWidget,
-        option_config_service: "OptionConfigurationService",
+        option_config_service: OptionConfigurationService,
     ):
         self._layout = layout
         self._container = container
@@ -55,6 +58,7 @@ class OptionPickerLayoutOrchestrator:
         """Add a section widget to the layout."""
         self._section_widgets.append(section_widget)
         self._layout.addWidget(section_widget)
+
     def apply_balanced_spacing(self) -> None:
         """Apply balanced spacing between header-section pairs."""
         if not self._header_widget:

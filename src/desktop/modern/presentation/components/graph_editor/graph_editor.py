@@ -13,6 +13,8 @@ This version uses clean component-based architecture with:
 - Maintainable and readable code structure
 """
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING, Optional
 
@@ -31,10 +33,9 @@ from .components.pictograph_display_section import PictographDisplaySection
 
 # Import essential utilities
 from .utils.validation import (
-    ValidationResult,
-    validate_beat_data,
     validate_sequence_data,
 )
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.sequence_workbench.sequence_workbench import (
@@ -74,7 +75,7 @@ class GraphEditor(QFrame):
     def __init__(
         self,
         graph_service: Optional[IGraphEditorService] = None,
-        parent: Optional["SequenceWorkbench"] = None,
+        parent: Optional[SequenceWorkbench] = None,
         workbench_width: int = 800,
         workbench_height: int = 600,
         session_service: Optional[ISessionStateTracker] = None,
@@ -315,12 +316,15 @@ class GraphEditor(QFrame):
         except Exception as e:
             logger.error(f"Error setting beat data: {e}")
             return False
+
     def get_current_sequence(self) -> Optional[SequenceData]:
         """Get the current sequence data."""
         return self._current_sequence
+
     def get_selected_beat_index(self) -> Optional[int]:
         """Get the currently selected beat index."""
         return self._selected_beat_index
+
     def _get_current_selected_arrow(self) -> Optional[str]:
         """Get the currently selected arrow identifier."""
         # Try to get selected arrow from adjustment panel

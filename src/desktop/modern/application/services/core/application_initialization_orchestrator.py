@@ -11,10 +11,15 @@ PROVIDES:
 - Service composition and coordination
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 
 from PyQt6.QtWidgets import QMainWindow
+from shared.application.services.core.session_restoration_coordinator import (
+    ISessionRestorationCoordinator,
+)
 
 from desktop.modern.application.services.core.window_management_service import (
     IWindowManagementService,
@@ -23,9 +28,6 @@ from desktop.modern.application.services.ui.window_discovery_service import (
     IWindowDiscoveryService,
 )
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
-from shared.application.services.core.session_restoration_coordinator import (
-    ISessionRestorationCoordinator,
-)
 
 
 class IApplicationInitializationOrchestrator(ABC):

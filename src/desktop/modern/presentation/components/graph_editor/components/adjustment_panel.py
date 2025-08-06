@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -14,8 +16,9 @@ from PyQt6.QtWidgets import (
 
 from desktop.modern.domain.models import BeatData, MotionType
 
-from ..config import ColorConfig, TurnConfig, UIConfig
 from .orientation_picker import OrientationPickerWidget
+from ..config import ColorConfig, TurnConfig, UIConfig
+
 
 logger = logging.getLogger(__name__)
 
@@ -228,15 +231,15 @@ class AdjustmentPanel(QWidget):
                 "text": "Left",
                 "border_color": ColorConfig.BLUE_BORDER,
             }
-        else:  # red
-            return {
-                "primary": ColorConfig.RED_PRIMARY,
-                "light": "rgba(237,28,36,0.4)",
-                "medium": "rgba(237,28,36,0.8)",
-                "gradient": "linear-gradient(135deg, rgba(237,28,36,0.1), rgba(237,28,36,0.8))",
-                "text": "Right",
-                "border_color": ColorConfig.RED_BORDER,
-            }
+        # red
+        return {
+            "primary": ColorConfig.RED_PRIMARY,
+            "light": "rgba(237,28,36,0.4)",
+            "medium": "rgba(237,28,36,0.8)",
+            "gradient": "linear-gradient(135deg, rgba(237,28,36,0.1), rgba(237,28,36,0.8))",
+            "text": "Right",
+            "border_color": ColorConfig.RED_BORDER,
+        }
 
     def _apply_color_styling(self):
         """Apply web-inspired color-coded styling to the adjustment panel"""
@@ -354,7 +357,7 @@ class AdjustmentPanel(QWidget):
             return getattr(
                 self._current_beat.blue_motion, "turns", TurnConfig.MIN_TURN_VALUE
             )
-        elif arrow_color == "red" and self._current_beat.red_motion:
+        if arrow_color == "red" and self._current_beat.red_motion:
             return getattr(
                 self._current_beat.red_motion, "turns", TurnConfig.MIN_TURN_VALUE
             )
@@ -374,16 +377,15 @@ class AdjustmentPanel(QWidget):
             self._current_beat = updated_beat
             self.turn_applied.emit(arrow_color, turn_value)
             self.beat_modified.emit(updated_beat)
-        else:
-            # Fallback to direct service call
-            if hasattr(self._graph_editor, "_graph_service"):
-                success = self._graph_editor._graph_service.apply_turn_adjustment(
-                    arrow_color, turn_value
-                )
-                if success:
-                    self.turn_applied.emit(arrow_color, turn_value)
-                    if self._current_beat:
-                        self.beat_modified.emit(self._current_beat)
+        # Fallback to direct service call
+        elif hasattr(self._graph_editor, "_graph_service"):
+            success = self._graph_editor._graph_service.apply_turn_adjustment(
+                arrow_color, turn_value
+            )
+            if success:
+                self.turn_applied.emit(arrow_color, turn_value)
+                if self._current_beat:
+                    self.beat_modified.emit(self._current_beat)
 
     def set_beat(self, beat_data: Optional[BeatData]):
         """Enhanced panel switching with perfect beat type detection"""

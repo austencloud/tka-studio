@@ -5,6 +5,8 @@ Coordinates microservices to provide the same interface as the monolith.
 Uses dependency injection to compose positioning pipeline.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.positioning_services import (
@@ -20,6 +22,7 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.graphics_items.arrow_item import (
     ArrowItem,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +113,7 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
         return updated_pictograph
 
     def should_mirror_arrow(
-        self, arrow_data: ArrowData, pictograph_data: "PictographData" = None
+        self, arrow_data: ArrowData, pictograph_data: PictographData = None
     ) -> bool:
         """Determine if arrow should be mirrored."""
         motion = None
@@ -125,8 +128,7 @@ class ArrowPositioningOrchestrator(IArrowPositioningOrchestrator):
 
         if motion_type == "anti":
             return self.mirror_conditions["anti"].get(prop_rot_dir, False)
-        else:
-            return self.mirror_conditions["other"].get(prop_rot_dir, False)
+        return self.mirror_conditions["other"].get(prop_rot_dir, False)
 
     def apply_mirror_transform(
         self, arrow_item: ArrowItem, should_mirror: bool

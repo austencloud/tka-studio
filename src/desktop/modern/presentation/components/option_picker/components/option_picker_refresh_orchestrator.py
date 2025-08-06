@@ -5,12 +5,15 @@ Handles debounced loading and refresh coordination for option picker.
 Manages the complex refresh logic with animation coordination.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QTimer
 
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 if TYPE_CHECKING:
     from shared.application.services.option_picker.option_configuration_service import (
@@ -31,7 +34,7 @@ class OptionPickerRefreshOrchestrator:
 
     def __init__(
         self,
-        option_config_service: "OptionConfigurationService",
+        option_config_service: OptionConfigurationService,
         refresh_callback: Callable[[SequenceData], None],
     ):
         self._option_config_service = option_config_service

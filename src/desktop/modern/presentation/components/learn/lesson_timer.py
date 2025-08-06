@@ -5,10 +5,13 @@ Focused component for countdown timer display with visual progress
 and time remaining indicators for timed quiz modes.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QProgressBar, QVBoxLayout, QWidget
+
 
 logger = logging.getLogger(__name__)
 

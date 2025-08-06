@@ -5,6 +5,8 @@ Exports all interface definitions for dependency injection and service contracts
 """
 
 # Background interfaces
+from __future__ import annotations
+
 from .background_interfaces import *
 
 # Core service interfaces
@@ -87,6 +89,7 @@ from .workbench_export_services import (
 
 # Workbench service interfaces
 from .workbench_services import *
+
 
 __all__ = [
     # Core services

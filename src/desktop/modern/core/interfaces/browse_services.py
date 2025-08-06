@@ -4,6 +4,8 @@ Browse Service Interfaces
 Interfaces for browse-related services following clean architecture patterns.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Optional
 

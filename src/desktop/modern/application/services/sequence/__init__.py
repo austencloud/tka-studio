@@ -12,6 +12,8 @@ This package contains the refactored services that replaced the SequenceBeatOper
 REFACTORING COMPLETE: 21KB God Object broken into focused 2-5KB services!
 """
 
+from __future__ import annotations
+
 from .beat_creation_service import BeatCreationService
 from .beat_operation_coordinator import BeatOperationCoordinator
 from .beat_sequence_service import BeatSequenceService
@@ -21,11 +23,12 @@ from .sequence_beat_operations import SequenceBeatOperations
 from .sequence_persistence_adapter import SequencePersistenceAdapter
 from .sequence_word_calculator import SequenceWordCalculator
 
+
 __all__ = [
     "BeatCreationService",
-    "BeatSequenceService",
-    "SequenceWordCalculator",
-    "SequencePersistenceAdapter",
     "BeatOperationCoordinator",
+    "BeatSequenceService",
     "SequenceBeatOperations",  # Backward compatibility
+    "SequencePersistenceAdapter",
+    "SequenceWordCalculator",
 ]

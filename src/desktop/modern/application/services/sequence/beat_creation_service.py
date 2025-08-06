@@ -5,12 +5,15 @@ Single Responsibility: Creating new beats from pictographs and calculating beat 
 Extracted from SequenceBeatOperations God Object.
 """
 
+from __future__ import annotations
+
 from typing import Optional
+
+from shared.application.services.sequence.beat_factory import BeatFactory
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from shared.application.services.sequence.beat_factory import BeatFactory
 
 
 class BeatCreationService:
@@ -70,6 +73,5 @@ class BeatCreationService:
             # Regular beats start from 1, so beat_number = number of non-start-position beats + 1
             regular_beats_count = len(current_sequence.beats) - 1
             return regular_beats_count + 1
-        else:
-            # No start position, so beat_number = total beats + 1
-            return len(current_sequence.beats) + 1
+        # No start position, so beat_number = total beats + 1
+        return len(current_sequence.beats) + 1

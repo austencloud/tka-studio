@@ -4,6 +4,8 @@ Prop Orchestration Services
 Services for orchestrating and coordinating prop positioning operations.
 """
 
+from __future__ import annotations
+
 from shared.application.services.positioning.props.orchestration.prop_management_service import (
     IPropManagementService,
     PropManagementService,
@@ -13,9 +15,10 @@ from shared.application.services.positioning.props.orchestration.prop_positionin
     PropPositioningOrchestrator,
 )
 
+
 __all__ = [
     "IPropManagementService",
-    "PropManagementService",
     "IPropPositioningOrchestrator",
+    "PropManagementService",
     "PropPositioningOrchestrator",
 ]

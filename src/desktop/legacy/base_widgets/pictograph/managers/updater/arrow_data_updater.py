@@ -1,8 +1,7 @@
 from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
-
-from enums.letter.letter_type import LetterType
 
 from data.constants import (
     BLUE,
@@ -12,6 +11,7 @@ from data.constants import (
     RED_ATTRS,
     TURNS,
 )
+from enums.letter.letter_type import LetterType
 
 if TYPE_CHECKING:
     from ...legacy_pictograph import LegacyPictograph
@@ -35,15 +35,21 @@ class ArrowDataUpdater:
             else (None, None)
         )
         if self.pictograph.state.letter_type == LetterType.Type3:
-            self.pictograph.managers.get.shift().arrow.updater.update_arrow()
-            self.pictograph.managers.get.dash().arrow.updater.update_arrow()
+            shift_arrow = self.pictograph.managers.get.shift().arrow
+            dash_arrow = self.pictograph.managers.get.dash().arrow
+            # Ensure components are set up before using updater
+            shift_arrow.setup_components()
+            dash_arrow.setup_components()
+            shift_arrow.updater.update_arrow()
+            dash_arrow.updater.update_arrow()
         else:
-            self.pictograph.elements.arrows.get(RED).updater.update_arrow(
-                red_arrow_data
-            )
-            self.pictograph.elements.arrows.get(BLUE).updater.update_arrow(
-                blue_arrow_data
-            )
+            red_arrow = self.pictograph.elements.arrows.get(RED)
+            blue_arrow = self.pictograph.elements.arrows.get(BLUE)
+            # Ensure components are set up before using updater
+            red_arrow.setup_components()
+            blue_arrow.setup_components()
+            red_arrow.updater.update_arrow(red_arrow_data)
+            blue_arrow.updater.update_arrow(blue_arrow_data)
 
     def _extract_arrow_datasets(self, pictograph_data: dict) -> tuple[dict, dict]:
         red_data = (

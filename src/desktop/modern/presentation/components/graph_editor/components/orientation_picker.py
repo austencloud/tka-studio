@@ -6,6 +6,8 @@ Modern 2025 design with large, easily pressable orientation buttons.
 Features glassmorphism styling and direct orientation selection.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -26,6 +28,7 @@ from desktop.modern.presentation.components.graph_editor.components.turn_adjustm
     apply_modern_panel_styling,
     apply_unified_button_styling,
 )
+
 
 logger = logging.getLogger(__name__)
 

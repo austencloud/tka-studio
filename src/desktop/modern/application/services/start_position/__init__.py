@@ -11,6 +11,8 @@ Services:
 - StartPositionOrchestrator: Service coordination and workflows
 """
 
+from __future__ import annotations
+
 from shared.application.services.start_position.start_position_data_service import (
     StartPositionDataService,
 )
@@ -21,9 +23,10 @@ from shared.application.services.start_position.start_position_selection_service
 from .start_position_orchestrator import StartPositionOrchestrator
 from .start_position_ui_service import StartPositionUIService
 
+
 __all__ = [
     "StartPositionDataService",
+    "StartPositionOrchestrator",
     "StartPositionSelectionService",
     "StartPositionUIService",
-    "StartPositionOrchestrator",
 ]

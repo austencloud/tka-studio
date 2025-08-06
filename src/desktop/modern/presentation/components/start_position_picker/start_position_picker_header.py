@@ -5,14 +5,18 @@ Handles the header section with mode controls and titles.
 Extracted from the main StartPositionPicker for better maintainability.
 """
 
+from __future__ import annotations
+
 import logging
+
+from PyQt6.QtCore import QEasingCurve, QEvent, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 # Import the legacy PyToggle for animated grid mode switching
 from domain.models.enums import PickerMode
 from presentation.components.ui.pytoggle import PyToggle
-from PyQt6.QtCore import QEasingCurve, QEvent, Qt, pyqtSignal
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -219,6 +223,7 @@ class StartPositionPickerHeader(QWidget):
 
         # Update label styles to reflect the current state
         self._update_label_styles()
+
     def _on_back_button_clicked(self):
         """Handle back button click."""
         logger.debug("Back button clicked")
@@ -311,7 +316,7 @@ class StartPositionPickerHeader(QWidget):
                 # Click diamond label when in box mode - switch to diamond
                 self.grid_mode_toggle.setChecked(False)
                 return True
-            elif obj == self.box_label and not self.grid_mode_toggle.isChecked():
+            if obj == self.box_label and not self.grid_mode_toggle.isChecked():
                 # Click box label when in diamond mode - switch to box
                 self.grid_mode_toggle.setChecked(True)
                 return True

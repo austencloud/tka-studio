@@ -5,17 +5,12 @@ This adapter maintains the Qt-dependent interface of the original PropRenderingS
 while using the framework-agnostic core service internally.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
-
-# Import Qt render engine from existing adapter
-from desktop.modern.application.adapters.qt_pictograph_adapter import (
-    QtRenderEngine,
-    QtTypeConverter,
-)
-from desktop.modern.domain.models import MotionData, PictographData
 from shared.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )
@@ -23,6 +18,14 @@ from shared.application.services.core.prop_rendering_service import (
     create_prop_rendering_service,
 )
 from shared.application.services.core.types import Size
+
+# Import Qt render engine from existing adapter
+from desktop.modern.application.adapters.qt_pictograph_adapter import (
+    QtRenderEngine,
+    QtTypeConverter,
+)
+from desktop.modern.domain.models import MotionData, PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -85,11 +88,10 @@ class QtPropRenderingServiceAdapter:
                 return self._qt_render_engine._created_items.get(
                     prop_command.command_id
                 )
-            else:
-                logger.error(
-                    f"❌ [QT_PROP_ADAPTER] Failed to execute prop command for {color}"
-                )
-                return None
+            logger.error(
+                f"❌ [QT_PROP_ADAPTER] Failed to execute prop command for {color}"
+            )
+            return None
 
         except Exception as e:
             logger.error(f"❌ [QT_PROP_ADAPTER] Prop rendering failed: {e}")

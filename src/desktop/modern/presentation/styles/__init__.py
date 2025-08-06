@@ -13,6 +13,8 @@ Key Components:
 """
 
 # Component-specific mixins
+from __future__ import annotations
+
 from .component_mixins import *
 
 # Type definitions
@@ -38,6 +40,7 @@ from .mixins import (
     apply_dialog_style_to_widget,
     apply_style_to_widget,
 )
+
 
 # Style guide utilities (if available)
 try:

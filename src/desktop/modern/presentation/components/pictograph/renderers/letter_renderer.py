@@ -4,8 +4,7 @@ Letter renderer for pictograph components.
 Handles rendering of letter text elements with Legacy-style positioning and styling.
 """
 
-from PyQt6.QtGui import QColor, QFont
-from PyQt6.QtWidgets import QGraphicsTextItem
+from __future__ import annotations
 
 
 class LetterRenderer:

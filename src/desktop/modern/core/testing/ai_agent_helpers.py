@@ -5,8 +5,10 @@ Provides simple interfaces for AI agents to test complex workflows
 using the existing sophisticated TKA architecture.
 """
 
-import logging
+from __future__ import annotations
+
 from dataclasses import dataclass
+import logging
 from typing import Any
 
 # Import your existing architecture
@@ -24,6 +26,7 @@ from desktop.modern.domain.models import (
     RotationDirection,
 )
 from desktop.modern.domain.models.enums import GridMode
+
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +149,7 @@ class TKAAITestHelper:
             logger.error(f"Sequence creation failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"Sequence creation failed: {str(e)}"],
+                errors=[f"Sequence creation failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("create_sequence", result))
@@ -216,7 +219,7 @@ class TKAAITestHelper:
             logger.error(f"Beat creation failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"Beat creation failed: {str(e)}"],
+                errors=[f"Beat creation failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("create_beat", result))
@@ -311,7 +314,7 @@ class TKAAITestHelper:
             logger.error(f"Command pattern test failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"Command pattern test failed: {str(e)}"],
+                errors=[f"Command pattern test failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("test_command_pattern", result))
@@ -366,7 +369,7 @@ class TKAAITestHelper:
             logger.error(f"Pictograph creation failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"Pictograph creation failed: {str(e)}"],
+                errors=[f"Pictograph creation failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("create_pictograph", result))
@@ -427,7 +430,7 @@ class TKAAITestHelper:
             logger.error(f"Pictograph from beat test failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"Pictograph from beat test failed: {str(e)}"],
+                errors=[f"Pictograph from beat test failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("pictograph_from_beat", result))
@@ -463,7 +466,7 @@ class TKAAITestHelper:
             logger.error(f"CSV dataset test failed: {e}")
             result = AITestResult(
                 success=False,
-                errors=[f"CSV dataset test failed: {str(e)}"],
+                errors=[f"CSV dataset test failed: {e!s}"],
                 execution_time=time.time() - start_time,
             )
             self.execution_history.append(("csv_dataset_test", result))

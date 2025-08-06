@@ -5,6 +5,8 @@ Tracks all sequence and start position state using Qt signals.
 This replaces the complex web of signal coordinators and multiple state holders.
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
@@ -12,6 +14,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -135,11 +138,12 @@ class SequenceStateTracker(QObject):
         """Refresh state from persistence (for undo/redo scenarios)"""
         try:
             # Load current state from persistence
-            from desktop.modern.application.services.sequence.sequence_start_position_manager import (
-                SequenceStartPositionManager,
-            )
             from shared.application.services.sequence.sequence_persister import (
                 SequencePersister,
+            )
+
+            from desktop.modern.application.services.sequence.sequence_start_position_manager import (
+                SequenceStartPositionManager,
             )
 
             persistence_service = SequencePersister()

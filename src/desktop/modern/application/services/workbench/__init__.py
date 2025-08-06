@@ -11,6 +11,8 @@ Components:
 - BeatSelectionService: Beat selection business logic
 """
 
+from __future__ import annotations
+
 from shared.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
 )
@@ -29,6 +31,7 @@ from shared.application.services.workbench.workbench_state_manager import (
     WorkbenchState,
     WorkbenchStateManager,
 )
+
 
 __all__ = [
     # Business Services

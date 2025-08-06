@@ -5,6 +5,8 @@ Simplified sequence browser that uses PyQt directly instead of thin service wrap
 Focuses on core functionality without unnecessary abstraction layers.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QTimer, pyqtSignal
@@ -36,6 +38,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 from .modern_browse_control_panel import ModernBrowseControlPanel
 from .modern_navigation_sidebar import ModernNavigationSidebar
 from .ui_setup import SequenceBrowserUISetup
+
 
 logger = logging.getLogger(__name__)
 

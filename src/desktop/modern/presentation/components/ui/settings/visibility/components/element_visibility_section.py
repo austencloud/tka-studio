@@ -5,6 +5,8 @@ Focused component handling element visibility controls with dependency managemen
 Extracted from the monolithic visibility tab following TKA clean architecture principles.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import pyqtSignal
@@ -17,6 +19,7 @@ from desktop.modern.core.interfaces.tab_settings_interfaces import (
 from desktop.modern.presentation.components.ui.settings.components.element_toggle import (
     ElementToggle,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +155,7 @@ class ElementVisibilitySection(QFrame):
         return {
             name: toggle.isChecked() for name, toggle in self.element_toggles.items()
         }
+
     def _apply_styling(self):
         """Apply glassmorphism styling to the section."""
         self.setStyleSheet(

@@ -5,6 +5,8 @@ Single Responsibility: Calculating sequence words from beat letters.
 Extracted from SequenceBeatOperations God Object.
 """
 
+from __future__ import annotations
+
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 

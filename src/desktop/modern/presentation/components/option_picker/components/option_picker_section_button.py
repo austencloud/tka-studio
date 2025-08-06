@@ -11,6 +11,8 @@ Key principles from Legacy:
 - No complex business logic or orchestration
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
@@ -23,6 +25,7 @@ from desktop.modern.presentation.components.option_picker.types.letter_types imp
 from desktop.modern.presentation.utils.letter_type_text_painter import (
     LetterTypeTextPainter,
 )
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
@@ -39,7 +42,7 @@ class OptionPickerSectionButton(QPushButton):
 
     clicked = pyqtSignal()
 
-    def __init__(self, section_widget: "OptionPickerSection"):
+    def __init__(self, section_widget: OptionPickerSection):
         super().__init__(section_widget)
         self.section_widget = section_widget
         # Updated to match glassmorphism styling of main header

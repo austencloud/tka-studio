@@ -6,6 +6,8 @@ These interfaces define contracts for glyph data processing, generation, and man
 that must behave identically across desktop and web platforms.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 

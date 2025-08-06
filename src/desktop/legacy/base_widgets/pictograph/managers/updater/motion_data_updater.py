@@ -1,10 +1,8 @@
 from __future__ import annotations
+
 import logging
 from functools import cache
 from typing import TYPE_CHECKING
-
-from enums.letter.letter import Letter
-from objects.motion.motion import Motion
 
 from data.constants import (
     BLUE,
@@ -22,6 +20,8 @@ from data.constants import (
     TRAILING,
     TURNS,
 )
+from enums.letter.letter import Letter
+from objects.motion.motion import Motion
 
 if TYPE_CHECKING:
     from ...legacy_pictograph import LegacyPictograph
@@ -194,17 +194,25 @@ class MotionDataUpdater:
                 return tuple(make_hashable(v) for v in value)  # Convert lists to tuples
             return value
 
+        # Handle case where pictograph state letter is None
+        letter_value = None
+        if self.pictograph.state.letter is not None:
+            letter_value = self.pictograph.state.letter.value
+
         return tuple(
-            (k, make_hashable(v))
-            for k, v in sorted(d.items())
-            if k != self.pictograph.state.letter.value
+            (k, make_hashable(v)) for k, v in sorted(d.items()) if k != letter_value
         )
 
     def _tuple_to_dict(self, t: tuple) -> dict:
+        # Handle case where pictograph state letter is None
+        letter_value = None
+        if self.pictograph.state.letter is not None:
+            letter_value = self.pictograph.state.letter.value
+
         return {
             k: self._tuple_to_dict(v) if isinstance(v, tuple) else v
             for k, v in t
-            if k != self.pictograph.state.letter.value
+            if k != letter_value
         }
 
     def clear_cache(self) -> None:

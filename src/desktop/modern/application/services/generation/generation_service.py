@@ -5,6 +5,8 @@ Orchestrates sequence generation using modern TKA architecture.
 ROBUST: Handles all error cases gracefully, works without optional services.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from typing import Any
@@ -18,6 +20,7 @@ from desktop.modern.domain.models.generation_models import (
     GenerationMetadata,
     GenerationResult,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +51,7 @@ class GenerationService(IGenerationService):
             self.freeform_service = FreeformGenerator()
             logger.info("✅ Freeform generator initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize freeform generator: {str(e)}")
+            logger.error(f"❌ Failed to initialize freeform generator: {e!s}")
             raise RuntimeError(f"Cannot initialize freeform generation: {e}")
 
         try:
@@ -57,7 +60,7 @@ class GenerationService(IGenerationService):
             self.circular_service = CircularGenerator()
             logger.info("✅ Circular generator initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize circular generator: {str(e)}")
+            logger.error(f"❌ Failed to initialize circular generator: {e!s}")
             raise RuntimeError(f"Cannot initialize circular generation: {e}")
 
         # Validation service removed - validation is now built into generators
@@ -133,11 +136,9 @@ class GenerationService(IGenerationService):
             )
 
         except Exception as e:
-            logger.error(
-                f"❌ Modern freeform generation failed: {str(e)}", exc_info=True
-            )
+            logger.error(f"❌ Modern freeform generation failed: {e!s}", exc_info=True)
             return GenerationResult(
-                success=False, error_message=f"Generation failed: {str(e)}"
+                success=False, error_message=f"Generation failed: {e!s}"
             )
 
     def generate_circular_sequence(self, config: GenerationConfig) -> GenerationResult:
@@ -210,11 +211,9 @@ class GenerationService(IGenerationService):
             )
 
         except Exception as e:
-            logger.error(
-                f"❌ Modern circular generation failed: {str(e)}", exc_info=True
-            )
+            logger.error(f"❌ Modern circular generation failed: {e!s}", exc_info=True)
             return GenerationResult(
-                success=False, error_message=f"Generation failed: {str(e)}"
+                success=False, error_message=f"Generation failed: {e!s}"
             )
 
     def auto_complete_sequence(self, current_sequence: Any) -> GenerationResult:
@@ -253,9 +252,9 @@ class GenerationService(IGenerationService):
             )
 
         except Exception as e:
-            logger.error(f"❌ Modern auto-completion failed: {str(e)}", exc_info=True)
+            logger.error(f"❌ Modern auto-completion failed: {e!s}", exc_info=True)
             return GenerationResult(
-                success=False, error_message=f"Auto-completion failed: {str(e)}"
+                success=False, error_message=f"Auto-completion failed: {e!s}"
             )
 
     def validate_generation_parameters(
@@ -280,10 +279,8 @@ class GenerationService(IGenerationService):
             return self._basic_validation(config)
 
         except Exception as e:
-            logger.error(f"❌ Validation failed: {str(e)}", exc_info=True)
-            return ValidationResult(
-                is_valid=False, errors=[f"Validation error: {str(e)}"]
-            )
+            logger.error(f"❌ Validation failed: {e!s}", exc_info=True)
+            return ValidationResult(is_valid=False, errors=[f"Validation error: {e!s}"])
 
     def _basic_validation(self, config: GenerationConfig) -> ValidationResult:
         """Perform basic validation when validation service is not available."""

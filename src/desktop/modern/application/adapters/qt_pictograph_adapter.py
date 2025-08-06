@@ -5,11 +5,13 @@ Bridges between the framework-agnostic core pictograph renderer and QT-specific
 presentation layer. Converts render commands to QT graphics items.
 """
 
+from __future__ import annotations
+
 import logging
+from pathlib import Path
 
 # Add project root to path for core services
 import sys
-from pathlib import Path
 
 # Import the framework-agnostic core services
 from typing import Optional
@@ -46,6 +48,7 @@ from shared.application.services.core.types import (
     Size,
     SvgAsset,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -113,11 +116,10 @@ class QtRenderEngine:
 
             if command.render_type == "svg":
                 return self._render_svg_command(command, scene)
-            elif command.render_type == "error":
+            if command.render_type == "error":
                 return self._render_error_command(command, scene)
-            else:
-                logger.warning(f"Unknown render type: {command.render_type}")
-                return False
+            logger.warning(f"Unknown render type: {command.render_type}")
+            return False
 
         except Exception as e:
             logger.error(f"Failed to execute render command {command.command_id}: {e}")
@@ -249,7 +251,7 @@ class QtAssetProvider(IPictographAssetProvider):
         if not self.legacy_asset_manager:
             logger.warning("No legacy asset manager provided to QT asset provider")
 
-    def get_grid_asset(self, grid_mode: str) -> Optional["SvgAsset"]:
+    def get_grid_asset(self, grid_mode: str) -> Optional[SvgAsset]:
         """Get grid asset from existing QT asset management."""
         try:
             from shared.application.services.core.types import Size, SvgAsset
@@ -277,7 +279,7 @@ class QtAssetProvider(IPictographAssetProvider):
 
     def get_prop_asset(
         self, prop_type: str, color: str, pictograph_data: dict | None = None
-    ) -> Optional["SvgAsset"]:
+    ) -> Optional[SvgAsset]:
         """Get prop asset from existing QT asset management with color transformation and beta positioning support."""
         try:
             from shared.application.services.core.types import Size, SvgAsset
@@ -312,7 +314,7 @@ class QtAssetProvider(IPictographAssetProvider):
             logger.error(f"Failed to get prop asset: {e}")
             return None
 
-    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> Optional["SvgAsset"]:
+    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> Optional[SvgAsset]:
         """Get glyph asset from existing QT asset management."""
         try:
             from shared.application.services.core.types import Size, SvgAsset
@@ -339,7 +341,7 @@ class QtAssetProvider(IPictographAssetProvider):
             logger.error(f"Failed to get glyph asset: {e}")
             return None
 
-    def get_arrow_asset(self, arrow_type: str) -> Optional["SvgAsset"]:
+    def get_arrow_asset(self, arrow_type: str) -> Optional[SvgAsset]:
         """Get arrow asset from existing QT asset management."""
         try:
             from shared.application.services.core.types import Size, SvgAsset
@@ -399,10 +401,7 @@ class QtAssetProvider(IPictographAssetProvider):
                         f"Successfully loaded grid SVG: {len(result)} characters"
                     )
                     return result
-                else:
-                    logger.warning(
-                        f"Grid SVG loading returned None for path: {grid_path}"
-                    )
+                logger.warning(f"Grid SVG loading returned None for path: {grid_path}")
             elif hasattr(self.legacy_asset_manager, "get_grid_svg"):
                 return self.legacy_asset_manager.get_grid_svg(grid_mode)
             elif hasattr(self.legacy_asset_manager, "load_asset"):
@@ -433,15 +432,14 @@ class QtAssetProvider(IPictographAssetProvider):
                 # Use PictographAssetManager methods
                 prop_path = self.legacy_asset_manager.get_prop_svg_path(prop_type)
                 return self.legacy_asset_manager.load_svg_data(prop_path)
-            elif hasattr(self.legacy_asset_manager, "get_prop_svg"):
+            if hasattr(self.legacy_asset_manager, "get_prop_svg"):
                 return self.legacy_asset_manager.get_prop_svg(prop_type)
-            elif hasattr(self.legacy_asset_manager, "load_asset"):
+            if hasattr(self.legacy_asset_manager, "load_asset"):
                 return self.legacy_asset_manager.load_asset(f"prop_{prop_type}.svg")
-            else:
-                logger.debug(
-                    "Asset manager doesn't have expected prop loading methods, using direct loading"
-                )
-                return self._load_prop_directly(prop_type)
+            logger.debug(
+                "Asset manager doesn't have expected prop loading methods, using direct loading"
+            )
+            return self._load_prop_directly(prop_type)
         except Exception as e:
             logger.error(f"Failed to load prop from existing system: {e}")
             return self._load_prop_directly(prop_type)
@@ -467,17 +465,16 @@ class QtAssetProvider(IPictographAssetProvider):
                     glyph_type, glyph_id
                 )
                 return self.legacy_asset_manager.load_svg_data(glyph_path)
-            elif hasattr(self.legacy_asset_manager, "get_glyph_svg"):
+            if hasattr(self.legacy_asset_manager, "get_glyph_svg"):
                 return self.legacy_asset_manager.get_glyph_svg(glyph_type, glyph_id)
-            elif hasattr(self.legacy_asset_manager, "load_asset"):
+            if hasattr(self.legacy_asset_manager, "load_asset"):
                 return self.legacy_asset_manager.load_asset(
                     f"glyph_{glyph_type}_{glyph_id}.svg"
                 )
-            else:
-                logger.debug(
-                    "Asset manager doesn't have expected glyph loading methods, using direct loading"
-                )
-                return self._load_glyph_directly(glyph_type, glyph_id)
+            logger.debug(
+                "Asset manager doesn't have expected glyph loading methods, using direct loading"
+            )
+            return self._load_glyph_directly(glyph_type, glyph_id)
         except Exception as e:
             logger.error(f"Failed to load glyph from existing system: {e}")
             return self._load_glyph_directly(glyph_type, glyph_id)
@@ -488,13 +485,12 @@ class QtAssetProvider(IPictographAssetProvider):
             # TODO: Replace with your actual arrow loading logic
             if hasattr(self.legacy_asset_manager, "get_arrow_svg"):
                 return self.legacy_asset_manager.get_arrow_svg(arrow_type)
-            elif hasattr(self.legacy_asset_manager, "load_asset"):
+            if hasattr(self.legacy_asset_manager, "load_asset"):
                 return self.legacy_asset_manager.load_asset(f"arrow_{arrow_type}.svg")
-            else:
-                logger.error(
-                    "Legacy asset manager doesn't have expected arrow loading methods"
-                )
-                return None
+            logger.error(
+                "Legacy asset manager doesn't have expected arrow loading methods"
+            )
+            return None
         except Exception as e:
             logger.error(f"Failed to load arrow from existing system: {e}")
             return None
@@ -565,8 +561,8 @@ class QtAssetProvider(IPictographAssetProvider):
         """
         try:
             # Import constants to ensure we use the exact same colors as legacy
-            import sys
             from pathlib import Path
+            import sys
 
             sys.path.insert(
                 0,

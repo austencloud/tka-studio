@@ -5,6 +5,8 @@ Handles circular sequence generation with direct CAP transformation methods.
 No over-engineered strategy patterns - around 200 lines.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.generation_services import CAPType, SliceSize
@@ -12,6 +14,7 @@ from desktop.modern.domain.models.generation_models import GenerationConfig
 from desktop.modern.domain.models.pictograph_data import PictographData
 
 from .freeform_generator import FreeformGenerator
+
 
 logger = logging.getLogger(__name__)
 
@@ -100,11 +103,10 @@ class CircularGenerator:
         """Calculate the word length based on slice size."""
         if slice_size == SliceSize.HALVED:
             return max(1, total_length // 2)
-        elif slice_size == SliceSize.QUARTERED:
+        if slice_size == SliceSize.QUARTERED:
             return max(1, total_length // 4)
-        else:
-            # Default to halved
-            return max(1, total_length // 2)
+        # Default to halved
+        return max(1, total_length // 2)
 
     def _create_base_config(
         self, original_config: GenerationConfig, word_length: int
@@ -128,18 +130,17 @@ class CircularGenerator:
         """
         if cap_type == CAPType.STRICT_ROTATED:
             return self._apply_rotated_transformation(base_pattern)
-        elif cap_type == CAPType.STRICT_MIRRORED:
+        if cap_type == CAPType.STRICT_MIRRORED:
             return self._apply_mirrored_transformation(base_pattern)
-        elif cap_type == CAPType.STRICT_SWAPPED:
+        if cap_type == CAPType.STRICT_SWAPPED:
             return self._apply_swapped_transformation(base_pattern)
-        elif (
+        if (
             cap_type == CAPType.STRICT_COMPLEMENTARY
             or cap_type == CAPType.SWAPPED_COMPLEMENTARY
         ):
             return self._apply_complementary_transformation(base_pattern)
-        else:
-            logger.error(f"Unknown CAP type: {cap_type}")
-            return []
+        logger.error(f"Unknown CAP type: {cap_type}")
+        return []
 
     def _apply_rotated_transformation(
         self, pattern: list[PictographData]

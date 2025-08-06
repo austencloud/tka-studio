@@ -9,9 +9,12 @@ of the construct tab layout:
 - ComponentConnector: Handles inter-component communication
 """
 
+from __future__ import annotations
+
 from .component_connector import ComponentConnector
 from .panel_factory import PanelFactory
 from .transition_animator import TransitionAnimator
+
 
 __all__ = [
     "ComponentConnector",

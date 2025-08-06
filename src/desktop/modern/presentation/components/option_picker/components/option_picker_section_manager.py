@@ -5,6 +5,8 @@ Manages section lifecycle, updates, and coordination.
 Handles section creation, updates, and inter-section communication.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QTimer
@@ -13,6 +15,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
+
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
@@ -31,7 +34,7 @@ class OptionPickerSectionManager:
     - Managing section animations
     """
 
-    def __init__(self, sections: dict[LetterType, "OptionPickerSection"]):
+    def __init__(self, sections: dict[LetterType, OptionPickerSection]):
         self._sections = sections
         self._update_in_progress = False
         self._pending_updates: list[tuple] = []
@@ -133,7 +136,7 @@ class OptionPickerSectionManager:
                         spacing=layout_config.get("spacing", 10),
                     )
 
-    def get_sections_with_content(self) -> list["OptionPickerSection"]:
+    def get_sections_with_content(self) -> list[OptionPickerSection]:
         """Get sections that have pictograph content."""
         return [
             section
@@ -141,7 +144,7 @@ class OptionPickerSectionManager:
             if hasattr(section, "pictographs") and section.pictographs
         ]
 
-    def get_section_by_type(self, letter_type: LetterType) -> "OptionPickerSection":
+    def get_section_by_type(self, letter_type: LetterType) -> OptionPickerSection:
         """Get section by letter type."""
         return self._sections.get(letter_type)
 

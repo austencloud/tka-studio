@@ -8,6 +8,8 @@ This file now imports from the domain layer.
 """
 
 # Import from domain layer to avoid circular imports
+from __future__ import annotations
+
 from desktop.modern.domain.models.browse_errors import (
     BrowseError,
     DataLoadError,
@@ -17,12 +19,13 @@ from desktop.modern.domain.models.browse_errors import (
     ThumbnailError,
 )
 
+
 # Re-export for backward compatibility
 __all__ = [
     "BrowseError",
     "DataLoadError",
     "FilterError",
+    "NavigationError",
     "StateError",
     "ThumbnailError",
-    "NavigationError",
 ]

@@ -5,6 +5,8 @@ Specific exception types for the learn tab that enable proper error handling
 and recovery strategies. Each exception type has a clear meaning and context.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 
@@ -139,35 +141,33 @@ class ErrorRecoveryStrategy:
         """Get the recommended recovery action for an error."""
         if isinstance(error, LessonNotAvailable):
             return "return_to_selector"
-        elif isinstance(error, QuestionGenerationError):
+        if isinstance(error, QuestionGenerationError):
             return "retry_question_generation"
-        elif isinstance(error, AnswerValidationError):
+        if isinstance(error, AnswerValidationError):
             return "retry_validation"
-        elif isinstance(error, UIRenderingError):
+        if isinstance(error, UIRenderingError):
             return "refresh_component"
-        elif isinstance(error, NetworkError):
+        if isinstance(error, NetworkError):
             return "retry_operation"
-        elif isinstance(error, InvalidStateTransition):
+        if isinstance(error, InvalidStateTransition):
             return "reset_to_safe_state"
-        else:
-            return "show_error_message"
+        return "show_error_message"
 
     @staticmethod
     def get_user_message(error: LearnError) -> str:
         """Get a user-friendly error message."""
         if isinstance(error, LessonNotAvailable):
             return "This lesson is currently unavailable. Please try another lesson."
-        elif isinstance(error, QuestionGenerationError):
+        if isinstance(error, QuestionGenerationError):
             return "Unable to generate the next question. Please try again."
-        elif isinstance(error, AnswerValidationError):
+        if isinstance(error, AnswerValidationError):
             return "There was an issue processing your answer. Please try again."
-        elif isinstance(error, UIRenderingError):
+        if isinstance(error, UIRenderingError):
             return "Display issue encountered. Refreshing the interface..."
-        elif isinstance(error, NetworkError):
+        if isinstance(error, NetworkError):
             return (
                 "Network connection issue. Please check your connection and try again."
             )
-        elif isinstance(error, DataCorruptionError):
+        if isinstance(error, DataCorruptionError):
             return "Data integrity issue detected. Please restart the lesson."
-        else:
-            return "An unexpected error occurred. Please try again."
+        return "An unexpected error occurred. Please try again."

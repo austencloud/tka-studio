@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import math
 import random
 from typing import Optional
 
 from PyQt6.QtGui import QPixmap
-
 from shared.application.services.backgrounds.shared.animation_types import (
     Position2D,
     UFOState,

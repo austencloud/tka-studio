@@ -5,6 +5,8 @@ Extends the existing MotionData model with prefloat attributes needed
 for letter determination without modifying the core domain model.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -51,7 +53,7 @@ class ExtendedMotionData(MotionData):
 
     def to_float_state(
         self, prefloat_motion_type: MotionType, prefloat_prop_rot_dir: RotationDirection
-    ) -> "ExtendedMotionData":
+    ) -> ExtendedMotionData:
         """Convert this motion to float state with prefloat attributes."""
         from dataclasses import replace
 
@@ -66,7 +68,7 @@ class ExtendedMotionData(MotionData):
 
     def with_prefloat_attributes(
         self, motion_type: MotionType, prop_rot_dir: RotationDirection
-    ) -> "ExtendedMotionData":
+    ) -> ExtendedMotionData:
         """Create new instance with prefloat attributes."""
         from dataclasses import replace
 
@@ -80,7 +82,7 @@ class ExtendedMotionData(MotionData):
         motion_data: MotionData,
         prefloat_motion_type: Optional[MotionType] = None,
         prefloat_prop_rot_dir: Optional[RotationDirection] = None,
-    ) -> "ExtendedMotionData":
+    ) -> ExtendedMotionData:
         """Create ExtendedMotionData from existing MotionData."""
         return cls(
             motion_type=motion_data.motion_type,
@@ -124,7 +126,7 @@ class ExtendedMotionData(MotionData):
         return base_dict
 
     @classmethod
-    def from_dict(cls, data: dict) -> "ExtendedMotionData":
+    def from_dict(cls, data: dict) -> ExtendedMotionData:
         """Create from dictionary including prefloat attributes."""
         prefloat_motion_type = None
         if data.get("prefloat_motion_type"):

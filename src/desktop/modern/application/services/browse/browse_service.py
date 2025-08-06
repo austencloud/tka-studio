@@ -6,6 +6,8 @@ Enhanced to support organized filter structure with letter ranges,
 difficulty levels, and other categorized options.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
 
@@ -80,39 +82,38 @@ class BrowseService:
         if filter_type == FilterType.ALL_SEQUENCES:
             return sequences
 
-        elif filter_type == FilterType.STARTING_LETTER:
+        if filter_type == FilterType.STARTING_LETTER:
             return self._filter_by_starting_letter(sequences, filter_value)
 
-        elif filter_type == FilterType.CONTAINS_LETTERS:
+        if filter_type == FilterType.CONTAINS_LETTERS:
             if filter_value is None:
                 return sequences
             return [s for s in sequences if filter_value.lower() in s.word.lower()]
 
-        elif filter_type == FilterType.LENGTH:
+        if filter_type == FilterType.LENGTH:
             return self._filter_by_length(sequences, filter_value)
 
-        elif filter_type == FilterType.DIFFICULTY:
+        if filter_type == FilterType.DIFFICULTY:
             return self._filter_by_difficulty(sequences, filter_value)
 
-        elif filter_type == FilterType.STARTING_POSITION:
+        if filter_type == FilterType.STARTING_POSITION:
             return self._filter_by_starting_position(sequences, filter_value)
 
-        elif filter_type == FilterType.AUTHOR:
+        if filter_type == FilterType.AUTHOR:
             return self._filter_by_author(sequences, filter_value)
 
-        elif filter_type == FilterType.GRID_MODE:
+        if filter_type == FilterType.GRID_MODE:
             return self._filter_by_grid_mode(sequences, filter_value)
 
-        elif filter_type == FilterType.FAVORITES:
+        if filter_type == FilterType.FAVORITES:
             # Return sequences marked as favorites
             return [s for s in sequences if s.is_favorite]
 
-        elif filter_type == FilterType.RECENT:
+        if filter_type == FilterType.RECENT:
             # Sort by date and return recent sequences (for demo, return all)
             return sorted(sequences, key=lambda s: s.date_added, reverse=True)
 
-        else:
-            return sequences
+        return sequences
 
     def _filter_by_starting_letter(
         self, sequences: list[SequenceData], filter_value: Any
@@ -121,7 +122,7 @@ class BrowseService:
         if filter_value is None or filter_value == "All Letters":
             return sequences
 
-        elif "-" in str(filter_value):  # Handle ranges like "A-D"
+        if "-" in str(filter_value):  # Handle ranges like "A-D"
             start_letter, end_letter = filter_value.split("-")
             return [
                 s
@@ -129,12 +130,10 @@ class BrowseService:
                 if s.word and start_letter <= s.word[0].upper() <= end_letter
             ]
 
-        else:  # Handle single letters
-            return [
-                s
-                for s in sequences
-                if s.word and s.word[0].upper() == filter_value.upper()
-            ]
+        # Handle single letters
+        return [
+            s for s in sequences if s.word and s.word[0].upper() == filter_value.upper()
+        ]
 
     def _filter_by_length(
         self, sequences: list[SequenceData], filter_value: Any
@@ -210,19 +209,18 @@ class BrowseService:
         """
         if sort_method == SortMethod.ALPHABETICAL:
             return sorted(sequences, key=lambda s: s.word.lower())
-        elif sort_method == SortMethod.DATE_ADDED:
+        if sort_method == SortMethod.DATE_ADDED:
             return sorted(sequences, key=lambda s: s.date_added, reverse=True)
-        elif sort_method == SortMethod.DIFFICULTY_LEVEL:
+        if sort_method == SortMethod.DIFFICULTY_LEVEL:
             return sorted(sequences, key=lambda s: s.difficulty_level)
-        elif sort_method == SortMethod.SEQUENCE_LENGTH:
+        if sort_method == SortMethod.SEQUENCE_LENGTH:
             return sorted(sequences, key=lambda s: s.sequence_length)
-        elif sort_method == SortMethod.AUTHOR:
+        if sort_method == SortMethod.AUTHOR:
             return sorted(sequences, key=lambda s: s.author.lower())
-        elif sort_method == SortMethod.POPULARITY:
+        if sort_method == SortMethod.POPULARITY:
             # Could be based on usage count or favorites
             return sorted(sequences, key=lambda s: s.is_favorite, reverse=True)
-        else:
-            return sequences
+        return sequences
 
     def _load_sequence_from_folder(self, folder_path: Path) -> SequenceData | None:
         """

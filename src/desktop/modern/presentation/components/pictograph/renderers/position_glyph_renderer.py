@@ -5,13 +5,14 @@ Handles rendering of position glyphs that show the start and end positions
 with an arrow between them (e.g., α → β).
 """
 
+from __future__ import annotations
+
 import os
 from typing import Optional
 
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsItemGroup
-
 from shared.application.services.assets.image_asset_utils import (
     get_image_path,
 )
@@ -106,9 +107,8 @@ class PositionGlyphRenderer:
             scale_factor = 0.75
             symbol_item.setScale(scale_factor)
             return symbol_item
-        else:
-            print(f"Warning: Failed to load position symbol: {svg_path}")
-            return None
+        print(f"Warning: Failed to load position symbol: {svg_path}")
+        return None
 
     def _render_arrow(self) -> Optional[QGraphicsSvgItem]:
         """Render the arrow between positions."""
@@ -127,9 +127,8 @@ class PositionGlyphRenderer:
             scale_factor = 0.75
             arrow_item.setScale(scale_factor)
             return arrow_item
-        else:
-            print(f"Warning: Failed to load arrow: {svg_path}")
-            return None
+        print(f"Warning: Failed to load arrow: {svg_path}")
+        return None
 
     def _position_elements(
         self,

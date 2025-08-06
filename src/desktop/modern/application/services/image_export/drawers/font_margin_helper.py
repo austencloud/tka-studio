@@ -6,11 +6,14 @@ Provides exact legacy font and margin calculations to prevent "humongous" text i
 and ensure consistent sizing across different sequence lengths.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtGui import QFont
 
 from desktop.modern.core.interfaces.image_export_services import IFontMarginHelper
+
 
 logger = logging.getLogger(__name__)
 

@@ -5,6 +5,8 @@ Main coordinator for the sequence card tab following the learn tab architecture 
 Uses clean service injection and maintains visual parity with legacy implementation.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import QCoreApplication, Qt, QTimer, pyqtSignal
@@ -23,6 +25,7 @@ from desktop.modern.presentation.components.sequence_card import (
     SequenceCardHeaderComponent,
     SequenceCardNavigationComponent,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -299,6 +302,7 @@ class SequenceCardTab(QWidget):
             self.header.set_description_text(f"Error loading sequences: {e}")
         finally:
             self.setCursor(Qt.CursorShape.ArrowCursor)
+
     def resizeEvent(self, event) -> None:
         """Handle resize event."""
         super().resizeEvent(event)

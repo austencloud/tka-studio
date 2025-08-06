@@ -5,6 +5,8 @@ This provides auto-sizing to parent containers for learn tab questions
 and answers without widget wrapper complexity.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtGui import QResizeEvent
 from PyQt6.QtWidgets import QSizePolicy
 
@@ -100,10 +102,9 @@ class LearnPictographView(BasePictographView):
         """Get margin factor based on context."""
         if self._context == "question":
             return 0.90  # Slightly smaller for questions
-        elif self._context == "answer":
+        if self._context == "answer":
             return 0.85  # Smaller for answer options
-        else:
-            return 0.90  # Default
+        return 0.90  # Default
 
     def _apply_legacy_view_scaling(self, target_size: int):
         """Apply legacy-style view scaling for learn tab."""

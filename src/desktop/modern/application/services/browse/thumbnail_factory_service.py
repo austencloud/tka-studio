@@ -4,6 +4,8 @@ Thumbnail Factory Service
 Service for creating sequence thumbnail widgets with image loading.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout, QWidget
@@ -128,7 +130,7 @@ class ThumbnailFactoryService(IThumbnailFactory):
         """Get the thumbnail path from sequence data."""
         if hasattr(sequence, "thumbnails") and sequence.thumbnails:
             return sequence.thumbnails[0]
-        elif hasattr(sequence, "thumbnail_paths") and sequence.thumbnail_paths:
+        if hasattr(sequence, "thumbnail_paths") and sequence.thumbnail_paths:
             return sequence.thumbnail_paths[0]
         return None
 

@@ -13,16 +13,18 @@ via the BeatOperationCoordinator. The God Object has been broken down into:
 REFACTORING COMPLETE: From 21KB God Object to clean coordinator pattern!
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
+from shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from shared.application.services.data.modern_to_legacy_converter import (
-    ModernToLegacyConverter,
-)
 
 from .beat_operation_coordinator import BeatOperationCoordinator
 

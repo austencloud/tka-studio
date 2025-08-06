@@ -4,11 +4,14 @@ Sequence Card Settings Service Implementation
 Handles persistence of sequence card tab settings.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardSettingsService,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +34,7 @@ class SequenceCardSettingsService(ISequenceCardSettingsService):
                 return self.settings_service.get_setting(
                     self.section, "last_length", 16
                 )
-            else:
-                return self._internal_settings.get("last_length", 16)
+            return self._internal_settings.get("last_length", 16)
         except Exception as e:
             logger.warning(f"Error getting last selected length: {e}")
             return 16
@@ -55,8 +57,7 @@ class SequenceCardSettingsService(ISequenceCardSettingsService):
                 return self.settings_service.get_setting(
                     self.section, "column_count", 2
                 )
-            else:
-                return self._internal_settings.get("column_count", 2)
+            return self._internal_settings.get("column_count", 2)
         except Exception as e:
             logger.warning(f"Error getting column count: {e}")
             return 2

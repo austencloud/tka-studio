@@ -5,6 +5,8 @@ Registers all letter determination services with the DI container following
 the established patterns for service registration.
 """
 
+from __future__ import annotations
+
 import logging
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -14,6 +16,7 @@ from desktop.modern.core.interfaces.letter_determination.letter_determination_se
     IMotionComparisonService,
     IPictographDatasetProvider,
 )
+
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,10 @@
 """CamelCase conversion utilities for domain models."""
 
-import re
+from __future__ import annotations
+
 from dataclasses import fields, is_dataclass
 from enum import Enum
+import re
 from typing import Any
 
 
@@ -26,14 +28,13 @@ def dataclass_to_camel_dict(obj: Any) -> dict[str, Any]:
     def convert_value(value: Any) -> Any:
         if is_dataclass(value):
             return dataclass_to_camel_dict(value)
-        elif isinstance(value, list):
+        if isinstance(value, list):
             return [convert_value(item) for item in value]
-        elif isinstance(value, dict):
+        if isinstance(value, dict):
             return {to_camel_case(k): convert_value(v) for k, v in value.items()}
-        elif isinstance(value, Enum):
+        if isinstance(value, Enum):
             return value.value
-        else:
-            return value
+        return value
 
     result = {}
     for field in fields(obj):
@@ -51,9 +52,8 @@ def dict_from_camel_case(data: dict[str, Any]) -> dict[str, Any]:
     def convert_value(value: Any) -> Any:
         if isinstance(value, dict):
             return dict_from_camel_case(value)
-        elif isinstance(value, list):
+        if isinstance(value, list):
             return [convert_value(item) for item in value]
-        else:
-            return value
+        return value
 
     return {to_snake_case(k): convert_value(v) for k, v in data.items()}

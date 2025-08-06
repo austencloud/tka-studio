@@ -5,6 +5,8 @@ These interfaces define the contracts for services that analyze and optimize
 code organization, following TKA's clean architecture principles.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path

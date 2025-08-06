@@ -4,6 +4,8 @@ Sequence Card Header Component
 Modern implementation preserving exact legacy styling and functionality.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
@@ -22,6 +24,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDisplayService,
     ISequenceCardExportService,
 )
+
 
 logger = logging.getLogger(__name__)
 

@@ -3,6 +3,8 @@ Core animation system interfaces - Framework Agnostic
 These interfaces define the canonical animation system that can be adapted to any UI framework.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass

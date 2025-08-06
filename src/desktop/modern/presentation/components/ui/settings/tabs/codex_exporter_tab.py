@@ -5,6 +5,8 @@ This tab provides functionality to export pictographs with turn configurations,
 following TKA's modern clean architecture and glassmorphism design.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtWidgets import (

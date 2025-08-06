@@ -5,6 +5,8 @@ Handles the main content area with position options and grid layout.
 Extracted from the main StartPositionPicker for better maintainability.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
@@ -22,6 +24,7 @@ from desktop.modern.core.interfaces.start_position_services import (
 from desktop.modern.presentation.components.start_position_picker.start_position_option import (
     StartPositionOption,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -306,12 +309,11 @@ class StartPositionPickerContent(QWidget):
         # Determine layout based on mode and position count
         if is_advanced:
             self._arrange_advanced_layout()
+        # AUTO mode - decide based on position count
+        elif len(self.position_options) <= 3:
+            self._arrange_basic_layout()
         else:
-            # AUTO mode - decide based on position count
-            if len(self.position_options) <= 3:
-                self._arrange_basic_layout()
-            else:
-                self._arrange_advanced_layout()
+            self._arrange_advanced_layout()
 
     def _arrange_basic_layout(self):
         """Arrange 3 positions responsively - EXACT logic from original."""

@@ -5,8 +5,10 @@ This module provides real dictionary data loading functionality for the modern b
 Simplified to use SequenceData directly instead of separate SequenceRecord.
 """
 
-import json
+from __future__ import annotations
+
 from datetime import datetime
+import json
 from pathlib import Path
 from typing import Any
 
@@ -168,7 +170,7 @@ class DictionaryDataManager(QObject):
                 metadata = json.loads(metadata_json)
 
                 # Extract metadata from the sequence structure
-                if "sequence" in metadata and metadata["sequence"]:
+                if metadata.get("sequence"):
                     first_entry = metadata["sequence"][0]
 
                     result = {
@@ -239,10 +241,9 @@ class DictionaryDataManager(QObject):
             return None
         if level <= 1:
             return "beginner"
-        elif level <= 3:
+        if level <= 3:
             return "intermediate"
-        else:
-            return "advanced"
+        return "advanced"
 
     # Query methods for filtering - now return SequenceData directly
 

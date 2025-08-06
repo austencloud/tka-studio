@@ -5,6 +5,8 @@ Modern Qt overlay widget for displaying sequence images in full screen.
 Based on the legacy FullScreenImageOverlay but with modern architecture patterns.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 from typing import Optional
@@ -12,6 +14,7 @@ from typing import Optional
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
+
 
 logger = logging.getLogger(__name__)
 

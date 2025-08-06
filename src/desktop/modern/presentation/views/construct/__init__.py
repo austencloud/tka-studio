@@ -24,6 +24,8 @@ Architecture Notes:
 - No unnecessary orchestration layer
 """
 
+from __future__ import annotations
+
 from desktop.modern.application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
@@ -48,6 +50,7 @@ from desktop.modern.presentation.managers.construct.layout_manager import (
     ConstructTabLayoutManager,
 )
 from desktop.modern.presentation.views.construct.construct_tab import ConstructTab
+
 
 # Create alias for backward compatibility
 ModernConstructTab = ConstructTab

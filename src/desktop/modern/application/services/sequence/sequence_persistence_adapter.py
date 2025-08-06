@@ -5,13 +5,16 @@ Single Responsibility: Saving and loading sequences with format conversion.
 Extracted from SequenceBeatOperations God Object.
 """
 
+from __future__ import annotations
+
 from typing import Any, Optional
 
-from desktop.modern.domain.models.sequence_data import SequenceData
 from shared.application.services.data.modern_to_legacy_converter import (
     ModernToLegacyConverter,
 )
 from shared.application.services.sequence.sequence_persister import SequencePersister
+
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class SequencePersistenceAdapter:

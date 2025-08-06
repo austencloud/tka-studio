@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .aurora_background import AuroraBackground
 from .aurora_borealis_background import AuroraBorealisBackground
 from .base_background import BaseBackground

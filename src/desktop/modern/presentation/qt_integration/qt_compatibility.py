@@ -8,11 +8,14 @@ ARCHITECTURE: Provides runtime Qt version detection, feature adaptation,
 and compatibility fallbacks for unsupported Qt features.
 """
 
-import logging
-import sys
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
+import logging
+import sys
 from typing import Any
+
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +120,7 @@ class QtCompatibilityManager:
         """Detect Qt variant and version."""
         # Try PyQt6 first (preferred)
         try:
-            import PyQt6.QtCore as QtCore
+            from PyQt6 import QtCore
 
             version_str = QtCore.qVersion() or "6.0.0"
             major, minor, patch = map(int, version_str.split("."))
@@ -133,7 +136,7 @@ class QtCompatibilityManager:
 
         # Try PySide6
         try:
-            import PySide6.QtCore as QtCore
+            from PySide6 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))
@@ -149,7 +152,7 @@ class QtCompatibilityManager:
 
         # Try PyQt5
         try:
-            import PyQt5.QtCore as QtCore
+            from PyQt5 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))
@@ -165,7 +168,7 @@ class QtCompatibilityManager:
 
         # Try PySide2
         try:
-            import PySide2.QtCore as QtCore
+            from PySide2 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))

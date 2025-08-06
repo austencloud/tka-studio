@@ -5,6 +5,8 @@ These services provide real business logic but without UI components.
 Perfect for server-side processing or CI/CD environments.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
@@ -58,13 +60,12 @@ class HeadlessLayoutService(ILayoutService):
 
             return Size(frame_width, frame_height)
 
-        elif component_type == "pictograph":
+        if component_type == "pictograph":
             # Real calculation for pictographs
             return Size(150, 150)
 
-        else:
-            # Default calculation
-            return Size(parent_size.width // 2, parent_size.height // 2)
+        # Default calculation
+        return Size(parent_size.width // 2, parent_size.height // 2)
 
     def calculate_beat_frame_layout(
         self, sequence: Any, container_size: tuple[int, int]

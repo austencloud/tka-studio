@@ -5,9 +5,12 @@ This module provides factory classes for creating various UI widgets
 with proper dependency injection and configuration.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QWidget
+
 
 if TYPE_CHECKING:
     from desktop.modern.core.dependency_injection.di_container import DIContainer
@@ -16,7 +19,7 @@ if TYPE_CHECKING:
 class OptionPickerWidgetFactory:
     """Factory for creating option picker widgets."""
 
-    def __init__(self, container: "DIContainer"):
+    def __init__(self, container: DIContainer):
         """Initialize the factory with a DI container."""
         self.container = container
 
@@ -40,7 +43,7 @@ class OptionPickerWidgetFactory:
 class WidgetFactory:
     """Main widget factory for the application."""
 
-    def __init__(self, container: "DIContainer"):
+    def __init__(self, container: DIContainer):
         """Initialize the factory with a DI container."""
         self.container = container
         self.option_picker_factory = OptionPickerWidgetFactory(container)
@@ -64,6 +67,6 @@ class WidgetFactory:
 
 # Export the main classes
 __all__ = [
-    "WidgetFactory",
     "OptionPickerWidgetFactory",
+    "WidgetFactory",
 ]

@@ -1,19 +1,22 @@
+from __future__ import annotations
+
 import logging
 from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
+from shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.views import (
     create_pictograph_view,
 )
-from shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
-)
 
 from ..config import ColorConfig, LayoutConfig, SizeConfig, StateConfig, UIConfig
+
 
 logger = logging.getLogger(__name__)
 

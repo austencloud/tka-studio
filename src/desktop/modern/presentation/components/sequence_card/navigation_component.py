@@ -4,6 +4,8 @@ Sequence Card Navigation Component
 Modern implementation preserving exact legacy sidebar styling and functionality.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -22,6 +24,7 @@ from desktop.modern.core.interfaces.sequence_card_services import (
     ISequenceCardDisplayService,
     ISequenceCardSettingsService,
 )
+
 
 logger = logging.getLogger(__name__)
 

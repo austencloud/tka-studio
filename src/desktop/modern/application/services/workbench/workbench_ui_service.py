@@ -5,6 +5,8 @@ Handles all UI-related functionality for the workbench component.
 Extracted from the large workbench component to improve maintainability.
 """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
@@ -17,12 +19,14 @@ from desktop.modern.presentation.components.sequence_workbench.indicator_section
     WorkbenchIndicatorSection,
 )
 
+
 if TYPE_CHECKING:
-    from desktop.modern.presentation.components.workbench.beat_frame_section import (
-        WorkbenchBeatFrameSection,
-    )
     from shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
+    )
+
+    from desktop.modern.presentation.components.workbench.beat_frame_section import (
+        WorkbenchBeatFrameSection,
     )
 
 
@@ -41,7 +45,7 @@ class WorkbenchUIService(IWorkbenchUIService):
         self,
         container: DIContainer,
         layout_service: ILayoutService,
-        beat_selection_service: "BeatSelectionService",
+        beat_selection_service: BeatSelectionService,
     ):
         self._container = container
         self._layout_service = layout_service
@@ -109,7 +113,7 @@ class WorkbenchUIService(IWorkbenchUIService):
         if self._beat_frame_section:
             self._beat_frame_section.show_button_message(operation, message, duration)
 
-    def get_beat_frame_section(self) -> Optional["WorkbenchBeatFrameSection"]:
+    def get_beat_frame_section(self) -> Optional[WorkbenchBeatFrameSection]:
         """Get the beat frame section component."""
         return self._beat_frame_section
 

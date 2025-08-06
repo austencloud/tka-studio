@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING, Optional
 
@@ -7,6 +9,7 @@ from PyQt6.QtWidgets import QFrame, QHBoxLayout, QSizePolicy
 from ..components.adjustment_panel import AdjustmentPanel
 from ..components.pictograph_container import GraphEditorPictographContainer
 from ..config import LayoutConfig
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +29,7 @@ class GraphEditorLayoutManager(QObject):
     - Layout management
     """
 
-    def __init__(self, graph_editor: "GraphEditor", parent: Optional[QObject] = None):
+    def __init__(self, graph_editor: GraphEditor, parent: Optional[QObject] = None):
         super().__init__(parent)
         self._graph_editor = graph_editor
 

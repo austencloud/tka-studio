@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from data.constants import *
 
 from .base_rot_angle_calculator import BaseRotAngleCalculator
@@ -12,6 +13,9 @@ class StaticRotAngleCalculator(BaseRotAngleCalculator):
         if self.arrow.motion.state.start_ori in [IN, OUT]:
             direction_map = self._radial_static_direction_map()
         elif self.arrow.motion.state.start_ori in [CLOCK, COUNTER]:
+            direction_map = self._nonradial_static_direction_map()
+        else:
+            # Fallback for when start_ori is not set or has unexpected value
             direction_map = self._nonradial_static_direction_map()
 
         prop_rot_dir = self.arrow.motion.state.prop_rot_dir

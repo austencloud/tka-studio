@@ -2,6 +2,8 @@
 Core animation components for the modern fade system.
 """
 
+from __future__ import annotations
+
 import asyncio
 from typing import Optional
 

@@ -12,11 +12,13 @@ ARCHITECTURE:
 - Enables web service reuse of the same core logic
 """
 
+from __future__ import annotations
+
 import logging
+from pathlib import Path
 
 # Import framework-agnostic core services
 import sys
-from pathlib import Path
 from typing import Any
 
 
@@ -46,11 +48,9 @@ from desktop.modern.application.adapters.qt_pictograph_adapter import (
 )
 from desktop.modern.domain.models import MotionData
 
+
 # Import from shared application services
 sys.path.insert(0, str(_project_root / "src"))
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
-)
 from shared.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     create_pictograph_renderer,
@@ -61,6 +61,11 @@ from shared.application.services.pictograph.asset_management.pictograph_asset_ma
 from shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
+
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
+
 
 logger = logging.getLogger(__name__)
 

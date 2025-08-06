@@ -5,9 +5,12 @@ Interface definitions for pictograph-related services following TKA's clean arch
 These interfaces define contracts for validation, scaling, and pictograph manipulation services.
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Optional
+
 
 # ScalingContext removed - direct views handle their own scaling
 

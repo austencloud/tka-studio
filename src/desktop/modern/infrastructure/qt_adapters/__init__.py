@@ -6,6 +6,8 @@ defined in core.types.animation, enabling desktop Qt functionality
 while maintaining web portability.
 """
 
+from __future__ import annotations
+
 from .animation_adapters import (
     QtAnimationGroupAdapter,
     QtOpacityEffectAdapter,
@@ -13,9 +15,10 @@ from .animation_adapters import (
     QtStackAdapter,
 )
 
+
 __all__ = [
-    "QtStackAdapter",
+    "QtAnimationGroupAdapter",
     "QtOpacityEffectAdapter",
     "QtPropertyAnimationAdapter",
-    "QtAnimationGroupAdapter",
+    "QtStackAdapter",
 ]

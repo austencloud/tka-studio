@@ -3,9 +3,10 @@
 Thin wrapper for sparkle rendering - business logic delegated to AuroraSparkleAnimation service.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPainter
-
 from shared.application.services.backgrounds.aurora.sparkle_animation import (
     AuroraSparkleAnimation,
 )

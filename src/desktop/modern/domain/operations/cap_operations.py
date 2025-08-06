@@ -5,12 +5,15 @@ Direct port of Circular Algorithmic Permutation logic from legacy system.
 These are the mathematical transformations that make circular sequences work.
 """
 
-import logging
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
+import logging
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 

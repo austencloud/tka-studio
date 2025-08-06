@@ -5,6 +5,8 @@ Handles coordination between construct tab components.
 Replaces the large SignalCoordinator with focused coordination logic.
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal

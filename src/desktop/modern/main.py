@@ -7,8 +7,11 @@ The main window class has been extracted to presentation/main_window.py for bett
 """
 
 # CRITICAL: Path setup MUST be first - before any other imports
-import sys
+from __future__ import annotations
+
 from pathlib import Path
+import sys
+
 
 # Check if tka_paths has already been imported (e.g., from root main.py)
 if "tka_paths" not in sys.modules:

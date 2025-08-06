@@ -8,6 +8,8 @@ natural scene integration without visual styling artifacts.
 Based on successful testing and unified with StartTextOverlay approach.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QWidget
 
 from .text_overlay_base import (
@@ -41,9 +43,12 @@ class BeatNumberOverlay(TextOverlayBase):
     def hide_overlay(self):
         """Hide the beat number overlay"""
         self._hide_overlay_common()
+
     def hide_beat_number(self):
         """Hide the beat number overlay (legacy method name)"""
         self.hide_overlay()
+
+
 def add_beat_number_to_view(
     beat_view: QWidget, beat_number: int
 ) -> BeatNumberOverlay | None:

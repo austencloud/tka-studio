@@ -5,11 +5,14 @@ Handles all grid layout operations for the sequence browser panel.
 Provides clean interface for grid management with proper error handling.
 """
 
+from __future__ import annotations
+
 import logging
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QWidget
+
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +66,10 @@ class GridLayoutService:
                     f"🔧 [GRID_LAYOUT] Recreated grid layout: {self.grid_layout}"
                 )
                 return True
-            else:
-                logger.error(
-                    "❌ [GRID_LAYOUT] Cannot recreate grid layout - no grid widget"
-                )
-                return False
+            logger.error(
+                "❌ [GRID_LAYOUT] Cannot recreate grid layout - no grid widget"
+            )
+            return False
         return True
 
     def clear_grid(self) -> None:

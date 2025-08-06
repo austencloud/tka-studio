@@ -5,13 +5,16 @@ Adds circuit breaker pattern to existing panel factory for improved resilience.
 Builds on existing error handling with circuit breaker state management.
 """
 
-import time
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+import time
 from typing import Any
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
+
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -65,7 +68,7 @@ class CircuitBreaker:
         """Check if operation can be executed."""
         if self.state == CircuitBreakerState.CLOSED:
             return True
-        elif self.state == CircuitBreakerState.OPEN:
+        if self.state == CircuitBreakerState.OPEN:
             # Check if timeout period has passed
             if self.stats.last_failure_time:
                 time_since_failure = time.time() - self.stats.last_failure_time
@@ -73,7 +76,7 @@ class CircuitBreaker:
                     self._transition_to_half_open()
                     return True
             return False
-        elif self.state == CircuitBreakerState.HALF_OPEN:
+        if self.state == CircuitBreakerState.HALF_OPEN:
             return True
         return False
 
@@ -322,6 +325,7 @@ class ResilientPanelFactory:
         layout.addWidget(label)
 
         return widget, None
+
     def reset_circuit_breaker(self, component_name: str) -> bool:
         """Reset specific circuit breaker to CLOSED state."""
         if component_name in self.circuit_breakers:

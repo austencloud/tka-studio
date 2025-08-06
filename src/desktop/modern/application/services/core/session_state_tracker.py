@@ -5,13 +5,15 @@ Provides robust auto-save/restore functionality for TKA applications.
 Automatically saves user state after interactions and restores exactly where they left off.
 """
 
-import json
-import logging
-import uuid
+from __future__ import annotations
+
 from dataclasses import asdict
 from datetime import datetime, timedelta
+import json
+import logging
 from pathlib import Path
 from typing import Any
+import uuid
 
 from PyQt6.QtCore import QTimer
 
@@ -22,6 +24,7 @@ from desktop.modern.core.interfaces.session_services import (
     SessionRestoreResult,
     SessionState,
 )
+
 
 logger = logging.getLogger(__name__)
 

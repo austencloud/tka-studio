@@ -5,6 +5,8 @@ Handles smooth transitions between panels in the construct tab.
 Manages fade animations and graphics effects cleanup.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QTimer
@@ -197,12 +199,9 @@ class TransitionAnimator:
                             widget.content.apply_sizing
                         )
                         widget.content.apply_sizing = lambda *args, **kwargs: None
-                else:
-                    if hasattr(widget.content, "_original_apply_sizing"):
-                        widget.content.apply_sizing = (
-                            widget.content._original_apply_sizing
-                        )
-                        delattr(widget.content, "_original_apply_sizing")
+                elif hasattr(widget.content, "_original_apply_sizing"):
+                    widget.content.apply_sizing = widget.content._original_apply_sizing
+                    delattr(widget.content, "_original_apply_sizing")
         except Exception as e:
             print(f"❌ [FADE] Error managing pictograph updates: {e}")
 

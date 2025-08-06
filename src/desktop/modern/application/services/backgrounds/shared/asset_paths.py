@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from PyQt6.QtGui import QPixmap

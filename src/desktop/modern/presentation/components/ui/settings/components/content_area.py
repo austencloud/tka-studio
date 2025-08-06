@@ -4,6 +4,8 @@ Settings dialog content area component.
 Manages the stacked widget that displays different settings tabs.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 
@@ -27,9 +29,11 @@ class SettingsContentArea(QStackedWidget):
         """Select a tab by index."""
         if 0 <= index < self.count():
             self.setCurrentIndex(index)
+
     def get_tab(self, tab_name: str) -> QWidget:
         """Get a tab widget by name."""
         return self.tabs.get(tab_name)
+
     def refresh_all_tabs(self):
         """Refresh all tabs that have a refresh method."""
         for tab_widget in self.tabs.values():

@@ -11,10 +11,12 @@ DECORATORS:
 - retry_on_failure: Retry decorator for transient failures
 """
 
+from __future__ import annotations
+
+from collections.abc import Callable
 import functools
 import logging
 import time
-from collections.abc import Callable
 from typing import Any
 
 from .exceptions import (
@@ -22,6 +24,7 @@ from .exceptions import (
     ValidationError,
     service_error,
 )
+
 
 # Configure logger for decorators
 logger = logging.getLogger(__name__)

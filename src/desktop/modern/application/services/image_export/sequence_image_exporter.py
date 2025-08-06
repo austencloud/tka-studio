@@ -5,8 +5,10 @@ This service provides image export functionality that replicates the legacy syst
 while following clean architecture patterns and using modern data types.
 """
 
-import logging
+from __future__ import annotations
+
 from collections.abc import Callable
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +24,7 @@ from desktop.modern.core.interfaces.image_export_services import (
     ISequenceImageRenderer,
     ISequenceMetadataExtractor,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -81,10 +84,9 @@ class SequenceImageExporter(ISequenceImageExporter):
                     output_path=output_path,
                     metadata={"word": word, "sequence_length": len(sequence_data)},
                 )
-            else:
-                error_msg = f"Failed to save image to {output_path}"
-                logger.error(error_msg)
-                return ExportResult(success=False, error_message=error_msg)
+            error_msg = f"Failed to save image to {output_path}"
+            logger.error(error_msg)
+            return ExportResult(success=False, error_message=error_msg)
 
         except Exception as e:
             error_msg = f"Error exporting sequence image: {e}"

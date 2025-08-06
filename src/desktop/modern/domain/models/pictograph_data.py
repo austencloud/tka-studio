@@ -1,7 +1,9 @@
-import json
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+import json
 from typing import Any, Optional
+import uuid
 
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.enums import (
@@ -46,10 +48,10 @@ class PictographData:
 
     # Letter determination fields
     beat: int = 0
-    timing: Optional["Timing"] = None  # Timing.SPLIT or Timing.TOG
-    direction: Optional["Direction"] = None  # Direction.SAME or Direction.OPP
+    timing: Optional[Timing] = None  # Timing.SPLIT or Timing.TOG
+    direction: Optional[Direction] = None  # Direction.SAME or Direction.OPP
     duration: int | None = None
-    letter_type: Optional["LetterType"] = None
+    letter_type: Optional[LetterType] = None
 
     # Visual state
     is_blank: bool = False
@@ -111,7 +113,7 @@ class PictographData:
         """Get the red prop."""
         return self.props.get("red", PropData(color="red"))
 
-    def update_arrow(self, color: str, **kwargs) -> "PictographData":
+    def update_arrow(self, color: str, **kwargs) -> PictographData:
         """Create a new pictograph with an updated arrow."""
         if color not in self.arrows:
             raise ValueError(f"Arrow color '{color}' not found")
@@ -125,7 +127,7 @@ class PictographData:
 
         return replace(self, arrows=new_arrows)
 
-    def update_prop(self, color: str, **kwargs) -> "PictographData":
+    def update_prop(self, color: str, **kwargs) -> PictographData:
         """Create a new pictograph with an updated prop."""
         if color not in self.props:
             raise ValueError(f"Prop color '{color}' not found")
@@ -139,7 +141,7 @@ class PictographData:
 
         return replace(self, props=new_props)
 
-    def update(self, **kwargs) -> "PictographData":
+    def update(self, **kwargs) -> PictographData:
         """Create a new pictograph with updated fields."""
         from dataclasses import replace
 
@@ -162,7 +164,7 @@ class PictographData:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "PictographData":
+    def from_dict(cls, data: dict[str, Any]) -> PictographData:
         """Create from dictionary."""
         grid_data = GridData.from_dict(data.get("grid_data", {}))
 
@@ -204,16 +206,14 @@ class PictographData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "PictographData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> PictographData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

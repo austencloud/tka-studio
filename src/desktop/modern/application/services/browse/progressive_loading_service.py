@@ -7,18 +7,21 @@ ensuring the UI remains responsive during heavy operations.
 Updated to work directly with SequenceData (no more SequenceRecord conversion).
 """
 
+from __future__ import annotations
+
 import logging
 from typing import Any
+
+from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from PyQt6.QtWidgets import QApplication
 
 from application.services.browse.dictionary_data_manager import (
     DictionaryDataManager,
 )
-from PyQt6.QtCore import QObject, QTimer, pyqtSignal
-from PyQt6.QtWidgets import QApplication
-
 from desktop.modern.domain.models.browse_errors import DataLoadError
 from desktop.modern.domain.models.browse_models import FilterType
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -225,39 +228,34 @@ class ProgressiveLoadingService(QObject):
                 return self.dictionary_manager.get_sequences_by_starting_letters(
                     letters
                 )
-            elif filter_value == "All Letters":
+            if filter_value == "All Letters":
                 return self.dictionary_manager.get_all_sequences()
-            else:
-                return self.dictionary_manager.get_sequences_by_starting_letter(
-                    filter_value
-                )
-        elif isinstance(filter_value, list):
+            return self.dictionary_manager.get_sequences_by_starting_letter(
+                filter_value
+            )
+        if isinstance(filter_value, list):
             return self.dictionary_manager.get_sequences_by_starting_letters(
                 filter_value
             )
-        else:
-            logger.warning(
-                f"⚠️ [PROGRESSIVE] Unexpected starting letter filter value: {filter_value}"
-            )
-            return []
+        logger.warning(
+            f"⚠️ [PROGRESSIVE] Unexpected starting letter filter value: {filter_value}"
+        )
+        return []
 
     def _apply_length_filter(self, filter_value) -> list[SequenceData]:
         """Apply length filter logic."""
         if isinstance(filter_value, str):
             if filter_value == "All":
                 return self.dictionary_manager.get_all_sequences()
-            else:
-                try:
-                    length_value = int(filter_value)
-                    logger.info(
-                        f"📏 [PROGRESSIVE] Converting length '{filter_value}' to {length_value}"
-                    )
-                    return self.dictionary_manager.get_sequences_by_length(length_value)
-                except ValueError:
-                    logger.warning(
-                        f"⚠️ [PROGRESSIVE] Invalid length value: {filter_value}"
-                    )
-                    return []
+            try:
+                length_value = int(filter_value)
+                logger.info(
+                    f"📏 [PROGRESSIVE] Converting length '{filter_value}' to {length_value}"
+                )
+                return self.dictionary_manager.get_sequences_by_length(length_value)
+            except ValueError:
+                logger.warning(f"⚠️ [PROGRESSIVE] Invalid length value: {filter_value}")
+                return []
         elif isinstance(filter_value, int):
             return self.dictionary_manager.get_sequences_by_length(filter_value)
         else:
@@ -270,23 +268,20 @@ class ProgressiveLoadingService(QObject):
         """Apply difficulty filter logic."""
         if filter_value == "All" or filter_value == "All Levels":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            logger.info(f"📊 [PROGRESSIVE] Filtering by difficulty: {filter_value}")
-            return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
+        logger.info(f"📊 [PROGRESSIVE] Filtering by difficulty: {filter_value}")
+        return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
 
     def _apply_author_filter(self, filter_value) -> list[SequenceData]:
         """Apply author filter logic."""
         if filter_value == "All Authors":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            return self.dictionary_manager.get_sequences_by_author(filter_value)
+        return self.dictionary_manager.get_sequences_by_author(filter_value)
 
     def _apply_grid_mode_filter(self, filter_value) -> list[SequenceData]:
         """Apply grid mode filter logic."""
         if filter_value == "All" or filter_value == "All Styles":
             return self.dictionary_manager.get_all_sequences()
-        else:
-            return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
+        return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
 
     def is_loading(self) -> bool:
         """Check if currently loading."""

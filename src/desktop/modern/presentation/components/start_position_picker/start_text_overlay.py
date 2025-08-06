@@ -6,6 +6,8 @@ This component replicates legacy's BeatStartTextItem functionality by adding
 and positioning.
 """
 
+from __future__ import annotations
+
 from PyQt6.QtCore import QPointF
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsTextItem
