@@ -2,36 +2,36 @@
   {
     "name": "PyQt6.QtWidgets",
     "members": [
-      "QWidget", "QApplication", "QMainWindow", "QVBoxLayout", "QHBoxLayout", 
-      "QGridLayout", "QFormLayout", "QStackedLayout", "QLabel", "QLineEdit", 
-      "QPushButton", "QCheckBox", "QRadioButton", "QComboBox", "QSpinBox", 
-      "QDoubleSpinBox", "QSlider", "QProgressBar", "QTextEdit", "QPlainTextEdit", 
-      "QListWidget", "QTreeWidget", "QTableWidget", "QTabWidget", "QGroupBox", 
-      "QFrame", "QScrollArea", "QSplitter", "QDialog", "QMessageBox", 
-      "QFileDialog", "QColorDialog", "QFontDialog", "QInputDialog", 
-      "QMenu", "QMenuBar", "QToolBar", "QStatusBar", "QAction", 
+      "QWidget", "QApplication", "QMainWindow", "QVBoxLayout", "QHBoxLayout",
+      "QGridLayout", "QFormLayout", "QStackedLayout", "QLabel", "QLineEdit",
+      "QPushButton", "QCheckBox", "QRadioButton", "QComboBox", "QSpinBox",
+      "QDoubleSpinBox", "QSlider", "QProgressBar", "QTextEdit", "QPlainTextEdit",
+      "QListWidget", "QTreeWidget", "QTableWidget", "QTabWidget", "QGroupBox",
+      "QFrame", "QScrollArea", "QSplitter", "QDialog", "QMessageBox",
+      "QFileDialog", "QColorDialog", "QFontDialog", "QInputDialog",
+      "QMenu", "QMenuBar", "QToolBar", "QStatusBar", "QAction",
       "QSpacerItem", "QSizePolicy", "QHeaderView"
     ]
   },
   {
-    "name": "PyQt6.QtCore", 
+    "name": "PyQt6.QtCore",
     "members": [
-      "Qt", "QObject", "QSize", "QRect", "QPoint", "QTimer", "QThread", 
-      "QEvent", "QEventLoop", "QCoreApplication", "QSettings", "QUrl", 
-      "QDir", "QFile", "QIODevice", "QTextStream", "QDataStream", 
-      "pyqtSignal", "pyqtSlot", "QPropertyAnimation", "QEasingCurve", 
-      "QVariantAnimation", "QAbstractAnimation", "QParallelAnimationGroup", 
+      "Qt", "QObject", "QSize", "QRect", "QPoint", "QTimer", "QThread",
+      "QEvent", "QEventLoop", "QCoreApplication", "QSettings", "QUrl",
+      "QDir", "QFile", "QIODevice", "QTextStream", "QDataStream",
+      "pyqtSignal", "pyqtSlot", "QPropertyAnimation", "QEasingCurve",
+      "QVariantAnimation", "QAbstractAnimation", "QParallelAnimationGroup",
       "QSequentialAnimationGroup", "QMutex", "QSemaphore", "QWaitCondition"
     ]
   },
   {
     "name": "PyQt6.QtGui",
     "members": [
-      "QFont", "QPixmap", "QIcon", "QPainter", "QColor", "QPalette", 
-      "QBrush", "QPen", "QLinearGradient", "QRadialGradient", "QConicalGradient", 
-      "QAction", "QKeySequence", "QShortcut", "QCursor", "QMovie", 
-      "QImage", "QBitmap", "QRegion", "QPainterPath", "QPolygon", 
-      "QTextCursor", "QTextDocument", "QTextFormat", "QSyntaxHighlighter", 
+      "QFont", "QPixmap", "QIcon", "QPainter", "QColor", "QPalette",
+      "QBrush", "QPen", "QLinearGradient", "QRadialGradient", "QConicalGradient",
+      "QAction", "QKeySequence", "QShortcut", "QCursor", "QMovie",
+      "QImage", "QBitmap", "QRegion", "QPainterPath", "QPolygon",
+      "QTextCursor", "QTextDocument", "QTextFormat", "QSyntaxHighlighter",
       "QValidator", "QIntValidator", "QDoubleValidator", "QRegularExpressionValidator"
     ]
   }

@@ -1,0 +1,105 @@
+/**
+ * Sequence Domain Model
+ * 
+ * Immutable data structure for complete kinetic sequences.
+ * Based on the modern desktop app's SequenceData but adapted for TypeScript.
+ */
+
+import type { BeatData } from './BeatData';
+
+export interface SequenceData {
+  readonly id: string;
+  readonly name: string;
+  readonly word: string;
+  readonly beats: readonly BeatData[];
+  readonly start_position?: BeatData;
+  readonly thumbnails: readonly string[];
+  readonly sequence_length?: number;
+  readonly author?: string;
+  readonly level?: number;
+  readonly date_added?: Date;
+  readonly grid_mode?: string;
+  readonly prop_type?: string;
+  readonly is_favorite: boolean;
+  readonly is_circular: boolean;
+  readonly starting_position?: string;
+  readonly difficulty_level?: string;
+  readonly tags: readonly string[];
+  readonly metadata: Record<string, any>;
+}
+
+export function createSequenceData(data: Partial<SequenceData> = {}): SequenceData {
+  return {
+    id: data.id ?? crypto.randomUUID(),
+    name: data.name ?? '',
+    word: data.word ?? '',
+    beats: data.beats ?? [],
+    start_position: data.start_position,
+    thumbnails: data.thumbnails ?? [],
+    sequence_length: data.sequence_length,
+    author: data.author,
+    level: data.level,
+    date_added: data.date_added,
+    grid_mode: data.grid_mode,
+    prop_type: data.prop_type,
+    is_favorite: data.is_favorite ?? false,
+    is_circular: data.is_circular ?? false,
+    starting_position: data.starting_position,
+    difficulty_level: data.difficulty_level,
+    tags: data.tags ?? [],
+    metadata: data.metadata ?? {},
+  };
+}
+
+export function updateSequenceData(sequence: SequenceData, updates: Partial<SequenceData>): SequenceData {
+  return {
+    ...sequence,
+    ...updates,
+  };
+}
+
+export function addBeatToSequence(sequence: SequenceData, beat: BeatData): SequenceData {
+  return updateSequenceData(sequence, {
+    beats: [...sequence.beats, beat],
+  });
+}
+
+export function removeBeatFromSequence(sequence: SequenceData, beatIndex: number): SequenceData {
+  if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
+    return sequence;
+  }
+  
+  const newBeats = sequence.beats.filter((_, index) => index !== beatIndex);
+  return updateSequenceData(sequence, {
+    beats: newBeats,
+  });
+}
+
+export function updateBeatInSequence(
+  sequence: SequenceData, 
+  beatIndex: number, 
+  beat: BeatData
+): SequenceData {
+  if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
+    return sequence;
+  }
+  
+  const newBeats = [...sequence.beats];
+  newBeats[beatIndex] = beat;
+  
+  return updateSequenceData(sequence, {
+    beats: newBeats,
+  });
+}
+
+export function getSequenceLength(sequence: SequenceData): number {
+  return sequence.beats.length;
+}
+
+export function isEmptySequence(sequence: SequenceData): boolean {
+  return sequence.beats.length === 0;
+}
+
+export function hasStartPosition(sequence: SequenceData): boolean {
+  return sequence.start_position != null;
+}

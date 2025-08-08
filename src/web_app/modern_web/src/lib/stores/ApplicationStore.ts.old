@@ -1,0 +1,391 @@
+/**
+ * Application Store - Global application state management
+ * 
+ * Coordinates global application state and provides centralized access
+ * to all stores and services through dependency injection.
+ */
+
+import type { ServiceContainer } from '@tka/shared/di/core/ServiceContainer';
+import type { 
+	ISettingsService,
+	IApplicationInitializationService,
+	AppSettings 
+} from '$services/interfaces';
+
+export class ApplicationStore {
+	// Application state
+	private _isInitialized = $state(false);
+	private _isInitializing = $state(false);
+	private _initializationError = $state<string | null>(null);
+	private _initializationProgress = $state(0);
+
+	// UI state
+	private _activeTab = $state<'construct' | 'generate' | 'browse' | 'learn'>('construct');
+	private _isFullScreen = $state(false);
+	private _showSettings = $state(false);
+	private _theme = $state<'light' | 'dark'>('dark');
+
+	// Performance tracking
+	private _performanceMetrics = $state({
+		initializationTime: 0,
+		lastRenderTime: 0,
+		memoryUsage: 0
+	});
+
+	constructor(
+		private container: ServiceContainer,
+		private settingsService: ISettingsService,
+		private initializationService: IApplicationInitializationService
+	) {
+		// Load initial settings
+		this.loadInitialSettings();
+	}
+
+	// ============================================================================
+	// REACTIVE GETTERS
+	// ============================================================================
+
+	get isInitialized() { 
+		return this._isInitialized; 
+	}
+
+	get isInitializing() { 
+		return this._isInitializing; 
+	}
+
+	get initializationError() { 
+		return this._initializationError; 
+	}
+
+	get initializationProgress() { 
+		return this._initializationProgress; 
+	}
+
+	get activeTab() { 
+		return this._activeTab; 
+	}
+
+	get isFullScreen() { 
+		return this._isFullScreen; 
+	}
+
+	get showSettings() { 
+		return this._showSettings; 
+	}
+
+	get theme() { 
+		return this._theme; 
+	}
+
+	get performanceMetrics() { 
+		return this._performanceMetrics; 
+	}
+
+	get currentSettings(): AppSettings {
+		return this.settingsService.currentSettings;
+	}
+
+	// Computed properties
+	get isReady(): boolean {
+		return this._isInitialized && !this._isInitializing && !this._initializationError;
+	}
+
+	get containerInfo() {
+		return {
+			id: this.container.containerId,
+			isDisposed: false, // TODO: Get from container
+		};
+	}
+
+	// ============================================================================
+	// INITIALIZATION
+	// ============================================================================
+
+	/**
+	 * Initialize the application
+	 */
+	async initialize(): Promise<void> {
+		if (this._isInitialized || this._isInitializing) {
+			return;
+		}
+
+		this._isInitializing = true;
+		this._initializationError = null;
+		this._initializationProgress = 0;
+
+		const startTime = performance.now();
+
+		try {
+			console.log('ApplicationStore: Starting initialization');
+
+			// Step 1: Initialize services
+			this._initializationProgress = 25;
+			await this.initializationService.initialize();
+
+			// Step 2: Load settings
+			this._initializationProgress = 50;
+			await this.settingsService.loadSettings();
+			this.applySettings();
+
+			// Step 3: Setup event listeners
+			this._initializationProgress = 75;
+			this.setupEventListeners();
+
+			// Step 4: Final setup
+			this._initializationProgress = 100;
+			await this.performFinalSetup();
+
+			// Track performance
+			const initializationTime = performance.now() - startTime;
+			this._performanceMetrics = {
+				...this._performanceMetrics,
+				initializationTime
+			};
+
+			this._isInitialized = true;
+			console.log(`ApplicationStore: Initialization complete (${initializationTime.toFixed(2)}ms)`);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+			this._initializationError = errorMessage;
+			console.error('ApplicationStore: Initialization failed:', error);
+			throw error;
+		} finally {
+			this._isInitializing = false;
+		}
+	}
+
+	/**
+	 * Load initial settings
+	 */
+	private async loadInitialSettings(): Promise<void> {
+		try {
+			await this.settingsService.loadSettings();
+			this.applySettings();
+		} catch (error) {
+			console.warn('Failed to load initial settings:', error);
+		}
+	}
+
+	/**
+	 * Apply settings to application state
+	 */
+	private applySettings(): void {
+		const settings = this.settingsService.currentSettings;
+		this._theme = settings.theme;
+		// Apply other settings as needed
+	}
+
+	/**
+	 * Setup event listeners
+	 */
+	private setupEventListeners(): void {
+		// Handle browser events
+		if (typeof window !== 'undefined') {
+			// Fullscreen change
+			document.addEventListener('fullscreenchange', () => {
+				this._isFullScreen = !!document.fullscreenElement;
+			});
+
+			// Performance monitoring
+			if ('memory' in performance) {
+				setInterval(() => {
+					this._performanceMetrics = {
+						...this._performanceMetrics,
+						memoryUsage: Math.round((performance as any).memory.usedJSHeapSize / 1048576)
+					};
+				}, 5000);
+			}
+
+			// Tab visibility
+			document.addEventListener('visibilitychange', () => {
+				if (document.hidden) {
+					console.log('ApplicationStore: App hidden, pausing non-critical operations');
+				} else {
+					console.log('ApplicationStore: App visible, resuming operations');
+				}
+			});
+		}
+	}
+
+	/**
+	 * Perform final setup
+	 */
+	private async performFinalSetup(): Promise<void> {
+		// Any final initialization steps
+		console.log('ApplicationStore: Performing final setup');
+	}
+
+	// ============================================================================
+	// TAB MANAGEMENT
+	// ============================================================================
+
+	/**
+	 * Switch to a different tab
+	 */
+	switchTab(tab: 'construct' | 'generate' | 'browse' | 'learn'): void {
+		console.log(`ApplicationStore: Switching to ${tab} tab`);
+		this._activeTab = tab;
+	}
+
+	/**
+	 * Check if a tab is active
+	 */
+	isTabActive(tab: string): boolean {
+		return this._activeTab === tab;
+	}
+
+	// ============================================================================
+	// UI STATE MANAGEMENT
+	// ============================================================================
+
+	/**
+	 * Toggle fullscreen mode
+	 */
+	async toggleFullScreen(): Promise<void> {
+		if (typeof document === 'undefined') return;
+
+		try {
+			if (document.fullscreenElement) {
+				await document.exitFullscreen();
+			} else {
+				await document.documentElement.requestFullscreen();
+			}
+		} catch (error) {
+			console.error('Failed to toggle fullscreen:', error);
+		}
+	}
+
+	/**
+	 * Show settings dialog
+	 */
+	showSettingsDialog(): void {
+		this._showSettings = true;
+	}
+
+	/**
+	 * Hide settings dialog
+	 */
+	hideSettingsDialog(): void {
+		this._showSettings = false;
+	}
+
+	/**
+	 * Toggle settings dialog
+	 */
+	toggleSettingsDialog(): void {
+		this._showSettings = !this._showSettings;
+	}
+
+	// ============================================================================
+	// SETTINGS MANAGEMENT
+	// ============================================================================
+
+	/**
+	 * Update a setting
+	 */
+	async updateSetting<K extends keyof AppSettings>(
+		key: K, 
+		value: AppSettings[K]
+	): Promise<void> {
+		try {
+			await this.settingsService.updateSetting(key, value);
+			this.applySettings();
+			console.log(`ApplicationStore: Setting ${key} updated`);
+		} catch (error) {
+			console.error(`Failed to update setting ${key}:`, error);
+			throw error;
+		}
+	}
+
+	/**
+	 * Reset settings to defaults
+	 */
+	async resetSettings(): Promise<void> {
+		try {
+			// TODO: Add reset method to settings service
+			console.log('ApplicationStore: Settings reset to defaults');
+		} catch (error) {
+			console.error('Failed to reset settings:', error);
+			throw error;
+		}
+	}
+
+	// ============================================================================
+	// ERROR HANDLING
+	// ============================================================================
+
+	/**
+	 * Clear initialization error
+	 */
+	clearInitializationError(): void {
+		this._initializationError = null;
+	}
+
+	/**
+	 * Handle global error
+	 */
+	handleGlobalError(error: Error, context?: string): void {
+		console.error(`ApplicationStore: Global error${context ? ` in ${context}` : ''}:`, error);
+		
+		// TODO: Add error reporting/logging
+		// TODO: Show user-friendly error messages
+	}
+
+	// ============================================================================
+	// PERFORMANCE MONITORING
+	// ============================================================================
+
+	/**
+	 * Track render performance
+	 */
+	trackRenderTime(componentName: string, renderTime: number): void {
+		this._performanceMetrics = {
+			...this._performanceMetrics,
+			lastRenderTime: renderTime
+		};
+
+		if (renderTime > 100) {
+			console.warn(`ApplicationStore: Slow render detected for ${componentName}: ${renderTime}ms`);
+		}
+	}
+
+	/**
+	 * Get performance summary
+	 */
+	getPerformanceSummary() {
+		return {
+			...this._performanceMetrics,
+			containerInfo: this.containerInfo,
+			isInitialized: this._isInitialized,
+			initializationTime: this._performanceMetrics.initializationTime
+		};
+	}
+
+	// ============================================================================
+	// UTILITY METHODS
+	// ============================================================================
+
+	/**
+	 * Get application state for debugging
+	 */
+	getState() {
+		return {
+			isInitialized: this._isInitialized,
+			isInitializing: this._isInitializing,
+			initializationError: this._initializationError,
+			activeTab: this._activeTab,
+			isFullScreen: this._isFullScreen,
+			showSettings: this._showSettings,
+			theme: this._theme,
+			performanceMetrics: this._performanceMetrics,
+		};
+	}
+
+	/**
+	 * Cleanup resources
+	 */
+	cleanup(): void {
+		console.log('ApplicationStore: Cleaning up resources');
+		// TODO: Cleanup event listeners, intervals, etc.
+	}
+}

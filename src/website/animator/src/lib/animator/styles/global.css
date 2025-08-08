@@ -1,0 +1,183 @@
+/* Global Mobile-First Reset */
+:global(html, body) {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+:global(body) {
+	font-family:
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		Roboto,
+		sans-serif;
+	line-height: 1.5;
+}
+
+:global(#svelte) {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+:global(*) {
+	box-sizing: border-box;
+}
+
+/* CSS Variables for Light and Dark Themes */
+:root {
+	/* Light theme (default) */
+	--color-background: #ffffff;
+	--color-surface: #f8f9fa;
+	--color-surface-elevated: #ffffff;
+	--color-surface-hover: #e9ecef;
+	--color-border: #e0e0e0;
+	--color-border-hover: #d0d0d0;
+	--color-text-primary: #333333;
+	--color-text-secondary: #666666;
+	--color-text: #333333; /* Alias for debug components */
+	--color-primary: #2196f3;
+	--color-primary-hover: #1976d2;
+	--color-primary-alpha: rgba(33, 150, 243, 0.2);
+	--color-primary-subtle: rgba(33, 150, 243, 0.1);
+	--color-success: #4caf50;
+	--color-error: #f44336;
+	--color-warning: #ff9800;
+
+	/* Grid colors for light theme */
+	--color-grid-point: #000000;
+	--color-grid-center: #000000;
+
+	/* Header gradients and shadows */
+	--header-gradient: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+	--header-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+	--fab-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	--fab-backdrop: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme='dark'] {
+	/* Dark theme */
+	--color-background: #1a1a1a;
+	--color-surface: #2a2a2a;
+	--color-surface-elevated: #333333;
+	--color-surface-hover: #3a3a3a;
+	--color-border: #404040;
+	--color-border-hover: #505050;
+	--color-text-primary: #f0f0f0;
+	--color-text-secondary: #b0b0b0;
+	--color-text: #f0f0f0; /* Alias for debug components */
+	--color-primary: #4dabf7;
+	--color-primary-hover: #339af0;
+	--color-primary-alpha: rgba(77, 171, 247, 0.2);
+	--color-primary-subtle: rgba(77, 171, 247, 0.1);
+	--color-success: #69db7c;
+	--color-error: #ff6b6b;
+	--color-warning: #ffd43b;
+
+	/* Grid colors for dark theme */
+	--color-grid-point: #ffffff;
+	--color-grid-center: #ffffff;
+
+	/* Header gradients and shadows for dark theme */
+	--header-gradient: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+	--header-shadow: 0 2px 8px rgba(77, 171, 247, 0.2);
+	--fab-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	--fab-backdrop: rgba(42, 42, 42, 0.9);
+}
+
+/* Common component styles */
+.animator-app {
+	height: 100vh;
+	height: 100dvh; /* Use dynamic viewport height for mobile */
+	display: flex;
+	flex-direction: column;
+	background: var(--color-background);
+	transition: background-color 0.3s ease;
+	overflow: hidden; /* Prevent body scroll on mobile */
+	position: relative;
+}
+
+/* Sidebar common styles */
+.sidebar-header {
+	padding: 1.5rem 1.5rem 1rem;
+	border-bottom: 1px solid var(--color-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.sidebar-header h2 {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--color-text-primary);
+}
+
+.sidebar-content {
+	flex: 1;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+/* Input toggle styles */
+.input-toggle {
+	display: flex;
+	gap: 0.25rem;
+	background: var(--color-background);
+	border-radius: 6px;
+	padding: 0.25rem;
+	border: 1px solid var(--color-border);
+	transition: all 0.3s ease;
+}
+
+.toggle-button {
+	padding: 0.5rem;
+	background: transparent;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 1.1rem;
+	transition: all 0.2s ease;
+	color: var(--color-text-secondary);
+	min-width: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.toggle-button:hover {
+	background: var(--color-surface-hover);
+}
+
+.toggle-button.active {
+	background: var(--color-primary);
+	color: white;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+	.sidebar-header {
+		padding: 0.75rem 1rem;
+		min-height: auto;
+	}
+
+	.sidebar-header h2 {
+		font-size: 1rem;
+	}
+
+	.sidebar-content {
+		flex: 1;
+		overflow: hidden;
+	}
+}

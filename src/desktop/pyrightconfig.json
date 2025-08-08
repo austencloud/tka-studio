@@ -39,21 +39,21 @@
     "../../launcher",
     "../../packages"
   ],
-  
+
   // Comprehensive diagnostic suppressions
   "reportMissingImports": "none",
   "reportMissingModuleSource": "none",
   "reportUnusedImport": "information",
-  "reportUnusedClass": "information", 
+  "reportUnusedClass": "information",
   "reportUnusedFunction": "information",
   "reportUnusedVariable": "information",
   "reportUnusedCoroutine": "information",
   "reportUnusedExpression": "none",
-  
+
   // Type checking suppressions
   "reportGeneralTypeIssues": "information",
   "reportOptionalSubscript": "none",
-  "reportOptionalMemberAccess": "none", 
+  "reportOptionalMemberAccess": "none",
   "reportOptionalCall": "none",
   "reportOptionalIterable": "none",
   "reportOptionalContextManager": "none",
@@ -62,7 +62,7 @@
   "reportPrivateImportUsage": "none",
   "reportUnknownParameterType": "none",
   "reportUnknownArgumentType": "none",
-  "reportUnknownLambdaType": "none", 
+  "reportUnknownLambdaType": "none",
   "reportUnknownVariableType": "none",
   "reportUnknownMemberType": "none",
   "reportMissingParameterType": "none",
@@ -76,11 +76,11 @@
   "reportAssertAlwaysTrue": "information",
   "reportSelfClsParameterName": "none",
   "reportImplicitStringConcatenation": "none",
-  
+
   // Function and method suppressions
   "reportFunctionMemberAccess": "none",
   "reportIncompatibleMethodOverride": "information",
-  "reportIncompatibleVariableOverride": "information", 
+  "reportIncompatibleVariableOverride": "information",
   "reportOverlappingOverload": "information",
   "reportPossiblyUnboundVariable": "information",
   "reportConstantRedefinition": "none",
@@ -88,26 +88,26 @@
   "reportIncompleteStub": "none",
   "reportUnsupportedDunderAll": "none",
   "reportUnusedCallResult": "none",
-  
+
   // PyQt/Qt specific suppressions
   "reportAttributeAccessIssue": "none",
   "reportArgumentType": "information",
-  "reportReturnType": "information", 
+  "reportReturnType": "information",
   "reportAssignmentType": "information",
   "reportOperatorIssue": "information",
   "reportIndexIssue": "information",
   "reportInvalidStringEscapeSequence": "information",
-  
+
   // Code style suppressions (handled by ruff)
   "reportWildcardImportFromLibrary": "none",
   "reportMissingTypeStubs": "none",
   "reportImportCycles": "information",
-  "reportPropertyTypeMismatch": "information", 
+  "reportPropertyTypeMismatch": "information",
   "reportDuplicateImport": "information",
   "reportUninitializedInstanceVariable": "none",
   "reportCallIssue": "information",
   "reportRedeclaration": "information",
-  
+
   // Additional PyQt specific suppressions
   "reportIncompatibleCallMethod": "none",
   "reportUntypedFunctionDecorator": "none",

@@ -166,25 +166,7 @@ coordination_service.handle_sequence_modified(sequence)
 
 ### How to Test:
 
-Since you're already in `/f/CODE/TKA/src/desktop`, just run:
-
-**Option 1 - Use the batch file (Windows):**
-```bash
-test_refactoring.bat
-```
-
-**Option 2 - Use the shell script (Git Bash/Linux):**
-```bash
-./test_refactoring.sh
-```
-
-**Option 3 - Try Python commands directly:**
-```bash
-# Try these in order until one works:
-py test_refactoring.py
-python3 test_refactoring.py
-python test_refactoring.py
-```
+Use your normal application run or the existing test suite tasks.
 
 ### Current Status:
 
