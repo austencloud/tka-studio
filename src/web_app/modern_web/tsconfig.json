@@ -17,7 +17,13 @@
 		"declarationMap": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"types": []
+		"types": ["svelte"],
+		"baseUrl": ".",
+		"paths": {
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$app/*": ["./.svelte-kit/types/app/*"]
+		}
 	},
 	"include": [
 		"src/**/*.d.ts",
