@@ -187,9 +187,10 @@
   "python.analysis.memory.keepLibraryLocalVariables": false,
 
   // === GIT PERFORMANCE ===
-  "git.autoRepositoryDetection": "subFolders",
+  "git.autoRepositoryDetection": true,
   "git.autofetch": false,
   "git.enableStatusBarSync": false,
+  "git.decorations.enabled": true,
 
   // === TESTING CONFIGURATION ===
   "python.testing.pytestArgs": [".", "-v", "--tb=short"],
