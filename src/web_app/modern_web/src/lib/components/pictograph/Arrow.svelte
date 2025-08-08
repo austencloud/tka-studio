@@ -23,36 +23,43 @@ Arrow Component - Renders SVG arrows with proper positioning
 
 	// Calculate position using positioning service
 	const position = $derived(() => {
-		if (!arrowData || !motionData) return { x: 475, y: 475 };
+		if (!arrowData) return { x: 475, y: 475 };
 
-		return arrowPositioningService.calculatePosition({
-			arrow_type: arrowData.color,
-			motion_type: motionData.motion_type,
-			location: arrowData.location,
-			grid_mode: gridMode,
-			turns: arrowData.turns,
-			letter: letter,
-			start_orientation: motionData.start_orientation,
-			end_orientation: motionData.end_orientation,
-		});
+		// Use arrowPositioningService if available, otherwise default positioning
+		try {
+			return arrowPositioningService.calculatePosition({
+				arrow_type: (arrowData.color as 'blue' | 'red') || 'blue',
+				motion_type: motionData?.motion_type || 'static',
+				location: arrowData.location || 'n',
+				grid_mode: gridMode,
+				turns: arrowData.turns || 0,
+				letter: letter,
+				start_orientation: motionData?.start_orientation || 0,
+				end_orientation: motionData?.end_orientation || 0,
+			});
+		} catch (e) {
+			console.warn('Arrow positioning failed, using default:', e);
+			return { x: 475, y: 475 };
+		}
 	});
 
 	// Get arrow SVG path based on motion type and properties
 	const arrowPath = $derived(() => {
-		if (!arrowData || !motionData) return '/images/arrows/static/still.svg';
+		if (!arrowData || !motionData) return '/images/arrows/still.svg';
 
-		const { motion_type, rotation_direction } = motionData;
+		const { motion_type, rotation_direction, turns } = motionData;
 		const baseDir = `/images/arrows/${motion_type}`;
 
-		// For pro/anti arrows, consider rotation direction
-		if (['pro', 'anti'].includes(motion_type)) {
+		// For motion types that have turn-based subdirectories (pro, anti, static)
+		if (['pro', 'anti', 'static'].includes(motion_type)) {
 			const isRadial = rotation_direction === 'clockwise';
 			const subDir = isRadial ? 'from_radial' : 'from_nonradial';
-			return `${baseDir}/${subDir}/${motion_type}.svg`;
+			const turnValue = (turns ?? 0).toFixed(1); // Ensure decimal format like "0.0"
+			return `${baseDir}/${subDir}/${motion_type}_${turnValue}.svg`;
 		}
 
-		// For other motion types
-		return `${baseDir}/${motion_type}.svg`;
+		// For simple motion types (dash, float)
+		return `${baseDir}.svg`;
 	});
 
 	// Apply color transformation
@@ -99,7 +106,7 @@ Arrow Component - Renders SVG arrows with proper positioning
 			x="-20"
 			y="-20"
 			class="arrow-svg {arrowData?.color}-arrow-svg"
-			on:error={() => {
+			onerror={() => {
 				error = 'Failed to load arrow SVG';
 				onError?.(`${arrowData?.color}-arrow`, error);
 			}}

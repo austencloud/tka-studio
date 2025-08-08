@@ -134,28 +134,36 @@ import {
 		const blueLocation = locations[index % locations.length];
 		const redLocation = locations[(index + 4) % locations.length]; // Offset for variety
 
-		// Create proper arrow data
+		console.log(`🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`);
+
+		// Create proper arrow data with location
 		const blueArrow = createArrowData({
 			arrow_type: ArrowType.BLUE,
 			color: 'blue',
-			turns: 0
+			turns: 0,
+			location: blueLocation
 		});
 
 		const redArrow = createArrowData({
 			arrow_type: ArrowType.RED,
 			color: 'red',
-			turns: 0
+			turns: 0,
+			location: redLocation
 		});
 
-		// Create proper prop data
+		console.log(`🏹 Created arrows - Blue: ${JSON.stringify({id: blueArrow.id, location: blueArrow.location})}, Red: ${JSON.stringify({id: redArrow.id, location: redArrow.location})}`);
+
+		// Create proper prop data with location
 		const blueProp = createPropData({
 			prop_type: PropType.STAFF,
-			color: 'blue'
+			color: 'blue',
+			location: blueLocation
 		});
 
 		const redProp = createPropData({
 			prop_type: PropType.STAFF,
-			color: 'red'
+			color: 'red',
+			location: redLocation
 		});
 
 		// Create proper motion data
@@ -179,7 +187,7 @@ import {
 			end_ori: Orientation.OUT
 		});
 
-		return createPictographData({
+		const pictograph = createPictographData({
 			id: `start-pos-${key}-${index}`,
 			grid_data: createGridData({ grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX }),
 			arrows: { blue: blueArrow, red: redArrow },
@@ -190,5 +198,9 @@ import {
 			is_blank: false,
 			is_mirrored: false
 		});
+
+		console.log(`🎨 Final pictograph arrows - Blue: ${JSON.stringify({id: pictograph.arrows?.blue?.id, location: pictograph.arrows?.blue?.location})}, Red: ${JSON.stringify({id: pictograph.arrows?.red?.id, location: pictograph.arrows?.red?.location})}`);
+
+		return pictograph;
 	}
 }

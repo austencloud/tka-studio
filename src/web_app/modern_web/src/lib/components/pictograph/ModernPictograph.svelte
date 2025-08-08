@@ -44,7 +44,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		beatNumber = null,
 		isStartPosition = false,
 		width = undefined,
-		height = undefined
+		height = undefined,
 	}: Props = $props();
 
 	// Determine if we should use responsive sizing (no width/height specified)
@@ -68,7 +68,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		const data = effectivePictographData();
 		if (!data) return null;
 
-		const gridMode = data.grid_data?.mode || 'diamond';
+		const gridMode = data.grid_data?.grid_mode || 'diamond';
 		return createGridData(gridMode);
 	});
 
@@ -127,7 +127,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 
 	const allComponentsLoaded = $derived(() => {
 		const required = requiredComponents();
-		return required.every(component => loadedComponents.has(component));
+		return required.every((component) => loadedComponents.has(component));
 	});
 
 	// Reactively update loading state
@@ -154,7 +154,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		if (debug) {
 			console.log(`Component loaded: ${componentName}`, {
 				loaded: loadedComponents.size,
-				required: requiredComponents().length
+				required: requiredComponents().length,
 			});
 		}
 	}
@@ -208,8 +208,10 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		onclick={handleSvgClick}
 		onkeydown={handleKeyDown}
 		role={onClick ? 'button' : 'img'}
-		tabindex={onClick ? 0 : -1}
-		aria-label={isStartPosition ? 'Start Position' : `Beat ${computedBeatNumber() || ''} Pictograph`}
+		{...onClick ? { tabindex: 0 } : {}}
+		aria-label={isStartPosition
+			? 'Start Position'
+			: `Beat ${computedBeatNumber() || ''} Pictograph`}
 	>
 		<!-- Background -->
 		<rect width="950" height="950" fill="white" />
@@ -217,7 +219,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		{#if hasValidData()}
 			<!-- Grid (always rendered first) -->
 			<Grid
-				gridMode={effectivePictographData()?.grid_data?.mode || 'diamond'}
+				gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
 				onLoaded={() => handleComponentLoaded('grid')}
 				onError={(error) => handleComponentError('grid', error)}
 				{debug}
@@ -227,12 +229,10 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 			{#each propsToRender() as { color, propData } (color)}
 				<Prop
 					{propData}
-					{color}
-					gridData={gridData()}
-					pictographData={effectivePictographData()}
+					motionData={effectivePictographData()?.motions?.[color]}
+					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
 					onLoaded={() => handleComponentLoaded(`${color}-prop`)}
 					onError={(error) => handleComponentError(`${color}-prop`, error)}
-					{debug}
 				/>
 			{/each}
 
@@ -240,22 +240,17 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 			{#each arrowsToRender() as { color, arrowData } (color)}
 				<Arrow
 					{arrowData}
-					{color}
-					gridData={gridData()}
-					pictographData={effectivePictographData()}
 					motionData={effectivePictographData()?.motions?.[color]}
+					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
+					letter={displayLetter() || undefined}
 					onLoaded={() => handleComponentLoaded(`${color}-arrow`)}
 					onError={(error) => handleComponentError(`${color}-arrow`, error)}
-					{debug}
 				/>
 			{/each}
 
 			<!-- Letter/Glyph overlay -->
 			{#if displayLetter()}
-				<TKAGlyph
-					letter={displayLetter()}
-					turnsTuple="(s, 0, 0)"
-				/>
+				<TKAGlyph letter={displayLetter()} turnsTuple="(s, 0, 0)" />
 			{/if}
 
 			<!-- Beat label -->
@@ -307,7 +302,16 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		<!-- Loading overlay -->
 		{#if isLoading && showLoadingIndicator}
 			<g class="loading-overlay">
-				<rect x="10" y="890" width="930" height="50" fill="rgba(59, 130, 246, 0.1)" stroke="#3b82f6" stroke-width="1" rx="4" />
+				<rect
+					x="10"
+					y="890"
+					width="930"
+					height="50"
+					fill="rgba(59, 130, 246, 0.1)"
+					stroke="#3b82f6"
+					stroke-width="1"
+					rx="4"
+				/>
 				<text x="475" y="910" text-anchor="middle" font-size="12" fill="#1d4ed8">
 					Loading... {loadingProgress()}%
 				</text>
@@ -333,7 +337,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 					Data: {effectivePictographData()?.id || 'none'}
 				</text>
 				<text x="20" y="850" font-size="11" fill="white" font-family="monospace">
-					Grid: {effectivePictographData()?.grid_data?.mode || 'none'}
+					Grid: {effectivePictographData()?.grid_data?.grid_mode || 'none'}
 				</text>
 				<text x="20" y="865" font-size="11" fill="white" font-family="monospace">
 					Letter: {displayLetter() || 'none'}
@@ -402,8 +406,14 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 	}
 
 	@keyframes pulse {
-		0% { opacity: 0.5; }
-		50% { opacity: 0.8; }
-		100% { opacity: 0.5; }
+		0% {
+			opacity: 0.5;
+		}
+		50% {
+			opacity: 0.8;
+		}
+		100% {
+			opacity: 0.5;
+		}
 	}
 </style>

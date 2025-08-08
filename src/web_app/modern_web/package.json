@@ -5,7 +5,7 @@
   "type": "module",
   "description": "TKA V2 Modern Web Application - Clean Svelte 5 + Runes Architecture",
   "scripts": {
-    "dev": "vite dev --host localhost --port 5174",
+    "dev": "vite dev --host localhost --port 5177",
     "dev:bash": "\"C:\\Program Files\\Git\\bin\\bash.exe\" -c \"npm run dev\"",
     "build": "vite build",
     "preview": "vite preview",
@@ -16,7 +16,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:simple": "echo 'Navigate to http://localhost:5174/simple-test to see the pictograph test'",
+    "test:simple": "echo 'Navigate to http://localhost:5177/simple-test to see the pictograph test'",
     "test:integration": "vitest run src/lib/components/workbench/__tests__",
     "test:all": "npm run test:pictograph && npm run test:integration && npm run test:e2e",
     "test:ai-analysis": "tsx scripts/ai-analysis.ts",

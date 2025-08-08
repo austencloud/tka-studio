@@ -274,38 +274,12 @@ async function fetchSvgAsDataUrl(url: string): Promise<string> {
 		return svgToBase64DataUrl(svgContent);
 	} catch (error) {
 		console.error(`Failed to fetch SVG as data URL: ${error}`);
-		// Return a fallback data URL for a simple grid
-		return createFallbackGridDataUrl();
+		// Let the error propagate - no fallbacks
+		throw error;
 	}
 }
 
-/**
- * Creates a fallback grid data URL
- *
- * @returns A data URL for a simple grid
- */
-function createFallbackGridDataUrl(): string {
-	// Create a simple grid SVG
-	const gridSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="950" height="950" viewBox="0 0 950 950">
-      <g stroke="#cccccc" stroke-width="1" fill="none">
-        <!-- Diamond grid -->
-        <path d="M475,100 L850,475 L475,850 L100,475 Z" />
-        <path d="M475,200 L750,475 L475,750 L200,475 Z" />
-        <path d="M475,300 L650,475 L475,650 L300,475 Z" />
-        <!-- Cross lines -->
-        <line x1="100" y1="475" x2="850" y2="475" />
-        <line x1="475" y1="100" x2="475" y2="850" />
-        <!-- Diagonal lines -->
-        <line x1="100" y1="100" x2="850" y2="850" />
-        <line x1="850" y1="100" x2="100" y2="850" />
-      </g>
-    </svg>
-  `;
 
-	// Convert to data URL
-	return svgToBase64DataUrl(gridSvg);
-}
 
 /**
  * Ensures that TKAGlyph components are fully rendered in the SVG

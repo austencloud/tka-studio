@@ -177,26 +177,7 @@ export class ArrowSvgLoader {
     return this.parseSvgToArrowData(svgContent, arrowParams);
   }
 
-  /**
-   * Get fallback SVG data when loading fails
-   */
-  public getFallbackSvgData(color?: string): ArrowSvgData {
-    let svgContent = this.getDefaultArrowSvg(color);
 
-    // Apply color transformation using SvgManager if color is provided
-    if (color) {
-      svgContent = this.svgManager.applyColor(svgContent, color as 'red' | 'blue');
-    }
-
-    // Create a dummy ArrowLoadParams for parsing
-    const arrowParams: ArrowLoadParams = {
-      motionType: 'fallback',
-      startOrientation: 'in',
-      turns: 0,
-      color: color || 'red'
-    };
-    return this.parseSvgToArrowData(svgContent, arrowParams);
-  }
 
   /**
    * Parse SVG content to ArrowSvgData format

@@ -1,0 +1,47 @@
+{
+  "name": "@tka/comparative-tests",
+  "version": "1.0.0",
+  "description": "Comparative test suite for start position picker validation between legacy and modern web applications",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test start-position-picker-comparison.test.ts",
+    "test:ui": "playwright test start-position-picker-comparison.test.ts --ui",
+    "test:debug": "playwright test start-position-picker-comparison.test.ts --debug",
+    "test:headed": "playwright test start-position-picker-comparison.test.ts --headed",
+    "test:report": "playwright test start-position-picker-comparison.test.ts --reporter=html",
+    "test:dev": "TEST_ENV=development playwright test start-position-picker-comparison.test.ts",
+    "test:ci": "TEST_ENV=ci playwright test start-position-picker-comparison.test.ts",
+    "test:prod": "TEST_ENV=production playwright test start-position-picker-comparison.test.ts",
+    "test:diamond": "playwright test start-position-picker-comparison.test.ts --grep \"DIAMOND\"",
+    "test:box": "playwright test start-position-picker-comparison.test.ts --grep \"BOX\"",
+    "test:alpha": "playwright test start-position-picker-comparison.test.ts --grep \"alpha\"",
+    "test:beta": "playwright test start-position-picker-comparison.test.ts --grep \"beta\"",
+    "test:gamma": "playwright test start-position-picker-comparison.test.ts --grep \"gamma\"",
+    "test:consistency": "playwright test start-position-picker-comparison.test.ts --grep \"Cross-Grid\"",
+    "clean": "rm -rf test-results playwright-report",
+    "setup": "npm install && playwright install",
+    "validate": "tsc --noEmit && npm run test:ci"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.54.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "testing",
+    "comparative",
+    "playwright",
+    "positioning",
+    "validation",
+    "tka"
+  ],
+  "author": "TKA Development Team",
+  "license": "UNLICENSED"
+}

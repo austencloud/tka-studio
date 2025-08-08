@@ -89,8 +89,10 @@ export default defineConfig({
       },
     },
   },
-  // Increase server timeout for dependency optimization
+  // Server configuration with dedicated port
   server: {
+    port: 5175,
+    host: "localhost",
     hmr: {
       timeout: 120000, // 120 seconds timeout for HMR
     },

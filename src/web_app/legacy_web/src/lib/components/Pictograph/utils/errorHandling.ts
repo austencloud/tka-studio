@@ -135,29 +135,19 @@ export function handleComponentError(
     dispatch: (event: string, detail?: any) => void;
     checkLoadingComplete: () => void;
   },
-  fallbackData: {
-    redPropData: PropData | null;
-    bluePropData: PropData | null;
-    redArrowData: ArrowData | null;
-    blueArrowData: ArrowData | null;
-  }
 ): void {
-  logger.warn(`Component error (${component})`, {
+  logger.error(`Component error (${component})`, {
     error: error instanceof Error ? error : new Error(String(error)),
     data: {
       component,
-      applyingFallback: true
+      errorOccurred: true
     }
   });
 
-  // Apply fallback positioning
-  applyFallbackPositioning(component, fallbackData);
+  // Do NOT apply fallback positioning - let the error be visible
+  // Do NOT mark component as loaded - it failed to load
 
-  // Mark component as loaded despite the error
-  context.loadedComponents.add(component);
-  context.componentsLoaded++;
-
-  logger.debug(`Applied fallback positioning for ${component}`, {
+  logger.debug(`Component failed to load: ${component}`, {
     data: {
       component,
       loadedComponents: Array.from(context.loadedComponents),

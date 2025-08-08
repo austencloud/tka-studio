@@ -42,8 +42,10 @@ export default defineConfig({
       },
     },
   },
-  // Increase server timeout for dependency optimization
+  // Server configuration - Website uses port 5173 (default)
   server: {
+    port: 5173,
+    host: "localhost",
     hmr: {
       timeout: 120000, // 120 seconds timeout for HMR
     },

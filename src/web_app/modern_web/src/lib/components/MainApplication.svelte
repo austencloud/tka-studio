@@ -1,10 +1,3 @@
-/**
- * Main Application - Root component for TKA V2 Modern
- * 
- * Coordinates application initialization and provides the main interface.
- * Uses pure Svelte 5 runes for state management.
- */
-
 <script lang="ts">
 	import { onMount, getContext } from 'svelte';
 	import type { ServiceContainer } from '@tka/shared/di/core/ServiceContainer';

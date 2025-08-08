@@ -1,11 +1,14 @@
 /**
  * Core Service Interfaces for TKA V2 Modern
- * 
+ *
  * These interfaces define the contract for all application services,
  * following the service-oriented architecture pattern from the desktop app.
  */
 
-import type { SequenceData, BeatData, MotionData } from '@tka/schemas';
+import type { BeatData } from '$domain/BeatData';
+import type { PictographData } from '$domain/PictographData';
+import type { MotionData } from '$domain/MotionData';
+import type { SequenceData } from '$domain/SequenceData';
 
 // ============================================================================
 // SEQUENCE SERVICES
@@ -41,15 +44,6 @@ export interface ISequenceDomainService {
 // ============================================================================
 // PICTOGRAPH SERVICES
 // ============================================================================
-
-export interface PictographData {
-	id: string;
-	gridData: any;
-	arrows: { blue: any; red: any };
-	props: { blue: any; red: any };
-	motions: { blue: MotionData | null; red: MotionData | null };
-	letter: string | null;
-}
 
 export interface IPictographService {
 	renderPictograph(data: PictographData): Promise<SVGElement>;
@@ -220,12 +214,12 @@ export interface IArrowPlacementDataService {
 		turns: number | string,
 		gridMode: GridMode
 	): Promise<{ x: number; y: number }>;
-	
+
 	getAvailablePlacementKeys(
 		motionType: MotionType,
 		gridMode: GridMode
 	): Promise<string[]>;
-	
+
 	isLoaded(): boolean;
 	loadPlacementData(): Promise<void>;
 }
@@ -236,7 +230,7 @@ export interface IArrowPlacementKeyService {
 		pictographData: PictographData,
 		availableKeys: string[]
 	): string;
-	
+
 	generateBasicKey(motionType: MotionType): string;
 }
 

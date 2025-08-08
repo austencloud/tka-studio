@@ -162,24 +162,7 @@
 </script>
 
 <div class="construct-tab" data-testid="construct-tab">
-	<!-- Header -->
-	<div class="construct-header">
-		<h1>Construct</h1>
-		<div class="construct-controls">
-			<div class="mode-indicator">
-				{isGenerateMode ? 'Generate Mode' : 'Construct Mode'}
-			</div>
-			<div class="grid-selector">
-				<label>
-					Grid:
-					<select bind:value={gridMode}>
-						<option value="diamond">Diamond</option>
-						<option value="box">Box</option>
-					</select>
-				</label>
-			</div>
-		</div>
-	</div>
+
 
 	<!-- Error display -->
 	{#if errorMessage}
@@ -211,28 +194,28 @@
 		<div class="right-panel">
 			<!-- Tab Navigation -->
 			<div class="tab-navigation">
-				<button 
+				<button
 					class="tab-btn"
 					class:active={activeRightPanel === 'start_position'}
 					onclick={() => handleViewTransition('start_position_picker')}
 				>
 					Start Position
 				</button>
-				<button 
+				<button
 					class="tab-btn"
 					class:active={activeRightPanel === 'option_picker'}
 					onclick={() => handleViewTransition('option_picker')}
 				>
 					Option Picker
 				</button>
-				<button 
+				<button
 					class="tab-btn"
 					class:active={activeRightPanel === 'graph_editor'}
 					onclick={() => handleViewTransition('graph_editor')}
 				>
 					Graph Editor
 				</button>
-				<button 
+				<button
 					class="tab-btn"
 					class:active={activeRightPanel === 'generate'}
 					onclick={() => handleViewTransition('generate')}
@@ -260,7 +243,7 @@
 						<p>Choose the next move for your sequence</p>
 					</div>
 					<div class="panel-content">
-						<OptionPicker 
+						<OptionPicker
 							{currentSequence}
 							difficulty="intermediate"
 							onOptionSelected={handleOptionSelected}
@@ -567,7 +550,7 @@
 		.construct-content {
 			flex-direction: column;
 		}
-		
+
 		.left-panel,
 		.right-panel {
 			flex: none;

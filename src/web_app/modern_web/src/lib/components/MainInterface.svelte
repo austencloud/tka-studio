@@ -1,10 +1,3 @@
-/**
- * Main Interface - Core application interface
- * 
- * The main interface that houses all application functionality.
- * Uses pure Svelte 5 runes for state management.
- */
-
 <script lang="ts">
 	// Import runes-based state
 	import { getActiveTab, isTabActive, switchTab } from '$stores/appState.svelte';
@@ -30,7 +23,7 @@
 
 <div class="main-interface">
 	<NavigationBar {tabs} {activeTab} onTabSelect={switchTab} />
-	
+
 	<main class="content-area">
 		{#if isTabActive('construct')}
 			<ConstructTab />
