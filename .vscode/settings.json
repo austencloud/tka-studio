@@ -193,6 +193,9 @@
   "git.decorations.enabled": true,
   "git.autorefresh": true,
   "git.refreshOnWindowFocus": true,
+  "git.scanRepositories": [],
+  "git.detectSubmodules": false,
+  "git.ignoredRepositories": [],
 
   // === TESTING CONFIGURATION ===
   "python.testing.pytestArgs": [".", "-v", "--tb=short"],
