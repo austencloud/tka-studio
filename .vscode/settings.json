@@ -191,6 +191,8 @@
   "git.autofetch": false,
   "git.enableStatusBarSync": false,
   "git.decorations.enabled": true,
+  "git.autorefresh": true,
+  "git.refreshOnWindowFocus": true,
 
   // === TESTING CONFIGURATION ===
   "python.testing.pytestArgs": [".", "-v", "--tb=short"],
