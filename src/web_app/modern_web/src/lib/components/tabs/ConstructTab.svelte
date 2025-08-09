@@ -5,6 +5,7 @@
 	import { getCurrentSequence, getSequences, getIsLoading } from '$stores/sequenceState.svelte';
 	import StartPositionPicker from '$components/construct/StartPositionPicker.svelte';
 	import OptionPicker from '$components/construct/OptionPicker.svelte';
+	import GeneratePanel from '$components/construct/GeneratePanel.svelte';
 	import Workbench from '$components/workbench/Workbench.svelte';
 	import type { BeatData, PictographData, SequenceData } from '$services/interfaces';
 	import { IConstructTabCoordinationService, ISequenceService } from '$services/interfaces';
@@ -221,15 +222,7 @@
 					{/if}
 
 				{:else if activeRightPanel === 'generate'}
-					<div class="panel-header">
-						<h2>Generate Sequences</h2>
-						<p>AI-powered sequence generation</p>
-					</div>
-					<div class="panel-content">
-						<div class="placeholder-content">
-							<p>Generate panel coming soon...</p>
-						</div>
-					</div>
+					<GeneratePanel />
 
 				{:else if activeRightPanel === 'edit'}
 					<div class="panel-header">

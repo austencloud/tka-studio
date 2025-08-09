@@ -1,76 +1,27 @@
-<!-- Generate Tab - Sequence generation interface -->
-<script lang="ts">
-	// Placeholder for generation functionality
-</script>
-
-<div class="generate-tab">
-	<div class="tab-header glass-surface">
-		<h1>Generate</h1>
-		<p>AI-powered sequence generation</p>
-	</div>
-
-	<div class="tab-content">
-		<div class="placeholder-content">
-			<h2>✨ Generate Tab</h2>
-			<p>Intelligent sequence generation will be implemented here.</p>
-			<p class="coming-soon">🚧 Coming Soon: Motion Generation, Pattern Recognition, AI Assistance</p>
-		</div>
-	</div>
+<!-- Placeholder Generate Tab (DEPRECATED) -->
+<!-- 
+This file has been moved to the Construct tab's right panel.
+The Generate functionality is now part of the Construct tab as it should be.
+See: src/lib/components/construct/GeneratePanel.svelte
+-->
+<div class="deprecated-notice">
+	<h2>⚠️ Moved</h2>
+	<p>Generate functionality has been moved to the Construct tab's right panel.</p>
 </div>
 
 <style>
-	.generate-tab {
+	.deprecated-notice {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
-		padding: var(--spacing-lg);
-		gap: var(--spacing-lg);
-	}
-
-	.tab-header {
-		padding: var(--spacing-lg);
-		text-align: center;
-	}
-
-	.tab-header h1 {
-		font-size: var(--font-size-2xl);
-		margin-bottom: var(--spacing-sm);
-		color: var(--foreground);
-	}
-
-	.tab-header p {
-		color: var(--muted-foreground);
-	}
-
-	.tab-content {
-		flex: 1;
-		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.placeholder-content {
+		height: 100%;
 		text-align: center;
-		max-width: 600px;
-	}
-
-	.placeholder-content h2 {
-		font-size: var(--font-size-xl);
-		margin-bottom: var(--spacing-md);
-		color: var(--foreground);
-	}
-
-	.placeholder-content p {
 		color: var(--muted-foreground);
-		margin-bottom: var(--spacing-lg);
 	}
 
-	.coming-soon {
-		background: rgba(255, 193, 7, 0.1);
-		border: 1px solid rgba(255, 193, 7, 0.3);
-		color: #ffc107;
-		padding: var(--spacing-md);
-		border-radius: 8px;
-		margin-top: var(--spacing-lg);
+	.deprecated-notice h2 {
+		color: var(--destructive);
+		margin-bottom: var(--spacing-md);
 	}
 </style>

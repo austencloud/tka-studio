@@ -127,15 +127,19 @@
 						break;
 					case '2':
 						event.preventDefault();
-						switchTab('generate');
+						switchTab('browse');
 						break;
 					case '3':
 						event.preventDefault();
-						switchTab('browse');
+						switchTab('write');
 						break;
 					case '4':
 						event.preventDefault();
 						switchTab('learn');
+						break;
+					case '5':
+						event.preventDefault();
+						switchTab('sequence_card');
 						break;
 				}
 			}
