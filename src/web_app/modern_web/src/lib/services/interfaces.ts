@@ -242,14 +242,6 @@ export interface IApplicationInitializationService {
 	initialize(): Promise<void>;
 }
 
-export interface AppSettings {
-	theme: 'light' | 'dark';
-	gridMode: 'diamond' | 'box';
-	showBeatNumbers: boolean;
-	autoSave: boolean;
-	exportQuality: 'low' | 'medium' | 'high';
-}
-
 export interface ISettingsService {
 	currentSettings: AppSettings;
 	updateSetting<K extends keyof AppSettings>(key: K, value: AppSettings[K]): Promise<void>;
@@ -357,6 +349,7 @@ export interface AppSettings {
 	propType?: string;
 	backupFrequency?: string;
 	enableFades?: boolean;
+	animationsEnabled?: boolean; // Simple animation control
 	growSequence?: boolean;
 	numBeats?: number;
 	beatLayout?: string;

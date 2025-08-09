@@ -85,38 +85,19 @@
         throw new Error("No prop data available");
       }
 
-      // Wait for SVG preload to complete if it's still running
-      if (typeof window !== "undefined" && !window.svgPreloadComplete) {
-        await new Promise((resolve) => {
-          if (window.svgPreloadComplete) {
-            resolve(void 0);
-            return;
-          }
+      // NO WAITING! Load immediately - cache-first approach
+      console.log("🎭 Loading prop SVG immediately (cache-optimized)");
 
-          const checkPreload = () => {
-            if (window.svgPreloadComplete) {
-              resolve(void 0);
-            } else {
-              setTimeout(checkPreload, 50);
-            }
-          };
-
-          // Listen for preload completion event
-          window.addEventListener("svgsPreloaded", () => resolve(void 0), {
-            once: true,
-          });
-
-          // Also poll as backup
-          setTimeout(checkPreload, 50);
-        });
-      }
-
+      // Reduced timeout since we're using cache-first loading
       loadTimeout = setTimeout(() => {
         if (!isLoaded) {
+          console.warn(
+            "Prop loading timed out after 2000ms - this indicates a cache miss or network issue"
+          );
           isLoaded = true;
           dispatch("loaded", { timeout: true });
         }
-      }, 5000); // Increased timeout like Arrow component
+      }, 2000); // Reduced timeout for cache-optimized loading
 
       const svgText = await svgManager.getPropSvg(
         effectivePropData.propType,

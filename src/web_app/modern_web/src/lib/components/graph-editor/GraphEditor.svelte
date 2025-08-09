@@ -4,14 +4,14 @@
 	import ModernPictograph from '$components/pictograph/ModernPictograph.svelte';
 	import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 	import type { BeatData, SequenceData } from '$services/interfaces';
-	import { getCurrentSequence, getSelectedBeatData, getSelectedBeatIndex } from '$stores/sequenceState.svelte';
+	import {
+		getCurrentSequence,
+		getSelectedBeatData,
+		getSelectedBeatIndex,
+	} from '$stores/sequenceState.svelte';
 
 	// Props - optional external data
-	const { 
-		onBeatModified,
-		onArrowSelected,
-		onVisibilityChanged 
-	} = $props<{
+	const { onBeatModified, onArrowSelected, onVisibilityChanged } = $props<{
 		onBeatModified?: (beatIndex: number, beatData: BeatData) => void;
 		onArrowSelected?: (arrowData: any) => void;
 		onVisibilityChanged?: (isVisible: boolean) => void;
@@ -23,8 +23,8 @@
 	let selectedBeatData = $derived(getSelectedBeatData());
 
 	// Component references
-	let modernPictograph: ModernPictograph;
-	let adjustmentPanel: MainAdjustmentPanel;
+	let modernPictograph = $state<ModernPictograph>();
+	let adjustmentPanel = $state<MainAdjustmentPanel>();
 
 	// Internal state
 	let errorMessage = $state<string | null>(null);
@@ -46,7 +46,7 @@
 			const orientationData = {
 				color,
 				orientation,
-				type: 'orientation_change'
+				type: 'orientation_change',
 			};
 			onArrowSelected?.(orientationData);
 			console.log(`Graph Editor: ${color} orientation changed to ${orientation}`);
@@ -68,7 +68,7 @@
 			const turnData = {
 				color,
 				turn_amount: turnAmount,
-				type: 'turn_change'
+				type: 'turn_change',
 			};
 			onArrowSelected?.(turnData);
 			console.log(`Graph Editor: ${color} turn amount changed to ${turnAmount}`);
@@ -83,7 +83,7 @@
 		if (selectedBeatIndex !== null && selectedBeatData) {
 			// ModernPictograph updates reactively via props
 			// No manual update needed
-			
+
 			// Update adjustment panel
 			if (adjustmentPanel) {
 				adjustmentPanel.setBeatData(selectedBeatIndex, selectedBeatData);
@@ -97,7 +97,7 @@
 			const timeout = setTimeout(() => {
 				errorMessage = null;
 			}, 5000);
-			
+
 			return () => clearTimeout(timeout);
 		}
 	});
@@ -105,22 +105,19 @@
 	onMount(() => {
 		console.log('Graph Editor mounted');
 		onVisibilityChanged?.(true);
-		
+
 		return () => {
 			onVisibilityChanged?.(false);
 		};
 	});
 </script>
 
-<div 
-	class="graph-editor"
-	data-testid="graph-editor"
->
+<div class="graph-editor" data-testid="graph-editor">
 	<!-- Error display -->
 	{#if errorMessage}
 		<div class="error-banner">
 			<span>⚠️ {errorMessage}</span>
-			<button onclick={() => errorMessage = null}>×</button>
+			<button onclick={() => (errorMessage = null)}>×</button>
 		</div>
 	{/if}
 
@@ -315,11 +312,11 @@
 			padding: var(--spacing-sm);
 			gap: var(--spacing-sm);
 		}
-		
+
 		.pictograph-section {
 			flex: 55;
 		}
-		
+
 		.adjustment-section {
 			flex: 45;
 		}
@@ -344,7 +341,7 @@
 		.graph-content {
 			flex-direction: column;
 		}
-		
+
 		.pictograph-section,
 		.adjustment-section {
 			flex: none;

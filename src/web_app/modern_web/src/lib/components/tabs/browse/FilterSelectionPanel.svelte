@@ -135,12 +135,7 @@
 </script>
 
 <div class="filter-selection-panel">
-	<!-- Main container with centering -->
 	<div class="main-container">
-		<!-- Add flexible space on left -->
-		<div class="flex-spacer"></div>
-
-		<!-- Centered content container with constrained width -->
 		<div class="content-container">
 			<!-- Header Section (fixed height) -->
 			<div class="header-section">
@@ -177,9 +172,6 @@
 				{/each}
 			</div>
 		</div>
-
-		<!-- Add flexible space on right -->
-		<div class="flex-spacer"></div>
 	</div>
 </div>
 
@@ -192,20 +184,17 @@
 	}
 
 	/* Main container with centering */
+	/* Main container takes full width */
 	.main-container {
 		display: flex;
 		height: 100%;
 		align-items: stretch;
+		width: 100%;
 	}
 
-	.flex-spacer {
-		flex: 1;
-	}
-
-	/* Centered content container with constrained width */
+	/* Content container takes full available width */
 	.content-container {
-		max-width: 600px;
-		min-width: 500px;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		height: 100%;

@@ -77,19 +77,43 @@ export class QuickSvgPreloader {
    * Get SVG from cache or fetch immediately
    */
   static async getSvg(path: string): Promise<string> {
-    // Return from cache if available
+    // FIRST: Check the global preload cache (highest priority)
+    if (typeof window !== 'undefined' && window.svgCache && window.svgCache.has(path)) {
+      const cachedSvg = window.svgCache.get(path);
+      if (cachedSvg) {
+        console.log(`✅ Using global preload cache for: ${path}`);
+        // Also store in our local cache for consistency
+        this.cache.set(path, cachedSvg);
+        return cachedSvg;
+      }
+    }
+
+    // SECOND: Check our internal cache
     if (this.cache.has(path)) {
+      console.log(`✅ Using QuickSvgPreloader cache for: ${path}`);
       return this.cache.get(path)!;
     }
 
-    // Fetch immediately for non-cached SVGs
+    // LAST RESORT: Fetch immediately (should be rare with proper preloading)
+    console.log(`⚠️ Cache miss, fetching: ${path}`);
     try {
-      const response = await fetch(path);
+      const response = await fetch(path, {
+        headers: {
+          'Cache-Control': 'max-age=31536000' // Aggressive browser caching
+        }
+      });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const svgContent = await response.text();
+
+      // Store in both caches
       this.cache.set(path, svgContent);
+      if (typeof window !== 'undefined') {
+        if (!window.svgCache) window.svgCache = new Map();
+        window.svgCache.set(path, svgContent);
+      }
+
       return svgContent;
     } catch (error) {
       throw new Error(`Failed to load SVG from ${path}: ${error}`);

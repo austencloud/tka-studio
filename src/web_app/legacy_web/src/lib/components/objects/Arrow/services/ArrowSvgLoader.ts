@@ -75,14 +75,26 @@ export class ArrowSvgLoader {
   }
 
   /**
-   * Load SVG content from a path with optimized fetching
+   * Load SVG content from a path with cache-first optimization
    */
   private async loadSvgFromPath(path: string): Promise<string> {
     try {
-      // Use optimized fetch without timeout for local development
+      // FIRST: Check the global preload cache - this should be instant
+      if (typeof window !== 'undefined' && window.svgCache && window.svgCache.has(path)) {
+        const cachedSvg = window.svgCache.get(path);
+        if (cachedSvg) {
+          console.log(`✅ Using preloaded cache for: ${path}`);
+          return cachedSvg;
+        }
+      }
+
+      console.log(`⚠️ Cache miss, fetching: ${path}`);
+
+      // FALLBACK: Fetch if not in cache (should be rare with proper preloading)
       const response = await fetch(path, {
         headers: {
-          'Accept': 'image/svg+xml,text/plain,*/*'
+          'Accept': 'image/svg+xml,text/plain,*/*',
+          'Cache-Control': 'max-age=31536000' // Aggressive browser caching
         }
       });
 
@@ -90,7 +102,15 @@ export class ArrowSvgLoader {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return await response.text();
+      const svgContent = await response.text();
+
+      // Store in global cache for future use
+      if (typeof window !== 'undefined') {
+        if (!window.svgCache) window.svgCache = new Map();
+        window.svgCache.set(path, svgContent);
+      }
+
+      return svgContent;
     } catch (error) {
       throw new Error(`Failed to load SVG from ${path}: ${error}`);
     }
