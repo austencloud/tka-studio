@@ -2,7 +2,12 @@
 <script lang="ts">
 	// Import runes-based state and components
 	import { onMount } from 'svelte';
-	import { getCurrentSequence, getSequences, getIsLoading } from '$stores/sequenceState.svelte';
+	import {
+		getCurrentSequence,
+		getSequences,
+		getIsLoading,
+		state as sequenceState,
+	} from '$stores/sequenceState.svelte';
 	import StartPositionPicker from '$components/construct/StartPositionPicker.svelte';
 	import OptionPicker from '$components/construct/OptionPicker.svelte';
 	import GeneratePanel from '$components/construct/GeneratePanel.svelte';
@@ -12,6 +17,16 @@
 	import type { BeatData, PictographData, SequenceData } from '$services/interfaces';
 	import { IConstructTabCoordinationService, ISequenceService } from '$services/interfaces';
 	import { resolve } from '$services/bootstrap';
+
+	// Import fade transitions for sub-tabs
+	import {
+		fluidTransition,
+		transitionToSubTab,
+		completeSubTabTransition,
+		isSubTabTransitioning,
+		getSubTabTransition,
+		type ConstructSubTabId,
+	} from '$services/ui/animation';
 
 	// Props using runes
 	const { isGenerateMode = false } = $props<{ isGenerateMode?: boolean }>();
@@ -25,12 +40,31 @@
 	let gridMode = $state<'diamond' | 'box'>('diamond');
 	let isTransitioning = $state(false);
 	let errorMessage = $state<string | null>(null);
+	let isSubTabTransitionActive = $state(false);
+	let currentSubTabTransition = $state<string | null>(null);
 
 	// Derived state: automatically determine what to show in Build tab
-	let shouldShowStartPositionPicker = $derived(() => {
-		const sequence = getCurrentSequence();
-		// Show start position picker if no sequence or no beats
-		return !sequence || !sequence.beats || sequence.beats.length === 0;
+	// Use a reactive variable instead of $derived to fix Svelte 5 reactivity issues
+	let shouldShowStartPositionPicker = $state(true);
+
+	// Use $effect to watch for sequence state changes and update the reactive variable
+	$effect(() => {
+		const sequence = sequenceState.currentSequence;
+		const shouldShow = !sequence || !sequence.beats || sequence.beats.length === 0;
+
+		console.log('🎯 ConstructTab shouldShowStartPositionPicker effect triggered:', {
+			hasSequence: !!sequence,
+			sequenceId: sequence?.id,
+			hasBeats: !!sequence?.beats,
+			beatCount: sequence?.beats?.length || 0,
+			shouldShow: shouldShow,
+			currentValue: shouldShowStartPositionPicker,
+		});
+
+		// Update the reactive variable
+		shouldShowStartPositionPicker = shouldShow;
+
+		console.log('🎯 Updated shouldShowStartPositionPicker to:', shouldShowStartPositionPicker);
 	});
 
 	// Reactive current sequence for template
@@ -84,7 +118,7 @@
 			// Create beat data from option
 			const beatData: BeatData = {
 				beat: getCurrentSequence()?.beats.length || 1,
-				pictograph_data: option
+				pictograph_data: option,
 			};
 
 			// Use coordination service to handle beat addition
@@ -104,11 +138,57 @@
 		}
 	}
 
-	// Handle main tab transitions
-	function handleMainTabTransition(targetTab: 'build' | 'generate' | 'edit' | 'export') {
-		activeRightPanel = targetTab;
+	// Handle main tab transitions with fade
+	async function handleMainTabTransition(targetTab: 'build' | 'generate' | 'edit' | 'export') {
+		const currentTab = activeRightPanel;
+
+		if (currentTab === targetTab) {
+			return; // Already on this tab
+		}
+
+		try {
+			// Start sub-tab transition
+			const transitionId = await transitionToSubTab(
+				currentTab as ConstructSubTabId,
+				targetTab as ConstructSubTabId
+			);
+
+			if (transitionId) {
+				isSubTabTransitionActive = true;
+				currentSubTabTransition = transitionId;
+
+				// Update active panel for reactive state
+				activeRightPanel = targetTab;
+
+				// Complete transition after brief delay
+				setTimeout(() => {
+					completeSubTabTransition(transitionId, currentTab, targetTab);
+					isSubTabTransitionActive = false;
+					currentSubTabTransition = null;
+				}, 50);
+
+				console.log(`🎭 Sub-tab transition: ${currentTab} → ${targetTab}`);
+			} else {
+				// Fallback to immediate switch
+				activeRightPanel = targetTab;
+			}
+		} catch (error) {
+			console.warn('Sub-tab transition failed, falling back to immediate switch:', error);
+			activeRightPanel = targetTab;
+		}
 		// Build tab content automatically determined by shouldShowStartPositionPicker
 	}
+
+	// Sub-tab transition functions - direct transition functions
+	const subTabInTransition = (node: Element) => ({
+		duration: 250,
+		css: (t: number) => `opacity: ${t}`,
+	});
+
+	const subTabOutTransition = (node: Element) => ({
+		duration: 200,
+		css: (t: number) => `opacity: ${1 - t}`,
+	});
 
 	// Graph Editor event handlers
 	function handleBeatModified(beatIndex: number, beatData: BeatData) {
@@ -152,7 +232,9 @@
 		if (type === 'current') {
 			console.log('Exporting current sequence:', config.sequence?.name);
 			// TODO: Implement actual export service call
-			alert(`Exporting sequence "${config.sequence?.name || 'Untitled'}" with ${config.sequence?.beats?.length || 0} beats`);
+			alert(
+				`Exporting sequence "${config.sequence?.name || 'Untitled'}" with ${config.sequence?.beats?.length || 0} beats`
+			);
 		} else if (type === 'all') {
 			console.log('Exporting all sequences');
 			// TODO: Implement actual export all service call
@@ -176,8 +258,8 @@
 							default:
 								console.log(`ConstructTab received event: ${eventType}`, data);
 						}
-					}
-				}
+					},
+				},
 			});
 		}
 	});
@@ -188,7 +270,7 @@
 	{#if errorMessage}
 		<div class="error-banner">
 			<p>❌ {errorMessage}</p>
-			<button onclick={() => errorMessage = null}>Dismiss</button>
+			<button onclick={() => (errorMessage = null)}>Dismiss</button>
 		</div>
 	{/if}
 
@@ -244,57 +326,82 @@
 				</button>
 			</div>
 
-			<!-- Tab Content -->
+			<!-- Tab Content with Fade Transitions -->
 			<div class="tab-content">
 				{#if activeRightPanel === 'build'}
-					<!-- Build Tab: Automatically shows Start Position OR Option Picker based on sequence state -->
-					{#if shouldShowStartPositionPicker}
-						<div class="panel-header">
-							<h3>Choose Start Position</h3>
-							<p>Select a starting position for your sequence</p>
-						</div>
-						<div class="panel-content">
-							<StartPositionPicker
-								{gridMode}
-								onStartPositionSelected={handleStartPositionSelected}
-							/>
-						</div>
-					{:else}
-						<div class="panel-header">
-							<h3>Build Your Sequence</h3>
-							<p>Choose the next move for your sequence</p>
-						</div>
-						<div class="panel-content">
-							<OptionPicker
-								{currentSequence}
-								difficulty="intermediate"
-								onOptionSelected={handleOptionSelected}
-							/>
-						</div>
-					{/if}
-
-				{:else if activeRightPanel === 'generate'}
-					<GeneratePanel />
-
-				{:else if activeRightPanel === 'edit'}
-					<div class="panel-header">
-						<h2>Graph Editor</h2>
-						<p>Advanced sequence editing tools</p>
+					<div
+						class="sub-tab-content"
+						data-sub-tab="build"
+						in:subTabInTransition
+						out:subTabOutTransition
+					>
+						<!-- Build Tab: Automatically shows Start Position OR Option Picker based on sequence state -->
+						{#if shouldShowStartPositionPicker}
+							<div class="panel-header">
+								<h3>Choose Start Position</h3>
+								<p>Select a starting position for your sequence</p>
+							</div>
+							<div class="panel-content">
+								<StartPositionPicker
+									{gridMode}
+									onStartPositionSelected={handleStartPositionSelected}
+								/>
+							</div>
+						{:else}
+							<div class="panel-header">
+								<h3>Build Your Sequence</h3>
+								<p>Choose the next move for your sequence</p>
+							</div>
+							<div class="panel-content">
+								<OptionPicker
+									{currentSequence}
+									difficulty="intermediate"
+									onOptionSelected={handleOptionSelected}
+								/>
+							</div>
+						{/if}
 					</div>
-					<div class="panel-content graph-editor-content">
-						<GraphEditor
-							onBeatModified={handleBeatModified}
-							onArrowSelected={handleArrowSelected}
-							onVisibilityChanged={handleGraphEditorVisibilityChanged}
+				{:else if activeRightPanel === 'generate'}
+					<div class="sub-tab-content" data-sub-tab="generate">
+						<GeneratePanel />
+					</div>
+				{:else if activeRightPanel === 'edit'}
+					<div
+						class="sub-tab-content"
+						data-sub-tab="edit"
+						in:subTabInTransition
+						out:subTabOutTransition
+					>
+						<div class="panel-header">
+							<h2>Graph Editor</h2>
+							<p>Advanced sequence editing tools</p>
+						</div>
+						<div class="panel-content graph-editor-content">
+							<GraphEditor
+								onBeatModified={handleBeatModified}
+								onArrowSelected={handleArrowSelected}
+								onVisibilityChanged={handleGraphEditorVisibilityChanged}
+							/>
+						</div>
+					</div>
+				{:else if activeRightPanel === 'export'}
+					<div
+						class="sub-tab-content"
+						data-sub-tab="export"
+						in:subTabInTransition
+						out:subTabOutTransition
+					>
+						<ExportPanel
+							on:settingChanged={handleExportSettingChanged}
+							on:previewUpdateRequested={handlePreviewUpdateRequested}
+							on:exportRequested={handleExportRequested}
 						/>
 					</div>
+				{/if}
 
-				{:else if activeRightPanel === 'export'}
-					<ExportPanel
-						on:settingChanged={handleExportSettingChanged}
-						on:previewUpdateRequested={handlePreviewUpdateRequested}
-						on:exportRequested={handleExportRequested}
-					/>
+				<!-- Debug sub-tab transition state -->
+				{#if isSubTabTransitionActive}
+					<div class="sub-tab-transition-debug">🎨 Sub-tab transitioning...</div>
 				{/if}
 			</div>
 		</div>
@@ -321,13 +428,13 @@
 
 	.error-banner {
 		flex-shrink: 0;
-		background: var(--destructive)/10;
+		background: var(--destructive) / 10;
 		color: var(--destructive);
 		padding: var(--spacing-md) var(--spacing-lg);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid var(--destructive)/20;
+		border-bottom: 1px solid var(--destructive) / 20;
 	}
 
 	.error-banner p {
@@ -359,9 +466,12 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		background: var(--background);
-		border: 1px solid var(--border);
+		/* Transparent background to show beautiful background without blur */
+		background: rgba(255, 255, 255, 0.05);
+		/* backdrop-filter: blur(20px); - REMOVED to show background */
+		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: var(--border-radius);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
 	}
 
@@ -370,9 +480,12 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		background: var(--background);
-		border: 1px solid var(--border);
+		/* Transparent background to show beautiful background without blur */
+		background: rgba(255, 255, 255, 0.05);
+		/* backdrop-filter: blur(20px); - REMOVED to show background */
+		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: var(--border-radius);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
 	}
 
@@ -380,7 +493,7 @@
 	.panel-header {
 		flex-shrink: 0;
 		padding: var(--spacing-lg);
-		background: var(--muted)/30;
+		background: var(--muted) / 30;
 		border-bottom: 1px solid var(--border);
 		text-align: center;
 	}
@@ -439,7 +552,7 @@
 	.main-tab-navigation {
 		flex-shrink: 0;
 		display: flex;
-		background: var(--muted)/20;
+		background: var(--muted) / 20;
 		border-bottom: 1px solid var(--border);
 	}
 
@@ -457,7 +570,7 @@
 	}
 
 	.main-tab-btn:hover {
-		background: var(--muted)/30;
+		background: var(--muted) / 30;
 		color: var(--foreground);
 	}
 
@@ -473,6 +586,34 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
+		position: relative;
+	}
+
+	/* Sub-tab content styling for transitions */
+	.sub-tab-content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		position: relative;
+		height: 100%;
+		width: 100%;
+	}
+
+	/* Debug sub-tab transition indicator */
+	.sub-tab-transition-debug {
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		background: rgba(138, 43, 226, 0.9);
+		color: white;
+		padding: 6px 12px;
+		border-radius: 15px;
+		font-size: 12px;
+		font-weight: 600;
+		z-index: 999;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		pointer-events: none;
 	}
 
 	.panel-content {
@@ -480,8 +621,6 @@
 		overflow: auto;
 		padding: var(--spacing-lg);
 	}
-
-
 
 	.graph-editor-content {
 		padding: 0;
@@ -525,8 +664,12 @@
 	}
 
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	/* Responsive adjustments */

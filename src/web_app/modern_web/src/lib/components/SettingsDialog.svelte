@@ -2,11 +2,12 @@
 <script lang="ts">
 	import { hideSettingsDialog, getSettings, updateSettings } from '$stores/appState.svelte';
 	import { createEventDispatcher } from 'svelte';
-	
+
 	import SettingsSidebar from './settings/SettingsSidebar.svelte';
 	import GeneralTab from './settings/tabs/GeneralTab.svelte';
 	import PropTypeTab from './settings/tabs/PropTypeTab.svelte';
 	import VisibilityTab from './settings/tabs/VisibilityTab.svelte';
+	import BackgroundTab from './settings/tabs/BackgroundTab.svelte';
 	import CodexExporterTab from './settings/tabs/CodexExporterTab.svelte';
 
 	const dispatch = createEventDispatcher();
@@ -14,13 +15,14 @@
 	// Current settings state
 	let settings = $state(getSettings());
 	let activeTab = $state('General');
-	
+
 	// Simplified tab configuration
 	const tabs = [
 		{ id: 'General', label: 'General', icon: '⚙️' },
 		{ id: 'PropType', label: 'Prop Type', icon: '🏷️' },
 		{ id: 'Visibility', label: 'Visibility', icon: '👁️' },
-		{ id: 'CodexExporter', label: 'Codex Exporter', icon: '📤' }
+		{ id: 'Background', label: 'Background', icon: '🌌' },
+		{ id: 'CodexExporter', label: 'Codex Exporter', icon: '📤' },
 	];
 
 	// Handle tab switching
@@ -72,7 +74,12 @@
 			<h2>Settings</h2>
 			<button class="close-button" onclick={handleClose}>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-					<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					<path
+						d="M18 6L6 18M6 6l12 12"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+					/>
 				</svg>
 			</button>
 		</div>
@@ -90,8 +97,14 @@
 					<PropTypeTab {settings} on:update={handleSettingsUpdate} />
 				{:else if activeTab === 'Visibility'}
 					<VisibilityTab {settings} on:update={handleSettingsUpdate} />
+				{:else if activeTab === 'Background'}
+					<BackgroundTab {settings} on:update={handleSettingsUpdate} />
 				{:else if activeTab === 'CodexExporter'}
-					<CodexExporterTab {settings} on:update={handleSettingsUpdate} on:export={handleCodexExport} />
+					<CodexExporterTab
+						{settings}
+						on:update={handleSettingsUpdate}
+						on:export={handleCodexExport}
+					/>
 				{/if}
 			</main>
 		</div>
@@ -191,7 +204,8 @@
 		background: rgba(255, 255, 255, 0.05);
 	}
 
-	.cancel-button, .apply-button {
+	.cancel-button,
+	.apply-button {
 		padding: var(--spacing-sm) var(--spacing-lg);
 		border-radius: 6px;
 		font-size: var(--font-size-sm);

@@ -89,7 +89,7 @@ export default defineConfig({
       },
     },
   },
-  // Server configuration with dedicated port
+  // Server configuration with dedicated port and improved static serving
   server: {
     port: 5175,
     host: "localhost",
@@ -101,6 +101,12 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
+    // Ensure proper static file serving
+    middlewareMode: false,
+    fs: {
+      strict: false,
+      allow: ['..']
+    }
   },
   logLevel: "error",
   test: {

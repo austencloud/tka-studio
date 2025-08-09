@@ -1,10 +1,18 @@
-<!-- GeneralTab.svelte - Compact general settings with better contrast -->
+<!-- GeneralTab.svelte - Compact general settings with fade system controls -->
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import SettingCard from '../SettingCard.svelte';
 	import TextInput from '../TextInput.svelte';
 	import ToggleSetting from '../ToggleSetting.svelte';
 	import SelectInput from '../SelectInput.svelte';
+	
+	// Import fade system for direct control
+	import { 
+		isFadeEnabled, 
+		setFadeEnabled, 
+		getFadeDebugInfo,
+		updateFadeSettings 
+	} from '$services/ui/animation';
 
 	interface Props {
 		settings: any;
@@ -18,6 +26,17 @@
 	let autoSave = $state(settings.autoSave ?? true);
 	let gridMode = $state(settings.gridMode || 'diamond');
 	let workbenchColumns = $state(settings.workbenchColumns || 5);
+	
+	// Fade system state
+	let fadeEnabled = $state(() => {
+		try {
+			return isFadeEnabled();
+		} catch {
+			return true; // Default to enabled
+		}
+	});
+	let fadeMainTabDuration = $state(350);
+	let fadeSubTabDuration = $state(250);
 
 	// Options
 	const gridModeOptions = [
@@ -25,7 +44,47 @@
 		{ value: 'box', label: 'Box' }
 	];
 
-	// Update handlers
+	// Fade system handlers
+	function handleFadeEnabledChange(event: CustomEvent) {
+		fadeEnabled = event.detail;
+		try {
+			setFadeEnabled(fadeEnabled);
+			dispatch('update', { key: 'fadeEnabled', value: fadeEnabled });
+			console.log(`🎭 Fade animations ${fadeEnabled ? 'enabled' : 'disabled'}`);
+		} catch (error) {
+			console.error('Failed to update fade enabled state:', error);
+		}
+	}
+
+	function handleFadeMainTabDurationChange(event: CustomEvent) {
+		fadeMainTabDuration = parseInt(event.detail);
+		try {
+			updateFadeSettings({ mainTabDuration: fadeMainTabDuration });
+			dispatch('update', { key: 'fadeMainTabDuration', value: fadeMainTabDuration });
+		} catch (error) {
+			console.error('Failed to update main tab duration:', error);
+		}
+	}
+
+	function handleFadeSubTabDurationChange(event: CustomEvent) {
+		fadeSubTabDuration = parseInt(event.detail);
+		try {
+			updateFadeSettings({ subTabDuration: fadeSubTabDuration });
+			dispatch('update', { key: 'fadeSubTabDuration', value: fadeSubTabDuration });
+		} catch (error) {
+			console.error('Failed to update sub-tab duration:', error);
+		}
+	}
+
+	// Debug info for developers
+	function logFadeDebugInfo() {
+		try {
+			const debugInfo = getFadeDebugInfo();
+			console.log('🎭 Fade System Debug Info:', debugInfo);
+		} catch (error) {
+			console.error('Failed to get fade debug info:', error);
+		}
+	}
 	function handleUserNameChange(event: CustomEvent) {
 		userName = event.detail;
 		dispatch('update', { key: 'userName', value: userName });
@@ -59,6 +118,48 @@
 		/>
 	</SettingCard>
 
+	<SettingCard title="Animation Settings">
+		<ToggleSetting
+			label="Enable Fade Transitions"
+			checked={fadeEnabled}
+			helpText="Smooth animations when switching between tabs"
+			on:change={handleFadeEnabledChange}
+		/>
+		
+		{#if fadeEnabled}
+			<TextInput
+				label="Main Tab Duration (ms)"
+				value={fadeMainTabDuration.toString()}
+				type="number"
+				min={100}
+				max={1000}
+				helpText="Animation duration for main tab transitions (Construct, Browse, etc.)"
+				on:change={handleFadeMainTabDurationChange}
+			/>
+			
+			<TextInput
+				label="Sub-tab Duration (ms)"
+				value={fadeSubTabDuration.toString()}
+				type="number"
+				min={100}
+				max={1000}
+				helpText="Animation duration for sub-tab transitions (Build, Generate, etc.)"
+				on:change={handleFadeSubTabDurationChange}
+			/>
+			
+			<div class="fade-debug-section">
+				<button 
+					class="debug-button" 
+					onclick={logFadeDebugInfo}
+					title="Print fade system debug info to console"
+				>
+					🎭 Debug Fade System
+				</button>
+				<span class="debug-help">Check browser console for details</span>
+			</div>
+		{/if}
+	</SettingCard>
+
 	<SettingCard title="Application Settings">
 		<ToggleSetting
 			label="Auto-save Settings"
@@ -90,5 +191,39 @@
 <style>
 	.tab-content {
 		max-width: 500px;
+	}
+
+	.fade-debug-section {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-sm);
+		margin-top: var(--spacing-md);
+		padding: var(--spacing-sm);
+		background: var(--muted) / 10;
+		border-radius: var(--border-radius-sm);
+		border: 1px solid var(--border);
+	}
+
+	.debug-button {
+		padding: var(--spacing-xs) var(--spacing-sm);
+		background: var(--primary);
+		color: var(--primary-foreground);
+		border: none;
+		border-radius: var(--border-radius-sm);
+		cursor: pointer;
+		font-size: var(--font-size-xs);
+		font-weight: 500;
+		transition: all var(--transition-fast);
+	}
+
+	.debug-button:hover {
+		background: var(--primary-hover);
+		transform: translateY(-1px);
+	}
+
+	.debug-help {
+		font-size: var(--font-size-xs);
+		color: var(--muted-foreground);
+		font-style: italic;
 	}
 </style>

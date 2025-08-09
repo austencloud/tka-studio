@@ -360,6 +360,10 @@ export interface AppSettings {
 	growSequence?: boolean;
 	numBeats?: number;
 	beatLayout?: string;
+	// Background settings
+	backgroundType?: 'snowfall' | 'nightSky' | 'aurora' | 'auroraBorealis' | 'starfield' | 'bubbles';
+	backgroundQuality?: 'high' | 'medium' | 'low' | 'minimal';
+	backgroundEnabled?: boolean;
 	visibility?: {
 		TKA?: boolean;
 		Reversals?: boolean;

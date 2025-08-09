@@ -1,7 +1,5 @@
 <!-- SelectInput.svelte - Improved contrast select dropdown -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
 	interface Option {
 		value: string;
 		label: string;
@@ -14,31 +12,32 @@
 		helpText?: string;
 		disabled?: boolean;
 		required?: boolean;
+		onchange?: (value: string) => void;
 	}
 
-	let { 
-		label, 
-		value = '', 
+	let {
+		label,
+		value = '',
 		options = [],
-		helpText, 
+		helpText,
 		disabled = false,
-		required = false
+		required = false,
+		onchange,
 	}: Props = $props();
-	
-	const dispatch = createEventDispatcher();
 
 	// Convert string array to option objects if needed
 	const normalizedOptions = $derived(() => {
-		return options.map(option => 
-			typeof option === 'string' 
-				? { value: option, label: option }
-				: option
+		return options.map((option) =>
+			typeof option === 'string' ? { value: option, label: option } : option
 		);
 	});
 
+	// Get the actual options array
+	let optionsArray = $derived(normalizedOptions());
+
 	function handleChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
-		dispatch('change', target.value);
+		onchange?.(target.value);
 	}
 </script>
 
@@ -47,15 +46,8 @@
 		{label}
 		{#if required}<span class="required">*</span>{/if}
 	</label>
-	<select 
-		id={label}
-		{value}
-		{disabled}
-		{required}
-		class="modern-select"
-		onchange={handleChange}
-	>
-		{#each normalizedOptions as option}
+	<select id={label} {value} {disabled} {required} class="modern-select" onchange={handleChange}>
+		{#each optionsArray as option}
 			<option value={option.value}>{option.label}</option>
 		{/each}
 	</select>

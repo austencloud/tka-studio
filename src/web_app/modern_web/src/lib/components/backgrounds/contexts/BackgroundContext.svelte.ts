@@ -5,7 +5,7 @@
  * with Svelte 5 runes. This file has a .svelte.ts extension to enable runes support.
  */
 
-import { getContext, setContext, untrack } from 'svelte';
+import { getContext, setContext } from 'svelte';
 import type {
   BackgroundType,
   Dimensions,
@@ -98,8 +98,9 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
   // Create background system based on type and quality
   let backgroundSystem = $state<BackgroundSystem | null>(null);
 
-  // Flag to prevent circular updates
-  let isUpdatingSystem = $state(false);
+  // Canvas and context references
+  let canvas: HTMLCanvasElement | null = null;
+  let ctx: CanvasRenderingContext2D | null = null;
 
   // Create and track a single background system during context initialization
   if (browser && !backgroundSystem) {
@@ -121,10 +122,6 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
       }
     }
   }
-
-  // Canvas references
-  let canvas: HTMLCanvasElement | null = null;
-  let ctx: CanvasRenderingContext2D | null = null;
   let animationFrameId: number | null = null;
   let reportCallback: ((metrics: PerformanceMetrics) => void) | null = null;
 
@@ -210,34 +207,8 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
     }
   }
 
-  // React to background type changes - use untrack to avoid reading backgroundSystem state
-  $effect(() => {
-    if (!browser || !backgroundType || isUpdatingSystem) return;
-
-    isUpdatingSystem = true;
-    try {
-      // Use untrack to prevent reading backgroundSystem state during assignment
-      untrack(() => {
-        createAndInitializeBackgroundSystem(backgroundType, qualityLevel);
-      });
-      savePreferences();
-    } finally {
-      isUpdatingSystem = false;
-    }
-  });
-
-  // React to quality level changes
-  $effect(() => {
-    if (!browser || !qualityLevel || isUpdatingSystem) return;
-
-    // Use untrack to safely read backgroundSystem without creating dependency
-    untrack(() => {
-      if (backgroundSystem) {
-        backgroundSystem.setQuality(qualityLevel);
-      }
-    });
-    savePreferences();
-  });
+  // Remove problematic effects that cause circular dependencies
+  // Instead, we'll handle updates through the setter methods
 
   // Initialize performance tracker
   const performanceTracker = PerformanceTracker.getInstance();
@@ -345,6 +316,10 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
   function setQuality(quality: QualityLevel): void {
     qualityLevel = quality;
+    if (backgroundSystem) {
+      backgroundSystem.setQuality(quality);
+    }
+    savePreferences();
   }
 
   function setLoading(loading: boolean): void {
@@ -353,6 +328,9 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
   function setBackgroundType(type: BackgroundType): void {
     backgroundType = type;
+    // Create new background system with the new type
+    createAndInitializeBackgroundSystem(type, qualityLevel);
+    savePreferences();
   }
 
   // Internal handlers

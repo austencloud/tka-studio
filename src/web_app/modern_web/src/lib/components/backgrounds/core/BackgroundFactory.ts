@@ -1,6 +1,8 @@
 // src/lib/components/backgrounds/core/BackgroundFactory.ts
 import { SnowfallBackgroundSystem } from '../snowfall/SnowfallBackgroundSystem';
 import { NightSkyBackgroundSystem } from '../nightSky/NightSkyBackgroundSystem';
+import { AuroraBackgroundSystem } from '../aurora/AuroraBackgroundSystem';
+import { BubblesBackgroundSystem } from '../bubbles/BubblesBackgroundSystem';
 import type {
 	BackgroundSystem,
 	BackgroundType,
@@ -51,13 +53,19 @@ export class BackgroundFactory {
 
 		let backgroundSystem: BackgroundSystem;
 
-		// Switch statement for background types
+		// Switch statement for background types (removed starfield and auroraBorealis)
 		switch (options.type) {
 			case 'snowfall':
 				backgroundSystem = new SnowfallBackgroundSystem();
 				break;
 			case 'nightSky':
 				backgroundSystem = new NightSkyBackgroundSystem();
+				break;
+			case 'aurora':
+				backgroundSystem = new AuroraBackgroundSystem();
+				break;
+			case 'bubbles':
+				backgroundSystem = new BubblesBackgroundSystem();
 				break;
 			default:
 				console.warn(`Unknown background type "${options.type}". Defaulting to snowfall.`);
@@ -96,6 +104,8 @@ export class BackgroundFactory {
 		switch (type) {
 			case 'snowfall':
 			case 'nightSky':
+			case 'aurora':
+			case 'bubbles':
 				return quality !== 'minimal'; // Disable on minimal quality
 			default:
 				return false;

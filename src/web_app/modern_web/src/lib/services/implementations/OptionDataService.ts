@@ -1,8 +1,8 @@
 /**
- * Option Data Service - Implementation
+ * Option Data Service - Implementation (Updated)
  * 
  * Provides option generation and filtering for the construct workflow.
- * Based on desktop option picker services but simplified for web.
+ * Now uses real CSV data like the legacy system.
  */
 
 import type { 
@@ -15,6 +15,22 @@ import type {
 	DifficultyLevel,
 	MotionType
 } from '../interfaces';
+import { CsvDataService, type ParsedCsvRow } from './CsvDataService';
+import type { MotionData } from '$domain/MotionData';
+import {
+	createPictographData,
+	createArrowData,
+	createPropData,
+	createMotionData,
+	createGridData,
+	ArrowType,
+	PropType,
+	MotionType as DomainMotionType,
+	Location,
+	Orientation,
+	RotationDirection,
+	GridMode as DomainGridMode
+} from '$domain';
 
 export class OptionDataService implements IOptionDataService {
 	private readonly MOTION_TYPES: MotionType[] = ['pro', 'anti', 'float', 'dash', 'static'];
@@ -25,20 +41,43 @@ export class OptionDataService implements IOptionDataService {
 		advanced: { maxTurns: 3, allowedTypes: ['pro', 'anti', 'float', 'dash', 'static'] }
 	};
 
+	private csvDataService: CsvDataService;
+
 	constructor() {
 		console.log('🎲 OptionDataService initialized');
+		this.csvDataService = new CsvDataService();
 	}
 
-	async getNextOptions(currentSequence: SequenceData, filters?: OptionFilters): Promise<PictographData[]> {
-		console.log('🎲 Generating next options for sequence:', currentSequence.id);
+	/**
+	 * Initialize the service by loading CSV data
+	 */
+	async initialize(): Promise<void> {
+		await this.csvDataService.loadCsvData();
+		console.log('✅ OptionDataService CSV data loaded');
+	}
+
+	/**
+	 * Get next options based on end position from CSV data (like legacy)
+	 */
+	async getNextOptionsFromEndPosition(endPosition: string, gridMode: 'diamond' | 'box' = 'diamond', filters?: OptionFilters): Promise<PictographData[]> {
+		console.log(`🎲 Getting real options for end position: ${endPosition} in ${gridMode} mode`);
 		
 		try {
-			// Get the last beat to understand context
-			const lastBeat = this.getLastBeat(currentSequence);
-			const contextualOptions = await this.generateContextualOptions(lastBeat, filters);
+			// Get matching options from CSV data
+			const csvOptions = this.csvDataService.getNextOptions(endPosition, gridMode);
 			
+			if (csvOptions.length === 0) {
+				console.warn(`⚠️ No options found for end position: ${endPosition}`);
+				return [];
+			}
+
+			// Convert CSV rows to PictographData
+			const pictographOptions = csvOptions
+				.map(row => this.convertCsvRowToPictographData(row, gridMode))
+				.filter((option): option is PictographData => option !== null);
+
 			// Apply filters
-			let filteredOptions = contextualOptions;
+			let filteredOptions = pictographOptions;
 			
 			if (filters?.difficulty) {
 				filteredOptions = this.filterOptionsByDifficulty(filteredOptions, filters.difficulty);
@@ -52,8 +91,39 @@ export class OptionDataService implements IOptionDataService {
 				filteredOptions = this.filterByTurns(filteredOptions, filters.minTurns, filters.maxTurns);
 			}
 			
-			console.log(`✅ Generated ${filteredOptions.length} options`);
+			console.log(`✅ Generated ${filteredOptions.length} real options from CSV data`);
 			return filteredOptions;
+			
+		} catch (error) {
+			console.error('❌ Error getting options from CSV:', error);
+			return [];
+		}
+	}
+
+	async getNextOptions(currentSequence: SequenceData, filters?: OptionFilters): Promise<PictographData[]> {
+		console.log('🎲 Getting next options for sequence:', currentSequence.id);
+		
+		try {
+			// Get the last beat to understand context
+			const lastBeat = this.getLastBeat(currentSequence);
+			
+			if (!lastBeat?.pictograph_data) {
+				console.warn('⚠️ No last beat found in sequence');
+				return [];
+			}
+
+			// Get end position from last beat
+			const endPosition = this.extractEndPosition(lastBeat.pictograph_data);
+			if (!endPosition) {
+				console.warn('⚠️ Could not extract end position from last beat');
+				return [];
+			}
+
+			// Get grid mode from last beat
+			const gridMode = lastBeat.pictograph_data.gridData?.mode === 'box' ? 'box' : 'diamond';
+
+			// Use the real CSV data method
+			return await this.getNextOptionsFromEndPosition(endPosition, gridMode, filters);
 			
 		} catch (error) {
 			console.error('❌ Error generating options:', error);
@@ -120,6 +190,132 @@ export class OptionDataService implements IOptionDataService {
 		return [...this.MOTION_TYPES];
 	}
 
+	/**
+	 * Convert CSV row to PictographData format (based on legacy implementation)
+	 */
+	private convertCsvRowToPictographData(row: ParsedCsvRow, gridMode: 'diamond' | 'box'): PictographData | null {
+		try {
+			console.log(`🔄 Converting CSV row: ${row.letter} ${row.startPos}->${row.endPos}`);
+
+			// Create motion data for blue and red
+			const blueMotion = this.createMotionDataFromCsv(row, 'blue');
+			const redMotion = this.createMotionDataFromCsv(row, 'red');
+
+			// Create arrow data
+			const blueArrow = createArrowData({
+				arrow_type: ArrowType.BLUE,
+				color: 'blue',
+				turns: 0, // Will be set from motion data
+				location: this.mapLocationString(row.blueStartLoc)
+			});
+
+			const redArrow = createArrowData({
+				arrow_type: ArrowType.RED,
+				color: 'red',
+				turns: 0, // Will be set from motion data
+				location: this.mapLocationString(row.redStartLoc)
+			});
+
+			// Create prop data
+			const blueProp = createPropData({
+				prop_type: PropType.STAFF,
+				color: 'blue',
+				location: this.mapLocationString(row.blueStartLoc)
+			});
+
+			const redProp = createPropData({
+				prop_type: PropType.STAFF,
+				color: 'red',
+				location: this.mapLocationString(row.redStartLoc)
+			});
+
+			// Create the complete PictographData
+			const pictograph = createPictographData({
+				id: `option-${row.letter}-${row.startPos}-${row.endPos}`,
+				grid_data: createGridData({ 
+					grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX 
+				}),
+				arrows: { blue: blueArrow, red: redArrow },
+				props: { blue: blueProp, red: redProp },
+				motions: { blue: blueMotion, red: redMotion },
+				letter: row.letter,
+				beat: 0,
+				is_blank: false,
+				is_mirrored: false
+			});
+
+			console.log(`✅ Converted CSV row to pictograph: ${pictograph.id}`);
+			return pictograph;
+
+		} catch (error) {
+			console.error('❌ Error converting CSV row to PictographData:', error, row);
+			return null;
+		}
+	}
+
+	/**
+	 * Create motion data from CSV row (like legacy implementation)
+	 */
+	private createMotionDataFromCsv(row: ParsedCsvRow, color: 'blue' | 'red'): MotionData {
+		const motionType = row[`${color}MotionType`] as string;
+		const propRotDir = row[`${color}PropRotDir`] as string;
+		const startLoc = row[`${color}StartLoc`] as string;
+		const endLoc = row[`${color}EndLoc`] as string;
+
+		return createMotionData({
+			motion_type: this.mapMotionType(motionType),
+			prop_rot_dir: this.mapRotationDirection(propRotDir),
+			start_loc: this.mapLocationString(startLoc),
+			end_loc: this.mapLocationString(endLoc),
+			turns: 0, // Basic for now
+			start_ori: Orientation.IN,
+			end_ori: Orientation.OUT
+		});
+	}
+
+	/**
+	 * Map string motion type to domain enum
+	 */
+	private mapMotionType(motionType: string): DomainMotionType {
+		switch (motionType.toLowerCase()) {
+			case 'pro': return DomainMotionType.PRO;
+			case 'anti': return DomainMotionType.ANTI;
+			case 'float': return DomainMotionType.FLOAT;
+			case 'dash': return DomainMotionType.DASH;
+			case 'static': return DomainMotionType.STATIC;
+			default: return DomainMotionType.PRO;
+		}
+	}
+
+	/**
+	 * Map string rotation direction to domain enum
+	 */
+	private mapRotationDirection(rotDir: string): RotationDirection {
+		switch (rotDir.toLowerCase()) {
+			case 'cw': return RotationDirection.CLOCKWISE;
+			case 'ccw': return RotationDirection.COUNTER_CLOCKWISE;
+			case 'no_rot': return RotationDirection.NO_ROTATION;
+			default: return RotationDirection.NO_ROTATION;
+		}
+	}
+
+	/**
+	 * Map string location to domain enum
+	 */
+	private mapLocationString(loc: string): Location {
+		switch (loc.toLowerCase()) {
+			case 'n': return Location.NORTH;
+			case 's': return Location.SOUTH;
+			case 'e': return Location.EAST;
+			case 'w': return Location.WEST;
+			case 'ne': return Location.NORTHEAST;
+			case 'se': return Location.SOUTHEAST;
+			case 'sw': return Location.SOUTHWEST;
+			case 'nw': return Location.NORTHWEST;
+			default: return Location.SOUTH;
+		}
+	}
+
 	private getLastBeat(sequence: SequenceData): BeatData | null {
 		if (!sequence.beats || sequence.beats.length === 0) {
 			return null;
@@ -127,88 +323,27 @@ export class OptionDataService implements IOptionDataService {
 		return sequence.beats[sequence.beats.length - 1];
 	}
 
-	private async generateContextualOptions(lastBeat: BeatData | null, filters?: OptionFilters): Promise<PictographData[]> {
-		// Generate a variety of options based on context
-		const options: PictographData[] = [];
-		const gridMode = lastBeat?.pictograph_data?.gridData?.mode || 'diamond';
-		
-		// Generate different motion combinations
-		const motionCombinations = this.getMotionCombinations(filters?.motionTypes);
-		
-		motionCombinations.forEach((combo, index) => {
-			const option = this.createOptionPictograph(combo, index, gridMode, lastBeat);
-			options.push(option);
-		});
-		
-		return options;
-	}
-
-	private getMotionCombinations(allowedTypes?: MotionType[]) {
-		const types = allowedTypes || this.MOTION_TYPES;
-		const combinations = [];
-		
-		// Generate various combinations
-		for (let i = 0; i < Math.min(types.length, 12); i++) {
-			const blueType = types[i % types.length];
-			const redType = types[(i + 2) % types.length];
-			
-			combinations.push({
-				blue: { type: blueType, turns: this.getRandomTurns(blueType) },
-				red: { type: redType, turns: this.getRandomTurns(redType) }
-			});
+	/**
+	 * Extract end position from pictograph data
+	 */
+	private extractEndPosition(pictographData: PictographData): string | null {
+		// Try to get from motion data
+		if (pictographData.motions?.blue?.endLocation) {
+			return this.mapLocationToPositionString(pictographData.motions.blue.endLocation);
 		}
-		
-		return combinations;
+		if (pictographData.motions?.red?.endLocation) {
+			return this.mapLocationToPositionString(pictographData.motions.red.endLocation);
+		}
+		return null;
 	}
 
-	private getRandomTurns(motionType: MotionType): number | 'fl' {
-		if (motionType === 'float') return 'fl';
-		if (motionType === 'static') return 0;
-		
-		const possibleTurns = [0.5, 1, 1.5, 2, 2.5, 3];
-		return possibleTurns[Math.floor(Math.random() * possibleTurns.length)];
-	}
-
-	private createOptionPictograph(combo: any, index: number, gridMode: string, lastBeat?: BeatData | null): PictographData {
-		// Create locations that make sense contextually
-		const locations = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
-		const blueStart = locations[index % locations.length];
-		const blueEnd = locations[(index + 2) % locations.length];
-		const redStart = locations[(index + 4) % locations.length];
-		const redEnd = locations[(index + 6) % locations.length];
-		
-		return {
-			id: `option-${index}-${combo.blue.type}-${combo.red.type}`,
-			gridData: { mode: gridMode as any },
-			arrows: { blue: {}, red: {} },
-			props: { blue: {}, red: {} },
-			motions: {
-				blue: {
-					motionType: combo.blue.type,
-					propRotDir: combo.blue.type === 'pro' ? 'cw' : combo.blue.type === 'anti' ? 'ccw' : 'no_rot',
-					startLocation: blueStart as any,
-					endLocation: blueEnd as any,
-					turns: combo.blue.turns,
-					startOrientation: 'in',
-					endOrientation: 'out'
-				},
-				red: {
-					motionType: combo.red.type,
-					propRotDir: combo.red.type === 'pro' ? 'cw' : combo.red.type === 'anti' ? 'ccw' : 'no_rot',
-					startLocation: redStart as any,
-					endLocation: redEnd as any,
-					turns: combo.red.turns,
-					startOrientation: 'out',
-					endOrientation: 'in'
-				}
-			},
-			letter: this.generateRandomLetter()
-		};
-	}
-
-	private generateRandomLetter(): string {
-		const letters = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ'];
-		return letters[Math.floor(Math.random() * letters.length)];
+	/**
+	 * Map location enum to position string
+	 */
+	private mapLocationToPositionString(location: Location): string {
+		// This would need proper mapping logic based on your position system
+		// For now, returning a default
+		return 'alpha1'; // Placeholder - needs proper mapping
 	}
 
 	private filterByMotionTypes(options: PictographData[], motionTypes: MotionType[]): PictographData[] {

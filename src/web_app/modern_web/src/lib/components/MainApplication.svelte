@@ -7,6 +7,14 @@
 		ISequenceService
 	} from '$services/interfaces';
 
+	// Import fade system
+	import { 
+		initializeFadeSystem, 
+		setFadeEnabled, 
+		getFadeDebugInfo,
+		isFadeEnabled 
+	} from '$services/ui/animation';
+
 	// Import runes-based state
 	import {
 		getIsInitialized,
@@ -80,23 +88,58 @@
 			setInitializationState(false, true, null, 0);
 
 			// Step 1: Initialize application services
-			setInitializationProgress(25);
+			setInitializationProgress(20);
 			await initService.initialize();
 
-			// Step 2: Load settings
-			setInitializationProgress(50);
+			// Step 2: Initialize fade system
+			setInitializationProgress(35);
+			try {
+				initializeFadeSystem({
+					duration: 300,
+					delay: 0
+				});
+				console.log('🎭 Fade system initialized in MainApplication');
+				console.log('🎭 Fade debug info:', getFadeDebugInfo());
+			} catch (fadeError) {
+				console.warn('Failed to initialize fade system:', fadeError);
+				// Non-critical error, continue with initialization
+			}
+
+			// Step 3: Load settings
+			setInitializationProgress(55);
 			await settingsService.loadSettings();
 			updateSettings(settingsService.currentSettings);
 
-			// Step 3: Load initial data
+			// Step 4: Apply fade settings from user preferences
+			setInitializationProgress(70);
+			try {
+				const currentSettings = settingsService.currentSettings;
+				if (currentSettings && typeof currentSettings.fadeEnabled === 'boolean') {
+					setFadeEnabled(currentSettings.fadeEnabled);
+					console.log(`🎭 Fade enabled from settings: ${currentSettings.fadeEnabled}`);
+				} else {
+					// Default to enabled if no setting found
+					setFadeEnabled(true);
+					console.log('🎭 Fade enabled by default');
+				}
+			} catch (settingsError) {
+				console.warn('Failed to apply fade settings:', settingsError);
+				setFadeEnabled(true); // Default to enabled
+			}
+
+			// Step 5: Load initial data
 			setInitializationProgress(75);
 			await loadSequences(sequenceService);
 
-			// Step 4: Complete initialization
+			// Step 6: Complete initialization
 			setInitializationProgress(100);
 			setInitializationState(true, false, null, 100);
 
 			console.log('✅ TKA V2 Modern initialized successfully');
+			console.log('🎭 Final fade system state:', {
+				enabled: isFadeEnabled(),
+				debugInfo: getFadeDebugInfo()
+			});
 		} catch (error) {
 			console.error('❌ Application initialization failed:', error);
 			setInitializationError(

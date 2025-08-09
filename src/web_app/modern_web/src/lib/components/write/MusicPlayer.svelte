@@ -13,13 +13,13 @@
 		onSeekRequested?: (position: number) => void;
 	}
 
-	let { 
+	let {
 		playerState = createDefaultMusicPlayerState(),
 		disabled = false,
 		onPlayRequested,
 		onPauseRequested,
 		onStopRequested,
-		onSeekRequested
+		onSeekRequested,
 	}: Props = $props();
 
 	// Local state for seeking
@@ -67,25 +67,25 @@
 	}
 
 	// Computed values
-	const sliderValue = $derived(() => {
-		if (!playerState.isLoaded || playerState.duration === 0) return 0;
-		const position = isSeeking ? seekPosition : playerState.currentTime;
-		return (position / playerState.duration) * 1000;
-	});
+	const sliderValue = $derived(
+		!playerState.isLoaded || playerState.duration === 0
+			? 0
+			: ((isSeeking ? seekPosition : playerState.currentTime) / playerState.duration) * 1000
+	);
 
-	const currentTimeDisplay = $derived(() => {
-		const time = isSeeking ? seekPosition : playerState.currentTime;
-		return formatTime(time);
-	});
+	const currentTimeDisplay = $derived(
+		formatTime(isSeeking ? seekPosition : playerState.currentTime)
+	);
 
 	const totalTimeDisplay = $derived(formatTime(playerState.duration));
 
-	const statusText = $derived(() => {
-		if (!playerState.isLoaded) return 'No music loaded';
-		return `♪ ${playerState.filename || 'Music loaded'}`;
-	});
+	const statusText = $derived(
+		!playerState.isLoaded ? 'No music loaded' : `♪ ${playerState.filename || 'Music loaded'}`
+	);
 
-	const statusColor = $derived(playerState.isLoaded ? 'rgba(100, 200, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)');
+	const statusColor = $derived(
+		playerState.isLoaded ? 'rgba(100, 200, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)'
+	);
 </script>
 
 <div class="music-player" class:disabled>
@@ -125,7 +125,7 @@
 
 		<!-- Control buttons -->
 		<div class="control-buttons">
-			<button 
+			<button
 				class="control-button play-button"
 				disabled={disabled || !playerState.isLoaded || playerState.isPlaying}
 				onclick={handlePlay}
@@ -134,7 +134,7 @@
 				▶
 			</button>
 
-			<button 
+			<button
 				class="control-button pause-button"
 				disabled={disabled || !playerState.isPlaying}
 				onclick={handlePause}
@@ -143,7 +143,7 @@
 				⏸
 			</button>
 
-			<button 
+			<button
 				class="control-button stop-button"
 				disabled={disabled || !playerState.isLoaded}
 				onclick={handleStop}

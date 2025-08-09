@@ -20,7 +20,6 @@
   export let motion: Motion | null = null;
   export let pictographData: PictographData | null = null;
   export let pictographService: PictographService | null = null;
-  export let loadTimeoutMs = 1000; // Configurable timeout
   // Animation duration is passed from parent but not used directly in this component
   export const animationDuration = 200;
 
@@ -134,16 +133,18 @@
         throw new Error("No arrow data available");
       }
 
-      // Adjust timeout for mobile devices
-      const timeoutDuration = isMobile() ? loadTimeoutMs * 2 : loadTimeoutMs;
+      // NO WAITING! Just load immediately - the browser cache will handle it
+      console.log("🏹 Loading arrow SVG immediately (cache-optimized)");
+
+      // Set a reasonable timeout (reduced since we're not waiting for anything)
+      const timeoutDuration = 2000; // 2 seconds should be plenty for cached content
 
       // Set safety timeout
       loadTimeout = setTimeout(() => {
         if (!isLoaded) {
-          // Use less verbose logging in production
-          if (import.meta.env.DEV) {
-            console.warn(`Arrow loading timed out after ${timeoutDuration}ms`);
-          }
+          console.warn(
+            `Arrow loading timed out after ${timeoutDuration}ms - this indicates a cache miss or network issue`
+          );
           isLoaded = true;
           dispatch("loaded", { timeout: true });
         }
@@ -167,7 +168,7 @@
         return;
       }
 
-      // Load the SVG with current configuration
+      // Load the SVG with current configuration - browser cache should make this instant
       const result = await svgLoader.loadSvg(
         effectiveArrowData.motionType,
         effectiveArrowData.startOri,

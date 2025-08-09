@@ -1,0 +1,121 @@
+/**
+ * Fade Animation CSS Variables
+ * 
+ * Provides CSS custom properties for consistent fade animations
+ * throughout the TKA web application
+ */
+
+:root {
+	/* Fade animation durations */
+	--fade-duration-fast: 200ms;
+	--fade-duration-normal: 300ms;
+	--fade-duration-slow: 500ms;
+	--fade-duration-main-tab: 350ms;
+	--fade-duration-sub-tab: 250ms;
+
+	/* Fade animation timing functions */
+	--fade-easing-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	--fade-easing-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+	--fade-easing-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+	/* Fade distances for slide effects */
+	--fade-slide-distance-small: 15px;
+	--fade-slide-distance-normal: 30px;
+	--fade-slide-distance-large: 50px;
+
+	/* Fade opacity values */
+	--fade-opacity-hidden: 0;
+	--fade-opacity-visible: 1;
+	--fade-opacity-semi: 0.5;
+
+	/* Fade scale values */
+	--fade-scale-start: 0.95;
+	--fade-scale-end: 1.0;
+	--fade-scale-overshoot: 1.02;
+
+	/* Z-index layers for transitions */
+	--fade-z-background: 1;
+	--fade-z-content: 2;
+	--fade-z-overlay: 10;
+	--fade-z-debug: 9999;
+}
+
+/* Fade transition utilities */
+.fade-transition-container {
+	position: relative;
+	overflow: hidden;
+}
+
+.fade-content {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+/* Debug styles for fade transitions */
+.fade-debug {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: rgba(255, 215, 0, 0.9);
+	color: #000;
+	padding: 4px 8px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 600;
+	z-index: var(--fade-z-debug);
+	pointer-events: none;
+	opacity: var(--fade-opacity-visible);
+	transition: opacity var(--fade-duration-fast) var(--fade-easing-ease-out);
+}
+
+.fade-debug.hidden {
+	opacity: var(--fade-opacity-hidden);
+}
+
+/* Smooth transitions for elements that participate in fades */
+.fade-participant {
+	transition: 
+		opacity var(--fade-duration-normal) var(--fade-easing-ease-in-out),
+		transform var(--fade-duration-normal) var(--fade-easing-ease-in-out);
+}
+
+/* Disable transitions when fades are disabled */
+.fades-disabled * {
+	transition: none !important;
+	animation: none !important;
+}
+
+/* Performance optimizations for fade transitions */
+.fade-gpu-acceleration {
+	transform: translateZ(0);
+	backface-visibility: hidden;
+	perspective: 1000px;
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--fade-duration-fast: 0ms;
+		--fade-duration-normal: 0ms;
+		--fade-duration-slow: 0ms;
+		--fade-duration-main-tab: 0ms;
+		--fade-duration-sub-tab: 0ms;
+	}
+	
+	.fade-participant {
+		transition: none !important;
+	}
+	
+	.fade-debug {
+		display: none;
+	}
+}
+
+/* Dark mode fade adjustments */
+@media (prefers-color-scheme: dark) {
+	.fade-debug {
+		background: rgba(255, 215, 0, 0.8);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+	}
+}

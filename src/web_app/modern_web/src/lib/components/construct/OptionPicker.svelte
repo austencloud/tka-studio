@@ -1,4 +1,4 @@
-<!-- OptionPicker.svelte - Modern implementation based on legacy component -->
+<!-- OptionPicker.svelte - Modern implementation with real CSV data and event listeners -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PictographData } from '$lib/domain/PictographData';
@@ -12,6 +12,8 @@
 		ISequenceService,
 	} from '$services/interfaces';
 	import { resolve } from '$services/bootstrap';
+	import { OptionDataService } from '$services/implementations/OptionDataService';
+	import { CsvDataService } from '$services/implementations/CsvDataService';
 	import ModernPictograph from '$components/pictograph/ModernPictograph.svelte';
 
 	// Props using runes
@@ -25,7 +27,7 @@
 		onOptionSelected?: (option: PictographData) => void;
 	}>();
 
-	// Runes-based reactive state (replacing legacy stores)
+	// Simplified state management (like legacy web app)
 	let availableOptions = $state<PictographData[]>([]);
 	let filteredOptions = $state<PictographData[]>([]);
 	let selectedOption = $state<PictographData | null>(null);
@@ -46,60 +48,91 @@
 	let optionsPerRow = $state(4);
 	let optionSize = $state(150);
 
-	// Modern services
-	const optionDataService = resolve('IOptionDataService') as IOptionDataService;
-	const sequenceService = resolve('ISequenceService') as ISequenceService;
+	// Services (non-reactive to prevent infinite loops)
+	let optionDataService: OptionDataService | null = null;
+	let csvDataService: CsvDataService | null = null;
 
-	// Load available options (modernized from legacy)
-	async function loadOptions() {
+	// Load options based on start position from localStorage (like legacy)
+	async function loadOptionsFromStartPosition() {
 		isLoading = true;
 		loadingError = false;
 
 		try {
-			console.log('🎲 Loading options for sequence:', currentSequence?.id);
+			console.log('🎯 Loading options from start position...');
 
-			if (!currentSequence) {
-				console.warn('⚠️ No current sequence provided');
-				availableOptions = [];
-				filteredOptions = [];
-				return;
+			// First try to get start position from localStorage (like legacy)
+			const startPositionData = localStorage.getItem('start_position');
+
+			if (startPositionData && optionDataService) {
+				const startPosition = JSON.parse(startPositionData);
+				console.log('📍 Found start position in localStorage:', startPosition);
+
+				// Extract end position from start position data (like legacy logic)
+				let endPosition: string | null = null;
+
+				// Try different ways to extract end position (supporting different data formats)
+				if (startPosition.endPos) {
+					endPosition = startPosition.endPos;
+				} else if (startPosition.pictograph_data?.motions?.blue?.endLocation) {
+					endPosition = startPosition.pictograph_data.motions.blue.endLocation;
+				} else if (startPosition.pictograph_data?.motions?.red?.endLocation) {
+					endPosition = startPosition.pictograph_data.motions.red.endLocation;
+				}
+
+				if (endPosition) {
+					console.log(`🎯 Loading options for end position: ${endPosition}`);
+
+					// Use the same approach as legacy web app - simple and direct
+					const gridMode = 'diamond';
+					const nextOptions = await optionDataService.getNextOptionsFromEndPosition(
+						endPosition,
+						gridMode,
+						{} // No filtering - show all options like legacy app
+					);
+
+					console.log(`✅ Loaded ${nextOptions.length} real options from CSV data`);
+
+					// Simple state update like legacy app - use spread operator for Svelte 5 reactivity
+					availableOptions = [...nextOptions];
+					filteredOptions = [...nextOptions];
+					isLoading = false;
+
+					console.log(`🎯 Options loaded successfully: ${filteredOptions.length} items`);
+					return;
+				}
 			}
 
-			// Build filters from state
-			const filters: OptionFilters = {
-				difficulty: localDifficulty,
-				motionTypes: selectedMotionTypes.length > 0 ? (selectedMotionTypes as any) : undefined,
-				minTurns: minTurns > 0 ? minTurns : undefined,
-				maxTurns: maxTurns < 10 ? maxTurns : undefined,
-			};
-
-			// Use modern service to get options
-			const options = await optionDataService.getNextOptions(currentSequence, filters);
-			availableOptions = options;
-			filteredOptions = options;
-
-			console.log(`✅ Loaded ${options.length} options`);
+			// No valid data found
+			console.warn('⚠️ No valid start position found in localStorage');
+			availableOptions = [];
+			filteredOptions = [];
 		} catch (error) {
-			console.error('❌ Error loading options:', error);
+			console.error('❌ Error loading options from start position:', error);
 			loadingError = true;
 			availableOptions = [];
 			filteredOptions = [];
 		} finally {
 			isLoading = false;
+			isTransitioning = false; // Clear transition state
 		}
 	}
 
-	// Apply filters to options
+	// Simplified filtering like legacy app - just show all options
 	function applyFilters() {
-		console.log('🎯 Applying filters:', { selectedMotionTypes, minTurns, maxTurns });
+		console.log('🎯 Applying filters (showing all options like legacy app)');
 
+		// Use spread operator for Svelte 5 reactivity - this is the key fix!
+		filteredOptions = [...availableOptions];
+		console.log(`🎯 Showing all ${filteredOptions.length} options`);
+
+		/* ORIGINAL FILTERING CODE - DISABLED
 		let filtered = [...availableOptions];
 
 		// Filter by motion types
 		if (selectedMotionTypes.length > 0) {
 			filtered = filtered.filter((option) => {
-				const blueType = option.motions?.blue?.motion_type;
-				const redType = option.motions?.red?.motion_type;
+				const blueType = option.motions?.blue?.motionType;
+				const redType = option.motions?.red?.motionType;
 				return (
 					selectedMotionTypes.includes(blueType || '') ||
 					selectedMotionTypes.includes(redType || '')
@@ -120,6 +153,7 @@
 
 		filteredOptions = filtered;
 		console.log(`🎯 Filtered to ${filtered.length} options`);
+		*/
 	}
 
 	// Handle option selection (modernized from legacy)
@@ -129,14 +163,6 @@
 
 			// Show transition state
 			isTransitioning = true;
-
-			// Validate option compatibility
-			if (currentSequence) {
-				const validation = optionDataService.validateOptionCompatibility(option, currentSequence);
-				if (!validation.isValid) {
-					console.warn('⚠️ Option compatibility warnings:', validation.errors);
-				}
-			}
 
 			// Update selected state
 			selectedOption = option;
@@ -183,7 +209,6 @@
 		}
 
 		console.log(`📐 Layout: ${optionsPerRow} per row, ${optionSize}px each`);
-		console.log(`🎯 OptionPicker: Setting pictograph size to ${optionSize}px`);
 	}
 
 	// Toggle motion type filter
@@ -196,12 +221,45 @@
 		applyFilters();
 	}
 
+	// Initialize services
+	async function initializeServices() {
+		try {
+			// Initialize services once on mount (prevents infinite loops)
+			optionDataService = new OptionDataService();
+			csvDataService = new CsvDataService();
+
+			// Load CSV data
+			await optionDataService.initialize();
+
+			console.log('✅ OptionPicker services initialized');
+		} catch (error) {
+			console.error('❌ Error initializing OptionPicker services:', error);
+			loadingError = true;
+		}
+	}
+
 	// Initialize on mount
 	onMount(() => {
+		console.log('🎯 OptionPicker onMount started - setting up event listeners');
+
+		// Initialize services asynchronously
+		initializeServices();
+
 		calculateLayout();
-		if (currentSequence) {
-			loadOptions();
-		}
+
+		// **CRITICAL: Add event listener for start position selection (missing from original modern version)**
+		const handleStartPositionSelected = (event: CustomEvent) => {
+			console.log('🎯 OptionPicker received start-position-selected event:', event.detail);
+			// Load options when start position is selected
+			loadOptionsFromStartPosition();
+		};
+
+		// Listen for start position selection events (like legacy)
+		document.addEventListener(
+			'start-position-selected',
+			handleStartPositionSelected as EventListener
+		);
+		console.log('✅ OptionPicker event listener added for start-position-selected');
 
 		// Listen for window resize
 		const handleResize = () => {
@@ -211,19 +269,68 @@
 		};
 
 		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
+
+		// **IMMEDIATE: Check if start position already exists and load options**
+		const existingStartPos = localStorage.getItem('start_position');
+		if (existingStartPos) {
+			console.log('🎯 OptionPicker found existing start position, loading options immediately');
+			setTimeout(() => {
+				if (optionDataService) {
+					loadOptionsFromStartPosition();
+				}
+			}, 200); // Slightly longer delay to ensure services are ready
+		}
+
+		return () => {
+			// Cleanup event listeners
+			document.removeEventListener(
+				'start-position-selected',
+				handleStartPositionSelected as EventListener
+			);
+			window.removeEventListener('resize', handleResize);
+			console.log('🧹 OptionPicker event listeners cleaned up');
+		};
 	});
 
 	// Reload when sequence or filters change
 	$effect(() => {
-		if (currentSequence) {
-			loadOptions();
+		if (currentSequence && optionDataService) {
+			loadOptionsFromStartPosition();
+		}
+	});
+
+	// **FALLBACK: Listen for coordination service events as backup**
+	$effect(() => {
+		if (typeof window !== 'undefined' && window.constructTabCoordination) {
+			const coordination = window.constructTabCoordination;
+
+			// Listen for start position set events from coordination service
+			const handleStartPositionSet = (data: any) => {
+				console.log('🎯 OptionPicker received start_position_set from coordination service:', data);
+				if (optionDataService) {
+					loadOptionsFromStartPosition();
+				}
+			};
+
+			// Subscribe to coordination events
+			coordination.subscribe('start_position_set', handleStartPositionSet);
+
+			return () => {
+				coordination.unsubscribe('start_position_set', handleStartPositionSet);
+			};
 		}
 	});
 
 	// Recalculate layout when dimensions change
 	$effect(() => {
 		calculateLayout();
+	});
+
+	// Debug: Log filteredOptions changes
+	$effect(() => {
+		console.log(`🔍 DEBUG: filteredOptions.length = ${filteredOptions.length}`, filteredOptions);
+		console.log(`🔍 DEBUG: filteredOptions is array? ${Array.isArray(filteredOptions)}`);
+		console.log(`🔍 DEBUG: filteredOptions type: ${typeof filteredOptions}`);
 	});
 </script>
 
@@ -233,6 +340,8 @@
 		<div class="header-content">
 			<h2>Choose Next Move</h2>
 			<div class="header-controls">
+				<!-- REMOVED: Difficulty selector and filters since we're showing all options -->
+				<!--
 				<button
 					class="filter-toggle"
 					class:active={showFilters}
@@ -241,12 +350,13 @@
 					🎛️ Filters
 				</button>
 				<div class="difficulty-selector">
-					<select bind:value={localDifficulty} onchange={() => loadOptions()}>
+					<select bind:value={localDifficulty} onchange={() => loadOptionsFromStartPosition()}>
 						<option value="beginner">Beginner</option>
 						<option value="intermediate">Intermediate</option>
 						<option value="advanced">Advanced</option>
 					</select>
 				</div>
+				-->
 			</div>
 		</div>
 
@@ -306,16 +416,16 @@
 		{#if isLoading}
 			<div class="loading-container">
 				<div class="loading-spinner"></div>
-				<p class="loading-text">Loading Options...</p>
+				<p class="loading-text">Loading Real Options from CSV...</p>
 			</div>
 		{:else if loadingError}
 			<div class="error-container">
 				<p>Unable to load options. Please try again.</p>
-				<button class="retry-button" onclick={() => loadOptions()}> Retry </button>
+				<button class="retry-button" onclick={() => loadOptionsFromStartPosition()}> Retry </button>
 			</div>
 		{:else if filteredOptions.length === 0}
 			<div class="empty-container">
-				<p>No options available with current filters.</p>
+				<p>No options available. Please select a start position first.</p>
 				<button
 					class="clear-filters-button"
 					onclick={() => {
@@ -363,10 +473,10 @@
 							<div class="option-letter">{option.letter || '?'}</div>
 							<div class="option-details">
 								{#if option.motions?.blue}
-									<span class="motion-tag blue">{option.motions.blue.motion_type}</span>
+									<span class="motion-tag blue">{option.motions.blue.motionType}</span>
 								{/if}
 								{#if option.motions?.red}
-									<span class="motion-tag red">{option.motions.red.motion_type}</span>
+									<span class="motion-tag red">{option.motions.red.motionType}</span>
 								{/if}
 							</div>
 						</div>
@@ -418,29 +528,6 @@
 		display: flex;
 		gap: var(--spacing-md);
 		align-items: center;
-	}
-
-	.filter-toggle {
-		padding: var(--spacing-sm) var(--spacing-md);
-		background: var(--muted);
-		border: 1px solid var(--border);
-		border-radius: var(--border-radius);
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.filter-toggle:hover,
-	.filter-toggle.active {
-		background: var(--primary);
-		color: var(--primary-foreground);
-	}
-
-	.difficulty-selector select {
-		padding: var(--spacing-sm);
-		border: 1px solid var(--border);
-		border-radius: var(--border-radius);
-		background: var(--background);
-		color: var(--foreground);
 	}
 
 	.filters-panel {

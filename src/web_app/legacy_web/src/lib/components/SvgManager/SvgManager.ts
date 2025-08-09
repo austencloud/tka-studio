@@ -6,6 +6,16 @@ import {
 	type Orientation,
 	type TKATurns
 } from '$lib/types/Types';
+import { QuickSvgPreloader } from '$lib/utils/QuickSvgPreloader';
+
+// Extend Window type for our SVG cache
+declare global {
+	interface Window {
+		svgCache?: Map<string, string>;
+		svgsPreloaded?: boolean;
+		svgPreloadComplete?: boolean;
+	}
+}
 
 /**
  * Enhanced SvgManager that doesn't depend on svgPreloader
@@ -24,7 +34,7 @@ export default class SvgManager {
 	}
 
 	/**
-	 * Fetch SVG content with error handling and timeout
+	 * Fetch SVG content with optimized error handling and cache checking
 	 */
 	private async fetchSvg(path: string): Promise<string> {
 		try {
@@ -32,31 +42,18 @@ export default class SvgManager {
 				throw new Error('Cannot fetch SVG in SSR context');
 			}
 
-			// Use AbortController for timeout control
-			const controller = new AbortController();
-			const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-			const response = await fetch(path, {
-				signal: controller.signal,
-				// Add cache control headers
-				headers: {
-					'Cache-Control': 'max-age=3600'
-				}
-			});
-
-			clearTimeout(timeoutId);
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch SVG: ${path} (${response.status})`);
+			// Check our preloader cache first for instant loading
+			if (typeof window !== 'undefined' && window.svgCache && window.svgCache.has(path)) {
+				const cachedSvg = window.svgCache.get(path);
+				if (cachedSvg) return cachedSvg;
 			}
 
-			return response.text();
+			// Use preloader for optimal performance
+			return await QuickSvgPreloader.getSvg(path);
 		} catch (error) {
 			// Minimal logging in production
 			if (import.meta.env.DEV) {
 				console.error(`SVG fetch error for ${path}:`, error);
-			} else {
-				console.error(`SVG fetch error for ${path}`);
 			}
 			throw error;
 		}

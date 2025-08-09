@@ -1,6 +1,6 @@
 // src/lib/components/backgrounds/types/types.ts
-// Background types
-export type BackgroundType = 'snowfall' | 'nightSky';
+// Background types - curated selection of beautiful backgrounds (removed starfield and auroraBorealis)
+export type BackgroundType = 'snowfall' | 'nightSky' | 'aurora' | 'bubbles';
 
 // --- Other type definitions remain the same ---
 export interface ParallaxLayer {

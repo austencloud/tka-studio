@@ -266,17 +266,16 @@ while maintaining the legacy layout structure with subtle glass effects.
 		flex-direction: column;
 		height: 100%;
 		padding: 16px;
-		background: linear-gradient(
-			135deg,
-			rgba(20, 20, 30, 0.95),
-			rgba(30, 30, 45, 0.9),
-			rgba(40, 40, 60, 0.95)
-		);
+		/* Transparent background to show beautiful background without blur */
+		background: rgba(255, 255, 255, 0.05);
+		/* backdrop-filter: blur(20px); - REMOVED to show background */
+		border: 1px solid rgba(255, 255, 255, 0.1);
 		color: rgba(255, 255, 255, 0.9);
 		font-family: 'Segoe UI', sans-serif;
 		border-radius: 8px;
 		gap: 12px;
 		overflow-y: auto;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 	}
 
 	.header {

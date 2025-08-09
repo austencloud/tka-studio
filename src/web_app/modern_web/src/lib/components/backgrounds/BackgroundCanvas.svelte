@@ -13,24 +13,17 @@
 	// Define props with Svelte 5 runes
 	const props = $props<{
 		backgroundType?: BackgroundType;
+		quality?: QualityLevel;
 		appIsLoading?: boolean;
 		onReady?: () => void;
 		onPerformanceReport?: (metrics: PerformanceMetrics) => void;
 	}>();
 
-	// Create mutable state variables from props with defaults
-	let backgroundType = $state(props.backgroundType || 'snowfall');
-	let appIsLoading = $state(props.appIsLoading !== undefined ? props.appIsLoading : true);
-
-	// Update state when props change
-	$effect(() => {
-		if (props.backgroundType !== undefined && props.backgroundType !== backgroundType) {
-			backgroundType = props.backgroundType;
-		}
-		if (props.appIsLoading !== undefined && props.appIsLoading !== appIsLoading) {
-			appIsLoading = props.appIsLoading;
-		}
-	});
+	// Use props directly instead of creating local state copies
+	// This avoids the need for effects or reactive statements
+	let backgroundType = $derived(props.backgroundType || 'snowfall');
+	let quality = $derived(props.quality || 'medium');
+	let appIsLoading = $derived(props.appIsLoading !== undefined ? props.appIsLoading : true);
 
 	// Get the context only once - don't recreate it on each render
 	let activeContext = browser ? getRunesBackgroundContext() : null;
@@ -42,6 +35,28 @@
 
 	// Use let for the canvas element
 	let canvas: HTMLCanvasElement | undefined;
+
+	// Watch for prop changes and update background system
+	$effect(() => {
+		if (!browser || !activeContext || !isInitialized) return;
+
+		// Update background type if it changed
+		if (backgroundType !== activeContext.backgroundType) {
+			console.log(
+				`🌌 Background type changed from ${activeContext.backgroundType} to ${backgroundType}`
+			);
+			activeContext.setBackgroundType(backgroundType);
+		}
+
+		// Update quality if it changed
+		if (quality !== activeContext.qualityLevel) {
+			console.log(`🌌 Background quality changed from ${activeContext.qualityLevel} to ${quality}`);
+			activeContext.setQuality(quality);
+		}
+	});
+
+	// Simple approach: recreate background system when props change
+	// This avoids the circular dependency issue
 
 	onMount(() => {
 		if (!browser) {
@@ -123,9 +138,9 @@
 					if (!currentBackgroundSystem) {
 						currentBackgroundSystem = BackgroundFactory.createBackgroundSystem({
 							type: backgroundType,
-							initialQuality: 'medium',
+							initialQuality: quality,
 						});
-						currentBackgroundSystem.initialize(dimensions, 'medium');
+						currentBackgroundSystem.initialize(dimensions, quality);
 					}
 
 					if (currentBackgroundSystem) {

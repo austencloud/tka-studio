@@ -1,5 +1,8 @@
 /* TKA V2 Modern - Base Styles */
 
+/* Import fade animation system */
+@import './lib/services/ui/animation/fade.css';
+
 /* CSS Reset and Base Styles */
 *,
 *::before,

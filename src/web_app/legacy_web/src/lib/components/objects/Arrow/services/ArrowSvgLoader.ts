@@ -75,14 +75,21 @@ export class ArrowSvgLoader {
   }
 
   /**
-   * Load SVG content from a path
+   * Load SVG content from a path with optimized fetching
    */
   private async loadSvgFromPath(path: string): Promise<string> {
     try {
-      const response = await fetch(path);
+      // Use optimized fetch without timeout for local development
+      const response = await fetch(path, {
+        headers: {
+          'Accept': 'image/svg+xml,text/plain,*/*'
+        }
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
+
       return await response.text();
     } catch (error) {
       throw new Error(`Failed to load SVG from ${path}: ${error}`);

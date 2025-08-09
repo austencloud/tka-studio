@@ -1,4 +1,4 @@
-<!-- StartPositionPicker.svelte - Modern implementation based on legacy component -->
+<!-- StartPositionPicker.svelte - Modern implementation updated for proper OptionPicker integration -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { IStartPositionService, IPictographRenderingService } from '$services/interfaces';
@@ -80,7 +80,7 @@
 		}
 	}
 
-	// Handle start position selection (modernized from legacy)
+	// Handle start position selection (modernized from legacy with proper data format)
 	async function handleSelect(startPosPictograph: PictographData) {
 		try {
 			console.log('🎯 Start position selected:', startPosPictograph.id);
@@ -88,7 +88,47 @@
 			// Show transition state
 			isTransitioning = true;
 
-			// Create start position beat data
+			// **CRITICAL: Create the data format that OptionPicker expects**
+			// Based on legacy analysis, OptionPicker looks for:
+			// 1. localStorage 'start_position' with endPos field
+			// 2. Proper pictograph data structure
+
+			// Extract end position from the pictograph data
+			const endPosition = extractEndPosition(startPosPictograph);
+			console.log('📍 Extracted end position:', endPosition);
+
+			// Create start position data in the format the OptionPicker expects (like legacy)
+			const startPositionData = {
+				// CRITICAL: Include endPos field for OptionPicker
+				endPos: endPosition,
+				// Include the full pictograph data
+				pictograph_data: {
+					...startPosPictograph,
+					// Ensure static motion types for start positions
+					motions: {
+						blue: startPosPictograph.motions?.blue ? {
+							...startPosPictograph.motions.blue,
+							motionType: 'static',
+							endLocation: startPosPictograph.motions.blue.startLocation,
+							endOri: startPosPictograph.motions.blue.startOri,
+							turns: 0,
+						} : null,
+						red: startPosPictograph.motions?.red ? {
+							...startPosPictograph.motions.red,
+							motionType: 'static',
+							endLocation: startPosPictograph.motions.red.startLocation,
+							endOri: startPosPictograph.motions.red.startOri,
+							turns: 0,
+						} : null,
+					},
+				},
+				// Additional legacy-compatible fields
+				letter: startPosPictograph.letter,
+				gridMode: gridMode,
+				isStartPosition: true
+			};
+
+			// Create start position beat data for internal use
 			const startPositionBeat: BeatData = {
 				id: crypto.randomUUID(),
 				beat_number: 0,
@@ -96,35 +136,22 @@
 				blue_reversal: false,
 				red_reversal: false,
 				is_blank: false,
-				pictograph_data: {
-					...startPosPictograph,
-					// Ensure static motion types for start positions
-					motions: {
-						blue: startPosPictograph.motions.blue
-							? {
-									...startPosPictograph.motions.blue,
-									motion_type: 'static' as any,
-									end_loc: startPosPictograph.motions.blue.start_loc,
-									end_ori: startPosPictograph.motions.blue.start_ori,
-									turns: 0,
-								}
-							: startPosPictograph.motions.blue,
-						red: startPosPictograph.motions.red
-							? {
-									...startPosPictograph.motions.red,
-									motion_type: 'static' as any,
-									end_loc: startPosPictograph.motions.red.start_loc,
-									end_ori: startPosPictograph.motions.red.start_ori,
-									turns: 0,
-								}
-							: startPosPictograph.motions.red,
-					},
+				pictograph_data: startPosPictograph,
+				metadata: {
+					endPos: endPosition
 				},
-				metadata: {},
 			};
 
 			// Update selected state
 			selectedStartPos = startPosPictograph;
+
+			// **CRITICAL: Save to localStorage in the format OptionPicker expects**
+			try {
+				localStorage.setItem('start_position', JSON.stringify(startPositionData));
+				console.log('💾 Saved start position to localStorage:', startPositionData);
+			} catch (error) {
+				console.error('Failed to save start position to localStorage:', error);
+			}
 
 			// Use modern service to set start position
 			if (startPositionService) {
@@ -134,18 +161,72 @@
 			// Call callback to notify parent component
 			onStartPositionSelected(startPositionBeat);
 
-			// Emit modern event (replacing legacy DOM events)
+			// **CRITICAL: Emit event that OptionPicker is listening for**
 			const event = new CustomEvent('start-position-selected', {
-				detail: { startPosition: startPositionBeat, isTransitioning: true },
+				detail: { 
+					startPosition: startPositionData, 
+					endPosition: endPosition,
+					isTransitioning: true 
+				},
 				bubbles: true,
 			});
 			document.dispatchEvent(event);
 
-			console.log('✅ Start position selection completed');
+			console.log('✅ Start position selection completed, OptionPicker should now load options');
 		} catch (error) {
 			console.error('❌ Error selecting start position:', error);
 			isTransitioning = false;
 		}
+	}
+
+	/**
+	 * Extract end position from pictograph data
+	 * This determines where the start position ends, which becomes the starting point for next options
+	 */
+	function extractEndPosition(pictographData: PictographData): string {
+		// For start positions, the end position is typically the same as start position
+		// since they're static motions, but we need to map to position keys that exist in CSV
+
+		// Default mappings based on legacy desktop patterns
+		const defaultEndPositions: Record<string, string> = {
+			'α': 'alpha1',  // Alpha start position ends at alpha1
+			'β': 'beta5',   // Beta start position ends at beta5  
+			'γ': 'gamma11', // Gamma start position ends at gamma11
+		};
+
+		// Try to get from letter first
+		if (pictographData.letter && defaultEndPositions[pictographData.letter]) {
+			return defaultEndPositions[pictographData.letter];
+		}
+
+		// Try to extract from motion data
+		if (pictographData.motions?.blue?.endLocation) {
+			return mapLocationToPosition(pictographData.motions.blue.endLocation);
+		}
+		if (pictographData.motions?.red?.endLocation) {
+			return mapLocationToPosition(pictographData.motions.red.endLocation);
+		}
+
+		// Default fallback
+		console.warn('⚠️ Could not extract end position, using default');
+		return 'alpha1';
+	}
+
+	/**
+	 * Map location enum to position string for CSV lookup
+	 */
+	function mapLocationToPosition(location: any): string {
+		// Basic mapping - this would need to be enhanced based on actual position system
+		const locationMap: Record<string, string> = {
+			'SOUTH': 'alpha1',
+			'NORTH': 'alpha1', 
+			'EAST': 'gamma11',
+			'WEST': 'alpha1',
+			// Add more mappings as needed
+		};
+
+		const locationStr = typeof location === 'string' ? location : location?.toString() || '';
+		return locationMap[locationStr.toUpperCase()] || 'alpha1';
 	}
 
 	// Initialize on mount

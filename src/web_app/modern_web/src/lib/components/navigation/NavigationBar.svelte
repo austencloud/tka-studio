@@ -1,6 +1,7 @@
-<!-- Navigation Bar - Tab switching interface -->
+<!-- Navigation Bar - Tab switching interface with fade system integration -->
 <script lang="ts">
-	import { showSettingsDialog } from '$stores/appState.svelte';
+	import { showSettingsDialog, getIsMainTabTransitioning, getMainTabTransitionState } from '$stores/appState.svelte';
+	import { isFadeEnabled } from '$services/ui/animation';
 
 	interface Props {
 		tabs: readonly { id: string; label: string; icon: string }[];
@@ -10,16 +11,45 @@
 
 	let { tabs, activeTab, onTabSelect }: Props = $props();
 
-	// Handle tab click
-	function handleTabClick(tab: { id: string; label: string; icon: string }) {
-		onTabSelect(tab.id as any);
+	// Reactive state for transition feedback
+	let isTransitioning = $derived(getIsMainTabTransitioning());
+	let transitionState = $derived(getMainTabTransitionState());
+	let fadeEnabled = $derived(() => {
+		try {
+			return isFadeEnabled();
+		} catch {
+			return false;
+		}
+	});
+
+	// Handle tab click with transition feedback
+	async function handleTabClick(tab: { id: string; label: string; icon: string }) {
+		if (isTransitioning) {
+			console.log('🎭 Tab transition in progress, ignoring click');
+			return;
+		}
+		
+		try {
+			await onTabSelect(tab.id as any);
+		} catch (error) {
+			console.error('Failed to select tab:', error);
+		}
+	}
+
+	// Check if a specific tab is currently transitioning
+	function isTabTransitioning(tabId: string): boolean {
+		return isTransitioning && 
+			   (transitionState.fromTab === tabId || transitionState.toTab === tabId);
 	}
 </script>
 
-<nav class="navigation-bar glass-surface">
+<nav class="navigation-bar glass-surface" class:transitioning={isTransitioning}>
 	<div class="nav-brand">
 		<h1>TKA</h1>
 		<span class="version">v2.0</span>
+		{#if fadeEnabled}
+			<span class="fade-indicator" title="Fade animations enabled">🎭</span>
+		{/if}
 	</div>
 
 	<div class="nav-tabs">
@@ -27,10 +57,16 @@
 			<button 
 				class="nav-tab" 
 				class:active={activeTab === tab.id}
+				class:transitioning={isTabTransitioning(tab.id)}
+				class:disabled={isTransitioning && !isTabTransitioning(tab.id)}
 				onclick={() => handleTabClick(tab)}
+				disabled={isTransitioning && !isTabTransitioning(tab.id)}
 			>
 				<span class="tab-icon">{tab.icon}</span>
 				<span class="tab-label">{tab.label}</span>
+				{#if isTabTransitioning(tab.id)}
+					<span class="transition-indicator">⟳</span>
+				{/if}
 			</button>
 		{/each}
 	</div>
@@ -142,7 +178,67 @@
 		color: var(--foreground);
 	}
 
-	/* Mobile responsive */
+	/* Fade system integration */
+	.fade-indicator {
+		font-size: 10px;
+		opacity: 0.6;
+		margin-left: 4px;
+	}
+
+	.navigation-bar.transitioning {
+		pointer-events: none;
+	}
+
+	.navigation-bar.transitioning .nav-tabs {
+		opacity: 0.8;
+	}
+
+	.nav-tab.transitioning {
+		pointer-events: auto;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.nav-tab.transitioning::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+		animation: shimmer 1s infinite;
+	}
+
+	.nav-tab.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	.transition-indicator {
+		font-size: 12px;
+		animation: spin 1s linear infinite;
+		margin-left: 4px;
+	}
+
+	@keyframes shimmer {
+		0% {
+			left: -100%;
+		}
+		100% {
+			left: 100%;
+		}
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
 	@media (max-width: 768px) {
 		.navigation-bar {
 			padding: var(--spacing-sm) var(--spacing-md);

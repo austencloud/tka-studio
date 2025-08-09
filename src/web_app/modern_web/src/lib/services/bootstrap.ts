@@ -31,6 +31,9 @@ import {
 	type IStartPositionService,
 } from './interfaces.js';
 
+// Import fade system
+import { FadeOrchestrator, initializeFadeOrchestrator } from './ui/animation';
+
 // Import service implementations
 import { SequenceService } from './implementations/SequenceService';
 import { SequenceDomainService } from './implementations/SequenceDomainService';
@@ -134,6 +137,17 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 			return new ApplicationInitializationService(settingsService, persistenceService);
 		});
 
+		// Initialize fade system (not in DI container as it's a global singleton)
+		try {
+			const fadeOrchestrator = initializeFadeOrchestrator({
+				duration: 300,
+				delay: 0
+			});
+			console.log('🎭 Fade orchestrator initialized in bootstrap');
+		} catch (fadeError) {
+			console.warn('Failed to initialize fade orchestrator in bootstrap:', fadeError);
+		}
+
 		// Validate all registrations can be resolved
 		await validateContainerConfiguration(container);
 
@@ -141,6 +155,7 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		setGlobalContainer(container);
 
 		console.log('✅ TKA V2 Modern application container initialized successfully');
+		console.log('🎭 Fade system integration complete');
 		return container;
 	} catch (error) {
 		console.error('❌ Failed to initialize application container:', error);
