@@ -1,6 +1,6 @@
 /**
  * Sequence Generation Service - Generate complete sequences
- * 
+ *
  * Orchestrates the generation of complete sequences by coordinating
  * motion generation and applying sequence-level constraints.
  */
@@ -10,7 +10,7 @@ import type {
 	ISequenceGenerationService,
 	IMotionGenerationService,
 	ISequenceDomainService,
-	GenerationOptions
+	GenerationOptions,
 } from '../interfaces';
 
 export class SequenceGenerationService implements ISequenceGenerationService {
@@ -31,7 +31,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 
 			// Generate beats
 			const beats: BeatData[] = [];
-			
+
 			for (let i = 1; i <= options.length; i++) {
 				const beat = await this.generateBeat(i, options, beats);
 				beats.push(beat);
@@ -42,7 +42,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 				name: this.generateSequenceName(options),
 				length: options.length,
 				gridMode: options.gridMode,
-				propType: options.propType
+				propType: options.propType,
 			});
 
 			// Replace the empty beats with generated beats
@@ -50,14 +50,16 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 				...sequence,
 				beats,
 				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString()
+				updatedAt: new Date().toISOString(),
 			};
 
 			console.log('Sequence generation complete:', generatedSequence.id);
 			return generatedSequence;
 		} catch (error) {
 			console.error('Failed to generate sequence:', error);
-			throw new Error(`Sequence generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Sequence generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -99,14 +101,16 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 				metadata: {
 					generated: true,
 					generatedAt: new Date().toISOString(),
-					difficulty: options.difficulty
-				}
+					difficulty: options.difficulty,
+				},
 			};
 
 			return beat;
 		} catch (error) {
 			console.error(`Failed to generate beat ${beatNumber}:`, error);
-			throw new Error(`Beat generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Beat generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -135,11 +139,11 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 			month: 'short',
 			day: 'numeric',
 			hour: 'numeric',
-			minute: '2-digit'
+			minute: '2-digit',
 		});
 
 		const difficulty = options.difficulty.charAt(0).toUpperCase() + options.difficulty.slice(1);
-		
+
 		return `${difficulty} ${options.length}-Beat (${timestamp})`;
 	}
 
@@ -152,7 +156,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 	): Promise<SequenceData> {
 		// TODO: Implement pattern-specific generation
 		console.log(`Generating ${pattern} pattern sequence`);
-		
+
 		// For now, use basic generation
 		return this.generateSequence(options);
 	}
@@ -167,9 +171,9 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 	): Promise<SequenceData[]> {
 		// TODO: Implement sequence variations
 		console.log(`Generating ${count} ${variationType} variations`);
-		
+
 		const variations: SequenceData[] = [];
-		
+
 		for (let i = 0; i < count; i++) {
 			// For now, generate new sequences
 			// Eventually this will modify the base sequence
@@ -177,14 +181,14 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 				length: baseSequence.length || 8,
 				gridMode: 'diamond',
 				propType: 'fan',
-				difficulty: 'intermediate'
+				difficulty: 'intermediate',
 			};
-			
+
 			const variation = await this.generateSequence(options);
 			variation.name = `${baseSequence.name} - Variation ${i + 1}`;
 			variations.push(variation);
 		}
-		
+
 		return variations;
 	}
 
@@ -200,7 +204,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 		return {
 			totalGenerated: 0,
 			averageGenerationTime: 0,
-			lastGenerated: null
+			lastGenerated: null,
 		};
 	}
 }

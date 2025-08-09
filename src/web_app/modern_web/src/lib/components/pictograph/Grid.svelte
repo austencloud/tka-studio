@@ -18,12 +18,7 @@ Uses pure runes instead of stores for reactivity.
 		debug?: boolean;
 	}
 
-	let {
-		gridMode = 'diamond',
-		onLoaded,
-		onError,
-		debug = false
-	}: Props = $props();
+	let { gridMode = 'diamond', onLoaded, onError, debug = false }: Props = $props();
 
 	// State using runes
 	let isLoaded = $state(false);
@@ -46,7 +41,7 @@ Uses pure runes instead of stores for reactivity.
 		isLoaded = false;
 		hasError = false;
 		errorMessage = null;
-		
+
 		if (debug) {
 			console.log(`Grid: Loading ${gridMode} grid from ${gridImagePath()}`);
 		}
@@ -57,24 +52,24 @@ Uses pure runes instead of stores for reactivity.
 		isLoaded = true;
 		hasError = false;
 		errorMessage = null;
-		
+
 		if (debug) {
 			console.log(`Grid: Successfully loaded ${gridMode} grid`);
 		}
-		
+
 		onLoaded?.();
 	}
 
 	function handleImageError() {
 		hasError = true;
 		errorMessage = `Failed to load ${gridMode} grid image`;
-		
+
 		if (debug) {
 			console.error(`Grid: ${errorMessage}`);
 		}
-		
+
 		onError?.(errorMessage);
-		
+
 		// Still call onLoaded to prevent blocking the parent component
 		onLoaded?.();
 	}
@@ -82,16 +77,16 @@ Uses pure runes instead of stores for reactivity.
 	// Fallback grid rendering using coordinates
 	const fallbackGridPath = $derived(() => {
 		const data = gridData();
-		
+
 		if (gridMode === 'diamond') {
 			// Create diamond shape from hand points
 			const points = [
 				data.allHandPointsNormal.n_diamond_hand_point?.coordinates,
 				data.allHandPointsNormal.e_diamond_hand_point?.coordinates,
 				data.allHandPointsNormal.s_diamond_hand_point?.coordinates,
-				data.allHandPointsNormal.w_diamond_hand_point?.coordinates
+				data.allHandPointsNormal.w_diamond_hand_point?.coordinates,
 			].filter(Boolean);
-			
+
 			if (points.length === 4) {
 				return `M ${points[0]!.x},${points[0]!.y} L ${points[1]!.x},${points[1]!.y} L ${points[2]!.x},${points[2]!.y} L ${points[3]!.x},${points[3]!.y} Z`;
 			}
@@ -101,18 +96,18 @@ Uses pure runes instead of stores for reactivity.
 				data.allHandPointsNormal.nw_box_hand_point?.coordinates,
 				data.allHandPointsNormal.ne_box_hand_point?.coordinates,
 				data.allHandPointsNormal.se_box_hand_point?.coordinates,
-				data.allHandPointsNormal.sw_box_hand_point?.coordinates
+				data.allHandPointsNormal.sw_box_hand_point?.coordinates,
 			].filter(Boolean);
-			
+
 			if (points.length === 4) {
 				return `M ${points[0]!.x},${points[0]!.y} L ${points[1]!.x},${points[1]!.y} L ${points[2]!.x},${points[2]!.y} L ${points[3]!.x},${points[3]!.y} Z`;
 			}
 		}
-		
+
 		// Ultimate fallback - simple centered shape
 		const center = { x: 475, y: 475 };
 		const size = 143;
-		
+
 		if (gridMode === 'diamond') {
 			return `M ${center.x},${center.y - size} L ${center.x + size},${center.y} L ${center.x},${center.y + size} L ${center.x - size},${center.y} Z`;
 		} else {
@@ -146,15 +141,10 @@ Uses pure runes instead of stores for reactivity.
 				stroke-width="2"
 				stroke-dasharray="5,5"
 			/>
-			
+
 			<!-- Center point -->
-			<circle
-				cx="475"
-				cy="475"
-				r="3"
-				fill="#9ca3af"
-			/>
-			
+			<circle cx="475" cy="475" r="3" fill="#9ca3af" />
+
 			{#if debug}
 				<!-- Debug points -->
 				{#each Object.entries(gridData().allHandPointsNormal) as [key, point]}

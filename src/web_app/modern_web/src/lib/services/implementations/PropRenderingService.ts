@@ -13,7 +13,7 @@ import type {
 	PropPosition,
 	MotionData,
 	GridMode,
-	Location
+	Location,
 } from '../interfaces';
 import { createGridData, type GridData } from '../../data/gridCoordinates.js';
 import { PropRotAngleManager } from '../PropRotAngleManager';
@@ -27,7 +27,7 @@ export class PropRenderingService implements IPropRenderingService {
 	// Color transformation constants (matching desktop)
 	private readonly COLOR_TRANSFORMATIONS = {
 		blue: '#2E3192',
-		red: '#ED1C24'
+		red: '#ED1C24',
 	};
 
 	constructor() {
@@ -46,7 +46,9 @@ export class PropRenderingService implements IPropRenderingService {
 	): Promise<SVGElement> {
 		// Props are now handled by ModernPictograph.svelte -> Prop.svelte components
 		// This service-level rendering is disabled to prevent duplicate CIRCLE_PROP elements
-		console.log('🎭 PropRenderingService.renderProp() disabled - props rendered by Prop.svelte');
+		console.log(
+			'🎭 PropRenderingService.renderProp() disabled - props rendered by Prop.svelte'
+		);
 
 		// Return empty group to prevent errors
 		const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -78,9 +80,8 @@ export class PropRenderingService implements IPropRenderingService {
 			return {
 				x: basePosition.x + offset.x,
 				y: basePosition.y + offset.y,
-				rotation
+				rotation,
 			};
-
 		} catch (error) {
 			console.error('❌ Error calculating prop position:', error);
 			// Return center position as fallback (950x950 scene)
@@ -115,7 +116,6 @@ export class PropRenderingService implements IPropRenderingService {
 
 			console.log(`📦 Loaded and cached ${propType} SVG for ${color}`);
 			return svgContent;
-
 		} catch (error) {
 			console.error(`❌ Error loading ${propType} SVG:`, error);
 			// Return fallback SVG
@@ -150,7 +150,11 @@ export class PropRenderingService implements IPropRenderingService {
 	/**
 	 * Get coordinates for a location on the grid using real grid data
 	 */
-	private getLocationCoordinates(location: Location, gridMode: GridMode, gridData: GridData): { x: number; y: number } {
+	private getLocationCoordinates(
+		location: Location,
+		gridMode: GridMode,
+		gridData: GridData
+	): { x: number; y: number } {
 		// Props are positioned at hand points based on their end location
 		const pointName = `${location}_${gridMode}_hand_point`;
 		const point = gridData.allHandPointsNormal?.[pointName];
@@ -175,11 +179,20 @@ export class PropRenderingService implements IPropRenderingService {
 		// Convert string orientation to enum
 		let orientation: Orientation;
 		switch (endOrientation) {
-			case 'in': orientation = Orientation.IN; break;
-			case 'out': orientation = Orientation.OUT; break;
-			case 'clock': orientation = Orientation.CLOCK; break;
-			case 'counter': orientation = Orientation.COUNTER; break;
-			default: orientation = Orientation.IN;
+			case 'in':
+				orientation = Orientation.IN;
+				break;
+			case 'out':
+				orientation = Orientation.OUT;
+				break;
+			case 'clock':
+				orientation = Orientation.CLOCK;
+				break;
+			case 'counter':
+				orientation = Orientation.COUNTER;
+				break;
+			default:
+				orientation = Orientation.IN;
 		}
 
 		return PropRotAngleManager.calculateRotation(endLocation, orientation);
@@ -245,7 +258,9 @@ export class PropRenderingService implements IPropRenderingService {
 	private createErrorProp(propType: string, color: 'blue' | 'red'): SVGElement {
 		// Props are now handled by ModernPictograph.svelte -> Prop.svelte components
 		// This error prop creation is disabled to prevent duplicate CIRCLE_PROP elements
-		console.log('🎭 PropRenderingService.createErrorProp() disabled - props rendered by Prop.svelte');
+		console.log(
+			'🎭 PropRenderingService.createErrorProp() disabled - props rendered by Prop.svelte'
+		);
 
 		// Return empty group to prevent errors
 		const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');

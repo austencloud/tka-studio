@@ -1,6 +1,6 @@
 /**
  * PictographService Svelte 5 Runes Tests
- * 
+ *
  * Tests for the rune-based pictograph service
  */
 
@@ -14,7 +14,7 @@ describe('PictographService (Runes)', () => {
 	beforeEach(() => {
 		service = createPictographService({
 			debugMode: false,
-			loadingTimeout: 1000
+			loadingTimeout: 1000,
 		});
 	});
 
@@ -49,7 +49,7 @@ describe('PictographService (Runes)', () => {
 						rotation_angle: 0,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
+						metadata: {},
 					},
 					red: {
 						id: 'red-arrow',
@@ -66,9 +66,9 @@ describe('PictographService (Runes)', () => {
 						rotation_angle: 180,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
-					}
-				}
+						metadata: {},
+					},
+				},
 			});
 
 			service.setPictographData(pictographData);
@@ -98,8 +98,8 @@ describe('PictographService (Runes)', () => {
 				redArrowData: {
 					motionType: 'pro',
 					loc: 'e',
-					turns: 1.5
-				}
+					turns: 1.5,
+				},
 			};
 
 			service.setPictographData(legacyData);
@@ -117,12 +117,12 @@ describe('PictographService (Runes)', () => {
 		it('should set data from beat with pictograph', () => {
 			const pictographData = createPictographData({
 				letter: 'C',
-				grid_data: { mode: 'diamond' }
+				grid_data: { mode: 'diamond' },
 			});
 
 			const beatData = createBeatData({
 				beat_number: 1,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			service.setBeatData(beatData);
@@ -141,7 +141,7 @@ describe('PictographService (Runes)', () => {
 			// Then set blank beat
 			const blankBeat = createBeatData({
 				beat_number: 2,
-				is_blank: true
+				is_blank: true,
 			});
 
 			service.setBeatData(blankBeat);
@@ -172,7 +172,7 @@ describe('PictographService (Runes)', () => {
 						rotation_angle: 0,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
+						metadata: {},
 					},
 					red: {
 						id: 'red',
@@ -189,8 +189,8 @@ describe('PictographService (Runes)', () => {
 						rotation_angle: 180,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
-					}
+						metadata: {},
+					},
 				},
 				props: {
 					blue: {
@@ -201,7 +201,7 @@ describe('PictographService (Runes)', () => {
 						coordinates: null,
 						rotation_angle: 0,
 						svg_center: null,
-						metadata: {}
+						metadata: {},
 					},
 					red: {
 						id: 'red-prop',
@@ -211,9 +211,9 @@ describe('PictographService (Runes)', () => {
 						coordinates: null,
 						rotation_angle: 180,
 						svg_center: null,
-						metadata: {}
-					}
-				}
+						metadata: {},
+					},
+				},
 			});
 
 			service.setPictographData(pictographData);
@@ -265,7 +265,7 @@ describe('PictographService (Runes)', () => {
 			const customService = createPictographService({
 				debugMode: true,
 				defaultGridMode: 'box',
-				loadingTimeout: 2000
+				loadingTimeout: 2000,
 			});
 
 			const config = customService.getConfig();
@@ -307,16 +307,16 @@ describe('PictographService (Runes)', () => {
 describe('createBeatPictographService', () => {
 	it('should create service bound to specific beat', () => {
 		const pictographData = createPictographData({
-			letter: 'G'
+			letter: 'G',
 		});
 
 		const beatData = createBeatData({
 			beat_number: 3,
-			pictograph_data: pictographData
+			pictograph_data: pictographData,
 		});
 
 		const beatService = createBeatPictographService(beatData, {
-			debugMode: true
+			debugMode: true,
 		});
 
 		expect(beatService.currentData).toEqual(pictographData);
@@ -327,7 +327,7 @@ describe('createBeatPictographService', () => {
 	it('should handle blank beat', () => {
 		const blankBeat = createBeatData({
 			beat_number: 4,
-			is_blank: true
+			is_blank: true,
 		});
 
 		const beatService = createBeatPictographService(blankBeat);

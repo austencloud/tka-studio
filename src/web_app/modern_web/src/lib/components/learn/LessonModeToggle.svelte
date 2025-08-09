@@ -12,7 +12,7 @@
 	let {
 		selectedMode = $bindable(QuizMode.FIXED_QUESTION),
 		disabled = false,
-		onModeChanged
+		onModeChanged,
 	}: Props = $props();
 
 	// Handle mode selection

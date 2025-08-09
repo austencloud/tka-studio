@@ -57,10 +57,10 @@
 		selectedAnswerId = null;
 		showFeedback = false;
 		isAnswered = false;
-		
+
 		// Generate new question
 		generateNewQuestion();
-		
+
 		dispatch('nextQuestion');
 	}
 
@@ -86,7 +86,7 @@
 			<div class="question-prompt">
 				<h3>{questionData.questionPrompt || 'Choose the correct answer:'}</h3>
 			</div>
-			
+
 			<div class="question-content">
 				{#if questionData.questionType === 'pictograph'}
 					<PictographRenderer pictographData={questionData.questionContent} />
@@ -104,7 +104,10 @@
 
 		<!-- Answer Section -->
 		<div class="answer-section">
-			<div class="answer-grid" class:button-grid={questionData.answerType === AnswerFormat.BUTTON}>
+			<div
+				class="answer-grid"
+				class:button-grid={questionData.answerType === AnswerFormat.BUTTON}
+			>
 				{#each questionData.answerOptions as option (option.id)}
 					<div class="answer-option {getAnswerClass(option)}">
 						{#if questionData.answerType === AnswerFormat.BUTTON}
@@ -112,7 +115,7 @@
 								content={option.content}
 								isSelected={selectedAnswerId === option.id}
 								isCorrect={option.isCorrect}
-								showFeedback={showFeedback}
+								{showFeedback}
 								disabled={isAnswered}
 								on:click={() => handleAnswerClick(option)}
 							/>
@@ -121,7 +124,7 @@
 								pictographData={option.content}
 								isSelected={selectedAnswerId === option.id}
 								isCorrect={option.isCorrect}
-								showFeedback={showFeedback}
+								{showFeedback}
 								disabled={isAnswered}
 								on:click={() => handleAnswerClick(option)}
 							/>
@@ -134,7 +137,7 @@
 		<!-- Feedback Section -->
 		{#if showFeedback && isAnswered}
 			<div class="feedback-section">
-				{#if questionData.answerOptions.find(opt => opt.id === selectedAnswerId)?.isCorrect}
+				{#if questionData.answerOptions.find((opt) => opt.id === selectedAnswerId)?.isCorrect}
 					<div class="feedback correct">
 						<span class="icon">✓</span>
 						<span class="message">Correct!</span>
@@ -145,10 +148,8 @@
 						<span class="message">Incorrect. The correct answer is highlighted.</span>
 					</div>
 				{/if}
-				
-				<button class="next-button" on:click={handleNextQuestion}>
-					Next Question
-				</button>
+
+				<button class="next-button" on:click={handleNextQuestion}> Next Question </button>
 			</div>
 		{/if}
 	{:else}
@@ -312,14 +313,26 @@
 	}
 
 	@keyframes correctPulse {
-		0%, 100% { transform: scale(1); }
-		50% { transform: scale(1.05); }
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.05);
+		}
 	}
 
 	@keyframes incorrectShake {
-		0%, 100% { transform: translateX(0); }
-		25% { transform: translateX(-5px); }
-		75% { transform: translateX(5px); }
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-5px);
+		}
+		75% {
+			transform: translateX(5px);
+		}
 	}
 
 	/* Responsive Design */

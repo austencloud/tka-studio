@@ -6,7 +6,7 @@
 		switchTab,
 		getShowSettings,
 		getSettings,
-		getIsTransitioning
+		getIsTransitioning,
 	} from '$stores/appState.svelte';
 
 	// Import simple fade system
@@ -30,14 +30,18 @@
 	import BackgroundCanvas from './backgrounds/BackgroundCanvas.svelte';
 
 	// Simple transition functions that respect animation settings
-	const tabIn = conditionalTransition((node: Element) => slideInFade(node, { 
-		duration: 300, 
-		direction: 'right' 
-	}));
-	
-	const tabOut = conditionalTransition((node: Element) => fade(node, { 
-		duration: 250 
-	}));
+	const tabIn = conditionalTransition((node: Element) =>
+		slideInFade(node, {
+			duration: 300,
+			direction: 'right',
+		})
+	);
+
+	const tabOut = conditionalTransition((node: Element) =>
+		fade(node, {
+			duration: 250,
+		})
+	);
 
 	// Tab configuration
 	const tabs = [

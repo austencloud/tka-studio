@@ -1,6 +1,6 @@
 /**
  * Data Adapter Tests
- * 
+ *
  * Tests for the legacy/modern data structure conversion functions
  */
 
@@ -13,7 +13,7 @@ import {
 	extractLegacyPropData,
 	ensureModernPictographData,
 	legacyToModernArrowData,
-	legacyToModernPropData
+	legacyToModernPropData,
 } from '../dataAdapter';
 import { createBeatData, createPictographData } from '$lib/domain';
 
@@ -25,17 +25,17 @@ describe('Data Adapter', () => {
 				gridData: { mode: 'diamond' },
 				arrows: {
 					blue: { id: 'blue-1', color: 'blue' },
-					red: { id: 'red-1', color: 'red' }
+					red: { id: 'red-1', color: 'red' },
 				},
 				props: {
 					blue: { id: 'blue-prop-1', color: 'blue' },
-					red: { id: 'red-prop-1', color: 'red' }
+					red: { id: 'red-prop-1', color: 'red' },
 				},
 				motions: {
 					blue: { motion_type: 'pro' },
-					red: { motion_type: 'anti' }
+					red: { motion_type: 'anti' },
 				},
-				letter: 'A'
+				letter: 'A',
 			};
 
 			const modern = legacyToModernPictographData(legacy);
@@ -53,7 +53,7 @@ describe('Data Adapter', () => {
 		it('should handle missing arrows and props gracefully', () => {
 			const legacy = {
 				id: 'test-id-2',
-				letter: 'B'
+				letter: 'B',
 			};
 
 			const modern = legacyToModernPictographData(legacy);
@@ -74,8 +74,8 @@ describe('Data Adapter', () => {
 				letter: 'C',
 				arrows: {
 					blue: { id: 'blue-arrow', color: 'blue', motion_type: 'pro' },
-					red: { id: 'red-arrow', color: 'red', motion_type: 'anti' }
-				}
+					red: { id: 'red-arrow', color: 'red', motion_type: 'anti' },
+				},
 			});
 
 			const legacy = modernToLegacyPictographData(modern);
@@ -91,12 +91,12 @@ describe('Data Adapter', () => {
 		it('should extract pictograph data from beat', () => {
 			const pictographData = createPictographData({
 				letter: 'D',
-				id: 'beat-pictograph'
+				id: 'beat-pictograph',
 			});
 
 			const beat = createBeatData({
 				beat_number: 1,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			const result = beatDataToPictographData(beat);
@@ -109,7 +109,7 @@ describe('Data Adapter', () => {
 		it('should return null for beat without pictograph data', () => {
 			const beat = createBeatData({
 				beat_number: 1,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const result = beatDataToPictographData(beat);
@@ -125,14 +125,14 @@ describe('Data Adapter', () => {
 					id: 'blue-legacy',
 					motionType: 'pro',
 					loc: 'n',
-					turns: 1.5
+					turns: 1.5,
 				},
 				redArrowData: {
 					id: 'red-legacy',
 					motionType: 'anti',
 					loc: 's',
-					turns: 0.5
-				}
+					turns: 0.5,
+				},
 			};
 
 			const result = extractLegacyArrowData(legacy);
@@ -151,8 +151,8 @@ describe('Data Adapter', () => {
 			const legacy = {
 				blueArrowData: {
 					id: 'blue-only',
-					motionType: 'float'
-				}
+					motionType: 'float',
+				},
 			};
 
 			const result = extractLegacyArrowData(legacy);
@@ -170,14 +170,14 @@ describe('Data Adapter', () => {
 					id: 'blue-prop-legacy',
 					propType: 'staff',
 					loc: 'ne',
-					rotAngle: 45
+					rotAngle: 45,
 				},
 				redPropData: {
 					id: 'red-prop-legacy',
 					propType: 'fan',
 					loc: 'sw',
-					rotAngle: 225
-				}
+					rotAngle: 225,
+				},
 			};
 
 			const result = extractLegacyPropData(legacy);
@@ -202,13 +202,13 @@ describe('Data Adapter', () => {
 				redArrowData: {
 					motionType: 'dash',
 					loc: 'w',
-					turns: 2
+					turns: 2,
 				},
 				bluePropData: {
 					propType: 'poi',
 					loc: 'e',
-					rotAngle: 90
-				}
+					rotAngle: 90,
+				},
 			};
 
 			const modern = ensureModernPictographData(legacy);
@@ -226,7 +226,7 @@ describe('Data Adapter', () => {
 		it('should pass through already modern data', () => {
 			const modern = createPictographData({
 				letter: 'F',
-				grid_data: { mode: 'diamond' }
+				grid_data: { mode: 'diamond' },
 			});
 
 			const result = ensureModernPictographData(modern);
@@ -259,7 +259,7 @@ describe('Data Adapter', () => {
 				turns: 1.5,
 				svgMirrored: true,
 				coords: { x: 100, y: 200 },
-				rotAngle: 45
+				rotAngle: 45,
 			};
 
 			const modern = legacyToModernArrowData(legacy, 'blue');
@@ -279,7 +279,7 @@ describe('Data Adapter', () => {
 
 		it('should handle missing properties with defaults', () => {
 			const legacy = {
-				motionType: 'float'
+				motionType: 'float',
 			};
 
 			const modern = legacyToModernArrowData(legacy, 'red');
@@ -301,7 +301,7 @@ describe('Data Adapter', () => {
 				loc: 'se',
 				coords: { x: 300, y: 400 },
 				rotAngle: 135,
-				svgCenter: { x: 50, y: 50 }
+				svgCenter: { x: 50, y: 50 },
 			};
 
 			const modern = legacyToModernPropData(legacy, 'red');

@@ -21,7 +21,7 @@
 		isRegenerating = false,
 		progressValue = 0,
 		progressMessage = 'Select a sequence length to view cards',
-		showProgress = false
+		showProgress = false,
 	}: Props = $props();
 
 	// Button states
@@ -41,10 +41,7 @@
 		{#if showProgress}
 			<div class="progress-container">
 				<div class="progress-bar">
-					<div 
-						class="progress-fill" 
-						style:width="{progressValue}%"
-					></div>
+					<div class="progress-fill" style:width="{progressValue}%"></div>
 				</div>
 				<span class="progress-text">{progressValue}%</span>
 			</div>

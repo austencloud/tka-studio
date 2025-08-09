@@ -1,6 +1,6 @@
 /**
  * Sequence Domain Service - REAL Business Logic from Desktop
- * 
+ *
  * Ported from desktop.modern.application.services.sequence.beat_sequence_service
  * and desktop.modern.domain.models for actual validation and business rules.
  */
@@ -13,7 +13,6 @@ import type {
 } from '../interfaces';
 
 export class SequenceDomainService implements ISequenceDomainService {
-	
 	/**
 	 * Validate sequence creation request - REAL validation from desktop
 	 */
@@ -114,9 +113,7 @@ export class SequenceDomainService implements ISequenceDomainService {
 		}
 
 		// Extract letters from beats (desktop logic)
-		const word = sequence.beats
-			.map(beat => beat.letter || '?')
-			.join('');
+		const word = sequence.beats.map((beat) => beat.letter || '?').join('');
 
 		// Apply word simplification for circular sequences (desktop logic)
 		return this.simplifyRepeatedWord(word);

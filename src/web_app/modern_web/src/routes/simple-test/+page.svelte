@@ -7,7 +7,7 @@ Simple Pictograph Test - Using Arrow Location Calculator
 
 	// CSV data: A,alpha1,alpha3,split,same,pro,cw,s,w,pro,cw,n,e
 	// This means:
-	// - Blue: start=s, end=w, pro, clockwise → location should be 'sw' 
+	// - Blue: start=s, end=w, pro, clockwise → location should be 'sw'
 	// - Red: start=n, end=e, pro, clockwise → location should be 'ne'
 	const correctPictographA = createPictographData({
 		letter: 'A',
@@ -18,7 +18,7 @@ Simple Pictograph Test - Using Arrow Location Calculator
 				arrow_type: 'blue',
 				color: '#2E3192',
 				motion_type: 'pro',
-				location: 'sw',      // Calculated by ArrowLocationCalculator: start=s, end=w → sw
+				location: 'sw', // Calculated by ArrowLocationCalculator: start=s, end=w → sw
 				start_orientation: 'in',
 				end_orientation: 'out',
 				rotation_direction: 'clockwise',
@@ -31,57 +31,57 @@ Simple Pictograph Test - Using Arrow Location Calculator
 				metadata: {
 					start_loc: 's',
 					end_loc: 'w',
-					calculated_location: 'sw'
-				}
+					calculated_location: 'sw',
+				},
 			},
 			red: {
 				id: 'red-arrow',
 				arrow_type: 'red',
 				color: '#ED1C24',
 				motion_type: 'pro',
-				location: 'ne',      // Calculated by ArrowLocationCalculator: start=n, end=e → ne
+				location: 'ne', // Calculated by ArrowLocationCalculator: start=n, end=e → ne
 				start_orientation: 'in',
 				end_orientation: 'out',
 				rotation_direction: 'clockwise',
 				turns: 0,
 				is_mirrored: false,
 				coordinates: null,
-				rotation_angle: 0,   // Need to look up correct rotation for NE + clockwise
+				rotation_angle: 0, // Need to look up correct rotation for NE + clockwise
 				svg_center: null,
 				svg_mirrored: false,
 				metadata: {
 					start_loc: 'n',
 					end_loc: 'e',
-					calculated_location: 'ne'
-				}
-			}
+					calculated_location: 'ne',
+				},
+			},
 		},
 		props: {
 			blue: {
 				id: 'blue-staff',
 				prop_type: 'staff',
 				color: '#2E3192',
-				location: 's',       // Props go at start location
+				location: 's', // Props go at start location
 				coordinates: null,
 				rotation_angle: 0,
 				svg_center: null,
 				metadata: {
-					orientation: 'in'
-				}
+					orientation: 'in',
+				},
 			},
 			red: {
 				id: 'red-staff',
 				prop_type: 'staff',
 				color: '#ED1C24',
-				location: 'n',       // Props go at start location
+				location: 'n', // Props go at start location
 				coordinates: null,
 				rotation_angle: 0,
 				svg_center: null,
 				metadata: {
-					orientation: 'in'
-				}
-			}
-		}
+					orientation: 'in',
+				},
+			},
+		},
 	});
 </script>
 
@@ -91,41 +91,41 @@ Simple Pictograph Test - Using Arrow Location Calculator
 
 <main>
 	<h1>Pictograph A Test - Arrow Location Calculator</h1>
-	
+
 	<div class="pictograph-container">
-		<ModernPictograph 
-			pictographData={correctPictographA}
-			width={400}
-			height={400}
-		/>
+		<ModernPictograph pictographData={correctPictographA} width={400} height={400} />
 	</div>
-	
+
 	<div class="explanation">
 		<h2>Arrow Location Logic</h2>
 		<p><strong>CSV:</strong> <code>A,alpha1,alpha3,split,same,pro,cw,s,w,pro,cw,n,e</code></p>
-		
+
 		<div class="location-calcs">
 			<div class="calc blue-calc">
 				<h3>Blue Arrow Calculation</h3>
 				<p>• Start: <strong>s</strong> (south)</p>
 				<p>• End: <strong>w</strong> (west)</p>
 				<p>• Motion: <strong>pro</strong> (clockwise)</p>
-				<p>• <strong>Location Calculator:</strong> s + w = <strong>sw</strong> (southwest)</p>
+				<p>
+					• <strong>Location Calculator:</strong> s + w = <strong>sw</strong> (southwest)
+				</p>
 				<p>• Arrow should render at <strong>southwest</strong> position</p>
 				<p>• Staff should be at <strong>south</strong> (start position)</p>
 			</div>
-			
+
 			<div class="calc red-calc">
 				<h3>Red Arrow Calculation</h3>
 				<p>• Start: <strong>n</strong> (north)</p>
 				<p>• End: <strong>e</strong> (east)</p>
 				<p>• Motion: <strong>pro</strong> (clockwise)</p>
-				<p>• <strong>Location Calculator:</strong> n + e = <strong>ne</strong> (northeast)</p>
+				<p>
+					• <strong>Location Calculator:</strong> n + e = <strong>ne</strong> (northeast)
+				</p>
 				<p>• Arrow should render at <strong>northeast</strong> position</p>
 				<p>• Staff should be at <strong>north</strong> (start position)</p>
 			</div>
 		</div>
-		
+
 		<div class="expected-result">
 			<h3>Expected Result</h3>
 			<p>✅ Blue arrow at <strong>southwest</strong> corner (not south)</p>
@@ -153,7 +153,7 @@ Simple Pictograph Test - Using Arrow Location Calculator
 		padding: 1rem;
 		background: white;
 		border-radius: 8px;
-		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	.explanation {
@@ -193,11 +193,11 @@ Simple Pictograph Test - Using Arrow Location Calculator
 	}
 
 	.blue-calc {
-		border-left: 4px solid #2E3192;
+		border-left: 4px solid #2e3192;
 	}
 
 	.red-calc {
-		border-left: 4px solid #ED1C24;
+		border-left: 4px solid #ed1c24;
 	}
 
 	.calc h3 {

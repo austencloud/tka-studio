@@ -11,7 +11,12 @@ import { createBeatData } from '$domain/BeatData';
 import type { PictographData } from '$domain/PictographData';
 import type { IConstructTabCoordinationService, ISequenceService } from '../interfaces';
 import { resolve } from '../bootstrap';
-import { constructTabState, setError, clearError, setTransitioning } from '../../stores/constructTabState.svelte';
+import {
+	constructTabState,
+	setError,
+	clearError,
+	setTransitioning,
+} from '../../stores/constructTabState.svelte';
 import { getCurrentSequence } from '../../stores/sequenceState.svelte';
 
 export class ConstructTabEventService {
@@ -28,7 +33,9 @@ export class ConstructTabEventService {
 			this.sequenceService = resolve('ISequenceService');
 		} catch (error) {
 			// This is expected during SSR - services will be resolved once client-side DI container is ready
-			console.warn('ConstructTabEventService: Services not yet available (expected during SSR)');
+			console.warn(
+				'ConstructTabEventService: Services not yet available (expected during SSR)'
+			);
 			// Services will remain null and methods will handle gracefully
 		}
 	}
@@ -38,7 +45,10 @@ export class ConstructTabEventService {
 	 */
 	async handleStartPositionSelected(startPosition: BeatData): Promise<void> {
 		try {
-			console.log('🎭 Start position selected in ConstructTabEventService:', startPosition.pictograph_data?.id);
+			console.log(
+				'🎭 Start position selected in ConstructTabEventService:',
+				startPosition.pictograph_data?.id
+			);
 			setTransitioning(true);
 
 			// Use coordination service to handle the selection
@@ -173,7 +183,10 @@ export class ConstructTabEventService {
 								// Handle legacy transition events if needed
 								break;
 							default:
-								console.log(`ConstructTabEventService received event: ${eventType}`, data);
+								console.log(
+									`ConstructTabEventService received event: ${eventType}`,
+									data
+								);
 						}
 					},
 				},

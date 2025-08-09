@@ -15,7 +15,7 @@ Provides dual blue/red orientation selection panels for start position configura
 		IN = 'in',
 		OUT = 'out',
 		CLOCK = 'clock',
-		COUNTER = 'counter'
+		COUNTER = 'counter',
 	}
 
 	// Props
@@ -32,12 +32,7 @@ Provides dual blue/red orientation selection panels for start position configura
 	let redOrientation: Orientation = $state(Orientation.IN);
 
 	// Available orientations
-	const orientations = [
-		Orientation.IN,
-		Orientation.OUT,
-		Orientation.CLOCK,
-		Orientation.COUNTER
-	];
+	const orientations = [Orientation.IN, Orientation.OUT, Orientation.CLOCK, Orientation.COUNTER];
 
 	// Handle orientation selection
 	function setOrientation(color: 'blue' | 'red', orientation: Orientation) {
@@ -61,9 +56,11 @@ Provides dual blue/red orientation selection panels for start position configura
 				const blueOri = beatData.pictograph_data.motions.blue.start_ori;
 				if (blueOri) {
 					try {
-						blueOrientation = typeof blueOri === 'string' ? 
-							Orientation[blueOri.toUpperCase() as keyof typeof Orientation] || Orientation.IN :
-							blueOri;
+						blueOrientation =
+							typeof blueOri === 'string'
+								? Orientation[blueOri.toUpperCase() as keyof typeof Orientation] ||
+									Orientation.IN
+								: blueOri;
 					} catch {
 						blueOrientation = Orientation.IN;
 					}
@@ -78,9 +75,11 @@ Provides dual blue/red orientation selection panels for start position configura
 				const redOri = beatData.pictograph_data.motions.red.start_ori;
 				if (redOri) {
 					try {
-						redOrientation = typeof redOri === 'string' ? 
-							Orientation[redOri.toUpperCase() as keyof typeof Orientation] || Orientation.IN :
-							redOri;
+						redOrientation =
+							typeof redOri === 'string'
+								? Orientation[redOri.toUpperCase() as keyof typeof Orientation] ||
+									Orientation.IN
+								: redOri;
 					} catch {
 						redOrientation = Orientation.IN;
 					}
@@ -96,8 +95,10 @@ Provides dual blue/red orientation selection panels for start position configura
 			redOrientation = Orientation.IN;
 		}
 
-		console.log('🧭 [ORIENTATION_PICKER] Beat data set, orientations:', 
-			{ blue: blueOrientation, red: redOrientation });
+		console.log('🧭 [ORIENTATION_PICKER] Beat data set, orientations:', {
+			blue: blueOrientation,
+			red: redOrientation,
+		});
 	}
 
 	export function getBlueOrientation(): Orientation {
@@ -132,16 +133,16 @@ Provides dual blue/red orientation selection panels for start position configura
 		<div class="panel-header">
 			<h4>Blue Orientation</h4>
 		</div>
-		
+
 		<!-- Current orientation display -->
 		<div class="current-orientation blue-display">
 			{blueOrientation.toUpperCase()}
 		</div>
-		
+
 		<!-- Orientation selection buttons -->
 		<div class="orientation-buttons">
 			{#each orientations as orientation}
-				<button 
+				<button
 					class="orientation-btn blue-btn"
 					class:active={blueOrientation === orientation}
 					onclick={() => setOrientation('blue', orientation)}
@@ -158,16 +159,16 @@ Provides dual blue/red orientation selection panels for start position configura
 		<div class="panel-header">
 			<h4>Red Orientation</h4>
 		</div>
-		
+
 		<!-- Current orientation display -->
 		<div class="current-orientation red-display">
 			{redOrientation.toUpperCase()}
 		</div>
-		
+
 		<!-- Orientation selection buttons -->
 		<div class="orientation-buttons">
 			{#each orientations as orientation}
-				<button 
+				<button
 					class="orientation-btn red-btn"
 					class:active={redOrientation === orientation}
 					onclick={() => setOrientation('red', orientation)}

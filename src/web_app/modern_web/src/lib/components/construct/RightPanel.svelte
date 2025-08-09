@@ -54,12 +54,7 @@
 	<!-- Tab Content with Fade Transitions -->
 	<div class="tab-content">
 		{#if activeRightPanel === 'build'}
-			<div
-				class="sub-tab-content"
-				data-sub-tab="build"
-				in:transitions.in
-				out:transitions.out
-			>
+			<div class="sub-tab-content" data-sub-tab="build" in:transitions.in out:transitions.out>
 				<BuildTabContent />
 			</div>
 		{:else if activeRightPanel === 'generate'}
@@ -67,12 +62,7 @@
 				<GeneratePanel />
 			</div>
 		{:else if activeRightPanel === 'edit'}
-			<div
-				class="sub-tab-content"
-				data-sub-tab="edit"
-				in:transitions.in
-				out:transitions.out
-			>
+			<div class="sub-tab-content" data-sub-tab="edit" in:transitions.in out:transitions.out>
 				<div class="panel-header">
 					<h2>Graph Editor</h2>
 					<p>Advanced sequence editing tools</p>

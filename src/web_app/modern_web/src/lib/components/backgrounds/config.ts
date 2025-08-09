@@ -13,7 +13,7 @@ export const SnowfallConfig = {
 		minSpeed: 0.5,
 		maxSpeed: 2,
 		density: 0.0001,
-		windChangeInterval: 300
+		windChangeInterval: 300,
 	},
 	shootingStar: {
 		colors: ['#ffffff', '#ffff99', '#99ccff', '#ffcc99'],
@@ -25,9 +25,9 @@ export const SnowfallConfig = {
 		maxInterval: 15000,
 		tailLength: {
 			min: 10,
-			max: 20
-		}
-	}
+			max: 20,
+		},
+	},
 };
 
 /**
@@ -112,7 +112,7 @@ export const QUALITY_CONFIGS = {
 		enableBlur: false,
 		enableGlow: false,
 		particleSize: 1,
-		densityMultiplier: 0.3
+		densityMultiplier: 0.3,
 	},
 	low: {
 		maxParticles: 50,
@@ -120,7 +120,7 @@ export const QUALITY_CONFIGS = {
 		enableBlur: false,
 		enableGlow: false,
 		particleSize: 2,
-		densityMultiplier: 0.5
+		densityMultiplier: 0.5,
 	},
 	medium: {
 		maxParticles: 100,
@@ -128,7 +128,7 @@ export const QUALITY_CONFIGS = {
 		enableBlur: true,
 		enableGlow: false,
 		particleSize: 3,
-		densityMultiplier: 0.75
+		densityMultiplier: 0.75,
 	},
 	high: {
 		maxParticles: 200,
@@ -136,8 +136,8 @@ export const QUALITY_CONFIGS = {
 		enableBlur: true,
 		enableGlow: true,
 		particleSize: 4,
-		densityMultiplier: 1.0
-	}
+		densityMultiplier: 1.0,
+	},
 } as const;
 
 /**
@@ -161,15 +161,15 @@ export function getOptimizedConfig(quality: QualityLevel) {
 					gradientStops: [
 						{ position: 0, color: '#1a1a2e' },
 						{ position: 0.5, color: '#16213e' },
-						{ position: 1, color: '#0f3460' }
-					]
-				}
+						{ position: 1, color: '#0f3460' },
+					],
+				},
 			},
-			nightSky: NightSkyConfig
+			nightSky: NightSkyConfig,
 		},
 		qualitySettings: {
 			...qualitySettings,
-			enableShootingStars: quality === 'high' || quality === 'medium'
-		}
+			enableShootingStars: quality === 'high' || quality === 'medium',
+		},
 	};
 }

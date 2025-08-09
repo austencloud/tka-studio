@@ -273,7 +273,9 @@
 		// **IMMEDIATE: Check if start position already exists and load options**
 		const existingStartPos = localStorage.getItem('start_position');
 		if (existingStartPos) {
-			console.log('🎯 OptionPicker found existing start position, loading options immediately');
+			console.log(
+				'🎯 OptionPicker found existing start position, loading options immediately'
+			);
 			setTimeout(() => {
 				if (optionDataService) {
 					loadOptionsFromStartPosition();
@@ -306,7 +308,10 @@
 
 			// Listen for start position set events from coordination service
 			const handleStartPositionSet = (data: any) => {
-				console.log('🎯 OptionPicker received start_position_set from coordination service:', data);
+				console.log(
+					'🎯 OptionPicker received start_position_set from coordination service:',
+					data
+				);
 				if (optionDataService) {
 					loadOptionsFromStartPosition();
 				}
@@ -328,7 +333,10 @@
 
 	// Debug: Log filteredOptions changes
 	$effect(() => {
-		console.log(`🔍 DEBUG: filteredOptions.length = ${filteredOptions.length}`, filteredOptions);
+		console.log(
+			`🔍 DEBUG: filteredOptions.length = ${filteredOptions.length}`,
+			filteredOptions
+		);
 		console.log(`🔍 DEBUG: filteredOptions is array? ${Array.isArray(filteredOptions)}`);
 		console.log(`🔍 DEBUG: filteredOptions type: ${typeof filteredOptions}`);
 	});
@@ -421,7 +429,9 @@
 		{:else if loadingError}
 			<div class="error-container">
 				<p>Unable to load options. Please try again.</p>
-				<button class="retry-button" onclick={() => loadOptionsFromStartPosition()}> Retry </button>
+				<button class="retry-button" onclick={() => loadOptionsFromStartPosition()}>
+					Retry
+				</button>
 			</div>
 		{:else if filteredOptions.length === 0}
 			<div class="empty-container">
@@ -473,10 +483,14 @@
 							<div class="option-letter">{option.letter || '?'}</div>
 							<div class="option-details">
 								{#if option.motions?.blue}
-									<span class="motion-tag blue">{option.motions.blue.motionType}</span>
+									<span class="motion-tag blue"
+										>{option.motions.blue.motionType}</span
+									>
 								{/if}
 								{#if option.motions?.red}
-									<span class="motion-tag red">{option.motions.red.motionType}</span>
+									<span class="motion-tag red"
+										>{option.motions.red.motionType}</span
+									>
 								{/if}
 							</div>
 						</div>

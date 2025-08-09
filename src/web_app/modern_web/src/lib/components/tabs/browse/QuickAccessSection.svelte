@@ -10,28 +10,28 @@
 			type: 'favorites',
 			value: 'favorites',
 			color: '#FFD700',
-			description: 'Your starred sequences'
+			description: 'Your starred sequences',
 		},
 		{
 			label: '🔥 Recently Added',
 			type: 'recent',
 			value: 'recent',
 			color: '#FF6B6B',
-			description: 'Recently added sequences'
+			description: 'Recently added sequences',
 		},
 		{
 			label: '📊 All Sequences',
 			type: 'all_sequences',
 			value: 'all',
 			color: '#4ECDC4',
-			description: 'Browse all sequences'
-		}
+			description: 'Browse all sequences',
+		},
 	];
 
 	function handleQuickAccess(filter: any) {
 		dispatch('quickAccess', {
 			type: filter.type,
-			value: filter.value
+			value: filter.value,
 		});
 	}
 </script>

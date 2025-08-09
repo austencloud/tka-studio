@@ -149,7 +149,9 @@
 			</div>
 			<div class="metadata-row">
 				<span class="metadata-label">Difficulty:</span>
-				<span class="metadata-value difficulty-{difficulty.toLowerCase()}">{difficulty}</span>
+				<span class="metadata-value difficulty-{difficulty.toLowerCase()}"
+					>{difficulty}</span
+				>
 			</div>
 			<div class="metadata-row">
 				<span class="metadata-label">Grid:</span>

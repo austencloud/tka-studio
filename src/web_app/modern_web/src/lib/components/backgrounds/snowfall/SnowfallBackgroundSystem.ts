@@ -6,7 +6,7 @@ import type {
 	Dimensions,
 	QualityLevel,
 	ShootingStarState,
-	Snowflake
+	Snowflake,
 } from '../types/types';
 import { drawBackgroundGradient } from './utils/backgroundUtils';
 import { getOptimizedConfig } from '../config';
@@ -22,7 +22,7 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 	private isDecember: boolean = false;
 	private accessibilitySettings: { reducedMotion: boolean; highContrast: boolean } = {
 		reducedMotion: false,
-		highContrast: false
+		highContrast: false,
 	};
 	private isInitialized: boolean = false;
 
@@ -52,7 +52,10 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 			this.snowflakes = this.snowflakeSystem.update(this.snowflakes, dimensions);
 			const { qualitySettings } = getOptimizedConfig(this.quality);
 			if (qualitySettings.enableShootingStars) {
-				this.shootingStarState = this.shootingStarSystem.update(this.shootingStarState, dimensions);
+				this.shootingStarState = this.shootingStarSystem.update(
+					this.shootingStarState,
+					dimensions
+				);
 			}
 		}
 	}

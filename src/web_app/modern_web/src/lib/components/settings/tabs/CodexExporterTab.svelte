@@ -24,7 +24,7 @@
 	// Options - matching desktop app
 	const gridModeOptions = [
 		{ value: 'diamond', label: 'Diamond' },
-		{ value: 'box', label: 'Box' }
+		{ value: 'box', label: 'Box' },
 	];
 
 	// Update handlers
@@ -65,7 +65,7 @@
 			gridMode,
 			generateAll,
 			quality,
-			includeMetadata
+			includeMetadata,
 		};
 		dispatch('update', { key: 'codexExporter', value: codexExporterSettings });
 	}
@@ -77,7 +77,7 @@
 			grid_mode: gridMode,
 			generate_all: generateAll,
 			quality: quality,
-			include_metadata: includeMetadata
+			include_metadata: includeMetadata,
 		};
 
 		// Emit export event (services will be handled later)
@@ -89,8 +89,8 @@
 </script>
 
 <div class="tab-content">
-	<SettingCard 
-		title="Codex Exporter" 
+	<SettingCard
+		title="Codex Exporter"
 		description="Export all pictographs with customizable turn configurations"
 	>
 		<!-- Turn Configuration Section -->

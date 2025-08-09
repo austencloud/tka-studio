@@ -22,10 +22,10 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 	function handleToggleChange(event: CustomEvent) {
 		const isChecked = event.detail.checked;
 		currentMode = isChecked ? 'BOX' : 'DIAMOND';
-		
+
 		// Dispatch value change
-		const changeEvent = new CustomEvent('valueChanged', { 
-			detail: { value: currentMode } 
+		const changeEvent = new CustomEvent('valueChanged', {
+			detail: { value: currentMode },
 		});
 		document.dispatchEvent(changeEvent);
 	}
@@ -35,9 +35,9 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 		if (currentMode !== 'DIAMOND') {
 			currentMode = 'DIAMOND';
 			toggleRef?.setChecked(false);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentMode } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentMode },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -47,9 +47,9 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 		if (currentMode !== 'BOX') {
 			currentMode = 'BOX';
 			toggleRef?.setChecked(true);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentMode } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentMode },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -68,18 +68,13 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 
 <div class="grid-mode-selector">
 	<div class="header-label">Grid Mode:</div>
-	
+
 	<div class="control-layout">
-		<button 
-			class="mode-label" 
-			class:active={!isBoxMode}
-			onclick={selectDiamond}
-			type="button"
-		>
+		<button class="mode-label" class:active={!isBoxMode} onclick={selectDiamond} type="button">
 			Diamond
 		</button>
-		
-		<PyToggle 
+
+		<PyToggle
 			bind:this={toggleRef}
 			checked={isBoxMode}
 			width={50}
@@ -88,13 +83,8 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 			circleColor="#FFFFFF"
 			onstateChanged={handleToggleChange}
 		/>
-		
-		<button 
-			class="mode-label" 
-			class:active={isBoxMode}
-			onclick={selectBox}
-			type="button"
-		>
+
+		<button class="mode-label" class:active={isBoxMode} onclick={selectBox} type="button">
 			Box
 		</button>
 	</div>
@@ -139,7 +129,7 @@ A compact control using PyToggle for selecting between Diamond and Box grid mode
 	}
 
 	.mode-label.active {
-		color: rgba(255, 255, 255, 1.0);
+		color: rgba(255, 255, 255, 1);
 		font-weight: bold;
 	}
 </style>

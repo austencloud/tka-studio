@@ -1,15 +1,15 @@
 /**
  * Service Actions - Bridge between services and runes state
- * 
+ *
  * These functions coordinate service calls with runes state updates.
  * Pure functions that handle the integration between services and reactive state.
  */
 
 import type { SequenceData, BeatData } from '@tka/schemas';
-import type { 
-	ISequenceService, 
+import type {
+	ISequenceService,
 	SequenceCreateRequest,
-	GenerationOptions 
+	GenerationOptions,
 } from '$services/interfaces';
 
 import {
@@ -21,7 +21,7 @@ import {
 	updateCurrentBeat,
 	setLoading,
 	setError,
-	clearError
+	clearError,
 } from './sequenceState.svelte';
 
 // ============================================================================
@@ -40,10 +40,10 @@ export async function createSequence(
 
 	try {
 		console.log('Creating sequence:', request);
-		
+
 		const sequence = await sequenceService.createSequence(request);
 		addSequence(sequence);
-		
+
 		console.log('Sequence created successfully:', sequence.id);
 		return sequence;
 	} catch (error) {
@@ -65,10 +65,10 @@ export async function loadSequences(sequenceService: ISequenceService): Promise<
 
 	try {
 		console.log('Loading sequences...');
-		
+
 		const sequences = await sequenceService.getAllSequences();
 		setSequences(sequences);
-		
+
 		console.log(`Loaded ${sequences.length} sequences`);
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -91,7 +91,7 @@ export async function selectSequence(
 
 	try {
 		console.log('Selecting sequence:', sequenceId);
-		
+
 		const sequence = await sequenceService.getSequence(sequenceId);
 		if (sequence) {
 			setCurrentSequence(sequence);
@@ -119,10 +119,10 @@ export async function deleteSequence(
 
 	try {
 		console.log('Deleting sequence:', sequenceId);
-		
+
 		await sequenceService.deleteSequence(sequenceId);
 		removeSequence(sequenceId);
-		
+
 		console.log('Sequence deleted successfully');
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -148,10 +148,10 @@ export async function updateBeat(
 
 	try {
 		console.log(`Updating beat ${beatIndex} in sequence ${currentSequence.id}`);
-		
+
 		await sequenceService.updateBeat(currentSequence.id, beatIndex, beatData);
 		updateCurrentBeat(beatIndex, beatData);
-		
+
 		console.log('Beat updated successfully');
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -176,16 +176,16 @@ export async function addBeat(
 
 	try {
 		console.log('Adding beat to sequence:', currentSequence.id);
-		
+
 		// Use the service's addBeat method (assumes it exists)
 		await (sequenceService as any).addBeat(currentSequence.id, beatData);
-		
+
 		// Reload the sequence to get the updated version
 		const updatedSequence = await sequenceService.getSequence(currentSequence.id);
 		if (updatedSequence) {
 			updateSequence(updatedSequence);
 		}
-		
+
 		console.log('Beat added successfully');
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -213,10 +213,10 @@ export async function generateSequence(
 
 	try {
 		console.log('Generating sequence with options:', options);
-		
+
 		const sequence = await generationService.generateSequence(options);
 		addSequence(sequence);
-		
+
 		console.log('Sequence generated successfully:', sequence.id);
 		return sequence;
 	} catch (error) {
@@ -233,17 +233,13 @@ export async function generateSequence(
 // ARROW POSITIONING ACTIONS
 // ============================================================================
 
-import type { 
-	IArrowPositioningService,
-	PictographData,
-	GridData 
-} from '$services/interfaces';
+import type { IArrowPositioningService, PictographData, GridData } from '$services/interfaces';
 
 import {
 	setArrowPositions,
 	setArrowPositioningInProgress,
 	setArrowPositioningError,
-	clearArrowPositions
+	clearArrowPositions,
 } from './sequenceState.svelte';
 
 /**
@@ -267,12 +263,10 @@ export async function calculateArrowPositions(
 
 		setArrowPositions(positions);
 		console.log(`Arrow positions calculated: ${positions.size} arrows positioned`);
-
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 		setArrowPositioningError(errorMessage);
 		console.error('Failed to calculate arrow positions:', error);
-
 	} finally {
 		setArrowPositioningInProgress(false);
 	}
@@ -315,9 +309,9 @@ function beatToPictographData(beat: BeatData, sequence: SequenceData): Pictograp
 		props: { blue: {}, red: {} },
 		motions: {
 			blue: beat.blueMotion,
-			red: beat.redMotion
+			red: beat.redMotion,
 		},
-		letter: beat.letter
+		letter: beat.letter,
 	};
 }
 
@@ -327,29 +321,45 @@ function beatToPictographData(beat: BeatData, sequence: SequenceData): Pictograp
 function createDefaultGridData(): GridData {
 	const center = { x: 150, y: 150 };
 	const size = 80;
-	
+
 	return {
 		mode: 'diamond',
 		allLayer2PointsNormal: {
-			'n_diamond_layer2_point': { coordinates: { x: center.x, y: center.y - size } },
-			'ne_diamond_layer2_point': { coordinates: { x: center.x + size * 0.7, y: center.y - size * 0.7 } },
-			'e_diamond_layer2_point': { coordinates: { x: center.x + size, y: center.y } },
-			'se_diamond_layer2_point': { coordinates: { x: center.x + size * 0.7, y: center.y + size * 0.7 } },
-			's_diamond_layer2_point': { coordinates: { x: center.x, y: center.y + size } },
-			'sw_diamond_layer2_point': { coordinates: { x: center.x - size * 0.7, y: center.y + size * 0.7 } },
-			'w_diamond_layer2_point': { coordinates: { x: center.x - size, y: center.y } },
-			'nw_diamond_layer2_point': { coordinates: { x: center.x - size * 0.7, y: center.y - size * 0.7 } },
+			n_diamond_layer2_point: { coordinates: { x: center.x, y: center.y - size } },
+			ne_diamond_layer2_point: {
+				coordinates: { x: center.x + size * 0.7, y: center.y - size * 0.7 },
+			},
+			e_diamond_layer2_point: { coordinates: { x: center.x + size, y: center.y } },
+			se_diamond_layer2_point: {
+				coordinates: { x: center.x + size * 0.7, y: center.y + size * 0.7 },
+			},
+			s_diamond_layer2_point: { coordinates: { x: center.x, y: center.y + size } },
+			sw_diamond_layer2_point: {
+				coordinates: { x: center.x - size * 0.7, y: center.y + size * 0.7 },
+			},
+			w_diamond_layer2_point: { coordinates: { x: center.x - size, y: center.y } },
+			nw_diamond_layer2_point: {
+				coordinates: { x: center.x - size * 0.7, y: center.y - size * 0.7 },
+			},
 		},
 		allHandPointsNormal: {
-			'n_diamond_hand_point': { coordinates: { x: center.x, y: center.y - size * 0.6 } },
-			'ne_diamond_hand_point': { coordinates: { x: center.x + size * 0.5, y: center.y - size * 0.5 } },
-			'e_diamond_hand_point': { coordinates: { x: center.x + size * 0.6, y: center.y } },
-			'se_diamond_hand_point': { coordinates: { x: center.x + size * 0.5, y: center.y + size * 0.5 } },
-			's_diamond_hand_point': { coordinates: { x: center.x, y: center.y + size * 0.6 } },
-			'sw_diamond_hand_point': { coordinates: { x: center.x - size * 0.5, y: center.y + size * 0.5 } },
-			'w_diamond_hand_point': { coordinates: { x: center.x - size * 0.6, y: center.y } },
-			'nw_diamond_hand_point': { coordinates: { x: center.x - size * 0.5, y: center.y - size * 0.5 } },
-		}
+			n_diamond_hand_point: { coordinates: { x: center.x, y: center.y - size * 0.6 } },
+			ne_diamond_hand_point: {
+				coordinates: { x: center.x + size * 0.5, y: center.y - size * 0.5 },
+			},
+			e_diamond_hand_point: { coordinates: { x: center.x + size * 0.6, y: center.y } },
+			se_diamond_hand_point: {
+				coordinates: { x: center.x + size * 0.5, y: center.y + size * 0.5 },
+			},
+			s_diamond_hand_point: { coordinates: { x: center.x, y: center.y + size * 0.6 } },
+			sw_diamond_hand_point: {
+				coordinates: { x: center.x - size * 0.5, y: center.y + size * 0.5 },
+			},
+			w_diamond_hand_point: { coordinates: { x: center.x - size * 0.6, y: center.y } },
+			nw_diamond_hand_point: {
+				coordinates: { x: center.x - size * 0.5, y: center.y - size * 0.5 },
+			},
+		},
 	};
 }
 

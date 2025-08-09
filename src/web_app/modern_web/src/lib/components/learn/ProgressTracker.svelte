@@ -16,12 +16,14 @@
 	export let compact: boolean = false;
 
 	// Reactive statements
-	$: accuracyPercentage = progress.questionsAnswered > 0 
-		? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100) 
-		: 0;
-	$: progressPercentage = quizMode === QuizModeEnum.FIXED_QUESTION && progress.totalQuestions > 0
-		? Math.round((progress.questionsAnswered / progress.totalQuestions) * 100)
-		: 0;
+	$: accuracyPercentage =
+		progress.questionsAnswered > 0
+			? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100)
+			: 0;
+	$: progressPercentage =
+		quizMode === QuizModeEnum.FIXED_QUESTION && progress.totalQuestions > 0
+			? Math.round((progress.questionsAnswered / progress.totalQuestions) * 100)
+			: 0;
 	$: formattedTime = formatTime(progress.timeElapsed);
 
 	// Methods
@@ -55,9 +57,9 @@
 					<span class="stat-label">answered</span>
 				</div>
 			{/if}
-			
+
 			<div class="stat-divider"></div>
-			
+
 			<div class="stat-item accuracy {getAccuracyClass(accuracyPercentage)}">
 				<span class="stat-value">{accuracyPercentage}%</span>
 				<span class="stat-label">accuracy</span>
@@ -71,13 +73,12 @@
 				<div class="progress-section">
 					<div class="progress-header">
 						<span class="progress-label">Question Progress</span>
-						<span class="progress-count">{progress.currentQuestion} / {progress.totalQuestions}</span>
+						<span class="progress-count"
+							>{progress.currentQuestion} / {progress.totalQuestions}</span
+						>
 					</div>
 					<div class="progress-bar">
-						<div 
-							class="progress-fill" 
-							style="width: {progressPercentage}%"
-						></div>
+						<div class="progress-fill" style="width: {progressPercentage}%"></div>
 					</div>
 				</div>
 			{/if}

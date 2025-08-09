@@ -15,7 +15,7 @@ export class DefaultPropPositioner {
 		ne: { x: 620, y: 330 },
 		se: { x: 620, y: 620 },
 		sw: { x: 330, y: 620 },
-		nw: { x: 330, y: 330 }
+		nw: { x: 330, y: 330 },
 	};
 
 	constructor(
@@ -69,7 +69,7 @@ export class DefaultPropPositioner {
 			pointName,
 			pointName.replace('_hand_point', ''),
 			`${pointName}_normal`,
-			`hand_${pointName}`
+			`hand_${pointName}`,
 		];
 
 		for (const altName of alternativeNames) {
@@ -91,7 +91,10 @@ export class DefaultPropPositioner {
 	/**
 	 * Static helper method for quick coordinate calculation
 	 */
-	static calculatePosition(location: string, gridMode: string = 'diamond'): { x: number; y: number } {
+	static calculatePosition(
+		location: string,
+		gridMode: string = 'diamond'
+	): { x: number; y: number } {
 		try {
 			const gridData = createGridData(gridMode as any);
 			const positioner = new DefaultPropPositioner(gridData, gridMode);

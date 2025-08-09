@@ -1,6 +1,6 @@
 /**
  * End-to-End Pictograph Rendering Tests
- * 
+ *
  * Tests the complete pictograph rendering pipeline from data to visual output
  */
 
@@ -17,11 +17,11 @@ test.describe('Modern Pictograph E2E', () => {
 		test('should render simple pictograph with letter', async ({ page }) => {
 			// Select the simple demo
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
+
 			// Wait for pictograph to load
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Verify SVG is present
@@ -41,11 +41,11 @@ test.describe('Modern Pictograph E2E', () => {
 		test('should render complex pictograph with multiple components', async ({ page }) => {
 			// Select the complex demo
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'complex');
-			
+
 			// Wait for pictograph to load
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Verify letter
@@ -63,11 +63,11 @@ test.describe('Modern Pictograph E2E', () => {
 		test('should render empty state for blank pictograph', async ({ page }) => {
 			// Select the empty demo
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'empty');
-			
+
 			// Wait for pictograph to load
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 5000 
+				timeout: 5000,
 			});
 
 			// Should show empty state indicator
@@ -85,10 +85,10 @@ test.describe('Modern Pictograph E2E', () => {
 			// Start with diamond mode
 			await page.selectOption('[data-testid=\"grid-mode-selector\"]', 'diamond');
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Verify grid is loaded
@@ -97,7 +97,7 @@ test.describe('Modern Pictograph E2E', () => {
 
 			// Switch to box mode
 			await page.selectOption('[data-testid=\"grid-mode-selector\"]', 'box');
-			
+
 			// Wait for re-render
 			await page.waitForTimeout(1000);
 
@@ -111,10 +111,10 @@ test.describe('Modern Pictograph E2E', () => {
 			// Enable debug mode
 			await page.check('[data-testid=\"debug-mode-checkbox\"]');
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Should show debug overlay
@@ -122,7 +122,9 @@ test.describe('Modern Pictograph E2E', () => {
 			await expect(debugOverlay).toBeVisible();
 
 			// Should show component count
-			const componentText = page.locator('svg text:text-matches(\"Components: \\\\d+/\\\\d+\")');
+			const componentText = page.locator(
+				'svg text:text-matches(\"Components: \\\\d+/\\\\d+\")'
+			);
 			await expect(componentText).toBeVisible();
 
 			// Should show data ID
@@ -134,10 +136,10 @@ test.describe('Modern Pictograph E2E', () => {
 			// Ensure debug mode is disabled
 			await page.uncheck('[data-testid=\"debug-mode-checkbox\"]');
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Should not show debug overlay
@@ -150,7 +152,7 @@ test.describe('Modern Pictograph E2E', () => {
 		test('should show loading indicator during component loading', async ({ page }) => {
 			// Clear cache and reload to see loading states
 			await page.reload();
-			
+
 			// Select a complex demo to have more loading time
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'complex');
 
@@ -168,21 +170,21 @@ test.describe('Modern Pictograph E2E', () => {
 
 		test('should handle component loading errors gracefully', async ({ page }) => {
 			// Mock network to cause asset loading failures
-			await page.route('/images/arrows/**', route => route.abort());
-			await page.route('/images/props/**', route => route.abort());
-			
+			await page.route('/images/arrows/**', (route) => route.abort());
+			await page.route('/images/props/**', (route) => route.abort());
+
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
+
 			// Should still render the pictograph with fallbacks
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// May show error overlay
 			const errorOverlay = page.locator('svg g.error-overlay');
 			// Error overlay might or might not be visible depending on fallback success
-			
+
 			// But the SVG should still be present
 			const svg = page.locator('[data-testid=\"main-pictograph\"] svg');
 			await expect(svg).toBeVisible();
@@ -200,9 +202,9 @@ test.describe('Modern Pictograph E2E', () => {
 			});
 
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Click the pictograph
@@ -215,9 +217,9 @@ test.describe('Modern Pictograph E2E', () => {
 
 		test('should respond to keyboard navigation', async ({ page }) => {
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Focus the pictograph
@@ -236,7 +238,7 @@ test.describe('Modern Pictograph E2E', () => {
 	test.describe('Multiple Size Rendering', () => {
 		test('should render correctly at different sizes', async ({ page }) => {
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
+
 			// Test small size
 			const smallPictograph = page.locator('[data-testid=\"small-pictograph\"] svg');
 			await expect(smallPictograph).toBeVisible({ timeout: 10000 });
@@ -282,7 +284,9 @@ test.describe('Modern Pictograph E2E', () => {
 			await expect(blankBeatDemo).toBeVisible({ timeout: 10000 });
 
 			// Should show beat number for blank beat
-			const beatNumber = page.locator('[data-testid=\"blank-beat-demo\"] svg text:has-text(\"2\")');
+			const beatNumber = page.locator(
+				'[data-testid=\"blank-beat-demo\"] svg text:has-text(\"2\")'
+			);
 			await expect(beatNumber).toBeVisible();
 
 			// Should show empty state
@@ -298,17 +302,17 @@ test.describe('Modern Pictograph E2E', () => {
 
 			// Load complex demo
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'complex');
-			
+
 			// Wait for complete rendering
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			// Wait for all loading to complete
-			await page.waitForSelector('svg g.loading-overlay', { 
+			await page.waitForSelector('svg g.loading-overlay', {
 				state: 'hidden',
-				timeout: 15000 
+				timeout: 15000,
 			});
 
 			// Mark end time
@@ -321,7 +325,7 @@ test.describe('Modern Pictograph E2E', () => {
 
 		test('should handle rapid demo switching without memory leaks', async ({ page }) => {
 			const demos = ['simple', 'complex', 'empty'];
-			
+
 			// Rapidly switch between demos
 			for (let i = 0; i < 10; i++) {
 				const demo = demos[i % demos.length];
@@ -331,9 +335,9 @@ test.describe('Modern Pictograph E2E', () => {
 
 			// Final render should still work
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			const svg = page.locator('[data-testid=\"main-pictograph\"] svg');
@@ -344,14 +348,14 @@ test.describe('Modern Pictograph E2E', () => {
 	test.describe('Error Handling', () => {
 		test('should recover from asset loading failures', async ({ page }) => {
 			// Mock some assets to fail
-			await page.route('/images/grid/diamond_grid.svg', route => route.abort());
-			
+			await page.route('/images/grid/diamond_grid.svg', (route) => route.abort());
+
 			await page.selectOption('[data-testid=\"demo-selector\"]', 'simple');
-			
+
 			// Should still render with fallback grid
-			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', { 
+			await page.waitForSelector('[data-testid=\"main-pictograph\"] svg', {
 				state: 'visible',
-				timeout: 10000 
+				timeout: 10000,
 			});
 
 			const svg = page.locator('[data-testid=\"main-pictograph\"] svg');
@@ -365,11 +369,11 @@ test.describe('Modern Pictograph E2E', () => {
 		test('should handle invalid data gracefully', async ({ page }) => {
 			// Inject invalid data (this would require a test endpoint)
 			await page.goto('/test/pictograph-demo?invalidData=true');
-			
+
 			// Should show error state or fallback
 			const svg = page.locator('svg');
 			await expect(svg).toBeVisible({ timeout: 5000 });
-			
+
 			// May show error overlay
 			const errorOverlay = page.locator('svg g.error-overlay');
 			// Error handling depends on implementation
@@ -385,9 +389,9 @@ test.describe('BeatView Integration E2E', () => {
 
 	test('should render multiple beats in sequence', async ({ page }) => {
 		// Wait for beat views to load
-		await page.waitForSelector('[data-testid=\"beat-view-0\"]', { 
+		await page.waitForSelector('[data-testid=\"beat-view-0\"]', {
 			state: 'visible',
-			timeout: 10000 
+			timeout: 10000,
 		});
 
 		// Check multiple beats are rendered
@@ -404,9 +408,9 @@ test.describe('BeatView Integration E2E', () => {
 	});
 
 	test('should handle beat selection', async ({ page }) => {
-		await page.waitForSelector('[data-testid=\"beat-view-0\"]', { 
+		await page.waitForSelector('[data-testid=\"beat-view-0\"]', {
 			state: 'visible',
-			timeout: 10000 
+			timeout: 10000,
 		});
 
 		// Click first beat
@@ -418,9 +422,9 @@ test.describe('BeatView Integration E2E', () => {
 	});
 
 	test('should show hover effects', async ({ page }) => {
-		await page.waitForSelector('[data-testid=\"beat-view-0\"]', { 
+		await page.waitForSelector('[data-testid=\"beat-view-0\"]', {
 			state: 'visible',
-			timeout: 10000 
+			timeout: 10000,
 		});
 
 		// Hover over beat

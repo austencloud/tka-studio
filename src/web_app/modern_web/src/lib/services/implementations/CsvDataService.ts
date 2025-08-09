@@ -52,11 +52,13 @@ export class CsvDataService {
 				// Fallback: Fetch CSV files from static directory
 				const [diamondResponse, boxResponse] = await Promise.all([
 					fetch('/DiamondPictographDataframe.csv'),
-					fetch('/BoxPictographDataframe.csv')
+					fetch('/BoxPictographDataframe.csv'),
 				]);
 
 				if (!diamondResponse.ok || !boxResponse.ok) {
-					throw new Error(`Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`);
+					throw new Error(
+						`Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`
+					);
 				}
 
 				const diamondData = await diamondResponse.text();
@@ -68,16 +70,19 @@ export class CsvDataService {
 			// Parse the CSV data
 			this.parsedData = {
 				diamond: this.parseCSV(this.csvData.diamondData),
-				box: this.parseCSV(this.csvData.boxData)
+				box: this.parseCSV(this.csvData.boxData),
 			};
 
 			this.isInitialized = true;
 
-			console.log(`✅ CSV data loaded: ${this.parsedData.diamond.length} diamond, ${this.parsedData.box.length} box entries`);
-
+			console.log(
+				`✅ CSV data loaded: ${this.parsedData.diamond.length} diamond, ${this.parsedData.box.length} box entries`
+			);
 		} catch (error) {
 			console.error('❌ Error loading CSV data:', error);
-			throw new Error(`Failed to load CSV data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to load CSV data: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -113,23 +118,27 @@ export class CsvDataService {
 			const dataset = this.parsedData[gridMode];
 
 			// Filter options where startPos matches the endPosition (positional continuity)
-			const matchingOptions = dataset.filter(row => row.startPos === endPosition);
+			const matchingOptions = dataset.filter((row) => row.startPos === endPosition);
 
-			console.log(`🎯 Found ${matchingOptions.length} options for end position: ${endPosition} in ${gridMode} mode`);
+			console.log(
+				`🎯 Found ${matchingOptions.length} options for end position: ${endPosition} in ${gridMode} mode`
+			);
 
 			// Debug: Show first few matches
 			if (matchingOptions.length > 0) {
-				console.log(`🔍 Sample options:`, matchingOptions.slice(0, 3).map(opt => ({
-					letter: opt.letter,
-					startPos: opt.startPos,
-					endPos: opt.endPos,
-					blueMotion: opt.blueMotionType,
-					redMotion: opt.redMotionType
-				})));
+				console.log(
+					`🔍 Sample options:`,
+					matchingOptions.slice(0, 3).map((opt) => ({
+						letter: opt.letter,
+						startPos: opt.startPos,
+						endPos: opt.endPos,
+						blueMotion: opt.blueMotionType,
+						redMotion: opt.redMotionType,
+					}))
+				);
 			}
 
 			return matchingOptions;
-
 		} catch (error) {
 			console.error('❌ Error getting next options:', error);
 			return [];
@@ -144,12 +153,12 @@ export class CsvDataService {
 		if (lines.length < 2) return [];
 
 		// Parse header
-		const headers = lines[0].split(',').map(h => h.trim());
+		const headers = lines[0].split(',').map((h) => h.trim());
 		const data: ParsedCsvRow[] = [];
 
 		// Parse each data row
 		for (let i = 1; i < lines.length; i++) {
-			const values = lines[i].split(',').map(v => v.trim());
+			const values = lines[i].split(',').map((v) => v.trim());
 			const row: Record<string, string> = {};
 
 			// Create row object
@@ -171,7 +180,7 @@ export class CsvDataService {
 				redMotionType: row.redMotionType || '',
 				redPropRotDir: row.redPropRotDir || '',
 				redStartLoc: row.redStartLoc || '',
-				redEndLoc: row.redEndLoc || ''
+				redEndLoc: row.redEndLoc || '',
 			});
 		}
 
@@ -185,7 +194,7 @@ export class CsvDataService {
 		if (!this.parsedData) return [];
 
 		const dataset = this.parsedData[gridMode];
-		const startPositions = [...new Set(dataset.map(row => row.startPos))];
+		const startPositions = [...new Set(dataset.map((row) => row.startPos))];
 		return startPositions.sort();
 	}
 
@@ -196,7 +205,7 @@ export class CsvDataService {
 		if (!this.parsedData) return [];
 
 		const dataset = this.parsedData[gridMode];
-		const endPositions = [...new Set(dataset.map(row => row.endPos))];
+		const endPositions = [...new Set(dataset.map((row) => row.endPos))];
 		return endPositions.sort();
 	}
 
@@ -209,16 +218,16 @@ export class CsvDataService {
 		return {
 			diamond: {
 				total: this.parsedData.diamond.length,
-				letters: [...new Set(this.parsedData.diamond.map(row => row.letter))].length,
+				letters: [...new Set(this.parsedData.diamond.map((row) => row.letter))].length,
 				startPositions: this.getAvailableStartPositions('diamond').length,
-				endPositions: this.getAvailableEndPositions('diamond').length
+				endPositions: this.getAvailableEndPositions('diamond').length,
 			},
 			box: {
 				total: this.parsedData.box.length,
-				letters: [...new Set(this.parsedData.box.map(row => row.letter))].length,
+				letters: [...new Set(this.parsedData.box.map((row) => row.letter))].length,
 				startPositions: this.getAvailableStartPositions('box').length,
-				endPositions: this.getAvailableEndPositions('box').length
-			}
+				endPositions: this.getAvailableEndPositions('box').length,
+			},
 		};
 	}
 
@@ -240,15 +249,15 @@ export class CsvDataService {
 
 		const dataset = this.parsedData[gridMode];
 		const positionData = {
-			asStartPos: dataset.filter(row => row.startPos === position),
-			asEndPos: dataset.filter(row => row.endPos === position)
+			asStartPos: dataset.filter((row) => row.startPos === position),
+			asEndPos: dataset.filter((row) => row.endPos === position),
 		};
 
 		console.log(`🔍 Position ${position} in ${gridMode} mode:`, {
 			appearsAsStartPos: positionData.asStartPos.length,
 			appearsAsEndPos: positionData.asEndPos.length,
 			sampleAsStart: positionData.asStartPos.slice(0, 2),
-			sampleAsEnd: positionData.asEndPos.slice(0, 2)
+			sampleAsEnd: positionData.asEndPos.slice(0, 2),
 		});
 	}
 }

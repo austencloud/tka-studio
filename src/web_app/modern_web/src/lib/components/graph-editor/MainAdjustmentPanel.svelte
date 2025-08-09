@@ -89,7 +89,8 @@
 			{#if currentBeatIndex !== null}
 				<span class="beat-info">Beat {currentBeatIndex + 1}</span>
 			{/if}
-			<span class="panel-type">{activePanel === 'orientation' ? 'Orientation' : 'Turns'}</span>
+			<span class="panel-type">{activePanel === 'orientation' ? 'Orientation' : 'Turns'}</span
+			>
 		</div>
 	</div>
 

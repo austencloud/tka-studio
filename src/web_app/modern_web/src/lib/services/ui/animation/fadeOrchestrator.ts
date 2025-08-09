@@ -4,16 +4,16 @@
  */
 
 import { cubicOut } from 'svelte/easing';
-import type { 
-	FadeConfig, 
-	FadeOperation, 
-	FadeOrchestratorState, 
-	FadeEvent, 
+import type {
+	FadeConfig,
+	FadeOperation,
+	FadeOrchestratorState,
+	FadeEvent,
 	FadeEventType,
 	TabTransitionState,
 	MainTabId,
 	ConstructSubTabId,
-	TabFadeConfig
+	TabFadeConfig,
 } from './fadeTypes';
 
 /**
@@ -33,10 +33,10 @@ export class FadeOrchestrator {
 				isTransitioning: false,
 				currentTab: '',
 				targetTab: null,
-				transitionId: null
+				transitionId: null,
 			},
 			globalDuration: initialConfig.duration || 300,
-			globalEasing: initialConfig.easing || cubicOut
+			globalEasing: initialConfig.easing || cubicOut,
 		};
 
 		this.eventListeners = new Map();
@@ -54,7 +54,7 @@ export class FadeOrchestrator {
 	 */
 	public setFadesEnabled(enabled: boolean): void {
 		this.state.isEnabled = enabled;
-		
+
 		if (!enabled) {
 			// Cancel all active operations when disabling
 			this.cancelAllOperations();
@@ -79,22 +79,24 @@ export class FadeOrchestrator {
 	 * Start a main tab transition (Construct, Browse, etc.)
 	 */
 	public async startMainTabTransition(
-		fromTab: MainTabId, 
+		fromTab: MainTabId,
 		toTab: MainTabId,
 		config: Partial<TabFadeConfig> = {}
 	): Promise<string> {
 		if (this.state.tabTransition.isTransitioning) {
-			console.warn(`FadeOrchestrator: Already transitioning from ${this.state.tabTransition.currentTab} to ${this.state.tabTransition.targetTab}`);
+			console.warn(
+				`FadeOrchestrator: Already transitioning from ${this.state.tabTransition.currentTab} to ${this.state.tabTransition.targetTab}`
+			);
 			return this.state.tabTransition.transitionId!;
 		}
 
 		const transitionId = this.generateOperationId('main_tab_transition');
-		
+
 		this.state.tabTransition = {
 			isTransitioning: true,
 			currentTab: fromTab,
 			targetTab: toTab,
-			transitionId
+			transitionId,
 		};
 
 		const mergedConfig: TabFadeConfig = {
@@ -103,14 +105,14 @@ export class FadeOrchestrator {
 			toTab,
 			duration: config.duration || this.state.globalDuration,
 			easing: config.easing || this.state.globalEasing,
-			...config
+			...config,
 		};
 
-		this.emitEvent('transition_start', transitionId, { 
+		this.emitEvent('transition_start', transitionId, {
 			type: 'main_tab',
-			fromTab, 
-			toTab, 
-			config: mergedConfig 
+			fromTab,
+			toTab,
+			config: mergedConfig,
 		});
 
 		return transitionId;
@@ -121,7 +123,9 @@ export class FadeOrchestrator {
 	 */
 	public completeMainTabTransition(transitionId: string): void {
 		if (this.state.tabTransition.transitionId !== transitionId) {
-			console.warn(`FadeOrchestrator: Transition ID mismatch. Expected ${this.state.tabTransition.transitionId}, got ${transitionId}`);
+			console.warn(
+				`FadeOrchestrator: Transition ID mismatch. Expected ${this.state.tabTransition.transitionId}, got ${transitionId}`
+			);
 			return;
 		}
 
@@ -132,13 +136,13 @@ export class FadeOrchestrator {
 			isTransitioning: false,
 			currentTab: toTab || fromTab,
 			targetTab: null,
-			transitionId: null
+			transitionId: null,
 		};
 
-		this.emitEvent('transition_complete', transitionId, { 
+		this.emitEvent('transition_complete', transitionId, {
 			type: 'main_tab',
-			fromTab, 
-			toTab 
+			fromTab,
+			toTab,
 		});
 	}
 
@@ -146,26 +150,26 @@ export class FadeOrchestrator {
 	 * Start a sub-tab transition (Build, Generate, etc.)
 	 */
 	public async startSubTabTransition(
-		fromTab: ConstructSubTabId, 
+		fromTab: ConstructSubTabId,
 		toTab: ConstructSubTabId,
 		config: Partial<TabFadeConfig> = {}
 	): Promise<string> {
 		const transitionId = this.generateOperationId('sub_tab_transition');
-		
+
 		const mergedConfig: TabFadeConfig = {
 			tabType: 'sub',
 			fromTab,
 			toTab,
 			duration: config.duration || this.state.globalDuration,
 			easing: config.easing || this.state.globalEasing,
-			...config
+			...config,
 		};
 
-		this.emitEvent('transition_start', transitionId, { 
+		this.emitEvent('transition_start', transitionId, {
 			type: 'sub_tab',
-			fromTab, 
-			toTab, 
-			config: mergedConfig 
+			fromTab,
+			toTab,
+			config: mergedConfig,
 		});
 
 		return transitionId;
@@ -175,10 +179,10 @@ export class FadeOrchestrator {
 	 * Complete a sub-tab transition
 	 */
 	public completeSubTabTransition(transitionId: string, fromTab: string, toTab: string): void {
-		this.emitEvent('transition_complete', transitionId, { 
+		this.emitEvent('transition_complete', transitionId, {
 			type: 'sub_tab',
-			fromTab, 
-			toTab 
+			fromTab,
+			toTab,
 		});
 	}
 
@@ -196,7 +200,7 @@ export class FadeOrchestrator {
 		}
 
 		const operationId = this.generateOperationId('fade_and_update');
-		
+
 		const operation: FadeOperation = {
 			id: operationId,
 			targets: [], // Will be set by the calling component
@@ -204,10 +208,10 @@ export class FadeOrchestrator {
 			config: {
 				duration: config.duration || this.state.globalDuration,
 				easing: config.easing || this.state.globalEasing,
-				...config
+				...config,
 			},
 			callback: typeof updateCallback === 'function' ? updateCallback : undefined,
-			status: 'pending'
+			status: 'pending',
 		};
 
 		this.state.activeOperations.set(operationId, operation);
@@ -249,18 +253,18 @@ export class FadeOrchestrator {
 			main_tab: {
 				duration: 350,
 				easing: this.state.globalEasing,
-				delay: 0
+				delay: 0,
 			},
 			sub_tab: {
 				duration: 250,
 				easing: this.state.globalEasing,
-				delay: 0
+				delay: 0,
 			},
 			general: {
 				duration: this.state.globalDuration,
 				easing: this.state.globalEasing,
-				delay: 0
-			}
+				delay: 0,
+			},
 		};
 
 		return configs[type];
@@ -297,12 +301,12 @@ export class FadeOrchestrator {
 			type,
 			operationId,
 			timestamp: Date.now(),
-			details
+			details,
 		};
 
 		const listeners = this.eventListeners.get(type);
 		if (listeners) {
-			listeners.forEach(listener => {
+			listeners.forEach((listener) => {
 				try {
 					listener(event);
 				} catch (error) {
@@ -329,8 +333,8 @@ export class FadeOrchestrator {
 			tabTransition: this.state.tabTransition,
 			globalConfig: {
 				duration: this.state.globalDuration,
-				easing: this.state.globalEasing.name || 'custom'
-			}
+				easing: this.state.globalEasing.name || 'custom',
+			},
 		};
 	}
 }

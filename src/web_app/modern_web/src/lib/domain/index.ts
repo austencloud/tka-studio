@@ -1,6 +1,6 @@
 /**
  * Domain Models Index
- * 
+ *
  * Central export point for all domain models following modern desktop architecture.
  */
 

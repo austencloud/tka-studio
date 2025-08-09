@@ -31,7 +31,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 						rotation_angle: 0,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
+						metadata: {},
 					},
 					red: {
 						id: 'red-arrow-1',
@@ -48,18 +48,18 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 						rotation_angle: 180,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {}
-					}
-				}
-			})
+						metadata: {},
+					},
+				},
+			}),
 		}),
-		
+
 		// Blank beat
 		createBeatData({
 			beat_number: 2,
-			is_blank: true
+			is_blank: true,
 		}),
-		
+
 		// Beat with complex pictograph
 		createBeatData({
 			beat_number: 3,
@@ -82,19 +82,19 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 						rotation_angle: 45,
 						svg_center: null,
 						svg_mirrored: true,
-						metadata: {}
-					}
-				}
-			})
+						metadata: {},
+					},
+				},
+			}),
 		}),
-		
+
 		// Beat with reversals
 		createBeatData({
 			beat_number: 4,
 			blue_reversal: true,
 			red_reversal: true,
-			is_blank: true
-		})
+			is_blank: true,
+		}),
 	];
 
 	// State for testing interactions
@@ -130,19 +130,27 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 <main class="test-page">
 	<div class="test-wrapper" data-testid="beat-view-demo-test">
 		<h1>BeatView Integration Test</h1>
-		
+
 		<!-- Control Panel -->
 		<div class="controls" data-testid="controls-panel">
 			<div class="control-item">
-				<strong>Selected Beat:</strong> {selectedBeatIndex === -1 ? 'None' : selectedBeatIndex}
+				<strong>Selected Beat:</strong>
+				{selectedBeatIndex === -1 ? 'None' : selectedBeatIndex}
 			</div>
 			<div class="control-item">
-				<strong>Hovered Beat:</strong> {hoveredBeatIndex === -1 ? 'None' : hoveredBeatIndex}
+				<strong>Hovered Beat:</strong>
+				{hoveredBeatIndex === -1 ? 'None' : hoveredBeatIndex}
 			</div>
 			<div class="control-item">
 				<strong>Click History:</strong> [{clickHistory.join(', ')}]
 			</div>
-			<button onclick={() => { selectedBeatIndex = -1; hoveredBeatIndex = -1; clickHistory = []; }}>
+			<button
+				onclick={() => {
+					selectedBeatIndex = -1;
+					hoveredBeatIndex = -1;
+					clickHistory = [];
+				}}
+			>
 				Reset
 			</button>
 		</div>
@@ -165,9 +173,12 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 					<div class="beat-info">
 						<div>Type: {beat.is_blank ? 'Blank' : 'Pictograph'}</div>
 						{#if beat.blue_reversal || beat.red_reversal}
-							<div>Reversals: 
+							<div>
+								Reversals:
 								{#if beat.blue_reversal}Blue{/if}
-								{#if beat.blue_reversal && beat.red_reversal} & {/if}
+								{#if beat.blue_reversal && beat.red_reversal}
+									&
+								{/if}
 								{#if beat.red_reversal}Red{/if}
 							</div>
 						{/if}
@@ -198,12 +209,16 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 		<!-- Debug Information -->
 		<div class="debug-info" data-testid="debug-info">
 			<h2>Debug Information</h2>
-			<pre>{JSON.stringify({
-				selectedBeatIndex,
-				hoveredBeatIndex,
-				clickHistory,
-				beatsCount: beats.length
-			}, null, 2)}</pre>
+			<pre>{JSON.stringify(
+					{
+						selectedBeatIndex,
+						hoveredBeatIndex,
+						clickHistory,
+						beatsCount: beats.length,
+					},
+					null,
+					2
+				)}</pre>
 		</div>
 	</div>
 </main>
@@ -225,7 +240,8 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	}
 
-	h1, h2 {
+	h1,
+	h2 {
 		color: #1f2937;
 		margin-bottom: 1rem;
 	}

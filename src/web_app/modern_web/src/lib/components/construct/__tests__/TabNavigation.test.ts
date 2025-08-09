@@ -12,19 +12,19 @@ import TabNavigation from '../TabNavigation.svelte';
 // Mock the stores and services
 vi.mock('$stores/constructTabState.svelte', () => {
 	const mockConstructTabState = {
-		activeRightPanel: 'build'
+		activeRightPanel: 'build',
 	};
 	return {
-		constructTabState: mockConstructTabState
+		constructTabState: mockConstructTabState,
 	};
 });
 
 vi.mock('$services/implementations/ConstructTabTransitionService', () => {
 	const mockTransitionService = {
-		handleMainTabTransition: vi.fn()
+		handleMainTabTransition: vi.fn(),
 	};
 	return {
-		constructTabTransitionService: mockTransitionService
+		constructTabTransitionService: mockTransitionService,
 	};
 });
 
@@ -62,7 +62,7 @@ describe('TabNavigation', () => {
 
 			const buttons = container.querySelectorAll('.main-tab-btn');
 			expect(buttons).toHaveLength(4);
-			buttons.forEach(button => {
+			buttons.forEach((button) => {
 				expect(button).toHaveClass('main-tab-btn');
 			});
 		});
@@ -125,8 +125,12 @@ describe('TabNavigation', () => {
 			const buildButton = screen.getByText('🔨 Build');
 			await fireEvent.click(buildButton);
 
-			const { constructTabTransitionService } = await import('$services/implementations/ConstructTabTransitionService');
-			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith('build');
+			const { constructTabTransitionService } = await import(
+				'$services/implementations/ConstructTabTransitionService'
+			);
+			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith(
+				'build'
+			);
 		});
 
 		it('should call transition service when generate tab is clicked', async () => {
@@ -135,8 +139,12 @@ describe('TabNavigation', () => {
 			const generateButton = screen.getByText('🤖 Generate');
 			await fireEvent.click(generateButton);
 
-			const { constructTabTransitionService } = await import('$services/implementations/ConstructTabTransitionService');
-			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith('generate');
+			const { constructTabTransitionService } = await import(
+				'$services/implementations/ConstructTabTransitionService'
+			);
+			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith(
+				'generate'
+			);
 		});
 
 		it('should call transition service when edit tab is clicked', async () => {
@@ -145,8 +153,12 @@ describe('TabNavigation', () => {
 			const editButton = screen.getByText('🔧 Edit');
 			await fireEvent.click(editButton);
 
-			const { constructTabTransitionService } = await import('$services/implementations/ConstructTabTransitionService');
-			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith('edit');
+			const { constructTabTransitionService } = await import(
+				'$services/implementations/ConstructTabTransitionService'
+			);
+			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith(
+				'edit'
+			);
 		});
 
 		it('should call transition service when export tab is clicked', async () => {
@@ -155,8 +167,12 @@ describe('TabNavigation', () => {
 			const exportButton = screen.getByText('🔤 Export');
 			await fireEvent.click(exportButton);
 
-			const { constructTabTransitionService } = await import('$services/implementations/ConstructTabTransitionService');
-			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith('export');
+			const { constructTabTransitionService } = await import(
+				'$services/implementations/ConstructTabTransitionService'
+			);
+			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith(
+				'export'
+			);
 		});
 	});
 
@@ -168,15 +184,19 @@ describe('TabNavigation', () => {
 			buildButton.focus();
 
 			await fireEvent.keyDown(buildButton, { key: 'Enter' });
-			const { constructTabTransitionService } = await import('$services/implementations/ConstructTabTransitionService');
-			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith('build');
+			const { constructTabTransitionService } = await import(
+				'$services/implementations/ConstructTabTransitionService'
+			);
+			expect(constructTabTransitionService.handleMainTabTransition).toHaveBeenCalledWith(
+				'build'
+			);
 		});
 
 		it('should be focusable', () => {
 			render(TabNavigation);
 
 			const buttons = screen.getAllByRole('button');
-			buttons.forEach(button => {
+			buttons.forEach((button) => {
 				button.focus();
 				expect(button).toHaveFocus();
 			});
@@ -197,7 +217,7 @@ describe('TabNavigation', () => {
 			const buttons = screen.getAllByRole('button');
 			expect(buttons).toHaveLength(4);
 
-			buttons.forEach(button => {
+			buttons.forEach((button) => {
 				expect(button).toHaveAttribute('type', 'button');
 			});
 		});

@@ -50,7 +50,9 @@
 
 		// Update quality if it changed
 		if (quality !== activeContext.qualityLevel) {
-			console.log(`🌌 Background quality changed from ${activeContext.qualityLevel} to ${quality}`);
+			console.log(
+				`🌌 Background quality changed from ${activeContext.qualityLevel} to ${quality}`
+			);
 			activeContext.setQuality(quality);
 		}
 	});

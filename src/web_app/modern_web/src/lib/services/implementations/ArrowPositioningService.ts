@@ -1,9 +1,9 @@
 /**
  * Arrow Positioning Service - Complete Implementation
- * 
+ *
  * Full-featured arrow positioning with sophisticated adjustment calculations.
  * Uses ArrowPlacementDataService and ArrowPlacementKeyService for accurate positioning.
- * 
+ *
  * Features:
  * - Default placement data loading and lookup
  * - Placement key generation with letter-specific logic
@@ -12,7 +12,7 @@
  */
 
 import type { MotionData } from '@tka/schemas';
-import type { 
+import type {
 	IArrowPositioningService,
 	ArrowPosition,
 	ArrowData,
@@ -21,11 +21,17 @@ import type {
 	MotionType,
 	Location,
 	Orientation,
-	PropRotDir
+	PropRotDir,
 } from '../interfaces';
 
-import { ArrowPlacementDataService, type IArrowPlacementDataService } from './ArrowPlacementDataService';
-import { ArrowPlacementKeyService, type IArrowPlacementKeyService } from './ArrowPlacementKeyService';
+import {
+	ArrowPlacementDataService,
+	type IArrowPlacementDataService,
+} from './ArrowPlacementDataService';
+import {
+	ArrowPlacementKeyService,
+	type IArrowPlacementKeyService,
+} from './ArrowPlacementKeyService';
 
 // ============================================================================
 // ROTATION CONSTANTS (ported from legacy ArrowRotationConstants.ts)
@@ -33,71 +39,143 @@ import { ArrowPlacementKeyService, type IArrowPlacementKeyService } from './Arro
 
 const PRO_ROTATION_MAP: Record<PropRotDir, Record<Location, number>> = {
 	cw: {
-		n: 0, ne: 45, e: 90, se: 135,
-		s: 180, sw: 225, w: 270, nw: 315,
-		center: 0
+		n: 0,
+		ne: 45,
+		e: 90,
+		se: 135,
+		s: 180,
+		sw: 225,
+		w: 270,
+		nw: 315,
+		center: 0,
 	},
 	ccw: {
-		n: 0, ne: 315, e: 270, se: 225,
-		s: 180, sw: 135, w: 90, nw: 45,
-		center: 0
+		n: 0,
+		ne: 315,
+		e: 270,
+		se: 225,
+		s: 180,
+		sw: 135,
+		w: 90,
+		nw: 45,
+		center: 0,
 	},
 	no_rot: {
-		n: 0, ne: 0, e: 0, se: 0,
-		s: 0, sw: 0, w: 0, nw: 0,
-		center: 0
+		n: 0,
+		ne: 0,
+		e: 0,
+		se: 0,
+		s: 0,
+		sw: 0,
+		w: 0,
+		nw: 0,
+		center: 0,
 	},
 	clockwise: {
-		n: 0, ne: 45, e: 90, se: 135,
-		s: 180, sw: 225, w: 270, nw: 315,
-		center: 0
+		n: 0,
+		ne: 45,
+		e: 90,
+		se: 135,
+		s: 180,
+		sw: 225,
+		w: 270,
+		nw: 315,
+		center: 0,
 	},
 	counter_clockwise: {
-		n: 0, ne: 315, e: 270, se: 225,
-		s: 180, sw: 135, w: 90, nw: 45,
-		center: 0
-	}
+		n: 0,
+		ne: 315,
+		e: 270,
+		se: 225,
+		s: 180,
+		sw: 135,
+		w: 90,
+		nw: 45,
+		center: 0,
+	},
 };
 
 const ANTI_REGULAR_MAP: Record<PropRotDir, Record<Location, number>> = {
 	cw: {
-		n: 180, ne: 225, e: 270, se: 315,
-		s: 0, sw: 45, w: 90, nw: 135,
-		center: 0
+		n: 180,
+		ne: 225,
+		e: 270,
+		se: 315,
+		s: 0,
+		sw: 45,
+		w: 90,
+		nw: 135,
+		center: 0,
 	},
 	ccw: {
-		n: 180, ne: 135, e: 90, se: 45,
-		s: 0, sw: 315, w: 270, nw: 225,
-		center: 0
+		n: 180,
+		ne: 135,
+		e: 90,
+		se: 45,
+		s: 0,
+		sw: 315,
+		w: 270,
+		nw: 225,
+		center: 0,
 	},
 	no_rot: {
-		n: 0, ne: 0, e: 0, se: 0,
-		s: 0, sw: 0, w: 0, nw: 0,
-		center: 0
+		n: 0,
+		ne: 0,
+		e: 0,
+		se: 0,
+		s: 0,
+		sw: 0,
+		w: 0,
+		nw: 0,
+		center: 0,
 	},
 	clockwise: {
-		n: 180, ne: 225, e: 270, se: 315,
-		s: 0, sw: 45, w: 90, nw: 135,
-		center: 0
+		n: 180,
+		ne: 225,
+		e: 270,
+		se: 315,
+		s: 0,
+		sw: 45,
+		w: 90,
+		nw: 135,
+		center: 0,
 	},
 	counter_clockwise: {
-		n: 180, ne: 135, e: 90, se: 45,
-		s: 0, sw: 315, w: 270, nw: 225,
-		center: 0
-	}
+		n: 180,
+		ne: 135,
+		e: 90,
+		se: 45,
+		s: 0,
+		sw: 315,
+		w: 270,
+		nw: 225,
+		center: 0,
+	},
 };
 
 const FLOAT_DIRECTION_MAP: Record<string, Record<Location, number>> = {
-	'cw_shift': {
-		n: 0, ne: 45, e: 90, se: 135,
-		s: 180, sw: 225, w: 270, nw: 315,
-		center: 0
+	cw_shift: {
+		n: 0,
+		ne: 45,
+		e: 90,
+		se: 135,
+		s: 180,
+		sw: 225,
+		w: 270,
+		nw: 315,
+		center: 0,
 	},
-	'ccw_shift': {
-		n: 0, ne: 315, e: 270, se: 225,
-		s: 180, sw: 135, w: 90, nw: 45,
-		center: 0
-	}
+	ccw_shift: {
+		n: 0,
+		ne: 315,
+		e: 270,
+		se: 225,
+		s: 180,
+		sw: 135,
+		w: 90,
+		nw: 45,
+		center: 0,
+	},
 };
 
 // ============================================================================
@@ -115,7 +193,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		this.placementDataService = placementDataService || new ArrowPlacementDataService();
 		this.placementKeyService = placementKeyService || new ArrowPlacementKeyService();
 	}
-	
+
 	/**
 	 * Calculate position and rotation for a single arrow
 	 */
@@ -126,36 +204,36 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	): Promise<ArrowPosition> {
 		try {
 			console.log(`Calculating position for ${arrowData.color} arrow`);
-			
+
 			// 1. Calculate initial position based on motion type
 			const initialPosition = this.getInitialPosition(arrowData, pictographData, gridData);
 			console.log(`Initial position for ${arrowData.color}:`, initialPosition);
-			
+
 			// 2. Calculate position adjustment using placement data
 			const adjustment = await this.calculateAdjustment(arrowData, pictographData);
 			console.log(`Adjustment for ${arrowData.color}:`, adjustment);
-			
+
 			// 3. Calculate rotation angle
 			const motion = this.getMotionForArrow(arrowData.color, pictographData);
-			const rotation = motion ? 
-				this.calculateRotationAngle(motion, arrowData.location, arrowData.isMirrored) : 0;
+			const rotation = motion
+				? this.calculateRotationAngle(motion, arrowData.location, arrowData.isMirrored)
+				: 0;
 			console.log(`Rotation for ${arrowData.color}:`, rotation);
-			
+
 			// 4. Calculate final position (accounting for SVG center offset)
 			const finalX = initialPosition.x + adjustment.x;
 			const finalY = initialPosition.y + adjustment.y;
-			
+
 			const result = { x: finalX, y: finalY, rotation };
 			console.log(`Final position for ${arrowData.color}:`, result);
-			
+
 			return result;
-			
 		} catch (error) {
 			console.error('Error calculating arrow position:', error);
 			return { x: 0, y: 0, rotation: 0 };
 		}
 	}
-	
+
 	/**
 	 * Calculate positions for all arrows in a pictograph
 	 */
@@ -165,27 +243,35 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	): Promise<Map<string, ArrowPosition>> {
 		console.log('Calculating all arrow positions for pictograph');
 		const positions = new Map<string, ArrowPosition>();
-		
+
 		// Process blue arrow if it exists
 		if (pictographData.motions?.blue) {
 			console.log('Processing blue arrow');
 			const blueArrow = this.motionToArrowData(pictographData.motions.blue, 'blue');
-			const bluePosition = await this.calculateArrowPosition(blueArrow, pictographData, gridData);
+			const bluePosition = await this.calculateArrowPosition(
+				blueArrow,
+				pictographData,
+				gridData
+			);
 			positions.set('blue', bluePosition);
 		}
-		
-		// Process red arrow if it exists  
+
+		// Process red arrow if it exists
 		if (pictographData.motions?.red) {
 			console.log('Processing red arrow');
 			const redArrow = this.motionToArrowData(pictographData.motions.red, 'red');
-			const redPosition = await this.calculateArrowPosition(redArrow, pictographData, gridData);
+			const redPosition = await this.calculateArrowPosition(
+				redArrow,
+				pictographData,
+				gridData
+			);
 			positions.set('red', redPosition);
 		}
-		
+
 		console.log(`Calculated positions for ${positions.size} arrows`);
 		return positions;
 	}
-	
+
 	/**
 	 * Calculate rotation angle for an arrow
 	 */
@@ -195,39 +281,39 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		isMirrored: boolean = false
 	): number {
 		const baseAngle = this.calculateBaseRotationAngle(motion, location);
-		
+
 		// Apply mirror effect if needed
 		if (isMirrored) {
 			return (360 - baseAngle) % 360;
 		}
-		
+
 		return baseAngle;
 	}
-	
+
 	/**
 	 * Determine if arrow should be mirrored
 	 */
 	shouldMirrorArrow(motion: MotionData): boolean {
 		const motionType = motion.motionType?.toLowerCase();
 		const propRotDir = motion.propRotDir?.toLowerCase();
-		
+
 		// Mirror conditions from legacy implementation
 		const mirrorConditions = {
-			'anti': { 'cw': true, 'ccw': false },
-			'other': { 'cw': false, 'ccw': true }
+			anti: { cw: true, ccw: false },
+			other: { cw: false, ccw: true },
 		};
-		
+
 		if (motionType === 'anti') {
 			return mirrorConditions.anti[propRotDir as 'cw' | 'ccw'] || false;
 		}
-		
+
 		return mirrorConditions.other[propRotDir as 'cw' | 'ccw'] || false;
 	}
-	
+
 	// ============================================================================
 	// PRIVATE HELPER METHODS
 	// ============================================================================
-	
+
 	/**
 	 * Get initial position based on motion type (from positionCalculator.ts)
 	 */
@@ -237,23 +323,31 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		gridData: GridData
 	): { x: number; y: number } {
 		const { motionType, location } = arrow;
-		
+
 		switch (motionType) {
 			case 'pro':
 			case 'anti':
 			case 'float':
-				return this.getShiftCoordinates(location, pictographData.gridData?.mode || 'diamond', gridData);
-				
+				return this.getShiftCoordinates(
+					location,
+					pictographData.gridData?.mode || 'diamond',
+					gridData
+				);
+
 			case 'static':
 			case 'dash':
-				return this.getStaticDashCoordinates(location, pictographData.gridData?.mode || 'diamond', gridData);
-				
+				return this.getStaticDashCoordinates(
+					location,
+					pictographData.gridData?.mode || 'diamond',
+					gridData
+				);
+
 			default:
 				console.warn(`Unknown motion type: ${motionType}, returning center`);
 				return { x: 475, y: 475 }; // Default center position (950x950 scene)
 		}
 	}
-	
+
 	/**
 	 * Get coordinates for shift-type motions (Pro, Anti, Float)
 	 */
@@ -264,15 +358,15 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	): { x: number; y: number } {
 		const pointName = `${location}_${gridMode}_layer2_point`;
 		const point = gridData.allLayer2PointsNormal?.[pointName];
-		
+
 		if (!point?.coordinates) {
 			console.warn(`Shift coordinate for '${pointName}' not found, using default`);
 			return { x: 475, y: 475 }; // Default center (950x950 scene)
 		}
-		
+
 		return point.coordinates;
 	}
-	
+
 	/**
 	 * Get coordinates for static or dash motions
 	 */
@@ -312,7 +406,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 			return { x: 475, y: 475 }; // Default center (950x950 scene)
 		}
 	}
-	
+
 	/**
 	 * Calculate position adjustment using sophisticated placement data
 	 */
@@ -355,15 +449,16 @@ export class ArrowPositioningService implements IArrowPositioningService {
 				'diamond' // TODO: Use actual grid mode
 			);
 
-			console.log(`Calculated adjustment for ${arrow.color}: [${adjustment.x}, ${adjustment.y}]`);
+			console.log(
+				`Calculated adjustment for ${arrow.color}: [${adjustment.x}, ${adjustment.y}]`
+			);
 			return adjustment;
-
 		} catch (error) {
 			console.error('Error calculating adjustment:', error);
 			return { x: 0, y: 0 };
 		}
 	}
-	
+
 	/**
 	 * Calculate base rotation angle based on motion type
 	 */
@@ -374,26 +469,26 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		switch (motionType) {
 			case 'pro':
 				return PRO_ROTATION_MAP[propRotDir]?.[location] ?? 0;
-				
+
 			case 'anti':
 				return ANTI_REGULAR_MAP[propRotDir]?.[location] ?? 0;
-				
+
 			case 'float':
 				const handRotDir = 'cw_shift'; // Simplified - would need actual hand rotation direction
 				return FLOAT_DIRECTION_MAP[handRotDir]?.[location] ?? 0;
-				
+
 			case 'dash':
 				return this.calculateDashRotation(motion, location);
-				
+
 			case 'static':
 				return this.calculateStaticRotation(motion, location);
-				
+
 			default:
 				console.warn(`Unknown motion type for rotation: ${motionType}`);
 				return 0;
 		}
 	}
-	
+
 	/**
 	 * Calculate dash motion rotation
 	 */
@@ -403,7 +498,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		const propRotDir = this.normalizePropRotDir(motion.propRotDir);
 		return PRO_ROTATION_MAP[propRotDir]?.[location] ?? 0;
 	}
-	
+
 	/**
 	 * Calculate static motion rotation
 	 */
@@ -413,14 +508,17 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		const propRotDir = this.normalizePropRotDir(motion.propRotDir);
 		return PRO_ROTATION_MAP[propRotDir]?.[location] ?? 0;
 	}
-	
+
 	/**
 	 * Get motion object for arrow color
 	 */
-	private getMotionForArrow(color: 'blue' | 'red', pictographData: PictographData): MotionData | null {
+	private getMotionForArrow(
+		color: 'blue' | 'red',
+		pictographData: PictographData
+	): MotionData | null {
 		return pictographData.motions?.[color] || null;
 	}
-	
+
 	/**
 	 * Convert MotionData to ArrowData structure
 	 */
@@ -437,7 +535,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 			endOrientation: this.normalizeOrientation(motion.endOri),
 			propRotDir: this.normalizePropRotDir(motion.propRotDir),
 			turns: motion.turns || 0,
-			isMirrored: this.shouldMirrorArrow(motion)
+			isMirrored: this.shouldMirrorArrow(motion),
 		};
 	}
 
@@ -467,7 +565,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		console.warn(`Invalid motion type: ${motionType}, defaulting to 'pro'`);
 		return 'pro';
 	}
-	
+
 	/**
 	 * Normalize prop rotation direction to standard format
 	 */
@@ -481,7 +579,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		console.warn(`Invalid prop rotation direction: ${propRotDir}, defaulting to 'cw'`);
 		return 'cw';
 	}
-	
+
 	/**
 	 * Normalize orientation to standard format
 	 */
@@ -495,7 +593,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		console.warn(`Invalid orientation: ${orientation}, defaulting to 'in'`);
 		return 'in';
 	}
-	
+
 	/**
 	 * Normalize location to standard format
 	 */

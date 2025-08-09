@@ -1,6 +1,6 @@
 /**
  * BeatView Integration Tests
- * 
+ *
  * Tests for BeatView component with ModernPictograph integration
  */
 
@@ -13,8 +13,8 @@ import { createBeatData, createPictographData } from '$lib/domain';
 // Mock the ModernPictograph component
 vi.mock('$lib/components/pictograph', () => ({
 	ModernPictograph: vi.fn(() => ({
-		$$: { on_mount: [], on_destroy: [], props: {} }
-	}))
+		$$: { on_mount: [], on_destroy: [], props: {} },
+	})),
 }));
 
 // Mock the BeatFrameService (define inside factory to avoid hoist issues)
@@ -23,9 +23,9 @@ vi.mock('$lib/services/BeatFrameService.svelte', () => {
 		beatFrameService: {
 			config: {
 				beatSize: 120,
-				hasStartTile: false
-			}
-		}
+				hasStartTile: false,
+			},
+		},
 	};
 });
 
@@ -37,20 +37,20 @@ describe('BeatView Integration', () => {
 	describe('Pictograph Rendering', () => {
 		it('should render ModernPictograph for beat with pictograph data', () => {
 			const pictographData = createPictographData({
-				letter: 'A'
+				letter: 'A',
 			});
 
 			const beat = createBeatData({
 				beat_number: 1,
 				pictograph_data: pictographData,
-				is_blank: false
+				is_blank: false,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 0
-				}
+					index: 0,
+				},
 			});
 
 			// Should have pictograph container
@@ -65,14 +65,14 @@ describe('BeatView Integration', () => {
 		it('should render beat number for beat without pictograph data', () => {
 			const beat = createBeatData({
 				beat_number: 2,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 1
-				}
+					index: 1,
+				},
 			});
 
 			// Should NOT have pictograph container
@@ -87,19 +87,19 @@ describe('BeatView Integration', () => {
 
 		it('should pass correct props to ModernPictograph', () => {
 			const pictographData = createPictographData({
-				letter: 'B'
+				letter: 'B',
 			});
 
 			const beat = createBeatData({
 				beat_number: 3,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			render(BeatView, {
 				props: {
 					beat,
-					index: 2
-				}
+					index: 2,
+				},
 			});
 
 			// Verify ModernPictograph would receive correct props
@@ -112,15 +112,15 @@ describe('BeatView Integration', () => {
 		it('should handle selected state', () => {
 			const beat = createBeatData({
 				beat_number: 4,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 3,
-					isSelected: true
-				}
+					isSelected: true,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -130,15 +130,15 @@ describe('BeatView Integration', () => {
 		it('should handle hovered state', () => {
 			const beat = createBeatData({
 				beat_number: 5,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 4,
-					isHovered: true
-				}
+					isHovered: true,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -148,14 +148,14 @@ describe('BeatView Integration', () => {
 		it('should handle blank beat state', () => {
 			const beat = createBeatData({
 				beat_number: 6,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 5
-				}
+					index: 5,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -164,20 +164,20 @@ describe('BeatView Integration', () => {
 
 		it('should handle beat with pictograph state', () => {
 			const pictographData = createPictographData({
-				letter: 'C'
+				letter: 'C',
 			});
 
 			const beat = createBeatData({
 				beat_number: 7,
 				pictograph_data: pictographData,
-				is_blank: false
+				is_blank: false,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 6
-				}
+					index: 6,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -190,15 +190,15 @@ describe('BeatView Integration', () => {
 			const handleClick = vi.fn();
 			const beat = createBeatData({
 				beat_number: 8,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 7,
-					onClick: handleClick
-				}
+					onClick: handleClick,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -212,15 +212,15 @@ describe('BeatView Integration', () => {
 			const handleDoubleClick = vi.fn();
 			const beat = createBeatData({
 				beat_number: 9,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 8,
-					onDoubleClick: handleDoubleClick
-				}
+					onDoubleClick: handleDoubleClick,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -233,20 +233,20 @@ describe('BeatView Integration', () => {
 		it('should pass click through to ModernPictograph for pictograph beats', () => {
 			const handleClick = vi.fn();
 			const pictographData = createPictographData({
-				letter: 'D'
+				letter: 'D',
 			});
 
 			const beat = createBeatData({
 				beat_number: 10,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			render(BeatView, {
 				props: {
 					beat,
 					index: 9,
-					onClick: handleClick
-				}
+					onClick: handleClick,
+				},
 			});
 
 			// ModernPictograph should receive the click handler
@@ -261,15 +261,15 @@ describe('BeatView Integration', () => {
 			const handleHover = vi.fn();
 			const beat = createBeatData({
 				beat_number: 11,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 10,
-					onHover: handleHover
-				}
+					onHover: handleHover,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -281,15 +281,15 @@ describe('BeatView Integration', () => {
 			const handleLeave = vi.fn();
 			const beat = createBeatData({
 				beat_number: 12,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 11,
-					onLeave: handleLeave
-				}
+					onLeave: handleLeave,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -303,15 +303,15 @@ describe('BeatView Integration', () => {
 			const handleClick = vi.fn();
 			const beat = createBeatData({
 				beat_number: 13,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 12,
-					onClick: handleClick
-				}
+					onClick: handleClick,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -323,15 +323,15 @@ describe('BeatView Integration', () => {
 			const handleClick = vi.fn();
 			const beat = createBeatData({
 				beat_number: 14,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
 					index: 13,
-					onClick: handleClick
-				}
+					onClick: handleClick,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -346,14 +346,14 @@ describe('BeatView Integration', () => {
 				beat_number: 15,
 				blue_reversal: true,
 				red_reversal: false,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 14
-				}
+					index: 14,
+				},
 			});
 
 			const blueReversal = container.querySelector('.reversal.blue');
@@ -368,14 +368,14 @@ describe('BeatView Integration', () => {
 				beat_number: 16,
 				blue_reversal: false,
 				red_reversal: true,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 15
-				}
+					index: 15,
+				},
 			});
 
 			const redReversal = container.querySelector('.reversal.red');
@@ -390,14 +390,14 @@ describe('BeatView Integration', () => {
 				beat_number: 17,
 				blue_reversal: true,
 				red_reversal: true,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 16
-				}
+					index: 16,
+				},
 			});
 
 			const blueReversal = container.querySelector('.reversal.blue');
@@ -412,14 +412,14 @@ describe('BeatView Integration', () => {
 		it('should have proper ARIA attributes', () => {
 			const beat = createBeatData({
 				beat_number: 18,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 17
-				}
+					index: 17,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -431,14 +431,14 @@ describe('BeatView Integration', () => {
 		it('should be keyboard focusable', () => {
 			const beat = createBeatData({
 				beat_number: 19,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 18
-				}
+					index: 18,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -449,19 +449,19 @@ describe('BeatView Integration', () => {
 	describe('Styling Integration', () => {
 		it('should apply correct sizing based on beatFrameService config', () => {
 			const pictographData = createPictographData({
-				letter: 'E'
+				letter: 'E',
 			});
 
 			const beat = createBeatData({
 				beat_number: 20,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			render(BeatView, {
 				props: {
 					beat,
-					index: 19
-				}
+					index: 19,
+				},
 			});
 
 			// The pictograph should be sized based on beatSize - 8
@@ -473,14 +473,14 @@ describe('BeatView Integration', () => {
 		it('should maintain responsive styling', () => {
 			const beat = createBeatData({
 				beat_number: 21,
-				is_blank: true
+				is_blank: true,
 			});
 
 			const { container } = render(BeatView, {
 				props: {
 					beat,
-					index: 20
-				}
+					index: 20,
+				},
 			});
 
 			const beatView = container.querySelector('.beat-view');
@@ -488,7 +488,7 @@ describe('BeatView Integration', () => {
 				position: 'relative',
 				display: 'flex',
 				alignItems: 'center',
-				justifyContent: 'center'
+				justifyContent: 'center',
 			});
 		});
 	});

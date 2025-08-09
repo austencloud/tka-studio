@@ -1,6 +1,6 @@
 /**
  * Question Generator Service
- * 
+ *
  * Generates quiz questions for different lesson types based on pictograph data.
  * Matches the desktop implementation's question generation logic.
  */
@@ -60,7 +60,7 @@ export class QuestionGeneratorService {
 		// For now, use mock data - this would be replaced with actual pictograph service
 		const availableLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 		const correctLetter = this.getRandomLetter(availableLetters);
-		
+
 		// Mock pictograph data for the correct letter
 		const correctPictograph = {
 			letter: correctLetter,
@@ -75,7 +75,7 @@ export class QuestionGeneratorService {
 		this.shuffleArray(allOptions);
 
 		// Create answer options
-		const answerOptions: AnswerOption[] = allOptions.map(letter => ({
+		const answerOptions: AnswerOption[] = allOptions.map((letter) => ({
 			id: this.generateOptionId(),
 			content: letter,
 			isCorrect: letter === correctLetter,
@@ -117,7 +117,7 @@ export class QuestionGeneratorService {
 		this.shuffleArray(allPictographs);
 
 		// Create answer options
-		const answerOptions: AnswerOption[] = allPictographs.map(pictograph => ({
+		const answerOptions: AnswerOption[] = allPictographs.map((pictograph) => ({
 			id: this.generateOptionId(),
 			content: pictograph,
 			isCorrect: pictograph.letter === correctLetter,
@@ -169,7 +169,7 @@ export class QuestionGeneratorService {
 		this.shuffleArray(allOptions);
 
 		// Create answer options
-		const answerOptions: AnswerOption[] = allOptions.map(pictograph => ({
+		const answerOptions: AnswerOption[] = allOptions.map((pictograph) => ({
 			id: this.generateOptionId(),
 			content: pictograph,
 			isCorrect: pictograph.start_pos === initialPictograph.end_pos,
@@ -195,7 +195,7 @@ export class QuestionGeneratorService {
 		availableLetters: string[],
 		count: number
 	): string[] {
-		const wrongLetters = availableLetters.filter(letter => letter !== correctLetter);
+		const wrongLetters = availableLetters.filter((letter) => letter !== correctLetter);
 		return this.getRandomItems(wrongLetters, count);
 	}
 
@@ -208,7 +208,7 @@ export class QuestionGeneratorService {
 		count: number
 	): PictographData[] {
 		const wrongLetters = this.generateWrongLetters(correctLetter, availableLetters, count);
-		return wrongLetters.map(letter => ({
+		return wrongLetters.map((letter) => ({
 			letter,
 			start_pos: this.getRandomPosition(),
 			end_pos: this.getRandomPosition(),
@@ -222,7 +222,9 @@ export class QuestionGeneratorService {
 	private static getRandomLetter(availableLetters: string[]): string {
 		let filteredLetters = availableLetters;
 		if (this.previousCorrectLetter) {
-			filteredLetters = availableLetters.filter(letter => letter !== this.previousCorrectLetter);
+			filteredLetters = availableLetters.filter(
+				(letter) => letter !== this.previousCorrectLetter
+			);
 		}
 		const letter = this.getRandomItem(filteredLetters);
 		this.previousCorrectLetter = letter;

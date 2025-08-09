@@ -24,10 +24,10 @@ Simple toggle between freeform and circular generation modes.
 	function handleToggleChange(event: CustomEvent) {
 		const isChecked = event.detail.checked;
 		currentMode = isChecked ? 'CIRCULAR' : 'FREEFORM';
-		
+
 		// Dispatch mode change
-		const changeEvent = new CustomEvent('modeChanged', { 
-			detail: { mode: currentMode } 
+		const changeEvent = new CustomEvent('modeChanged', {
+			detail: { mode: currentMode },
 		});
 		document.dispatchEvent(changeEvent);
 	}
@@ -37,9 +37,9 @@ Simple toggle between freeform and circular generation modes.
 		if (currentMode !== 'FREEFORM') {
 			currentMode = 'FREEFORM';
 			toggleRef?.setChecked(false);
-			
-			const changeEvent = new CustomEvent('modeChanged', { 
-				detail: { mode: currentMode } 
+
+			const changeEvent = new CustomEvent('modeChanged', {
+				detail: { mode: currentMode },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -49,9 +49,9 @@ Simple toggle between freeform and circular generation modes.
 		if (currentMode !== 'CIRCULAR') {
 			currentMode = 'CIRCULAR';
 			toggleRef?.setChecked(true);
-			
-			const changeEvent = new CustomEvent('modeChanged', { 
-				detail: { mode: currentMode } 
+
+			const changeEvent = new CustomEvent('modeChanged', {
+				detail: { mode: currentMode },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -70,18 +70,18 @@ Simple toggle between freeform and circular generation modes.
 
 <div class="generation-mode-toggle">
 	<div class="header-label">Generation Mode:</div>
-	
+
 	<div class="control-layout">
-		<button 
-			class="mode-label" 
+		<button
+			class="mode-label"
 			class:active={!isCircularMode}
 			onclick={selectFreeform}
 			type="button"
 		>
 			Freeform
 		</button>
-		
-		<PyToggle 
+
+		<PyToggle
 			bind:this={toggleRef}
 			checked={isCircularMode}
 			width={60}
@@ -90,9 +90,9 @@ Simple toggle between freeform and circular generation modes.
 			circleColor="#DDD"
 			onstateChanged={handleToggleChange}
 		/>
-		
-		<button 
-			class="mode-label" 
+
+		<button
+			class="mode-label"
 			class:active={isCircularMode}
 			onclick={selectCircular}
 			type="button"

@@ -1,18 +1,14 @@
 /**
  * Motion Generation Service - Generate individual motions
- * 
+ *
  * This service will eventually port the motion generation algorithms
  * from the desktop application. For now, it provides basic motion generation.
  */
 
 import type { MotionData, BeatData } from '@tka/schemas';
-import type { 
-	IMotionGenerationService,
-	GenerationOptions 
-} from '../interfaces';
+import type { IMotionGenerationService, GenerationOptions } from '../interfaces';
 
 export class MotionGenerationService implements IMotionGenerationService {
-
 	/**
 	 * Generate a motion for a specific color
 	 */
@@ -48,36 +44,34 @@ export class MotionGenerationService implements IMotionGenerationService {
 				endLoc,
 				turns,
 				startOri,
-				endOri
+				endOri,
 			};
 
 			console.log(`Generated ${color} motion:`, motion);
 			return motion;
 		} catch (error) {
 			console.error(`Failed to generate ${color} motion:`, error);
-			throw new Error(`Motion generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Motion generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
 	/**
 	 * Calculate turns for a motion
 	 */
-	private calculateTurns(
-		motionType: string,
-		startLoc: string,
-		endLoc: string
-	): number {
+	private calculateTurns(motionType: string, startLoc: string, endLoc: string): number {
 		// Simple turn calculation (placeholder)
 		if (motionType === 'static') return 0;
 		if (motionType === 'dash') return 0;
-		
+
 		// For pro/anti/float, calculate based on location change
 		const locationOrder = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
 		const startIndex = locationOrder.indexOf(startLoc);
 		const endIndex = locationOrder.indexOf(endLoc);
-		
+
 		if (startIndex === -1 || endIndex === -1) return 1;
-		
+
 		const distance = Math.abs(endIndex - startIndex);
 		return Math.min(distance, 8 - distance);
 	}
@@ -134,7 +128,7 @@ export class MotionGenerationService implements IMotionGenerationService {
 
 		return {
 			isValid: reasons.length === 0,
-			reasons
+			reasons,
 		};
 	}
 }

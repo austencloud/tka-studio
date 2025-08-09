@@ -46,7 +46,7 @@ export class PerformanceTracker {
 		return {
 			fps: this.fps,
 			particleCount: this.particleCount,
-			warnings: this.warnings
+			warnings: this.warnings,
 		};
 	}
 

@@ -5,12 +5,7 @@
  * Based on the desktop StartPositionOrchestrator but simplified for web.
  */
 
-import type {
-	IStartPositionService,
-	ValidationResult,
-	GridMode,
-	MotionType
-} from '../interfaces';
+import type { IStartPositionService, ValidationResult, GridMode, MotionType } from '../interfaces';
 import type { BeatData, PictographData } from '../../domain';
 import {
 	createPictographData,
@@ -25,11 +20,12 @@ import {
 	Location,
 	Orientation,
 	RotationDirection,
-	GridMode as DomainGridMode
-} from '../../domain'; export class StartPositionService implements IStartPositionService {
+	GridMode as DomainGridMode,
+} from '../../domain';
+export class StartPositionService implements IStartPositionService {
 	private readonly DEFAULT_START_POSITIONS = {
 		diamond: ['alpha1_alpha1', 'beta5_beta5', 'gamma11_gamma11'],
-		box: ['alpha2_alpha2', 'beta4_beta4', 'gamma12_gamma12']
+		box: ['alpha2_alpha2', 'beta4_beta4', 'gamma12_gamma12'],
 	};
 
 	constructor() {
@@ -48,11 +44,11 @@ import {
 				return createBeatData({
 					beat_number: 0,
 					is_blank: false,
-					pictograph_data: this.createStartPositionPictograph(key, index, gridMode)
+					pictograph_data: this.createStartPositionPictograph(key, index, gridMode),
 				});
-			}); console.log(`✅ Generated ${beatData.length} start positions`);
+			});
+			console.log(`✅ Generated ${beatData.length} start positions`);
 			return beatData;
-
 		} catch (error) {
 			console.error('❌ Error getting start positions:', error);
 			return [];
@@ -69,10 +65,11 @@ import {
 			}
 
 			console.log('✅ Start position set successfully');
-
 		} catch (error) {
 			console.error('❌ Error setting start position:', error);
-			throw new Error(`Failed to set start position: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to set start position: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -98,9 +95,10 @@ import {
 
 		return {
 			isValid: errors.length === 0,
-			errors
+			errors,
 		};
-	} async getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]> {
+	}
+	async getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]> {
 		console.log(`📍 Getting default start positions for ${gridMode} mode`);
 
 		try {
@@ -112,14 +110,17 @@ import {
 
 			console.log(`✅ Generated ${pictographData.length} default start positions`);
 			return pictographData;
-
 		} catch (error) {
 			console.error('❌ Error getting default start positions:', error);
 			return [];
 		}
 	}
 
-	private createStartPositionPictograph(key: string, index: number, gridMode: GridMode): PictographData {
+	private createStartPositionPictograph(
+		key: string,
+		index: number,
+		gridMode: GridMode
+	): PictographData {
 		const [startPos, endPos] = key.split('_');
 
 		// Determine letter based on position key
@@ -132,13 +133,13 @@ import {
 		// Use correct locations based on legacy position mappings
 		// From PatternGenerator.ts and positions_map.py
 		const positionMappings: Record<string, { blue: Location; red: Location }> = {
-			'alpha1_alpha1': { blue: Location.SOUTH, red: Location.NORTH },  // Alpha1: Blue=South, Red=North
-			'beta5_beta5': { blue: Location.SOUTH, red: Location.SOUTH },    // Beta5: Blue=South, Red=South
-			'gamma11_gamma11': { blue: Location.SOUTH, red: Location.EAST }, // Gamma11: Blue=South, Red=East
+			alpha1_alpha1: { blue: Location.SOUTH, red: Location.NORTH }, // Alpha1: Blue=South, Red=North
+			beta5_beta5: { blue: Location.SOUTH, red: Location.SOUTH }, // Beta5: Blue=South, Red=South
+			gamma11_gamma11: { blue: Location.SOUTH, red: Location.EAST }, // Gamma11: Blue=South, Red=East
 			// Box mode positions
-			'alpha2_alpha2': { blue: Location.SOUTHWEST, red: Location.NORTHEAST }, // Alpha2: Blue=Southwest, Red=Northeast
-			'beta4_beta4': { blue: Location.SOUTHEAST, red: Location.SOUTHEAST },   // Beta4: Blue=Southeast, Red=Southeast
-			'gamma12_gamma12': { blue: Location.NORTHWEST, red: Location.NORTHEAST } // Gamma12: Blue=Northwest, Red=Northeast
+			alpha2_alpha2: { blue: Location.SOUTHWEST, red: Location.NORTHEAST }, // Alpha2: Blue=Southwest, Red=Northeast
+			beta4_beta4: { blue: Location.SOUTHEAST, red: Location.SOUTHEAST }, // Beta4: Blue=Southeast, Red=Southeast
+			gamma12_gamma12: { blue: Location.NORTHWEST, red: Location.NORTHEAST }, // Gamma12: Blue=Northwest, Red=Northeast
 		};
 
 		const mapping = positionMappings[key];
@@ -149,36 +150,40 @@ import {
 		const blueLocation = mapping?.blue || Location.SOUTH;
 		const redLocation = mapping?.red || Location.NORTH;
 
-		console.log(`🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`);
+		console.log(
+			`🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`
+		);
 
 		// Create proper arrow data with location
 		const blueArrow = createArrowData({
 			arrow_type: ArrowType.BLUE,
 			color: 'blue',
 			turns: 0,
-			location: blueLocation
+			location: blueLocation,
 		});
 
 		const redArrow = createArrowData({
 			arrow_type: ArrowType.RED,
 			color: 'red',
 			turns: 0,
-			location: redLocation
+			location: redLocation,
 		});
 
-		console.log(`🏹 Created arrows - Blue: ${JSON.stringify({id: blueArrow.id, location: blueArrow.location})}, Red: ${JSON.stringify({id: redArrow.id, location: redArrow.location})}`);
+		console.log(
+			`🏹 Created arrows - Blue: ${JSON.stringify({ id: blueArrow.id, location: blueArrow.location })}, Red: ${JSON.stringify({ id: redArrow.id, location: redArrow.location })}`
+		);
 
 		// Create proper prop data with location
 		const blueProp = createPropData({
 			prop_type: PropType.STAFF,
 			color: 'blue',
-			location: blueLocation
+			location: blueLocation,
 		});
 
 		const redProp = createPropData({
 			prop_type: PropType.STAFF,
 			color: 'red',
-			location: redLocation
+			location: redLocation,
 		});
 
 		// Create proper motion data
@@ -189,7 +194,7 @@ import {
 			end_loc: blueLocation,
 			turns: 0,
 			start_ori: Orientation.IN,
-			end_ori: Orientation.IN
+			end_ori: Orientation.IN,
 		});
 
 		const redMotion = createMotionData({
@@ -199,22 +204,26 @@ import {
 			end_loc: redLocation,
 			turns: 0,
 			start_ori: Orientation.IN,
-			end_ori: Orientation.IN
+			end_ori: Orientation.IN,
 		});
 
 		const pictograph = createPictographData({
 			id: `start-pos-${key}-${index}`,
-			grid_data: createGridData({ grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX }),
+			grid_data: createGridData({
+				grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX,
+			}),
 			arrows: { blue: blueArrow, red: redArrow },
 			props: { blue: blueProp, red: redProp },
 			motions: { blue: blueMotion, red: redMotion },
 			letter,
 			beat: index,
 			is_blank: false,
-			is_mirrored: false
+			is_mirrored: false,
 		});
 
-		console.log(`🎨 Final pictograph arrows - Blue: ${JSON.stringify({id: pictograph.arrows?.blue?.id, location: pictograph.arrows?.blue?.location})}, Red: ${JSON.stringify({id: pictograph.arrows?.red?.id, location: pictograph.arrows?.red?.location})}`);
+		console.log(
+			`🎨 Final pictograph arrows - Blue: ${JSON.stringify({ id: pictograph.arrows?.blue?.id, location: pictograph.arrows?.blue?.location })}, Red: ${JSON.stringify({ id: pictograph.arrows?.red?.id, location: pictograph.arrows?.red?.location })}`
+		);
 
 		return pictograph;
 	}

@@ -1,6 +1,10 @@
 <!-- Navigation Bar - Tab switching interface with fade system integration -->
 <script lang="ts">
-	import { showSettingsDialog, getIsMainTabTransitioning, getMainTabTransitionState } from '$stores/appState.svelte';
+	import {
+		showSettingsDialog,
+		getIsMainTabTransitioning,
+		getMainTabTransitionState,
+	} from '$stores/appState.svelte';
 	import { isFadeEnabled } from '$services/ui/animation';
 
 	interface Props {
@@ -28,7 +32,7 @@
 			console.log('🎭 Tab transition in progress, ignoring click');
 			return;
 		}
-		
+
 		try {
 			await onTabSelect(tab.id as any);
 		} catch (error) {
@@ -38,8 +42,10 @@
 
 	// Check if a specific tab is currently transitioning
 	function isTabTransitioning(tabId: string): boolean {
-		return isTransitioning && 
-			   (transitionState.fromTab === tabId || transitionState.toTab === tabId);
+		return (
+			isTransitioning &&
+			(transitionState.fromTab === tabId || transitionState.toTab === tabId)
+		);
 	}
 </script>
 
@@ -54,8 +60,8 @@
 
 	<div class="nav-tabs">
 		{#each tabs as tab}
-			<button 
-				class="nav-tab" 
+			<button
+				class="nav-tab"
 				class:active={activeTab === tab.id}
 				class:transitioning={isTabTransitioning(tab.id)}
 				class:disabled={isTransitioning && !isTabTransitioning(tab.id)}
@@ -72,10 +78,19 @@
 	</div>
 
 	<div class="nav-actions">
-		<button class="nav-action" onclick={showSettingsDialog} title="Settings (Ctrl+,)" aria-label="Open Settings">
+		<button
+			class="nav-action"
+			onclick={showSettingsDialog}
+			title="Settings (Ctrl+,)"
+			aria-label="Open Settings"
+		>
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-				<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-				<path d="m12 1 2.09.87.87 2.09-2.09.87-.87-2.09L12 1zM12 23l-2.09-.87-.87-2.09 2.09-.87.87 2.09L12 23zM1 12l.87-2.09L3.96 9l.87 2.09L5.7 12l-.87 2.09L3.96 15l-.87-2.09L1 12zM23 12l-.87 2.09L20.04 15l-.87-2.09L18.3 12l.87-2.09L20.04 9l.87 2.09L23 12z" stroke="currentColor" stroke-width="2"/>
+				<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+				<path
+					d="m12 1 2.09.87.87 2.09-2.09.87-.87-2.09L12 1zM12 23l-2.09-.87-.87-2.09 2.09-.87.87 2.09L12 23zM1 12l.87-2.09L3.96 9l.87 2.09L5.7 12l-.87 2.09L3.96 15l-.87-2.09L1 12zM23 12l-.87 2.09L20.04 15l-.87-2.09L18.3 12l.87-2.09L20.04 9l.87 2.09L23 12z"
+					stroke="currentColor"
+					stroke-width="2"
+				/>
 			</svg>
 		</button>
 	</div>

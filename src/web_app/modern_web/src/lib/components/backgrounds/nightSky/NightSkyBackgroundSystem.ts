@@ -8,7 +8,7 @@ import type {
 	Spaceship,
 	ShootingStarState,
 	EasterEggState,
-	AccessibilitySettings
+	AccessibilitySettings,
 } from '../types/types';
 import { drawBackgroundGradient } from '../snowfall/utils/backgroundUtils'; // Assuming this is a generic gradient util
 import { getOptimizedConfig } from '../config';
@@ -36,7 +36,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 	private a11y: AccessibilitySettings = {
 		reducedMotion: false,
 		highContrast: false,
-		visibleParticleSize: 2
+		visibleParticleSize: 2,
 	};
 
 	constructor() {
@@ -63,13 +63,13 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			fraction = cyclePosition * 2;
 		} else {
 			// Waning
-			fraction = 2 - (cyclePosition * 2);
+			fraction = 2 - cyclePosition * 2;
 		}
 
 		return {
 			fraction: Math.abs(fraction),
 			phase: cyclePosition,
-			angle: 0 // Simplified - no angle calculation
+			angle: 0, // Simplified - no angle calculation
 		};
 	}
 
@@ -98,7 +98,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 	public draw(ctx: CanvasRenderingContext2D, dim: Dimensions) {
 		const gradientStops = this.cfg.background?.gradientStops || [
 			{ position: 0, color: '#0A0E2C' },
-			{ position: 1, color: '#4A5490' }
+			{ position: 1, color: '#4A5490' },
 		];
 		drawBackgroundGradient(ctx, dim, gradientStops);
 
@@ -155,15 +155,20 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			const L = this.layers[key];
 			if (L && L.stars && Array.isArray(L.stars)) {
 				L.stars.forEach((s: Star) => {
-					s.x = (s.x + L.driftX * (this.a11y.reducedMotion ? 0.3 : 1) + dim.width) % dim.width;
-					s.y = (s.y + L.driftY * (this.a11y.reducedMotion ? 0.3 : 1) + dim.height) % dim.height;
+					s.x =
+						(s.x + L.driftX * (this.a11y.reducedMotion ? 0.3 : 1) + dim.width) %
+						dim.width;
+					s.y =
+						(s.y + L.driftY * (this.a11y.reducedMotion ? 0.3 : 1) + dim.height) %
+						dim.height;
 					if (s.isTwinkling) {
 						s.currentOpacity =
 							s.baseOpacity *
 							(0.7 +
 								0.3 *
 									Math.sin(
-										(s.twinklePhase += s.twinkleSpeed * (this.a11y.reducedMotion ? 0.3 : 1))
+										(s.twinklePhase +=
+											s.twinkleSpeed * (this.a11y.reducedMotion ? 0.3 : 1))
 									));
 					}
 				});
@@ -178,7 +183,8 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			if (L && L.stars && Array.isArray(L.stars)) {
 				const alphaMult = key === 'far' ? 0.5 : key === 'mid' ? 0.8 : 1;
 				L.stars.forEach((star: Star) => {
-					ctx.globalAlpha = star.currentOpacity * alphaMult * (this.a11y.reducedMotion ? 0.7 : 1);
+					ctx.globalAlpha =
+						star.currentOpacity * alphaMult * (this.a11y.reducedMotion ? 0.7 : 1);
 					ctx.fillStyle = star.color;
 					ctx.beginPath();
 					ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
@@ -202,7 +208,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 				y: Math.random() * dim.height * 0.7, // Keep them mostly in upper part
 				baseR: r,
 				phase: Math.random() * Math.PI * 2,
-				color: this.randItem(this.cfg.nebula.colors)
+				color: this.randItem(this.cfg.nebula.colors),
 			};
 		});
 	}
@@ -236,11 +242,15 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			this.constellationLines = [];
 			return;
 		}
-		if (!this.layers.near || !this.layers.near.stars || this.layers.near.stars.length === 0) return;
+		if (!this.layers.near || !this.layers.near.stars || this.layers.near.stars.length === 0)
+			return;
 
 		if (this.constellationLines.length === 0 && this.layers.near.stars.length > 1) {
 			const nearStars = this.layers.near.stars;
-			const numLines = Math.min(this.cfg.constellations.maxLines, Math.floor(nearStars.length / 2));
+			const numLines = Math.min(
+				this.cfg.constellations.maxLines,
+				Math.floor(nearStars.length / 2)
+			);
 			for (let i = 0; i < numLines; i++) {
 				const aIndex = this.randInt(0, nearStars.length - 1);
 				let bIndex = this.randInt(0, nearStars.length - 1);
@@ -252,7 +262,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 					a: nearStars[aIndex],
 					b: nearStars[bIndex],
 					opacity: Math.random() * this.cfg.constellations.opacity,
-					dir: Math.random() > 0.5 ? 1 : -1
+					dir: Math.random() > 0.5 ? 1 : -1,
 				});
 			}
 		}
@@ -301,8 +311,8 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			illumination: {
 				fraction: moonIlluminationData.fraction, // How much is lit (0 to 1)
 				phaseValue: moonIlluminationData.phase, // Phase cycle (0=new, 0.25=1st Q, 0.5=full, 0.75=3rd Q, 1=new again)
-				angle: moonIlluminationData.angle // Angle of the moon's bright limb (from SunCalc)
-			}
+				angle: moonIlluminationData.angle, // Angle of the moon's bright limb (from SunCalc)
+			},
 		};
 	}
 
@@ -335,11 +345,12 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 		ctx.fill();
 
 		// Apply shadow for phases other than full moon
-		if (fraction < 0.99) { // If not almost full moon
+		if (fraction < 0.99) {
+			// If not almost full moon
 			// Get background gradient colors
 			const gradientStops = this.cfg.background?.gradientStops || [
 				{ position: 0, color: '#0A0E2C' },
-				{ position: 1, color: '#4A5490' }
+				{ position: 1, color: '#4A5490' },
 			];
 
 			// Calculate relative position of the moon in the sky to determine which gradient color to use
@@ -355,8 +366,10 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 				let upperStop = gradientStops[gradientStops.length - 1];
 
 				for (let i = 0; i < gradientStops.length - 1; i++) {
-					if (gradientStops[i].position <= relativeYPosition &&
-						gradientStops[i + 1].position >= relativeYPosition) {
+					if (
+						gradientStops[i].position <= relativeYPosition &&
+						gradientStops[i + 1].position >= relativeYPosition
+					) {
 						lowerStop = gradientStops[i];
 						upperStop = gradientStops[i + 1];
 						break;
@@ -364,9 +377,11 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 				}
 
 				// Use the color closer to the moon's position for simplicity
-				shadowBaseColor = Math.abs(relativeYPosition - lowerStop.position) <
-								  Math.abs(relativeYPosition - upperStop.position) ?
-								  lowerStop.color : upperStop.color;
+				shadowBaseColor =
+					Math.abs(relativeYPosition - lowerStop.position) <
+					Math.abs(relativeYPosition - upperStop.position)
+						? lowerStop.color
+						: upperStop.color;
 			} else if (gradientStops.length === 1) {
 				shadowBaseColor = gradientStops[0].color;
 			}
@@ -426,7 +441,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 					speed: sCfg.speedPercent * dim.width * effectiveSpeed,
 					active: true,
 					direction: dir,
-					opacity: 1.0
+					opacity: 1.0,
 				};
 				this.spaceshipState.timer = 0;
 				this.spaceshipState.interval = this.randInt(15000, 30000);
@@ -530,7 +545,8 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 	private makeStar(dim: Dimensions): Star {
 		const sCfg = this.cfg.stars;
 		const r =
-			this.randFloat(sCfg.minSize, sCfg.maxSize) * (this.a11y.visibleParticleSize > 2 ? 1.5 : 1);
+			this.randFloat(sCfg.minSize, sCfg.maxSize) *
+			(this.a11y.visibleParticleSize > 2 ? 1.5 : 1);
 		const tw = Math.random() < sCfg.twinkleChance;
 		return {
 			x: Math.random() * dim.width,
@@ -541,7 +557,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 			twinkleSpeed: tw ? this.randFloat(sCfg.minTwinkleSpeed, sCfg.maxTwinkleSpeed) : 0,
 			twinklePhase: Math.random() * Math.PI * 2,
 			isTwinkling: tw,
-			color: this.a11y.highContrast ? '#FFFFFF' : this.randItem(sCfg.colors)
+			color: this.a11y.highContrast ? '#FFFFFF' : this.randItem(sCfg.colors),
 		};
 	}
 	private randFloat(m: number, M: number) {

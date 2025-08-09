@@ -78,7 +78,11 @@
 <div class="workbench" bind:this={containerElement}>
 	<div class="main-layout">
 		<div class="left-vbox">
-			<SequenceContent {containerHeight} {containerWidth} onBeatSelected={handleBeatSelected} />
+			<SequenceContent
+				{containerHeight}
+				{containerWidth}
+				onBeatSelected={handleBeatSelected}
+			/>
 		</div>
 		<div class="workbench-button-panel">
 			<ButtonPanel

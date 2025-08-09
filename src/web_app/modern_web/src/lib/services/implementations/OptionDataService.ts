@@ -13,7 +13,7 @@ import type {
 	ValidationResult,
 	OptionFilters,
 	DifficultyLevel,
-	MotionType
+	MotionType,
 } from '../interfaces';
 import { CsvDataService, type ParsedCsvRow } from './CsvDataService';
 import { OrientationCalculationService } from './OrientationCalculationService';
@@ -30,7 +30,7 @@ import {
 	Location,
 	Orientation,
 	RotationDirection,
-	GridMode as DomainGridMode
+	GridMode as DomainGridMode,
 } from '$domain';
 
 export class OptionDataService implements IOptionDataService {
@@ -39,7 +39,7 @@ export class OptionDataService implements IOptionDataService {
 	private readonly DIFFICULTY_MOTION_LIMITS = {
 		beginner: { maxTurns: 1, allowedTypes: ['pro', 'anti', 'static'] },
 		intermediate: { maxTurns: 2, allowedTypes: ['pro', 'anti', 'float', 'static'] },
-		advanced: { maxTurns: 3, allowedTypes: ['pro', 'anti', 'float', 'dash', 'static'] }
+		advanced: { maxTurns: 3, allowedTypes: ['pro', 'anti', 'float', 'dash', 'static'] },
 	};
 
 	private csvDataService: CsvDataService;
@@ -62,7 +62,11 @@ export class OptionDataService implements IOptionDataService {
 	/**
 	 * Get next options based on end position from CSV data (like legacy)
 	 */
-	async getNextOptionsFromEndPosition(endPosition: string, gridMode: 'diamond' | 'box' = 'diamond', filters?: OptionFilters): Promise<PictographData[]> {
+	async getNextOptionsFromEndPosition(
+		endPosition: string,
+		gridMode: 'diamond' | 'box' = 'diamond',
+		filters?: OptionFilters
+	): Promise<PictographData[]> {
 		console.log(`🎲 Getting real options for end position: ${endPosition} in ${gridMode} mode`);
 
 		try {
@@ -76,14 +80,17 @@ export class OptionDataService implements IOptionDataService {
 
 			// Convert CSV rows to PictographData
 			const pictographOptions = csvOptions
-				.map(row => this.convertCsvRowToPictographData(row, gridMode))
+				.map((row) => this.convertCsvRowToPictographData(row, gridMode))
 				.filter((option): option is PictographData => option !== null);
 
 			// Apply filters
 			let filteredOptions = pictographOptions;
 
 			if (filters?.difficulty) {
-				filteredOptions = this.filterOptionsByDifficulty(filteredOptions, filters.difficulty);
+				filteredOptions = this.filterOptionsByDifficulty(
+					filteredOptions,
+					filters.difficulty
+				);
 			}
 
 			if (filters?.motionTypes) {
@@ -91,19 +98,25 @@ export class OptionDataService implements IOptionDataService {
 			}
 
 			if (filters?.minTurns !== undefined || filters?.maxTurns !== undefined) {
-				filteredOptions = this.filterByTurns(filteredOptions, filters.minTurns, filters.maxTurns);
+				filteredOptions = this.filterByTurns(
+					filteredOptions,
+					filters.minTurns,
+					filters.maxTurns
+				);
 			}
 
 			console.log(`✅ Generated ${filteredOptions.length} real options from CSV data`);
 			return filteredOptions;
-
 		} catch (error) {
 			console.error('❌ Error getting options from CSV:', error);
 			return [];
 		}
 	}
 
-	async getNextOptions(currentSequence: SequenceData, filters?: OptionFilters): Promise<PictographData[]> {
+	async getNextOptions(
+		currentSequence: SequenceData,
+		filters?: OptionFilters
+	): Promise<PictographData[]> {
 		console.log('🎲 Getting next options for sequence:', currentSequence.id);
 
 		try {
@@ -127,7 +140,6 @@ export class OptionDataService implements IOptionDataService {
 
 			// Use the real CSV data method
 			return await this.getNextOptionsFromEndPosition(endPosition, gridMode, filters);
-
 		} catch (error) {
 			console.error('❌ Error generating options:', error);
 			return [];
@@ -139,13 +151,16 @@ export class OptionDataService implements IOptionDataService {
 
 		const limits = this.DIFFICULTY_MOTION_LIMITS[level];
 
-		const filtered = options.filter(option => {
+		const filtered = options.filter((option) => {
 			// Check blue motion
 			if (option.motions?.blue) {
 				if (!limits.allowedTypes.includes(option.motions.blue.motionType)) {
 					return false;
 				}
-				if (typeof option.motions.blue.turns === 'number' && option.motions.blue.turns > limits.maxTurns) {
+				if (
+					typeof option.motions.blue.turns === 'number' &&
+					option.motions.blue.turns > limits.maxTurns
+				) {
 					return false;
 				}
 			}
@@ -155,7 +170,10 @@ export class OptionDataService implements IOptionDataService {
 				if (!limits.allowedTypes.includes(option.motions.red.motionType)) {
 					return false;
 				}
-				if (typeof option.motions.red.turns === 'number' && option.motions.red.turns > limits.maxTurns) {
+				if (
+					typeof option.motions.red.turns === 'number' &&
+					option.motions.red.turns > limits.maxTurns
+				) {
 					return false;
 				}
 			}
@@ -179,13 +197,16 @@ export class OptionDataService implements IOptionDataService {
 		const lastBeat = this.getLastBeat(sequence);
 		if (lastBeat?.pictograph_data) {
 			// Validate motion continuity
-			const continuityErrors = this.validateMotionContinuity(lastBeat.pictograph_data, option);
+			const continuityErrors = this.validateMotionContinuity(
+				lastBeat.pictograph_data,
+				option
+			);
 			errors.push(...continuityErrors);
 		}
 
 		return {
 			isValid: errors.length === 0,
-			errors
+			errors,
 		};
 	}
 
@@ -196,7 +217,10 @@ export class OptionDataService implements IOptionDataService {
 	/**
 	 * Convert CSV row to PictographData format (based on legacy implementation)
 	 */
-	private convertCsvRowToPictographData(row: ParsedCsvRow, gridMode: 'diamond' | 'box'): PictographData | null {
+	private convertCsvRowToPictographData(
+		row: ParsedCsvRow,
+		gridMode: 'diamond' | 'box'
+	): PictographData | null {
 		try {
 			console.log(`🔄 Converting CSV row: ${row.letter} ${row.startPos}->${row.endPos}`);
 
@@ -209,34 +233,34 @@ export class OptionDataService implements IOptionDataService {
 				arrow_type: ArrowType.BLUE,
 				color: 'blue',
 				turns: 0, // Will be set from motion data
-				location: this.mapLocationString(row.blueStartLoc)
+				location: this.mapLocationString(row.blueStartLoc),
 			});
 
 			const redArrow = createArrowData({
 				arrow_type: ArrowType.RED,
 				color: 'red',
 				turns: 0, // Will be set from motion data
-				location: this.mapLocationString(row.redStartLoc)
+				location: this.mapLocationString(row.redStartLoc),
 			});
 
 			// Create prop data
 			const blueProp = createPropData({
 				prop_type: PropType.STAFF,
 				color: 'blue',
-				location: this.mapLocationString(row.blueStartLoc)
+				location: this.mapLocationString(row.blueStartLoc),
 			});
 
 			const redProp = createPropData({
 				prop_type: PropType.STAFF,
 				color: 'red',
-				location: this.mapLocationString(row.redStartLoc)
+				location: this.mapLocationString(row.redStartLoc),
 			});
 
 			// Create the complete PictographData
 			const pictograph = createPictographData({
 				id: `option-${row.letter}-${row.startPos}-${row.endPos}`,
 				grid_data: createGridData({
-					grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX
+					grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX,
 				}),
 				arrows: { blue: blueArrow, red: redArrow },
 				props: { blue: blueProp, red: redProp },
@@ -244,12 +268,11 @@ export class OptionDataService implements IOptionDataService {
 				letter: row.letter,
 				beat: 0,
 				is_blank: false,
-				is_mirrored: false
+				is_mirrored: false,
 			});
 
 			console.log(`✅ Converted CSV row to pictograph: ${pictograph.id}`);
 			return pictograph;
-
 		} catch (error) {
 			console.error('❌ Error converting CSV row to PictographData:', error, row);
 			return null;
@@ -275,7 +298,9 @@ export class OptionDataService implements IOptionDataService {
 			Orientation.IN // Standard start orientation
 		);
 
-		console.log(`🧭 Motion created: ${color} ${motionType} - start: ${motion.start_ori}, end: ${motion.end_ori}`);
+		console.log(
+			`🧭 Motion created: ${color} ${motionType} - start: ${motion.start_ori}, end: ${motion.end_ori}`
+		);
 		return motion;
 	}
 
@@ -284,12 +309,18 @@ export class OptionDataService implements IOptionDataService {
 	 */
 	private mapMotionType(motionType: string): DomainMotionType {
 		switch (motionType.toLowerCase()) {
-			case 'pro': return DomainMotionType.PRO;
-			case 'anti': return DomainMotionType.ANTI;
-			case 'float': return DomainMotionType.FLOAT;
-			case 'dash': return DomainMotionType.DASH;
-			case 'static': return DomainMotionType.STATIC;
-			default: return DomainMotionType.PRO;
+			case 'pro':
+				return DomainMotionType.PRO;
+			case 'anti':
+				return DomainMotionType.ANTI;
+			case 'float':
+				return DomainMotionType.FLOAT;
+			case 'dash':
+				return DomainMotionType.DASH;
+			case 'static':
+				return DomainMotionType.STATIC;
+			default:
+				return DomainMotionType.PRO;
 		}
 	}
 
@@ -298,10 +329,14 @@ export class OptionDataService implements IOptionDataService {
 	 */
 	private mapRotationDirection(rotDir: string): RotationDirection {
 		switch (rotDir.toLowerCase()) {
-			case 'cw': return RotationDirection.CLOCKWISE;
-			case 'ccw': return RotationDirection.COUNTER_CLOCKWISE;
-			case 'no_rot': return RotationDirection.NO_ROTATION;
-			default: return RotationDirection.NO_ROTATION;
+			case 'cw':
+				return RotationDirection.CLOCKWISE;
+			case 'ccw':
+				return RotationDirection.COUNTER_CLOCKWISE;
+			case 'no_rot':
+				return RotationDirection.NO_ROTATION;
+			default:
+				return RotationDirection.NO_ROTATION;
 		}
 	}
 
@@ -310,15 +345,24 @@ export class OptionDataService implements IOptionDataService {
 	 */
 	private mapLocationString(loc: string): Location {
 		switch (loc.toLowerCase()) {
-			case 'n': return Location.NORTH;
-			case 's': return Location.SOUTH;
-			case 'e': return Location.EAST;
-			case 'w': return Location.WEST;
-			case 'ne': return Location.NORTHEAST;
-			case 'se': return Location.SOUTHEAST;
-			case 'sw': return Location.SOUTHWEST;
-			case 'nw': return Location.NORTHWEST;
-			default: return Location.SOUTH;
+			case 'n':
+				return Location.NORTH;
+			case 's':
+				return Location.SOUTH;
+			case 'e':
+				return Location.EAST;
+			case 'w':
+				return Location.WEST;
+			case 'ne':
+				return Location.NORTHEAST;
+			case 'se':
+				return Location.SOUTHEAST;
+			case 'sw':
+				return Location.SOUTHWEST;
+			case 'nw':
+				return Location.NORTHWEST;
+			default:
+				return Location.SOUTH;
 		}
 	}
 
@@ -352,26 +396,37 @@ export class OptionDataService implements IOptionDataService {
 		return 'alpha1'; // Placeholder - needs proper mapping
 	}
 
-	private filterByMotionTypes(options: PictographData[], motionTypes: MotionType[]): PictographData[] {
-		return options.filter(option => {
-			const blueValid = !option.motions?.blue || motionTypes.includes(option.motions.blue.motionType);
-			const redValid = !option.motions?.red || motionTypes.includes(option.motions.red.motionType);
+	private filterByMotionTypes(
+		options: PictographData[],
+		motionTypes: MotionType[]
+	): PictographData[] {
+		return options.filter((option) => {
+			const blueValid =
+				!option.motions?.blue || motionTypes.includes(option.motions.blue.motionType);
+			const redValid =
+				!option.motions?.red || motionTypes.includes(option.motions.red.motionType);
 			return blueValid && redValid;
 		});
 	}
 
-	private filterByTurns(options: PictographData[], minTurns?: number, maxTurns?: number): PictographData[] {
-		return options.filter(option => {
+	private filterByTurns(
+		options: PictographData[],
+		minTurns?: number,
+		maxTurns?: number
+	): PictographData[] {
+		return options.filter((option) => {
 			// Check blue motion turns
 			if (option.motions?.blue) {
-				const blueTurns = typeof option.motions.blue.turns === 'number' ? option.motions.blue.turns : 0;
+				const blueTurns =
+					typeof option.motions.blue.turns === 'number' ? option.motions.blue.turns : 0;
 				if (minTurns !== undefined && blueTurns < minTurns) return false;
 				if (maxTurns !== undefined && blueTurns > maxTurns) return false;
 			}
 
 			// Check red motion turns
 			if (option.motions?.red) {
-				const redTurns = typeof option.motions.red.turns === 'number' ? option.motions.red.turns : 0;
+				const redTurns =
+					typeof option.motions.red.turns === 'number' ? option.motions.red.turns : 0;
 				if (minTurns !== undefined && redTurns < minTurns) return false;
 				if (maxTurns !== undefined && redTurns > maxTurns) return false;
 			}
@@ -380,23 +435,34 @@ export class OptionDataService implements IOptionDataService {
 		});
 	}
 
-	private validateMotionContinuity(lastPictograph: PictographData, nextOption: PictographData): string[] {
+	private validateMotionContinuity(
+		lastPictograph: PictographData,
+		nextOption: PictographData
+	): string[] {
 		const errors: string[] = [];
 
 		// Basic continuity validation - end positions should connect to start positions
 		if (lastPictograph.motions?.blue && nextOption.motions?.blue) {
 			if (lastPictograph.motions.blue.endLocation !== nextOption.motions.blue.startLocation) {
 				// Allow some flexibility in continuity for now
-				console.warn('Blue motion continuity warning:',
-					lastPictograph.motions.blue.endLocation, '→', nextOption.motions.blue.startLocation);
+				console.warn(
+					'Blue motion continuity warning:',
+					lastPictograph.motions.blue.endLocation,
+					'→',
+					nextOption.motions.blue.startLocation
+				);
 			}
 		}
 
 		if (lastPictograph.motions?.red && nextOption.motions?.red) {
 			if (lastPictograph.motions.red.endLocation !== nextOption.motions.red.startLocation) {
 				// Allow some flexibility in continuity for now
-				console.warn('Red motion continuity warning:',
-					lastPictograph.motions.red.endLocation, '→', nextOption.motions.red.startLocation);
+				console.warn(
+					'Red motion continuity warning:',
+					lastPictograph.motions.red.endLocation,
+					'→',
+					nextOption.motions.red.startLocation
+				);
 			}
 		}
 

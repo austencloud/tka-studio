@@ -14,13 +14,13 @@
 		onSequenceRemoveRequested?: (position: number) => void;
 	}
 
-	let { 
+	let {
 		act = null,
 		disabled = false,
 		onActInfoChanged,
 		onMusicLoadRequested,
 		onSequenceClicked,
-		onSequenceRemoveRequested
+		onSequenceRemoveRequested,
 	}: Props = $props();
 
 	// Handle act info changes

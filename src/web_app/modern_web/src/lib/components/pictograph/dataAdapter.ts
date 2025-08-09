@@ -5,7 +5,12 @@
  * structures (used by services) and modern domain structures (used by components).
  */
 
-import type { PictographData as ModernPictographData, BeatData as ModernBeatData, ArrowData as ModernArrowData, PropData as ModernPropData } from '$lib/domain';
+import type {
+	PictographData as ModernPictographData,
+	BeatData as ModernBeatData,
+	ArrowData as ModernArrowData,
+	PropData as ModernPropData,
+} from '$lib/domain';
 import type { PictographData as LegacyPictographData } from '$lib/services/interfaces';
 import { GridMode, ArrowType, PropType, Orientation, RotationDirection } from '$lib/domain/enums';
 import { calculateArrowLocation } from './utils/arrowLocationCalculator';
@@ -21,7 +26,7 @@ export function legacyToModernPictographData(legacy: LegacyPictographData): Mode
 			center_x: 0,
 			center_y: 0,
 			radius: 100,
-			grid_points: {}
+			grid_points: {},
 		},
 		arrows: {
 			blue: legacy.arrows?.blue || createEmptyModernArrowData('blue'),
@@ -133,7 +138,7 @@ export function legacyToModernArrowData(legacy: any, color: 'blue' | 'red'): Mod
 	const calculatedLocation = calculateArrowLocation({
 		start_loc: legacy.startLoc || legacy.start_loc || '',
 		end_loc: legacy.endLoc || legacy.end_loc || '',
-		motion_type: legacy.motionType || legacy.motion_type || 'static'
+		motion_type: legacy.motionType || legacy.motion_type || 'static',
 	});
 
 	return {
@@ -167,7 +172,8 @@ export function legacyToModernPropData(legacy: any, color: 'blue' | 'red'): Mode
 		prop_type: legacy.propType || legacy.prop_type || PropType.STAFF,
 		color,
 		orientation: legacy.ori || legacy.orientation || Orientation.IN,
-		rotation_direction: legacy.rotDir || legacy.rotation_direction || RotationDirection.NO_ROTATION,
+		rotation_direction:
+			legacy.rotDir || legacy.rotation_direction || RotationDirection.NO_ROTATION,
 		location: legacy.loc || legacy.location || 'center',
 		position_x: legacy.coords?.x || legacy.coordinates?.x || 0,
 		position_y: legacy.coords?.y || legacy.coordinates?.y || 0,
@@ -182,7 +188,10 @@ export function legacyToModernPropData(legacy: any, color: 'blue' | 'red'): Mode
 /**
  * Extract arrow data from legacy pictograph structure (direct properties)
  */
-export function extractLegacyArrowData(legacy: any): { blue: ModernArrowData | null; red: ModernArrowData | null } {
+export function extractLegacyArrowData(legacy: any): {
+	blue: ModernArrowData | null;
+	red: ModernArrowData | null;
+} {
 	const blue = legacy.blueArrowData || legacy.blue_arrow_data || null;
 	const red = legacy.redArrowData || legacy.red_arrow_data || null;
 
@@ -195,7 +204,10 @@ export function extractLegacyArrowData(legacy: any): { blue: ModernArrowData | n
 /**
  * Extract prop data from legacy pictograph structure (direct properties)
  */
-export function extractLegacyPropData(legacy: any): { blue: ModernPropData | null; red: ModernPropData | null } {
+export function extractLegacyPropData(legacy: any): {
+	blue: ModernPropData | null;
+	red: ModernPropData | null;
+} {
 	const blue = legacy.bluePropData || legacy.blue_prop_data || null;
 	const red = legacy.redPropData || legacy.red_prop_data || null;
 
@@ -228,7 +240,7 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 				center_x: 0,
 				center_y: 0,
 				radius: 100,
-				grid_points: {}
+				grid_points: {},
 			},
 			arrows: {
 				blue: arrows.blue || createEmptyModernArrowData('blue'),

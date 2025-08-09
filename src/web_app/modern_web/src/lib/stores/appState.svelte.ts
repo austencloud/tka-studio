@@ -14,7 +14,7 @@ import {
 	isFadeEnabled,
 	isMainTabTransitioning,
 	getMainTabTransition,
-	type MainTabId
+	type MainTabId,
 } from '$services/ui/animation';
 
 // ============================================================================
@@ -26,14 +26,22 @@ const initState = $state({
 	isInitialized: false,
 	isInitializing: false,
 	initializationError: null as string | null,
-	initializationProgress: 0
+	initializationProgress: 0,
 });
 
 // Export getter functions for the state
-export function getIsInitialized() { return initState.isInitialized; }
-export function getIsInitializing() { return initState.isInitializing; }
-export function getInitializationError() { return initState.initializationError; }
-export function getInitializationProgress() { return initState.initializationProgress; }
+export function getIsInitialized() {
+	return initState.isInitialized;
+}
+export function getIsInitializing() {
+	return initState.isInitializing;
+}
+export function getInitializationError() {
+	return initState.initializationError;
+}
+export function getInitializationProgress() {
+	return initState.initializationProgress;
+}
 
 // ============================================================================
 // UI STATE
@@ -46,13 +54,21 @@ const uiState = $state({
 	activeTab: 'construct' as TabId,
 	isFullScreen: false,
 	showSettings: false,
-	theme: 'dark' as 'light' | 'dark'
+	theme: 'dark' as 'light' | 'dark',
 });
 
-export function getActiveTab() { return uiState.activeTab; }
-export function getIsFullScreen() { return uiState.isFullScreen; }
-export function getShowSettings() { return uiState.showSettings; }
-export function getTheme() { return uiState.theme; }
+export function getActiveTab() {
+	return uiState.activeTab;
+}
+export function getIsFullScreen() {
+	return uiState.isFullScreen;
+}
+export function getShowSettings() {
+	return uiState.showSettings;
+}
+export function getTheme() {
+	return uiState.theme;
+}
 
 // Fade transition state getters
 export function getIsMainTabTransitioning() {
@@ -78,10 +94,12 @@ export function getMainTabTransitionState() {
 const perfState = $state({
 	initializationTime: 0,
 	lastRenderTime: 0,
-	memoryUsage: 0
+	memoryUsage: 0,
 });
 
-export function getPerformanceMetrics() { return perfState; }
+export function getPerformanceMetrics() {
+	return perfState;
+}
 
 // ============================================================================
 // SETTINGS STATE
@@ -100,7 +118,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 	// Background settings
 	backgroundType: 'aurora',
 	backgroundQuality: 'medium',
-	backgroundEnabled: true
+	backgroundEnabled: true,
 };
 
 // Load settings from localStorage
@@ -134,7 +152,9 @@ function saveSettingsToStorage(settings: AppSettings): void {
 
 const settingsState = $state<AppSettings>(loadSettingsFromStorage());
 
-export function getSettings() { return settingsState; }
+export function getSettings() {
+	return settingsState;
+}
 
 // ============================================================================
 // DERIVED STATE
@@ -175,7 +195,7 @@ export function setInitializationState(
 		try {
 			initializeFadeSystem({
 				duration: 300, // Default duration for transitions
-				delay: 0
+				delay: 0,
 			});
 			console.log('🎭 Fade system initialized with app state');
 		} catch (fadeError) {
@@ -223,7 +243,10 @@ export async function switchTab(tab: TabId): Promise<void> {
 	if (initState.isInitialized && isFadeEnabled()) {
 		try {
 			// Start the fade transition
-			const transitionId = await transitionToMainTab(currentTab as MainTabId, tab as MainTabId);
+			const transitionId = await transitionToMainTab(
+				currentTab as MainTabId,
+				tab as MainTabId
+			);
 
 			if (transitionId) {
 				// Update the active tab immediately for reactive state
@@ -240,7 +263,10 @@ export async function switchTab(tab: TabId): Promise<void> {
 				uiState.activeTab = tab;
 			}
 		} catch (error) {
-			console.warn('Failed to start tab transition, falling back to immediate switch:', error);
+			console.warn(
+				'Failed to start tab transition, falling back to immediate switch:',
+				error
+			);
 			uiState.activeTab = tab;
 		}
 	} else {
@@ -362,7 +388,7 @@ export function getAppStateSnapshot() {
 		showSettings: uiState.showSettings,
 		theme: uiState.theme,
 		performanceMetrics: { ...perfState },
-		settings: { ...settingsState }
+		settings: { ...settingsState },
 	};
 }
 
@@ -381,6 +407,6 @@ export function resetAppState(): void {
 	Object.assign(perfState, {
 		initializationTime: 0,
 		lastRenderTime: 0,
-		memoryUsage: 0
+		memoryUsage: 0,
 	});
 }

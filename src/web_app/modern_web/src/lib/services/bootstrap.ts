@@ -1,6 +1,6 @@
 /**
  * Application Bootstrap - TKA V2 Modern
- * 
+ *
  * This module creates and configures the application's dependency injection container,
  * registering all services and their dependencies following the clean architecture
  * pattern established in the desktop application.
@@ -54,23 +54,76 @@ import { OptionDataService } from './implementations/OptionDataService';
 import { StartPositionService } from './implementations/StartPositionService';
 
 // Create ServiceInterface objects for DI container
-const ISequenceServiceInterface = createServiceInterface<ISequenceService>('ISequenceService', SequenceService);
-const ISequenceDomainServiceInterface = createServiceInterface<ISequenceDomainService>('ISequenceDomainService', SequenceDomainService);
-const IPictographServiceInterface = createServiceInterface<IPictographService>('IPictographService', PictographService);
-const IPictographRenderingServiceInterface = createServiceInterface<IPictographRenderingService>('IPictographRenderingService', PictographRenderingService);
-const IArrowPositioningServiceInterface = createServiceInterface<IArrowPositioningService>('IArrowPositioningService', ArrowPositioningService);
-const IArrowPlacementDataServiceInterface = createServiceInterface<IArrowPlacementDataService>('IArrowPlacementDataService', ArrowPlacementDataService);
-const IArrowPlacementKeyServiceInterface = createServiceInterface<IArrowPlacementKeyService>('IArrowPlacementKeyService', ArrowPlacementKeyService);
-const IPropRenderingServiceInterface = createServiceInterface<IPropRenderingService>('IPropRenderingService', PropRenderingService);
-const IPersistenceServiceInterface = createServiceInterface<IPersistenceService>('IPersistenceService', LocalStoragePersistenceService);
-const ISequenceGenerationServiceInterface = createServiceInterface<ISequenceGenerationService>('ISequenceGenerationService', SequenceGenerationService);
-const IMotionGenerationServiceInterface = createServiceInterface<IMotionGenerationService>('IMotionGenerationService', MotionGenerationService);
-const IApplicationInitializationServiceInterface = createServiceInterface<IApplicationInitializationService>('IApplicationInitializationService', ApplicationInitializationService);
-const ISettingsServiceInterface = createServiceInterface<ISettingsService>('ISettingsService', SettingsService);
-const IExportServiceInterface = createServiceInterface<IExportService>('IExportService', ExportService);
-const IConstructTabCoordinationServiceInterface = createServiceInterface<IConstructTabCoordinationService>('IConstructTabCoordinationService', ConstructTabCoordinationService);
-const IOptionDataServiceInterface = createServiceInterface<IOptionDataService>('IOptionDataService', OptionDataService);
-const IStartPositionServiceInterface = createServiceInterface<IStartPositionService>('IStartPositionService', StartPositionService);
+const ISequenceServiceInterface = createServiceInterface<ISequenceService>(
+	'ISequenceService',
+	SequenceService
+);
+const ISequenceDomainServiceInterface = createServiceInterface<ISequenceDomainService>(
+	'ISequenceDomainService',
+	SequenceDomainService
+);
+const IPictographServiceInterface = createServiceInterface<IPictographService>(
+	'IPictographService',
+	PictographService
+);
+const IPictographRenderingServiceInterface = createServiceInterface<IPictographRenderingService>(
+	'IPictographRenderingService',
+	PictographRenderingService
+);
+const IArrowPositioningServiceInterface = createServiceInterface<IArrowPositioningService>(
+	'IArrowPositioningService',
+	ArrowPositioningService
+);
+const IArrowPlacementDataServiceInterface = createServiceInterface<IArrowPlacementDataService>(
+	'IArrowPlacementDataService',
+	ArrowPlacementDataService
+);
+const IArrowPlacementKeyServiceInterface = createServiceInterface<IArrowPlacementKeyService>(
+	'IArrowPlacementKeyService',
+	ArrowPlacementKeyService
+);
+const IPropRenderingServiceInterface = createServiceInterface<IPropRenderingService>(
+	'IPropRenderingService',
+	PropRenderingService
+);
+const IPersistenceServiceInterface = createServiceInterface<IPersistenceService>(
+	'IPersistenceService',
+	LocalStoragePersistenceService
+);
+const ISequenceGenerationServiceInterface = createServiceInterface<ISequenceGenerationService>(
+	'ISequenceGenerationService',
+	SequenceGenerationService
+);
+const IMotionGenerationServiceInterface = createServiceInterface<IMotionGenerationService>(
+	'IMotionGenerationService',
+	MotionGenerationService
+);
+const IApplicationInitializationServiceInterface =
+	createServiceInterface<IApplicationInitializationService>(
+		'IApplicationInitializationService',
+		ApplicationInitializationService
+	);
+const ISettingsServiceInterface = createServiceInterface<ISettingsService>(
+	'ISettingsService',
+	SettingsService
+);
+const IExportServiceInterface = createServiceInterface<IExportService>(
+	'IExportService',
+	ExportService
+);
+const IConstructTabCoordinationServiceInterface =
+	createServiceInterface<IConstructTabCoordinationService>(
+		'IConstructTabCoordinationService',
+		ConstructTabCoordinationService
+	);
+const IOptionDataServiceInterface = createServiceInterface<IOptionDataService>(
+	'IOptionDataService',
+	OptionDataService
+);
+const IStartPositionServiceInterface = createServiceInterface<IStartPositionService>(
+	'IStartPositionService',
+	StartPositionService
+);
 
 /**
  * Create and configure the web application DI container
@@ -97,7 +150,11 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 			const sequenceService = container.resolve(ISequenceServiceInterface);
 			const startPositionService = container.resolve(IStartPositionServiceInterface);
 			const optionDataService = container.resolve(IOptionDataServiceInterface);
-			return new ConstructTabCoordinationService(sequenceService, startPositionService, optionDataService);
+			return new ConstructTabCoordinationService(
+				sequenceService,
+				startPositionService,
+				optionDataService
+			);
 		});
 
 		// Register rendering services
@@ -141,7 +198,7 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		try {
 			const fadeOrchestrator = initializeFadeOrchestrator({
 				duration: 300,
-				delay: 0
+				delay: 0,
 			});
 			console.log('🎭 Fade orchestrator initialized in bootstrap');
 		} catch (fadeError) {
@@ -159,7 +216,9 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		return container;
 	} catch (error) {
 		console.error('❌ Failed to initialize application container:', error);
-		throw new Error(`Application initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		throw new Error(
+			`Application initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
 	}
 }
 
@@ -186,7 +245,9 @@ async function validateContainerConfiguration(container: ServiceContainer): Prom
 			console.log(`✅ Service validated: ${serviceInterface.name}`);
 		} catch (error) {
 			console.error(`❌ Failed to validate service: ${serviceInterface.name}`, error);
-			throw new Error(`Failed to resolve ${serviceInterface.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to resolve ${serviceInterface.name}: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 }
@@ -201,7 +262,9 @@ let globalContainer: ServiceContainer | null = null;
  */
 export function getContainer(): ServiceContainer {
 	if (!globalContainer) {
-		throw new Error('Application container not initialized. Call createWebApplication() first.');
+		throw new Error(
+			'Application container not initialized. Call createWebApplication() first.'
+		);
 	}
 	return globalContainer;
 }

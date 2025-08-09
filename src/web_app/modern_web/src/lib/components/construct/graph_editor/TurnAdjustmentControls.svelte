@@ -30,14 +30,14 @@ Modern turn adjustment controls with direct turn value selection.
 	// Available turn values (fl = float = 0.25)
 	const turnValues = ['fl', '0', '0.5', '1', '1.5', '2', '2.5', '3'];
 	const turnValueMap: Record<string, number> = {
-		'fl': 0.25,  // float = quarter turn
+		fl: 0.25, // float = quarter turn
 		'0': 0.0,
 		'0.5': 0.5,
 		'1': 1.0,
 		'1.5': 1.5,
 		'2': 2.0,
 		'2.5': 2.5,
-		'3': 3.0
+		'3': 3.0,
 	};
 
 	// Component references
@@ -68,7 +68,13 @@ Modern turn adjustment controls with direct turn value selection.
 
 		// Emit signal
 		onTurnAmountChanged?.(color, turnAmount);
-		console.log('🔄 [TURN_CONTROLS]', color, 'turn value selected:', turnValue, '(' + turnAmount + ')');
+		console.log(
+			'🔄 [TURN_CONTROLS]',
+			color,
+			'turn value selected:',
+			turnValue,
+			'(' + turnAmount + ')'
+		);
 	}
 
 	// Update beat data with new turn values
@@ -83,14 +89,14 @@ Modern turn adjustment controls with direct turn value selection.
 				if (updatedBeat.pictograph_data.motions.blue && blueTurnAmount !== 0) {
 					updatedBeat.pictograph_data.motions.blue = {
 						...updatedBeat.pictograph_data.motions.blue,
-						turns: blueTurnAmount
+						turns: blueTurnAmount,
 					};
 				}
 
 				if (updatedBeat.pictograph_data.motions.red && redTurnAmount !== 0) {
 					updatedBeat.pictograph_data.motions.red = {
 						...updatedBeat.pictograph_data.motions.red,
-						turns: redTurnAmount
+						turns: redTurnAmount,
 					};
 				}
 			}
@@ -98,7 +104,6 @@ Modern turn adjustment controls with direct turn value selection.
 			currentBeatData = updatedBeat;
 			onBeatDataUpdated?.(updatedBeat);
 			console.log('📊 [TURN_CONTROLS] Beat data updated with turn changes');
-
 		} catch (error) {
 			console.error('❌ [TURN_CONTROLS] Error updating beat with turn changes:', error);
 		}
@@ -150,22 +155,24 @@ Modern turn adjustment controls with direct turn value selection.
 
 		// Update UI displays
 		updateTurnDisplays();
-		
-		console.log('🔄 [TURN_CONTROLS] Beat data set, turn amounts:', 
-			{ blue: blueTurnAmount, red: redTurnAmount });
+
+		console.log('🔄 [TURN_CONTROLS] Beat data set, turn amounts:', {
+			blue: blueTurnAmount,
+			red: redTurnAmount,
+		});
 	}
 </script>
 
 <div class="turn-adjustment-controls">
 	<!-- Blue turn panel (left side) -->
 	<div class="turn-panel blue-panel">
-		<CurrentTurnDisplay 
+		<CurrentTurnDisplay
 			bind:this={blueCurrentDisplayRef}
 			color="blue"
 			initialValue={findTurnValueString(blueTurnAmount)}
 		/>
-		
-		<TurnValueButtonGrid 
+
+		<TurnValueButtonGrid
 			bind:this={blueGridRef}
 			color="blue"
 			{turnValues}
@@ -176,13 +183,13 @@ Modern turn adjustment controls with direct turn value selection.
 
 	<!-- Red turn panel (right side) -->
 	<div class="turn-panel red-panel">
-		<CurrentTurnDisplay 
+		<CurrentTurnDisplay
 			bind:this={redCurrentDisplayRef}
 			color="red"
 			initialValue={findTurnValueString(redTurnAmount)}
 		/>
-		
-		<TurnValueButtonGrid 
+
+		<TurnValueButtonGrid
 			bind:this={redGridRef}
 			color="red"
 			{turnValues}

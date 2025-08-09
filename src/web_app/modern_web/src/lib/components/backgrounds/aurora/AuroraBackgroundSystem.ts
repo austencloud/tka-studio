@@ -4,7 +4,7 @@ import type {
 	Dimensions,
 	QualityLevel,
 	AccessibilitySettings,
-	PerformanceMetrics
+	PerformanceMetrics,
 } from '../types/types';
 
 interface Blob {
@@ -31,7 +31,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 	private accessibility: AccessibilitySettings = {
 		reducedMotion: false,
 		highContrast: false,
-		visibleParticleSize: 2
+		visibleParticleSize: 2,
 	};
 
 	// Animation state
@@ -116,17 +116,22 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 		return {
 			fps: 60, // Estimated
 			warnings: [],
-			particleCount: this.blobs.length + this.sparkles.length
+			particleCount: this.blobs.length + this.sparkles.length,
 		};
 	}
 
 	private getNumBlobs(): number {
 		switch (this.quality) {
-			case 'high': return 5;
-			case 'medium': return 3;
-			case 'low': return 2;
-			case 'minimal': return 1;
-			default: return 3;
+			case 'high':
+				return 5;
+			case 'medium':
+				return 3;
+			case 'low':
+				return 2;
+			case 'minimal':
+				return 1;
+			default:
+				return 3;
 		}
 	}
 
@@ -134,11 +139,16 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 		if (this.accessibility.reducedMotion) return 0;
 
 		switch (this.quality) {
-			case 'high': return 50;
-			case 'medium': return 30;
-			case 'low': return 15;
-			case 'minimal': return 5;
-			default: return 30;
+			case 'high':
+				return 50;
+			case 'medium':
+				return 30;
+			case 'low':
+				return 15;
+			case 'minimal':
+				return 5;
+			default:
+				return 30;
 		}
 	}
 
@@ -159,7 +169,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 			dx: (Math.random() - 0.5) * 0.002,
 			dy: (Math.random() - 0.5) * 0.002,
 			dsize: (Math.random() - 0.5) * 0.5,
-			dopacity: (Math.random() - 0.5) * 0.005
+			dopacity: (Math.random() - 0.5) * 0.005,
 		};
 	}
 
@@ -177,7 +187,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 			y: Math.random(),
 			size: 2 + Math.random() * 2,
 			opacity: 0.5 + Math.random() * 0.5,
-			pulseSpeed: 0.005 + Math.random() * 0.01
+			pulseSpeed: 0.005 + Math.random() * 0.01,
 		};
 	}
 
@@ -212,7 +222,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 		const colors = [
 			{ r: 255, g: 0, b: 255, a: 0.4 }, // Magenta
 			{ r: 0, g: 255, b: 255, a: 0.4 }, // Cyan
-			{ r: 255, g: 255, b: 0, a: 0.4 }  // Yellow
+			{ r: 255, g: 255, b: 0, a: 0.4 }, // Yellow
 		];
 
 		for (let i = 0; i < colors.length; i++) {
@@ -223,10 +233,13 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 			const hslColor = this.hsvToRgb(hue / 360, 1, 1);
 
 			// Apply sine wave to adjust gradient positioning
-			const waveShift = 0.1 * Math.sin(this.wavePhase + i * 2 * Math.PI / colors.length);
+			const waveShift = 0.1 * Math.sin(this.wavePhase + (i * 2 * Math.PI) / colors.length);
 			const position = Math.min(Math.max(i / colors.length + waveShift, 0), 1);
 
-			gradient.addColorStop(position, `rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a})`);
+			gradient.addColorStop(
+				position,
+				`rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a})`
+			);
 		}
 
 		ctx.fillStyle = gradient;
@@ -278,19 +291,44 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 		const t = v * (1 - (1 - f) * s);
 
 		switch (i % 6) {
-			case 0: r = v; g = t; b = p; break;
-			case 1: r = q; g = v; b = p; break;
-			case 2: r = p; g = v; b = t; break;
-			case 3: r = p; g = q; b = v; break;
-			case 4: r = t; g = p; b = v; break;
-			case 5: r = v; g = p; b = q; break;
-			default: r = g = b = 0;
+			case 0:
+				r = v;
+				g = t;
+				b = p;
+				break;
+			case 1:
+				r = q;
+				g = v;
+				b = p;
+				break;
+			case 2:
+				r = p;
+				g = v;
+				b = t;
+				break;
+			case 3:
+				r = p;
+				g = q;
+				b = v;
+				break;
+			case 4:
+				r = t;
+				g = p;
+				b = v;
+				break;
+			case 5:
+				r = v;
+				g = p;
+				b = q;
+				break;
+			default:
+				r = g = b = 0;
 		}
 
 		return {
 			r: Math.round(r * 255),
 			g: Math.round(g * 255),
-			b: Math.round(b * 255)
+			b: Math.round(b * 255),
 		};
 	}
 }

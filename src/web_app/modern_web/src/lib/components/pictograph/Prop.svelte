@@ -115,7 +115,10 @@ Prop Component - Renders SVG props with proper positioning
 			// Calculate offset using direction
 			const offsetCalculator = new BetaOffsetCalculator();
 			const basePosition = { x: 0, y: 0 }; // We only want the offset, not absolute position
-			const newPosition = offsetCalculator.calculateNewPositionWithOffset(basePosition, direction);
+			const newPosition = offsetCalculator.calculateNewPositionWithOffset(
+				basePosition,
+				direction
+			);
 
 			console.log(
 				`🎯 Beta direction for ${propData.color} prop: ${direction}, offset: (${newPosition.x}, ${newPosition.y})`
@@ -177,7 +180,12 @@ Prop Component - Renders SVG props with proper positioning
 		const svg = doc.documentElement;
 
 		// Get viewBox dimensions
-		const viewBoxValues = svg.getAttribute('viewBox')?.split(/\s+/) || ['0', '0', '252.8', '77.8'];
+		const viewBoxValues = svg.getAttribute('viewBox')?.split(/\s+/) || [
+			'0',
+			'0',
+			'252.8',
+			'77.8',
+		];
 		const viewBox = {
 			width: parseFloat(viewBoxValues[2]) || 252.8,
 			height: parseFloat(viewBoxValues[3]) || 77.8,
@@ -240,7 +248,10 @@ Prop Component - Renders SVG props with proper positioning
 			const { viewBox, center } = parsePropSvg(originalSvgText);
 
 			// Apply color transformation to the SVG
-			const coloredSvgText = applyColorToSvg(originalSvgText, propData.color as 'blue' | 'red');
+			const coloredSvgText = applyColorToSvg(
+				originalSvgText,
+				propData.color as 'blue' | 'red'
+			);
 
 			svgData = {
 				imageSrc: `data:image/svg+xml;base64,${btoa(coloredSvgText)}`,

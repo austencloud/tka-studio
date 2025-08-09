@@ -1,12 +1,21 @@
 /**
  * Beta Offset Calculator
- * 
+ *
  * Converts direction values to pixel offsets for beta prop positioning.
  * Based on legacy beta offset calculation logic.
  */
 
 import type { Direction } from './BetaPropDirectionCalculator';
-import { UP, DOWN, LEFT, RIGHT, UPRIGHT, DOWNRIGHT, UPLEFT, DOWNLEFT } from './BetaPropDirectionCalculator';
+import {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	UPRIGHT,
+	DOWNRIGHT,
+	UPLEFT,
+	DOWNLEFT,
+} from './BetaPropDirectionCalculator';
 
 export interface Position {
 	x: number;
@@ -22,10 +31,10 @@ export class BetaOffsetCalculator {
 	 */
 	calculateNewPositionWithOffset(currentPosition: Position, direction: Direction): Position {
 		const offset = this.getOffsetForDirection(direction);
-		
+
 		return {
 			x: currentPosition.x + offset.x,
-			y: currentPosition.y + offset.y
+			y: currentPosition.y + offset.y,
 		};
 	}
 
@@ -34,7 +43,7 @@ export class BetaOffsetCalculator {
 	 */
 	private getOffsetForDirection(direction: Direction): Position {
 		const distance = this.OFFSET_DISTANCE;
-		
+
 		switch (direction) {
 			case UP:
 				return { x: 0, y: -distance };
@@ -66,17 +75,15 @@ export class BetaOffsetCalculator {
 		blueDirection: Direction | null,
 		redDirection: Direction | null
 	): { blue: Position; red: Position } {
-		const blueOffset = blueDirection 
+		const blueOffset = blueDirection
 			? this.getOffsetForDirection(blueDirection)
 			: { x: 0, y: 0 };
-			
-		const redOffset = redDirection 
-			? this.getOffsetForDirection(redDirection)
-			: { x: 0, y: 0 };
+
+		const redOffset = redDirection ? this.getOffsetForDirection(redDirection) : { x: 0, y: 0 };
 
 		return {
 			blue: blueOffset,
-			red: redOffset
+			red: redOffset,
 		};
 	}
 }

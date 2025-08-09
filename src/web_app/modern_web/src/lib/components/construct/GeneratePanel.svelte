@@ -218,7 +218,10 @@ while maintaining the legacy layout structure with subtle glass effects.
 
 		<GridModeSelector bind:this={gridModeSelectorRef} initialMode={currentConfig.gridMode} />
 
-		<GenerationModeToggle bind:this={generationModeToggleRef} initialMode={currentConfig.mode} />
+		<GenerationModeToggle
+			bind:this={generationModeToggleRef}
+			initialMode={currentConfig.mode}
+		/>
 
 		<PropContinuityToggle
 			bind:this={propContinuityToggleRef}
@@ -238,7 +241,10 @@ while maintaining the legacy layout structure with subtle glass effects.
 					initialValue={currentConfig.sliceSize}
 				/>
 
-				<CAPTypeSelector bind:this={capTypeSelectorRef} initialValue={currentConfig.capType} />
+				<CAPTypeSelector
+					bind:this={capTypeSelectorRef}
+					initialValue={currentConfig.capType}
+				/>
 			{/if}
 		</div>
 	</div>

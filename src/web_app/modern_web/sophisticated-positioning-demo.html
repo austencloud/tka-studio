@@ -1,496 +1,541 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKA Sophisticated Arrow Positioning Demo</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin: 10px 0;
-        }
-        
-        .demo-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .pictograph-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .pictograph-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .card-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding-bottom: 10px;
-        }
-        
-        .pictograph-svg {
-            width: 100%;
-            height: auto;
-            max-width: 300px;
-            margin: 0 auto;
-            display: block;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .motion-info {
-            margin-top: 15px;
-            font-size: 0.9em;
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 8px;
-            font-family: monospace;
-        }
-        
-        .motion-info div {
-            margin-bottom: 5px;
-        }
-        
-        .load-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 20px auto;
-            display: block;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .load-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        
-        .status {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.1em;
-        }
-        
-        .error {
-            color: #ff6b6b;
-            background: rgba(255,107,107,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        
-        .success {
-            color: #51cf66;
-            background: rgba(81,207,102,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>🎯 TKA Sophisticated Arrow Positioning</h1>
-        <p>Desktop-Parity Pictograph Rendering Engine</p>
-        <p><strong>Advanced Features:</strong> Placement Data Loading • Complex Key Generation • Sophisticated Adjustments</p>
-    </div>
-    
-    <button class="load-button" onclick="loadSophisticatedDemo()">🚀 Load Sophisticated Positioning Demo</button>
-    
-    <div id="status" class="status">Click the button above to see sophisticated arrow positioning in action!</div>
-    
-    <div id="demo-container" class="demo-container"></div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TKA Sophisticated Arrow Positioning Demo</title>
+		<style>
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				margin: 0;
+				padding: 20px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				min-height: 100vh;
+			}
 
-    <script type="module">
-        // Test data showcasing sophisticated positioning features
-        const testCases = [
-            {
-                name: "PRO Motion with Letter A",
-                description: "Uses sophisticated placement key: pro_to_layer1_alpha_A",
-                data: {
-                    id: "pro-motion-A",
-                    gridData: { mode: 'diamond' },
-                    motions: {
-                        blue: {
-                            motionType: 'pro',
-                            propRotDir: 'cw',
-                            startLocation: 'n',
-                            turns: 1,
-                        }
-                    },
-                    letter: 'A'
-                }
-            },
-            {
-                name: "ANTI Motion with Letter θ-",
-                description: "Uses dash letter handling: anti_to_layer2_alpha_θ_dash",
-                data: {
-                    id: "anti-motion-theta-dash",
-                    gridData: { mode: 'diamond' },
-                    motions: {
-                        blue: {
-                            motionType: 'anti',
-                            propRotDir: 'ccw',
-                            startLocation: 'e',
-                            turns: 0.5,
-                        }
-                    },
-                    letter: 'θ-'
-                }
-            },
-            {
-                name: "Dual Arrows - Sophisticated Positioning",
-                description: "Complex placement calculations for both arrows",
-                data: {
-                    id: "dual-arrows-sophisticated",
-                    gridData: { mode: 'diamond' },
-                    motions: {
-                        blue: {
-                            motionType: 'pro',
-                            propRotDir: 'cw',
-                            startLocation: 'n',
-                            turns: 2,
-                        },
-                        red: {
-                            motionType: 'anti',
-                            propRotDir: 'ccw',
-                            startLocation: 's',
-                            turns: 1.5,
-                        }
-                    },
-                    letter: 'β'
-                }
-            },
-            {
-                name: "FLOAT Motion - Special Handling",
-                description: "Uses 'fl' turns for float motions",
-                data: {
-                    id: "float-motion-special",
-                    gridData: { mode: 'diamond' },
-                    motions: {
-                        blue: {
-                            motionType: 'float',
-                            propRotDir: 'no_rot',
-                            startLocation: 'center',
-                            turns: 'fl',
-                        }
-                    },
-                    letter: null
-                }
-            }
-        ];
-        
-        // Mock sophisticated positioning system for demo
-        class SophisticatedDemo {
-            constructor() {
-                this.placementData = {
-                    diamond: {
-                        pro: {
-                            "pro_to_layer1_alpha": { "1": [-35, -15], "2": [45, -40] },
-                            "pro_to_layer1_alpha_A": { "1": [-25, -10], "2": [50, -35] },
-                            "pro_to_layer1_beta": { "1.5": [-100, 150], "2": [45, -40] }
-                        },
-                        anti: {
-                            "anti_to_layer2_alpha": { "0.5": [-90, 65], "1.5": [-30, 70] },
-                            "anti_to_layer2_alpha_θ_dash": { "0.5": [-100, 70], "1.5": [-40, 75] }
-                        },
-                        float: {
-                            "float_to_layer1_alpha": { "fl": [30, -30] }
-                        }
-                    }
-                };
-            }
-            
-            generatePlacementKey(motionData, pictographData) {
-                const motionType = motionData.motionType;
-                const letter = pictographData.letter;
-                
-                if (letter) {
-                    if (letter.includes('-')) {
-                        // Dash letter handling: θ- → θ_dash
-                        const baseString = letter.replace('-', '_dash');
-                        return `${motionType}_to_layer2_alpha_${baseString}`;
-                    } else {
-                        // Regular letter: A → _A
-                        return `${motionType}_to_layer1_alpha_${letter}`;
-                    }
-                }
-                
-                return `${motionType}_to_layer1_alpha`;
-            }
-            
-            getAdjustment(motionType, placementKey, turns) {
-                const data = this.placementData.diamond?.[motionType]?.[placementKey]?.[turns.toString()];
-                if (data) {
-                    console.log(`🎯 Found sophisticated adjustment: ${placementKey}[${turns}] = [${data[0]}, ${data[1]}]`);
-                    return { x: data[0], y: data[1] };
-                }
-                console.log(`⚠️ No adjustment found for: ${placementKey}[${turns}], using default`);
-                return { x: 0, y: 0 };
-            }
-            
-            calculatePosition(motionData, pictographData) {
-                // Get base position
-                const locationMap = {
-                    n: { x: 150, y: 70 },
-                    e: { x: 230, y: 150 },
-                    s: { x: 150, y: 230 },
-                    w: { x: 70, y: 150 },
-                    center: { x: 150, y: 150 }
-                };
-                const basePos = locationMap[motionData.startLocation] || { x: 150, y: 150 };
-                
-                // Generate sophisticated placement key
-                const placementKey = this.generatePlacementKey(motionData, pictographData);
-                
-                // Get sophisticated adjustment
-                const adjustment = this.getAdjustment(motionData.motionType, placementKey, motionData.turns);
-                
-                // Calculate rotation
-                const rotationMap = {
-                    'pro-cw': 0, 'pro-ccw': 180,
-                    'anti-cw': 180, 'anti-ccw': 0,
-                    'float': 45
-                };
-                const rotKey = `${motionData.motionType}-${motionData.propRotDir}`;
-                const rotation = rotationMap[rotKey] || 0;
-                
-                return {
-                    x: basePos.x + adjustment.x,
-                    y: basePos.y + adjustment.y,
-                    rotation: rotation,
-                    placementKey: placementKey,
-                    adjustment: adjustment
-                };
-            }
-            
-            renderPictograph(data) {
-                console.log(`🎨 Rendering sophisticated pictograph: ${data.id}`);
-                
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '300');
-                svg.setAttribute('height', '300');
-                svg.setAttribute('viewBox', '0 0 300 300');
-                
-                // Background
-                const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                bg.setAttribute('width', '100%');
-                bg.setAttribute('height', '100%');
-                bg.setAttribute('fill', '#ffffff');
-                svg.appendChild(bg);
-                
-                // Grid
-                const diamond = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-                diamond.setAttribute('points', '150,50 250,150 150,250 50,150');
-                diamond.setAttribute('fill', 'none');
-                diamond.setAttribute('stroke', '#e5e7eb');
-                diamond.setAttribute('stroke-width', '2');
-                svg.appendChild(diamond);
-                
-                // Render arrows with sophisticated positioning
-                const arrows = [];
-                if (data.motions?.blue) {
-                    const bluePos = this.calculatePosition(data.motions.blue, data);
-                    this.renderArrow(svg, 'blue', bluePos);
-                    arrows.push({ color: 'blue', ...bluePos });
-                }
-                if (data.motions?.red) {
-                    const redPos = this.calculatePosition(data.motions.red, data);
-                    this.renderArrow(svg, 'red', redPos);
-                    arrows.push({ color: 'red', ...redPos });
-                }
-                
-                // Add sophisticated metadata
-                this.addMetadata(svg, data, arrows);
-                
-                return svg;
-            }
-            
-            renderArrow(svg, color, position) {
-                console.log(`🏹 Rendering ${color} arrow with sophisticated positioning:`, position);
-                
-                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                group.setAttribute('transform', `translate(${position.x}, ${position.y}) rotate(${position.rotation})`);
-                group.setAttribute('class', `sophisticated-arrow-${color}`);
-                
-                // Enhanced arrow shape
-                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                arrow.setAttribute('d', 'M 0,-25 L 15,0 L 0,25 L -8,15 L -8,-15 Z');
-                arrow.setAttribute('fill', color);
-                arrow.setAttribute('stroke', '#000');
-                arrow.setAttribute('stroke-width', '2');
-                arrow.setAttribute('opacity', '0.9');
-                arrow.setAttribute('filter', 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))');
-                
-                // Position indicator
-                const indicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                indicator.setAttribute('cx', '0');
-                indicator.setAttribute('cy', '0');
-                indicator.setAttribute('r', '3');
-                indicator.setAttribute('fill', color === 'blue' ? '#0066ff' : '#ff0066');
-                indicator.setAttribute('opacity', '0.7');
-                
-                group.appendChild(arrow);
-                group.appendChild(indicator);
-                svg.appendChild(group);
-            }
-            
-            addMetadata(svg, data, arrows) {
-                // Title
-                const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                title.setAttribute('x', '150');
-                title.setAttribute('y', '280');
-                title.setAttribute('text-anchor', 'middle');
-                title.setAttribute('font-family', 'monospace');
-                title.setAttribute('font-size', '11');
-                title.setAttribute('fill', '#4b5563');
-                title.textContent = `${data.id} • Sophisticated Positioning`;
-                svg.appendChild(title);
-                
-                // Sophisticated positioning debug info
-                let yOffset = 15;
-                arrows.forEach(arrow => {
-                    const debugText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    debugText.setAttribute('x', '10');
-                    debugText.setAttribute('y', yOffset.toString());
-                    debugText.setAttribute('font-family', 'monospace');
-                    debugText.setAttribute('font-size', '9');
-                    debugText.setAttribute('fill', '#6b7280');
-                    debugText.textContent = `${arrow.color}: ${arrow.placementKey}`;
-                    svg.appendChild(debugText);
-                    yOffset += 10;
-                    
-                    const adjustText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    adjustText.setAttribute('x', '10');
-                    adjustText.setAttribute('y', yOffset.toString());
-                    adjustText.setAttribute('font-family', 'monospace');
-                    adjustText.setAttribute('font-size', '9');
-                    adjustText.setAttribute('fill', '#059669');
-                    adjustText.textContent = `adj: [${arrow.adjustment.x}, ${arrow.adjustment.y}] → [${arrow.x.toFixed(1)}, ${arrow.y.toFixed(1)}]`;
-                    svg.appendChild(adjustText);
-                    yOffset += 15;
-                });
-                
-                // Letter info
-                if (data.letter) {
-                    const letterText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    letterText.setAttribute('x', '10');
-                    letterText.setAttribute('y', yOffset.toString());
-                    letterText.setAttribute('font-family', 'monospace');
-                    letterText.setAttribute('font-size', '10');
-                    letterText.setAttribute('fill', '#059669');
-                    letterText.setAttribute('font-weight', 'bold');
-                    letterText.textContent = `Letter: ${data.letter}`;
-                    svg.appendChild(letterText);
-                }
-            }
-        }
-        
-        // Global demo function
-        window.loadSophisticatedDemo = function() {
-            const statusDiv = document.getElementById('status');
-            const containerDiv = document.getElementById('demo-container');
-            
-            statusDiv.innerHTML = '<div class="status">🚀 Initializing sophisticated positioning system...</div>';
-            
-            try {
-                const demo = new SophisticatedDemo();
-                
-                statusDiv.innerHTML = '<div class="success">✅ Sophisticated positioning system loaded! Rendering pictographs with advanced features...</div>';
-                
-                // Clear container
-                containerDiv.innerHTML = '';
-                
-                // Render all test cases
-                testCases.forEach(testCase => {
-                    const card = document.createElement('div');
-                    card.className = 'pictograph-card';
-                    
-                    const title = document.createElement('div');
-                    title.className = 'card-title';
-                    title.textContent = testCase.name;
-                    card.appendChild(title);
-                    
-                    const description = document.createElement('div');
-                    description.style.cssText = 'font-size: 0.9em; opacity: 0.8; margin-bottom: 15px; text-align: center; font-style: italic;';
-                    description.textContent = testCase.description;
-                    card.appendChild(description);
-                    
-                    try {
-                        const svg = demo.renderPictograph(testCase.data);
-                        svg.className = 'pictograph-svg';
-                        card.appendChild(svg);
-                        
-                        // Add motion info
-                        const motionInfo = document.createElement('div');
-                        motionInfo.className = 'motion-info';
-                        motionInfo.innerHTML = `
+			.header {
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+			.header h1 {
+				font-size: 2.5em;
+				margin: 0;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+			}
+
+			.header p {
+				font-size: 1.2em;
+				opacity: 0.9;
+				margin: 10px 0;
+			}
+
+			.demo-container {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+				gap: 20px;
+				max-width: 1400px;
+				margin: 0 auto;
+			}
+
+			.pictograph-card {
+				background: rgba(255, 255, 255, 0.1);
+				backdrop-filter: blur(10px);
+				border-radius: 15px;
+				padding: 20px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				transition:
+					transform 0.3s ease,
+					box-shadow 0.3s ease;
+			}
+
+			.pictograph-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			}
+
+			.card-title {
+				font-size: 1.3em;
+				font-weight: bold;
+				margin-bottom: 15px;
+				text-align: center;
+				border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+				padding-bottom: 10px;
+			}
+
+			.pictograph-svg {
+				width: 100%;
+				height: auto;
+				max-width: 300px;
+				margin: 0 auto;
+				display: block;
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+			}
+
+			.motion-info {
+				margin-top: 15px;
+				font-size: 0.9em;
+				background: rgba(0, 0, 0, 0.2);
+				padding: 10px;
+				border-radius: 8px;
+				font-family: monospace;
+			}
+
+			.motion-info div {
+				margin-bottom: 5px;
+			}
+
+			.load-button {
+				background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+				color: white;
+				border: none;
+				padding: 15px 30px;
+				font-size: 1.1em;
+				border-radius: 25px;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin: 20px auto;
+				display: block;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+			}
+
+			.load-button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+			}
+
+			.status {
+				text-align: center;
+				margin: 20px 0;
+				font-size: 1.1em;
+			}
+
+			.error {
+				color: #ff6b6b;
+				background: rgba(255, 107, 107, 0.1);
+				padding: 15px;
+				border-radius: 10px;
+				margin: 10px 0;
+			}
+
+			.success {
+				color: #51cf66;
+				background: rgba(81, 207, 102, 0.1);
+				padding: 15px;
+				border-radius: 10px;
+				margin: 10px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<h1>🎯 TKA Sophisticated Arrow Positioning</h1>
+			<p>Desktop-Parity Pictograph Rendering Engine</p>
+			<p>
+				<strong>Advanced Features:</strong> Placement Data Loading • Complex Key Generation
+				• Sophisticated Adjustments
+			</p>
+		</div>
+
+		<button class="load-button" onclick="loadSophisticatedDemo()">
+			🚀 Load Sophisticated Positioning Demo
+		</button>
+
+		<div id="status" class="status">
+			Click the button above to see sophisticated arrow positioning in action!
+		</div>
+
+		<div id="demo-container" class="demo-container"></div>
+
+		<script type="module">
+			// Test data showcasing sophisticated positioning features
+			const testCases = [
+				{
+					name: 'PRO Motion with Letter A',
+					description: 'Uses sophisticated placement key: pro_to_layer1_alpha_A',
+					data: {
+						id: 'pro-motion-A',
+						gridData: { mode: 'diamond' },
+						motions: {
+							blue: {
+								motionType: 'pro',
+								propRotDir: 'cw',
+								startLocation: 'n',
+								turns: 1,
+							},
+						},
+						letter: 'A',
+					},
+				},
+				{
+					name: 'ANTI Motion with Letter θ-',
+					description: 'Uses dash letter handling: anti_to_layer2_alpha_θ_dash',
+					data: {
+						id: 'anti-motion-theta-dash',
+						gridData: { mode: 'diamond' },
+						motions: {
+							blue: {
+								motionType: 'anti',
+								propRotDir: 'ccw',
+								startLocation: 'e',
+								turns: 0.5,
+							},
+						},
+						letter: 'θ-',
+					},
+				},
+				{
+					name: 'Dual Arrows - Sophisticated Positioning',
+					description: 'Complex placement calculations for both arrows',
+					data: {
+						id: 'dual-arrows-sophisticated',
+						gridData: { mode: 'diamond' },
+						motions: {
+							blue: {
+								motionType: 'pro',
+								propRotDir: 'cw',
+								startLocation: 'n',
+								turns: 2,
+							},
+							red: {
+								motionType: 'anti',
+								propRotDir: 'ccw',
+								startLocation: 's',
+								turns: 1.5,
+							},
+						},
+						letter: 'β',
+					},
+				},
+				{
+					name: 'FLOAT Motion - Special Handling',
+					description: "Uses 'fl' turns for float motions",
+					data: {
+						id: 'float-motion-special',
+						gridData: { mode: 'diamond' },
+						motions: {
+							blue: {
+								motionType: 'float',
+								propRotDir: 'no_rot',
+								startLocation: 'center',
+								turns: 'fl',
+							},
+						},
+						letter: null,
+					},
+				},
+			];
+
+			// Mock sophisticated positioning system for demo
+			class SophisticatedDemo {
+				constructor() {
+					this.placementData = {
+						diamond: {
+							pro: {
+								pro_to_layer1_alpha: { 1: [-35, -15], 2: [45, -40] },
+								pro_to_layer1_alpha_A: { 1: [-25, -10], 2: [50, -35] },
+								pro_to_layer1_beta: { 1.5: [-100, 150], 2: [45, -40] },
+							},
+							anti: {
+								anti_to_layer2_alpha: { 0.5: [-90, 65], 1.5: [-30, 70] },
+								anti_to_layer2_alpha_θ_dash: { 0.5: [-100, 70], 1.5: [-40, 75] },
+							},
+							float: {
+								float_to_layer1_alpha: { fl: [30, -30] },
+							},
+						},
+					};
+				}
+
+				generatePlacementKey(motionData, pictographData) {
+					const motionType = motionData.motionType;
+					const letter = pictographData.letter;
+
+					if (letter) {
+						if (letter.includes('-')) {
+							// Dash letter handling: θ- → θ_dash
+							const baseString = letter.replace('-', '_dash');
+							return `${motionType}_to_layer2_alpha_${baseString}`;
+						} else {
+							// Regular letter: A → _A
+							return `${motionType}_to_layer1_alpha_${letter}`;
+						}
+					}
+
+					return `${motionType}_to_layer1_alpha`;
+				}
+
+				getAdjustment(motionType, placementKey, turns) {
+					const data =
+						this.placementData.diamond?.[motionType]?.[placementKey]?.[
+							turns.toString()
+						];
+					if (data) {
+						console.log(
+							`🎯 Found sophisticated adjustment: ${placementKey}[${turns}] = [${data[0]}, ${data[1]}]`
+						);
+						return { x: data[0], y: data[1] };
+					}
+					console.log(
+						`⚠️ No adjustment found for: ${placementKey}[${turns}], using default`
+					);
+					return { x: 0, y: 0 };
+				}
+
+				calculatePosition(motionData, pictographData) {
+					// Get base position
+					const locationMap = {
+						n: { x: 150, y: 70 },
+						e: { x: 230, y: 150 },
+						s: { x: 150, y: 230 },
+						w: { x: 70, y: 150 },
+						center: { x: 150, y: 150 },
+					};
+					const basePos = locationMap[motionData.startLocation] || { x: 150, y: 150 };
+
+					// Generate sophisticated placement key
+					const placementKey = this.generatePlacementKey(motionData, pictographData);
+
+					// Get sophisticated adjustment
+					const adjustment = this.getAdjustment(
+						motionData.motionType,
+						placementKey,
+						motionData.turns
+					);
+
+					// Calculate rotation
+					const rotationMap = {
+						'pro-cw': 0,
+						'pro-ccw': 180,
+						'anti-cw': 180,
+						'anti-ccw': 0,
+						float: 45,
+					};
+					const rotKey = `${motionData.motionType}-${motionData.propRotDir}`;
+					const rotation = rotationMap[rotKey] || 0;
+
+					return {
+						x: basePos.x + adjustment.x,
+						y: basePos.y + adjustment.y,
+						rotation: rotation,
+						placementKey: placementKey,
+						adjustment: adjustment,
+					};
+				}
+
+				renderPictograph(data) {
+					console.log(`🎨 Rendering sophisticated pictograph: ${data.id}`);
+
+					const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+					svg.setAttribute('width', '300');
+					svg.setAttribute('height', '300');
+					svg.setAttribute('viewBox', '0 0 300 300');
+
+					// Background
+					const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+					bg.setAttribute('width', '100%');
+					bg.setAttribute('height', '100%');
+					bg.setAttribute('fill', '#ffffff');
+					svg.appendChild(bg);
+
+					// Grid
+					const diamond = document.createElementNS(
+						'http://www.w3.org/2000/svg',
+						'polygon'
+					);
+					diamond.setAttribute('points', '150,50 250,150 150,250 50,150');
+					diamond.setAttribute('fill', 'none');
+					diamond.setAttribute('stroke', '#e5e7eb');
+					diamond.setAttribute('stroke-width', '2');
+					svg.appendChild(diamond);
+
+					// Render arrows with sophisticated positioning
+					const arrows = [];
+					if (data.motions?.blue) {
+						const bluePos = this.calculatePosition(data.motions.blue, data);
+						this.renderArrow(svg, 'blue', bluePos);
+						arrows.push({ color: 'blue', ...bluePos });
+					}
+					if (data.motions?.red) {
+						const redPos = this.calculatePosition(data.motions.red, data);
+						this.renderArrow(svg, 'red', redPos);
+						arrows.push({ color: 'red', ...redPos });
+					}
+
+					// Add sophisticated metadata
+					this.addMetadata(svg, data, arrows);
+
+					return svg;
+				}
+
+				renderArrow(svg, color, position) {
+					console.log(
+						`🏹 Rendering ${color} arrow with sophisticated positioning:`,
+						position
+					);
+
+					const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+					group.setAttribute(
+						'transform',
+						`translate(${position.x}, ${position.y}) rotate(${position.rotation})`
+					);
+					group.setAttribute('class', `sophisticated-arrow-${color}`);
+
+					// Enhanced arrow shape
+					const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+					arrow.setAttribute('d', 'M 0,-25 L 15,0 L 0,25 L -8,15 L -8,-15 Z');
+					arrow.setAttribute('fill', color);
+					arrow.setAttribute('stroke', '#000');
+					arrow.setAttribute('stroke-width', '2');
+					arrow.setAttribute('opacity', '0.9');
+					arrow.setAttribute('filter', 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))');
+
+					// Position indicator
+					const indicator = document.createElementNS(
+						'http://www.w3.org/2000/svg',
+						'circle'
+					);
+					indicator.setAttribute('cx', '0');
+					indicator.setAttribute('cy', '0');
+					indicator.setAttribute('r', '3');
+					indicator.setAttribute('fill', color === 'blue' ? '#0066ff' : '#ff0066');
+					indicator.setAttribute('opacity', '0.7');
+
+					group.appendChild(arrow);
+					group.appendChild(indicator);
+					svg.appendChild(group);
+				}
+
+				addMetadata(svg, data, arrows) {
+					// Title
+					const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+					title.setAttribute('x', '150');
+					title.setAttribute('y', '280');
+					title.setAttribute('text-anchor', 'middle');
+					title.setAttribute('font-family', 'monospace');
+					title.setAttribute('font-size', '11');
+					title.setAttribute('fill', '#4b5563');
+					title.textContent = `${data.id} • Sophisticated Positioning`;
+					svg.appendChild(title);
+
+					// Sophisticated positioning debug info
+					let yOffset = 15;
+					arrows.forEach((arrow) => {
+						const debugText = document.createElementNS(
+							'http://www.w3.org/2000/svg',
+							'text'
+						);
+						debugText.setAttribute('x', '10');
+						debugText.setAttribute('y', yOffset.toString());
+						debugText.setAttribute('font-family', 'monospace');
+						debugText.setAttribute('font-size', '9');
+						debugText.setAttribute('fill', '#6b7280');
+						debugText.textContent = `${arrow.color}: ${arrow.placementKey}`;
+						svg.appendChild(debugText);
+						yOffset += 10;
+
+						const adjustText = document.createElementNS(
+							'http://www.w3.org/2000/svg',
+							'text'
+						);
+						adjustText.setAttribute('x', '10');
+						adjustText.setAttribute('y', yOffset.toString());
+						adjustText.setAttribute('font-family', 'monospace');
+						adjustText.setAttribute('font-size', '9');
+						adjustText.setAttribute('fill', '#059669');
+						adjustText.textContent = `adj: [${arrow.adjustment.x}, ${arrow.adjustment.y}] → [${arrow.x.toFixed(1)}, ${arrow.y.toFixed(1)}]`;
+						svg.appendChild(adjustText);
+						yOffset += 15;
+					});
+
+					// Letter info
+					if (data.letter) {
+						const letterText = document.createElementNS(
+							'http://www.w3.org/2000/svg',
+							'text'
+						);
+						letterText.setAttribute('x', '10');
+						letterText.setAttribute('y', yOffset.toString());
+						letterText.setAttribute('font-family', 'monospace');
+						letterText.setAttribute('font-size', '10');
+						letterText.setAttribute('fill', '#059669');
+						letterText.setAttribute('font-weight', 'bold');
+						letterText.textContent = `Letter: ${data.letter}`;
+						svg.appendChild(letterText);
+					}
+				}
+			}
+
+			// Global demo function
+			window.loadSophisticatedDemo = function () {
+				const statusDiv = document.getElementById('status');
+				const containerDiv = document.getElementById('demo-container');
+
+				statusDiv.innerHTML =
+					'<div class="status">🚀 Initializing sophisticated positioning system...</div>';
+
+				try {
+					const demo = new SophisticatedDemo();
+
+					statusDiv.innerHTML =
+						'<div class="success">✅ Sophisticated positioning system loaded! Rendering pictographs with advanced features...</div>';
+
+					// Clear container
+					containerDiv.innerHTML = '';
+
+					// Render all test cases
+					testCases.forEach((testCase) => {
+						const card = document.createElement('div');
+						card.className = 'pictograph-card';
+
+						const title = document.createElement('div');
+						title.className = 'card-title';
+						title.textContent = testCase.name;
+						card.appendChild(title);
+
+						const description = document.createElement('div');
+						description.style.cssText =
+							'font-size: 0.9em; opacity: 0.8; margin-bottom: 15px; text-align: center; font-style: italic;';
+						description.textContent = testCase.description;
+						card.appendChild(description);
+
+						try {
+							const svg = demo.renderPictograph(testCase.data);
+							svg.className = 'pictograph-svg';
+							card.appendChild(svg);
+
+							// Add motion info
+							const motionInfo = document.createElement('div');
+							motionInfo.className = 'motion-info';
+							motionInfo.innerHTML = `
                             <div><strong>ID:</strong> ${testCase.data.id}</div>
                             <div><strong>Letter:</strong> ${testCase.data.letter || 'None'}</div>
                             <div><strong>Blue Motion:</strong> ${testCase.data.motions.blue ? testCase.data.motions.blue.motionType : 'None'}</div>
                             <div><strong>Red Motion:</strong> ${testCase.data.motions.red ? testCase.data.motions.red.motionType : 'None'}</div>
                             <div><strong>Features:</strong> Placement Keys • Adjustment Calculations • Letter Handling</div>
                         `;
-                        card.appendChild(motionInfo);
-                        
-                    } catch (error) {
-                        console.error('Error rendering pictograph:', error);
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error';
-                        errorDiv.textContent = `Rendering failed: ${error.message}`;
-                        card.appendChild(errorDiv);
-                    }
-                    
-                    containerDiv.appendChild(card);
-                });
-                
-                statusDiv.innerHTML = '<div class="success">🎉 Sophisticated positioning demo complete! Each pictograph shows advanced placement key generation and adjustment calculations. Check the console for detailed logs.</div>';
-                
-            } catch (error) {
-                console.error('Demo failed:', error);
-                statusDiv.innerHTML = `<div class="error">❌ Demo failed: ${error.message}</div>`;
-            }
-        };
-    </script>
-</body>
+							card.appendChild(motionInfo);
+						} catch (error) {
+							console.error('Error rendering pictograph:', error);
+							const errorDiv = document.createElement('div');
+							errorDiv.className = 'error';
+							errorDiv.textContent = `Rendering failed: ${error.message}`;
+							card.appendChild(errorDiv);
+						}
+
+						containerDiv.appendChild(card);
+					});
+
+					statusDiv.innerHTML =
+						'<div class="success">🎉 Sophisticated positioning demo complete! Each pictograph shows advanced placement key generation and adjustment calculations. Check the console for detailed logs.</div>';
+				} catch (error) {
+					console.error('Demo failed:', error);
+					statusDiv.innerHTML = `<div class="error">❌ Demo failed: ${error.message}</div>`;
+				}
+			};
+		</script>
+	</body>
 </html>

@@ -9,12 +9,12 @@
 		onSaveAsRequested?: () => void;
 	}
 
-	let { 
+	let {
 		hasUnsavedChanges = false,
 		disabled = false,
 		onNewActRequested,
 		onSaveRequested,
-		onSaveAsRequested
+		onSaveAsRequested,
 	}: Props = $props();
 
 	// Handle toolbar actions
@@ -37,7 +37,7 @@
 <div class="write-toolbar" class:disabled>
 	<!-- File operations -->
 	<div class="toolbar-section file-operations">
-		<button 
+		<button
 			class="toolbar-button new-button btn-primary"
 			{disabled}
 			onclick={handleNewAct}
@@ -46,7 +46,7 @@
 			📄 New Act
 		</button>
 
-		<button 
+		<button
 			class="toolbar-button save-button btn-glass"
 			class:has-changes={hasUnsavedChanges}
 			{disabled}
@@ -59,7 +59,7 @@
 			{/if}
 		</button>
 
-		<button 
+		<button
 			class="toolbar-button save-as-button btn-glass"
 			{disabled}
 			onclick={handleSaveAs}
@@ -75,13 +75,9 @@
 	<!-- Status section -->
 	<div class="toolbar-section status-section">
 		{#if hasUnsavedChanges}
-			<span class="status-text unsaved">
-				● Unsaved changes
-			</span>
+			<span class="status-text unsaved"> ● Unsaved changes </span>
 		{:else}
-			<span class="status-text saved">
-				✓ Saved
-			</span>
+			<span class="status-text saved"> ✓ Saved </span>
 		{/if}
 	</div>
 </div>
@@ -187,8 +183,13 @@
 	}
 
 	@keyframes pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.5; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.5;
+		}
 	}
 
 	.status-text {

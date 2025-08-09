@@ -1,20 +1,14 @@
 /**
  * Export Service - Sequence export functionality
- * 
+ *
  * Handles exporting sequences to various formats (images, JSON, etc.)
  */
 
 import type { SequenceData } from '@tka/schemas';
-import type { 
-	IExportService, 
-	ExportOptions,
-	IPictographService 
-} from '../interfaces';
+import type { IExportService, ExportOptions, IPictographService } from '../interfaces';
 
 export class ExportService implements IExportService {
-	constructor(
-		private pictographService: IPictographService
-	) {}
+	constructor(private pictographService: IPictographService) {}
 
 	/**
 	 * Export sequence as PNG image
@@ -26,7 +20,7 @@ export class ExportService implements IExportService {
 			// Create canvas for rendering
 			const canvas = document.createElement('canvas');
 			const ctx = canvas.getContext('2d');
-			
+
 			if (!ctx) {
 				throw new Error('Canvas 2D context not available');
 			}
@@ -72,7 +66,9 @@ export class ExportService implements IExportService {
 			});
 		} catch (error) {
 			console.error('Failed to export sequence as image:', error);
-			throw new Error(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -82,19 +78,21 @@ export class ExportService implements IExportService {
 	async exportSequenceAsJson(sequence: SequenceData): Promise<string> {
 		try {
 			console.log(`Exporting sequence "${sequence.name}" as JSON`);
-			
+
 			// Add export metadata
 			const exportData = {
 				...sequence,
 				exportedAt: new Date().toISOString(),
 				exportedBy: 'TKA V2 Modern',
-				version: '2.0.0'
+				version: '2.0.0',
 			};
 
 			return JSON.stringify(exportData, null, 2);
 		} catch (error) {
 			console.error('Failed to export sequence as JSON:', error);
-			throw new Error(`JSON export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`JSON export failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -117,11 +115,7 @@ export class ExportService implements IExportService {
 		ctx.fillStyle = '#374151';
 		ctx.font = '16px monospace';
 		ctx.textAlign = 'center';
-		ctx.fillText(
-			beat.beatNumber.toString(),
-			x + size / 2,
-			y + size / 2 + 6
-		);
+		ctx.fillText(beat.beatNumber.toString(), x + size / 2, y + size / 2 + 6);
 
 		// Draw motion indicators
 		if (beat.blueMotion) {
@@ -153,7 +147,7 @@ export class ExportService implements IExportService {
 			beatSize: 150,
 			spacing: 10,
 			includeTitle: true,
-			includeMetadata: false
+			includeMetadata: false,
 		};
 	}
 }

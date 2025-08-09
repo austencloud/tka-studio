@@ -1,10 +1,134 @@
 {
+    // File handling
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 1000,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/.svelte-kit": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.log": true,
+        "**/coverage": true,
+        "**/test-results": true,
+        "**/playwright-report": true
+    },
+
+    // Editor settings
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": false,
     "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit"
-    }
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
+    "editor.rulers": [100],
+    "editor.minimap.enabled": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.inlayHints.enabled": "on",
+
+    // Language-specific settings
+    "[svelte]": {
+        "editor.defaultFormatter": "svelte.svelte-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.organizeImports": "explicit"
+        }
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.wordWrap": "on"
+    },
+
+    // TypeScript settings
+    "typescript.preferences.quoteStyle": "single",
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "typescript.inlayHints.variableTypes.enabled": true,
+    "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+
+    // Svelte settings
+    "svelte.enable-ts-plugin": true,
+    "svelte.plugin.css.diagnostics.enable": true,
+    "svelte.plugin.css.completions.enable": true,
+    "svelte.plugin.html.completions.enable": true,
+    "svelte.plugin.svelte.diagnostics.enable": true,
+    "svelte.plugin.typescript.diagnostics.enable": true,
+    "svelte.plugin.typescript.hover.enable": true,
+
+    // ESLint settings
+    "eslint.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "svelte"
+    ],
+    "eslint.format.enable": true,
+
+    // Prettier settings
+    "prettier.enable": true,
+    "prettier.requireConfig": true,
+
+    // Emmet settings
+    "emmet.includeLanguages": {
+        "svelte": "html"
+    },
+
+    // Search settings
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.svelte-kit": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/coverage": true,
+        "**/test-results": true,
+        "**/playwright-report": true,
+        "**/*.log": true
+    },
+
+    // Terminal settings
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.env.windows": {
+        "NODE_ENV": "development"
+    },
+
+    // Git settings
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+
+    // Explorer settings
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+
+    // Workbench settings
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.closeOnFileDelete": true,
+    "workbench.startupEditor": "newUntitledFile"
 }

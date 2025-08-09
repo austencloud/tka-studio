@@ -1,6 +1,6 @@
 /**
  * ModernPictograph Component Tests
- * 
+ *
  * Tests for the main pictograph orchestrator component
  */
 
@@ -12,19 +12,19 @@ import { createBeatData, createPictographData } from '$lib/domain';
 
 // Mock the child components
 vi.mock('../Grid.svelte', () => ({
-	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } }))
+	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } })),
 }));
 
 vi.mock('../Prop.svelte', () => ({
-	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } }))
+	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } })),
 }));
 
 vi.mock('../Arrow.svelte', () => ({
-	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } }))
+	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } })),
 }));
 
 vi.mock('../TKAGlyph.svelte', () => ({
-	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } }))
+	default: vi.fn(() => ({ $$: { on_mount: [], on_destroy: [], props: {} } })),
 }));
 
 describe('ModernPictograph', () => {
@@ -36,15 +36,15 @@ describe('ModernPictograph', () => {
 		it('should render with pictograph data', () => {
 			const pictographData = createPictographData({
 				letter: 'A',
-				grid_data: { mode: 'diamond' }
+				grid_data: { mode: 'diamond' },
 			});
 
 			render(ModernPictograph, {
 				props: {
 					pictographData,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -56,20 +56,20 @@ describe('ModernPictograph', () => {
 		it('should render with beat data', () => {
 			const pictographData = createPictographData({
 				letter: 'B',
-				grid_data: { mode: 'box' }
+				grid_data: { mode: 'box' },
 			});
 
 			const beatData = createBeatData({
 				beat_number: 1,
-				pictograph_data: pictographData
+				pictograph_data: pictographData,
 			});
 
 			render(ModernPictograph, {
 				props: {
 					beatData,
 					width: 200,
-					height: 200
-				}
+					height: 200,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -81,13 +81,13 @@ describe('ModernPictograph', () => {
 			render(ModernPictograph, {
 				props: {
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');
 			expect(svg).toBeInTheDocument();
-			
+
 			// Should show empty state
 			const emptyText = screen.getByText('Empty');
 			expect(emptyText).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('ModernPictograph', () => {
 		it('should render as button when onClick provided', () => {
 			const handleClick = vi.fn();
 			const pictographData = createPictographData({
-				letter: 'C'
+				letter: 'C',
 			});
 
 			render(ModernPictograph, {
@@ -106,8 +106,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					onClick: handleClick,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('button');
@@ -117,15 +117,15 @@ describe('ModernPictograph', () => {
 
 		it('should render as img when no onClick provided', () => {
 			const pictographData = createPictographData({
-				letter: 'D'
+				letter: 'D',
 			});
 
 			render(ModernPictograph, {
 				props: {
 					pictographData,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -137,7 +137,7 @@ describe('ModernPictograph', () => {
 	describe('Beat Number Display', () => {
 		it('should show beat number when provided', () => {
 			const pictographData = createPictographData({
-				letter: 'E'
+				letter: 'E',
 			});
 
 			render(ModernPictograph, {
@@ -145,8 +145,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					beatNumber: 5,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const beatNumberText = screen.getByText('5');
@@ -155,7 +155,7 @@ describe('ModernPictograph', () => {
 
 		it('should show START label for start position', () => {
 			const pictographData = createPictographData({
-				letter: 'F'
+				letter: 'F',
 			});
 
 			render(ModernPictograph, {
@@ -163,8 +163,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					isStartPosition: true,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const startText = screen.getByText('START');
@@ -173,7 +173,7 @@ describe('ModernPictograph', () => {
 
 		it('should not show beat number for start position', () => {
 			const pictographData = createPictographData({
-				letter: 'G'
+				letter: 'G',
 			});
 
 			render(ModernPictograph, {
@@ -182,13 +182,13 @@ describe('ModernPictograph', () => {
 					beatNumber: 1,
 					isStartPosition: true,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const startText = screen.getByText('START');
 			expect(startText).toBeInTheDocument();
-			
+
 			const beatNumberText = screen.queryByText('1');
 			expect(beatNumberText).not.toBeInTheDocument();
 		});
@@ -199,7 +199,7 @@ describe('ModernPictograph', () => {
 			const pictographData = createPictographData({
 				id: 'debug-test-id',
 				letter: 'H',
-				grid_data: { mode: 'diamond' }
+				grid_data: { mode: 'diamond' },
 			});
 
 			render(ModernPictograph, {
@@ -207,8 +207,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					debug: true,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			// Should show abbreviated ID
@@ -227,7 +227,7 @@ describe('ModernPictograph', () => {
 		it('should not show debug info when debug disabled', () => {
 			const pictographData = createPictographData({
 				id: 'no-debug-test-id',
-				letter: 'I'
+				letter: 'I',
 			});
 
 			render(ModernPictograph, {
@@ -235,8 +235,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					debug: false,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const debugId = screen.queryByText(/no-debug-test-id/);
@@ -247,15 +247,15 @@ describe('ModernPictograph', () => {
 	describe('Letter Display', () => {
 		it('should show letter from pictograph data', () => {
 			const pictographData = createPictographData({
-				letter: 'J'
+				letter: 'J',
 			});
 
 			render(ModernPictograph, {
 				props: {
 					pictographData,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			// Letter should be rendered by TKAGlyph component
@@ -267,15 +267,15 @@ describe('ModernPictograph', () => {
 		it('should show beat number for beat without letter', () => {
 			const beatData = createBeatData({
 				beat_number: 7,
-				is_blank: false
+				is_blank: false,
 			});
 
 			render(ModernPictograph, {
 				props: {
 					beatData,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const beatNumber = screen.getByText('7');
@@ -286,15 +286,15 @@ describe('ModernPictograph', () => {
 	describe('Component State Classes', () => {
 		it('should have loading class during initial state', () => {
 			const pictographData = createPictographData({
-				letter: 'K'
+				letter: 'K',
 			});
 
 			const { container } = render(ModernPictograph, {
 				props: {
 					pictographData,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const pictographContainer = container.querySelector('.modern-pictograph');
@@ -304,7 +304,7 @@ describe('ModernPictograph', () => {
 		it('should have clickable class when onClick provided', () => {
 			const handleClick = vi.fn();
 			const pictographData = createPictographData({
-				letter: 'L'
+				letter: 'L',
 			});
 
 			const { container } = render(ModernPictograph, {
@@ -312,8 +312,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					onClick: handleClick,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const pictographContainer = container.querySelector('.modern-pictograph');
@@ -322,7 +322,7 @@ describe('ModernPictograph', () => {
 
 		it('should have debug-mode class when debug enabled', () => {
 			const pictographData = createPictographData({
-				letter: 'M'
+				letter: 'M',
 			});
 
 			const { container } = render(ModernPictograph, {
@@ -330,8 +330,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					debug: true,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const pictographContainer = container.querySelector('.modern-pictograph');
@@ -342,7 +342,7 @@ describe('ModernPictograph', () => {
 	describe('Accessibility', () => {
 		it('should have proper aria-label for regular pictograph', () => {
 			const pictographData = createPictographData({
-				letter: 'N'
+				letter: 'N',
 			});
 
 			render(ModernPictograph, {
@@ -350,8 +350,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					beatNumber: 3,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -360,7 +360,7 @@ describe('ModernPictograph', () => {
 
 		it('should have proper aria-label for start position', () => {
 			const pictographData = createPictographData({
-				letter: 'O'
+				letter: 'O',
 			});
 
 			render(ModernPictograph, {
@@ -368,8 +368,8 @@ describe('ModernPictograph', () => {
 					pictographData,
 					isStartPosition: true,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -380,13 +380,13 @@ describe('ModernPictograph', () => {
 	describe('Props Validation', () => {
 		it('should handle missing width/height with defaults', () => {
 			const pictographData = createPictographData({
-				letter: 'P'
+				letter: 'P',
 			});
 
 			render(ModernPictograph, {
 				props: {
-					pictographData
-				}
+					pictographData,
+				},
 			});
 
 			const svg = screen.getByRole('img');
@@ -400,8 +400,8 @@ describe('ModernPictograph', () => {
 					pictographData: null,
 					beatData: null,
 					width: 300,
-					height: 300
-				}
+					height: 300,
+				},
 			});
 
 			const svg = screen.getByRole('img');

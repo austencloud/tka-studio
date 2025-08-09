@@ -69,7 +69,10 @@
 			) {
 				// Trigger a resize-like update
 				if (backgroundContext.backgroundSystem) {
-					backgroundContext.backgroundSystem.handleResize?.(currentDims, currentDimensions);
+					backgroundContext.backgroundSystem.handleResize?.(
+						currentDims,
+						currentDimensions
+					);
 				}
 			}
 		}

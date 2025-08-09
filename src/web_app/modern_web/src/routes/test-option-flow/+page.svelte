@@ -24,7 +24,7 @@
 	function handleStartPositionSelected(position: BeatData) {
 		currentStartPosition = position;
 		logResult(`Start position selected: ${position.pictograph_data?.letter || 'Unknown'}`);
-		
+
 		// Check localStorage
 		const storedData = localStorage.getItem('start_position');
 		if (storedData) {
@@ -49,16 +49,18 @@
 	async function runAutomatedTest() {
 		isTestRunning = true;
 		testResults = [];
-		
+
 		try {
 			logResult('🚀 Starting automated test...');
 
 			// Test 1: Check if CSV data is available
 			logResult('📊 Testing CSV data availability...');
-			
+
 			if (typeof window !== 'undefined' && (window as any).csvData) {
 				const csvData = (window as any).csvData;
-				logResult(`CSV data found: Diamond=${csvData.diamondData.length} chars, Box=${csvData.boxData.length} chars`);
+				logResult(
+					`CSV data found: Diamond=${csvData.diamondData.length} chars, Box=${csvData.boxData.length} chars`
+				);
 			} else {
 				logResult('No CSV data found in window.csvData', true);
 			}
@@ -70,7 +72,9 @@
 				if (response.ok) {
 					const text = await response.text();
 					const lines = text.split('\n');
-					logResult(`Diamond CSV accessible: ${lines.length} lines, first line: ${lines[0]}`);
+					logResult(
+						`Diamond CSV accessible: ${lines.length} lines, first line: ${lines[0]}`
+					);
 				} else {
 					logResult(`Diamond CSV not accessible: ${response.status}`, true);
 				}
@@ -100,11 +104,15 @@
 				pictograph_data: {
 					letter: 'α',
 					motions: {
-						blue: { motionType: 'static', startLocation: 'SOUTH', endLocation: 'SOUTH' },
-						red: { motionType: 'static', startLocation: 'NORTH', endLocation: 'NORTH' }
-					}
+						blue: {
+							motionType: 'static',
+							startLocation: 'SOUTH',
+							endLocation: 'SOUTH',
+						},
+						red: { motionType: 'static', startLocation: 'NORTH', endLocation: 'NORTH' },
+					},
 				},
-				isStartPosition: true
+				isStartPosition: true,
 			};
 
 			localStorage.setItem('start_position', JSON.stringify(testStartPosition));
@@ -119,10 +127,9 @@
 			logResult('start-position-selected event dispatched');
 
 			// Wait a bit for async operations
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			logResult('✅ Automated test completed');
-
 		} catch (error) {
 			logResult(`Automated test failed: ${error}`, true);
 		} finally {
@@ -140,7 +147,7 @@
 	// Check services on mount
 	onMount(() => {
 		logResult('🔄 Test page mounted, checking services...');
-		
+
 		// Check if services are available
 		setTimeout(() => {
 			try {
@@ -157,7 +164,6 @@
 				} else {
 					logResult('DI container not found - this may be normal');
 				}
-
 			} catch (error) {
 				logResult(`Error checking services: ${error}`, true);
 			}
@@ -172,22 +178,16 @@
 <div class="test-page">
 	<header class="test-header">
 		<h1>Start Position → Option Picker Flow Test</h1>
-		<p>This page tests the complete flow from start position selection to option loading using real CSV data.</p>
-		
+		<p>
+			This page tests the complete flow from start position selection to option loading using
+			real CSV data.
+		</p>
+
 		<div class="test-controls">
-			<button 
-				class="test-btn primary"
-				onclick={runAutomatedTest}
-				disabled={isTestRunning}
-			>
+			<button class="test-btn primary" onclick={runAutomatedTest} disabled={isTestRunning}>
 				{isTestRunning ? '⏳ Running...' : '🚀 Run Automated Test'}
 			</button>
-			<button 
-				class="test-btn secondary"
-				onclick={clearResults}
-			>
-				🗑️ Clear Results
-			</button>
+			<button class="test-btn secondary" onclick={clearResults}> 🗑️ Clear Results </button>
 		</div>
 	</header>
 
@@ -197,7 +197,10 @@
 			<h2>📊 Test Results</h2>
 			<div class="results-container">
 				{#if testResults.length === 0}
-					<p class="no-results">No test results yet. Run the automated test or manually select a start position.</p>
+					<p class="no-results">
+						No test results yet. Run the automated test or manually select a start
+						position.
+					</p>
 				{:else}
 					{#each testResults as result}
 						<div class="result-item" class:error={result.includes('❌')}>
@@ -213,11 +216,11 @@
 			<h2>📋 Current State</h2>
 			<div class="state-info">
 				<div class="state-item">
-					<strong>Start Position:</strong> 
+					<strong>Start Position:</strong>
 					{currentStartPosition?.pictograph_data?.letter || 'None selected'}
 				</div>
 				<div class="state-item">
-					<strong>Selected Option:</strong> 
+					<strong>Selected Option:</strong>
 					{selectedOption?.letter || 'None selected'}
 				</div>
 				<div class="state-item">
@@ -244,10 +247,7 @@
 			<h2>🎲 Option Picker</h2>
 			<p>Options should load automatically after selecting a start position:</p>
 			<div class="picker-container">
-				<OptionPicker
-					difficulty="intermediate"
-					onOptionSelected={handleOptionSelected}
-				/>
+				<OptionPicker difficulty="intermediate" onOptionSelected={handleOptionSelected} />
 			</div>
 		</div>
 	</div>
@@ -425,7 +425,7 @@
 		.test-content {
 			grid-template-columns: 1fr;
 		}
-		
+
 		.results-panel,
 		.state-panel {
 			grid-column: 1;

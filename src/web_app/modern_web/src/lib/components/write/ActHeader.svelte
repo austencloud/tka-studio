@@ -10,12 +10,7 @@
 		onMusicLoadRequested?: () => void;
 	}
 
-	let { 
-		act = null,
-		disabled = false,
-		onActInfoChanged,
-		onMusicLoadRequested
-	}: Props = $props();
+	let { act = null, disabled = false, onActInfoChanged, onMusicLoadRequested }: Props = $props();
 
 	// Local state for form inputs
 	let nameValue = $state('');
@@ -57,7 +52,9 @@
 		if (!act?.musicFile) return 'No music loaded';
 		return `♪ ${act.musicFile.name}`;
 	});
-	const musicStatusColor = $derived(act?.musicFile ? 'rgba(100, 200, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)');
+	const musicStatusColor = $derived(
+		act?.musicFile ? 'rgba(100, 200, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)'
+	);
 </script>
 
 <div class="act-header" class:disabled>
@@ -74,11 +71,7 @@
 		/>
 
 		<!-- Music button -->
-		<button 
-			class="music-button btn-glass"
-			{disabled}
-			onclick={handleMusicLoad}
-		>
+		<button class="music-button btn-glass" {disabled} onclick={handleMusicLoad}>
 			🎵 Load Music
 		</button>
 	</div>

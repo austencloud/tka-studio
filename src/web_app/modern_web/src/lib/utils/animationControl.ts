@@ -8,17 +8,17 @@ import { getSettings } from '$stores/appState.svelte';
 
 // Initialize animation state from settings
 export function initializeAnimationControl() {
-    const settings = getSettings();
-    setAnimationsEnabled(settings.animationsEnabled ?? true);
+	const settings = getSettings();
+	setAnimationsEnabled(settings.animationsEnabled ?? true);
 }
 
 // Update animation state when settings change
 export function updateAnimationState(enabled: boolean) {
-    setAnimationsEnabled(enabled);
+	setAnimationsEnabled(enabled);
 }
 
 // Utility to check if animations should run
 export function shouldAnimate(): boolean {
-    const settings = getSettings();
-    return settings.animationsEnabled ?? true;
+	const settings = getSettings();
+	return settings.animationsEnabled ?? true;
 }

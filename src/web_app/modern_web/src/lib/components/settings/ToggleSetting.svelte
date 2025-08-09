@@ -10,7 +10,7 @@
 	}
 
 	let { label, checked = false, helpText, disabled = false }: Props = $props();
-	
+
 	const dispatch = createEventDispatcher();
 
 	function handleToggle() {
@@ -21,12 +21,7 @@
 
 <div class="setting-card">
 	<label class="toggle-setting" class:disabled>
-		<input 
-			type="checkbox" 
-			{checked}
-			{disabled}
-			onchange={handleToggle}
-		/>
+		<input type="checkbox" {checked} {disabled} onchange={handleToggle} />
 		<span class="toggle-slider"></span>
 		<span class="setting-label">{label}</span>
 	</label>
@@ -56,7 +51,7 @@
 		opacity: 0.5;
 	}
 
-	.toggle-setting input[type="checkbox"] {
+	.toggle-setting input[type='checkbox'] {
 		display: none;
 	}
 

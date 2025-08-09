@@ -21,7 +21,11 @@
 
 	// Handle variation navigation
 	function nextVariation() {
-		if (sequence && sequence.variations && currentVariationIndex < sequence.variations.length - 1) {
+		if (
+			sequence &&
+			sequence.variations &&
+			currentVariationIndex < sequence.variations.length - 1
+		) {
 			currentVariationIndex++;
 		}
 	}
@@ -43,9 +47,9 @@
 	function getDifficultyColor(difficulty: number) {
 		const colors = {
 			1: '#10b981', // green
-			2: '#f59e0b', // yellow  
+			2: '#f59e0b', // yellow
 			3: '#ef4444', // red
-			4: '#8b5cf6'  // purple
+			4: '#8b5cf6', // purple
 		};
 		return colors[difficulty] || '#6366f1';
 	}
@@ -54,8 +58,8 @@
 		const labels = {
 			1: 'Beginner',
 			2: 'Intermediate',
-			3: 'Advanced', 
-			4: 'Expert'
+			3: 'Advanced',
+			4: 'Expert',
 		};
 		return labels[difficulty] || 'Unknown';
 	}
@@ -64,7 +68,7 @@
 		return date.toLocaleDateString('en-US', {
 			year: 'numeric',
 			month: 'long',
-			day: 'numeric'
+			day: 'numeric',
 		});
 	}
 </script>
@@ -74,17 +78,13 @@
 		<div class="viewer-content" transition:slide={{ duration: 300 }}>
 			<!-- Header -->
 			<div class="viewer-header">
-				<button 
-					class="back-button"
-					on:click={handleBackToBrowser}
-					type="button"
-				>
+				<button class="back-button" on:click={handleBackToBrowser} type="button">
 					<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-						<path 
-							d="M12.5 15L7.5 10L12.5 5" 
-							stroke="currentColor" 
-							stroke-width="2" 
-							stroke-linecap="round" 
+						<path
+							d="M12.5 15L7.5 10L12.5 5"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
 							stroke-linejoin="round"
 						/>
 					</svg>
@@ -93,7 +93,7 @@
 
 				<div class="sequence-header-info">
 					<h2 class="sequence-title">{sequence.word}</h2>
-					<div 
+					<div
 						class="difficulty-badge"
 						style="--difficulty-color: {getDifficultyColor(sequence.difficulty)}"
 					>
@@ -106,12 +106,12 @@
 			<div class="image-viewer-section">
 				<div class="image-container">
 					{#if currentVariation?.imageUrl}
-						<img 
-							src={currentVariation.imageUrl} 
+						<img
+							src={currentVariation.imageUrl}
 							alt="{sequence.word} - Variation {currentVariationIndex + 1}"
 							class:loading={isImageLoading}
-							on:load={() => isImageLoading = false}
-							on:error={() => isImageLoading = false}
+							on:load={() => (isImageLoading = false)}
+							on:error={() => (isImageLoading = false)}
 						/>
 					{:else}
 						<!-- Placeholder -->
@@ -129,16 +129,14 @@
 					{/if}
 
 					{#if sequence.isFavorite}
-						<div class="favorite-indicator">
-							⭐
-						</div>
+						<div class="favorite-indicator">⭐</div>
 					{/if}
 				</div>
 
 				<!-- Navigation Controls -->
 				{#if sequence.variations && sequence.variations.length > 1}
 					<div class="image-navigation">
-						<button 
+						<button
 							class="nav-button"
 							class:disabled={currentVariationIndex === 0}
 							on:click={prevVariation}
@@ -147,12 +145,12 @@
 						>
 							◀
 						</button>
-						
+
 						<span class="variation-info">
 							{currentVariationIndex + 1} / {sequence.variations.length}
 						</span>
-						
-						<button 
+
+						<button
 							class="nav-button"
 							class:disabled={currentVariationIndex >= sequence.variations.length - 1}
 							on:click={nextVariation}
@@ -168,36 +166,39 @@
 			<!-- Sequence Details -->
 			<div class="sequence-details">
 				<h3>Details</h3>
-				
+
 				<div class="details-grid">
 					<div class="detail-item">
 						<span class="detail-label">Length</span>
 						<span class="detail-value">{sequence.length} beats</span>
 					</div>
-					
+
 					<div class="detail-item">
 						<span class="detail-label">Start Position</span>
 						<span class="detail-value">{sequence.startPosition}</span>
 					</div>
-					
+
 					<div class="detail-item">
 						<span class="detail-label">Grid Mode</span>
 						<span class="detail-value">{sequence.gridMode}</span>
 					</div>
-					
+
 					<div class="detail-item">
 						<span class="detail-label">Author</span>
 						<span class="detail-value">{sequence.author}</span>
 					</div>
-					
+
 					<div class="detail-item">
 						<span class="detail-label">Date Added</span>
 						<span class="detail-value">{formatDate(sequence.dateAdded)}</span>
 					</div>
-					
+
 					<div class="detail-item">
 						<span class="detail-label">Difficulty</span>
-						<span class="detail-value" style="color: {getDifficultyColor(sequence.difficulty)}">
+						<span
+							class="detail-value"
+							style="color: {getDifficultyColor(sequence.difficulty)}"
+						>
 							{getDifficultyLabel(sequence.difficulty)}
 						</span>
 					</div>
@@ -217,47 +218,59 @@
 
 			<!-- Action Buttons -->
 			<div class="action-buttons">
-				<button 
+				<button
 					class="action-button primary"
 					on:click={() => handleAction('edit')}
 					type="button"
 				>
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-						<path d="M12.1465 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2 13L2.35355 9.64645L11.1464 0.853553C11.3417 0.658291 11.6583 0.658291 11.8536 0.853553L12.1465 1.85355Z" stroke="currentColor" stroke-width="1.5"/>
+						<path
+							d="M12.1465 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2 13L2.35355 9.64645L11.1464 0.853553C11.3417 0.658291 11.6583 0.658291 11.8536 0.853553L12.1465 1.85355Z"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
 					</svg>
 					Edit
 				</button>
-				
-				<button 
+
+				<button
 					class="action-button secondary"
 					on:click={() => handleAction('save')}
 					type="button"
 				>
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-						<path d="M13 2.5V13.5H3V2.5H13Z" stroke="currentColor" stroke-width="1.5"/>
-						<path d="M10 1V4H6V1" stroke="currentColor" stroke-width="1.5"/>
+						<path d="M13 2.5V13.5H3V2.5H13Z" stroke="currentColor" stroke-width="1.5" />
+						<path d="M10 1V4H6V1" stroke="currentColor" stroke-width="1.5" />
 					</svg>
 					Save
 				</button>
-				
-				<button 
+
+				<button
 					class="action-button secondary"
 					on:click={() => handleAction('fullscreen')}
 					type="button"
 				>
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-						<path d="M2 5V2H5M14 5V2H11M14 11V14H11M2 11V14H5" stroke="currentColor" stroke-width="1.5"/>
+						<path
+							d="M2 5V2H5M14 5V2H11M14 11V14H11M2 11V14H5"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
 					</svg>
 					Fullscreen
 				</button>
-				
-				<button 
+
+				<button
 					class="action-button danger"
 					on:click={() => handleAction('delete')}
 					type="button"
 				>
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-						<path d="M2 4H14M6 4V2H10V4M12 4V14H4V4" stroke="currentColor" stroke-width="1.5"/>
+						<path
+							d="M2 4H14M6 4V2H10V4M12 4V14H4V4"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
 					</svg>
 					Delete
 				</button>
@@ -346,7 +359,7 @@
 
 	.difficulty-badge {
 		--difficulty-color: var(--primary-color);
-		
+
 		padding: var(--spacing-xs) var(--spacing-sm);
 		background: var(--difficulty-color);
 		color: white;
@@ -367,9 +380,10 @@
 		position: relative;
 		width: 100%;
 		height: 200px;
-		background: linear-gradient(135deg, 
-			rgba(99, 102, 241, 0.1), 
-			rgba(168, 85, 247, 0.1), 
+		background: linear-gradient(
+			135deg,
+			rgba(99, 102, 241, 0.1),
+			rgba(168, 85, 247, 0.1),
 			rgba(6, 182, 212, 0.1)
 		);
 		border: var(--glass-border);

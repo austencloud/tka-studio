@@ -1,6 +1,6 @@
 /**
  * Answer Checker Service
- * 
+ *
  * Validates user answers and provides feedback for quiz questions.
  * Handles different answer types and lesson-specific validation logic.
  */
@@ -44,7 +44,11 @@ export class AnswerCheckerService {
 			case LessonType.LETTER_TO_PICTOGRAPH:
 				return this.checkLetterToPictographAnswer(questionData, userAnswer, selectedOption);
 			case LessonType.VALID_NEXT_PICTOGRAPH:
-				return this.checkValidNextPictographAnswer(questionData, userAnswer, selectedOption);
+				return this.checkValidNextPictographAnswer(
+					questionData,
+					userAnswer,
+					selectedOption
+				);
 			default:
 				return {
 					isCorrect: false,
@@ -64,18 +68,18 @@ export class AnswerCheckerService {
 	): AnswerResult {
 		const correctLetter = questionData.correctAnswer;
 		const userLetter = typeof userAnswer === 'string' ? userAnswer : userAnswer?.toString();
-		
+
 		const isCorrect = userLetter?.toLowerCase() === correctLetter?.toLowerCase();
 
 		return {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
-			message: isCorrect 
+			message: isCorrect
 				? `Correct! The letter is ${correctLetter}.`
 				: `Incorrect. The correct letter is ${correctLetter}.`,
 			correctAnswer: correctLetter,
-			explanation: isCorrect 
-				? undefined 
+			explanation: isCorrect
+				? undefined
 				: `The pictograph represents the letter "${correctLetter}".`,
 		};
 	}
@@ -97,12 +101,12 @@ export class AnswerCheckerService {
 		return {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
-			message: isCorrect 
+			message: isCorrect
 				? `Correct! You selected the right pictograph.`
 				: `Incorrect. The correct pictograph is highlighted.`,
 			correctAnswer: correctPictograph,
-			explanation: isCorrect 
-				? undefined 
+			explanation: isCorrect
+				? undefined
 				: `The correct pictograph for "${questionData.questionContent}" has different start/end positions.`,
 		};
 	}
@@ -124,12 +128,12 @@ export class AnswerCheckerService {
 		return {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
-			message: isCorrect 
+			message: isCorrect
 				? `Correct! This pictograph can follow the previous one.`
 				: `Incorrect. The pictograph's start position must match the previous end position.`,
 			correctAnswer: questionData.correctAnswer,
-			explanation: isCorrect 
-				? undefined 
+			explanation: isCorrect
+				? undefined
 				: `The correct pictograph must start where the previous one ends (${initialPictograph?.end_pos}).`,
 		};
 	}
@@ -182,7 +186,12 @@ export class AnswerCheckerService {
 			case LessonType.LETTER_TO_PICTOGRAPH:
 				return answer && typeof answer === 'object' && 'letter' in answer;
 			case LessonType.VALID_NEXT_PICTOGRAPH:
-				return answer && typeof answer === 'object' && 'start_pos' in answer && 'end_pos' in answer;
+				return (
+					answer &&
+					typeof answer === 'object' &&
+					'start_pos' in answer &&
+					'end_pos' in answer
+				);
 			default:
 				return false;
 		}
@@ -213,19 +222,21 @@ export class AnswerCheckerService {
 		timeToAnswer: number
 	): number {
 		const result = this.checkAnswer(questionData, userAnswer);
-		
+
 		if (!result.isCorrect) return 0;
 
 		// Base confidence on correctness and response time
 		let confidence = 1.0;
 
 		// Reduce confidence for very quick answers (might be guessing)
-		if (timeToAnswer < 2000) { // Less than 2 seconds
+		if (timeToAnswer < 2000) {
+			// Less than 2 seconds
 			confidence *= 0.7;
 		}
 
 		// Reduce confidence for very slow answers (might be uncertain)
-		if (timeToAnswer > 30000) { // More than 30 seconds
+		if (timeToAnswer > 30000) {
+			// More than 30 seconds
 			confidence *= 0.8;
 		}
 
@@ -244,14 +255,14 @@ export class AnswerCheckerService {
 
 		if (accuracy >= 0.9) {
 			if (averageTime < 5000) {
-				return 'Excellent! You\'re both accurate and fast.';
+				return "Excellent! You're both accurate and fast.";
 			} else {
 				return 'Great accuracy! Try to answer a bit faster.';
 			}
 		} else if (accuracy >= 0.7) {
 			return 'Good work! Keep practicing to improve your accuracy.';
 		} else if (accuracy >= 0.5) {
-			return 'You\'re making progress. Take your time to think through each answer.';
+			return "You're making progress. Take your time to think through each answer.";
 		} else {
 			return 'Keep practicing! Review the lesson materials if needed.';
 		}

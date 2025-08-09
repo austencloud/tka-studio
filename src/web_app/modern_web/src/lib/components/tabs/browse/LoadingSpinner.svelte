@@ -3,8 +3,8 @@
 	export let color: string = 'var(--primary-color)';
 </script>
 
-<div 
-	class="loading-spinner" 
+<div
+	class="loading-spinner"
 	class:small={size === 'small'}
 	class:medium={size === 'medium'}
 	class:large={size === 'large'}

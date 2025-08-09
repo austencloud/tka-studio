@@ -9,9 +9,11 @@
 
 		<!-- SMART CONSOLE FORWARDER - DEVELOPMENT ONLY -->
 		<script>
-			(function() {
+			(function () {
 				// Only enable in development
-				const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+				const isDev =
+					window.location.hostname === 'localhost' ||
+					window.location.hostname === '127.0.0.1';
 				if (!isDev) return;
 
 				// Store original console methods
@@ -19,7 +21,7 @@
 					log: console.log,
 					error: console.error,
 					warn: console.warn,
-					info: console.info
+					info: console.info,
 				};
 
 				// Filter out noisy logs
@@ -37,13 +39,13 @@
 
 					// Skip repetitive debug messages
 					const skipPatterns = [
-						/^[0-9]+$/,  // Just numbers
-						/^\s*$/,     // Just whitespace
+						/^[0-9]+$/, // Just numbers
+						/^\s*$/, // Just whitespace
 						/^undefined$/,
-						/^null$/
+						/^null$/,
 					];
 
-					return !skipPatterns.some(pattern => pattern.test(message));
+					return !skipPatterns.some((pattern) => pattern.test(message));
 				}
 
 				// Send to server (throttled)
@@ -57,58 +59,60 @@
 
 					if (!shouldForwardLog(args)) return;
 
-					const message = args.map(arg => {
-						if (typeof arg === 'object') {
-							try {
-								return JSON.stringify(arg, null, 2);
-							} catch {
-								return String(arg);
+					const message = args
+						.map((arg) => {
+							if (typeof arg === 'object') {
+								try {
+									return JSON.stringify(arg, null, 2);
+								} catch {
+									return String(arg);
+								}
 							}
-						}
-						return String(arg);
-					}).join(' ');
+							return String(arg);
+						})
+						.join(' ');
 
 					fetch('/api/console-forward', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ level, message })
+						body: JSON.stringify({ level, message }),
 					}).catch(() => {}); // Ignore fetch errors
 				}
 
 				// Override console methods with smart filtering
-				console.log = function(...args) {
+				console.log = function (...args) {
 					originalConsole.log.apply(console, args);
 					sendToServer('LOG', args);
 				};
 
-				console.error = function(...args) {
+				console.error = function (...args) {
 					originalConsole.error.apply(console, args);
 					sendToServer('ERROR', args);
 				};
 
-				console.warn = function(...args) {
+				console.warn = function (...args) {
 					originalConsole.warn.apply(console, args);
 					sendToServer('WARN', args);
 				};
 
-				console.info = function(...args) {
+				console.info = function (...args) {
 					originalConsole.info.apply(console, args);
 					sendToServer('INFO', args);
 				};
 
 				// Capture global errors (always forward these)
-				window.addEventListener('error', function(event) {
+				window.addEventListener('error', function (event) {
 					console.error('🚨 GLOBAL ERROR:', {
 						message: event.message,
 						filename: event.filename,
 						line: event.lineno,
 						column: event.colno,
-						stack: event.error?.stack
+						stack: event.error?.stack,
 					});
 				});
 
 				// Capture unhandled promise rejections (always forward these)
-				window.addEventListener('unhandledrejection', function(event) {
+				window.addEventListener('unhandledrejection', function (event) {
 					console.error('🚨 UNHANDLED PROMISE REJECTION:', event.reason);
 				});
 			})();

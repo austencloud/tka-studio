@@ -15,7 +15,14 @@ Arrow Component - Renders SVG arrows with proper positioning
 		onError?: (componentType: string, error: string) => void;
 	}
 
-	let { arrowData, motionData, gridMode = 'diamond', letter, onLoaded, onError }: Props = $props();
+	let {
+		arrowData,
+		motionData,
+		gridMode = 'diamond',
+		letter,
+		onLoaded,
+		onError,
+	}: Props = $props();
 
 	let arrowElement: SVGGElement;
 	let loaded = $state(false);

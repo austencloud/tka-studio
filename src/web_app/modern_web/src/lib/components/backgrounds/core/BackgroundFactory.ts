@@ -8,7 +8,7 @@ import type {
 	BackgroundType,
 	QualityLevel,
 	AccessibilitySettings,
-	BackgroundFactoryParams
+	BackgroundFactoryParams,
 } from '../types/types';
 import { detectAppropriateQuality } from '../config';
 
@@ -16,13 +16,14 @@ export class BackgroundFactory {
 	private static defaultAccessibility: AccessibilitySettings = {
 		reducedMotion: false,
 		highContrast: false,
-		visibleParticleSize: 2
+		visibleParticleSize: 2,
 	};
 
 	public static createBackgroundSystem(
 		params: BackgroundFactoryParams | BackgroundType
 	): BackgroundSystem {
-		const options: BackgroundFactoryParams = typeof params === 'string' ? { type: params } : params;
+		const options: BackgroundFactoryParams =
+			typeof params === 'string' ? { type: params } : params;
 
 		const quality: QualityLevel =
 			options.initialQuality ||
@@ -30,7 +31,7 @@ export class BackgroundFactory {
 
 		const accessibility: AccessibilitySettings = {
 			...this.defaultAccessibility,
-			...(options.accessibility || {})
+			...(options.accessibility || {}),
 		};
 
 		// Detect accessibility preferences from browser if not overridden
@@ -94,7 +95,7 @@ export class BackgroundFactory {
 		// For now, defaulting to nightSky as it's newly added
 		return this.createBackgroundSystem({
 			type: 'nightSky', // Changed default maybe? Or keep snowfall?
-			initialQuality: quality
+			initialQuality: quality,
 		});
 	}
 

@@ -21,11 +21,7 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 		onBeatDataUpdated?: (beatData: BeatData) => void;
 	}
 
-	let { 
-		onOrientationChanged, 
-		onTurnAmountChanged, 
-		onBeatDataUpdated 
-	}: Props = $props();
+	let { onOrientationChanged, onTurnAmountChanged, onBeatDataUpdated }: Props = $props();
 
 	// State
 	let currentBeatData: BeatData | null = $state(null);
@@ -37,13 +33,16 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 	let turnControlsRef: TurnAdjustmentControls;
 
 	// Determine panel mode based on beat type
-	function determinePanelMode(beatIndex: number, beatData: BeatData | null): 'orientation' | 'turns' {
+	function determinePanelMode(
+		beatIndex: number,
+		beatData: BeatData | null
+	): 'orientation' | 'turns' {
 		if (!beatData) {
 			return 'orientation';
 		}
 
 		// Check for start position indicators
-		const isStartPosition = (
+		const isStartPosition =
 			// Explicit start position index
 			beatIndex === -1 ||
 			// Check metadata for start position marker
@@ -51,10 +50,11 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 			// Check beat number (0 = start position, 1+ = regular beats)
 			beatData.beat === 0 ||
 			// Check for start position letter
-			beatData.letter === 'α' || beatData.letter === 'alpha' || beatData.letter === 'start' ||
+			beatData.letter === 'α' ||
+			beatData.letter === 'alpha' ||
+			beatData.letter === 'start' ||
 			// Check for sequence start position in metadata
-			beatData.metadata?.sequence_start_position
-		);
+			beatData.metadata?.sequence_start_position;
 
 		return isStartPosition ? 'orientation' : 'turns';
 	}
@@ -105,7 +105,12 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 			showTurnControls(beatData);
 		}
 
-		console.log('🎛️ [ADJUSTMENT_PANEL] Panel switched to', panelMode, 'mode for beat', beatIndex);
+		console.log(
+			'🎛️ [ADJUSTMENT_PANEL] Panel switched to',
+			panelMode,
+			'mode for beat',
+			beatIndex
+		);
 	}
 
 	export function getCurrentPanelMode(): 'orientation' | 'turns' {
@@ -127,7 +132,7 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 		if (turnControlsRef) {
 			turnControlsRef.setBeatData(null);
 		}
-		
+
 		currentPanelMode = 'orientation';
 		currentBeatData = null;
 		currentBeatIndex = null;
@@ -146,7 +151,7 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 	<!-- Context-sensitive panel switching -->
 	{#if currentPanelMode === 'orientation'}
 		<div class="panel-container" data-panel="orientation">
-			<DualOrientationPicker 
+			<DualOrientationPicker
 				bind:this={orientationPickerRef}
 				onOrientationChanged={handleOrientationChanged}
 				onBeatDataUpdated={handleBeatDataUpdated}
@@ -154,7 +159,7 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 		</div>
 	{:else}
 		<div class="panel-container" data-panel="turns">
-			<TurnAdjustmentControls 
+			<TurnAdjustmentControls
 				bind:this={turnControlsRef}
 				onTurnAmountChanged={handleTurnAmountChanged}
 				onBeatDataUpdated={handleBeatDataUpdated}
@@ -178,11 +183,11 @@ Orchestrates the stacked widget switching between orientation and turn controls.
 		min-height: 0; /* Allow flexbox to shrink */
 	}
 
-	.panel-container[data-panel="orientation"] {
+	.panel-container[data-panel='orientation'] {
 		/* Specific styling for orientation panel if needed */
 	}
 
-	.panel-container[data-panel="turns"] {
+	.panel-container[data-panel='turns'] {
 		/* Specific styling for turn controls panel if needed */
 	}
 

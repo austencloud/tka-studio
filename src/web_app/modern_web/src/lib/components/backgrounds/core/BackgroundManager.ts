@@ -43,7 +43,7 @@ export class BackgroundManager {
 
 		this.dimensions.set({
 			width: initialWidth,
-			height: initialHeight
+			height: initialHeight,
 		});
 
 		canvas.width = initialWidth;
@@ -83,7 +83,7 @@ export class BackgroundManager {
 			const perfStatus = this.performanceTracker.getPerformanceStatus();
 			this.performanceMetrics.set({
 				fps: perfStatus.fps,
-				warnings: perfStatus.warnings
+				warnings: perfStatus.warnings,
 			});
 
 			if (this.reportCallback) {
@@ -118,7 +118,10 @@ export class BackgroundManager {
 
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('resize', this.handleResize.bind(this));
-			document.removeEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+			document.removeEventListener(
+				'visibilitychange',
+				this.handleVisibilityChange.bind(this)
+			);
 		}
 
 		this.canvas = null;

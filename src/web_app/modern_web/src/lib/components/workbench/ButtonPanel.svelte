@@ -52,7 +52,12 @@
 		>
 			📚
 		</button>
-		<button type="button" class="panel-btn" title="Fullscreen" onclick={() => handle(onFullscreen)}>
+		<button
+			type="button"
+			class="panel-btn"
+			title="Fullscreen"
+			onclick={() => handle(onFullscreen)}
+		>
 			👁️
 		</button>
 	</div>
@@ -93,7 +98,12 @@
 
 	<!-- Sequence Management Group -->
 	<div class="button-group">
-		<button type="button" class="panel-btn" title="Copy JSON" onclick={() => handle(onCopyJson)}>
+		<button
+			type="button"
+			class="panel-btn"
+			title="Copy JSON"
+			onclick={() => handle(onCopyJson)}
+		>
 			📋
 		</button>
 		<button

@@ -10,7 +10,7 @@ import type {
 	SequenceData,
 	BeatData,
 	IStartPositionService,
-	IOptionDataService
+	IOptionDataService,
 } from '../interfaces';
 import { ISequenceService } from '../interfaces';
 import { resolve } from '../bootstrap';
@@ -53,7 +53,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Notify components about sequence change
 			this.notifyComponents('sequence_modified', { sequence });
-
 		} catch (error) {
 			console.error('❌ Error handling sequence modification:', error);
 		} finally {
@@ -77,13 +76,13 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 				name: `Sequence ${new Date().toLocaleTimeString()}`,
 				length: 16, // Default length
 				gridMode: 'diamond', // Default grid mode
-				propType: 'staff' // Default prop type
+				propType: 'staff', // Default prop type
 			});
 
 			// Add the start position as beat 0 (start position beat)
 			const startPositionWithBeat0 = {
 				...startPosition,
-				beat_number: 0 // Mark as start position
+				beat_number: 0, // Mark as start position
 			};
 
 			// Add the start position beat to the sequence using updateBeat
@@ -95,8 +94,15 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 				// Set the updated sequence as the current sequence in BOTH state systems
 				setCurrentSequence(updatedSequence); // Old sequence state system
 				sequenceStateService.setCurrentSequence(updatedSequence); // New sequence state service for beat frame
-				console.log('🎯 Set updated sequence as current sequence:', updatedSequence.id, 'beats:', updatedSequence.beats.length);
-				console.log('🎯 Updated both sequence state systems for beat frame synchronization');
+				console.log(
+					'🎯 Set updated sequence as current sequence:',
+					updatedSequence.id,
+					'beats:',
+					updatedSequence.beats.length
+				);
+				console.log(
+					'🎯 Updated both sequence state systems for beat frame synchronization'
+				);
 			} else {
 				console.error('❌ Failed to reload updated sequence');
 			}
@@ -108,7 +114,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Transition to option picker
 			await this.handleUITransitionRequest('option_picker');
-
 		} catch (error) {
 			console.error('❌ Error handling start position set:', error);
 		}
@@ -126,7 +131,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Notify components
 			this.notifyComponents('beat_added', { beatData });
-
 		} catch (error) {
 			console.error('❌ Error handling beat added:', error);
 		}
@@ -142,9 +146,11 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Simulate generation completion
 			setTimeout(() => {
-				this.notifyComponents('generation_completed', { success: true, message: 'Generation completed' });
+				this.notifyComponents('generation_completed', {
+					success: true,
+					message: 'Generation completed',
+				});
 			}, 1000);
-
 		} catch (error) {
 			console.error('❌ Error handling generation request:', error);
 		}
@@ -157,7 +163,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 			// Emit custom events for UI transitions (similar to legacy implementation)
 			const transitionEvent = new CustomEvent('construct-tab-transition', {
 				detail: { targetPanel },
-				bubbles: true
+				bubbles: true,
 			});
 
 			if (typeof window !== 'undefined') {
@@ -166,7 +172,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Notify components about the transition
 			this.notifyComponents('ui_transition', { targetPanel });
-
 		} catch (error) {
 			console.error('❌ Error handling UI transition:', error);
 		}
@@ -210,7 +215,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			// Transition to appropriate panel
 			await this.handleUITransitionRequest(targetPanel);
-
 		} catch (error) {
 			console.error('❌ Error updating UI based on sequence:', error);
 		}
@@ -244,7 +248,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		if (typeof window !== 'undefined') {
 			const event = new CustomEvent(`construct-coordination-${eventType}`, {
 				detail: data,
-				bubbles: true
+				bubbles: true,
 			});
 			document.dispatchEvent(event);
 		}

@@ -18,7 +18,7 @@
 		Positions: settings.visibility?.Positions ?? false,
 		Elemental: settings.visibility?.Elemental ?? false,
 		VTG: settings.visibility?.VTG ?? false,
-		nonRadialPoints: settings.visibility?.nonRadialPoints ?? false
+		nonRadialPoints: settings.visibility?.nonRadialPoints ?? false,
 	});
 
 	function updateVisibilitySetting(key: string, value: boolean) {
@@ -28,8 +28,8 @@
 </script>
 
 <div class="tab-content">
-	<SettingCard 
-		title="Visibility Settings" 
+	<SettingCard
+		title="Visibility Settings"
 		description="Control which elements are shown in pictographs"
 	>
 		<div class="visibility-grid">

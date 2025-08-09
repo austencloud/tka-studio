@@ -8,7 +8,7 @@ export default defineConfig({
 	// otherwise Vitest may resolve to the server entry leading to
 	// `lifecycle_function_unavailable` errors.
 	resolve: {
-		conditions: ['browser']
+		conditions: ['browser'],
 	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
@@ -17,12 +17,12 @@ export default defineConfig({
 		globals: true,
 		// Inline Svelte to avoid SSR resolution quirks during Vitest transforms
 		deps: {
-			inline: ['svelte']
+			inline: ['svelte'],
 		},
 		alias: {
-			'$lib': './src/lib',
-			'$app': './node_modules/@sveltejs/kit/src/runtime/app',
-			'@tka/schemas': './src/lib/domain'
-		}
-	}
+			$lib: './src/lib',
+			$app: './node_modules/@sveltejs/kit/src/runtime/app',
+			'@tka/schemas': './src/lib/domain',
+		},
+	},
 });

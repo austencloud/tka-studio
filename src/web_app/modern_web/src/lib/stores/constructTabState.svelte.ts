@@ -42,7 +42,9 @@ class ConstructTabState {
 
 		// Only log if the value actually changes to reduce noise
 		if (this.shouldShowStartPositionPicker !== shouldShow) {
-			console.log(`🎯 Start position picker: ${shouldShow ? 'show' : 'hide'} (beats: ${sequence?.beats?.length || 0})`);
+			console.log(
+				`🎯 Start position picker: ${shouldShow ? 'show' : 'hide'} (beats: ${sequence?.beats?.length || 0})`
+			);
 		}
 
 		this.shouldShowStartPositionPicker = shouldShow;

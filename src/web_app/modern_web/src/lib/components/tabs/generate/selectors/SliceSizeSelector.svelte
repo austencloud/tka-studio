@@ -24,10 +24,10 @@ Simple toggle between halved and quartered slice sizes for circular mode.
 	function handleToggleChange(event: CustomEvent) {
 		const isChecked = event.detail.checked;
 		currentValue = isChecked ? 'QUARTERED' : 'HALVED';
-		
+
 		// Dispatch value change
-		const changeEvent = new CustomEvent('valueChanged', { 
-			detail: { value: currentValue } 
+		const changeEvent = new CustomEvent('valueChanged', {
+			detail: { value: currentValue },
 		});
 		document.dispatchEvent(changeEvent);
 	}
@@ -37,9 +37,9 @@ Simple toggle between halved and quartered slice sizes for circular mode.
 		if (currentValue !== 'HALVED') {
 			currentValue = 'HALVED';
 			toggleRef?.setChecked(false);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentValue } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentValue },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -49,9 +49,9 @@ Simple toggle between halved and quartered slice sizes for circular mode.
 		if (currentValue !== 'QUARTERED') {
 			currentValue = 'QUARTERED';
 			toggleRef?.setChecked(true);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentValue } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentValue },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -70,16 +70,11 @@ Simple toggle between halved and quartered slice sizes for circular mode.
 
 <div class="slice-size-selector">
 	<div class="control-layout">
-		<button 
-			class="mode-label" 
-			class:active={!isQuartered}
-			onclick={selectHalved}
-			type="button"
-		>
+		<button class="mode-label" class:active={!isQuartered} onclick={selectHalved} type="button">
 			Halved
 		</button>
-		
-		<PyToggle 
+
+		<PyToggle
 			bind:this={toggleRef}
 			checked={isQuartered}
 			width={60}
@@ -88,9 +83,9 @@ Simple toggle between halved and quartered slice sizes for circular mode.
 			circleColor="#DDD"
 			onstateChanged={handleToggleChange}
 		/>
-		
-		<button 
-			class="mode-label" 
+
+		<button
+			class="mode-label"
 			class:active={isQuartered}
 			onclick={selectQuartered}
 			type="button"

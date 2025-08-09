@@ -26,8 +26,8 @@
 			// "All" selected
 			filteredSequences = allSequences;
 		} else {
-			filteredSequences = allSequences.filter(seq => 
-				seq.beats?.length === selectedLength || seq.length === selectedLength
+			filteredSequences = allSequences.filter(
+				(seq) => seq.beats?.length === selectedLength || seq.length === selectedLength
 			);
 		}
 	});
@@ -41,9 +41,10 @@
 		} else if (isRegenerating) {
 			progressMessage = `Regenerating images... ${progressValue}%`;
 		} else if (filteredSequences.length === 0) {
-			progressMessage = selectedLength === 0 ? 
-				'No sequences available' : 
-				`No sequences found with ${selectedLength} beats`;
+			progressMessage =
+				selectedLength === 0
+					? 'No sequences available'
+					: `No sequences found with ${selectedLength} beats`;
 		} else {
 			progressMessage = `Displaying ${filteredSequences.length} sequence${filteredSequences.length === 1 ? '' : 's'}`;
 		}
@@ -66,17 +67,18 @@
 		try {
 			isExporting = true;
 			progressValue = 0;
-			
+
 			// Simulate export progress
 			for (let i = 0; i <= 100; i += 10) {
 				progressValue = i;
-				await new Promise(resolve => setTimeout(resolve, 200));
+				await new Promise((resolve) => setTimeout(resolve, 200));
 			}
-			
+
 			// TODO: Implement actual export functionality
 			console.log('Exporting all sequence cards...');
-			alert('Export completed! (This is a demo - actual export functionality will be implemented)');
-			
+			alert(
+				'Export completed! (This is a demo - actual export functionality will be implemented)'
+			);
 		} catch (error) {
 			console.error('Export failed:', error);
 			alert('Export failed. Please try again.');
@@ -98,17 +100,16 @@
 		try {
 			isRegenerating = true;
 			progressValue = 0;
-			
+
 			// Simulate regeneration progress
 			for (let i = 0; i <= 100; i += 5) {
 				progressValue = i;
-				await new Promise(resolve => setTimeout(resolve, 100));
+				await new Promise((resolve) => setTimeout(resolve, 100));
 			}
-			
+
 			// TODO: Implement actual image regeneration
 			console.log('Regenerating all images...');
 			alert('Image regeneration completed! (This is a demo)');
-			
 		} catch (error) {
 			console.error('Image regeneration failed:', error);
 			alert('Image regeneration failed. Please try again.');

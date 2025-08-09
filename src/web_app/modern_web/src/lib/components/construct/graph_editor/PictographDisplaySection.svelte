@@ -44,14 +44,14 @@ and detailed information panel.
 
 		const reservedSpace = infoPanelMinWidth + 15 + 16; // info panel + spacing + margins
 		const availableWidth = containerWidth - reservedSpace;
-		
+
 		return Math.max(minPictographSize, Math.min(maxPictographSize, availableWidth));
 	}
 
 	// Update pictograph size dynamically
 	function updatePictographSize(newSize: number) {
 		if (newSize === currentPictographSize) return;
-		
+
 		currentPictographSize = newSize;
 		console.log('📐 [PICTOGRAPH_DISPLAY] Size updated to:', newSize);
 	}
@@ -61,7 +61,7 @@ and detailed information panel.
 		if (pictographContainer) {
 			const containerWidth = pictographContainer.offsetWidth;
 			const newSize = calculateOptimalPictographSize(containerWidth);
-			
+
 			if (Math.abs(newSize - currentPictographSize) > 5) {
 				updatePictographSize(newSize);
 			}
@@ -118,7 +118,7 @@ and detailed information panel.
 		if (typeof window !== 'undefined' && pictographContainer) {
 			const resizeObserver = new ResizeObserver(handleResize);
 			resizeObserver.observe(pictographContainer);
-			
+
 			return () => {
 				resizeObserver.disconnect();
 			};
@@ -130,7 +130,7 @@ and detailed information panel.
 	<!-- Left side: Large square pictograph display -->
 	<div class="pictograph-container" bind:this={pictographContainer}>
 		<div class="pictograph-wrapper">
-			<div 
+			<div
 				class="pictograph-placeholder"
 				style="width: {currentPictographSize}px; height: {currentPictographSize}px;"
 			>
@@ -145,9 +145,7 @@ and detailed information panel.
 
 	<!-- Right side: Detailed information panel -->
 	<div class="info-panel-container">
-		<DetailedInfoPanel 
-			bind:this={infoPanelRef}
-		/>
+		<DetailedInfoPanel bind:this={infoPanelRef} />
 	</div>
 </div>
 

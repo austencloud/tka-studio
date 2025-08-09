@@ -1,34 +1,91 @@
 {
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
-		"allowJs": true,
-		"checkJs": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"sourceMap": true,
-		"strict": true,
-		"moduleResolution": "bundler",
+		// Language and Environment
 		"target": "ES2022",
 		"module": "ESNext",
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+		"moduleResolution": "bundler",
+		"allowJs": true,
+		"checkJs": true,
+		"jsx": "preserve",
+
+		// Type Checking
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true,
+		"useUnknownInCatchVariables": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": false,
+
+		// Modules
+		"baseUrl": ".",
+		"paths": {
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$app/*": ["./node_modules/@sveltejs/kit/src/runtime/app/*"],
+			"@/*": ["./src/*"]
+		},
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+
+		// Emit
 		"declaration": true,
 		"declarationMap": true,
-		"allowSyntheticDefaultImports": true,
+		"sourceMap": true,
+		"removeComments": false,
+		"importHelpers": true,
+		"downlevelIteration": true,
 		"experimentalDecorators": true,
-		"types": ["svelte"]
+		"emitDecoratorMetadata": true,
+
+		// Interop Constraints
+		"allowUmdGlobalAccess": false,
+
+		// Completeness
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+
+		// Type definitions
+		"types": ["svelte", "node", "vite/client", "@testing-library/jest-dom", "vitest/globals"],
+		"typeRoots": ["./node_modules/@types", "./src/types"]
 	},
 	"include": [
 		"src/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.js",
-		"src/**/*.svelte"
+		"src/**/*.svelte",
+		"tests/**/*.ts",
+		"tests/**/*.js",
+		"playwright.config.ts",
+		"vite.config.ts",
+		"vitest.config.ts",
+		"tailwind.config.js",
+		"postcss.config.js",
+		"svelte.config.js"
 	],
 	"exclude": [
 		"node_modules/**",
 		".svelte-kit/**",
 		"dist/**",
-		"build/**"
+		"build/**",
+		"coverage/**",
+		"test-results/**",
+		"playwright-report/**",
+		"**/*.min.js"
 	]
 }

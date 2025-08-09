@@ -1,6 +1,6 @@
 /**
  * Settings Service - Application Settings Management
- * 
+ *
  * Manages application settings with persistence and reactive updates.
  */
 
@@ -8,13 +8,13 @@ import type { ISettingsService, AppSettings } from '../interfaces';
 
 export class SettingsService implements ISettingsService {
 	private readonly SETTINGS_KEY = 'tka-v2-settings';
-	
+
 	private _settings: AppSettings = {
 		theme: 'dark',
 		gridMode: 'diamond',
 		showBeatNumbers: true,
 		autoSave: true,
-		exportQuality: 'high'
+		exportQuality: 'high',
 	};
 
 	constructor() {
@@ -32,17 +32,16 @@ export class SettingsService implements ISettingsService {
 	/**
 	 * Update a specific setting
 	 */
-	async updateSetting<K extends keyof AppSettings>(
-		key: K, 
-		value: AppSettings[K]
-	): Promise<void> {
+	async updateSetting<K extends keyof AppSettings>(key: K, value: AppSettings[K]): Promise<void> {
 		try {
 			this._settings[key] = value;
 			await this.persistSettings();
 			console.log(`Setting ${key} updated to:`, value);
 		} catch (error) {
 			console.error(`Failed to update setting ${key}:`, error);
-			throw new Error(`Failed to update setting: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to update setting: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -84,9 +83,9 @@ export class SettingsService implements ISettingsService {
 			gridMode: 'diamond',
 			showBeatNumbers: true,
 			autoSave: true,
-			exportQuality: 'high'
+			exportQuality: 'high',
 		};
-		
+
 		await this.persistSettings();
 		console.log('Settings reset to defaults');
 	}

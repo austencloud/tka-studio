@@ -159,11 +159,7 @@ export interface IArrowPositioningService {
 		gridData: GridData
 	): Promise<Map<string, ArrowPosition>>;
 
-	calculateRotationAngle(
-		motion: MotionData,
-		location: Location,
-		isMirrored: boolean
-	): number;
+	calculateRotationAngle(motion: MotionData, location: Location, isMirrored: boolean): number;
 
 	shouldMirrorArrow(motion: MotionData): boolean;
 }
@@ -218,10 +214,7 @@ export interface IArrowPlacementDataService {
 		gridMode: GridMode
 	): Promise<{ x: number; y: number }>;
 
-	getAvailablePlacementKeys(
-		motionType: MotionType,
-		gridMode: GridMode
-	): Promise<string[]>;
+	getAvailablePlacementKeys(motionType: MotionType, gridMode: GridMode): Promise<string[]>;
 
 	isLoaded(): boolean;
 	loadPlacementData(): Promise<void>;
@@ -281,7 +274,10 @@ export interface IConstructTabCoordinationService {
 }
 
 export interface IOptionDataService {
-	getNextOptions(currentSequence: SequenceData, filters?: OptionFilters): Promise<PictographData[]>;
+	getNextOptions(
+		currentSequence: SequenceData,
+		filters?: OptionFilters
+	): Promise<PictographData[]>;
 	filterOptionsByDifficulty(options: PictographData[], level: DifficultyLevel): PictographData[];
 	validateOptionCompatibility(option: PictographData, sequence: SequenceData): ValidationResult;
 	getAvailableMotionTypes(): MotionType[];
@@ -320,20 +316,37 @@ export function defineService<T>(name: string): ServiceInterface<T> {
 
 // Service interface definitions
 export const ISequenceService = defineService<ISequenceService>('ISequenceService');
-export const ISequenceDomainService = defineService<ISequenceDomainService>('ISequenceDomainService');
+export const ISequenceDomainService =
+	defineService<ISequenceDomainService>('ISequenceDomainService');
 export const IPictographService = defineService<IPictographService>('IPictographService');
-export const IPictographRenderingService = defineService<IPictographRenderingService>('IPictographRenderingService');
-export const IArrowPositioningService = defineService<IArrowPositioningService>('IArrowPositioningService');
-export const IArrowPlacementDataService = defineService<IArrowPlacementDataService>('IArrowPlacementDataService');
-export const IArrowPlacementKeyService = defineService<IArrowPlacementKeyService>('IArrowPlacementKeyService');
+export const IPictographRenderingService = defineService<IPictographRenderingService>(
+	'IPictographRenderingService'
+);
+export const IArrowPositioningService = defineService<IArrowPositioningService>(
+	'IArrowPositioningService'
+);
+export const IArrowPlacementDataService = defineService<IArrowPlacementDataService>(
+	'IArrowPlacementDataService'
+);
+export const IArrowPlacementKeyService = defineService<IArrowPlacementKeyService>(
+	'IArrowPlacementKeyService'
+);
 export const IPropRenderingService = defineService<IPropRenderingService>('IPropRenderingService');
 export const IPersistenceService = defineService<IPersistenceService>('IPersistenceService');
-export const ISequenceGenerationService = defineService<ISequenceGenerationService>('ISequenceGenerationService');
-export const IMotionGenerationService = defineService<IMotionGenerationService>('IMotionGenerationService');
-export const IApplicationInitializationService = defineService<IApplicationInitializationService>('IApplicationInitializationService');
+export const ISequenceGenerationService = defineService<ISequenceGenerationService>(
+	'ISequenceGenerationService'
+);
+export const IMotionGenerationService = defineService<IMotionGenerationService>(
+	'IMotionGenerationService'
+);
+export const IApplicationInitializationService = defineService<IApplicationInitializationService>(
+	'IApplicationInitializationService'
+);
 export const ISettingsService = defineService<ISettingsService>('ISettingsService');
 export const IExportService = defineService<IExportService>('IExportService');
-export const IConstructTabCoordinationService = defineService<IConstructTabCoordinationService>('IConstructTabCoordinationService');
+export const IConstructTabCoordinationService = defineService<IConstructTabCoordinationService>(
+	'IConstructTabCoordinationService'
+);
 export const IOptionDataService = defineService<IOptionDataService>('IOptionDataService');
 export const IStartPositionService = defineService<IStartPositionService>('IStartPositionService');
 
@@ -357,7 +370,13 @@ export interface AppSettings {
 	numBeats?: number;
 	beatLayout?: string;
 	// Background settings
-	backgroundType?: 'snowfall' | 'nightSky' | 'aurora' | 'auroraBorealis' | 'starfield' | 'bubbles';
+	backgroundType?:
+		| 'snowfall'
+		| 'nightSky'
+		| 'aurora'
+		| 'auroraBorealis'
+		| 'starfield'
+		| 'bubbles';
 	backgroundQuality?: 'high' | 'medium' | 'low' | 'minimal';
 	backgroundEnabled?: boolean;
 	visibility?: {

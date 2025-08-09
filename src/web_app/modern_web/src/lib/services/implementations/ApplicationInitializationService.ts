@@ -1,6 +1,6 @@
 /**
  * Application Initialization Service
- * 
+ *
  * Handles the startup sequence and initialization of the application.
  * This service ensures all required services are ready before the app starts.
  */
@@ -8,7 +8,7 @@
 import type {
 	IApplicationInitializationService,
 	ISettingsService,
-	IPersistenceService
+	IPersistenceService,
 } from '../interfaces';
 
 export class ApplicationInitializationService implements IApplicationInitializationService {
@@ -39,7 +39,9 @@ export class ApplicationInitializationService implements IApplicationInitializat
 			console.log('✅ TKA V2 Modern initialization complete');
 		} catch (error) {
 			console.error('❌ Application initialization failed:', error);
-			throw new Error(`Initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -63,7 +65,7 @@ export class ApplicationInitializationService implements IApplicationInitializat
 	private async initializePersistence(): Promise<void> {
 		try {
 			console.log('💾 Initializing persistence layer...');
-			
+
 			// Check localStorage availability
 			if (typeof Storage === 'undefined') {
 				throw new Error('LocalStorage is not available');
@@ -77,7 +79,9 @@ export class ApplicationInitializationService implements IApplicationInitializat
 			console.log('✅ Persistence layer initialized');
 		} catch (error) {
 			console.error('❌ Persistence initialization failed:', error);
-			throw new Error(`Persistence initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Persistence initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -95,7 +99,7 @@ export class ApplicationInitializationService implements IApplicationInitializat
 		];
 
 		const results = await Promise.allSettled(checks);
-		const failures = results.filter(result => result.status === 'rejected');
+		const failures = results.filter((result) => result.status === 'rejected');
 
 		if (failures.length > 0) {
 			console.warn('⚠️ Some startup checks failed:', failures);
@@ -163,7 +167,7 @@ export class ApplicationInitializationService implements IApplicationInitializat
 			// Try to store 1MB of data to test space
 			const testData = 'x'.repeat(1024 * 1024); // 1MB
 			const testKey = 'tka-v2-space-test';
-			
+
 			localStorage.setItem(testKey, testData);
 			localStorage.removeItem(testKey);
 		} catch (error) {
@@ -174,9 +178,9 @@ export class ApplicationInitializationService implements IApplicationInitializat
 	/**
 	 * Get initialization status
 	 */
-	getInitializationStatus(): { 
-		isInitialized: boolean; 
-		version: string; 
+	getInitializationStatus(): {
+		isInitialized: boolean;
+		version: string;
 		timestamp: string;
 	} {
 		return {

@@ -1,6 +1,6 @@
 /**
  * Modern Pictograph Components - Export Index
- * 
+ *
  * Central export point for all modern rune-based pictograph components.
  */
 

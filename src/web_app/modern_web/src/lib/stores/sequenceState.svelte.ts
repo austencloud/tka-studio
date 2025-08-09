@@ -31,7 +31,7 @@ const state = $state({
 	// Arrow positioning state
 	arrowPositions: new Map<string, ArrowPosition>(),
 	arrowPositioningInProgress: false,
-	arrowPositioningError: null as string | null
+	arrowPositioningError: null as string | null,
 });
 
 // ============================================================================
@@ -45,17 +45,39 @@ export { state };
 // GETTERS
 // ============================================================================
 
-export function getCurrentSequence() { return state.currentSequence; }
-export function getSequences() { return state.sequences; }
-export function getIsLoading() { return state.isLoading; }
-export function getError() { return state.error; }
-export function getSelectedBeatIndex() { return state.selectedBeatIndex; }
-export function getSelectedSequenceId() { return state.selectedSequenceId; }
-export function getShowBeatNumbers() { return state.showBeatNumbers; }
-export function getGridMode() { return state.gridMode; }
-export function getArrowPositions() { return state.arrowPositions; }
-export function getArrowPositioningInProgress() { return state.arrowPositioningInProgress; }
-export function getArrowPositioningError() { return state.arrowPositioningError; }
+export function getCurrentSequence() {
+	return state.currentSequence;
+}
+export function getSequences() {
+	return state.sequences;
+}
+export function getIsLoading() {
+	return state.isLoading;
+}
+export function getError() {
+	return state.error;
+}
+export function getSelectedBeatIndex() {
+	return state.selectedBeatIndex;
+}
+export function getSelectedSequenceId() {
+	return state.selectedSequenceId;
+}
+export function getShowBeatNumbers() {
+	return state.showBeatNumbers;
+}
+export function getGridMode() {
+	return state.gridMode;
+}
+export function getArrowPositions() {
+	return state.arrowPositions;
+}
+export function getArrowPositioningInProgress() {
+	return state.arrowPositioningInProgress;
+}
+export function getArrowPositioningError() {
+	return state.arrowPositioningError;
+}
 
 // ============================================================================
 // COMPUTED GETTERS
@@ -75,9 +97,7 @@ export function getSelectedBeatData(): BeatData | null {
 export function getSelectedBeat(): BeatData | null {
 	const beatIndex = state.selectedBeatIndex;
 	const sequence = state.currentSequence;
-	return beatIndex !== null && sequence
-		? sequence.beats[beatIndex] ?? null
-		: null;
+	return beatIndex !== null && sequence ? (sequence.beats[beatIndex] ?? null) : null;
 }
 
 export function getHasCurrentSequence(): boolean {
@@ -126,7 +146,7 @@ export function addSequence(sequence: SequenceData): void {
  * Update sequence in the list
  */
 export function updateSequence(updatedSequence: SequenceData): void {
-	const index = state.sequences.findIndex(s => s.id === updatedSequence.id);
+	const index = state.sequences.findIndex((s) => s.id === updatedSequence.id);
 	if (index >= 0) {
 		state.sequences[index] = updatedSequence;
 	}
@@ -141,7 +161,7 @@ export function updateSequence(updatedSequence: SequenceData): void {
  * Remove sequence from the list
  */
 export function removeSequence(sequenceId: string): void {
-	state.sequences = state.sequences.filter(s => s.id !== sequenceId);
+	state.sequences = state.sequences.filter((s) => s.id !== sequenceId);
 
 	// Clear current sequence if it was deleted
 	if (state.currentSequence?.id === sequenceId) {

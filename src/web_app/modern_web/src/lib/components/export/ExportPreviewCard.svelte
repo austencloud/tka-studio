@@ -30,16 +30,16 @@
 	let previewInfo = $derived(() => {
 		if (!currentSequence) return null;
 
-		const enabledOptions = Object.entries(exportSettings)
-			.filter(([key, value]) => typeof value === 'boolean' && value)
-			.length;
+		const enabledOptions = Object.entries(exportSettings).filter(
+			([key, value]) => typeof value === 'boolean' && value
+		).length;
 
 		return {
 			sequenceName: currentSequence.name || 'Untitled Sequence',
 			beatCount: currentSequence.beats?.length || 0,
 			format: exportSettings.export_format,
 			quality: exportSettings.export_quality,
-			enabledOptions
+			enabledOptions,
 		};
 	});
 
@@ -76,12 +76,11 @@
 			previewError = null;
 
 			// Simulate preview generation (replace with actual preview service)
-			await new Promise(resolve => setTimeout(resolve, 800));
+			await new Promise((resolve) => setTimeout(resolve, 800));
 
 			// Create a simple preview image showing sequence info
 			const canvas = createPreviewCanvas();
 			previewImageUrl = canvas.toDataURL();
-
 		} catch (error) {
 			console.error('Preview generation failed:', error);
 			previewError = error instanceof Error ? error.message : 'Preview generation failed';
@@ -94,7 +93,7 @@
 	function createPreviewCanvas(): HTMLCanvasElement {
 		const canvas = document.createElement('canvas');
 		const ctx = canvas.getContext('2d')!;
-		
+
 		// Set canvas size
 		canvas.width = 400;
 		canvas.height = 300;
@@ -119,15 +118,19 @@
 			ctx.font = '14px Arial';
 			ctx.fillText(`Sequence: ${previewInfo.sequenceName}`, canvas.width / 2, 70);
 			ctx.fillText(`Beats: ${previewInfo.beatCount}`, canvas.width / 2, 95);
-			
+
 			// Format info
 			ctx.fillStyle = '#6366f1';
 			ctx.fillText(`Format: ${previewInfo.format}`, canvas.width / 2, 130);
 			ctx.fillText(`Quality: ${previewInfo.quality}`, canvas.width / 2, 155);
-			
+
 			// Options info
 			ctx.fillStyle = '#10b981';
-			ctx.fillText(`${previewInfo.enabledOptions} export options enabled`, canvas.width / 2, 190);
+			ctx.fillText(
+				`${previewInfo.enabledOptions} export options enabled`,
+				canvas.width / 2,
+				190
+			);
 
 			// Sample pictograph representation
 			ctx.fillStyle = '#374151';
@@ -154,7 +157,7 @@
 <div class="export-preview-card">
 	<div class="preview-header">
 		<h3 class="card-title">Export Preview</h3>
-		<button 
+		<button
 			class="refresh-button"
 			onclick={handleRefreshPreview}
 			disabled={isGeneratingPreview}
@@ -178,17 +181,15 @@
 			</div>
 		{:else if previewImageUrl}
 			<div class="preview-image-container">
-				<img 
-					src={previewImageUrl} 
-					alt="Export preview" 
-					class="preview-image"
-				/>
+				<img src={previewImageUrl} alt="Export preview" class="preview-image" />
 			</div>
 		{:else}
 			<div class="preview-placeholder">
 				<div class="placeholder-icon">📄</div>
 				<p>Create a sequence to see preview</p>
-				<span class="placeholder-hint">Preview will update automatically when settings change</span>
+				<span class="placeholder-hint"
+					>Preview will update automatically when settings change</span
+				>
 			</div>
 		{/if}
 	</div>
@@ -197,7 +198,7 @@
 		<div class="status-bar">
 			<span class="status-text">{statusMessage}</span>
 		</div>
-		
+
 		{#if previewInfo}
 			<div class="preview-details">
 				<div class="detail-item">
@@ -368,8 +369,12 @@
 	}
 
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	/* Responsive adjustments */

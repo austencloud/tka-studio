@@ -77,7 +77,9 @@ from the TKA system, showing real pictographs with proper motion calculations.
 				const sampleKey = i === 0 ? 'sample' : i === 1 ? 'complex' : 'advanced';
 
 				// Use the proper conversion method from OptionDataService
-				const convertedPictograph = (optionDataService as any).convertCsvRowToPictographData(
+				const convertedPictograph = (
+					optionDataService as any
+				).convertCsvRowToPictographData(
 					row,
 					gridMode === GridMode.DIAMOND ? 'diamond' : 'box'
 				);
@@ -210,7 +212,11 @@ from the TKA system, showing real pictographs with proper motion calculations.
 
 			<div class="control-group">
 				<label for="grid-mode-selector">Grid Mode:</label>
-				<select id="grid-mode-selector" bind:value={gridMode} data-testid="grid-mode-selector">
+				<select
+					id="grid-mode-selector"
+					bind:value={gridMode}
+					data-testid="grid-mode-selector"
+				>
 					<option value={GridMode.DIAMOND}>Diamond</option>
 					<option value={GridMode.BOX}>Box</option>
 				</select>
@@ -218,7 +224,11 @@ from the TKA system, showing real pictographs with proper motion calculations.
 
 			<div class="control-group">
 				<label>
-					<input type="checkbox" bind:checked={debugMode} data-testid="debug-mode-checkbox" />
+					<input
+						type="checkbox"
+						bind:checked={debugMode}
+						data-testid="debug-mode-checkbox"
+					/>
 					Debug Mode
 				</label>
 			</div>
@@ -286,7 +296,9 @@ from the TKA system, showing real pictographs with proper motion calculations.
 
 	<!-- Toggle Controls Button -->
 	{#if !showControls}
-		<button class="toggle-controls" onclick={() => (showControls = true)}> Show Controls </button>
+		<button class="toggle-controls" onclick={() => (showControls = true)}>
+			Show Controls
+		</button>
 	{/if}
 </div>
 

@@ -9,7 +9,8 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 		initialValue?: Set<LetterType>;
 	}
 
-	let { initialValue = new Set(['TYPE1', 'TYPE2', 'TYPE3', 'TYPE4', 'TYPE5', 'TYPE6']) }: Props = $props();
+	let { initialValue = new Set(['TYPE1', 'TYPE2', 'TYPE3', 'TYPE4', 'TYPE5', 'TYPE6']) }: Props =
+		$props();
 
 	// State
 	let currentValue = $state(new Set(initialValue));
@@ -21,18 +22,18 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 		primaryColor: string;
 		secondaryColor: string;
 	}> = [
-		{ type: 'TYPE1', number: "1", primaryColor: "#36c3ff", secondaryColor: "#6F2DA8" },
-		{ type: 'TYPE2', number: "2", primaryColor: "#6F2DA8", secondaryColor: "#6F2DA8" },
-		{ type: 'TYPE3', number: "3", primaryColor: "#26e600", secondaryColor: "#6F2DA8" },
-		{ type: 'TYPE4', number: "4", primaryColor: "#26e600", secondaryColor: "#26e600" },
-		{ type: 'TYPE5', number: "5", primaryColor: "#00b3ff", secondaryColor: "#26e600" },
-		{ type: 'TYPE6', number: "6", primaryColor: "#eb7d00", secondaryColor: "#eb7d00" }
+		{ type: 'TYPE1', number: '1', primaryColor: '#36c3ff', secondaryColor: '#6F2DA8' },
+		{ type: 'TYPE2', number: '2', primaryColor: '#6F2DA8', secondaryColor: '#6F2DA8' },
+		{ type: 'TYPE3', number: '3', primaryColor: '#26e600', secondaryColor: '#6F2DA8' },
+		{ type: 'TYPE4', number: '4', primaryColor: '#26e600', secondaryColor: '#26e600' },
+		{ type: 'TYPE5', number: '5', primaryColor: '#00b3ff', secondaryColor: '#26e600' },
+		{ type: 'TYPE6', number: '6', primaryColor: '#eb7d00', secondaryColor: '#eb7d00' },
 	];
 
 	// Handle button click
 	function toggleLetterType(letterType: LetterType) {
 		const newValue = new Set(currentValue);
-		
+
 		if (newValue.has(letterType)) {
 			newValue.delete(letterType);
 			// Ensure at least one type is selected
@@ -42,12 +43,12 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 		} else {
 			newValue.add(letterType);
 		}
-		
+
 		currentValue = newValue;
-		
+
 		// Dispatch value change
-		const event = new CustomEvent('valueChanged', { 
-			detail: { value: newValue } 
+		const event = new CustomEvent('valueChanged', {
+			detail: { value: newValue },
 		});
 		document.dispatchEvent(event);
 	}
@@ -64,18 +65,17 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 
 <div class="letter-type-selector">
 	<div class="header-label">Filter by type:</div>
-	
+
 	<div class="button-layout">
 		{#each letterTypes as { type, number, primaryColor, secondaryColor }}
-			<button 
-				class="type-button" 
+			<button
+				class="type-button"
 				class:checked={currentValue.has(type)}
 				onclick={() => toggleLetterType(type)}
 				style="
-					{currentValue.has(type) 
-						? `border: 3px solid ${secondaryColor}; outline: 2px solid ${primaryColor}; outline-offset: -1px;` 
-						: ''
-					}
+					{currentValue.has(type)
+					? `border: 3px solid ${secondaryColor}; outline: 2px solid ${primaryColor}; outline-offset: -1px;`
+					: ''}
 				"
 				type="button"
 			>
@@ -124,7 +124,7 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 	}
 
 	.type-button:hover:not(.checked) {
-		background: rgba(240, 240, 240, 1.0);
+		background: rgba(240, 240, 240, 1);
 		border-color: rgba(180, 180, 180, 0.5);
 	}
 
@@ -134,6 +134,6 @@ Simple horizontal row of numbered buttons for letter types in freeform mode.
 	}
 
 	.type-button.checked:hover {
-		background: rgba(250, 250, 250, 1.0);
+		background: rgba(250, 250, 250, 1);
 	}
 </style>

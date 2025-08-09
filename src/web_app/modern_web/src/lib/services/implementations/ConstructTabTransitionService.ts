@@ -1,6 +1,6 @@
 /**
  * ConstructTab Transition Service
- * 
+ *
  * Handles tab transitions and animations for the ConstructTab component.
  * This service manages the complex transition logic that was previously
  * embedded in the massive ConstructTab component.

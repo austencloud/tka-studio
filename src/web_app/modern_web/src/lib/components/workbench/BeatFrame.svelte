@@ -184,7 +184,11 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.05) 1px, transparent 0);
+		background-image: radial-gradient(
+			circle at 1px 1px,
+			rgba(0, 0, 0, 0.05) 1px,
+			transparent 0
+		);
 		background-size: 20px 20px;
 		pointer-events: none;
 		border-radius: inherit;

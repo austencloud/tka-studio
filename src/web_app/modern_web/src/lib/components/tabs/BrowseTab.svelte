@@ -50,14 +50,12 @@
 			{#if currentPanelIndex === 0}
 				<!-- Filter Selection Panel -->
 				<div class="panel-container" data-panel="filter-selection">
-					<FilterSelectionPanel 
-						on:filterSelected={handleFilterSelected}
-					/>
+					<FilterSelectionPanel on:filterSelected={handleFilterSelected} />
 				</div>
 			{:else if currentPanelIndex === 1}
 				<!-- Sequence Browser Panel -->
 				<div class="panel-container" data-panel="sequence-browser">
-					<SequenceBrowserPanel 
+					<SequenceBrowserPanel
 						filter={selectedFilter}
 						{isLoading}
 						on:sequenceSelected={handleSequenceSelected}
@@ -69,7 +67,7 @@
 
 		<!-- Right side - Sequence Viewer Panel (1/3 width) -->
 		<div class="right-panel">
-			<SequenceViewerPanel 
+			<SequenceViewerPanel
 				sequence={selectedSequence}
 				on:backToBrowser={handleBackToBrowser}
 				on:sequenceAction={handleSequenceAction}

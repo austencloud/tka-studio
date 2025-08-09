@@ -20,24 +20,24 @@
 		add_user_info: true,
 		add_word: true,
 		use_last_save_directory: true,
-		
+
 		// Format settings
 		export_format: 'PNG',
 		export_quality: '300 DPI',
-		
+
 		// User settings
 		user_name: 'Default User',
-		custom_note: ''
+		custom_note: '',
 	});
 
 	// Handle setting changes
 	function handleSettingChanged(event: CustomEvent) {
 		const { setting, value } = event.detail;
 		exportSettings = { ...exportSettings, [setting]: value };
-		
+
 		// Emit to parent for persistence
 		dispatch('settingChanged', { setting, value });
-		
+
 		// Trigger preview update
 		dispatch('previewUpdateRequested', exportSettings);
 	}
@@ -51,7 +51,7 @@
 
 		const exportConfig = {
 			sequence: currentSequence,
-			settings: exportSettings
+			settings: exportSettings,
 		};
 
 		dispatch('exportRequested', { type: 'current', config: exportConfig });
@@ -60,7 +60,7 @@
 	// Handle export all sequences
 	function handleExportAll() {
 		const exportConfig = {
-			settings: exportSettings
+			settings: exportSettings,
 		};
 
 		dispatch('exportRequested', { type: 'all', config: exportConfig });
@@ -87,19 +87,13 @@
 
 			<!-- Scroll only the settings, not the actions -->
 			<div class="settings-scroll">
-				<ExportSettingsCard
-					{exportSettings}
-					on:settingChanged={handleSettingChanged}
-				/>
+				<ExportSettingsCard {exportSettings} on:settingChanged={handleSettingChanged} />
 			</div>
 		</div>
 
 		<!-- Right: Preview column -->
 		<div class="preview-column">
-			<ExportPreviewCard
-				{currentSequence}
-				{exportSettings}
-			/>
+			<ExportPreviewCard {currentSequence} {exportSettings} />
 		</div>
 	</div>
 </div>

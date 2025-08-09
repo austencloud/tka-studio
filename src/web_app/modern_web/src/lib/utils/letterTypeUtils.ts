@@ -11,12 +11,35 @@ export type LetterType = 'Type1' | 'Type2' | 'Type3' | 'Type4' | 'Type5' | 'Type
  * Letter classifications by type
  */
 const LETTER_TYPE_CLASSIFICATIONS: Record<LetterType, string[]> = {
-	Type1: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'],
+	Type1: [
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F',
+		'G',
+		'H',
+		'I',
+		'J',
+		'K',
+		'L',
+		'M',
+		'N',
+		'O',
+		'P',
+		'Q',
+		'R',
+		'S',
+		'T',
+		'U',
+		'V',
+	],
 	Type2: ['W', 'X', 'Y', 'Z', 'Σ', 'Δ', 'θ', 'Ω'],
 	Type3: ['W-', 'X-', 'Y-', 'Z-', 'Σ-', 'Δ-', 'θ-', 'Ω-'],
 	Type4: ['Φ', 'Ψ', 'Λ'],
 	Type5: ['Φ-', 'Ψ-', 'Λ-'],
-	Type6: ['α', 'β', 'Γ']
+	Type6: ['α', 'β', 'Γ'],
 };
 
 /**
@@ -28,7 +51,7 @@ const LETTER_TYPE_BORDER_COLORS: Record<LetterType, string> = {
 	Type3: 'var(--primary)',
 	Type4: 'var(--primary)',
 	Type5: 'var(--primary)',
-	Type6: '#eb7d00' // Orange for Type 6 (α, β, Γ)
+	Type6: '#eb7d00', // Orange for Type 6 (α, β, Γ)
 };
 
 /**

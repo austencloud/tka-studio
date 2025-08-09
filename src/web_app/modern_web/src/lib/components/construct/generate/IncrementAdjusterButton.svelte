@@ -20,9 +20,9 @@ A custom perfectly round button with hover effects and dynamic styling.
 	}
 </script>
 
-<button 
-	class="increment-adjuster-button" 
-	class:disabled 
+<button
+	class="increment-adjuster-button"
+	class:disabled
 	{disabled}
 	onclick={handleClick}
 	type="button"

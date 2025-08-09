@@ -11,13 +11,7 @@
 		onClicked?: (lessonType: LessonType) => void;
 	}
 
-	let {
-		text,
-		lessonType,
-		description = '',
-		disabled = false,
-		onClicked
-	}: Props = $props();
+	let { text, lessonType, description = '', disabled = false, onClicked }: Props = $props();
 
 	// Handle button click
 	function handleClick() {
@@ -76,12 +70,7 @@
 		left: -100%;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(
-			90deg,
-			transparent,
-			rgba(255, 255, 255, 0.1),
-			transparent
-		);
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 		transition: left var(--transition-slow);
 	}
 

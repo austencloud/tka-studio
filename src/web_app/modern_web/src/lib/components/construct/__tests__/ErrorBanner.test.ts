@@ -11,7 +11,7 @@ import ErrorBanner from '../ErrorBanner.svelte';
 
 // Mock the store
 vi.mock('$stores/constructTabState.svelte', () => ({
-	clearError: vi.fn()
+	clearError: vi.fn(),
 }));
 
 describe('ErrorBanner', () => {
@@ -23,8 +23,8 @@ describe('ErrorBanner', () => {
 		it('should render with error message', () => {
 			render(ErrorBanner, {
 				props: {
-					message: 'Test error message'
-				}
+					message: 'Test error message',
+				},
 			});
 
 			const banner = screen.getByTestId('error-banner');
@@ -40,8 +40,8 @@ describe('ErrorBanner', () => {
 		it('should have correct CSS classes', () => {
 			const { container } = render(ErrorBanner, {
 				props: {
-					message: 'Another error'
-				}
+					message: 'Another error',
+				},
 			});
 
 			const banner = container.querySelector('.error-banner');
@@ -56,8 +56,8 @@ describe('ErrorBanner', () => {
 
 			render(ErrorBanner, {
 				props: {
-					message: 'Dismissible error'
-				}
+					message: 'Dismissible error',
+				},
 			});
 
 			const dismissButton = screen.getByText('Dismiss');
@@ -71,8 +71,8 @@ describe('ErrorBanner', () => {
 
 			render(ErrorBanner, {
 				props: {
-					message: 'Keyboard accessible error'
-				}
+					message: 'Keyboard accessible error',
+				},
 			});
 
 			const dismissButton = screen.getByText('Dismiss');
@@ -88,8 +88,8 @@ describe('ErrorBanner', () => {
 		it('should handle empty message', () => {
 			render(ErrorBanner, {
 				props: {
-					message: ''
-				}
+					message: '',
+				},
 			});
 
 			const errorText = screen.getByText('❌');
@@ -97,12 +97,13 @@ describe('ErrorBanner', () => {
 		});
 
 		it('should handle long error messages', () => {
-			const longMessage = 'This is a very long error message that should still be displayed correctly even when it contains a lot of text and might wrap to multiple lines';
+			const longMessage =
+				'This is a very long error message that should still be displayed correctly even when it contains a lot of text and might wrap to multiple lines';
 
 			render(ErrorBanner, {
 				props: {
-					message: longMessage
-				}
+					message: longMessage,
+				},
 			});
 
 			const errorText = screen.getByText(`❌ ${longMessage}`);
@@ -114,8 +115,8 @@ describe('ErrorBanner', () => {
 
 			render(ErrorBanner, {
 				props: {
-					message: specialMessage
-				}
+					message: specialMessage,
+				},
 			});
 
 			const errorText = screen.getByText(`❌ ${specialMessage}`);
@@ -127,8 +128,8 @@ describe('ErrorBanner', () => {
 		it('should have proper ARIA attributes', () => {
 			render(ErrorBanner, {
 				props: {
-					message: 'Accessible error'
-				}
+					message: 'Accessible error',
+				},
 			});
 
 			const banner = screen.getByTestId('error-banner');
@@ -141,8 +142,8 @@ describe('ErrorBanner', () => {
 		it('should be focusable', () => {
 			render(ErrorBanner, {
 				props: {
-					message: 'Focusable error'
-				}
+					message: 'Focusable error',
+				},
 			});
 
 			const dismissButton = screen.getByText('Dismiss');

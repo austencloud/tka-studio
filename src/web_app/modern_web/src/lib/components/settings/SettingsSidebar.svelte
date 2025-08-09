@@ -22,7 +22,7 @@
 <aside class="settings-sidebar">
 	<nav class="sidebar-nav">
 		{#each tabs as tab}
-			<button 
+			<button
 				class="sidebar-item"
 				class:active={activeTab === tab.id}
 				onclick={() => handleTabClick(tab.id)}

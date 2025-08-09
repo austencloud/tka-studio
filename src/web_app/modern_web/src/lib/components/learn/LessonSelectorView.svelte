@@ -18,7 +18,7 @@
 		availableLessons = Object.values(LessonType),
 		isLoading = false,
 		onLessonRequested,
-		onModeChanged
+		onModeChanged,
 	}: Props = $props();
 
 	// Handle mode change

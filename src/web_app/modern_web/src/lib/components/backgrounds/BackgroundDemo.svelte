@@ -122,7 +122,11 @@
 
 				<div class="control-group">
 					<label for="quality-select">Quality:</label>
-					<select id="quality-select" value={currentQuality} onchange={handleQualityChange}>
+					<select
+						id="quality-select"
+						value={currentQuality}
+						onchange={handleQualityChange}
+					>
 						{#each qualityLevels as level}
 							<option value={level}>{level}</option>
 						{/each}

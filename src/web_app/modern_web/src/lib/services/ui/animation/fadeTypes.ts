@@ -49,11 +49,11 @@ export interface FadeOrchestratorState {
 	globalEasing: (t: number) => number;
 }
 
-export type FadeEventType = 
-	| 'fade_start' 
-	| 'fade_complete' 
-	| 'fade_error' 
-	| 'transition_start' 
+export type FadeEventType =
+	| 'fade_start'
+	| 'fade_complete'
+	| 'fade_error'
+	| 'transition_start'
 	| 'transition_complete';
 
 export interface FadeEvent {

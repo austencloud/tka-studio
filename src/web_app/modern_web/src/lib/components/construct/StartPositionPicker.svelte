@@ -106,26 +106,30 @@
 					...startPosPictograph,
 					// Ensure static motion types for start positions
 					motions: {
-						blue: startPosPictograph.motions?.blue ? {
-							...startPosPictograph.motions.blue,
-							motionType: 'static',
-							endLocation: startPosPictograph.motions.blue.startLocation,
-							endOri: startPosPictograph.motions.blue.startOri,
-							turns: 0,
-						} : null,
-						red: startPosPictograph.motions?.red ? {
-							...startPosPictograph.motions.red,
-							motionType: 'static',
-							endLocation: startPosPictograph.motions.red.startLocation,
-							endOri: startPosPictograph.motions.red.startOri,
-							turns: 0,
-						} : null,
+						blue: startPosPictograph.motions?.blue
+							? {
+									...startPosPictograph.motions.blue,
+									motionType: 'static',
+									endLocation: startPosPictograph.motions.blue.startLocation,
+									endOri: startPosPictograph.motions.blue.startOri,
+									turns: 0,
+								}
+							: null,
+						red: startPosPictograph.motions?.red
+							? {
+									...startPosPictograph.motions.red,
+									motionType: 'static',
+									endLocation: startPosPictograph.motions.red.startLocation,
+									endOri: startPosPictograph.motions.red.startOri,
+									turns: 0,
+								}
+							: null,
 					},
 				},
 				// Additional legacy-compatible fields
 				letter: startPosPictograph.letter,
 				gridMode: gridMode,
-				isStartPosition: true
+				isStartPosition: true,
 			};
 
 			// Create start position beat data for internal use
@@ -138,7 +142,7 @@
 				is_blank: false,
 				pictograph_data: startPosPictograph,
 				metadata: {
-					endPos: endPosition
+					endPos: endPosition,
 				},
 			};
 
@@ -163,16 +167,18 @@
 
 			// **CRITICAL: Emit event that OptionPicker is listening for**
 			const event = new CustomEvent('start-position-selected', {
-				detail: { 
-					startPosition: startPositionData, 
+				detail: {
+					startPosition: startPositionData,
 					endPosition: endPosition,
-					isTransitioning: true 
+					isTransitioning: true,
 				},
 				bubbles: true,
 			});
 			document.dispatchEvent(event);
 
-			console.log('✅ Start position selection completed, OptionPicker should now load options');
+			console.log(
+				'✅ Start position selection completed, OptionPicker should now load options'
+			);
 		} catch (error) {
 			console.error('❌ Error selecting start position:', error);
 			isTransitioning = false;
@@ -189,9 +195,9 @@
 
 		// Default mappings based on legacy desktop patterns
 		const defaultEndPositions: Record<string, string> = {
-			'α': 'alpha1',  // Alpha start position ends at alpha1
-			'β': 'beta5',   // Beta start position ends at beta5  
-			'γ': 'gamma11', // Gamma start position ends at gamma11
+			α: 'alpha1', // Alpha start position ends at alpha1
+			β: 'beta5', // Beta start position ends at beta5
+			γ: 'gamma11', // Gamma start position ends at gamma11
 		};
 
 		// Try to get from letter first
@@ -218,10 +224,10 @@
 	function mapLocationToPosition(location: any): string {
 		// Basic mapping - this would need to be enhanced based on actual position system
 		const locationMap: Record<string, string> = {
-			'SOUTH': 'alpha1',
-			'NORTH': 'alpha1', 
-			'EAST': 'gamma11',
-			'WEST': 'alpha1',
+			SOUTH: 'alpha1',
+			NORTH: 'alpha1',
+			EAST: 'gamma11',
+			WEST: 'alpha1',
 			// Add more mappings as needed
 		};
 

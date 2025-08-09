@@ -31,8 +31,8 @@ describe('LoadingOverlay', () => {
 		it('should render with custom message', () => {
 			render(LoadingOverlay, {
 				props: {
-					message: 'Custom loading message'
-				}
+					message: 'Custom loading message',
+				},
 			});
 
 			const overlay = screen.getByTestId('loading-overlay');
@@ -45,8 +45,8 @@ describe('LoadingOverlay', () => {
 		it('should have correct CSS classes', () => {
 			const { container } = render(LoadingOverlay, {
 				props: {
-					message: 'Test message'
-				}
+					message: 'Test message',
+				},
 			});
 
 			const overlay = container.querySelector('.loading-overlay');
@@ -63,8 +63,8 @@ describe('LoadingOverlay', () => {
 		it('should handle empty message', () => {
 			render(LoadingOverlay, {
 				props: {
-					message: ''
-				}
+					message: '',
+				},
 			});
 
 			const overlay = screen.getByTestId('loading-overlay');
@@ -77,12 +77,13 @@ describe('LoadingOverlay', () => {
 		});
 
 		it('should handle long messages', () => {
-			const longMessage = 'This is a very long loading message that should still be displayed correctly';
+			const longMessage =
+				'This is a very long loading message that should still be displayed correctly';
 
 			render(LoadingOverlay, {
 				props: {
-					message: longMessage
-				}
+					message: longMessage,
+				},
 			});
 
 			const messageText = screen.getByText(longMessage);
@@ -94,8 +95,8 @@ describe('LoadingOverlay', () => {
 
 			render(LoadingOverlay, {
 				props: {
-					message: specialMessage
-				}
+					message: specialMessage,
+				},
 			});
 
 			const messageText = screen.getByText(specialMessage);
@@ -127,8 +128,8 @@ describe('LoadingOverlay', () => {
 		it('should have proper test id', () => {
 			render(LoadingOverlay, {
 				props: {
-					message: 'Accessible loading'
-				}
+					message: 'Accessible loading',
+				},
 			});
 
 			const overlay = screen.getByTestId('loading-overlay');
@@ -138,8 +139,8 @@ describe('LoadingOverlay', () => {
 		it('should be properly structured for screen readers', () => {
 			render(LoadingOverlay, {
 				props: {
-					message: 'Screen reader test'
-				}
+					message: 'Screen reader test',
+				},
 			});
 
 			const overlay = screen.getByTestId('loading-overlay');

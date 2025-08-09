@@ -15,19 +15,19 @@
 		required?: boolean;
 	}
 
-	let { 
-		label, 
-		value = '', 
-		placeholder, 
-		helpText, 
+	let {
+		label,
+		value = '',
+		placeholder,
+		helpText,
 		type = 'text',
 		maxlength,
 		min,
 		max,
 		disabled = false,
-		required = false
+		required = false,
 	}: Props = $props();
-	
+
 	const dispatch = createEventDispatcher();
 
 	function handleInput(event: Event) {
@@ -41,7 +41,7 @@
 		{label}
 		{#if required}<span class="required">*</span>{/if}
 	</label>
-	<input 
+	<input
 		id={label}
 		{type}
 		{value}

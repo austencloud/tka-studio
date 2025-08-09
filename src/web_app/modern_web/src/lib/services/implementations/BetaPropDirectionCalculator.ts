@@ -19,8 +19,15 @@ export const DOWNRIGHT = 'downright';
 export const UPLEFT = 'upleft';
 export const DOWNLEFT = 'downleft';
 
-export type Direction = typeof UP | typeof DOWN | typeof LEFT | typeof RIGHT |
-                       typeof UPRIGHT | typeof DOWNRIGHT | typeof UPLEFT | typeof DOWNLEFT;
+export type Direction =
+	| typeof UP
+	| typeof DOWN
+	| typeof LEFT
+	| typeof RIGHT
+	| typeof UPRIGHT
+	| typeof DOWNRIGHT
+	| typeof UPLEFT
+	| typeof DOWNLEFT;
 
 // Location constants
 export const NORTH = 'n';
@@ -32,8 +39,15 @@ export const SOUTHEAST = 'se';
 export const SOUTHWEST = 'sw';
 export const NORTHWEST = 'nw';
 
-export type Loc = typeof NORTH | typeof SOUTH | typeof EAST | typeof WEST |
-                  typeof NORTHEAST | typeof SOUTHEAST | typeof SOUTHWEST | typeof NORTHWEST;
+export type Loc =
+	| typeof NORTH
+	| typeof SOUTH
+	| typeof EAST
+	| typeof WEST
+	| typeof NORTHEAST
+	| typeof SOUTHEAST
+	| typeof SOUTHWEST
+	| typeof NORTHWEST;
 
 export type DiamondLoc = typeof NORTH | typeof SOUTH | typeof EAST | typeof WEST;
 export type BoxLoc = typeof NORTHEAST | typeof SOUTHEAST | typeof SOUTHWEST | typeof NORTHWEST;
@@ -55,14 +69,14 @@ export class BetaPropDirectionCalculator {
 		[NORTH]: { [RED]: RIGHT, [BLUE]: LEFT },
 		[EAST]: { [RED]: DOWN, [BLUE]: UP },
 		[SOUTH]: { [RED]: LEFT, [BLUE]: RIGHT },
-		[WEST]: { [RED]: UP, [BLUE]: DOWN }
+		[WEST]: { [RED]: UP, [BLUE]: DOWN },
 	};
 
 	private diamondMapNonRadial: Record<DiamondLoc, Record<Color, Direction>> = {
 		[NORTH]: { [RED]: UP, [BLUE]: DOWN },
 		[EAST]: { [RED]: RIGHT, [BLUE]: LEFT },
 		[SOUTH]: { [RED]: DOWN, [BLUE]: UP },
-		[WEST]: { [RED]: LEFT, [BLUE]: RIGHT }
+		[WEST]: { [RED]: LEFT, [BLUE]: RIGHT },
 	};
 
 	// Box grid maps for static/dash motions
@@ -70,14 +84,14 @@ export class BetaPropDirectionCalculator {
 		[NORTHEAST]: { [RED]: DOWNRIGHT, [BLUE]: UPLEFT },
 		[SOUTHEAST]: { [RED]: UPRIGHT, [BLUE]: DOWNLEFT },
 		[SOUTHWEST]: { [RED]: DOWNRIGHT, [BLUE]: UPLEFT },
-		[NORTHWEST]: { [RED]: UPRIGHT, [BLUE]: DOWNLEFT }
+		[NORTHWEST]: { [RED]: UPRIGHT, [BLUE]: DOWNLEFT },
 	};
 
 	private boxMapNonRadial: Record<BoxLoc, Record<Color, Direction>> = {
 		[NORTHEAST]: { [RED]: UPLEFT, [BLUE]: DOWNRIGHT },
 		[SOUTHEAST]: { [RED]: UPRIGHT, [BLUE]: DOWNLEFT },
 		[SOUTHWEST]: { [RED]: UPLEFT, [BLUE]: DOWNRIGHT },
-		[NORTHWEST]: { [RED]: DOWNLEFT, [BLUE]: UPRIGHT }
+		[NORTHWEST]: { [RED]: DOWNLEFT, [BLUE]: UPRIGHT },
 	};
 
 	// Shift motion direction maps
@@ -89,7 +103,7 @@ export class BetaPropDirectionCalculator {
 		[NORTHEAST]: { [NORTHWEST]: UPRIGHT, [SOUTHEAST]: UPRIGHT },
 		[SOUTHEAST]: { [NORTHEAST]: DOWNRIGHT, [SOUTHWEST]: DOWNRIGHT },
 		[SOUTHWEST]: { [NORTHWEST]: DOWNLEFT, [SOUTHEAST]: DOWNLEFT },
-		[NORTHWEST]: { [NORTHEAST]: UPLEFT, [SOUTHWEST]: UPLEFT }
+		[NORTHWEST]: { [NORTHEAST]: UPLEFT, [SOUTHWEST]: UPLEFT },
 	};
 
 	private directionMapNonRadialShift: Record<Loc, Record<Loc, Direction>> = {
@@ -100,7 +114,7 @@ export class BetaPropDirectionCalculator {
 		[NORTHEAST]: { [SOUTHEAST]: UPLEFT, [NORTHWEST]: DOWNRIGHT },
 		[SOUTHEAST]: { [NORTHEAST]: UPRIGHT, [SOUTHWEST]: UPRIGHT },
 		[SOUTHWEST]: { [NORTHWEST]: UPLEFT, [SOUTHEAST]: DOWNRIGHT },
-		[NORTHWEST]: { [NORTHEAST]: DOWNLEFT, [SOUTHWEST]: DOWNLEFT }
+		[NORTHWEST]: { [NORTHEAST]: DOWNLEFT, [SOUTHWEST]: DOWNLEFT },
 	};
 
 	constructor(private motionData: { red: MotionData; blue: MotionData }) {}
@@ -135,7 +149,11 @@ export class BetaPropDirectionCalculator {
 	/**
 	 * Get shift direction based on start and end locations
 	 */
-	private getShiftDirection(isRadial: boolean, startLoc: string, endLoc: string): Direction | null {
+	private getShiftDirection(
+		isRadial: boolean,
+		startLoc: string,
+		endLoc: string
+	): Direction | null {
 		const map = isRadial ? this.directionMapRadialShift : this.directionMapNonRadialShift;
 		return map[startLoc as Loc]?.[endLoc as Loc] ?? null;
 	}
@@ -169,7 +187,7 @@ export class BetaPropDirectionCalculator {
 			[UPRIGHT]: DOWNLEFT,
 			[DOWNLEFT]: UPRIGHT,
 			[UPLEFT]: DOWNRIGHT,
-			[DOWNRIGHT]: UPLEFT
+			[DOWNRIGHT]: UPLEFT,
 		};
 		return opposites[direction];
 	}

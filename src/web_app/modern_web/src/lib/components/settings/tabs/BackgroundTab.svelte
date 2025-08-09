@@ -100,11 +100,14 @@
 			<div class="preview-container">
 				<div class="preview-box" data-background={backgroundType}>
 					<div class="preview-content">
-						<h4>{backgroundOptions.find((opt) => opt.value === backgroundType)?.label}</h4>
+						<h4>
+							{backgroundOptions.find((opt) => opt.value === backgroundType)?.label}
+						</h4>
 						<p class="preview-description">{currentDescription}</p>
 						<div class="quality-indicator">
 							Quality: <span class="quality-badge" data-quality={backgroundQuality}>
-								{qualityOptions.find((opt) => opt.value === backgroundQuality)?.label}
+								{qualityOptions.find((opt) => opt.value === backgroundQuality)
+									?.label}
 							</span>
 						</div>
 					</div>

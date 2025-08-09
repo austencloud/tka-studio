@@ -286,7 +286,14 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		{:else}
 			<!-- Empty state -->
 			<g class="empty-state">
-				<circle cx="475" cy="475" r="100" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="2" />
+				<circle
+					cx="475"
+					cy="475"
+					r="100"
+					fill="#f3f4f6"
+					stroke="#e5e7eb"
+					stroke-width="2"
+				/>
 				<text
 					x="475"
 					y="475"

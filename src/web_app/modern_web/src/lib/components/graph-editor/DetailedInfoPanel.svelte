@@ -4,11 +4,7 @@
 	import type { BeatData, SequenceData } from '$services/interfaces';
 
 	// Props
-	const {
-		selectedBeatIndex,
-		selectedBeatData,
-		currentSequence
-	} = $props<{
+	const { selectedBeatIndex, selectedBeatData, currentSequence } = $props<{
 		selectedBeatIndex: number | null;
 		selectedBeatData: BeatData | null;
 		currentSequence: SequenceData | null;
@@ -39,38 +35,38 @@
 	// Get motion info from pictograph data
 	function getMotionInfo(beatData: BeatData | null) {
 		if (!beatData?.pictograph_data) return null;
-		
+
 		const motions = [];
 		const pictograph = beatData.pictograph_data;
-		
+
 		// Extract motion information from pictograph
 		if (pictograph.blue_motion_type) {
 			motions.push({
 				color: 'Blue',
 				type: pictograph.blue_motion_type,
-				direction: pictograph.blue_prop_rot_dir || 'Unknown'
+				direction: pictograph.blue_prop_rot_dir || 'Unknown',
 			});
 		}
-		
+
 		if (pictograph.red_motion_type) {
 			motions.push({
 				color: 'Red',
 				type: pictograph.red_motion_type,
-				direction: pictograph.red_prop_rot_dir || 'Unknown'
+				direction: pictograph.red_prop_rot_dir || 'Unknown',
 			});
 		}
-		
+
 		return motions;
 	}
 
 	// Get position info
 	function getPositionInfo(beatData: BeatData | null) {
 		if (!beatData?.pictograph_data) return null;
-		
+
 		return {
 			gridMode: beatData.pictograph_data.grid_mode || 'diamond',
 			blueStart: beatData.pictograph_data.blue_start_pos || 'Unknown',
-			redStart: beatData.pictograph_data.red_start_pos || 'Unknown'
+			redStart: beatData.pictograph_data.red_start_pos || 'Unknown',
 		};
 	}
 
@@ -129,7 +125,11 @@
 					{#each motions as motion}
 						<div class="motion-info">
 							<div class="motion-header">
-								<span class="motion-color" class:blue={motion.color === 'Blue'} class:red={motion.color === 'Red'}>
+								<span
+									class="motion-color"
+									class:blue={motion.color === 'Blue'}
+									class:red={motion.color === 'Red'}
+								>
 									{motion.color}
 								</span>
 							</div>
@@ -145,7 +145,6 @@
 					{/each}
 				</div>
 			{/if}
-
 		{:else}
 			<div class="no-info">
 				<div class="placeholder-icon">ℹ️</div>

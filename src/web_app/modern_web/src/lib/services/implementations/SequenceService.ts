@@ -1,6 +1,6 @@
 /**
  * Sequence Service - Application Layer
- * 
+ *
  * Coordinates between domain logic and persistence for sequence operations.
  * This service orchestrates the business workflows for sequence management.
  */
@@ -43,7 +43,9 @@ export class SequenceService implements ISequenceService {
 			return sequenceWithTimestamps;
 		} catch (error) {
 			console.error('Failed to create sequence:', error);
-			throw new Error(`Failed to create sequence: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to create sequence: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -79,7 +81,9 @@ export class SequenceService implements ISequenceService {
 			console.log('Beat updated successfully');
 		} catch (error) {
 			console.error('Failed to update beat:', error);
-			throw new Error(`Failed to update beat: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to update beat: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -93,7 +97,9 @@ export class SequenceService implements ISequenceService {
 			console.log('Sequence deleted successfully');
 		} catch (error) {
 			console.error('Failed to delete sequence:', error);
-			throw new Error(`Failed to delete sequence: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to delete sequence: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -158,7 +164,9 @@ export class SequenceService implements ISequenceService {
 			await this.persistenceService.saveSequence(updatedSequence);
 		} catch (error) {
 			console.error('Failed to add beat:', error);
-			throw new Error(`Failed to add beat: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to add beat: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -191,7 +199,9 @@ export class SequenceService implements ISequenceService {
 			await this.persistenceService.saveSequence(updatedSequence);
 		} catch (error) {
 			console.error('Failed to remove beat:', error);
-			throw new Error(`Failed to remove beat: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to remove beat: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 }

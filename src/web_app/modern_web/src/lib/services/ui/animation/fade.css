@@ -30,7 +30,7 @@
 
 	/* Fade scale values */
 	--fade-scale-start: 0.95;
-	--fade-scale-end: 1.0;
+	--fade-scale-end: 1;
 	--fade-scale-overshoot: 1.02;
 
 	/* Z-index layers for transitions */
@@ -75,7 +75,7 @@
 
 /* Smooth transitions for elements that participate in fades */
 .fade-participant {
-	transition: 
+	transition:
 		opacity var(--fade-duration-normal) var(--fade-easing-ease-in-out),
 		transform var(--fade-duration-normal) var(--fade-easing-ease-in-out);
 }
@@ -102,11 +102,11 @@
 		--fade-duration-main-tab: 0ms;
 		--fade-duration-sub-tab: 0ms;
 	}
-	
+
 	.fade-participant {
 		transition: none !important;
 	}
-	
+
 	.fade-debug {
 		display: none;
 	}

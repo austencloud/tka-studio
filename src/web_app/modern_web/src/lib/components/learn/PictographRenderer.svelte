@@ -18,16 +18,20 @@
 	// Methods
 	function getGridSize(size: string): number {
 		switch (size) {
-			case 'small': return 80;
-			case 'medium': return 120;
-			case 'large': return 160;
-			default: return 120;
+			case 'small':
+				return 80;
+			case 'medium':
+				return 120;
+			case 'large':
+				return 160;
+			default:
+				return 120;
 		}
 	}
 
 	function getPositions(data: any) {
 		if (!data) return { start: null, end: null };
-		
+
 		return {
 			start: parsePosition(data.start_pos),
 			end: parsePosition(data.end_pos),
@@ -36,43 +40,43 @@
 
 	function parsePosition(pos: string) {
 		if (!pos) return null;
-		
+
 		const positionMap: Record<string, { x: number; y: number }> = {
-			'n': { x: 0.5, y: 0 },
-			'ne': { x: 1, y: 0 },
-			'e': { x: 1, y: 0.5 },
-			'se': { x: 1, y: 1 },
-			's': { x: 0.5, y: 1 },
-			'sw': { x: 0, y: 1 },
-			'w': { x: 0, y: 0.5 },
-			'nw': { x: 0, y: 0 },
+			n: { x: 0.5, y: 0 },
+			ne: { x: 1, y: 0 },
+			e: { x: 1, y: 0.5 },
+			se: { x: 1, y: 1 },
+			s: { x: 0.5, y: 1 },
+			sw: { x: 0, y: 1 },
+			w: { x: 0, y: 0.5 },
+			nw: { x: 0, y: 0 },
 		};
-		
+
 		return positionMap[pos.toLowerCase()] || { x: 0.5, y: 0.5 };
 	}
 
 	function getPositionStyle(position: { x: number; y: number } | null, isStart = true) {
 		if (!position) return '';
-		
+
 		const x = position.x * gridSize;
 		const y = position.y * gridSize;
-		
+
 		return `left: ${x}px; top: ${y}px;`;
 	}
 
 	function getLineStyle() {
 		if (!positions.start || !positions.end) return '';
-		
+
 		const startX = positions.start.x * gridSize;
 		const startY = positions.start.y * gridSize;
 		const endX = positions.end.x * gridSize;
 		const endY = positions.end.y * gridSize;
-		
+
 		const deltaX = endX - startX;
 		const deltaY = endY - startY;
 		const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 		const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-		
+
 		return `
 			left: ${startX}px;
 			top: ${startY}px;
@@ -90,21 +94,26 @@
 			<svg width={gridSize} height={gridSize} class="grid-svg">
 				<!-- Diamond grid lines -->
 				<path
-					d="M {gridSize/2} 0 L {gridSize} {gridSize/2} L {gridSize/2} {gridSize} L 0 {gridSize/2} Z"
+					d="M {gridSize / 2} 0 L {gridSize} {gridSize / 2} L {gridSize /
+						2} {gridSize} L 0 {gridSize / 2} Z"
 					fill="none"
 					stroke="rgba(255, 255, 255, 0.2)"
 					stroke-width="1"
 				/>
 				<!-- Center cross -->
 				<line
-					x1={gridSize/2} y1="0"
-					x2={gridSize/2} y2={gridSize}
+					x1={gridSize / 2}
+					y1="0"
+					x2={gridSize / 2}
+					y2={gridSize}
 					stroke="rgba(255, 255, 255, 0.1)"
 					stroke-width="1"
 				/>
 				<line
-					x1="0" y1={gridSize/2}
-					x2={gridSize} y2={gridSize/2}
+					x1="0"
+					y1={gridSize / 2}
+					x2={gridSize}
+					y2={gridSize / 2}
 					stroke="rgba(255, 255, 255, 0.1)"
 					stroke-width="1"
 				/>
@@ -115,11 +124,22 @@
 				<!-- Grid lines -->
 				<defs>
 					<pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-						<path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+						<path
+							d="M 20 0 L 0 0 0 20"
+							fill="none"
+							stroke="rgba(255, 255, 255, 0.1)"
+							stroke-width="1"
+						/>
 					</pattern>
 				</defs>
 				<rect width="100%" height="100%" fill="url(#grid)" />
-				<rect width="100%" height="100%" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+				<rect
+					width="100%"
+					height="100%"
+					fill="none"
+					stroke="rgba(255, 255, 255, 0.2)"
+					stroke-width="2"
+				/>
 			</svg>
 		{/if}
 	</div>
@@ -128,7 +148,7 @@
 	<div class="pictograph-content">
 		<!-- Start Position -->
 		{#if positions.start}
-			<div 
+			<div
 				class="position-marker start-position"
 				style={getPositionStyle(positions.start, true)}
 			>
@@ -139,7 +159,7 @@
 
 		<!-- End Position -->
 		{#if positions.end}
-			<div 
+			<div
 				class="position-marker end-position"
 				style={getPositionStyle(positions.end, false)}
 			>
@@ -307,12 +327,12 @@
 		.letter-overlay {
 			font-size: 1rem;
 		}
-		
+
 		.marker-dot {
 			width: 6px;
 			height: 6px;
 		}
-		
+
 		.marker-label {
 			font-size: 8px;
 		}
@@ -322,12 +342,12 @@
 		.letter-overlay {
 			font-size: 2rem;
 		}
-		
+
 		.marker-dot {
 			width: 10px;
 			height: 10px;
 		}
-		
+
 		.marker-label {
 			font-size: 12px;
 		}

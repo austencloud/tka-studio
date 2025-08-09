@@ -20,17 +20,18 @@ Displays detailed information about the selected beat including metadata and pro
 		if (!currentBeatData) {
 			return {
 				title: 'No Selection',
-				details: []
+				details: [],
 			};
 		}
 
-		const isStartPosition = currentBeatIndex === -1 || 
+		const isStartPosition =
+			currentBeatIndex === -1 ||
 			currentBeatData.metadata?.is_start_position ||
 			currentBeatData.beat === 0 ||
 			currentBeatData.letter === 'α';
 
 		const title = isStartPosition ? 'Start Position' : `Beat ${currentBeatData.beat}`;
-		
+
 		const details = [];
 
 		// Beat letter
@@ -38,7 +39,7 @@ Displays detailed information about the selected beat including metadata and pro
 			details.push({
 				label: 'Letter',
 				value: currentBeatData.letter,
-				important: true
+				important: true,
 			});
 		}
 
@@ -47,26 +48,26 @@ Displays detailed information about the selected beat including metadata and pro
 			details.push({
 				label: 'Beat #',
 				value: currentBeatData.beat.toString(),
-				important: false
+				important: false,
 			});
 		}
 
 		// Motion information
 		if (currentBeatData.pictograph_data?.motions) {
 			const motions = currentBeatData.pictograph_data.motions;
-			
+
 			if (motions.blue) {
 				details.push({
 					label: 'Blue Motion',
 					value: motions.blue.motion_type || 'Unknown',
-					important: false
+					important: false,
 				});
-				
+
 				if (motions.blue.turns !== undefined) {
 					details.push({
 						label: 'Blue Turns',
 						value: motions.blue.turns.toString(),
-						important: false
+						important: false,
 					});
 				}
 			}
@@ -75,14 +76,14 @@ Displays detailed information about the selected beat including metadata and pro
 				details.push({
 					label: 'Red Motion',
 					value: motions.red.motion_type || 'Unknown',
-					important: false
+					important: false,
 				});
-				
+
 				if (motions.red.turns !== undefined) {
 					details.push({
 						label: 'Red Turns',
 						value: motions.red.turns.toString(),
-						important: false
+						important: false,
 					});
 				}
 			}
@@ -93,7 +94,7 @@ Displays detailed information about the selected beat including metadata and pro
 			details.push({
 				label: 'Grid Mode',
 				value: currentBeatData.pictograph_data.grid_mode,
-				important: false
+				important: false,
 			});
 		}
 
@@ -102,9 +103,9 @@ Displays detailed information about the selected beat including metadata and pro
 			Object.entries(currentBeatData.metadata).forEach(([key, value]) => {
 				if (key !== 'is_start_position' && value !== null && value !== undefined) {
 					details.push({
-						label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+						label: key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
 						value: String(value),
-						important: false
+						important: false,
 					});
 				}
 			});
@@ -117,7 +118,7 @@ Displays detailed information about the selected beat including metadata and pro
 	export function updateBeatInfo(beatIndex: number, beatData: BeatData | null) {
 		currentBeatIndex = beatIndex;
 		currentBeatData = beatData;
-		
+
 		console.log('ℹ️ [INFO_PANEL] Updated with beat:', beatIndex, beatData?.letter);
 	}
 

@@ -91,7 +91,12 @@
 		<main class="content-area">
 			<!-- Main tab content with fade transitions -->
 			{#if isTabActive('construct')}
-				<div class="tab-content" data-tab="construct" in:tabInTransition out:tabOutTransition>
+				<div
+					class="tab-content"
+					data-tab="construct"
+					in:tabInTransition
+					out:tabOutTransition
+				>
 					<ConstructTab />
 				</div>
 			{:else if isTabActive('browse')}
@@ -99,7 +104,12 @@
 					<BrowseTab />
 				</div>
 			{:else if isTabActive('sequence_card')}
-				<div class="tab-content" data-tab="sequence_card" in:tabInTransition out:tabOutTransition>
+				<div
+					class="tab-content"
+					data-tab="sequence_card"
+					in:tabInTransition
+					out:tabOutTransition
+				>
 					<SequenceCardTab />
 				</div>
 			{:else if isTabActive('write')}

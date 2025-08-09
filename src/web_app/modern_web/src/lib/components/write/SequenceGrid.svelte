@@ -10,11 +10,7 @@
 		onSequenceRemoveRequested?: (position: number) => void;
 	}
 
-	let { 
-		sequences = [],
-		onSequenceClicked,
-		onSequenceRemoveRequested
-	}: Props = $props();
+	let { sequences = [], onSequenceClicked, onSequenceRemoveRequested }: Props = $props();
 
 	// Handle sequence click
 	function handleSequenceClicked(position: number) {
@@ -32,12 +28,12 @@
 
 	function updateGridColumns() {
 		if (!containerElement) return;
-		
+
 		const containerWidth = containerElement.clientWidth;
 		const thumbnailWidth = 120; // Base thumbnail width
 		const gap = 10; // Grid gap
 		const padding = 20; // Container padding
-		
+
 		const availableWidth = containerWidth - padding;
 		const columns = Math.max(1, Math.floor((availableWidth + gap) / (thumbnailWidth + gap)));
 		gridColumns = Math.min(columns, 8); // Max 8 columns
@@ -47,13 +43,13 @@
 	$effect(() => {
 		if (containerElement) {
 			updateGridColumns();
-			
+
 			const resizeObserver = new ResizeObserver(() => {
 				updateGridColumns();
 			});
-			
+
 			resizeObserver.observe(containerElement);
-			
+
 			return () => {
 				resizeObserver.disconnect();
 			};
@@ -71,10 +67,7 @@
 		</div>
 	{:else}
 		<!-- Sequences grid -->
-		<div 
-			class="sequences-grid" 
-			style="grid-template-columns: repeat({gridColumns}, 1fr);"
-		>
+		<div class="sequences-grid" style="grid-template-columns: repeat({gridColumns}, 1fr);">
 			{#each sequences as sequence, index (sequence.id)}
 				<SequenceThumbnail
 					{sequence}

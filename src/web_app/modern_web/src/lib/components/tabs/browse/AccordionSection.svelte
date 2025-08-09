@@ -88,7 +88,11 @@
 					<!-- Image-based content for visual filters -->
 					<div class="options-grid visual-grid">
 						{#each options as option}
-							<CategoryButton {option} visualType={type} on:selected={handleFilterSelection} />
+							<CategoryButton
+								{option}
+								visualType={type}
+								on:selected={handleFilterSelection}
+							/>
 						{/each}
 					</div>
 				{:else}

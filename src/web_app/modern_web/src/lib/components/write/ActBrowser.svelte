@@ -11,12 +11,7 @@
 		onRefresh?: () => void;
 	}
 
-	let { 
-		acts = [],
-		isLoading = false,
-		onActSelected,
-		onRefresh
-	}: Props = $props();
+	let { acts = [], isLoading = false, onActSelected, onRefresh }: Props = $props();
 
 	// Handle refresh
 	function handleRefresh() {
@@ -34,12 +29,12 @@
 
 	function updateGridColumns() {
 		if (!containerElement) return;
-		
+
 		const containerWidth = containerElement.clientWidth;
 		const thumbnailWidth = 160; // Base thumbnail width
 		const gap = 16; // Grid gap
 		const padding = 32; // Container padding
-		
+
 		const availableWidth = containerWidth - padding;
 		const columns = Math.max(1, Math.floor((availableWidth + gap) / (thumbnailWidth + gap)));
 		gridColumns = columns;
@@ -49,13 +44,13 @@
 	$effect(() => {
 		if (containerElement) {
 			updateGridColumns();
-			
+
 			const resizeObserver = new ResizeObserver(() => {
 				updateGridColumns();
 			});
-			
+
 			resizeObserver.observe(containerElement);
-			
+
 			return () => {
 				resizeObserver.disconnect();
 			};
@@ -96,15 +91,9 @@
 			</div>
 		{:else}
 			<!-- Acts grid -->
-			<div 
-				class="acts-grid" 
-				style="grid-template-columns: repeat({gridColumns}, 1fr);"
-			>
+			<div class="acts-grid" style="grid-template-columns: repeat({gridColumns}, 1fr);">
 				{#each acts as act (act.id)}
-					<ActThumbnail 
-						actInfo={act} 
-						onActSelected={handleActSelected}
-					/>
+					<ActThumbnail actInfo={act} onActSelected={handleActSelected} />
 				{/each}
 			</div>
 		{/if}
@@ -179,8 +168,12 @@
 	}
 
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	.loading-state p {

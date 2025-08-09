@@ -1,6 +1,6 @@
 /**
  * Lesson Configuration Service
- * 
+ *
  * Manages lesson configurations, validation, and provides utilities
  * for working with different lesson types and quiz modes.
  */
@@ -35,7 +35,7 @@ export class LessonConfigService {
 	 * Get lesson information for display.
 	 */
 	static getLessonInfo(lessonType: LessonType): LessonInfo {
-		const info = LESSON_INFO.find(lesson => lesson.lessonType === lessonType);
+		const info = LESSON_INFO.find((lesson) => lesson.lessonType === lessonType);
 		if (!info) {
 			throw new Error(`No lesson info found for lesson type: ${lessonType}`);
 		}
@@ -224,7 +224,7 @@ export class LessonConfigService {
 	 */
 	static getEstimatedCompletionTime(lessonType: LessonType, quizMode: QuizMode): number {
 		const baseTime = this.getDifficultyLevel(lessonType) * 2; // 2 minutes per difficulty level
-		
+
 		switch (quizMode) {
 			case QuizMode.FIXED_QUESTION:
 				return baseTime + 5; // Add 5 minutes for fixed questions

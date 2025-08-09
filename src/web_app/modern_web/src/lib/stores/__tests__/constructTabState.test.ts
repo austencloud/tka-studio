@@ -1,15 +1,21 @@
 /**
  * ConstructTabState Store Tests
- * 
+ *
  * Tests for the centralized state management store
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { constructTabState, setActivePanel, setGridMode, setError, clearError } from '../constructTabState.svelte';
+import {
+	constructTabState,
+	setActivePanel,
+	setGridMode,
+	setError,
+	clearError,
+} from '../constructTabState.svelte';
 
 // Mock the sequence state
 const mockSequenceState = {
-	currentSequence: null
+	currentSequence: null,
 };
 
 vi.mock('../sequenceState.svelte', () => ({
@@ -17,8 +23,8 @@ vi.mock('../sequenceState.svelte', () => ({
 	state: {
 		get currentSequence() {
 			return mockSequenceState.currentSequence;
-		}
-	}
+		},
+	},
 }));
 
 describe('ConstructTabState', () => {

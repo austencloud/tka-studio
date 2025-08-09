@@ -1,6 +1,6 @@
 /**
  * Local Storage Persistence Service
- * 
+ *
  * Handles data persistence using browser localStorage.
  * This provides a simple persistence layer for sequences and settings.
  */
@@ -27,7 +27,9 @@ export class LocalStoragePersistenceService implements IPersistenceService {
 			console.log(`Sequence "${sequence.name}" saved successfully`);
 		} catch (error) {
 			console.error('Failed to save sequence:', error);
-			throw new Error(`Failed to save sequence: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to save sequence: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -98,7 +100,9 @@ export class LocalStoragePersistenceService implements IPersistenceService {
 			console.log(`Sequence ${id} deleted successfully`);
 		} catch (error) {
 			console.error(`Failed to delete sequence ${id}:`, error);
-			throw new Error(`Failed to delete sequence: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			throw new Error(
+				`Failed to delete sequence: ${error instanceof Error ? error.message : 'Unknown error'}`
+			);
 		}
 	}
 
@@ -108,7 +112,7 @@ export class LocalStoragePersistenceService implements IPersistenceService {
 	private async updateSequenceIndex(sequence: SequenceData): Promise<void> {
 		try {
 			const indexData = localStorage.getItem(this.SEQUENCES_KEY);
-			const sequenceIds = indexData ? JSON.parse(indexData) as string[] : [];
+			const sequenceIds = indexData ? (JSON.parse(indexData) as string[]) : [];
 
 			// Add sequence ID if not already present
 			if (!sequenceIds.includes(sequence.id)) {
@@ -129,7 +133,7 @@ export class LocalStoragePersistenceService implements IPersistenceService {
 			if (!indexData) return;
 
 			const sequenceIds = JSON.parse(indexData) as string[];
-			const filteredIds = sequenceIds.filter(existingId => existingId !== id);
+			const filteredIds = sequenceIds.filter((existingId) => existingId !== id);
 
 			localStorage.setItem(this.SEQUENCES_KEY, JSON.stringify(filteredIds));
 		} catch (error) {

@@ -1,15 +1,17 @@
 /**
  * Pictograph Service - High-level pictograph operations
- * 
+ *
  * Coordinates pictograph rendering and manipulation operations.
  */
 
-import type { IPictographService, PictographData, IPictographRenderingService } from '../interfaces';
+import type {
+	IPictographService,
+	PictographData,
+	IPictographRenderingService,
+} from '../interfaces';
 
 export class PictographService implements IPictographService {
-	constructor(
-		private renderingService: IPictographRenderingService
-	) {}
+	constructor(private renderingService: IPictographRenderingService) {}
 
 	/**
 	 * Render a pictograph to SVG
@@ -40,7 +42,7 @@ export class PictographService implements IPictographService {
 		svg.setAttribute('width', '300');
 		svg.setAttribute('height', '300');
 		svg.setAttribute('viewBox', '0 0 300 300');
-		
+
 		// Add error indicator
 		const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 		rect.setAttribute('x', '10');
@@ -50,17 +52,17 @@ export class PictographService implements IPictographService {
 		rect.setAttribute('fill', '#f3f4f6');
 		rect.setAttribute('stroke', '#e5e7eb');
 		rect.setAttribute('stroke-width', '2');
-		
+
 		const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		text.setAttribute('x', '150');
 		text.setAttribute('y', '150');
 		text.setAttribute('text-anchor', 'middle');
 		text.setAttribute('fill', '#6b7280');
 		text.textContent = 'Render Error';
-		
+
 		svg.appendChild(rect);
 		svg.appendChild(text);
-		
+
 		return svg;
 	}
 }

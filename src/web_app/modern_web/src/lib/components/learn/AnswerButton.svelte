@@ -26,15 +26,15 @@
 	// Methods
 	function getButtonClass(): string {
 		let classes = ['answer-button'];
-		
+
 		if (disabled) {
 			classes.push('disabled');
 		}
-		
+
 		if (isSelected) {
 			classes.push('selected');
 		}
-		
+
 		if (showFeedback) {
 			if (isCorrect) {
 				classes.push('correct');
@@ -44,7 +44,7 @@
 				classes.push('faded');
 			}
 		}
-		
+
 		return classes.join(' ');
 	}
 
@@ -55,16 +55,11 @@
 	}
 </script>
 
-<button 
-	class={buttonClass}
-	on:click={handleClick}
-	{disabled}
-	type="button"
->
+<button class={buttonClass} on:click={handleClick} {disabled} type="button">
 	<span class="button-content">
 		{content}
 	</span>
-	
+
 	{#if showFeedback && isCorrect}
 		<span class="feedback-icon correct-icon">✓</span>
 	{:else if showFeedback && isSelected && !isCorrect}
@@ -99,12 +94,7 @@
 		left: -100%;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(
-			90deg,
-			transparent,
-			rgba(255, 255, 255, 0.1),
-			transparent
-		);
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 		transition: left 0.5s ease;
 	}
 
@@ -182,7 +172,8 @@
 	}
 
 	@keyframes correctPulse {
-		0%, 100% {
+		0%,
+		100% {
 			transform: scale(1);
 		}
 		50% {
@@ -191,7 +182,8 @@
 	}
 
 	@keyframes incorrectShake {
-		0%, 100% {
+		0%,
+		100% {
 			transform: translateX(0);
 		}
 		25% {

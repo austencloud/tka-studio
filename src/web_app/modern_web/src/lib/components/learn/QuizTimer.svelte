@@ -85,7 +85,7 @@
 
 	function checkWarnings() {
 		const warningTimes = [60, 30, 10, 5];
-		
+
 		for (const warningTime of warningTimes) {
 			if (timeRemaining === warningTime && lastWarningTime !== warningTime) {
 				lastWarningTime = warningTime;
@@ -103,21 +103,21 @@
 
 	function getTimerClass(): string {
 		let classes = ['quiz-timer', `size-${size}`];
-		
+
 		if (isCritical) {
 			classes.push('critical');
 		} else if (isWarning) {
 			classes.push('warning');
 		}
-		
+
 		if (isPaused) {
 			classes.push('paused');
 		}
-		
+
 		if (!isRunning) {
 			classes.push('stopped');
 		}
-		
+
 		return classes.join(' ');
 	}
 
@@ -182,7 +182,7 @@
 				transform="rotate(-90 60 60)"
 			/>
 		</svg>
-		
+
 		<!-- Time Display -->
 		<div class="time-display">
 			<span class="time-text">{formattedTime}</span>
@@ -218,7 +218,9 @@
 	}
 
 	.progress-ring-progress {
-		transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
+		transition:
+			stroke-dashoffset 0.3s ease,
+			stroke 0.3s ease;
 		stroke: #667eea;
 	}
 

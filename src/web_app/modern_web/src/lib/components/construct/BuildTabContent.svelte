@@ -34,10 +34,7 @@
 			<p>Select a starting position for your sequence</p>
 		</div>
 		<div class="panel-content">
-			<StartPositionPicker
-				{gridMode}
-				onStartPositionSelected={handleStartPositionSelected}
-			/>
+			<StartPositionPicker {gridMode} onStartPositionSelected={handleStartPositionSelected} />
 		</div>
 	{:else}
 		<div class="panel-header">

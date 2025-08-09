@@ -5,6 +5,7 @@ Super simple test to see if a single pictograph renders correctly.
 ## How to use:
 
 1. **Start the dev server:**
+
    ```bash
    npm run dev
    ```

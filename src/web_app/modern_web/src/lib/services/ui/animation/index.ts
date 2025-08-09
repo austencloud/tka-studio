@@ -1,6 +1,6 @@
 /**
  * Fade Animation System - Main Export
- * 
+ *
  * Complete fade management system ported from TKA desktop app
  * Provides smooth transitions for tab switching and UI animations
  */
@@ -18,7 +18,7 @@ export type {
 	FadeEventType,
 	MainTabId,
 	ConstructSubTabId,
-	TabFadeConfig
+	TabFadeConfig,
 } from './fadeTypes';
 
 // Orchestrator
@@ -26,7 +26,7 @@ export {
 	FadeOrchestrator,
 	getFadeOrchestrator,
 	initializeFadeOrchestrator,
-	resetFadeOrchestrator
+	resetFadeOrchestrator,
 } from './fadeOrchestrator';
 
 // Custom Transitions
@@ -43,7 +43,7 @@ export {
 	slideLeft,
 	slideRight,
 	slideUp,
-	slideDown
+	slideDown,
 } from './transitions';
 
 // State Management (Svelte 5 Runes)
@@ -68,7 +68,7 @@ export {
 	getFadeConfigForTransition,
 	isSpecificTransitionRunning,
 	getFadeDebugInfo,
-	resetFadeSystem
+	resetFadeSystem,
 } from './fadeState.svelte';
 
 // Utility functions for common fade patterns
@@ -78,34 +78,41 @@ export const fadeUtils = {
 	 */
 	createFadePair: (duration = 300) => {
 		return {
-			in: (node: Element) => enhancedFade(node, { 
-				duration, 
-				direction: 'in',
-				opacity: { start: 0, end: 1 }
-			}),
-			out: (node: Element) => enhancedFade(node, { 
-				duration, 
-				direction: 'out',
-				opacity: { start: 1, end: 0 }
-			})
+			in: (node: Element) =>
+				enhancedFade(node, {
+					duration,
+					direction: 'in',
+					opacity: { start: 0, end: 1 },
+				}),
+			out: (node: Element) =>
+				enhancedFade(node, {
+					duration,
+					direction: 'out',
+					opacity: { start: 1, end: 0 },
+				}),
 		};
 	},
 
 	/**
 	 * Create a slide fade pair
 	 */
-	createSlideFadePair: (direction: 'left' | 'right' | 'up' | 'down' = 'right', duration = 300) => {
+	createSlideFadePair: (
+		direction: 'left' | 'right' | 'up' | 'down' = 'right',
+		duration = 300
+	) => {
 		return {
-			in: (node: Element) => slideFade(node, { 
-				duration, 
-				direction, 
-				opacity: { start: 0, end: 1 }
-			}),
-			out: (node: Element) => slideFade(node, { 
-				duration, 
-				direction, 
-				opacity: { start: 1, end: 0 }
-			})
+			in: (node: Element) =>
+				slideFade(node, {
+					duration,
+					direction,
+					opacity: { start: 0, end: 1 },
+				}),
+			out: (node: Element) =>
+				slideFade(node, {
+					duration,
+					direction,
+					opacity: { start: 1, end: 0 },
+				}),
 		};
 	},
 
@@ -115,13 +122,8 @@ export const fadeUtils = {
 	createKeyedCrossfade: (duration = 300) => {
 		const [send, receive] = createTabCrossfade({ duration });
 		return { send, receive };
-	}
+	},
 };
 
 // Import the transition functions for direct use
-import {
-	enhancedFade,
-	slideFade,
-	scaleFade,
-	fluidTransition
-} from './transitions';
+import { enhancedFade, slideFade, scaleFade, fluidTransition } from './transitions';

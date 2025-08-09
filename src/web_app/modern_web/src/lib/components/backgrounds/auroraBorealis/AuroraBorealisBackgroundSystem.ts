@@ -4,7 +4,7 @@ import type {
 	Dimensions,
 	QualityLevel,
 	AccessibilitySettings,
-	PerformanceMetrics
+	PerformanceMetrics,
 } from '../types/types';
 
 export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
@@ -12,27 +12,27 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 	private accessibility: AccessibilitySettings = {
 		reducedMotion: false,
 		highContrast: false,
-		visibleParticleSize: 2
+		visibleParticleSize: 2,
 	};
-	
+
 	// Animation state
 	private lightWaves: number[] = [];
 	private isInitialized = false;
 
 	// Aurora Borealis color palette
 	private readonly auroraColors = [
-		{ r: 0, g: 25, b: 50, a: 0.4 },   // Deep blue
-		{ r: 0, g: 50, b: 100, a: 0.2 },  // Medium blue
+		{ r: 0, g: 25, b: 50, a: 0.4 }, // Deep blue
+		{ r: 0, g: 50, b: 100, a: 0.2 }, // Medium blue
 		{ r: 0, g: 100, b: 150, a: 0.1 }, // Light blue
 		{ r: 50, g: 150, b: 100, a: 0.15 }, // Blue-green
 		{ r: 100, g: 200, b: 150, a: 0.12 }, // Green
-		{ r: 150, g: 255, b: 200, a: 0.08 }  // Light green
+		{ r: 150, g: 255, b: 200, a: 0.08 }, // Light green
 	];
 
 	public initialize(dimensions: Dimensions, quality: QualityLevel): void {
 		this.quality = quality;
 		this.isInitialized = true;
-		
+
 		// Initialize light waves with random phases for natural variation
 		const numWaves = this.getNumWaves();
 		this.lightWaves = [];
@@ -43,11 +43,11 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
 	public update(dimensions: Dimensions): void {
 		if (!this.isInitialized) return;
-		
+
 		// Update light wave positions for smooth animation
 		// Advance each wave at slightly different speeds for natural variation
 		for (let i = 0; i < this.lightWaves.length; i++) {
-			const waveSpeed = 0.008 + (i * 0.002); // Varying speeds
+			const waveSpeed = 0.008 + i * 0.002; // Varying speeds
 			this.lightWaves[i] += waveSpeed;
 
 			// Keep waves within reasonable bounds to prevent overflow
@@ -59,10 +59,10 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
 	public draw(ctx: CanvasRenderingContext2D, dimensions: Dimensions): void {
 		if (!this.isInitialized) return;
-		
+
 		// Draw base gradient from dark to lighter
 		this.drawBaseGradient(ctx, dimensions);
-		
+
 		// Draw aurora light waves
 		this.drawAuroraWaves(ctx, dimensions);
 	}
@@ -92,27 +92,32 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 		return {
 			fps: 60, // Estimated
 			warnings: [],
-			particleCount: this.lightWaves.length
+			particleCount: this.lightWaves.length,
 		};
 	}
 
 	private getNumWaves(): number {
 		switch (this.quality) {
-			case 'high': return 12;
-			case 'medium': return 10;
-			case 'low': return 6;
-			case 'minimal': return 4;
-			default: return 10;
+			case 'high':
+				return 12;
+			case 'medium':
+				return 10;
+			case 'low':
+				return 6;
+			case 'minimal':
+				return 4;
+			default:
+				return 10;
 		}
 	}
 
 	private drawBaseGradient(ctx: CanvasRenderingContext2D, dimensions: Dimensions): void {
 		// Create base gradient from dark to lighter
 		const baseGradient = ctx.createLinearGradient(0, 0, dimensions.width, dimensions.height);
-		baseGradient.addColorStop(0, 'rgb(5, 10, 25)');    // Very dark blue
+		baseGradient.addColorStop(0, 'rgb(5, 10, 25)'); // Very dark blue
 		baseGradient.addColorStop(0.5, 'rgb(10, 20, 40)'); // Dark blue
-		baseGradient.addColorStop(1, 'rgb(15, 30, 60)');   // Medium dark blue
-		
+		baseGradient.addColorStop(1, 'rgb(15, 30, 60)'); // Medium dark blue
+
 		ctx.fillStyle = baseGradient;
 		ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 	}
@@ -120,7 +125,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 	private drawAuroraWaves(ctx: CanvasRenderingContext2D, dimensions: Dimensions): void {
 		// Calculate wave positions for gradient
 		const wavePositions: Array<[number, number]> = [];
-		
+
 		for (let i = 0; i < this.lightWaves.length; i++) {
 			const wave = this.lightWaves[i];
 			const position = (Math.sin(wave) + 1) / 2; // Normalize to 0-1
@@ -132,7 +137,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
 		// Create gradient with aurora colors
 		const gradient = ctx.createLinearGradient(0, 0, dimensions.width, dimensions.height);
-		
+
 		for (const [pos, waveIndex] of wavePositions) {
 			const colorIndex = waveIndex % this.auroraColors.length;
 			const color = this.auroraColors[colorIndex];
@@ -157,24 +162,27 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 	private drawAdditionalWaveEffects(ctx: CanvasRenderingContext2D, dimensions: Dimensions): void {
 		// Add subtle vertical wave patterns for enhanced aurora effect
 		ctx.save();
-		
+
 		for (let i = 0; i < this.lightWaves.length; i += 2) {
 			const wave = this.lightWaves[i];
-			const x = (Math.sin(wave * 0.5) + 1) / 2 * dimensions.width;
+			const x = ((Math.sin(wave * 0.5) + 1) / 2) * dimensions.width;
 			const width = 20 + Math.sin(wave) * 10;
-			
-			const waveGradient = ctx.createLinearGradient(x - width/2, 0, x + width/2, 0);
+
+			const waveGradient = ctx.createLinearGradient(x - width / 2, 0, x + width / 2, 0);
 			const color = this.auroraColors[i % this.auroraColors.length];
-			const intensity = (Math.sin(wave * 2) + 1) / 2 * 0.1;
-			
+			const intensity = ((Math.sin(wave * 2) + 1) / 2) * 0.1;
+
 			waveGradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
-			waveGradient.addColorStop(0.5, `rgba(${color.r}, ${color.g}, ${color.b}, ${intensity})`);
+			waveGradient.addColorStop(
+				0.5,
+				`rgba(${color.r}, ${color.g}, ${color.b}, ${intensity})`
+			);
 			waveGradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
-			
+
 			ctx.fillStyle = waveGradient;
-			ctx.fillRect(x - width/2, 0, width, dimensions.height);
+			ctx.fillRect(x - width / 2, 0, width, dimensions.height);
 		}
-		
+
 		ctx.restore();
 	}
 }

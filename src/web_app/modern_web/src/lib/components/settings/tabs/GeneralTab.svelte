@@ -5,13 +5,13 @@
 	import TextInput from '../TextInput.svelte';
 	import ToggleSetting from '../ToggleSetting.svelte';
 	import SelectInput from '../SelectInput.svelte';
-	
+
 	// Import fade system for direct control
-	import { 
-		isFadeEnabled, 
-		setFadeEnabled, 
+	import {
+		isFadeEnabled,
+		setFadeEnabled,
 		getFadeDebugInfo,
-		updateFadeSettings 
+		updateFadeSettings,
 	} from '$services/ui/animation';
 
 	interface Props {
@@ -26,7 +26,7 @@
 	let autoSave = $state(settings.autoSave ?? true);
 	let gridMode = $state(settings.gridMode || 'diamond');
 	let workbenchColumns = $state(settings.workbenchColumns || 5);
-	
+
 	// Fade system state
 	let fadeEnabled = $state(() => {
 		try {
@@ -41,7 +41,7 @@
 	// Options
 	const gridModeOptions = [
 		{ value: 'diamond', label: 'Diamond' },
-		{ value: 'box', label: 'Box' }
+		{ value: 'box', label: 'Box' },
 	];
 
 	// Fade system handlers
@@ -125,7 +125,7 @@
 			helpText="Smooth animations when switching between tabs"
 			on:change={handleFadeEnabledChange}
 		/>
-		
+
 		{#if fadeEnabled}
 			<TextInput
 				label="Main Tab Duration (ms)"
@@ -136,7 +136,7 @@
 				helpText="Animation duration for main tab transitions (Construct, Browse, etc.)"
 				on:change={handleFadeMainTabDurationChange}
 			/>
-			
+
 			<TextInput
 				label="Sub-tab Duration (ms)"
 				value={fadeSubTabDuration.toString()}
@@ -146,10 +146,10 @@
 				helpText="Animation duration for sub-tab transitions (Build, Generate, etc.)"
 				on:change={handleFadeSubTabDurationChange}
 			/>
-			
+
 			<div class="fade-debug-section">
-				<button 
-					class="debug-button" 
+				<button
+					class="debug-button"
 					onclick={logFadeDebugInfo}
 					title="Print fade system debug info to console"
 				>

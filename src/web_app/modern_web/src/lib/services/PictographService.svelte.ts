@@ -1,6 +1,6 @@
 /**
  * Modern Pictograph Service using Svelte 5 Runes
- * 
+ *
  * Provides reactive pictograph data and rendering coordination using pure runes.
  * This complements the existing class-based services.
  */
@@ -23,7 +23,7 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 		defaultGridMode: 'diamond',
 		debugMode: false,
 		loadingTimeout: 5000,
-		...config
+		...config,
 	};
 
 	// Reactive state using runes
@@ -45,37 +45,47 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 	// Helper function to determine required components
 	function getRequiredComponents(): string[] {
 		if (!currentPictographData) return [];
-		
+
 		const components = ['grid'];
-		
+
 		if (currentPictographData.arrows?.blue) components.push('blue-arrow');
 		if (currentPictographData.arrows?.red) components.push('red-arrow');
 		if (currentPictographData.props?.blue) components.push('blue-prop');
 		if (currentPictographData.props?.red) components.push('red-prop');
-		
+
 		return components;
 	}
 
 	// Public methods
 	const service = {
 		// Getters (reactive)
-		get currentData() { return currentPictographData; },
-		get isLoading() { return isLoading; },
-		get errorMessage() { return errorMessage; },
-		get loadingProgress() { return loadingProgress(); },
-		get hasValidData() { return hasValidData(); },
+		get currentData() {
+			return currentPictographData;
+		},
+		get isLoading() {
+			return isLoading;
+		},
+		get errorMessage() {
+			return errorMessage;
+		},
+		get loadingProgress() {
+			return loadingProgress();
+		},
+		get hasValidData() {
+			return hasValidData();
+		},
 
 		// Methods
 		setPictographData(data: any) {
 			try {
 				errorMessage = null;
 				const modernData = ensureModernPictographData(data);
-				
+
 				if (modernData) {
 					currentPictographData = modernData;
 					loadedComponents.clear();
 					isLoading = true;
-					
+
 					if (serviceConfig.debugMode) {
 						console.log('📊 PictographService: Data set', modernData);
 					}
@@ -101,19 +111,19 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 
 		markComponentLoaded(componentName: string) {
 			loadedComponents.add(componentName);
-			
+
 			if (serviceConfig.debugMode) {
 				console.log(`📦 Component loaded: ${componentName}`, {
 					loaded: loadedComponents.size,
-					required: getRequiredComponents().length
+					required: getRequiredComponents().length,
 				});
 			}
 
 			// Check if all components are loaded
 			const required = getRequiredComponents();
-			if (required.every(comp => loadedComponents.has(comp))) {
+			if (required.every((comp) => loadedComponents.has(comp))) {
 				isLoading = false;
-				
+
 				if (serviceConfig.debugMode) {
 					console.log('✅ All components loaded');
 				}
@@ -122,7 +132,7 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 
 		markComponentError(componentName: string, error: string) {
 			errorMessage = `${componentName}: ${error}`;
-			
+
 			if (serviceConfig.debugMode) {
 				console.error(`❌ Component error: ${componentName}`, error);
 			}
@@ -145,7 +155,7 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 
 		getConfig() {
 			return { ...serviceConfig };
-		}
+		},
 	};
 
 	return service;
@@ -159,7 +169,10 @@ export const globalPictographService = createPictographService();
 /**
  * Helper function to create a pictograph service bound to a specific beat
  */
-export function createBeatPictographService(beat: BeatData, config?: Partial<PictographServiceConfig>) {
+export function createBeatPictographService(
+	beat: BeatData,
+	config?: Partial<PictographServiceConfig>
+) {
 	const service = createPictographService(config);
 	service.setBeatData(beat);
 	return service;

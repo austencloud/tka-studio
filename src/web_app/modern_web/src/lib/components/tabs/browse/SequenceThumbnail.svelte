@@ -15,7 +15,7 @@
 			1: '#10b981', // green
 			2: '#f59e0b', // yellow
 			3: '#ef4444', // red
-			4: '#8b5cf6'  // purple
+			4: '#8b5cf6', // purple
 		};
 		return colors[difficulty] || '#6366f1';
 	}
@@ -23,22 +23,22 @@
 	function getDifficultyLabel(difficulty: number) {
 		const labels = {
 			1: 'Beginner',
-			2: 'Intermediate', 
+			2: 'Intermediate',
 			3: 'Advanced',
-			4: 'Expert'
+			4: 'Expert',
 		};
 		return labels[difficulty] || 'Unknown';
 	}
 
 	function formatDate(date: Date) {
-		return date.toLocaleDateString('en-US', { 
-			month: 'short', 
-			day: 'numeric' 
+		return date.toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
 		});
 	}
 </script>
 
-<div 
+<div
 	class="sequence-thumbnail"
 	class:list-view={viewMode === 'list'}
 	on:click={handleSelect}
@@ -60,7 +60,7 @@
 				</div>
 			</div>
 		{/if}
-		
+
 		<!-- Overlay with favorite star -->
 		{#if sequence.isFavorite}
 			<div class="favorite-overlay">
@@ -73,7 +73,7 @@
 	<div class="sequence-info">
 		<div class="info-header">
 			<h3 class="sequence-title">{sequence.word}</h3>
-			<div 
+			<div
 				class="difficulty-badge"
 				style="--difficulty-color: {getDifficultyColor(sequence.difficulty)}"
 			>
@@ -108,7 +108,10 @@
 				</div>
 				<div class="detail-row">
 					<span class="detail-label">Difficulty:</span>
-					<span class="detail-value" style="color: {getDifficultyColor(sequence.difficulty)}">
+					<span
+						class="detail-value"
+						style="color: {getDifficultyColor(sequence.difficulty)}"
+					>
 						{getDifficultyLabel(sequence.difficulty)}
 					</span>
 				</div>
@@ -175,9 +178,10 @@
 		position: relative;
 		width: 100%;
 		height: 160px;
-		background: linear-gradient(135deg, 
-			rgba(99, 102, 241, 0.2), 
-			rgba(168, 85, 247, 0.2), 
+		background: linear-gradient(
+			135deg,
+			rgba(99, 102, 241, 0.2),
+			rgba(168, 85, 247, 0.2),
 			rgba(6, 182, 212, 0.2)
 		);
 		display: flex;
@@ -212,7 +216,8 @@
 		opacity: 0.9;
 	}
 
-	.grid-mode, .start-pos {
+	.grid-mode,
+	.start-pos {
 		padding: 2px 6px;
 		background: rgba(255, 255, 255, 0.2);
 		border-radius: 4px;
@@ -264,7 +269,7 @@
 
 	.difficulty-badge {
 		--difficulty-color: var(--primary-color);
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;

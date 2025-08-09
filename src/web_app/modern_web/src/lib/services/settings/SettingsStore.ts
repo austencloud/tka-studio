@@ -10,4 +10,5 @@
 // This file is kept for backward compatibility but should not be used.
 // All settings functionality has been moved to appState.svelte.ts
 
-export const DEPRECATED_MESSAGE = 'This settings store is deprecated. Use appState.svelte.ts instead.';
+export const DEPRECATED_MESSAGE =
+	'This settings store is deprecated. Use appState.svelte.ts instead.';

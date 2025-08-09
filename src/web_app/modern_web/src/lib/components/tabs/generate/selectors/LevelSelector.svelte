@@ -14,22 +14,28 @@ Simple 3-level difficulty selector with circular buttons.
 
 	// Level data with exact legacy gradient colors
 	const levelData = [
-		{ level: 1, number: "1", label: "No Turns", gradient: "rgb(245, 245, 245)", color: "black" },
-		{ 
-			level: 2, 
-			number: "2", 
-			label: "Whole Turns", 
+		{
+			level: 1,
+			number: '1',
+			label: 'No Turns',
+			gradient: 'rgb(245, 245, 245)',
+			color: 'black',
+		},
+		{
+			level: 2,
+			number: '2',
+			label: 'Whole Turns',
 			gradient: `linear-gradient(135deg,
 				rgb(170, 170, 170) 0%,
 				rgb(120, 120, 120) 30%,
 				rgb(180, 180, 180) 60%,
 				rgb(110, 110, 110) 100%)`,
-			color: "black"
+			color: 'black',
 		},
-		{ 
-			level: 3, 
-			number: "3", 
-			label: "Half Turns", 
+		{
+			level: 3,
+			number: '3',
+			label: 'Half Turns',
 			gradient: `linear-gradient(135deg,
 				rgb(255, 215, 0) 0%,
 				rgb(238, 201, 0) 20%,
@@ -37,18 +43,18 @@ Simple 3-level difficulty selector with circular buttons.
 				rgb(184, 134, 11) 60%,
 				rgb(139, 69, 19) 80%,
 				rgb(85, 107, 47) 100%)`,
-			color: "black"
-		}
+			color: 'black',
+		},
 	];
 
 	// Handle button click
 	function selectLevel(level: number) {
 		if (level !== currentValue) {
 			currentValue = level;
-			
+
 			// Dispatch value change
-			const event = new CustomEvent('valueChanged', { 
-				detail: { value: level } 
+			const event = new CustomEvent('valueChanged', {
+				detail: { value: level },
 			});
 			document.dispatchEvent(event);
 		}
@@ -69,8 +75,8 @@ Simple 3-level difficulty selector with circular buttons.
 <div class="level-selector">
 	{#each levelData as { level, number, label, gradient, color }}
 		<div class="level-item">
-			<button 
-				class="level-button" 
+			<button
+				class="level-button"
 				class:checked={currentValue === level}
 				onclick={() => selectLevel(level)}
 				style="background: {gradient}; color: {color};"

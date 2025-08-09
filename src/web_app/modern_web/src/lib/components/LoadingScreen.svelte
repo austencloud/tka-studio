@@ -1,9 +1,3 @@
-/**
- * Loading Screen - Pure Svelte 5 implementation
- * 
- * Shows loading progress during application initialization.
- */
-
 <script lang="ts">
 	interface Props {
 		progress?: number;
@@ -16,18 +10,18 @@
 	const clampedProgress = $derived(Math.max(0, Math.min(100, progress)));
 </script>
 
+/** * Loading Screen - Pure Svelte 5 implementation * * Shows loading progress during application
+initialization. */
+
 <div class="loading-screen">
 	<div class="loading-content">
 		<div class="spinner"></div>
 		<h2>TKA - The Kinetic Constructor</h2>
 		<p class="message">{message}</p>
-		
+
 		<div class="progress-container">
 			<div class="progress-bar">
-				<div 
-					class="progress-fill" 
-					style="width: {clampedProgress}%"
-				></div>
+				<div class="progress-fill" style="width: {clampedProgress}%"></div>
 			</div>
 			<span class="progress-text">{Math.round(clampedProgress)}%</span>
 		</div>
@@ -106,7 +100,11 @@
 	}
 
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>

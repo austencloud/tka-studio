@@ -19,13 +19,13 @@ Displays the currently selected turn value with color-coded styling.
 		blue: {
 			border: '#0066cc',
 			background: 'rgba(0, 102, 204, 0.1)',
-			text: '#0066cc'
+			text: '#0066cc',
 		},
 		red: {
 			border: '#cc0000',
 			background: 'rgba(204, 0, 0, 0.1)',
-			text: '#cc0000'
-		}
+			text: '#cc0000',
+		},
 	};
 
 	// Public methods
@@ -38,7 +38,7 @@ Displays the currently selected turn value with color-coded styling.
 	}
 </script>
 
-<div 
+<div
 	class="current-turn-display"
 	style="
 		border-color: {colorStyles[color].border};

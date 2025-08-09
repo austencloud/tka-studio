@@ -1,6 +1,6 @@
 /**
  * Arrow Positioning Service
- * 
+ *
  * Implements the arrow positioning pipeline from the desktop app:
  * 1. Initial position (from grid coordinates)
  * 2. Default adjustments
@@ -47,8 +47,10 @@ export class ArrowPositioningService {
 		const directionalAdjustment = this.getDirectionalAdjustment(input);
 
 		// Step 5: Combine all adjustments
-		const finalX = initialPosition.x + defaultAdjustment.x + specialAdjustment.x + directionalAdjustment.x;
-		const finalY = initialPosition.y + defaultAdjustment.y + specialAdjustment.y + directionalAdjustment.y;
+		const finalX =
+			initialPosition.x + defaultAdjustment.x + specialAdjustment.x + directionalAdjustment.x;
+		const finalY =
+			initialPosition.y + defaultAdjustment.y + specialAdjustment.y + directionalAdjustment.y;
 
 		return { x: finalX, y: finalY };
 	}
@@ -81,25 +83,25 @@ export class ArrowPositioningService {
 		// Base coordinates for diamond grid layer2 points
 		// These are estimated positions - ideally we'd load from data files
 		const diamondLayer2Points: Record<string, Position> = {
-			'n': { x: 475, y: 200 },
-			'ne': { x: 625, y: 275 },
-			'e': { x: 700, y: 475 },
-			'se': { x: 625, y: 675 },
-			's': { x: 475, y: 750 },
-			'sw': { x: 325, y: 675 },
-			'w': { x: 250, y: 475 },
-			'nw': { x: 325, y: 275 }
+			n: { x: 475, y: 200 },
+			ne: { x: 625, y: 275 },
+			e: { x: 700, y: 475 },
+			se: { x: 625, y: 675 },
+			s: { x: 475, y: 750 },
+			sw: { x: 325, y: 675 },
+			w: { x: 250, y: 475 },
+			nw: { x: 325, y: 275 },
 		};
 
 		const boxLayer2Points: Record<string, Position> = {
-			'n': { x: 475, y: 225 },
-			'ne': { x: 600, y: 300 },
-			'e': { x: 675, y: 475 },
-			'se': { x: 600, y: 650 },
-			's': { x: 475, y: 725 },
-			'sw': { x: 350, y: 650 },
-			'w': { x: 275, y: 475 },
-			'nw': { x: 350, y: 300 }
+			n: { x: 475, y: 225 },
+			ne: { x: 600, y: 300 },
+			e: { x: 675, y: 475 },
+			se: { x: 600, y: 650 },
+			s: { x: 475, y: 725 },
+			sw: { x: 350, y: 650 },
+			w: { x: 275, y: 475 },
+			nw: { x: 350, y: 300 },
 		};
 
 		const points = grid_mode === 'box' ? boxLayer2Points : diamondLayer2Points;
@@ -113,25 +115,25 @@ export class ArrowPositioningService {
 	private getHandCoordinates(location: string, grid_mode: string): Position {
 		// Base coordinates for diamond grid hand points
 		const diamondHandPoints: Record<string, Position> = {
-			'n': { x: 475, y: 175 },
-			'ne': { x: 650, y: 250 },
-			'e': { x: 725, y: 475 },
-			'se': { x: 650, y: 700 },
-			's': { x: 475, y: 775 },
-			'sw': { x: 300, y: 700 },
-			'w': { x: 225, y: 475 },
-			'nw': { x: 300, y: 250 }
+			n: { x: 475, y: 175 },
+			ne: { x: 650, y: 250 },
+			e: { x: 725, y: 475 },
+			se: { x: 650, y: 700 },
+			s: { x: 475, y: 775 },
+			sw: { x: 300, y: 700 },
+			w: { x: 225, y: 475 },
+			nw: { x: 300, y: 250 },
 		};
 
 		const boxHandPoints: Record<string, Position> = {
-			'n': { x: 475, y: 200 },
-			'ne': { x: 625, y: 275 },
-			'e': { x: 700, y: 475 },
-			'se': { x: 625, y: 675 },
-			's': { x: 475, y: 750 },
-			'sw': { x: 325, y: 675 },
-			'w': { x: 250, y: 475 },
-			'nw': { x: 325, y: 275 }
+			n: { x: 475, y: 200 },
+			ne: { x: 625, y: 275 },
+			e: { x: 700, y: 475 },
+			se: { x: 625, y: 675 },
+			s: { x: 475, y: 750 },
+			sw: { x: 325, y: 675 },
+			w: { x: 250, y: 475 },
+			nw: { x: 325, y: 275 },
 		};
 
 		const points = grid_mode === 'box' ? boxHandPoints : diamondHandPoints;
@@ -154,7 +156,7 @@ export class ArrowPositioningService {
 				'1.5': { x: 10, y: 15 },
 				'2': { x: -70, y: 15 },
 				'2.5': { x: 20, y: 30 },
-				'3': { x: -70, y: 50 }
+				'3': { x: -70, y: 50 },
 			},
 			anti: {
 				'0': { x: 0, y: -25 },
@@ -163,7 +165,7 @@ export class ArrowPositioningService {
 				'1.5': { x: -10, y: -15 },
 				'2': { x: 70, y: -15 },
 				'2.5': { x: -20, y: -30 },
-				'3': { x: 70, y: -50 }
+				'3': { x: 70, y: -50 },
 			},
 			float: {
 				'0': { x: 5, y: 5 },
@@ -172,8 +174,8 @@ export class ArrowPositioningService {
 				'1.5': { x: 5, y: 5 },
 				'2': { x: 5, y: 5 },
 				'2.5': { x: 5, y: 5 },
-				'3': { x: 5, y: 5 }
-			}
+				'3': { x: 5, y: 5 },
+			},
 		};
 
 		const turnsKey = turns.toString();
@@ -200,25 +202,25 @@ export class ArrowPositioningService {
 		// The real system uses complex directional tuple generators
 		const directionalAdjustments: Record<string, Record<string, Position>> = {
 			pro: {
-				'n': { x: 0, y: -10 },
-				'ne': { x: 10, y: -10 },
-				'e': { x: 10, y: 0 },
-				'se': { x: 10, y: 10 },
-				's': { x: 0, y: 10 },
-				'sw': { x: -10, y: 10 },
-				'w': { x: -10, y: 0 },
-				'nw': { x: -10, y: -10 }
+				n: { x: 0, y: -10 },
+				ne: { x: 10, y: -10 },
+				e: { x: 10, y: 0 },
+				se: { x: 10, y: 10 },
+				s: { x: 0, y: 10 },
+				sw: { x: -10, y: 10 },
+				w: { x: -10, y: 0 },
+				nw: { x: -10, y: -10 },
 			},
 			anti: {
-				'n': { x: 0, y: 10 },
-				'ne': { x: -10, y: 10 },
-				'e': { x: -10, y: 0 },
-				'se': { x: -10, y: -10 },
-				's': { x: 0, y: -10 },
-				'sw': { x: 10, y: -10 },
-				'w': { x: 10, y: 0 },
-				'nw': { x: 10, y: 10 }
-			}
+				n: { x: 0, y: 10 },
+				ne: { x: -10, y: 10 },
+				e: { x: -10, y: 0 },
+				se: { x: -10, y: -10 },
+				s: { x: 0, y: -10 },
+				sw: { x: 10, y: -10 },
+				w: { x: 10, y: 0 },
+				nw: { x: 10, y: 10 },
+			},
 		};
 
 		const motionAdjustments = directionalAdjustments[motion_type] || {};

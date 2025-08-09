@@ -1,6 +1,6 @@
 /**
  * Quiz Session Service
- * 
+ *
  * Manages quiz sessions, progress tracking, and session state.
  * Handles both fixed question and countdown quiz modes.
  */
@@ -130,7 +130,7 @@ export class QuizSessionService {
 
 		// Calculate results
 		const results = this.calculateResults(session);
-		
+
 		// Clean up session
 		this.activeSessions.delete(sessionId);
 
@@ -142,12 +142,12 @@ export class QuizSessionService {
 	 */
 	private static calculateResults(session: QuizSession): LessonResults {
 		const completionTime = (new Date().getTime() - session.startTime.getTime()) / 1000;
-		const accuracyPercentage = session.questionsAnswered > 0 
-			? (session.correctAnswers / session.questionsAnswered) * 100 
-			: 0;
-		const averageTimePerQuestion = session.questionsAnswered > 0 
-			? completionTime / session.questionsAnswered 
-			: 0;
+		const accuracyPercentage =
+			session.questionsAnswered > 0
+				? (session.correctAnswers / session.questionsAnswered) * 100
+				: 0;
+		const averageTimePerQuestion =
+			session.questionsAnswered > 0 ? completionTime / session.questionsAnswered : 0;
 
 		return {
 			sessionId: session.sessionId,
@@ -307,7 +307,7 @@ export class QuizSessionService {
 		const activeSessions = this.activeSessions.size;
 		// Note: We don't track completed sessions in this simple implementation
 		// In a real app, you'd want to persist this data
-		
+
 		return {
 			totalSessions: activeSessions, // This would be total from database
 			activeSessions,

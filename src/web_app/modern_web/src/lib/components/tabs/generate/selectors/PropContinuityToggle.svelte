@@ -24,10 +24,10 @@ Simple toggle between random and continuous prop behavior.
 	function handleToggleChange(event: CustomEvent) {
 		const isChecked = event.detail.checked;
 		currentValue = isChecked ? 'CONTINUOUS' : 'RANDOM';
-		
+
 		// Dispatch value change
-		const changeEvent = new CustomEvent('valueChanged', { 
-			detail: { value: currentValue } 
+		const changeEvent = new CustomEvent('valueChanged', {
+			detail: { value: currentValue },
 		});
 		document.dispatchEvent(changeEvent);
 	}
@@ -37,9 +37,9 @@ Simple toggle between random and continuous prop behavior.
 		if (currentValue !== 'RANDOM') {
 			currentValue = 'RANDOM';
 			toggleRef?.setChecked(false);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentValue } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentValue },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -49,9 +49,9 @@ Simple toggle between random and continuous prop behavior.
 		if (currentValue !== 'CONTINUOUS') {
 			currentValue = 'CONTINUOUS';
 			toggleRef?.setChecked(true);
-			
-			const changeEvent = new CustomEvent('valueChanged', { 
-				detail: { value: currentValue } 
+
+			const changeEvent = new CustomEvent('valueChanged', {
+				detail: { value: currentValue },
 			});
 			document.dispatchEvent(changeEvent);
 		}
@@ -70,18 +70,18 @@ Simple toggle between random and continuous prop behavior.
 
 <div class="prop-continuity-toggle">
 	<div class="header-label">Prop Continuity:</div>
-	
+
 	<div class="control-layout">
-		<button 
-			class="mode-label" 
+		<button
+			class="mode-label"
 			class:active={!isContinuous}
 			onclick={selectRandom}
 			type="button"
 		>
 			Random
 		</button>
-		
-		<PyToggle 
+
+		<PyToggle
 			bind:this={toggleRef}
 			checked={isContinuous}
 			width={60}
@@ -90,9 +90,9 @@ Simple toggle between random and continuous prop behavior.
 			circleColor="#DDD"
 			onstateChanged={handleToggleChange}
 		/>
-		
-		<button 
-			class="mode-label" 
+
+		<button
+			class="mode-label"
 			class:active={isContinuous}
 			onclick={selectContinuous}
 			type="button"

@@ -26,10 +26,9 @@
 		try {
 			isExportingCurrent = true;
 			dispatch('exportCurrent');
-			
+
 			// Simulate export process (replace with actual export logic)
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 		} catch (error) {
 			console.error('Export current failed:', error);
 		} finally {
@@ -44,10 +43,9 @@
 		try {
 			isExportingAll = true;
 			dispatch('exportAll');
-			
+
 			// Simulate export process (replace with actual export logic)
-			await new Promise(resolve => setTimeout(resolve, 1500));
-			
+			await new Promise((resolve) => setTimeout(resolve, 1500));
 		} catch (error) {
 			console.error('Export all failed:', error);
 		} finally {
@@ -60,7 +58,7 @@
 		if (!currentSequence) return null;
 		return {
 			name: currentSequence.name || 'Untitled Sequence',
-			beatCount: currentSequence.beats?.length || 0
+			beatCount: currentSequence.beats?.length || 0,
 		};
 	});
 </script>
@@ -316,8 +314,12 @@
 	}
 
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	/* Responsive adjustments */

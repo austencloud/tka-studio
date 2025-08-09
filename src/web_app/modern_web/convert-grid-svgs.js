@@ -11,36 +11,36 @@ import { join } from 'path';
 
 // Use puppeteer to convert SVG to PNG
 async function convertSvgToPng() {
-    try {
-        // Dynamic import for ES modules
-        const puppeteer = await import('puppeteer');
+	try {
+		// Dynamic import for ES modules
+		const puppeteer = await import('puppeteer');
 
-        const browser = await puppeteer.default.launch();
-        const page = await browser.newPage();
+		const browser = await puppeteer.default.launch();
+		const page = await browser.newPage();
 
-        // Set viewport to consistent size (same as position images)
-        await page.setViewport({ width: 400, height: 400 });
+		// Set viewport to consistent size (same as position images)
+		await page.setViewport({ width: 400, height: 400 });
 
-        const gridTypes = ['diamond', 'box', 'skewed'];
-        const gridDir = './static/images/grid/';
-        const outputDir = './static/images/grid_images/';
+		const gridTypes = ['diamond', 'box', 'skewed'];
+		const gridDir = './static/images/grid/';
+		const outputDir = './static/images/grid_images/';
 
-        // Create output directory if it doesn't exist
-        if (!existsSync(outputDir)) {
-            mkdirSync(outputDir, { recursive: true });
-        }
+		// Create output directory if it doesn't exist
+		if (!existsSync(outputDir)) {
+			mkdirSync(outputDir, { recursive: true });
+		}
 
-        for (const gridType of gridTypes) {
-            const svgPath = join(gridDir, `${gridType}_grid.svg`);
+		for (const gridType of gridTypes) {
+			const svgPath = join(gridDir, `${gridType}_grid.svg`);
 
-            if (existsSync(svgPath)) {
-                console.log(`Converting ${gridType}_grid.svg to PNG...`);
+			if (existsSync(svgPath)) {
+				console.log(`Converting ${gridType}_grid.svg to PNG...`);
 
-                // Read SVG content
-                const svgContent = readFileSync(svgPath, 'utf8');
+				// Read SVG content
+				const svgContent = readFileSync(svgPath, 'utf8');
 
-                // Create HTML with SVG
-                const html = `
+				// Create HTML with SVG
+				const html = `
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -69,32 +69,31 @@ async function convertSvgToPng() {
                     </html>
                 `;
 
-                // Load HTML and capture screenshot
-                await page.setContent(html);
-                await page.waitForTimeout(100); // Wait for render
+				// Load HTML and capture screenshot
+				await page.setContent(html);
+				await page.waitForTimeout(100); // Wait for render
 
-                const screenshot = await page.screenshot({
-                    type: 'png',
-                    clip: { x: 0, y: 0, width: 400, height: 400 }
-                });
+				const screenshot = await page.screenshot({
+					type: 'png',
+					clip: { x: 0, y: 0, width: 400, height: 400 },
+				});
 
-                // Save PNG file
-                const outputPath = join(outputDir, `${gridType}.png`);
-                writeFileSync(outputPath, screenshot);
+				// Save PNG file
+				const outputPath = join(outputDir, `${gridType}.png`);
+				writeFileSync(outputPath, screenshot);
 
-                console.log(`✅ Created ${outputPath}`);
-            } else {
-                console.warn(`⚠️  SVG file not found: ${svgPath}`);
-            }
-        }
+				console.log(`✅ Created ${outputPath}`);
+			} else {
+				console.warn(`⚠️  SVG file not found: ${svgPath}`);
+			}
+		}
 
-        await browser.close();
-        console.log('🎉 Grid SVG to PNG conversion complete!');
-
-    } catch (error) {
-        console.error('❌ Error converting SVGs:', error);
-        process.exit(1);
-    }
+		await browser.close();
+		console.log('🎉 Grid SVG to PNG conversion complete!');
+	} catch (error) {
+		console.error('❌ Error converting SVGs:', error);
+		process.exit(1);
+	}
 }
 
 // Run the conversion

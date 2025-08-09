@@ -12,10 +12,7 @@
 		columnCount?: number;
 	}
 
-	let {
-		selectedLength = 16,
-		columnCount = 2
-	}: Props = $props();
+	let { selectedLength = 16, columnCount = 2 }: Props = $props();
 
 	// Length options matching desktop app exactly
 	const lengthOptions = [
@@ -28,7 +25,7 @@
 		{ value: 8, label: '8' },
 		{ value: 10, label: '10' },
 		{ value: 12, label: '12' },
-		{ value: 16, label: '16' }
+		{ value: 16, label: '16' },
 	];
 
 	// Column count options
@@ -62,7 +59,9 @@
 					class="length-button"
 					class:selected={selectedLength === option.value}
 					onclick={() => handleLengthClick(option.value)}
-					title="Show sequences with {option.value === 0 ? 'any length' : `${option.value} beats`}"
+					title="Show sequences with {option.value === 0
+						? 'any length'
+						: `${option.value} beats`}"
 				>
 					{option.label}
 				</button>
@@ -72,9 +71,7 @@
 
 	<!-- Column Selector -->
 	<div class="column-selector">
-		<label class="column-label" for="column-select">
-			Preview Columns:
-		</label>
+		<label class="column-label" for="column-select"> Preview Columns: </label>
 		<select
 			id="column-select"
 			class="column-select"
@@ -90,9 +87,7 @@
 
 <style>
 	.sequence-card-navigation {
-		background: linear-gradient(to bottom, 
-			rgba(71, 85, 105, 0.4), 
-			rgba(51, 65, 85, 0.6));
+		background: linear-gradient(to bottom, rgba(71, 85, 105, 0.4), rgba(51, 65, 85, 0.6));
 		border-radius: 12px;
 		border: 1px solid rgba(100, 116, 139, 0.3);
 		padding: 12px;
@@ -104,9 +99,7 @@
 
 	/* Sidebar Header */
 	.sidebar-header {
-		background: linear-gradient(to bottom, 
-			rgba(71, 85, 105, 0.5), 
-			rgba(51, 65, 85, 0.7));
+		background: linear-gradient(to bottom, rgba(71, 85, 105, 0.5), rgba(51, 65, 85, 0.7));
 		border-radius: 10px;
 		border: 1px solid rgba(100, 116, 139, 0.4);
 		padding: 16px;
@@ -144,9 +137,7 @@
 	}
 
 	.length-button {
-		background: linear-gradient(to bottom, 
-			rgba(71, 85, 105, 0.3), 
-			rgba(51, 65, 85, 0.5));
+		background: linear-gradient(to bottom, rgba(71, 85, 105, 0.3), rgba(51, 65, 85, 0.5));
 		border: 1px solid rgba(100, 116, 139, 0.4);
 		border-radius: 10px;
 		padding: 10px 14px;
@@ -160,9 +151,7 @@
 	}
 
 	.length-button:hover {
-		background: linear-gradient(to bottom, 
-			rgba(100, 116, 139, 0.4), 
-			rgba(71, 85, 105, 0.6));
+		background: linear-gradient(to bottom, rgba(100, 116, 139, 0.4), rgba(71, 85, 105, 0.6));
 		border: 1px solid rgba(148, 163, 184, 0.5);
 		transform: translateY(-1px);
 	}

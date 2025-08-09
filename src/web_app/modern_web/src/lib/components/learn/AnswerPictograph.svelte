@@ -27,15 +27,15 @@
 	// Methods
 	function getCardClass(): string {
 		let classes = ['answer-pictograph'];
-		
+
 		if (disabled) {
 			classes.push('disabled');
 		}
-		
+
 		if (isSelected) {
 			classes.push('selected');
 		}
-		
+
 		if (showFeedback) {
 			if (isCorrect) {
 				classes.push('correct');
@@ -45,7 +45,7 @@
 				classes.push('faded');
 			}
 		}
-		
+
 		return classes.join(' ');
 	}
 
@@ -56,25 +56,17 @@
 	}
 </script>
 
-<button 
-	class={cardClass}
-	on:click={handleClick}
-	{disabled}
-	type="button"
->
+<button class={cardClass} on:click={handleClick} {disabled} type="button">
 	<div class="pictograph-container">
-		<PictographRenderer 
-			{pictographData} 
-			size="medium"
-		/>
+		<PictographRenderer {pictographData} size="medium" />
 	</div>
-	
+
 	{#if pictographData?.letter}
 		<div class="letter-label">
 			{pictographData.letter}
 		</div>
 	{/if}
-	
+
 	{#if showFeedback && isCorrect}
 		<div class="feedback-overlay correct">
 			<span class="feedback-icon">✓</span>
@@ -113,12 +105,7 @@
 		left: -100%;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(
-			90deg,
-			transparent,
-			rgba(255, 255, 255, 0.1),
-			transparent
-		);
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 		transition: left 0.5s ease;
 		z-index: 1;
 	}
@@ -232,7 +219,8 @@
 	}
 
 	@keyframes correctPulse {
-		0%, 100% {
+		0%,
+		100% {
 			transform: scale(1) translateY(-2px);
 		}
 		50% {
@@ -241,7 +229,8 @@
 	}
 
 	@keyframes incorrectShake {
-		0%, 100% {
+		0%,
+		100% {
 			transform: translateX(0) translateY(-2px);
 		}
 		25% {

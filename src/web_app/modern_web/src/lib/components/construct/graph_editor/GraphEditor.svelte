@@ -43,27 +43,27 @@ in stack widgets. Features a modern UI with pictograph display and dual adjustme
 	// Event handlers
 	function onPictographUpdated(beatIndex: number, beatData: BeatData) {
 		console.log('📸 [GRAPH_EDITOR] Pictograph updated for beat:', beatIndex);
-		
+
 		// Emit custom event for parent to handle
 		const event = new CustomEvent('beatModified', {
-			detail: { beatIndex, beatData }
+			detail: { beatIndex, beatData },
 		});
 		document.dispatchEvent(event);
 	}
 
 	function onOrientationChanged(color: string, orientation: any) {
 		console.log('🧭 [GRAPH_EDITOR] Orientation changed:', color, orientation);
-		
+
 		// Create orientation data for compatibility
 		const orientationData = {
 			color,
 			orientation: orientation,
-			type: 'orientation_change'
+			type: 'orientation_change',
 		};
 
 		// Emit custom event
 		const event = new CustomEvent('arrowSelected', {
-			detail: orientationData
+			detail: orientationData,
 		});
 		document.dispatchEvent(event);
 
@@ -75,31 +75,31 @@ in stack widgets. Features a modern UI with pictograph display and dual adjustme
 
 	function onTurnAmountChanged(color: string, turnAmount: number) {
 		console.log('🔄 [GRAPH_EDITOR] Turn amount changed:', color, turnAmount);
-		
+
 		const turnData = {
 			color,
 			turn_amount: turnAmount,
-			type: 'turn_change'
+			type: 'turn_change',
 		};
 
 		// Emit custom event
 		const event = new CustomEvent('arrowSelected', {
-			detail: turnData
+			detail: turnData,
 		});
 		document.dispatchEvent(event);
 	}
 
 	function onBeatDataUpdated(beatData: BeatData) {
 		console.log('📊 [GRAPH_EDITOR] Beat data updated:', beatData);
-		
+
 		selectedBeatData = beatData;
-		
+
 		// Emit custom event
 		const event = new CustomEvent('beatModified', {
-			detail: { 
-				beatIndex: selectedBeatIndex || 0, 
-				beatData 
-			}
+			detail: {
+				beatIndex: selectedBeatIndex || 0,
+				beatData,
+			},
 		});
 		document.dispatchEvent(event);
 	}
@@ -150,25 +150,19 @@ in stack widgets. Features a modern UI with pictograph display and dual adjustme
 	}
 </script>
 
-<div 
-	class="graph-editor"
-	style="width: {workbenchWidth}px; height: 300px;"
->
+<div class="graph-editor" style="width: {workbenchWidth}px; height: 300px;">
 	<!-- Pictograph Display Section (top 65%) -->
 	<div class="pictograph-section">
-		<PictographDisplaySection 
-			bind:this={pictographDisplayRef}
-			onPictographUpdated={onPictographUpdated}
-		/>
+		<PictographDisplaySection bind:this={pictographDisplayRef} {onPictographUpdated} />
 	</div>
 
 	<!-- Main Adjustment Panel (bottom 35%) -->
 	<div class="adjustment-section">
-		<MainAdjustmentPanel 
+		<MainAdjustmentPanel
 			bind:this={adjustmentPanelRef}
-			onOrientationChanged={onOrientationChanged}
-			onTurnAmountChanged={onTurnAmountChanged}
-			onBeatDataUpdated={onBeatDataUpdated}
+			{onOrientationChanged}
+			{onTurnAmountChanged}
+			{onBeatDataUpdated}
 		/>
 	</div>
 </div>
@@ -204,11 +198,11 @@ in stack widgets. Features a modern UI with pictograph display and dual adjustme
 			height: auto;
 			min-height: 400px;
 		}
-		
+
 		.pictograph-section {
 			flex: 60;
 		}
-		
+
 		.adjustment-section {
 			flex: 40;
 		}

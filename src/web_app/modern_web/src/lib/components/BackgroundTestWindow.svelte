@@ -76,7 +76,9 @@
 					backgroundType={currentBackground}
 					quality={currentQuality}
 					onReady={() =>
-						console.log(`🌌 Background ${currentBackground} ready with quality ${currentQuality}!`)}
+						console.log(
+							`🌌 Background ${currentBackground} ready with quality ${currentQuality}!`
+						)}
 				/>
 			{/key}
 		{/if}
@@ -92,7 +94,11 @@
 				<!-- Background Type Selector -->
 				<div class="control-group">
 					<label for="background-select">Background Type:</label>
-					<select id="background-select" bind:value={currentBackground} class="select-input">
+					<select
+						id="background-select"
+						bind:value={currentBackground}
+						class="select-input"
+					>
 						{#each backgroundOptions as option}
 							<option value={option.value}>{option.label}</option>
 						{/each}

@@ -1,6 +1,6 @@
 /**
  * Orientation Calculation Service
- * 
+ *
  * Implements the motion orientation calculation logic from legacy and modern desktop apps.
  * Calculates end orientation based on motion type, turns, start orientation, and prop rotation direction.
  */
@@ -9,7 +9,6 @@ import { Orientation, MotionType, RotationDirection } from '$lib/domain/enums';
 import type { MotionData } from '$lib/domain/MotionData';
 
 export class OrientationCalculationService {
-	
 	/**
 	 * Calculate end orientation for a motion based on motion type, turns, and start orientation
 	 */
@@ -53,7 +52,7 @@ export class OrientationCalculationService {
 			[Orientation.IN]: Orientation.OUT,
 			[Orientation.OUT]: Orientation.IN,
 			[Orientation.CLOCK]: Orientation.COUNTER,
-			[Orientation.COUNTER]: Orientation.CLOCK
+			[Orientation.COUNTER]: Orientation.CLOCK,
 		};
 		return orientationMap[orientation] || orientation;
 	}
@@ -73,7 +72,7 @@ export class OrientationCalculationService {
 			// ANTI/DASH: even turns switch orientation, odd turns keep
 			return turns % 2 === 0 ? this.switchOrientation(startOri) : startOri;
 		}
-		
+
 		return startOri;
 	}
 
@@ -87,32 +86,46 @@ export class OrientationCalculationService {
 		propRotDir: RotationDirection
 	): Orientation {
 		// Convert prop rotation direction to string for mapping
-		const rotDir = propRotDir === RotationDirection.CLOCKWISE ? 'cw' : 
-					   propRotDir === RotationDirection.COUNTER_CLOCKWISE ? 'ccw' : 'cw';
+		const rotDir =
+			propRotDir === RotationDirection.CLOCKWISE
+				? 'cw'
+				: propRotDir === RotationDirection.COUNTER_CLOCKWISE
+					? 'ccw'
+					: 'cw';
 
 		let orientationMap: Record<string, Orientation>;
 
 		if (motionType === MotionType.ANTI || motionType === MotionType.DASH) {
 			orientationMap = {
-				[`${Orientation.IN}_cw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-				[`${Orientation.IN}_ccw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-				[`${Orientation.OUT}_cw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-				[`${Orientation.OUT}_ccw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+				[`${Orientation.IN}_cw`]:
+					turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+				[`${Orientation.IN}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+				[`${Orientation.OUT}_cw`]:
+					turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+				[`${Orientation.OUT}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
 				[`${Orientation.CLOCK}_cw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
 				[`${Orientation.CLOCK}_ccw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
 				[`${Orientation.COUNTER}_cw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
-				[`${Orientation.COUNTER}_ccw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
+				[`${Orientation.COUNTER}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
 			};
 		} else if (motionType === MotionType.PRO || motionType === MotionType.STATIC) {
 			orientationMap = {
-				[`${Orientation.IN}_cw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-				[`${Orientation.IN}_ccw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-				[`${Orientation.OUT}_cw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-				[`${Orientation.OUT}_ccw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+				[`${Orientation.IN}_cw`]:
+					turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+				[`${Orientation.IN}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+				[`${Orientation.OUT}_cw`]:
+					turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+				[`${Orientation.OUT}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
 				[`${Orientation.CLOCK}_cw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
 				[`${Orientation.CLOCK}_ccw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
 				[`${Orientation.COUNTER}_cw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
-				[`${Orientation.COUNTER}_ccw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
+				[`${Orientation.COUNTER}_ccw`]:
+					turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
 			};
 		} else {
 			return startOri;
@@ -155,7 +168,7 @@ export class OrientationCalculationService {
 			end_ori: startOri, // Will be calculated
 			is_visible: true,
 			prefloat_motion_type: null,
-			prefloat_prop_rot_dir: null
+			prefloat_prop_rot_dir: null,
 		};
 
 		// Calculate and set the proper end orientation

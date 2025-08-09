@@ -9,11 +9,7 @@
 		onRetryLesson?: () => void;
 	}
 
-	let { 
-		results = null,
-		onBackToSelector,
-		onRetryLesson
-	}: Props = $props();
+	let { results = null, onBackToSelector, onRetryLesson }: Props = $props();
 
 	// Handle navigation
 	function handleBackClick() {
@@ -27,7 +23,7 @@
 	// Get lesson display name
 	function getLessonDisplayName(results: LessonResults | null): string {
 		if (!results) return 'Unknown Lesson';
-		
+
 		switch (results.lessonType) {
 			case 'pictograph_to_letter':
 				return 'Lesson 1: Pictograph to Letter';
@@ -43,7 +39,7 @@
 	// Get quiz mode display name
 	function getQuizModeDisplayName(results: LessonResults | null): string {
 		if (!results) return 'Unknown Mode';
-		
+
 		switch (results.quizMode) {
 			case 'fixed_question':
 				return 'Fixed Questions';
@@ -62,7 +58,11 @@
 	}
 
 	// Get performance grade
-	function getPerformanceGrade(accuracy: number): { grade: string; color: string; message: string } {
+	function getPerformanceGrade(accuracy: number): {
+		grade: string;
+		color: string;
+		message: string;
+	} {
 		if (accuracy >= 90) return { grade: 'A', color: '#10b981', message: 'Excellent!' };
 		if (accuracy >= 80) return { grade: 'B', color: '#3b82f6', message: 'Great job!' };
 		if (accuracy >= 70) return { grade: 'C', color: '#f59e0b', message: 'Good work!' };
@@ -77,14 +77,14 @@
 
 		if (accuracy >= 90) {
 			if (avgTime < 3) {
-				return 'Outstanding! You\'re both accurate and fast.';
+				return "Outstanding! You're both accurate and fast.";
 			} else {
 				return 'Excellent accuracy! You really understand this lesson.';
 			}
 		} else if (accuracy >= 70) {
 			return 'Good progress! Keep practicing to improve your speed and accuracy.';
 		} else {
-			return 'Don\'t give up! Review the lesson materials and try again.';
+			return "Don't give up! Review the lesson materials and try again.";
 		}
 	}
 
@@ -115,9 +115,7 @@
 <div class="lesson-results">
 	<!-- Header -->
 	<div class="results-header glass-surface">
-		<button class="back-button btn-glass" onclick={handleBackClick}>
-			← Back to Lessons
-		</button>
+		<button class="back-button btn-glass" onclick={handleBackClick}> ← Back to Lessons </button>
 		<div class="lesson-info">
 			<h2 class="lesson-title">Lesson Complete!</h2>
 			<p class="lesson-subtitle">{getLessonDisplayName(results)}</p>
@@ -130,15 +128,26 @@
 			<!-- Actual Results -->
 			<div class="results-card glass-surface">
 				<div class="performance-summary">
-					<div class="grade-circle" style="border-color: {getPerformanceGrade(results.accuracyPercentage).color}">
-						<span class="grade-letter" style="color: {getPerformanceGrade(results.accuracyPercentage).color}">
+					<div
+						class="grade-circle"
+						style="border-color: {getPerformanceGrade(results.accuracyPercentage)
+							.color}"
+					>
+						<span
+							class="grade-letter"
+							style="color: {getPerformanceGrade(results.accuracyPercentage).color}"
+						>
 							{getPerformanceGrade(results.accuracyPercentage).grade}
 						</span>
 					</div>
 					<div class="accuracy-text">
-						<span class="accuracy-percentage">{results.accuracyPercentage.toFixed(1)}%</span>
+						<span class="accuracy-percentage"
+							>{results.accuracyPercentage.toFixed(1)}%</span
+						>
 						<span class="accuracy-label">Accuracy</span>
-						<span class="performance-message">{getPerformanceGrade(results.accuracyPercentage).message}</span>
+						<span class="performance-message"
+							>{getPerformanceGrade(results.accuracyPercentage).message}</span
+						>
 					</div>
 				</div>
 
@@ -273,7 +282,8 @@
 		gap: var(--spacing-xl);
 	}
 
-	.results-card, .placeholder-results {
+	.results-card,
+	.placeholder-results {
 		padding: var(--spacing-2xl);
 		border-radius: 16px;
 		max-width: 600px;
@@ -470,7 +480,8 @@
 		flex-wrap: wrap;
 	}
 
-	.retry-button, .new-lesson-button {
+	.retry-button,
+	.new-lesson-button {
 		padding: var(--spacing-md) var(--spacing-lg);
 		border-radius: 12px;
 		font-weight: 500;
@@ -519,7 +530,8 @@
 			padding: var(--spacing-sm);
 		}
 
-		.results-card, .placeholder-results {
+		.results-card,
+		.placeholder-results {
 			padding: var(--spacing-lg);
 		}
 
@@ -527,7 +539,8 @@
 			flex-direction: column;
 		}
 
-		.retry-button, .new-lesson-button {
+		.retry-button,
+		.new-lesson-button {
 			min-width: auto;
 		}
 	}

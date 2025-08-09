@@ -69,7 +69,8 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.include_start_position}
-					onchange={(e) => handleCheckboxChange('include_start_position', e.target.checked)}
+					onchange={(e) =>
+						handleCheckboxChange('include_start_position', e.target.checked)}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Include Start Position</span>
@@ -119,7 +120,8 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.use_last_save_directory}
-					onchange={(e) => handleCheckboxChange('use_last_save_directory', e.target.checked)}
+					onchange={(e) =>
+						handleCheckboxChange('use_last_save_directory', e.target.checked)}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Use Last Save Directory</span>

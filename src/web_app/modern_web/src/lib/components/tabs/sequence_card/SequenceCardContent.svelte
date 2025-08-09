@@ -15,7 +15,7 @@
 		sequences = [],
 		columnCount = 2,
 		isLoading = false,
-		selectedLength = 16
+		selectedLength = 16,
 	}: Props = $props();
 
 	let contentElement: HTMLElement;
@@ -33,7 +33,7 @@
 		if (sequences.length > 0 && !isLoading) {
 			loadedCardIds.clear();
 			loadingProgress = 0;
-			
+
 			// Simulate progressive loading
 			sequences.forEach((sequence, index) => {
 				setTimeout(() => {
@@ -86,7 +86,7 @@
 					{#if selectedLength === 0}
 						No sequences are available in your library.
 					{:else}
-						No sequences found with {selectedLength} beats.<br>
+						No sequences found with {selectedLength} beats.<br />
 						Try selecting a different length or "All" to see available sequences.
 					{/if}
 				</p>
@@ -101,15 +101,14 @@
 					<div class="progress-bar">
 						<div class="progress-fill" style:width="{loadingProgress}%"></div>
 					</div>
-					<span class="progress-text">Loading cards... {Math.round(loadingProgress)}%</span>
+					<span class="progress-text"
+						>Loading cards... {Math.round(loadingProgress)}%</span
+					>
 				</div>
 			{/if}
 
 			<!-- Cards Grid -->
-			<div 
-				class="cards-grid" 
-				style:grid-template-columns={gridColumns}
-			>
+			<div class="cards-grid" style:grid-template-columns={gridColumns}>
 				{#each sequences as sequence, index (sequence.id || sequence.name || index)}
 					<div class="card-slot">
 						{#if loadedCardIds.has(sequence.id || sequence.name || `${index}`)}
@@ -269,7 +268,7 @@
 
 	/* Card Placeholder */
 	.card-placeholder {
-		background: var(--muted)/20;
+		background: var(--muted) / 20;
 		border: 2px dashed var(--border);
 		border-radius: 12px;
 		padding: 40px 20px;
@@ -332,8 +331,12 @@
 
 	/* Animations */
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	/* Responsive Design */

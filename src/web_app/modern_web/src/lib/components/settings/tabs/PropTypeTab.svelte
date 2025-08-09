@@ -24,7 +24,7 @@
 		{ id: 'Chicken', label: 'Chicken', image: '/images/props/chicken.png' },
 		{ id: 'Hand', label: 'Hand', image: '/images/props/hand.svg' },
 		{ id: 'Guitar', label: 'Guitar', image: '/images/props/guitar.svg' },
-		{ id: 'Ukulele', label: 'Ukulele', image: '/images/props/ukulele.svg' }
+		{ id: 'Ukulele', label: 'Ukulele', image: '/images/props/ukulele.svg' },
 	];
 
 	let selectedPropType = $state(settings.propType || 'Staff');
@@ -36,24 +36,16 @@
 </script>
 
 <div class="tab-content">
-	<SettingCard 
-		title="Select Prop Type" 
-		description="Choose your primary prop type for sequences"
-	>
+	<SettingCard title="Select Prop Type" description="Choose your primary prop type for sequences">
 		<div class="prop-grid">
 			{#each propTypes as prop}
-				<button 
+				<button
 					class="prop-button"
 					class:selected={selectedPropType === prop.id}
 					onclick={() => selectPropType(prop.id)}
 				>
 					<div class="prop-image-container">
-						<img 
-							src={prop.image} 
-							alt={prop.label} 
-							class="prop-image"
-							loading="lazy"
-						/>
+						<img src={prop.image} alt={prop.label} class="prop-image" loading="lazy" />
 					</div>
 					<span class="prop-label">{prop.label}</span>
 				</button>
@@ -141,17 +133,17 @@
 			grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
 			gap: var(--spacing-xs);
 		}
-		
+
 		.prop-button {
 			padding: var(--spacing-xs);
 			min-height: 70px;
 		}
-		
+
 		.prop-image-container {
 			width: 30px;
 			height: 30px;
 		}
-		
+
 		.prop-label {
 			font-size: var(--font-size-xs);
 		}
