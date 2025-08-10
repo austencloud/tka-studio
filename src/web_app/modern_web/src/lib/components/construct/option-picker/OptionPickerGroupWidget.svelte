@@ -39,12 +39,12 @@ Matches the desktop version exactly:
 <div class="group-widget">
 	<div class="horizontal-layout">
 		{#each groupableTypes as letterType (letterType)}
-			<div class="section-container" style:width="{sectionWidth}px">
+			<div class="section-container" style:width="{sectionWidth()}px">
 				<OptionPickerSection
 					{letterType}
 					{pictographs}
 					{onPictographSelected}
-					containerWidth={sectionWidth}
+					containerWidth={sectionWidth()}
 				/>
 			</div>
 		{/each}

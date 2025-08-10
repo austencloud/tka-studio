@@ -69,8 +69,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.include_start_position}
-					onchange={(e) =>
-						handleCheckboxChange('include_start_position', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('include_start_position', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Include Start Position</span>
@@ -80,7 +84,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.add_beat_numbers}
-					onchange={(e) => handleCheckboxChange('add_beat_numbers', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('add_beat_numbers', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Add Beat Numbers</span>
@@ -90,7 +99,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.add_reversal_symbols}
-					onchange={(e) => handleCheckboxChange('add_reversal_symbols', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('add_reversal_symbols', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Add Reversal Symbols</span>
@@ -100,7 +114,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.add_user_info}
-					onchange={(e) => handleCheckboxChange('add_user_info', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('add_user_info', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Add User Info</span>
@@ -110,7 +129,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.add_word}
-					onchange={(e) => handleCheckboxChange('add_word', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('add_word', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Add Word</span>
@@ -120,8 +144,12 @@
 				<input
 					type="checkbox"
 					checked={exportSettings.use_last_save_directory}
-					onchange={(e) =>
-						handleCheckboxChange('use_last_save_directory', e.target.checked)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLInputElement) {
+							handleCheckboxChange('use_last_save_directory', target.checked);
+						}
+					}}
 				/>
 				<span class="checkmark"></span>
 				<span class="option-label">Use Last Save Directory</span>
@@ -139,7 +167,12 @@
 					id="export-format"
 					class="modern-select"
 					value={exportSettings.export_format}
-					onchange={(e) => handleSelectChange('export_format', e.target.value)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLSelectElement) {
+							handleSelectChange('export_format', target.value);
+						}
+					}}
 				>
 					{#each formatOptions as option}
 						<option value={option.value}>{option.label}</option>
@@ -153,7 +186,12 @@
 					id="export-quality"
 					class="modern-select"
 					value={exportSettings.export_quality}
-					onchange={(e) => handleSelectChange('export_quality', e.target.value)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLSelectElement) {
+							handleSelectChange('export_quality', target.value);
+						}
+					}}
 				>
 					{#each qualityOptions as option}
 						<option value={option.value}>{option.label}</option>
@@ -173,7 +211,12 @@
 					id="user-name"
 					class="modern-select"
 					value={exportSettings.user_name}
-					onchange={(e) => handleSelectChange('user_name', e.target.value)}
+					onchange={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLSelectElement) {
+							handleSelectChange('user_name', target.value);
+						}
+					}}
 				>
 					{#each userOptions as option}
 						<option value={option.value}>{option.label}</option>
@@ -189,7 +232,12 @@
 					value={exportSettings.custom_note}
 					placeholder="Add a custom note to your export..."
 					rows="3"
-					oninput={(e) => handleTextChange('custom_note', e.target.value)}
+					oninput={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLTextAreaElement) {
+							handleTextChange('custom_note', target.value);
+						}
+					}}
 				></textarea>
 			</div>
 		</div>

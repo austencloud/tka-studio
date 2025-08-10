@@ -10,6 +10,7 @@ Refactored from the large GeneratePanel.svelte with simple extracted responsibil
 <script lang="ts">
 	import { resolve } from '$services/bootstrap';
 	import { onMount } from 'svelte';
+	import type { IDeviceDetectionService } from '$services/interfaces';
 	// Import selector components
 	import CAPTypeSelector from '../../tabs/generate/selectors/CAPTypeSelector.svelte';
 	import GenerationModeToggle from '../../tabs/generate/selectors/GenerationModeToggle.svelte';
@@ -33,10 +34,11 @@ Refactored from the large GeneratePanel.svelte with simple extracted responsibil
 	// ===== Device Service Integration =====
 	onMount(() => {
 		try {
-			const deviceService = resolve('IDeviceDetectionService');
+			const deviceService = resolve<IDeviceDetectionService>('IDeviceDetectionService');
 			return deviceState.initializeDevice(deviceService);
 		} catch {
 			// Fallback handled in deviceState
+			return undefined;
 		}
 	});
 </script>

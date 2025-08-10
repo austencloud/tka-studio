@@ -11,17 +11,15 @@
  * - Special placement handling (future enhancement)
  */
 
-import type { MotionData } from '$lib/domain';
-import { GridMode } from '$lib/domain';
+import type { ArrowData, MotionData, PictographData } from '$lib/domain';
+import { ArrowType, GridMode } from '$lib/domain';
 import type {
-	ArrowData,
 	ArrowPosition,
 	GridData,
 	IArrowPositioningService,
 	Location,
 	MotionType,
 	Orientation,
-	PictographData,
 	PropRotDir,
 } from '../interfaces';
 
@@ -215,9 +213,16 @@ export class ArrowPositioningService implements IArrowPositioningService {
 			console.log(`Adjustment for ${arrowData.color}:`, adjustment);
 
 			// 3. Calculate rotation angle
-			const motion = this.getMotionForArrow(arrowData.color, pictographData);
+			const motion = this.getMotionForArrow(
+				arrowData.color as 'blue' | 'red',
+				pictographData
+			);
 			const rotation = motion
-				? this.calculateRotationAngle(motion, arrowData.location, arrowData.isMirrored)
+				? this.calculateRotationAngle(
+						motion,
+						arrowData.location as Location,
+						arrowData.is_mirrored
+					)
 				: 0;
 			console.log(`Rotation for ${arrowData.color}:`, rotation);
 
@@ -330,21 +335,21 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		pictographData: PictographData,
 		gridData: GridData
 	): { x: number; y: number } {
-		const { motionType, location } = arrow;
+		const { motion_type, location } = arrow;
 		const gridMode = this.extractGridMode(pictographData);
 
-		switch (motionType) {
+		switch (motion_type) {
 			case 'pro':
 			case 'anti':
 			case 'float':
-				return this.getShiftCoordinates(location, gridMode, gridData);
+				return this.getShiftCoordinates(location as Location, gridMode, gridData);
 
 			case 'static':
 			case 'dash':
-				return this.getStaticDashCoordinates(location, gridMode, gridData);
+				return this.getStaticDashCoordinates(location as Location, gridMode, gridData);
 
 			default:
-				console.warn(`Unknown motion type: ${motionType}, returning center`);
+				console.warn(`Unknown motion type: ${motion_type}, returning center`);
 				return { x: 475, y: 475 }; // Default center position (950x950 scene)
 		}
 	}
@@ -424,7 +429,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	): Promise<{ x: number; y: number }> {
 		try {
 			// Get motion data for this arrow
-			const motion = this.getMotionForArrow(arrow.color, pictographData);
+			const motion = this.getMotionForArrow(arrow.color as 'blue' | 'red', pictographData);
 			if (!motion) {
 				console.warn(`No motion data for ${arrow.color} arrow`);
 				return { x: 0, y: 0 };
@@ -556,14 +561,20 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		const rawTurns: unknown = (motion as any).turns;
 		return {
 			id: `${color}-arrow`,
+			arrow_type: color === 'blue' ? ArrowType.BLUE : ArrowType.RED,
 			color,
-			motionType: this.normalizeMotionType(rawType),
+			motion_type: this.normalizeMotionType(rawType),
 			location,
-			startOrientation: this.normalizeOrientation(rawStartOri),
-			endOrientation: this.normalizeOrientation(rawEndOri),
-			propRotDir: this.normalizePropRotDir(rawProp),
+			start_orientation: this.normalizeOrientation(rawStartOri),
+			end_orientation: this.normalizeOrientation(rawEndOri),
+			rotation_direction: this.normalizePropRotDir(rawProp),
 			turns: typeof rawTurns === 'number' ? rawTurns : 0,
-			isMirrored: this.shouldMirrorArrow(motion),
+			is_mirrored: this.shouldMirrorArrow(motion),
+			position_x: 0,
+			position_y: 0,
+			rotation_angle: 0,
+			is_visible: true,
+			is_selected: false,
 		};
 	}
 

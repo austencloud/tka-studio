@@ -1,7 +1,7 @@
 <!-- ExportActionsCard.svelte - Export action buttons matching desktop app -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { SequenceData } from '$services/interfaces';
+	import { createEventDispatcher } from 'svelte';
 
 	interface Props {
 		currentSequence: SequenceData | null;
@@ -70,10 +70,10 @@
 	<div class="action-section">
 		<div class="action-header">
 			<h4 class="action-title">Current Sequence</h4>
-			{#if sequenceInfo}
+			{#if sequenceInfo()}
 				<div class="sequence-info">
-					<span class="sequence-name">{sequenceInfo.name}</span>
-					<span class="beat-count">{sequenceInfo.beatCount} beats</span>
+					<span class="sequence-name">{sequenceInfo()?.name}</span>
+					<span class="beat-count">{sequenceInfo()?.beatCount} beats</span>
 				</div>
 			{:else}
 				<div class="no-sequence">

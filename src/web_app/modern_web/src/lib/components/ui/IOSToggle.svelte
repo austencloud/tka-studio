@@ -45,8 +45,10 @@ A beautiful toggle switch that follows iOS design patterns with proper interacti
 	function handleToggleClick() {
 		if (disabled) return;
 
-		const newValue = isSecondOption ? firstOption.value : secondOption.value;
-		onchange?.(newValue);
+		const newValue = isSecondOption ? firstOption?.value : secondOption?.value;
+		if (newValue !== undefined) {
+			onchange?.(newValue);
+		}
 	}
 </script>
 

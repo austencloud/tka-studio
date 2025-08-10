@@ -1,7 +1,7 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { BeatData, SequenceData } from '$services/interfaces';
+	import { onMount } from 'svelte';
 
 	// Props
 	const { selectedBeatIndex, selectedBeatData, currentSequence } = $props<{
@@ -40,19 +40,19 @@
 		const pictograph = beatData.pictograph_data;
 
 		// Extract motion information from pictograph
-		if (pictograph.blue_motion_type) {
+		if (pictograph.motions?.blue?.motion_type) {
 			motions.push({
 				color: 'Blue',
-				type: pictograph.blue_motion_type,
-				direction: pictograph.blue_prop_rot_dir || 'Unknown',
+				type: pictograph.motions.blue.motion_type,
+				direction: pictograph.motions.blue.prop_rot_dir || 'Unknown',
 			});
 		}
 
-		if (pictograph.red_motion_type) {
+		if (pictograph.motions?.red?.motion_type) {
 			motions.push({
 				color: 'Red',
-				type: pictograph.red_motion_type,
-				direction: pictograph.red_prop_rot_dir || 'Unknown',
+				type: pictograph.motions.red.motion_type,
+				direction: pictograph.motions.red.prop_rot_dir || 'Unknown',
 			});
 		}
 
@@ -65,8 +65,8 @@
 
 		return {
 			gridMode: beatData.pictograph_data.grid_mode || 'diamond',
-			blueStart: beatData.pictograph_data.blue_start_pos || 'Unknown',
-			redStart: beatData.pictograph_data.red_start_pos || 'Unknown',
+			blueStart: beatData.pictograph_data.motions?.blue?.start_loc || 'Unknown',
+			redStart: beatData.pictograph_data.motions?.red?.start_loc || 'Unknown',
 		};
 	}
 
@@ -122,7 +122,7 @@
 				{@const motions = getMotionInfo(displayBeatData)}
 				<div class="info-section">
 					<h4>Motions</h4>
-					{#each motions as motion}
+					{#each motions || [] as motion}
 						<div class="motion-info">
 							<div class="motion-header">
 								<span

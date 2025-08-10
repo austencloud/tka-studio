@@ -245,7 +245,7 @@
 			// Add more mappings as needed
 		};
 
-		const locationStr = typeof location === 'string' ? location : location?.toString() || '';
+		const locationStr = typeof location === 'string' ? location : String(location || '');
 		return locationMap[locationStr.toUpperCase()] || 'alpha1';
 	}
 

@@ -11,12 +11,13 @@ A custom perfectly round button with hover effects and dynamic styling.
 	let { symbol, disabled = false }: Props = $props();
 
 	// Handle click event
-	function handleClick() {
+	function handleClick(): CustomEvent | undefined {
 		if (!disabled) {
 			// Emit custom event that parent can listen to
 			const event = new CustomEvent('click');
 			return event;
 		}
+		return undefined;
 	}
 </script>
 

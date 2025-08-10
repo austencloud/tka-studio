@@ -49,8 +49,9 @@
 		if (!currentSequence || !currentSequence.beats || currentSequence.beats.length === 0) {
 			return 'Create a sequence to see preview';
 		}
-		if (previewInfo) {
-			return `Preview: ${previewInfo.format} • ${previewInfo.quality} • ${previewInfo.enabledOptions} options enabled`;
+		const info = previewInfo();
+		if (info) {
+			return `Preview: ${info.format} • ${info.quality} • ${info.enabledOptions} options enabled`;
 		}
 		return 'Preview ready';
 	});
@@ -112,24 +113,21 @@
 		ctx.textAlign = 'center';
 		ctx.fillText('Export Preview', canvas.width / 2, 40);
 
-		if (previewInfo) {
+		const info = previewInfo();
+		if (info) {
 			// Sequence info
 			ctx.font = '14px Arial';
-			ctx.fillText(`Sequence: ${previewInfo.sequenceName}`, canvas.width / 2, 70);
-			ctx.fillText(`Beats: ${previewInfo.beatCount}`, canvas.width / 2, 95);
+			ctx.fillText(`Sequence: ${info.sequenceName}`, canvas.width / 2, 70);
+			ctx.fillText(`Beats: ${info.beatCount}`, canvas.width / 2, 95);
 
 			// Format info
 			ctx.fillStyle = '#6366f1';
-			ctx.fillText(`Format: ${previewInfo.format}`, canvas.width / 2, 130);
-			ctx.fillText(`Quality: ${previewInfo.quality}`, canvas.width / 2, 155);
+			ctx.fillText(`Format: ${info.format}`, canvas.width / 2, 130);
+			ctx.fillText(`Quality: ${info.quality}`, canvas.width / 2, 155);
 
 			// Options info
 			ctx.fillStyle = '#10b981';
-			ctx.fillText(
-				`${previewInfo.enabledOptions} export options enabled`,
-				canvas.width / 2,
-				190
-			);
+			ctx.fillText(`${info.enabledOptions} export options enabled`, canvas.width / 2, 190);
 
 			// Sample pictograph representation
 			ctx.fillStyle = '#374151';
@@ -198,19 +196,20 @@
 			<span class="status-text">{statusMessage}</span>
 		</div>
 
-		{#if previewInfo}
+		{#if previewInfo()}
+			{@const info = previewInfo()}
 			<div class="preview-details">
 				<div class="detail-item">
 					<span class="detail-label">Sequence:</span>
-					<span class="detail-value">{previewInfo.sequenceName}</span>
+					<span class="detail-value">{info?.sequenceName}</span>
 				</div>
 				<div class="detail-item">
 					<span class="detail-label">Beats:</span>
-					<span class="detail-value">{previewInfo.beatCount}</span>
+					<span class="detail-value">{info?.beatCount}</span>
 				</div>
 				<div class="detail-item">
 					<span class="detail-label">Format:</span>
-					<span class="detail-value">{previewInfo.format}</span>
+					<span class="detail-value">{info?.format}</span>
 				</div>
 			</div>
 		{/if}

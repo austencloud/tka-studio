@@ -79,7 +79,7 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 		setPictographData(data: unknown) {
 			try {
 				errorMessage = null;
-				const modernData = ensureModernPictographData(data);
+				const modernData = ensureModernPictographData(data as Record<string, unknown>);
 
 				if (modernData) {
 					currentPictographData = modernData;

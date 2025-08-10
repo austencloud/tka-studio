@@ -3,7 +3,7 @@ Prop Component - Renders SVG props with proper positioning
 -->
 <script lang="ts">
 	import type { MotionData, PropData } from '$lib/domain';
-	import { MotionType, Orientation, RotationDirection } from '$lib/domain/enums';
+	import { Location, MotionType, Orientation, RotationDirection } from '$lib/domain/enums';
 	import { DefaultPropPositioner } from '$lib/services/DefaultPropPositioner';
 	import { PropRotAngleManager } from '$lib/services/PropRotAngleManager';
 	import { BetaOffsetCalculator } from '$lib/services/implementations/BetaOffsetCalculator';
@@ -83,8 +83,8 @@ Prop Component - Renders SVG props with proper positioning
 			const redMotion: MotionData = {
 				motion_type: MotionType.STATIC,
 				prop_rot_dir: RotationDirection.CLOCKWISE,
-				start_loc: redProp?.location || 's',
-				end_loc: redProp?.location || 's',
+				start_loc: (redProp?.location as Location) || Location.SOUTH,
+				end_loc: (redProp?.location as Location) || Location.SOUTH,
 				turns: 0,
 				start_ori: Orientation.IN,
 				end_ori: Orientation.IN,
@@ -94,8 +94,8 @@ Prop Component - Renders SVG props with proper positioning
 			const blueMotion: MotionData = {
 				motion_type: MotionType.STATIC,
 				prop_rot_dir: RotationDirection.CLOCKWISE,
-				start_loc: blueProp?.location || 's',
-				end_loc: blueProp?.location || 's',
+				start_loc: (blueProp?.location as Location) || Location.SOUTH,
+				end_loc: (blueProp?.location as Location) || Location.SOUTH,
 				turns: 0,
 				start_ori: Orientation.IN,
 				end_ori: Orientation.IN,

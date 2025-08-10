@@ -4,21 +4,7 @@
  * Just extracts the device detection logic without over-engineering
  */
 
-interface ResponsiveSettings {
-	minTouchTarget: number;
-	elementSpacing: number;
-	allowScrolling: boolean;
-	layoutDensity: string;
-	fontScaling: number;
-}
-
-interface DeviceCapabilities {
-	isMobile: boolean;
-	isTablet: boolean;
-	isDesktop: boolean;
-	hasTouch: boolean;
-	screenSize: { width: number; height: number };
-}
+import type { DeviceCapabilities, ResponsiveSettings } from '$services/interfaces';
 
 /**
  * Creates simple reactive state for device integration
@@ -44,6 +30,19 @@ export function createDeviceState() {
 
 	const elementSpacing = $derived(() => {
 		return responsiveSettings?.elementSpacing ?? 16;
+	});
+
+	// Compatibility properties for older code
+	const isMobile = $derived(() => {
+		return deviceCapabilities?.screenSize === 'mobile';
+	});
+
+	const isTablet = $derived(() => {
+		return deviceCapabilities?.screenSize === 'tablet';
+	});
+
+	const isDesktop = $derived(() => {
+		return deviceCapabilities?.screenSize === 'desktop';
 	});
 
 	// Simple initialization function (matches your original onMount logic)
@@ -76,6 +75,8 @@ export function createDeviceState() {
 				layoutDensity: 'comfortable',
 				fontScaling: 1.0,
 			} as ResponsiveSettings;
+			// Return empty cleanup function for fallback
+			return () => {};
 		}
 	}
 
@@ -100,6 +101,17 @@ export function createDeviceState() {
 		},
 		get elementSpacing() {
 			return elementSpacing;
+		},
+		
+		// Compatibility properties
+		get isMobile() {
+			return isMobile;
+		},
+		get isTablet() {
+			return isTablet;
+		},
+		get isDesktop() {
+			return isDesktop;
 		},
 
 		// Actions

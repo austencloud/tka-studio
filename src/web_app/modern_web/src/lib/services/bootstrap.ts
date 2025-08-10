@@ -55,7 +55,11 @@ import { StartPositionService } from './implementations/StartPositionService';
 // Create ServiceInterface objects for DI container
 const ISequenceServiceInterface = createServiceInterface<ISequenceService>(
 	'ISequenceService',
-	SequenceService
+	class extends SequenceService {
+		constructor(...args: unknown[]) {
+			super(args[0] as ISequenceDomainService, args[1] as IPersistenceService);
+		}
+	}
 );
 const ISequenceDomainServiceInterface = createServiceInterface<ISequenceDomainService>(
 	'ISequenceDomainService',
@@ -63,15 +67,30 @@ const ISequenceDomainServiceInterface = createServiceInterface<ISequenceDomainSe
 );
 const IPictographServiceInterface = createServiceInterface<IPictographService>(
 	'IPictographService',
-	PictographService
+	class extends PictographService {
+		constructor(...args: unknown[]) {
+			super(args[0] as IPictographRenderingService);
+		}
+	}
 );
 const IPictographRenderingServiceInterface = createServiceInterface<IPictographRenderingService>(
 	'IPictographRenderingService',
-	PictographRenderingService
+	class extends PictographRenderingService {
+		constructor(...args: unknown[]) {
+			super(args[0] as IArrowPositioningService, args[1] as IPropRenderingService);
+		}
+	}
 );
 const IArrowPositioningServiceInterface = createServiceInterface<IArrowPositioningService>(
 	'IArrowPositioningService',
-	ArrowPositioningService
+	class extends ArrowPositioningService {
+		constructor(...args: unknown[]) {
+			super(
+				args[0] as IArrowPlacementDataService | undefined,
+				args[1] as IArrowPlacementKeyService | undefined
+			);
+		}
+	}
 );
 const IArrowPlacementDataServiceInterface = createServiceInterface<IArrowPlacementDataService>(
 	'IArrowPlacementDataService',
@@ -91,7 +110,11 @@ const IPersistenceServiceInterface = createServiceInterface<IPersistenceService>
 );
 const ISequenceGenerationServiceInterface = createServiceInterface<ISequenceGenerationService>(
 	'ISequenceGenerationService',
-	SequenceGenerationService
+	class extends SequenceGenerationService {
+		constructor(...args: unknown[]) {
+			super(args[0] as IMotionGenerationService);
+		}
+	}
 );
 const IMotionGenerationServiceInterface = createServiceInterface<IMotionGenerationService>(
 	'IMotionGenerationService',
@@ -100,7 +123,11 @@ const IMotionGenerationServiceInterface = createServiceInterface<IMotionGenerati
 const IApplicationInitializationServiceInterface =
 	createServiceInterface<IApplicationInitializationService>(
 		'IApplicationInitializationService',
-		ApplicationInitializationService
+		class extends ApplicationInitializationService {
+			constructor(...args: unknown[]) {
+				super(args[0] as ISettingsService, args[1] as IPersistenceService);
+			}
+		}
 	);
 const ISettingsServiceInterface = createServiceInterface<ISettingsService>(
 	'ISettingsService',
@@ -108,12 +135,20 @@ const ISettingsServiceInterface = createServiceInterface<ISettingsService>(
 );
 const IExportServiceInterface = createServiceInterface<IExportService>(
 	'IExportService',
-	ExportService
+	class extends ExportService {
+		constructor(...args: unknown[]) {
+			super(args[0] as IPictographService);
+		}
+	}
 );
 const IConstructTabCoordinationServiceInterface =
 	createServiceInterface<IConstructTabCoordinationService>(
 		'IConstructTabCoordinationService',
-		ConstructTabCoordinationService
+		class extends ConstructTabCoordinationService {
+			constructor(...args: unknown[]) {
+				super(args[0] as ISequenceService, args[1] as IStartPositionService);
+			}
+		}
 	);
 const IOptionDataServiceInterface = createServiceInterface<IOptionDataService>(
 	'IOptionDataService',

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import GeneratePanel from '../GeneratePanel.svelte';
+import GeneratePanel from '../generate/GeneratePanel.svelte';
 
 // Mock the device detection service
 vi.mock('$lib/services/ServiceRegistry', () => ({

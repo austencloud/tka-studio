@@ -1,25 +1,22 @@
 <!-- TurnAdjustmentControls.svelte - Blue and red turn amount grid controls -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { BeatData } from '$services/interfaces';
-
-	// Props
-	const { currentBeatData } = $props<{
-		currentBeatData: BeatData | null;
-	}>();
-
-	// Component state
-	let selectedColor = $state<'blue' | 'red'>('blue');
-	let blueTurnAmount = $state<number>(0);
-	let redTurnAmount = $state<number>(0);
-	let selectedArrow = $state<string | null>(null);
-
-	// Turn amount options (typical range for turn values)
-	const turnOptions = [-3, -2, -1, 0, 1, 2, 3];
-
+	import { onMount } from 'svelte';
 	// Create dispatcher for events
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
+
+	// Props
+	let { currentBeatData = null }: { currentBeatData?: BeatData | null } = $props();
+
+	// State variables
+	let blueTurnAmount = $state(0);
+	let redTurnAmount = $state(0);
+	let selectedColor = $state<'blue' | 'red' | null>(null);
+	let selectedArrow = $state<string | null>(null);
+
+	// Turn amount options
+	const turnAmountOptions = [0, 0.5, 1, 1.5, 2, 2.5, 3];
 
 	// Handle turn amount clicks
 	function handleTurnAmountClick(color: 'blue' | 'red', turnAmount: number) {
@@ -53,11 +50,15 @@
 		const pictograph = beatData.pictograph_data;
 
 		// Update turn amounts from pictograph data
-		if (pictograph.blue_turns !== undefined) {
-			blueTurnAmount = pictograph.blue_turns;
+		if (pictograph.motions?.blue?.turns !== undefined) {
+			blueTurnAmount =
+				typeof pictograph.motions.blue.turns === 'number'
+					? pictograph.motions.blue.turns
+					: 0;
 		}
-		if (pictograph.red_turns !== undefined) {
-			redTurnAmount = pictograph.red_turns;
+		if (pictograph.motions?.red?.turns !== undefined) {
+			redTurnAmount =
+				typeof pictograph.motions.red.turns === 'number' ? pictograph.motions.red.turns : 0;
 		}
 
 		console.log('TurnAdjustmentControls: Updated from beat data', {
@@ -100,7 +101,7 @@
 			</div>
 		</div>
 		<div class="turn-grid">
-			{#each turnOptions as turnValue}
+			{#each turnAmountOptions as turnValue}
 				<button
 					class="turn-btn blue-btn"
 					class:active={blueTurnAmount === turnValue && selectedColor === 'blue'}
@@ -139,7 +140,7 @@
 			</div>
 		</div>
 		<div class="turn-grid">
-			{#each turnOptions as turnValue}
+			{#each turnAmountOptions as turnValue}
 				<button
 					class="turn-btn red-btn"
 					class:active={redTurnAmount === turnValue && selectedColor === 'red'}

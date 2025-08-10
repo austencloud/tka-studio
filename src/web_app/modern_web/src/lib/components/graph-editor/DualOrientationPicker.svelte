@@ -1,25 +1,22 @@
 <!-- DualOrientationPicker.svelte - Blue and red orientation controls for start positions -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { BeatData } from '$services/interfaces';
-
-	// Props
-	const { currentBeatData } = $props<{
-		currentBeatData: BeatData | null;
-	}>();
-
-	// Component state
-	let selectedColor = $state<'blue' | 'red'>('blue');
-	let blueOrientation = $state<string>('IN');
-	let redOrientation = $state<string>('IN');
-	let selectedArrow = $state<string | null>(null);
-
-	// Orientation options
-	const orientationOptions = ['IN', 'OUT', 'CLOCK', 'COUNTER'];
-
+	import { onMount } from 'svelte';
 	// Create dispatcher for events
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
+
+	// Props
+	let { currentBeatData = null }: { currentBeatData?: BeatData | null } = $props();
+
+	// State variables
+	let blueOrientation = $state('in');
+	let redOrientation = $state('in');
+	let selectedColor = $state<'blue' | 'red' | null>(null);
+	let selectedArrow = $state<string | null>(null);
+
+	// Orientation options
+	const orientationOptions = ['in', 'out', 'clock', 'counter'];
 
 	// Handle orientation button clicks
 	function handleOrientationClick(color: 'blue' | 'red', orientation: string) {
@@ -53,11 +50,11 @@
 		const pictograph = beatData.pictograph_data;
 
 		// Update orientations from pictograph data
-		if (pictograph.blue_start_ori) {
-			blueOrientation = pictograph.blue_start_ori;
+		if (pictograph.motions?.blue?.start_ori) {
+			blueOrientation = pictograph.motions.blue.start_ori;
 		}
-		if (pictograph.red_start_ori) {
-			redOrientation = pictograph.red_start_ori;
+		if (pictograph.motions?.red?.start_ori) {
+			redOrientation = pictograph.motions.red.start_ori;
 		}
 
 		console.log('DualOrientationPicker: Updated from beat data', {

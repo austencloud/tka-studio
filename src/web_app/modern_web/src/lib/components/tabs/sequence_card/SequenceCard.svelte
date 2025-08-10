@@ -1,7 +1,7 @@
 <!-- SequenceCard.svelte - Individual sequence card component -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { SequenceData } from '$services/interfaces';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		sequence: SequenceData;
@@ -15,8 +15,8 @@
 
 	// Derived properties
 	let sequenceName = $derived(sequence.name || 'Untitled Sequence');
-	let beatCount = $derived(sequence.beats?.length || sequence.length || 0);
-	let difficulty = $derived(sequence.difficulty || 'Intermediate');
+	let beatCount = $derived(sequence.beats?.length || sequence.sequence_length || 0);
+	let difficulty = $derived(sequence.difficulty_level || 'Intermediate');
 	let gridMode = $derived(sequence.grid_mode || 'diamond');
 	let author = $derived(sequence.author || 'Unknown');
 

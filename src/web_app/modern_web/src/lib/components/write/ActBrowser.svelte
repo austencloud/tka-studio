@@ -55,6 +55,7 @@
 				resizeObserver.disconnect();
 			};
 		}
+		return () => {}; // Return empty cleanup function when no container
 	});
 </script>
 

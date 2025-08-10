@@ -61,7 +61,10 @@ export class DefaultPropPositioner {
 	private getGridPoint(pointName: string): { coordinates: { x: number; y: number } } | null {
 		// Try to find the point in allHandPointsNormal
 		if (this.gridData.allHandPointsNormal && this.gridData.allHandPointsNormal[pointName]) {
-			return this.gridData.allHandPointsNormal[pointName];
+			const point = this.gridData.allHandPointsNormal[pointName];
+			if (point.coordinates) {
+				return { coordinates: point.coordinates };
+			}
 		}
 
 		// Try alternative naming patterns
@@ -74,7 +77,10 @@ export class DefaultPropPositioner {
 
 		for (const altName of alternativeNames) {
 			if (this.gridData.allHandPointsNormal && this.gridData.allHandPointsNormal[altName]) {
-				return this.gridData.allHandPointsNormal[altName];
+				const point = this.gridData.allHandPointsNormal[altName];
+				if (point.coordinates) {
+					return { coordinates: point.coordinates };
+				}
 			}
 		}
 

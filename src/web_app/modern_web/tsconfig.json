@@ -57,8 +57,7 @@
 		"isolatedModules": true,
 
 		// Emit
-		"declaration": true,
-		"declarationMap": true,
+		"noEmit": true,
 		"sourceMap": true,
 		"removeComments": false,
 		"importHelpers": true,

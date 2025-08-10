@@ -78,7 +78,7 @@ Matches the desktop version exactly:
 		console.log(`🔍 OptionPickerSection [${letterType}] received:`, {
 			letterType,
 			pictographsCount: pictographs.length,
-			pictographs: pictographs.map((p) => ({ id: p.id, letter: p.letter })),
+			pictographs: pictographs.map((p: PictographData) => ({ id: p.id, letter: p.letter })),
 		});
 	});
 
@@ -86,7 +86,7 @@ Matches the desktop version exactly:
 	const sectionPictographs = $derived(() => {
 		console.log(`🔍 OptionPickerSection [${letterType}] sectionPictographs:`, {
 			count: pictographs.length,
-			letters: pictographs.map((p) => p.letter),
+			letters: pictographs.map((p: PictographData) => p.letter),
 		});
 		return pictographs;
 	});

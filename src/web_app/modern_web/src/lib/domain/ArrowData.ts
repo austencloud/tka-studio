@@ -81,17 +81,19 @@ export function arrowDataToObject(arrow: ArrowData): Record<string, unknown> {
 }
 
 export function arrowDataFromObject(data: Record<string, unknown>): ArrowData {
-	return createArrowData({
-		id: typeof data.id === 'string' ? data.id : undefined,
-		arrow_type: data.arrow_type as ArrowType,
-		color: typeof data.color === 'string' ? data.color : undefined,
-		turns: typeof data.turns === 'number' ? data.turns : undefined,
-		is_mirrored: typeof data.is_mirrored === 'boolean' ? data.is_mirrored : undefined,
-		location: typeof data.location === 'string' ? data.location : undefined,
-		position_x: typeof data.position_x === 'number' ? data.position_x : undefined,
-		position_y: typeof data.position_y === 'number' ? data.position_y : undefined,
-		rotation_angle: typeof data.rotation_angle === 'number' ? data.rotation_angle : undefined,
-		is_visible: typeof data.is_visible === 'boolean' ? data.is_visible : undefined,
-		is_selected: typeof data.is_selected === 'boolean' ? data.is_selected : undefined,
-	});
+	const partialData: Record<string, unknown> = {};
+
+	if (typeof data.id === 'string') partialData.id = data.id;
+	if (data.arrow_type) partialData.arrow_type = data.arrow_type as ArrowType;
+	if (typeof data.color === 'string') partialData.color = data.color;
+	if (typeof data.turns === 'number') partialData.turns = data.turns;
+	if (typeof data.is_mirrored === 'boolean') partialData.is_mirrored = data.is_mirrored;
+	if (typeof data.location === 'string') partialData.location = data.location;
+	if (typeof data.position_x === 'number') partialData.position_x = data.position_x;
+	if (typeof data.position_y === 'number') partialData.position_y = data.position_y;
+	if (typeof data.rotation_angle === 'number') partialData.rotation_angle = data.rotation_angle;
+	if (typeof data.is_visible === 'boolean') partialData.is_visible = data.is_visible;
+	if (typeof data.is_selected === 'boolean') partialData.is_selected = data.is_selected;
+
+	return createArrowData(partialData as Partial<ArrowData>);
 }

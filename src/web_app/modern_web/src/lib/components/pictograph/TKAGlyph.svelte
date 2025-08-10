@@ -72,8 +72,8 @@ Uses pure runes instead of stores for reactivity.
 				letterDimensions = { width: 100, height: 100 };
 			} else {
 				letterDimensions = {
-					width: parseFloat(viewBoxMatch[1]),
-					height: parseFloat(viewBoxMatch[2]),
+					width: parseFloat(viewBoxMatch[1] || '100'),
+					height: parseFloat(viewBoxMatch[2] || '100'),
 				};
 			}
 
@@ -114,9 +114,9 @@ Uses pure runes instead of stores for reactivity.
 			}
 
 			return {
-				timing: parts[0],
-				blue: parseFloat(parts[1]) || 0,
-				red: parseFloat(parts[2]) || 0,
+				timing: parts[0] || '',
+				blue: parseFloat(parts[1] || '0') || 0,
+				red: parseFloat(parts[2] || '0') || 0,
 			};
 		} catch (error) {
 			if (debug) {
@@ -254,7 +254,7 @@ Uses pure runes instead of stores for reactivity.
 				fill="#6b7280"
 				opacity="0.8"
 			>
-				{parsedTurns().timing.toUpperCase()}
+				{parsedTurns()?.timing?.toUpperCase() || ''}
 			</text>
 		{/if}
 

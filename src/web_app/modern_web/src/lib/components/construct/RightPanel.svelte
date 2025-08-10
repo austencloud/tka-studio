@@ -10,7 +10,7 @@
 	import { constructTabEventService } from '$services/implementations/ConstructTabEventService';
 	import { constructTabState } from '$stores/constructTabState.svelte';
 	import BuildTabContent from './BuildTabContent.svelte';
-	import GeneratePanel from './GeneratePanel.svelte';
+	import GeneratePanel from './generate/GeneratePanel.svelte';
 	import TabNavigation from './TabNavigation.svelte';
 
 	// Import Svelte's built-in fade transition for consistency with main tabs
@@ -118,7 +118,7 @@
 		border-radius: 12px;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
-		
+
 	}
 
 	.tab-content {

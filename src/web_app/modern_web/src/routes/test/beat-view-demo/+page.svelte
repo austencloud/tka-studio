@@ -6,6 +6,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 <script lang="ts">
 	import BeatView from '$lib/components/workbench/BeatView.svelte';
 	import { createBeatData, createPictographData } from '$lib/domain';
+	import { ArrowType } from '$lib/domain/enums';
 
 	// Create sample beats for testing
 	const beats = [
@@ -18,7 +19,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 				arrows: {
 					blue: {
 						id: 'blue-arrow-1',
-						arrow_type: 'blue',
+						arrow_type: ArrowType.BLUE,
 						color: 'blue',
 						motion_type: 'pro',
 						location: 'n',
@@ -35,7 +36,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 					},
 					red: {
 						id: 'red-arrow-1',
-						arrow_type: 'red',
+						arrow_type: ArrowType.RED,
 						color: 'red',
 						motion_type: 'anti',
 						location: 's',
@@ -69,7 +70,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 				arrows: {
 					blue: {
 						id: 'blue-arrow-3',
-						arrow_type: 'blue',
+						arrow_type: ArrowType.BLUE,
 						color: 'blue',
 						motion_type: 'float',
 						location: 'ne',

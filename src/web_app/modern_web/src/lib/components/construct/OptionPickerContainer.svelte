@@ -71,7 +71,7 @@
 		return (
 			optionPickerState.isLoading &&
 			!hasPreloadedData() &&
-			optionPickerState.optionsData().length === 0
+			optionPickerState.optionsData.length === 0
 		);
 	});
 

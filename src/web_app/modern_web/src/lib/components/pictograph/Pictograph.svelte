@@ -106,7 +106,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		return components;
 	});
 
-
 	const allComponentsLoaded = $derived(() => {
 		const required = requiredComponents();
 		return required.every((component) => loadedComponents.has(component));
@@ -209,11 +208,10 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 
 			<!-- Props (rendered first so arrows appear on top) -->
 			{#each propsToRender() as { color, propData } (color)}
+				{@const motionData = effectivePictographData()?.motions?.[color]}
 				<Prop
 					{propData}
-					{...effectivePictographData()?.motions?.[color] && {
-						motionData: effectivePictographData()?.motions?.[color],
-					}}
+					{...motionData && { motionData }}
 					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
 					allProps={Object.values(effectivePictographData()?.props || {})}
 					onLoaded={() => handleComponentLoaded(`${color}-prop`)}
@@ -223,13 +221,13 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 
 			<!-- Arrows (rendered after props) -->
 			{#each arrowsToRender() as { color, arrowData } (color)}
+				{@const motionData = effectivePictographData()?.motions?.[color]}
+				{@const letter = displayLetter()}
 				<Arrow
 					{arrowData}
-					{...effectivePictographData()?.motions?.[color] && {
-						motionData: effectivePictographData()?.motions?.[color],
-					}}
+					{...motionData && { motionData }}
 					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
-					{...displayLetter() && { letter: displayLetter() }}
+					{...letter && { letter }}
 					onLoaded={() => handleComponentLoaded(`${color}-arrow`)}
 					onError={(error) => handleComponentError(`${color}-arrow`, error)}
 				/>
@@ -291,8 +289,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 				</text>
 			</g>
 		{/if}
-
-
 	</svg>
 </div>
 

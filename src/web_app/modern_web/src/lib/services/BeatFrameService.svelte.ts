@@ -120,8 +120,11 @@ class BeatFrameService {
 				''
 			).toString();
 		}
+		const metadataLetter = (beat.metadata as Record<string, unknown>)?.letter;
 		return (
-			beat.pictograph_data?.letter ?? (beat.metadata as Record<string, unknown>)?.letter ?? ''
+			beat.pictograph_data?.letter ??
+			(typeof metadataLetter === 'string' ? metadataLetter : '') ??
+			''
 		);
 	}
 }
