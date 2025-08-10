@@ -128,24 +128,24 @@ Uses device detection service for appropriate touch targets and layout
 		updateConfig({ turnIntensity: event.detail.value });
 	}
 
-	function onGridModeChanged(event: CustomEvent) {
-		updateConfig({ gridMode: event.detail.value });
+	function onGridModeChanged(value: GridMode) {
+		updateConfig({ gridMode: value });
 	}
 
-	function onGenerationModeChanged(event: CustomEvent) {
-		updateConfig({ mode: event.detail.mode });
+	function onGenerationModeChanged(mode: GenerationMode) {
+		updateConfig({ mode });
 	}
 
-	function onPropContinuityChanged(event: CustomEvent) {
-		updateConfig({ propContinuity: event.detail.value });
+	function onPropContinuityChanged(value: PropContinuity) {
+		updateConfig({ propContinuity: value });
 	}
 
 	function onLetterTypesChanged(event: CustomEvent) {
 		updateConfig({ letterTypes: event.detail.value });
 	}
 
-	function onSliceSizeChanged(event: CustomEvent) {
-		updateConfig({ sliceSize: event.detail.value });
+	function onSliceSizeChanged(value: SliceSize) {
+		updateConfig({ sliceSize: value });
 	}
 
 	function onCAPTypeChanged(event: CustomEvent) {
@@ -197,45 +197,45 @@ Uses device detection service for appropriate touch targets and layout
 			<h4 class="section-title">Mode & Layout</h4>
 			<div class="settings-grid">
 				<div class="setting-item">
-					<GridModeSelector 
+					<GridModeSelector
 						initialMode={currentConfig.gridMode}
-						on:valueChanged={onGridModeChanged}
+						onvalueChanged={onGridModeChanged}
 					/>
 				</div>
 				<div class="setting-item">
 					<GenerationModeToggle
 						initialMode={currentConfig.mode}
-						on:modeChanged={onGenerationModeChanged}
+						onmodeChanged={onGenerationModeChanged}
 					/>
 				</div>
 				<div class="setting-item">
 					<PropContinuityToggle
 						initialValue={currentConfig.propContinuity}
-						on:valueChanged={onPropContinuityChanged}
+						onvalueChanged={onPropContinuityChanged}
 					/>
 				</div>
 			</div>
 		</section>
 
-		<!-- Mode-specific settings -->
-		{#if isFreeformMode}
-			<section class="settings-section">
+		<!-- Mode-specific settings with consistent structure -->
+		<section class="settings-section mode-specific-section">
+			{#if isFreeformMode}
 				<h4 class="section-title">Filter Options</h4>
-				<div class="setting-item full-width">
-					<LetterTypeSelector
-						initialValue={currentConfig.letterTypes}
-						on:valueChanged={onLetterTypesChanged}
-					/>
+				<div class="settings-grid">
+					<div class="setting-item full-width">
+						<LetterTypeSelector
+							initialValue={currentConfig.letterTypes}
+							on:valueChanged={onLetterTypesChanged}
+						/>
+					</div>
 				</div>
-			</section>
-		{:else}
-			<section class="settings-section">
+			{:else}
 				<h4 class="section-title">Circular Mode Options</h4>
 				<div class="settings-grid">
 					<div class="setting-item">
 						<SliceSizeSelector
 							initialValue={currentConfig.sliceSize}
-							on:valueChanged={onSliceSizeChanged}
+							onvalueChanged={onSliceSizeChanged}
 						/>
 					</div>
 					<div class="setting-item">
@@ -245,8 +245,8 @@ Uses device detection service for appropriate touch targets and layout
 						/>
 					</div>
 				</div>
-			</section>
-		{/if}
+			{/if}
+		</section>
 	</div>
 
 	<!-- Action buttons with proper touch targets -->
@@ -303,19 +303,20 @@ Uses device detection service for appropriate touch targets and layout
 	.settings-container {
 		flex: 1;
 		overflow-y: auto;
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-rows: auto auto auto;
 		gap: calc(var(--element-spacing) * 1.25);
-		justify-content: space-between; /* Distribute sections evenly */
-		margin-bottom: var(--element-spacing); /* Add space before action buttons */
+		margin-bottom: var(--element-spacing);
+		min-height: 0; /* Allow proper overflow handling */
+		align-content: start; /* Align to top instead of distributing */
 	}
 
 	.settings-section {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		flex: 1; /* Take equal space */
-		min-height: 150px; /* Minimum comfortable height */
+		/* Remove flex: 1 to prevent height expansion issues */
+		min-height: auto; /* Let content determine height */
 	}
 
 	.section-title {
@@ -331,13 +332,11 @@ Uses device detection service for appropriate touch targets and layout
 		display: grid;
 		gap: var(--element-spacing);
 		grid-template-columns: 1fr;
-		flex: 1; /* Expand to fill section */
-		align-content: space-evenly; /* Distribute items evenly */
+		/* Remove flex: 1 and space-evenly to prevent layout instability */
+		align-content: start; /* Align items to start instead of distributing */
 	}
 
 	.setting-item {
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 6px;
 		padding: var(--element-spacing);
 		transition: background-color 0.2s ease;
@@ -345,7 +344,7 @@ Uses device detection service for appropriate touch targets and layout
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex: 1; /* Expand to fill available grid space */
+		/* Remove flex: 1 to prevent expansion issues */
 	}
 
 	.setting-item:hover {
@@ -354,6 +353,21 @@ Uses device detection service for appropriate touch targets and layout
 
 	.setting-item.full-width {
 		grid-column: 1 / -1;
+	}
+
+	/* Ensure smooth transitions when content changes */
+	.settings-section {
+		transition: height 0.2s ease-out;
+	}
+
+	/* Prevent layout shift during mode switching */
+	.settings-grid {
+		transition: grid-template-rows 0.2s ease-out;
+	}
+
+	/* Ensure consistent height for mode-specific section */
+	.mode-specific-section {
+		min-height: 120px; /* Reserve space to prevent layout shift */
 	}
 
 	.action-section {
@@ -428,7 +442,7 @@ Uses device detection service for appropriate touch targets and layout
 	}
 
 	.generate-panel[data-layout="spacious"] .settings-grid {
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		grid-template-columns: 1fr; /* Keep single column to prevent wrapping issues */
 		gap: calc(var(--element-spacing) * 1.5);
 	}
 
@@ -449,7 +463,7 @@ Uses device detection service for appropriate touch targets and layout
 	}
 
 	.generate-panel[data-layout="compact"] .settings-grid {
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		grid-template-columns: 1fr; /* Keep single column to prevent wrapping issues */
 		gap: calc(var(--element-spacing) * 0.75);
 	}
 
@@ -477,6 +491,8 @@ Uses device detection service for appropriate touch targets and layout
 		overflow: hidden;
 		flex: 1;
 		min-height: 0;
+		/* Ensure grid doesn't expand beyond container */
+		max-height: 100%;
 	}
 
 	/* Mobile-specific adjustments */
@@ -499,13 +515,14 @@ Uses device detection service for appropriate touch targets and layout
 		}
 	}
 
-	/* Large desktop optimization */
+	/* Large desktop optimization - only enable multi-column for sections with multiple items */
 	@media (min-width: 1440px) {
-		.generate-panel[data-layout="compact"] .settings-grid {
-			grid-template-columns: repeat(3, 1fr);
+		/* Only apply multi-column to sections that have multiple setting items */
+		.generate-panel[data-layout="compact"] .settings-section:not(:has(.full-width)) .settings-grid {
+			grid-template-columns: repeat(2, 1fr);
 		}
-		
-		.generate-panel[data-layout="spacious"] .settings-grid {
+
+		.generate-panel[data-layout="spacious"] .settings-section:not(:has(.full-width)) .settings-grid {
 			grid-template-columns: repeat(2, 1fr);
 		}
 	}
