@@ -19,10 +19,10 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	import { resize } from './option-picker/actions/resize';
 	import { BREAKPOINTS } from './option-picker/config';
 	import OptionPickerHeader from './option-picker/OptionPickerHeader.svelte';
-	import { createOptionPickerRunes } from './option-picker/optionPickerRunes.svelte.ts';
 	import OptionPickerScroll from './option-picker/OptionPickerScroll.svelte';
+	import { createOptionPickerState } from './option-picker/OptionPickerSectionState.svelte.ts';
 	import { detectFoldableDevice } from './option-picker/utils/deviceDetection';
-	import { getEnhancedDeviceType } from './option-picker/utils/layoutUtils';
+	import { getEnhancedDeviceType, getResponsiveLayout } from './option-picker/utils/layoutUtils';
 
 	console.log('🎯 OptionPicker script is being processed with PURE RUNES');
 
@@ -39,37 +39,34 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	}>();
 
 	// Create sophisticated state management using ONLY runes (NO STORES)
-	const optionPickerState = createOptionPickerRunes();
+	const optionPickerState = createOptionPickerState();
 	console.log('🔧 OptionPicker optionPickerState created:', !!optionPickerState);
 
-	// Force reactivity with $effect
-	let effectiveOptions = $state([]);
+	// Test direct access to allOptions after loading
+	$effect(() => {
+		// This should run after options are loaded
+		setTimeout(() => {
+			console.log('🔍 OptionPicker delayed check:', {
+				allOptionsLength: optionPickerState.allOptions?.length || 0,
+				allOptionsType: typeof optionPickerState.allOptions,
+				timestamp: new Date().toLocaleTimeString(),
+			});
+		}, 1000);
+	});
 
-	// Direct reactive update - check for changes immediately
-	function updateOptionsFromRunes() {
+	// Use reactive derived state that automatically updates when options change
+	const effectiveOptions = $derived(() => {
+		console.log('🔍 OptionPicker derived CALLED at:', new Date().toLocaleTimeString());
 		const allOptions = optionPickerState.allOptions || [];
-		console.log('🔍 OptionPicker updateOptionsFromRunes:', {
+		console.log('🔍 OptionPicker derived update:', {
 			optionsLength: allOptions.length,
 			timestamp: new Date().toLocaleTimeString(),
+			allOptionsType: typeof optionPickerState.allOptions,
+			isArray: Array.isArray(allOptions),
+			firstOption: allOptions[0]?.letter || 'none',
 		});
-
-		effectiveOptions = [...allOptions];
-
-		console.log('🔍 OptionPicker updated options:', {
-			totalOptions: effectiveOptions.length,
-			firstOption: effectiveOptions[0]
-				? {
-						id: effectiveOptions[0].id,
-						letter: effectiveOptions[0].letter,
-						end_position: effectiveOptions[0].end_position,
-					}
-				: null,
-		});
-	}
-
-	// Call update immediately and set up interval
-	updateOptionsFromRunes();
-	setInterval(updateOptionsFromRunes, 200);
+		return allOptions;
+	});
 
 	// Container element for size detection
 	let containerElement: HTMLDivElement | null = null;
@@ -118,15 +115,26 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 		},
 	};
 
-	// Simple static layout configuration to stop infinite loop
-	const currentLayoutConfig = {
-		gridColumns: 'repeat(8, minmax(0, 1fr))',
-		optionSize: '100px',
-		gridGap: '6px',
-		gridClass: 'many-items-grid',
-		aspectClass: 'wide-aspect-container',
-		scaleFactor: 1,
-	};
+	// Dynamic layout configuration using sophisticated layout calculation
+	const currentLayoutConfig = $derived.by(() => {
+		// Derive mobile status from device type
+		const isMobile =
+			enhancedDeviceInfo.deviceType === 'mobile' ||
+			enhancedDeviceInfo.deviceType === 'smallMobile';
+
+		// Calculate portrait mode from container dimensions
+		const isPortrait = optionPickerState.containerHeight > optionPickerState.containerWidth;
+
+		// Use the sophisticated layout calculation with current state
+		return getResponsiveLayout(
+			effectiveOptions.length,
+			optionPickerState.containerHeight,
+			optionPickerState.containerWidth,
+			isMobile,
+			isPortrait,
+			foldableInfo
+		);
+	});
 
 	// Load options using the advanced runes system
 	async function loadOptionsFromStartPosition() {
@@ -246,6 +254,10 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 >
 	<!-- Debug: Component is rendering with PURE RUNES -->
 	{console.log('🎯 OptionPicker template is rendering with PURE RUNES')}
+	{console.log(
+		'🔍 OptionPicker template accessing effectiveOptions.length:',
+		effectiveOptions.length
+	)}
 
 	<!-- Header matching desktop version -->
 	<OptionPickerHeader />
