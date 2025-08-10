@@ -316,6 +316,73 @@ export function defineService<T>(name: string): ServiceInterface<T> {
 // Note: Service interface constants are defined in bootstrap.ts to avoid circular dependencies
 
 // ============================================================================
+// DEVICE DETECTION SERVICES
+// ============================================================================
+
+export interface DeviceCapabilities {
+	/** Primary input method - determines UI interaction patterns */
+	primaryInput: 'touch' | 'mouse' | 'hybrid';
+	
+	/** Screen size category for layout decisions */
+	screenSize: 'mobile' | 'tablet' | 'desktop';
+	
+	/** Whether device has touch capability */
+	hasTouch: boolean;
+	
+	/** Whether device has precise pointer (mouse/trackpad) */
+	hasPrecisePointer: boolean;
+	
+	/** Whether device has keyboard */
+	hasKeyboard: boolean;
+	
+	/** Viewport dimensions */
+	viewport: {
+		width: number;
+		height: number;
+	};
+	
+	/** Pixel density ratio */
+	pixelRatio: number;
+}
+
+export interface ResponsiveSettings {
+	/** Minimum touch target size in pixels */
+	minTouchTarget: number;
+	
+	/** Preferred spacing between interactive elements */
+	elementSpacing: number;
+	
+	/** Whether scrolling is acceptable in current context */
+	allowScrolling: boolean;
+	
+	/** Layout density preference */
+	layoutDensity: 'compact' | 'comfortable' | 'spacious';
+	
+	/** Font size scaling factor */
+	fontScaling: number;
+}
+
+export interface IDeviceDetectionService {
+	/** Get current device capabilities */
+	getCapabilities(): DeviceCapabilities;
+	
+	/** Get responsive settings based on device */
+	getResponsiveSettings(): ResponsiveSettings;
+	
+	/** Check if device is primarily touch-based */
+	isTouchPrimary(): boolean;
+	
+	/** Check if layout should prioritize touch targets */
+	shouldOptimizeForTouch(): boolean;
+	
+	/** Listen for device capability changes (screen rotation, etc.) */
+	onCapabilitiesChanged(callback: (capabilities: DeviceCapabilities) => void): () => void;
+	
+	/** Get breakpoint for current viewport */
+	getCurrentBreakpoint(): 'mobile' | 'tablet' | 'desktop' | 'large-desktop';
+}
+
+// ============================================================================
 // APPLICATION SETTINGS
 // ============================================================================
 

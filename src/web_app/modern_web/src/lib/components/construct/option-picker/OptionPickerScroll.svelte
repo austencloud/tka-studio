@@ -13,6 +13,7 @@ Enhanced with complete legacy layout system:
 <script lang="ts">
 	import type { PictographData } from '$lib/domain/PictographData';
 	import type { ResponsiveLayoutConfig } from './config';
+	import OptionPickerSection from './OptionPickerSection.svelte';
 	import type { FoldableDetectionResult } from './utils/deviceDetection';
 
 	// Enhanced props with sophisticated layout system
@@ -59,15 +60,7 @@ Enhanced with complete legacy layout system:
 		foldableInfo?: FoldableDetectionResult;
 	}>();
 
-	// Debug: Log sophisticated layout info
-	console.log('🎯 OptionPickerScroll rendering with sophisticated layout:', {
-		containerWidth,
-		containerHeight,
-		layoutConfig,
-		deviceInfo,
-		foldableInfo,
-		pictographsCount: pictographs.length,
-	});
+	// Layout info available for debugging if needed
 
 	// Organize sections like desktop: individual sections first, then grouped
 	// Temporarily use string literals to avoid LetterType initialization issues
@@ -76,6 +69,11 @@ Enhanced with complete legacy layout system:
 
 	// Advanced pictograph filtering and organization
 	const organizedPictographs = $derived(() => {
+		console.log('🔍 OptionPickerScroll organizing pictographs:', {
+			totalPictographs: pictographs.length,
+			pictographLetters: pictographs.map((p) => p.letter),
+		});
+
 		const organized = {
 			individual: {} as Record<string, PictographData[]>,
 			grouped: {} as Record<string, PictographData[]>,
@@ -106,6 +104,8 @@ Enhanced with complete legacy layout system:
 				else if (letter.match(/^[ΦΨΛ]-$/)) pictographType = 'Type5';
 				else if (letter.match(/^[αβΓ]$/)) pictographType = 'Type6';
 
+				console.log(`🔍 Pictograph ${pictograph.letter} -> ${pictographType}`);
+
 				if (individualSections.includes(pictographType)) {
 					organized.individual[pictographType].push(pictograph);
 					organized.hasIndividual = true;
@@ -119,6 +119,17 @@ Enhanced with complete legacy layout system:
 				organized.individual['Type1'].push(pictograph);
 				organized.hasIndividual = true;
 			}
+		});
+
+		console.log('🔍 OptionPickerScroll organized result:', {
+			hasIndividual: organized.hasIndividual,
+			hasGrouped: organized.hasGrouped,
+			individualCounts: Object.fromEntries(
+				Object.entries(organized.individual).map(([key, value]) => [key, value.length])
+			),
+			groupedCounts: Object.fromEntries(
+				Object.entries(organized.grouped).map(([key, value]) => [key, value.length])
+			),
 		});
 
 		return organized;
@@ -203,23 +214,43 @@ Enhanced with complete legacy layout system:
 				</div>
 			{/if}
 
-			<!-- TEMPORARY SIMPLE FALLBACK: Display all options without complex organization -->
+			<!-- Sectioned layout with proper organization -->
 			{#if pictographs.length > 0}
-				<div class="simple-options-grid">
-					{#each pictographs as pictograph (pictograph.id)}
-						<button
-							class="simple-option-button"
-							onclick={() => onPictographSelected?.(pictograph)}
-						>
-							<div class="option-letter">{pictograph.letter}</div>
-							<div class="option-id">{pictograph.id}</div>
-						</button>
-					{/each}
+				<div class="sections-container">
+					<!-- Individual sections (Type1, Type2, Type3) -->
+					{#if organizedPictographs.hasIndividual}
+						{#each individualSections as letterType (letterType)}
+							{#if organizedPictographs.individual[letterType].length > 0}
+								<OptionPickerSection
+									{letterType}
+									pictographs={organizedPictographs.individual[letterType]}
+									{onPictographSelected}
+									{containerWidth}
+									isExpanded={true}
+								/>
+							{/if}
+						{/each}
+					{/if}
+
+					<!-- Grouped sections (Type4, Type5, Type6) -->
+					{#if organizedPictographs.hasGrouped}
+						{#each groupedSections as letterType (letterType)}
+							{#if organizedPictographs.grouped[letterType].length > 0}
+								<OptionPickerSection
+									{letterType}
+									pictographs={organizedPictographs.grouped[letterType]}
+									{onPictographSelected}
+									{containerWidth}
+									isExpanded={true}
+								/>
+							{/if}
+						{/each}
+					{/if}
 				</div>
 			{/if}
 
 			<!-- Empty state with layout info -->
-			{#if organizedPictographs.totalCount === 0}
+			{#if pictographs.length === 0}
 				<div class="empty-state">
 					<p>No options available for current sequence</p>
 					<small>
@@ -274,6 +305,14 @@ Enhanced with complete legacy layout system:
 		flex: 1;
 		/* Transparent background */
 		background: transparent;
+	}
+
+	/* Sections container styling */
+	.sections-container {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 8px;
 	}
 
 	/* Debug info styling */
@@ -361,44 +400,38 @@ Enhanced with complete legacy layout system:
 		padding: 4px;
 	}
 
-	/* Simple fallback grid styles */
-	.simple-options-grid {
+	/* Pictograph grid styles */
+	.pictographs-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-		gap: 12px;
-		padding: 16px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
-	.simple-option-button {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 12px;
-		border: 2px solid #333;
-		border-radius: 8px;
-		background: #1a1a1a;
-		color: white;
+	.pictograph-container {
+		position: relative;
 		cursor: pointer;
+		border: 2px solid transparent;
+		border-radius: 8px;
 		transition: all 0.2s ease;
-		min-height: 80px;
+		background: rgba(255, 255, 255, 0.05);
+		overflow: hidden;
 	}
 
-	.simple-option-button:hover {
-		background: #333;
-		border-color: #555;
+	.pictograph-container:hover {
+		border-color: #4a90e2;
+		background: rgba(255, 255, 255, 0.1);
 		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	}
 
-	.option-letter {
-		font-size: 24px;
-		font-weight: bold;
-		margin-bottom: 4px;
+	.pictograph-container:focus {
+		outline: none;
+		border-color: #4a90e2;
+		box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
 	}
 
-	.option-id {
-		font-size: 10px;
-		opacity: 0.7;
+	.pictograph-container:active {
+		transform: translateY(0);
 	}
 
 	/* Landscape vs Portrait optimizations */

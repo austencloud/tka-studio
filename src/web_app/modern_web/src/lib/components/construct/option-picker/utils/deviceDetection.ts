@@ -61,7 +61,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
 	}
 
 	// Default result (not foldable)
-	let finalResult: FoldableDetectionResult = {
+	const finalResult: FoldableDetectionResult = {
 		isFoldable: false,
 		isUnfolded: false,
 		foldableType: 'unknown',
@@ -92,7 +92,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
 	// --- Detection Logic Pipeline ---
 
 	// 1. Device Specification Matching (High Confidence)
-	let specMatchFound = checkAgainstDeviceSpecs(ua, windowW, windowH, finalResult);
+	const specMatchFound = checkAgainstDeviceSpecs(ua, windowW, windowH, finalResult);
 	if (specMatchFound) {
 		if (DEBUG_MODE) console.log('Foldable Detect: Result from Spec Match', finalResult);
 		saveDetectionResult(finalResult); // Save confident result

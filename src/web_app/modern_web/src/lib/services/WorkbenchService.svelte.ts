@@ -5,10 +5,9 @@
  * Manages interactions between beat frame, sequence state, and UI.
  */
 
-import { sequenceStateService } from './SequenceStateService.svelte';
-import { beatFrameService } from './BeatFrameService.svelte';
-import type { BeatData, PictographData } from '../domain';
 import { createBeatData, createPictographData, GridMode } from '../domain';
+import { beatFrameService } from './BeatFrameService.svelte';
+import { sequenceStateService } from './SequenceStateService.svelte';
 
 class WorkbenchService {
 	// Workbench state

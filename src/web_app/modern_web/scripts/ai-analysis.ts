@@ -198,7 +198,6 @@ class PictographImplementationAnalyzer {
 
 	private analyzeDataFlow(): void {
 		const adapterFile = this.files.find((f) => f.path.includes('dataAdapter'));
-		const _serviceFile = this.files.find((f) => f.path.includes('PictographService.svelte'));
 
 		if (!adapterFile) {
 			this.addResult('Data Flow', 'error', 'Missing data adapter layer');
@@ -665,7 +664,10 @@ class PictographImplementationAnalyzer {
 		details?: string[],
 		recommendations?: string[]
 	): void {
-		this.results.push({ category, status, message, details, recommendations });
+		const result: AnalysisResult = { category, status, message };
+		if (details && details.length) result.details = details;
+		if (recommendations && recommendations.length) result.recommendations = recommendations;
+		this.results.push(result);
 	}
 
 	private printResults(): void {

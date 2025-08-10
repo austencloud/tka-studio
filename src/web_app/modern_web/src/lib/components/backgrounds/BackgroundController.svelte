@@ -1,23 +1,21 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { getRunesBackgroundContext } from './contexts/BackgroundContext.svelte';
-	import type { BackgroundType, QualityLevel, Dimensions } from './types/types';
 	import { browser } from '$app/environment';
+	import { onDestroy, onMount } from 'svelte';
+	import { getRunesBackgroundContext } from './contexts/BackgroundContext.svelte';
+	import type { BackgroundType, Dimensions, QualityLevel } from './types/types';
 
 	// Props using Svelte 5 runes
 	const {
 		dimensions: propDimensions,
 		backgroundType: propBackgroundType,
 		quality: propQuality,
-		isVisible: propIsVisible,
 		onready,
 		onerror,
-		onperformanceReport
+		onperformanceReport,
 	} = $props<{
 		dimensions?: Dimensions;
 		backgroundType?: BackgroundType;
 		quality?: QualityLevel;
-		isVisible?: boolean;
 		onready?: () => void;
 		onerror?: (error: { message: string }) => void;
 		onperformanceReport?: (report: { fps: number }) => void;

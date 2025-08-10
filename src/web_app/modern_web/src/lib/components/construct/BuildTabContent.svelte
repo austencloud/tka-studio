@@ -14,17 +14,22 @@
 
 	console.log('🎯 BuildTabContent script is being processed');
 
-	// Debug the constructTabState directly
-	console.log('🎯 constructTabState:', constructTabState);
-	console.log(
-		'🎯 constructTabState.shouldShowStartPositionPicker:',
-		constructTabState.shouldShowStartPositionPicker
-	);
+	// Simple debugging
+	console.log('🎯 constructTabState available:', !!constructTabState);
 
 	// Reactive state from store
 	let shouldShowStartPositionPicker = $derived(constructTabState.shouldShowStartPositionPicker);
 	let currentSequence = $derived(constructTabState.currentSequence);
 	let gridMode = $derived(constructTabState.gridMode);
+
+	// Add debugging for the reactive values
+	$effect(() => {
+		console.log(
+			'🔍 BuildTabContent shouldShowStartPositionPicker:',
+			shouldShowStartPositionPicker
+		);
+		console.log('🔍 BuildTabContent currentSequence exists:', !!currentSequence);
+	});
 
 	// Event handlers
 	async function handleStartPositionSelected(startPosition: BeatData) {
@@ -46,7 +51,6 @@
 			<StartPositionPicker {gridMode} onStartPositionSelected={handleStartPositionSelected} />
 		</div>
 	{:else}
-
 		<div class="panel-content">
 			<OptionPicker
 				{currentSequence}

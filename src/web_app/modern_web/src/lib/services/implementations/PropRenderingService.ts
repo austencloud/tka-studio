@@ -8,16 +8,9 @@
  * - Rendering props as SVG elements
  */
 
-import { type GridData } from '../../data/gridCoordinates.js';
-import { Orientation } from '../../domain/enums';
+import { GridMode as DomainGridMode, Orientation } from '../../domain/enums';
 import { DefaultPropPositioner } from '../DefaultPropPositioner';
-import type {
-	GridMode,
-	IPropRenderingService,
-	Location,
-	MotionData,
-	PropPosition,
-} from '../interfaces';
+import type { GridMode, IPropRenderingService, MotionData, PropPosition } from '../interfaces';
 import { PropRotAngleManager } from '../PropRotAngleManager';
 
 export class PropRenderingService implements IPropRenderingService {
@@ -42,7 +35,7 @@ export class PropRenderingService implements IPropRenderingService {
 		_propType: string,
 		_color: 'blue' | 'red',
 		_motionData: MotionData,
-		_gridMode: GridMode = 'diamond'
+		_gridMode: GridMode = DomainGridMode.DIAMOND
 	): Promise<SVGElement> {
 		// Props are now handled by ModernPictograph.svelte -> Prop.svelte components
 		// This service-level rendering is disabled to prevent duplicate CIRCLE_PROP elements
@@ -59,7 +52,7 @@ export class PropRenderingService implements IPropRenderingService {
 	async calculatePropPosition(
 		motionData: MotionData,
 		color: 'blue' | 'red',
-		gridMode: GridMode = 'diamond'
+		gridMode: GridMode = DomainGridMode.DIAMOND
 	): Promise<PropPosition> {
 		try {
 			// Use end location for prop positioning (domain uses end_loc)
@@ -147,22 +140,7 @@ export class PropRenderingService implements IPropRenderingService {
 	/**
 	 * Get coordinates for a location on the grid using real grid data
 	 */
-	private getLocationCoordinates(
-		location: Location,
-		gridMode: GridMode,
-		gridData: GridData
-	): { x: number; y: number } {
-		// Props are positioned at hand points based on their end location
-		const pointName = `${location}_${gridMode}_hand_point`;
-		const point = gridData.allHandPointsNormal?.[pointName];
-
-		if (point?.coordinates) {
-			return point.coordinates;
-		}
-
-		// Fallback to center if point not found
-		return gridData.centerPoint?.coordinates || { x: 475, y: 475 };
-	}
+	// getLocationCoordinates removed (unused)
 
 	/**
 	 * Calculate prop rotation based on motion data using PropRotAngleManager for parity

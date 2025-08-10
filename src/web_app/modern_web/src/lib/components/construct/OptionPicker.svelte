@@ -14,140 +14,17 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	import { createBeatData } from '$lib/domain/BeatData';
 	import type { PictographData } from '$lib/domain/PictographData';
 	import type { SequenceData } from '$lib/domain/SequenceData';
-	import { OptionDataService } from '$lib/services/implementations/OptionDataService';
-	import { getCurrentSequence } from '$lib/stores/sequenceState.svelte';
 	import type { DifficultyLevel } from '$services/interfaces';
 	import { onMount } from 'svelte';
 	import { resize } from './option-picker/actions/resize';
 	import { BREAKPOINTS } from './option-picker/config';
 	import OptionPickerHeader from './option-picker/OptionPickerHeader.svelte';
-	import { OptionPickerLayoutManager } from './option-picker/OptionPickerLayoutManager';
 	import OptionPickerScroll from './option-picker/OptionPickerScroll.svelte';
 	import { createOptionPickerState } from './option-picker/OptionPickerSectionState.svelte.js';
-	import { LetterType } from './option-picker/types/LetterType';
 	import { detectFoldableDevice } from './option-picker/utils/deviceDetection';
-	import { getEnhancedDeviceType, getResponsiveLayout } from './option-picker/utils/layoutUtils';
+	import { getEnhancedDeviceType } from './option-picker/utils/layoutUtils';
 
 	console.log('🎯 OptionPicker script is being processed with PURE RUNES');
-
-	// Helper function to get the end position from the current sequence
-	function getCurrentSequenceEndPosition(): string | null {
-		const currentSequence = getCurrentSequence();
-		console.log(
-			'🔍 getCurrentSequence() returned:',
-			currentSequence
-				? {
-						id: currentSequence.id,
-						name: currentSequence.name,
-						beats: currentSequence.beats?.length || 0,
-						hasStartPosition: !!currentSequence.start_position,
-					}
-				: 'null'
-		);
-
-		if (!currentSequence) {
-			console.warn('⚠️ No current sequence found');
-			return null;
-		}
-
-		// First, check if there's a start position (for new sequences)
-		if (currentSequence.start_position?.pictograph_data) {
-			const startEndPosition = extractEndPositionFromPictograph(
-				currentSequence.start_position.pictograph_data
-			);
-			console.log(`🎯 Using start position as end position: ${startEndPosition}`);
-			return startEndPosition;
-		}
-
-		// Then, find the last non-blank beat (for sequences with beats)
-		if (currentSequence.beats && currentSequence.beats.length > 0) {
-			for (let i = currentSequence.beats.length - 1; i >= 0; i--) {
-				type LegacyBeat = { is_blank: boolean; pictograph_data?: PictographData | null };
-				type NewBeat = { isBlank?: boolean; pictographData?: PictographData | null };
-				const rawBeat = currentSequence.beats[i] as LegacyBeat | NewBeat | undefined;
-				if (!rawBeat) continue;
-				const isBlank = 'is_blank' in rawBeat ? rawBeat.is_blank : rawBeat.isBlank === true;
-				const pictograph =
-					'pictograph_data' in rawBeat ? rawBeat.pictograph_data : rawBeat.pictographData;
-				if (!isBlank && pictograph) {
-					// Extract end position from the pictograph data
-					const endPosition = extractEndPositionFromPictograph(pictograph);
-					console.log(`🎯 Found end position from beat ${i}: ${endPosition}`);
-					return endPosition;
-				}
-			}
-		}
-
-		console.warn('⚠️ No end position found in sequence');
-		return null;
-	}
-
-	// Helper function to extract end position from pictograph data
-	function extractEndPositionFromPictograph(pictographData: PictographData): string | null {
-		console.log('🔍 Extracting end position from pictograph:', {
-			id: pictographData.id,
-			letter: pictographData.letter,
-			end_position: pictographData.end_position,
-			metadata: pictographData.metadata,
-			motions: pictographData.motions,
-		});
-
-		// Try to get from end_position field first
-		if (pictographData.end_position) {
-			console.log(`✅ Found end_position field: ${pictographData.end_position}`);
-			return pictographData.end_position;
-		}
-
-		// Try to get from metadata
-		if (pictographData.metadata?.endPosition) {
-			console.log(`✅ Found metadata.endPosition: ${pictographData.metadata.endPosition}`);
-			return pictographData.metadata.endPosition;
-		}
-
-		// For start positions, try to extract from the ID or letter
-		if (pictographData.id?.includes('start-pos-')) {
-			// Extract from start position ID like "start-pos-gamma11_gamma11-2"
-			const match = pictographData.id.match(/start-pos-([^_]+)_/);
-			if (match && match[1]) {
-				const endPos = match[1];
-				console.log(`✅ Extracted from start position ID: ${endPos}`);
-				return endPos;
-			}
-		}
-
-		// Try to get from motion data as fallback
-		if (pictographData.motions?.blue?.end_loc) {
-			const mapped = mapLocationToPosition(pictographData.motions.blue.end_loc);
-			console.log(`⚠️ Using blue motion end_loc fallback: ${mapped}`);
-			return mapped;
-		}
-		if (pictographData.motions?.red?.end_loc) {
-			const mapped = mapLocationToPosition(pictographData.motions.red.end_loc);
-			console.log(`⚠️ Using red motion end_loc fallback: ${mapped}`);
-			return mapped;
-		}
-
-		console.warn('⚠️ No end position found, defaulting to alpha1');
-		return 'alpha1';
-	}
-
-	// Helper function to map location to position string
-	function mapLocationToPosition(location: string | Location): string {
-		// Basic mapping - this matches the legacy system
-		const locationMap: Record<string, string> = {
-			n: 'alpha1',
-			s: 'alpha1',
-			e: 'gamma11',
-			w: 'alpha1',
-			ne: 'beta5',
-			se: 'gamma11',
-			sw: 'alpha1',
-			nw: 'beta5',
-		};
-
-		const locationStr = typeof location === 'string' ? location : location?.toString() || '';
-		return locationMap[locationStr.toLowerCase()] || 'alpha1';
-	}
 
 	// Props using runes
 	const {
@@ -164,21 +41,14 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	// Create sophisticated state management using ONLY runes (NO STORES)
 	const optionPickerState = createOptionPickerState();
 
-	// Simple reactive state for options (backup solution)
-	let simpleOptionsData = $state<PictographData[]>([]);
-
-	// Derived state that uses backup when main state is empty
-	let effectiveOptions = $derived.by(() => {
-		const mainOptions = optionPickerState.allOptions || [];
-		const backupOptions = simpleOptionsData || [];
-		const result = mainOptions.length > 0 ? mainOptions : backupOptions;
-		console.log('🔧 effectiveOptions:', {
-			mainLength: mainOptions.length,
-			backupLength: backupOptions.length,
-			resultLength: result.length,
-			usingBackup: mainOptions.length === 0 && backupOptions.length > 0,
+	// Use only the advanced runes system - no backup needed
+	let effectiveOptions = $derived(() => {
+		const options = optionPickerState.allOptions || [];
+		console.log('🔍 OptionPicker effectiveOptions from runes:', {
+			optionsLength: options.length,
+			optionLetters: options.map((p) => p.letter),
 		});
-		return result;
+		return options;
 	});
 
 	// Container element for size detection
@@ -203,103 +73,58 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 		return getEnhancedDeviceType(optionPickerState.containerWidth, isMobileUserAgent);
 	});
 
-	const currentLayoutConfig = $derived(() => {
-		const optionsCount = effectiveOptions.length;
+	// Static layout calculation to prevent infinite loops
+	const advancedLayoutCalculation = {
+		optionsPerRow: 8,
+		optionSize: 100,
+		gridGap: '6px',
+		gridColumns: 'repeat(8, minmax(0, 1fr))',
+		gridClass: 'many-items-grid',
+		aspectClass: 'wide-aspect-container',
+		scaleFactor: 1,
+		deviceType: 'desktop',
+		containerAspect: 'wide',
+		isMobile: false,
+		isTablet: false,
+		isPortrait: false,
+		foldableInfo: { isFoldable: false, isUnfolded: true },
+		layoutConfig: {
+			gridColumns: 'repeat(8, minmax(0, 1fr))',
+			optionSize: '100px',
+			gridGap: '6px',
+			gridClass: 'many-items-grid',
+			aspectClass: 'wide-aspect-container',
+			scaleFactor: 1,
+		},
+	};
 
-		return getResponsiveLayout(
-			optionsCount,
-			optionPickerState.containerHeight,
-			optionPickerState.containerWidth,
-			optionPickerState.isMobile,
-			optionPickerState.isPortrait,
-			foldableInfo
-		);
-	});
+	// Simple static layout configuration to stop infinite loop
+	const currentLayoutConfig = {
+		gridColumns: 'repeat(8, minmax(0, 1fr))',
+		optionSize: '100px',
+		gridGap: '6px',
+		gridClass: 'many-items-grid',
+		aspectClass: 'wide-aspect-container',
+		scaleFactor: 1,
+	};
 
-	// Advanced layout calculation using the sophisticated layout manager
-	const advancedLayoutCalculation = $derived(() => {
-		return OptionPickerLayoutManager.calculateLayout({
-			count: effectiveOptions.length,
-			containerWidth: optionPickerState.containerWidth,
-			containerHeight: optionPickerState.containerHeight,
-			windowWidth,
-			windowHeight,
-			isMobileUserAgent:
-				typeof navigator !== 'undefined' &&
-				/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent),
-		});
-	});
+	// Load options using the advanced runes system
+	async function loadOptionsFromStartPosition() {
+		console.log('🚀 OptionPicker loadOptionsFromStartPosition called');
+		console.log('🔍 optionPickerState type:', typeof optionPickerState);
+		console.log('🔍 optionPickerState.loadOptions type:', typeof optionPickerState.loadOptions);
+		console.log('🔍 optionPickerState keys:', Object.keys(optionPickerState));
 
-	// Initialize data service and load options
-	async function initializeAndLoadOptions() {
 		try {
-			console.log('🎯 OptionPicker: initializeAndLoadOptions called with PURE RUNES');
-			optionPickerState.setLoading(true);
-
-			// Get the current sequence's end position
-			const endPosition = getCurrentSequenceEndPosition();
-			if (!endPosition) {
-				console.warn('⚠️ No end position found, cannot load options');
-				optionPickerState.setOptions([]);
-				optionPickerState.setError(null);
-				return;
+			if (typeof optionPickerState.loadOptions === 'function') {
+				console.log('🎯 Calling optionPickerState.loadOptions([])...');
+				await optionPickerState.loadOptions([]);
+				console.log('✅ optionPickerState.loadOptions([]) completed');
+			} else {
+				console.error('❌ optionPickerState.loadOptions is not a function!');
 			}
-
-			console.log(`🎯 Loading real options for end position: ${endPosition}`);
-
-			// Create OptionDataService instance and load real data
-			const optionDataService = new OptionDataService();
-			await optionDataService.initialize();
-
-			// Get real options from CSV data
-			const realOptions = await optionDataService.getNextOptionsFromEndPosition(
-				endPosition,
-				'diamond', // Default to diamond mode for now
-				{} // No filters - show all options
-			);
-
-			console.log(`✅ Loaded ${realOptions.length} real options from CSV data`);
-
-			// Debug: Test the LetterType.getLetterType function with real data
-			console.log('🔍 Testing LetterType.getLetterType function with real data:');
-			realOptions.slice(0, 10).forEach((option) => {
-				const letterType = LetterType.getLetterType(option.letter || '');
-				console.log(`  Letter "${option.letter}" -> Type "${letterType}"`);
-			});
-
-			console.log('🔧 About to set options in state:', {
-				optionsCount: realOptions.length,
-				firstOption: realOptions[0]?.letter,
-				stateType: typeof optionPickerState,
-				hasSetOptions: typeof optionPickerState.setOptions === 'function',
-			});
-
-			optionPickerState.setOptions(realOptions);
-			console.log(
-				'🔧 Options set in state, current allOptions length:',
-				optionPickerState.allOptions?.length
-			);
-
-			// Also set the simple backup state
-			simpleOptionsData = realOptions;
-			console.log('🔧 Simple backup state set with length:', simpleOptionsData.length);
-
-			// Check state after a brief delay to see if it's a reactivity timing issue
-			setTimeout(() => {
-				console.log(
-					'🔧 Options state after timeout:',
-					optionPickerState.allOptions?.length
-				);
-				console.log('🔧 Simple backup state after timeout:', simpleOptionsData.length);
-			}, 100);
-
-			optionPickerState.setError(null);
 		} catch (error) {
-			console.error('❌ Error loading real options:', error);
-			optionPickerState.setError(error instanceof Error ? error.message : 'Unknown error');
-			optionPickerState.setOptions([]);
-		} finally {
-			optionPickerState.setLoading(false);
+			console.error('❌ Error in loadOptionsFromStartPosition:', error);
 		}
 	}
 
@@ -349,19 +174,14 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	let mounted = $state(false);
 
 	$effect(() => {
+		console.log('🔍 OptionPicker $effect called, mounted:', mounted);
 		if (!mounted) {
 			mounted = true;
-			console.log('🎯 OptionPicker mounted via effect with PURE RUNES - initializing...');
-
-			// Initialize and load options
-			try {
-				console.log('🎯 About to call initializeAndLoadOptions...');
-				initializeAndLoadOptions().catch((error) => {
-					console.error('❌ Error in initializeAndLoadOptions:', error);
-				});
-			} catch (error) {
-				console.error('❌ Sync error in initializeAndLoadOptions:', error);
-			}
+			console.log(
+				'🎯 OptionPicker mounted via effect - about to call loadOptionsFromStartPosition...'
+			);
+			loadOptionsFromStartPosition();
+			console.log('🎯 OptionPicker loadOptionsFromStartPosition call completed');
 		}
 	});
 
@@ -372,7 +192,7 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 		// Add event listener for start position selection
 		const handleStartPositionSelected = () => {
 			console.log('🎯 Start position selected - reloading options');
-			initializeAndLoadOptions();
+			loadOptionsFromStartPosition();
 		};
 
 		// Set up window resize listener
@@ -428,7 +248,7 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 			<div class="error-container">
 				<p>❌ Error loading options</p>
 				<p>{optionPickerState.error}</p>
-				<button class="retry-button" onclick={initializeAndLoadOptions}> Retry </button>
+				<button class="retry-button" onclick={loadOptionsFromStartPosition}> Retry </button>
 			</div>
 		{:else if effectiveOptions.length === 0}
 			<div class="empty-container">
@@ -450,6 +270,19 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 				deviceInfo={enhancedDeviceInfo}
 				{foldableInfo}
 			/>
+
+			<!-- Debug: Show layout config being passed -->
+			<div
+				style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px; font-size: 12px; border-radius: 4px; z-index: 1000;"
+			>
+				<div>Grid: {currentLayoutConfig?.gridColumns || 'undefined'}</div>
+				<div>Gap: {currentLayoutConfig?.gridGap || 'undefined'}</div>
+				<div>Size: {currentLayoutConfig?.optionSize || 'undefined'}</div>
+				<div>Options: {effectiveOptions.length}</div>
+				<div>
+					Container: {optionPickerState.containerWidth}x{optionPickerState.containerHeight}
+				</div>
+			</div>
 		{/if}
 	</div>
 

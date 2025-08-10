@@ -6,7 +6,7 @@ export const createSnowflakeSystem = () => {
 	const config = SnowfallConfig;
 	let windStrength = 0;
 	let windChangeTimer = 0;
-	let currentQuality = 'medium'; // TODO: Use this to adjust snowflake rendering quality
+	// quality tracking placeholder removed; density adjustments are applied ad-hoc
 
 	const generateSnowflakeShape = (size: number): Path2D => {
 		const path = new Path2D();
@@ -27,7 +27,9 @@ export const createSnowflakeSystem = () => {
 	};
 
 	const randomSnowflakeColor = (): string => {
-		return config.snowflake.colors[Math.floor(Math.random() * config.snowflake.colors.length)];
+		const colors = config.snowflake.colors;
+		if (!colors.length) return '#FFFFFF';
+		return colors[Math.floor(Math.random() * colors.length)] ?? '#FFFFFF';
 	};
 
 	const createSnowflake = (width: number, height: number): Snowflake => {
@@ -49,7 +51,6 @@ export const createSnowflakeSystem = () => {
 	};
 
 	const initialize = ({ width, height }: Dimensions, quality: string): Snowflake[] => {
-		currentQuality = quality;
 		let adjustedDensity = config.snowflake.density;
 
 		const screenSizeFactor = Math.min(1, (width * height) / (1920 * 1080));
@@ -107,10 +108,12 @@ export const createSnowflakeSystem = () => {
 		const colorGroups = new Map<string, Snowflake[]>();
 
 		flakes.forEach((flake) => {
-			if (!colorGroups.has(flake.color)) {
-				colorGroups.set(flake.color, []);
+			const existing = colorGroups.get(flake.color);
+			if (existing) {
+				existing.push(flake);
+			} else {
+				colorGroups.set(flake.color, [flake]);
 			}
-			colorGroups.get(flake.color)!.push(flake);
 		});
 
 		colorGroups.forEach((groupFlakes, color) => {
@@ -128,7 +131,7 @@ export const createSnowflakeSystem = () => {
 
 	const adjustToResize = (
 		flakes: Snowflake[],
-		oldDimensions: Dimensions,
+		_oldDimensions: Dimensions,
 		newDimensions: Dimensions,
 		quality: string
 	): Snowflake[] => {
@@ -155,8 +158,8 @@ export const createSnowflakeSystem = () => {
 		return flakes;
 	};
 
-	const setQuality = (quality: string): void => {
-		currentQuality = quality;
+	const setQuality = (_quality: string): void => {
+		// future: adjust density dynamically
 	};
 
 	return {

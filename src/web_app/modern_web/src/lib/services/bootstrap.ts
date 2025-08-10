@@ -17,6 +17,7 @@ import type {
 	IArrowPlacementKeyService,
 	IArrowPositioningService,
 	IConstructTabCoordinationService,
+	IDeviceDetectionService,
 	IExportService,
 	IMotionGenerationService,
 	IOptionDataService,
@@ -37,6 +38,7 @@ import { ArrowPlacementDataService } from './implementations/ArrowPlacementDataS
 import { ArrowPlacementKeyService } from './implementations/ArrowPlacementKeyService';
 import { ArrowPositioningService } from './implementations/ArrowPositioningService';
 import { ConstructTabCoordinationService } from './implementations/ConstructTabCoordinationService';
+import { DeviceDetectionService } from './implementations/DeviceDetectionService';
 import { ExportService } from './implementations/ExportService';
 import { LocalStoragePersistenceService } from './implementations/LocalStoragePersistenceService';
 import { MotionGenerationService } from './implementations/MotionGenerationService';
@@ -121,6 +123,10 @@ const IStartPositionServiceInterface = createServiceInterface<IStartPositionServ
 	'IStartPositionService',
 	StartPositionService
 );
+const IDeviceDetectionServiceInterface = createServiceInterface<IDeviceDetectionService>(
+	'IDeviceDetectionService',
+	DeviceDetectionService
+);
 
 /**
  * Create and configure the web application DI container
@@ -135,6 +141,7 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		// Register infrastructure services
 		container.registerSingletonClass(IPersistenceServiceInterface);
 		container.registerSingletonClass(ISettingsServiceInterface);
+		container.registerSingletonClass(IDeviceDetectionServiceInterface);
 
 		// Register placement services (no dependencies)
 		container.registerSingletonClass(IArrowPlacementDataServiceInterface);
@@ -215,6 +222,7 @@ async function validateContainerConfiguration(container: ServiceContainer): Prom
 		// Core services needed by MainApplication
 		IPersistenceServiceInterface,
 		ISettingsServiceInterface,
+		IDeviceDetectionServiceInterface,
 		ISequenceDomainServiceInterface,
 		ISequenceServiceInterface,
 		IApplicationInitializationServiceInterface,
@@ -280,6 +288,7 @@ const serviceInterfaceMap = new Map<string, ServiceInterface<any>>([
 	['IConstructTabCoordinationService', IConstructTabCoordinationServiceInterface],
 	['IOptionDataService', IOptionDataServiceInterface],
 	['IStartPositionService', IStartPositionServiceInterface],
+	['IDeviceDetectionService', IDeviceDetectionServiceInterface],
 ]);
 
 /**

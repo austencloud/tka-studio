@@ -1,12 +1,13 @@
 <!--
-Generate Panel - Svelte Version for Construct Tab Right Panel
-Modern Generate Panel with Tasteful Glassmorphism
-
-A clean, compact design that fits in the construct tab's right panel
-while maintaining the legacy layout structure with subtle glass effects.
+Responsive Generate Panel - Following Proper UX Principles
+Uses device detection service for appropriate touch targets and layout
 -->
 <script lang="ts">
-	// Import all selector components from the tabs directory for now
+	import { resolve } from '$services/bootstrap';
+	import type { IDeviceDetectionService } from '$services/interfaces';
+	import { onMount } from 'svelte';
+	
+	// Import selector components
 	import LengthSelector from '../tabs/generate/selectors/LengthSelector.svelte';
 	import LevelSelector from '../tabs/generate/selectors/LevelSelector.svelte';
 	import TurnIntensitySelector from '../tabs/generate/selectors/TurnIntensitySelector.svelte';
@@ -22,235 +23,234 @@ while maintaining the legacy layout structure with subtle glass effects.
 	type GridMode = 'DIAMOND' | 'BOX';
 	type PropContinuity = 'RANDOM' | 'CONTINUOUS';
 	type SliceSize = 'HALVED' | 'QUARTERED';
-	type CAPType = 'STRICT_ROTATED'; // Simplified for demo
+	type CAPType = 'STRICT_ROTATED';
 	type LetterType = 'TYPE1' | 'TYPE2' | 'TYPE3' | 'TYPE4' | 'TYPE5' | 'TYPE6';
 
-	interface GenerationConfig {
-		mode: GenerationMode;
-		length: number;
-		level: number;
-		turnIntensity: number;
-		gridMode: GridMode;
-		propContinuity: PropContinuity;
-		letterTypes: Set<LetterType>;
-		sliceSize: SliceSize;
-		capType: CAPType;
-	}
+	// Service and state
+	let deviceService: IDeviceDetectionService | null = null;
+	let deviceCapabilities = $state(null);
+	let responsiveSettings = $state(null);
 
-	interface GenerationState {
-		config: GenerationConfig;
-		isGenerating: boolean;
-	}
-
-	// State
-	let currentConfig: GenerationConfig = $state({
-		mode: 'FREEFORM',
+	// Generation state
+	let currentConfig = $state({
+		mode: 'FREEFORM' as GenerationMode,
 		length: 16,
 		level: 2,
 		turnIntensity: 1.0,
-		gridMode: 'DIAMOND',
-		propContinuity: 'CONTINUOUS',
-		letterTypes: new Set(['TYPE1', 'TYPE2', 'TYPE3', 'TYPE4', 'TYPE5', 'TYPE6']),
-		sliceSize: 'HALVED',
-		capType: 'STRICT_ROTATED',
+		gridMode: 'DIAMOND' as GridMode,
+		propContinuity: 'CONTINUOUS' as PropContinuity,
+		letterTypes: new Set(['TYPE1', 'TYPE2', 'TYPE3', 'TYPE4', 'TYPE5', 'TYPE6'] as LetterType[]),
+		sliceSize: 'HALVED' as SliceSize,
+		capType: 'STRICT_ROTATED' as CAPType,
 	});
 
 	let isGenerating = $state(false);
-
-	let currentState: GenerationState = $derived({
-		config: currentConfig,
-		isGenerating: isGenerating,
-	});
-
-	// Component references
-	let lengthSelectorRef = $state<LengthSelector>();
-	let levelSelectorRef = $state<LevelSelector>();
-	let turnIntensitySelectorRef = $state<TurnIntensitySelector>();
-	let gridModeSelectorRef = $state<GridModeSelector>();
-	let generationModeToggleRef = $state<GenerationModeToggle>();
-	let propContinuityToggleRef = $state<PropContinuityToggle>();
-	let letterTypeSelectorRef = $state<LetterTypeSelector>();
-	let sliceSizeSelectorRef = $state<SliceSizeSelector>();
-	let capTypeSelectorRef = $state<CAPTypeSelector>();
-
-	// Derived state
 	let isFreeformMode = $derived(currentConfig.mode === 'FREEFORM');
 
+	// Responsive layout properties
+	let layoutMode = $derived(() => {
+		if (!responsiveSettings) return 'comfortable';
+		return responsiveSettings.layoutDensity;
+	});
+
+	let shouldAllowScrolling = $derived(() => {
+		return responsiveSettings?.allowScrolling ?? true;
+	});
+
+	let minTouchTarget = $derived(() => {
+		return responsiveSettings?.minTouchTarget ?? 44;
+	});
+
+	let elementSpacing = $derived(() => {
+		return responsiveSettings?.elementSpacing ?? 16;
+	});
+
+	onMount(() => {
+		try {
+			deviceService = resolve('IDeviceDetectionService');
+			deviceCapabilities = deviceService.getCapabilities();
+			responsiveSettings = deviceService.getResponsiveSettings();
+
+			console.log('🔍 Device capabilities:', deviceCapabilities);
+			console.log('📱 Responsive settings:', responsiveSettings);
+
+			// Listen for device changes (orientation, window resize)
+			const cleanup = deviceService.onCapabilitiesChanged((caps) => {
+				deviceCapabilities = caps;
+				responsiveSettings = deviceService.getResponsiveSettings();
+			});
+
+			return cleanup;
+		} catch (error) {
+			console.warn('DeviceDetectionService not available, using defaults:', error);
+			// Fallback defaults
+			responsiveSettings = {
+				minTouchTarget: 44,
+				elementSpacing: 16,
+				allowScrolling: true,
+				layoutDensity: 'comfortable',
+				fontScaling: 1.0
+			};
+		}
+	});
+
 	// Event handlers
-	function updateConfig(updates: Partial<GenerationConfig>) {
+	function updateConfig(updates: Partial<typeof currentConfig>) {
 		currentConfig = { ...currentConfig, ...updates };
-		currentState = { ...currentState, config: currentConfig };
-
-		console.log('🔍 [GENERATE_PANEL] Config updated:', updates);
-		console.log('🔍 [GENERATE_PANEL] Current config:', currentConfig);
-	}
-
-	function onModeChanged(event: CustomEvent) {
-		const mode = event.detail.mode as GenerationMode;
-		updateConfig({ mode });
-		updateComponentVisibility(mode);
-	}
-
-	function onLengthChanged(event: CustomEvent) {
-		const length = event.detail.value as number;
-		console.log('🔍 [GENERATE_PANEL] Length changed to:', length);
-		updateConfig({ length });
-	}
-
-	function onLevelChanged(event: CustomEvent) {
-		const level = event.detail.value as number;
-		updateConfig({ level });
-	}
-
-	function onTurnIntensityChanged(event: CustomEvent) {
-		const turnIntensity = event.detail.value as number;
-		updateConfig({ turnIntensity });
-	}
-
-	function onGridModeChanged(event: CustomEvent) {
-		const gridMode = event.detail.value as GridMode;
-		updateConfig({ gridMode });
-	}
-
-	function onPropContinuityChanged(event: CustomEvent) {
-		const propContinuity = event.detail.value as PropContinuity;
-		updateConfig({ propContinuity });
-	}
-
-	function onLetterTypesChanged(event: CustomEvent) {
-		const letterTypes = event.detail.value as Set<LetterType>;
-		updateConfig({ letterTypes });
-	}
-
-	function onSliceSizeChanged(event: CustomEvent) {
-		const sliceSize = event.detail.value as SliceSize;
-		updateConfig({ sliceSize });
-	}
-
-	function onCAPTypeChanged(event: CustomEvent) {
-		const capType = event.detail.value as CAPType;
-		updateConfig({ capType });
-	}
-
-	function updateComponentVisibility(mode: GenerationMode) {
-		const isFreeform = mode === 'FREEFORM';
-
-		// Update visibility - these will be handled by reactive statements
-		// In Svelte, we'll use conditional rendering in the template
 	}
 
 	function onGenerateClicked() {
 		if (isGenerating) return;
-
-		console.log('🎯 [GENERATE_PANEL] Generate clicked with config:', currentConfig);
-
 		isGenerating = true;
-
-		// Simulate generation process
+		
+		console.log('🎯 Generate clicked with config:', currentConfig);
+		
 		setTimeout(() => {
 			isGenerating = false;
-			console.log('✅ [GENERATE_PANEL] Generation completed');
 		}, 2000);
 	}
 
 	function onAutoCompleteClicked() {
 		if (isGenerating) return;
-
-		console.log('🔄 [GENERATE_PANEL] Auto-complete clicked');
-		// TODO: Implement auto-complete logic
+		console.log('🔄 Auto-complete clicked');
 	}
 
-	// Set up event listeners
-	$effect(() => {
-		// Mode change events
-		const handleModeChange = (e: Event) => onModeChanged(e as CustomEvent);
-		document.addEventListener('modeChanged', handleModeChange);
+	// Event handlers for selector changes
+	function onLevelChanged(event: CustomEvent) {
+		updateConfig({ level: event.detail.value });
+	}
 
-		// Value change events
-		const handleLengthChange = (e: Event) => onLengthChanged(e as CustomEvent);
-		const handleLevelChange = (e: Event) => onLevelChanged(e as CustomEvent);
-		const handleTurnIntensityChange = (e: Event) => onTurnIntensityChanged(e as CustomEvent);
-		const handleGridModeChange = (e: Event) => onGridModeChanged(e as CustomEvent);
-		const handlePropContinuityChange = (e: Event) => onPropContinuityChanged(e as CustomEvent);
-		const handleLetterTypesChange = (e: Event) => onLetterTypesChanged(e as CustomEvent);
-		const handleSliceSizeChange = (e: Event) => onSliceSizeChanged(e as CustomEvent);
-		const handleCAPTypeChange = (e: Event) => onCAPTypeChanged(e as CustomEvent);
+	function onLengthChanged(event: CustomEvent) {
+		updateConfig({ length: event.detail.value });
+	}
 
-		document.addEventListener('valueChanged', handleLengthChange);
-		document.addEventListener('valueChanged', handleLevelChange);
-		document.addEventListener('valueChanged', handleTurnIntensityChange);
-		document.addEventListener('valueChanged', handleGridModeChange);
-		document.addEventListener('valueChanged', handlePropContinuityChange);
-		document.addEventListener('valueChanged', handleLetterTypesChange);
-		document.addEventListener('valueChanged', handleSliceSizeChange);
-		document.addEventListener('valueChanged', handleCAPTypeChange);
+	function onTurnIntensityChanged(event: CustomEvent) {
+		updateConfig({ turnIntensity: event.detail.value });
+	}
 
-		return () => {
-			document.removeEventListener('modeChanged', handleModeChange);
-			document.removeEventListener('valueChanged', handleLengthChange);
-			document.removeEventListener('valueChanged', handleLevelChange);
-			document.removeEventListener('valueChanged', handleTurnIntensityChange);
-			document.removeEventListener('valueChanged', handleGridModeChange);
-			document.removeEventListener('valueChanged', handlePropContinuityChange);
-			document.removeEventListener('valueChanged', handleLetterTypesChange);
-			document.removeEventListener('valueChanged', handleSliceSizeChange);
-			document.removeEventListener('valueChanged', handleCAPTypeChange);
-		};
-	});
+	function onGridModeChanged(event: CustomEvent) {
+		updateConfig({ gridMode: event.detail.value });
+	}
+
+	function onGenerationModeChanged(event: CustomEvent) {
+		updateConfig({ mode: event.detail.mode });
+	}
+
+	function onPropContinuityChanged(event: CustomEvent) {
+		updateConfig({ propContinuity: event.detail.value });
+	}
+
+	function onLetterTypesChanged(event: CustomEvent) {
+		updateConfig({ letterTypes: event.detail.value });
+	}
+
+	function onSliceSizeChanged(event: CustomEvent) {
+		updateConfig({ sliceSize: event.detail.value });
+	}
+
+	function onCAPTypeChanged(event: CustomEvent) {
+		updateConfig({ capType: event.detail.value });
+	}
 </script>
 
-<div class="generate-panel">
-	<!-- Minimal header -->
+<div 
+	class="generate-panel" 
+	data-layout={layoutMode} 
+	data-allow-scroll={shouldAllowScrolling}
+	style="--min-touch-target: {minTouchTarget}px; --element-spacing: {elementSpacing}px;"
+>
+	<!-- Header -->
 	<div class="header">
 		<h3>Customize Your Sequence</h3>
+		<!-- Debug info removed for production -->
 	</div>
 
-	<!-- Controls section - clean and spacious -->
-	<div class="controls-section">
-		<LevelSelector bind:this={levelSelectorRef} initialValue={currentConfig.level} />
+	<!-- Settings Container - responsive layout -->
+	<div class="settings-container">
+		<!-- Core sequence settings always visible -->
+		<section class="settings-section">
+			<h4 class="section-title">Sequence Settings</h4>
+			<div class="settings-grid">
+				<div class="setting-item">
+					<LevelSelector 
+						initialValue={currentConfig.level}
+						on:valueChanged={onLevelChanged}
+					/>
+				</div>
+				<div class="setting-item">
+					<LengthSelector 
+						initialValue={currentConfig.length}
+						on:valueChanged={onLengthChanged}
+					/>
+				</div>
+				<div class="setting-item">
+					<TurnIntensitySelector
+						initialValue={currentConfig.turnIntensity}
+						on:valueChanged={onTurnIntensityChanged}
+					/>
+				</div>
+			</div>
+		</section>
 
-		<LengthSelector bind:this={lengthSelectorRef} initialValue={currentConfig.length} />
+		<!-- Mode and grid settings -->
+		<section class="settings-section">
+			<h4 class="section-title">Mode & Layout</h4>
+			<div class="settings-grid">
+				<div class="setting-item">
+					<GridModeSelector 
+						initialMode={currentConfig.gridMode}
+						on:valueChanged={onGridModeChanged}
+					/>
+				</div>
+				<div class="setting-item">
+					<GenerationModeToggle
+						initialMode={currentConfig.mode}
+						on:modeChanged={onGenerationModeChanged}
+					/>
+				</div>
+				<div class="setting-item">
+					<PropContinuityToggle
+						initialValue={currentConfig.propContinuity}
+						on:valueChanged={onPropContinuityChanged}
+					/>
+				</div>
+			</div>
+		</section>
 
-		<TurnIntensitySelector
-			bind:this={turnIntensitySelectorRef}
-			initialValue={currentConfig.turnIntensity}
-		/>
-
-		<GridModeSelector bind:this={gridModeSelectorRef} initialMode={currentConfig.gridMode} />
-
-		<GenerationModeToggle
-			bind:this={generationModeToggleRef}
-			initialMode={currentConfig.mode}
-		/>
-
-		<PropContinuityToggle
-			bind:this={propContinuityToggleRef}
-			initialValue={currentConfig.propContinuity}
-		/>
-
-		<!-- Mode-specific controls with fixed height container -->
-		<div class="mode-specific-controls">
-			{#if isFreeformMode}
-				<LetterTypeSelector
-					bind:this={letterTypeSelectorRef}
-					initialValue={currentConfig.letterTypes}
-				/>
-			{:else}
-				<SliceSizeSelector
-					bind:this={sliceSizeSelectorRef}
-					initialValue={currentConfig.sliceSize}
-				/>
-
-				<CAPTypeSelector
-					bind:this={capTypeSelectorRef}
-					initialValue={currentConfig.capType}
-				/>
-			{/if}
-		</div>
+		<!-- Mode-specific settings -->
+		{#if isFreeformMode}
+			<section class="settings-section">
+				<h4 class="section-title">Filter Options</h4>
+				<div class="setting-item full-width">
+					<LetterTypeSelector
+						initialValue={currentConfig.letterTypes}
+						on:valueChanged={onLetterTypesChanged}
+					/>
+				</div>
+			</section>
+		{:else}
+			<section class="settings-section">
+				<h4 class="section-title">Circular Mode Options</h4>
+				<div class="settings-grid">
+					<div class="setting-item">
+						<SliceSizeSelector
+							initialValue={currentConfig.sliceSize}
+							on:valueChanged={onSliceSizeChanged}
+						/>
+					</div>
+					<div class="setting-item">
+						<CAPTypeSelector
+							initialValue={currentConfig.capType}
+							on:valueChanged={onCAPTypeChanged}
+						/>
+					</div>
+				</div>
+			</section>
+		{/if}
 	</div>
 
-	<!-- Action buttons - prominent and clear -->
-	<div class="action-buttons">
+	<!-- Action buttons with proper touch targets -->
+	<div class="action-section">
 		<button
 			class="action-button secondary"
 			onclick={onAutoCompleteClicked}
@@ -275,103 +275,105 @@ while maintaining the legacy layout structure with subtle glass effects.
 	.generate-panel {
 		display: flex;
 		flex-direction: column;
-		flex: 1; /* Take full available height from flex parent */
-		min-height: 0; /* Allow flex shrinking */
+		height: 100%;
 		padding: 16px;
-		/* Transparent background to show beautiful background without blur */
 		background: rgba(255, 255, 255, 0.05);
-		/* backdrop-filter: blur(20px); - REMOVED to show background */
 		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 8px;
 		color: rgba(255, 255, 255, 0.9);
 		font-family: 'Segoe UI', sans-serif;
-		border-radius: 8px;
-		gap: 12px;
-		overflow-y: auto;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+		gap: var(--element-spacing);
+		overflow: hidden;
 	}
 
 	.header {
+		flex-shrink: 0;
 		text-align: center;
-		padding: 0 0 8px 0;
-		margin: 0;
+		padding-bottom: 12px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	.header h3 {
-		color: rgba(255, 255, 255, 0.95);
+		margin: 0;
 		font-size: 18px;
 		font-weight: 600;
-		letter-spacing: 0.5px;
-		margin: 0;
-		background: transparent;
-		border: none;
+		color: rgba(255, 255, 255, 0.95);
 	}
 
-	.controls-section {
+	.settings-container {
+		flex: 1;
+		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
-		gap: 12px; /* Restore gap for proper spacing */
-		flex: 1; /* Take all available space between header and buttons */
-		overflow-y: visible; /* Allow natural height */
-		padding-bottom: 8px; /* Add some bottom spacing */
-		justify-content: space-evenly; /* Distribute space evenly between controls */
+		gap: calc(var(--element-spacing) * 1.25);
+		justify-content: space-between; /* Distribute sections evenly */
+		margin-bottom: var(--element-spacing); /* Add space before action buttons */
 	}
 
-	/* Make each control item expand equally without breaking internal layouts */
-	.controls-section > :global(*) {
-		flex: 1; /* Each control gets equal space */
-		display: flex;
-		align-items: center; /* Center content vertically within each flex item */
-		min-height: 60px; /* Minimum height for each control */
-		padding: 12px 0; /* Add vertical padding for spacing */
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
-	}
-
-	/* Remove border from last item */
-	.controls-section > :global(*:last-child) {
-		border-bottom: none;
-	}
-
-	/* Fixed height container for mode-specific controls */
-	.mode-specific-controls {
-		flex: 2; /* Give this section more space since it can have multiple components */
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: stretch;
-		min-height: 120px; /* Fixed minimum height to prevent layout shifts */
-		max-height: 140px; /* Fixed maximum height to maintain consistency */
-		overflow: hidden; /* Hide overflow if content is too tall */
-		gap: 8px; /* Space between multiple components in circular mode */
-		padding: 12px 0;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-	}
-
-	/* Ensure child components fit within the fixed height */
-	.mode-specific-controls > :global(*) {
-		flex-shrink: 1; /* Allow shrinking if needed */
-		overflow: hidden; /* Prevent overflow */
-	}
-
-	.action-buttons {
+	.settings-section {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		flex-shrink: 0; /* Don't shrink */
-		padding-top: 16px; /* Add some spacing above buttons */
-		border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+		flex: 1; /* Take equal space */
+		min-height: 150px; /* Minimum comfortable height */
+	}
+
+	.section-title {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.8);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		padding-bottom: 6px;
+	}
+
+	.settings-grid {
+		display: grid;
+		gap: var(--element-spacing);
+		grid-template-columns: 1fr;
+		flex: 1; /* Expand to fill section */
+		align-content: space-evenly; /* Distribute items evenly */
+	}
+
+	.setting-item {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 6px;
+		padding: var(--element-spacing);
+		transition: background-color 0.2s ease;
+		min-height: var(--min-touch-target);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 1; /* Expand to fill available grid space */
+	}
+
+	.setting-item:hover {
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.setting-item.full-width {
+		grid-column: 1 / -1;
+	}
+
+	.action-section {
+		flex-shrink: 0;
+		display: flex;
+		gap: var(--element-spacing);
+		padding-top: var(--element-spacing);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	.action-button {
+		flex: 1;
+		min-height: var(--min-touch-target);
+		padding: 12px 20px;
+		border: none;
 		border-radius: 6px;
 		font-size: 14px;
-		font-weight: 500;
-		padding: 10px 16px;
-		width: 100%;
+		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		border: none;
-		outline: none;
 	}
 
 	.action-button:disabled {
@@ -383,24 +385,17 @@ while maintaining the legacy layout structure with subtle glass effects.
 		background: rgba(255, 255, 255, 0.1);
 		border: 1px solid rgba(255, 255, 255, 0.2);
 		color: rgba(255, 255, 255, 0.9);
-		font-weight: 500;
 	}
 
 	.action-button.secondary:hover:not(:disabled) {
 		background: rgba(255, 255, 255, 0.15);
 		border-color: rgba(255, 255, 255, 0.3);
-		color: white;
-	}
-
-	.action-button.secondary:active:not(:disabled) {
-		background: rgba(255, 255, 255, 0.2);
 	}
 
 	.action-button.primary {
 		background: rgba(70, 130, 255, 0.8);
 		border: 1px solid rgba(70, 130, 255, 0.9);
 		color: white;
-		font-weight: 600;
 	}
 
 	.action-button.primary:hover:not(:disabled) {
@@ -408,7 +403,139 @@ while maintaining the legacy layout structure with subtle glass effects.
 		border-color: rgba(80, 140, 255, 1);
 	}
 
-	.action-button.primary:active:not(:disabled) {
-		background: rgba(60, 120, 245, 0.9);
+	/* Responsive layouts based on device capabilities */
+	
+	/* Comfortable layout for touch-primary devices */
+	.generate-panel[data-layout="comfortable"] .settings-grid {
+		grid-template-columns: 1fr;
+		gap: calc(var(--element-spacing) * 1.25);
+	}
+
+	.generate-panel[data-layout="comfortable"] .setting-item {
+		padding: calc(var(--element-spacing) * 1.25);
+		min-height: calc(var(--min-touch-target) * 1.2);
+	}
+
+	.generate-panel[data-layout="comfortable"] .action-button {
+		min-height: calc(var(--min-touch-target) * 1.1);
+		font-size: 16px;
+	}
+
+	/* Spacious layout for hybrid devices (desktop + touch) */
+	.generate-panel[data-layout="spacious"] {
+		padding: calc(var(--element-spacing) * 1.5);
+		gap: calc(var(--element-spacing) * 1.5);
+	}
+
+	.generate-panel[data-layout="spacious"] .settings-grid {
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: calc(var(--element-spacing) * 1.5);
+	}
+
+	.generate-panel[data-layout="spacious"] .setting-item {
+		padding: calc(var(--element-spacing) * 1.5);
+		min-height: calc(var(--min-touch-target) * 1.4);
+	}
+
+	.generate-panel[data-layout="spacious"] .action-button {
+		min-height: calc(var(--min-touch-target) * 1.3);
+		font-size: 16px;
+	}
+
+	/* Compact layout for precise pointer devices (desktop mouse) */
+	.generate-panel[data-layout="compact"] {
+		padding: 12px;
+		gap: calc(var(--element-spacing) * 0.75);
+	}
+
+	.generate-panel[data-layout="compact"] .settings-grid {
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: calc(var(--element-spacing) * 0.75);
+	}
+
+	.generate-panel[data-layout="compact"] .setting-item {
+		padding: calc(var(--element-spacing) * 0.75);
+		min-height: calc(var(--min-touch-target) * 0.8);
+	}
+
+	.generate-panel[data-layout="compact"] .header h3 {
+		font-size: 16px;
+	}
+
+	.generate-panel[data-layout="compact"] .action-button {
+		min-height: var(--min-touch-target);
+		font-size: 13px;
+		padding: 8px 16px;
+	}
+
+	/* Ensure no scrolling is forced when not appropriate */
+	.generate-panel[data-allow-scroll="false"] {
+		overflow: hidden;
+	}
+
+	.generate-panel[data-allow-scroll="false"] .settings-container {
+		overflow: hidden;
+		flex: 1;
+		min-height: 0;
+	}
+
+	/* Mobile-specific adjustments */
+	@media (max-width: 768px) {
+		.generate-panel {
+			padding: var(--element-spacing);
+		}
+
+		.settings-grid {
+			grid-template-columns: 1fr !important;
+		}
+
+		.action-section {
+			flex-direction: column;
+		}
+
+		.action-button {
+			min-height: calc(var(--min-touch-target) * 1.1) !important;
+			font-size: 16px !important;
+		}
+	}
+
+	/* Large desktop optimization */
+	@media (min-width: 1440px) {
+		.generate-panel[data-layout="compact"] .settings-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+		
+		.generate-panel[data-layout="spacious"] .settings-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	/* High DPI display adjustments */
+	@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+		.action-button {
+			border-width: 0.5px;
+		}
+		
+		.setting-item {
+			border-width: 0.5px;
+		}
+	}
+
+	/* Child component styling to work with responsive settings */
+	.setting-item :global(.level-selector),
+	.setting-item :global(.length-selector),
+	.setting-item :global(.turn-intensity-selector),
+	.setting-item :global(.grid-mode-selector) {
+		width: 100%;
+	}
+
+	.setting-item :global(.level-button) {
+		min-height: calc(var(--min-touch-target) * 0.8);
+		min-width: calc(var(--min-touch-target) * 0.8);
+	}
+
+	.setting-item :global(.value-display) {
+		min-height: calc(var(--min-touch-target) * 0.6);
+		min-width: calc(var(--min-touch-target) * 0.8);
 	}
 </style>

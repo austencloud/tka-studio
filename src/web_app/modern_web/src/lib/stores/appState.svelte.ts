@@ -5,8 +5,9 @@
  * Simple, clean state management without complex fade orchestration
  */
 
-import type { AppSettings } from '$services/interfaces';
 import { browser } from '$app/environment';
+import { GridMode as DomainGridMode } from '$lib/domain/enums';
+import type { AppSettings } from '$services/interfaces';
 
 // ============================================================================
 // INITIALIZATION STATE
@@ -84,7 +85,7 @@ const SETTINGS_STORAGE_KEY = 'tka-modern-web-settings';
 // Default settings
 const DEFAULT_SETTINGS: AppSettings = {
 	theme: 'dark',
-	gridMode: 'diamond',
+	gridMode: DomainGridMode.DIAMOND,
 	showBeatNumbers: true,
 	autoSave: true,
 	exportQuality: 'high',
@@ -106,7 +107,7 @@ function loadSettingsFromStorage(): AppSettings {
 		if (!stored) {
 			console.log('🔄 No stored settings found, using defaults:', {
 				key: SETTINGS_STORAGE_KEY,
-				defaultBackgroundType: DEFAULT_SETTINGS.backgroundType
+				defaultBackgroundType: DEFAULT_SETTINGS.backgroundType,
 			});
 			return DEFAULT_SETTINGS;
 		}
@@ -118,7 +119,7 @@ function loadSettingsFromStorage(): AppSettings {
 			key: SETTINGS_STORAGE_KEY,
 			backgroundType: merged.backgroundType,
 			backgroundEnabled: merged.backgroundEnabled,
-			fullSettings: merged
+			fullSettings: merged,
 		});
 		return merged;
 	} catch (error) {
@@ -137,7 +138,7 @@ function saveSettingsToStorage(settings: AppSettings): void {
 			key: SETTINGS_STORAGE_KEY,
 			backgroundType: settings.backgroundType,
 			backgroundEnabled: settings.backgroundEnabled,
-			fullSettings: settings
+			fullSettings: settings,
 		});
 	} catch (error) {
 		console.error('❌ Failed to save settings to localStorage:', error);
@@ -284,9 +285,9 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
 	console.log('🔄 Updating settings:', {
 		newSettings,
 		backgroundType: newSettings.backgroundType,
-		previousBackgroundType: settingsState.backgroundType
+		previousBackgroundType: settingsState.backgroundType,
 	});
-	
+
 	Object.assign(settingsState, newSettings);
 
 	// Apply theme if changed
@@ -296,8 +297,11 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
 
 	// Save to localStorage
 	saveSettingsToStorage(settingsState);
-	
-	console.log('💾 Settings updated and saved. Current backgroundType:', settingsState.backgroundType);
+
+	console.log(
+		'💾 Settings updated and saved. Current backgroundType:',
+		settingsState.backgroundType
+	);
 }
 
 /**
@@ -374,7 +378,7 @@ export function resetAppState(): void {
  */
 export function clearStoredSettings(): void {
 	if (!browser) return;
-	
+
 	try {
 		localStorage.removeItem(SETTINGS_STORAGE_KEY);
 		console.log('🗝 Cleared stored settings from localStorage');
@@ -391,7 +395,7 @@ export function clearStoredSettings(): void {
  */
 export function debugSettings(): void {
 	if (!browser) return;
-	
+
 	try {
 		const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
 		console.log('🔍 Debug Settings:', {
@@ -399,7 +403,7 @@ export function debugSettings(): void {
 			storedValue: stored,
 			parsedValue: stored ? JSON.parse(stored) : null,
 			currentState: settingsState,
-			currentBackground: settingsState.backgroundType
+			currentBackground: settingsState.backgroundType,
 		});
 	} catch (error) {
 		console.error('❌ Failed to debug settings:', error);

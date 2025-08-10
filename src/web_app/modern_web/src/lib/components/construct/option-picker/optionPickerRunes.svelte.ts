@@ -9,8 +9,10 @@
  * - Complex reactive state derivations
  */
 
+import { GridMode } from '$lib/domain/enums';
 import type { PictographData } from '$lib/domain/PictographData';
-import type { ReversalFilter, SortMethod } from '../config';
+import { OptionDataService } from '$services/implementations/OptionDataService';
+import type { ReversalFilter, SortMethod } from './config';
 import { determineGroupKey, getSortedGroupKeys, getSorter } from './services/OptionsService';
 
 // ===== Types =====
@@ -99,7 +101,7 @@ export function createOptionPickerRunes() {
 
 	// Filtered and sorted options
 	const filteredOptions = $derived(() => {
-		let options = [...optionsData];
+		const options = [...optionsData];
 		options.sort(getSorter(uiState.sortMethod, sequenceData));
 		return options;
 	});
@@ -107,7 +109,8 @@ export function createOptionPickerRunes() {
 	// Grouped options based on sort method
 	const groupedOptions = $derived(() => {
 		const groups: Record<string, PictographData[]> = {};
-		filteredOptions.forEach((option) => {
+		const options = filteredOptions();
+		options.forEach((option) => {
 			const groupKey = determineGroupKey(option, uiState.sortMethod, sequenceData);
 			if (!groups[groupKey]) groups[groupKey] = [];
 			groups[groupKey].push(option);
@@ -134,13 +137,15 @@ export function createOptionPickerRunes() {
 
 	// ===== Actions =====
 	async function loadOptions(sequence: PictographData[]) {
-		// Don't try to load options if sequence is empty
+		console.log('🚀 Runes loadOptions called with sequence:', {
+			sequenceLength: sequence?.length || 0,
+			isEmpty: !sequence || sequence.length === 0,
+		});
+
+		// For empty sequence, load from start position
 		if (!sequence || sequence.length === 0) {
-			console.warn('Attempted to load options with empty sequence');
-			optionsData = [];
-			uiState.isLoading = false;
-			uiState.error = null;
-			return;
+			console.log('🎯 Empty sequence - loading from start position...');
+			// Don't return early - continue to load from start position
 		}
 
 		sequenceData = sequence;
@@ -164,7 +169,7 @@ export function createOptionPickerRunes() {
 
 					nextOptions = await optionDataService.getNextOptionsFromEndPosition(
 						endPosition,
-						'diamond',
+						GridMode.DIAMOND,
 						{} // No filters
 					);
 				} else {
@@ -184,7 +189,7 @@ export function createOptionPickerRunes() {
 
 						nextOptions = await optionDataService.getNextOptionsFromEndPosition(
 							endPosition,
-							'diamond',
+							GridMode.DIAMOND,
 							{}
 						);
 					}
@@ -196,7 +201,9 @@ export function createOptionPickerRunes() {
 				console.warn('No options available for the current sequence');
 			}
 
+			console.log(`🔧 Runes setting optionsData with ${nextOptions?.length || 0} options`);
 			optionsData = nextOptions || [];
+			console.log(`🔧 Runes optionsData set, current length: ${optionsData.length}`);
 			uiState.isLoading = false;
 
 			// Only set default tab if we don't have a selected tab yet
@@ -298,7 +305,6 @@ export function createOptionPickerRunes() {
 			return sequenceData;
 		},
 		get allOptions() {
-			console.log('🔧 allOptions getter called, returning:', optionsData?.length, 'options');
 			return optionsData;
 		},
 		get filteredOptions() {

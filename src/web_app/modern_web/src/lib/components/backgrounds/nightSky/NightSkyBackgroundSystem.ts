@@ -1,19 +1,19 @@
 // src/lib/components/backgrounds/nightSky/NightSkyBackgroundSystem.ts
-import type {
-	BackgroundSystem,
-	Dimensions,
-	QualityLevel,
-	Star,
-	CelestialBody, // Ensure CelestialBody is imported
-	Spaceship,
-	ShootingStarState,
-	EasterEggState,
-	AccessibilitySettings,
-} from '../types/types';
-import { drawBackgroundGradient } from '../snowfall/utils/backgroundUtils'; // Assuming this is a generic gradient util
 import { getOptimizedConfig } from '../config';
-import { createShootingStarSystem } from '../systems/ShootingStarSystem';
 import { NightSkyConfig } from '../config/nightSky.js';
+import { drawBackgroundGradient } from '../snowfall/utils/backgroundUtils'; // Assuming this is a generic gradient util
+import { createShootingStarSystem } from '../systems/ShootingStarSystem';
+import type {
+	AccessibilitySettings,
+	BackgroundSystem,
+	CelestialBody,
+	Dimensions,
+	EasterEggState,
+	QualityLevel,
+	ShootingStarState, // Ensure CelestialBody is imported
+	Spaceship,
+	Star,
+} from '../types/types';
 
 type ParallaxLayer = { stars: Star[]; driftX: number; driftY: number };
 
@@ -567,6 +567,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 		return Math.floor(Math.random() * (M - m + 1)) + m;
 	}
 	private randItem<T>(arr: T[]): T {
-		return arr[Math.floor(Math.random() * arr.length)];
+		if (arr.length === 0) throw new Error('randItem called with empty array');
+		return arr[Math.floor(Math.random() * arr.length)] as T;
 	}
 }

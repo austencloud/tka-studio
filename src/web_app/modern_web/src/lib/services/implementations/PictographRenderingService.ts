@@ -5,14 +5,14 @@
  * Integrates with the sophisticated ArrowPositioningService for accurate positioning.
  */
 
-import type { BeatData, PictographData, MotionData } from '$lib/domain';
-import { GridMode } from '$lib/domain';
+import type { BeatData, MotionData, PictographData } from '$lib/domain';
 import {
 	ArrowType,
 	createArrowData,
 	createGridData as createDomainGridData,
 	createPictographData,
 	createPropData,
+	GridMode,
 	PropType,
 } from '$lib/domain';
 import { getLetterImagePath } from '$lib/utils/letterTypeClassification';
@@ -322,7 +322,6 @@ export class PictographRenderingService implements IPictographRenderingService {
 
 		return path;
 	}
-
 
 	/**
 	 * Render ID label with enhanced metadata

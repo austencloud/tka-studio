@@ -5,13 +5,7 @@
  * Handles different answer types and lesson-specific validation logic.
  */
 
-import {
-	type QuestionData,
-	type AnswerOption,
-	LessonType,
-	AnswerFormat,
-	AnswerFeedback,
-} from '$lib/types/learn';
+import { AnswerFeedback, type AnswerOption, LessonType, type QuestionData } from '$lib/types/learn';
 
 export interface AnswerResult {
 	isCorrect: boolean;
@@ -71,17 +65,18 @@ export class AnswerCheckerService {
 
 		const isCorrect = userLetter?.toLowerCase() === correctLetter?.toLowerCase();
 
-		return {
+		const base = {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
 			message: isCorrect
 				? `Correct! The letter is ${correctLetter}.`
 				: `Incorrect. The correct letter is ${correctLetter}.`,
 			correctAnswer: correctLetter,
-			explanation: isCorrect
-				? undefined
-				: `The pictograph represents the letter "${correctLetter}".`,
-		};
+		} as AnswerResult;
+		if (!isCorrect) {
+			(base as any).explanation = `The pictograph represents the letter "${correctLetter}".`;
+		}
+		return base;
 	}
 
 	/**
@@ -98,17 +93,19 @@ export class AnswerCheckerService {
 		// Compare pictograph data
 		const isCorrect = this.comparePictographs(userPictograph, correctPictograph);
 
-		return {
+		const base = {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
 			message: isCorrect
 				? `Correct! You selected the right pictograph.`
 				: `Incorrect. The correct pictograph is highlighted.`,
 			correctAnswer: correctPictograph,
-			explanation: isCorrect
-				? undefined
-				: `The correct pictograph for "${questionData.questionContent}" has different start/end positions.`,
-		};
+		} as AnswerResult;
+		if (!isCorrect) {
+			(base as any).explanation =
+				`The correct pictograph for "${questionData.questionContent}" has different start/end positions.`;
+		}
+		return base;
 	}
 
 	/**
@@ -125,17 +122,19 @@ export class AnswerCheckerService {
 		// Check if the user's pictograph can follow the initial one
 		const isCorrect = this.canPictographFollow(initialPictograph, userPictograph);
 
-		return {
+		const base = {
 			isCorrect,
 			feedback: isCorrect ? AnswerFeedback.CORRECT : AnswerFeedback.INCORRECT,
 			message: isCorrect
 				? `Correct! This pictograph can follow the previous one.`
 				: `Incorrect. The pictograph's start position must match the previous end position.`,
 			correctAnswer: questionData.correctAnswer,
-			explanation: isCorrect
-				? undefined
-				: `The correct pictograph must start where the previous one ends (${initialPictograph?.end_pos}).`,
-		};
+		} as AnswerResult;
+		if (!isCorrect) {
+			(base as any).explanation =
+				`The correct pictograph must start where the previous one ends (${initialPictograph?.end_pos}).`;
+		}
+		return base;
 	}
 
 	/**

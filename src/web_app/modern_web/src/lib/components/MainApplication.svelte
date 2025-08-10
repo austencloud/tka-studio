@@ -3,6 +3,7 @@
 	import type { ServiceContainer } from '$services/di/ServiceContainer';
 	import type {
 		IApplicationInitializationService,
+		IDeviceDetectionService,
 		ISequenceService,
 		ISettingsService,
 	} from '$services/interfaces';
@@ -38,6 +39,7 @@
 	let initService: IApplicationInitializationService | null = $state(null);
 	let settingsService: ISettingsService | null = $state(null);
 	let sequenceService: ISequenceService | null = $state(null);
+	let deviceService: IDeviceDetectionService | null = $state(null);
 
 	// Resolve services when container is available
 	$effect(() => {
@@ -47,6 +49,7 @@
 				initService = resolve('IApplicationInitializationService');
 				settingsService = resolve('ISettingsService');
 				sequenceService = resolve('ISequenceService');
+				deviceService = resolve('IDeviceDetectionService');
 				console.log('✅ Services resolved successfully');
 			} catch (error) {
 				console.error('Failed to resolve services:', error);
@@ -65,12 +68,12 @@
 
 		// Wait for services to be resolved
 		let attempts = 0;
-		while ((!initService || !settingsService || !sequenceService) && attempts < 10) {
+		while ((!initService || !settingsService || !sequenceService || !deviceService) && attempts < 10) {
 			await new Promise((resolve) => setTimeout(resolve, 100));
 			attempts++;
 		}
 
-		if (!initService || !settingsService || !sequenceService) {
+		if (!initService || !settingsService || !sequenceService || !deviceService) {
 			setInitializationError('Failed to resolve required services');
 			return;
 		}
@@ -87,8 +90,14 @@
 			await settingsService.loadSettings();
 			updateSettings(settingsService.currentSettings);
 
-			// Step 3: Load initial data
-			setInitializationProgress(60);
+			// Step 3: Initialize device detection
+			setInitializationProgress(50);
+			// Device service auto-initializes in constructor, just ensure it's working
+			const capabilities = deviceService.getCapabilities();
+			console.log('📱 Device capabilities detected:', capabilities);
+
+			// Step 4: Load initial data
+			setInitializationProgress(70);
 			await loadSequences(sequenceService);
 
 			// Step 6: Complete initialization

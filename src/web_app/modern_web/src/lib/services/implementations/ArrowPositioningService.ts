@@ -351,7 +351,8 @@ export class ArrowPositioningService implements IArrowPositioningService {
 
 	private extractGridMode(pictographData: PictographData): GridMode {
 		const raw = pictographData.grid_data as unknown as { grid_mode?: string };
-		const mode = typeof raw.grid_mode === 'string' ? raw.grid_mode.toLowerCase() : GridMode.DIAMOND;
+		const mode =
+			typeof raw.grid_mode === 'string' ? raw.grid_mode.toLowerCase() : GridMode.DIAMOND;
 		return mode === 'box' ? GridMode.BOX : GridMode.DIAMOND;
 	}
 

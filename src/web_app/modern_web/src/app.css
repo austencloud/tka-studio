@@ -135,6 +135,12 @@ h6 {
 	--spacing-xl: 2rem;
 	--spacing-2xl: 3rem;
 
+	/* Device Detection Service Variables */
+	--min-touch-target: 44px;
+	--element-spacing: 16px;
+	--font-scaling: 1.0;
+	--layout-density: comfortable;
+
 	/* Colors - Dark theme by default */
 	--background: #0a0a0a;
 	--foreground: #ffffff;
@@ -271,6 +277,86 @@ body {
 
 /* Focus styles for accessibility */
 :focus-visible {
-	outline: 2px solid var(--primary-color);
-	outline-offset: 2px;
+outline: 2px solid var(--primary-color);
+outline-offset: 2px;
+}
+
+/* Device Detection Service Utilities */
+.touch-target {
+	min-height: var(--min-touch-target);
+	min-width: var(--min-touch-target);
+}
+
+.touch-spacing {
+	gap: var(--element-spacing);
+}
+
+.responsive-layout {
+	container-type: inline-size;
+}
+
+/* Device-specific overrides applied by DeviceDetectionService */
+[data-device-type="touch"] {
+	--min-touch-target: 48px;
+	--element-spacing: 20px;
+	--layout-density: comfortable;
+}
+
+[data-device-type="mouse"] {
+	--min-touch-target: 32px;
+	--element-spacing: 12px;
+	--layout-density: compact;
+}
+
+[data-device-type="hybrid"] {
+	--min-touch-target: 52px;
+	--element-spacing: 24px;
+	--layout-density: spacious;
+}
+
+/* Layout density classes */
+[data-layout-density="compact"] {
+	--spacing-multiplier: 0.75;
+}
+
+[data-layout-density="comfortable"] {
+	--spacing-multiplier: 1.0;
+}
+
+[data-layout-density="spacious"] {
+	--spacing-multiplier: 1.5;
+}
+
+/* Screen size specific adjustments */
+[data-screen-size="mobile"] {
+	--font-scaling: 1.1;
+}
+
+[data-screen-size="tablet"] {
+	--font-scaling: 1.05;
+}
+
+[data-screen-size="desktop"] {
+	--font-scaling: 1.0;
+}
+
+/* Container queries for truly responsive components */
+@container (min-width: 300px) {
+	.responsive-layout {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: var(--element-spacing);
+	}
+}
+
+@container (min-width: 600px) {
+	.responsive-layout {
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	}
+}
+
+@container (min-width: 900px) {
+	.responsive-layout {
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	}
 }

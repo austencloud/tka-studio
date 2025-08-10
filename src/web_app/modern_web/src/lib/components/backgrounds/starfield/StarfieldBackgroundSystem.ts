@@ -203,7 +203,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
 
 			// Choose star color
 			const colorIndex = Math.floor(star.x + star.y) % this.starColors.length;
-			const color = this.starColors[Math.abs(colorIndex)];
+			const color = this.starColors[Math.abs(colorIndex)] || { r: 255, g: 255, b: 255 };
 
 			ctx.save();
 			ctx.globalAlpha = brightness;

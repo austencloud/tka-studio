@@ -1,6 +1,6 @@
 // src/lib/components/backgrounds/systems/ShootingStarSystem.ts
-import type { Dimensions, ShootingStar, ShootingStarState } from '../types/types';
 import { SnowfallConfig } from '../config';
+import type { Dimensions, ShootingStar, ShootingStarState } from '../types/types';
 
 export const createShootingStarSystem = () => {
 	const config = SnowfallConfig.shootingStar;
@@ -17,7 +17,9 @@ export const createShootingStarSystem = () => {
 	}
 
 	function getRandomColor(): string {
-		return config.colors[Math.floor(Math.random() * config.colors.length)];
+		if (!config.colors.length) return '#FFFFFF';
+		const idx = Math.floor(Math.random() * config.colors.length);
+		return config.colors[idx] ?? '#FFFFFF';
 	}
 
 	const spawnShootingStar = ({ width, height }: Dimensions): ShootingStar => {
@@ -27,7 +29,8 @@ export const createShootingStarSystem = () => {
 			{ x: -0.1 * width, y: randomFloat(0.2, 0.8) * height },
 			{ x: 1.1 * width, y: randomFloat(0.2, 0.8) * height },
 		];
-		const startPos = startOptions[Math.floor(Math.random() * startOptions.length)];
+		const startPos = (startOptions[Math.floor(Math.random() * startOptions.length)] ||
+			startOptions[0]) as { x: number; y: number };
 
 		let dx = randomFloat(0.3, 0.5) * (startPos.x > 0 ? -1 : 1);
 		let dy = Math.random() < 0.5 ? -randomFloat(0.05, 0.2) : randomFloat(0.05, 0.2);

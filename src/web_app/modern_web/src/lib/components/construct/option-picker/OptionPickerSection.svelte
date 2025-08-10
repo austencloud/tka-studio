@@ -73,23 +73,22 @@ Matches the desktop version exactly:
 		onPictographSelected(pictograph);
 	}
 
-	// Filter pictographs for this section
-	const sectionPictographs = $derived(() => {
-		const filtered = pictographs.filter((p: PictographData) => {
-			// Simple letter type detection to avoid LetterType class issues
-			let pictographType = 'Type1'; // Default fallback
-
-			const letter = p.letter || '';
-			if (letter.match(/^[A-V]$/)) pictographType = 'Type1';
-			else if (letter.match(/^[WXYZ]|[ΣΔθΩ]$/)) pictographType = 'Type2';
-			else if (letter.match(/^[WXYZ]-|[ΣΔθΩ]-$/)) pictographType = 'Type3';
-			else if (letter.match(/^[ΦΨΛ]$/)) pictographType = 'Type4';
-			else if (letter.match(/^[ΦΨΛ]-$/)) pictographType = 'Type5';
-			else if (letter.match(/^[αβΓ]$/)) pictographType = 'Type6';
-
-			return pictographType === letterType;
+	// Debug: Log what we're receiving
+	$effect(() => {
+		console.log(`🔍 OptionPickerSection [${letterType}] received:`, {
+			letterType,
+			pictographsCount: pictographs.length,
+			pictographs: pictographs.map((p) => ({ id: p.id, letter: p.letter })),
 		});
-		return filtered;
+	});
+
+	// Since pictographs are already filtered by OptionPickerScroll, just use them directly
+	const sectionPictographs = $derived(() => {
+		console.log(`🔍 OptionPickerSection [${letterType}] sectionPictographs:`, {
+			count: pictographs.length,
+			letters: pictographs.map((p) => p.letter),
+		});
+		return pictographs;
 	});
 </script>
 

@@ -4,14 +4,15 @@
  * Manages application settings with persistence and reactive updates.
  */
 
-import type { ISettingsService, AppSettings } from '../interfaces';
+import { GridMode as DomainGridMode } from '$lib/domain/enums';
+import type { AppSettings, ISettingsService } from '../interfaces';
 
 export class SettingsService implements ISettingsService {
 	private readonly SETTINGS_KEY = 'tka-v2-settings';
 
 	private _settings: AppSettings = {
 		theme: 'dark',
-		gridMode: 'diamond',
+		gridMode: DomainGridMode.DIAMOND,
 		showBeatNumbers: true,
 		autoSave: true,
 		exportQuality: 'high',
@@ -81,7 +82,7 @@ export class SettingsService implements ISettingsService {
 	async resetToDefaults(): Promise<void> {
 		this._settings = {
 			theme: 'dark',
-			gridMode: 'diamond',
+			gridMode: DomainGridMode.DIAMOND,
 			showBeatNumbers: true,
 			autoSave: true,
 			exportQuality: 'high',

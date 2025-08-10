@@ -41,7 +41,7 @@ export function legacyToModernPictographData(legacy: LegacyPictographData): Mode
 			blue: (legacy as any).motions?.blue || createMotionData(),
 			red: (legacy as any).motions?.red || createMotionData(),
 		},
-		letter: legacy.letter ?? null,
+		letter: legacy.letter !== undefined ? legacy.letter : null,
 		start_position: null, // Map if available in legacy
 		end_position: null, // Map if available in legacy
 		beat: 0, // Map if available in legacy
@@ -263,7 +263,7 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 					data.motions?.red ||
 					createMotionData(),
 			},
-			letter: data.letter,
+			letter: data.letter !== undefined ? data.letter : null,
 			start_position: data.startPos || data.start_position || null,
 			end_position: data.endPos || data.end_position || null,
 			beat: data.beat || 0,

@@ -81,7 +81,11 @@ export class MotionGenerationService implements IMotionGenerationService {
 	 * Random choice helper
 	 */
 	private randomChoice<T>(array: readonly T[]): T {
-		return array[Math.floor(Math.random() * array.length)];
+		if (array.length === 0) {
+			throw new Error('randomChoice called with empty array');
+		}
+		// At this point array has at least one element; assertion is safe
+		return array[Math.floor(Math.random() * array.length)] as T;
 	}
 
 	/**

@@ -6,12 +6,11 @@
  */
 
 import {
-	type QuestionData,
+	AnswerFormat,
 	type AnswerOption,
 	LessonType,
+	type QuestionData,
 	QuestionFormat,
-	AnswerFormat,
-	QUIZ_DEFAULTS,
 } from '$lib/types/learn';
 import { LessonConfigService } from './LessonConfigService';
 
@@ -243,7 +242,8 @@ export class QuestionGeneratorService {
 	 * Utility: Get random item from array.
 	 */
 	private static getRandomItem<T>(array: T[]): T {
-		return array[Math.floor(Math.random() * array.length)];
+		if (array.length === 0) throw new Error('getRandomItem called with empty array');
+		return array[Math.floor(Math.random() * array.length)] as T;
 	}
 
 	/**
@@ -260,7 +260,9 @@ export class QuestionGeneratorService {
 	private static shuffleArray<T>(array: T[]): void {
 		for (let i = array.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
-			[array[i], array[j]] = [array[j], array[i]];
+			const tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
 		}
 	}
 

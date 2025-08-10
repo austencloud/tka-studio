@@ -5,8 +5,8 @@
  * Ports the exact functionality from desktop DefaultPlacementService.
  */
 
-import type { MotionType, GridMode } from '../interfaces';
 import { GridMode as DomainGridMode } from '$lib/domain';
+import type { GridMode, MotionType } from '../interfaces';
 
 // Placement data structure from JSON files
 export interface PlacementData {

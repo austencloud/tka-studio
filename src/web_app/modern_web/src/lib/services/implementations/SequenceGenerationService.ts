@@ -7,6 +7,7 @@
 
 import type { BeatData, SequenceData } from '$lib/domain';
 import { createSequenceData } from '$lib/domain';
+import { GridMode as DomainGridMode } from '$lib/domain/enums';
 import type {
 	GenerationOptions,
 	IMotionGenerationService,
@@ -126,7 +127,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 			throw new Error('Sequence length must be between 1 and 64');
 		}
 
-		if (!['diamond', 'box'].includes(options.gridMode)) {
+		if (!Object.values(DomainGridMode).includes(options.gridMode as DomainGridMode)) {
 			throw new Error('Grid mode must be either "diamond" or "box"');
 		}
 
@@ -183,7 +184,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 			// Eventually this will modify the base sequence
 			const options: GenerationOptions = {
 				length: baseSequence.beats.length || 8,
-				gridMode: (baseSequence.grid_mode as 'diamond' | 'box') || 'diamond',
+				gridMode: (baseSequence.grid_mode as DomainGridMode) || DomainGridMode.DIAMOND,
 				propType: baseSequence.prop_type || 'fan',
 				difficulty:
 					(baseSequence.difficulty_level as 'beginner' | 'intermediate' | 'advanced') ||

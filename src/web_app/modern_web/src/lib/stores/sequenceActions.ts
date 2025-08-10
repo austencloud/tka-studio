@@ -5,12 +5,13 @@
  * Pure functions that handle the integration between services and reactive state.
  */
 
+import type { BeatData, PictographData, SequenceData } from '$lib/domain';
+import { GridMode as DomainGridMode } from '$lib/domain/enums';
 import type {
 	GenerationOptions,
 	ISequenceService,
 	SequenceCreateRequest,
 } from '$services/interfaces';
-import type { BeatData, SequenceData, PictographData } from '$lib/domain';
 
 import {
 	addSequence,
@@ -167,7 +168,9 @@ export async function updateBeat(
  * Add a beat to the current sequence
  */
 export async function addBeat(
-	sequenceService: ISequenceService & { addBeat?(id: string, beat?: Partial<BeatData>): Promise<void> },
+	sequenceService: ISequenceService & {
+		addBeat?(id: string, beat?: Partial<BeatData>): Promise<void>;
+	},
 	currentSequence: SequenceData,
 	beatData?: Partial<BeatData>
 ): Promise<void> {
@@ -309,7 +312,13 @@ function beatToPictographData(beat: BeatData, sequence: SequenceData): Pictograp
 	if (beat.pictograph_data?.motions?.red) motions.red = beat.pictograph_data.motions.red;
 	return {
 		id: `beat-${beat.beat_number}`,
-		grid_data: { grid_mode: (sequence.grid_mode as any) || 'diamond', center_x:0, center_y:0, radius:100, grid_points:{} },
+		grid_data: {
+			grid_mode: (sequence.grid_mode as string) || DomainGridMode.DIAMOND,
+			center_x: 0,
+			center_y: 0,
+			radius: 100,
+			grid_points: {},
+		},
 		arrows: {},
 		props: {},
 		motions: motions as Record<string, unknown>,
@@ -317,7 +326,7 @@ function beatToPictographData(beat: BeatData, sequence: SequenceData): Pictograp
 		beat: beat.beat_number,
 		is_blank: beat.is_blank,
 		is_mirrored: false,
-		metadata: {}
+		metadata: {},
 	} as PictographData;
 }
 
@@ -329,7 +338,7 @@ function createDefaultGridData(): GridData {
 	const size = 80;
 
 	return {
-		mode: 'diamond',
+		mode: DomainGridMode.DIAMOND,
 		allLayer2PointsNormal: {
 			n_diamond_layer2_point: { coordinates: { x: center.x, y: center.y - size } },
 			ne_diamond_layer2_point: {

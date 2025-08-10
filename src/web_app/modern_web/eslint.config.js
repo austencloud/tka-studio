@@ -19,7 +19,6 @@ export default [
 			parserOptions: {
 				ecmaVersion: 2022,
 				sourceType: 'module',
-				project: './tsconfig.json',
 			},
 			globals: {
 				...globals.browser,
@@ -62,7 +61,6 @@ export default [
 			parser: svelteParser,
 			parserOptions: {
 				parser: tsParser,
-				project: './tsconfig.json',
 				extraFileExtensions: ['.svelte'],
 			},
 			globals: {
@@ -238,6 +236,9 @@ export default [
 			'coverage/**',
 			'*.min.js',
 			'static/**',
+			'REFERENCE/**',
+			'REMOVED_ANIMATION_BACKUP/**',
+			'vitest-setup.ts',
 		],
 	},
 ];
