@@ -1,0 +1,96 @@
+/**
+ * Simple device state management for GeneratePanel
+ *
+ * Just extracts the device detection logic without over-engineering
+ */
+
+interface ResponsiveSettings {
+	minTouchTarget: number;
+	elementSpacing: number;
+	allowScrolling: boolean;
+	layoutDensity: string;
+	fontScaling: number;
+}
+
+/**
+ * Creates simple reactive state for device integration
+ */
+export function createDeviceState() {
+	// Simple device state (matches your original)
+	let deviceCapabilities = $state<any>(null);
+	let responsiveSettings = $state<ResponsiveSettings | null>(null);
+
+	// Derived values (matches your original logic exactly)
+	const layoutMode = $derived(() => {
+		if (!responsiveSettings) return 'comfortable';
+		return responsiveSettings.layoutDensity;
+	});
+
+	const shouldAllowScrolling = $derived(() => {
+		return responsiveSettings?.allowScrolling ?? true;
+	});
+
+	const minTouchTarget = $derived(() => {
+		return responsiveSettings?.minTouchTarget ?? 44;
+	});
+
+	const elementSpacing = $derived(() => {
+		return responsiveSettings?.elementSpacing ?? 16;
+	});
+
+	// Simple initialization function (matches your original onMount logic)
+	function initializeDevice(deviceService: any) {
+		try {
+			deviceCapabilities = deviceService.getCapabilities();
+			responsiveSettings = deviceService.getResponsiveSettings();
+
+			console.log('🔍 Device capabilities:', deviceCapabilities);
+			console.log('📱 Responsive settings:', responsiveSettings);
+
+			// Listen for device changes
+			const cleanup = deviceService.onCapabilitiesChanged((caps: any) => {
+				deviceCapabilities = caps;
+				responsiveSettings = deviceService.getResponsiveSettings();
+			});
+
+			return cleanup;
+		} catch (error) {
+			console.warn('DeviceDetectionService not available, using defaults:', error);
+			// Fallback defaults (matches your original)
+			responsiveSettings = {
+				minTouchTarget: 44,
+				elementSpacing: 16,
+				allowScrolling: true,
+				layoutDensity: 'comfortable',
+				fontScaling: 1.0,
+			} as ResponsiveSettings;
+		}
+	}
+
+	return {
+		// State
+		get deviceCapabilities() {
+			return deviceCapabilities;
+		},
+		get responsiveSettings() {
+			return responsiveSettings;
+		},
+
+		// Derived values
+		get layoutMode() {
+			return layoutMode;
+		},
+		get shouldAllowScrolling() {
+			return shouldAllowScrolling;
+		},
+		get minTouchTarget() {
+			return minTouchTarget;
+		},
+		get elementSpacing() {
+			return elementSpacing;
+		},
+
+		// Actions
+		initializeDevice,
+	};
+}

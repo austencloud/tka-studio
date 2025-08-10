@@ -131,8 +131,13 @@ describe('OptionPickerContainer - Sophisticated Systems Integration', () => {
 		});
 
 		// Find and click the first option
-		const firstOption = screen.getAllByRole('button', { name: /Beat Pictograph/ })[0];
-		await user.click(firstOption);
+		const options = screen.getAllByRole('button', { name: /Beat Pictograph/ });
+		expect(options.length).toBeGreaterThan(0);
+		const firstOption = options[0];
+		expect(firstOption).toBeDefined();
+		if (firstOption) {
+			await user.click(firstOption);
+		}
 
 		// Should call the callback
 		expect(mockOnOptionSelected).toHaveBeenCalled();

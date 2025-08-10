@@ -1,22 +1,22 @@
 // src/lib/components/construct/option-picker/utils/layoutUtils.ts
 
-import { memoizeLRU } from './memoizationUtils';
 import {
 	DEVICE_CONFIG,
-	LAYOUT_TEMPLATES,
 	GAP_ADJUSTMENTS,
 	getContainerAspect,
 	getDeviceType,
-	getLayoutCategory
+	getLayoutCategory,
+	LAYOUT_TEMPLATES,
 } from '../config';
-import { DEFAULT_COLUMNS, LAYOUT_RULES, GRID_GAP_OVERRIDES } from './layoutConfig';
 import { detectFoldableDevice, type FoldableDetectionResult } from './deviceDetection';
+import { DEFAULT_COLUMNS, GRID_GAP_OVERRIDES, LAYOUT_RULES } from './layoutConfig';
+import { memoizeLRU } from './memoizationUtils';
 
 import type {
+	ContainerAspect,
 	DeviceType,
 	LayoutCategory,
-	ContainerAspect,
-	ResponsiveLayoutConfig
+	ResponsiveLayoutConfig,
 } from '../config';
 
 export function getEnhancedDeviceType(
@@ -30,18 +30,22 @@ export function getEnhancedDeviceType(
 	const foldableInfo = detectFoldableDevice();
 	const baseDeviceType = getDeviceType(width, isMobileUserAgent);
 
-	if (foldableInfo.isFoldable && foldableInfo.isUnfolded && foldableInfo.foldableType === 'zfold') {
+	if (
+		foldableInfo.isFoldable &&
+		foldableInfo.isUnfolded &&
+		foldableInfo.foldableType === 'zfold'
+	) {
 		return {
 			deviceType: 'tablet',
 			isFoldable: true,
-			foldableInfo
+			foldableInfo,
 		};
 	}
 
 	return {
 		deviceType: baseDeviceType,
 		isFoldable: foldableInfo.isFoldable,
-		foldableInfo
+		foldableInfo,
 	};
 }
 
@@ -82,7 +86,7 @@ export const getResponsiveLayout = memoizeLRU(
 				gridGap: '8px',
 				gridClass: '',
 				aspectClass: '',
-				scaleFactor: isMobileDevice ? 0.95 : 1.0
+				scaleFactor: isMobileDevice ? 0.95 : 1.0,
 			};
 		}
 
@@ -98,7 +102,7 @@ export const getResponsiveLayout = memoizeLRU(
 			containerHeight,
 			isMobileDevice,
 			isPortraitMode,
-			foldableInfo
+			foldableInfo,
 		});
 
 		const optionSize = calculateOptionSize({
@@ -108,10 +112,10 @@ export const getResponsiveLayout = memoizeLRU(
 			gridConfig,
 			isMobileDevice,
 			isPortraitMode,
-			foldableInfo
+			foldableInfo,
 		});
 
-		const containerAspect = getContainerAspect(containerWidth, containerHeight);
+		// const containerAspect = getContainerAspect(containerWidth, containerHeight);
 
 		const gridGap = getGridGap({
 			count,
@@ -119,7 +123,7 @@ export const getResponsiveLayout = memoizeLRU(
 			containerHeight,
 			isMobileDevice,
 			isPortraitMode,
-			foldableInfo
+			foldableInfo,
 		});
 
 		const { gridClass, aspectClass } = getGridClasses(
@@ -143,7 +147,7 @@ export const getResponsiveLayout = memoizeLRU(
 			gridGap,
 			gridClass,
 			aspectClass,
-			scaleFactor
+			scaleFactor,
 		};
 	},
 	100,
@@ -193,7 +197,7 @@ const calculateGridConfiguration = memoizeLRU(
 		const fullParams = {
 			...params,
 			containerAspect,
-			layoutCategory
+			layoutCategory,
 		};
 
 		for (const rule of LAYOUT_RULES) {
@@ -211,7 +215,11 @@ const calculateGridConfiguration = memoizeLRU(
 		columns = Math.max(1, columns);
 
 		if (params.foldableInfo?.isFoldable && params.foldableInfo.isUnfolded) {
-			if (params.foldableInfo.foldableType === 'zfold' && !params.isPortraitMode && columns > 2) {
+			if (
+				params.foldableInfo.foldableType === 'zfold' &&
+				!params.isPortraitMode &&
+				columns > 2
+			) {
 				columns = Math.min(columns, 5);
 			}
 		}
@@ -222,8 +230,14 @@ const calculateGridConfiguration = memoizeLRU(
 	},
 	100,
 	(params) => {
-		const { count, containerWidth, containerHeight, isMobileDevice, isPortraitMode, foldableInfo } =
-			params;
+		const {
+			count,
+			containerWidth,
+			containerHeight,
+			isMobileDevice,
+			isPortraitMode,
+			foldableInfo,
+		} = params;
 		const roundedWidth = Math.round(containerWidth / 10) * 10;
 		const roundedHeight = Math.round(containerHeight / 10) * 10;
 		const foldableKey = foldableInfo?.isFoldable
@@ -249,7 +263,7 @@ function getGridGap(params: {
 		const fullParams = {
 			...params,
 			containerAspect,
-			layoutCategory
+			layoutCategory,
 		};
 
 		if (doesRuleMatch(override, fullParams)) {

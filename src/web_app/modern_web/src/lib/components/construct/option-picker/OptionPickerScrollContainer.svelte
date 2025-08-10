@@ -11,7 +11,7 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 	import type { PictographData } from '$lib/domain/PictographData';
 	import OptionPickerSection from './OptionPickerSection.svelte';
 	import type { ResponsiveLayoutConfig } from './config';
-	import { createOptionPickerScrollState } from './optionPickerScrollState.svelte.ts';
+	import { createOptionPickerScrollState } from './optionPickerScrollState.svelte';
 	import type { FoldableDetectionResult } from './utils/deviceDetection';
 	import type { DeviceInfo } from './utils/scrollLayoutMetrics';
 
@@ -106,17 +106,17 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 	<div class="scroll-container">
 		<div class="content-layout">
 			<!-- Main Content: Sectioned Layout -->
-			{#if !scrollState.isEmpty}
+			{#if !scrollState.isEmpty()}
 				<div class="sections-container">
 					<!-- Individual sections (Type1, Type2, Type3) -->
-					{#if scrollState.hasIndividualSections}
+					{#if scrollState.hasIndividualSections()}
 						{#each individualSections as letterType (letterType)}
-							{#if scrollState.organizedPictographs.individual[letterType]?.length > 0}
+							{#if (scrollState.organizedPictographs.individual[letterType]?.length ?? 0) > 0}
 								<OptionPickerSection
 									{letterType}
 									pictographs={scrollState.organizedPictographs.individual[
 										letterType
-									]}
+									] ?? []}
 									{onPictographSelected}
 									{containerWidth}
 									isExpanded={true}
@@ -126,14 +126,14 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 					{/if}
 
 					<!-- Grouped sections (Type4, Type5, Type6) -->
-					{#if scrollState.hasGroupedSections}
+					{#if scrollState.hasGroupedSections()}
 						{#each groupedSections as letterType (letterType)}
-							{#if scrollState.organizedPictographs.grouped[letterType]?.length > 0}
+							{#if (scrollState.organizedPictographs.grouped[letterType]?.length ?? 0) > 0}
 								<OptionPickerSection
 									{letterType}
 									pictographs={scrollState.organizedPictographs.grouped[
 										letterType
-									]}
+									] ?? []}
 									{onPictographSelected}
 									{containerWidth}
 									isExpanded={true}
@@ -145,7 +145,7 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 			{/if}
 
 			<!-- Empty State -->
-			{#if scrollState.isEmpty}
+			{#if scrollState.isEmpty()}
 				<div class="empty-state">
 					<p>No options available for current sequence</p>
 					{#if import.meta.env.DEV}
@@ -269,9 +269,7 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 		gap: 10px;
 	}
 
-	.option-picker-scroll.foldable {
-		/* Special handling for foldable devices */
-	}
+	/* .option-picker-scroll.foldable - Reserved for future foldable device specific styling */
 
 	.option-picker-scroll.foldable.unfolded {
 		/* Adjustments for unfolded foldable devices */

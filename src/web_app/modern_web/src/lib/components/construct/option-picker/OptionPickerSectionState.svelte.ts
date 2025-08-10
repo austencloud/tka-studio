@@ -78,9 +78,9 @@ export function createSectionState(letterType: string, initialExpanded: boolean 
 		return getEnhancedDeviceType(containerWidth, isMobileUserAgent);
 	});
 
-	const deviceType = $derived(() => enhancedDeviceInfo.deviceType);
-	const isMobile = $derived(() => deviceType === 'smallMobile' || deviceType === 'mobile');
-	const isTablet = $derived(() => deviceType === 'tablet');
+	const deviceType = $derived(() => enhancedDeviceInfo().deviceType);
+	const isMobile = $derived(() => deviceType() === 'smallMobile' || deviceType() === 'mobile');
+	const isTablet = $derived(() => deviceType() === 'tablet');
 	const isPortrait = $derived(() => containerHeight > containerWidth);
 	const containerAspect = $derived(() => getContainerAspect(containerWidth, containerHeight));
 
@@ -94,9 +94,9 @@ export function createSectionState(letterType: string, initialExpanded: boolean 
 			defaultCount,
 			containerHeight,
 			containerWidth,
-			isMobile,
-			isPortrait,
-			foldableInfo
+			isMobile(),
+			isPortrait(),
+			foldableInfo()
 		);
 	});
 
@@ -309,9 +309,9 @@ export function createOptionPickerState() {
 		return getEnhancedDeviceType(containerWidth, isMobileUserAgent);
 	});
 
-	const deviceType = $derived(() => enhancedDeviceInfo.deviceType);
-	const isMobile = $derived(() => deviceType === 'smallMobile' || deviceType === 'mobile');
-	const isTablet = $derived(() => deviceType === 'tablet');
+	const deviceType = $derived(() => enhancedDeviceInfo().deviceType);
+	const isMobile = $derived(() => deviceType() === 'smallMobile' || deviceType() === 'mobile');
+	const isTablet = $derived(() => deviceType() === 'tablet');
 	const isPortrait = $derived(() => containerHeight > containerWidth);
 	const containerAspect = $derived(() => getContainerAspect(containerWidth, containerHeight));
 
@@ -323,9 +323,9 @@ export function createOptionPickerState() {
 			optionsCount,
 			containerHeight,
 			containerWidth,
-			isMobile,
-			isPortrait,
-			foldableInfo
+			isMobile(),
+			isPortrait(),
+			foldableInfo()
 		);
 	});
 
@@ -347,7 +347,11 @@ export function createOptionPickerState() {
 		if (!sectionStates.has(letterType)) {
 			sectionStates.set(letterType, createSectionState(letterType));
 		}
-		return sectionStates.get(letterType)!;
+		const sectionState = sectionStates.get(letterType);
+		if (!sectionState) {
+			throw new Error(`Failed to create section state for ${letterType}`);
+		}
+		return sectionState;
 	}
 
 	// Debounced dimension updates
@@ -405,15 +409,6 @@ export function createOptionPickerState() {
 		// Update all section states with new window dimensions
 		sectionStates.forEach((sectionState) => {
 			sectionState.updateWindowDimensions(width, height);
-		});
-	}
-
-	function setSelectedPictograph(pictograph: PictographData | null) {
-		optionPickerRunes.setSelectedPictograph(pictograph);
-
-		// Update all section states
-		sectionStates.forEach((sectionState) => {
-			sectionState.setSelectedPictograph(pictograph);
 		});
 	}
 
@@ -482,7 +477,6 @@ export function createOptionPickerState() {
 		setError: optionPickerRunes.setError,
 		setSequence: optionPickerRunes.setSequence,
 		setOptions: optionPickerRunes.setOptions,
-		setSelectedPictograph: optionPickerRunes.setSelectedPictograph,
 
 		// Advanced layout reactive state
 		get containerWidth() {
@@ -525,7 +519,6 @@ export function createOptionPickerState() {
 		// Enhanced state management
 		setContainerDimensions,
 		setWindowDimensions,
-		setSelectedPictograph,
 		resetAllStates,
 	};
 }

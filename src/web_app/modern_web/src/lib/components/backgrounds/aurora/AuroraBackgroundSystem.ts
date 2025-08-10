@@ -45,7 +45,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
 	private isInitialized = false;
 
-	public initialize(dimensions: Dimensions, quality: QualityLevel): void {
+	public initialize(_dimensions: Dimensions, quality: QualityLevel): void {
 		this.quality = quality;
 		this.isInitialized = true;
 
@@ -238,7 +238,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
 			gradient.addColorStop(
 				position,
-				`rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a})`
+				`rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a ?? 1})`
 			);
 		}
 

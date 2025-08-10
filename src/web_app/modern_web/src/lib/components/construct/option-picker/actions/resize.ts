@@ -1,6 +1,6 @@
 /**
  * Resize Action using Svelte 5 - No stores, pure functional approach
- * 
+ *
  * A Svelte action that detects element resizing and calls the callback
  * with the new width and height. Includes debounced fallback for window resize.
  */
@@ -48,7 +48,7 @@ export const resize: Action<HTMLElement, (width: number, height: number) => void
 		console.warn('Resize action requires a callback function.');
 		return {
 			destroy() {},
-			update() {}
+			update() {},
 		};
 	}
 
@@ -71,7 +71,7 @@ export const resize: Action<HTMLElement, (width: number, height: number) => void
 			if (!entries.length) return;
 
 			const entry = entries[0];
-			if (entry.contentRect) {
+			if (entry?.contentRect) {
 				const { width, height } = entry.contentRect;
 				// Call the current callback (supports dynamic updates)
 				if (typeof callback === 'function') {
@@ -94,7 +94,7 @@ export const resize: Action<HTMLElement, (width: number, height: number) => void
 				if (resizeObserver) {
 					resizeObserver.disconnect();
 				}
-			}
+			},
 		};
 	} else {
 		// Fallback for older browsers without ResizeObserver
@@ -126,7 +126,7 @@ export const resize: Action<HTMLElement, (width: number, height: number) => void
 					debouncedHandleResize.cancel();
 					window.removeEventListener('resize', debouncedHandleResize);
 				}
-			}
+			},
 		};
 	}
 };
@@ -159,7 +159,7 @@ export function createResizeObserver() {
 				if (!entries.length) return;
 
 				const entry = entries[0];
-				if (entry.contentRect) {
+				if (entry?.contentRect) {
 					width = entry.contentRect.width;
 					height = entry.contentRect.height;
 				}
@@ -183,13 +183,19 @@ export function createResizeObserver() {
 
 	return {
 		// Reactive state
-		get width() { return width; },
-		get height() { return height; },
-		get isObserving() { return isObserving; },
+		get width() {
+			return width;
+		},
+		get height() {
+			return height;
+		},
+		get isObserving() {
+			return isObserving;
+		},
 
 		// Actions
 		observe,
-		disconnect
+		disconnect,
 	};
 }
 
@@ -239,12 +245,18 @@ export function createWindowResizeObserver() {
 
 	return {
 		// Reactive state
-		get windowWidth() { return windowWidth; },
-		get windowHeight() { return windowHeight; },
-		get isListening() { return isListening; },
+		get windowWidth() {
+			return windowWidth;
+		},
+		get windowHeight() {
+			return windowHeight;
+		},
+		get isListening() {
+			return isListening;
+		},
 
 		// Actions
 		startListening,
-		stopListening
+		stopListening,
 	};
 }

@@ -258,12 +258,16 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 					// Ensure different stars
 					bIndex = this.randInt(0, nearStars.length - 1);
 				}
-				this.constellationLines.push({
-					a: nearStars[aIndex],
-					b: nearStars[bIndex],
-					opacity: Math.random() * this.cfg.constellations.opacity,
-					dir: Math.random() > 0.5 ? 1 : -1,
-				});
+				const starA = nearStars[aIndex];
+				const starB = nearStars[bIndex];
+				if (starA && starB) {
+					this.constellationLines.push({
+						a: starA,
+						b: starB,
+						opacity: Math.random() * this.cfg.constellations.opacity,
+						dir: Math.random() > 0.5 ? 1 : -1,
+					});
+				}
 			}
 		}
 		const effectiveSpeed = this.a11y.reducedMotion ? 0.3 : 1;
@@ -366,24 +370,38 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 				let upperStop = gradientStops[gradientStops.length - 1];
 
 				for (let i = 0; i < gradientStops.length - 1; i++) {
+					const currentStop = gradientStops[i];
+					const nextStop = gradientStops[i + 1];
 					if (
-						gradientStops[i].position <= relativeYPosition &&
-						gradientStops[i + 1].position >= relativeYPosition
+						currentStop?.position !== undefined &&
+						nextStop?.position !== undefined &&
+						currentStop.position <= relativeYPosition &&
+						nextStop.position >= relativeYPosition
 					) {
-						lowerStop = gradientStops[i];
-						upperStop = gradientStops[i + 1];
+						lowerStop = currentStop;
+						upperStop = nextStop;
 						break;
 					}
 				}
 
 				// Use the color closer to the moon's position for simplicity
-				shadowBaseColor =
-					Math.abs(relativeYPosition - lowerStop.position) <
-					Math.abs(relativeYPosition - upperStop.position)
-						? lowerStop.color
-						: upperStop.color;
+				if (
+					lowerStop &&
+					upperStop &&
+					lowerStop.position !== undefined &&
+					upperStop.position !== undefined
+				) {
+					shadowBaseColor =
+						Math.abs(relativeYPosition - lowerStop.position) <
+						Math.abs(relativeYPosition - upperStop.position)
+							? lowerStop.color
+							: upperStop.color;
+				}
 			} else if (gradientStops.length === 1) {
-				shadowBaseColor = gradientStops[0].color;
+				const firstStop = gradientStops[0];
+				if (firstStop) {
+					shadowBaseColor = firstStop.color;
+				}
 			}
 
 			// Determine shadow color - use black for high contrast or calculated color

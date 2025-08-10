@@ -3,7 +3,7 @@ Prop Component - Renders SVG props with proper positioning
 -->
 <script lang="ts">
 	import type { MotionData, PropData } from '$lib/domain';
-	import { Orientation } from '$lib/domain/enums';
+	import { Orientation, RotationDirection, MotionType } from '$lib/domain/enums';
 	import { DefaultPropPositioner } from '$lib/services/DefaultPropPositioner';
 	import { PropRotAngleManager } from '$lib/services/PropRotAngleManager';
 	import { BetaOffsetCalculator } from '$lib/services/implementations/BetaOffsetCalculator';
@@ -80,22 +80,26 @@ Prop Component - Renders SVG props with proper positioning
 
 			// For start positions, we need to construct motion data from prop data
 			// Since start positions are static, we can use the prop location as both start and end
-			const redMotion = {
-				motion_type: 'static' as any,
+			const redMotion: MotionData = {
+				motion_type: MotionType.STATIC,
+				prop_rot_dir: RotationDirection.CLOCKWISE,
 				start_loc: redProp?.location || 's',
 				end_loc: redProp?.location || 's',
+				turns: 0,
 				start_ori: Orientation.IN,
 				end_ori: Orientation.IN,
-				color: 'red',
+				is_visible: true,
 			};
 
-			const blueMotion = {
-				motion_type: 'static' as any,
+			const blueMotion: MotionData = {
+				motion_type: MotionType.STATIC,
+				prop_rot_dir: RotationDirection.CLOCKWISE,
 				start_loc: blueProp?.location || 's',
 				end_loc: blueProp?.location || 's',
+				turns: 0,
 				start_ori: Orientation.IN,
 				end_ori: Orientation.IN,
-				color: 'blue',
+				is_visible: true,
 			};
 
 			// Create direction calculator
@@ -192,7 +196,7 @@ Prop Component - Renders SVG props with proper positioning
 					y: parseFloat(centerElement.getAttribute('cy') || '0') || center.y,
 				};
 			}
-		} catch (e) {
+		} catch {
 			// SVG center calculation failed, using default center
 		}
 

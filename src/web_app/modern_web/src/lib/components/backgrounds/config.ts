@@ -1,6 +1,6 @@
 // src/lib/components/backgrounds/config.ts
-import type { QualityLevel } from './types/types';
 import { NightSkyConfig } from './config/nightSky';
+import type { QualityLevel } from './types/types';
 
 /**
  * Snowfall configuration object
@@ -95,6 +95,7 @@ export function detectAppropriateQuality(): QualityLevel {
 			if (batteryManager.level < 0.2) {
 				return 'low';
 			}
+			return 'normal';
 		});
 	}
 

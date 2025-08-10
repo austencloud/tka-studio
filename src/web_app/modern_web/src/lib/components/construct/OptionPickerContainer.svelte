@@ -53,6 +53,11 @@
 		});
 	});
 
+	// Reactive access to options data
+	const optionsData = $derived(() => optionPickerState.optionsData);
+	const isLoading = $derived(() => optionPickerState.isLoading);
+	const error = $derived(() => optionPickerState.error);
+
 	// Handle container resize
 	function handleResize(width: number, height: number) {
 		containerWidth = width;
@@ -66,8 +71,12 @@
 	}
 
 	// Handle start position selection events
-	function handleStartPositionSelected(event: CustomEvent) {
-		console.log('🎯 OptionPickerContainer received start-position-selected:', event.detail);
+	function handleStartPositionSelected(event: Event) {
+		const customEvent = event as CustomEvent;
+		console.log(
+			'🎯 OptionPickerContainer received start-position-selected:',
+			customEvent.detail
+		);
 		optionPickerState.loadOptions([]); // Empty array loads from start position
 	}
 
@@ -106,16 +115,11 @@
 		.optionSize}px; --grid-gap: {layoutConfig().gridGap}px"
 >
 	<!-- Header -->
-	<OptionPickerHeader
-		totalOptions={optionPickerState.optionsData.length}
-		isLoading={optionPickerState.isLoading}
-		deviceInfo={deviceInfo()}
-		layoutConfig={layoutConfig()}
-	/>
+	<OptionPickerHeader />
 
 	<!-- Main content area -->
 	<div class="content-area">
-		{#if optionPickerState.isLoading}
+		{#if isLoading()}
 			<div class="loading-container">
 				<div class="loading-spinner"></div>
 				<p>Loading options...</p>
@@ -125,15 +129,15 @@
 						.scaleFactor}
 				</small>
 			</div>
-		{:else if optionPickerState.error}
+		{:else if error()}
 			<div class="error-container">
 				<p>❌ Error loading options</p>
-				<p>{optionPickerState.error}</p>
+				<p>{error()}</p>
 				<button class="retry-button" onclick={() => optionPickerState.loadOptions([])}>
 					Retry
 				</button>
 			</div>
-		{:else if optionPickerState.optionsData.length === 0}
+		{:else if optionsData().length === 0}
 			<div class="empty-container">
 				<p>No options available</p>
 				<p>Please select a start position first</p>
@@ -144,7 +148,7 @@
 		{:else}
 			<!-- Use existing well-designed scroll component -->
 			<OptionPickerScroll
-				pictographs={optionPickerState.optionsData}
+				pictographs={optionsData()}
 				onPictographSelected={handleOptionSelected}
 				{containerWidth}
 				{containerHeight}

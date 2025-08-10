@@ -40,7 +40,7 @@ Arrow Component - Renders SVG arrows with proper positioning
 				location: arrowData.location || 'n',
 				grid_mode: gridMode,
 				turns: arrowData.turns || 0,
-				letter: letter,
+				...(letter && { letter }),
 				start_orientation: motionData?.start_orientation || 0,
 				end_orientation: motionData?.end_orientation || 0,
 			});
@@ -71,7 +71,6 @@ Arrow Component - Renders SVG arrows with proper positioning
 
 	// Apply color transformation
 	const coloredSVG = $derived(() => {
-		const hexColor = arrowData?.color === 'blue' ? '#2E3192' : '#ED1C24';
 		// This would be where we apply color transformations to the SVG
 		// For now, we'll rely on CSS styling
 		return arrowPath();

@@ -5,11 +5,10 @@ This is the modern equivalent of the legacy Pictograph.svelte, but using pure Sv
 instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Glyphs.
 -->
 <script lang="ts">
-	import type { PictographData, BeatData } from '$lib/domain';
-	import { createGridData } from '$lib/data/gridCoordinates';
+	import type { BeatData, PictographData } from '$lib/domain';
+	import Arrow from './Arrow.svelte';
 	import Grid from './Grid.svelte';
 	import Prop from './Prop.svelte';
-	import Arrow from './Arrow.svelte';
 	import TKAGlyph from './TKAGlyph.svelte';
 
 	interface Props {
@@ -39,7 +38,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		beatData = null,
 		onClick,
 		debug = false,
-		animationDuration = 200,
 		showLoadingIndicator = true,
 		beatNumber = null,
 		isStartPosition = false,
@@ -61,15 +59,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 		if (pictographData) return pictographData;
 		if (beatData?.pictograph_data) return beatData.pictograph_data;
 		return null;
-	});
-
-	// Derived state - grid data
-	const gridData = $derived(() => {
-		const data = effectivePictographData();
-		if (!data) return null;
-
-		const gridMode = data.grid_data?.grid_mode || 'diamond';
-		return createGridData(gridMode);
 	});
 
 	// Derived state - check if we have required data
@@ -225,13 +214,13 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 				{debug}
 			/>
 
-			<!-- Props (rendered before arrows for layering) -->
+			<!-- Props (rendered first so arrows appear on top) -->
 			{#each propsToRender() as { color, propData } (color)}
 				<Prop
 					{propData}
-					motionData={effectivePictographData()?.motions?.[color]}
+					{...(effectivePictographData()?.motions?.[color] && { motionData: effectivePictographData()?.motions?.[color] })}
 					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
-					allProps={propsToRender().map((p) => p.propData)}
+					allProps={Object.values(effectivePictographData()?.props || {})}
 					onLoaded={() => handleComponentLoaded(`${color}-prop`)}
 					onError={(error) => handleComponentError(`${color}-prop`, error)}
 				/>
@@ -241,14 +230,13 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 			{#each arrowsToRender() as { color, arrowData } (color)}
 				<Arrow
 					{arrowData}
-					motionData={effectivePictographData()?.motions?.[color]}
+					{...(effectivePictographData()?.motions?.[color] && { motionData: effectivePictographData()?.motions?.[color] })}
 					gridMode={effectivePictographData()?.grid_data?.grid_mode || 'diamond'}
-					letter={displayLetter() || undefined}
+					{...(displayLetter() && { letter: displayLetter() })}
 					onLoaded={() => handleComponentLoaded(`${color}-arrow`)}
 					onError={(error) => handleComponentError(`${color}-arrow`, error)}
 				/>
 			{/each}
-
 			<!-- Letter/Glyph overlay -->
 			{#if displayLetter()}
 				<TKAGlyph letter={displayLetter()} turnsTuple="(s, 0, 0)" />
@@ -333,7 +321,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 				/>
 			</g>
 		{/if}
-
 	</svg>
 </div>
 

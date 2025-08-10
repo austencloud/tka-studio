@@ -1,33 +1,60 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/svelte';
-import OptionPickerScroll from '../OptionPickerScroll.svelte';
 import type { PictographData } from '$lib/domain/PictographData';
+import { render, screen, waitFor } from '@testing-library/svelte';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import OptionPickerScroll from '../OptionPickerScroll.svelte';
 
 // Mock ModernPictograph component
 vi.mock('$lib/components/pictograph/ModernPictograph.svelte', () => ({
 	default: vi.fn(() => ({
 		$$: { fragment: null },
 		$set: vi.fn(),
-		$destroy: vi.fn()
-	}))
+		$destroy: vi.fn(),
+	})),
 }));
 
 describe('OptionPicker Integration', () => {
 	// Create test data that matches the expected sectioning
 	const createTestPictographs = (): PictographData[] => {
 		const pictographs: PictographData[] = [];
-		
+
 		// Type1 letters (16 pictographs)
-		const type1Letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+		const type1Letters = [
+			'A',
+			'B',
+			'C',
+			'D',
+			'E',
+			'F',
+			'G',
+			'H',
+			'I',
+			'J',
+			'K',
+			'L',
+			'M',
+			'N',
+			'O',
+			'P',
+		];
 		type1Letters.forEach((letter, index) => {
 			pictographs.push({
 				id: `type1-${index}`,
 				letter,
 				end_position: 'BL',
-				grid_data: { grid_mode: 'diamond' },
+				grid_data: {
+					grid_mode: 'diamond',
+					center_x: 475,
+					center_y: 475,
+					radius: 400,
+					grid_points: {},
+				},
 				arrows: {},
 				props: {},
-				motions: {}
+				motions: {},
+				beat: 1,
+				is_blank: false,
+				is_mirrored: false,
+				metadata: {},
 			} as PictographData);
 		});
 
@@ -38,10 +65,20 @@ describe('OptionPicker Integration', () => {
 				id: `type2-${index}`,
 				letter,
 				end_position: 'BR',
-				grid_data: { grid_mode: 'diamond' },
+				grid_data: {
+					grid_mode: 'diamond',
+					center_x: 475,
+					center_y: 475,
+					radius: 400,
+					grid_points: {},
+				},
 				arrows: {},
 				props: {},
-				motions: {}
+				motions: {},
+				beat: 1,
+				is_blank: false,
+				is_mirrored: false,
+				metadata: {},
 			} as PictographData);
 		});
 
@@ -52,10 +89,20 @@ describe('OptionPicker Integration', () => {
 				id: `type3-${index}`,
 				letter,
 				end_position: 'TL',
-				grid_data: { grid_mode: 'diamond' },
+				grid_data: {
+					grid_mode: 'diamond',
+					center_x: 475,
+					center_y: 475,
+					radius: 400,
+					grid_points: {},
+				},
 				arrows: {},
 				props: {},
-				motions: {}
+				motions: {},
+				beat: 1,
+				is_blank: false,
+				is_mirrored: false,
+				metadata: {},
 			} as PictographData);
 		});
 
@@ -66,10 +113,20 @@ describe('OptionPicker Integration', () => {
 				id: `type4-${index}`,
 				letter,
 				end_position: 'TR',
-				grid_data: { grid_mode: 'diamond' },
+				grid_data: {
+					grid_mode: 'diamond',
+					center_x: 475,
+					center_y: 475,
+					radius: 400,
+					grid_points: {},
+				},
 				arrows: {},
 				props: {},
-				motions: {}
+				motions: {},
+				beat: 1,
+				is_blank: false,
+				is_mirrored: false,
+				metadata: {},
 			} as PictographData);
 		});
 
@@ -87,7 +144,7 @@ describe('OptionPicker Integration', () => {
 			gridGap: '8px',
 			gridClass: 'default-grid',
 			aspectClass: 'default-aspect',
-			scaleFactor: 1.0
+			scaleFactor: 1.0,
 		},
 		deviceInfo: {
 			deviceType: 'desktop' as const,
@@ -96,15 +153,15 @@ describe('OptionPicker Integration', () => {
 				isFoldable: false,
 				isUnfolded: false,
 				foldableType: 'unknown' as const,
-				confidence: 0
-			}
+				confidence: 0,
+			},
 		},
 		foldableInfo: {
 			isFoldable: false,
 			isUnfolded: false,
 			foldableType: 'unknown' as const,
-			confidence: 0
-		}
+			confidence: 0,
+		},
 	};
 
 	beforeEach(() => {
@@ -121,7 +178,7 @@ describe('OptionPicker Integration', () => {
 				const type1Button = screen.getByText(/Type1.*Dual-Shift/i);
 				expect(type1Button).toBeInTheDocument();
 
-				// Should find Type2 section with 8 pictographs  
+				// Should find Type2 section with 8 pictographs
 				const type2Button = screen.getByText(/Type2.*Shift/i);
 				expect(type2Button).toBeInTheDocument();
 
@@ -141,7 +198,7 @@ describe('OptionPicker Integration', () => {
 			await waitFor(() => {
 				// Check that pictograph containers are rendered
 				const pictographContainers = screen.getAllByRole('button');
-				
+
 				// Should have section header buttons + pictograph containers
 				// 4 section headers + 35 pictograph containers = 39 total buttons
 				expect(pictographContainers.length).toBeGreaterThan(30);
@@ -149,8 +206,8 @@ describe('OptionPicker Integration', () => {
 		});
 
 		it('should handle empty pictographs array', () => {
-			render(OptionPickerScroll, { 
-				props: { ...defaultProps, pictographs: [] }
+			render(OptionPickerScroll, {
+				props: { ...defaultProps, pictographs: [] },
 			});
 
 			// Should show empty state
@@ -163,16 +220,16 @@ describe('OptionPicker Integration', () => {
 			const { rerender } = render(OptionPickerScroll, { props: defaultProps });
 
 			// Test with smaller container
-			rerender({ 
-				props: { ...defaultProps, containerWidth: 400 }
+			rerender({
+				props: { ...defaultProps, containerWidth: 400 },
 			});
 
 			// Should still render sections
 			expect(screen.getByText(/Type1.*Dual-Shift/i)).toBeInTheDocument();
 
 			// Test with larger container
-			rerender({ 
-				props: { ...defaultProps, containerWidth: 1200 }
+			rerender({
+				props: { ...defaultProps, containerWidth: 1200 },
 			});
 
 			// Should still render sections
@@ -183,17 +240,17 @@ describe('OptionPicker Integration', () => {
 	describe('Pictograph Selection', () => {
 		it('should call onPictographSelected when pictograph is clicked', async () => {
 			const mockOnSelect = vi.fn();
-			render(OptionPickerScroll, { 
-				props: { ...defaultProps, onPictographSelected: mockOnSelect }
+			render(OptionPickerScroll, {
+				props: { ...defaultProps, onPictographSelected: mockOnSelect },
 			});
 
 			await waitFor(() => {
 				const pictographContainers = screen.getAllByRole('button');
 				// Find a pictograph container (not a section header)
-				const pictographContainer = pictographContainers.find(button => 
-					!button.textContent?.includes('Type')
+				const pictographContainer = pictographContainers.find(
+					(button) => !button.textContent?.includes('Type')
 				);
-				
+
 				if (pictographContainer) {
 					pictographContainer.click();
 					expect(mockOnSelect).toHaveBeenCalled();

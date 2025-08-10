@@ -1,6 +1,6 @@
 /**
  * PictographOrganizerService - Handles organization and filtering of pictographs
- * 
+ *
  * Extracted from OptionPickerScroll.svelte to provide reusable pictograph organization logic.
  * Maintains compatibility with legacy letter type detection while providing clean separation.
  */
@@ -24,7 +24,7 @@ export interface PictographOrganizationConfig {
 // ===== Constants =====
 const DEFAULT_CONFIG: PictographOrganizationConfig = {
 	individualSections: ['Type1', 'Type2', 'Type3'],
-	groupedSections: ['Type4', 'Type5', 'Type6']
+	groupedSections: ['Type4', 'Type5', 'Type6'],
 };
 
 // ===== Main Service Class =====
@@ -60,18 +60,22 @@ export class PictographOrganizerService {
 		pictographs.forEach((pictograph) => {
 			try {
 				const pictographType = this.determinePictographType(pictograph);
-				
+
 				if (this.config.individualSections.includes(pictographType)) {
-					organized.individual[pictographType].push(pictograph);
+					organized.individual[pictographType]?.push(pictograph);
 					organized.hasIndividual = true;
 				} else if (this.config.groupedSections.includes(pictographType)) {
-					organized.grouped[pictographType].push(pictograph);
+					organized.grouped[pictographType]?.push(pictograph);
 					organized.hasGrouped = true;
 				}
 			} catch (error) {
-				console.warn('Letter type detection error for pictograph:', pictograph.letter, error);
+				console.warn(
+					'Letter type detection error for pictograph:',
+					pictograph.letter,
+					error
+				);
 				// Fallback: put all problematic options in Type1 section
-				organized.individual['Type1'].push(pictograph);
+				organized.individual['Type1']?.push(pictograph);
 				organized.hasIndividual = true;
 			}
 		});
@@ -85,7 +89,7 @@ export class PictographOrganizerService {
 	 */
 	private determinePictographType(pictograph: PictographData): string {
 		const letter = pictograph.letter || '';
-		
+
 		// Check longer patterns first to avoid partial matches
 		// Complex patterns with dash suffix
 		if (letter.match(/^[WXYZ]-$|^[ΣΔθΩ]-$/)) {
@@ -94,7 +98,7 @@ export class PictographOrganizerService {
 		if (letter.match(/^[ΦΨΛ]-$/)) {
 			return 'Type5';
 		}
-		
+
 		// Simple letter patterns
 		if (letter.match(/^[A-V]$/)) {
 			return 'Type1';
@@ -122,11 +126,11 @@ export class PictographOrganizerService {
 	} {
 		return {
 			individual: Object.keys(organized.individual).filter(
-				key => organized.individual[key].length > 0
+				(key) => organized.individual[key] && organized.individual[key].length > 0
 			),
 			grouped: Object.keys(organized.grouped).filter(
-				key => organized.grouped[key].length > 0
-			)
+				(key) => organized.grouped[key] && organized.grouped[key].length > 0
+			),
 		};
 	}
 

@@ -1,12 +1,12 @@
 /**
  * ScrollLayoutMetricsUtil - Advanced layout metrics calculation for scroll containers
- * 
+ *
  * Extracted from OptionPickerScroll.svelte to provide reusable layout calculation logic.
  * Handles sophisticated device detection, foldable devices, and responsive layout calculations.
  */
 
-import type { FoldableDetectionResult } from './deviceDetection';
 import type { ResponsiveLayoutConfig } from '../config';
+import type { FoldableDetectionResult } from './deviceDetection';
 
 // ===== Types =====
 export interface LayoutMetrics {
@@ -50,12 +50,12 @@ export class ScrollLayoutMetricsUtil {
 	): LayoutMetrics {
 		const metrics: LayoutMetrics = {
 			shouldUseCompactLayout: containerHeight < 400,
-			shouldUseMobileLayout: 
+			shouldUseMobileLayout:
 				deviceInfo.deviceType === 'mobile' || deviceInfo.deviceType === 'smallMobile',
 			shouldUseTabletLayout: deviceInfo.deviceType === 'tablet',
 			isFoldableDevice: foldableInfo.isFoldable,
 			isUnfoldedFoldable: foldableInfo.isFoldable && foldableInfo.isUnfolded,
-			shouldAdjustForFoldable: 
+			shouldAdjustForFoldable:
 				foldableInfo.isFoldable && foldableInfo.foldableType === 'zfold',
 			aspectRatio: containerWidth / containerHeight,
 			isLandscape: containerWidth > containerHeight,
@@ -115,7 +115,7 @@ export class ScrollLayoutMetricsUtil {
 	 */
 	static generateCSSClasses(
 		layoutMetrics: LayoutMetrics,
-		foldableInfo: FoldableDetectionResult
+		_foldableInfo: FoldableDetectionResult
 	): string[] {
 		const classes: string[] = [];
 
@@ -133,7 +133,10 @@ export class ScrollLayoutMetricsUtil {
 	/**
 	 * Provides responsive breakpoint checks for advanced layouts
 	 */
-	static getResponsiveBreakpoints(containerWidth: number, containerHeight: number): {
+	static getResponsiveBreakpoints(
+		containerWidth: number,
+		containerHeight: number
+	): {
 		isSmallMobile: boolean;
 		isMobile: boolean;
 		isTablet: boolean;
@@ -272,7 +275,10 @@ export function createLayoutMetricsCalculator(
 				deviceInfo().foldableInfo,
 				layoutConfig()
 			);
-			return ScrollLayoutMetricsUtil.calculateScrollBehavior(metrics, deviceInfo().foldableInfo);
+			return ScrollLayoutMetricsUtil.calculateScrollBehavior(
+				metrics,
+				deviceInfo().foldableInfo
+			);
 		},
 		get cssProperties() {
 			const metrics = ScrollLayoutMetricsUtil.calculateLayoutMetrics(

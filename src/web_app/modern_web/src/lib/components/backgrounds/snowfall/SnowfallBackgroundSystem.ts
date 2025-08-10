@@ -1,6 +1,7 @@
 // src/lib/components/backgrounds/snowfall/SnowfallBackgroundSystem.ts
-import { createSnowflakeSystem } from '../systems/SnowflakeSystem';
+import { getOptimizedConfig } from '../config';
 import { createShootingStarSystem } from '../systems/ShootingStarSystem';
+import { createSnowflakeSystem } from '../systems/SnowflakeSystem';
 import type {
 	BackgroundSystem,
 	Dimensions,
@@ -9,7 +10,6 @@ import type {
 	Snowflake,
 } from '../types/types';
 import { drawBackgroundGradient } from './utils/backgroundUtils';
-import { getOptimizedConfig } from '../config';
 
 export class SnowfallBackgroundSystem implements BackgroundSystem {
 	private snowflakeSystem = createSnowflakeSystem();
@@ -19,8 +19,8 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 	private shootingStarState: ShootingStarState;
 
 	private quality: QualityLevel = 'medium';
-	private isDecember: boolean = false;
-	private accessibilitySettings: { reducedMotion: boolean; highContrast: boolean } = {
+	private _isDecember: boolean = false;
+	private _accessibilitySettings: { reducedMotion: boolean; highContrast: boolean } = {
 		reducedMotion: false,
 		highContrast: false,
 	};
@@ -28,7 +28,7 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 
 	constructor() {
 		this.shootingStarState = this.shootingStarSystem.initialState;
-		this.isDecember = new Date().getMonth() === 11;
+		this._isDecember = new Date().getMonth() === 11;
 		this.isInitialized = false;
 	}
 
@@ -81,7 +81,7 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 	}
 
 	public setAccessibility(settings: { reducedMotion: boolean; highContrast: boolean }): void {
-		this.accessibilitySettings = settings;
+		this._accessibilitySettings = settings;
 	}
 
 	public handleResize(oldDimensions: Dimensions, newDimensions: Dimensions): void {

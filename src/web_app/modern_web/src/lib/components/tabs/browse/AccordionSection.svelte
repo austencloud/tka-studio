@@ -35,8 +35,12 @@
 
 		const contentHeight = contentElement.scrollHeight;
 		const visibleHeight = contentElement.clientHeight;
-		
-		console.log(`Scroll check for ${type}:`, { contentHeight, visibleHeight, needsScroll: contentHeight > visibleHeight });
+
+		console.log(`Scroll check for ${type}:`, {
+			contentHeight,
+			visibleHeight,
+			needsScroll: contentHeight > visibleHeight,
+		});
 		needsScroll = contentHeight > visibleHeight;
 	}
 
@@ -54,33 +58,35 @@
 		}
 	});
 
-	// ✅ PURE RUNES: Mount effect for resize handling  
+	// ✅ PURE RUNES: Mount effect for resize handling
 	$effect(() => {
 		if (!mounted) {
 			mounted = true;
-			
+
 			// Setup resize observer for better detection
 			const resizeObserver = new ResizeObserver(() => {
 				if (isExpanded && contentElement) {
 					setTimeout(checkIfScrollNeeded, 50);
 				}
 			});
-			
+
 			// Setup window resize listener as backup
 			const handleResize = () => {
 				if (isExpanded && contentElement) {
 					setTimeout(checkIfScrollNeeded, 100);
 				}
 			};
-			
+
 			window.addEventListener('resize', handleResize);
-			
+
 			// Cleanup
 			return () => {
 				resizeObserver.disconnect();
 				window.removeEventListener('resize', handleResize);
 			};
 		}
+		// Return undefined for the else case
+		return undefined;
 	});
 
 	// ✅ PURE RUNES: Effect to observe content element when it changes
@@ -91,13 +97,15 @@
 					setTimeout(checkIfScrollNeeded, 50);
 				}
 			});
-			
+
 			resizeObserver.observe(contentElement);
-			
+
 			return () => {
 				resizeObserver.disconnect();
 			};
 		}
+		// Return undefined for the else case
+		return undefined;
 	});
 
 	// ✅ PURE RUNES: Modern event handling without dispatchers

@@ -65,7 +65,7 @@ export function modernToLegacyPictographData(modern: ModernPictographData): Lega
 		arrows: modern.arrows,
 		props: modern.props,
 		motions: modern.motions,
-		letter: modern.letter,
+		letter: modern.letter || null,
 		beat: modern.beat,
 		is_blank: modern.is_blank,
 		is_mirrored: modern.is_mirrored,

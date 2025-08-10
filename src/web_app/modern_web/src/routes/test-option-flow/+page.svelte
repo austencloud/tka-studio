@@ -56,8 +56,10 @@
 			// Test 1: Check if CSV data is available
 			logResult('📊 Testing CSV data availability...');
 
-			if (typeof window !== 'undefined' && (window as any).csvData) {
-				const csvData = (window as any).csvData;
+			if (typeof window !== 'undefined' && 'csvData' in window) {
+				const csvData = (
+					window as { csvData: { diamondData: unknown[]; boxData: unknown[] } }
+				).csvData;
 				logResult(
 					`CSV data found: Diamond=${csvData.diamondData.length} chars, Box=${csvData.boxData.length} chars`
 				);

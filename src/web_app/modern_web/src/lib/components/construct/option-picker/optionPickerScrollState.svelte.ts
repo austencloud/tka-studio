@@ -45,7 +45,7 @@ export interface ScrollContainerState {
 	isEmpty: boolean;
 	hasIndividualSections: boolean;
 	hasGroupedSections: boolean;
-	debugInfo?: any; // For development debugging
+	debugInfo?: () => Record<string, unknown> | null; // For development debugging
 }
 
 // ===== Main State Creator =====
@@ -100,10 +100,10 @@ export function createOptionPickerScrollState(initialProps: ScrollContainerProps
 				isFoldable: foldableInfo.isFoldable,
 				organizedSections: {
 					individual: Object.keys(organizedPictographs.individual).filter(
-						(key) => organizedPictographs.individual[key].length > 0
+						(key) => (organizedPictographs.individual?.[key]?.length ?? 0) > 0
 					),
 					grouped: Object.keys(organizedPictographs.grouped).filter(
-						(key) => organizedPictographs.grouped[key].length > 0
+						(key) => (organizedPictographs.grouped?.[key]?.length ?? 0) > 0
 					),
 				},
 				layoutMetrics: {
@@ -190,9 +190,9 @@ export function createOptionPickerScrollState(initialProps: ScrollContainerProps
 			scrollBehavior: scrollBehavior(),
 			cssProperties: cssProperties(),
 			cssClasses: cssClasses(),
-			isEmpty,
-			hasIndividualSections,
-			hasGroupedSections,
+			isEmpty: isEmpty(),
+			hasIndividualSections: hasIndividualSections(),
+			hasGroupedSections: hasGroupedSections(),
 			debugInfo,
 		};
 	}

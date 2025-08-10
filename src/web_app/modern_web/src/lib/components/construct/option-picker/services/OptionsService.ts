@@ -1,12 +1,12 @@
 /**
  * Options Service for OptionPicker using ONLY Svelte 5 Runes
- * 
+ *
  * Provides functionality for generating, filtering, sorting, and grouping pictograph options.
  * Complete port from legacy system without any stores - pure runes and functions.
  */
 
 import type { PictographData } from '$lib/domain/PictographData';
-import type { SortMethod, ReversalFilter } from '../config';
+import type { ReversalFilter, SortMethod } from '../config';
 
 /**
  * Determine reversal category for an option
@@ -19,20 +19,20 @@ export function determineReversalCategory(
 	if (!sequence || sequence.length === 0) {
 		return 'all';
 	}
-	
+
 	const lastBeat = sequence[sequence.length - 1];
 	if (!lastBeat?.motions?.red || !lastBeat?.motions?.blue) {
 		return 'all';
 	}
-	
+
 	if (!option?.motions?.red || !option?.motions?.blue) {
 		return 'all';
 	}
-	
+
 	// Check if rotation directions continue or reverse
 	const redContinuous = lastBeat.motions.red.prop_rot_dir === option.motions.red.prop_rot_dir;
 	const blueContinuous = lastBeat.motions.blue.prop_rot_dir === option.motions.blue.prop_rot_dir;
-	
+
 	if (redContinuous && blueContinuous) {
 		return 'continuous';
 	} else if (redContinuous || blueContinuous) {
@@ -52,7 +52,7 @@ export function determineGroupKey(
 ): string {
 	switch (sortMethod) {
 		case 'type':
-			return getLetterType(option.letter);
+			return getLetterType(option.letter || null);
 		case 'endPosition':
 			return option.end_position || option.metadata?.endPosition || 'Unknown';
 		case 'reversals':
@@ -67,35 +67,55 @@ export function determineGroupKey(
  */
 function getLetterType(letter: string | null): string {
 	if (!letter) return 'Unknown';
-	
+
 	// Type 1: Dual-Shift letters
 	const type1Letters = [
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F',
+		'G',
+		'H',
+		'I',
+		'J',
+		'K',
+		'L',
+		'M',
+		'N',
+		'O',
+		'P',
+		'Q',
+		'R',
+		'S',
+		'T',
+		'U',
+		'V',
 	];
-	
-	// Type 2: Shift letters  
+
+	// Type 2: Shift letters
 	const type2Letters = ['W', 'X', 'Y', 'Z', 'Σ', 'Δ', 'θ', 'Ω'];
-	
+
 	// Type 3: Dash letters
 	const type3Letters = ['W-', 'X-', 'Y-', 'Z-', 'Σ-', 'Δ-', 'θ-', 'Ω-'];
-	
+
 	// Type 4: Static letters
 	const type4Letters = ['Φ', 'Ψ', 'Λ'];
-	
+
 	// Type 5: Dash Static letters
 	const type5Letters = ['Φ-', 'Ψ-', 'Λ-'];
-	
+
 	// Type 6: Flip letters
 	const type6Letters = ['α', 'β', 'Γ'];
-	
+
 	if (type1Letters.includes(letter)) return 'Type1';
 	if (type2Letters.includes(letter)) return 'Type2';
 	if (type3Letters.includes(letter)) return 'Type3';
 	if (type4Letters.includes(letter)) return 'Type4';
 	if (type5Letters.includes(letter)) return 'Type5';
 	if (type6Letters.includes(letter)) return 'Type6';
-	
+
 	return 'Unknown';
 }
 
@@ -125,7 +145,7 @@ export function getSortedGroupKeys(keys: string[], sortMethod: SortMethod): stri
 					}
 					return 999; // Unknown positions last
 				};
-				
+
 				return getPositionOrder(a) - getPositionOrder(b);
 			});
 		case 'reversals':
@@ -148,8 +168,8 @@ export function getSorter(
 	switch (sortMethod) {
 		case 'type':
 			return (a, b) => {
-				const typeA = getLetterType(a.letter);
-				const typeB = getLetterType(b.letter);
+				const typeA = getLetterType(a.letter || null);
+				const typeB = getLetterType(b.letter || null);
 				if (typeA !== typeB) {
 					return typeA.localeCompare(typeB);
 				}
@@ -197,8 +217,8 @@ export function filterByReversals(
 	if (filter === 'all') {
 		return options;
 	}
-	
-	return options.filter(option => {
+
+	return options.filter((option) => {
 		const category = determineReversalCategory(sequence, option);
 		return category === filter;
 	});
@@ -211,22 +231,33 @@ export function getGroupDisplayName(groupKey: string, sortMethod: SortMethod): s
 	switch (sortMethod) {
 		case 'type':
 			switch (groupKey) {
-				case 'Type1': return 'Type 1: Dual-Shift';
-				case 'Type2': return 'Type 2: Shift';
-				case 'Type3': return 'Type 3: Dash';
-				case 'Type4': return 'Type 4: Static';
-				case 'Type5': return 'Type 5: Dash Static';
-				case 'Type6': return 'Type 6: Flip';
-				default: return groupKey;
+				case 'Type1':
+					return 'Type 1: Dual-Shift';
+				case 'Type2':
+					return 'Type 2: Shift';
+				case 'Type3':
+					return 'Type 3: Dash';
+				case 'Type4':
+					return 'Type 4: Static';
+				case 'Type5':
+					return 'Type 5: Dash Static';
+				case 'Type6':
+					return 'Type 6: Flip';
+				default:
+					return groupKey;
 			}
 		case 'endPosition':
 			return `End Position: ${groupKey}`;
 		case 'reversals':
 			switch (groupKey) {
-				case 'continuous': return 'Continuous';
-				case 'oneReversal': return 'One Reversal';
-				case 'twoReversals': return 'Two Reversals';
-				default: return groupKey;
+				case 'continuous':
+					return 'Continuous';
+				case 'oneReversal':
+					return 'One Reversal';
+				case 'twoReversals':
+					return 'Two Reversals';
+				default:
+					return groupKey;
 			}
 		default:
 			return groupKey;
@@ -244,18 +275,18 @@ export function getOptionsSummary(options: PictographData[]): {
 	const summary = {
 		total: options.length,
 		byType: {} as Record<string, number>,
-		byEndPosition: {} as Record<string, number>
+		byEndPosition: {} as Record<string, number>,
 	};
-	
-	options.forEach(option => {
+
+	options.forEach((option) => {
 		// Count by type
-		const type = getLetterType(option.letter);
+		const type = getLetterType(option.letter || null);
 		summary.byType[type] = (summary.byType[type] || 0) + 1;
-		
+
 		// Count by end position
 		const endPos = option.end_position || option.metadata?.endPosition || 'Unknown';
 		summary.byEndPosition[endPos] = (summary.byEndPosition[endPos] || 0) + 1;
 	});
-	
+
 	return summary;
 }

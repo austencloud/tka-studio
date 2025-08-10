@@ -310,9 +310,15 @@ export function createOptionPickerRunes() {
 		get selectedPictograph() {
 			return selectedPictograph;
 		},
-		filteredOptions, // This is already a $derived, so it's reactive
-		groupedOptions, // This is already a $derived, so it's reactive
-		categoryKeys, // This is already a $derived, so it's reactive
+		get filteredOptions() {
+			return filteredOptions();
+		},
+		get groupedOptions() {
+			return groupedOptions();
+		},
+		get categoryKeys() {
+			return categoryKeys();
+		},
 
 		// ✅ Keep getters for backward compatibility, but prefer direct access above
 		get sequence() {
