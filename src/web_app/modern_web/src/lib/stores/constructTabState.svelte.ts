@@ -6,7 +6,7 @@
  * the massive ConstructTab component.
  */
 
-import { getCurrentSequence, state as sequenceState } from './sequenceState.svelte';
+import { getCurrentSequence, state as sequenceState } from '../state/sequenceState.svelte';
 
 export type ActiveRightPanel = 'build' | 'generate' | 'edit' | 'export';
 export type GridMode = 'diamond' | 'box';

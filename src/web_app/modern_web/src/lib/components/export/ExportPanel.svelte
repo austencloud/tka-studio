@@ -1,10 +1,10 @@
 <!-- ExportPanel.svelte - Export panel matching desktop app exactly -->
 <script lang="ts">
+	import { getCurrentSequence } from '$lib/state/sequenceState.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { getCurrentSequence } from '$stores/sequenceState.svelte';
-	import ExportSettingsCard from './ExportSettingsCard.svelte';
-	import ExportPreviewCard from './ExportPreviewCard.svelte';
 	import ExportActionsCard from './ExportActionsCard.svelte';
+	import ExportPreviewCard from './ExportPreviewCard.svelte';
+	import ExportSettingsCard from './ExportSettingsCard.svelte';
 
 	const dispatch = createEventDispatcher();
 

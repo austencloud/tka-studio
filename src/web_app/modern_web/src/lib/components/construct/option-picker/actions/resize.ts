@@ -10,7 +10,7 @@ import type { Action } from 'svelte/action';
 /**
  * Debounce utility function - pure functional approach
  */
-function debounce<T extends (...args: any[]) => any>(
+function debounce<T extends (...args: unknown[]) => unknown>(
 	func: T,
 	delay: number
 ): T & { cancel: () => void } {

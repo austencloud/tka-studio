@@ -12,12 +12,20 @@ interface ResponsiveSettings {
 	fontScaling: number;
 }
 
+interface DeviceCapabilities {
+	isMobile: boolean;
+	isTablet: boolean;
+	isDesktop: boolean;
+	hasTouch: boolean;
+	screenSize: { width: number; height: number };
+}
+
 /**
  * Creates simple reactive state for device integration
  */
 export function createDeviceState() {
 	// Simple device state (matches your original)
-	let deviceCapabilities = $state<any>(null);
+	let deviceCapabilities = $state<DeviceCapabilities | null>(null);
 	let responsiveSettings = $state<ResponsiveSettings | null>(null);
 
 	// Derived values (matches your original logic exactly)
@@ -39,7 +47,11 @@ export function createDeviceState() {
 	});
 
 	// Simple initialization function (matches your original onMount logic)
-	function initializeDevice(deviceService: any) {
+	function initializeDevice(deviceService: {
+		getCapabilities(): DeviceCapabilities;
+		getResponsiveSettings(): ResponsiveSettings;
+		onCapabilitiesChanged(callback: (caps: DeviceCapabilities) => void): () => void;
+	}) {
 		try {
 			deviceCapabilities = deviceService.getCapabilities();
 			responsiveSettings = deviceService.getResponsiveSettings();
@@ -48,7 +60,7 @@ export function createDeviceState() {
 			console.log('📱 Responsive settings:', responsiveSettings);
 
 			// Listen for device changes
-			const cleanup = deviceService.onCapabilitiesChanged((caps: any) => {
+			const cleanup = deviceService.onCapabilitiesChanged((caps: DeviceCapabilities) => {
 				deviceCapabilities = caps;
 				responsiveSettings = deviceService.getResponsiveSettings();
 			});

@@ -1,20 +1,19 @@
 <!-- Write Tab - Act creation and editing with pixel-perfect desktop replica -->
 <script lang="ts">
-	import {
-		WriteView,
-		type ActData,
-		type ActThumbnailInfo,
-		type MusicPlayerState,
-		createEmptyAct,
-		createDefaultMusicPlayerState,
-	} from '$lib/types/write';
-	import WriteToolbar from '$lib/components/write/WriteToolbar.svelte';
 	import ActBrowser from '$lib/components/write/ActBrowser.svelte';
 	import ActSheet from '$lib/components/write/ActSheet.svelte';
 	import MusicPlayer from '$lib/components/write/MusicPlayer.svelte';
+	import WriteToolbar from '$lib/components/write/WriteToolbar.svelte';
+	import {
+		createDefaultMusicPlayerState,
+		createEmptyAct,
+		type ActData,
+		type ActThumbnailInfo,
+		type MusicPlayerState,
+	} from '$lib/types/write';
 
 	// State management using runes
-	let currentView = $state<WriteView>(WriteView.MAIN);
+
 	let currentAct = $state<ActData | null>(null);
 	let availableActs = $state<ActThumbnailInfo[]>([]);
 	let isLoading = $state<boolean>(false);

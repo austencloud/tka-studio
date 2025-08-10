@@ -19,6 +19,21 @@ import type {
 	ResponsiveLayoutConfig,
 } from '../config';
 
+interface LayoutRule {
+	when: {
+		count?: number;
+		minCount?: number;
+		maxCount?: number;
+		device?: 'desktop' | 'mobile';
+		aspect?: ContainerAspect;
+		aspects?: ContainerAspect[];
+		orientation?: 'portrait' | 'landscape';
+		extraCheck?: (width: number, height: number, params: GridConfigParams) => boolean;
+	};
+	columns?: number;
+	gap?: number;
+}
+
 export function getEnhancedDeviceType(
 	width: number,
 	isMobileUserAgent: boolean
@@ -168,7 +183,7 @@ export const getResponsiveLayout = memoizeLRU(
 	}
 );
 
-function doesRuleMatch(rule: any, params: GridConfigParams): boolean {
+function doesRuleMatch(rule: LayoutRule, params: GridConfigParams): boolean {
 	if (rule.when.count !== undefined && rule.when.count !== params.count) return false;
 	if (rule.when.minCount !== undefined && params.count < rule.when.minCount) return false;
 	if (rule.when.maxCount !== undefined && params.count > rule.when.maxCount) return false;

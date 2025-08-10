@@ -9,7 +9,7 @@
 	import { onMount } from 'svelte';
 
 	// Props using runes
-	const { isGenerateMode = false } = $props<{ isGenerateMode?: boolean }>();
+	const {} = $props<{ isGenerateMode?: boolean }>();
 
 	// Reactive state from store
 	let errorMessage = $derived(constructTabState.errorMessage);

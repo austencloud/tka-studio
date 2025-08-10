@@ -8,7 +8,6 @@ Test page for the new sectioned OptionPicker component
 	import { onMount } from 'svelte';
 
 	let testStatus = $state('Initializing...');
-	let optionPickerRef: any = null;
 
 	// Real start position data that should trigger option loading
 	const realStartPosition = {
@@ -153,32 +152,6 @@ Test page for the new sectioned OptionPicker component
 		background: #1d4ed8;
 	}
 
-	.test-info {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 20px;
-		background: white;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.test-info h3 {
-		color: #333;
-		margin-top: 0;
-	}
-
-	.test-info ul {
-		color: #666;
-	}
-
-	.test-info li {
-		margin-bottom: 8px;
-	}
-
-	.test-info strong {
-		color: #333;
-	}
-
 	.test-container {
 		max-width: 1200px;
 		margin: 0 auto 30px auto;
@@ -187,31 +160,5 @@ Test page for the new sectioned OptionPicker component
 		border-radius: 8px;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 		padding: 20px;
-	}
-
-	.test-info {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 20px;
-		background: white;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.test-info h3 {
-		color: #333;
-		margin-top: 0;
-	}
-
-	.test-info ul {
-		color: #666;
-	}
-
-	.test-info li {
-		margin-bottom: 8px;
-	}
-
-	.test-info strong {
-		color: #333;
 	}
 </style>

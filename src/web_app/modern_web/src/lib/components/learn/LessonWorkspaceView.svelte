@@ -30,7 +30,6 @@
 	let {
 		lessonType = null,
 		quizMode = null,
-		layoutMode: _layoutMode,
 		onBackToSelector,
 		onLessonComplete,
 	}: Props = $props();
@@ -47,12 +46,9 @@
 	let questionStartTime = 0;
 
 	// Component references
-	let timerComponent = $state<any>();
+	let timerComponent = $state<QuizTimer>();
 
 	// Derived state
-	const _lessonConfig = $derived(
-		lessonType ? LessonConfigService.getLessonConfig(lessonType) : null
-	);
 	const isCountdownMode = $derived(quizMode === QuizModeEnum.COUNTDOWN);
 	const isFixedQuestionMode = $derived(quizMode === QuizModeEnum.FIXED_QUESTION);
 
@@ -114,7 +110,7 @@
 	function handleAnswerSelected(event: CustomEvent) {
 		if (isAnswered || !currentQuestion || !sessionId) return;
 
-		const { answerId, answerContent: _answerContent, isCorrect } = event.detail;
+		const { answerId, isCorrect } = event.detail;
 		const timeToAnswer = Date.now() - questionStartTime;
 
 		// Mark as answered
@@ -220,7 +216,9 @@
 					<QuizTimer
 						bind:this={timerComponent}
 						{timeRemaining}
-						totalTime={LessonConfigService.getQuizTime(quizMode)}
+						totalTime={LessonConfigService.getQuizTime(
+							quizMode || QuizModeEnum.FIXED_QUESTION
+						)}
 						isRunning={true}
 						size="small"
 						on:tick={handleTimerTick}
@@ -233,7 +231,11 @@
 		<!-- Progress Tracker -->
 		{#if progress}
 			<div class="progress-container">
-				<ProgressTracker {progress} {quizMode} compact={true} />
+				<ProgressTracker
+					{progress}
+					quizMode={quizMode || QuizModeEnum.FIXED_QUESTION}
+					compact={true}
+				/>
 			</div>
 		{/if}
 

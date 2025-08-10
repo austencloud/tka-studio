@@ -1,25 +1,22 @@
 <!-- GraphEditor.svelte - Professional Graph Editor ported from desktop -->
 <script lang="ts">
 	import ModernPictograph from '$components/pictograph/ModernPictograph.svelte';
-	import type { BeatData } from '$services/interfaces';
 	import {
 		getCurrentSequence,
 		getSelectedBeatData,
 		getSelectedBeatIndex,
-	} from '$stores/sequenceState.svelte';
+	} from '$lib/state/sequenceState.svelte';
+	import type { BeatData } from '$services/interfaces';
 	import { onMount } from 'svelte';
 	import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 
 	// Props - optional external data
-	const {
-		onBeatModified: _onBeatModified,
-		onArrowSelected: _onArrowSelected,
-		onVisibilityChanged: _onVisibilityChanged,
-	} = $props<{
-		onBeatModified?: (beatIndex: number, beatData: BeatData) => void;
-		onArrowSelected?: (arrowData: any) => void;
-		onVisibilityChanged?: (isVisible: boolean) => void;
-	}>();
+	const { onArrowSelected: _onArrowSelected, onVisibilityChanged: _onVisibilityChanged } =
+		$props<{
+			onBeatModified?: (beatIndex: number, beatData: BeatData) => void;
+			onArrowSelected?: (arrowData: any) => void;
+			onVisibilityChanged?: (isVisible: boolean) => void;
+		}>();
 
 	// Reactive state from stores
 	let currentSequence = $derived(getCurrentSequence());

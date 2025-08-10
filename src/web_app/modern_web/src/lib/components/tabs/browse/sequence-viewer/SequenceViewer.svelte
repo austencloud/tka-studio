@@ -1,11 +1,11 @@
 <!-- SequenceViewer.svelte - Main coordinator component using pure Svelte 5 runes -->
 <script lang="ts">
-	import { slide, fade } from 'svelte/transition';
-	import SequenceViewerHeader from './SequenceViewerHeader.svelte';
-	import SequenceImageViewer from './SequenceImageViewer.svelte';
-	import SequenceDetails from './SequenceDetails.svelte';
+	import { slide } from 'svelte/transition';
 	import SequenceActions from './SequenceActions.svelte';
+	import SequenceDetails from './SequenceDetails.svelte';
 	import SequenceEmptyState from './SequenceEmptyState.svelte';
+	import SequenceImageViewer from './SequenceImageViewer.svelte';
+	import SequenceViewerHeader from './SequenceViewerHeader.svelte';
 
 	interface Props {
 		sequence?: any;

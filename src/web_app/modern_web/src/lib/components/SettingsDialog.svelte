@@ -1,7 +1,7 @@
 <!-- SettingsDialog.svelte - Simplified main settings dialog -->
 <script lang="ts">
-	import { getSettings, hideSettingsDialog, updateSettings } from '$stores/appState.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import type { BackgroundType, QualityLevel } from '$lib/components/backgrounds/types/types';
+	import { getSettings, hideSettingsDialog, updateSettings } from '$lib/state/appState.svelte';
 
 	import SettingsSidebar from './settings/SettingsSidebar.svelte';
 	import BackgroundTab from './settings/tabs/BackgroundTab.svelte';
@@ -10,11 +10,32 @@
 	import PropTypeTab from './settings/tabs/PropTypeTab.svelte';
 	import VisibilityTab from './settings/tabs/VisibilityTab.svelte';
 
-	const dispatch = createEventDispatcher();
-
 	// Current settings state
 	let settings = $state(getSettings());
 	let activeTab = $state('General');
+
+	// Derived state for background settings - ensure compatibility
+	const backgroundSettings = $derived(() => {
+		const bgType = settings.backgroundType;
+		// Map unsupported types to supported ones
+		const supportedType: BackgroundType | undefined =
+			bgType === 'auroraBorealis' || bgType === 'starfield'
+				? 'aurora'
+				: bgType === 'snowfall' ||
+					  bgType === 'nightSky' ||
+					  bgType === 'aurora' ||
+					  bgType === 'bubbles'
+					? bgType
+					: bgType
+						? 'aurora'
+						: undefined; // default fallback or undefined if no bgType
+
+		return {
+			backgroundType: supportedType,
+			backgroundQuality: settings.backgroundQuality as QualityLevel | undefined,
+			backgroundEnabled: settings.backgroundEnabled,
+		};
+	});
 
 	// Simplified tab configuration
 	const tabs = [
@@ -43,12 +64,10 @@
 		const config = event.detail;
 		console.log('🚀 Codex export requested with config:', config);
 		// TODO: Implement actual export service call
-		dispatch('codexExport', config);
 	}
 
 	// Handle apply/save
 	function handleApply() {
-		dispatch('applied', settings);
 		console.log('✅ Settings applied:', settings);
 		hideSettingsDialog();
 	}
@@ -113,7 +132,10 @@
 				{:else if activeTab === 'Visibility'}
 					<VisibilityTab {settings} on:update={handleSettingsUpdate} />
 				{:else if activeTab === 'Background'}
-					<BackgroundTab {settings} on:update={handleSettingsUpdate} />
+					<BackgroundTab
+						settings={backgroundSettings()}
+						on:update={handleSettingsUpdate}
+					/>
 				{:else if activeTab === 'CodexExporter'}
 					<CodexExporterTab
 						{settings}

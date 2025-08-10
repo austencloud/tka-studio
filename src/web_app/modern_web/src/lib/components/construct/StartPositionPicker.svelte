@@ -2,8 +2,10 @@
 <script lang="ts">
 	import type { BeatData } from '$domain/BeatData';
 	import type { PictographData } from '$domain/PictographData';
+	import { Location, MotionType } from '$domain/enums';
 	import { getLetterBorderColor } from '$lib/utils/letterTypeUtils';
 	import { resolve } from '$services/bootstrap';
+	import type { IPictographRenderingService, IStartPositionService } from '$services/interfaces';
 	import { onMount } from 'svelte';
 	import ModernPictograph from '../pictograph/ModernPictograph.svelte';
 
@@ -21,8 +23,8 @@
 	let isTransitioning = $state(false);
 
 	// Modern services (replacing legacy service calls)
-	let startPositionService = $state<any | null>(null);
-	let pictographRenderingService = $state<any | null>(null);
+	let startPositionService = $state<IStartPositionService | null>(null);
+	let pictographRenderingService = $state<IPictographRenderingService | null>(null);
 
 	// Resolve services when container is ready
 	$effect(() => {
@@ -97,18 +99,18 @@
 						blue: startPosPictograph.motions?.blue
 							? {
 									...startPosPictograph.motions.blue,
-									motionType: 'static',
-									endLocation: startPosPictograph.motions.blue.startLocation,
-									endOri: startPosPictograph.motions.blue.startOri,
+									motion_type: MotionType.STATIC,
+									end_loc: startPosPictograph.motions.blue.start_loc,
+									end_ori: startPosPictograph.motions.blue.start_ori,
 									turns: 0,
 								}
 							: null,
 						red: startPosPictograph.motions?.red
 							? {
 									...startPosPictograph.motions.red,
-									motionType: 'static',
-									endLocation: startPosPictograph.motions.red.startLocation,
-									endOri: startPosPictograph.motions.red.startOri,
+									motion_type: MotionType.STATIC,
+									end_loc: startPosPictograph.motions.red.start_loc,
+									end_ori: startPosPictograph.motions.red.start_ori,
 									turns: 0,
 								}
 							: null,
@@ -185,15 +187,15 @@
 
 		// Try to get from letter first
 		if (pictographData.letter && defaultEndPositions[pictographData.letter]) {
-			return defaultEndPositions[pictographData.letter];
+			return defaultEndPositions[pictographData.letter]!;
 		}
 
 		// Try to extract from motion data
-		if (pictographData.motions?.blue?.endLocation) {
-			return mapLocationToPosition(pictographData.motions.blue.endLocation);
+		if (pictographData.motions?.blue?.end_loc) {
+			return mapLocationToPosition(pictographData.motions.blue.end_loc);
 		}
-		if (pictographData.motions?.red?.endLocation) {
-			return mapLocationToPosition(pictographData.motions.red.endLocation);
+		if (pictographData.motions?.red?.end_loc) {
+			return mapLocationToPosition(pictographData.motions.red.end_loc);
 		}
 
 		// Default fallback
@@ -203,7 +205,7 @@
 	/**
 	 * Map location enum to position string for CSV lookup
 	 */
-	function mapLocationToPosition(location: any): string {
+	function mapLocationToPosition(location: Location): string {
 		// Basic mapping - this would need to be enhanced based on actual position system
 		const locationMap: Record<string, string> = {
 			SOUTH: 'alpha1',

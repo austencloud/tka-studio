@@ -1,7 +1,27 @@
 import type { ResourceTracker as ResourceTrackerInterface } from '../types/types';
 
+interface Disposable {
+	dispose?(): void;
+	close?(): void;
+	cleanup?(): void;
+}
+
+type TrackedResource =
+	| HTMLElement
+	| HTMLImageElement
+	| HTMLCanvasElement
+	| Worker
+	| WebGLRenderingContext
+	| WebGL2RenderingContext
+	| Path2D
+	| Disposable
+	| TrackedResource[]
+	| Set<TrackedResource>
+	| Map<unknown, TrackedResource>
+	| unknown;
+
 export class ResourceTracker implements ResourceTrackerInterface {
-	private resources: Set<any>;
+	private resources: Set<TrackedResource>;
 	private isActive: boolean;
 
 	constructor() {
@@ -19,7 +39,7 @@ export class ResourceTracker implements ResourceTrackerInterface {
 		return resource;
 	}
 
-	public untrackResource(resource: any): void {
+	public untrackResource(resource: TrackedResource): void {
 		this.resources.delete(resource);
 	}
 
@@ -39,7 +59,7 @@ export class ResourceTracker implements ResourceTrackerInterface {
 		}
 	}
 
-	private disposeResource(resource: any): void {
+	private disposeResource(resource: TrackedResource): void {
 		if (!resource) return;
 
 		if (resource instanceof HTMLElement) {
@@ -67,11 +87,26 @@ export class ResourceTracker implements ResourceTrackerInterface {
 			if (extension) extension.loseContext();
 		} else if (resource instanceof Path2D) {
 			// Path2D objects don't need explicit cleanup
-		} else if (resource.dispose && typeof resource.dispose === 'function') {
+		} else if (
+			resource &&
+			typeof resource === 'object' &&
+			'dispose' in resource &&
+			typeof resource.dispose === 'function'
+		) {
 			resource.dispose();
-		} else if (resource.close && typeof resource.close === 'function') {
+		} else if (
+			resource &&
+			typeof resource === 'object' &&
+			'close' in resource &&
+			typeof resource.close === 'function'
+		) {
 			resource.close();
-		} else if (resource.cleanup && typeof resource.cleanup === 'function') {
+		} else if (
+			resource &&
+			typeof resource === 'object' &&
+			'cleanup' in resource &&
+			typeof resource.cleanup === 'function'
+		) {
 			resource.cleanup();
 		} else if (Array.isArray(resource)) {
 			resource.forEach((item) => this.disposeResource(item));
@@ -81,7 +116,7 @@ export class ResourceTracker implements ResourceTrackerInterface {
 		}
 	}
 
-	public isTracking(resource: any): boolean {
+	public isTracking(resource: TrackedResource): boolean {
 		return this.resources.has(resource);
 	}
 

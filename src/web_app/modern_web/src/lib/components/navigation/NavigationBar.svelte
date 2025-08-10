@@ -1,6 +1,6 @@
 <!-- Navigation Bar - Tab switching interface with fade system integration -->
 <script lang="ts">
-	import { showSettingsDialog } from '$stores/appState.svelte';
+	import { showSettingsDialog } from '$lib/state/appState.svelte';
 
 	type TabID = string;
 	interface TabDef {

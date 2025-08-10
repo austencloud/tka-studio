@@ -42,7 +42,7 @@ export function detectAppropriateQuality(): QualityLevel {
 	}
 
 	// Check device memory (if available)
-	const deviceMemory = (navigator as any).deviceMemory;
+	const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
 	if (deviceMemory && deviceMemory < 4) {
 		return 'low';
 	}
@@ -54,7 +54,13 @@ export function detectAppropriateQuality(): QualityLevel {
 	}
 
 	// Check connection type (if available)
-	const connection = (navigator as any).connection;
+	const connection = (
+		navigator as Navigator & {
+			connection?: {
+				effectiveType?: string;
+			};
+		}
+	).connection;
 	if (connection) {
 		const effectiveType = connection.effectiveType;
 		if (effectiveType === 'slow-2g' || effectiveType === '2g') {
@@ -89,9 +95,13 @@ export function detectAppropriateQuality(): QualityLevel {
 	}
 
 	// Check battery status (if available)
-	const battery = (navigator as any).getBattery?.();
+	const battery = (
+		navigator as Navigator & {
+			getBattery?: () => Promise<{ level: number }>;
+		}
+	).getBattery?.();
 	if (battery) {
-		battery.then((batteryManager: any) => {
+		battery.then((batteryManager: { level: number }) => {
 			if (batteryManager.level < 0.2) {
 				return 'low';
 			}

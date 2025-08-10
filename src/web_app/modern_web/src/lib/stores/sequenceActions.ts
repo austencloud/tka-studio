@@ -23,7 +23,7 @@ import {
 	setSequences,
 	updateCurrentBeat,
 	updateSequence,
-} from './sequenceState.svelte';
+} from '../state/sequenceState.svelte';
 
 // ============================================================================
 // SEQUENCE ACTIONS
@@ -245,7 +245,7 @@ import {
 	setArrowPositioningError,
 	setArrowPositioningInProgress,
 	setArrowPositions,
-} from './sequenceState.svelte';
+} from '../state/sequenceState.svelte';
 
 /**
  * Calculate arrow positions for current pictograph

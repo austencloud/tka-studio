@@ -182,7 +182,7 @@ export interface BackgroundFactoryParams {
 	type: BackgroundType;
 	initialQuality?: QualityLevel;
 	accessibility?: AccessibilitySettings;
-	customConfig?: any;
+	customConfig?: Record<string, unknown>;
 }
 
 export type BackgroundEvent =
@@ -192,7 +192,7 @@ export type BackgroundEvent =
 	| { type: 'error'; message: string; stack?: string };
 
 export interface ResourceTracker {
-	trackResource: (resource: any) => void;
-	untrackResource: (resource: any) => void;
+	trackResource: (resource: unknown) => void;
+	untrackResource: (resource: unknown) => void;
 	disposeAll: () => void;
 }

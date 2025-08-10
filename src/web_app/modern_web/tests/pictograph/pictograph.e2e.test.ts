@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * End-to-End Pictograph Rendering Tests
  *
@@ -26,7 +25,7 @@ test.describe('Modern Pictograph E2E', () => {
 			});
 
 			// Verify SVG is present
-			const svg = page.locator('[data-testid=\"main-pictograph\"] svg');
+			const svg = page.locator('[data-testid="main-pictograph"] svg');
 			await expect(svg).toBeVisible();
 
 			// Verify dimensions

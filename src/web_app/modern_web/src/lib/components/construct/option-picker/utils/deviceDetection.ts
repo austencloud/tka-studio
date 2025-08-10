@@ -105,17 +105,18 @@ export function detectFoldableDevice(): FoldableDetectionResult {
 	try {
 		// Experimental API
 		if ('getWindowSegments' in navigator && typeof navigator.getWindowSegments === 'function') {
-			segmentCount = (navigator as any).getWindowSegments().length;
+			segmentCount = (navigator as { getWindowSegments(): unknown[] }).getWindowSegments()
+				.length;
 		}
 	} catch (e) {
 		if (DEBUG_MODE) console.warn('Error accessing getWindowSegments', e);
 	}
 
-	let viewportSegments: any[] | undefined;
+	let viewportSegments: unknown[] | undefined;
 	try {
 		// Experimental API
 		if (window.visualViewport && 'segments' in window.visualViewport) {
-			viewportSegments = (window.visualViewport as any).segments as any[] | undefined;
+			viewportSegments = (window.visualViewport as { segments?: unknown[] }).segments;
 		}
 	} catch (e) {
 		if (DEBUG_MODE) console.warn('Error accessing visualViewport.segments', e);
@@ -353,12 +354,14 @@ export const FoldableDeviceUtils = {
 					window.matchMedia('(screen-spanning: single-fold-horizontal)').matches,
 				getWindowSegmentsLength:
 					'getWindowSegments' in navigator &&
-					typeof (navigator as any).getWindowSegments === 'function'
-						? (navigator as any).getWindowSegments().length
+					typeof (navigator as { getWindowSegments?: () => unknown[] })
+						.getWindowSegments === 'function'
+						? (navigator as { getWindowSegments(): unknown[] }).getWindowSegments()
+								.length
 						: 'N/A',
 				visualViewportSegmentsLength:
-					window.visualViewport && 'segments' in (window.visualViewport as any)
-						? (window.visualViewport as any).segments?.length
+					window.visualViewport && 'segments' in window.visualViewport
+						? (window.visualViewport as { segments?: unknown[] }).segments?.length
 						: 'N/A',
 			};
 		} catch (e) {

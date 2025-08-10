@@ -13,7 +13,7 @@
 	}
 
 	function getDifficultyColor(difficulty: number) {
-		const colors = {
+		const colors: Record<number, string> = {
 			1: '#10b981', // green
 			2: '#f59e0b', // yellow
 			3: '#ef4444', // red
@@ -23,7 +23,7 @@
 	}
 
 	function getDifficultyLabel(difficulty: number) {
-		const labels = {
+		const labels: Record<number, string> = {
 			1: 'Beginner',
 			2: 'Intermediate',
 			3: 'Advanced',
@@ -34,7 +34,7 @@
 </script>
 
 <div class="viewer-header">
-	<button class="back-button" on:click={handleBackToBrowser} type="button">
+	<button class="back-button" onclick={handleBackToBrowser} type="button">
 		<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
 			<path
 				d="M12.5 15L7.5 10L12.5 5"

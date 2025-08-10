@@ -22,9 +22,9 @@
 		showSettingsDialog,
 		switchTab,
 		updateSettings,
-	} from '$stores/appState.svelte';
+	} from '$lib/state/appState.svelte';
 
-	import { loadSequences } from '$stores/sequenceActions';
+	import { loadSequences } from '$lib/stores/sequenceActions';
 
 	// Import components
 	import ErrorScreen from './ErrorScreen.svelte';
@@ -174,7 +174,7 @@
 		<MainInterface />
 
 		{#if getShowSettings()}
-			<SettingsDialog {settingsService} onClose={hideSettingsDialog} />
+			<SettingsDialog />
 		{/if}
 	{/if}
 </div>
@@ -187,22 +187,5 @@
 		width: 100%;
 		position: relative;
 		overflow: hidden;
-	}
-
-	/* Theme-specific styles */
-	.tka-app[data-theme='construct'] {
-		/* Construct tab specific styles */
-	}
-
-	.tka-app[data-theme='generate'] {
-		/* Generate tab specific styles */
-	}
-
-	.tka-app[data-theme='browse'] {
-		/* Browse tab specific styles */
-	}
-
-	.tka-app[data-theme='learn'] {
-		/* Learn tab specific styles */
 	}
 </style>

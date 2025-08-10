@@ -1,16 +1,17 @@
 <!--
 	Answer Pictograph Component
-	
+
 	Displays pictograph answer options as clickable cards.
 	Handles selection states, feedback, and visual effects.
 -->
 
 <script lang="ts">
+	import type { PictographData } from '$domain/PictographData';
 	import { createEventDispatcher } from 'svelte';
 	import PictographRenderer from './PictographRenderer.svelte';
 
 	// Props
-	export let pictographData: any;
+	export let pictographData: PictographData;
 	export let isSelected = false;
 	export let isCorrect = false;
 	export let showFeedback = false;

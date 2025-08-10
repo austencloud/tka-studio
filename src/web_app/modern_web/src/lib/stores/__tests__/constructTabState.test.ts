@@ -4,13 +4,13 @@
  * Tests for the centralized state management store
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+	clearError,
 	constructTabState,
 	setActivePanel,
-	setGridMode,
 	setError,
-	clearError,
+	setGridMode,
 } from '../constructTabState.svelte';
 
 // Mock the sequence state
@@ -55,12 +55,32 @@ describe('ConstructTabState', () => {
 		});
 
 		it('should show start position picker when sequence has no beats', () => {
-			mockSequenceState.currentSequence = { beats: [] };
+			mockSequenceState.currentSequence = {
+				id: 'test',
+				name: 'Test Sequence',
+				word: 'test',
+				beats: [],
+				thumbnails: [],
+				is_favorite: false,
+				is_circular: false,
+				tags: [],
+				metadata: {},
+			} as any;
 			expect(constructTabState.shouldShowStartPositionPicker).toBe(true);
 		});
 
 		it('should not show start position picker when sequence has beats', () => {
-			mockSequenceState.currentSequence = { beats: [{ beat: 1 }] };
+			mockSequenceState.currentSequence = {
+				id: 'test',
+				name: 'Test Sequence',
+				word: 'test',
+				beats: [{ beat_number: 1 } as any],
+				thumbnails: [],
+				is_favorite: false,
+				is_circular: false,
+				tags: [],
+				metadata: {},
+			} as any;
 			expect(constructTabState.shouldShowStartPositionPicker).toBe(false);
 		});
 	});
@@ -114,7 +134,17 @@ describe('ConstructTabState', () => {
 
 	describe('Derived State Getters', () => {
 		it('should return current sequence', () => {
-			const testSequence = { id: 'test', beats: [] };
+			const testSequence = {
+				id: 'test',
+				name: 'Test Sequence',
+				word: 'test',
+				beats: [],
+				thumbnails: [],
+				is_favorite: false,
+				is_circular: false,
+				tags: [],
+				metadata: {},
+			} as any;
 			mockSequenceState.currentSequence = testSequence;
 			expect(constructTabState.currentSequence).toBe(testSequence);
 		});

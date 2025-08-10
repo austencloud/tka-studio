@@ -39,8 +39,6 @@ export class StartPositionService implements IStartPositionService {
 			const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
 
 			const beatData: BeatData[] = startPositionKeys.map((key, index) => {
-				const [_startPos, _endPos] = key.split('_');
-
 				return createBeatData({
 					beat_number: 0,
 					is_blank: false,
@@ -73,7 +71,7 @@ export class StartPositionService implements IStartPositionService {
 							);
 							return;
 						}
-					} catch (e) {
+					} catch {
 						// If parsing fails, continue with saving new format
 					}
 				}
@@ -149,8 +147,6 @@ export class StartPositionService implements IStartPositionService {
 		index: number,
 		gridMode: GridMode
 	): PictographData {
-		const [_startPos, _endPos] = key.split('_');
-
 		// Determine letter based on position key
 		let letter: string;
 		if (key.includes('alpha')) letter = 'α';

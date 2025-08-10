@@ -47,6 +47,7 @@ const uiState = $state({
 	isFullScreen: false,
 	showSettings: false,
 	theme: 'dark' as 'light' | 'dark',
+	isTransitioning: false,
 });
 
 export function getActiveTab() {
@@ -60,6 +61,9 @@ export function getShowSettings() {
 }
 export function getTheme() {
 	return uiState.theme;
+}
+export function getIsTransitioning() {
+	return uiState.isTransitioning;
 }
 
 // ============================================================================
@@ -211,7 +215,7 @@ export function clearInitializationError(): void {
 }
 
 /**
- * Switch to a different tab - SIMPLE VERSION
+ * Switch to a different tab - with transition feedback
  */
 export function switchTab(tab: TabId): void {
 	const currentTab = uiState.activeTab;
@@ -221,9 +225,17 @@ export function switchTab(tab: TabId): void {
 		return;
 	}
 
-	// Simple immediate switch - transitions will be handled by components
+	// Set transitioning state
+	uiState.isTransitioning = true;
+
+	// Switch tab immediately (transitions handled by components)
 	uiState.activeTab = tab;
 	console.log(`🔄 Tab switched: ${currentTab} → ${tab}`);
+
+	// Clear transitioning state after a short delay
+	setTimeout(() => {
+		uiState.isTransitioning = false;
+	}, 600); // Allow time for transitions to complete
 }
 
 /**

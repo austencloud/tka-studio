@@ -58,7 +58,7 @@ export class AnswerCheckerService {
 	private static checkPictographToLetterAnswer(
 		questionData: QuestionData,
 		userAnswer: any,
-		selectedOption?: AnswerOption
+		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const correctLetter = questionData.correctAnswer;
 		const userLetter = typeof userAnswer === 'string' ? userAnswer : userAnswer?.toString();
@@ -85,7 +85,7 @@ export class AnswerCheckerService {
 	private static checkLetterToPictographAnswer(
 		questionData: QuestionData,
 		userAnswer: any,
-		selectedOption?: AnswerOption
+		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const correctPictograph = questionData.correctAnswer;
 		const userPictograph = userAnswer;
@@ -114,7 +114,7 @@ export class AnswerCheckerService {
 	private static checkValidNextPictographAnswer(
 		questionData: QuestionData,
 		userAnswer: any,
-		selectedOption?: AnswerOption
+		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const initialPictograph = questionData.questionContent;
 		const userPictograph = userAnswer;

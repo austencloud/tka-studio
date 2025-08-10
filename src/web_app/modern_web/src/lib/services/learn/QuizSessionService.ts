@@ -6,13 +6,12 @@
  */
 
 import {
-	type QuizSession,
 	type LessonProgress,
 	type LessonResults,
+	type QuizSession,
 	type TimerState,
 	LessonType,
 	QuizMode,
-	QUIZ_DEFAULTS,
 } from '$lib/types/learn';
 import { LessonConfigService } from './LessonConfigService';
 

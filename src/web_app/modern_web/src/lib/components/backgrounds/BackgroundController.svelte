@@ -9,6 +9,7 @@
 		dimensions: propDimensions,
 		backgroundType: propBackgroundType,
 		quality: propQuality,
+		isVisible: propIsVisible,
 		onready,
 		onerror,
 		onperformanceReport,
@@ -16,6 +17,7 @@
 		dimensions?: Dimensions;
 		backgroundType?: BackgroundType;
 		quality?: QualityLevel;
+		isVisible?: boolean;
 		onready?: () => void;
 		onerror?: (error: { message: string }) => void;
 		onperformanceReport?: (report: { fps: number }) => void;
@@ -28,6 +30,7 @@
 	let currentBackgroundType = $state(propBackgroundType || 'snowfall');
 	let currentQuality = $state(propQuality || 'medium');
 	let currentDimensions = $state(propDimensions || { width: 0, height: 0 });
+	let currentIsVisible = $state(propIsVisible !== undefined ? propIsVisible : true);
 
 	// Update reactive state when props change
 	$effect(() => {
@@ -39,6 +42,9 @@
 		}
 		if (propDimensions !== undefined) {
 			currentDimensions = propDimensions;
+		}
+		if (propIsVisible !== undefined) {
+			currentIsVisible = propIsVisible;
 		}
 	});
 
@@ -77,6 +83,18 @@
 					);
 				}
 			}
+		}
+	});
+
+	$effect(() => {
+		if (!browser || !backgroundContext) return;
+
+		// Handle visibility changes - for now just store the state
+		// Visibility control can be implemented later when background context supports it
+		if (currentIsVisible) {
+			// Background is visible - no specific action needed currently
+		} else {
+			// Background is hidden - no specific action needed currently
 		}
 	});
 
@@ -132,9 +150,10 @@
 		currentQuality = quality;
 	}
 
-	export function setVisibility(_visible: boolean) {
-		// Visibility control can be implemented if needed
-		// Currently not used but keeping for API compatibility
+	export function setVisibility(visible: boolean) {
+		currentIsVisible = visible;
+		// Update visibility through the background context if needed
+		// This method allows external control of visibility state
 	}
 </script>
 

@@ -56,8 +56,9 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 				this.lightWaves[i] = currentWave + waveSpeed;
 
 				// Keep waves within reasonable bounds to prevent overflow
-				if (this.lightWaves[i]! > 4 * Math.PI) {
-					this.lightWaves[i] = this.lightWaves[i]! - 4 * Math.PI;
+				const currentValue = this.lightWaves[i];
+				if (currentValue !== undefined && currentValue > 4 * Math.PI) {
+					this.lightWaves[i] = currentValue - 4 * Math.PI;
 				}
 			}
 		}
@@ -154,10 +155,16 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
 			if (color && this.lightWaves[waveIndex] !== undefined) {
 				// Add some dynamic intensity variation
-				const intensityFactor = (Math.sin(this.lightWaves[waveIndex]! * 1.5) + 1) / 2;
-				const alpha = color.a * intensityFactor;
+				const waveValue = this.lightWaves[waveIndex];
+				if (waveValue !== undefined) {
+					const intensityFactor = (Math.sin(waveValue * 1.5) + 1) / 2;
+					const alpha = color.a * intensityFactor;
 
-				gradient.addColorStop(pos, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`);
+					gradient.addColorStop(
+						pos,
+						`rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`
+					);
+				}
 			}
 		}
 

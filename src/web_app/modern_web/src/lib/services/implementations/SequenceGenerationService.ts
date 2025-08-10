@@ -11,15 +11,11 @@ import { GridMode as DomainGridMode } from '$lib/domain/enums';
 import type {
 	GenerationOptions,
 	IMotionGenerationService,
-	ISequenceDomainService,
 	ISequenceGenerationService,
 } from '../interfaces';
 
 export class SequenceGenerationService implements ISequenceGenerationService {
-	constructor(
-		private motionGenerationService: IMotionGenerationService,
-		private sequenceDomainService: ISequenceDomainService
-	) {}
+	constructor(private motionGenerationService: IMotionGenerationService) {}
 
 	/**
 	 * Generate a complete sequence

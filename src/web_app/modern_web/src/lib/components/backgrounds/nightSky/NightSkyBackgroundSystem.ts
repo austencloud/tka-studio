@@ -20,7 +20,11 @@ type ParallaxLayer = { stars: Star[]; driftX: number; driftY: number };
 export class NightSkyBackgroundSystem implements BackgroundSystem {
 	// core state -------------------------------------------------------------
 	private quality: QualityLevel = 'medium';
-	private layers: Record<'far' | 'mid' | 'near', ParallaxLayer> = {} as any;
+	private layers: Record<'far' | 'mid' | 'near', ParallaxLayer> = {
+		far: { stars: [], driftX: 0, driftY: 0 },
+		mid: { stars: [], driftX: 0, driftY: 0 },
+		near: { stars: [], driftX: 0, driftY: 0 },
+	};
 	private nebulae: { x: number; y: number; baseR: number; phase: number; color: string }[] = [];
 	private constellationLines: { a: Star; b: Star; opacity: number; dir: number }[] = [];
 	private celestialBody: CelestialBody | null = null; // This will be our moon
@@ -127,7 +131,11 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 
 	/* CLEANUP */
 	public cleanup() {
-		this.layers = {} as any;
+		this.layers = {
+			far: { stars: [], driftX: 0, driftY: 0 },
+			mid: { stars: [], driftX: 0, driftY: 0 },
+			near: { stars: [], driftX: 0, driftY: 0 },
+		};
 		this.nebulae = [];
 		this.constellationLines = [];
 		this.celestialBody = null;

@@ -1,15 +1,15 @@
 <script lang="ts">
-	// Import runes-based state
+	// Import state management functions - updated to work with consolidated MainInterface
 	import {
 		getActiveTab,
+		getIsTransitioning,
 		getSettings,
 		getShowSettings,
 		isTabActive,
 		switchTab,
-	} from '$stores/appState.svelte';
-	// Import Svelte's built-in fade transition
-	import { shouldAnimate } from '$lib/utils/simpleFade';
-	import { fade } from 'svelte/transition';
+	} from '$lib/state/appState.svelte';
+	// Import simple fade system
+	import { fade } from '$lib/utils/simpleFade';
 	// Import tab components
 	import BackgroundCanvas from './backgrounds/BackgroundCanvas.svelte';
 	import BackgroundProvider from './backgrounds/BackgroundProvider.svelte';
@@ -21,27 +21,30 @@
 	import SequenceCardTab from './tabs/SequenceCardTab.svelte';
 	import WriteTab from './tabs/WriteTab.svelte';
 
-	// Sequential fade timing - this is the key to making it work!
-	const OUT_DURATION = 250;
-	const IN_DURATION = 250;
-	const IN_DELAY = OUT_DURATION; // Wait for out transition to complete
+	// Reactive state for template using proper derived
+	let activeTab = $derived(getActiveTab());
+	let showSettings = $derived(getShowSettings());
+	let settings = $derived(getSettings());
 
-	// Get reactive state
-	const activeTab = $derived(getActiveTab());
-	// Animation settings consumed by simpleFade utilities
-	const animationSettings = $derived({ animationsEnabled: !!getSettings().animationsEnabled });
+	// Simple transition functions that respect animation settings
+	const tabOut = (node: Element) => {
+		const animationsEnabled = settings.animationsEnabled !== false;
+		return fade(node, { 
+			duration: animationsEnabled ? 250 : 0 
+		});
+	};
 
-	// Transition parameters
-	const fadeOutParams = $derived(
-		shouldAnimate(animationSettings) ? { duration: OUT_DURATION } : { duration: 0 }
-	);
-	const fadeInParams = $derived(
-		shouldAnimate(animationSettings)
-			? { duration: IN_DURATION, delay: IN_DELAY }
-			: { duration: 0 }
-	);
+	const tabIn = (node: Element) => {
+		const animationsEnabled = settings.animationsEnabled !== false;
+		return fade(node, { 
+			duration: animationsEnabled ? 300 : 0,
+			delay: animationsEnabled ? 250 : 0 // Wait for out transition
+		});
+	};
 
-	// Tab configuration - UPDATED to include Sequence Card tab matching desktop app exactly
+	let isTransitioning = $derived(getIsTransitioning());
+
+	// Tab configuration
 	const tabs = [
 		{ id: 'construct', label: 'Construct', icon: '🔧' },
 		{ id: 'browse', label: 'Browse', icon: '🔍' },
@@ -50,41 +53,31 @@
 		{ id: 'learn', label: 'Learn', icon: '🧠' },
 	] as const;
 
-	type TabId = (typeof tabs)[number]['id'];
 	function handleTabSelect(tabId: string) {
-		if ((tabs as readonly { id: TabId }[]).some((t) => t.id === tabId)) {
-			switchTab(tabId as TabId);
-		}
+		switchTab(tabId);
 	}
 </script>
 
 <BackgroundProvider>
 	<div class="main-interface">
-		<!-- Background Canvas - positioned behind everything -->
-		{#if getSettings().backgroundEnabled}
+		<!-- Background Canvas -->
+		{#if settings.backgroundEnabled}
 			<BackgroundCanvas
-				backgroundType={getSettings().backgroundType || 'aurora'}
-				quality={getSettings().backgroundQuality || 'medium'}
+				backgroundType={settings.backgroundType || 'aurora'}
+				quality={settings.backgroundQuality || 'medium'}
 				onReady={() =>
 					console.log(
-						`🌌 Main app background ready: ${getSettings().backgroundType} at ${getSettings().backgroundQuality} quality`
+						`🌌 Background ready: ${settings.backgroundType} at ${settings.backgroundQuality} quality`
 					)}
 			/>
-		{:else}
-			<!-- Debug: Show when background is disabled -->
-			<div
-				style="position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.5); color: white; padding: 4px; font-size: 12px; z-index: 1000;"
-			>
-				Background Disabled
-			</div>
 		{/if}
 
 		<NavigationBar {tabs} {activeTab} onTabSelect={handleTabSelect} />
 
 		<main class="content-area">
-			<!-- Main tab content with sequential fade transitions using {#key} block -->
+			<!-- Tab content with reliable transitions -->
 			{#key activeTab}
-				<div class="tab-content" in:fade={fadeInParams} out:fade={fadeOutParams}>
+				<div class="tab-content" in:tabIn out:tabOut>
 					{#if isTabActive('construct')}
 						<ConstructTab />
 					{:else if isTabActive('browse')}
@@ -98,12 +91,19 @@
 					{/if}
 				</div>
 			{/key}
+
+			<!-- Transition indicator for better UX -->
+			{#if isTransitioning}
+				<div class="transition-indicator">
+					Switching to {activeTab}...
+				</div>
+			{/if}
 		</main>
 	</div>
 </BackgroundProvider>
 
 <!-- Settings Dialog -->
-{#if getShowSettings()}
+{#if showSettings}
 	<SettingsDialog />
 {/if}
 
@@ -115,7 +115,6 @@
 		width: 100%;
 		overflow: hidden;
 		position: relative;
-		z-index: 1;
 	}
 
 	.content-area {
@@ -126,22 +125,31 @@
 		position: relative;
 	}
 
-	/* Tab content styling for transitions */
 	.tab-content {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 		width: 100%;
 		height: 100%;
-		/* Ensure smooth transitions without layout jumps */
-		will-change: opacity;
-		backface-visibility: hidden;
+	}
+
+	.transition-indicator {
+		position: absolute;
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(0, 123, 255, 0.9);
+		color: white;
+		padding: 8px 16px;
+		border-radius: 20px;
+		font-size: 14px;
+		z-index: 1000;
+		pointer-events: none;
 	}
 
 	/* Responsive design */
@@ -149,6 +157,14 @@
 		.main-interface {
 			height: 100vh;
 			height: 100dvh; /* Dynamic viewport height for mobile */
+		}
+	}
+
+	/* Disable animations when user prefers reduced motion */
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			transition: none !important;
+			animation: none !important;
 		}
 	}
 </style>

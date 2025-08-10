@@ -50,8 +50,6 @@
 		snowfall: 'Gentle falling snowflakes with shooting stars',
 		nightSky: 'Starry night with celestial bodies and shooting stars',
 		aurora: 'Colorful aurora with animated blobs and sparkles',
-		auroraBorealis: 'Northern lights with flowing wave patterns',
-		starfield: 'Deep space with twinkling stars and nebula effects',
 		bubbles: 'Underwater scene with floating bubbles and light rays',
 	};
 

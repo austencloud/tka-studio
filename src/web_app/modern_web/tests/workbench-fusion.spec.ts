@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Workbench Fusion Tests', () => {
 	test.beforeEach(async ({ page }) => {
@@ -199,16 +199,21 @@ test.describe('Workbench Fusion Tests', () => {
 		const hasScrollableClass = await page.evaluate(() => {
 			const style = document.createElement('style');
 			document.head.appendChild(style);
-			const sheet = style.sheet;
 
 			// Look for scrollable-active class in stylesheets
 			for (let i = 0; i < document.styleSheets.length; i++) {
 				try {
-					const rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules;
-					for (let j = 0; j < rules.length; j++) {
-						const rule = rules[j] as any;
-						if (rule.selectorText && rule.selectorText.includes('scrollable-active')) {
-							return true;
+					const styleSheet = document.styleSheets[i];
+					const rules = styleSheet?.cssRules || styleSheet?.rules;
+					if (rules) {
+						for (let j = 0; j < rules.length; j++) {
+							const rule = rules[j] as any;
+							if (
+								rule.selectorText &&
+								rule.selectorText.includes('scrollable-active')
+							) {
+								return true;
+							}
 						}
 					}
 				} catch (e) {

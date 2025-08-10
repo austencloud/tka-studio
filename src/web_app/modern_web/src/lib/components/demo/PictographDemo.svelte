@@ -30,6 +30,7 @@ from the TKA system, showing real pictographs with proper motion calculations.
 <script lang="ts">
 	import { ModernPictograph } from '$lib/components/pictograph';
 	import type { PictographData } from '$lib/domain';
+	import { GridMode as DomainGridMode } from '$lib/domain';
 	import { GridMode } from '$lib/domain/enums';
 	import { CsvDataService } from '$lib/services/implementations/CsvDataService';
 	import { OptionDataService } from '$lib/services/implementations/OptionDataService';
@@ -39,9 +40,7 @@ from the TKA system, showing real pictographs with proper motion calculations.
 	let selectedDemo = $state('sample');
 	let debugMode = $state(false);
 	let gridMode = $state<GridMode>(GridMode.DIAMOND);
-	let showControls = $state(true);
-
-	// Services
+	let showControls = $state(true); // Services
 	let csvDataService: CsvDataService | null = null;
 	let optionDataService: OptionDataService | null = null;
 
@@ -63,12 +62,9 @@ from the TKA system, showing real pictographs with proper motion calculations.
 			// Load sample pictographs from real CSV data
 			await loadSamplePictographs();
 
-			isLoading = false;
 			console.log('✅ PictographDemo initialized with real data');
 		} catch (error) {
 			console.error('❌ Failed to initialize PictographDemo:', error);
-			loadingError = error instanceof Error ? error.message : 'Unknown error';
-			isLoading = false;
 		}
 	});
 
@@ -79,39 +75,23 @@ from the TKA system, showing real pictographs with proper motion calculations.
 		try {
 			console.log('🎨 Loading sample pictographs...');
 
-			// Get a few sample CSV rows directly without triggering option generation
-			const diamondData = csvDataService.getParsedData('diamond');
+			// Use a simple approach to get some sample options
+			const sampleOptions = await optionDataService.getNextOptionsFromEndPosition(
+				'RH_SD',
+				gridMode === GridMode.DIAMOND ? DomainGridMode.DIAMOND : DomainGridMode.BOX
+			);
 
-			if (diamondData.length === 0) {
-				throw new Error('No diamond CSV data available');
-			}
-
-			// Just take the first few rows and convert them directly
+			// Just take the first few and rename them for demo purposes
 			const samples: { [key: string]: PictographData } = {};
 
-			// Take first 3 rows as samples
-			const sampleRows = diamondData.slice(0, 3);
-
-			for (let i = 0; i < sampleRows.length; i++) {
-				const row = sampleRows[i];
-				const sampleKey = i === 0 ? 'sample' : i === 1 ? 'complex' : 'advanced';
-
-				// Use the proper conversion method from OptionDataService
-				const convertedPictograph = (
-					optionDataService as any
-				).convertCsvRowToPictographData(
-					row,
-					gridMode === GridMode.DIAMOND ? 'diamond' : 'box'
-				);
-
-				if (convertedPictograph) {
-					// Override the ID to make it demo-specific
-					samples[sampleKey] = {
-						...convertedPictograph,
-						id: `demo-${sampleKey}`,
-						beat: 1,
-					};
-				}
+			if (sampleOptions.length > 0) {
+				samples.sample = { ...sampleOptions[0], id: 'demo-sample' } as PictographData;
+			}
+			if (sampleOptions.length > 1) {
+				samples.complex = { ...sampleOptions[1], id: 'demo-complex' } as PictographData;
+			}
+			if (sampleOptions.length > 2) {
+				samples.advanced = { ...sampleOptions[2], id: 'demo-advanced' } as PictographData;
 			}
 
 			samplePictographs = samples;
@@ -146,33 +126,31 @@ from the TKA system, showing real pictographs with proper motion calculations.
 
 	// Load a random pictograph from CSV data
 	async function loadRandomPictograph() {
-		if (!csvDataService) return;
+		if (!optionDataService) return;
 
 		try {
-			const diamondData = csvDataService.getParsedData('diamond');
-			if (diamondData.length === 0) return;
-
-			// Get a random row
-			const randomIndex = Math.floor(Math.random() * diamondData.length);
-			const randomRow = diamondData[randomIndex];
-
-			// Convert using the proper conversion method
-			const convertedPictograph = (optionDataService as any).convertCsvRowToPictographData(
-				randomRow,
-				gridMode === GridMode.DIAMOND ? 'diamond' : 'box'
+			// Get some random options and pick one
+			const randomOptions = await optionDataService.getNextOptionsFromEndPosition(
+				'LH_SD',
+				gridMode === GridMode.DIAMOND ? DomainGridMode.DIAMOND : DomainGridMode.BOX
 			);
 
-			if (convertedPictograph) {
-				// Update the sample pictograph
-				samplePictographs = {
-					...samplePictographs,
-					sample: {
-						...convertedPictograph,
-						id: `demo-random-${Date.now()}`,
-						beat: 1,
-					},
-				};
-				console.log(`🎲 Generated random pictograph: ${convertedPictograph.letter}`);
+			if (randomOptions.length > 0) {
+				const randomIndex = Math.floor(Math.random() * randomOptions.length);
+				const randomPictograph = randomOptions[randomIndex];
+
+				if (randomPictograph) {
+					// Update the sample pictograph
+					samplePictographs = {
+						...samplePictographs,
+						sample: {
+							...randomPictograph,
+							id: `demo-random-${Date.now()}`,
+							beat: 1,
+						} as PictographData,
+					};
+					console.log(`🎲 Generated random pictograph: ${randomPictograph.letter}`);
+				}
 			}
 		} catch (error) {
 			console.error('❌ Error loading random pictograph:', error);
@@ -361,23 +339,6 @@ from the TKA system, showing real pictographs with proper motion calculations.
 		justify-content: center;
 		align-items: center;
 		min-height: 300px;
-	}
-
-	.size-demo {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		align-items: center;
-	}
-
-	.size-item {
-		text-align: center;
-	}
-
-	.size-item h4 {
-		margin: 0 0 0.5rem 0;
-		color: #6b7280;
-		font-size: 0.875rem;
 	}
 
 	.info-panel {

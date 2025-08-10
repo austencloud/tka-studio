@@ -5,13 +5,12 @@
  * Based on desktop ConstructTabCoordinationService but simplified for web with runes.
  */
 
-import { createSequence } from '$stores/sequenceActions';
-import { setCurrentSequence } from '$stores/sequenceState.svelte';
-import { resolve } from '../bootstrap';
+import { GridMode } from '$lib/domain/enums';
+import { setCurrentSequence } from '$lib/state/sequenceState.svelte';
+import { createSequence } from '$lib/stores/sequenceActions';
 import type {
 	BeatData,
 	IConstructTabCoordinationService,
-	IOptionDataService,
 	ISequenceService,
 	IStartPositionService,
 	SequenceData,
@@ -23,9 +22,8 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 	private isHandlingSequenceModification = false;
 
 	constructor(
-		private _sequenceService: ISequenceService,
-		private _startPositionService: IStartPositionService,
-		private _optionDataService: IOptionDataService
+		private sequenceService: ISequenceService,
+		private startPositionService: IStartPositionService
 	) {
 		console.log('🎭 ConstructTabCoordinationService initialized');
 	}
@@ -65,26 +63,25 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 		try {
 			// Set the start position using the service
-			await this._startPositionService.setStartPosition(startPosition);
+			await this.startPositionService.setStartPosition(startPosition);
 
 			// **CRITICAL: Create a sequence with the start position stored separately**
 			console.log('🎭 Creating sequence with start position stored separately from beats');
-			const sequenceService = resolve('ISequenceService');
 
 			// Create a new sequence with NO beats initially (progressive creation)
-			const newSequence = await createSequence(sequenceService, {
+			const newSequence = await createSequence(this.sequenceService, {
 				name: `Sequence ${new Date().toLocaleTimeString()}`,
 				length: 0, // Start with 0 beats - beats will be added progressively
-				gridMode: 'diamond', // Default grid mode
+				gridMode: GridMode.DIAMOND, // Default grid mode
 				propType: 'staff', // Default prop type
 			});
 
 			// **CRITICAL: Set the start position in the sequence's start_position field, NOT as beat 0**
 			console.log('🎭 Setting start position in sequence.start_position field');
-			await sequenceService.setSequenceStartPosition(newSequence.id, startPosition);
+			await this.sequenceService.setSequenceStartPosition(newSequence.id, startPosition);
 
 			// **CRITICAL: Reload the sequence to get the updated start position**
-			const updatedSequence = await sequenceService.getSequence(newSequence.id);
+			const updatedSequence = await this.sequenceService.getSequence(newSequence.id);
 			if (updatedSequence) {
 				// Set the updated sequence as the current sequence in BOTH state systems
 				setCurrentSequence(updatedSequence); // Old sequence state system
@@ -125,9 +122,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		console.log('🎭 Handling beat added:', beatData.beat_number);
 
 		try {
-			const sequenceService = resolve('ISequenceService');
-			const sequenceStateService = resolve('SequenceStateService');
-
 			// Get current sequence from state
 			const currentSequence = sequenceStateService.currentSequence;
 			if (!currentSequence) {
@@ -137,11 +131,12 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 
 			console.log('🎭 Adding beat to sequence:', currentSequence.id);
 
-			// Add beat to sequence using service
-			await sequenceService.addBeat(currentSequence.id, beatData);
+			// Add beat to sequence using service (use updateBeat with next beat index)
+			const nextBeatIndex = currentSequence.beats.length;
+			await this.sequenceService.updateBeat(currentSequence.id, nextBeatIndex, beatData);
 
 			// Reload the sequence to get the updated version
-			const updatedSequence = await sequenceService.getSequence(currentSequence.id);
+			const updatedSequence = await this.sequenceService.getSequence(currentSequence.id);
 			if (updatedSequence) {
 				// Update both state systems
 				setCurrentSequence(updatedSequence); // Old sequence state system
@@ -254,7 +249,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		}
 
 		const firstBeat = sequence.beats[0];
-		return firstBeat?.beat === 0 && !!firstBeat.pictograph_data;
+		return firstBeat?.beat_number === 0 && !!firstBeat.pictograph_data;
 	}
 
 	private notifyComponents(eventType: string, data: any): void {
@@ -278,17 +273,6 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 				bubbles: true,
 			});
 			document.dispatchEvent(event);
-		}
-	}
-
-	private async getCurrentSequence(): Promise<SequenceData | null> {
-		try {
-			// TODO: Get current sequence from sequence service
-			// For now, return null - this would be implemented based on app state
-			return null;
-		} catch (error) {
-			console.error('❌ Error getting current sequence:', error);
-			return null;
 		}
 	}
 }

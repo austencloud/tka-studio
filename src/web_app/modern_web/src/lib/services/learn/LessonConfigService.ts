@@ -6,17 +6,17 @@
  */
 
 import {
-	type LessonConfig,
-	type LessonInfo,
-	LessonType,
-	QuizMode,
-	QuestionFormat,
 	AnswerFormat,
 	LESSON_CONFIGS,
 	LESSON_INFO,
+	LESSON_TYPE_NAMES,
+	type LessonConfig,
+	type LessonInfo,
+	LessonType,
+	QuestionFormat,
 	QUIZ_DEFAULTS,
 	QUIZ_MODE_NAMES,
-	LESSON_TYPE_NAMES,
+	QuizMode,
 } from '$lib/types/learn';
 
 export class LessonConfigService {
@@ -179,7 +179,7 @@ export class LessonConfigService {
 	/**
 	 * Check if a lesson is available (for future use with unlocking system).
 	 */
-	static isLessonAvailable(lessonType: LessonType): boolean {
+	static isLessonAvailable(_lessonType: LessonType): boolean {
 		// For now, all lessons are available
 		// This can be extended to support lesson unlocking logic
 		return true;

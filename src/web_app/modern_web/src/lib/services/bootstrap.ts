@@ -153,12 +153,8 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		container.registerFactory(IConstructTabCoordinationServiceInterface, () => {
 			const sequenceService = container.resolve(ISequenceServiceInterface);
 			const startPositionService = container.resolve(IStartPositionServiceInterface);
-			const optionDataService = container.resolve(IOptionDataServiceInterface);
-			return new ConstructTabCoordinationService(
-				sequenceService,
-				startPositionService,
-				optionDataService
-			);
+
+			return new ConstructTabCoordinationService(sequenceService, startPositionService);
 		});
 
 		// Register rendering services

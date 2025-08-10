@@ -12,7 +12,6 @@ import {
 	type QuestionData,
 	QuestionFormat,
 } from '$lib/types/learn';
-import { LessonConfigService } from './LessonConfigService';
 
 // Mock pictograph data structure (this would come from the actual pictograph service)
 interface PictographData {
@@ -34,7 +33,6 @@ export class QuestionGeneratorService {
 		lessonType: LessonType,
 		pictographDataset?: Record<string, PictographData[]>
 	): QuestionData {
-		const config = LessonConfigService.getLessonConfig(lessonType);
 		const questionId = this.generateQuestionId();
 
 		switch (lessonType) {
@@ -54,7 +52,7 @@ export class QuestionGeneratorService {
 	 */
 	private static generatePictographToLetterQuestion(
 		questionId: string,
-		pictographDataset?: Record<string, PictographData[]>
+		_pictographDataset?: Record<string, PictographData[]>
 	): QuestionData {
 		// For now, use mock data - this would be replaced with actual pictograph service
 		const availableLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -97,7 +95,7 @@ export class QuestionGeneratorService {
 	 */
 	private static generateLetterToPictographQuestion(
 		questionId: string,
-		pictographDataset?: Record<string, PictographData[]>
+		_pictographDataset?: Record<string, PictographData[]>
 	): QuestionData {
 		const availableLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 		const correctLetter = this.getRandomLetter(availableLetters);
@@ -139,7 +137,7 @@ export class QuestionGeneratorService {
 	 */
 	private static generateValidNextPictographQuestion(
 		questionId: string,
-		pictographDataset?: Record<string, PictographData[]>
+		_pictographDataset?: Record<string, PictographData[]>
 	): QuestionData {
 		// Mock initial pictograph
 		const initialPictograph = {
@@ -260,8 +258,8 @@ export class QuestionGeneratorService {
 	private static shuffleArray<T>(array: T[]): void {
 		for (let i = array.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
-			const tmp = array[i];
-			array[i] = array[j];
+			const tmp = array[i]!;
+			array[i] = array[j]!;
 			array[j] = tmp;
 		}
 	}
@@ -270,14 +268,14 @@ export class QuestionGeneratorService {
 	 * Generate unique question ID.
 	 */
 	private static generateQuestionId(): string {
-		return `question_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+		return `question_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 	}
 
 	/**
 	 * Generate unique option ID.
 	 */
 	private static generateOptionId(): string {
-		return `option_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+		return `option_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 	}
 
 	/**
