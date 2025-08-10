@@ -43,7 +43,7 @@ export interface PictographData {
 	readonly is_mirrored: boolean;
 
 	// Metadata
-	readonly metadata: Record<string, any>;
+	readonly metadata: Record<string, unknown>;
 }
 
 export function createPictographData(data: Partial<PictographData> = {}): PictographData {
@@ -138,7 +138,7 @@ export function getRedProp(pictograph: PictographData): PropData {
 	return pictograph.props.red ?? createPropData({ color: 'red' });
 }
 
-export function pictographDataToObject(pictograph: PictographData): Record<string, any> {
+export function pictographDataToObject(pictograph: PictographData): Record<string, unknown> {
 	return {
 		id: pictograph.id,
 		grid_data: pictograph.grid_data,
@@ -159,23 +159,58 @@ export function pictographDataToObject(pictograph: PictographData): Record<strin
 	};
 }
 
-export function pictographDataFromObject(data: Record<string, any>): PictographData {
-	return createPictographData({
-		id: data.id,
-		grid_data: data.grid_data,
-		arrows: data.arrows,
-		props: data.props,
-		motions: data.motions,
-		letter: data.letter,
-		start_position: data.start_position,
-		end_position: data.end_position,
-		beat: data.beat,
-		timing: data.timing,
-		direction: data.direction,
-		duration: data.duration,
-		letter_type: data.letter_type,
-		is_blank: data.is_blank,
-		is_mirrored: data.is_mirrored,
-		metadata: data.metadata,
-	});
+export function pictographDataFromObject(data: Record<string, unknown>): PictographData {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const partialData: any = {};
+	
+	if (data.id !== undefined) {
+		partialData.id = data.id;
+	}
+	if (data.grid_data !== undefined) {
+		partialData.grid_data = data.grid_data;
+	}
+	if (data.arrows !== undefined) {
+		partialData.arrows = data.arrows;
+	}
+	if (data.props !== undefined) {
+		partialData.props = data.props;
+	}
+	if (data.motions !== undefined) {
+		partialData.motions = data.motions;
+	}
+	if (data.letter !== undefined) {
+		partialData.letter = data.letter;
+	}
+	if (data.start_position !== undefined) {
+		partialData.start_position = data.start_position;
+	}
+	if (data.end_position !== undefined) {
+		partialData.end_position = data.end_position;
+	}
+	if (data.beat !== undefined) {
+		partialData.beat = data.beat;
+	}
+	if (data.timing !== undefined) {
+		partialData.timing = data.timing;
+	}
+	if (data.direction !== undefined) {
+		partialData.direction = data.direction;
+	}
+	if (data.duration !== undefined) {
+		partialData.duration = data.duration;
+	}
+	if (data.letter_type !== undefined) {
+		partialData.letter_type = data.letter_type;
+	}
+	if (data.is_blank !== undefined) {
+		partialData.is_blank = data.is_blank;
+	}
+	if (data.is_mirrored !== undefined) {
+		partialData.is_mirrored = data.is_mirrored;
+	}
+	if (data.metadata !== undefined) {
+		partialData.metadata = data.metadata;
+	}
+	
+	return createPictographData(partialData);
 }

@@ -1,13 +1,12 @@
 <!--
 	Quiz Timer Component
-	
+
 	Displays and manages countdown timer for quiz sessions.
 	Handles timer state, visual feedback, and time warnings.
 -->
 
 <script lang="ts">
-	import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-	import type { TimerState } from '$lib/types/learn';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
 	// Props
 	export let timeRemaining: number = 120; // seconds

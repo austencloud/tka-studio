@@ -26,7 +26,7 @@ export interface Position {
 }
 
 export class ArrowPositioningService {
-	private readonly SCENE_SIZE = 950;
+	private readonly _SCENE_SIZE = 950;
 	private readonly CENTER_X = 475;
 	private readonly CENTER_Y = 475;
 
@@ -144,7 +144,7 @@ export class ArrowPositioningService {
 	 * Get default adjustment based on motion type and turns
 	 */
 	private getDefaultAdjustment(input: ArrowPositioningInput): Position {
-		const { motion_type, turns, location } = input;
+		const { motion_type, turns } = input;
 
 		// Basic default adjustments based on motion type and turns
 		// This is a simplified version - the real system has complex lookup tables
@@ -186,7 +186,7 @@ export class ArrowPositioningService {
 	/**
 	 * Get special adjustment for specific letters (simplified)
 	 */
-	private getSpecialAdjustment(input: ArrowPositioningInput): Position {
+	private getSpecialAdjustment(_input: ArrowPositioningInput): Position {
 		// This would normally load from special placement JSON files
 		// For now, return zero adjustment
 		return { x: 0, y: 0 };

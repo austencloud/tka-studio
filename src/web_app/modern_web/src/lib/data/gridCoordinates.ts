@@ -104,6 +104,10 @@ export function parseCoordinates(coordString: string): { x: number; y: number } 
 
 	try {
 		const [x, y] = coordString.replace(/[()]/g, '').split(', ').map(parseFloat);
+		if (isNaN(x) || isNaN(y)) {
+			console.error(`Invalid coordinates parsed: "${coordString}"`);
+			return null;
+		}
 		return { x, y };
 	} catch (error) {
 		console.error(`Failed to parse coordinates: "${coordString}"`, error);

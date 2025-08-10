@@ -61,7 +61,7 @@ export function hasPrefloatData(motion: MotionData): boolean {
 	return motion.prefloat_motion_type != null || motion.prefloat_prop_rot_dir != null;
 }
 
-export function motionDataToObject(motion: MotionData): Record<string, any> {
+export function motionDataToObject(motion: MotionData): Record<string, unknown> {
 	return {
 		motion_type: motion.motion_type,
 		prop_rot_dir: motion.prop_rot_dir,
@@ -76,17 +76,40 @@ export function motionDataToObject(motion: MotionData): Record<string, any> {
 	};
 }
 
-export function motionDataFromObject(data: Record<string, any>): MotionData {
-	return createMotionData({
-		motion_type: data.motion_type,
-		prop_rot_dir: data.prop_rot_dir,
-		start_loc: data.start_loc,
-		end_loc: data.end_loc,
-		turns: data.turns,
-		start_ori: data.start_ori,
-		end_ori: data.end_ori,
-		is_visible: data.is_visible,
-		prefloat_motion_type: data.prefloat_motion_type,
-		prefloat_prop_rot_dir: data.prefloat_prop_rot_dir,
-	});
+export function motionDataFromObject(data: Record<string, unknown>): MotionData {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const partialData: any = {};
+	
+	if (data.motion_type !== undefined) {
+		partialData.motion_type = data.motion_type;
+	}
+	if (data.prop_rot_dir !== undefined) {
+		partialData.prop_rot_dir = data.prop_rot_dir;
+	}
+	if (data.start_loc !== undefined) {
+		partialData.start_loc = data.start_loc;
+	}
+	if (data.end_loc !== undefined) {
+		partialData.end_loc = data.end_loc;
+	}
+	if (data.turns !== undefined) {
+		partialData.turns = data.turns;
+	}
+	if (data.start_ori !== undefined) {
+		partialData.start_ori = data.start_ori;
+	}
+	if (data.end_ori !== undefined) {
+		partialData.end_ori = data.end_ori;
+	}
+	if (data.is_visible !== undefined) {
+		partialData.is_visible = data.is_visible;
+	}
+	if (data.prefloat_motion_type !== undefined) {
+		partialData.prefloat_motion_type = data.prefloat_motion_type;
+	}
+	if (data.prefloat_prop_rot_dir !== undefined) {
+		partialData.prefloat_prop_rot_dir = data.prefloat_prop_rot_dir;
+	}
+	
+	return createMotionData(partialData);
 }

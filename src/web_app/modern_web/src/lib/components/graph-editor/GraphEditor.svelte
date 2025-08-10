@@ -1,14 +1,14 @@
 <!-- GraphEditor.svelte - Professional Graph Editor ported from desktop -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ModernPictograph from '$components/pictograph/ModernPictograph.svelte';
-	import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
-	import type { BeatData, SequenceData } from '$services/interfaces';
+	import type { BeatData } from '$services/interfaces';
 	import {
 		getCurrentSequence,
 		getSelectedBeatData,
 		getSelectedBeatIndex,
 	} from '$stores/sequenceState.svelte';
+	import { onMount } from 'svelte';
+	import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 
 	// Props - optional external data
 	const { onBeatModified, onArrowSelected, onVisibilityChanged } = $props<{
@@ -28,17 +28,6 @@
 
 	// Internal state
 	let errorMessage = $state<string | null>(null);
-
-	// Handle pictograph updates
-	function handlePictographUpdated(beatIndex: number, beatData: BeatData) {
-		try {
-			onBeatModified?.(beatIndex, beatData);
-			console.log(`Graph Editor: Pictograph updated for beat ${beatIndex}`);
-		} catch (error) {
-			console.error('Error handling pictograph update:', error);
-			errorMessage = 'Failed to update pictograph';
-		}
-	}
 
 	// Handle orientation changes
 	function handleOrientationChanged(color: string, orientation: string) {

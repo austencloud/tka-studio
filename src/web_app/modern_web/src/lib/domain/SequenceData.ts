@@ -25,7 +25,7 @@ export interface SequenceData {
 	readonly starting_position?: string;
 	readonly difficulty_level?: string;
 	readonly tags: readonly string[];
-	readonly metadata: Record<string, any>;
+	readonly metadata: Record<string, unknown>;
 }
 
 export function createSequenceData(data: Partial<SequenceData> = {}): SequenceData {

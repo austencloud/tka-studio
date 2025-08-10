@@ -1,23 +1,22 @@
 <!-- LessonWorkspaceView.svelte - Enhanced lesson workspace with full functionality -->
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import type {
-		LessonType,
-		QuizMode,
-		LayoutMode,
-		QuestionData,
-		LessonProgress,
-		LessonResults,
-		QuizSession,
-	} from '$lib/types/learn';
-	import { QuizMode as QuizModeEnum } from '$lib/types/learn';
 	import { LessonConfigService } from '$lib/services/learn/LessonConfigService';
 	import { QuestionGeneratorService } from '$lib/services/learn/QuestionGeneratorService';
 	import { QuizSessionService } from '$lib/services/learn/QuizSessionService';
-	import { AnswerCheckerService } from '$lib/services/learn/AnswerCheckerService';
+	import type {
+		LayoutMode,
+		LessonProgress,
+		LessonResults,
+		LessonType,
+		QuestionData,
+		QuizMode,
+	} from '$lib/types/learn';
+	import { QuizMode as QuizModeEnum } from '$lib/types/learn';
+	import { onDestroy, onMount } from 'svelte';
+
+	import ProgressTracker from './ProgressTracker.svelte';
 	import QuestionGenerator from './QuestionGenerator.svelte';
 	import QuizTimer from './QuizTimer.svelte';
-	import ProgressTracker from './ProgressTracker.svelte';
 
 	// Props
 	interface Props {
@@ -31,7 +30,7 @@
 	let {
 		lessonType = null,
 		quizMode = null,
-		layoutMode,
+		layoutMode: _layoutMode,
 		onBackToSelector,
 		onLessonComplete,
 	}: Props = $props();
@@ -51,7 +50,7 @@
 	let timerComponent = $state<any>();
 
 	// Derived state
-	const lessonConfig = $derived(
+	const _lessonConfig = $derived(
 		lessonType ? LessonConfigService.getLessonConfig(lessonType) : null
 	);
 	const isCountdownMode = $derived(quizMode === QuizModeEnum.COUNTDOWN);
@@ -115,7 +114,7 @@
 	function handleAnswerSelected(event: CustomEvent) {
 		if (isAnswered || !currentQuestion || !sessionId) return;
 
-		const { answerId, answerContent, isCorrect } = event.detail;
+		const { answerId, answerContent: _answerContent, isCorrect } = event.detail;
 		const timeToAnswer = Date.now() - questionStartTime;
 
 		// Mark as answered

@@ -1,6 +1,6 @@
 <!--
 	Pictograph Renderer Component
-	
+
 	Renders pictograph data as visual representations.
 	Handles different pictograph formats and grid modes.
 -->
@@ -55,7 +55,7 @@
 		return positionMap[pos.toLowerCase()] || { x: 0.5, y: 0.5 };
 	}
 
-	function getPositionStyle(position: { x: number; y: number } | null, isStart = true) {
+	function getPositionStyle(position: { x: number; y: number } | null, _isStart = true) {
 		if (!position) return '';
 
 		const x = position.x * gridSize;

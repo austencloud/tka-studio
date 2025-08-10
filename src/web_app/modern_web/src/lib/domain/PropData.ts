@@ -20,7 +20,7 @@ export interface PropData {
 	readonly position_y: number;
 	readonly rotation_angle: number;
 	readonly coordinates?: { x: number; y: number } | null;
-	readonly svg_center?: any;
+	readonly svg_center?: { x: number; y: number } | null;
 
 	// State flags
 	readonly is_visible: boolean;
@@ -52,7 +52,7 @@ export function updatePropData(prop: PropData, updates: Partial<PropData>): Prop
 	};
 }
 
-export function propDataToObject(prop: PropData): Record<string, any> {
+export function propDataToObject(prop: PropData): Record<string, unknown> {
 	return {
 		id: prop.id,
 		prop_type: prop.prop_type,
@@ -67,17 +67,40 @@ export function propDataToObject(prop: PropData): Record<string, any> {
 	};
 }
 
-export function propDataFromObject(data: Record<string, any>): PropData {
-	return createPropData({
-		id: data.id,
-		prop_type: data.prop_type,
-		color: data.color,
-		orientation: data.orientation,
-		rotation_direction: data.rotation_direction,
-		location: data.location,
-		position_x: data.position_x,
-		position_y: data.position_y,
-		is_visible: data.is_visible,
-		is_selected: data.is_selected,
-	});
+export function propDataFromObject(data: Record<string, unknown>): PropData {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const partialData: any = {};
+	
+	if (data.id !== undefined) {
+		partialData.id = data.id;
+	}
+	if (data.prop_type !== undefined) {
+		partialData.prop_type = data.prop_type;
+	}
+	if (data.color !== undefined) {
+		partialData.color = data.color;
+	}
+	if (data.orientation !== undefined) {
+		partialData.orientation = data.orientation;
+	}
+	if (data.rotation_direction !== undefined) {
+		partialData.rotation_direction = data.rotation_direction;
+	}
+	if (data.location !== undefined) {
+		partialData.location = data.location;
+	}
+	if (data.position_x !== undefined) {
+		partialData.position_x = data.position_x;
+	}
+	if (data.position_y !== undefined) {
+		partialData.position_y = data.position_y;
+	}
+	if (data.is_visible !== undefined) {
+		partialData.is_visible = data.is_visible;
+	}
+	if (data.is_selected !== undefined) {
+		partialData.is_selected = data.is_selected;
+	}
+	
+	return createPropData(partialData);
 }

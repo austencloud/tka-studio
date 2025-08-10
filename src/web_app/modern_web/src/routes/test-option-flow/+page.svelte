@@ -154,14 +154,14 @@
 		setTimeout(() => {
 			try {
 				// Check global CSV data
-				if (typeof window !== 'undefined' && (window as any).csvData) {
+				if (typeof window !== 'undefined' && 'csvData' in window) {
 					logResult('Global CSV data is available');
 				} else {
 					logResult('Global CSV data not found', true);
 				}
 
 				// Check DI container
-				if (typeof window !== 'undefined' && (window as any).diContainer) {
+				if (typeof window !== 'undefined' && 'diContainer' in window) {
 					logResult('DI container is available');
 				} else {
 					logResult('DI container not found - this may be normal');

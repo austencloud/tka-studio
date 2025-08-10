@@ -32,7 +32,7 @@ export function updateGridData(grid: GridData, updates: Partial<GridData>): Grid
 	};
 }
 
-export function gridDataToObject(grid: GridData): Record<string, any> {
+export function gridDataToObject(grid: GridData): Record<string, unknown> {
 	return {
 		grid_mode: grid.grid_mode,
 		center_x: grid.center_x,
@@ -42,12 +42,25 @@ export function gridDataToObject(grid: GridData): Record<string, any> {
 	};
 }
 
-export function gridDataFromObject(data: Record<string, any>): GridData {
-	return createGridData({
-		grid_mode: data.grid_mode,
-		center_x: data.center_x,
-		center_y: data.center_y,
-		radius: data.radius,
-		grid_points: data.grid_points,
-	});
+export function gridDataFromObject(data: Record<string, unknown>): GridData {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const partialData: any = {};
+	
+	if (data.grid_mode !== undefined) {
+		partialData.grid_mode = data.grid_mode;
+	}
+	if (data.center_x !== undefined) {
+		partialData.center_x = data.center_x;
+	}
+	if (data.center_y !== undefined) {
+		partialData.center_y = data.center_y;
+	}
+	if (data.radius !== undefined) {
+		partialData.radius = data.radius;
+	}
+	if (data.grid_points !== undefined) {
+		partialData.grid_points = data.grid_points;
+	}
+	
+	return createGridData(partialData);
 }
