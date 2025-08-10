@@ -1,3 +1,11 @@
+import { GridMode } from '$lib/domain';
+
+declare global {
+	// Extend window typing for csvData injection
+	interface Window {
+		csvData?: CsvDataSet;
+	}
+}
 /**
  * CSV Data Service - Implementation (Updated for Global Data Access)
  *
@@ -28,7 +36,7 @@ export interface ParsedCsvRow {
 
 export class CsvDataService {
 	private csvData: CsvDataSet | null = null;
-	private parsedData: { diamond: ParsedCsvRow[]; box: ParsedCsvRow[] } | null = null;
+	private parsedData: Record<GridMode, ParsedCsvRow[]> | null = null;
 	private isInitialized = false;
 
 	constructor() {
@@ -45,8 +53,8 @@ export class CsvDataService {
 
 		try {
 			// First try to get data from global window.csvData (set by layout)
-			if (typeof window !== 'undefined' && (window as any).csvData) {
-				this.csvData = (window as any).csvData;
+			if (typeof window !== 'undefined' && window.csvData) {
+				this.csvData = window.csvData;
 			} else {
 				// Fallback: Fetch CSV files from static directory
 				const [diamondResponse, boxResponse] = await Promise.all([
@@ -67,10 +75,12 @@ export class CsvDataService {
 			}
 
 			// Parse the CSV data
-			this.parsedData = {
-				diamond: this.parseCSV(this.csvData.diamondData),
-				box: this.parseCSV(this.csvData.boxData),
-			};
+			if (this.csvData) {
+				this.parsedData = {
+					[GridMode.DIAMOND]: this.parseCSV(this.csvData.diamondData),
+					[GridMode.BOX]: this.parseCSV(this.csvData.boxData),
+				};
+			}
 
 			this.isInitialized = true;
 		} catch (error) {
@@ -91,7 +101,7 @@ export class CsvDataService {
 	/**
 	 * Get parsed data for a specific grid mode
 	 */
-	getParsedData(gridMode: 'diamond' | 'box'): ParsedCsvRow[] {
+	getParsedData(gridMode: GridMode): ParsedCsvRow[] {
 		if (!this.parsedData) {
 			return [];
 		}
@@ -101,7 +111,7 @@ export class CsvDataService {
 	/**
 	 * Get available options for a given end position (like legacy OptionDataService)
 	 */
-	getNextOptions(endPosition: string, gridMode: 'diamond' | 'box' = 'diamond'): ParsedCsvRow[] {
+	getNextOptions(endPosition: string, gridMode: GridMode = GridMode.DIAMOND): ParsedCsvRow[] {
 		if (!this.parsedData) {
 			return [];
 		}
@@ -128,12 +138,14 @@ export class CsvDataService {
 		if (lines.length < 2) return [];
 
 		// Parse header
-		const headers = lines[0].split(',').map((h) => h.trim());
+		const headerLine = lines[0] ?? '';
+		const headers = headerLine.split(',').map((h) => h.trim());
 		const data: ParsedCsvRow[] = [];
 
 		// Parse each data row
 		for (let i = 1; i < lines.length; i++) {
-			const values = lines[i].split(',').map((v) => v.trim());
+			const line = lines[i] ?? '';
+			const values = line.split(',').map((v) => v.trim());
 			const row: Record<string, string> = {};
 
 			// Create row object
@@ -165,7 +177,7 @@ export class CsvDataService {
 	/**
 	 * Get all available start positions for a given grid mode
 	 */
-	getAvailableStartPositions(gridMode: 'diamond' | 'box' = 'diamond'): string[] {
+	getAvailableStartPositions(gridMode: GridMode = GridMode.DIAMOND): string[] {
 		if (!this.parsedData) return [];
 
 		const dataset = this.parsedData[gridMode];
@@ -176,7 +188,7 @@ export class CsvDataService {
 	/**
 	 * Get all available end positions for a given grid mode
 	 */
-	getAvailableEndPositions(gridMode: 'diamond' | 'box' = 'diamond'): string[] {
+	getAvailableEndPositions(gridMode: GridMode = GridMode.DIAMOND): string[] {
 		if (!this.parsedData) return [];
 
 		const dataset = this.parsedData[gridMode];
@@ -191,17 +203,17 @@ export class CsvDataService {
 		if (!this.parsedData) return null;
 
 		return {
-			diamond: {
+			[GridMode.DIAMOND]: {
 				total: this.parsedData.diamond.length,
 				letters: [...new Set(this.parsedData.diamond.map((row) => row.letter))].length,
-				startPositions: this.getAvailableStartPositions('diamond').length,
-				endPositions: this.getAvailableEndPositions('diamond').length,
+				startPositions: this.getAvailableStartPositions(GridMode.DIAMOND).length,
+				endPositions: this.getAvailableEndPositions(GridMode.DIAMOND).length,
 			},
-			box: {
+			[GridMode.BOX]: {
 				total: this.parsedData.box.length,
 				letters: [...new Set(this.parsedData.box.map((row) => row.letter))].length,
-				startPositions: this.getAvailableStartPositions('box').length,
-				endPositions: this.getAvailableEndPositions('box').length,
+				startPositions: this.getAvailableStartPositions(GridMode.BOX).length,
+				endPositions: this.getAvailableEndPositions(GridMode.BOX).length,
 			},
 		};
 	}
@@ -216,15 +228,12 @@ export class CsvDataService {
 	/**
 	 * Debug method to inspect specific position data
 	 */
-	debugPosition(position: string, gridMode: 'diamond' | 'box' = 'diamond'): void {
+	debugPosition(_position: string, gridMode: GridMode = GridMode.DIAMOND): void {
 		if (!this.parsedData) {
 			return;
 		}
 
-		const dataset = this.parsedData[gridMode];
-		const positionData = {
-			asStartPos: dataset.filter((row) => row.startPos === position),
-			asEndPos: dataset.filter((row) => row.endPos === position),
-		};
+		// Intentionally minimal to avoid unused variable warnings
+		void this.parsedData[gridMode];
 	}
 }

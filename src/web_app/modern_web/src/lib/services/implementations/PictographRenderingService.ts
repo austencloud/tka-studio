@@ -5,7 +5,8 @@
  * Integrates with the sophisticated ArrowPositioningService for accurate positioning.
  */
 
-import type { BeatData, PictographData } from '$lib/domain';
+import type { BeatData, PictographData, MotionData } from '$lib/domain';
+import { GridMode } from '$lib/domain';
 import {
 	ArrowType,
 	createArrowData,
@@ -31,7 +32,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 
 	constructor(
 		private arrowPositioning: IArrowPositioningService,
-		private propRendering: IPropRenderingService
+		_propRendering: IPropRenderingService
 	) {
 		// PictographRenderingService initialized
 	}
@@ -44,10 +45,10 @@ export class PictographRenderingService implements IPictographRenderingService {
 			const svg = this.createBaseSVG();
 
 			// 1. Render grid first
-			await this.renderGrid(svg, (data as any).grid_data?.grid_mode || 'diamond');
+			const gridMode: GridMode = data.grid_data?.grid_mode ?? GridMode.DIAMOND;
+			await this.renderGrid(svg, gridMode);
 
 			// 2. Calculate arrow positions using sophisticated positioning service
-			const gridMode = (data as any).grid_data?.grid_mode || 'diamond';
 			const rawGridData = createGridData(gridMode);
 			const gridDataWithMode = this.adaptGridData(rawGridData, gridMode);
 
@@ -91,7 +92,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 			if (data.letter) {
 				await this.renderLetterGlyph(svg, data.letter);
 			}
-		} catch (e) {
+		} catch {
 			// Overlay rendering skipped
 		}
 	}
@@ -131,100 +132,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 		group.removeAttribute('opacity');
 	}
 
-	/** Render overlays from glyphData on BeatData (VTG and elemental) */
-	private async renderOverlaysFromGlyphData(svg: SVGElement, glyphData?: any): Promise<void> {
-		if (!glyphData) return;
-		try {
-			// VTG glyphs
-			const vtg = glyphData.vtg_mode as string | undefined;
-			if (vtg) {
-				const vtgMap: Record<string, string> = {
-					SS: '/images/vtg_glyphs/SS.svg',
-					SO: '/images/vtg_glyphs/SO.svg',
-					TS: '/images/vtg_glyphs/TS.svg',
-					TO: '/images/vtg_glyphs/TO.svg',
-					QS: '/images/vtg_glyphs/QS.svg',
-					QO: '/images/vtg_glyphs/QO.svg',
-				};
-				const path = vtgMap[vtg];
-				if (path) await this.renderVtgGlyph(svg, path);
-			}
-
-			// Elemental glyphs
-			const elemental = glyphData.elemental_type as string | undefined;
-			if (elemental) {
-				const elemMap: Record<string, string> = {
-					water: '/images/elements/water.svg',
-					fire: '/images/elements/fire.svg',
-					earth: '/images/elements/earth.svg',
-					air: '/images/elements/air.svg',
-					sun: '/images/elements/sun.svg',
-					moon: '/images/elements/moon.svg',
-				};
-				const path = elemMap[elemental];
-				if (path) await this.renderElementalGlyph(svg, path);
-			}
-		} catch (e) {
-			// Glyph overlay rendering failed
-		}
-	}
-
-	private async renderVtgGlyph(svg: SVGElement, path: string): Promise<void> {
-		// Legacy: bottom-right, 4% offset, ~0.7 scale
-		const offsetPct = 0.04;
-		const scale = 0.7;
-		const res = await fetch(path);
-		if (!res.ok) return;
-		const content = await res.text();
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(content, 'image/svg+xml');
-		const el = doc.documentElement as unknown as SVGElement;
-		const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-		g.setAttribute('class', 'vtg-glyph');
-		g.setAttribute('opacity', '0');
-		g.appendChild(document.importNode(el, true));
-		svg.appendChild(g);
-		let bbox: DOMRect;
-		try {
-			bbox = g.getBBox();
-		} catch {
-			bbox = new DOMRect(0, 0, 100, 100);
-		}
-		const ox = this.SVG_SIZE * offsetPct;
-		const oy = this.SVG_SIZE * offsetPct;
-		const x = this.SVG_SIZE - bbox.width * scale - ox;
-		const y = this.SVG_SIZE - bbox.height * scale - oy;
-		g.setAttribute('transform', `translate(${x}, ${y}) scale(${scale})`);
-		g.removeAttribute('opacity');
-	}
-
-	private async renderElementalGlyph(svg: SVGElement, path: string): Promise<void> {
-		// Legacy: top-right, 4% offset
-		const offsetPct = 0.04;
-		const res = await fetch(path);
-		if (!res.ok) return;
-		const content = await res.text();
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(content, 'image/svg+xml');
-		const el = doc.documentElement as unknown as SVGElement;
-		const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-		g.setAttribute('class', 'elemental-glyph');
-		g.setAttribute('opacity', '0');
-		g.appendChild(document.importNode(el, true));
-		svg.appendChild(g);
-		let bbox: DOMRect;
-		try {
-			bbox = g.getBBox();
-		} catch {
-			bbox = new DOMRect(0, 0, 100, 100);
-		}
-		const ox = this.SVG_SIZE * offsetPct;
-		const oy = this.SVG_SIZE * offsetPct;
-		const x = this.SVG_SIZE - bbox.width - ox;
-		const y = oy;
-		g.setAttribute('transform', `translate(${x}, ${y})`);
-		g.removeAttribute('opacity');
-	}
+	// Removed legacy glyph rendering helpers (vtg/elemental)
 
 	/**
 	 * Render a beat as a pictograph
@@ -233,8 +141,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 		// Convert beat data to pictograph data
 		const pictographData = this.beatToPictographData(beat);
 		const svg = await this.renderPictograph(pictographData);
-		// Render VTG/elemental overlays if glyphData is provided
-		await this.renderOverlaysFromGlyphData(svg, beat.glyphData as any);
+		// (VTG/elemental overlays removed for now)
 		return svg;
 	}
 
@@ -261,7 +168,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 	/**
 	 * Adapt raw grid data to match the interface requirements
 	 */
-	private adaptGridData(rawGridData: RawGridData, mode: 'diamond' | 'box'): GridData {
+	private adaptGridData(rawGridData: RawGridData, mode: GridMode): GridData {
 		// Filter out null coordinates and adapt to interface
 		const adaptPoints = (
 			points: Record<string, { coordinates: { x: number; y: number } | null }>
@@ -289,7 +196,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 		svg: SVGElement,
 		color: 'blue' | 'red',
 		position: ArrowPosition,
-		motionData: any
+		motionData: MotionData | undefined
 	): Promise<void> {
 		try {
 			// Get the correct arrow SVG path
@@ -337,27 +244,23 @@ export class PictographRenderingService implements IPictographRenderingService {
 	/**
 	 * Get the correct arrow SVG path based on motion data (like ArrowSvgManager)
 	 */
-	private getArrowSvgPath(motionData: any): string {
+	private getArrowSvgPath(motionData: MotionData | undefined): string {
 		if (!motionData) {
-			return '/images/arrows/static/from_radial/static_0.svg'; // Default fallback
+			return '/images/arrows/static/from_radial/static_0.svg';
 		}
-
-		const motionType = motionData.motionType || 'static';
-		const turns = motionData.turns || 0;
-		const startOri = motionData.startOrientation || 'in';
-
-		// Handle float arrows (special case)
-		if (motionType === 'float') {
-			return '/images/arrows/float.svg';
-		}
-
-		// Determine radial path based on start orientation
+		const motionType = motionData.motion_type;
+		const turnsVal = motionData.turns;
+		const startOri = motionData.start_ori;
+		if (motionType === 'float') return '/images/arrows/float.svg';
 		const radialPath = startOri === 'in' ? 'from_radial' : 'from_nonradial';
-
-		// Format turns to match filename (e.g., 0 -> "0.0", 1 -> "1.0", 0.5 -> "0.5")
-		const turnsStr = turns % 1 === 0 ? `${turns}.0` : turns.toString();
-
-		// Construct path: /images/arrows/{motionType}/{radialPath}/{motionType}_{turns}.svg
+		let turnsStr: string;
+		if (turnsVal === 'fl') {
+			turnsStr = 'fl';
+		} else if (typeof turnsVal === 'number') {
+			turnsStr = turnsVal % 1 === 0 ? `${turnsVal}.0` : turnsVal.toString();
+		} else {
+			turnsStr = '0.0';
+		}
 		return `/images/arrows/${motionType}/${radialPath}/${motionType}_${turnsStr}.svg`;
 	}
 
@@ -420,19 +323,6 @@ export class PictographRenderingService implements IPictographRenderingService {
 		return path;
 	}
 
-	/**
-	 * Create position indicator for debugging
-	 */
-	private createPositionIndicator(color: 'blue' | 'red'): SVGElement {
-		const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-		circle.setAttribute('cx', '0');
-		circle.setAttribute('cy', '0');
-		circle.setAttribute('r', '3');
-		circle.setAttribute('fill', color === 'blue' ? '#0066ff' : '#ff0066');
-		circle.setAttribute('opacity', '0.7');
-		circle.setAttribute('class', 'position-indicator');
-		return circle;
-	}
 
 	/**
 	 * Render ID label with enhanced metadata
@@ -501,7 +391,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 	 */
 	private async renderGrid(
 		svg: SVGElement,
-		gridMode: 'diamond' | 'box' = 'diamond'
+		gridMode: GridMode = GridMode.DIAMOND
 	): Promise<void> {
 		try {
 			// Load the appropriate grid SVG
@@ -527,11 +417,11 @@ export class PictographRenderingService implements IPictographRenderingService {
 	/**
 	 * Fallback grid rendering if SVG loading fails
 	 */
-	private renderFallbackGrid(svg: SVGElement, gridMode: 'diamond' | 'box'): void {
+	private renderFallbackGrid(svg: SVGElement, gridMode: GridMode): void {
 		const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 		gridGroup.setAttribute('class', `fallback-grid-${gridMode}`);
 
-		if (gridMode === 'diamond') {
+		if (gridMode === GridMode.DIAMOND) {
 			// Create diamond outline
 			const diamond = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
 			const size = 143; // Approximate size based on real coordinates
@@ -568,7 +458,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 	 * Convert beat data to pictograph data
 	 */
 	private beatToPictographData(beat: BeatData): PictographData {
-		const motions: Record<string, any> = {};
+		const motions: Record<string, MotionData> = {};
 		if (beat.pictograph_data?.motions?.blue) motions.blue = beat.pictograph_data.motions.blue;
 		if (beat.pictograph_data?.motions?.red) motions.red = beat.pictograph_data.motions.red;
 		return createPictographData({
@@ -582,7 +472,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 				blue: createPropData({ prop_type: PropType.STAFF, color: 'blue' }),
 				red: createPropData({ prop_type: PropType.STAFF, color: 'red' }),
 			},
-			motions: motions as any,
+			motions,
 			letter: beat.pictograph_data?.letter || null,
 			beat: beat.beat_number,
 			is_blank: beat.is_blank,

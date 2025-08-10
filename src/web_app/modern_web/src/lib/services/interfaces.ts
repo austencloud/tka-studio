@@ -6,6 +6,7 @@
  */
 
 import type { BeatData, MotionData, PictographData, SequenceData } from '$lib/domain';
+import { GridMode as DomainGridMode } from '$lib/domain';
 
 // Re-export domain types for convenience
 export type { BeatData, MotionData, PictographData, SequenceData };
@@ -17,7 +18,7 @@ export type { BeatData, MotionData, PictographData, SequenceData };
 export interface SequenceCreateRequest {
 	name: string;
 	length: number;
-	gridMode?: 'diamond' | 'box';
+	gridMode?: DomainGridMode;
 	propType?: string;
 }
 
@@ -73,7 +74,7 @@ export interface IPersistenceService {
 
 export interface GenerationOptions {
 	length: number;
-	gridMode: 'diamond' | 'box';
+	gridMode: DomainGridMode;
 	propType: string;
 	difficulty: 'beginner' | 'intermediate' | 'advanced';
 }
@@ -117,7 +118,7 @@ export interface ArrowData {
 }
 
 export interface GridData {
-	mode: 'diamond' | 'box';
+	mode: DomainGridMode;
 	allLayer2PointsNormal: Record<string, GridPoint>;
 	allHandPointsNormal: Record<string, GridPoint>;
 }
@@ -143,7 +144,7 @@ export type Location = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw' | 'cent
 export type Orientation = 'in' | 'out' | 'clock' | 'counter';
 export type PropRotDir = 'cw' | 'ccw' | 'no_rot' | 'clockwise' | 'counter_clockwise';
 export type HandRotDir = 'cw_shift' | 'ccw_shift';
-export type GridMode = 'diamond' | 'box';
+export type GridMode = DomainGridMode;
 
 export interface IArrowPositioningService {
 	calculateArrowPosition(
@@ -320,7 +321,7 @@ export function defineService<T>(name: string): ServiceInterface<T> {
 
 export interface AppSettings {
 	theme: 'light' | 'dark';
-	gridMode: 'diamond' | 'box';
+	gridMode: DomainGridMode;
 	showBeatNumbers: boolean;
 	autoSave: boolean;
 	exportQuality: 'low' | 'medium' | 'high';

@@ -84,7 +84,11 @@ export class SequenceService implements ISequenceService {
 			}
 
 			// Update the sequence with the start position
-			const updatedSequence = { ...currentSequence, start_position: startPosition } as SequenceData;
+			const updatedSequence = {
+				...currentSequence,
+				start_position: startPosition,
+			} as SequenceData;
+
 			await this.persistenceService.saveSequence(updatedSequence);
 
 			console.log('Start position set successfully');
@@ -159,7 +163,10 @@ export class SequenceService implements ISequenceService {
 				metadata: {},
 				...beatData,
 			};
-			const updatedSequence = { ...sequence, beats: [...sequence.beats, newBeat] } as SequenceData;
+			const updatedSequence = {
+				...sequence,
+				beats: [...sequence.beats, newBeat],
+			} as SequenceData;
 			await this.persistenceService.saveSequence(updatedSequence);
 		} catch (error) {
 			console.error('Failed to add beat:', error);

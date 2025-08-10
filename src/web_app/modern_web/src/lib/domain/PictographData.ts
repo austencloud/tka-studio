@@ -6,13 +6,13 @@
  */
 
 import type { ArrowData } from './ArrowData';
-import type { PropData } from './PropData';
-import type { MotionData } from './MotionData';
-import type { GridData } from './GridData';
-import { ArrowType, Direction, GridPosition, LetterType, PropType, Timing } from './enums';
 import { createArrowData } from './ArrowData';
-import { createPropData } from './PropData';
+import type { GridData } from './GridData';
 import { createGridData } from './GridData';
+import type { MotionData } from './MotionData';
+import type { PropData } from './PropData';
+import { createPropData } from './PropData';
+import { ArrowType, Direction, GridPosition, LetterType, Timing } from './enums';
 
 export interface PictographData {
 	// Core identity
@@ -102,8 +102,7 @@ export function updateArrow(
 
 	const currentArrow = pictograph.arrows[color];
 	const updatedArrow = { ...currentArrow, ...updates };
-	const newArrows = { ...pictograph.arrows, [color]: updatedArrow };
-
+	const newArrows = { ...pictograph.arrows, [color]: updatedArrow } as Record<string, ArrowData>;
 	return { ...pictograph, arrows: newArrows };
 }
 
@@ -118,8 +117,7 @@ export function updateProp(
 
 	const currentProp = pictograph.props[color];
 	const updatedProp = { ...currentProp, ...updates };
-	const newProps = { ...pictograph.props, [color]: updatedProp };
-
+	const newProps = { ...pictograph.props, [color]: updatedProp } as Record<string, PropData>;
 	return { ...pictograph, props: newProps };
 }
 

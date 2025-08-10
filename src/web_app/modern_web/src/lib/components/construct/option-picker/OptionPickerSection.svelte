@@ -11,7 +11,6 @@ Matches the desktop version exactly:
 	import ModernPictograph from '$lib/components/pictograph/ModernPictograph.svelte';
 	import type { PictographData } from '$lib/domain/PictographData';
 	import OptionPickerSectionHeader from './OptionPickerSectionHeader.svelte';
-	import { LetterType } from './types/LetterType.js';
 
 	// Props
 	const {
@@ -77,7 +76,17 @@ Matches the desktop version exactly:
 	// Filter pictographs for this section
 	const sectionPictographs = $derived(() => {
 		const filtered = pictographs.filter((p: PictographData) => {
-			const pictographType = LetterType.getLetterType(p.letter || '');
+			// Simple letter type detection to avoid LetterType class issues
+			let pictographType = 'Type1'; // Default fallback
+
+			const letter = p.letter || '';
+			if (letter.match(/^[A-V]$/)) pictographType = 'Type1';
+			else if (letter.match(/^[WXYZ]|[ΣΔθΩ]$/)) pictographType = 'Type2';
+			else if (letter.match(/^[WXYZ]-|[ΣΔθΩ]-$/)) pictographType = 'Type3';
+			else if (letter.match(/^[ΦΨΛ]$/)) pictographType = 'Type4';
+			else if (letter.match(/^[ΦΨΛ]-$/)) pictographType = 'Type5';
+			else if (letter.match(/^[αβΓ]$/)) pictographType = 'Type6';
+
 			return pictographType === letterType;
 		});
 		return filtered;

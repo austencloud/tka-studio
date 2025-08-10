@@ -6,13 +6,14 @@
  */
 
 import type {
-	PictographData as ModernPictographData,
-	BeatData as ModernBeatData,
 	ArrowData as ModernArrowData,
+	BeatData as ModernBeatData,
+	PictographData as ModernPictographData,
 	PropData as ModernPropData,
 } from '$lib/domain';
+import { createMotionData } from '$lib/domain';
+import { ArrowType, GridMode, Orientation, PropType, RotationDirection } from '$lib/domain/enums';
 import type { PictographData as LegacyPictographData } from '$lib/services/interfaces';
-import { GridMode, ArrowType, PropType, Orientation, RotationDirection } from '$lib/domain/enums';
 import { calculateArrowLocation } from './utils/arrowLocationCalculator';
 
 /**
@@ -37,10 +38,10 @@ export function legacyToModernPictographData(legacy: LegacyPictographData): Mode
 			red: legacy.props?.red || createEmptyModernPropData('red'),
 		},
 		motions: {
-			blue: legacy.motions?.blue || null,
-			red: legacy.motions?.red || null,
+			blue: (legacy as any).motions?.blue || createMotionData(),
+			red: (legacy as any).motions?.red || createMotionData(),
 		},
-		letter: legacy.letter,
+		letter: legacy.letter ?? null,
 		start_position: null, // Map if available in legacy
 		end_position: null, // Map if available in legacy
 		beat: 0, // Map if available in legacy
@@ -236,7 +237,7 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 		return {
 			id: data.id || crypto.randomUUID(),
 			grid_data: {
-				grid_mode: data.gridMode || data.grid_mode || 'diamond',
+				grid_mode: (data.gridMode || data.grid_mode || GridMode.DIAMOND) as GridMode,
 				center_x: 0,
 				center_y: 0,
 				radius: 100,
@@ -251,8 +252,16 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 				red: props.red || createEmptyModernPropData('red'),
 			},
 			motions: {
-				blue: data.blueMotionData || data.blue_motion_data || data.motions?.blue || null,
-				red: data.redMotionData || data.red_motion_data || data.motions?.red || null,
+				blue:
+					data.blueMotionData ||
+					data.blue_motion_data ||
+					data.motions?.blue ||
+					createMotionData(),
+				red:
+					data.redMotionData ||
+					data.red_motion_data ||
+					data.motions?.red ||
+					createMotionData(),
 			},
 			letter: data.letter,
 			start_position: data.startPos || data.start_position || null,
@@ -279,17 +288,20 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 /**
  * Debug helper to log data structure differences
  */
-export function debugDataStructure(data: any, label: string = 'Data'): void {
+export function debugDataStructure(data: unknown, label: string = 'Data'): void {
+	// Runtime type inspection only (debug utility)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const d = data as any;
 	console.group(`🔍 ${label} Structure Analysis`);
-	console.log('Raw data:', data);
-	console.log('Has grid_data (modern):', !!data?.grid_data);
-	console.log('Has gridMode (legacy):', !!data?.gridMode);
-	console.log('Has arrows dict (modern):', !!data?.arrows);
-	console.log('Has redArrowData (legacy):', !!data?.redArrowData);
-	console.log('Has props dict (modern):', !!data?.props);
-	console.log('Has redPropData (legacy):', !!data?.redPropData);
+	console.log('Raw data:', d);
+	console.log('Has grid_data (modern):', !!d?.grid_data);
+	console.log('Has gridMode (legacy):', !!d?.gridMode);
+	console.log('Has arrows dict (modern):', !!d?.arrows);
+	console.log('Has redArrowData (legacy):', !!d?.redArrowData);
+	console.log('Has props dict (modern):', !!d?.props);
+	console.log('Has redPropData (legacy):', !!d?.redPropData);
 
-	const modern = ensureModernPictographData(data);
+	const modern = ensureModernPictographData(d);
 	console.log('Converted to modern:', modern);
 	console.groupEnd();
 }

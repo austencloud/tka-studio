@@ -29,12 +29,12 @@ export interface SequenceData {
 }
 
 export function createSequenceData(data: Partial<SequenceData> = {}): SequenceData {
-	return {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const base: any = {
 		id: data.id ?? crypto.randomUUID(),
 		name: data.name ?? '',
 		word: data.word ?? '',
 		beats: data.beats ?? [],
-		start_position: data.start_position,
 		thumbnails: data.thumbnails ?? [],
 		sequence_length: data.sequence_length,
 		author: data.author,
@@ -49,6 +49,8 @@ export function createSequenceData(data: Partial<SequenceData> = {}): SequenceDa
 		tags: data.tags ?? [],
 		metadata: data.metadata ?? {},
 	};
+	if (data.start_position !== undefined) base.start_position = data.start_position;
+	return base as SequenceData;
 }
 
 export function updateSequenceData(

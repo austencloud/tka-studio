@@ -62,7 +62,7 @@ export class OptionDataService implements IOptionDataService {
 	 */
 	async getNextOptionsFromEndPosition(
 		endPosition: string,
-		gridMode: 'diamond' | 'box' = 'diamond',
+		gridMode: DomainGridMode = DomainGridMode.DIAMOND,
 		filters?: OptionFilters
 	): Promise<PictographData[]> {
 		try {
@@ -128,8 +128,8 @@ export class OptionDataService implements IOptionDataService {
 			// Get grid mode from last beat (domain: pictograph_data.grid_data.grid_mode)
 			const gridMode =
 				lastBeat.pictograph_data.grid_data?.grid_mode === DomainGridMode.BOX
-					? 'box'
-					: 'diamond';
+					? DomainGridMode.BOX
+					: DomainGridMode.DIAMOND;
 
 			// Use the real CSV data method
 			return await this.getNextOptionsFromEndPosition(endPosition, gridMode, filters);
@@ -205,7 +205,7 @@ export class OptionDataService implements IOptionDataService {
 	 */
 	private convertCsvRowToPictographData(
 		row: ParsedCsvRow,
-		gridMode: 'diamond' | 'box',
+		gridMode: DomainGridMode,
 		index: number = 0
 	): PictographData | null {
 		try {
@@ -245,7 +245,7 @@ export class OptionDataService implements IOptionDataService {
 			const pictograph = createPictographData({
 				id: `option-${row.letter}-${row.startPos}-${row.endPos}-${index}`,
 				grid_data: createGridData({
-					grid_mode: gridMode === 'diamond' ? DomainGridMode.DIAMOND : DomainGridMode.BOX,
+					grid_mode: gridMode,
 				}),
 				arrows: { blue: blueArrow, red: redArrow },
 				props: { blue: blueProp, red: redProp },

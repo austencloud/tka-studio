@@ -109,6 +109,11 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 			// Notify components
 			this.notifyComponents('start_position_set', { startPosition });
 
+			// **CRITICAL: Update construct tab state to hide start position picker**
+			const { constructTabState } = await import('$stores/constructTabState.svelte');
+			constructTabState.updateShouldShowStartPositionPicker();
+			console.log('🎭 Updated construct tab state to show option picker');
+
 			// Transition to option picker
 			await this.handleUITransitionRequest('option_picker');
 		} catch (error) {

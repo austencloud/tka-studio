@@ -4,11 +4,12 @@
  * Handles exporting sequences to various formats (images, JSON, etc.)
  */
 
-import type { SequenceData, BeatData } from '$lib/domain';
-import type { IExportService, ExportOptions, IPictographService } from '../interfaces';
+import type { BeatData, SequenceData } from '$lib/domain';
+import type { ExportOptions, IExportService, IPictographService } from '../interfaces';
 
 export class ExportService implements IExportService {
-	constructor(private pictographService: IPictographService) {}
+	// pictographService reserved for future richer rendering; omitted to reduce lint noise
+	constructor(_pictographService: IPictographService) {}
 
 	/**
 	 * Export sequence as PNG image

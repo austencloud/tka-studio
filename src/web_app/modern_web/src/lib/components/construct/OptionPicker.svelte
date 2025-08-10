@@ -1,13 +1,14 @@
 <!-- eslint-disable import/no-unresolved import/default import/named -->
 <!--
-OptionPicker.svelte - Desktop-Style Sectioned Option Picker
+OptionPicker.svelte - Sophisticated Desktop-Style Sectioned Option Picker using ONLY RUNES
 
-Matches the desktop version exactly:
-- Header with "Choose Your Next Option" title
-- Sections organized by letter type (Type1: Dual-Shift, Type2: Shift, etc.)
-- Individual sections for Types 1, 2, 3
-- Horizontal group for Types 4, 5, 6
-- Responsive layout with proper state management
+Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
+- Advanced device detection including foldable devices
+- Sophisticated responsive layout calculations with memoization
+- Complex layout context using ONLY Svelte 5 runes (NO STORES)
+- Performance optimizations with LRU caching
+- Desktop-style sectioned organization
+- Pure runes-based state management throughout
 -->
 <script lang="ts">
 	import { createBeatData } from '$lib/domain/BeatData';
@@ -17,15 +18,35 @@ Matches the desktop version exactly:
 	import { getCurrentSequence } from '$lib/stores/sequenceState.svelte';
 	import type { DifficultyLevel } from '$services/interfaces';
 	import { onMount } from 'svelte';
+	import { resize } from './option-picker/actions/resize';
+	import { BREAKPOINTS } from './option-picker/config';
 	import OptionPickerHeader from './option-picker/OptionPickerHeader.svelte';
+	import { OptionPickerLayoutManager } from './option-picker/OptionPickerLayoutManager';
 	import OptionPickerScroll from './option-picker/OptionPickerScroll.svelte';
 	import { createOptionPickerState } from './option-picker/OptionPickerSectionState.svelte.js';
 	import { LetterType } from './option-picker/types/LetterType';
+	import { detectFoldableDevice } from './option-picker/utils/deviceDetection';
+	import { getEnhancedDeviceType, getResponsiveLayout } from './option-picker/utils/layoutUtils';
+
+	console.log('🎯 OptionPicker script is being processed with PURE RUNES');
 
 	// Helper function to get the end position from the current sequence
 	function getCurrentSequenceEndPosition(): string | null {
 		const currentSequence = getCurrentSequence();
+		console.log(
+			'🔍 getCurrentSequence() returned:',
+			currentSequence
+				? {
+						id: currentSequence.id,
+						name: currentSequence.name,
+						beats: currentSequence.beats?.length || 0,
+						hasStartPosition: !!currentSequence.start_position,
+					}
+				: 'null'
+		);
+
 		if (!currentSequence) {
+			console.warn('⚠️ No current sequence found');
 			return null;
 		}
 
@@ -140,29 +161,87 @@ Matches the desktop version exactly:
 		onOptionSelected?: (option: PictographData) => void;
 	}>();
 
-	// Create state management using runes
+	// Create sophisticated state management using ONLY runes (NO STORES)
 	const optionPickerState = createOptionPickerState();
 
-	// Data service removed (was unused during test option scaffolding)
+	// Simple reactive state for options (backup solution)
+	let simpleOptionsData = $state<PictographData[]>([]);
+
+	// Derived state that uses backup when main state is empty
+	let effectiveOptions = $derived.by(() => {
+		const mainOptions = optionPickerState.allOptions || [];
+		const backupOptions = simpleOptionsData || [];
+		const result = mainOptions.length > 0 ? mainOptions : backupOptions;
+		console.log('🔧 effectiveOptions:', {
+			mainLength: mainOptions.length,
+			backupLength: backupOptions.length,
+			resultLength: result.length,
+			usingBackup: mainOptions.length === 0 && backupOptions.length > 0,
+		});
+		return result;
+	});
 
 	// Container element for size detection
 	let containerElement: HTMLDivElement | null = null;
 
-	// Transition state
+	// Transition state using runes
 	let isTransitioning = $state(false);
+
+	// Advanced layout state using ONLY runes
+	let windowWidth = $state(
+		typeof window !== 'undefined' ? window.innerWidth : BREAKPOINTS.desktop
+	);
+	let windowHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 768);
+
+	// Derived sophisticated layout state using ONLY runes
+	const foldableInfo = $derived(() => detectFoldableDevice());
+
+	const enhancedDeviceInfo = $derived(() => {
+		const isMobileUserAgent =
+			typeof navigator !== 'undefined' &&
+			/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+		return getEnhancedDeviceType(optionPickerState.containerWidth, isMobileUserAgent);
+	});
+
+	const currentLayoutConfig = $derived(() => {
+		const optionsCount = effectiveOptions.length;
+
+		return getResponsiveLayout(
+			optionsCount,
+			optionPickerState.containerHeight,
+			optionPickerState.containerWidth,
+			optionPickerState.isMobile,
+			optionPickerState.isPortrait,
+			foldableInfo
+		);
+	});
+
+	// Advanced layout calculation using the sophisticated layout manager
+	const advancedLayoutCalculation = $derived(() => {
+		return OptionPickerLayoutManager.calculateLayout({
+			count: effectiveOptions.length,
+			containerWidth: optionPickerState.containerWidth,
+			containerHeight: optionPickerState.containerHeight,
+			windowWidth,
+			windowHeight,
+			isMobileUserAgent:
+				typeof navigator !== 'undefined' &&
+				/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent),
+		});
+	});
 
 	// Initialize data service and load options
 	async function initializeAndLoadOptions() {
 		try {
-			console.log('🎯 OptionPicker: initializeAndLoadOptions called');
+			console.log('🎯 OptionPicker: initializeAndLoadOptions called with PURE RUNES');
 			optionPickerState.setLoading(true);
 
 			// Get the current sequence's end position
 			const endPosition = getCurrentSequenceEndPosition();
 			if (!endPosition) {
 				console.warn('⚠️ No end position found, cannot load options');
-				optionPickerState.setAllPictographs([]);
-				optionPickerState.setLoadingError(false);
+				optionPickerState.setOptions([]);
+				optionPickerState.setError(null);
 				return;
 			}
 
@@ -188,12 +267,37 @@ Matches the desktop version exactly:
 				console.log(`  Letter "${option.letter}" -> Type "${letterType}"`);
 			});
 
-			optionPickerState.setAllPictographs(realOptions);
-			optionPickerState.setLoadingError(false);
+			console.log('🔧 About to set options in state:', {
+				optionsCount: realOptions.length,
+				firstOption: realOptions[0]?.letter,
+				stateType: typeof optionPickerState,
+				hasSetOptions: typeof optionPickerState.setOptions === 'function',
+			});
+
+			optionPickerState.setOptions(realOptions);
+			console.log(
+				'🔧 Options set in state, current allOptions length:',
+				optionPickerState.allOptions?.length
+			);
+
+			// Also set the simple backup state
+			simpleOptionsData = realOptions;
+			console.log('🔧 Simple backup state set with length:', simpleOptionsData.length);
+
+			// Check state after a brief delay to see if it's a reactivity timing issue
+			setTimeout(() => {
+				console.log(
+					'🔧 Options state after timeout:',
+					optionPickerState.allOptions?.length
+				);
+				console.log('🔧 Simple backup state after timeout:', simpleOptionsData.length);
+			}, 100);
+
+			optionPickerState.setError(null);
 		} catch (error) {
 			console.error('❌ Error loading real options:', error);
-			optionPickerState.setLoadingError(true);
-			optionPickerState.setAllPictographs([]);
+			optionPickerState.setError(error instanceof Error ? error.message : 'Unknown error');
+			optionPickerState.setOptions([]);
 		} finally {
 			optionPickerState.setLoading(false);
 		}
@@ -207,7 +311,7 @@ Matches the desktop version exactly:
 			// Show transition state
 			isTransitioning = true;
 
-			// Update global state
+			// Update global state using runes
 			optionPickerState.setSelectedPictograph(pictograph);
 
 			// Create beat data from pictograph
@@ -234,12 +338,11 @@ Matches the desktop version exactly:
 		}
 	}
 
-	// Handle container resize
-	function handleResize() {
-		if (containerElement) {
-			const rect = containerElement.getBoundingClientRect();
-			optionPickerState.setContainerDimensions(rect.width, rect.height);
-		}
+	// Update window dimensions on resize
+	function updateWindowSize() {
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+		optionPickerState.setWindowDimensions(windowWidth, windowHeight);
 	}
 
 	// Initialize on mount using effect (Svelte 5 approach)
@@ -248,8 +351,7 @@ Matches the desktop version exactly:
 	$effect(() => {
 		if (!mounted) {
 			mounted = true;
-			console.log('🎯 OptionPicker mounted via effect - initializing...');
-			console.log('🎯 OptionPicker effect function started');
+			console.log('🎯 OptionPicker mounted via effect with PURE RUNES - initializing...');
 
 			// Initialize and load options
 			try {
@@ -265,17 +367,7 @@ Matches the desktop version exactly:
 
 	// Initialize on mount (backup approach)
 	onMount(() => {
-		console.log('🎯 OptionPicker mounted - initializing...');
-		console.log('🎯 OptionPicker onMount function started');
-
-		// Set up resize observer for responsive layout
-		let resizeObserver: ResizeObserver | null = null;
-		if (containerElement) {
-			resizeObserver = new ResizeObserver(() => {
-				handleResize();
-			});
-			resizeObserver.observe(containerElement);
-		}
+		console.log('🎯 OptionPicker mounted with PURE RUNES - initializing...');
 
 		// Add event listener for start position selection
 		const handleStartPositionSelected = () => {
@@ -283,52 +375,80 @@ Matches the desktop version exactly:
 			initializeAndLoadOptions();
 		};
 
+		// Set up window resize listener
+		window.addEventListener('resize', updateWindowSize);
+		updateWindowSize(); // Initial call
+
 		document.addEventListener('start-position-selected', handleStartPositionSelected);
 
-		console.log('🎯 OptionPicker onMount completed');
+		console.log('🎯 OptionPicker onMount completed with PURE RUNES');
 
 		// Cleanup on unmount
 		return () => {
-			if (resizeObserver) {
-				resizeObserver.disconnect();
-			}
+			window.removeEventListener('resize', updateWindowSize);
 			document.removeEventListener('start-position-selected', handleStartPositionSelected);
 		};
 	});
 </script>
 
-<!-- Main container with desktop-style sectioned layout -->
-<div class="option-picker" bind:this={containerElement}>
-	<!-- Debug: Component is rendering -->
-	{console.log('🎯 OptionPicker template is rendering')}
+<!-- Main container with sophisticated layout using PURE RUNES -->
+<div
+	class="option-picker"
+	class:mobile={optionPickerState.isMobile}
+	class:tablet={optionPickerState.isTablet}
+	class:portrait={optionPickerState.isPortrait}
+	class:foldable={foldableInfo.isFoldable}
+	class:unfolded={foldableInfo.isUnfolded}
+	class:zfold={foldableInfo.foldableType === 'zfold'}
+	style="--layout-scale-factor: {currentLayoutConfig.scaleFactor}; --option-size: {currentLayoutConfig.optionSize}; --grid-gap: {currentLayoutConfig.gridGap}"
+	bind:this={containerElement}
+	use:resize={optionPickerState.setContainerDimensions}
+>
+	<!-- Debug: Component is rendering with PURE RUNES -->
+	{console.log('🎯 OptionPicker template is rendering with PURE RUNES')}
 
 	<!-- Header matching desktop version -->
 	<OptionPickerHeader />
 
-	<!-- Main scrollable content area -->
-	<div class="option-picker-content">
+	<!-- Main scrollable content area with advanced layout using PURE RUNES -->
+	<div
+		class="options-container {currentLayoutConfig.gridClass} {currentLayoutConfig.aspectClass}"
+	>
 		{#if optionPickerState.isLoading}
 			<div class="loading-container">
 				<div class="loading-spinner"></div>
 				<p>Loading options...</p>
+				<small>
+					Using sophisticated layout with PURE RUNES: {enhancedDeviceInfo.deviceType} |
+					{optionPickerState.containerAspect} |
+					{foldableInfo.isFoldable ? 'Foldable' : 'Standard'} | Scale: {currentLayoutConfig.scaleFactor}
+				</small>
 			</div>
-		{:else if optionPickerState.loadingError}
+		{:else if optionPickerState.error}
 			<div class="error-container">
 				<p>❌ Error loading options</p>
+				<p>{optionPickerState.error}</p>
 				<button class="retry-button" onclick={initializeAndLoadOptions}> Retry </button>
 			</div>
-		{:else if optionPickerState.allPictographs.length === 0}
+		{:else if effectiveOptions.length === 0}
 			<div class="empty-container">
 				<p>No options available</p>
 				<p>Please select a start position first</p>
+				<small>
+					Layout: {currentLayoutConfig.gridColumns} | Device: {enhancedDeviceInfo.deviceType}
+					| Advanced Calc: {advancedLayoutCalculation.optionsPerRow} cols, {advancedLayoutCalculation.optionSize}px
+				</small>
 			</div>
 		{:else}
-			<!-- Sectioned scroll area matching desktop exactly -->
+			<!-- Sectioned scroll area with sophisticated responsive layout using PURE RUNES -->
 			<OptionPickerScroll
-				pictographs={optionPickerState.allPictographs}
+				pictographs={effectiveOptions}
 				onPictographSelected={handlePictographSelected}
 				containerWidth={optionPickerState.containerWidth}
 				containerHeight={optionPickerState.containerHeight}
+				layoutConfig={currentLayoutConfig}
+				deviceInfo={enhancedDeviceInfo}
+				{foldableInfo}
 			/>
 		{/if}
 	</div>
@@ -352,12 +472,89 @@ Matches the desktop version exactly:
 		border: none; /* Remove border to blend with background */
 		border-radius: 8px;
 		overflow: hidden;
+		transform: scale(var(--layout-scale-factor, 1));
+		transform-origin: top left;
+		transition: transform 0.2s ease;
 	}
 
-	.option-picker-content {
+	.options-container {
 		flex: 1;
 		overflow: hidden;
 		position: relative;
+		border-radius: 8px;
+		background-color: transparent;
+		min-height: 0; /* Crucial for flex child sizing */
+		overflow: hidden; /* Contains children, prevents double scrollbars */
+		justify-content: center; /* Center content vertically */
+	}
+
+	/* Device-specific styles from sophisticated layout system */
+	.option-picker.mobile {
+		border-radius: 6px;
+	}
+
+	.option-picker.mobile .options-container {
+		border-radius: 6px;
+	}
+
+	.option-picker.portrait {
+		/* Portrait-specific adjustments */
+	}
+
+	/* Foldable device styles from advanced device detection */
+	.option-picker.foldable {
+		/* Base foldable device styles */
+	}
+
+	.option-picker.foldable.unfolded {
+		/* Styles for unfolded foldable devices */
+	}
+
+	.option-picker.foldable.zfold {
+		/* Samsung Z Fold specific styles */
+	}
+
+	/* Layout template classes from sophisticated layout system */
+	.options-container.single-item-grid {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.options-container.two-item-grid {
+		display: grid;
+		gap: var(--grid-gap, 8px);
+		padding: 12px;
+	}
+
+	.options-container.two-item-grid.horizontal-layout {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.options-container.two-item-grid.vertical-layout {
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr 1fr;
+	}
+
+	.options-container.few-items-grid,
+	.options-container.medium-items-grid,
+	.options-container.many-items-grid {
+		display: grid;
+		gap: var(--grid-gap, 8px);
+		padding: 12px;
+	}
+
+	/* Aspect ratio classes from sophisticated layout calculations */
+	.options-container.tall-aspect-container {
+		/* Tall aspect ratio specific styles */
+	}
+
+	.options-container.square-aspect-container {
+		/* Square aspect ratio specific styles */
+	}
+
+	.options-container.wide-aspect-container {
+		/* Wide aspect ratio specific styles */
 	}
 
 	.loading-container,
@@ -371,6 +568,14 @@ Matches the desktop version exactly:
 		padding: 32px;
 		text-align: center;
 		color: var(--muted-foreground, #666666);
+	}
+
+	.loading-container small,
+	.empty-container small {
+		margin-top: 8px;
+		font-size: 11px;
+		opacity: 0.7;
+		font-family: monospace;
 	}
 
 	.loading-spinner {
@@ -428,7 +633,7 @@ Matches the desktop version exactly:
 		font-weight: 500;
 	}
 
-	/* Responsive adjustments */
+	/* Responsive adjustments from sophisticated breakpoint system */
 	@media (max-width: 768px) {
 		.option-picker {
 			border-radius: 6px;
@@ -465,6 +670,14 @@ Matches the desktop version exactly:
 		.retry-button {
 			padding: 6px 12px;
 			font-size: 13px;
+		}
+	}
+
+	/* Optional: Constrain max width on large screens */
+	@media (min-width: 1400px) {
+		.option-picker {
+			max-width: 1400px;
+			margin: 0 auto;
 		}
 	}
 </style>

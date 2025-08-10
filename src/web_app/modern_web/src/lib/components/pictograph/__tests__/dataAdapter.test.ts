@@ -4,32 +4,85 @@
  * Tests for the legacy/modern data structure conversion functions
  */
 
-import { describe, it, expect } from 'vitest';
+import { createBeatData, createPictographData } from '$lib/domain';
+import { ArrowType, GridMode } from '$lib/domain/enums';
+import { describe, expect, it } from 'vitest';
 import {
-	legacyToModernPictographData,
-	modernToLegacyPictographData,
 	beatDataToPictographData,
+	ensureModernPictographData,
 	extractLegacyArrowData,
 	extractLegacyPropData,
-	ensureModernPictographData,
 	legacyToModernArrowData,
+	legacyToModernPictographData,
 	legacyToModernPropData,
+	modernToLegacyPictographData,
 } from '../dataAdapter';
-import { createBeatData, createPictographData } from '$lib/domain';
 
 describe('Data Adapter', () => {
 	describe('legacyToModernPictographData', () => {
 		it('should convert basic legacy data to modern format', () => {
-			const legacy = {
+			const legacy: any = {
 				id: 'test-id',
-				gridData: { mode: 'diamond' },
+				grid_data: { mode: 'diamond' },
 				arrows: {
-					blue: { id: 'blue-1', color: 'blue' },
-					red: { id: 'red-1', color: 'red' },
+					blue: {
+						id: 'blue-1',
+						arrow_type: 'blue',
+						color: 'blue',
+						motion_type: 'pro',
+						turns: 0,
+						is_mirrored: false,
+						start_orientation: 'in',
+						end_orientation: 'in',
+						rotation_direction: 'clockwise',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
+					red: {
+						id: 'red-1',
+						arrow_type: 'red',
+						color: 'red',
+						motion_type: 'anti',
+						turns: 0,
+						is_mirrored: false,
+						start_orientation: 'in',
+						end_orientation: 'in',
+						rotation_direction: 'clockwise',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
 				},
 				props: {
-					blue: { id: 'blue-prop-1', color: 'blue' },
-					red: { id: 'red-prop-1', color: 'red' },
+					blue: {
+						id: 'blue-prop-1',
+						prop_type: 'staff',
+						color: 'blue',
+						orientation: 'in',
+						rotation_direction: 'no_rot',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
+					red: {
+						id: 'red-prop-1',
+						prop_type: 'staff',
+						color: 'red',
+						orientation: 'in',
+						rotation_direction: 'no_rot',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
 				},
 				motions: {
 					blue: { motion_type: 'pro' },
@@ -51,7 +104,7 @@ describe('Data Adapter', () => {
 		});
 
 		it('should handle missing arrows and props gracefully', () => {
-			const legacy = {
+			const legacy: any = {
 				id: 'test-id-2',
 				letter: 'B',
 			};
@@ -73,8 +126,38 @@ describe('Data Adapter', () => {
 				id: 'modern-test',
 				letter: 'C',
 				arrows: {
-					blue: { id: 'blue-arrow', color: 'blue', motion_type: 'pro' },
-					red: { id: 'red-arrow', color: 'red', motion_type: 'anti' },
+					blue: {
+						id: 'blue-arrow',
+						arrow_type: ArrowType.BLUE,
+						color: 'blue',
+						motion_type: 'pro',
+						turns: 0,
+						is_mirrored: false,
+						start_orientation: 'in',
+						end_orientation: 'in',
+						rotation_direction: 'clockwise',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
+					red: {
+						id: 'red-arrow',
+						arrow_type: ArrowType.RED,
+						color: 'red',
+						motion_type: 'anti',
+						turns: 0,
+						is_mirrored: false,
+						start_orientation: 'in',
+						end_orientation: 'in',
+						rotation_direction: 'clockwise',
+						position_x: 0,
+						position_y: 0,
+						rotation_angle: 0,
+						is_visible: true,
+						is_selected: false,
+					},
 				},
 			});
 
@@ -82,8 +165,8 @@ describe('Data Adapter', () => {
 
 			expect(legacy.id).toBe('modern-test');
 			expect(legacy.letter).toBe('C');
-			expect(legacy.arrows.blue.id).toBe('blue-arrow');
-			expect(legacy.arrows.red.id).toBe('red-arrow');
+			expect(legacy.arrows!.blue!.id).toBe('blue-arrow');
+			expect(legacy.arrows!.red!.id).toBe('red-arrow');
 		});
 	});
 
@@ -216,7 +299,7 @@ describe('Data Adapter', () => {
 			expect(modern).toBeDefined();
 			expect(modern?.id).toBe('ensure-test');
 			expect(modern?.letter).toBe('E');
-			expect(modern?.grid_data.mode).toBe('box');
+			expect(modern?.grid_data.grid_mode).toBe(GridMode.BOX);
 			expect(modern?.arrows.red?.motion_type).toBe('dash');
 			expect(modern?.arrows.red?.location).toBe('w');
 			expect(modern?.props.blue?.prop_type).toBe('poi');
@@ -226,7 +309,13 @@ describe('Data Adapter', () => {
 		it('should pass through already modern data', () => {
 			const modern = createPictographData({
 				letter: 'F',
-				grid_data: { mode: 'diamond' },
+				grid_data: {
+					grid_mode: GridMode.DIAMOND,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 			});
 
 			const result = ensureModernPictographData(modern);

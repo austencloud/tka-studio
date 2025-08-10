@@ -4,11 +4,12 @@
  * Tests for the main pictograph orchestrator component
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
-import '@testing-library/jest-dom';
-import ModernPictograph from '../ModernPictograph.svelte';
 import { createBeatData, createPictographData } from '$lib/domain';
+import { GridMode } from '$lib/domain/enums';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/svelte';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import ModernPictograph from '../ModernPictograph.svelte';
 
 // Mock the child components
 vi.mock('../Grid.svelte', () => ({
@@ -36,7 +37,14 @@ describe('ModernPictograph', () => {
 		it('should render with pictograph data', () => {
 			const pictographData = createPictographData({
 				letter: 'A',
-				grid_data: { mode: 'diamond' },
+				// Provide full grid_data shape matching domain (tests previously used legacy 'mode')
+				grid_data: {
+					grid_mode: GridMode.DIAMOND,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 			});
 
 			render(ModernPictograph, {
@@ -56,7 +64,13 @@ describe('ModernPictograph', () => {
 		it('should render with beat data', () => {
 			const pictographData = createPictographData({
 				letter: 'B',
-				grid_data: { mode: 'box' },
+				grid_data: {
+					grid_mode: GridMode.BOX,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 			});
 
 			const beatData = createBeatData({
@@ -199,7 +213,13 @@ describe('ModernPictograph', () => {
 			const pictographData = createPictographData({
 				id: 'debug-test-id',
 				letter: 'H',
-				grid_data: { mode: 'diamond' },
+				grid_data: {
+					grid_mode: GridMode.DIAMOND,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 			});
 
 			render(ModernPictograph, {

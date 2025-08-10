@@ -5,8 +5,9 @@
  * This provides basic sequence state management with proper Svelte 5 patterns.
  */
 
-import type { SequenceData, BeatData } from '$lib/domain';
+import type { BeatData, SequenceData } from '$lib/domain';
 // (Removed unused SequenceCreateRequest import after domain model migration)
+import { GridMode } from '$lib/domain/enums';
 import type { ArrowPosition } from '$services/interfaces';
 
 // ============================================================================
@@ -26,7 +27,7 @@ const state = $state({
 
 	// UI state
 	showBeatNumbers: true,
-	gridMode: 'diamond' as 'diamond' | 'box',
+	gridMode: GridMode.DIAMOND as GridMode,
 
 	// Arrow positioning state
 	arrowPositions: new Map<string, ArrowPosition>(),
@@ -220,7 +221,7 @@ export function selectBeat(beatIndex: number | null): void {
 /**
  * Set grid mode
  */
-export function setGridMode(mode: 'diamond' | 'box'): void {
+export function setGridMode(mode: GridMode): void {
 	state.gridMode = mode;
 }
 
@@ -276,8 +277,7 @@ export function resetSequenceState(): void {
 	state.error = null;
 	state.selectedBeatIndex = null;
 	state.selectedSequenceId = null;
-	state.showBeatNumbers = true;
-	state.gridMode = 'diamond';
+	state.gridMode = GridMode.DIAMOND;
 	state.arrowPositions.clear();
 	state.arrowPositioningInProgress = false;
 	state.arrowPositioningError = null;

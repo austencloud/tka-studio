@@ -56,16 +56,12 @@
 		loadingError = false;
 
 		try {
-			console.log(`🎯 Loading start positions for ${gridMode} mode`);
-
 			// Use modern service to get start positions
 			if (!startPositionService) {
 				throw new Error('StartPositionService not available');
 			}
 			const startPositions = await startPositionService.getDefaultStartPositions(gridMode);
 			startPositionPictographs = startPositions;
-
-			console.log(`✅ Loaded ${startPositionPictographs.length} start positions`);
 		} catch (error) {
 			console.error('❌ Error loading start positions:', error);
 			loadingError = true;
@@ -78,8 +74,6 @@
 	// Handle start position selection (modernized from legacy with proper data format)
 	async function handleSelect(startPosPictograph: PictographData) {
 		try {
-			console.log('🎯 Start position selected:', startPosPictograph.id);
-
 			// Show transition state
 			isTransitioning = true;
 
@@ -90,7 +84,6 @@
 
 			// Extract end position from the pictograph data
 			const endPosition = extractEndPosition(startPosPictograph);
-			console.log('📍 Extracted end position:', endPosition);
 
 			// Create start position data in the format the OptionPicker expects (like legacy)
 			const startPositionData = {
@@ -147,7 +140,6 @@
 			// **CRITICAL: Save to localStorage in the format OptionPicker expects**
 			try {
 				localStorage.setItem('start_position', JSON.stringify(startPositionData));
-				console.log('💾 Saved start position to localStorage:', startPositionData);
 			} catch (error) {
 				console.error('Failed to save start position to localStorage:', error);
 			}
@@ -170,10 +162,6 @@
 				bubbles: true,
 			});
 			document.dispatchEvent(event);
-
-			console.log(
-				'✅ Start position selection completed, OptionPicker should now load options'
-			);
 		} catch (error) {
 			console.error('❌ Error selecting start position:', error);
 			isTransitioning = false;
@@ -209,7 +197,6 @@
 		}
 
 		// Default fallback
-		console.warn('⚠️ Could not extract end position, using default');
 		return 'alpha1';
 	}
 

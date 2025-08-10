@@ -4,9 +4,18 @@
  * Tests for the rune-based pictograph service
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { createPictographService, createBeatPictographService } from '../PictographService.svelte';
 import { createBeatData, createPictographData } from '$lib/domain';
+import {
+	ArrowType,
+	GridMode,
+	Location,
+	MotionType,
+	Orientation,
+	PropType,
+	RotationDirection,
+} from '$lib/domain/enums';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { createBeatPictographService, createPictographService } from '../PictographService.svelte';
 
 describe('PictographService (Runes)', () => {
 	let service: ReturnType<typeof createPictographService>;
@@ -32,41 +41,53 @@ describe('PictographService (Runes)', () => {
 		it('should set pictograph data and start loading', () => {
 			const pictographData = createPictographData({
 				letter: 'A',
-				grid_data: { mode: 'diamond' },
+				grid_data: {
+					grid_mode: GridMode.DIAMOND,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 				arrows: {
 					blue: {
 						id: 'blue-arrow',
-						arrow_type: 'blue',
+						arrow_type: ArrowType.BLUE,
 						color: 'blue',
-						motion_type: 'pro',
-						location: 'n',
-						start_orientation: 'in',
-						end_orientation: 'out',
-						rotation_direction: 'clockwise',
+						motion_type: MotionType.PRO,
+						location: Location.NORTH,
+						start_orientation: Orientation.IN,
+						end_orientation: Orientation.OUT,
+						rotation_direction: RotationDirection.CLOCKWISE,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						turns: 1,
 						is_mirrored: false,
 						coordinates: null,
 						rotation_angle: 0,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {},
 					},
 					red: {
 						id: 'red-arrow',
-						arrow_type: 'red',
+						arrow_type: ArrowType.RED,
 						color: 'red',
-						motion_type: 'anti',
-						location: 's',
-						start_orientation: 'in',
-						end_orientation: 'out',
-						rotation_direction: 'counter_clockwise',
+						motion_type: MotionType.ANTI,
+						location: Location.SOUTH,
+						start_orientation: Orientation.IN,
+						end_orientation: Orientation.OUT,
+						rotation_direction: RotationDirection.COUNTER_CLOCKWISE,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						turns: 1,
 						is_mirrored: false,
 						coordinates: null,
 						rotation_angle: 180,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {},
 					},
 				},
 			});
@@ -106,7 +127,7 @@ describe('PictographService (Runes)', () => {
 
 			expect(service.currentData).toBeDefined();
 			expect(service.currentData?.letter).toBe('B');
-			expect(service.currentData?.grid_data.mode).toBe('box');
+			expect(service.currentData?.grid_data.grid_mode).toBe(GridMode.BOX);
 			expect(service.currentData?.arrows.red?.motion_type).toBe('pro');
 			expect(service.currentData?.arrows.red?.location).toBe('e');
 			expect(service.hasValidData).toBe(true);
@@ -117,7 +138,13 @@ describe('PictographService (Runes)', () => {
 		it('should set data from beat with pictograph', () => {
 			const pictographData = createPictographData({
 				letter: 'C',
-				grid_data: { mode: 'diamond' },
+				grid_data: {
+					grid_mode: GridMode.DIAMOND,
+					center_x: 0,
+					center_y: 0,
+					radius: 100,
+					grid_points: {},
+				},
 			});
 
 			const beatData = createBeatData({
@@ -159,59 +186,75 @@ describe('PictographService (Runes)', () => {
 				arrows: {
 					blue: {
 						id: 'blue',
-						arrow_type: 'blue',
+						arrow_type: ArrowType.BLUE,
 						color: 'blue',
-						motion_type: 'pro',
-						location: 'n',
-						start_orientation: 'in',
-						end_orientation: 'out',
-						rotation_direction: 'clockwise',
+						motion_type: MotionType.PRO,
+						location: Location.NORTH,
+						start_orientation: Orientation.IN,
+						end_orientation: Orientation.OUT,
+						rotation_direction: RotationDirection.CLOCKWISE,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						turns: 1,
 						is_mirrored: false,
 						coordinates: null,
 						rotation_angle: 0,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {},
 					},
 					red: {
 						id: 'red',
-						arrow_type: 'red',
+						arrow_type: ArrowType.RED,
 						color: 'red',
-						motion_type: 'anti',
-						location: 's',
-						start_orientation: 'in',
-						end_orientation: 'out',
-						rotation_direction: 'counter_clockwise',
+						motion_type: MotionType.ANTI,
+						location: Location.SOUTH,
+						start_orientation: Orientation.IN,
+						end_orientation: Orientation.OUT,
+						rotation_direction: RotationDirection.COUNTER_CLOCKWISE,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						turns: 1,
 						is_mirrored: false,
 						coordinates: null,
 						rotation_angle: 180,
 						svg_center: null,
 						svg_mirrored: false,
-						metadata: {},
 					},
 				},
 				props: {
 					blue: {
 						id: 'blue-prop',
-						prop_type: 'staff',
+						prop_type: PropType.STAFF,
 						color: 'blue',
-						location: 'n',
+						location: Location.NORTH,
+						orientation: Orientation.IN,
+						rotation_direction: RotationDirection.NO_ROTATION,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						coordinates: null,
 						rotation_angle: 0,
 						svg_center: null,
-						metadata: {},
 					},
 					red: {
 						id: 'red-prop',
-						prop_type: 'staff',
+						prop_type: PropType.STAFF,
 						color: 'red',
-						location: 's',
+						location: Location.SOUTH,
+						orientation: Orientation.IN,
+						rotation_direction: RotationDirection.NO_ROTATION,
+						position_x: 0,
+						position_y: 0,
+						is_visible: true,
+						is_selected: false,
 						coordinates: null,
 						rotation_angle: 180,
 						svg_center: null,
-						metadata: {},
 					},
 				},
 			});

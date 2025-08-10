@@ -97,9 +97,9 @@ class WorkbenchService {
 	}
 
 	// Grid configuration
-	setGridMode(mode: 'diamond' | 'box'): void {
+	setGridMode(mode: GridMode): void {
 		beatFrameService.setConfig({
-			gridMode: mode === 'diamond' ? GridMode.DIAMOND : GridMode.BOX,
+			gridMode: mode,
 		});
 	}
 

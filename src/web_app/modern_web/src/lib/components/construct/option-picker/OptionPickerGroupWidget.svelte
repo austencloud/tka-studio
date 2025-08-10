@@ -9,7 +9,7 @@ Matches the desktop version exactly:
 -->
 <script lang="ts">
 	import type { PictographData } from '$lib/domain/PictographData';
-	import { LetterType } from './types/LetterType.js';
+	// import { LetterType } from './types/LetterType'; // Temporarily disabled to avoid initialization issues
 	import OptionPickerSection from './OptionPickerSection.svelte';
 
 	// Props
@@ -24,7 +24,7 @@ Matches the desktop version exactly:
 	}>();
 
 	// Groupable types (Types 4, 5, 6) - matches desktop exactly
-	const groupableTypes = [LetterType.TYPE4, LetterType.TYPE5, LetterType.TYPE6];
+	const groupableTypes = ['Type4', 'Type5', 'Type6'];
 
 	// Calculate section width for horizontal layout
 	const sectionWidth = $derived(() => {
@@ -39,10 +39,7 @@ Matches the desktop version exactly:
 <div class="group-widget">
 	<div class="horizontal-layout">
 		{#each groupableTypes as letterType (letterType)}
-			<div 
-				class="section-container"
-				style:width="{sectionWidth}px"
-			>
+			<div class="section-container" style:width="{sectionWidth}px">
 				<OptionPickerSection
 					{letterType}
 					{pictographs}
@@ -95,7 +92,7 @@ Matches the desktop version exactly:
 			flex-direction: column;
 			gap: 8px;
 		}
-		
+
 		.section-container {
 			width: 100% !important;
 		}

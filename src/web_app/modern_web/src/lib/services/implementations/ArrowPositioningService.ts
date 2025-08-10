@@ -12,6 +12,7 @@
  */
 
 import type { MotionData } from '$lib/domain';
+import { GridMode } from '$lib/domain';
 import type {
 	ArrowData,
 	ArrowPosition,
@@ -348,10 +349,10 @@ export class ArrowPositioningService implements IArrowPositioningService {
 		}
 	}
 
-	private extractGridMode(pictographData: PictographData): 'diamond' | 'box' {
+	private extractGridMode(pictographData: PictographData): GridMode {
 		const raw = pictographData.grid_data as unknown as { grid_mode?: string };
-		const mode = typeof raw.grid_mode === 'string' ? raw.grid_mode.toLowerCase() : 'diamond';
-		return mode === 'box' ? 'box' : 'diamond';
+		const mode = typeof raw.grid_mode === 'string' ? raw.grid_mode.toLowerCase() : GridMode.DIAMOND;
+		return mode === 'box' ? GridMode.BOX : GridMode.DIAMOND;
 	}
 
 	/**
@@ -359,7 +360,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	 */
 	private getShiftCoordinates(
 		location: Location,
-		gridMode: 'diamond' | 'box',
+		gridMode: GridMode,
 		gridData: GridData
 	): { x: number; y: number } {
 		const pointName = `${location}_${gridMode}_layer2_point`;
@@ -378,7 +379,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 	 */
 	private getStaticDashCoordinates(
 		location: Location,
-		gridMode: 'diamond' | 'box',
+		gridMode: GridMode,
 		gridData: GridData
 	): { x: number; y: number } {
 		// Check if this is a diagonal direction in diamond mode
@@ -437,7 +438,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 			const motionType = this.normalizeMotionType(rawType);
 			const availableKeys = await this.placementDataService.getAvailablePlacementKeys(
 				motionType,
-				'diamond' // TODO: Use actual grid mode from pictographData
+				GridMode.DIAMOND // TODO: Use actual grid mode from pictographData
 			);
 
 			// Generate placement key using key service
@@ -454,7 +455,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 				motionType,
 				placementKey,
 				motion.turns || 0,
-				'diamond' // TODO: Use actual grid mode
+				GridMode.DIAMOND // TODO: Use actual grid mode
 			);
 
 			console.log(

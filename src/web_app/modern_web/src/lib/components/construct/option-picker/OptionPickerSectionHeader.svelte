@@ -7,22 +7,50 @@ Matches the desktop version exactly:
 - Clickable to toggle section (like desktop)
 -->
 <script lang="ts">
-	import { LetterType } from './types/LetterType.js';
-
 	// Props
 	const { letterType, onToggle = () => {} } = $props<{
 		letterType: string;
 		onToggle?: () => void;
 	}>();
 
-	// Get type info
-	const typeInfo = $derived(LetterType.getTypeDescription(letterType));
-	const colorPairs = $derived(LetterType.getLegacyColorPairs(letterType));
-	const coloredDescription = $derived(LetterType.getColoredText(typeInfo.description));
+	// Get type info (simplified to avoid LetterType class issues)
+	const typeInfo = $derived.by(() => {
+		const typeDescriptions = {
+			Type1: { description: 'Dual-Shift', typeName: 'Type1' },
+			Type2: { description: 'Shift', typeName: 'Type2' },
+			Type3: { description: 'Cross-Shift', typeName: 'Type3' },
+			Type4: { description: 'Dash', typeName: 'Type4' },
+			Type5: { description: 'Dual-Dash', typeName: 'Type5' },
+			Type6: { description: 'Static', typeName: 'Type6' },
+		};
+		return (
+			typeDescriptions[letterType as keyof typeof typeDescriptions] || {
+				description: 'Unknown',
+				typeName: 'Type ?',
+			}
+		);
+	});
+
+	const colorPairs = $derived.by(() => {
+		const colorPairs = {
+			Type1: { primary: '#36c3ff', secondary: '#6F2DA8' },
+			Type2: { primary: '#6F2DA8', secondary: '#6F2DA8' },
+			Type3: { primary: '#26e600', secondary: '#6F2DA8' },
+			Type4: { primary: '#26e600', secondary: '#26e600' },
+			Type5: { primary: '#00b3ff', secondary: '#26e600' },
+			Type6: { primary: '#eb7d00', secondary: '#eb7d00' },
+		};
+		return (
+			colorPairs[letterType as keyof typeof colorPairs] || {
+				primary: '#666666',
+				secondary: '#666666',
+			}
+		);
+	});
 
 	// Generate button text like desktop
 	const buttonText = $derived(`${typeInfo.typeName}: ${typeInfo.description}`);
-	const buttonHtml = $derived(`${typeInfo.typeName}: ${coloredDescription}`);
+	const buttonHtml = $derived(`${typeInfo.typeName}: ${typeInfo.description}`);
 </script>
 
 <div class="section-header">
