@@ -2,7 +2,7 @@
 Test page for the new sectioned OptionPicker component
 -->
 <script lang="ts">
-	import OptionPicker from '$lib/components/construct/OptionPicker.svelte';
+	import OptionPickerContainer from '$lib/components/construct/OptionPickerContainer.svelte';
 	import type { PictographData } from '$lib/domain/PictographData';
 	// Set up real start position data for testing
 	import { onMount } from 'svelte';
@@ -93,7 +93,7 @@ Test page for the new sectioned OptionPicker component
 	</div>
 
 	<div class="test-container">
-		<OptionPicker onOptionSelected={handleOptionSelected} difficulty="intermediate" />
+		<OptionPickerContainer onOptionSelected={handleOptionSelected} />
 	</div>
 </div>
 

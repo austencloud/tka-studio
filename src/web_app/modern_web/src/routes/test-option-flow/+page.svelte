@@ -1,10 +1,10 @@
 <!-- Test page for Start Position to Option Picker flow -->
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import OptionPickerContainer from '$components/construct/OptionPickerContainer.svelte';
 	import StartPositionPicker from '$components/construct/StartPositionPicker.svelte';
-	import OptionPicker from '$components/construct/OptionPicker.svelte';
 	import type { BeatData } from '$domain/BeatData';
 	import type { PictographData } from '$domain/PictographData';
+	import { onMount } from 'svelte';
 
 	// Test state
 	let testResults = $state<string[]>([]);
@@ -247,7 +247,7 @@
 			<h2>🎲 Option Picker</h2>
 			<p>Options should load automatically after selecting a start position:</p>
 			<div class="picker-container">
-				<OptionPicker difficulty="intermediate" onOptionSelected={handleOptionSelected} />
+				<OptionPickerContainer onOptionSelected={handleOptionSelected} />
 			</div>
 		</div>
 	</div>

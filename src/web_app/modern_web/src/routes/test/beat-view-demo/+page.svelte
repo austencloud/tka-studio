@@ -206,20 +206,7 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 			</div>
 		</div>
 
-		<!-- Debug Information -->
-		<div class="debug-info" data-testid="debug-info">
-			<h2>Debug Information</h2>
-			<pre>{JSON.stringify(
-					{
-						selectedBeatIndex,
-						hoveredBeatIndex,
-						clickHistory,
-						beatsCount: beats.length,
-					},
-					null,
-					2
-				)}</pre>
-		</div>
+
 	</div>
 </main>
 
@@ -322,16 +309,5 @@ Test route for E2E BeatView testing with multiple beats and interactions.
 		gap: 0.5rem;
 	}
 
-	.debug-info {
-		padding: 1rem;
-		background: #1f2937;
-		border-radius: 6px;
-		color: white;
-	}
 
-	.debug-info pre {
-		margin: 0;
-		font-size: 0.75rem;
-		overflow-x: auto;
-	}
 </style>

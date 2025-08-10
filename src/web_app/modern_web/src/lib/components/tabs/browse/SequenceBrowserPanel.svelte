@@ -1,18 +1,26 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-	import SequenceThumbnail from './SequenceThumbnail.svelte';
 	import LoadingSpinner from './LoadingSpinner.svelte';
+	import type { SequenceData } from './SequenceThumbnail.svelte';
+	import SequenceThumbnail from './SequenceThumbnail.svelte';
 
-	export let filter: { type: string; value: any } | null = null;
-	export let isLoading: boolean = false;
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const {
+		filter = null,
+		isLoading = false,
+		onSequenceSelected = () => {},
+		onBackToFilters = () => {},
+	} = $props<{
+		filter?: { type: string; value: unknown } | null;
+		isLoading?: boolean;
+		onSequenceSelected?: (sequence: SequenceData) => void;
+		onBackToFilters?: () => void;
+	}>();
 
-	const dispatch = createEventDispatcher();
-
-	// Mock sequence data - in real app this would come from API/service
-	let sequences: any[] = [];
-	let sortBy = 'name'; // 'name', 'difficulty', 'length', 'recent'
-	let viewMode: 'grid' | 'list' = 'grid';
+	// ✅ PURE RUNES: State using runes
+	let sequences: SequenceData[] = $state([]);
+	let sortBy = $state('name'); // 'name', 'difficulty', 'length', 'recent'
+	let viewMode: 'grid' | 'list' = $state('grid');
 
 	// Sort options
 	const sortOptions = [
@@ -23,25 +31,25 @@
 	];
 
 	// Generate mock sequences based on filter
-	function generateMockSequences(filter: any) {
+	function generateMockSequences(
+		filter: { type: string; value: unknown } | null
+	): SequenceData[] {
 		if (!filter) return [];
 
-		const mockSequences = [];
+		const mockSequences: SequenceData[] = [];
 		const count = Math.floor(Math.random() * 20) + 10; // 10-30 sequences
 
 		for (let i = 0; i < count; i++) {
 			mockSequences.push({
 				id: `seq_${i}`,
-				word: `Word${i + 1}`,
+				name: `Word${i + 1}`,
 				difficulty: Math.floor(Math.random() * 4) + 1,
-				length: Math.floor(Math.random() * 6) + 2,
-				startPosition: ['alpha', 'beta', 'gamma'][Math.floor(Math.random() * 3)],
-				gridMode: ['diamond', 'box'][Math.floor(Math.random() * 2)],
-				thumbnailUrl: null, // Will be generated
-				author: 'TKA User',
-				dateAdded: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
-				isFavorite: Math.random() > 0.8,
+				createdDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+				description: `Sequence ${i + 1} description`,
 				tags: ['flow', 'beginner', 'practice'].slice(0, Math.floor(Math.random() * 3) + 1),
+				author: 'TKA User',
+				duration: Math.floor(Math.random() * 60) + 30,
+				beatCount: Math.floor(Math.random() * 6) + 2,
 			});
 		}
 
@@ -49,17 +57,17 @@
 	}
 
 	// Sort sequences
-	function sortSequences(sequences: any[], sortBy: string) {
+	function sortSequences(sequences: SequenceData[], sortBy: string): SequenceData[] {
 		return [...sequences].sort((a, b) => {
 			switch (sortBy) {
 				case 'name':
-					return a.word.localeCompare(b.word);
+					return a.name.localeCompare(b.name);
 				case 'difficulty':
 					return a.difficulty - b.difficulty;
 				case 'length':
-					return a.length - b.length;
+					return (a.beatCount || 0) - (b.beatCount || 0);
 				case 'recent':
-					return b.dateAdded.getTime() - a.dateAdded.getTime();
+					return b.createdDate.getTime() - a.createdDate.getTime();
 				default:
 					return 0;
 			}
@@ -67,14 +75,13 @@
 	}
 
 	// Handle sequence selection
-	function handleSequenceSelect(event: CustomEvent) {
-		const sequence = event.detail;
-		dispatch('sequenceSelected', sequence);
+	function handleSequenceSelect(sequence: SequenceData) {
+		onSequenceSelected(sequence);
 	}
 
 	// Handle back to filters
 	function handleBackToFilters() {
-		dispatch('backToFilters');
+		onBackToFilters();
 	}
 
 	// Handle sort change
@@ -83,15 +90,11 @@
 		sortBy = target.value;
 	}
 
-	// Reactive sorting
-	$: sortedSequences = sortSequences(sequences, sortBy);
+	// ✅ PURE RUNES: Reactive sorting using derived
+	const sortedSequences = $derived(sortSequences(sequences, sortBy));
 
-	// Load sequences when filter changes
-	$: if (filter) {
-		sequences = generateMockSequences(filter);
-	}
-
-	onMount(() => {
+	// ✅ PURE RUNES: Load sequences when filter changes using effect
+	$effect(() => {
 		if (filter) {
 			sequences = generateMockSequences(filter);
 		}
@@ -102,7 +105,7 @@
 	<!-- Header with controls -->
 	<div class="browser-header">
 		<div class="header-left">
-			<button class="back-button" on:click={handleBackToFilters} type="button">
+			<button class="back-button" onclick={handleBackToFilters} type="button">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
 					<path
 						d="M12.5 15L7.5 10L12.5 5"
@@ -127,7 +130,7 @@
 			<div class="view-controls">
 				<label class="sort-control">
 					Sort by:
-					<select bind:value={sortBy} on:change={handleSortChange}>
+					<select bind:value={sortBy} onchange={handleSortChange}>
 						{#each sortOptions as option}
 							<option value={option.value}>{option.label}</option>
 						{/each}
@@ -138,7 +141,7 @@
 					<button
 						class="view-button"
 						class:active={viewMode === 'grid'}
-						on:click={() => (viewMode = 'grid')}
+						onclick={() => (viewMode = 'grid')}
 						title="Grid View"
 						aria-label="Switch to grid view"
 						type="button"
@@ -153,7 +156,7 @@
 					<button
 						class="view-button"
 						class:active={viewMode === 'list'}
-						on:click={() => (viewMode = 'list')}
+						onclick={() => (viewMode = 'list')}
 						title="List View"
 						aria-label="Switch to list view"
 						type="button"
@@ -183,7 +186,7 @@
 				transition:slide={{ duration: 300 }}
 			>
 				{#each sortedSequences as sequence}
-					<SequenceThumbnail {sequence} {viewMode} on:select={handleSequenceSelect} />
+					<SequenceThumbnail {sequence} {viewMode} onSelect={handleSequenceSelect} />
 				{/each}
 			</div>
 		{:else}
@@ -192,7 +195,7 @@
 					<div class="empty-icon">📭</div>
 					<h3>No sequences found</h3>
 					<p>Try adjusting your filter criteria or browse all sequences.</p>
-					<button class="browse-all-button" on:click={handleBackToFilters} type="button">
+					<button class="browse-all-button" onclick={handleBackToFilters} type="button">
 						Browse All Sequences
 					</button>
 				</div>

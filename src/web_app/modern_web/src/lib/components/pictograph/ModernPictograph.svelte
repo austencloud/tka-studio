@@ -334,24 +334,6 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 			</g>
 		{/if}
 
-		<!-- Debug info -->
-		{#if debug}
-			<g class="debug-info">
-				<rect x="10" y="800" width="300" height="80" fill="rgba(0, 0, 0, 0.8)" rx="4" />
-				<text x="20" y="820" font-size="11" fill="white" font-family="monospace">
-					Components: {loadedComponents.size}/{requiredComponents().length}
-				</text>
-				<text x="20" y="835" font-size="11" fill="white" font-family="monospace">
-					Data: {effectivePictographData()?.id || 'none'}
-				</text>
-				<text x="20" y="850" font-size="11" fill="white" font-family="monospace">
-					Grid: {effectivePictographData()?.grid_data?.grid_mode || 'none'}
-				</text>
-				<text x="20" y="865" font-size="11" fill="white" font-family="monospace">
-					Letter: {displayLetter() || 'none'}
-				</text>
-			</g>
-		{/if}
 	</svg>
 </div>
 

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
-	const dispatch = createEventDispatcher();
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const { onQuickAccess = () => {} } = $props<{
+		onQuickAccess?: (data: { type: string; value: string }) => void;
+	}>();
 
 	// Quick access filter options matching desktop app
 	const quickFilters = [
@@ -28,8 +29,8 @@
 		},
 	];
 
-	function handleQuickAccess(filter: any) {
-		dispatch('quickAccess', {
+	function handleQuickAccess(filter: { type: string; value: string }) {
+		onQuickAccess({
 			type: filter.type,
 			value: filter.value,
 		});
@@ -41,7 +42,7 @@
 		<button
 			class="quick-button"
 			style="--accent-color: {filter.color}"
-			on:click={() => handleQuickAccess(filter)}
+			onclick={() => handleQuickAccess(filter)}
 			title={filter.description}
 			type="button"
 		>

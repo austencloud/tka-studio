@@ -9,7 +9,7 @@
 	import { constructTabEventService } from '$services/implementations/ConstructTabEventService';
 	import type { BeatData, PictographData } from '$services/interfaces';
 	import { constructTabState } from '$stores/constructTabState.svelte';
-	import OptionPicker from './OptionPicker.svelte';
+	import OptionPickerContainer from './OptionPickerContainer.svelte';
 	import StartPositionPicker from './StartPositionPicker.svelte';
 
 	console.log('🎯 BuildTabContent script is being processed');
@@ -52,11 +52,7 @@
 		</div>
 	{:else}
 		<div class="panel-content">
-			<OptionPicker
-				{currentSequence}
-				difficulty="intermediate"
-				onOptionSelected={handleOptionSelected}
-			/>
+			<OptionPickerContainer onOptionSelected={handleOptionSelected} />
 		</div>
 	{/if}
 </div>

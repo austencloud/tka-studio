@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import AccordionSection from './AccordionSection.svelte';
 	import QuickAccessSection from './QuickAccessSection.svelte';
 
-	const dispatch = createEventDispatcher();
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const { onFilterSelected = () => {} } = $props<{
+		onFilterSelected?: (data: { type: string; value: unknown }) => void;
+	}>();
 
 	// Filter configuration matching desktop app exactly
 	const filterSections = [
@@ -87,31 +89,29 @@
 		},
 	];
 
-	// Track active filter state
-	let activeFilter: { type: string; value: any } | null = null;
+	// ✅ PURE RUNES: Track active filter state
+	let activeFilter: { type: string; value: unknown } | null = $state(null);
 
-	// Track which accordion section is currently expanded
+	// ✅ PURE RUNES: Track which accordion section is currently expanded
 	// Auto-open the first section (Starting Position) like desktop app
-	let currentExpandedSection: string | null = filterSections[0]?.type || null;
+	let currentExpandedSection: string | null = $state(filterSections[0]?.type || null);
 
-	function handleFilterSelection(event: CustomEvent) {
-		const { type, value } = event.detail;
-		activeFilter = { type, value };
+	function handleFilterSelection(data: { type: string; value: unknown }) {
+		activeFilter = { type: data.type, value: data.value };
 
-		// Emit filter selected event
-		dispatch('filterSelected', { type, value });
+		// Call callback prop instead of dispatching event
+		onFilterSelected({ type: data.type, value: data.value });
 	}
 
-	function handleQuickAccess(event: CustomEvent) {
-		const { type, value } = event.detail;
-		activeFilter = { type, value };
+	function handleQuickAccess(data: { type: string; value: unknown }) {
+		activeFilter = { type: data.type, value: data.value };
 
-		// Emit filter selected event
-		dispatch('filterSelected', { type, value });
+		// Call callback prop instead of dispatching event
+		onFilterSelected({ type: data.type, value: data.value });
 	}
 
-	function handleExpansionRequest(event: CustomEvent) {
-		const { type } = event.detail;
+	function handleExpansionRequest(data: { type: string; title: string }) {
+		const { type } = data;
 
 		// If the requested section is already expanded, collapse it
 		if (currentExpandedSection === type) {
@@ -140,7 +140,7 @@
 					<div class="header-spacer"></div>
 
 					<!-- Quick Access buttons on right -->
-					<QuickAccessSection on:quickAccess={handleQuickAccess} />
+					<QuickAccessSection onQuickAccess={handleQuickAccess} />
 				</div>
 			</div>
 
@@ -155,8 +155,8 @@
 						sections={section.sections || []}
 						isActive={activeFilter?.type === section.type}
 						isExpanded={currentExpandedSection === section.type}
-						on:filterSelected={handleFilterSelection}
-						on:expansionRequested={handleExpansionRequest}
+						onFilterSelected={handleFilterSelection}
+						onExpansionRequested={handleExpansionRequest}
 					/>
 				{/each}
 			</div>

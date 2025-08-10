@@ -1,17 +1,31 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	// ✅ PURE RUNES: Type definitions
+	export interface CategoryButtonProps {
+		value?: string;
+		label?: string;
+		color?: string;
+		image?: string;
+		type?: string;
+		difficulty?: string;
+	}
 
-	export let option: any;
-	export let visualType: string = '';
-
-	const dispatch = createEventDispatcher();
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const {
+		option,
+		visualType = '',
+		onSelected = () => {},
+	} = $props<{
+		option: CategoryButtonProps;
+		visualType?: string;
+		onSelected?: (value: string) => void;
+	}>();
 
 	function handleClick() {
-		dispatch('selected', option.value || option.label);
+		onSelected(option.value || option.label || '');
 	}
 
 	// Get button styling based on option type
-	function getButtonStyle(option: any, visualType: string) {
+	function getButtonStyle(option: CategoryButtonProps, visualType: string) {
 		let style = '';
 
 		if (option.color) {
@@ -38,7 +52,7 @@
 				return `/images/grid/${value.toLowerCase()}_grid.svg`;
 			case 'starting_position':
 				return `/images/position_images/${value.toLowerCase()}.png`;
-			case 'difficulty':
+			case 'difficulty': {
 				// Map difficulty names to levels
 				const difficultyMap: Record<string, string> = {
 					beginner: 'level_1',
@@ -46,6 +60,7 @@
 					advanced: 'level_3',
 				};
 				return `/images/level_images/${difficultyMap[value.toLowerCase()] || 'level_1'}.png`;
+			}
 			default:
 				return '';
 		}
@@ -64,7 +79,7 @@
 	class:has-image={shouldShowImage(visualType)}
 	data-visual-type={visualType}
 	style={getButtonStyle(option, visualType)}
-	on:click={handleClick}
+	onclick={handleClick}
 	type="button"
 >
 	<!-- Unified image-based button content with consistent styling -->

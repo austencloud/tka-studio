@@ -118,10 +118,6 @@ test.describe('Modern Pictograph E2E', () => {
 				timeout: 10000,
 			});
 
-			// Should show debug overlay
-			const debugOverlay = page.locator('svg g.debug-info');
-			await expect(debugOverlay).toBeVisible();
-
 			// Should show component count
 			const componentText = page.locator(
 				'svg text:text-matches(\"Components: \\\\d+/\\\\d+\")'
@@ -143,9 +139,7 @@ test.describe('Modern Pictograph E2E', () => {
 				timeout: 10000,
 			});
 
-			// Should not show debug overlay
-			const debugOverlay = page.locator('svg g.debug-info');
-			await expect(debugOverlay).not.toBeVisible();
+
 		});
 	});
 

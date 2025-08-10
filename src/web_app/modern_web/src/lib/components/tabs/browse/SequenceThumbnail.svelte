@@ -1,17 +1,35 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
-	export let sequence: any;
-	export let viewMode: 'grid' | 'list' = 'grid';
-
-	const dispatch = createEventDispatcher();
-
-	function handleSelect() {
-		dispatch('select', sequence);
+	// ✅ PURE RUNES: Type definitions
+	export interface SequenceData {
+		id: string;
+		name: string;
+		difficulty: number;
+		createdDate: Date;
+		thumbnail?: string;
+		description?: string;
+		tags?: string[];
+		author?: string;
+		duration?: number;
+		beatCount?: number;
 	}
 
-	function getDifficultyColor(difficulty: number) {
-		const colors = {
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const {
+		sequence,
+		viewMode = 'grid',
+		onSelect = () => {},
+	} = $props<{
+		sequence: SequenceData;
+		viewMode?: 'grid' | 'list';
+		onSelect?: (sequence: SequenceData) => void;
+	}>();
+
+	function handleSelect() {
+		onSelect(sequence);
+	}
+
+	function getDifficultyColor(difficulty: number): string {
+		const colors: Record<number, string> = {
 			1: '#10b981', // green
 			2: '#f59e0b', // yellow
 			3: '#ef4444', // red
@@ -20,8 +38,8 @@
 		return colors[difficulty] || '#6366f1';
 	}
 
-	function getDifficultyLabel(difficulty: number) {
-		const labels = {
+	function getDifficultyLabel(difficulty: number): string {
+		const labels: Record<number, string> = {
 			1: 'Beginner',
 			2: 'Intermediate',
 			3: 'Advanced',
@@ -41,8 +59,8 @@
 <div
 	class="sequence-thumbnail"
 	class:list-view={viewMode === 'list'}
-	on:click={handleSelect}
-	on:keydown={(e) => e.key === 'Enter' && handleSelect()}
+	onclick={handleSelect}
+	onkeydown={(e) => e.key === 'Enter' && handleSelect()}
 	role="button"
 	tabindex="0"
 >

@@ -1,86 +1,140 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
-	import { slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
 	import CategoryButton from './CategoryButton.svelte';
 
-	export let title: string;
-	export let type: string;
-	export let options: any[];
-	export let sections: any[][] = [];
-	export let isActive: boolean = false;
-	export let isExpanded: boolean = false;
+	// ✅ PURE RUNES: Props using modern Svelte 5 runes
+	const {
+		title,
+		type,
+		options = [],
+		sections = [],
+		isActive = false,
+		isExpanded = false,
+		onExpansionRequested = () => {},
+		onFilterSelected = () => {},
+	} = $props<{
+		title: string;
+		type: string;
+		options: unknown[];
+		sections?: string[][];
+		isActive?: boolean;
+		isExpanded?: boolean;
+		onExpansionRequested?: (data: { type: string; title: string }) => void;
+		onFilterSelected?: (data: { type: string; value: unknown }) => void;
+	}>();
 
-	const dispatch = createEventDispatcher();
+	// ✅ PURE RUNES: State management with direct runes
+	let contentElement = $state<HTMLDivElement | null>(null);
+	let needsScroll = $state(false);
+	let mounted = $state(false);
 
-	let containerElement: HTMLDivElement;
-	let availableHeight: number = 0;
+	// ✅ PURE RUNES: Simple overflow detection for automatic scrolling
+	function checkIfScrollNeeded() {
+		if (!contentElement) return;
 
-	// Calculate available height for dropdown content
-	function calculateAvailableHeight() {
-		if (!containerElement) return;
+		const contentHeight = contentElement.scrollHeight;
+		const visibleHeight = contentElement.clientHeight;
 		
-		try {
-			// Get the viewport height
-			const viewportHeight = window.innerHeight;
-			
-			// Get the container's position relative to viewport
-			const rect = containerElement.getBoundingClientRect();
-			
-			// Calculate available space from container top to bottom of viewport
-			// Account for some padding at the bottom and current position
-			const bottomPadding = 60; // Space at bottom
-			const topOffset = rect.top;
-			
-			// Available height = viewport height - current top position - bottom padding
-			availableHeight = Math.max(300, viewportHeight - topOffset - bottomPadding);
-			
-		} catch {
-			// Fallback to a reasonable default
-			availableHeight = 500;
+		console.log(`Scroll check for ${type}:`, { contentHeight, visibleHeight, needsScroll: contentHeight > visibleHeight });
+		needsScroll = contentHeight > visibleHeight;
+	}
+
+	// ✅ PURE RUNES: Effect for scroll detection when expanded
+	$effect(() => {
+		if (isExpanded && contentElement) {
+			// Immediate check
+			checkIfScrollNeeded();
+			// Small delay to allow content to render
+			setTimeout(checkIfScrollNeeded, 50);
+			// Additional check after a longer delay for complex layouts
+			setTimeout(checkIfScrollNeeded, 200);
+			// Final check after transition completes
+			setTimeout(checkIfScrollNeeded, 350);
 		}
-	}
+	});
 
-	// Handle header click to request expansion/collapse
+	// ✅ PURE RUNES: Mount effect for resize handling  
+	$effect(() => {
+		if (!mounted) {
+			mounted = true;
+			
+			// Setup resize observer for better detection
+			const resizeObserver = new ResizeObserver(() => {
+				if (isExpanded && contentElement) {
+					setTimeout(checkIfScrollNeeded, 50);
+				}
+			});
+			
+			// Setup window resize listener as backup
+			const handleResize = () => {
+				if (isExpanded && contentElement) {
+					setTimeout(checkIfScrollNeeded, 100);
+				}
+			};
+			
+			window.addEventListener('resize', handleResize);
+			
+			// Cleanup
+			return () => {
+				resizeObserver.disconnect();
+				window.removeEventListener('resize', handleResize);
+			};
+		}
+	});
+
+	// ✅ PURE RUNES: Effect to observe content element when it changes
+	$effect(() => {
+		if (contentElement && mounted) {
+			const resizeObserver = new ResizeObserver(() => {
+				if (isExpanded) {
+					setTimeout(checkIfScrollNeeded, 50);
+				}
+			});
+			
+			resizeObserver.observe(contentElement);
+			
+			return () => {
+				resizeObserver.disconnect();
+			};
+		}
+	});
+
+	// ✅ PURE RUNES: Modern event handling without dispatchers
 	function toggleExpansion() {
-		dispatch('expansionRequested', { type, title });
+		onExpansionRequested({ type, title });
 	}
 
-	// Handle filter selection from category buttons
-	function handleFilterSelection(event: CustomEvent) {
-		const value = event.detail;
-		dispatch('filterSelected', { type, value });
-	}
-
-	// Handle letter selection (for starting letter type)
+	// ✅ PURE RUNES: Handle filter selection from category buttons
+	function handleFilterSelection(data: { type: string; value: string }) {
+		onFilterSelected(data);
+	} // ✅ PURE RUNES: Modern letter selection handling
 	function handleLetterSelection(letter: string) {
-		dispatch('filterSelected', { type, value: letter });
+		onFilterSelected({ type, value: letter });
 	}
 
-	// Recalculate height when expanded
-	$: if (isExpanded && containerElement) {
-		setTimeout(calculateAvailableHeight, 50);
-	}
+	// ✅ PURE RUNES: Effect for resize handling
+	$effect(() => {
+		function handleResize() {
+			if (isExpanded) {
+				setTimeout(checkIfScrollNeeded, 100);
+			}
+		}
 
-	onMount(() => {
-		calculateAvailableHeight();
-		
-		// Recalculate on window resize
-		const handleResize = () => calculateAvailableHeight();
 		window.addEventListener('resize', handleResize);
-		
+
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	});
 </script>
 
-<div class="accordion-section" class:expanded={isExpanded} class:active={isActive} bind:this={containerElement}>
+<div class="accordion-section" class:expanded={isExpanded} class:active={isActive}>
 	<!-- Accordion Header -->
 	<button
 		class="accordion-header"
 		class:expanded={isExpanded}
-		on:click={toggleExpansion}
+		onclick={toggleExpansion}
 		type="button"
 	>
 		<div class="header-content">
@@ -104,12 +158,8 @@
 
 	<!-- Accordion Content -->
 	{#if isExpanded}
-		<div
-			class="accordion-content"
-			transition:slide={{ duration: 300, easing: cubicInOut }}
-			style="--available-height: {availableHeight}px"
-		>
-			<div class="content-inner">
+		<div class="accordion-content" transition:slide={{ duration: 300, easing: cubicInOut }}>
+			<div class="content-inner" class:needs-scroll={needsScroll} bind:this={contentElement}>
 				{#if type === 'starting_letter'}
 					<!-- Special letter grid layout for Starting Letter section -->
 					<div class="letter-grid-container">
@@ -118,7 +168,7 @@
 								{#each row as letter}
 									<button
 										class="letter-button"
-										on:click={() => handleLetterSelection(letter)}
+										onclick={() => handleLetterSelection(letter)}
 										type="button"
 									>
 										{letter}
@@ -134,7 +184,7 @@
 							<CategoryButton
 								{option}
 								visualType={type}
-								on:selected={handleFilterSelection}
+								onSelected={(value) => handleFilterSelection({ type, value })}
 							/>
 						{/each}
 					</div>
@@ -142,7 +192,10 @@
 					<!-- Standard button grid for other filters -->
 					<div class="options-grid standard-grid">
 						{#each options as option}
-							<CategoryButton {option} on:selected={handleFilterSelection} />
+							<CategoryButton
+								{option}
+								onSelected={(value) => handleFilterSelection({ type, value })}
+							/>
 						{/each}
 					</div>
 				{/if}
@@ -236,13 +289,19 @@
 	/* Accordion Content */
 	.accordion-content {
 		overflow: hidden;
-		--available-height: 500px; /* Fallback value */
 	}
 
 	.content-inner {
 		padding: var(--spacing-lg);
 		padding-top: var(--spacing-md);
-		max-height: var(--available-height);
+		/* Default: allow content to expand naturally, no scrolling */
+		max-height: none;
+		overflow: visible;
+	}
+
+	/* Only add scrolling when needed */
+	.content-inner.needs-scroll {
+		max-height: min(60vh, 400px); /* More reasonable max height */
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
@@ -271,44 +330,42 @@
 		gap: var(--spacing-sm);
 		width: 100%;
 		padding: var(--spacing-sm);
-		/* Use available height instead of hardcoded max-height */
-		max-height: calc(var(--available-height) - 40px); /* Account for padding */
-		overflow-y: auto;
-		overflow-x: hidden;
+		/* Let it expand naturally - scrolling handled by parent */
+		overflow: visible;
 		/* Smooth scrolling */
 		scroll-behavior: smooth;
 	}
 
-	/* Stylized scrollbar for letter grid */
-	.letter-grid-container::-webkit-scrollbar {
+	/* Stylized scrollbar for content when scrolling is needed */
+	.content-inner.needs-scroll::-webkit-scrollbar {
 		width: 8px;
 	}
 
-	.letter-grid-container::-webkit-scrollbar-track {
+	.content-inner.needs-scroll::-webkit-scrollbar-track {
 		background: rgba(255, 255, 255, 0.05);
 		border-radius: 4px;
 		margin: 4px 0;
 	}
 
-	.letter-grid-container::-webkit-scrollbar-thumb {
+	.content-inner.needs-scroll::-webkit-scrollbar-thumb {
 		background: rgba(255, 255, 255, 0.2);
 		border-radius: 4px;
 		transition: all var(--transition-fast);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
-	.letter-grid-container::-webkit-scrollbar-thumb:hover {
+	.content-inner.needs-scroll::-webkit-scrollbar-thumb:hover {
 		background: rgba(255, 255, 255, 0.35);
 		border-color: rgba(255, 255, 255, 0.2);
 		transform: scaleX(1.2);
 	}
 
-	.letter-grid-container::-webkit-scrollbar-thumb:active {
+	.content-inner.needs-scroll::-webkit-scrollbar-thumb:active {
 		background: rgba(255, 255, 255, 0.5);
 	}
 
 	/* Firefox scrollbar styling */
-	.letter-grid-container {
+	.content-inner.needs-scroll {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
 	}
@@ -391,19 +448,9 @@
 			height: 35px;
 			font-size: var(--font-size-base);
 		}
-
-		/* Adjust height calculation for mobile */
-		.letter-grid-container {
-			max-height: calc(var(--available-height) - 30px);
-		}
 	}
 
 	@media (max-width: 480px) {
-		/* Further adjustments for very small screens */
-		.letter-grid-container {
-			max-height: calc(var(--available-height) - 25px);
-		}
-		
 		.letter-button {
 			min-width: 32px;
 			height: 32px;

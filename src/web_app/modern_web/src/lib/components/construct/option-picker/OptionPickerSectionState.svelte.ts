@@ -317,7 +317,7 @@ export function createOptionPickerState() {
 
 	// Calculate layout for current options
 	const currentLayoutConfig = $derived(() => {
-		const optionsCount = optionPickerRunes.allOptions.length;
+		const optionsCount = optionPickerRunes.optionsData.length;
 
 		return getResponsiveLayout(
 			optionsCount,
@@ -430,8 +430,59 @@ export function createOptionPickerState() {
 	initializeSectionStates();
 
 	return {
-		// Expose the main runes interface
-		...optionPickerRunes,
+		// ✅ FIXED: Explicitly expose reactive getters instead of spreading
+		// This ensures reactivity is preserved when wrapping the runes
+		get optionsData() {
+			return optionPickerRunes.optionsData;
+		},
+		get sequenceData() {
+			return optionPickerRunes.sequenceData;
+		},
+		get selectedPictograph() {
+			return optionPickerRunes.selectedPictograph;
+		},
+		get filteredOptions() {
+			return optionPickerRunes.filteredOptions;
+		},
+		get groupedOptions() {
+			return optionPickerRunes.groupedOptions;
+		},
+		get categoryKeys() {
+			return optionPickerRunes.categoryKeys;
+		},
+
+		// Expose other runes interface methods
+		get sequence() {
+			return optionPickerRunes.sequence;
+		},
+		get allOptions() {
+			return optionPickerRunes.allOptions;
+		},
+		get isLoading() {
+			return optionPickerRunes.isLoading;
+		},
+		get error() {
+			return optionPickerRunes.error;
+		},
+		get sortMethod() {
+			return optionPickerRunes.sortMethod;
+		},
+		get lastSelectedTab() {
+			return optionPickerRunes.lastSelectedTab;
+		},
+
+		// Actions
+		loadOptions: optionPickerRunes.loadOptions,
+		setSortMethod: optionPickerRunes.setSortMethod,
+		setReversalFilter: optionPickerRunes.setReversalFilter,
+		setLastSelectedTabForSort: optionPickerRunes.setLastSelectedTabForSort,
+		selectOption: optionPickerRunes.selectOption,
+		reset: optionPickerRunes.reset,
+		setLoading: optionPickerRunes.setLoading,
+		setError: optionPickerRunes.setError,
+		setSequence: optionPickerRunes.setSequence,
+		setOptions: optionPickerRunes.setOptions,
+		setSelectedPictograph: optionPickerRunes.setSelectedPictograph,
 
 		// Advanced layout reactive state
 		get containerWidth() {

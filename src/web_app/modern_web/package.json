@@ -27,6 +27,7 @@
 		"test:integration": "vitest run src/lib/components/workbench/__tests__",
 		"test:all": "npm run test:pictograph && npm run test:integration && npm run test:e2e",
 		"test:ai-analysis": "tsx scripts/ai-analysis.ts",
+		"audit:runes": "node scripts/audit-runes-reactivity.js",
 		"prune:css": "tsx scripts/prune-unused-css.ts",
 		"lint": "eslint . --ext .js,.ts,.svelte",
 		"lint:fix": "eslint . --ext .js,.ts,.svelte --fix",

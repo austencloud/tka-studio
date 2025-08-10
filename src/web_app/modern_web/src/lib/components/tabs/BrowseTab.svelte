@@ -5,20 +5,20 @@
 
 	// Tab state management
 	let currentPanelIndex = 0; // 0 = filter selection, 1 = sequence browser
-	let selectedFilter: { type: string; value: any } | null = null;
-	let selectedSequence: any | null = null;
+	let selectedFilter: { type: string; value: unknown } | null = null;
+	let selectedSequence: unknown | null = null;
 	let isLoading = false;
 
-	// Switch to sequence browser when filter is selected
-	function handleFilterSelected(event: CustomEvent) {
-		selectedFilter = event.detail;
+	// ✅ PURE RUNES: Switch to sequence browser when filter is selected
+	function handleFilterSelected(data: { type: string; value: unknown }) {
+		selectedFilter = data;
 		currentPanelIndex = 1;
 		// TODO: Trigger sequence loading based on filter
 	}
 
-	// Handle sequence selection from browser
-	function handleSequenceSelected(event: CustomEvent) {
-		selectedSequence = event.detail;
+	// ✅ PURE RUNES: Handle sequence selection from browser
+	function handleSequenceSelected(sequence: unknown) {
+		selectedSequence = sequence;
 		// TODO: Load sequence details for viewer panel
 	}
 
@@ -49,7 +49,7 @@
 			{#if currentPanelIndex === 0}
 				<!-- Filter Selection Panel -->
 				<div class="panel-container" data-panel="filter-selection">
-					<FilterSelectionPanel on:filterSelected={handleFilterSelected} />
+					<FilterSelectionPanel onFilterSelected={handleFilterSelected} />
 				</div>
 			{:else if currentPanelIndex === 1}
 				<!-- Sequence Browser Panel -->
@@ -57,8 +57,8 @@
 					<SequenceBrowserPanel
 						filter={selectedFilter}
 						{isLoading}
-						on:sequenceSelected={handleSequenceSelected}
-						on:backToFilters={handleBackToFilters}
+						onSequenceSelected={handleSequenceSelected}
+						onBackToFilters={handleBackToFilters}
 					/>
 				</div>
 			{/if}

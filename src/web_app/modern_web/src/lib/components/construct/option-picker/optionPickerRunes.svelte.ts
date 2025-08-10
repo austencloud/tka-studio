@@ -300,24 +300,26 @@ export function createOptionPickerRunes() {
 
 	// ===== Return Reactive Interface =====
 	return {
-		// Direct access to reactive state
+		// ✅ FIXED: Use getters that access the state directly for reactivity
+		get optionsData() {
+			return optionsData;
+		},
+		get sequenceData() {
+			return sequenceData;
+		},
+		get selectedPictograph() {
+			return selectedPictograph;
+		},
+		filteredOptions, // This is already a $derived, so it's reactive
+		groupedOptions, // This is already a $derived, so it's reactive
+		categoryKeys, // This is already a $derived, so it's reactive
+
+		// ✅ Keep getters for backward compatibility, but prefer direct access above
 		get sequence() {
 			return sequenceData;
 		},
 		get allOptions() {
 			return optionsData;
-		},
-		get filteredOptions() {
-			return filteredOptions;
-		},
-		get groupedOptions() {
-			return groupedOptions;
-		},
-		get categoryKeys() {
-			return categoryKeys;
-		},
-		get selectedPictograph() {
-			return selectedPictograph;
 		},
 		get isLoading() {
 			return uiState.isLoading;

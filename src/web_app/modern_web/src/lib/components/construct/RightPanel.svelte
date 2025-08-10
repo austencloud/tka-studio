@@ -17,6 +17,7 @@
 	import { fade } from 'svelte/transition';
 	import { shouldAnimate } from '$lib/utils/simpleFade';
 	import { getAnimationSettings } from '$lib/utils/animationControl';
+	import type { ArrowData, BeatData } from '$lib/domain';
 
 	// Reactive state from store
 	let activeRightPanel = $derived(constructTabState.activeRightPanel);
@@ -33,11 +34,11 @@
 	let fadeInParams = $derived(shouldAnimate(animationSettings) ? { duration: IN_DURATION, delay: IN_DELAY } : { duration: 0 });
 
 	// Event handlers for child components
-	function handleBeatModified(beatIndex: number, beatData: any) {
+	function handleBeatModified(beatIndex: number, beatData: BeatData) {
 		constructTabEventService.handleBeatModified(beatIndex, beatData);
 	}
 
-	function handleArrowSelected(arrowData: any) {
+	function handleArrowSelected(arrowData: ArrowData) {
 		constructTabEventService.handleArrowSelected(arrowData);
 	}
 
