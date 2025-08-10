@@ -9,11 +9,11 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 -->
 <script lang="ts">
 	import type { PictographData } from '$lib/domain/PictographData';
+	import OptionPickerSection from './OptionPickerSection.svelte';
 	import type { ResponsiveLayoutConfig } from './config';
+	import { createOptionPickerScrollState } from './optionPickerScrollState.svelte.ts';
 	import type { FoldableDetectionResult } from './utils/deviceDetection';
 	import type { DeviceInfo } from './utils/scrollLayoutMetrics';
-	import OptionPickerSection from './OptionPickerSection.svelte';
-	import { createOptionPickerScrollState, type ScrollContainerProps } from './optionPickerScrollState.svelte.ts';
 
 	// ===== Props =====
 	const {
@@ -95,13 +95,13 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 </script>
 
 <div
-	class="option-picker-scroll {scrollState.cssClasses.join(' ')}"
+	class="option-picker-scroll {scrollState.cssClasses().join(' ')}"
 	style:height="{containerHeight}px"
-	style:--scroll-width={scrollState.cssProperties['--scroll-width']}
-	style:--scroll-opacity={scrollState.cssProperties['--scroll-opacity']}
-	style:--content-padding={scrollState.cssProperties['--content-padding']}
-	style:--section-spacing={scrollState.cssProperties['--section-spacing']}
-	style:--scale-factor={scrollState.cssProperties['--scale-factor']}
+	style:--scroll-width={scrollState.cssProperties()['--scroll-width']}
+	style:--scroll-opacity={scrollState.cssProperties()['--scroll-opacity']}
+	style:--content-padding={scrollState.cssProperties()['--content-padding']}
+	style:--section-spacing={scrollState.cssProperties()['--section-spacing']}
+	style:--scale-factor={scrollState.cssProperties()['--scale-factor']}
 >
 	<div class="scroll-container">
 		<div class="content-layout">
@@ -114,7 +114,9 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 							{#if scrollState.organizedPictographs.individual[letterType]?.length > 0}
 								<OptionPickerSection
 									{letterType}
-									pictographs={scrollState.organizedPictographs.individual[letterType]}
+									pictographs={scrollState.organizedPictographs.individual[
+										letterType
+									]}
 									{onPictographSelected}
 									{containerWidth}
 									isExpanded={true}
@@ -129,7 +131,9 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 							{#if scrollState.organizedPictographs.grouped[letterType]?.length > 0}
 								<OptionPickerSection
 									{letterType}
-									pictographs={scrollState.organizedPictographs.grouped[letterType]}
+									pictographs={scrollState.organizedPictographs.grouped[
+										letterType
+									]}
 									{onPictographSelected}
 									{containerWidth}
 									isExpanded={true}
@@ -146,9 +150,8 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 					<p>No options available for current sequence</p>
 					{#if import.meta.env.DEV}
 						<small>
-							Container: {containerWidth}×{containerHeight} | 
-							Layout: {layoutConfig.gridClass || 'default'} |
-							Device: {deviceInfo.deviceType}
+							Container: {containerWidth}×{containerHeight} | Layout: {layoutConfig.gridClass ||
+								'default'} | Device: {deviceInfo.deviceType}
 						</small>
 					{/if}
 				</div>
