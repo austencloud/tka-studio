@@ -28,12 +28,12 @@ This component demonstrates the modern pictograph system using actual CSV data
 from the TKA system, showing real pictographs with proper motion calculations.
 -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { ModernPictograph } from '$lib/components/pictograph';
 	import type { PictographData } from '$lib/domain';
 	import { GridMode } from '$lib/domain/enums';
 	import { CsvDataService } from '$lib/services/implementations/CsvDataService';
 	import { OptionDataService } from '$lib/services/implementations/OptionDataService';
+	import { onMount } from 'svelte';
 
 	// Demo state using runes
 	let selectedDemo = $state('sample');

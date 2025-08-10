@@ -1,61 +1,25 @@
 <script>
-	// Test the EXACT pattern from optionPickerRunes - including async loading
-	function createTestRunes() {
-		let optionsData = $state([]);
-		let uiState = $state({ isLoading: true });
+	// Import the ACTUAL runes function to test it in isolation
+	import { createOptionPickerRunes } from '$lib/components/construct/option-picker/optionPickerRunes.svelte.ts';
 
-		console.log('🔧 Test runes created, optionsData length:', optionsData.length);
+	console.log('🔧 Test: Importing real createOptionPickerRunes function');
 
-		async function loadOptions() {
-			console.log('🚀 Test loadOptions called');
-			uiState.isLoading = true;
+	// Create test runes instance using the REAL runes function
+	const testRunes = createOptionPickerRunes();
+	console.log('🔧 Test: Real runes created:', !!testRunes);
 
-			// Simulate the exact async pattern from the real runes
-			try {
-				// Simulate async data loading
-				const mockData = await new Promise((resolve) => {
-					setTimeout(() => {
-						resolve([
-							{ id: 1, letter: 'A', end_position: 'test1' },
-							{ id: 2, letter: 'B', end_position: 'test2' },
-							{ id: 3, letter: 'C', end_position: 'test3' },
-						]);
-					}, 100);
-				});
-
-				console.log(`🔧 Test setting optionsData with ${mockData.length} options`);
-				optionsData = mockData;
-				console.log(`🔧 Test optionsData set, current length: ${optionsData.length}`);
-				uiState.isLoading = false;
-			} catch (error) {
-				console.error('❌ Test loadOptions error:', error);
-				uiState.isLoading = false;
-			}
-		}
-
-		return {
-			get allOptions() {
-				console.log(
-					'🔍 Test allOptions getter called, returning',
-					optionsData.length,
-					'options'
-				);
-				return optionsData;
-			},
-			get isLoading() {
-				console.log('🔍 Test isLoading getter called, returning', uiState.isLoading);
-				return uiState.isLoading;
-			},
-			loadOptions,
-		};
-	}
-
-	// Create test runes instance - EXACT same pattern as OptionPicker
-	const testRunes = createTestRunes();
-
-	// Test component reactivity using $effect (EXACT same pattern as OptionPicker)
+	// Test component reactivity using EXACT OptionPicker pattern
 	let effectiveOptions = $state([]);
-	let isLoading = $state(true);
+	let groupedOptions = $state({});
+
+	// Helper function - same as OptionPicker
+	function getLetterType(letter) {
+		if (!letter) return 'Unknown';
+		// Simplified grouping for test
+		if (letter >= 'A' && letter <= 'F') return 'Type1';
+		if (letter >= 'G' && letter <= 'L') return 'Type2';
+		return 'Type3';
+	}
 
 	$effect(() => {
 		console.log('🔍 Test component $effect called');
@@ -69,13 +33,39 @@
 			timestamp: new Date().toLocaleTimeString(),
 		});
 
-		effectiveOptions = allOptions;
-		isLoading = loadingState;
+		effectiveOptions = [...allOptions];
+
+		// Group options using legacy pattern (same as OptionPicker)
+		const groups = {};
+		allOptions.forEach((option) => {
+			const groupKey = getLetterType(option.letter);
+			if (!groups[groupKey]) groups[groupKey] = [];
+			groups[groupKey].push(option);
+		});
+
+		// Sort keys in the same order as OptionPicker
+		const sortedKeys = ['Type1', 'Type2', 'Type3', 'Unknown'];
+		const sortedGroups = {};
+		sortedKeys.forEach((key) => {
+			if (groups[key]) {
+				sortedGroups[key] = groups[key];
+			}
+		});
+
+		console.log('🔍 Test component grouped result:', {
+			groupKeys: Object.keys(sortedGroups),
+			groupCounts: Object.entries(sortedGroups).map(
+				([key, opts]) => `${key}: ${opts.length}`
+			),
+		});
+
+		groupedOptions = { ...sortedGroups };
 	});
 
 	function triggerLoad() {
-		console.log('🎯 Triggering loadOptions...');
-		testRunes.loadOptions();
+		console.log('🎯 Triggering real loadOptions...');
+		// Call the real loadOptions function with an empty sequence (same as OptionPicker)
+		testRunes.loadOptions([]);
 	}
 
 	console.log('✅ Test component initialized');
@@ -89,8 +79,11 @@
 	<div class="results">
 		<h3>Results:</h3>
 		<p>Options Count: {effectiveOptions.length}</p>
-		<p>Is Loading: {isLoading}</p>
-		<p>Options Data: {JSON.stringify(effectiveOptions)}</p>
+		<p>Is Loading: {testRunes.isLoading}</p>
+		<p>Groups: {Object.keys(groupedOptions).length}</p>
+		{#each Object.entries(groupedOptions) as [groupKey, options]}
+			<p>{groupKey}: {options.length} options</p>
+		{/each}
 	</div>
 
 	<div class="debug">
@@ -98,6 +91,7 @@
 		<p>Direct runes access:</p>
 		<p>testRunes.allOptions.length: {testRunes.allOptions.length}</p>
 		<p>testRunes.isLoading: {testRunes.isLoading}</p>
+		<p>First few options: {JSON.stringify(effectiveOptions.slice(0, 3))}</p>
 	</div>
 </div>
 

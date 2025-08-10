@@ -78,14 +78,14 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 	if (contextInstances.size > 0) {
 		// Try to get existing context, but don't throw during HMR
 		try {
-		const existingContext = getRunesBackgroundContext();
-		if (existingContext) {
-			return existingContext;
+			const existingContext = getRunesBackgroundContext();
+			if (existingContext) {
+				return existingContext;
+			}
+		} catch {
+			// Context not found (likely due to HMR), continue with creating new one
+			contextInstances.clear(); // Clear stale instances
 		}
-	} catch {
-		// Context not found (likely due to HMR), continue with creating new one
-		contextInstances.clear(); // Clear stale instances
-	}
 	}
 
 	// Initialize state with runes - use explicit initial values to avoid undefined

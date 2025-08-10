@@ -68,12 +68,7 @@ Enhanced with complete legacy layout system:
 	const groupedSections = ['Type4', 'Type5', 'Type6'];
 
 	// Advanced pictograph filtering and organization
-	const organizedPictographs = $derived(() => {
-		console.log('🔍 OptionPickerScroll organizing pictographs:', {
-			totalPictographs: pictographs.length,
-			pictographLetters: pictographs.map((p) => p.letter),
-		});
-
+	const organizedPictographs = $derived.by(() => {
 		const organized = {
 			individual: {} as Record<string, PictographData[]>,
 			grouped: {} as Record<string, PictographData[]>,
@@ -97,14 +92,13 @@ Enhanced with complete legacy layout system:
 				let pictographType = 'Type1'; // Default fallback
 
 				const letter = pictograph.letter || '';
-				if (letter.match(/^[A-V]$/)) pictographType = 'Type1';
-				else if (letter.match(/^[WXYZ]|[ΣΔθΩ]$/)) pictographType = 'Type2';
-				else if (letter.match(/^[WXYZ]-|[ΣΔθΩ]-$/)) pictographType = 'Type3';
-				else if (letter.match(/^[ΦΨΛ]$/)) pictographType = 'Type4';
+				// Check longer patterns first to avoid partial matches
+				if (letter.match(/^[WXYZ]-$|^[ΣΔθΩ]-$/)) pictographType = 'Type3';
 				else if (letter.match(/^[ΦΨΛ]-$/)) pictographType = 'Type5';
+				else if (letter.match(/^[A-V]$/)) pictographType = 'Type1';
+				else if (letter.match(/^[WXYZ]$|^[ΣΔθΩ]$/)) pictographType = 'Type2';
+				else if (letter.match(/^[ΦΨΛ]$/)) pictographType = 'Type4';
 				else if (letter.match(/^[αβΓ]$/)) pictographType = 'Type6';
-
-				console.log(`🔍 Pictograph ${pictograph.letter} -> ${pictographType}`);
 
 				if (individualSections.includes(pictographType)) {
 					organized.individual[pictographType].push(pictograph);
@@ -119,17 +113,6 @@ Enhanced with complete legacy layout system:
 				organized.individual['Type1'].push(pictograph);
 				organized.hasIndividual = true;
 			}
-		});
-
-		console.log('🔍 OptionPickerScroll organized result:', {
-			hasIndividual: organized.hasIndividual,
-			hasGrouped: organized.hasGrouped,
-			individualCounts: Object.fromEntries(
-				Object.entries(organized.individual).map(([key, value]) => [key, value.length])
-			),
-			groupedCounts: Object.fromEntries(
-				Object.entries(organized.grouped).map(([key, value]) => [key, value.length])
-			),
 		});
 
 		return organized;
@@ -170,9 +153,7 @@ Enhanced with complete legacy layout system:
 	});
 
 	// Check if we have any pictographs for grouped sections
-	const hasGroupedPictographs = $derived(() => {
-		return organizedPictographs.hasGrouped;
-	});
+	const hasGroupedPictographs = $derived(organizedPictographs.hasGrouped);
 
 	// Advanced scroll behavior for different devices
 	const scrollBehavior = $derived(() => {

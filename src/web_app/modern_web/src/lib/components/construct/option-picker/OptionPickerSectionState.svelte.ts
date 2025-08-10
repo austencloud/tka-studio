@@ -1,35 +1,32 @@
 /**
  * OptionPickerSectionState.svelte.ts - PURE RUNES Advanced section state management
- * 
+ *
  * Manages sophisticated layout and state including device detection, responsive layouts,
  * and advanced layout context using ONLY Svelte 5 runes - no stores whatsoever.
  */
 
 import type { PictographData } from '$lib/domain/PictographData';
-import { 
-	getResponsiveLayout, 
-	getEnhancedDeviceType 
-} from './utils/layoutUtils';
-import { 
-	getContainerAspect, 
-	type DeviceType, 
-	type ContainerAspect, 
+import {
+	BREAKPOINTS,
+	getContainerAspect,
+	type ContainerAspect,
+	type DeviceType,
 	type ResponsiveLayoutConfig,
-	BREAKPOINTS 
 } from './config';
-import { detectFoldableDevice, type FoldableDetectionResult } from './utils/deviceDetection';
 import { createOptionPickerRunes } from './optionPickerRunes.svelte';
+import { detectFoldableDevice, type FoldableDetectionResult } from './utils/deviceDetection';
+import { getEnhancedDeviceType, getResponsiveLayout } from './utils/layoutUtils';
 
 export interface SectionState {
-	// Loading and initialization 
+	// Loading and initialization
 	loadingOptions: boolean;
 	uiInitialized: boolean;
 	scrollAreaReady: boolean;
-	
+
 	// Section-specific state
 	isExpanded: boolean;
 	selectedPictograph: PictographData | null;
-	
+
 	// Advanced layout state
 	containerWidth: number;
 	containerHeight: number;
@@ -42,7 +39,7 @@ export interface SectionState {
 	containerAspect: ContainerAspect;
 	layoutConfig: ResponsiveLayoutConfig;
 	foldableInfo: FoldableDetectionResult;
-	
+
 	// Legacy compatibility
 	optionPickerWidth: number | null;
 	isGroupable: boolean | null;
@@ -61,47 +58,38 @@ export function createSectionState(letterType: string, initialExpanded: boolean 
 
 	// Advanced layout state using runes
 	let containerWidth = $state(
-		typeof window !== 'undefined' 
-			? Math.max(300, window.innerWidth * 0.8) 
-			: BREAKPOINTS.desktop
+		typeof window !== 'undefined' ? Math.max(300, window.innerWidth * 0.8) : BREAKPOINTS.desktop
 	);
 	let containerHeight = $state(
-		typeof window !== 'undefined' 
-			? Math.max(200, window.innerHeight * 0.6) 
-			: 768
+		typeof window !== 'undefined' ? Math.max(200, window.innerHeight * 0.6) : 768
 	);
 	let windowWidth = $state(
 		typeof window !== 'undefined' ? window.innerWidth : BREAKPOINTS.desktop
 	);
-	let windowHeight = $state(
-		typeof window !== 'undefined' ? window.innerHeight : 768
-	);
+	let windowHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 768);
 
 	// Derived sophisticated layout state using runes
 	const foldableInfo = $derived(() => detectFoldableDevice());
-	
+
 	const enhancedDeviceInfo = $derived(() => {
-		const isMobileUserAgent = typeof navigator !== 'undefined' && 
+		const isMobileUserAgent =
+			typeof navigator !== 'undefined' &&
 			/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 		return getEnhancedDeviceType(containerWidth, isMobileUserAgent);
 	});
 
 	const deviceType = $derived(() => enhancedDeviceInfo.deviceType);
-	const isMobile = $derived(() => 
-		deviceType === 'smallMobile' || deviceType === 'mobile'
-	);
+	const isMobile = $derived(() => deviceType === 'smallMobile' || deviceType === 'mobile');
 	const isTablet = $derived(() => deviceType === 'tablet');
 	const isPortrait = $derived(() => containerHeight > containerWidth);
-	const containerAspect = $derived(() => 
-		getContainerAspect(containerWidth, containerHeight)
-	);
+	const containerAspect = $derived(() => getContainerAspect(containerWidth, containerHeight));
 
 	// Calculate responsive layout configuration
 	const layoutConfig = $derived(() => {
 		// For section state, we use a default count of 10 for layout calculations
 		// This will be overridden by actual option counts in the components
 		const defaultCount = 10;
-		
+
 		return getResponsiveLayout(
 			defaultCount,
 			containerHeight,
@@ -142,16 +130,18 @@ export function createSectionState(letterType: string, initialExpanded: boolean 
 				} else {
 					// Use fallback values based on window size
 					if (newContainerWidth <= 0) {
-						const fallbackWidth = typeof window !== 'undefined'
-							? Math.max(300, window.innerWidth * 0.8)
-							: BREAKPOINTS.desktop;
+						const fallbackWidth =
+							typeof window !== 'undefined'
+								? Math.max(300, window.innerWidth * 0.8)
+								: BREAKPOINTS.desktop;
 						containerWidth = fallbackWidth;
 					}
 
 					if (newContainerHeight <= 0) {
-						const fallbackHeight = typeof window !== 'undefined'
-							? Math.max(200, window.innerHeight * 0.6)
-							: 768;
+						const fallbackHeight =
+							typeof window !== 'undefined'
+								? Math.max(200, window.innerHeight * 0.6)
+								: 768;
 						containerHeight = fallbackHeight;
 					}
 				}
@@ -208,33 +198,73 @@ export function createSectionState(letterType: string, initialExpanded: boolean 
 	// Return reactive state and functions
 	return {
 		// Basic reactive state (getters)
-		get loadingOptions() { return loadingOptions; },
-		get uiInitialized() { return uiInitialized; },
-		get scrollAreaReady() { return scrollAreaReady; },
-		get isExpanded() { return isExpanded; },
-		get selectedPictograph() { return selectedPictograph; },
-		
+		get loadingOptions() {
+			return loadingOptions;
+		},
+		get uiInitialized() {
+			return uiInitialized;
+		},
+		get scrollAreaReady() {
+			return scrollAreaReady;
+		},
+		get isExpanded() {
+			return isExpanded;
+		},
+		get selectedPictograph() {
+			return selectedPictograph;
+		},
+
 		// Advanced layout reactive state
-		get containerWidth() { return containerWidth; },
-		get containerHeight() { return containerHeight; },
-		get windowWidth() { return windowWidth; },
-		get windowHeight() { return windowHeight; },
-		get deviceType() { return deviceType; },
-		get isMobile() { return isMobile; },
-		get isTablet() { return isTablet; },
-		get isPortrait() { return isPortrait; },
-		get containerAspect() { return containerAspect; },
-		get layoutConfig() { return layoutConfig; },
-		get foldableInfo() { return foldableInfo; },
-		
+		get containerWidth() {
+			return containerWidth;
+		},
+		get containerHeight() {
+			return containerHeight;
+		},
+		get windowWidth() {
+			return windowWidth;
+		},
+		get windowHeight() {
+			return windowHeight;
+		},
+		get deviceType() {
+			return deviceType;
+		},
+		get isMobile() {
+			return isMobile;
+		},
+		get isTablet() {
+			return isTablet;
+		},
+		get isPortrait() {
+			return isPortrait;
+		},
+		get containerAspect() {
+			return containerAspect;
+		},
+		get layoutConfig() {
+			return layoutConfig;
+		},
+		get foldableInfo() {
+			return foldableInfo;
+		},
+
 		// Legacy compatibility
-		get optionPickerWidth() { return optionPickerWidth; },
-		get isGroupable() { return isGroupable; },
-		
+		get optionPickerWidth() {
+			return optionPickerWidth;
+		},
+		get isGroupable() {
+			return isGroupable;
+		},
+
 		// Derived state
-		get canLoadOptions() { return canLoadOptions; },
-		get isReady() { return isReady; },
-		
+		get canLoadOptions() {
+			return canLoadOptions;
+		},
+		get isReady() {
+			return isReady;
+		},
+
 		// State management functions
 		setLoadingOptions,
 		setUiInitialized,
@@ -259,45 +289,36 @@ export function createOptionPickerState() {
 
 	// Advanced layout state using runes
 	let containerWidth = $state(
-		typeof window !== 'undefined' 
-			? Math.max(300, window.innerWidth * 0.8) 
-			: BREAKPOINTS.desktop
+		typeof window !== 'undefined' ? Math.max(300, window.innerWidth * 0.8) : BREAKPOINTS.desktop
 	);
 	let containerHeight = $state(
-		typeof window !== 'undefined' 
-			? Math.max(200, window.innerHeight * 0.6) 
-			: 768
+		typeof window !== 'undefined' ? Math.max(200, window.innerHeight * 0.6) : 768
 	);
 	let windowWidth = $state(
 		typeof window !== 'undefined' ? window.innerWidth : BREAKPOINTS.desktop
 	);
-	let windowHeight = $state(
-		typeof window !== 'undefined' ? window.innerHeight : 768
-	);
+	let windowHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 768);
 
 	// Derived sophisticated state using runes
 	const foldableInfo = $derived(() => detectFoldableDevice());
-	
+
 	const enhancedDeviceInfo = $derived(() => {
-		const isMobileUserAgent = typeof navigator !== 'undefined' && 
+		const isMobileUserAgent =
+			typeof navigator !== 'undefined' &&
 			/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 		return getEnhancedDeviceType(containerWidth, isMobileUserAgent);
 	});
 
 	const deviceType = $derived(() => enhancedDeviceInfo.deviceType);
-	const isMobile = $derived(() => 
-		deviceType === 'smallMobile' || deviceType === 'mobile'
-	);
+	const isMobile = $derived(() => deviceType === 'smallMobile' || deviceType === 'mobile');
 	const isTablet = $derived(() => deviceType === 'tablet');
 	const isPortrait = $derived(() => containerHeight > containerWidth);
-	const containerAspect = $derived(() => 
-		getContainerAspect(containerWidth, containerHeight)
-	);
+	const containerAspect = $derived(() => getContainerAspect(containerWidth, containerHeight));
 
 	// Calculate layout for current options
 	const currentLayoutConfig = $derived(() => {
 		const optionsCount = optionPickerRunes.allOptions.length;
-		
+
 		return getResponsiveLayout(
 			optionsCount,
 			containerHeight,
@@ -314,7 +335,7 @@ export function createOptionPickerState() {
 	// Initialize section states
 	function initializeSectionStates() {
 		const letterTypes = ['Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6'];
-		letterTypes.forEach(letterType => {
+		letterTypes.forEach((letterType) => {
 			if (!sectionStates.has(letterType)) {
 				sectionStates.set(letterType, createSectionState(letterType));
 			}
@@ -346,22 +367,24 @@ export function createOptionPickerState() {
 				} else {
 					// Use fallback values
 					if (newContainerWidth <= 0) {
-						const fallbackWidth = typeof window !== 'undefined'
-							? Math.max(300, window.innerWidth * 0.8)
-							: BREAKPOINTS.desktop;
+						const fallbackWidth =
+							typeof window !== 'undefined'
+								? Math.max(300, window.innerWidth * 0.8)
+								: BREAKPOINTS.desktop;
 						containerWidth = fallbackWidth;
 					}
 
 					if (newContainerHeight <= 0) {
-						const fallbackHeight = typeof window !== 'undefined'
-							? Math.max(200, window.innerHeight * 0.6)
-							: 768;
+						const fallbackHeight =
+							typeof window !== 'undefined'
+								? Math.max(200, window.innerHeight * 0.6)
+								: 768;
 						containerHeight = fallbackHeight;
 					}
 				}
 
 				// Update all section states with new dimensions
-				sectionStates.forEach(sectionState => {
+				sectionStates.forEach((sectionState) => {
 					sectionState.updateContainerDimensions(containerWidth, containerHeight);
 				});
 
@@ -378,27 +401,27 @@ export function createOptionPickerState() {
 	function setWindowDimensions(width: number, height: number) {
 		windowWidth = width;
 		windowHeight = height;
-		
+
 		// Update all section states with new window dimensions
-		sectionStates.forEach(sectionState => {
+		sectionStates.forEach((sectionState) => {
 			sectionState.updateWindowDimensions(width, height);
 		});
 	}
 
 	function setSelectedPictograph(pictograph: PictographData | null) {
 		optionPickerRunes.setSelectedPictograph(pictograph);
-		
+
 		// Update all section states
-		sectionStates.forEach(sectionState => {
+		sectionStates.forEach((sectionState) => {
 			sectionState.setSelectedPictograph(pictograph);
 		});
 	}
 
 	function resetAllStates() {
 		optionPickerRunes.reset();
-		
+
 		// Reset all section states
-		sectionStates.forEach(sectionState => {
+		sectionStates.forEach((sectionState) => {
 			sectionState.resetState();
 		});
 	}
@@ -409,23 +432,45 @@ export function createOptionPickerState() {
 	return {
 		// Expose the main runes interface
 		...optionPickerRunes,
-		
+
 		// Advanced layout reactive state
-		get containerWidth() { return containerWidth; },
-		get containerHeight() { return containerHeight; },
-		get windowWidth() { return windowWidth; },
-		get windowHeight() { return windowHeight; },
-		get deviceType() { return deviceType; },
-		get isMobile() { return isMobile; },
-		get isTablet() { return isTablet; },
-		get isPortrait() { return isPortrait; },
-		get containerAspect() { return containerAspect; },
-		get layoutConfig() { return currentLayoutConfig; },
-		get foldableInfo() { return foldableInfo; },
-		
+		get containerWidth() {
+			return containerWidth;
+		},
+		get containerHeight() {
+			return containerHeight;
+		},
+		get windowWidth() {
+			return windowWidth;
+		},
+		get windowHeight() {
+			return windowHeight;
+		},
+		get deviceType() {
+			return deviceType;
+		},
+		get isMobile() {
+			return isMobile;
+		},
+		get isTablet() {
+			return isTablet;
+		},
+		get isPortrait() {
+			return isPortrait;
+		},
+		get containerAspect() {
+			return containerAspect;
+		},
+		get layoutConfig() {
+			return currentLayoutConfig;
+		},
+		get foldableInfo() {
+			return foldableInfo;
+		},
+
 		// Section state management
 		getSectionState,
-		
+
 		// Enhanced state management
 		setContainerDimensions,
 		setWindowDimensions,

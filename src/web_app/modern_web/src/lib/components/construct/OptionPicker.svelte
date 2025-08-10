@@ -19,7 +19,8 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	import { resize } from './option-picker/actions/resize';
 	import { BREAKPOINTS } from './option-picker/config';
 	import OptionPickerHeader from './option-picker/OptionPickerHeader.svelte';
-	import { createOptionPickerState } from './option-picker/OptionPickerSectionState.svelte.js';
+	import { createOptionPickerRunes } from './option-picker/optionPickerRunes.svelte.ts';
+	import OptionPickerScroll from './option-picker/OptionPickerScroll.svelte';
 	import { detectFoldableDevice } from './option-picker/utils/deviceDetection';
 	import { getEnhancedDeviceType } from './option-picker/utils/layoutUtils';
 
@@ -38,12 +39,11 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	}>();
 
 	// Create sophisticated state management using ONLY runes (NO STORES)
-	const optionPickerState = createOptionPickerState();
+	const optionPickerState = createOptionPickerRunes();
 	console.log('🔧 OptionPicker optionPickerState created:', !!optionPickerState);
 
 	// Force reactivity with $effect
 	let effectiveOptions = $state([]);
-	let groupedOptions = $state({});
 
 	// Direct reactive update - check for changes immediately
 	function updateOptionsFromRunes() {
@@ -55,80 +55,21 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 
 		effectiveOptions = [...allOptions];
 
-		// Group options using legacy pattern
-		const groups = {};
-		allOptions.forEach((option) => {
-			const groupKey = getLetterType(option.letter);
-			if (!groups[groupKey]) groups[groupKey] = [];
-			groups[groupKey].push(option);
+		console.log('🔍 OptionPicker updated options:', {
+			totalOptions: effectiveOptions.length,
+			firstOption: effectiveOptions[0]
+				? {
+						id: effectiveOptions[0].id,
+						letter: effectiveOptions[0].letter,
+						end_position: effectiveOptions[0].end_position,
+					}
+				: null,
 		});
-
-		// Sort keys in the same order as legacy
-		const sortedKeys = ['Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6', 'Unknown'];
-		const sortedGroups = {};
-		sortedKeys.forEach((key) => {
-			if (groups[key]) {
-				sortedGroups[key] = groups[key];
-			}
-		});
-
-		console.log('🔍 OptionPicker grouped result:', {
-			groupKeys: Object.keys(sortedGroups),
-			groupCounts: Object.entries(sortedGroups).map(
-				([key, opts]) => `${key}: ${opts.length}`
-			),
-		});
-
-		groupedOptions = { ...sortedGroups };
 	}
 
 	// Call update immediately and set up interval
 	updateOptionsFromRunes();
 	setInterval(updateOptionsFromRunes, 200);
-
-	// Helper function - same as legacy OptionsService
-	function getLetterType(letter: string | null): string {
-		if (!letter) return 'Unknown';
-
-		const type1Letters = [
-			'A',
-			'B',
-			'C',
-			'D',
-			'E',
-			'F',
-			'G',
-			'H',
-			'I',
-			'J',
-			'K',
-			'L',
-			'M',
-			'N',
-			'O',
-			'P',
-			'Q',
-			'R',
-			'S',
-			'T',
-			'U',
-			'V',
-		];
-		const type2Letters = ['W', 'X', 'Y', 'Z', 'Σ', 'Δ', 'θ', 'Ω'];
-		const type3Letters = ['W-', 'X-', 'Y-', 'Z-', 'Σ-', 'Δ-', 'θ-', 'Ω-'];
-		const type4Letters = ['Φ', 'Ψ', 'Λ'];
-		const type5Letters = ['Φ-', 'Ψ-', 'Λ-'];
-		const type6Letters = ['α', 'β', 'Γ'];
-
-		if (type1Letters.includes(letter)) return 'Type1';
-		if (type2Letters.includes(letter)) return 'Type2';
-		if (type3Letters.includes(letter)) return 'Type3';
-		if (type4Letters.includes(letter)) return 'Type4';
-		if (type5Letters.includes(letter)) return 'Type5';
-		if (type6Letters.includes(letter)) return 'Type6';
-
-		return 'Unknown';
-	}
 
 	// Container element for size detection
 	let containerElement: HTMLDivElement | null = null;
@@ -246,7 +187,7 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 	function updateWindowSize() {
 		windowWidth = window.innerWidth;
 		windowHeight = window.innerHeight;
-		optionPickerState.setWindowDimensions(windowWidth, windowHeight);
+		// Note: setWindowDimensions not needed in runes implementation
 	}
 
 	// Initialize on mount using effect (Svelte 5 approach)
@@ -339,44 +280,23 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 				</small>
 			</div>
 		{:else}
-			<!-- Display options in sections like legacy web -->
-			<div class="options-sections">
-				{#each Object.entries(groupedOptions) as [letterType, options] (letterType)}
-					{#if options.length > 0}
-						<div class="option-section">
-							<div class="section-header">
-								<h3>{letterType}</h3>
-								<span class="option-count">({options.length})</span>
-							</div>
-							<div class="section-options">
-								{#each options as option (option.id)}
-									<button
-										class="option-button"
-										onclick={() => handlePictographSelected(option)}
-									>
-										<div class="option-content">
-											<span class="option-letter">{option.letter}</span>
-											<span class="option-end"
-												>{option.end_position || 'Unknown'}</span
-											>
-										</div>
-									</button>
-								{/each}
-							</div>
-						</div>
-					{/if}
-				{/each}
-			</div>
+			<!-- Use proper OptionPickerScroll component with ModernPictograph rendering -->
+			<OptionPickerScroll
+				pictographs={effectiveOptions}
+				onPictographSelected={handlePictographSelected}
+				containerWidth={optionPickerState.containerWidth}
+				containerHeight={optionPickerState.containerHeight}
+				layoutConfig={currentLayoutConfig}
+				deviceInfo={enhancedDeviceInfo}
+				{foldableInfo}
+			/>
 
-			<!-- Debug: Show grouped options info -->
+			<!-- Debug: Show options info -->
 			<div
 				style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px; font-size: 12px; border-radius: 4px; z-index: 1000;"
 			>
 				<div>Total Options: {effectiveOptions.length}</div>
-				<div>Groups: {Object.keys(groupedOptions).length}</div>
-				{#each Object.entries(groupedOptions) as [type, opts]}
-					<div>{type}: {opts.length}</div>
-				{/each}
+				<div>Using OptionPickerScroll for sectioned display</div>
 			</div>
 		{/if}
 	</div>
@@ -614,74 +534,5 @@ Enhanced with the complete legacy layout system using PURE Svelte 5 runes:
 		padding: 16px;
 		max-height: 100%;
 		overflow-y: auto;
-	}
-
-	.option-section {
-		margin-bottom: 24px;
-		border: 1px solid #333;
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.05);
-	}
-
-	.section-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 12px 16px;
-		background: rgba(255, 255, 255, 0.1);
-		border-bottom: 1px solid #333;
-	}
-
-	.section-header h3 {
-		margin: 0;
-		color: #fff;
-		font-size: 16px;
-		font-weight: 600;
-	}
-
-	.option-count {
-		color: #888;
-		font-size: 14px;
-	}
-
-	.section-options {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-		gap: 8px;
-		padding: 16px;
-	}
-
-	.option-button {
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid #444;
-		border-radius: 6px;
-		padding: 12px;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		color: #fff;
-	}
-
-	.option-button:hover {
-		background: rgba(255, 255, 255, 0.2);
-		border-color: #666;
-		transform: translateY(-1px);
-	}
-
-	.option-content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 4px;
-	}
-
-	.option-letter {
-		font-size: 18px;
-		font-weight: bold;
-		color: #fff;
-	}
-
-	.option-end {
-		font-size: 12px;
-		color: #888;
 	}
 </style>

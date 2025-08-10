@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import FilterSelectionPanel from './browse/FilterSelectionPanel.svelte';
 	import SequenceBrowserPanel from './browse/SequenceBrowserPanel.svelte';
 	import SequenceViewerPanel from './browse/SequenceViewerPanel.svelte';

@@ -13,7 +13,33 @@
 
 	const dispatch = createEventDispatcher();
 
-	let contentElement: HTMLDivElement;
+	let containerElement: HTMLDivElement;
+	let availableHeight: number = 0;
+
+	// Calculate available height for dropdown content
+	function calculateAvailableHeight() {
+		if (!containerElement) return;
+		
+		try {
+			// Get the viewport height
+			const viewportHeight = window.innerHeight;
+			
+			// Get the container's position relative to viewport
+			const rect = containerElement.getBoundingClientRect();
+			
+			// Calculate available space from container top to bottom of viewport
+			// Account for some padding at the bottom and current position
+			const bottomPadding = 60; // Space at bottom
+			const topOffset = rect.top;
+			
+			// Available height = viewport height - current top position - bottom padding
+			availableHeight = Math.max(300, viewportHeight - topOffset - bottomPadding);
+			
+		} catch {
+			// Fallback to a reasonable default
+			availableHeight = 500;
+		}
+	}
 
 	// Handle header click to request expansion/collapse
 	function toggleExpansion() {
@@ -30,9 +56,26 @@
 	function handleLetterSelection(letter: string) {
 		dispatch('filterSelected', { type, value: letter });
 	}
+
+	// Recalculate height when expanded
+	$: if (isExpanded && containerElement) {
+		setTimeout(calculateAvailableHeight, 50);
+	}
+
+	onMount(() => {
+		calculateAvailableHeight();
+		
+		// Recalculate on window resize
+		const handleResize = () => calculateAvailableHeight();
+		window.addEventListener('resize', handleResize);
+		
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	});
 </script>
 
-<div class="accordion-section" class:expanded={isExpanded} class:active={isActive}>
+<div class="accordion-section" class:expanded={isExpanded} class:active={isActive} bind:this={containerElement}>
 	<!-- Accordion Header -->
 	<button
 		class="accordion-header"
@@ -63,8 +106,8 @@
 	{#if isExpanded}
 		<div
 			class="accordion-content"
-			bind:this={contentElement}
 			transition:slide={{ duration: 300, easing: cubicInOut }}
+			style="--available-height: {availableHeight}px"
 		>
 			<div class="content-inner">
 				{#if type === 'starting_letter'}
@@ -193,11 +236,15 @@
 	/* Accordion Content */
 	.accordion-content {
 		overflow: hidden;
+		--available-height: 500px; /* Fallback value */
 	}
 
 	.content-inner {
 		padding: var(--spacing-lg);
 		padding-top: var(--spacing-md);
+		max-height: var(--available-height);
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	/* Options Grid */
@@ -224,8 +271,8 @@
 		gap: var(--spacing-sm);
 		width: 100%;
 		padding: var(--spacing-sm);
-		/* Enable scrolling when content overflows */
-		max-height: 400px; /* Reasonable max height */
+		/* Use available height instead of hardcoded max-height */
+		max-height: calc(var(--available-height) - 40px); /* Account for padding */
 		overflow-y: auto;
 		overflow-x: hidden;
 		/* Smooth scrolling */
@@ -345,16 +392,16 @@
 			font-size: var(--font-size-base);
 		}
 
-		/* Reduce max-height on mobile for better space usage */
+		/* Adjust height calculation for mobile */
 		.letter-grid-container {
-			max-height: 300px;
+			max-height: calc(var(--available-height) - 30px);
 		}
 	}
 
 	@media (max-width: 480px) {
-		/* Even smaller max-height on very small screens */
+		/* Further adjustments for very small screens */
 		.letter-grid-container {
-			max-height: 250px;
+			max-height: calc(var(--available-height) - 25px);
 		}
 		
 		.letter-button {

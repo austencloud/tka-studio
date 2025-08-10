@@ -6,17 +6,14 @@
  * and performance optimizations.
  */
 
-import { 
-	getResponsiveLayout, 
-	getEnhancedDeviceType 
-} from './utils/layoutUtils';
-import { 
-	getContainerAspect, 
-	type DeviceType, 
-	type ContainerAspect, 
-	type ResponsiveLayoutConfig
+import {
+	getContainerAspect,
+	type ContainerAspect,
+	type DeviceType,
+	type ResponsiveLayoutConfig,
 } from './config';
 import { detectFoldableDevice, type FoldableDetectionResult } from './utils/deviceDetection';
+import { getEnhancedDeviceType, getResponsiveLayout } from './utils/layoutUtils';
 
 export interface LayoutCalculationParams {
 	count: number;
@@ -58,12 +55,12 @@ export class OptionPickerLayoutManager {
 			containerHeight,
 			windowWidth = containerWidth,
 			windowHeight = containerHeight,
-			isMobileUserAgent = false
+			isMobileUserAgent = false,
 		} = params;
 
 		// Create a cache key for this calculation
 		const cacheKey = `${count}:${containerWidth}:${containerHeight}:${windowWidth}:${windowHeight}:${isMobileUserAgent}`;
-		
+
 		// Return cached result if the parameters haven't changed
 		if (this.lastCalculationKey === cacheKey && this.lastCalculationResult) {
 			return this.lastCalculationResult;
@@ -112,7 +109,7 @@ export class OptionPickerLayoutManager {
 			isTablet,
 			isPortrait,
 			foldableInfo,
-			layoutConfig
+			layoutConfig,
 		};
 
 		// Cache the result
@@ -125,7 +122,10 @@ export class OptionPickerLayoutManager {
 	/**
 	 * Legacy compatibility method - simplified interface
 	 */
-	static calculateSimpleLayout(containerWidth: number): { optionsPerRow: number; optionSize: number } {
+	static calculateSimpleLayout(containerWidth: number): {
+		optionsPerRow: number;
+		optionSize: number;
+	} {
 		const result = this.calculateLayout({
 			count: 10, // Default count for legacy compatibility
 			containerWidth,
@@ -134,7 +134,7 @@ export class OptionPickerLayoutManager {
 
 		return {
 			optionsPerRow: result.optionsPerRow,
-			optionSize: result.optionSize
+			optionSize: result.optionSize,
 		};
 	}
 
@@ -142,14 +142,14 @@ export class OptionPickerLayoutManager {
 	 * Get responsive layout configuration for a specific count and container dimensions
 	 */
 	static getResponsiveConfig(
-		count: number, 
-		containerWidth: number, 
+		count: number,
+		containerWidth: number,
 		containerHeight: number
 	): ResponsiveLayoutConfig {
 		const result = this.calculateLayout({
 			count,
 			containerWidth,
-			containerHeight
+			containerHeight,
 		});
 
 		return result.layoutConfig;
@@ -162,7 +162,7 @@ export class OptionPickerLayoutManager {
 		const result = this.calculateLayout({
 			count: 1, // Minimal count for device detection
 			containerWidth,
-			containerHeight: 400 // Default height for detection
+			containerHeight: 400, // Default height for detection
 		});
 
 		return result.isMobile;
@@ -175,14 +175,14 @@ export class OptionPickerLayoutManager {
 		const result = this.calculateLayout({
 			count: 1,
 			containerWidth,
-			containerHeight: 400
+			containerHeight: 400,
 		});
 
 		return {
 			deviceType: result.deviceType,
 			isMobile: result.isMobile,
 			isTablet: result.isTablet,
-			foldableInfo: result.foldableInfo
+			foldableInfo: result.foldableInfo,
 		};
 	}
 
@@ -190,8 +190,8 @@ export class OptionPickerLayoutManager {
 	 * Calculate optimal option size for given parameters
 	 */
 	static calculateOptimalOptionSize(
-		count: number, 
-		containerWidth: number, 
+		count: number,
+		containerWidth: number,
 		containerHeight: number,
 		targetColumns?: number
 	): number {
@@ -208,7 +208,7 @@ export class OptionPickerLayoutManager {
 		const result = this.calculateLayout({
 			count,
 			containerWidth,
-			containerHeight
+			containerHeight,
 		});
 
 		return result.optionSize;
@@ -225,7 +225,7 @@ export class OptionPickerLayoutManager {
 		const result = this.calculateLayout({
 			count,
 			containerWidth,
-			containerHeight
+			containerHeight,
 		});
 
 		return result.gridGap;
