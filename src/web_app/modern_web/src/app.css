@@ -196,7 +196,7 @@ body {
 
 /* Button Styles */
 .btn {
-	padding: var(--spacing-sm) var(--spacing-md);
+	padding: var(--spacing-xs) var(--spacing-md);
 	border: none;
 	border-radius: 8px;
 	cursor: pointer;

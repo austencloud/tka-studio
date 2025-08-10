@@ -1,6 +1,6 @@
 <!-- GraphEditor.svelte - Professional Graph Editor ported from desktop -->
 <script lang="ts">
-	import ModernPictograph from '$components/pictograph/ModernPictograph.svelte';
+	import ModernPictograph from '$lib/components/pictograph/Pictograph.svelte';
 	import {
 		getCurrentSequence,
 		getSelectedBeatData,
@@ -14,7 +14,12 @@
 	const { onArrowSelected: _onArrowSelected, onVisibilityChanged: _onVisibilityChanged } =
 		$props<{
 			onBeatModified?: (beatIndex: number, beatData: BeatData) => void;
-			onArrowSelected?: (arrowData: any) => void;
+			onArrowSelected?: (arrowData: {
+				color: string;
+				orientation?: string;
+				turn_amount?: number;
+				type: string;
+			}) => void;
 			onVisibilityChanged?: (isVisible: boolean) => void;
 		}>();
 

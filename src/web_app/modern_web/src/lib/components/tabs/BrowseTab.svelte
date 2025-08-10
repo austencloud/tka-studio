@@ -34,8 +34,7 @@
 	}
 
 	// Handle sequence actions (edit, save, delete, fullscreen)
-	function handleSequenceAction(event: CustomEvent) {
-		const { action, sequence } = event.detail;
+	function handleSequenceAction(action: string, sequence: unknown) {
 		console.log(`Action: ${action} on sequence:`, sequence);
 		// TODO: Implement actions
 	}
@@ -68,8 +67,8 @@
 		<div class="right-panel">
 			<SequenceViewerPanel
 				sequence={selectedSequence}
-				on:backToBrowser={handleBackToBrowser}
-				on:sequenceAction={handleSequenceAction}
+				onBackToBrowser={handleBackToBrowser}
+				onSequenceAction={handleSequenceAction}
 			/>
 		</div>
 	</div>

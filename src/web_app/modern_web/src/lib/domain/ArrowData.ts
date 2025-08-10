@@ -26,7 +26,7 @@ export interface ArrowData {
 	readonly position_y: number;
 	readonly rotation_angle: number;
 	readonly coordinates?: { x: number; y: number } | null;
-	readonly svg_center?: any;
+	readonly svg_center?: { x: number; y: number } | null;
 	readonly svg_mirrored?: boolean;
 
 	// State flags
@@ -64,7 +64,7 @@ export function updateArrowData(arrow: ArrowData, updates: Partial<ArrowData>): 
 	};
 }
 
-export function arrowDataToObject(arrow: ArrowData): Record<string, any> {
+export function arrowDataToObject(arrow: ArrowData): Record<string, unknown> {
 	return {
 		id: arrow.id,
 		arrow_type: arrow.arrow_type,
@@ -80,18 +80,18 @@ export function arrowDataToObject(arrow: ArrowData): Record<string, any> {
 	};
 }
 
-export function arrowDataFromObject(data: Record<string, any>): ArrowData {
+export function arrowDataFromObject(data: Record<string, unknown>): ArrowData {
 	return createArrowData({
-		id: data.id,
-		arrow_type: data.arrow_type,
-		color: data.color,
-		turns: data.turns,
-		is_mirrored: data.is_mirrored,
-		location: data.location,
-		position_x: data.position_x,
-		position_y: data.position_y,
-		rotation_angle: data.rotation_angle,
-		is_visible: data.is_visible,
-		is_selected: data.is_selected,
+		id: typeof data.id === 'string' ? data.id : undefined,
+		arrow_type: data.arrow_type as ArrowType,
+		color: typeof data.color === 'string' ? data.color : undefined,
+		turns: typeof data.turns === 'number' ? data.turns : undefined,
+		is_mirrored: typeof data.is_mirrored === 'boolean' ? data.is_mirrored : undefined,
+		location: typeof data.location === 'string' ? data.location : undefined,
+		position_x: typeof data.position_x === 'number' ? data.position_x : undefined,
+		position_y: typeof data.position_y === 'number' ? data.position_y : undefined,
+		rotation_angle: typeof data.rotation_angle === 'number' ? data.rotation_angle : undefined,
+		is_visible: typeof data.is_visible === 'boolean' ? data.is_visible : undefined,
+		is_selected: typeof data.is_selected === 'boolean' ? data.is_selected : undefined,
 	});
 }

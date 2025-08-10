@@ -38,7 +38,7 @@
 		const seq = sequenceStateService.currentSequence;
 		if (!seq) return;
 		// Clear by setting zero beats
-		sequenceStateService.setCurrentSequence({ ...seq, beats: [] } as any);
+		sequenceStateService.setCurrentSequence({ ...seq, beats: [] });
 	}
 
 	function handleBeatSelected(index: number) {
@@ -115,7 +115,7 @@
 	.main-layout {
 		display: grid;
 		grid-template-columns: 1fr auto; /* left fills, right button panel auto width */
-		gap: var(--spacing-sm); /* Add small gap between content and button panel */
+		gap: var(--spacing-xs); /* Add small gap between content and button panel */
 		width: 100%;
 		height: 100%;
 	}

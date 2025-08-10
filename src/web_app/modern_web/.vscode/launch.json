@@ -3,15 +3,18 @@
 	"configurations": [
 		{
 			"name": "Run Dev Server + Open Browser",
-			"type": "node-terminal",
+			"type": "node",
 			"request": "launch",
-			"command": "npm run dev",
-			// Wait for Vite dev server; when ready open default browser once.
+			"program": "${workspaceFolder}/node_modules/.bin/vite",
+			"args": ["--mode", "development"],
+			"console": "integratedTerminal",
 			"serverReadyAction": {
 				"pattern": "Local:.*(http://localhost:5174/)",
 				"uriFormat": "%s",
 				"action": "openExternally"
-			}
+			},
+			"sourceMaps": true,
+			"skipFiles": ["<node_internals>/**"]
 		}
 	]
 }

@@ -29,16 +29,20 @@
 
 	// Handle name change
 	function handleNameChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		nameValue = target.value;
-		onActInfoChanged?.(nameValue, descriptionValue);
+		const target = event.target;
+		if (target instanceof HTMLInputElement) {
+			nameValue = target.value;
+			onActInfoChanged?.(nameValue, descriptionValue);
+		}
 	}
 
 	// Handle description change
 	function handleDescriptionChange(event: Event) {
-		const target = event.target as HTMLTextAreaElement;
-		descriptionValue = target.value;
-		onActInfoChanged?.(nameValue, descriptionValue);
+		const target = event.target;
+		if (target instanceof HTMLTextAreaElement) {
+			descriptionValue = target.value;
+			onActInfoChanged?.(nameValue, descriptionValue);
+		}
 	}
 
 	// Handle music load button

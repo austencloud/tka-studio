@@ -109,7 +109,7 @@ declare module '*.json' {
 
 // Svelte component types
 declare module '*.svelte' {
-	const component: any;
+	const component: import('svelte').ComponentType;
 	export default component;
 }
 

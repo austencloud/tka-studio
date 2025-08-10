@@ -31,6 +31,11 @@ export interface PictographData {
 	readonly start_position?: GridPosition | null;
 	readonly end_position?: GridPosition | null;
 
+	// Legacy compatibility properties
+	readonly start_pos?: string | null;
+	readonly end_pos?: string | null;
+	readonly grid_mode?: string | null;
+
 	// Letter determination fields
 	readonly beat: number;
 	readonly timing?: Timing | null;

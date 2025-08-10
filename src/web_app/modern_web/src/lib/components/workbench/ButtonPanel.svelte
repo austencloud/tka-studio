@@ -143,7 +143,6 @@
 
 		/* Glassmorphism panel styling with reduced opacity to avoid visual conflict */
 		background: rgba(255, 255, 255, 0.04); /* Reduced from 0.08 */
-		backdrop-filter: blur(15px); /* Slightly less blur */
 		border: 1px solid rgba(255, 255, 255, 0.08); /* More subtle border */
 		border-radius: 12px;
 		box-shadow:

@@ -5,7 +5,7 @@
  * @param keyFn Optional function to generate a custom cache key
  * @returns Memoized function with the same signature as the original
  */
-export function memoizeLRU<T extends (...args: unknown[]) => unknown>(
+export function memoizeLRU<T extends (...args: never[]) => unknown>(
 	fn: T,
 	maxSize: number = 100,
 	keyFn?: (...args: Parameters<T>) => string
@@ -44,7 +44,7 @@ export function memoizeLRU<T extends (...args: unknown[]) => unknown>(
 	};
 
 	// Add a method to clear the cache if needed
-	(memoized as any).clearCache = () => {
+	(memoized as T & { clearCache: () => void }).clearCache = () => {
 		cache.clear();
 		keyOrder.length = 0;
 	};

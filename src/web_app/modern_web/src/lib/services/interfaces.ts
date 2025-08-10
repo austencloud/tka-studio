@@ -5,7 +5,7 @@
  * following the service-oriented architecture pattern from the desktop app.
  */
 
-import type { BeatData, MotionData, PictographData, SequenceData } from '$lib/domain';
+import type { ArrowData, BeatData, MotionData, PictographData, SequenceData } from '$lib/domain';
 import { GridMode as DomainGridMode } from '$lib/domain';
 
 // Re-export domain types for convenience
@@ -49,7 +49,7 @@ export interface ISequenceDomainService {
 
 export interface IPictographService {
 	renderPictograph(data: PictographData): Promise<SVGElement>;
-	updateArrow(pictographId: string, arrowData: any): Promise<PictographData>;
+	updateArrow(pictographId: string, arrowData: ArrowData): Promise<PictographData>;
 }
 
 export interface IPictographRenderingService {
@@ -101,7 +101,7 @@ export interface ArrowPosition {
 	rotation: number;
 }
 
-export interface ArrowData {
+export interface LegacyArrowData {
 	id: string;
 	color: 'blue' | 'red';
 	motionType: MotionType;
@@ -135,7 +135,7 @@ export interface Coordinates {
 export interface ArrowPlacementConfig {
 	pictographData: PictographData;
 	gridData: GridData;
-	checker?: any;
+	checker?: unknown;
 }
 
 // Arrow positioning enums
@@ -264,11 +264,11 @@ export interface IExportService {
 // ============================================================================
 
 export interface IConstructTabCoordinationService {
-	setupComponentCoordination(components: Record<string, any>): void;
+	setupComponentCoordination(components: Record<string, unknown>): void;
 	handleSequenceModified(sequence: SequenceData): Promise<void>;
 	handleStartPositionSet(startPosition: BeatData): Promise<void>;
 	handleBeatAdded(beatData: BeatData): Promise<void>;
-	handleGenerationRequest(config: any): Promise<void>;
+	handleGenerationRequest(config: Record<string, unknown>): Promise<void>;
 	handleUITransitionRequest(targetPanel: string): Promise<void>;
 }
 

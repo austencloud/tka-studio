@@ -5,8 +5,8 @@
  * This complements the existing class-based services.
  */
 
-import type { PictographData, BeatData } from '$lib/domain';
 import { ensureModernPictographData } from '$lib/components/pictograph/dataAdapter';
+import type { BeatData, PictographData } from '$lib/domain';
 
 interface PictographServiceConfig {
 	defaultGridMode: 'diamond' | 'box';
@@ -76,7 +76,7 @@ export function createPictographService(config: Partial<PictographServiceConfig>
 		},
 
 		// Methods
-		setPictographData(data: any) {
+		setPictographData(data: unknown) {
 			try {
 				errorMessage = null;
 				const modernData = ensureModernPictographData(data);

@@ -91,9 +91,9 @@ export interface LessonInfo {
  */
 export interface QuestionData {
 	questionId: string;
-	questionContent: any; // Pictograph data, letter string, or text
+	questionContent: unknown; // Pictograph data, letter string, or text
 	answerOptions: AnswerOption[]; // Array of answer choices
-	correctAnswer: any; // The correct answer from the options
+	correctAnswer: unknown; // The correct answer from the options
 	questionType: QuestionFormat;
 	answerType: AnswerFormat;
 	lessonType: LessonType;
@@ -106,7 +106,7 @@ export interface QuestionData {
  */
 export interface AnswerOption {
 	id: string;
-	content: any; // Letter string, pictograph data, etc.
+	content: unknown; // Letter string, pictograph data, etc.
 	isCorrect: boolean;
 	feedback?: string;
 }

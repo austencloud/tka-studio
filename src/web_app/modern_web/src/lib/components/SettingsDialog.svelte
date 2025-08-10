@@ -59,6 +59,18 @@
 		settings = newSettings;
 	}
 
+	// Adapter for modern prop-based updates
+	function handlePropUpdate(event: { key: string; value: unknown }) {
+		const newSettings = { ...settings, [event.key]: event.value };
+		updateSettings(newSettings);
+		settings = newSettings;
+	}
+
+	// Adapter for export handler
+	function handlePropExport() {
+		handleCodexExport(new CustomEvent('export'));
+	}
+
 	// Handle codex export request
 	function handleCodexExport(event: CustomEvent) {
 		const config = event.detail;
@@ -128,9 +140,9 @@
 				{#if activeTab === 'General'}
 					<GeneralTab {settings} on:update={handleSettingsUpdate} />
 				{:else if activeTab === 'PropType'}
-					<PropTypeTab {settings} on:update={handleSettingsUpdate} />
+					<PropTypeTab {settings} onUpdate={handlePropUpdate} />
 				{:else if activeTab === 'Visibility'}
-					<VisibilityTab {settings} on:update={handleSettingsUpdate} />
+					<VisibilityTab {settings} onUpdate={handlePropUpdate} />
 				{:else if activeTab === 'Background'}
 					<BackgroundTab
 						settings={backgroundSettings()}
@@ -139,8 +151,8 @@
 				{:else if activeTab === 'CodexExporter'}
 					<CodexExporterTab
 						{settings}
-						on:update={handleSettingsUpdate}
-						on:export={handleCodexExport}
+						onUpdate={handlePropUpdate}
+						onExport={handlePropExport}
 					/>
 				{/if}
 			</main>

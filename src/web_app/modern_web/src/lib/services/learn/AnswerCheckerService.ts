@@ -11,7 +11,7 @@ export interface AnswerResult {
 	isCorrect: boolean;
 	feedback: AnswerFeedback;
 	message: string;
-	correctAnswer?: any;
+	correctAnswer?: unknown;
 	explanation?: string;
 }
 
@@ -21,7 +21,7 @@ export class AnswerCheckerService {
 	 */
 	static checkAnswer(
 		questionData: QuestionData,
-		userAnswer: any,
+		userAnswer: unknown,
 		selectedOption?: AnswerOption
 	): AnswerResult {
 		if (!questionData || userAnswer === null || userAnswer === undefined) {
@@ -57,13 +57,13 @@ export class AnswerCheckerService {
 	 */
 	private static checkPictographToLetterAnswer(
 		questionData: QuestionData,
-		userAnswer: any,
+		userAnswer: unknown,
 		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const correctLetter = questionData.correctAnswer;
 		const userLetter = typeof userAnswer === 'string' ? userAnswer : userAnswer?.toString();
 
-		const isCorrect = userLetter?.toLowerCase() === correctLetter?.toLowerCase();
+		const isCorrect = userLetter?.toLowerCase() === (correctLetter as string)?.toLowerCase();
 
 		const base = {
 			isCorrect,
@@ -74,7 +74,8 @@ export class AnswerCheckerService {
 			correctAnswer: correctLetter,
 		} as AnswerResult;
 		if (!isCorrect) {
-			(base as any).explanation = `The pictograph represents the letter "${correctLetter}".`;
+			(base as AnswerResult).explanation =
+				`The pictograph represents the letter "${correctLetter}".`;
 		}
 		return base;
 	}
@@ -84,14 +85,17 @@ export class AnswerCheckerService {
 	 */
 	private static checkLetterToPictographAnswer(
 		questionData: QuestionData,
-		userAnswer: any,
+		userAnswer: unknown,
 		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const correctPictograph = questionData.correctAnswer;
 		const userPictograph = userAnswer;
 
 		// Compare pictograph data
-		const isCorrect = this.comparePictographs(userPictograph, correctPictograph);
+		const isCorrect = this.comparePictographs(
+			userPictograph as Record<string, unknown>,
+			correctPictograph as Record<string, unknown>
+		);
 
 		const base = {
 			isCorrect,
@@ -102,7 +106,7 @@ export class AnswerCheckerService {
 			correctAnswer: correctPictograph,
 		} as AnswerResult;
 		if (!isCorrect) {
-			(base as any).explanation =
+			(base as AnswerResult).explanation =
 				`The correct pictograph for "${questionData.questionContent}" has different start/end positions.`;
 		}
 		return base;
@@ -113,14 +117,17 @@ export class AnswerCheckerService {
 	 */
 	private static checkValidNextPictographAnswer(
 		questionData: QuestionData,
-		userAnswer: any,
+		userAnswer: unknown,
 		_selectedOption?: AnswerOption
 	): AnswerResult {
 		const initialPictograph = questionData.questionContent;
 		const userPictograph = userAnswer;
 
 		// Check if the user's pictograph can follow the initial one
-		const isCorrect = this.canPictographFollow(initialPictograph, userPictograph);
+		const isCorrect = this.canPictographFollow(
+			initialPictograph as Record<string, unknown>,
+			userPictograph as Record<string, unknown>
+		);
 
 		const base = {
 			isCorrect,
@@ -131,8 +138,8 @@ export class AnswerCheckerService {
 			correctAnswer: questionData.correctAnswer,
 		} as AnswerResult;
 		if (!isCorrect) {
-			(base as any).explanation =
-				`The correct pictograph must start where the previous one ends (${initialPictograph?.end_pos}).`;
+			(base as AnswerResult).explanation =
+				`The correct pictograph must start where the previous one ends (${(initialPictograph as Record<string, unknown>)?.end_pos}).`;
 		}
 		return base;
 	}
@@ -140,7 +147,10 @@ export class AnswerCheckerService {
 	/**
 	 * Compare two pictographs for equality.
 	 */
-	private static comparePictographs(pictograph1: any, pictograph2: any): boolean {
+	private static comparePictographs(
+		pictograph1: Record<string, unknown>,
+		pictograph2: Record<string, unknown>
+	): boolean {
 		if (!pictograph1 || !pictograph2) return false;
 
 		return (
@@ -154,7 +164,10 @@ export class AnswerCheckerService {
 	/**
 	 * Check if one pictograph can follow another.
 	 */
-	private static canPictographFollow(firstPictograph: any, secondPictograph: any): boolean {
+	private static canPictographFollow(
+		firstPictograph: Record<string, unknown>,
+		secondPictograph: Record<string, unknown>
+	): boolean {
 		if (!firstPictograph || !secondPictograph) return false;
 
 		// The second pictograph's start position must match the first's end position
@@ -178,18 +191,18 @@ export class AnswerCheckerService {
 	/**
 	 * Validate answer format for a lesson type.
 	 */
-	static validateAnswerFormat(lessonType: LessonType, answer: any): boolean {
+	static validateAnswerFormat(lessonType: LessonType, answer: unknown): boolean {
 		switch (lessonType) {
 			case LessonType.PICTOGRAPH_TO_LETTER:
 				return typeof answer === 'string' && answer.length === 1;
 			case LessonType.LETTER_TO_PICTOGRAPH:
-				return answer && typeof answer === 'object' && 'letter' in answer;
+				return Boolean(answer && typeof answer === 'object' && 'letter' in answer);
 			case LessonType.VALID_NEXT_PICTOGRAPH:
-				return (
+				return Boolean(
 					answer &&
-					typeof answer === 'object' &&
-					'start_pos' in answer &&
-					'end_pos' in answer
+						typeof answer === 'object' &&
+						'start_pos' in answer &&
+						'end_pos' in answer
 				);
 			default:
 				return false;
@@ -217,7 +230,7 @@ export class AnswerCheckerService {
 	 */
 	static calculateConfidence(
 		questionData: QuestionData,
-		userAnswer: any,
+		userAnswer: unknown,
 		timeToAnswer: number
 	): number {
 		const result = this.checkAnswer(questionData, userAnswer);

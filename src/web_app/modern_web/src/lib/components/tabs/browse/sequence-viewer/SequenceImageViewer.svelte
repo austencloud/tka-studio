@@ -1,8 +1,16 @@
 <!-- SequenceImageViewer.svelte - Image viewer with variation navigation -->
 <script lang="ts">
+	import type { SequenceData } from '$domain/SequenceData';
+
 	interface Props {
-		sequence?: any;
-		currentVariation?: any;
+		sequence?: SequenceData & {
+			variations?: unknown[];
+			gridMode?: string;
+			startPosition?: string;
+			isFavorite?: boolean;
+			word?: string;
+		};
+		currentVariation?: { imageUrl?: string } | undefined;
 		currentVariationIndex?: number;
 		onNextVariation?: () => void;
 		onPrevVariation?: () => void;
@@ -42,7 +50,10 @@
 
 	let canGoPrev = $derived(currentVariationIndex > 0);
 	let canGoNext = $derived(
-		hasMultipleVariations && currentVariationIndex < sequence.variations.length - 1
+		hasMultipleVariations &&
+			sequence &&
+			sequence.variations &&
+			currentVariationIndex < sequence.variations.length - 1
 	);
 </script>
 
@@ -51,7 +62,7 @@
 		{#if currentVariation?.imageUrl}
 			<img
 				src={currentVariation.imageUrl}
-				alt="{sequence.word} - Variation {currentVariationIndex + 1}"
+				alt="{sequence?.word || 'Sequence'} - Variation {currentVariationIndex + 1}"
 				class:loading={isImageLoading}
 				onload={handleImageLoad}
 				onerror={handleImageError}
@@ -61,17 +72,17 @@
 			<div class="image-placeholder">
 				<div class="placeholder-content">
 					<div class="sequence-icon">🔄</div>
-					<h3>{sequence.word}</h3>
+					<h3>{sequence?.word || 'Sequence'}</h3>
 					<p>Pictograph visualization</p>
 					<div class="placeholder-details">
-						<span>{sequence.gridMode} grid</span>
-						<span>{sequence.startPosition} start</span>
+						<span>{sequence?.gridMode || 'diamond'} grid</span>
+						<span>{sequence?.startPosition || 'center'} start</span>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if sequence.isFavorite}
+		{#if sequence?.isFavorite}
 			<div class="favorite-indicator">⭐</div>
 		{/if}
 	</div>
@@ -90,7 +101,7 @@
 			</button>
 
 			<span class="variation-info">
-				{currentVariationIndex + 1} / {sequence.variations.length}
+				{currentVariationIndex + 1} / {sequence?.variations?.length || 1}
 			</span>
 
 			<button

@@ -9,7 +9,7 @@ import { GridMode } from '$lib/domain/enums';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import ModernPictograph from '../ModernPictograph.svelte';
+import ModernPictograph from '../Pictograph.svelte';
 
 // Mock the child components
 vi.mock('../Grid.svelte', () => ({

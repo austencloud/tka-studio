@@ -58,7 +58,7 @@ export class DefaultPropPositioner {
 	/**
 	 * Get grid point by name from grid data
 	 */
-	private getGridPoint(pointName: string): any {
+	private getGridPoint(pointName: string): { coordinates: { x: number; y: number } } | null {
 		// Try to find the point in allHandPointsNormal
 		if (this.gridData.allHandPointsNormal && this.gridData.allHandPointsNormal[pointName]) {
 			return this.gridData.allHandPointsNormal[pointName];
@@ -96,7 +96,7 @@ export class DefaultPropPositioner {
 		gridMode: string = 'diamond'
 	): { x: number; y: number } {
 		try {
-			const gridData = createGridData(gridMode as any);
+			const gridData = createGridData(gridMode as 'diamond' | 'box');
 			const positioner = new DefaultPropPositioner(gridData, gridMode);
 			return positioner.calculateCoordinates(location);
 		} catch (error) {

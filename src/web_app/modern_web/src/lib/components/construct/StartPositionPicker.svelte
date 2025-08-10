@@ -2,12 +2,12 @@
 <script lang="ts">
 	import type { BeatData } from '$domain/BeatData';
 	import type { PictographData } from '$domain/PictographData';
-	import { Location, MotionType } from '$domain/enums';
+	import { GridMode, Location, MotionType } from '$domain/enums';
 	import { getLetterBorderColor } from '$lib/utils/letterTypeUtils';
 	import { resolve } from '$services/bootstrap';
 	import type { IPictographRenderingService, IStartPositionService } from '$services/interfaces';
 	import { onMount } from 'svelte';
-	import ModernPictograph from '../pictograph/ModernPictograph.svelte';
+	import ModernPictograph from '../pictograph/Pictograph.svelte';
 
 	// Props using runes
 	const { gridMode = 'diamond', onStartPositionSelected = () => {} } = $props<{
@@ -146,6 +146,35 @@
 				console.error('Failed to save start position to localStorage:', error);
 			}
 
+			// **NEW: Preload options BEFORE triggering the transition**
+			// This ensures options are ready when the option picker fades in
+			try {
+				console.log('🚀 Preloading options for seamless transition...');
+
+				// Import and use the OptionDataService to preload options
+				const { OptionDataService } = await import(
+					'$services/implementations/OptionDataService'
+				);
+				const optionDataService = new OptionDataService();
+				await optionDataService.initialize();
+
+				const preloadedOptions = await optionDataService.getNextOptionsFromEndPosition(
+					endPosition,
+					gridMode === 'diamond' ? GridMode.DIAMOND : GridMode.BOX,
+					{}
+				);
+
+				console.log(
+					`✅ Preloaded ${preloadedOptions?.length || 0} options for seamless transition`
+				);
+
+				// Store the preloaded options so OptionPicker can use them immediately
+				localStorage.setItem('preloaded_options', JSON.stringify(preloadedOptions || []));
+			} catch (preloadError) {
+				console.warn('Failed to preload options, will load normally:', preloadError);
+				// Continue with normal flow even if preload fails
+			}
+
 			// Use modern service to set start position
 			if (startPositionService) {
 				await startPositionService.setStartPosition(startPositionBeat);
@@ -160,6 +189,7 @@
 					startPosition: startPositionData,
 					endPosition: endPosition,
 					isTransitioning: true,
+					preloadedOptions: true, // Signal that options are preloaded
 				},
 				bubbles: true,
 			});

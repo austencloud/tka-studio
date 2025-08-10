@@ -339,7 +339,7 @@ export function trackRenderTime(componentName: string, renderTime: number): void
  */
 export function updateMemoryUsage(): void {
 	if (typeof performance !== 'undefined' && 'memory' in performance) {
-		const memory = (performance as any).memory;
+		const memory = (performance as { memory: { usedJSHeapSize: number } }).memory;
 		perfState.memoryUsage = Math.round(memory.usedJSHeapSize / 1048576);
 	}
 }

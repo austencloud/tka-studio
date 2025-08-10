@@ -179,6 +179,91 @@ export function createOptionPickerRunes() {
 		}
 
 		sequenceData = sequence;
+
+		// **NEW: Check for preloaded options first to avoid loading state**
+		try {
+			// First check for specific preloaded options (from individual clicks)
+			const preloadedData = localStorage.getItem('preloaded_options');
+			if (preloadedData) {
+				console.log('✨ Using individually preloaded options for seamless transition');
+				const preloadedOptions = JSON.parse(preloadedData);
+				console.log(
+					`🔧 Runes setting optionsData with ${preloadedOptions?.length || 0} preloaded options`
+				);
+				optionsData = preloadedOptions || [];
+				uiState.isLoading = false;
+				uiState.error = null;
+
+				// Clear preloaded data so it's only used once
+				localStorage.removeItem('preloaded_options');
+
+				// Set default tab if needed
+				if (
+					!uiState.lastSelectedTab[uiState.sortMethod] ||
+					uiState.lastSelectedTab[uiState.sortMethod] === null
+				) {
+					console.log('No tab selected yet, defaulting to "all"');
+					setLastSelectedTabForSort(uiState.sortMethod, 'all');
+				}
+
+				return; // Skip the loading process
+			}
+
+			// Check for bulk preloaded options (from component load)
+			const allPreloadedData = localStorage.getItem('all_preloaded_options');
+			if (allPreloadedData) {
+				const allPreloadedOptions = JSON.parse(allPreloadedData);
+
+				// Determine the current end position we need options for
+				let targetEndPosition: string | null = null;
+
+				if (sequence && sequence.length > 0) {
+					const lastBeat = sequence[sequence.length - 1];
+					const endPos = lastBeat?.end_position || lastBeat?.metadata?.endPosition;
+					targetEndPosition = typeof endPos === 'string' ? endPos : null;
+				} else {
+					// For empty sequence, get from start position
+					const startPositionData = localStorage.getItem('start_position');
+					if (startPositionData) {
+						const startPosition = JSON.parse(startPositionData);
+						targetEndPosition = startPosition.endPos || null;
+					}
+				}
+
+				// If we have preloaded options for this end position, use them
+				if (targetEndPosition && allPreloadedOptions[targetEndPosition]) {
+					console.log(
+						`✨ Using bulk preloaded options for end position: ${targetEndPosition}`
+					);
+					const optionsForPosition = allPreloadedOptions[targetEndPosition];
+					console.log(
+						`🔧 Runes setting optionsData with ${optionsForPosition?.length || 0} bulk preloaded options`
+					);
+					optionsData = optionsForPosition || [];
+					uiState.isLoading = false;
+					uiState.error = null;
+
+					// Set default tab if needed
+					if (
+						!uiState.lastSelectedTab[uiState.sortMethod] ||
+						uiState.lastSelectedTab[uiState.sortMethod] === null
+					) {
+						console.log('No tab selected yet, defaulting to "all"');
+						setLastSelectedTabForSort(uiState.sortMethod, 'all');
+					}
+
+					return; // Skip the loading process
+				}
+			}
+		} catch (error) {
+			console.warn(
+				'Failed to load preloaded options, falling back to normal loading:',
+				error
+			);
+		}
+
+		// Normal loading process (only if no preloaded options)
+		// Note: Set loading state here to avoid brief flash when preloaded data exists
 		uiState.isLoading = true;
 		uiState.error = null;
 

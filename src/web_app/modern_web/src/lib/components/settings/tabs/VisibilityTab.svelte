@@ -1,15 +1,15 @@
 <!-- VisibilityTab.svelte - Compact visibility settings with better contrast -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { AppSettings } from '$services/interfaces';
 	import SettingCard from '../SettingCard.svelte';
 	import ToggleSetting from '../ToggleSetting.svelte';
 
 	interface Props {
-		settings: any;
+		settings: AppSettings;
+		onUpdate?: (event: { key: string; value: unknown }) => void;
 	}
 
-	let { settings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { settings, onUpdate }: Props = $props();
 
 	// Visibility settings - matching desktop defaults
 	let visibilitySettings = $state({
@@ -21,9 +21,9 @@
 		nonRadialPoints: settings.visibility?.nonRadialPoints ?? false,
 	});
 
-	function updateVisibilitySetting(key: string, value: boolean) {
+	function updateVisibilitySetting(key: keyof typeof visibilitySettings, value: boolean) {
 		visibilitySettings[key] = value;
-		dispatch('update', { key: 'visibility', value: { ...visibilitySettings } });
+		onUpdate?.({ key: 'visibility', value: { ...visibilitySettings } });
 	}
 </script>
 

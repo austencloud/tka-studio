@@ -36,8 +36,10 @@
 	let optionsArray = $derived(normalizedOptions());
 
 	function handleChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		onchange?.(target.value);
+		const target = event.target;
+		if (target instanceof HTMLSelectElement) {
+			onchange?.(target.value);
+		}
 	}
 </script>
 

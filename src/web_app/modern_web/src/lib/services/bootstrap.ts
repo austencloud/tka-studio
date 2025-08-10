@@ -227,7 +227,7 @@ async function validateContainerConfiguration(container: ServiceContainer): Prom
 	for (const serviceInterface of servicesToValidate) {
 		try {
 			console.log(`🔍 Validating service: ${serviceInterface.token}`);
-			const service = container.resolve(serviceInterface as any);
+			const service = container.resolve(serviceInterface as ServiceInterface<unknown>);
 			if (!service) {
 				throw new Error(`Service ${serviceInterface.token} resolved to null/undefined`);
 			}
@@ -266,7 +266,7 @@ export function setGlobalContainer(container: ServiceContainer): void {
 }
 
 // Service interface mapping for string-based resolution
-const serviceInterfaceMap = new Map<string, ServiceInterface<any>>([
+const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
 	['ISequenceService', ISequenceServiceInterface],
 	['ISequenceDomainService', ISequenceDomainServiceInterface],
 	['IPictographService', IPictographServiceInterface],
@@ -299,7 +299,7 @@ export function resolve<T>(serviceInterface: ServiceInterface<T> | string): T {
 		if (!mappedInterface) {
 			throw new Error(`Service interface not found for key: ${serviceInterface}`);
 		}
-		return container.resolve(mappedInterface);
+		return container.resolve(mappedInterface) as T;
 	}
 
 	return container.resolve(serviceInterface);

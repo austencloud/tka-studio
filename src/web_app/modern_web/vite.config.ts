@@ -12,6 +12,7 @@ export default defineConfig({
 
 	// Build configuration
 	build: {
+		sourcemap: true, // Enable source maps for production builds
 		rollupOptions: {
 			output: {
 				manualChunks: {

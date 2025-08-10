@@ -1,5 +1,6 @@
 <!-- SequenceViewer.svelte - Main coordinator component using pure Svelte 5 runes -->
 <script lang="ts">
+	import type { SequenceData } from '$domain/SequenceData';
 	import { slide } from 'svelte/transition';
 	import SequenceActions from './SequenceActions.svelte';
 	import SequenceDetails from './SequenceDetails.svelte';
@@ -8,9 +9,9 @@
 	import SequenceViewerHeader from './SequenceViewerHeader.svelte';
 
 	interface Props {
-		sequence?: any;
+		sequence?: (SequenceData & { variations?: unknown[] }) | null;
 		onBackToBrowser?: () => void;
-		onSequenceAction?: (action: string, sequence: any) => void;
+		onSequenceAction?: (action: string, sequence: SequenceData) => void;
 	}
 
 	let { sequence = null, onBackToBrowser, onSequenceAction }: Props = $props();
@@ -26,7 +27,10 @@
 	});
 
 	// Derived current variation
-	let currentVariation = $derived(sequence?.variations?.[currentVariationIndex] || sequence);
+	let currentVariation = $derived(
+		(sequence?.variations?.[currentVariationIndex] as { imageUrl?: string } | undefined) ||
+			(sequence as { imageUrl?: string } | undefined)
+	);
 
 	// Variation navigation handlers
 	function nextVariation() {
@@ -51,7 +55,9 @@
 	}
 
 	function handleSequenceAction(action: string) {
-		onSequenceAction?.(action, sequence);
+		if (sequence) {
+			onSequenceAction?.(action, sequence);
+		}
 	}
 </script>
 

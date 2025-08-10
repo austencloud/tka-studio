@@ -29,28 +29,28 @@ export interface SequenceData {
 }
 
 export function createSequenceData(data: Partial<SequenceData> = {}): SequenceData {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const base: any = {
+	const result: SequenceData = {
 		id: data.id ?? crypto.randomUUID(),
 		name: data.name ?? '',
 		word: data.word ?? '',
 		beats: data.beats ?? [],
 		thumbnails: data.thumbnails ?? [],
-		sequence_length: data.sequence_length,
-		author: data.author,
-		level: data.level,
-		date_added: data.date_added,
-		grid_mode: data.grid_mode,
-		prop_type: data.prop_type,
 		is_favorite: data.is_favorite ?? false,
 		is_circular: data.is_circular ?? false,
-		starting_position: data.starting_position,
-		difficulty_level: data.difficulty_level,
 		tags: data.tags ?? [],
 		metadata: data.metadata ?? {},
+		// Optional properties - only include if defined
+		...(data.sequence_length !== undefined && { sequence_length: data.sequence_length }),
+		...(data.author !== undefined && { author: data.author }),
+		...(data.level !== undefined && { level: data.level }),
+		...(data.date_added !== undefined && { date_added: data.date_added }),
+		...(data.grid_mode !== undefined && { grid_mode: data.grid_mode }),
+		...(data.prop_type !== undefined && { prop_type: data.prop_type }),
+		...(data.starting_position !== undefined && { starting_position: data.starting_position }),
+		...(data.difficulty_level !== undefined && { difficulty_level: data.difficulty_level }),
+		...(data.start_position !== undefined && { start_position: data.start_position }),
 	};
-	if (data.start_position !== undefined) base.start_position = data.start_position;
-	return base as SequenceData;
+	return result;
 }
 
 export function updateSequenceData(

@@ -6,8 +6,10 @@
 -->
 
 <script lang="ts">
+	import type { PictographData } from '$domain/PictographData';
+
 	// Props
-	export let pictographData: any;
+	export let pictographData: PictographData;
 	export let size: 'small' | 'medium' | 'large' = 'medium';
 	export let showDetails = false;
 
@@ -29,12 +31,12 @@
 		}
 	}
 
-	function getPositions(data: any) {
+	function getPositions(data: PictographData) {
 		if (!data) return { start: null, end: null };
 
 		return {
-			start: parsePosition(data.start_pos),
-			end: parsePosition(data.end_pos),
+			start: parsePosition(data.start_pos || ''),
+			end: parsePosition(data.end_pos || ''),
 		};
 	}
 

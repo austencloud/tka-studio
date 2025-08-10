@@ -3,30 +3,35 @@
  * Local implementation to replace missing @tka/shared/di/core modules
  */
 
-export interface ServiceInterface<T = any> {
+export interface ServiceInterface<T = unknown> {
 	token: string;
-	implementation: new (...args: any[]) => T;
+	implementation: new (...args: unknown[]) => T;
 }
 
 export function createServiceInterface<T>(
 	token: string,
-	implementation: new (...args: any[]) => T
+	implementation: new (...args: unknown[]) => T
 ): ServiceInterface<T> {
 	return { token, implementation };
 }
 
 export type Factory<T> = () => T;
 
+interface ServiceConfig {
+	implementation: new (...args: unknown[]) => unknown;
+	dependencies: string[];
+}
+
 export class ServiceContainer {
-	private services = new Map<string, any>();
-	private factories = new Map<string, Factory<any>>();
-	private singletons = new Map<string, any>();
+	private services = new Map<string, ServiceConfig>();
+	private factories = new Map<string, Factory<unknown>>();
+	private singletons = new Map<string, unknown>();
 
 	constructor(public readonly name: string) {}
 
 	register<T>(serviceInterface: ServiceInterface<T>, ...dependencies: ServiceInterface[]): void {
 		this.services.set(serviceInterface.token, {
-			implementation: serviceInterface.implementation,
+			implementation: serviceInterface.implementation as new (...args: unknown[]) => unknown,
 			dependencies: dependencies.map((dep) => dep.token),
 		});
 	}
@@ -49,12 +54,12 @@ export class ServiceContainer {
 
 		// Check if it's a singleton
 		if (this.singletons.has(token)) {
-			return this.singletons.get(token);
+			return this.singletons.get(token) as T;
 		}
 
 		// Check if it's a factory
 		if (this.factories.has(token)) {
-			return this.factories.get(token)!();
+			return this.factories.get(token)!() as T;
 		}
 
 		// Check if it's a registered service
@@ -62,19 +67,17 @@ export class ServiceContainer {
 		if (serviceConfig) {
 			const { implementation, dependencies } = serviceConfig;
 			const resolvedDependencies = dependencies.map((depToken: string) => {
-				const depInterface = Array.from(this.services.keys()).find(
-					(key) => key === depToken
-				);
-				if (!depInterface) {
+				const depServiceConfig = this.services.get(depToken);
+				if (!depServiceConfig) {
 					throw new Error(`Dependency ${depToken} not found`);
 				}
 				return this.resolve({
 					token: depToken,
-					implementation: this.services.get(depToken).implementation,
+					implementation: depServiceConfig.implementation,
 				});
 			});
 
-			return new implementation(...resolvedDependencies);
+			return new implementation(...resolvedDependencies) as T;
 		}
 
 		throw new Error(`Service ${token} not registered`);

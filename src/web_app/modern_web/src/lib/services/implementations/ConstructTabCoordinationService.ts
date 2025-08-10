@@ -17,8 +17,12 @@ import type {
 } from '../interfaces';
 import { sequenceStateService } from '../SequenceStateService.svelte';
 
+interface ComponentWithEventHandler {
+	handleEvent?: (eventType: string, data: unknown) => void;
+}
+
 export class ConstructTabCoordinationService implements IConstructTabCoordinationService {
-	private components: Record<string, any> = {};
+	private components: Record<string, ComponentWithEventHandler> = {};
 	private isHandlingSequenceModification = false;
 
 	constructor(
@@ -28,7 +32,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		console.log('🎭 ConstructTabCoordinationService initialized');
 	}
 
-	setupComponentCoordination(components: Record<string, any>): void {
+	setupComponentCoordination(components: Record<string, ComponentWithEventHandler>): void {
 		console.log('🎭 Setting up component coordination:', Object.keys(components));
 		this.components = components;
 
@@ -158,7 +162,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		}
 	}
 
-	async handleGenerationRequest(config: any): Promise<void> {
+	async handleGenerationRequest(config: Record<string, unknown>): Promise<void> {
 		console.log('🎭 Handling generation request:', config);
 
 		try {
@@ -252,7 +256,7 @@ export class ConstructTabCoordinationService implements IConstructTabCoordinatio
 		return firstBeat?.beat_number === 0 && !!firstBeat.pictograph_data;
 	}
 
-	private notifyComponents(eventType: string, data: any): void {
+	private notifyComponents(eventType: string, data: unknown): void {
 		console.log(`🎭 Notifying components of ${eventType}:`, data);
 
 		// Notify individual components if they have handlers

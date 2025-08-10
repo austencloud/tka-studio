@@ -1,9 +1,9 @@
 <script lang="ts">
-	import BackgroundProvider from '$lib/components/backgrounds/BackgroundProvider.svelte';
+	import { browser } from '$app/environment';
 	import BackgroundCanvas from '$lib/components/backgrounds/BackgroundCanvas.svelte';
 	import BackgroundController from '$lib/components/backgrounds/BackgroundController.svelte';
+	import BackgroundProvider from '$lib/components/backgrounds/BackgroundProvider.svelte';
 	import type { BackgroundType, QualityLevel } from '$lib/components/backgrounds/types/types';
-	import { browser } from '$app/environment';
 
 	// Props
 	const {
@@ -65,15 +65,19 @@
 
 	// Handle control changes
 	function handleBackgroundChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		currentBackground = target.value as BackgroundType;
-		controller?.setBackgroundType(currentBackground);
+		const target = event.target;
+		if (target instanceof HTMLSelectElement) {
+			currentBackground = target.value as BackgroundType;
+			controller?.setBackgroundType(currentBackground);
+		}
 	}
 
 	function handleQualityChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		currentQuality = target.value as QualityLevel;
-		controller?.setQuality(currentQuality);
+		const target = event.target;
+		if (target instanceof HTMLSelectElement) {
+			currentQuality = target.value as QualityLevel;
+			controller?.setQuality(currentQuality);
+		}
 	}
 
 	function toggleVisibility() {

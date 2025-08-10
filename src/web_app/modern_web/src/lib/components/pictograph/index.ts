@@ -5,7 +5,7 @@
  */
 
 // Main pictograph component
-export { default as ModernPictograph } from './ModernPictograph.svelte';
+export { default as ModernPictograph } from './Pictograph.svelte';
 
 // Individual rendering components
 export { default as Grid } from './Grid.svelte';

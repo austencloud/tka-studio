@@ -77,8 +77,7 @@ export function motionDataToObject(motion: MotionData): Record<string, unknown> 
 }
 
 export function motionDataFromObject(data: Record<string, unknown>): MotionData {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const partialData: any = {};
+	const partialData: Record<string, unknown> = {};
 
 	if (data.motion_type !== undefined) {
 		partialData.motion_type = data.motion_type;

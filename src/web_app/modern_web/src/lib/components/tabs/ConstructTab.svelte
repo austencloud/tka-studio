@@ -64,7 +64,9 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr; /* 50/50 split between left panel and right panel */
 		overflow: hidden;
-		gap: 8px;
+		gap: var(--spacing-xs); /* Add small gap between content and button panel */
+
+
 		padding: 8px;
 	}
 

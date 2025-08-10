@@ -47,7 +47,8 @@ export class ConstructTabEventService {
 				'🎭 Start position selected in ConstructTabEventService:',
 				startPosition.pictograph_data?.id
 			);
-			setTransitioning(true);
+			// DON'T set transitioning immediately - let the fade transitions handle the UI
+			// setTransitioning(true); // ← REMOVED to prevent flash
 
 			// Ensure coordination service is available - retry resolution if needed
 			if (!this.constructCoordinator) {
@@ -78,7 +79,8 @@ export class ConstructTabEventService {
 			console.error('❌ Error handling start position selection:', error);
 			setError(error instanceof Error ? error.message : 'Failed to set start position');
 		} finally {
-			setTransitioning(false);
+			// No need to set transitioning to false since we don't set it to true
+			// setTransitioning(false); // ← REMOVED to match the removal above
 		}
 	}
 
@@ -128,7 +130,7 @@ export class ConstructTabEventService {
 	/**
 	 * Handle arrow selection from the Graph Editor
 	 */
-	handleArrowSelected(arrowData: any): void {
+	handleArrowSelected(arrowData: unknown): void {
 		console.log('ConstructTabEventService: Arrow selected in graph editor', arrowData);
 		// Handle arrow selection events from graph editor
 		// This could be used for highlighting or additional UI feedback
@@ -191,7 +193,7 @@ export class ConstructTabEventService {
 		if (this.constructCoordinator) {
 			this.constructCoordinator.setupComponentCoordination({
 				constructTab: {
-					handleEvent: (eventType: string, data: any) => {
+					handleEvent: (eventType: string, data: unknown) => {
 						switch (eventType) {
 							case 'ui_transition':
 								// Handle legacy transition events if needed

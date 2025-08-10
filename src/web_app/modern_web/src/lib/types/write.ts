@@ -11,7 +11,7 @@
 export interface SequenceData {
 	id: string;
 	name: string;
-	beats: any[]; // Beat data structure
+	beats: unknown[]; // Beat data structure
 	thumbnail?: string; // Base64 or URL to thumbnail image
 	duration?: number; // Duration in seconds
 	metadata?: {

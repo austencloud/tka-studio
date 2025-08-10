@@ -5,8 +5,8 @@
  * Based on the modern desktop app's BeatData adapted for TypeScript.
  */
 
-import type { PictographData } from './PictographData';
 import type { MotionData } from './MotionData';
+import type { PictographData } from './PictographData';
 
 export interface BeatData {
 	readonly id: string;
@@ -16,7 +16,7 @@ export interface BeatData {
 	readonly red_reversal: boolean;
 	readonly is_blank: boolean;
 	readonly pictograph_data?: PictographData | null;
-	readonly metadata: Record<string, any>;
+	readonly metadata: Record<string, unknown>;
 }
 
 export function createBeatData(data: Partial<BeatData> = {}): BeatData {
@@ -79,7 +79,7 @@ export function createBeatFromPictograph(
 	});
 }
 
-export function beatDataToObject(beat: BeatData): Record<string, any> {
+export function beatDataToObject(beat: BeatData): Record<string, unknown> {
 	return {
 		id: beat.id,
 		beat_number: beat.beat_number,
@@ -92,7 +92,7 @@ export function beatDataToObject(beat: BeatData): Record<string, any> {
 	};
 }
 
-export function beatDataFromObject(data: Record<string, any>): BeatData {
+export function beatDataFromObject(data: Record<string, unknown>): BeatData {
 	return createBeatData({
 		id: data.id,
 		beat_number: data.beat_number,

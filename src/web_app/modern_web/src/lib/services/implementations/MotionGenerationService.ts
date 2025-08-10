@@ -6,6 +6,7 @@
  */
 
 import type { BeatData, MotionData } from '$lib/domain';
+import { Location, MotionType, Orientation, RotationDirection } from '$lib/domain/enums';
 import type { GenerationOptions, IMotionGenerationService } from '../interfaces';
 
 export class MotionGenerationService implements IMotionGenerationService {
@@ -21,10 +22,34 @@ export class MotionGenerationService implements IMotionGenerationService {
 			console.log(`Generating ${color} motion`);
 
 			// Basic motion generation (placeholder)
-			const motionTypes = ['pro', 'anti', 'float', 'dash', 'static'] as const;
-			const locations = ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'] as const;
-			const orientations = ['in', 'out', 'clock', 'counter'] as const;
-			const rotationDirections = ['cw', 'ccw', 'no_rot'] as const;
+			const motionTypes = [
+				MotionType.PRO,
+				MotionType.ANTI,
+				MotionType.FLOAT,
+				MotionType.DASH,
+				MotionType.STATIC,
+			];
+			const locations = [
+				Location.NORTH,
+				Location.EAST,
+				Location.SOUTH,
+				Location.WEST,
+				Location.NORTHEAST,
+				Location.SOUTHEAST,
+				Location.SOUTHWEST,
+				Location.NORTHWEST,
+			];
+			const orientations = [
+				Orientation.IN,
+				Orientation.OUT,
+				Orientation.CLOCK,
+				Orientation.COUNTER,
+			];
+			const rotationDirections = [
+				RotationDirection.CLOCKWISE,
+				RotationDirection.COUNTER_CLOCKWISE,
+				RotationDirection.NO_ROTATION,
+			];
 
 			// Simple random selection (will be replaced with proper algorithms)
 			const motionType = this.randomChoice(motionTypes);
@@ -38,13 +63,13 @@ export class MotionGenerationService implements IMotionGenerationService {
 			const turns = this.calculateTurns(motionType, startLoc, endLoc);
 
 			const motion: MotionData = {
-				motion_type: motionType as any,
-				prop_rot_dir: propRotDir as any,
-				start_loc: startLoc as any,
-				end_loc: endLoc as any,
+				motion_type: motionType,
+				prop_rot_dir: propRotDir,
+				start_loc: startLoc,
+				end_loc: endLoc,
 				turns,
-				start_ori: startOri as any,
-				end_ori: endOri as any,
+				start_ori: startOri,
+				end_ori: endOri,
 				is_visible: true,
 			};
 

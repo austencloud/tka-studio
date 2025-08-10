@@ -129,6 +129,7 @@
 		background: transparent;
 		border-radius: 12px;
 		overflow: hidden;
+		
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 

@@ -1,18 +1,19 @@
 <!--
 	Question Generator Component
-	
+
 	Generates and displays quiz questions for different lesson types.
 	Handles question content, answer options, and user interactions.
 -->
 
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import type { QuestionData, AnswerOption, LessonType } from '$lib/types/learn';
+	import type { PictographData } from '$domain/PictographData';
 	import { QuestionGeneratorService } from '$lib/services/learn/QuestionGeneratorService';
-	import PictographRenderer from './PictographRenderer.svelte';
+	import type { AnswerOption, LessonType, QuestionData } from '$lib/types/learn';
+	import { AnswerFormat } from '$lib/types/learn';
+	import { createEventDispatcher } from 'svelte';
 	import AnswerButton from './AnswerButton.svelte';
 	import AnswerPictograph from './AnswerPictograph.svelte';
-	import { AnswerFormat } from '$lib/types/learn';
+	import PictographRenderer from './PictographRenderer.svelte';
 
 	// Props
 	export let lessonType: LessonType;
@@ -23,7 +24,7 @@
 
 	// Events
 	const dispatch = createEventDispatcher<{
-		answerSelected: { answerId: string; answerContent: any; isCorrect: boolean };
+		answerSelected: { answerId: string; answerContent: PictographData; isCorrect: boolean };
 		nextQuestion: void;
 	}>();
 

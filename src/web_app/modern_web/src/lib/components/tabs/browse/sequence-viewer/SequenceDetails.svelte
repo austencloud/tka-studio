@@ -1,13 +1,27 @@
 <!-- SequenceDetails.svelte - Sequence metadata and details display -->
 <script lang="ts">
+	import type { SequenceData } from '$domain/SequenceData';
+
 	interface Props {
-		sequence?: any;
+		sequence?: SequenceData & {
+			difficulty?: number;
+			tags?: string[];
+			description?: string;
+			author?: string;
+			dateCreated?: string;
+			isFavorite?: boolean;
+			word?: string;
+			length?: number;
+			startPosition?: string;
+			gridMode?: string;
+			dateAdded?: Date;
+		};
 	}
 
 	let { sequence }: Props = $props();
 
 	function getDifficultyColor(difficulty: number) {
-		const colors = {
+		const colors: Record<number, string> = {
 			1: '#10b981', // green
 			2: '#f59e0b', // yellow
 			3: '#ef4444', // red
@@ -17,7 +31,7 @@
 	}
 
 	function getDifficultyLabel(difficulty: number) {
-		const labels = {
+		const labels: Record<number, string> = {
 			1: 'Beginner',
 			2: 'Intermediate',
 			3: 'Advanced',
@@ -44,33 +58,38 @@
 	<div class="details-grid">
 		<div class="detail-item">
 			<span class="detail-label">Length</span>
-			<span class="detail-value">{sequence.length} beats</span>
+			<span class="detail-value">{sequence?.length || 0} beats</span>
 		</div>
 
 		<div class="detail-item">
 			<span class="detail-label">Start Position</span>
-			<span class="detail-value">{sequence.startPosition}</span>
+			<span class="detail-value">{sequence?.startPosition || 'Unknown'}</span>
 		</div>
 
 		<div class="detail-item">
 			<span class="detail-label">Grid Mode</span>
-			<span class="detail-value">{sequence.gridMode}</span>
+			<span class="detail-value">{sequence?.gridMode || 'Diamond'}</span>
 		</div>
 
 		<div class="detail-item">
 			<span class="detail-label">Author</span>
-			<span class="detail-value">{sequence.author}</span>
+			<span class="detail-value">{sequence?.author || 'Unknown'}</span>
 		</div>
 
 		<div class="detail-item">
 			<span class="detail-label">Date Added</span>
-			<span class="detail-value">{formatDate(sequence.dateAdded)}</span>
+			<span class="detail-value"
+				>{sequence?.dateAdded ? formatDate(sequence.dateAdded) : 'Unknown'}</span
+			>
 		</div>
 
 		<div class="detail-item">
 			<span class="detail-label">Difficulty</span>
-			<span class="detail-value" style="color: {getDifficultyColor(sequence.difficulty)}">
-				{getDifficultyLabel(sequence.difficulty)}
+			<span
+				class="detail-value"
+				style="color: {getDifficultyColor(sequence?.difficulty || 1)}"
+			>
+				{getDifficultyLabel(sequence?.difficulty || 1)}
 			</span>
 		</div>
 	</div>
@@ -79,7 +98,7 @@
 		<div class="tags-section">
 			<h4>Tags</h4>
 			<div class="tags-container">
-				{#each sequence.tags as tag}
+				{#each sequence?.tags || [] as tag}
 					<span class="tag">{tag}</span>
 				{/each}
 			</div>

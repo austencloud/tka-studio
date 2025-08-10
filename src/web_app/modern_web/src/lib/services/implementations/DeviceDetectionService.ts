@@ -3,7 +3,11 @@
  * Uses modern detection methods based on research from W3C, Material Design, and iOS guidelines
  */
 
-import type { DeviceCapabilities, IDeviceDetectionService, ResponsiveSettings } from '../interfaces';
+import type {
+	DeviceCapabilities,
+	IDeviceDetectionService,
+	ResponsiveSettings,
+} from '../interfaces';
 
 export class DeviceDetectionService implements IDeviceDetectionService {
 	private capabilities: DeviceCapabilities | null = null;
@@ -49,7 +53,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 			elementSpacing,
 			allowScrolling,
 			layoutDensity,
-			fontScaling
+			fontScaling,
 		};
 	}
 
@@ -87,7 +91,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 	private detectCapabilities(): void {
 		const viewport = {
 			width: window.innerWidth,
-			height: window.innerHeight
+			height: window.innerHeight,
 		};
 
 		// Touch detection using multiple methods for reliability
@@ -112,7 +116,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 			hasPrecisePointer,
 			hasKeyboard,
 			viewport,
-			pixelRatio: window.devicePixelRatio || 1
+			pixelRatio: window.devicePixelRatio || 1,
 		};
 
 		// Update CSS custom properties
@@ -125,7 +129,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 			'ontouchstart' in window ||
 			navigator.maxTouchPoints > 0 ||
 			// Legacy IE support
-			(navigator as any).msMaxTouchPoints > 0
+			((navigator as Navigator & { msMaxTouchPoints?: number }).msMaxTouchPoints ?? 0) > 0
 		);
 	}
 
@@ -190,18 +194,9 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 		);
 
 		// Set data attributes for CSS targeting
-		document.documentElement.setAttribute(
-			'data-device-type',
-			this.capabilities.primaryInput
-		);
-		document.documentElement.setAttribute(
-			'data-screen-size',
-			this.capabilities.screenSize
-		);
-		document.documentElement.setAttribute(
-			'data-layout-density',
-			settings.layoutDensity
-		);
+		document.documentElement.setAttribute('data-device-type', this.capabilities.primaryInput);
+		document.documentElement.setAttribute('data-screen-size', this.capabilities.screenSize);
+		document.documentElement.setAttribute('data-layout-density', settings.layoutDensity);
 	}
 
 	private setupListeners(): void {
@@ -264,7 +259,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 
 	private notifyListeners(): void {
 		if (this.capabilities) {
-			this.listeners.forEach(callback => callback(this.capabilities!));
+			this.listeners.forEach((callback) => callback(this.capabilities!));
 		}
 	}
 

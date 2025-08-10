@@ -10,9 +10,20 @@ import type {
 	BeatData as ModernBeatData,
 	PictographData as ModernPictographData,
 	PropData as ModernPropData,
+	MotionData,
 } from '$lib/domain';
 import { createMotionData } from '$lib/domain';
-import { ArrowType, GridMode, Orientation, PropType, RotationDirection } from '$lib/domain/enums';
+import {
+	ArrowType,
+	Direction,
+	GridMode,
+	GridPosition,
+	LetterType,
+	Orientation,
+	PropType,
+	RotationDirection,
+	Timing,
+} from '$lib/domain/enums';
 import type { PictographData as LegacyPictographData } from '$lib/services/interfaces';
 import { calculateArrowLocation } from './utils/arrowLocationCalculator';
 
@@ -38,8 +49,9 @@ export function legacyToModernPictographData(legacy: LegacyPictographData): Mode
 			red: legacy.props?.red || createEmptyModernPropData('red'),
 		},
 		motions: {
-			blue: (legacy as any).motions?.blue || createMotionData(),
-			red: (legacy as any).motions?.red || createMotionData(),
+			blue:
+				(legacy as { motions?: { blue?: MotionData } }).motions?.blue || createMotionData(),
+			red: (legacy as { motions?: { red?: MotionData } }).motions?.red || createMotionData(),
 		},
 		letter: legacy.letter !== undefined ? legacy.letter : null,
 		start_position: null, // Map if available in legacy
@@ -134,67 +146,102 @@ function createEmptyModernPropData(color: 'blue' | 'red'): ModernPropData {
 /**
  * Convert legacy arrow data to modern structure with calculated location
  */
-export function legacyToModernArrowData(legacy: any, color: 'blue' | 'red'): ModernArrowData {
+export function legacyToModernArrowData(
+	legacy: Record<string, unknown>,
+	color: 'blue' | 'red'
+): ModernArrowData {
 	// Calculate the correct arrow location based on start/end positions
 	const calculatedLocation = calculateArrowLocation({
-		start_loc: legacy.startLoc || legacy.start_loc || '',
-		end_loc: legacy.endLoc || legacy.end_loc || '',
-		motion_type: legacy.motionType || legacy.motion_type || 'static',
+		start_loc: (legacy.startLoc as string) || (legacy.start_loc as string) || '',
+		end_loc: (legacy.endLoc as string) || (legacy.end_loc as string) || '',
+		motion_type: (legacy.motionType as string) || (legacy.motion_type as string) || 'static',
 	});
 
 	return {
-		id: legacy.id || crypto.randomUUID(),
+		id: (legacy.id as string) || crypto.randomUUID(),
 		arrow_type: color === 'blue' ? ArrowType.BLUE : ArrowType.RED,
 		color,
-		motion_type: legacy.motionType || legacy.motion_type || 'static',
-		location: calculatedLocation || legacy.loc || legacy.location || 'center',
-		start_orientation: legacy.startOri || legacy.start_orientation || 'in',
-		end_orientation: legacy.endOri || legacy.end_orientation || 'in',
-		rotation_direction: legacy.propRotDir || legacy.rotation_direction || 'clockwise',
-		turns: legacy.turns || 0,
-		is_mirrored: legacy.svgMirrored || legacy.is_mirrored || false,
-		position_x: legacy.coords?.x || legacy.coordinates?.x || 0,
-		position_y: legacy.coords?.y || legacy.coordinates?.y || 0,
-		rotation_angle: legacy.rotAngle || legacy.rotation_angle || 0,
-		coordinates: legacy.coords || legacy.coordinates || null,
-		svg_center: legacy.svgCenter || legacy.svg_center || null,
-		svg_mirrored: legacy.svgMirrored || legacy.svg_mirrored || false,
-		is_visible: legacy.is_visible !== undefined ? legacy.is_visible : true,
-		is_selected: legacy.is_selected || false,
+		motion_type: (legacy.motionType as string) || (legacy.motion_type as string) || 'static',
+		location:
+			calculatedLocation || (legacy.loc as string) || (legacy.location as string) || 'center',
+		start_orientation:
+			(legacy.startOri as string) || (legacy.start_orientation as string) || 'in',
+		end_orientation: (legacy.endOri as string) || (legacy.end_orientation as string) || 'in',
+		rotation_direction:
+			(legacy.propRotDir as string) || (legacy.rotation_direction as string) || 'clockwise',
+		turns: (legacy.turns as number) || 0,
+		is_mirrored: (legacy.svgMirrored as boolean) || (legacy.is_mirrored as boolean) || false,
+		position_x:
+			(legacy.coords as { x?: number })?.x || (legacy.coordinates as { x?: number })?.x || 0,
+		position_y:
+			(legacy.coords as { y?: number })?.y || (legacy.coordinates as { y?: number })?.y || 0,
+		rotation_angle: (legacy.rotAngle as number) || (legacy.rotation_angle as number) || 0,
+		coordinates:
+			(legacy.coords as { x: number; y: number }) ||
+			(legacy.coordinates as { x: number; y: number }) ||
+			null,
+		svg_center:
+			(legacy.svgCenter as { x: number; y: number }) ||
+			(legacy.svg_center as { x: number; y: number }) ||
+			null,
+		svg_mirrored: (legacy.svgMirrored as boolean) || (legacy.svg_mirrored as boolean) || false,
+		is_visible: legacy.is_visible !== undefined ? (legacy.is_visible as boolean) : true,
+		is_selected: (legacy.is_selected as boolean) || false,
 	};
 }
 
 /**
  * Convert legacy prop data to modern structure
  */
-export function legacyToModernPropData(legacy: any, color: 'blue' | 'red'): ModernPropData {
+export function legacyToModernPropData(
+	legacy: Record<string, unknown>,
+	color: 'blue' | 'red'
+): ModernPropData {
 	return {
-		id: legacy.id || crypto.randomUUID(),
-		prop_type: legacy.propType || legacy.prop_type || PropType.STAFF,
+		id: (legacy.id as string) || crypto.randomUUID(),
+		prop_type:
+			(legacy.propType as PropType) || (legacy.prop_type as PropType) || PropType.STAFF,
 		color,
-		orientation: legacy.ori || legacy.orientation || Orientation.IN,
+		orientation:
+			(legacy.ori as Orientation) || (legacy.orientation as Orientation) || Orientation.IN,
 		rotation_direction:
-			legacy.rotDir || legacy.rotation_direction || RotationDirection.NO_ROTATION,
-		location: legacy.loc || legacy.location || 'center',
-		position_x: legacy.coords?.x || legacy.coordinates?.x || 0,
-		position_y: legacy.coords?.y || legacy.coordinates?.y || 0,
-		rotation_angle: legacy.rotAngle || legacy.rotation_angle || 0,
-		coordinates: legacy.coords || legacy.coordinates || null,
-		svg_center: legacy.svgCenter || legacy.svg_center || null,
-		is_visible: legacy.is_visible !== undefined ? legacy.is_visible : true,
-		is_selected: legacy.is_selected || false,
+			(legacy.rotDir as RotationDirection) ||
+			(legacy.rotation_direction as RotationDirection) ||
+			RotationDirection.NO_ROTATION,
+		location: (legacy.loc as string) || (legacy.location as string) || 'center',
+		position_x:
+			(legacy.coords as { x?: number })?.x || (legacy.coordinates as { x?: number })?.x || 0,
+		position_y:
+			(legacy.coords as { y?: number })?.y || (legacy.coordinates as { y?: number })?.y || 0,
+		rotation_angle: (legacy.rotAngle as number) || (legacy.rotation_angle as number) || 0,
+		coordinates:
+			(legacy.coords as { x: number; y: number }) ||
+			(legacy.coordinates as { x: number; y: number }) ||
+			null,
+		svg_center:
+			(legacy.svgCenter as { x: number; y: number }) ||
+			(legacy.svg_center as { x: number; y: number }) ||
+			null,
+		is_visible: legacy.is_visible !== undefined ? (legacy.is_visible as boolean) : true,
+		is_selected: (legacy.is_selected as boolean) || false,
 	};
 }
 
 /**
  * Extract arrow data from legacy pictograph structure (direct properties)
  */
-export function extractLegacyArrowData(legacy: any): {
+export function extractLegacyArrowData(legacy: Record<string, unknown>): {
 	blue: ModernArrowData | null;
 	red: ModernArrowData | null;
 } {
-	const blue = legacy.blueArrowData || legacy.blue_arrow_data || null;
-	const red = legacy.redArrowData || legacy.red_arrow_data || null;
+	const blue =
+		(legacy.blueArrowData as Record<string, unknown>) ||
+		(legacy.blue_arrow_data as Record<string, unknown>) ||
+		null;
+	const red =
+		(legacy.redArrowData as Record<string, unknown>) ||
+		(legacy.red_arrow_data as Record<string, unknown>) ||
+		null;
 
 	return {
 		blue: blue ? legacyToModernArrowData(blue, 'blue') : null,
@@ -205,12 +252,18 @@ export function extractLegacyArrowData(legacy: any): {
 /**
  * Extract prop data from legacy pictograph structure (direct properties)
  */
-export function extractLegacyPropData(legacy: any): {
+export function extractLegacyPropData(legacy: Record<string, unknown>): {
 	blue: ModernPropData | null;
 	red: ModernPropData | null;
 } {
-	const blue = legacy.bluePropData || legacy.blue_prop_data || null;
-	const red = legacy.redPropData || legacy.red_prop_data || null;
+	const blue =
+		(legacy.bluePropData as Record<string, unknown>) ||
+		(legacy.blue_prop_data as Record<string, unknown>) ||
+		null;
+	const red =
+		(legacy.redPropData as Record<string, unknown>) ||
+		(legacy.red_prop_data as Record<string, unknown>) ||
+		null;
 
 	return {
 		blue: blue ? legacyToModernPropData(blue, 'blue') : null,
@@ -221,12 +274,14 @@ export function extractLegacyPropData(legacy: any): {
 /**
  * Convert any pictograph data (legacy or modern) to modern structure
  */
-export function ensureModernPictographData(data: any): ModernPictographData | null {
+export function ensureModernPictographData(
+	data: Record<string, unknown>
+): ModernPictographData | null {
 	if (!data) return null;
 
 	// If it already looks like modern data (has grid_data property)
-	if (data.grid_data && data.arrows && data.props) {
-		return data as ModernPictographData;
+	if (data.grid_data && data.arrows && data.props && typeof data.id === 'string') {
+		return data as unknown as ModernPictographData;
 	}
 
 	// If it looks like legacy data with direct properties
@@ -235,7 +290,7 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 		const props = extractLegacyPropData(data);
 
 		return {
-			id: data.id || crypto.randomUUID(),
+			id: typeof data.id === 'string' ? data.id : crypto.randomUUID(),
 			grid_data: {
 				grid_mode: (data.gridMode || data.grid_mode || GridMode.DIAMOND) as GridMode,
 				center_x: 0,
@@ -253,33 +308,45 @@ export function ensureModernPictographData(data: any): ModernPictographData | nu
 			},
 			motions: {
 				blue:
-					data.blueMotionData ||
-					data.blue_motion_data ||
-					data.motions?.blue ||
+					(data.blueMotionData as MotionData) ||
+					(data.blue_motion_data as MotionData) ||
 					createMotionData(),
 				red:
-					data.redMotionData ||
-					data.red_motion_data ||
-					data.motions?.red ||
+					(data.redMotionData as MotionData) ||
+					(data.red_motion_data as MotionData) ||
 					createMotionData(),
 			},
-			letter: data.letter !== undefined ? data.letter : null,
-			start_position: data.startPos || data.start_position || null,
-			end_position: data.endPos || data.end_position || null,
-			beat: data.beat || 0,
-			timing: data.timing || null,
-			direction: data.direction || null,
-			duration: data.duration || null,
-			letter_type: data.letter_type || null,
-			is_blank: data.is_blank || false,
-			is_mirrored: data.is_mirrored || false,
-			metadata: data.metadata || {},
+			letter: typeof data.letter === 'string' ? data.letter : null,
+			start_position:
+				typeof data.startPos === 'string'
+					? (data.startPos as GridPosition)
+					: typeof data.start_position === 'string'
+						? (data.start_position as GridPosition)
+						: null,
+			end_position:
+				typeof data.endPos === 'string'
+					? (data.endPos as GridPosition)
+					: typeof data.end_position === 'string'
+						? (data.end_position as GridPosition)
+						: null,
+			beat: typeof data.beat === 'number' ? data.beat : 0,
+			timing: typeof data.timing === 'string' ? (data.timing as Timing) : null,
+			direction: typeof data.direction === 'string' ? (data.direction as Direction) : null,
+			duration: typeof data.duration === 'number' ? data.duration : null,
+			letter_type:
+				typeof data.letter_type === 'string' ? (data.letter_type as LetterType) : null,
+			is_blank: typeof data.is_blank === 'boolean' ? data.is_blank : false,
+			is_mirrored: typeof data.is_mirrored === 'boolean' ? data.is_mirrored : false,
+			metadata:
+				typeof data.metadata === 'object' && data.metadata !== null
+					? (data.metadata as Record<string, unknown>)
+					: {},
 		};
 	}
 
 	// If it's from the service interfaces
 	if (data.arrows || data.props) {
-		return legacyToModernPictographData(data);
+		return legacyToModernPictographData(data as unknown as LegacyPictographData);
 	}
 
 	return null;

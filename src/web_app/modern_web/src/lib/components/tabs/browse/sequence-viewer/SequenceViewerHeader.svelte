@@ -1,7 +1,12 @@
 <!-- SequenceViewerHeader.svelte - Header with title, back button, and difficulty -->
 <script lang="ts">
+	import type { SequenceData } from '$domain/SequenceData';
+
 	interface Props {
-		sequence?: any;
+		sequence?: SequenceData & {
+			difficulty?: number;
+			word?: string;
+		};
 		onBackToBrowser?: () => void;
 	}
 
@@ -48,12 +53,12 @@
 	</button>
 
 	<div class="sequence-header-info">
-		<h2 class="sequence-title">{sequence.word}</h2>
+		<h2 class="sequence-title">{sequence?.word || 'Untitled Sequence'}</h2>
 		<div
 			class="difficulty-badge"
-			style="--difficulty-color: {getDifficultyColor(sequence.difficulty)}"
+			style="--difficulty-color: {getDifficultyColor(sequence?.difficulty || 1)}"
 		>
-			{getDifficultyLabel(sequence.difficulty)}
+			{getDifficultyLabel(sequence?.difficulty || 1)}
 		</div>
 	</div>
 </div>

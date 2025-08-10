@@ -1,14 +1,14 @@
 <!-- PropTypeTab.svelte - Prop type selection with actual desktop app files -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { AppSettings } from '$services/interfaces';
 	import SettingCard from '../SettingCard.svelte';
 
 	interface Props {
-		settings: any;
+		settings: AppSettings;
+		onUpdate?: (event: { key: string; value: unknown }) => void;
 	}
 
-	let { settings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { settings, onUpdate }: Props = $props();
 
 	// Exact prop types from desktop app prop_type_tab.py
 	const propTypes = [
@@ -31,7 +31,7 @@
 
 	function selectPropType(propType: string) {
 		selectedPropType = propType;
-		dispatch('update', { key: 'propType', value: propType });
+		onUpdate?.({ key: 'propType', value: propType });
 	}
 </script>
 

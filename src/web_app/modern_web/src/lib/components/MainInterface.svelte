@@ -29,16 +29,16 @@
 	// Simple transition functions that respect animation settings
 	const tabOut = (node: Element) => {
 		const animationsEnabled = settings.animationsEnabled !== false;
-		return fade(node, { 
-			duration: animationsEnabled ? 250 : 0 
+		return fade(node, {
+			duration: animationsEnabled ? 250 : 0,
 		});
 	};
 
 	const tabIn = (node: Element) => {
 		const animationsEnabled = settings.animationsEnabled !== false;
-		return fade(node, { 
+		return fade(node, {
 			duration: animationsEnabled ? 300 : 0,
-			delay: animationsEnabled ? 250 : 0 // Wait for out transition
+			delay: animationsEnabled ? 250 : 0, // Wait for out transition
 		});
 	};
 

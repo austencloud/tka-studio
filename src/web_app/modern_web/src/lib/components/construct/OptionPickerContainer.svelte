@@ -37,6 +37,44 @@
 	// Use sophisticated state management system
 	const optionPickerState = createOptionPickerRunes();
 
+	// Helper to check if preloaded data exists
+	const hasPreloadedData = $derived(() => {
+		if (typeof window === 'undefined') return false;
+
+		// Check for individual preloaded data
+		const preloadedData = localStorage.getItem('preloaded_options');
+		if (preloadedData) {
+			try {
+				const options = JSON.parse(preloadedData);
+				return Array.isArray(options) && options.length > 0;
+			} catch {
+				return false;
+			}
+		}
+
+		// Check for bulk preloaded data
+		const allPreloadedData = localStorage.getItem('all_preloaded_options');
+		if (allPreloadedData) {
+			try {
+				const allOptions = JSON.parse(allPreloadedData);
+				return Object.keys(allOptions).length > 0;
+			} catch {
+				return false;
+			}
+		}
+
+		return false;
+	});
+
+	// Only show loading if we're actually loading AND don't have preloaded data
+	const shouldShowLoading = $derived(() => {
+		return (
+			optionPickerState.isLoading &&
+			!hasPreloadedData() &&
+			optionPickerState.optionsData().length === 0
+		);
+	});
+
 	// Derived device and layout information
 	const foldableInfo = $derived(() => detectFoldableDevice());
 	const deviceInfo = $derived(() => getEnhancedDeviceType(containerWidth, containerWidth < 768));
@@ -55,7 +93,6 @@
 
 	// Reactive access to options data
 	const optionsData = $derived(() => optionPickerState.optionsData);
-	const isLoading = $derived(() => optionPickerState.isLoading);
 	const error = $derived(() => optionPickerState.error);
 
 	// Handle container resize
@@ -70,6 +107,68 @@
 		onOptionSelected?.(option);
 	}
 
+	// Helper function to load preloaded data directly into state
+	function loadPreloadedData() {
+		if (typeof window === 'undefined') return false;
+
+		try {
+			// Check for individual preloaded data first
+			const preloadedData = localStorage.getItem('preloaded_options');
+			if (preloadedData) {
+				const options = JSON.parse(preloadedData);
+				if (Array.isArray(options) && options.length > 0) {
+					console.log('✨ Loading individually preloaded options directly into state');
+					optionPickerState.setOptions(options);
+					localStorage.removeItem('preloaded_options'); // Clear after use
+					return true;
+				}
+			}
+
+			// Check for bulk preloaded data
+			const allPreloadedData = localStorage.getItem('all_preloaded_options');
+			if (allPreloadedData) {
+				const allOptions = JSON.parse(allPreloadedData);
+				console.log('🔍 Available bulk preloaded keys:', Object.keys(allOptions));
+
+				// Determine the current end position we need options for
+				let targetEndPosition: string | null = null;
+				const startPositionData = localStorage.getItem('start_position');
+				if (startPositionData) {
+					const startPosition = JSON.parse(startPositionData);
+					// Look for endPos in metadata (StartPositionPicker format)
+					targetEndPosition =
+						startPosition.metadata?.endPos || startPosition.endPos || null;
+					console.log('🎯 Looking for end position:', targetEndPosition);
+					console.log(
+						'📋 Start position data structure:',
+						JSON.stringify(startPosition, null, 2)
+					);
+				}
+
+				// If we have preloaded options for this end position, use them
+				if (targetEndPosition && allOptions[targetEndPosition]) {
+					const optionsForPosition = allOptions[targetEndPosition];
+					console.log(
+						`✨ Loading bulk preloaded options for ${targetEndPosition} directly into state`
+					);
+					optionPickerState.setOptions(optionsForPosition);
+					return true;
+				} else {
+					console.log(
+						`❌ No bulk preloaded options found for end position: ${targetEndPosition}`
+					);
+					console.log('📦 All available bulk keys:', Object.keys(allOptions));
+				}
+			} else {
+				console.log('❌ No bulk preloaded data found in localStorage');
+			}
+		} catch (error) {
+			console.warn('Failed to load preloaded data:', error);
+		}
+
+		return false;
+	}
+
 	// Handle start position selection events
 	function handleStartPositionSelected(event: Event) {
 		const customEvent = event as CustomEvent;
@@ -77,13 +176,35 @@
 			'🎯 OptionPickerContainer received start-position-selected:',
 			customEvent.detail
 		);
-		optionPickerState.loadOptions([]); // Empty array loads from start position
+
+		// Try to load preloaded data first
+		if (!loadPreloadedData()) {
+			console.log('🎯 No preloaded data for start position change, loading options normally');
+			optionPickerState.loadOptions([]); // Empty array loads from start position
+		}
 	}
 
 	// Initialize on mount
 	onMount(() => {
 		console.log('🎯 OptionPickerContainer mounted - using sophisticated systems');
-		optionPickerState.loadOptions([]); // Empty array loads from start position
+
+		// Add debug logging for localStorage contents
+		if (typeof window !== 'undefined') {
+			const startPosData = localStorage.getItem('start_position');
+			const allPreloadedData = localStorage.getItem('all_preloaded_options');
+			console.log('🔍 localStorage DEBUG:');
+			console.log('  - start_position:', startPosData ? JSON.parse(startPosData) : null);
+			console.log(
+				'  - all_preloaded_options keys:',
+				allPreloadedData ? Object.keys(JSON.parse(allPreloadedData)) : null
+			);
+		}
+
+		// Try to load preloaded data first, fallback to normal loading
+		if (!loadPreloadedData()) {
+			console.log('🎯 No preloaded data found, loading options normally');
+			optionPickerState.loadOptions([]); // Empty array loads from start position
+		}
 
 		// Listen for start position selection events
 		document.addEventListener('start-position-selected', handleStartPositionSelected);
@@ -98,8 +219,11 @@
 	$effect(() => {
 		if (currentSequence) {
 			console.log('🔄 OptionPickerContainer sequence changed, reloading options');
-			// For now, just reload from start position when sequence changes
-			optionPickerState.loadOptions([]);
+			// Try to load preloaded data first, fallback to normal loading
+			if (!loadPreloadedData()) {
+				console.log('🎯 No preloaded data for sequence change, loading options normally');
+				optionPickerState.loadOptions([]);
+			}
 		}
 	});
 </script>
@@ -119,7 +243,7 @@
 
 	<!-- Main content area -->
 	<div class="content-area">
-		{#if isLoading()}
+		{#if shouldShowLoading()}
 			<div class="loading-container">
 				<div class="loading-spinner"></div>
 				<p>Loading options...</p>
@@ -167,7 +291,6 @@
 		height: 100%;
 		width: 100%;
 		position: relative;
-		background: var(--background-color, #f8f9fa);
 		border-radius: 8px;
 		overflow: hidden;
 	}

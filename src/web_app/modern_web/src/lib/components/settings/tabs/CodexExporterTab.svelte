@@ -1,25 +1,26 @@
 <!-- CodexExporterTab.svelte - Export all pictographs with turn configurations -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { AppSettings } from '$services/interfaces';
 	import SelectInput from '../SelectInput.svelte';
 	import SettingCard from '../SettingCard.svelte';
 	import TextInput from '../TextInput.svelte';
 	import ToggleSetting from '../ToggleSetting.svelte';
 
 	interface Props {
-		settings: any;
+		settings: AppSettings & { codexExporter?: Record<string, unknown> };
+		onUpdate?: (event: { key: string; value: unknown }) => void;
+		onExport?: () => void;
 	}
 
-	let { settings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { settings, onUpdate, onExport }: Props = $props();
 
 	// Local state for form values - matching desktop app defaults
-	let redTurns = $state(settings.codexExporter?.redTurns ?? 16);
-	let blueTurns = $state(settings.codexExporter?.blueTurns ?? 16);
-	let gridMode = $state(settings.codexExporter?.gridMode ?? 'diamond');
-	let generateAll = $state(settings.codexExporter?.generateAll ?? true);
-	let quality = $state(settings.codexExporter?.quality ?? 300);
-	let includeMetadata = $state(settings.codexExporter?.includeMetadata ?? true);
+	let redTurns = $state((settings.codexExporter?.redTurns as number) ?? 16);
+	let blueTurns = $state((settings.codexExporter?.blueTurns as number) ?? 16);
+	let gridMode = $state((settings.codexExporter?.gridMode as string) ?? 'diamond');
+	let generateAll = $state((settings.codexExporter?.generateAll as boolean) ?? true);
+	let quality = $state((settings.codexExporter?.quality as number) ?? 300);
+	let includeMetadata = $state((settings.codexExporter?.includeMetadata as boolean) ?? true);
 
 	// Options - matching desktop app
 	const gridModeOptions = [
@@ -67,21 +68,12 @@
 			quality,
 			includeMetadata,
 		};
-		dispatch('update', { key: 'codexExporter', value: codexExporterSettings });
+		onUpdate?.({ key: 'codexExporter', value: codexExporterSettings });
 	}
 
 	function handleExportClick() {
-		const config = {
-			red_turns: redTurns,
-			blue_turns: blueTurns,
-			grid_mode: gridMode,
-			generate_all: generateAll,
-			quality: quality,
-			include_metadata: includeMetadata,
-		};
-
 		// Emit export event (services will be handled later)
-		dispatch('export', config);
+		onExport?.();
 
 		// Show success message
 		alert('Pictograph export has been initiated. This may take several minutes to complete.');
