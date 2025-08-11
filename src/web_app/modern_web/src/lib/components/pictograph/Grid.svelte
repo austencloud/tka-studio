@@ -25,6 +25,7 @@ Uses pure runes instead of stores for reactivity.
 	let hasError = $state(false);
 	let errorMessage = $state<string | null>(null);
 	// Image element for potential future use
+	// @ts-expect-error: Used in bind:this but not referenced in code
 	let _imageElement = $state<SVGImageElement | null>(null);
 
 	// Derived state - grid image path

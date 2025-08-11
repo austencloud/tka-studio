@@ -62,19 +62,10 @@ separation of concerns and maintainability. Reduced from 537 lines to ~80 lines.
 	/>
 
 	<!-- Action buttons component -->
-	<ThumbnailActions
-		{sequence}
-		{isFavorite}
-		{onFavoriteToggle}
-		{onAction}
-	/>
+	<ThumbnailActions {sequence} {isFavorite} {onFavoriteToggle} {onAction} />
 
 	<!-- Metadata component -->
-	<ThumbnailMetadata
-		{sequence}
-		{viewMode}
-		showExtendedInfo={viewMode === 'list'}
-	/>
+	<ThumbnailMetadata {sequence} {viewMode} showExtendedInfo={viewMode === 'list'} />
 </div>
 
 <style>
@@ -102,11 +93,9 @@ separation of concerns and maintainability. Reduced from 537 lines to ~80 lines.
 		outline-offset: 2px;
 	}
 
-	/* Grid view (default) */
-	.grid-view {
-		aspect-ratio: 4/5;
-		min-height: 200px;
-	}
+	/* Grid view (default) - no additional styling needed */
+	/* Fixed aspect-ratio and min-height removed to allow natural sizing based on content */
+	/* The container will now expand vertically to accommodate the image's natural aspect ratio */
 
 	/* List view */
 	.list-view {

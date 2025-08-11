@@ -2,8 +2,8 @@
  * Data processing and directional tuple service interfaces.
  */
 
-import type { ArrowData, Location, MotionData, PictographData, GridMode } from '$lib/domain';
-import type { Point, MotionType, ArrowPosition, GridData } from './types';
+import type { ArrowData, GridMode, Location, MotionData, PictographData } from '$lib/domain';
+import type { ArrowPosition, GridData, MotionType, Point } from './types';
 
 // Directional tuple processing interfaces
 export interface IDirectionalTupleCalculator {

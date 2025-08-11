@@ -14,7 +14,7 @@
  */
 
 import type { MotionData, PictographData } from '$lib/domain';
-import type { ISpecialPlacementService } from '../../interfaces';
+import type { ISpecialPlacementService } from '../../placement-services';
 
 // Define Point interface locally since it might not be in domain
 interface Point {

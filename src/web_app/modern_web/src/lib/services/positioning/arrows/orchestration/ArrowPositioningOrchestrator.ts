@@ -14,8 +14,8 @@ import type {
 	IArrowLocationCalculator,
 	IArrowPositioningOrchestrator,
 	IArrowRotationCalculator,
-	Point,
-} from '../../interfaces';
+} from '../../core-services';
+import type { Point } from '../../types';
 
 export class ArrowPositioningOrchestrator implements IArrowPositioningOrchestrator {
 	private locationCalculator: IArrowLocationCalculator;

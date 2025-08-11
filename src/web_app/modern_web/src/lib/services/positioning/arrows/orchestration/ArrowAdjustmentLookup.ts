@@ -13,16 +13,15 @@
  * Direct TypeScript mirror of reference/modern/application/services/positioning/arrows/orchestration/arrow_adjustment_lookup.py
  */
 
-import type { ArrowData, MotionData, PictographData } from '$lib/domain';
+import type { ArrowData, GridMode, MotionData, PictographData } from '$lib/domain';
 import type {
 	IAttributeKeyGenerator,
-	IDefaultPlacementService,
 	IPlacementKeyGenerator,
 	ISpecialPlacementOriKeyGenerator,
-	ISpecialPlacementService,
 	ITurnsTupleKeyGenerator,
-	Point,
-} from '../../interfaces';
+} from '../../data-services';
+import type { IDefaultPlacementService, ISpecialPlacementService } from '../../placement-services';
+import type { MotionType, Point } from '../../types';
 
 export class ArrowAdjustmentLookup {
 	/**
@@ -221,8 +220,8 @@ export class ArrowAdjustmentLookup {
 			const adjustmentPoint = await this.defaultPlacementService.getDefaultAdjustment(
 				placementKey,
 				motionData.turns || 0,
-				motionData.motion_type as any,
-				gridMode as any
+				motionData.motion_type as MotionType,
+				gridMode as GridMode
 			);
 
 			return adjustmentPoint;

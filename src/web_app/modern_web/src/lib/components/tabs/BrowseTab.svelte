@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { SequenceData } from '$domain/SequenceData';
 	import type { BrowseSequenceMetadata } from '$lib/domain/browse';
 	import { NavigationMode } from '$lib/domain/browse';
 	import { resolve } from '$lib/services/bootstrap';
@@ -20,11 +19,11 @@
 	import DeleteConfirmationDialog from './browse/DeleteConfirmationDialog.svelte';
 	import ErrorBanner from './browse/ErrorBanner.svelte';
 	import FilterSelectionPanel from './browse/FilterSelectionPanel.svelte';
+	import FullscreenSequenceViewer from './browse/FullscreenSequenceViewer.svelte';
 	import LoadingOverlay from './browse/LoadingOverlay.svelte';
 	import NavigationSidebar from './browse/NavigationSidebar.svelte';
 	import PanelContainer from './browse/PanelContainer.svelte';
 	import SequenceBrowserPanel from './browse/sequence-browser/SequenceBrowserPanel.svelte';
-	import { SequenceViewer } from './browse/sequence-viewer';
 	// Extracted event handlers
 	import { createBrowseEventHandlers } from './browse/browse-event-handlers';
 	import { createNavigationEventHandlers } from './browse/navigation-event-handlers';
@@ -57,27 +56,15 @@
 	// ✅ PURE RUNES: Local UI state
 	let currentPanelIndex = $state(0); // 0 = filter selection, 1 = sequence browser
 	let isNavigationCollapsed = $state(false); // Navigation sidebar collapse state
+	let showFullscreenViewer = $state(false); // Fullscreen sequence viewer state
+	let fullscreenSequence = $state<BrowseSequenceMetadata | undefined>(undefined); // Current sequence for fullscreen
 
 	// ✅ DERIVED RUNES: Computed UI state from browse state
 	let selectedFilter = $derived(browseState.currentFilter);
-	let selectedSequence = $derived(browseState.selectedSequence);
 	let isLoading = $derived(browseState.isLoading);
 	let hasError = $derived(browseState.hasError);
 	let sequences = $derived(browseState.displayedSequences);
 	let navigationMode = $derived(browseState.navigationMode);
-
-	// Transform selectedSequence to match SequenceViewer's expected type
-	let transformedSequence = $derived(
-		selectedSequence
-			? ({
-					...selectedSequence,
-					beats: [], // Add missing SequenceData properties
-					is_favorite: selectedSequence.isFavorite,
-					is_circular: selectedSequence.isCircular,
-					variations: [],
-				} as SequenceData & BrowseSequenceMetadata & { variations?: unknown[] })
-			: null
-	);
 
 	// Advanced derived values
 	let navigationSections = $derived(browseState.navigationSections);
@@ -122,10 +109,8 @@
 	// Destructure handlers for easier use
 	const {
 		handleFilterSelected,
-		handleSequenceSelected,
 		handleBackToFilters,
-		handleBackToBrowser,
-		handleSequenceAction,
+		handleSequenceAction: originalHandleSequenceAction,
 		handleConfirmDelete,
 		handleCancelDelete,
 		handleClearError,
@@ -136,6 +121,36 @@
 		handleNavigationItemClick,
 		handleToggleNavigationCollapse,
 	} = navigationEventHandlers;
+
+	// ✅ CUSTOM HANDLERS: Override default behavior for fullscreen functionality
+	function handleSequenceSelected(sequence: BrowseSequenceMetadata) {
+		console.log('📄 Opening sequence in fullscreen:', sequence.word);
+		fullscreenSequence = sequence;
+		showFullscreenViewer = true;
+	}
+
+	function handleCloseFullscreen() {
+		console.log('❌ Closing fullscreen viewer');
+		showFullscreenViewer = false;
+		fullscreenSequence = undefined;
+	}
+
+	function handleSequenceAction(action: string, sequence: BrowseSequenceMetadata) {
+		console.log(`🎬 Fullscreen action: ${action} on sequence:`, sequence.id);
+
+		if (action === 'edit') {
+			// Close fullscreen and handle edit
+			handleCloseFullscreen();
+			originalHandleSequenceAction(action, sequence);
+		} else if (action === 'save') {
+			// Handle save action
+			originalHandleSequenceAction(action, sequence);
+		} else if (action === 'delete') {
+			// Close fullscreen and handle delete
+			handleCloseFullscreen();
+			originalHandleSequenceAction(action, sequence);
+		}
+	}
 </script>
 
 <div class="browse-tab">
@@ -177,14 +192,6 @@
 				</PanelContainer>
 			{/if}
 		{/snippet}
-
-		{#snippet rightPanel()}
-			<SequenceViewer
-				sequence={transformedSequence}
-				onBackToBrowser={handleBackToBrowser}
-				onSequenceAction={handleSequenceAction}
-			/>
-		{/snippet}
 	</BrowseLayout>
 
 	<!-- Loading overlay for initial load -->
@@ -200,6 +207,15 @@
 		show={showDeleteDialog}
 		onConfirm={handleConfirmDelete}
 		onCancel={handleCancelDelete}
+	/>
+
+	<!-- Fullscreen Sequence Viewer -->
+	<FullscreenSequenceViewer
+		show={showFullscreenViewer}
+		{...fullscreenSequence ? { sequence: fullscreenSequence } : {}}
+		{thumbnailService}
+		onClose={handleCloseFullscreen}
+		onAction={handleSequenceAction}
 	/>
 </div>
 

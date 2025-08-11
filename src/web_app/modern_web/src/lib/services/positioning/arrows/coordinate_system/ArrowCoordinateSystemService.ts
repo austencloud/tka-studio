@@ -15,7 +15,7 @@
 
 import type { MotionData } from '$lib/domain';
 import { Location } from '$lib/domain';
-import type { Point } from '../../interfaces';
+import type { Point } from '../../types';
 
 export interface IArrowCoordinateSystemService {
 	getInitialPosition(motion: MotionData, location: Location): Point;

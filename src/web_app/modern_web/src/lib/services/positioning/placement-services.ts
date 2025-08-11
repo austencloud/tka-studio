@@ -3,7 +3,7 @@
  */
 
 import type { GridMode, MotionData, PictographData } from '$lib/domain';
-import type { Point, MotionType } from './types';
+import type { MotionType, Point } from './types';
 
 export interface ISpecialPlacementService {
 	getSpecialAdjustment(

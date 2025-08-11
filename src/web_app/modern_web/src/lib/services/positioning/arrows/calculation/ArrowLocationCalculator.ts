@@ -14,7 +14,8 @@
 
 import type { MotionData, PictographData } from '$lib/domain';
 import { Location } from '$lib/domain';
-import type { BeatData, IArrowLocationCalculator, MotionType } from '../../interfaces';
+import type { IArrowLocationCalculator } from '../../core-services';
+import type { BeatData, MotionType } from '../../types';
 import { DashLocationCalculator } from './DashLocationCalculator';
 
 export class ArrowLocationCalculator implements IArrowLocationCalculator {
@@ -118,7 +119,6 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
 		const locationPairKey = this.createLocationPairKey([motion.start_loc, motion.end_loc]);
 		const calculatedLocation = this.shiftDirectionPairs[locationPairKey] || motion.start_loc;
-
 
 		return calculatedLocation;
 	}

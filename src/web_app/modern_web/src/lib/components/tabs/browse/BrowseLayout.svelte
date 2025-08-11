@@ -11,12 +11,12 @@
 		isNavigationCollapsed?: boolean;
 		navigationSidebar: Snippet;
 		centerPanel: Snippet;
-		rightPanel: Snippet;
+		rightPanel?: Snippet;
 	}>();
 </script>
 
-<!-- Main three-column layout: Navigation | Panels | Viewer -->
-<div class="main-layout">
+<!-- Main layout: Navigation | Panels | Optional Viewer -->
+<div class="main-layout" class:two-panel={!rightPanel}>
 	<!-- Navigation Sidebar (left) -->
 	<div class="navigation-sidebar-container" class:collapsed={isNavigationCollapsed}>
 		{@render navigationSidebar()}
@@ -27,10 +27,12 @@
 		{@render centerPanel()}
 	</div>
 
-	<!-- Right side - Sequence Viewer Panel -->
-	<div class="right-panel">
-		{@render rightPanel()}
-	</div>
+	<!-- Right side - Sequence Viewer Panel (optional) -->
+	{#if rightPanel}
+		<div class="right-panel">
+			{@render rightPanel()}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -39,6 +41,12 @@
 		flex: 1;
 		gap: 0;
 		overflow: hidden;
+	}
+
+	/* Two-panel layout (when right panel is hidden) */
+	.main-layout.two-panel .center-panel-stack {
+		/* Give center panel more space when right panel is hidden */
+		flex: 1;
 	}
 
 	/* Three-column layout */
@@ -106,6 +114,8 @@
 			border-left: none;
 			border-top: var(--glass-border);
 		}
+
+		/* Two-panel layout: Navigation and center panel only on mobile */
 	}
 
 	@media (max-width: 768px) {

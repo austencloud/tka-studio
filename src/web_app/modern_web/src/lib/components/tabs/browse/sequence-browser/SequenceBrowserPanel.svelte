@@ -2,6 +2,7 @@
 	import type { BrowseSequenceMetadata, FilterType, FilterValue } from '$lib/domain/browse';
 	import { SortMethod } from '$lib/domain/browse';
 	import { resolve } from '$lib/services/bootstrap';
+	import type { IThumbnailService } from '$lib/services/interfaces';
 	import SequenceBrowserControls from './SequenceBrowserControls.svelte';
 	import SequenceBrowserFooter from './SequenceBrowserFooter.svelte';
 	import SequenceBrowserHeader from './SequenceBrowserHeader.svelte';
@@ -24,7 +25,7 @@
 	}>();
 
 	// ✅ RESOLVE SERVICES: Get services from DI container
-	const thumbnailService = resolve('IThumbnailService');
+	const thumbnailService = resolve('IThumbnailService') as IThumbnailService;
 
 	// ✅ PURE RUNES: State using runes
 	let sortBy = $state<SortMethod>(SortMethod.ALPHABETICAL);

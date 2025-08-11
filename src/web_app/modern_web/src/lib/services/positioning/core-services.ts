@@ -3,7 +3,7 @@
  */
 
 import type { ArrowData, GridMode, Location, MotionData, PictographData } from '$lib/domain';
-import type { Point, MotionType, ArrowColor } from './types';
+import type { ArrowColor, MotionType, Point } from './types';
 
 export interface IArrowLocationCalculator {
 	/**

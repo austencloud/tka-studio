@@ -75,7 +75,9 @@ export class OptionDataService implements IOptionDataService {
 
 			// Convert CSV rows to PictographData with unique IDs
 			const pictographOptions = csvOptions
-				.map((row, index) => this.convertCsvRowToPictographData(row, gridMode, index))
+				.map((row, index) =>
+					this.convertCsvRowToPictographDataInternal(row, gridMode, index)
+				)
 				.filter((option): option is PictographData => option !== null);
 
 			// Apply filters
@@ -201,9 +203,20 @@ export class OptionDataService implements IOptionDataService {
 	}
 
 	/**
+	 * Convert CSV row to PictographData format (public method for external use)
+	 */
+	convertCsvRowToPictographData(
+		row: ParsedCsvRow,
+		gridMode: DomainGridMode,
+		index: number = 0
+	): PictographData | null {
+		return this.convertCsvRowToPictographDataInternal(row, gridMode, index);
+	}
+
+	/**
 	 * Convert CSV row to PictographData format (based on legacy implementation)
 	 */
-	private convertCsvRowToPictographData(
+	private convertCsvRowToPictographDataInternal(
 		row: ParsedCsvRow,
 		gridMode: DomainGridMode,
 		index: number = 0
@@ -241,9 +254,9 @@ export class OptionDataService implements IOptionDataService {
 				location: this.mapLocationString(row.redEndLoc),
 			});
 
-			// Create the complete PictographData with unique ID
+			// Create the complete PictographData with unique ID including grid mode
 			const pictograph = createPictographData({
-				id: `option-${row.letter}-${row.startPos}-${row.endPos}-${index}`,
+				id: `${gridMode}-${row.letter || 'unknown'}-${row.startPos || 'unknown'}-${row.endPos || 'unknown'}-${index}`,
 				grid_data: createGridData({
 					grid_mode: gridMode,
 				}),

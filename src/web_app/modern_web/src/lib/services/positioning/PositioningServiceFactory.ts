@@ -6,6 +6,15 @@
  */
 
 import { GridMode, MotionType } from '$lib/domain/enums';
+import type {
+	IArrowAdjustmentCalculator,
+	IArrowCoordinateSystemService,
+	IArrowLocationCalculator,
+	IArrowPositioningOrchestrator,
+	IArrowRotationCalculator,
+	IDirectionalTupleProcessor,
+	IPositioningServiceFactory,
+} from '$services/positioning';
 import {
 	ArrowAdjustmentCalculator,
 	ArrowAdjustmentLookup,
@@ -22,15 +31,6 @@ import {
 	DirectionalTupleProcessor,
 	QuadrantIndexCalculator,
 } from '$services/positioning/arrows/processors/DirectionalTupleProcessor';
-import type {
-	IArrowAdjustmentCalculator,
-	IArrowCoordinateSystemService,
-	IArrowLocationCalculator,
-	IArrowPositioningOrchestrator,
-	IArrowRotationCalculator,
-	IDirectionalTupleProcessor,
-	IPositioningServiceFactory,
-} from '$services/positioning';
 
 export class PositioningServiceFactory implements IPositioningServiceFactory {
 	/**

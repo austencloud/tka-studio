@@ -10,6 +10,7 @@
 	let { sequence }: Props = $props();
 
 	// Card element used in bind:this
+	// @ts-expect-error: Used in bind:this but not referenced in code
 	let cardElement: HTMLElement;
 	let imageLoaded = $state(false);
 	let imageError = $state(false);

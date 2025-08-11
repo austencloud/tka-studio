@@ -3,11 +3,11 @@
  */
 
 import type {
-	IArrowLocationCalculator,
-	IArrowRotationCalculator,
 	IArrowAdjustmentCalculator,
 	IArrowCoordinateSystemService,
+	IArrowLocationCalculator,
 	IArrowPositioningOrchestrator,
+	IArrowRotationCalculator,
 	IDashLocationCalculator,
 } from './core-services';
 import type { IDirectionalTupleProcessor } from './data-services';

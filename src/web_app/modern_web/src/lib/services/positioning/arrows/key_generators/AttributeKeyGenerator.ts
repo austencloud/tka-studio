@@ -8,7 +8,7 @@
  */
 
 import type { ArrowData, PictographData } from '$lib/domain';
-import type { IAttributeKeyGenerator } from '../../interfaces';
+import type { IAttributeKeyGenerator } from '../../data-services';
 
 export class AttributeKeyGenerator implements IAttributeKeyGenerator {
 	/**

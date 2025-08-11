@@ -78,18 +78,22 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
 	.image-container {
 		position: relative;
 		width: 100%;
-		height: 120px;
-		overflow: hidden;
+		/* Remove fixed height to allow natural sizing based on image aspect ratio */
 		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		/* Minimum height to ensure placeholders have reasonable size */
+		min-height: 120px;
 	}
 
 	.thumbnail-image {
 		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		/* Remove fixed height to allow natural aspect ratio */
+		max-width: 100%;
+		height: auto;
+		/* Change from cover to contain to maintain aspect ratio */
+		object-fit: contain;
 		opacity: 0;
 		transition: opacity 0.3s ease;
 	}
@@ -154,7 +158,8 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
 	/* Responsive design */
 	@media (max-width: 768px) {
 		.image-container {
-			height: 100px;
+			/* Remove fixed height for mobile as well */
+			min-height: 100px;
 		}
 
 		.placeholder-icon {

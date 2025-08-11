@@ -53,8 +53,10 @@
 		if (sequence.thumbnails && sequence.thumbnails.length > 0) {
 			const thumbnailPath =
 				sequence.thumbnails[currentVariationIndex] || sequence.thumbnails[0];
-			const imageUrl = thumbnailService.getThumbnailUrl(sequence.id, thumbnailPath);
-			return { imageUrl };
+			if (thumbnailPath) {
+				const imageUrl = thumbnailService.getThumbnailUrl(sequence.id, thumbnailPath);
+				return { imageUrl };
+			}
 		}
 
 		return undefined;

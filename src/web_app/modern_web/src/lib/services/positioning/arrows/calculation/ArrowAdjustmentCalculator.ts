@@ -17,7 +17,8 @@
 
 import type { MotionData, PictographData } from '$lib/domain';
 import { GridMode, MotionType } from '$lib/domain';
-import type { IArrowAdjustmentCalculator, Location, Point } from '../../interfaces';
+import type { IArrowAdjustmentCalculator } from '../../core-services';
+import type { Location, Point } from '../../types';
 import { DefaultPlacementService } from '../placement/DefaultPlacementService';
 import { SpecialPlacementService } from '../placement/SpecialPlacementService';
 import {
