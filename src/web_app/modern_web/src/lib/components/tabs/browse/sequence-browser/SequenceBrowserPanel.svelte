@@ -3,15 +3,15 @@
 	import { SortMethod } from '$lib/domain/browse';
 	import { resolve } from '$lib/services/bootstrap';
 	import type { IThumbnailService } from '$lib/services/interfaces';
+	import { getBrowseTabStateManager } from '$lib/state/browseTabStateManager.svelte';
+	import { onMount } from 'svelte';
 	import SequenceBrowserControls from './SequenceBrowserControls.svelte';
 	import SequenceBrowserFooter from './SequenceBrowserFooter.svelte';
-	import SequenceBrowserHeader from './SequenceBrowserHeader.svelte';
 	import SequenceBrowserStates from './SequenceBrowserStates.svelte';
 	import SequenceGrid from './SequenceGrid.svelte';
 
 	// ✅ PURE RUNES: Props using modern Svelte 5 runes
 	const {
-		filter = null,
 		sequences = [],
 		isLoading = false,
 		onSequenceSelected = () => {},
@@ -26,11 +26,14 @@
 
 	// ✅ RESOLVE SERVICES: Get services from DI container
 	const thumbnailService = resolve('IThumbnailService') as IThumbnailService;
+	const stateManager = getBrowseTabStateManager();
 
-	// ✅ PURE RUNES: State using runes
+	// ✅ PURE RUNES: State using runes with persistence
 	let sortBy = $state<SortMethod>(SortMethod.ALPHABETICAL);
 	let viewMode: 'grid' | 'list' = $state('grid');
 	let error = $state<string | null>(null);
+	let scrollContainer: HTMLElement | null = $state(null);
+	let scrollCleanup: (() => void) | null = null;
 
 	// ✅ DERIVED RUNES: Reactive sorting
 	const sortedSequences = $derived(() => {
@@ -89,20 +92,73 @@
 	const hasSequences = $derived(() => !isLoading && !error && sortedSequences().length > 0);
 	const showFooter = $derived(() => !isLoading && !error && sortedSequences().length > 0);
 
-	// ✅ RUNES METHODS: Event handlers
+	// ✅ STATE RESTORATION: Load saved state on mount
+	onMount(() => {
+		// Load state asynchronously
+		(async () => {
+			try {
+				const savedState = await stateManager.loadState();
+				if (savedState) {
+					// Restore sort state
+					if (savedState.sort) {
+						sortBy = stateManager.mapStringToSortMethod(savedState.sort.method);
+						console.log('📖 Restored sort method:', sortBy);
+					}
+
+					// Restore view state
+					if (savedState.view) {
+						viewMode = savedState.view.mode;
+						console.log('📖 Restored view mode:', viewMode);
+					}
+				}
+			} catch (error) {
+				console.warn('⚠️ Failed to restore browse state:', error);
+			}
+		})();
+
+		// Cleanup scroll observer on component destroy
+		return () => {
+			if (scrollCleanup) {
+				scrollCleanup();
+			}
+		};
+	});
+
+	// ✅ SCROLL PERSISTENCE: Setup scroll observer when container becomes available
+	$effect(() => {
+		if (scrollContainer) {
+			// Setup scroll observer
+			scrollCleanup = stateManager.createScrollObserver(scrollContainer);
+
+			// Restore scroll position if we have saved state
+			stateManager.loadState().then((savedState) => {
+				if (savedState?.scroll && scrollContainer) {
+					stateManager.restoreScrollPosition(scrollContainer, savedState.scroll);
+				}
+			});
+		}
+	});
+
+	// ✅ RUNES METHODS: Event handlers with state persistence
 	function handleSortChange(newSortBy: SortMethod) {
 		console.log('🔄 Sort changed to:', newSortBy);
 		sortBy = newSortBy;
+		// Save sort state
+		stateManager.saveSortState(newSortBy);
 	}
 
 	function handleViewModeChange(newViewMode: 'grid' | 'list') {
 		console.log('👁️ View mode changed to:', newViewMode);
 		viewMode = newViewMode;
+		// Save view state
+		stateManager.saveViewState(newViewMode);
 	}
 
 	function handleSequenceSelect(sequence: BrowseSequenceMetadata) {
 		console.log('📄 Sequence selected:', sequence.word);
 		onSequenceSelected(sequence);
+		// Save selection state
+		stateManager.saveSelectionState(sequence.id, null);
 	}
 
 	function handleBackToFilters() {
@@ -120,7 +176,6 @@
 <div class="sequence-browser-panel">
 	<!-- Header with back button and filter info -->
 	<div class="browser-header">
-		<SequenceBrowserHeader {filter} onBackToFilters={handleBackToFilters} />
 		<SequenceBrowserControls
 			{sortBy}
 			{viewMode}
@@ -129,8 +184,8 @@
 		/>
 	</div>
 
-	<!-- Content area -->
-	<div class="browser-content">
+	<!-- Content area with scroll persistence -->
+	<div class="browser-content" bind:this={scrollContainer}>
 		<SequenceBrowserStates
 			{isLoading}
 			{error}

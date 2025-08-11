@@ -69,25 +69,10 @@ export class CodexService implements ICodexService {
 	private initialized = false;
 	private codexPictographs: PictographData[] = [];
 
-	// Letter organization by rows (matches desktop ROWS structure)
-	private readonly LETTER_ROWS = [
-		['A', 'B', 'C', 'D', 'E', 'F'],
-		['G', 'H', 'I', 'J', 'K', 'L'],
-		['M', 'N', 'O', 'P', 'Q', 'R'],
-		['S', 'T', 'U', 'V'],
-		['W', 'X', 'Y', 'Z'],
-		['Σ', 'Δ', 'θ', 'Ω'],
-		['W-', 'X-', 'Y-', 'Z-'],
-		['Σ-', 'Δ-', 'θ-', 'Ω-'],
-		['Φ', 'Ψ', 'Λ'],
-		['Φ-', 'Ψ-', 'Λ-'],
-		['α', 'β', 'Γ']
-	];
-
 	constructor() {
 		this.csvDataService = new CsvDataService();
 		this.optionDataService = new OptionDataService();
-		console.log('🔧 CodexService initialized with specific letter mapping and desktop functionality');
+		console.log('🔧 CodexService initialized with specific letter mapping');
 	}
 
 	/**
@@ -155,18 +140,18 @@ export class CodexService implements ICodexService {
 	 */
 	private async initializePictographs(): Promise<void> {
 		try {
-			console.log('🚀 Starting CodexService initialization...');
-
 			// Load real CSV data using existing infrastructure
 			await this.csvDataService.loadCsvData();
-			console.log('📄 CSV data loaded in CodexService');
 
-			// Get specific pictographs only from diamond mode (like desktop app)
-			this.codexPictographs = this.getCodexPictographsForGridMode(GridMode.DIAMOND);
+			// Get specific pictographs from both grid modes based on mapping
+			this.codexPictographs = [
+				...this.getCodexPictographsForGridMode(GridMode.DIAMOND),
+				...this.getCodexPictographsForGridMode(GridMode.BOX),
+			];
 
 			this.initialized = true;
 			console.log(
-				`✅ CodexService initialized with ${this.codexPictographs.length} diamond pictographs from mapping`
+				`✅ CodexService initialized with ${this.codexPictographs.length} specific pictographs from mapping`
 			);
 		} catch (error) {
 			console.error('❌ Failed to initialize CodexService:', error);
@@ -178,16 +163,11 @@ export class CodexService implements ICodexService {
 	 * Get codex pictographs for a specific grid mode using the letter mapping
 	 */
 	private getCodexPictographsForGridMode(gridMode: GridMode): PictographData[] {
-		console.log(`🔍 Getting codex pictographs for ${gridMode} mode...`);
 		const csvRows = this.csvDataService.getParsedData(gridMode);
-		console.log(`📊 Found ${csvRows.length} total CSV rows for ${gridMode} mode`);
-
 		const codexPictographs: PictographData[] = [];
 
 		// For each letter in our codex mapping, find matching CSV row
 		Object.entries(CODEX_LETTER_MAPPING).forEach(([letter, mapping]) => {
-			console.log(`🔤 Looking for letter "${letter}" with mapping:`, mapping);
-
 			const matchingRow = csvRows.find(
 				(row) =>
 					row.letter === letter &&
@@ -198,7 +178,6 @@ export class CodexService implements ICodexService {
 			);
 
 			if (matchingRow) {
-				console.log(`✅ Found matching row for letter "${letter}":`, matchingRow);
 				const pictograph = this.convertCsvRowToPictographData(
 					matchingRow,
 					gridMode,
@@ -206,24 +185,12 @@ export class CodexService implements ICodexService {
 				);
 				if (pictograph) {
 					codexPictographs.push(pictograph);
-					console.log(`📊 Added pictograph for letter "${letter}":`, pictograph.id);
-				} else {
-					console.warn(
-						`⚠️ Failed to convert CSV row to pictograph for letter "${letter}"`
-					);
 				}
 			} else {
 				console.warn(`⚠️ No CSV data found for codex letter ${letter} in ${gridMode} mode`);
-				// Log what we're looking for vs what's available
-				const letterRows = csvRows.filter((row) => row.letter === letter);
-				console.log(
-					`Available rows for letter "${letter}":`,
-					letterRows.length > 0 ? letterRows.slice(0, 3) : 'none'
-				);
 			}
 		});
 
-		console.log(`🎯 Total codex pictographs found: ${codexPictographs.length}`);
 		return codexPictographs;
 	}
 
@@ -242,64 +209,5 @@ export class CodexService implements ICodexService {
 			console.error('❌ Error converting CSV row to PictographData:', error, row);
 			return null;
 		}
-	}
-
-	/**
-	 * Get letters organized by rows for grid display (matches desktop layout)
-	 */
-	getLettersByRow(): string[][] {
-		return [...this.LETTER_ROWS]; // Return a copy to prevent mutation
-	}
-
-	/**
-	 * Apply rotate operation to all pictographs
-	 */
-	async rotateAllPictographs(pictographs: PictographData[]): Promise<PictographData[]> {
-		// For now, return unchanged pictographs
-		// In a full implementation, this would apply rotation transformations
-		console.log('🔄 Rotate operation applied to', pictographs.length, 'pictographs');
-		return [...pictographs];
-	}
-
-	/**
-	 * Apply mirror operation to all pictographs
-	 */
-	async mirrorAllPictographs(pictographs: PictographData[]): Promise<PictographData[]> {
-		// For now, return unchanged pictographs
-		// In a full implementation, this would apply mirror transformations
-		console.log('🪞 Mirror operation applied to', pictographs.length, 'pictographs');
-		return [...pictographs];
-	}
-
-	/**
-	 * Apply color swap operation to all pictographs
-	 */
-	async colorSwapAllPictographs(pictographs: PictographData[]): Promise<PictographData[]> {
-		// For now, return unchanged pictographs
-		// In a full implementation, this would swap red and blue motion types
-		console.log('⚫⚪ Color swap operation applied to', pictographs.length, 'pictographs');
-		return [...pictographs];
-	}
-
-	/**
-	 * Get all pictograph data organized by letter
-	 */
-	async getAllPictographData(): Promise<Record<string, PictographData | null>> {
-		const allPictographs = await this.loadAllPictographs();
-		const result: Record<string, PictographData | null> = {};
-		
-		// Initialize all letters from LETTER_ROWS to null
-		this.LETTER_ROWS.flat().forEach(letter => {
-			result[letter] = null;
-		});
-		
-		// Fill in the pictographs we have
-		allPictographs.forEach(pictograph => {
-			if (pictograph.letter) {
-				result[pictograph.letter] = pictograph;
-			}
-		});
-		
-		return result;
 	}
 }

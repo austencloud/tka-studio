@@ -16,6 +16,7 @@
 		getIsInitialized,
 		getShowSettings,
 		hideSettingsDialog,
+		restoreApplicationState,
 		setInitializationError,
 		setInitializationProgress,
 		setInitializationState,
@@ -102,6 +103,10 @@
 			// Step 4: Load initial data
 			setInitializationProgress(70);
 			await loadSequences(sequenceService);
+
+			// Step 5: Restore application state (tab memory)
+			setInitializationProgress(85);
+			await restoreApplicationState();
 
 			// Step 6: Complete initialization
 			setInitializationProgress(100);

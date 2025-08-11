@@ -1,13 +1,14 @@
 <!--
 	Codex Component - Reference sidebar for browsing pictographs
 
-	Matches desktop CodexComponent functionality with collapsible sections,
-	pictograph browsing, and filtering capabilities.
+	Matches desktop CodexComponent functionality with control panel,
+	row-based pictograph organization, operations, and orientation selector.
 -->
 <script lang="ts">
 	import type { PictographData } from '$lib/domain/PictographData';
 	import { createCodexState } from '$lib/state/codex-state.svelte';
-	import Pictograph from '$lib/components/pictograph/Pictograph.svelte';
+	import CodexControlPanel from './CodexControlPanel.svelte';
+	import CodexPictographGrid from './CodexPictographGrid.svelte';
 
 	// Props
 	interface Props {
@@ -16,22 +17,19 @@
 		onToggleVisibility?: () => void;
 	}
 
-	let {
-		isVisible = true,
-		onPictographSelected,
-		onToggleVisibility
-	}: Props = $props();
+	let { isVisible = true, onPictographSelected, onToggleVisibility }: Props = $props();
 
 	// Create codex state using runes
 	const codexState = createCodexState();
 
 	// Reactive values
-	let filteredPictographs = $derived(codexState.filteredPictographs);
+	let filteredPictographsByLetter = $derived(codexState.filteredPictographsByLetter);
+	let letterRows = $derived(codexState.letterRows);
 	let isLoading = $derived(codexState.isLoading);
 	let searchTerm = $derived(codexState.searchTerm);
+	let currentOrientation = $derived(codexState.currentOrientation);
 	let error = $derived(codexState.error);
-
-	// Codex is simply an alphabetical reference of all pictographs
+	let isProcessingOperation = $derived(codexState.isProcessingOperation);
 
 	// Methods
 	function handleSearchChange(event: Event) {
@@ -46,6 +44,23 @@
 	function toggleCollapse() {
 		onToggleVisibility?.();
 	}
+
+	// Control panel handlers
+	function handleRotate() {
+		codexState.rotatePictographs();
+	}
+
+	function handleMirror() {
+		codexState.mirrorPictographs();
+	}
+
+	function handleColorSwap() {
+		codexState.colorSwapPictographs();
+	}
+
+	function handleOrientationChange(orientation: string) {
+		codexState.setOrientation(orientation);
+	}
 </script>
 
 <div class="codex-component" class:collapsed={!isVisible}>
@@ -58,6 +73,15 @@
 	</div>
 
 	{#if isVisible}
+		<!-- Control Panel -->
+		<CodexControlPanel
+			{currentOrientation}
+			onRotate={handleRotate}
+			onMirror={handleMirror}
+			onColorSwap={handleColorSwap}
+			onOrientationChange={handleOrientationChange}
+		/>
+
 		<!-- Search bar -->
 		<div class="search-section">
 			<input
@@ -84,37 +108,29 @@
 					<div class="loading-spinner"></div>
 					<p>Loading pictographs...</p>
 				</div>
-			{:else if filteredPictographs.length === 0}
+			{:else if isProcessingOperation}
+				<div class="loading-state">
+					<div class="loading-spinner"></div>
+					<p>Processing operation...</p>
+				</div>
+			{:else if Object.keys(filteredPictographsByLetter()).length === 0}
 				<div class="empty-state">
 					<p>No pictographs found</p>
 				</div>
 			{:else}
-				<div class="pictograph-grid">
-					{#each filteredPictographs as pictograph (pictograph.id)}
-						<button
-							class="pictograph-item"
-							onclick={() => handlePictographClick(pictograph)}
-							title={pictograph.letter || 'Pictograph'}
-						>
-							<!-- Actual Pictograph component -->
-							<div class="pictograph-preview">
-								<Pictograph 
-									pictographData={pictograph} 
-									width={80} 
-									height={80}
-								/>
-							</div>
-							<span class="pictograph-label">{pictograph.letter}</span>
-						</button>
-					{/each}
-				</div>
+				<!-- Row-based pictograph grid -->
+				<CodexPictographGrid
+					pictographsByLetter={filteredPictographsByLetter()}
+					{letterRows}
+					pictographSize={80}
+					onPictographClick={handlePictographClick}
+				/>
 			{/if}
 		</div>
 	{/if}
 </div>
 
 <style>
-
 	.codex-component {
 		display: flex;
 		flex-direction: column;
@@ -174,7 +190,6 @@
 		display: none;
 	}
 
-
 	.search-section {
 		padding: var(--desktop-spacing-lg);
 		border-bottom: 1px solid var(--desktop-border-tertiary);
@@ -207,7 +222,6 @@
 
 	.codex-content {
 		flex: 1;
-		padding: var(--desktop-spacing-lg);
 		overflow-y: auto;
 	}
 
@@ -225,6 +239,7 @@
 		color: var(--desktop-text-muted);
 		text-align: center;
 		gap: var(--desktop-spacing-lg);
+		padding: var(--desktop-spacing-lg);
 	}
 
 	.error-state {
@@ -236,6 +251,7 @@
 		color: var(--desktop-progress-poor);
 		text-align: center;
 		gap: var(--desktop-spacing-lg);
+		padding: var(--desktop-spacing-lg);
 	}
 
 	.error-icon {
@@ -274,55 +290,13 @@
 		animation: spin 1s linear infinite;
 	}
 
-	.pictograph-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-		gap: var(--desktop-spacing-md);
-	}
-
-	.pictograph-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--desktop-spacing-sm);
-		padding: var(--desktop-spacing-md);
-		background: var(--desktop-bg-tertiary);
-		border: 1px solid var(--desktop-border-tertiary);
-		border-radius: var(--desktop-border-radius-sm);
-		cursor: pointer;
-		transition: all var(--desktop-transition-normal);
-		min-height: 80px;
-	}
-
-	.pictograph-item:hover {
-		background: var(--desktop-bg-secondary);
-		border-color: var(--desktop-border-primary);
-		transform: translateY(-2px);
-	}
-
-	.pictograph-preview {
-		width: 40px;
-		height: 40px;
-		background: var(--desktop-bg-secondary);
-		border-radius: var(--desktop-border-radius-xs);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--desktop-text-primary);
-		font-weight: bold;
-		font-size: var(--desktop-font-size-xl);
-	}
-
-	.pictograph-label {
-		color: var(--desktop-text-secondary);
-		font-size: var(--desktop-font-size-xs);
-		font-weight: 500;
-		text-align: center;
-	}
-
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	/* Responsive design */
@@ -331,21 +305,12 @@
 			width: 250px;
 			min-width: 200px;
 		}
+	}
 
-		.pictograph-grid {
-			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-			gap: var(--desktop-spacing-sm);
-		}
-
-		.pictograph-item {
-			padding: var(--desktop-spacing-sm);
-			min-height: 60px;
-		}
-
-		.pictograph-preview {
-			width: 32px;
-			height: 32px;
-			font-size: var(--desktop-font-size-base);
+	@media (max-width: 480px) {
+		.codex-component {
+			width: 100%;
+			min-width: 250px;
 		}
 	}
 </style>

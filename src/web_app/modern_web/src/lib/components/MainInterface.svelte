@@ -2,7 +2,6 @@
 	// Import state management functions - updated to work with consolidated MainInterface
 	import {
 		getActiveTab,
-		getIsTransitioning,
 		getSettings,
 		getShowSettings,
 		isTabActive,
@@ -42,7 +41,6 @@
 		});
 	};
 
-	let isTransitioning = $derived(getIsTransitioning());
 
 	// Tab configuration
 	const tabs = [
@@ -95,12 +93,6 @@
 				</div>
 			{/key}
 
-			<!-- Transition indicator for better UX -->
-			{#if isTransitioning}
-				<div class="transition-indicator">
-					Switching to {activeTab}...
-				</div>
-			{/if}
 		</main>
 	</div>
 </BackgroundProvider>
@@ -141,19 +133,7 @@
 		height: 100%;
 	}
 
-	.transition-indicator {
-		position: absolute;
-		top: 20px;
-		left: 50%;
-		transform: translateX(-50%);
-		background: rgba(0, 123, 255, 0.9);
-		color: white;
-		padding: 8px 16px;
-		border-radius: 20px;
-		font-size: 14px;
-		z-index: 1000;
-		pointer-events: none;
-	}
+
 
 	/* Responsive design */
 	@media (max-width: 768px) {

@@ -8,6 +8,14 @@
 import { browser } from '$app/environment';
 import { GridMode as DomainGridMode } from '$lib/domain/enums';
 import type { AppSettings } from '$services/interfaces';
+import { BrowseStatePersistenceService } from '../services/implementations/BrowseStatePersistenceService';
+
+// ============================================================================
+// PERSISTENCE SERVICES
+// ============================================================================
+
+// Initialize persistence service
+const browseStatePersistence = new BrowseStatePersistenceService();
 
 // ============================================================================
 // INITIALIZATION STATE
@@ -215,7 +223,7 @@ export function clearInitializationError(): void {
 }
 
 /**
- * Switch to a different tab - with transition feedback
+ * Switch to a different tab - with transition feedback and state persistence
  */
 export function switchTab(tab: TabId): void {
 	const currentTab = uiState.activeTab;
@@ -225,12 +233,18 @@ export function switchTab(tab: TabId): void {
 		return;
 	}
 
+	// Save current tab state before switching
+	saveCurrentTabState(currentTab);
+
 	// Set transitioning state
 	uiState.isTransitioning = true;
 
 	// Switch tab immediately (transitions handled by components)
 	uiState.activeTab = tab;
 	console.log(`🔄 Tab switched: ${currentTab} → ${tab}`);
+
+	// Save application tab state
+	saveApplicationTabState(tab, currentTab);
 
 	// Clear transitioning state after a short delay
 	setTimeout(() => {
@@ -420,4 +434,73 @@ export function debugSettings(): void {
 	} catch (error) {
 		console.error('❌ Failed to debug settings:', error);
 	}
+}
+
+// ============================================================================
+// TAB STATE PERSISTENCE
+// ============================================================================
+
+/**
+ * Save current tab state before switching
+ */
+async function saveCurrentTabState(currentTab: TabId): Promise<void> {
+	if (!browser) return;
+
+	// For now, we'll focus on Browse tab state
+	// Other tabs can be added later as needed
+	if (currentTab === 'browse') {
+		// This will be implemented when we integrate with Browse tab components
+		console.log('💾 Saving Browse tab state...');
+	}
+}
+
+/**
+ * Save application-level tab state
+ */
+async function saveApplicationTabState(newTab: TabId, previousTab: TabId): Promise<void> {
+	if (!browser) return;
+
+	try {
+		const tabState = {
+			activeTab: newTab,
+			lastActiveTab: previousTab,
+			tabStates: {}, // Will be populated with individual tab states
+			lastUpdated: new Date(),
+		};
+
+		await browseStatePersistence.saveApplicationTabState(tabState);
+	} catch (error) {
+		console.error('❌ Failed to save application tab state:', error);
+	}
+}
+
+/**
+ * Load and restore application tab state on startup
+ */
+export async function restoreApplicationState(): Promise<void> {
+	if (!browser) return;
+
+	try {
+		const tabState = await browseStatePersistence.loadApplicationTabState();
+
+		if (tabState && tabState.activeTab) {
+			// Restore the last active tab
+			uiState.activeTab = tabState.activeTab as TabId;
+			console.log(`🔄 Restored last active tab: ${tabState.activeTab}`);
+
+			// If the restored tab is Browse, we'll restore its state when the component loads
+			if (tabState.activeTab === 'browse') {
+				console.log('📖 Browse tab will restore its state when loaded');
+			}
+		}
+	} catch (error) {
+		console.error('❌ Failed to restore application state:', error);
+	}
+}
+
+/**
+ * Get the browse state persistence service for use by Browse tab components
+ */
+export function getBrowseStatePersistence(): BrowseStatePersistenceService {
+	return browseStatePersistence;
 }

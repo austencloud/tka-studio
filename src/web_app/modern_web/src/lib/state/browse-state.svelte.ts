@@ -33,6 +33,8 @@ import type {
 	SequenceSection,
 	SortMethod,
 } from '$lib/services/interfaces';
+import { getBrowseStatePersistence } from './appState.svelte';
+import { getBrowseTabStateManager } from './browseTabStateManager.svelte';
 
 export function createBrowseState(
 	browseService: IBrowseService,
@@ -44,6 +46,9 @@ export function createBrowseState(
 	sectionService: ISectionService,
 	deleteService: IDeleteService
 ) {
+	// ✅ STATE PERSISTENCE: Initialize state manager
+	const stateManager = getBrowseTabStateManager();
+
 	// ✅ PURE RUNES: Reactive state for UI
 	let allSequences = $state<BrowseSequenceMetadata[]>([]);
 	let filteredSequences = $state<BrowseSequenceMetadata[]>([]);
@@ -117,6 +122,9 @@ export function createBrowseState(
 			await generateNavigationSections();
 			await generateSequenceSections();
 
+			// 📖 RESTORE STATE: Restore saved filter state after loading sequences
+			await restoreFilterState();
+
 			loadingState.isLoading = false;
 			loadingState.loadedCount = sequences.length;
 			loadingState.totalCount = sequences.length;
@@ -124,6 +132,89 @@ export function createBrowseState(
 			loadingState.isLoading = false;
 			loadingState.error =
 				error instanceof Error ? error.message : 'Failed to load sequences';
+		}
+	}
+
+	// 📖 RESTORE FILTER STATE: Restore saved filter state when Browse tab loads
+	async function restoreFilterState() {
+		try {
+			// Try to load individual filter state first
+			const savedFilterState = await getBrowseStatePersistence().loadFilterState();
+			if (savedFilterState && savedFilterState.type && savedFilterState.value !== null) {
+				console.log('📖 Restoring filter state:', savedFilterState);
+
+				const filterType = savedFilterState.type as string;
+				const filterValue = savedFilterState.value;
+
+				// Check if this is a navigation filter
+				if (filterType.startsWith('navigation_')) {
+					const sectionType = filterType.replace(
+						'navigation_',
+						''
+					) as NavigationSection['type'];
+
+					// Find the navigation item that matches the saved filter
+					const matchingItem: NavigationItem = {
+						id: `${sectionType}_${filterValue}`,
+						label: String(filterValue),
+						value: filterValue as string | number,
+						count: 0, // Will be updated when navigation sections are generated
+						isActive: true,
+					};
+
+					// Apply the navigation filter
+					const filtered = navigationService.getSequencesForNavigationItem(
+						matchingItem,
+						sectionType,
+						allSequences
+					);
+
+					// Apply current sort
+					const sorted = await browseService.sortSequences(filtered, currentSort);
+
+					// Update reactive state
+					currentFilter = {
+						type: filterType as FilterType,
+						value: filterValue as FilterValue,
+					};
+					filteredSequences = filtered;
+					displayedSequences = sorted;
+					navigationMode = NavigationMode.SEQUENCE_BROWSER;
+
+					console.log('✅ Navigation filter state restored successfully');
+				} else {
+					// Handle regular filters
+					const filterTypeEnum = filterType as FilterType;
+					const filterValueEnum = filterValue as FilterValue;
+
+					// Apply the saved filter
+					currentFilter = {
+						type: filterTypeEnum,
+						value: filterValueEnum,
+					};
+
+					// Apply the filter to sequences
+					const filtered = await browseService.applyFilter(
+						allSequences,
+						filterTypeEnum,
+						filterValueEnum
+					);
+
+					// Apply current sort
+					const sorted = await browseService.sortSequences(filtered, currentSort);
+
+					// Update reactive state
+					filteredSequences = filtered;
+					displayedSequences = sorted;
+					navigationMode = NavigationMode.SEQUENCE_BROWSER;
+
+					console.log('✅ Regular filter state restored successfully');
+				}
+			} else {
+				console.log('📖 No saved filter state to restore');
+			}
+		} catch (error) {
+			console.warn('⚠️ Failed to restore filter state:', error);
 		}
 	}
 
@@ -136,6 +227,10 @@ export function createBrowseState(
 			// Update current filter state
 			currentFilter = { type: filterType, value: filterValue };
 			console.log('📝 Updated currentFilter:', currentFilter);
+
+			// 💾 SAVE FILTER STATE: Persist filter state for cross-session memory
+			await stateManager.saveFilterState(filterType, filterValue);
+			console.log('💾 Filter state saved:', { type: filterType, value: filterValue });
 
 			console.log('📊 allSequences available:', allSequences.length, 'items');
 
@@ -211,19 +306,31 @@ export function createBrowseState(
 		}
 	}
 
-	function selectSequence(sequence: BrowseSequenceMetadata) {
+	async function selectSequence(sequence: BrowseSequenceMetadata) {
 		selectedSequence = sequence;
+
+		// 💾 SAVE SELECTION STATE: Persist selected sequence for cross-session memory
+		await stateManager.saveSelectionState(sequence.id, null);
+		console.log('💾 Selection state saved:', sequence.id);
 	}
 
-	function clearSelection() {
+	async function clearSelection() {
 		selectedSequence = null;
+
+		// 💾 CLEAR SELECTION STATE: Remove saved selection state
+		await stateManager.saveSelectionState(null, null);
+		console.log('🗑️ Selection state cleared');
 	}
 
-	function backToFilters() {
+	async function backToFilters() {
 		navigationMode = NavigationMode.FILTER_SELECTION;
 		currentFilter = null;
 		searchQuery = '';
 		displayedSequences = allSequences;
+
+		// 💾 CLEAR FILTER STATE: Remove saved filter state when going back to filters
+		await stateManager.saveFilterState(null, null);
+		console.log('🗑️ Filter state cleared');
 	}
 
 	async function preloadThumbnails(sequences: BrowseSequenceMetadata[]) {
@@ -380,6 +487,16 @@ export function createBrowseState(
 			// Update displayed sequences
 			displayedSequences = filtered;
 			filteredSequences = filtered;
+
+			// 💾 SAVE NAVIGATION FILTER STATE: Persist navigation filter for cross-session memory
+			const filterType = `navigation_${sectionType}`;
+			const filterValue = item.value;
+			currentFilter = { type: filterType as FilterType, value: filterValue as FilterValue };
+			await stateManager.saveFilterState(filterType, filterValue);
+			console.log('💾 Navigation filter state saved:', {
+				type: filterType,
+				value: filterValue,
+			});
 
 			return filtered;
 		} catch (error) {
