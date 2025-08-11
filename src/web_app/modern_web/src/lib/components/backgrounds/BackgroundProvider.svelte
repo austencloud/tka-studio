@@ -45,7 +45,9 @@
 
 			if (typeof window !== 'undefined') {
 				// Attach for debugging / external access
-				(window as any).__runesBackgroundContext = runesCtx;
+				(
+					window as typeof window & { __runesBackgroundContext?: unknown }
+				).__runesBackgroundContext = runesCtx;
 			}
 		}
 	});

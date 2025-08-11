@@ -20,10 +20,14 @@ Follows Svelte 5 runes + microservices architecture.
 		sections = [],
 		onSectionToggle = () => {},
 		onItemClick = () => {},
+		isCollapsed = false,
+		onToggleCollapse = () => {},
 	} = $props<{
 		sections?: NavigationSection[];
 		onSectionToggle?: (sectionId: string) => void;
 		onItemClick?: (sectionId: string, itemId: string) => void;
+		isCollapsed?: boolean;
+		onToggleCollapse?: () => void;
 	}>();
 
 	// Handle section header click
@@ -36,25 +40,8 @@ Follows Svelte 5 runes + microservices architecture.
 		onItemClick(section.id, item.id);
 	}
 
-	// Get section icon based on type
-	function getSectionIcon(section: NavigationSection): string {
-		switch (section.type) {
-			case 'favorites':
-				return '⭐';
-			case 'date':
-				return '📅';
-			case 'length':
-				return '📏';
-			case 'letter':
-				return '🔤';
-			case 'level':
-				return '📊';
-			case 'author':
-				return '👤';
-			default:
-				return '📁';
-		}
-	}
+	// Note: Section titles already include emojis from NavigationService
+	// No need for additional icon function
 
 	// Format item count for display
 	function formatCount(count: number): string {
@@ -64,73 +51,107 @@ Follows Svelte 5 runes + microservices architecture.
 	}
 </script>
 
-<div class="navigation-sidebar">
+<div class="navigation-sidebar" class:collapsed={isCollapsed}>
 	<!-- Header -->
 	<div class="sidebar-header">
-		<h3 class="sidebar-title">Browse Library</h3>
-		<div class="sidebar-subtitle">Quick Navigation</div>
+		<div class="header-content">
+			<div class="header-text">
+				<h3 class="sidebar-title">Browse Library</h3>
+				{#if !isCollapsed}
+					<div class="sidebar-subtitle">Quick Navigation</div>
+				{/if}
+			</div>
+			<button
+				class="collapse-toggle"
+				onclick={onToggleCollapse}
+				title={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
+			>
+				{isCollapsed ? '▶' : '◀'}
+			</button>
+		</div>
 	</div>
 
 	<!-- Navigation Sections -->
-	<div class="navigation-sections">
-		{#each sections as section (section.id)}
-			<div class="navigation-section" class:has-items={section.items.length > 0}>
-				<!-- Section Header -->
-				<button
-					class="section-header"
-					class:expanded={section.isExpanded}
-					onclick={() => handleSectionClick(section)}
-					disabled={section.items.length === 0}
-				>
-					<div class="section-header-content">
-						<span class="section-icon">{getSectionIcon(section)}</span>
-						<span class="section-title">{section.title}</span>
-						<span class="section-count">{formatCount(section.totalCount)}</span>
-					</div>
+	{#if !isCollapsed}
+		<div class="navigation-sections">
+			{#each sections as section (section.id)}
+				<div class="navigation-section" class:has-items={section.items.length > 0}>
+					<!-- Section Header -->
+					<button
+						class="section-header"
+						class:expanded={section.isExpanded}
+						onclick={() => handleSectionClick(section)}
+						disabled={section.items.length === 0}
+					>
+						<div class="section-header-content">
+							<span class="section-title">{section.title}</span>
+							<span class="section-count">{formatCount(section.totalCount)}</span>
+						</div>
 
-					{#if section.items.length > 0}
-						<div class="section-expand-icon" class:rotated={section.isExpanded}>▶</div>
+						{#if section.items.length > 0}
+							<div class="section-expand-icon" class:rotated={section.isExpanded}>
+								▶
+							</div>
+						{/if}
+					</button>
+
+					<!-- Section Items -->
+					{#if section.isExpanded && section.items.length > 0}
+						<div class="section-items" transition:slide={{ duration: 200 }}>
+							{#if section.type === 'letter'}
+								<!-- Special grid layout for letters -->
+								<div class="letter-grid">
+									{#each section.items as item (item.id)}
+										<button
+											class="letter-item"
+											class:active={item.isActive}
+											onclick={() => handleItemClick(section, item)}
+											title="{item.label} ({item.count} sequences)"
+										>
+											<span class="letter-label">{item.label}</span>
+											<span class="letter-count">{item.count}</span>
+										</button>
+									{/each}
+								</div>
+							{:else}
+								<!-- Standard vertical layout for other sections -->
+								{#each section.items as item (item.id)}
+									<button
+										class="navigation-item"
+										class:active={item.isActive}
+										onclick={() => handleItemClick(section, item)}
+									>
+										<span class="item-label">{item.label}</span>
+										<span class="item-count">{formatCount(item.count)}</span>
+									</button>
+								{/each}
+							{/if}
+						</div>
 					{/if}
-				</button>
-
-				<!-- Section Items -->
-				{#if section.isExpanded && section.items.length > 0}
-					<div class="section-items" transition:slide={{ duration: 200 }}>
-						{#each section.items as item (item.id)}
-							<button
-								class="navigation-item"
-								class:active={item.isActive}
-								onclick={() => handleItemClick(section, item)}
-							>
-								<span class="item-label">{item.label}</span>
-								<span class="item-count">{formatCount(item.count)}</span>
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</div>
-		{/each}
-	</div>
-
-	<!-- Footer Stats -->
-	{#if sections.length > 0}
-		{@const totalSequences = sections.reduce(
-			(sum: number, section: NavigationSection) => sum + section.totalCount,
-			0
-		)}
-		{@const expandedCount = sections.filter((s: NavigationSection) => s.isExpanded).length}
-		<div class="sidebar-footer">
-			<div class="footer-stats">
-				<div class="stat-item">
-					<span class="stat-label">Total Sequences:</span>
-					<span class="stat-value">{totalSequences}</span>
 				</div>
-				<div class="stat-item">
-					<span class="stat-label">Sections:</span>
-					<span class="stat-value">{expandedCount}/{sections.length}</span>
-				</div>
-			</div>
+			{/each}
 		</div>
+
+		<!-- Footer Stats -->
+		{#if sections.length > 0}
+			{@const totalSequences = sections.reduce(
+				(sum: number, section: NavigationSection) => sum + section.totalCount,
+				0
+			)}
+			{@const expandedCount = sections.filter((s: NavigationSection) => s.isExpanded).length}
+			<div class="sidebar-footer">
+				<div class="footer-stats">
+					<div class="stat-item">
+						<span class="stat-label">Total Sequences:</span>
+						<span class="stat-value">{totalSequences}</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-label">Sections:</span>
+						<span class="stat-value">{expandedCount}/{sections.length}</span>
+					</div>
+				</div>
+			</div>
+		{/if}
 	{/if}
 </div>
 
@@ -144,6 +165,11 @@ Follows Svelte 5 runes + microservices architecture.
 		border-right: var(--glass-border);
 		backdrop-filter: blur(10px);
 		overflow: hidden;
+		transition: width var(--transition-normal);
+	}
+
+	.navigation-sidebar.collapsed {
+		width: 60px;
 	}
 
 	/* Header */
@@ -154,17 +180,54 @@ Follows Svelte 5 runes + microservices architecture.
 		background: rgba(255, 255, 255, 0.05);
 	}
 
+	.header-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-sm);
+	}
+
+	.header-text {
+		flex: 1;
+		min-width: 0;
+	}
+
 	.sidebar-title {
 		font-size: var(--font-size-lg);
 		font-weight: 600;
 		color: white;
 		margin: 0 0 var(--spacing-xs) 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.collapsed .sidebar-title {
+		font-size: var(--font-size-sm);
+		margin: 0;
 	}
 
 	.sidebar-subtitle {
 		font-size: var(--font-size-sm);
 		color: rgba(255, 255, 255, 0.7);
 		margin: 0;
+	}
+
+	.collapse-toggle {
+		background: none;
+		border: none;
+		color: rgba(255, 255, 255, 0.7);
+		font-size: var(--font-size-sm);
+		cursor: pointer;
+		padding: var(--spacing-xs);
+		border-radius: 4px;
+		transition: all var(--transition-fast);
+		flex-shrink: 0;
+	}
+
+	.collapse-toggle:hover {
+		background: rgba(255, 255, 255, 0.1);
+		color: white;
 	}
 
 	/* Navigation Sections */
@@ -216,12 +279,6 @@ Follows Svelte 5 runes + microservices architecture.
 		align-items: center;
 		gap: var(--spacing-sm);
 		flex: 1;
-	}
-
-	.section-icon {
-		font-size: 14px;
-		width: 16px;
-		text-align: center;
 	}
 
 	.section-title {
@@ -288,6 +345,60 @@ Follows Svelte 5 runes + microservices architecture.
 	}
 
 	.navigation-item.active .item-count {
+		color: rgba(var(--primary-color-rgb), 0.8);
+	}
+
+	/* Letter Grid Layout */
+	.letter-grid {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: var(--spacing-xs);
+		padding: var(--spacing-sm);
+	}
+
+	.letter-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: var(--spacing-xs);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 6px;
+		color: rgba(255, 255, 255, 0.8);
+		font-size: var(--font-size-xs);
+		cursor: pointer;
+		transition: all var(--transition-fast);
+		min-height: 40px;
+		aspect-ratio: 1;
+	}
+
+	.letter-item:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.2);
+		color: white;
+	}
+
+	.letter-item.active {
+		background: rgba(var(--primary-color-rgb), 0.2);
+		border-color: var(--primary-color);
+		color: var(--primary-color);
+	}
+
+	.letter-label {
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.letter-count {
+		font-size: 10px;
+		color: rgba(255, 255, 255, 0.6);
+		font-weight: 400;
+		margin-top: 2px;
+	}
+
+	.letter-item.active .letter-count {
 		color: rgba(var(--primary-color-rgb), 0.8);
 	}
 

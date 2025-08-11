@@ -1,5 +1,8 @@
 /* TKA V2 Modern - Base Styles */
 
+/* Import Desktop Theme for Learn Tab Compatibility */
+@import './lib/styles/desktop-theme.css';
+
 /* CSS Reset and Base Styles */
 *,
 *::before,

@@ -3,6 +3,7 @@
 	
 	Displays quiz progress including question count, accuracy, and streaks.
 	Adapts display based on quiz mode (fixed questions vs countdown).
+	Matches desktop ProgressControls styling exactly.
 -->
 
 <script lang="ts">
@@ -68,38 +69,36 @@
 	{:else}
 		<!-- Detailed View -->
 		<div class="detailed-stats">
-			<!-- Progress Bar (for fixed question mode) -->
-			{#if quizMode === QuizModeEnum.FIXED_QUESTION}
-				<div class="progress-section">
-					<div class="progress-header">
-						<span class="progress-label">Question Progress</span>
-						<span class="progress-count"
-							>{progress.currentQuestion} / {progress.totalQuestions}</span
-						>
-					</div>
-					<div class="progress-bar">
-						<div class="progress-fill" style="width: {progressPercentage}%"></div>
-					</div>
+	<!-- Progress Bar (for fixed question mode) -->
+		{#if quizMode === QuizModeEnum.FIXED_QUESTION}
+			<div class="progress-section">
+				<div class="progress-header">
+					<span class="progress-label">Question Progress</span>
+					<span class="progress-count">{progress.currentQuestion} / {progress.totalQuestions}</span>
 				</div>
-			{/if}
+				<div class="desktop-progress-bar">
+					<div class="desktop-progress-fill" style="width: {progressPercentage}%"></div>
+				</div>
+			</div>
+		{/if}
 
-			<!-- Stats Grid -->
-			<div class="stats-grid">
-				<div class="stat-card">
-					<div class="stat-icon">📊</div>
-					<div class="stat-content">
-						<div class="stat-value">{progress.questionsAnswered}</div>
-						<div class="stat-label">Questions Answered</div>
-					</div>
+		<!-- Stats Grid -->
+		<div class="stats-grid">
+			<div class="stat-card">
+				<div class="stat-icon">📊</div>
+				<div class="stat-content">
+					<div class="stat-value">{progress.questionsAnswered}</div>
+					<div class="stat-label">Questions Answered</div>
 				</div>
+			</div>
 
-				<div class="stat-card accuracy-card {getAccuracyClass(accuracyPercentage)}">
-					<div class="stat-icon">🎯</div>
-					<div class="stat-content">
-						<div class="stat-value">{accuracyPercentage}%</div>
-						<div class="stat-label">Accuracy</div>
-					</div>
+			<div class="stat-card accuracy-card {getAccuracyClass(accuracyPercentage)}">
+				<div class="stat-icon">🎯</div>
+				<div class="stat-content">
+					<div class="stat-value desktop-accuracy-{getAccuracyClass(accuracyPercentage)}">{accuracyPercentage}%</div>
+					<div class="stat-label">Accuracy</div>
 				</div>
+			</div>
 
 				<div class="stat-card">
 					<div class="stat-icon">✅</div>
@@ -150,24 +149,26 @@
 </div>
 
 <style>
+	@import '$lib/styles/desktop-theme.css';
+	
 	.progress-tracker {
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 12px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: var(--desktop-bg-secondary);
+		border: 1px solid var(--desktop-border-secondary);
+		border-radius: var(--desktop-border-radius);
 		backdrop-filter: blur(10px);
-		color: #ffffff;
+		color: var(--desktop-text-primary);
 	}
 
 	/* Compact View */
 	.compact {
-		padding: 0.75rem 1rem;
+		padding: var(--desktop-spacing-md) var(--desktop-spacing-lg);
 	}
 
 	.compact-stats {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
-		font-size: 0.875rem;
+		gap: var(--desktop-spacing-lg);
+		font-size: var(--desktop-font-size-sm);
 	}
 
 	.stat-item {
@@ -178,94 +179,96 @@
 
 	.stat-value {
 		font-weight: bold;
-		font-size: 1.125rem;
+		font-size: var(--desktop-font-size-lg);
 	}
 
 	.stat-separator {
-		color: #94a3b8;
+		color: var(--desktop-text-muted);
 		margin: 0 0.25rem;
 	}
 
 	.stat-total {
-		color: #94a3b8;
-		font-size: 1rem;
+		color: var(--desktop-text-muted);
+		font-size: var(--desktop-font-size-base);
 	}
 
 	.stat-label {
-		color: #94a3b8;
-		font-size: 0.75rem;
+		color: var(--desktop-text-muted);
+		font-size: var(--desktop-font-size-xs);
 	}
 
 	.stat-divider {
 		width: 1px;
 		height: 20px;
-		background: rgba(255, 255, 255, 0.2);
+		background: var(--desktop-border-secondary);
 	}
 
 	/* Detailed View */
 	.detailed-stats {
-		padding: 1.5rem;
+		padding: var(--desktop-spacing-xl);
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
+		gap: var(--desktop-spacing-xl);
 	}
 
 	.progress-section {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: var(--desktop-spacing-sm);
 	}
 
 	.progress-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 0.875rem;
+		font-size: var(--desktop-font-size-sm);
 	}
 
 	.progress-label {
-		color: #ffffff;
+		color: var(--desktop-text-primary);
 		font-weight: 500;
 	}
 
 	.progress-count {
-		color: #94a3b8;
+		color: var(--desktop-text-muted);
 		font-weight: 600;
 	}
 
 	.progress-bar {
 		height: 8px;
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: 4px;
+		background: var(--desktop-bg-tertiary);
+		border-radius: var(--desktop-border-radius-xs);
 		overflow: hidden;
 	}
-
+	
 	.progress-fill {
 		height: 100%;
 		background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-		border-radius: 4px;
-		transition: width 0.3s ease;
+		border-radius: var(--desktop-border-radius-xs);
+		transition: width var(--desktop-transition-slow);
 	}
 
 	.stats-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-		gap: 1rem;
+		gap: var(--desktop-spacing-lg);
 	}
 
 	.stat-card {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		padding: 1rem;
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 8px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		transition: all 0.2s ease;
+		gap: var(--desktop-spacing-md);
+		padding: var(--desktop-spacing-lg);
+		background: var(--desktop-bg-tertiary);
+		border: 1px solid var(--desktop-border-tertiary);
+		border-radius: var(--desktop-border-radius);
+		backdrop-filter: blur(10px);
+		transition: all var(--desktop-transition-normal);
 	}
 
 	.stat-card:hover {
-		background: rgba(255, 255, 255, 0.1);
+		background: var(--desktop-bg-secondary);
+		border-color: var(--desktop-border-secondary);
 		transform: translateY(-2px);
 	}
 
@@ -281,56 +284,56 @@
 	}
 
 	.stat-card .stat-value {
-		font-size: 1.25rem;
+		font-size: var(--desktop-font-size-xl);
 		font-weight: bold;
-		color: #ffffff;
+		color: var(--desktop-text-primary);
 	}
 
 	.stat-card .stat-label {
-		font-size: 0.75rem;
-		color: #94a3b8;
+		font-size: var(--desktop-font-size-xs);
+		color: var(--desktop-text-muted);
 		font-weight: 500;
 	}
 
-	/* Accuracy Colors */
+	/* Accuracy Colors - using desktop theme variables */
 	.accuracy.excellent,
 	.accuracy-card.excellent {
-		color: #4ade80;
+		color: var(--desktop-progress-excellent) !important;
 	}
 
 	.accuracy.good,
 	.accuracy-card.good {
-		color: #22d3ee;
+		color: var(--desktop-progress-good) !important;
 	}
 
 	.accuracy.fair,
 	.accuracy-card.fair {
-		color: #f59e0b;
+		color: var(--desktop-progress-fair) !important;
 	}
 
 	.accuracy.poor,
 	.accuracy-card.poor {
-		color: #f87171;
+		color: var(--desktop-progress-poor) !important;
 	}
 
 	.accuracy-card.excellent {
-		border-color: rgba(74, 222, 128, 0.3);
-		background: rgba(74, 222, 128, 0.1);
+		border-color: var(--desktop-progress-excellent);
+		background: rgba(0, 255, 0, 0.1);
 	}
 
 	.accuracy-card.good {
-		border-color: rgba(34, 211, 238, 0.3);
-		background: rgba(34, 211, 238, 0.1);
+		border-color: var(--desktop-progress-good);
+		background: rgba(255, 255, 0, 0.1);
 	}
 
 	.accuracy-card.fair {
-		border-color: rgba(245, 158, 11, 0.3);
-		background: rgba(245, 158, 11, 0.1);
+		border-color: var(--desktop-progress-fair);
+		background: rgba(255, 165, 0, 0.1);
 	}
 
 	.accuracy-card.poor {
-		border-color: rgba(248, 113, 113, 0.3);
-		background: rgba(248, 113, 113, 0.1);
+		border-color: var(--desktop-progress-poor);
+		background: rgba(255, 0, 0, 0.1);
 	}
 
 	.streak-section {

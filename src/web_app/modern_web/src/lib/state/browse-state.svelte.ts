@@ -27,6 +27,7 @@ import type {
 	ISectionService,
 	ISequenceIndexService,
 	IThumbnailService,
+	NavigationItem,
 	NavigationSection,
 	SectionConfiguration,
 	SequenceSection,
@@ -365,6 +366,28 @@ export function createBrowseState(
 		navigationSections = navigationService.setActiveItem(sectionId, itemId, navigationSections);
 	}
 
+	async function filterSequencesByNavigation(
+		sectionType: NavigationSection['type'],
+		item: NavigationItem
+	): Promise<BrowseSequenceMetadata[]> {
+		try {
+			const filtered = navigationService.getSequencesForNavigationItem(
+				item,
+				sectionType,
+				allSequences
+			);
+
+			// Update displayed sequences
+			displayedSequences = filtered;
+			filteredSequences = filtered;
+
+			return filtered;
+		} catch (error) {
+			console.error('Failed to filter sequences by navigation:', error);
+			return [];
+		}
+	}
+
 	function toggleSequenceSection(sectionId: string) {
 		sequenceSections = sectionService.toggleSectionExpansion(sectionId, sequenceSections);
 	}
@@ -530,6 +553,7 @@ export function createBrowseState(
 		generateSequenceSections,
 		toggleNavigationSection,
 		setActiveNavigationItem,
+		filterSequencesByNavigation,
 		toggleSequenceSection,
 		updateSectionConfiguration,
 		prepareDeleteSequence,

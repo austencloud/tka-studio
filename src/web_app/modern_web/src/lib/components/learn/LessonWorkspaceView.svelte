@@ -18,6 +18,7 @@
 	import ProgressTracker from './ProgressTracker.svelte';
 	import QuestionGenerator from './QuestionGenerator.svelte';
 	import QuizTimer from './QuizTimer.svelte';
+	import LessonControls from './LessonControls.svelte';
 
 	// Props
 	interface Props {
@@ -45,6 +46,8 @@
 	let timeRemaining = $state(0);
 	let isLoading = $state(false);
 	let questionStartTime = 0;
+	let isPaused = $state(false);
+	let hasStarted = $state(false);
 
 	// Component references
 	let timerComponent = $state<QuizTimer>();
@@ -86,6 +89,7 @@
 		// Generate first question
 		generateNewQuestion();
 		updateProgress();
+		hasStarted = true;
 
 		isLoading = false;
 	}
@@ -190,6 +194,29 @@
 		}
 		onBackToSelector?.();
 	}
+	
+	// Lesson control handlers
+	function handlePauseClicked() {
+		isPaused = true;
+		if (timerComponent) {
+			timerComponent.pause();
+		}
+	}
+	
+	function handleResumeClicked() {
+		isPaused = false;
+		if (timerComponent) {
+			timerComponent.resume();
+		}
+	}
+	
+	function handleRestartClicked() {
+		if (sessionId) {
+			QuizSessionService.abandonSession(sessionId);
+		}
+		// Restart the lesson
+		startLesson();
+	}
 
 	function formatLessonTitle(): string {
 		if (!lessonType) return 'Unknown Lesson';
@@ -217,20 +244,35 @@
 				<p class="quiz-mode">Mode: {getQuizModeDisplay()}</p>
 			</div>
 			{#if isCountdownMode && timeRemaining > 0}
-				<div class="timer-container">
-					<QuizTimer
-						bind:this={timerComponent}
-						{timeRemaining}
-						totalTime={LessonConfigService.getQuizTime(
-							quizMode || QuizModeEnum.FIXED_QUESTION
-						)}
-						isRunning={true}
-						size="small"
-						on:tick={handleTimerTick}
-						on:timeUp={handleTimeUp}
-					/>
-				</div>
+			<div class="timer-container">
+			<QuizTimer
+			bind:this={timerComponent}
+			{timeRemaining}
+			totalTime={LessonConfigService.getQuizTime(
+			quizMode || QuizModeEnum.FIXED_QUESTION
+			)}
+			isRunning={!isPaused}
+			size="small"
+			on:tick={handleTimerTick}
+			on:timeUp={handleTimeUp}
+			/>
+			</div>
 			{/if}
+				
+				<!-- Lesson Controls -->
+				{#if hasStarted}
+					<div class="controls-container">
+						<LessonControls
+							showPauseButton={isCountdownMode}
+							showRestartButton={true}
+							{isPaused}
+							isDisabled={isLoading}
+							onPauseClicked={handlePauseClicked}
+							onResumeClicked={handleResumeClicked}
+							onRestartClicked={handleRestartClicked}
+						/>
+					</div>
+				{/if}
 		</div>
 
 		<!-- Progress Tracker -->
@@ -317,6 +359,12 @@
 	.timer-container {
 		display: flex;
 		align-items: center;
+	}
+	
+	.controls-container {
+		display: flex;
+		align-items: center;
+		margin-left: auto;
 	}
 
 	.progress-container {
