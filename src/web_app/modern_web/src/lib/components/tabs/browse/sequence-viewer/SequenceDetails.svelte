@@ -40,12 +40,27 @@
 		return labels[difficulty] || 'Unknown';
 	}
 
-	function formatDate(date: Date) {
-		return date.toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		});
+	function formatDate(date: Date | string | undefined) {
+		if (!date) return 'Unknown';
+
+		try {
+			// Convert string to Date if needed
+			const dateObj = typeof date === 'string' ? new Date(date) : date;
+
+			// Check if it's a valid date
+			if (isNaN(dateObj.getTime())) {
+				return 'Unknown';
+			}
+
+			return dateObj.toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			});
+		} catch (error) {
+			console.warn('Error formatting date:', date, error);
+			return 'Unknown';
+		}
 	}
 
 	// Check if sequence has tags

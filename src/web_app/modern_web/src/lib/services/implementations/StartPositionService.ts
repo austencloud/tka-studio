@@ -193,9 +193,7 @@ export class StartPositionService implements IStartPositionService {
 			location: redLocation,
 		});
 
-		console.log(
-			`🏹 Created arrows - Blue: ${JSON.stringify({ id: blueArrow.id, location: blueArrow.location })}, Red: ${JSON.stringify({ id: redArrow.id, location: redArrow.location })}`
-		);
+
 
 		// Create proper prop data with location
 		const blueProp = createPropData({
@@ -245,9 +243,7 @@ export class StartPositionService implements IStartPositionService {
 			is_mirrored: false,
 		});
 
-		console.log(
-			`🎨 Final pictograph arrows - Blue: ${JSON.stringify({ id: pictograph.arrows?.blue?.id, location: pictograph.arrows?.blue?.location })}, Red: ${JSON.stringify({ id: pictograph.arrows?.red?.id, location: pictograph.arrows?.red?.location })}`
-		);
+
 
 		return pictograph;
 	}

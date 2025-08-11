@@ -117,9 +117,6 @@ class ArrowLocationCalculatorService(IArrowLocationCalculator):
             location_pair, motion_data.start_loc
         )
 
-        logger.debug(
-            f"Shift location calculation: {motion_data.start_loc} -> {motion_data.end_loc} = {calculated_location}"
-        )
 
         return calculated_location
 

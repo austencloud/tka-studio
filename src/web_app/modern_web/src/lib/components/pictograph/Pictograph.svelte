@@ -6,9 +6,11 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 -->
 <script lang="ts">
 	import type { BeatData, PictographData } from '$lib/domain';
+	import { createGridData, createPictographData, createPropData } from '$lib/domain';
 	import Arrow from './Arrow.svelte';
 	import Grid from './Grid.svelte';
 	import Prop from './Prop.svelte';
+	import { arrowPositioningService } from './services/arrowPositioningService';
 	import TKAGlyph from './TKAGlyph.svelte';
 
 	interface Props {
@@ -52,6 +54,11 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 	let isLoading = $state(false);
 	let errorMessage = $state<string | null>(null);
 	let loadedComponents = $state(new Set<string>());
+
+	// Arrow positioning coordination state
+	let arrowPositions = $state<Record<string, { x: number; y: number; rotation: number }>>({});
+	let arrowMirroring = $state<Record<string, boolean>>({});
+	let showArrows = $state(false);
 
 	// Derived state - get effective pictograph data
 	const effectivePictographData = $derived(() => {
@@ -126,7 +133,95 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 			isLoaded = false;
 			errorMessage = null;
 			loadedComponents.clear();
+
+			// Reset arrow positioning coordination
+			arrowPositions = {};
+			arrowMirroring = {};
+			showArrows = false;
 		}
+	});
+
+	// Arrow positioning coordination - calculate all positions upfront
+	$effect(() => {
+		const data = effectivePictographData();
+		if (!data?.arrows) {
+			showArrows = true; // No arrows to position
+			return;
+		}
+
+		// Calculate positions for all arrows asynchronously
+		(async () => {
+			try {
+				const arrowEntries = Object.entries(data.arrows).filter(
+					([_, arrowData]) => arrowData != null
+				);
+
+				if (arrowEntries.length === 0) {
+					showArrows = true;
+					return;
+				}
+
+				const positionPromises = arrowEntries.map(async ([color, arrowData]) => {
+					const motionData = data.motions?.[color];
+					if (!motionData) return null;
+
+					// Create pictograph context for positioning
+					const pictographContext = createPictographData({
+						letter: data.letter || 'A',
+						grid_data: createGridData(),
+						arrows: { [color]: arrowData },
+						props: {
+							blue: createPropData({ color: 'blue' }),
+							red: createPropData({ color: 'red' }),
+						},
+						motions: { [color]: motionData },
+					});
+
+					// Calculate position and mirroring
+					const position = await arrowPositioningService.calculatePosition(
+						arrowData,
+						motionData,
+						pictographContext
+					);
+
+					const shouldMirror = arrowPositioningService.shouldMirror(
+						arrowData,
+						motionData,
+						pictographContext
+					);
+
+
+
+					return { color, position, shouldMirror };
+				});
+
+				// Wait for all positions to be calculated
+				const results = await Promise.all(positionPromises);
+
+				// Store calculated positions and mirroring
+				const newPositions: Record<string, { x: number; y: number; rotation: number }> = {};
+				const newMirroring: Record<string, boolean> = {};
+
+				results.forEach((result) => {
+					if (result) {
+						newPositions[result.color] = result.position;
+						newMirroring[result.color] = result.shouldMirror;
+					}
+				});
+
+				arrowPositions = newPositions;
+				arrowMirroring = newMirroring;
+
+				// Small delay to ensure all Arrow components are ready, then show all arrows at once
+				await new Promise((resolve) => setTimeout(resolve, 50));
+				showArrows = true;
+
+			} catch (error) {
+				console.error('Failed to calculate arrow positions:', error);
+				// Fallback: show arrows without coordination
+				showArrows = true;
+			}
+		})();
 	});
 
 	// Component event handlers
@@ -225,6 +320,9 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 				<Arrow
 					{arrowData}
 					{...motionData && { motionData }}
+					preCalculatedPosition={arrowPositions[color]}
+					preCalculatedMirroring={arrowMirroring[color]}
+					showArrow={showArrows}
 					onLoaded={() => handleComponentLoaded(`${color}-arrow`)}
 					onError={(error) => handleComponentError(`${color}-arrow`, error)}
 				/>

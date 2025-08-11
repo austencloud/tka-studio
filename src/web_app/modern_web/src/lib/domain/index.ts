@@ -15,3 +15,6 @@ export * from './PropData';
 export * from './PictographData';
 export * from './BeatData';
 export * from './SequenceData';
+
+// Browse Models
+export * from './browse';

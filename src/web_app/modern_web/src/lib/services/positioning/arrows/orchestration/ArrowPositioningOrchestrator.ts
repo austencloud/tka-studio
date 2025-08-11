@@ -61,9 +61,11 @@ export class ArrowPositioningOrchestrator implements IArrowPositioningOrchestrat
 		initialPosition = this.ensureValidPosition(initialPosition);
 
 		const rotation = this.rotationCalculator.calculateRotation(motion, location);
-		const adjustment = this.adjustmentCalculator.calculateAdjustment(motion, letter, location);
 
-		const [adjustmentX, adjustmentY] = this.extractAdjustmentValues(adjustment);
+		// No adjustment - keep arrows at their initial positions
+		const adjustmentX = 0;
+		const adjustmentY = 0;
+		console.log(`🔧 Extracted adjustment values: [${adjustmentX}, ${adjustmentY}]`);
 
 		const finalX = initialPosition.x + adjustmentX;
 		const finalY = initialPosition.y + adjustmentY;
@@ -168,28 +170,28 @@ export class ArrowPositioningOrchestrator implements IArrowPositioningOrchestrat
 		return { x: 475.0, y: 475.0 };
 	}
 
-	private extractAdjustmentValues(adjustment: Point | number): [number, number] {
-		/**Extract x and y values from adjustment object.*/
-		if (typeof adjustment === 'number') {
-			return [adjustment, adjustment];
-		}
-
-		if (adjustment && typeof adjustment.x === 'number' && typeof adjustment.y === 'number') {
-			return [adjustment.x, adjustment.y];
-		}
-
-		return [0.0, 0.0];
-	}
-
 	private updateArrowInPictograph(
 		pictographData: PictographData,
 		color: string,
 		updates: Partial<ArrowData>
 	): PictographData {
 		/**Update arrow properties in pictograph data.*/
-		// For now, return the original pictograph data
-		// This would need proper implementation based on your PictographData structure
-		console.log(`Would update arrow ${color} with:`, updates);
-		return pictographData;
+		// Create a deep copy and update the specific arrow
+		const updatedPictograph = { ...pictographData };
+
+		if (updatedPictograph.arrows && updatedPictograph.arrows[color]) {
+			updatedPictograph.arrows = {
+				...updatedPictograph.arrows,
+				[color]: {
+					...updatedPictograph.arrows[color],
+					...updates,
+				},
+			};
+			console.log(`✅ Updated ${color} arrow with:`, updates);
+		} else {
+			console.warn(`❌ Could not update ${color} arrow: not found in pictograph data`);
+		}
+
+		return updatedPictograph;
 	}
 }

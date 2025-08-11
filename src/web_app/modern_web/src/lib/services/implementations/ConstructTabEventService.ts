@@ -74,7 +74,7 @@ export class ConstructTabEventService {
 			// Clear any previous errors
 			clearError();
 
-			console.log('✅ Transitioned to option picker within Build tab');
+			console.log('✅ Transitioned to option picker');
 		} catch (error) {
 			console.error('❌ Error handling start position selection:', error);
 			setError(error instanceof Error ? error.message : 'Failed to set start position');

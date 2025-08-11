@@ -3,19 +3,30 @@ Arrow Component - Renders SVG arrows with proper positioning and natural sizing
 Follows the same pattern as Prop component for consistent sizing behavior
 -->
 <script lang="ts">
+	import { arrowPositioningService } from '$lib/components/pictograph/services/arrowPositioningService';
 	import type { ArrowData, MotionData } from '$lib/domain';
+	import { createGridData, createPictographData, createPropData } from '$lib/domain';
 	import { onMount } from 'svelte';
-	// TODO: Fix import issue with positioning service
-	// import { arrowPositioningService } from '$lib/components/pictograph/services/arrowPositioningService';
 
 	interface Props {
 		arrowData: ArrowData;
 		motionData?: MotionData; // MotionData from pictograph
+		preCalculatedPosition?: { x: number; y: number; rotation: number } | undefined; // Pre-calculated position from parent
+		preCalculatedMirroring?: boolean | undefined; // Pre-calculated mirroring from parent
+		showArrow?: boolean; // Whether to show the arrow (coordination flag)
 		onLoaded?: (componentType: string) => void;
 		onError?: (componentType: string, error: string) => void;
 	}
 
-	let { arrowData, motionData, onLoaded, onError }: Props = $props();
+	let {
+		arrowData,
+		motionData,
+		preCalculatedPosition,
+		preCalculatedMirroring,
+		showArrow = true,
+		onLoaded,
+		onError,
+	}: Props = $props();
 
 	let loaded = $state(false);
 	let error = $state<string | null>(null);
@@ -25,38 +36,132 @@ Follows the same pattern as Prop component for consistent sizing behavior
 		center: { x: number; y: number };
 	} | null>(null);
 
-	// Calculate position using motion data (start location + positioning adjustments)
-	const position = $derived(() => {
-		if (!arrowData || !motionData) return { x: 475.0, y: 475.0 };
+	// Calculate position using sophisticated positioning pipeline
+	const position = $derived(async () => {
+		if (!arrowData || !motionData) return { x: 475.0, y: 475.0, rotation: 0 };
 
 		// First priority: use coordinates if already calculated
 		if (arrowData.coordinates) {
-			return arrowData.coordinates;
+			return { ...arrowData.coordinates, rotation: arrowData.rotation_angle || 0 };
 		}
 
 		// Second priority: use position_x/position_y if available
 		if (arrowData.position_x !== 0 || arrowData.position_y !== 0) {
-			return { x: arrowData.position_x, y: arrowData.position_y };
+			return {
+				x: arrowData.position_x,
+				y: arrowData.position_y,
+				rotation: arrowData.rotation_angle || 0,
+			};
 		}
 
-		// Third priority: calculate from motion data START LOCATION
-		// This is the key - arrows are positioned at the START of the motion
-		const startLocation = motionData.start_loc;
-		if (startLocation) {
-			const basePosition = calculateLocationCoordinates(startLocation);
+		// Third priority: Calculate using sophisticated positioning pipeline
+		try {
+			// Create a proper PictographData object for positioning
+			const pictographData = createPictographData({
+				letter: 'A', // Default letter
+				grid_data: createGridData(),
+				arrows: {
+					[arrowData.color]: arrowData,
+				},
+				props: {
+					blue: createPropData({ color: 'blue' }),
+					red: createPropData({ color: 'red' }),
+				},
+				motions: {
+					[arrowData.color]: motionData,
+				},
+			});
 
-			// TODO: Apply positioning offsets from arrow placement JSON files
-			// For now, return the base grid position
-			return basePosition;
+			const result = await arrowPositioningService.calculatePosition(
+				arrowData,
+				motionData,
+				pictographData
+			);
+
+
+			return result;
+		} catch (error) {
+			console.warn('Sophisticated positioning failed, using fallback:', error);
+			// Fourth priority: calculate from motion data START LOCATION
+			const startLocation = motionData.start_loc;
+			if (startLocation) {
+				const basePosition = calculateLocationCoordinates(startLocation);
+				return { ...basePosition, rotation: 0 };
+			}
+
+			// Fallback: try arrowData location field
+			if (arrowData.location) {
+				const basePosition = calculateLocationCoordinates(arrowData.location);
+				return { ...basePosition, rotation: 0 };
+			}
+
+			// Final fallback to center
+			return { x: 475.0, y: 475.0, rotation: 0 };
+		}
+	});
+
+	// Convert position promise to synchronous value for UI
+	let calculatedPosition = $state({ x: 475.0, y: 475.0, rotation: 0 });
+	let shouldMirror = $state(false);
+
+	// Update position and mirroring when dependencies change
+	$effect(() => {
+		// If pre-calculated values are provided, use them directly
+		if (preCalculatedPosition) {
+			calculatedPosition = preCalculatedPosition;
+			shouldMirror = preCalculatedMirroring ?? false;
+			return;
 		}
 
-		// Fallback: try arrowData location field
-		if (arrowData.location) {
-			return calculateLocationCoordinates(arrowData.location);
-		}
+		// Otherwise, calculate positioning as before
+		if (arrowData && motionData) {
+			// Provide immediate fallback position based on motion data
+			const startLocation = motionData.start_loc;
+			if (startLocation) {
+				const immediatePosition = calculateLocationCoordinates(startLocation);
+				calculatedPosition = { ...immediatePosition, rotation: 0 };
+			}
 
-		// Final fallback to center
-		return { x: 475.0, y: 475.0 };
+			// Then calculate sophisticated position asynchronously
+			(async () => {
+				try {
+					const sophisticatedPosition = await position();
+					calculatedPosition = sophisticatedPosition;
+
+					// Calculate mirroring using the positioning service
+					const pictographData = createPictographData({
+						letter: 'A', // Default letter
+						grid_data: createGridData(),
+						arrows: {
+							[arrowData.color]: arrowData,
+						},
+						props: {
+							blue: createPropData({ color: 'blue' }),
+							red: createPropData({ color: 'red' }),
+						},
+						motions: {
+							[arrowData.color]: motionData,
+						},
+					});
+
+					shouldMirror = arrowPositioningService.shouldMirror(
+						arrowData,
+						motionData,
+						pictographData
+					);
+
+
+				} catch (err) {
+					console.error('Failed to calculate sophisticated position:', err);
+					// Keep the immediate position if sophisticated calculation fails
+					shouldMirror = false;
+				}
+			})();
+		} else {
+			// Reset to center if no data
+			calculatedPosition = { x: 475.0, y: 475.0, rotation: 0 };
+			shouldMirror = false;
+		}
 	});
 
 	// Convert location strings (ne, sw, etc.) to grid coordinates
@@ -216,24 +321,36 @@ Follows the same pattern as Prop component for consistent sizing behavior
 		<!-- Loading state -->
 		<circle r="8" fill={arrowData?.color === 'blue' ? '#2E3192' : '#ED1C24'} opacity="0.3" />
 		<animate attributeName="opacity" values="0.3;0.8;0.3" dur="1s" repeatCount="indefinite" />
-	{:else}
+	{:else if showArrow}
 		<!-- Actual arrow SVG with natural sizing and centering (same as props) -->
 		<image
 			href={svgData.imageSrc}
 			transform="
-				translate({position().x}, {position().y})
-				rotate({arrowData?.rotation_angle || 0})
+				translate({calculatedPosition.x}, {calculatedPosition.y})
+				rotate({calculatedPosition.rotation || arrowData?.rotation_angle || 0})
+				scale({shouldMirror ? -1 : 1}, 1)
 				translate({-svgData.center.x}, {-svgData.center.y})
 			"
 			width={svgData.viewBox.width}
 			height={svgData.viewBox.height}
 			preserveAspectRatio="xMidYMid meet"
 			class="arrow-svg {arrowData?.color}-arrow-svg"
+			class:mirrored={shouldMirror}
+			style:opacity={showArrow ? 1 : 0}
 			onerror={() => {
 				error = 'Failed to load arrow SVG';
 				onError?.(`${arrowData?.color}-arrow`, error);
 			}}
 		/>
+	{:else}
+		<!-- Hidden but loaded arrow (positioning ready but waiting for coordination) -->
+		<g opacity="0" aria-hidden="true">
+			<circle
+				r="2"
+				fill={arrowData?.color === 'blue' ? '#2E3192' : '#ED1C24'}
+				opacity="0.1"
+			/>
+		</g>
 
 		<!-- Debug info (if needed) -->
 		{#if import.meta.env.DEV}

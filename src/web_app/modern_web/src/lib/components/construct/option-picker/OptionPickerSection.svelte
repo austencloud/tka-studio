@@ -73,21 +73,9 @@ Matches the desktop version exactly:
 		onPictographSelected(pictograph);
 	}
 
-	// Debug: Log what we're receiving
-	$effect(() => {
-		console.log(`🔍 OptionPickerSection [${letterType}] received:`, {
-			letterType,
-			pictographsCount: pictographs.length,
-			pictographs: pictographs.map((p: PictographData) => ({ id: p.id, letter: p.letter })),
-		});
-	});
 
 	// Since pictographs are already filtered by OptionPickerScroll, just use them directly
 	const sectionPictographs = $derived(() => {
-		console.log(`🔍 OptionPickerSection [${letterType}] sectionPictographs:`, {
-			count: pictographs.length,
-			letters: pictographs.map((p: PictographData) => p.letter),
-		});
 		return pictographs;
 	});
 </script>

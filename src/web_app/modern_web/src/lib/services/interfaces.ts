@@ -7,6 +7,12 @@
 
 import type { ArrowData, BeatData, MotionData, PictographData, SequenceData } from '$lib/domain';
 import { GridMode as DomainGridMode } from '$lib/domain';
+import type {
+	BrowseSequenceMetadata,
+	FilterType,
+	FilterValue,
+	SortMethod,
+} from '$lib/domain/browse';
 
 // Re-export domain types for convenience
 export type { BeatData, MotionData, PictographData, SequenceData };
@@ -380,6 +386,43 @@ export interface IDeviceDetectionService {
 
 	/** Get breakpoint for current viewport */
 	getCurrentBreakpoint(): 'mobile' | 'tablet' | 'desktop' | 'large-desktop';
+}
+
+// ============================================================================
+// BROWSE SERVICES
+// ============================================================================
+
+export interface IBrowseService {
+	loadSequenceMetadata(): Promise<BrowseSequenceMetadata[]>;
+	applyFilter(
+		sequences: BrowseSequenceMetadata[],
+		filterType: FilterType,
+		filterValue: FilterValue
+	): Promise<BrowseSequenceMetadata[]>;
+	sortSequences(
+		sequences: BrowseSequenceMetadata[],
+		sortMethod: SortMethod
+	): Promise<BrowseSequenceMetadata[]>;
+	groupSequencesIntoSections(
+		sequences: BrowseSequenceMetadata[],
+		sortMethod: SortMethod
+	): Promise<Record<string, BrowseSequenceMetadata[]>>;
+	getUniqueValues(field: keyof BrowseSequenceMetadata): Promise<string[]>;
+	getFilterOptions(filterType: FilterType): Promise<string[]>;
+}
+
+export interface IThumbnailService {
+	getThumbnailUrl(sequenceId: string, thumbnailPath: string): string;
+	preloadThumbnail(sequenceId: string, thumbnailPath: string): Promise<void>;
+	getThumbnailMetadata(sequenceId: string): Promise<{ width: number; height: number } | null>;
+	clearThumbnailCache(): void;
+}
+
+export interface ISequenceIndexService {
+	loadSequenceIndex(): Promise<BrowseSequenceMetadata[]>;
+	buildSearchIndex(sequences: BrowseSequenceMetadata[]): Promise<void>;
+	searchSequences(query: string): Promise<BrowseSequenceMetadata[]>;
+	refreshIndex(): Promise<void>;
 }
 
 // ============================================================================

@@ -1,14 +1,20 @@
 /**
- * Arrow Positioning Service
+ * Arrow Positioning Service for Svelte Components
  *
- * Integrates the new microservices-based arrow positioning architecture.
- * This is a simplified integration that uses our new services directly.
+ * Provides a simple interface for arrow positioning that uses the sophisticated
+ * positioning pipeline we've built and tested.
  */
 
-import type { MotionData, PictographData } from '$lib/domain';
-import type { GridMode, MotionType } from '$lib/services/interfaces';
-import { DefaultPlacementService } from '$lib/services/positioning/arrows/placement/DefaultPlacementService';
-import { SpecialPlacementService } from '$lib/services/positioning/arrows/placement/SpecialPlacementService';
+import type { ArrowData, MotionData, PictographData } from '$lib/domain';
+import { ArrowType } from '$lib/domain';
+import { getPositioningServiceFactory } from '$lib/services/positioning/PositioningServiceFactory';
+import type { IArrowPositioningOrchestrator } from '$lib/services/positioning/interfaces';
+
+export interface ArrowPositionResult {
+	x: number;
+	y: number;
+	rotation: number;
+}
 
 export interface ArrowPositioningInput {
 	arrow_type: 'blue' | 'red';
@@ -27,173 +33,156 @@ export interface Position {
 }
 
 export class ArrowPositioningService {
-	private specialPlacementService: SpecialPlacementService;
-	private defaultPlacementService: DefaultPlacementService;
+	private orchestrator: IArrowPositioningOrchestrator;
 
 	constructor() {
-		this.specialPlacementService = new SpecialPlacementService();
-		this.defaultPlacementService = new DefaultPlacementService();
+		// Use the singleton factory to get a properly configured orchestrator
+		// This prevents recreating placement services and reloading data on hot reload
+		const factory = getPositioningServiceFactory();
+		this.orchestrator = factory.createPositioningOrchestrator();
 	}
 
 	/**
-	 * Calculate the final position for an arrow using our new microservices
+	 * Calculate arrow position using the sophisticated positioning pipeline
 	 */
-	async calculatePosition(input: ArrowPositioningInput): Promise<Position> {
-		console.log('🎯 ArrowPositioningService.calculatePosition() called with:', input);
-
+	async calculatePosition(
+		arrowData: ArrowData,
+		motionData: MotionData,
+		pictographData: PictographData
+	): Promise<ArrowPositionResult> {
 		try {
-			// Step 1: Get initial position based on location and grid
-			const initialPosition = this.getInitialPosition(input);
-
-			// Step 2: Try special placement first
-			const motionData: MotionData = {
-				motion_type: input.motion_type,
-				start_ori: input.start_orientation || 'in',
-				end_ori: input.end_orientation || 'in',
-				prop_rot_dir: 'cw',
-				turns: input.turns,
-			} as MotionData;
-
-			const pictographData: PictographData = {
-				letter: input.letter || 'A',
-				grid_mode: input.grid_mode,
-				motions: {
-					[input.arrow_type]: motionData,
-				},
-			} as PictographData;
-
-			let specialAdjustment = { x: 0, y: 0 };
-			try {
-				const result = await this.specialPlacementService.getSpecialAdjustment(
-					motionData,
-					pictographData
-				);
-				if (result) {
-					specialAdjustment = result;
-					console.log(
-						`Special placement found: (${specialAdjustment.x}, ${specialAdjustment.y})`
-					);
-				}
-			} catch {
-				console.log('No special placement found, using default');
-			}
-
-			// Step 3: Get default adjustment if no special placement
-			let defaultAdjustment = { x: 0, y: 0 };
-			if (specialAdjustment.x === 0 && specialAdjustment.y === 0) {
-				try {
-					// Generate placement key (simplified)
-					const placementKey = `${input.location}_${input.motion_type}`;
-					defaultAdjustment = await this.defaultPlacementService.getDefaultAdjustment(
-						placementKey,
-						input.turns,
-						input.motion_type as MotionType,
-						input.grid_mode as GridMode
-					);
-					console.log(
-						`Default placement: (${defaultAdjustment.x}, ${defaultAdjustment.y})`
-					);
-				} catch (error) {
-					console.warn('Default placement failed:', error);
-				}
-			}
-
-			// Step 4: Combine all adjustments
-			const finalX = initialPosition.x + specialAdjustment.x + defaultAdjustment.x;
-			const finalY = initialPosition.y + specialAdjustment.y + defaultAdjustment.y;
-
-			console.log(
-				`${input.arrow_type} ${input.motion_type} at ${input.location}: (${finalX}, ${finalY})`
+			// Use the sophisticated positioning pipeline
+			const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
+				arrowData,
+				pictographData,
+				motionData
 			);
 
-			return { x: finalX, y: finalY };
+			return { x, y, rotation };
 		} catch (error) {
-			console.error('Arrow positioning failed:', error);
-			// Fallback to center position
-			return { x: 475, y: 475 };
+			console.error('Sophisticated positioning failed, using fallback:', error);
+			return this.getFallbackPosition(motionData);
 		}
 	}
 
 	/**
-	 * Get initial position based on motion type and location
+	 * Synchronous position calculation (may not include full adjustments)
 	 */
-	private getInitialPosition(input: ArrowPositioningInput): Position {
-		const { motion_type, location, grid_mode } = input;
+	calculatePositionSync(
+		arrowData: ArrowData,
+		motionData: MotionData,
+		pictographData: PictographData
+	): ArrowPositionResult {
+		try {
+			console.log(`🎯 Calculating sync position for ${arrowData.color} arrow`);
+			console.log(
+				`Motion: ${motionData.motion_type}, Start: ${motionData.start_loc}, End: ${motionData.end_loc}`
+			);
 
-		// For PRO/ANTI/FLOAT - use shift coordinates (layer2 points)
-		if (['pro', 'anti', 'float'].includes(motion_type)) {
-			return this.getShiftCoordinates(location, grid_mode);
+			// Use the synchronous positioning method
+			const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
+				arrowData,
+				pictographData,
+				motionData
+			);
+
+			console.log(`✅ Calculated sync position: (${x}, ${y}) rotation: ${rotation}°`);
+
+			return { x, y, rotation };
+		} catch (error) {
+			console.error('Synchronous positioning failed, using fallback:', error);
+			return this.getFallbackPosition(motionData);
 		}
-
-		// For STATIC/DASH - use hand points
-		if (['static', 'dash'].includes(motion_type)) {
-			return this.getHandCoordinates(location, grid_mode);
-		}
-
-		// Default to center
-		return { x: 475, y: 475 };
 	}
 
 	/**
-	 * Get shift coordinates for PRO/ANTI/FLOAT motions
+	 * Determine if arrow should be mirrored based on motion data
 	 */
-	private getShiftCoordinates(location: string, grid_mode: string): Position {
-		const diamondLayer2Points: Record<string, Position> = {
-			n: { x: 475, y: 200 },
-			ne: { x: 625, y: 275 },
-			e: { x: 700, y: 475 },
-			se: { x: 625, y: 675 },
-			s: { x: 475, y: 750 },
-			sw: { x: 325, y: 675 },
-			w: { x: 250, y: 475 },
-			nw: { x: 325, y: 275 },
-		};
-
-		const boxLayer2Points: Record<string, Position> = {
-			n: { x: 475, y: 225 },
-			ne: { x: 600, y: 300 },
-			e: { x: 675, y: 475 },
-			se: { x: 600, y: 650 },
-			s: { x: 475, y: 725 },
-			sw: { x: 350, y: 650 },
-			w: { x: 275, y: 475 },
-			nw: { x: 350, y: 300 },
-		};
-
-		const points = grid_mode === 'box' ? boxLayer2Points : diamondLayer2Points;
-		return points[location] || { x: 475, y: 475 };
+	shouldMirror(
+		arrowData: ArrowData,
+		_motionData: MotionData,
+		pictographData: PictographData
+	): boolean {
+		try {
+			return this.orchestrator.shouldMirrorArrow(arrowData, pictographData);
+		} catch (error) {
+			console.warn('Failed to determine mirror state, using default:', error);
+			return false;
+		}
 	}
 
 	/**
-	 * Get hand coordinates for STATIC/DASH motions
+	 * Legacy interface for backward compatibility
 	 */
-	private getHandCoordinates(location: string, grid_mode: string): Position {
-		const diamondHandPoints: Record<string, Position> = {
-			n: { x: 475, y: 175 },
-			ne: { x: 650, y: 250 },
-			e: { x: 725, y: 475 },
-			se: { x: 650, y: 700 },
-			s: { x: 475, y: 775 },
-			sw: { x: 300, y: 700 },
-			w: { x: 225, y: 475 },
-			nw: { x: 300, y: 250 },
+	async calculatePosition_legacy(input: ArrowPositioningInput): Promise<Position> {
+		const arrowData: ArrowData = {
+			color: input.arrow_type,
+			arrow_type: input.arrow_type === 'blue' ? ArrowType.BLUE : ArrowType.RED,
+			location: input.location,
+			motion_type: input.motion_type,
+		} as ArrowData;
+
+		const motionData: MotionData = {
+			motion_type: input.motion_type,
+			start_loc: input.location,
+			start_ori: input.start_orientation || 'in',
+			end_ori: input.end_orientation || 'in',
+			prop_rot_dir: 'cw',
+			turns: input.turns,
+		} as MotionData;
+
+		const pictographData: PictographData = {
+			letter: input.letter || 'A',
+			grid_mode: input.grid_mode,
+			motions: {
+				[input.arrow_type]: motionData,
+			},
+		} as PictographData;
+
+		const result = await this.calculatePosition(arrowData, motionData, pictographData);
+		return { x: result.x, y: result.y };
+	}
+
+	/**
+	 * Fallback position calculation using basic coordinates
+	 */
+	private getFallbackPosition(motionData: MotionData): ArrowPositionResult {
+		const coordinates = this.calculateLocationCoordinates(motionData.start_loc || 'center');
+		console.log(`🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`);
+
+		return {
+			x: coordinates.x,
+			y: coordinates.y,
+			rotation: 0,
+		};
+	}
+
+	/**
+	 * Basic coordinate calculation as fallback
+	 */
+	private calculateLocationCoordinates(location: string): { x: number; y: number } {
+		// Diamond grid coordinates from legacy desktop circle_coords.json
+		const diamondCoordinates: Record<string, { x: number; y: number }> = {
+			// Cardinal directions (hand_points)
+			n: { x: 475.0, y: 331.9 },
+			e: { x: 618.1, y: 475.0 },
+			s: { x: 475.0, y: 618.1 },
+			w: { x: 331.9, y: 475.0 },
+
+			// Diagonal directions (layer2_points) - used for arrows
+			ne: { x: 618.1, y: 331.9 },
+			se: { x: 618.1, y: 618.1 },
+			sw: { x: 331.9, y: 618.1 },
+			nw: { x: 331.9, y: 331.9 },
+
+			// Center point
+			center: { x: 475.0, y: 475.0 },
 		};
 
-		const boxHandPoints: Record<string, Position> = {
-			n: { x: 475, y: 200 },
-			ne: { x: 625, y: 275 },
-			e: { x: 700, y: 475 },
-			se: { x: 625, y: 675 },
-			s: { x: 475, y: 750 },
-			sw: { x: 325, y: 675 },
-			w: { x: 250, y: 475 },
-			nw: { x: 325, y: 275 },
-		};
-
-		const points = grid_mode === 'box' ? boxHandPoints : diamondHandPoints;
-		return points[location] || { x: 475, y: 475 };
+		const coords = diamondCoordinates[location.toLowerCase()];
+		return coords || { x: 475.0, y: 475.0 };
 	}
 }
 
-// Export a singleton instance for use in components
+// Create singleton instance
 export const arrowPositioningService = new ArrowPositioningService();

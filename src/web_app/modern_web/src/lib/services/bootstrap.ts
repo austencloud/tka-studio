@@ -16,6 +16,7 @@ import type {
 	IArrowPlacementDataService,
 	IArrowPlacementKeyService,
 	IArrowPositioningService,
+	IBrowseService,
 	IConstructTabCoordinationService,
 	IDeviceDetectionService,
 	IExportService,
@@ -27,16 +28,34 @@ import type {
 	IPropRenderingService,
 	ISequenceDomainService,
 	ISequenceGenerationService,
+	ISequenceIndexService,
 	ISequenceService,
 	ISettingsService,
 	IStartPositionService,
+	IThumbnailService,
 } from './interfaces.js';
+
+// Import enhanced positioning service interfaces
+import type {
+	IArrowAdjustmentCalculator,
+	IArrowAdjustmentLookup,
+	IArrowCoordinateSystemService,
+	IArrowLocationCalculator,
+	IArrowPositioningOrchestrator,
+	IArrowRotationCalculator,
+	IDashLocationCalculator,
+	IDirectionalTupleCalculator,
+	IDirectionalTupleProcessor,
+	IPositioningServiceFactory,
+	IQuadrantIndexCalculator,
+} from './positioning/interfaces';
 
 // Import service implementations
 import { ApplicationInitializationService } from './implementations/ApplicationInitializationService';
 import { ArrowPlacementDataService } from './implementations/ArrowPlacementDataService';
 import { ArrowPlacementKeyService } from './implementations/ArrowPlacementKeyService';
 import { ArrowPositioningService } from './implementations/ArrowPositioningService';
+import { BrowseService } from './implementations/BrowseService';
 import { ConstructTabCoordinationService } from './implementations/ConstructTabCoordinationService';
 import { DeviceDetectionService } from './implementations/DeviceDetectionService';
 import { ExportService } from './implementations/ExportService';
@@ -48,9 +67,21 @@ import { PictographService } from './implementations/PictographService';
 import { PropRenderingService } from './implementations/PropRenderingService';
 import { SequenceDomainService } from './implementations/SequenceDomainService';
 import { SequenceGenerationService } from './implementations/SequenceGenerationService';
+import { SequenceIndexService } from './implementations/SequenceIndexService';
 import { SequenceService } from './implementations/SequenceService';
 import { SettingsService } from './implementations/SettingsService';
 import { StartPositionService } from './implementations/StartPositionService';
+import { ThumbnailService } from './implementations/ThumbnailService';
+
+// Import enhanced positioning service implementations
+import { ArrowAdjustmentCalculator } from './positioning/arrows/calculation/ArrowAdjustmentCalculator';
+import { ArrowLocationCalculator } from './positioning/arrows/calculation/ArrowLocationCalculator';
+import { ArrowRotationCalculator } from './positioning/arrows/calculation/ArrowRotationCalculator';
+import { DashLocationCalculator } from './positioning/arrows/calculation/DashLocationCalculator';
+import { ArrowCoordinateSystemService } from './positioning/arrows/coordinate_system/ArrowCoordinateSystemService';
+import { ArrowPositioningOrchestrator } from './positioning/arrows/orchestration/ArrowPositioningOrchestrator';
+import { DirectionalTupleProcessor } from './positioning/arrows/processors/DirectionalTupleProcessor';
+import { PositioningServiceFactory } from './positioning/PositioningServiceFactory';
 
 // Create ServiceInterface objects for DI container
 const ISequenceServiceInterface = createServiceInterface<ISequenceService>(
@@ -162,6 +193,78 @@ const IDeviceDetectionServiceInterface = createServiceInterface<IDeviceDetection
 	'IDeviceDetectionService',
 	DeviceDetectionService
 );
+const IBrowseServiceInterface = createServiceInterface<IBrowseService>(
+	'IBrowseService',
+	BrowseService
+);
+const IThumbnailServiceInterface = createServiceInterface<IThumbnailService>(
+	'IThumbnailService',
+	ThumbnailService
+);
+const ISequenceIndexServiceInterface = createServiceInterface<ISequenceIndexService>(
+	'ISequenceIndexService',
+	SequenceIndexService
+);
+
+// Enhanced positioning service interfaces
+const IArrowLocationCalculatorInterface = createServiceInterface<IArrowLocationCalculator>(
+	'IArrowLocationCalculator',
+	class extends ArrowLocationCalculator {
+		constructor(...args: unknown[]) {
+			super(args[0] as DashLocationCalculator | undefined);
+		}
+	}
+);
+const IArrowRotationCalculatorInterface = createServiceInterface<IArrowRotationCalculator>(
+	'IArrowRotationCalculator',
+	ArrowRotationCalculator
+);
+const IArrowAdjustmentCalculatorInterface = createServiceInterface<IArrowAdjustmentCalculator>(
+	'IArrowAdjustmentCalculator',
+	class extends ArrowAdjustmentCalculator {
+		constructor(...args: unknown[]) {
+			super(
+				args[0] as IArrowAdjustmentLookup | undefined,
+				args[1] as IDirectionalTupleProcessor | undefined
+			);
+		}
+	}
+);
+const IArrowCoordinateSystemServiceInterface =
+	createServiceInterface<IArrowCoordinateSystemService>(
+		'IArrowCoordinateSystemService',
+		ArrowCoordinateSystemService
+	);
+const IDashLocationCalculatorInterface = createServiceInterface<IDashLocationCalculator>(
+	'IDashLocationCalculator',
+	DashLocationCalculator
+);
+const IDirectionalTupleProcessorInterface = createServiceInterface<IDirectionalTupleProcessor>(
+	'IDirectionalTupleProcessor',
+	class extends DirectionalTupleProcessor {
+		constructor(...args: unknown[]) {
+			super(args[0] as IDirectionalTupleCalculator, args[1] as IQuadrantIndexCalculator);
+		}
+	}
+);
+const IArrowPositioningOrchestratorInterface =
+	createServiceInterface<IArrowPositioningOrchestrator>(
+		'IArrowPositioningOrchestrator',
+		class extends ArrowPositioningOrchestrator {
+			constructor(...args: unknown[]) {
+				super(
+					args[0] as IArrowLocationCalculator,
+					args[1] as IArrowRotationCalculator,
+					args[2] as IArrowAdjustmentCalculator,
+					args[3] as IArrowCoordinateSystemService
+				);
+			}
+		}
+	);
+const IPositioningServiceFactoryInterface = createServiceInterface<IPositioningServiceFactory>(
+	'IPositioningServiceFactory',
+	PositioningServiceFactory
+);
 
 /**
  * Create and configure the web application DI container
@@ -178,9 +281,44 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 		container.registerSingletonClass(ISettingsServiceInterface);
 		container.registerSingletonClass(IDeviceDetectionServiceInterface);
 
+		// Register browse services
+		container.registerSingletonClass(IBrowseServiceInterface);
+		container.registerSingletonClass(IThumbnailServiceInterface);
+		container.registerSingletonClass(ISequenceIndexServiceInterface);
+
 		// Register placement services (no dependencies)
 		container.registerSingletonClass(IArrowPlacementDataServiceInterface);
 		container.registerSingletonClass(IArrowPlacementKeyServiceInterface);
+
+		// Register enhanced positioning services
+		container.registerSingletonClass(IArrowCoordinateSystemServiceInterface);
+		container.registerSingletonClass(IDashLocationCalculatorInterface);
+		container.registerSingletonClass(IArrowRotationCalculatorInterface);
+		container.registerSingletonClass(IPositioningServiceFactoryInterface);
+
+		// Register directional tuple processor with dependencies
+		container.registerFactory(IDirectionalTupleProcessorInterface, () => {
+			const factory = container.resolve(IPositioningServiceFactoryInterface);
+			return factory.createDirectionalTupleProcessor();
+		});
+
+		// Register arrow location calculator with dependencies
+		container.registerFactory(IArrowLocationCalculatorInterface, () => {
+			const factory = container.resolve(IPositioningServiceFactoryInterface);
+			return factory.createLocationCalculator();
+		});
+
+		// Register arrow adjustment calculator with dependencies
+		container.registerFactory(IArrowAdjustmentCalculatorInterface, () => {
+			const factory = container.resolve(IPositioningServiceFactoryInterface);
+			return factory.createAdjustmentCalculator();
+		});
+
+		// Register enhanced arrow positioning orchestrator
+		container.registerFactory(IArrowPositioningOrchestratorInterface, () => {
+			const factory = container.resolve(IPositioningServiceFactoryInterface);
+			return factory.createPositioningOrchestrator();
+		});
 
 		// Register construct tab services
 		container.registerSingletonClass(IStartPositionServiceInterface);
@@ -320,6 +458,18 @@ const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
 	['IOptionDataService', IOptionDataServiceInterface],
 	['IStartPositionService', IStartPositionServiceInterface],
 	['IDeviceDetectionService', IDeviceDetectionServiceInterface],
+	['IBrowseService', IBrowseServiceInterface],
+	['IThumbnailService', IThumbnailServiceInterface],
+	['ISequenceIndexService', ISequenceIndexServiceInterface],
+	// Enhanced positioning services
+	['IArrowLocationCalculator', IArrowLocationCalculatorInterface],
+	['IArrowRotationCalculator', IArrowRotationCalculatorInterface],
+	['IArrowAdjustmentCalculator', IArrowAdjustmentCalculatorInterface],
+	['IArrowCoordinateSystemService', IArrowCoordinateSystemServiceInterface],
+	['IDashLocationCalculator', IDashLocationCalculatorInterface],
+	['IDirectionalTupleProcessor', IDirectionalTupleProcessorInterface],
+	['IArrowPositioningOrchestrator', IArrowPositioningOrchestratorInterface],
+	['IPositioningServiceFactory', IPositioningServiceFactoryInterface],
 ]);
 
 /**

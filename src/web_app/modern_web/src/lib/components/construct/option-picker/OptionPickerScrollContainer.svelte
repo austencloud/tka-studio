@@ -84,14 +84,6 @@ Refactored from the large OptionPickerScroll.svelte with extracted responsibilit
 	const individualSections = ['Type1', 'Type2', 'Type3'];
 	const groupedSections = ['Type4', 'Type5', 'Type6'];
 
-	// ===== Debug Logging (Development Only) =====
-	if (import.meta.env.DEV) {
-		$effect(() => {
-			if (scrollState.debugInfo) {
-				console.log('🔍 OptionPickerScrollContainer debug info:', scrollState.debugInfo);
-			}
-		});
-	}
 </script>
 
 <div
