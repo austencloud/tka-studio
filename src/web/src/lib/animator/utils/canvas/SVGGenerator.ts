@@ -1,94 +1,27 @@
 /**
- * SVG Generator for creating prop staff images
- * Generates blue and red staff SVGs for animation rendering
+ * SVG Generator for creating prop staff images and grid
+ * Based on the exact implementation from standalone_animator.html
  */
-
-import { PROP_COLORS, ANIMATION_CONSTANTS } from '../../constants/index.js';
 
 export class SVGGenerator {
 	/**
-	 * Generate blue staff SVG
+	 * Generate grid SVG exactly as in standalone_animator.html
+	 */
+	static generateGridSvg(): string {
+		return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 950 950" style="enable-background:new 0 0 950 950; background-color: #ffffff;" xml:space="preserve"><g id="outer_points"><circle fill="#000000" cx="475" cy="175" r="25"/><circle fill="#000000" cx="775" cy="475" r="25"/><circle fill="#000000" cx="475" cy="775" r="25"/><circle fill="#000000" cx="175" cy="475" r="25"/></g><g id="halfway_points"><circle fill="#000000" cx="475" cy="323.5" r="8"/><circle fill="#000000" cx="626.5" cy="475" r="8"/><circle fill="#000000" cx="475" cy="626.5" r="8"/><circle fill="#000000" cx="323.5" cy="475" r="8"/></g><g id="center_group"><circle fill="#000000" cx="475" cy="475" r="12"/></g></svg>`;
+	}
+
+	/**
+	 * Generate blue staff SVG exactly as in standalone_animator.html
 	 */
 	static generateBlueStaffSvg(): string {
-		const { STAFF_VIEWBOX_WIDTH, STAFF_VIEWBOX_HEIGHT, STAFF_CENTER_X, STAFF_CENTER_Y } =
-			ANIMATION_CONSTANTS;
-
-		return `
-			<svg viewBox="0 0 ${STAFF_VIEWBOX_WIDTH} ${STAFF_VIEWBOX_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-				<defs>
-					<style>
-						.staff-blue { fill: ${PROP_COLORS.BLUE}; stroke: #000; stroke-width: 2; }
-						.center-dot { fill: #fff; stroke: #000; stroke-width: 1; }
-					</style>
-				</defs>
-				<g transform="translate(${STAFF_CENTER_X}, ${STAFF_CENTER_Y})">
-					<!-- Staff body -->
-					<rect x="-40" y="-10" width="80" height="20" rx="2" class="staff-blue"/>
-					<!-- Center dot -->
-					<circle cx="0" cy="0" r="4" class="center-dot"/>
-				</g>
-			</svg>
-		`.trim();
+		return `<svg version="1.1" id="staff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 252.8 77.8" style="enable-background:new 0 0 252.8 77.8;" xml:space="preserve"><path fill="#2E3192" stroke="#555555" stroke-width="1" stroke-miterlimit="10" d="M251.4,67.7V10.1c0-4.8-4.1-8.7-9.1-8.7s-9.1,3.9-9.1,8.7v19.2H10.3c-4.9,0-8.9,3.8-8.9,8.5V41 c0,4.6,4,8.5,8.9,8.5h222.9v18.2c0,4.8,4.1,8.7,9.1,8.7S251.4,72.5,251.4,67.7z"/><circle id="centerPoint" fill="#FF0000" cx="126.4" cy="38.9" r="5" /></svg>`;
 	}
 
 	/**
-	 * Generate red staff SVG
+	 * Generate red staff SVG exactly as in standalone_animator.html
 	 */
 	static generateRedStaffSvg(): string {
-		const { STAFF_VIEWBOX_WIDTH, STAFF_VIEWBOX_HEIGHT, STAFF_CENTER_X, STAFF_CENTER_Y } =
-			ANIMATION_CONSTANTS;
-
-		return `
-			<svg viewBox="0 0 ${STAFF_VIEWBOX_WIDTH} ${STAFF_VIEWBOX_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-				<defs>
-					<style>
-						.staff-red { fill: ${PROP_COLORS.RED}; stroke: #000; stroke-width: 2; }
-						.center-dot { fill: #fff; stroke: #000; stroke-width: 1; }
-					</style>
-				</defs>
-				<g transform="translate(${STAFF_CENTER_X}, ${STAFF_CENTER_Y})">
-					<!-- Staff body -->
-					<rect x="-40" y="-10" width="80" height="20" rx="2" class="staff-red"/>
-					<!-- Center dot -->
-					<circle cx="0" cy="0" r="4" class="center-dot"/>
-				</g>
-			</svg>
-		`.trim();
-	}
-
-	/**
-	 * Generate grid SVG
-	 */
-	static generateGridSvg(width: number, height: number): string {
-		const { GRID_VIEWBOX_SIZE, GRID_CENTER } = ANIMATION_CONSTANTS;
-		const scale = Math.min(width, height) / GRID_VIEWBOX_SIZE;
-
-		return `
-			<svg viewBox="0 0 ${GRID_VIEWBOX_SIZE} ${GRID_VIEWBOX_SIZE}" xmlns="http://www.w3.org/2000/svg">
-				<defs>
-					<style>
-						.grid-line { stroke: #ddd; stroke-width: 1; fill: none; }
-						.grid-label { font-family: sans-serif; font-size: 14px; fill: #666; text-anchor: middle; }
-						.grid-center { stroke: #999; stroke-width: 2; fill: none; }
-					</style>
-				</defs>
-				
-				<!-- Outer diamond -->
-				<path d="M ${GRID_CENTER} 50 L ${GRID_VIEWBOX_SIZE - 50} ${GRID_CENTER} L ${GRID_CENTER} ${GRID_VIEWBOX_SIZE - 50} L 50 ${GRID_CENTER} Z" class="grid-line"/>
-				
-				<!-- Inner diamond -->
-				<path d="M ${GRID_CENTER} 200 L ${GRID_VIEWBOX_SIZE - 200} ${GRID_CENTER} L ${GRID_CENTER} ${GRID_VIEWBOX_SIZE - 200} L 200 ${GRID_CENTER} Z" class="grid-line"/>
-				
-				<!-- Center lines -->
-				<line x1="${GRID_CENTER}" y1="0" x2="${GRID_CENTER}" y2="${GRID_VIEWBOX_SIZE}" class="grid-center"/>
-				<line x1="0" y1="${GRID_CENTER}" x2="${GRID_VIEWBOX_SIZE}" y2="${GRID_CENTER}" class="grid-center"/>
-				
-				<!-- Position labels -->
-				<text x="${GRID_CENTER}" y="40" class="grid-label">N</text>
-				<text x="${GRID_VIEWBOX_SIZE - 40}" y="${GRID_CENTER + 5}" class="grid-label">E</text>
-				<text x="${GRID_CENTER}" y="${GRID_VIEWBOX_SIZE - 25}" class="grid-label">S</text>
-				<text x="40" y="${GRID_CENTER + 5}" class="grid-label">W</text>
-			</svg>
-		`.trim();
+		return `<svg version="1.1" id="staff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 252.8 77.8" style="enable-background:new 0 0 252.8 77.8;" xml:space="preserve"><path fill="#ED1C24" stroke="#555555" stroke-width="1" stroke-miterlimit="10" d="M251.4,67.7V10.1c0-4.8-4.1-8.7-9.1-8.7s-9.1,3.9-9.1,8.7v19.2H10.3c-4.9,0-8.9,3.8-8.9,8.5V41 c0,4.6,4,8.5,8.9,8.5h222.9v18.2c0,4.8,4.1,8.7,9.1,8.7S251.4,72.5,251.4,67.7z"/><circle id="centerPoint" fill="#FF0000" cx="126.4" cy="38.9" r="5" /></svg>`;
 	}
 }

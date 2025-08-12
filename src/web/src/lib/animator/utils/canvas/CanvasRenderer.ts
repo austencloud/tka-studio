@@ -1,117 +1,99 @@
 /**
  * Canvas Renderer for animation visualization
- * Handles rendering of grid, props, and animation frames
+ * Based on the exact implementation from standalone_animator.html
  */
 
-import type { PropState } from '../../types/core.js';
-import { ANIMATION_CONSTANTS, CANVAS_COLORS } from '../../constants/index.js';
+import type { PropState } from "../../types/core.js";
+
+// Constants from standalone_animator.html
+const GRID_HALFWAY_POINT_OFFSET = 143.1;
+const STAFF_VIEWBOX_WIDTH = 252.8;
+const STAFF_VIEWBOX_HEIGHT = 77.8;
+const STAFF_CENTER_X = 126.4;
+const STAFF_CENTER_Y = 38.9;
 
 export class CanvasRenderer {
-	/**
-	 * Render the complete animation scene
-	 */
-	static renderScene(
-		ctx: CanvasRenderingContext2D,
-		width: number,
-		height: number,
-		gridVisible: boolean,
-		gridImage: HTMLImageElement | null,
-		blueStaffImage: HTMLImageElement | null,
-		redStaffImage: HTMLImageElement | null,
-		blueProp: PropState,
-		redProp: PropState
-	): void {
-		// Clear canvas
-		ctx.clearRect(0, 0, width, height);
-		ctx.fillStyle = CANVAS_COLORS.BACKGROUND;
-		ctx.fillRect(0, 0, width, height);
+  /**
+   * Render the complete animation scene exactly as in standalone_animator.html
+   */
+  static renderScene(
+    ctx: CanvasRenderingContext2D,
+    canvasSize: number,
+    gridVisible: boolean,
+    gridImage: HTMLImageElement | null,
+    blueStaffImage: HTMLImageElement | null,
+    redStaffImage: HTMLImageElement | null,
+    blueProp: PropState,
+    redProp: PropState
+  ): void {
+    // Clear canvas exactly as in standalone
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
 
-		// Save context state
-		ctx.save();
+    // Draw grid exactly as in standalone
+    this.drawGrid(ctx, canvasSize, gridVisible, gridImage);
 
-		// Set up coordinate system (center origin)
-		ctx.translate(width / 2, height / 2);
-		const scale = Math.min(width, height) / ANIMATION_CONSTANTS.GRID_VIEWBOX_SIZE;
-		ctx.scale(scale, scale);
-		ctx.translate(-ANIMATION_CONSTANTS.GRID_CENTER, -ANIMATION_CONSTANTS.GRID_CENTER);
+    // Draw staffs exactly as in standalone
+    if (blueStaffImage) {
+      this.drawStaff(ctx, canvasSize, blueProp, blueStaffImage);
+    }
 
-		// Render grid if visible and available
-		if (gridVisible && gridImage) {
-			ctx.drawImage(gridImage, 0, 0, ANIMATION_CONSTANTS.GRID_VIEWBOX_SIZE, ANIMATION_CONSTANTS.GRID_VIEWBOX_SIZE);
-		}
+    if (redStaffImage) {
+      this.drawStaff(ctx, canvasSize, redProp, redStaffImage);
+    }
+  }
 
-		// Render props
-		if (blueStaffImage) {
-			this.renderProp(ctx, blueStaffImage, blueProp);
-		}
+  /**
+   * Draw grid exactly as in standalone_animator.html
+   */
+  private static drawGrid(
+    ctx: CanvasRenderingContext2D,
+    canvasSize: number,
+    gridVisible: boolean,
+    gridImage: HTMLImageElement | null
+  ): void {
+    if (!gridVisible || !gridImage) return;
+    ctx.drawImage(gridImage, 0, 0, canvasSize, canvasSize);
+  }
 
-		if (redStaffImage) {
-			this.renderProp(ctx, redStaffImage, redProp);
-		}
+  /**
+   * Draw staff exactly as in standalone_animator.html
+   */
+  private static drawStaff(
+    ctx: CanvasRenderingContext2D,
+    canvasSize: number,
+    propState: PropState,
+    staffImage: HTMLImageElement
+  ): void {
+    if (!propState) return;
 
-		// Restore context state
-		ctx.restore();
-	}
+    // Calculate position exactly as in standalone
+    const centerX = canvasSize / 2;
+    const centerY = canvasSize / 2;
+    const inwardFactor = 0.95;
+    const gridScaleFactor = canvasSize / 950; // 950 is the viewBox size from standalone
+    const scaledHalfwayRadius = GRID_HALFWAY_POINT_OFFSET * gridScaleFactor;
 
-	/**
-	 * Render a single prop (staff) at the given state
-	 */
-	private static renderProp(
-		ctx: CanvasRenderingContext2D,
-		staffImage: HTMLImageElement,
-		propState: PropState
-	): void {
-		ctx.save();
+    const x =
+      centerX +
+      Math.cos(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
+    const y =
+      centerY +
+      Math.sin(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
 
-		// Move to prop position
-		ctx.translate(propState.x, propState.y);
+    const staffWidth = STAFF_VIEWBOX_WIDTH * gridScaleFactor;
+    const staffHeight = STAFF_VIEWBOX_HEIGHT * gridScaleFactor;
 
-		// Rotate staff
-		ctx.rotate(propState.staffRotationAngle);
-
-		// Scale staff
-		const scale = ANIMATION_CONSTANTS.DEFAULT_PROP_SCALE;
-		ctx.scale(scale, scale);
-
-		// Draw staff centered
-		const drawWidth = ANIMATION_CONSTANTS.STAFF_VIEWBOX_WIDTH;
-		const drawHeight = ANIMATION_CONSTANTS.STAFF_VIEWBOX_HEIGHT;
-		
-		ctx.drawImage(
-			staffImage,
-			-drawWidth / 2,
-			-drawHeight / 2,
-			drawWidth,
-			drawHeight
-		);
-
-		ctx.restore();
-	}
-
-	/**
-	 * Render debug information (optional)
-	 */
-	static renderDebugInfo(
-		ctx: CanvasRenderingContext2D,
-		width: number,
-		height: number,
-		blueProp: PropState,
-		redProp: PropState
-	): void {
-		ctx.save();
-		ctx.fillStyle = CANVAS_COLORS.LABELS;
-		ctx.font = '12px sans-serif';
-		
-		// Blue prop info
-		ctx.fillText(`Blue: (${blueProp.x.toFixed(1)}, ${blueProp.y.toFixed(1)})`, 10, 20);
-		ctx.fillText(`Angle: ${(blueProp.centerPathAngle * 180 / Math.PI).toFixed(1)}°`, 10, 35);
-		ctx.fillText(`Staff: ${(blueProp.staffRotationAngle * 180 / Math.PI).toFixed(1)}°`, 10, 50);
-		
-		// Red prop info
-		ctx.fillText(`Red: (${redProp.x.toFixed(1)}, ${redProp.y.toFixed(1)})`, 10, 80);
-		ctx.fillText(`Angle: ${(redProp.centerPathAngle * 180 / Math.PI).toFixed(1)}°`, 10, 95);
-		ctx.fillText(`Staff: ${(redProp.staffRotationAngle * 180 / Math.PI).toFixed(1)}°`, 10, 110);
-		
-		ctx.restore();
-	}
+    // Draw exactly as in standalone
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(propState.staffRotationAngle);
+    ctx.drawImage(
+      staffImage,
+      -STAFF_CENTER_X * gridScaleFactor,
+      -STAFF_CENTER_Y * gridScaleFactor,
+      staffWidth,
+      staffHeight
+    );
+    ctx.restore();
+  }
 }

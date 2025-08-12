@@ -9,7 +9,7 @@ Integrates the animator module directly into the browse experience.
 	import type { BrowseSequenceMetadata } from '$lib/domain/browse';
 	import { resolve } from '$lib/services/bootstrap';
 	import type { ISequenceService } from '$lib/services/interfaces';
-	import { SimplifiedAnimationEngine, AnimatorCanvas } from '$lib/animator';
+	import { StandalonePortedEngine, AnimatorCanvas, ensureStandaloneFormat } from '$lib/animator';
 	import type { PropState } from '$lib/animator';
 
 	// ✅ PURE RUNES: Props using modern Svelte 5 runes
@@ -36,11 +36,18 @@ Integrates the animator module directly into the browse experience.
 	let error = $state<string | null>(null);
 
 	// Animation engine and state
-	let animationEngine = new SimplifiedAnimationEngine();
+	let animationEngine = new StandalonePortedEngine();
 	let currentBeat = $state(0);
 	let isPlaying = $state(false);
-	let playInterval: ReturnType<typeof setInterval> | null = null;
+	let speed = $state(1.0);
 	let totalBeats = $state(0);
+	let sequenceWord = $state('');
+	let sequenceAuthor = $state('');
+	let shouldLoop = $state(false);
+
+	// Animation frame reference
+	let animationFrameId: number | null = null;
+	let lastTimestamp: number | null = null;
 
 	// Prop states for rendering
 	let bluePropState = $state<PropState>({
@@ -54,6 +61,15 @@ Integrates the animator module directly into the browse experience.
 		staffRotationAngle: 0,
 		x: 0,
 		y: 0,
+	});
+
+	// Clean up on component destroy
+	$effect(() => {
+		return () => {
+			if (animationFrameId !== null) {
+				cancelAnimationFrame(animationFrameId);
+			}
+		};
 	});
 
 	// Load sequence data when sequence changes
@@ -77,9 +93,27 @@ Integrates the animator module directly into the browse experience.
 				throw new Error(`Sequence not found: ${sequence.id}`);
 			}
 
-			sequenceData = fullSequence;
-			currentBeat = 0;
-			console.log('✅ Sequence loaded for animation:', sequenceData);
+			// Convert web app data to standalone format and initialize engine
+			const standaloneData = ensureStandaloneFormat(fullSequence);
+
+			if (animationEngine.initialize(standaloneData)) {
+				sequenceData = fullSequence;
+				const metadata = animationEngine.getMetadata();
+				totalBeats = metadata.totalBeats;
+				sequenceWord = metadata.word;
+				sequenceAuthor = metadata.author;
+
+				// Reset animation state
+				currentBeat = 0;
+				isPlaying = false;
+
+				// Update prop states
+				updatePropStates();
+
+				console.log('✅ Sequence loaded for animation:', sequenceData);
+			} else {
+				throw new Error('Failed to initialize animation engine');
+			}
 		} catch (err) {
 			console.error('❌ Failed to load sequence:', err);
 			error = err instanceof Error ? err.message : 'Failed to load sequence';
@@ -88,41 +122,107 @@ Integrates the animator module directly into the browse experience.
 		}
 	}
 
-	function handlePlay() {
-		if (!sequenceData?.beats) return;
+	// Update prop states from engine
+	function updatePropStates(): void {
+		bluePropState = animationEngine.getBluePropState();
+		redPropState = animationEngine.getRedPropState();
+	}
 
-		if (isPlaying) {
-			// Stop playing
-			if (playInterval) {
-				clearInterval(playInterval);
-				playInterval = null;
+	// Animation loop using StandalonePortedEngine
+	function animationLoop(timestamp: number): void {
+		if (!isPlaying) return;
+
+		// Calculate deltaTime
+		if (lastTimestamp === null) {
+			lastTimestamp = timestamp;
+		}
+		const deltaTime = timestamp - lastTimestamp;
+		lastTimestamp = timestamp;
+
+		// Update current beat based on speed
+		const beatDelta = (deltaTime / 1000) * speed;
+		const newBeat = currentBeat + beatDelta;
+
+		// Check if we've reached the end
+		const animationEndBeat = totalBeats + 1;
+
+		if (newBeat > animationEndBeat) {
+			if (shouldLoop) {
+				// Loop back to start
+				currentBeat = 0;
+				lastTimestamp = null;
+				animationEngine.reset();
+			} else {
+				// Stop at end
+				currentBeat = totalBeats;
+				isPlaying = false;
 			}
-			isPlaying = false;
 		} else {
-			// Start playing
+			currentBeat = newBeat;
+		}
+
+		// Calculate state for current beat using StandalonePortedEngine
+		animationEngine.calculateState(currentBeat);
+
+		// Update props from engine state
+		updatePropStates();
+
+		// Request next frame if still playing
+		if (isPlaying) {
+			animationFrameId = requestAnimationFrame(animationLoop);
+		}
+	}
+
+	function handlePlay() {
+		if (isPlaying) {
+			isPlaying = false;
+			if (animationFrameId !== null) {
+				cancelAnimationFrame(animationFrameId);
+				animationFrameId = null;
+			}
+		} else {
 			isPlaying = true;
-			playInterval = setInterval(() => {
-				currentBeat = (currentBeat + 1) % sequenceData.beats.length;
-			}, 1000); // 1 second per beat
+			lastTimestamp = null;
+			animationFrameId = requestAnimationFrame(animationLoop);
 		}
 	}
 
 	function handleStop() {
-		if (playInterval) {
-			clearInterval(playInterval);
-			playInterval = null;
-		}
-		isPlaying = false;
 		currentBeat = 0;
+		isPlaying = false;
+
+		if (animationFrameId !== null) {
+			cancelAnimationFrame(animationFrameId);
+			animationFrameId = null;
+		}
+
+		animationEngine.reset();
+		updatePropStates();
 	}
 
 	function handleBeatChange(beat: number) {
-		currentBeat = beat;
+		// Stop any current animation
+		isPlaying = false;
+		if (animationFrameId !== null) {
+			cancelAnimationFrame(animationFrameId);
+			animationFrameId = null;
+		}
+
+		// Set the current beat
+		currentBeat = Math.max(0, Math.min(beat, totalBeats));
+
+		// Calculate state for this specific beat
+		animationEngine.calculateState(currentBeat);
+		updatePropStates();
+	}
+
+	function handleSpeedChange(value: number) {
+		speed = Math.max(0.1, Math.min(3.0, value));
 	}
 
 	onDestroy(() => {
-		if (playInterval) {
-			clearInterval(playInterval);
+		if (animationFrameId !== null) {
+			cancelAnimationFrame(animationFrameId);
 		}
 	});
 </script>
@@ -167,8 +267,20 @@ Integrates the animator module directly into the browse experience.
 					{isPlaying ? '⏸️' : '▶️'}
 				</button>
 				<button class="control-button" onclick={handleStop}> ⏹️ </button>
+				<div class="speed-control">
+					<label for="speed-slider">Speed: {speed.toFixed(1)}x</label>
+					<input
+						id="speed-slider"
+						type="range"
+						min="0.1"
+						max="3.0"
+						step="0.1"
+						value={speed}
+						oninput={(e) => handleSpeedChange(parseFloat((e.target as HTMLInputElement).value))}
+					/>
+				</div>
 				<div class="beat-info">
-					Beat {currentBeat + 1} of {totalBeats || sequenceData.beats?.length || 0}
+					Beat {Math.floor(currentBeat) + 1} of {totalBeats || sequenceData.beats?.length || 0}
 				</div>
 			</div>
 
@@ -363,6 +475,7 @@ Integrates the animator module directly into the browse experience.
 		padding: 0.75rem;
 		background: var(--color-surface-elevated);
 		border-radius: 0.5rem;
+		flex-wrap: wrap;
 	}
 
 	.control-button {
@@ -378,6 +491,46 @@ Integrates the animator module directly into the browse experience.
 
 	.control-button:hover {
 		background: var(--color-primary-hover);
+	}
+
+	.speed-control {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		min-width: 120px;
+	}
+
+	.speed-control label {
+		font-size: 0.75rem;
+		color: var(--color-text-secondary);
+		font-weight: 500;
+	}
+
+	.speed-control input[type="range"] {
+		width: 100%;
+		height: 4px;
+		background: var(--color-border);
+		border-radius: 2px;
+		outline: none;
+		-webkit-appearance: none;
+	}
+
+	.speed-control input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		width: 16px;
+		height: 16px;
+		background: var(--color-primary);
+		border-radius: 50%;
+		cursor: pointer;
+	}
+
+	.speed-control input[type="range"]::-moz-range-thumb {
+		width: 16px;
+		height: 16px;
+		background: var(--color-primary);
+		border-radius: 50%;
+		cursor: pointer;
+		border: none;
 	}
 
 	.beat-info {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { modalState, modalData, modalActions, type ResourceModalData } from '$lib/stores/modalStore';
-  import { focusTrap } from '$lib/utils/focusTrap';
+  import { modalState, modalData, modalActions, type ResourceModalData } from '../../stores/modalStore';
+  import { focusTrap } from '../../utils/focusTrap';
   
   // Props that extend ResourceGuideLayout props
   export let isOpen = false;

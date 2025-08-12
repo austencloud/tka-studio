@@ -1,25 +1,28 @@
 <script lang="ts">
 	import type { PropState } from '../../types/core.js';
 	import { svgStringToImage } from '../../svgStringToImage.js';
-	import { ANIMATION_CONSTANTS } from '../../constants/animation.js';
 	import { SVGGenerator } from '../../utils/canvas/SVGGenerator.js';
 	import { CanvasRenderer } from '../../utils/canvas/CanvasRenderer.js';
-	import GridManager from './GridManager.svelte';
 
 	// Modern Svelte 5 props
 	let {
 		blueProp,
 		redProp,
-		width = 500,
-		height = 500,
+		canvasSize = 500,
+		width,
+		height,
 		gridVisible = true
 	}: {
 		blueProp: PropState;
 		redProp: PropState;
+		canvasSize?: number;
 		width?: number;
 		height?: number;
 		gridVisible?: boolean;
 	} = $props();
+
+	// Use width/height if provided, otherwise use canvasSize
+	const actualSize = width && height ? Math.min(width, height) : canvasSize;
 
 	let canvasElement: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -29,14 +32,6 @@
 	let imagesLoaded = $state(false);
 	let rafId: number | null = null;
 	let needsRender = $state(true);
-	let gridManager: GridManager;
-
-	// Handle grid image load from GridManager
-	function handleGridImageLoad(image: HTMLImageElement): void {
-		gridImage = image;
-		needsRender = true;
-		startRenderLoop();
-	}
 
 	// Track prop changes to trigger re-renders
 	$effect(() => {
@@ -47,21 +42,14 @@
 		startRenderLoop();
 	});
 
-	// Initial load of staff images and canvas setup
+	// Initial load of images and canvas setup
 	$effect(() => {
-		const loadStaffImages = async () => {
+		const loadImages = async () => {
 			try {
-				[blueStaffImage, redStaffImage] = await Promise.all([
-					svgStringToImage(
-						SVGGenerator.generateBlueStaffSvg(),
-						ANIMATION_CONSTANTS.STAFF_VIEWBOX_WIDTH,
-						ANIMATION_CONSTANTS.STAFF_VIEWBOX_HEIGHT
-					),
-					svgStringToImage(
-						SVGGenerator.generateRedStaffSvg(),
-						ANIMATION_CONSTANTS.STAFF_VIEWBOX_WIDTH,
-						ANIMATION_CONSTANTS.STAFF_VIEWBOX_HEIGHT
-					)
+				[gridImage, blueStaffImage, redStaffImage] = await Promise.all([
+					svgStringToImage(SVGGenerator.generateGridSvg(), actualSize, actualSize),
+					svgStringToImage(SVGGenerator.generateBlueStaffSvg(), 252.8, 77.8),
+					svgStringToImage(SVGGenerator.generateRedStaffSvg(), 252.8, 77.8)
 				]);
 
 				ctx = canvasElement.getContext('2d');
@@ -74,7 +62,7 @@
 		};
 
 		if (canvasElement) {
-			loadStaffImages();
+			loadImages();
 		}
 
 		return () => {
@@ -107,8 +95,7 @@
 
 		CanvasRenderer.renderScene(
 			ctx,
-			width,
-			height,
+			actualSize,
 			gridVisible,
 			gridImage,
 			blueStaffImage,
@@ -120,10 +107,13 @@
 </script>
 
 <div class="canvas-wrapper">
-	<canvas bind:this={canvasElement} {width} {height} style:width="{width}px" style:height="{height}px"
+	<canvas
+		bind:this={canvasElement}
+		width={actualSize}
+		height={actualSize}
+		style:width="{actualSize}px"
+		style:height="{actualSize}px"
 	></canvas>
-
-	<GridManager bind:this={gridManager} {width} {height} onGridImageLoad={handleGridImageLoad} />
 </div>
 
 <style>
@@ -133,9 +123,9 @@
 	}
 
 	canvas {
-		border: 1px solid #e0e0e0;
+		border: 1px solid #e5e7eb;
 		border-radius: 4px;
-		background: white;
+		background: #ffffff;
 		transition: all 0.3s ease;
 		display: block;
 	}

@@ -1,0 +1,146 @@
+/**
+ * Enhanced Panel System CSS Variables
+ * 
+ * Defines design tokens for the unified panel management system.
+ * Includes transitions, colors, spacing, and responsive breakpoints.
+ */
+
+:root {
+  /* Transitions */
+  --transition-fast: 0.15s ease-out;
+  --transition-normal: 0.3s ease-out;
+  --transition-slow: 0.5s ease-out;
+
+  /* Spacing (if not already defined) */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Font sizes (if not already defined) */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+
+  /* Panel-specific colors */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --panel-bg: rgba(255, 255, 255, 0.02);
+  --panel-bg-elevated: rgba(255, 255, 255, 0.05);
+  --panel-bg-hover: rgba(255, 255, 255, 0.1);
+
+  /* Enhanced color system (if not already defined) */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --primary-color-rgb: 59, 130, 246; /* For rgba() usage */
+  
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  
+  --color-surface: rgba(17, 24, 39, 0.8);
+  --color-surface-elevated: rgba(31, 41, 55, 0.9);
+  --color-surface-hover: rgba(55, 65, 81, 0.6);
+  
+  --color-border: rgba(75, 85, 99, 0.5);
+  
+  --color-text-primary: rgba(255, 255, 255, 0.95);
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-tertiary: rgba(255, 255, 255, 0.5);
+
+  /* Panel dimensions */
+  --panel-collapsed-width: 60px;
+  --panel-min-width: 200px;
+  --panel-max-width: 600px;
+  --splitter-thickness: 8px;
+
+  /* Z-index layers */
+  --z-panel: 10;
+  --z-splitter: 20;
+  --z-overlay: 1000;
+  --z-modal: 2000;
+  --z-debug: 9999;
+
+  /* Responsive breakpoints */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+  --breakpoint-desktop: 1200px;
+}
+
+/* Dark theme adjustments (if needed) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --panel-bg: rgba(0, 0, 0, 0.3);
+    --panel-bg-elevated: rgba(0, 0, 0, 0.5);
+    --panel-bg-hover: rgba(255, 255, 255, 0.1);
+    
+    --color-surface: rgba(17, 24, 39, 0.95);
+    --color-surface-elevated: rgba(31, 41, 55, 0.95);
+    --color-surface-hover: rgba(55, 65, 81, 0.8);
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  :root {
+    --glass-border: 2px solid currentColor;
+    --color-border: rgba(255, 255, 255, 0.8);
+    --color-text-secondary: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: none;
+    --transition-normal: none;
+    --transition-slow: none;
+  }
+}
+
+/* Enhanced panel system utilities */
+.panel-transition {
+  transition: all var(--transition-normal);
+}
+
+.panel-fast-transition {
+  transition: all var(--transition-fast);
+}
+
+.panel-no-transition {
+  transition: none !important;
+}
+
+/* Glass morphism effects for panels */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(10px);
+  border: var(--glass-border);
+}
+
+.glass-panel-elevated {
+  background: var(--panel-bg-elevated);
+  backdrop-filter: blur(15px);
+  border: var(--glass-border);
+}
+
+/* Focus management utilities */
+.focus-visible-ring:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

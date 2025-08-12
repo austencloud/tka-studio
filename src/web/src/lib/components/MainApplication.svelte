@@ -10,10 +10,7 @@
 	} from '$services/interfaces';
 	import { getContext, onMount } from 'svelte';
 	
-	// Import app mode state
-	import { getAppMode, isLandingMode, isAppMode } from '$lib/state/appModeState.svelte';
-	
-	// Import runes-based state
+	// Import app state management
 	import {
 		getActiveTab,
 		getInitializationError,
@@ -47,8 +44,7 @@
 	let sequenceService: ISequenceService | null = $state(null);
 	let deviceService: IDeviceDetectionService | null = $state(null);
 
-	// App mode state
-	let appMode = $derived(getAppMode());
+	// App state
 	let isInitialized = $derived(getIsInitialized());
 	let initializationError = $derived(getInitializationError());
 	let initializationProgress = $derived(getInitializationProgress());
@@ -110,13 +106,9 @@
 			const capabilities = deviceService.getCapabilities();
 			console.log('📱 Device capabilities detected:', capabilities);
 
-			// Step 4: Load initial data (only in app mode)
-			if (isAppMode()) {
-				setInitializationProgress(70);
-				await loadSequences(sequenceService);
-			} else {
-				setInitializationProgress(70);
-			}
+			// Step 4: Load initial data
+			setInitializationProgress(70);
+			await loadSequences(sequenceService);
 
 			// Step 5: Restore application state (tab memory)
 			setInitializationProgress(85);
@@ -126,7 +118,7 @@
 			setInitializationProgress(100);
 			setInitializationState(true, false, null, 100);
 
-			console.log(`✅ TKA V2 Unified initialized successfully (${appMode} mode)`);
+			console.log('✅ TKA Constructor initialized successfully');
 		} catch (error) {
 			console.error('❌ Application initialization failed:', error);
 			setInitializationError(
@@ -135,10 +127,8 @@
 		}
 	});
 
-	// Handle keyboard shortcuts (only in app mode)
+	// Handle keyboard shortcuts
 	$effect(() => {
-		if (!isAppMode()) return;
-
 		function handleKeydown(event: KeyboardEvent) {
 			// Settings dialog toggle (Ctrl/Cmd + ,)
 			if ((event.ctrlKey || event.metaKey) && event.key === ',') {
@@ -183,12 +173,12 @@
 </script>
 
 <svelte:head>
-	<title>{isLandingMode() ? 'The Kinetic Alphabet - Flow Arts Choreography Toolbox' : 'TKA Constructor - The Kinetic Alphabet'}</title>
+	<title>TKA Constructor - The Kinetic Alphabet</title>
 	<meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Create, learn, and share movement sequences." />
 </svelte:head>
 
-<!-- Unified Application Container -->
-<div class="tka-unified-app" data-mode={appMode} data-testid="unified-application">
+<!-- Application Container -->
+<div class="tka-app" data-testid="tka-application">
 	{#if initializationError}
 		<ErrorScreen
 			error={initializationError}
@@ -197,21 +187,21 @@
 	{:else if !isInitialized}
 		<LoadingScreen 
 			progress={initializationProgress} 
-			message={isLandingMode() ? "Loading TKA..." : "Initializing Constructor..."}
+			message="Initializing Constructor..."
 		/>
 	{:else}
-		<!-- Main Interface handles both landing and app modes -->
+		<!-- Main Interface -->
 		<MainInterface />
 
-		<!-- Settings dialog only in app mode -->
-		{#if isAppMode() && getShowSettings()}
+		<!-- Settings dialog -->
+		{#if getShowSettings()}
 			<SettingsDialog />
 		{/if}
 	{/if}
 </div>
 
 <style>
-	.tka-unified-app {
+	.tka-app {
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
@@ -219,42 +209,15 @@
 		position: relative;
 		overflow: hidden;
 		transition: all 0.3s ease;
-	}
-
-	.tka-unified-app[data-mode="landing"] {
-		/* Landing mode styles */
 		background: transparent;
-		overflow: visible; /* Allow scrolling for landing pages */
-	}
-
-	.tka-unified-app[data-mode="app"] {
-		/* App mode styles */
-		background: transparent;
-		overflow: hidden; /* Fixed height for app interface */
-	}
-
-	/* Global typography for landing mode */
-	.tka-unified-app[data-mode="landing"] {
 		--text-color: rgba(255, 255, 255, 0.95);
-		--text-secondary: rgba(255, 255, 255, 0.8);
-		--text-muted: rgba(255, 255, 255, 0.6);
-	}
-
-	/* Global typography for app mode */
-	.tka-unified-app[data-mode="app"] {
-		--text-color: rgba(255, 255, 255, 0.95);
-		--muted-foreground: rgba(255, 255, 255, 0.7);
 		--foreground: rgba(255, 255, 255, 0.95);
+		--muted-foreground: rgba(255, 255, 255, 0.7);
 	}
 
 	/* Responsive adjustments */
 	@media (max-width: 768px) {
-		.tka-unified-app[data-mode="landing"] {
-			/* Better mobile scrolling for landing */
-			-webkit-overflow-scrolling: touch;
-		}
-
-		.tka-unified-app[data-mode="app"] {
+		.tka-app {
 			/* Dynamic viewport height for mobile app */
 			min-height: 100dvh;
 		}
@@ -262,19 +225,14 @@
 
 	/* Reduced motion support */
 	@media (prefers-reduced-motion: reduce) {
-		.tka-unified-app {
+		.tka-app {
 			transition: none;
 		}
 	}
 
 	/* High contrast mode */
 	@media (prefers-contrast: high) {
-		.tka-unified-app[data-mode="landing"] {
-			--text-color: white;
-			--text-secondary: rgba(255, 255, 255, 0.9);
-		}
-
-		.tka-unified-app[data-mode="app"] {
+		.tka-app {
 			--text-color: white;
 			--foreground: white;
 		}
@@ -282,7 +240,7 @@
 
 	/* Print styles */
 	@media print {
-		.tka-unified-app {
+		.tka-app {
 			min-height: auto;
 			overflow: visible;
 		}

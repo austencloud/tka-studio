@@ -1,3 +1,12 @@
+<!--
+Enhanced Browse Tab with Unified Panel Management
+
+Integrates panel management service with runes for:
+- Unified collapse/expand logic for both panels
+- Splitter-based resizing
+- Persistent panel state
+- Reactive UI updates
+-->
 <script lang="ts">
 	import type { BrowseSequenceMetadata } from '$lib/domain/browse';
 	import { NavigationMode } from '$lib/domain/browse';
@@ -8,24 +17,30 @@
 		IFavoritesService,
 		IFilterPersistenceService,
 		INavigationService,
+		IPanelManagementService,
 		ISectionService,
 		ISequenceIndexService,
 		IThumbnailService,
 	} from '$lib/services/interfaces';
 	import { createBrowseState } from '$lib/state/browse-state.svelte';
-	import { onMount } from 'svelte';
-	// Extracted components
-	import AnimationPanel from './browse/AnimationPanel.svelte';
-	import BrowseLayout from './browse/BrowseLayout.svelte';
+	import { createPanelState, BROWSE_TAB_PANEL_CONFIGS } from '$lib/state/panel-state.svelte';
+	import { onMount, onDestroy } from 'svelte';
+
+	// Enhanced components
+	import BrowseLayoutEnhanced from './browse/BrowseLayout.svelte';
+	import NavigationSidebar from './browse/NavigationSidebar.svelte';
+	import AnimationPanelEnhanced from './browse/AnimationPanelEnhanced.svelte';
+
+	// Existing components
 	import DeleteConfirmationDialog from './browse/DeleteConfirmationDialog.svelte';
 	import ErrorBanner from './browse/ErrorBanner.svelte';
 	import FilterSelectionPanel from './browse/FilterSelectionPanel.svelte';
 	import FullscreenSequenceViewer from './browse/FullscreenSequenceViewer.svelte';
 	import LoadingOverlay from './browse/LoadingOverlay.svelte';
-	import NavigationSidebar from './browse/NavigationSidebar.svelte';
 	import PanelContainer from './browse/PanelContainer.svelte';
 	import SequenceBrowserPanel from './browse/sequence-browser/SequenceBrowserPanel.svelte';
-	// Extracted event handlers
+
+	// Event handlers
 	import { createBrowseEventHandlers } from './browse/browse-event-handlers';
 	import { createNavigationEventHandlers } from './browse/navigation-event-handlers';
 
@@ -33,16 +48,20 @@
 	const browseService = resolve('IBrowseService') as IBrowseService;
 	const thumbnailService = resolve('IThumbnailService') as IThumbnailService;
 	const sequenceIndexService = resolve('ISequenceIndexService') as ISequenceIndexService;
-	// Advanced browse services
 	const favoritesService = resolve('IFavoritesService') as IFavoritesService;
 	const navigationService = resolve('INavigationService') as INavigationService;
-	const filterPersistenceService = resolve(
-		'IFilterPersistenceService'
-	) as IFilterPersistenceService;
+	const filterPersistenceService = resolve('IFilterPersistenceService') as IFilterPersistenceService;
 	const sectionService = resolve('ISectionService') as ISectionService;
 	const deleteService = resolve('IDeleteService') as IDeleteService;
+	const panelManagementService = resolve('IPanelManagementService') as IPanelManagementService;
 
-	// ✅ CREATE BROWSE STATE: Runes-based reactive state
+	// ✅ REGISTER PANELS: Configure panel management
+	onMount(() => {
+		panelManagementService.registerPanel(BROWSE_TAB_PANEL_CONFIGS.navigation);
+		panelManagementService.registerPanel(BROWSE_TAB_PANEL_CONFIGS.animation);
+	});
+
+	// ✅ CREATE STATE MANAGERS: Runes-based reactive state
 	const browseState = createBrowseState(
 		browseService,
 		thumbnailService,
@@ -54,15 +73,12 @@
 		deleteService
 	);
 
+	const panelState = createPanelState(panelManagementService);
+
 	// ✅ PURE RUNES: Local UI state
 	let currentPanelIndex = $state(0); // 0 = filter selection, 1 = sequence browser
-	let isNavigationCollapsed = $state(false); // Navigation sidebar collapse state
 	let showFullscreenViewer = $state(false); // Fullscreen sequence viewer state
 	let fullscreenSequence = $state<BrowseSequenceMetadata | undefined>(undefined); // Current sequence for fullscreen
-
-	// Phase 3: Animation panel state
-	let showAnimationPanel = $state(false); // Animation panel visibility
-	let isAnimationPanelCollapsed = $state(false); // Animation panel collapse state
 	let animationSequence = $state<BrowseSequenceMetadata | null>(null); // Current sequence for animation
 
 	// ✅ DERIVED RUNES: Computed UI state from browse state
@@ -71,8 +87,6 @@
 	let hasError = $derived(browseState.hasError);
 	let sequences = $derived(browseState.displayedSequences);
 	let navigationMode = $derived(browseState.navigationMode);
-
-	// Advanced derived values
 	let navigationSections = $derived(browseState.navigationSections);
 	let deleteConfirmation = $derived(browseState.deleteConfirmation);
 	let showDeleteDialog = $derived(browseState.showDeleteDialog);
@@ -97,7 +111,12 @@
 		}
 	});
 
-	// ✅ EXTRACTED EVENT HANDLERS: Create event handlers using extracted functions
+	// Cleanup on destroy
+	onDestroy(() => {
+		panelState.cleanup();
+	});
+
+	// ✅ EVENT HANDLERS: Create event handlers using extracted functions
 	const browseEventHandlers = createBrowseEventHandlers(browseState, (index) => {
 		currentPanelIndex = index;
 	});
@@ -108,7 +127,7 @@
 			currentPanelIndex = index;
 		},
 		() => {
-			isNavigationCollapsed = !isNavigationCollapsed;
+			panelState.toggleNavigationCollapse();
 		}
 	);
 
@@ -128,22 +147,26 @@
 		handleToggleNavigationCollapse,
 	} = navigationEventHandlers;
 
+	// ✅ FULLSCREEN HANDLERS
 	function handleCloseFullscreen() {
 		console.log('❌ Closing fullscreen viewer');
 		showFullscreenViewer = false;
 		fullscreenSequence = undefined;
 	}
 
+	// ✅ SEQUENCE ACTION HANDLER: Enhanced with animation panel integration
 	function handleSequenceAction(action: string, sequence: BrowseSequenceMetadata) {
 		console.log(`🎬 Sequence action: ${action} on sequence:`, sequence.id);
 
 		if (action === 'animate') {
-			// Phase 3: Handle animate action
+			// Show animation panel and set sequence
 			console.log('🎬 Opening animation panel for sequence:', sequence.id);
 			animationSequence = sequence;
-			showAnimationPanel = true;
+			panelState.setAnimationVisible(true);
 			// Expand panel if it's collapsed
-			isAnimationPanelCollapsed = false;
+			if (panelState.isAnimationCollapsed) {
+				panelState.toggleAnimationCollapse();
+			}
 		} else if (action === 'edit') {
 			// Close fullscreen and handle edit
 			handleCloseFullscreen();
@@ -166,16 +189,22 @@
 		}
 	}
 
-	// Phase 3: Animation panel handlers
+	// ✅ ANIMATION PANEL HANDLERS
 	function handleCloseAnimationPanel() {
 		console.log('🎬 Closing animation panel');
-		showAnimationPanel = false;
+		panelState.setAnimationVisible(false);
 		animationSequence = null;
 	}
 
-	function handleToggleAnimationPanel() {
-		console.log('🔄 Toggling animation panel collapse');
-		isAnimationPanelCollapsed = !isAnimationPanelCollapsed;
+	// ✅ RESIZE HANDLERS: For panel width changes
+	function handleNavigationResize(width: number) {
+		console.log('📏 Navigation panel resized to:', width);
+		// Additional logic if needed when navigation panel is resized
+	}
+
+	function handleAnimationResize(width: number) {
+		console.log('📏 Animation panel resized to:', width);
+		// Additional logic if needed when animation panel is resized
 	}
 </script>
 
@@ -187,14 +216,18 @@
 		onDismiss={handleClearError}
 	/>
 
-	<!-- Main layout using extracted component -->
-	<BrowseLayout {isNavigationCollapsed} isRightPanelCollapsed={isAnimationPanelCollapsed}>
+	<!-- Enhanced layout with unified panel management -->
+	<BrowseLayoutEnhanced 
+		{panelState}
+		onNavigationResize={handleNavigationResize}
+		onAnimationResize={handleAnimationResize}
+	>
 		{#snippet navigationSidebar()}
 			<NavigationSidebar
 				sections={navigationSections}
 				onSectionToggle={handleNavigationSectionToggle}
 				onItemClick={handleNavigationItemClick}
-				isCollapsed={isNavigationCollapsed}
+				isCollapsed={panelState.isNavigationCollapsed}
 				onToggleCollapse={handleToggleNavigationCollapse}
 			/>
 		{/snippet}
@@ -220,16 +253,14 @@
 		{/snippet}
 
 		{#snippet rightPanel()}
-			<!-- Phase 3: Animation Panel -->
-			<AnimationPanel
+			<!-- Enhanced Animation Panel with unified panel management -->
+			<AnimationPanelEnhanced
 				sequence={animationSequence}
-				isVisible={showAnimationPanel}
-				isCollapsed={isAnimationPanelCollapsed}
+				{panelState}
 				onClose={handleCloseAnimationPanel}
-				onToggle={handleToggleAnimationPanel}
 			/>
 		{/snippet}
-	</BrowseLayout>
+	</BrowseLayoutEnhanced>
 
 	<!-- Loading overlay for initial load -->
 	<LoadingOverlay
@@ -265,5 +296,39 @@
 		overflow: hidden;
 		background: transparent;
 		position: relative;
+	}
+
+	/* Global panel animation support */
+	:global(.browse-tab .panel-transition) {
+		transition: all var(--transition-normal);
+	}
+
+	/* Ensure proper stacking for overlays */
+	.browse-tab :global(.loading-overlay),
+	.browse-tab :global(.error-banner),
+	.browse-tab :global(.delete-dialog),
+	.browse-tab :global(.fullscreen-viewer) {
+		z-index: 1000;
+	}
+
+	/* Panel state debugging (remove in production) */
+	.browse-tab::after {
+		content: '';
+		position: fixed;
+		top: 10px;
+		right: 10px;
+		width: 10px;
+		height: 10px;
+		background: var(--color-success);
+		border-radius: 50%;
+		z-index: 9999;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+
+	/* Show debug indicator when panels are resizing */
+	.browse-tab.resizing::after {
+		opacity: 1;
+		background: var(--color-warning);
 	}
 </style>

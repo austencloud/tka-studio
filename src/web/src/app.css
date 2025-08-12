@@ -6,6 +6,9 @@
 /* Import Glass Scrollbars System */
 @import './lib/styles/glass-scrollbars.css';
 
+/* Import Enhanced Panel System Variables */
+@import './lib/styles/enhanced-panel-system.css';
+
 /* CSS Reset and Base Styles */
 *,
 *::before,

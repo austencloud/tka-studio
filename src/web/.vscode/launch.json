@@ -1,14 +1,14 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "🚀 Launch TKA Web App",
-            "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}/web_app/src",
-            "preLaunchTask": "npm: dev",
-            "runtimeArgs": ["--auto-open-devtools-for-tabs"]
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "🚀 Launch TKA Web App",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/web_app/src",
+      "preLaunchTask": "Start Dev Server",
+      "runtimeArgs": ["--auto-open-devtools-for-tabs"]
+    }
+  ]
 }

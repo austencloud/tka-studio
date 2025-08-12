@@ -4,12 +4,10 @@
 
 	// Modern Svelte 5 props
 	let {
-		width = 500,
-		height = 500,
+		canvasSize = 500,
 		onGridImageLoad
 	}: {
-		width?: number;
-		height?: number;
+		canvasSize?: number;
 		onGridImageLoad: (image: HTMLImageElement) => void;
 	} = $props();
 
@@ -27,8 +25,8 @@
 		isLoading = true;
 		
 		try {
-			const svgString = SVGGenerator.generateGridSvg(width, height);
-			gridImage = await svgStringToImage(svgString, width, height);
+			const svgString = SVGGenerator.generateGridSvg();
+			gridImage = await svgStringToImage(svgString, canvasSize, canvasSize);
 			
 			// Notify parent component
 			onGridImageLoad(gridImage);

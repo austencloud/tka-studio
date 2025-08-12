@@ -18,7 +18,7 @@ const config = {
       "$lib/features": "src/lib/features",
       "$lib/constructor": "src/lib/features/constructor",
       "$lib/components": "src/lib/core",
-      "@tka/domain": "../../../packages/domain/src/index.ts",
+      "@tka/domain": "src/lib/domain/index.ts",
     },
   },
 };

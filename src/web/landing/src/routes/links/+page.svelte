@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { modalState, modalActions, type ResourceModalData } from '$lib/core/shared/stores/modalStore';
-  import ResourceModal from '$lib/components/resource-guide/ResourceModal.svelte';
-  import VTGContent from '$lib/components/resource-guide/content/VTGContent.svelte';
+  import ResourceModal from '$lib/core/shared/components/resource-guide/ResourceModal.svelte';
+  import VTGContent from '$lib/core/shared/components/resource-guide/content/VTGContent.svelte';
 
   let searchTerm = '';
   let selectedCategory = 'all';

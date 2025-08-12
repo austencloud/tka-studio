@@ -28,6 +28,14 @@ export type {
 } from './implementations/DeleteService';
 export type { IFavoritesService } from './implementations/FavoritesService';
 export type {
+	IPanelManagementService,
+	PanelState,
+	PanelConfiguration,
+	ResizeOperation,
+	ResizeDirection,
+	SplitterConfig,
+} from './di/interfaces/panel-interfaces';
+export type {
 	BrowseState,
 	FilterState,
 	IFilterPersistenceService,

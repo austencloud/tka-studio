@@ -1,4 +1,19 @@
-import { Letter } from "@tka/domain";
+// Mock Letter enum since @tka/domain is not available
+enum Letter {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
+  W = "W",
+  X = "X",
+  W_DASH = "W_DASH",
+  X_DASH = "X_DASH",
+  Φ = "Φ",
+  Φ_DASH = "Φ_DASH",
+  α = "α",
+}
 import { LetterType } from "../types/LetterType.js";
 import { LetterConditions } from "../components/Pictograph/constants/LetterConditions.js";
 

@@ -4,21 +4,36 @@
  */
 
 // Core types and utilities
-export * from './types/core.js';
+export * from "./types/core.js";
 
 // Constants
-export * from './constants/index.js';
+export * from "./constants/index.js";
 
 // Animation engine
-export { SimplifiedAnimationEngine } from './core/engine/simplified-animation-engine.js';
+export { StandalonePortedEngine } from "./core/engine/standalone-ported-engine.js";
+
+// Data conversion utilities
+export {
+  convertWebAppToStandalone,
+  ensureStandaloneFormat,
+  isWebAppFormat,
+  isStandaloneFormat,
+} from "./utils/data-converter.js";
+
+// Math utilities
+export * from "./utils/standalone-math.js";
+
+// TODO: File utilities (PNG parser path issues)
+// export { extractSequenceFromPNG } from "../../../animator/src/lib/animator/utils/file/png-parser.js";
+// export type { PNGParseResult } from "../../../animator/src/lib/animator/utils/file/png-parser.js";
 
 // Canvas utilities
-export { CanvasRenderer } from './utils/canvas/CanvasRenderer.js';
-export { SVGGenerator } from './utils/canvas/SVGGenerator.js';
+export { CanvasRenderer } from "./utils/canvas/CanvasRenderer.js";
+export { SVGGenerator } from "./utils/canvas/SVGGenerator.js";
 
 // SVG utilities
-export { svgStringToImage } from './svgStringToImage.js';
+export { svgStringToImage } from "./svgStringToImage.js";
 
-// Components
-export { default as AnimatorCanvas } from './components/canvas/AnimatorCanvas.svelte';
-export { default as GridManager } from './components/canvas/GridManager.svelte';
+// Components (based on standalone_animator.html reference implementation)
+export { default as AnimatorCanvas } from "./components/canvas/AnimatorCanvas.svelte";
+export { default as GridManager } from "./components/canvas/GridManager.svelte";

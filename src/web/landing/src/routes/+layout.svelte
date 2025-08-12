@@ -2,8 +2,8 @@
     import '../app.css';
     import NavBar from '../components/NavBar.svelte';
     import Footer from '../components/Footer.svelte';
-    import BackgroundProvider from '$lib/features/backgrounds/Backgrounds/BackgroundProvider.svelte';
-    import BackgroundCanvas from '$lib/features/backgrounds/Backgrounds/BackgroundCanvas.svelte';
+    import BackgroundProvider from '$lib/components/backgrounds/BackgroundProvider.svelte';
+    import BackgroundCanvas from '$lib/components/backgrounds/BackgroundCanvas.svelte';
     import { onMount } from 'svelte';
     import type { LayoutData } from './$types.js';
     import { browser } from '$app/environment';

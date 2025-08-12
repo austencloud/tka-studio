@@ -7,5 +7,8 @@ export default defineConfig({
     port: 5173,
     host: "localhost",
     open: true,
+    fs: {
+      allow: [".", "../animator"],
+    },
   },
 });

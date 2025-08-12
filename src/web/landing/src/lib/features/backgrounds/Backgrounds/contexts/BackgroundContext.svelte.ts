@@ -15,7 +15,7 @@ import type {
 } from "../types/types";
 import { BackgroundFactory } from "../core/BackgroundFactory";
 import { PerformanceTracker } from "../core/PerformanceTracker";
-import { detectAppropriateQuality } from "../config";
+import { detectAppropriateQuality } from "../../config";
 import { browser } from "$app/environment";
 
 // The context key
@@ -92,17 +92,17 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
     fps: 60,
     warnings: [],
   });
-  const isActive = $state(true);
-  const qualityLevel = $state<QualityLevel>(detectAppropriateQuality());
-  const isLoading = $state(false);
-  const backgroundType = $state<BackgroundType>("nightSky");
-  const isInitialized = $state(false);
+  let isActive = $state(true);
+  let qualityLevel = $state<QualityLevel>(detectAppropriateQuality());
+  let isLoading = $state(false);
+  let backgroundType = $state<BackgroundType>("nightSky");
+  let isInitialized = $state(false);
 
   // Derived values using $derived properly
   const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
 
   // Create background system based on type and quality
-  const backgroundSystem = $state<BackgroundSystem | null>(null);
+  let backgroundSystem = $state<BackgroundSystem | null>(null);
 
   // Create and track a single background system during context initialization
   if (browser && !backgroundSystem) {
@@ -347,7 +347,10 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
       // Return cleanup function
       return () => {
         window.removeEventListener("resize", handleResize);
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
         stopAnimation();
       };
     });
@@ -574,11 +577,11 @@ function createMockRunesBackgroundContext(): RunesBackgroundContext {
     fps: 60,
     warnings: [],
   });
-  const isActive = $state(true);
-  const qualityLevel = $state<QualityLevel>("medium");
-  const isLoading = $state(false);
-  const backgroundType = $state<BackgroundType>("snowfall");
-  const isInitialized = $state(false);
+  let isActive = $state(true);
+  let qualityLevel = $state<QualityLevel>("medium");
+  let isLoading = $state(false);
+  let backgroundType = $state<BackgroundType>("snowfall");
+  let isInitialized = $state(false);
   const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
 
   // Create a mock background system
@@ -590,7 +593,7 @@ function createMockRunesBackgroundContext(): RunesBackgroundContext {
     cleanup: () => {},
   } as BackgroundSystem;
 
-  const backgroundSystem = $state<BackgroundSystem | null>(mockSystem);
+  let backgroundSystem = $state<BackgroundSystem | null>(mockSystem);
 
   // Return a mock context with no-op functions
   return {
@@ -685,12 +688,14 @@ export function useBackgroundContext() {
       fps: 60,
       warnings: [],
     });
-    const isActive = $state(true);
-    const qualityLevel = $state<QualityLevel>("medium");
-    const isLoading = $state(false);
-    const backgroundType = $state<BackgroundType>("snowfall");
-    const isInitialized = $state(false);
-    const shouldRender = $derived(() => isActive && performanceMetrics.fps > 30);
+    let isActive = $state(true);
+    let qualityLevel = $state<QualityLevel>("medium");
+    let isLoading = $state(false);
+    let backgroundType = $state<BackgroundType>("snowfall");
+    let isInitialized = $state(false);
+    const shouldRender = $derived(
+      () => isActive && performanceMetrics.fps > 30
+    );
 
     return {
       // State getters to prevent direct reference issues
