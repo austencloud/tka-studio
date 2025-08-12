@@ -39,18 +39,26 @@ def get_image_path(filename) -> str:
         if os.path.exists(full_path):
             return full_path
 
-    # Use desktop images directory
-    desktop_images_dir = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "images")
-    )
+    # Use centralized path resolver for desktop images
+    try:
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+        from shared.infrastructure.path_resolver import get_image_path
+        return get_image_path(filename)
+    except Exception as e:
+        print(f"Warning: Could not use centralized path resolver: {e}")
+        # Fallback to manual discovery
+        desktop_images_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "images")
+        )
 
-    full_path = os.path.join(desktop_images_dir, filename)
-    if os.path.exists(full_path):
+        full_path = os.path.join(desktop_images_dir, filename)
+        if os.path.exists(full_path):
+            return full_path
+
+        dir_path = os.path.dirname(full_path)
+        os.makedirs(dir_path, exist_ok=True)
         return full_path
-
-    dir_path = os.path.dirname(full_path)
-    os.makedirs(dir_path, exist_ok=True)
-    return full_path
 
 
 def get_settings_path():

@@ -1,0 +1,312 @@
+/**
+ * Desktop-matching CSS Variables and Styling
+ * 
+ * Matches the exact colors, gradients, and styling patterns
+ * from the PyQt6 desktop implementation.
+ */
+
+/* Desktop Color Palette */
+:root {
+	/* Primary Colors - matching desktop PyQt6 styling */
+	--desktop-primary-blue: rgba(70, 130, 180, 0.8);
+	--desktop-primary-blue-hover: rgba(100, 149, 237, 0.9);
+	--desktop-primary-blue-active: rgba(65, 105, 225, 1.0);
+	--desktop-primary-blue-border: rgba(70, 130, 180, 1.0);
+	
+	/* Orange (Pause button) */
+	--desktop-orange: rgba(255, 165, 0, 0.7);
+	--desktop-orange-hover: rgba(255, 165, 0, 0.8);
+	--desktop-orange-active: rgba(255, 165, 0, 0.9);
+	--desktop-orange-border: rgba(255, 165, 0, 0.9);
+	--desktop-orange-hover-border: rgba(255, 185, 20, 1.0);
+	
+	/* Blue (Restart button) */
+	--desktop-restart-blue: rgba(62, 99, 221, 0.7);
+	--desktop-restart-blue-hover: rgba(62, 99, 221, 0.8);
+	--desktop-restart-blue-active: rgba(62, 99, 221, 0.9);
+	--desktop-restart-blue-border: rgba(62, 99, 221, 0.9);
+	--desktop-restart-blue-hover-border: rgba(82, 119, 241, 1.0);
+	
+	/* Background and Surface Colors */
+	--desktop-bg-primary: rgba(255, 255, 255, 0.2);
+	--desktop-bg-secondary: rgba(255, 255, 255, 0.1);
+	--desktop-bg-tertiary: rgba(255, 255, 255, 0.05);
+	--desktop-border-primary: rgba(255, 255, 255, 0.3);
+	--desktop-border-secondary: rgba(255, 255, 255, 0.2);
+	--desktop-border-tertiary: rgba(255, 255, 255, 0.1);
+	
+	/* Progress Colors */
+	--desktop-progress-excellent: rgba(0, 255, 0, 0.9);
+	--desktop-progress-good: rgba(255, 255, 0, 0.9);
+	--desktop-progress-fair: rgba(255, 165, 0, 0.9);
+	--desktop-progress-poor: rgba(255, 0, 0, 0.9);
+	
+	/* Text Colors */
+	--desktop-text-primary: rgba(255, 255, 255, 1.0);
+	--desktop-text-secondary: rgba(255, 255, 255, 0.9);
+	--desktop-text-muted: rgba(255, 255, 255, 0.7);
+	--desktop-text-disabled: rgba(255, 255, 255, 0.5);
+	
+	/* Typography - Georgia serif to match desktop */
+	--desktop-font-family: Georgia, serif;
+	--desktop-font-size-xs: 10px;
+	--desktop-font-size-sm: 12px;
+	--desktop-font-size-base: 14px;
+	--desktop-font-size-md: 16px;
+	--desktop-font-size-lg: 18px;
+	--desktop-font-size-xl: 24px;
+	--desktop-font-size-2xl: 32px;
+	--desktop-font-size-3xl: 48px;
+	
+	/* Spacing and Layout */
+	--desktop-border-radius: 12px;
+	--desktop-border-radius-sm: 8px;
+	--desktop-border-radius-xs: 6px;
+	--desktop-spacing-xs: 5px;
+	--desktop-spacing-sm: 8px;
+	--desktop-spacing-md: 10px;
+	--desktop-spacing-lg: 15px;
+	--desktop-spacing-xl: 20px;
+	--desktop-spacing-2xl: 30px;
+	
+	/* Shadows and Effects */
+	--desktop-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+	--desktop-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+	--desktop-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+	
+	/* Transitions */
+	--desktop-transition-fast: 0.15s ease;
+	--desktop-transition-normal: 0.2s ease;
+	--desktop-transition-slow: 0.3s ease;
+}
+
+/* Desktop Button Styles */
+.desktop-button {
+	font-family: var(--desktop-font-family);
+	font-weight: bold;
+	border-radius: var(--desktop-border-radius);
+	border: 2px solid;
+	cursor: pointer;
+	transition: all var(--desktop-transition-normal);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 40px;
+	padding: var(--desktop-spacing-sm) var(--desktop-spacing-lg);
+	font-size: var(--desktop-font-size-base);
+}
+
+.desktop-button:hover {
+	transform: translateY(-1px);
+	box-shadow: var(--desktop-shadow-md);
+}
+
+.desktop-button:active {
+	transform: translateY(0);
+}
+
+.desktop-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+/* Primary Button (Blue) */
+.desktop-button-primary {
+	background-color: var(--desktop-primary-blue);
+	border-color: var(--desktop-primary-blue-border);
+	color: var(--desktop-text-primary);
+}
+
+.desktop-button-primary:hover:not(:disabled) {
+	background-color: var(--desktop-primary-blue-hover);
+	border-color: var(--desktop-primary-blue-hover);
+}
+
+.desktop-button-primary:active:not(:disabled) {
+	background-color: var(--desktop-primary-blue-active);
+}
+
+/* Orange Button (Pause) */
+.desktop-button-orange {
+	background-color: var(--desktop-orange);
+	border-color: var(--desktop-orange-border);
+	color: var(--desktop-text-primary);
+}
+
+.desktop-button-orange:hover:not(:disabled) {
+	background-color: var(--desktop-orange-hover);
+	border-color: var(--desktop-orange-hover-border);
+}
+
+.desktop-button-orange:active:not(:disabled) {
+	background-color: var(--desktop-orange-active);
+}
+
+/* Restart Button (Blue variant) */
+.desktop-button-restart {
+	background-color: var(--desktop-restart-blue);
+	border-color: var(--desktop-restart-blue-border);
+	color: var(--desktop-text-primary);
+}
+
+.desktop-button-restart:hover:not(:disabled) {
+	background-color: var(--desktop-restart-blue-hover);
+	border-color: var(--desktop-restart-blue-hover-border);
+}
+
+.desktop-button-restart:active:not(:disabled) {
+	background-color: var(--desktop-restart-blue-active);
+}
+
+/* Desktop Panel Styles */
+.desktop-panel {
+	background: var(--desktop-bg-secondary);
+	border: 1px solid var(--desktop-border-secondary);
+	border-radius: var(--desktop-border-radius);
+	backdrop-filter: blur(10px);
+}
+
+.desktop-panel-primary {
+	background: var(--desktop-bg-primary);
+	border-color: var(--desktop-border-primary);
+}
+
+.desktop-panel-tertiary {
+	background: var(--desktop-bg-tertiary);
+	border-color: var(--desktop-border-tertiary);
+}
+
+/* Desktop Typography */
+.desktop-text {
+	font-family: var(--desktop-font-family);
+	color: var(--desktop-text-primary);
+}
+
+.desktop-text-secondary {
+	color: var(--desktop-text-secondary);
+}
+
+.desktop-text-muted {
+	color: var(--desktop-text-muted);
+}
+
+.desktop-text-disabled {
+	color: var(--desktop-text-disabled);
+}
+
+/* Desktop Form Elements */
+.desktop-input {
+	font-family: var(--desktop-font-family);
+	background: var(--desktop-bg-secondary);
+	border: 1px solid var(--desktop-border-secondary);
+	border-radius: var(--desktop-border-radius-xs);
+	color: var(--desktop-text-primary);
+	padding: var(--desktop-spacing-sm) var(--desktop-spacing-md);
+	transition: all var(--desktop-transition-normal);
+}
+
+.desktop-input::placeholder {
+	color: var(--desktop-text-disabled);
+}
+
+.desktop-input:focus {
+	outline: none;
+	border-color: var(--desktop-primary-blue-border);
+	background: var(--desktop-bg-primary);
+}
+
+/* Desktop Progress Styles */
+.desktop-progress-bar {
+	height: 12px;
+	background: var(--desktop-bg-tertiary);
+	border: 1px solid var(--desktop-border-tertiary);
+	border-radius: var(--desktop-border-radius-xs);
+	overflow: hidden;
+}
+
+.desktop-progress-fill {
+	height: 100%;
+	background: linear-gradient(90deg, var(--desktop-restart-blue) 0%, var(--desktop-restart-blue-hover) 100%);
+	border-radius: var(--desktop-border-radius-xs);
+	transition: width var(--desktop-transition-slow);
+}
+
+/* Desktop Accuracy Colors */
+.desktop-accuracy-excellent {
+	color: var(--desktop-progress-excellent) !important;
+}
+
+.desktop-accuracy-good {
+	color: var(--desktop-progress-good) !important;
+}
+
+.desktop-accuracy-fair {
+	color: var(--desktop-progress-fair) !important;
+}
+
+.desktop-accuracy-poor {
+	color: var(--desktop-progress-poor) !important;
+}
+
+/* Desktop Layout Utilities */
+.desktop-flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.desktop-flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.desktop-flex-start {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.desktop-flex-end {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+/* Desktop Responsive Utilities */
+@media (max-width: 768px) {
+	:root {
+		--desktop-font-size-base: 12px;
+		--desktop-font-size-md: 14px;
+		--desktop-font-size-lg: 16px;
+		--desktop-spacing-sm: 6px;
+		--desktop-spacing-md: 8px;
+		--desktop-spacing-lg: 12px;
+	}
+	
+	.desktop-button {
+		min-height: 36px;
+		padding: var(--desktop-spacing-xs) var(--desktop-spacing-md);
+		font-size: var(--desktop-font-size-sm);
+	}
+}
+
+@media (max-width: 480px) {
+	:root {
+		--desktop-font-size-base: 11px;
+		--desktop-font-size-md: 13px;
+		--desktop-font-size-lg: 15px;
+		--desktop-spacing-xs: 4px;
+		--desktop-spacing-sm: 5px;
+		--desktop-spacing-md: 6px;
+		--desktop-spacing-lg: 10px;
+	}
+	
+	.desktop-button {
+		min-height: 32px;
+		padding: var(--desktop-spacing-xs) var(--desktop-spacing-sm);
+		font-size: var(--desktop-font-size-xs);
+	}
+}

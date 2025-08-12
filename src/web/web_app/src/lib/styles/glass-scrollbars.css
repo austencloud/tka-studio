@@ -1,0 +1,585 @@
+/**
+ * Desktop Glassmorphism Scrollbars
+ *
+ * A comprehensive scrollbar styling system that matches the desktop theme
+ * with beautiful glassmorphism effects. Provides consistent, elegant
+ * scrollbars across all components.
+ *
+ * Usage: Add the appropriate class to any scrollable container:
+ * - .glass-scrollbar-primary (main scrollbars)
+ * - .glass-scrollbar-secondary (subtle scrollbars)
+ * - .glass-scrollbar-minimal (ultra-thin scrollbars)
+ * - .glass-scrollbar-hover (appears only on hover)
+ */
+
+/* ===== QUICK GLASS SCROLLBARS (Easy Application) ===== */
+/* Simple classes that can be applied to any scrollable element */
+
+.quick-glass-primary {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.quick-glass-primary::-webkit-scrollbar {
+	width: 12px;
+}
+
+.quick-glass-primary::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 6px;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+
+.quick-glass-primary::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 6px;
+	backdrop-filter: blur(15px);
+	-webkit-backdrop-filter: blur(15px);
+	transition: all 0.3s ease;
+}
+
+.quick-glass-primary::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.25);
+	border-color: rgba(255, 255, 255, 0.3);
+	transform: scale(1.05);
+}
+
+.quick-glass-secondary {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.quick-glass-secondary::-webkit-scrollbar {
+	width: 10px;
+}
+
+.quick-glass-secondary::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	border-radius: 6px;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.quick-glass-secondary::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 6px;
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	transition: all 0.3s ease;
+}
+
+.quick-glass-secondary::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.18);
+	border-color: rgba(255, 255, 255, 0.25);
+}
+
+.quick-glass-minimal {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.quick-glass-minimal::-webkit-scrollbar {
+	width: 6px;
+}
+
+.quick-glass-minimal::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.quick-glass-minimal::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.12);
+	border-radius: 3px;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	transition: all 0.3s ease;
+}
+
+.quick-glass-minimal::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.quick-glass-hover {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.quick-glass-hover::-webkit-scrollbar {
+	width: 0px;
+	transition: width 0.3s ease;
+}
+
+.quick-glass-hover:hover::-webkit-scrollbar {
+	width: 12px;
+}
+
+.quick-glass-hover::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 6px;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.quick-glass-hover:hover::-webkit-scrollbar-track {
+	opacity: 1;
+}
+
+.quick-glass-hover::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 6px;
+	backdrop-filter: blur(15px);
+	-webkit-backdrop-filter: blur(15px);
+	opacity: 0;
+	transition: all 0.3s ease;
+}
+
+.quick-glass-hover:hover::-webkit-scrollbar-thumb {
+	opacity: 1;
+}
+
+.quick-glass-gradient {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.quick-glass-gradient::-webkit-scrollbar {
+	width: 12px;
+}
+
+.quick-glass-gradient::-webkit-scrollbar-track {
+	background: linear-gradient(180deg, 
+		rgba(255, 255, 255, 0.05) 0%, 
+		rgba(255, 255, 255, 0.02) 50%, 
+		rgba(255, 255, 255, 0.05) 100%
+	);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 6px;
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+.quick-glass-gradient::-webkit-scrollbar-thumb {
+	background: linear-gradient(180deg,
+		rgba(255, 255, 255, 0.25) 0%,
+		rgba(255, 255, 255, 0.15) 50%,
+		rgba(255, 255, 255, 0.25) 100%
+	);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 6px;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	transition: all 0.3s ease;
+}
+
+.quick-glass-gradient::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg,
+		rgba(255, 255, 255, 0.35) 0%,
+		rgba(255, 255, 255, 0.25) 50%,
+		rgba(255, 255, 255, 0.35) 100%
+	);
+}
+
+/* Firefox support for quick glass scrollbars */
+.quick-glass-primary {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.03);
+}
+
+.quick-glass-secondary {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.02);
+}
+
+.quick-glass-minimal {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+.quick-glass-hover {
+	scrollbar-width: none;
+}
+
+.quick-glass-hover:hover {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.03);
+}
+
+.quick-glass-gradient {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive quick glass scrollbars */
+@media (max-width: 768px) {
+	.quick-glass-primary::-webkit-scrollbar,
+	.quick-glass-secondary::-webkit-scrollbar,
+	.quick-glass-gradient::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.quick-glass-minimal::-webkit-scrollbar {
+		width: 4px;
+	}
+}
+
+@media (max-width: 480px) {
+	.quick-glass-primary::-webkit-scrollbar,
+	.quick-glass-secondary::-webkit-scrollbar,
+	.quick-glass-gradient::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.quick-glass-minimal::-webkit-scrollbar {
+		width: 3px;
+	}
+}
+
+/* ===== END QUICK GLASS SCROLLBARS ===== */
+
+/* ===== BASE SCROLLBAR VARIABLES ===== */
+:root {
+	/* Scrollbar dimensions */
+	--glass-scrollbar-width: 12px;
+	--glass-scrollbar-width-hover: 16px;
+	--glass-scrollbar-minimal-width: 6px;
+	--glass-scrollbar-track-border-radius: 6px;
+	--glass-scrollbar-thumb-border-radius: 6px;
+
+	/* Glassmorphism colors for scrollbars */
+	--glass-scrollbar-track-bg: rgba(255, 255, 255, 0.03);
+	--glass-scrollbar-track-border: rgba(255, 255, 255, 0.1);
+	--glass-scrollbar-thumb-bg: rgba(255, 255, 255, 0.15);
+	--glass-scrollbar-thumb-bg-hover: rgba(255, 255, 255, 0.25);
+	--glass-scrollbar-thumb-bg-active: rgba(255, 255, 255, 0.35);
+	--glass-scrollbar-thumb-border: rgba(255, 255, 255, 0.2);
+	--glass-scrollbar-thumb-border-hover: rgba(255, 255, 255, 0.3);
+
+	/* Shadow effects */
+	--glass-scrollbar-track-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+	--glass-scrollbar-thumb-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	--glass-scrollbar-thumb-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+	/* Transition timing */
+	--glass-scrollbar-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	--glass-scrollbar-transition-fast: all 0.15s ease-out;
+}
+
+/* ===== PRIMARY GLASSMORPHISM SCROLLBAR ===== */
+.glass-scrollbar-primary {
+	/* Webkit browsers (Chrome, Safari, Edge) */
+	&::-webkit-scrollbar {
+		width: var(--glass-scrollbar-width);
+		height: var(--glass-scrollbar-width);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: var(--glass-scrollbar-track-bg);
+		border: 1px solid var(--glass-scrollbar-track-border);
+		border-radius: var(--glass-scrollbar-track-border-radius);
+		box-shadow: var(--glass-scrollbar-track-shadow);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: var(--glass-scrollbar-thumb-bg);
+		border: 1px solid var(--glass-scrollbar-thumb-border);
+		border-radius: var(--glass-scrollbar-thumb-border-radius);
+		box-shadow: var(--glass-scrollbar-thumb-shadow);
+		backdrop-filter: blur(15px);
+		-webkit-backdrop-filter: blur(15px);
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: var(--glass-scrollbar-thumb-bg-hover);
+		border-color: var(--glass-scrollbar-thumb-border-hover);
+		box-shadow: var(--glass-scrollbar-thumb-shadow-hover);
+		transform: scale(1.05);
+	}
+
+	&::-webkit-scrollbar-thumb:active {
+		background: var(--glass-scrollbar-thumb-bg-active);
+		transform: scale(0.95);
+		transition: var(--glass-scrollbar-transition-fast);
+	}
+
+	&::-webkit-scrollbar-corner {
+		background: var(--glass-scrollbar-track-bg);
+		border-radius: var(--glass-scrollbar-track-border-radius);
+	}
+
+	/* Firefox support */
+	scrollbar-width: thin;
+	scrollbar-color: var(--glass-scrollbar-thumb-bg) var(--glass-scrollbar-track-bg);
+	scrollbar-gutter: stable;
+}
+
+/* ===== SECONDARY GLASSMORPHISM SCROLLBAR (More Subtle) ===== */
+.glass-scrollbar-secondary {
+	&::-webkit-scrollbar {
+		width: calc(var(--glass-scrollbar-width) - 2px);
+		height: calc(var(--glass-scrollbar-width) - 2px);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: var(--glass-scrollbar-track-border-radius);
+		box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.05);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: var(--glass-scrollbar-thumb-border-radius);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.18);
+		border-color: rgba(255, 255, 255, 0.25);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	&::-webkit-scrollbar-thumb:active {
+		background: rgba(255, 255, 255, 0.25);
+		transform: scale(0.98);
+	}
+
+	/* Firefox support */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.02);
+}
+
+/* ===== MINIMAL GLASSMORPHISM SCROLLBAR (Ultra-thin) ===== */
+.glass-scrollbar-minimal {
+	&::-webkit-scrollbar {
+		width: var(--glass-scrollbar-minimal-width);
+		height: var(--glass-scrollbar-minimal-width);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.12);
+		border-radius: calc(var(--glass-scrollbar-minimal-width) / 2);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+	}
+
+	&::-webkit-scrollbar-thumb:active {
+		background: rgba(255, 255, 255, 0.3);
+	}
+
+	/* Firefox support */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+/* ===== HOVER-ONLY GLASSMORPHISM SCROLLBAR ===== */
+.glass-scrollbar-hover {
+	&::-webkit-scrollbar {
+		width: 0px;
+		height: 0px;
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&:hover::-webkit-scrollbar {
+		width: var(--glass-scrollbar-width);
+		height: var(--glass-scrollbar-width);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: var(--glass-scrollbar-track-bg);
+		border: 1px solid var(--glass-scrollbar-track-border);
+		border-radius: var(--glass-scrollbar-track-border-radius);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		opacity: 0;
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&:hover::-webkit-scrollbar-track {
+		opacity: 1;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: var(--glass-scrollbar-thumb-bg);
+		border: 1px solid var(--glass-scrollbar-thumb-border);
+		border-radius: var(--glass-scrollbar-thumb-border-radius);
+		backdrop-filter: blur(15px);
+		-webkit-backdrop-filter: blur(15px);
+		opacity: 0;
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&:hover::-webkit-scrollbar-thumb {
+		opacity: 1;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: var(--glass-scrollbar-thumb-bg-hover);
+		border-color: var(--glass-scrollbar-thumb-border-hover);
+		box-shadow: var(--glass-scrollbar-thumb-shadow-hover);
+	}
+
+	/* Firefox support */
+	scrollbar-width: none;
+	&:hover {
+		scrollbar-width: thin;
+		scrollbar-color: var(--glass-scrollbar-thumb-bg) var(--glass-scrollbar-track-bg);
+	}
+}
+
+/* ===== ENHANCED SCROLLBAR WITH GRADIENT ===== */
+.glass-scrollbar-gradient {
+	&::-webkit-scrollbar {
+		width: var(--glass-scrollbar-width);
+		height: var(--glass-scrollbar-width);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: linear-gradient(180deg, 
+			rgba(255, 255, 255, 0.05) 0%, 
+			rgba(255, 255, 255, 0.02) 50%, 
+			rgba(255, 255, 255, 0.05) 100%
+		);
+		border: 1px solid var(--glass-scrollbar-track-border);
+		border-radius: var(--glass-scrollbar-track-border-radius);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: linear-gradient(180deg,
+			rgba(255, 255, 255, 0.25) 0%,
+			rgba(255, 255, 255, 0.15) 50%,
+			rgba(255, 255, 255, 0.25) 100%
+		);
+		border: 1px solid var(--glass-scrollbar-thumb-border);
+		border-radius: var(--glass-scrollbar-thumb-border-radius);
+		box-shadow: 
+			var(--glass-scrollbar-thumb-shadow),
+			inset 0 1px 0 rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		transition: var(--glass-scrollbar-transition);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: linear-gradient(180deg,
+			rgba(255, 255, 255, 0.35) 0%,
+			rgba(255, 255, 255, 0.25) 50%,
+			rgba(255, 255, 255, 0.35) 100%
+		);
+		box-shadow: 
+			var(--glass-scrollbar-thumb-shadow-hover),
+			inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	}
+
+	/* Firefox support */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+	:root {
+		--glass-scrollbar-width: 10px;
+		--glass-scrollbar-minimal-width: 4px;
+	}
+
+	.glass-scrollbar-primary,
+	.glass-scrollbar-secondary,
+	.glass-scrollbar-hover,
+	.glass-scrollbar-gradient {
+		&::-webkit-scrollbar {
+			width: var(--glass-scrollbar-width);
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	:root {
+		--glass-scrollbar-width: 8px;
+		--glass-scrollbar-minimal-width: 3px;
+	}
+}
+
+/* ===== HIGH DPI DISPLAY OPTIMIZATIONS ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.glass-scrollbar-primary,
+	.glass-scrollbar-secondary,
+	.glass-scrollbar-hover,
+	.glass-scrollbar-gradient {
+		&::-webkit-scrollbar-thumb {
+			/* Slightly more opaque on high DPI for better visibility */
+			background: rgba(255, 255, 255, calc(var(--glass-scrollbar-thumb-opacity, 0.15) + 0.05));
+		}
+	}
+}
+
+/* ===== DARK/LIGHT MODE VARIANTS ===== */
+.glass-scrollbar-light {
+	/* Light mode variant with darker scrollbars */
+	--glass-scrollbar-track-bg: rgba(0, 0, 0, 0.03);
+	--glass-scrollbar-track-border: rgba(0, 0, 0, 0.1);
+	--glass-scrollbar-thumb-bg: rgba(0, 0, 0, 0.15);
+	--glass-scrollbar-thumb-bg-hover: rgba(0, 0, 0, 0.25);
+	--glass-scrollbar-thumb-bg-active: rgba(0, 0, 0, 0.35);
+	--glass-scrollbar-thumb-border: rgba(0, 0, 0, 0.2);
+	--glass-scrollbar-thumb-border-hover: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+	.glass-scrollbar-primary,
+	.glass-scrollbar-secondary,
+	.glass-scrollbar-minimal,
+	.glass-scrollbar-hover,
+	.glass-scrollbar-gradient {
+		&::-webkit-scrollbar-thumb {
+			transition: none;
+		}
+	}
+}
+
+/* Ensure scrollbars are always visible for users who prefer them */
+@media (prefers-reduced-transparency: reduce) {
+	.glass-scrollbar-primary,
+	.glass-scrollbar-secondary,
+	.glass-scrollbar-hover,
+	.glass-scrollbar-gradient {
+		&::-webkit-scrollbar-track {
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: none;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: rgba(255, 255, 255, 0.3);
+			backdrop-filter: none;
+		}
+	}
+}

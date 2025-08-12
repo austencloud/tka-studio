@@ -111,42 +111,46 @@ def create_data_config(
 
 def _find_project_data_dir() -> Path:
     """
-    Find the project data directory using simple upward search.
-    Prioritizes desktop/data over root/data.
+    Find the project data directory using centralized path resolver.
 
     Returns:
         Path to data directory
     """
-    # Start from this file and search upward
-    current_path = Path(__file__).resolve().parent
+    try:
+        from shared.infrastructure.path_resolver import path_resolver
+        return path_resolver.data_dir
+    except Exception as e:
+        print(f"Warning: Could not use centralized path resolver: {e}")
+        # Fallback to manual discovery
+        current_path = Path(__file__).resolve().parent
 
-    # First priority: search for desktop/data directory
-    while current_path.parent != current_path:  # Not at filesystem root
-        if current_path.name == "desktop":
+        # First priority: search for desktop/data directory
+        while current_path.parent != current_path:  # Not at filesystem root
+            if current_path.name == "desktop":
+                potential_data = current_path / "data"
+                if (
+                    potential_data.exists()
+                    and (potential_data / "DiamondPictographDataframe.csv").exists()
+                ):
+                    return potential_data
+            current_path = current_path.parent
+
+        # Second priority: search upward for any data directory
+        current_path = Path(__file__).resolve().parent
+        while current_path.parent != current_path:  # Not at filesystem root
+            # Look for data directory at this level
             potential_data = current_path / "data"
             if (
                 potential_data.exists()
                 and (potential_data / "DiamondPictographDataframe.csv").exists()
             ):
                 return potential_data
-        current_path = current_path.parent
 
-    # Second priority: search upward for any data directory
-    current_path = Path(__file__).resolve().parent
-    while current_path.parent != current_path:  # Not at filesystem root
-        # Look for data directory at this level
-        potential_data = current_path / "data"
-        if (
-            potential_data.exists()
-            and (potential_data / "DiamondPictographDataframe.csv").exists()
-        ):
-            return potential_data
+            # Check if this is the TKA root directory
+            if current_path.name == "TKA":
+                return current_path / "data"
 
-        # Check if this is the TKA root directory
-        if current_path.name == "TKA":
-            return current_path / "data"
+            current_path = current_path.parent
 
-        current_path = current_path.parent
-
-    # Fallback: use current working directory + data
-    return Path.cwd() / "data"
+        # Fallback: use current working directory + data
+        return Path.cwd() / "data"

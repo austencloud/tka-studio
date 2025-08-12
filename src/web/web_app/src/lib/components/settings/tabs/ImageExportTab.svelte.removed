@@ -1,0 +1,91 @@
+<!-- ImageExportTab.svelte - Image export settings tab -->
+<script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+	import SettingCard from '../SettingCard.svelte';
+	import ToggleSetting from '../ToggleSetting.svelte';
+
+	interface Props {
+		settings: any;
+	}
+
+	let { settings }: Props = $props();
+	const dispatch = createEventDispatcher();
+
+	// Image export settings - matching desktop defaults  
+	let imageExportSettings = $state({
+		includeStartPosition: settings.imageExport?.includeStartPosition ?? true,
+		addReversalSymbols: settings.imageExport?.addReversalSymbols ?? true,
+		addBeatNumbers: settings.imageExport?.addBeatNumbers ?? true,
+		addDifficultyLevel: settings.imageExport?.addDifficultyLevel ?? true,
+		addWord: settings.imageExport?.addWord ?? true,
+		addInfo: settings.imageExport?.addInfo ?? true,
+		addUserInfo: settings.imageExport?.addUserInfo ?? true
+	});
+
+	function updateImageExportSetting(key: string, value: boolean) {
+		imageExportSettings[key] = value;
+		dispatch('update', { key: 'imageExport', value: { ...imageExportSettings } });
+	}
+</script>
+
+<div class="tab-content">
+	<SettingCard 
+		title="Image Export Options" 
+		description="Configure what information to include in exported sequence images."
+	>
+		<ToggleSetting
+			label="Include Start Position"
+			checked={imageExportSettings.includeStartPosition}
+			helpText="Include the starting position in exported sequence images."
+			on:change={(e) => updateImageExportSetting('includeStartPosition', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add Reversal Symbols"
+			checked={imageExportSettings.addReversalSymbols}
+			helpText="Show reversal direction symbols in exported images."
+			on:change={(e) => updateImageExportSetting('addReversalSymbols', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add Beat Numbers"
+			checked={imageExportSettings.addBeatNumbers}
+			helpText="Include beat numbering in exported sequence images."
+			on:change={(e) => updateImageExportSetting('addBeatNumbers', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add Difficulty Level"
+			checked={imageExportSettings.addDifficultyLevel}
+			helpText="Display the sequence difficulty level on exported images."
+			on:change={(e) => updateImageExportSetting('addDifficultyLevel', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add Word"
+			checked={imageExportSettings.addWord}
+			helpText="Include the sequence word/name in exported images."
+			on:change={(e) => updateImageExportSetting('addWord', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add Info"
+			checked={imageExportSettings.addInfo}
+			helpText="Include additional sequence information in exports."
+			on:change={(e) => updateImageExportSetting('addInfo', e.detail)}
+		/>
+
+		<ToggleSetting
+			label="Add User Info"
+			checked={imageExportSettings.addUserInfo}
+			helpText="Include user name and creation details in exported images."
+			on:change={(e) => updateImageExportSetting('addUserInfo', e.detail)}
+		/>
+	</SettingCard>
+</div>
+
+<style>
+	.tab-content {
+		max-width: 600px;
+	}
+</style>

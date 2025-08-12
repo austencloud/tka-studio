@@ -261,12 +261,14 @@ class RealAssetProvider(IAssetProvider):
             return svg_content
 
     def _get_default_assets_path(self) -> Path:
-        """Get default path to TKA desktop assets."""
+        """Get default path to TKA desktop assets using centralized resolver."""
         try:
-            # Find the desktop directory that contains images
+            from shared.infrastructure.path_resolver import path_resolver
+            return path_resolver.desktop_root
+        except Exception as e:
+            logger.warning(f"Could not use centralized path resolver: {e}")
+            # Fallback to manual discovery
             current_file = Path(__file__)
-
-            # Navigate up to find the desktop directory
             desktop_root = current_file
             while desktop_root.name != "desktop" and desktop_root.parent != desktop_root:
                 desktop_root = desktop_root.parent
@@ -274,17 +276,6 @@ class RealAssetProvider(IAssetProvider):
             if desktop_root.name == "desktop":
                 return desktop_root
 
-            # Fallback: try to find desktop/images from current working directory
-            cwd = Path.cwd()
-            desktop_path = cwd / "src" / "desktop"
-            if desktop_path.exists():
-                return desktop_path
-
-            # Last fallback to current working directory
-            return Path.cwd()
-
-        except Exception as e:
-            logger.warning(f"Could not determine assets path: {e}")
             return Path.cwd()
 
     def clear_cache(self):

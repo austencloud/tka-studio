@@ -1,0 +1,79 @@
+<!-- BeatLayoutTab.svelte - Beat layout configuration tab -->
+<script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+	import SettingCard from '../SettingCard.svelte';
+	import TextInput from '../TextInput.svelte';
+	import SelectInput from '../SelectInput.svelte';
+	import ToggleSetting from '../ToggleSetting.svelte';
+
+	interface Props {
+		settings: any;
+	}
+
+	let { settings }: Props = $props();
+	const dispatch = createEventDispatcher();
+
+	// Beat layout settings
+	let numBeats = $state(settings.numBeats || 5);
+	let selectedBeatLayout = $state(settings.beatLayout || '3 x 2');
+	let growSequence = $state(settings.growSequence ?? true);
+
+	// Beat layout options matching desktop app
+	const beatLayoutOptions = [
+		'1 x 8', '2 x 4', '3 x 3', '4 x 2', '5 x 1',
+		'2 x 3', '3 x 2', '1 x 6', '6 x 1'
+	];
+
+	function handleNumBeatsChange(event: CustomEvent) {
+		numBeats = parseInt(event.detail);
+		dispatch('update', { key: 'numBeats', value: numBeats });
+	}
+
+	function handleBeatLayoutChange(event: CustomEvent) {
+		selectedBeatLayout = event.detail;
+		dispatch('update', { key: 'beatLayout', value: selectedBeatLayout });
+	}
+
+	function handleGrowSequenceChange(event: CustomEvent) {
+		growSequence = event.detail;
+		dispatch('update', { key: 'growSequence', value: growSequence });
+	}
+</script>
+
+<div class="tab-content">
+	<SettingCard 
+		title="Beat Layout Configuration" 
+		description="Configure how beats are arranged in sequences."
+	>
+		<TextInput
+			label="Number of Beats"
+			value={numBeats.toString()}
+			type="number"
+			min={1}
+			max={64}
+			helpText="Set the default number of beats for new sequences."
+			on:change={handleNumBeatsChange}
+		/>
+
+		<SelectInput
+			label="Layout Option"
+			value={selectedBeatLayout}
+			options={beatLayoutOptions}
+			helpText="Choose how beats are arranged in the grid layout."
+			on:change={handleBeatLayoutChange}
+		/>
+
+		<ToggleSetting
+			label="Grow Sequence"
+			checked={growSequence}
+			helpText="Automatically expand the sequence layout as beats are added."
+			on:change={handleGrowSequenceChange}
+		/>
+	</SettingCard>
+</div>
+
+<style>
+	.tab-content {
+		max-width: 600px;
+	}
+</style>

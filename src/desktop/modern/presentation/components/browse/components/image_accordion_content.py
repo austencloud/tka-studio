@@ -182,12 +182,16 @@ class ImageAccordionContent(QFrame, StyleMixin):
             "advanced": (3, "🔴 Level 3", "Non-radial orientations."),
         }
 
-        # Image directory (pointing to desktop/images/level_images)
-        current_file = Path(__file__)
-        # Go up from: src/desktop/modern/presentation/components/browse/components/
-        # To reach desktop directory (6 levels up)
-        desktop_root = current_file.parent.parent.parent.parent.parent.parent
-        image_dir = desktop_root / "images" / "level_images"
+        # Image directory (using centralized path resolver)
+        try:
+            from shared.infrastructure.path_resolver import path_resolver
+            image_dir = path_resolver.get_image_path("level_images")
+        except Exception as e:
+            print(f"Warning: Could not use centralized path resolver: {e}")
+            # Fallback to manual discovery
+            current_file = Path(__file__)
+            desktop_root = current_file.parent.parent.parent.parent.parent.parent
+            image_dir = desktop_root / "images" / "level_images"
 
         print(f"🔍 [DEBUG] Looking for level images at: {image_dir}")
         print(f"🔍 [DEBUG] Directory exists: {image_dir.exists()}")
@@ -294,12 +298,16 @@ class ImageAccordionContent(QFrame, StyleMixin):
 
         # Legacy grid mode configuration (matching legacy system)
 
-        # Image directory (pointing to desktop/images/grid)
-        current_file = Path(__file__)
-        # Go up from: src/desktop/modern/presentation/components/browse/components/
-        # To reach desktop directory (6 levels up)
-        desktop_root = current_file.parent.parent.parent.parent.parent.parent
-        image_dir = desktop_root / "images" / "grid"
+        # Image directory (using centralized path resolver)
+        try:
+            from shared.infrastructure.path_resolver import path_resolver
+            image_dir = path_resolver.get_image_path("grid")
+        except Exception as e:
+            print(f"Warning: Could not use centralized path resolver: {e}")
+            # Fallback to manual discovery  
+            current_file = Path(__file__)
+            desktop_root = current_file.parent.parent.parent.parent.parent.parent
+            image_dir = desktop_root / "images" / "grid"
 
         print(f"🔍 [DEBUG] Looking for grid images at: {image_dir}")
         print(f"🔍 [DEBUG] Directory exists: {image_dir.exists()}")
