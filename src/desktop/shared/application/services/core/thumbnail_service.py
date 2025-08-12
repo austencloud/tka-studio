@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Protocol
 
 # Import framework-agnostic types
-from shared.application.services.core.types import (
+from desktop.shared.application.services.core.types import (
     ImageData,
     ImageFormat,
     Size,

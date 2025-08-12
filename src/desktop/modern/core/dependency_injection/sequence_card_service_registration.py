@@ -9,16 +9,16 @@ from __future__ import annotations
 
 import logging
 
-from shared.application.services.sequence_card.sequence_cache_service import (
+from desktop.shared.application.services.sequence_card.sequence_cache_service import (
     SequenceCardCacheService,
 )
-from shared.application.services.sequence_card.sequence_data_service import (
+from desktop.shared.application.services.sequence_card.sequence_data_service import (
     SequenceCardDataService,
 )
-from shared.application.services.sequence_card.sequence_display_service import (
+from desktop.shared.application.services.sequence_card.sequence_display_service import (
     SequenceCardDisplayService,
 )
-from shared.application.services.sequence_card.sequence_settings_service import (
+from desktop.shared.application.services.sequence_card.sequence_settings_service import (
     SequenceCardSettingsService,
 )
 
@@ -156,7 +156,7 @@ def validate_sequence_card_service_registration(container: DIContainer) -> bool:
 
         # Test basic functionality with modern path service
         try:
-            from shared.application.services.sequence_card.path_service import (
+            from desktop.shared.application.services.sequence_card.path_service import (
                 SequenceCardPathService,
             )
 

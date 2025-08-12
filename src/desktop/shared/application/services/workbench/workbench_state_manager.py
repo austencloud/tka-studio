@@ -85,26 +85,8 @@ class WorkbenchStateManager(IWorkbenchStateManager):
         # Set new sequence
         self._current_sequence = sequence
 
-        # DEBUG: Add comprehensive logging for sequence changes
-        print("🔍 [WORKBENCH_STATE] set_sequence called")
-        print(
-            f"🔍 [WORKBENCH_STATE] Previous sequence: {previous_sequence.length if previous_sequence else 0} beats"
-        )
-        print(
-            f"🔍 [WORKBENCH_STATE] New sequence: {sequence.length if sequence else 0} beats"
-        )
-        if sequence:
-            print(f"🔍 [WORKBENCH_STATE] New sequence ID: {sequence.id}")
-            print(f"🔍 [WORKBENCH_STATE] New sequence name: {sequence.name}")
-            if sequence.beats:
-                for i, beat in enumerate(sequence.beats):
-                    print(
-                        f"🔍 [WORKBENCH_STATE] Beat {i}: beat_number={beat.beat_number}, is_blank={beat.is_blank}"
-                    )
-                    if hasattr(beat, "pictograph_data") and beat.pictograph_data:
-                        print(
-                            f"🔍 [WORKBENCH_STATE] Beat {i} pictograph: letter={beat.pictograph_data.letter}"
-                        )
+
+
 
         # Calculate new state
         new_state = self._calculate_workbench_state()
@@ -114,9 +96,6 @@ class WorkbenchStateManager(IWorkbenchStateManager):
         if sequence_changed:
             logger.debug(
                 f"Sequence changed: {sequence.length if sequence else 0} beats"
-            )
-            print(
-                f"🔍 [WORKBENCH_STATE] Sequence changed detected: {previous_sequence != sequence}"
             )
 
         if state_changed:

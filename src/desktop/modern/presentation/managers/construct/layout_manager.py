@@ -441,7 +441,6 @@ class ConstructTabLayoutManager:
                 "option_picker", self.option_picker
             )
 
-            print("✅ Real option picker created and integrated")
 
             # Notify callback if provided
             if self.option_picker_ready_callback:

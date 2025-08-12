@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
 
 if TYPE_CHECKING:
-    from shared.application.services.option_picker.option_configuration_service import (
+    from desktop.shared.application.services.option_picker.option_configuration_service import (
         OptionConfigurationService,
     )
 

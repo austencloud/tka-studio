@@ -39,7 +39,7 @@ def test_save_image_step_by_step():
 
         # Step 2: Create state manager and set sequence
         print("\n🔧 Step 2: Creating state manager...")
-        from shared.application.services.workbench.workbench_state_manager import (
+        from desktop.shared.application.services.workbench.workbench_state_manager import (
             WorkbenchStateManager,
         )
 
@@ -60,7 +60,7 @@ def test_save_image_step_by_step():
 
         # Step 4: Create operation coordinator
         print("\n🔧 Step 4: Creating operation coordinator...")
-        from shared.application.services.workbench.workbench_operation_coordinator import (
+        from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
             WorkbenchOperationCoordinator,
         )
 

@@ -18,10 +18,10 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QFrame, QGridLayout, QGroupBox, QSizePolicy, QVBoxLayout
-from shared.application.services.option_picker.option_configuration_service import (
+from desktop.shared.application.services.option_picker.option_configuration_service import (
     OptionConfigurationService,
 )
-from shared.application.services.option_picker.option_picker_size_calculator import (
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
 

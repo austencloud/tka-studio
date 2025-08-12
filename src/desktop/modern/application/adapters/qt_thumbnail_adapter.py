@@ -20,14 +20,14 @@ from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 
-from shared.application.services.core.thumbnail_service import (
+from desktop.shared.application.services.core.thumbnail_service import (
     CoreThumbnailService,
     IThumbnailImageLoader,
     ThumbnailData,
     ThumbnailSpec,
     convert_sequence_data_to_spec,
 )
-from shared.application.services.core.types import ImageData, ImageFormat, Size
+from desktop.shared.application.services.core.types import ImageData, ImageFormat, Size
 
 
 logger = logging.getLogger(__name__)
@@ -313,7 +313,7 @@ class QtThumbnailFactoryAdapter:
         """Create multiple thumbnails efficiently using core service."""
         try:
             # Convert all sequences to specs
-            from shared.application.services.core.thumbnail_service import (
+            from desktop.shared.application.services.core.thumbnail_service import (
                 batch_convert_sequences_to_specs,
             )
 

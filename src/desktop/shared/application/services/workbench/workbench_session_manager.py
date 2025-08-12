@@ -301,26 +301,7 @@ class WorkbenchSessionManager(IWorkbenchSessionManager):
         subscription_ids = []
 
         try:
-            if not self._event_bus:
-                logger.warning(
-                    "Event bus not available - skipping session restoration subscription"
-                )
-                return subscription_ids
-
-            # Subscribe to session restoration events
-            from desktop.modern.core.events.event_bus import EventPriority
-
-            sub_id = self._event_bus.subscribe(
-                "ui.session_restoration.sequence_restored",
-                self._on_sequence_restored_event,
-                priority=EventPriority.HIGH,
-            )
-
-            if sub_id:
-                subscription_ids.append(sub_id)
-                logger.debug("Session restoration event subscription created")
-            else:
-                logger.warning("Failed to subscribe to session restoration events")
+            return subscription_ids
 
         except Exception as e:
             logger.error(f"Error setting up event subscriptions: {e}")

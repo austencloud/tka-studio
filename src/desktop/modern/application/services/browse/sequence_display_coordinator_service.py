@@ -179,13 +179,11 @@ class SequenceDisplayCoordinatorService:
                 # Process events to keep UI responsive
                 QApplication.processEvents()
 
-        print(f"🖼️ Added {len(sequences)} sequences progressively to final layout")
 
     def initialize_progressive_layout(self, sort_method: str) -> None:
         """Initialize the layout system for progressive loading."""
         self.layout_manager.clear_grid()
         self._reset_progressive_state()
-        print(f"🎨 Layout initialized for {sort_method} sorting")
 
     def finalize_progressive_layout(
         self, all_sequences: list[SequenceData], sort_method: str

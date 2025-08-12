@@ -120,7 +120,7 @@ def diagnose_learn_tab():
         question_service = container.resolve(IQuestionGenerationService)
 
         # Test Lesson3 specifically
-        from shared.application.services.learn.lesson_configuration_service import (
+        from desktop.shared.application.services.learn.lesson_configuration_service import (
             LessonConfigurationService,
         )
 

@@ -95,10 +95,10 @@ def register_construct_tab_services(container: DIContainer) -> None:
     # Register workbench coordination service - transient (new instance each time)
     def create_workbench_coordination_service(c):
         try:
-            from shared.application.services.workbench.workbench_operation_coordinator import (
+            from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
                 WorkbenchOperationCoordinator,
             )
-            from shared.application.services.workbench.workbench_state_manager import (
+            from desktop.shared.application.services.workbench.workbench_state_manager import (
                 WorkbenchStateManager,
             )
 

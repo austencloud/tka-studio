@@ -123,7 +123,7 @@ class SequenceStateTrackerService:
             # Load current state from persistence
             # Note: This would need to be injected as dependencies to avoid direct imports
             # For now, keeping the same pattern as the original
-            from shared.application.services.sequence.sequence_persister import (
+            from desktop.shared.application.services.sequence.sequence_persister import (
                 SequencePersister,
             )
 

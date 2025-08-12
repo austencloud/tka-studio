@@ -49,7 +49,7 @@ class AnimationServiceRegistrar(BaseServiceRegistrar):
             self._update_progress("Registering modern animation system...")
 
             # Import and register modern animation services
-            from shared.application.services.ui.animation.modern_service_registration import (
+            from desktop.shared.application.services.ui.animation.modern_service_registration import (
                 setup_modern_animation_services,
             )
 

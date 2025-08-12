@@ -43,7 +43,7 @@ class BrowseDataManager:
             self.dictionary_manager = dictionary_manager
         else:
             # Fallback to direct instantiation if not injected
-            from application.services.browse.dictionary_data_manager import (
+            from desktop.modern.application.services.browse.dictionary_data_manager import (
                 DictionaryDataManager,
             )
 

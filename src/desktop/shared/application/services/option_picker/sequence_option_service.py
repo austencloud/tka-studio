@@ -26,16 +26,16 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.option_picker.option_orientation_updater import (
+from desktop.shared.application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
-from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
     OrientationCalculator,
 )
-from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
     PictographPositionMatcher,
 )
-from shared.application.services.sequence.sequence_orientation_validator import (
+from desktop.shared.application.services.sequence.sequence_orientation_validator import (
     SequenceOrientationValidator,
 )
 

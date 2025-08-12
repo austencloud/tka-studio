@@ -16,10 +16,10 @@ from __future__ import annotations
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.data.legacy_to_modern_converter import (
+from desktop.shared.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
-from shared.application.services.sequence.sequence_loader_service import (
+from desktop.shared.application.services.sequence.sequence_loader_service import (
     SequenceLoaderService,
 )
 

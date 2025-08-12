@@ -10,7 +10,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from shared.application.services.core.types import Size, SvgAsset
+from desktop.shared.application.services.core.types import Size, SvgAsset
 
 from .core_pictograph_rendering_service import IAssetProvider
 
@@ -256,7 +256,7 @@ class RealAssetProvider(IAssetProvider):
     def _get_default_assets_path(self) -> Path:
         """Get default path to TKA desktop assets using centralized resolver."""
         try:
-            from shared.infrastructure.path_resolver import path_resolver
+            from desktop.shared.infrastructure.path_resolver import path_resolver
             return path_resolver.desktop_root
         except Exception as e:
             logger.warning(f"Could not use centralized path resolver: {e}")

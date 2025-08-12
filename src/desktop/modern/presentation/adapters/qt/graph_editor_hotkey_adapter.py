@@ -11,7 +11,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.graph_editor.graph_editor_hotkey_service import (
+from desktop.shared.application.services.graph_editor.graph_editor_hotkey_service import (
     GraphEditorHotkeyService,
 )
 

@@ -35,9 +35,7 @@ class StartPositionView(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        print(
-            f"🔧 [START_POS_VIEW] Initializing StartPositionView with parent: {parent}"
-        )
+
 
         # Common state (previously from PictographViewBase)
         self._beat_data: Optional[BeatData] = None
@@ -238,13 +236,9 @@ class StartPositionView(QFrame):
 
         self.show()
         self.setVisible(True)
-        print(
-            f"🔧 [START_POS_VIEW] Start position view cleared and made visible: {self.isVisible()}"
-        )
 
         parent = self.parent()
         parent_visible = parent.isVisible() if parent else "No parent"
-        print(f"🔧 [START_POS_VIEW] Parent visibility: {parent_visible}")
 
     def _update_display(self):
         """Update the visual display based on position data"""

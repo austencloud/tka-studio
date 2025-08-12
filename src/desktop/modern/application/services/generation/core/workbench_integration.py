@@ -320,16 +320,16 @@ class WorkbenchIntegrator:
         """Try to create arrow positioning orchestrator with fallback initialization."""
         try:
             # Import all required services
-            from shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
+            from desktop.shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
-            from shared.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
+            from desktop.shared.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
                 ArrowRotationCalculatorService,
             )
-            from shared.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+            from desktop.shared.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
                 ArrowCoordinateSystemService,
             )
-            from shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+            from desktop.shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
                 ArrowAdjustmentCalculator,
             )
 

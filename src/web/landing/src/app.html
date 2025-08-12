@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Load fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black:wght@400&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Default meta tags (can be overridden by pages) -->
+    <meta
+      name="description"
+      content="The Kinetic Alphabet - A revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Learn, create, and share movement sequences."
+    />
+    <meta
+      name="keywords"
+      content="flow arts, poi, staff, choreography, movement, dance, kinetic alphabet, sequence constructor"
+    />
+    <meta name="author" content="The Kinetic Alphabet" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="The Kinetic Alphabet - Flow Arts Choreography Toolbox"
+    />
+    <meta
+      property="og:description"
+      content="A revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Learn, create, and share movement sequences."
+    />
+    <meta property="og:site_name" content="The Kinetic Alphabet" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:title"
+      content="The Kinetic Alphabet - Flow Arts Choreography Toolbox"
+    />
+    <meta
+      property="twitter:description"
+      content="A revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts."
+    />
+
+    <!-- Console forwarding for AI debugging -->
+    <script>
+      // Console forwarding for AI debugging
+      if (
+        typeof window !== "undefined" &&
+        window.location.hostname === "localhost"
+      ) {
+        const originalConsole = {
+          log: console.log,
+          error: console.error,
+          warn: console.warn,
+          info: console.info,
+        };
+
+        function forwardToTerminal(level, args) {
+          // Send to original console first
+          originalConsole[level](...args);
+
+          // Forward to terminal via WebSocket or Server-Sent Events
+          try {
+            // Create a simple message format
+            const message = args
+              .map((arg) =>
+                typeof arg === "object"
+                  ? JSON.stringify(arg, null, 2)
+                  : String(arg)
+              )
+              .join(" ");
+
+            // Send to a simple endpoint that logs to terminal
+            fetch("/api/console-forward", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                level,
+                message,
+                timestamp: new Date().toISOString(),
+                url: window.location.pathname,
+              }),
+            }).catch(() => {}); // Silently fail if endpoint doesn't exist
+          } catch (e) {
+            // Silently fail - don't break the app
+          }
+        }
+
+        console.log = (...args) => forwardToTerminal("log", args);
+        console.error = (...args) => forwardToTerminal("error", args);
+        console.warn = (...args) => forwardToTerminal("warn", args);
+        console.info = (...args) => forwardToTerminal("info", args);
+      }
+    </script>
+
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div id="svelte">%sveltekit.body%</div>
+  </body>
+</html>

@@ -48,7 +48,7 @@ def ensure_container_initialized(force_reinit: bool = False) -> bool:
 
         # Register all services
         logger.info("Initializing DI container with all services...")
-        from shared.application.services.core.service_registration_manager import (
+        from desktop.shared.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
 
@@ -169,7 +169,7 @@ def create_test_container():
         RuntimeError: If container creation or service registration fails
     """
     try:
-        from shared.application.services.core.service_registration_manager import (
+        from desktop.shared.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
 

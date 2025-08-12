@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import logging
 
-from shared.application.services.data.dataset_query import IDatasetQuery
-from shared.application.services.learn.question_generation_service import (
+from desktop.shared.application.services.data.dataset_query import IDatasetQuery
+from desktop.shared.application.services.learn.question_generation_service import (
     QuestionGenerationService,
 )
 
@@ -55,7 +55,7 @@ def register_learn_services(container: DIContainer) -> None:
     try:
         # External dependencies (use real data services)
         # Use the real pictograph service with actual TKA dataset
-        from shared.application.services.data.pictograph_data_manager import (
+        from desktop.shared.application.services.data.pictograph_data_manager import (
             PictographDataManager,
         )
 

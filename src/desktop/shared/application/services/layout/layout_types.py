@@ -23,8 +23,8 @@ except ImportError:
     EVENT_SYSTEM_AVAILABLE = False
 
 try:
-    from core.decorators import handle_service_errors
-    from core.exceptions import ServiceOperationError, ValidationError
+    from desktop.modern.core.decorators import handle_service_errors
+    from desktop.modern.core.exceptions import ServiceOperationError, ValidationError
 
     from desktop.modern.core.monitoring import monitor_performance
 except ImportError:

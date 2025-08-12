@@ -25,7 +25,7 @@ from .start_position_view import StartPositionView
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from shared.application.services.workbench.beat_selection_service import (
+    from desktop.shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -384,9 +384,7 @@ class SequenceBeatFrame(QScrollArea):
         if not self._current_sequence or len(self._current_sequence.beats) == 0:
             # No sequence beats to display, but start position remains visible
             # CRITICAL FIX: Hide all beat widgets when sequence is empty/cleared
-            print(
-                "🧹 [SEQUENCE_BEAT_FRAME] Hiding all beat widgets - sequence is empty"
-            )
+
             for beat_view in self._beat_views:
                 beat_view.hide()
                 beat_view.setVisible(False)

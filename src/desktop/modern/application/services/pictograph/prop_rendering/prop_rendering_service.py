@@ -44,12 +44,12 @@ from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
 # Import framework-agnostic core services (using established import pattern)
-from shared.application.services.core.prop_rendering_service import (
+from desktop.shared.application.services.core.prop_rendering_service import (
     CorePropRenderingService,
 )
 
 # Support dependencies for existing functionality
-from shared.application.services.pictograph.prop_rendering.asset_manager import (
+from desktop.shared.application.services.pictograph.prop_rendering.asset_manager import (
     PropAssetManager,
 )
 

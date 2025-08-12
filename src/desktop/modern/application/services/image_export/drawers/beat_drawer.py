@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
-from shared.application.services.data.pictograph_factory import PictographFactory
+from desktop.shared.application.services.data.pictograph_factory import PictographFactory
 
 from desktop.modern.core.interfaces.image_export_services import (
     IBeatDrawer,

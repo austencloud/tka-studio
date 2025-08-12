@@ -62,7 +62,6 @@ def _position_window_on_secondary_monitor(window):
     # Log which screen we're using
     screen_name = target_screen.name() if hasattr(target_screen, "name") else "Unknown"
     screen_type = "secondary" if len(screens) > 1 else "primary"
-    print(f"🖥️ Positioning window on {screen_type} monitor: {screen_name}")
 
     # Calculate window dimensions (90% of screen size, centered)
     available_geometry = target_screen.availableGeometry()

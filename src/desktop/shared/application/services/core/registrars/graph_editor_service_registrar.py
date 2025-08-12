@@ -41,7 +41,7 @@ class GraphEditorServiceRegistrar(BaseServiceRegistrar):
         self._update_progress("Registering graph editor services...")
 
         try:
-            from shared.application.services.graph_editor.graph_editor_state_manager import (
+            from desktop.shared.application.services.graph_editor.graph_editor_state_manager import (
                 GraphEditorStateManager,
             )
 

@@ -49,25 +49,20 @@ class TransitionAnimator:
             on_complete: Optional callback to call when transition completes
         """
         if self._is_transitioning:
-            print(
-                f"🎭 [FADE] Skipping transition to {target_name} - already transitioning"
-            )
+
             return
 
         if stack.currentIndex() == target_index:
-            print(f"🎭 [FADE] Skipping transition to {target_name} - already current")
             return
 
         current_widget = stack.currentWidget()
         next_widget = stack.widget(target_index)
 
         if not current_widget or not next_widget:
-            print(f"🎭 [FADE] Invalid widgets for transition to {target_name}")
             self._fallback_transition(stack, target_index, target_name, on_complete)
             return
 
         self._is_transitioning = True
-        print(f"🎭 [FADE] Starting fade transition to {target_name}")
 
         # Clean up graphics effects before starting animation
         self._clear_graphics_effects([current_widget, next_widget])
@@ -76,7 +71,7 @@ class TransitionAnimator:
         self._disable_pictograph_updates(current_widget, True)
 
         def on_fade_out_finished():
-            print(f"🎭 [FADE] Fade out complete, switching to {target_name}")
+            print(f" Fade out complete, switching to {target_name}")
 
             # Clean up again before switching
             self._clear_graphics_effects([current_widget, next_widget])
@@ -134,7 +129,6 @@ class TransitionAnimator:
             animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
             def on_animation_complete():
-                print(f"✅ [FADE] Fade transition completed to {target_name}")
                 self._clear_graphics_effects([widget])
                 self._reset_transition_state()
                 if on_complete:

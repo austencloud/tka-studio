@@ -18,13 +18,13 @@ from collections.abc import Callable
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QGroupBox
-from shared.application.services.option_picker.option_configuration_service import (
+from desktop.shared.application.services.option_picker.option_configuration_service import (
     OptionConfigurationService,
 )
-from shared.application.services.option_picker.option_picker_size_calculator import (
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
-from shared.application.services.option_picker.option_pool_service import (
+from desktop.shared.application.services.option_picker.option_pool_service import (
     OptionPoolService,
 )
 

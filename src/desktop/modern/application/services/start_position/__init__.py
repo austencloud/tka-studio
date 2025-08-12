@@ -13,10 +13,10 @@ Services:
 
 from __future__ import annotations
 
-from shared.application.services.start_position.start_position_data_service import (
+from desktop.shared.application.services.start_position.start_position_data_service import (
     StartPositionDataService,
 )
-from shared.application.services.start_position.start_position_selection_service import (
+from desktop.shared.application.services.start_position.start_position_selection_service import (
     StartPositionSelectionService,
 )
 

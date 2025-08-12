@@ -13,7 +13,7 @@ from typing import Optional
 
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.pictograph_data import PictographData
-from shared.application.services.pictograph.pictograph_validator import (
+from desktop.shared.application.services.pictograph.pictograph_validator import (
     PictographValidator,
 )
 

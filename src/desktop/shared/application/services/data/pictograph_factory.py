@@ -23,7 +23,7 @@ from desktop.modern.domain.models.enums import (
 from desktop.modern.domain.models.grid_data import GridData
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from shared.application.services.glyphs.glyph_data_service import GlyphDataService
+from desktop.shared.application.services.glyphs.glyph_data_service import GlyphDataService
 
 logger = logging.getLogger(__name__)
 
@@ -249,7 +249,7 @@ class PictographFactory(IPictographFactory):
             BeatData object with embedded pictograph data
         """
         # Use BeatFactory for consistent beat creation with embedded pictograph
-        from shared.application.services.sequence.beat_factory import BeatFactory
+        from desktop.shared.application.services.sequence.beat_factory import BeatFactory
 
         return BeatFactory.create_from_pictograph(pictograph_data, beat_number)
 

@@ -246,9 +246,7 @@ class EnhancedExportPreviewCard(QFrame):
         """Set the current sequence data."""
         self.current_sequence = sequence
         self.current_word = word
-        print(
-            f"📊 [PREVIEW] Sequence data set: {sequence.length if sequence else 0} beats, word: {word}"
-        )
+
 
         # Trigger preview generation if we have a sequence
         if sequence and sequence.beats:

@@ -17,8 +17,8 @@ from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
 
-from shared.application.services.core.image_export_service import CoreImageExportService
-from shared.application.services.core.types import (
+from desktop.shared.application.services.core.image_export_service import CoreImageExportService
+from desktop.shared.application.services.core.types import (
     Color,
     ImageData,
     ImageFormat,

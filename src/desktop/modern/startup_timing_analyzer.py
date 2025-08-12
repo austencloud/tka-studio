@@ -226,7 +226,7 @@ def time_function_calls():
 
         # Time ApplicationFactory import and creation
         with analyzer.time_operation("ApplicationFactory import"):
-            from core.application.application_factory import (
+            from desktop.modern.core.application.application_factory import (
                 ApplicationFactory,
                 ApplicationMode,
             )
@@ -236,13 +236,13 @@ def time_function_calls():
 
         # Time service initialization
         with analyzer.time_operation("Event-driven services initialization"):
-            from core.service_locator import initialize_services
+            from desktop.modern.core.service_locator import initialize_services
 
             initialize_services()
 
         # Time splash screen creation
         with analyzer.time_operation("SplashScreen creation"):
-            from presentation.components.ui.splash_screen import SplashScreen
+            from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
             from PyQt6.QtGui import QGuiApplication
 
             screens = QGuiApplication.screens()
@@ -268,7 +268,7 @@ def time_function_calls():
                                 "ApplicationOrchestrator import",
                                 "TKAMainWindow.__init__",
                             ):
-                                from application.services.core.application_orchestrator import (
+                                from desktop.modern.application.services.core.application_orchestrator import (
                                     ApplicationOrchestrator,
                                 )
 

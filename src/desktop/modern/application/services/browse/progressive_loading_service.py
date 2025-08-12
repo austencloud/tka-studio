@@ -15,7 +15,7 @@ from typing import Any
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication
 
-from application.services.browse.dictionary_data_manager import (
+from desktop.modern.application.services.browse.dictionary_data_manager import (
     DictionaryDataManager,
 )
 from desktop.modern.domain.models.browse_errors import DataLoadError

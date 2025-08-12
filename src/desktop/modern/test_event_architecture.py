@@ -32,7 +32,7 @@ def test_service_initialization():
     logger.info("🧪 Testing service initialization...")
 
     try:
-        from core.service_locator import initialize_services, is_initialized
+        from desktop.modern.core.service_locator import initialize_services, is_initialized
 
         # Initialize services
         success = initialize_services()
@@ -54,9 +54,9 @@ def test_start_position_command():
     logger.info("🧪 Testing start position command...")
 
     try:
-        from core.commands.start_position_commands import SetStartPositionCommand
-        from core.debugging.event_logger import enable_event_logging, log_debug_info
-        from core.service_locator import get_command_processor, get_event_bus
+        from desktop.modern.core.commands.start_position_commands import SetStartPositionCommand
+        from desktop.modern.core.debugging.event_logger import enable_event_logging, log_debug_info
+        from desktop.modern.core.service_locator import get_command_processor, get_event_bus
 
         # Enable event logging for this test
         enable_event_logging()
@@ -120,14 +120,14 @@ def test_beat_command():
     logger.info("🧪 Testing beat addition command...")
 
     try:
-        from core.commands.sequence_commands import AddBeatCommand
-        from core.service_locator import (
+        from desktop.modern.core.commands.sequence_commands import AddBeatCommand
+        from desktop.modern.core.service_locator import (
             get_command_processor,
             get_event_bus,
             get_sequence_state_manager,
         )
-        from domain.models.beat_models import BeatData
-        from domain.models.sequence_data import SequenceData
+        from desktop.modern.domain.models.beat_models import BeatData
+        from desktop.modern.domain.models.sequence_data import SequenceData
 
         # Get services
         command_processor = get_command_processor()
@@ -181,9 +181,9 @@ def test_state_manager():
     logger.info("🧪 Testing state manager...")
 
     try:
-        from core.service_locator import get_sequence_state_manager
-        from domain.models.beat_models import BeatData
-        from domain.models.sequence_data import SequenceData
+        from desktop.modern.core.service_locator import get_sequence_state_manager
+        from desktop.modern.domain.models.beat_models import BeatData
+        from desktop.modern.domain.models.sequence_data import SequenceData
 
         state_manager = get_sequence_state_manager()
 

@@ -22,7 +22,7 @@ from desktop.modern.domain.models import (
     PictographData,
     RotationDirection,
 )
-from shared.application.services.pictograph.pictograph_csv_manager import (
+from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
     PictographCSVManager,
 )
 
@@ -265,7 +265,7 @@ class PictographPositionMatcher:
 
     def _generate_glyph_data(self, pictograph_data: PictographData) -> None:
         """Generate glyph data for pictograph data using the glyph data service."""
-        from shared.application.services.glyphs.glyph_data_service import (
+        from desktop.shared.application.services.glyphs.glyph_data_service import (
             GlyphDataService,
         )
 

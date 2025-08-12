@@ -62,7 +62,7 @@ class PictographCSVManager(IPictographCSVManager):
         self._csv_data = None
         
         try:
-            from shared.infrastructure.path_resolver import path_resolver
+            from desktop.shared.infrastructure.path_resolver import path_resolver
             self._data_path = path_resolver.get_data_path("DiamondPictographDataframe.csv")
         except Exception as e:
             print(f"Warning: Could not use centralized path resolver: {e}")

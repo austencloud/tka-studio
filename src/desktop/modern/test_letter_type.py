@@ -68,7 +68,7 @@ def test_letter_type_determination():
                 print(f"     -> No matching enum found for '{letter_type_str}'")
 
         print("\n4. Testing pictograph factory:")
-        from shared.application.services.data.pictograph_factory import (
+        from desktop.shared.application.services.data.pictograph_factory import (
             PictographFactory,
         )
 

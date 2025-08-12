@@ -14,7 +14,7 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from shared.application.services.data.dataset_query import IDatasetQuery
+from desktop.shared.application.services.data.dataset_query import IDatasetQuery
 
 logger = logging.getLogger(__name__)
 

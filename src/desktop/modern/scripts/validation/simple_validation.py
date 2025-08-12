@@ -17,7 +17,7 @@ print("Testing basic imports...")
 try:
     print("✅ Interface import successful")
 
-    from shared.application.services.start_position.start_position_data_service import (
+    from desktop.shared.application.services.start_position.start_position_data_service import (
         StartPositionDataService,
     )
 

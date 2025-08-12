@@ -1,0 +1,97 @@
+/* src/lib/styles/safe-area.css
+ * Safe area inset handling for mobile devices
+ * 
+ * This file provides CSS variables and utility classes for handling
+ * safe area insets on mobile devices with notches, punch holes,
+ * dynamic islands, and other hardware elements that may obstruct content.
+ */
+
+:root {
+  /* Direct mapping to environment variables with fallbacks */
+  --safe-inset-top: env(safe-area-inset-top, 0px);
+  --safe-inset-right: env(safe-area-inset-right, 0px);
+  --safe-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-inset-left: env(safe-area-inset-left, 0px);
+  
+  /* Base spacing variable that can be used throughout the app */
+  --base-spacing: 8px;
+  
+  /* Combined variables that integrate with existing spacing system */
+  --content-padding-top: calc(var(--base-spacing) + var(--safe-inset-top));
+  --content-padding-right: calc(var(--base-spacing) + var(--safe-inset-right));
+  --content-padding-bottom: calc(var(--base-spacing) + var(--safe-inset-bottom));
+  --content-padding-left: calc(var(--base-spacing) + var(--safe-inset-left));
+  
+  /* Shorthand for all sides */
+  --safe-area-padding: 
+    var(--content-padding-top)
+    var(--content-padding-right)
+    var(--content-padding-bottom)
+    var(--content-padding-left);
+    
+  /* Variables for fixed position elements */
+  --safe-position-top: var(--safe-inset-top);
+  --safe-position-right: var(--safe-inset-right);
+  --safe-position-bottom: var(--safe-inset-bottom);
+  --safe-position-left: var(--safe-inset-left);
+}
+
+/* Utility classes for applying safe area insets */
+.safe-area-padding {
+  padding: var(--safe-area-padding);
+}
+
+.safe-area-padding-top {
+  padding-top: var(--content-padding-top);
+}
+
+.safe-area-padding-right {
+  padding-right: var(--content-padding-right);
+}
+
+.safe-area-padding-bottom {
+  padding-bottom: var(--content-padding-bottom);
+}
+
+.safe-area-padding-left {
+  padding-left: var(--content-padding-left);
+}
+
+/* Classes for fixed position elements */
+.safe-area-position-top {
+  top: var(--safe-position-top);
+}
+
+.safe-area-position-right {
+  right: var(--safe-position-right);
+}
+
+.safe-area-position-bottom {
+  bottom: var(--safe-position-bottom);
+}
+
+.safe-area-position-left {
+  left: var(--safe-position-left);
+}
+
+/* Fullscreen overlay specific classes */
+.safe-area-fullscreen {
+  padding: 
+    var(--safe-inset-top, 0px)
+    var(--safe-inset-right, 0px)
+    var(--safe-inset-bottom, 0px)
+    var(--safe-inset-left, 0px);
+}
+
+/* Media query for devices that support safe area insets */
+@supports (padding: env(safe-area-inset-top)) {
+  /* Additional device-specific adjustments can be added here if needed */
+  .safe-area-fullscreen {
+    /* Ensure content doesn't get cut off by notches or rounded corners */
+    padding: 
+      max(env(safe-area-inset-top), 8px)
+      max(env(safe-area-inset-right), 8px)
+      max(env(safe-area-inset-bottom), 8px)
+      max(env(safe-area-inset-left), 8px);
+  }
+}

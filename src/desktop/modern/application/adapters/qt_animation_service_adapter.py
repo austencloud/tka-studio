@@ -13,7 +13,7 @@ from typing import Any
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
-from shared.application.services.core.animation_service import (
+from desktop.shared.application.services.core.animation_service import (
     AnimationCommand,
     AnimationType,
     EasingType,

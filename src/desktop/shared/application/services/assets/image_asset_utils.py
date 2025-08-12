@@ -4,7 +4,7 @@ Image asset utilities for pictograph rendering.
 Handles path management and asset loading for SVG files.
 """
 
-from shared.infrastructure.path_resolver import get_image_path
+from desktop.shared.infrastructure.path_resolver import get_image_path
 
 
 # Re-export the centralized path resolver function

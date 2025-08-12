@@ -10,7 +10,7 @@ import logging
 from typing import Any, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.sequence.sequence_state_tracker_service import (
+from desktop.shared.application.services.sequence.sequence_state_tracker_service import (
     SequenceStateTrackerService,
 )
 

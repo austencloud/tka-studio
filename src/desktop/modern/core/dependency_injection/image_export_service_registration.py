@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import logging
 
-from shared.application.services.image_export.sequence_image_layout_calculator import (
+from desktop.shared.application.services.image_export.sequence_image_layout_calculator import (
     SequenceImageLayoutCalculator,
 )
-from shared.application.services.image_export.sequence_metadata_extractor import (
+from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
     SequenceMetadataExtractor,
 )
 
@@ -119,7 +119,7 @@ def _register_pictograph_services(container: DIContainer) -> None:
             sys.path.insert(0, shared_src_str)
 
         # Import and register the pictograph service registrar
-        from shared.application.services.core.registrars.pictograph_service_registrar import (
+        from desktop.shared.application.services.core.registrars.pictograph_service_registrar import (
             PictographServiceRegistrar,
         )
 
@@ -139,7 +139,7 @@ def _register_positioning_services(container: DIContainer) -> None:
     """Register positioning services needed for pictograph scenes."""
     try:
         # Import and register the positioning service registrar
-        from shared.application.services.core.registrars.positioning_service_registrar import (
+        from desktop.shared.application.services.core.registrars.positioning_service_registrar import (
             PositioningServiceRegistrar,
         )
 

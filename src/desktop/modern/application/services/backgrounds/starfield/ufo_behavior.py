@@ -5,7 +5,7 @@ import random
 from typing import Optional
 
 from PyQt6.QtGui import QPixmap
-from shared.application.services.backgrounds.shared.animation_types import (
+from desktop.shared.application.services.backgrounds.shared.animation_types import (
     Position2D,
     UFOState,
     Velocity2D,

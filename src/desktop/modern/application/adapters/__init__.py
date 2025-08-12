@@ -19,7 +19,7 @@ try:
         sys.path.append(str(shared_src))
 
     # Now import the shared modules
-    from shared.application.adapters.qt_image_export_adapter import QtImageExportAdapter
+    from desktop.shared.application.adapters.qt_image_export_adapter import QtImageExportAdapter
 
     # Make them available in this namespace
     __all__ = ["QtImageExportAdapter"]

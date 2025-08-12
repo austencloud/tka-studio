@@ -61,14 +61,14 @@ class ServiceContainer:
             self.register(ISequenceDataService, FileBasedSequenceDataService)
 
             # Layout services
-            from shared.application.services.layout.layout_manager import LayoutManager
+            from desktop.shared.application.services.layout.layout_manager import LayoutManager
 
             from desktop.modern.core.interfaces.core_services import ILayoutService
 
             self.register(ILayoutService, LayoutManager)
 
             # Pictograph services
-            from shared.application.services.pictograph.pictograph_csv_manager import (
+            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
 
@@ -85,7 +85,7 @@ class ServiceContainer:
             self.register(ISequenceManager, SequenceBeatOperations)
 
             # UI services
-            from shared.application.services.ui.coordination.ui_coordinator import (
+            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
 
@@ -104,7 +104,7 @@ class ServiceContainer:
             self.register(ISessionStateTracker, SessionStateTracker)
 
             # Register additional services using the service registration manager
-            from shared.application.services.core.service_registration_manager import (
+            from desktop.shared.application.services.core.service_registration_manager import (
                 ServiceRegistrationManager,
             )
 

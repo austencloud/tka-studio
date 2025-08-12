@@ -80,7 +80,7 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             pass
 
         try:
-            from shared.application.services.ui.animation.modern_service_registration import (
+            from desktop.shared.application.services.ui.animation.modern_service_registration import (
                 setup_modern_animation_services,
             )
 
@@ -97,10 +97,10 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.option_picker_interfaces import (
                 IOptionProvider,
             )
-            from shared.application.services.option_picker.option_provider import (
+            from desktop.shared.application.services.option_picker.option_provider import (
                 OptionProvider,
             )
-            from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 
@@ -125,22 +125,22 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.application.services.option_picker.frame_pool_service import (
                 FramePoolService,
             )
-            from shared.application.services.option_picker.option_configuration_service import (
+            from desktop.shared.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from shared.application.services.option_picker.option_loader import (
+            from desktop.shared.application.services.option_picker.option_loader import (
                 OptionLoader,
             )
-            from shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from shared.application.services.option_picker.option_pool_service import (
+            from desktop.shared.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from shared.application.services.option_picker.sequence_option_service import (
+            from desktop.shared.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
-            from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 
@@ -206,16 +206,16 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
                 OptionPickerScroll,
             )
-            from shared.application.services.option_picker.option_configuration_service import (
+            from desktop.shared.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from shared.application.services.option_picker.option_pool_service import (
+            from desktop.shared.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from shared.application.services.option_picker.sequence_option_service import (
+            from desktop.shared.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
 

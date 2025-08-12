@@ -113,7 +113,6 @@ class AccordionSection(QFrame, StyleMixin):
         if self.is_expanded:
             return
 
-        print(f"📖 [ACCORDION SECTION] Expanding: {self.title}")
         self.is_expanded = True
         self.header.set_expanded(True)
 

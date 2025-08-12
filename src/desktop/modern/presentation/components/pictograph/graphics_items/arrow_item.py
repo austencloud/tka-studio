@@ -16,7 +16,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from shared.application.services.pictograph.arrow_rendering_service import (
+from desktop.shared.application.services.pictograph.arrow_rendering_service import (
     ArrowRenderingService,
 )
 

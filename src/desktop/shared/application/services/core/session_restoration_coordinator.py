@@ -20,7 +20,7 @@ from desktop.modern.core.interfaces.session_services import (
     ISessionStateTracker,
     SessionState,
 )
-from shared.application.services.sequence.sequence_restorer import ISequenceRestorer
+from desktop.shared.application.services.sequence.sequence_restorer import ISequenceRestorer
 
 
 class QObjectABCMeta(type(QObject), ABCMeta):

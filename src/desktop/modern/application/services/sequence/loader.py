@@ -14,10 +14,10 @@ from typing import TYPE_CHECKING
 
 # Removed circular import - workbench should be passed as parameter if needed
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.data.legacy_to_modern_converter import (
+from desktop.shared.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -154,7 +154,7 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
-            from shared.application.services.data.dataset_query import IDatasetQuery
+            from desktop.shared.application.services.data.dataset_query import IDatasetQuery
 
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,

@@ -36,11 +36,11 @@ def _get_project_root() -> Path:
 _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root / "src"))
 
-from shared.application.services.core.pictograph_renderer import (
+from desktop.shared.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     IPictographAssetProvider,
 )
-from shared.application.services.core.types import (
+from desktop.shared.application.services.core.types import (
     Point,
     RenderCommand,
     RenderTarget,
@@ -254,7 +254,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def get_grid_asset(self, grid_mode: str) -> Optional[SvgAsset]:
         """Get grid asset from existing QT asset management."""
         try:
-            from shared.application.services.core.types import Size, SvgAsset
+            from desktop.shared.application.services.core.types import Size, SvgAsset
 
             if not self.legacy_asset_manager:
                 logger.error("No asset manager available for grid assets")
@@ -282,7 +282,7 @@ class QtAssetProvider(IPictographAssetProvider):
     ) -> Optional[SvgAsset]:
         """Get prop asset from existing QT asset management with color transformation and beta positioning support."""
         try:
-            from shared.application.services.core.types import Size, SvgAsset
+            from desktop.shared.application.services.core.types import Size, SvgAsset
 
             if not self.legacy_asset_manager:
                 logger.error("No asset manager available for prop assets")
@@ -317,7 +317,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> Optional[SvgAsset]:
         """Get glyph asset from existing QT asset management."""
         try:
-            from shared.application.services.core.types import Size, SvgAsset
+            from desktop.shared.application.services.core.types import Size, SvgAsset
 
             if not self.legacy_asset_manager:
                 logger.error("No asset manager available for glyph assets")
@@ -344,7 +344,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def get_arrow_asset(self, arrow_type: str) -> Optional[SvgAsset]:
         """Get arrow asset from existing QT asset management."""
         try:
-            from shared.application.services.core.types import Size, SvgAsset
+            from desktop.shared.application.services.core.types import Size, SvgAsset
 
             if not self.legacy_asset_manager:
                 logger.error("No asset manager available for arrow assets")
@@ -498,7 +498,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def _load_grid_directly(self, grid_mode: str) -> str | None:
         """Load grid SVG directly from file system."""
         try:
-            from shared.application.services.assets.image_asset_utils import (
+            from desktop.shared.application.services.assets.image_asset_utils import (
                 get_image_path,
             )
 
@@ -514,7 +514,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def _load_prop_directly(self, prop_type: str) -> str | None:
         """Load prop SVG directly from file system."""
         try:
-            from shared.application.services.assets.image_asset_utils import (
+            from desktop.shared.application.services.assets.image_asset_utils import (
                 get_image_path,
             )
 
@@ -530,7 +530,7 @@ class QtAssetProvider(IPictographAssetProvider):
     def _load_glyph_directly(self, glyph_type: str, glyph_id: str) -> str | None:
         """Load glyph SVG directly from file system."""
         try:
-            from shared.application.services.assets.image_asset_utils import (
+            from desktop.shared.application.services.assets.image_asset_utils import (
                 get_image_path,
             )
 

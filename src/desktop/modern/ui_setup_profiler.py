@@ -90,25 +90,25 @@ def profile_ui_setup():
             app = QApplication(sys.argv)
             app.setStyle("Fusion")
 
-        from core.application.application_factory import (
+        from desktop.modern.core.application.application_factory import (
             ApplicationFactory,
             ApplicationMode,
         )
 
         container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
 
-        from core.service_locator import initialize_services
+        from desktop.modern.core.service_locator import initialize_services
 
         initialize_services()
 
-        from presentation.components.ui.splash_screen import SplashScreen
+        from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
         from PyQt6.QtGui import QGuiApplication
 
         screens = QGuiApplication.screens()
         target_screen = screens[0] if screens else None
         splash = SplashScreen(target_screen=target_screen)
 
-        from application.services.core.application_orchestrator import (
+        from desktop.modern.application.services.core.application_orchestrator import (
             ApplicationOrchestrator,
         )
 
@@ -133,7 +133,7 @@ def profile_ui_setup():
             window, target_screen, False, None, None
         )
 
-        from core.dependency_injection.di_container import get_container
+        from desktop.modern.core.dependency_injection.di_container import get_container
 
         window.orchestrator.container = get_container()
         window.orchestrator.service_manager.register_all_services(

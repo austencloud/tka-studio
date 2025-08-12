@@ -55,8 +55,7 @@ class ConfigurationManager:
             # Parse command line arguments
             app_mode = self._determine_application_mode()
 
-            # Set up logging configuration
-            self._configure_logging()
+
 
             # Create immutable configuration
             config = ApplicationConfiguration(mode=app_mode)
@@ -81,11 +80,3 @@ class ConfigurationManager:
             return ApplicationMode.TEST
         return ApplicationMode.PRODUCTION
 
-    def _configure_logging(self) -> None:
-        """Configure application logging for quiet startup."""
-        try:
-            from desktop.modern.core.logging.instant_fix import apply_instant_fix
-
-            apply_instant_fix("quiet")
-        except Exception as e:
-            self.logger.warning(f"⚠️ Could not apply logging fix: {e}")

@@ -17,8 +17,8 @@ from desktop.modern.core.interfaces.pictograph_rendering_services import (
     IPictographAssetManager,
 )
 from desktop.modern.domain.models import MotionData
-from shared.application.services.assets.image_asset_utils import get_image_path
-from shared.application.services.core.types import Size, SvgAsset
+from desktop.shared.application.services.assets.image_asset_utils import get_image_path
+from desktop.shared.application.services.core.types import Size, SvgAsset
 
 logger = logging.getLogger(__name__)
 

@@ -23,15 +23,15 @@ from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
-from shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
     WorkbenchOperationCoordinator,
 )
-from shared.application.services.workbench.workbench_session_manager import (
+from desktop.shared.application.services.workbench.workbench_session_manager import (
     WorkbenchSessionManager,
 )
-from shared.application.services.workbench.workbench_state_manager import (
+from desktop.shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
 
@@ -50,7 +50,7 @@ from .ui_setup_helper import UISetupHelper
 
 
 if TYPE_CHECKING:
-    from shared.application.services.workbench.beat_selection_service import (
+    from desktop.shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -149,23 +149,12 @@ class SequenceWorkbench(ViewableComponentBase):
     def _complete_initialization(self) -> None:
         """Complete workbench initialization after main window is shown."""
         try:
-            print("🔧 [WORKBENCH] Starting deferred initialization...")
             self._setup_session_subscriptions()
-            print("🔧 [WORKBENCH] Session subscriptions setup complete")
-
             self._ui_setup.complete_ui_setup()
-            print("🔧 [WORKBENCH] UI setup complete")
-
             self._signal_connector.connect_signals()
-            print("🔧 [WORKBENCH] Signals connected")
-
             self._ui_setup.setup_button_interface()
-            print("🔧 [WORKBENCH] Button interface setup complete")
+            self._setup_state_monitoring() 
 
-            self._setup_state_monitoring()  # CRITICAL FIX: Monitor state manager changes
-            print("🔧 [WORKBENCH] State monitoring setup complete")
-
-            print("✅ [WORKBENCH] Deferred initialization completed successfully")
 
         except Exception as e:
             print(f"❌ [WORKBENCH] Error in deferred initialization: {e}")
@@ -186,28 +175,23 @@ class SequenceWorkbench(ViewableComponentBase):
 
     def _setup_state_monitoring(self):
         """Setup monitoring of state manager changes for automatic UI updates."""
-        print("🔗 [WORKBENCH] Setting up state monitoring...")
 
         # Store the original state manager methods to intercept changes
         if hasattr(self._state_manager, "set_sequence"):
             original_set_sequence = self._state_manager.set_sequence
 
             def monitored_set_sequence(sequence, from_restoration=False):
-                print(
-                    f"🔍 [WORKBENCH] State manager set_sequence intercepted: {sequence}"
-                )
+
                 result = original_set_sequence(sequence, from_restoration)
 
                 # If the state changed, update our UI
                 if result.changed and result.sequence_changed:
-                    print("🔄 [WORKBENCH] State changed externally, updating UI...")
                     self._update_ui_from_state()
 
                 return result
 
             # Replace the method with our monitored version
             self._state_manager.set_sequence = monitored_set_sequence
-            print("✅ [WORKBENCH] State monitoring setup complete")
         else:
             print("❌ [WORKBENCH] State manager has no set_sequence method!")
 
@@ -248,9 +232,7 @@ class SequenceWorkbench(ViewableComponentBase):
                 self.sequence_modified.emit(complete_sequence)
 
                 # Debug output to track sequence updates
-                print(
-                    f"🔄 [WORKBENCH] Sequence updated: {sequence.length if sequence else 0} beats"
-                )
+
                 if sequence:
                     for i, beat in enumerate(sequence.beats):
                         print(
@@ -288,7 +270,6 @@ class SequenceWorkbench(ViewableComponentBase):
                 if complete_sequence:
                     self.sequence_modified.emit(complete_sequence)
 
-                print(f"🔄 [WORKBENCH] Start position updated: {position_key}")
         else:
             print("🎯 [WORKBENCH] No start position change detected")
 
@@ -364,23 +345,16 @@ class SequenceWorkbench(ViewableComponentBase):
         print(f"📊 [WORKBENCH] Handling operation result: success={result.success}")
         if not result.success:
             print(f"❌ [WORKBENCH] Operation failed: {result.message}")
-            if hasattr(result, "error_details") and result.error_details:
-                print(f"🔍 [WORKBENCH] Error details: {result.error_details}")
+
         if result.success:
-            print(f"✅ [WORKBENCH] Operation successful: {result.message}")
             self.operation_completed.emit(result.message)
 
             # Update state if sequence was modified
             if result.updated_sequence:
-                print(
-                    f"🔄 [WORKBENCH] Updating state with sequence: {len(result.updated_sequence.beats)} beats"
-                )
+
                 state_result = self._state_manager.set_sequence(result.updated_sequence)
-                print(
-                    f"📊 [WORKBENCH] State update result: changed={state_result.changed}"
-                )
+
                 if state_result.changed:
-                    print("🔄 [WORKBENCH] Updating UI from state...")
                     self._update_ui_from_state()
 
                     # Emit both signals - new signal includes operation type
@@ -389,9 +363,6 @@ class SequenceWorkbench(ViewableComponentBase):
                         result.updated_sequence, result.operation_type.value
                     )
 
-                    print(
-                        f"✅ [WORKBENCH] UI updated and sequence_modified signals emitted (operation: {result.operation_type.value})"
-                    )
             else:
                 print("⚠️ [WORKBENCH] No updated sequence in result")
 
@@ -413,19 +384,14 @@ class SequenceWorkbench(ViewableComponentBase):
     def _update_ui_from_state(self):
         """Update UI components based on current business state."""
         sequence = self._state_manager.get_current_sequence()
-        print(f"🔄 [WORKBENCH] Updating UI from state - sequence: {sequence}")
-        print(
-            f"🔄 [WORKBENCH] Sequence length: {sequence.length if sequence else 'None'}"
-        )
+
 
         # Update indicator section
         if self._indicator_section:
-            print("🔄 [WORKBENCH] Updating indicator section...")
             self._indicator_section.update_sequence(sequence)
 
         # Update beat frame section
         if self._beat_frame_section:
-            print("🔄 [WORKBENCH] Updating beat frame section...")
             self._beat_frame_section.set_sequence(sequence)
         else:
             print("❌ [WORKBENCH] No beat frame section available!")

@@ -53,28 +53,28 @@ class SequenceServiceRegistrar(BaseServiceRegistrar):
                 ISequenceLoader,
                 ISequenceStartPositionManager,
             )
-            from shared.application.services.sequence.beat_factory import (
+            from desktop.shared.application.services.sequence.beat_factory import (
                 BeatFactory,
                 IBeatFactory,
             )
-            from shared.application.services.sequence.sequence_beat_operations_service import (
+            from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
                 SequenceBeatOperationsService,
             )
-            from shared.application.services.sequence.sequence_loader_service import (
+            from desktop.shared.application.services.sequence.sequence_loader_service import (
                 SequenceLoaderService,
             )
-            from shared.application.services.sequence.sequence_persister import (
+            from desktop.shared.application.services.sequence.sequence_persister import (
                 ISequencePersister,
                 SequencePersister,
             )
-            from shared.application.services.sequence.sequence_repository import (
+            from desktop.shared.application.services.sequence.sequence_repository import (
                 ISequenceRepository,
                 SequenceRepository,
             )
-            from shared.application.services.sequence.sequence_start_position_service import (
+            from desktop.shared.application.services.sequence.sequence_start_position_service import (
                 SequenceStartPositionService,
             )
-            from shared.application.services.sequence.sequence_validator import (
+            from desktop.shared.application.services.sequence.sequence_validator import (
                 ISequenceValidator,
                 SequenceValidator,
             )

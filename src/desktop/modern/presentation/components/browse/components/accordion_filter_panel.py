@@ -10,7 +10,7 @@ from __future__ import annotations
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
-from application.services.browse.dictionary_data_manager import DictionaryDataManager
+from desktop.modern.application.services.browse.dictionary_data_manager import DictionaryDataManager
 from desktop.modern.domain.models.browse_models import FilterType
 
 from .accordion_section import AccordionSection
@@ -256,12 +256,7 @@ class AccordionFilterPanel(QWidget):
         # This method maintains compatibility with the existing FilterSelectionPanel
         # For now, we'll just log the active filter
         # TODO: Later implement visual feedback for active filters
-        if filter_type and filter_value:
-            print(
-                f"🎯 [ACCORDION PANEL] Active filter: {filter_type.value} = {filter_value}"
-            )
-        else:
-            print("🎯 [ACCORDION PANEL] No active filter")
+
 
     def _apply_styling(self) -> None:
         """Apply glassmorphism styling to the accordion panel."""

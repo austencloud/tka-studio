@@ -28,8 +28,8 @@ from PyQt6.QtWidgets import (
 # Add src to path for imports
 sys.path.insert(0, "src")
 
-from shared.application.services.data.pictograph_factory import PictographFactory
-from shared.application.services.pictograph.pictograph_csv_manager import (
+from desktop.shared.application.services.data.pictograph_factory import PictographFactory
+from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
     PictographCSVManager,
 )
 

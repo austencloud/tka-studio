@@ -248,7 +248,7 @@ class PictographValidator(IPictographValidator):
 
         # Use the orientation calculator to get end orientation
         if self.orientation_calculator is None:
-            from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+            from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
                 OrientationCalculator,
             )
 

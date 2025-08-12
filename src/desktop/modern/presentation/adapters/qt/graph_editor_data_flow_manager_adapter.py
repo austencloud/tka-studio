@@ -11,7 +11,7 @@ from collections.abc import Callable
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.graph_editor.graph_editor_data_flow_service import (
+from desktop.shared.application.services.graph_editor.graph_editor_data_flow_service import (
     GraphEditorDataFlowService,
 )
 

@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import logging
 
-from shared.application.services.data.data_service import DataManager
+from desktop.shared.application.services.data.data_service import DataManager
 
 from desktop.modern.core.config.app_config import (
     AppConfig,
@@ -250,10 +250,10 @@ def register_start_position_services(container: DIContainer) -> None:
     try:
         # Import start position interfaces
         # Import start position service implementations
-        from shared.application.services.start_position.start_position_data_service import (
+        from desktop.shared.application.services.start_position.start_position_data_service import (
             StartPositionDataService,
         )
-        from shared.application.services.start_position.start_position_selection_service import (
+        from desktop.shared.application.services.start_position.start_position_selection_service import (
             StartPositionSelectionService,
         )
 
@@ -300,7 +300,7 @@ def register_extracted_services(container: DIContainer) -> None:
     """
     try:
         # Register position matching service
-        from shared.application.services.positioning.position_mapper import (
+        from desktop.shared.application.services.positioning.position_mapper import (
             PositionMapper,
         )
 
@@ -314,7 +314,7 @@ def register_extracted_services(container: DIContainer) -> None:
 
         # Register positioning services using ServiceRegistrationManager
         try:
-            from shared.application.services.core.service_registration_manager import (
+            from desktop.shared.application.services.core.service_registration_manager import (
                 ServiceRegistrationCoordinator,
             )
 

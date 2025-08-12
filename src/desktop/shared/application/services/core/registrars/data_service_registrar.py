@@ -61,24 +61,24 @@ class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
         """Register core data management services."""
         try:
             from desktop.modern.core.interfaces.data_services import IDataCacheManager
-            from shared.application.services.data.cache_manager import DataCacheManager
-            from shared.application.services.data.csv_reader import (
+            from desktop.shared.application.services.data.cache_manager import DataCacheManager
+            from desktop.shared.application.services.data.csv_reader import (
                 CSVReader,
                 ICSVReader,
             )
-            from shared.application.services.data.data_service import (
+            from desktop.shared.application.services.data.data_service import (
                 DataManager,
                 IDataManager,
             )
-            from shared.application.services.data.dataset_query import (
+            from desktop.shared.application.services.data.dataset_query import (
                 DatasetQuery,
                 IDatasetQuery,
             )
-            from shared.application.services.data.pictograph_data_manager import (
+            from desktop.shared.application.services.data.pictograph_data_manager import (
                 IPictographDataManager,
                 PictographDataManager,
             )
-            from shared.application.services.positioning.props.configuration.json_configuration_service import (
+            from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
                 IJSONConfigurator,
                 JSONConfigurator,
             )
@@ -120,10 +120,10 @@ class DataServiceRegistrar(BaseServiceRegistrar, IDataServiceRegistrar):
                 ILegacyToModernConverter,
                 IModernToLegacyConverter,
             )
-            from shared.application.services.data.legacy_to_modern_converter import (
+            from desktop.shared.application.services.data.legacy_to_modern_converter import (
                 LegacyToModernConverter,
             )
-            from shared.application.services.data.modern_to_legacy_converter import (
+            from desktop.shared.application.services.data.modern_to_legacy_converter import (
                 ModernToLegacyConverter,
             )
 

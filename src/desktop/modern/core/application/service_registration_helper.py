@@ -74,11 +74,11 @@ class ServiceRegistrationHelper:
     def register_common_core_services(container: DIContainer) -> None:
         """Register core services common to all modes."""
         try:
-            from shared.application.services.layout.layout_manager import LayoutManager
-            from shared.application.services.pictograph.pictograph_csv_manager import (
+            from desktop.shared.application.services.layout.layout_manager import LayoutManager
+            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
-            from shared.application.services.ui.coordination.ui_coordinator import (
+            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
 
@@ -120,10 +120,10 @@ class ServiceRegistrationHelper:
     def register_common_pictograph_services(container: DIContainer) -> None:
         """Register pictograph services common to all modes."""
         try:
-            from shared.application.services.pictograph.border_manager import (
+            from desktop.shared.application.services.pictograph.border_manager import (
                 PictographBorderManager,
             )
-            from shared.application.services.pictograph.context_detection_service import (
+            from desktop.shared.application.services.pictograph.context_detection_service import (
                 PictographContextDetector,
             )
 
@@ -154,11 +154,11 @@ class ServiceRegistrationHelper:
     def register_common_session_services(container: DIContainer) -> None:
         """Register session and lifecycle services common to all modes."""
         try:
-            from shared.application.services.core.session_restoration_coordinator import (
+            from desktop.shared.application.services.core.session_restoration_coordinator import (
                 ISessionRestorationCoordinator,
                 SessionRestorationCoordinator,
             )
-            from shared.application.services.sequence.sequence_restorer import (
+            from desktop.shared.application.services.sequence.sequence_restorer import (
                 ISequenceRestorer,
                 SequenceRestorer,
             )
@@ -219,7 +219,7 @@ class ServiceRegistrationHelper:
     def register_visibility_services(container: DIContainer) -> None:
         """Register visibility settings services."""
         try:
-            from shared.application.services.settings.visibility_settings_manager import (
+            from desktop.shared.application.services.settings.visibility_settings_manager import (
                 VisibilitySettingsManager,
             )
 
@@ -346,16 +346,16 @@ class ServiceRegistrationHelper:
     def _register_option_picker_services(container: DIContainer) -> None:
         """Register the core option picker services that OptionPickerScroll depends on."""
         try:
-            from shared.application.services.option_picker.option_configuration_service import (
+            from desktop.shared.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from shared.application.services.option_picker.option_pool_service import (
+            from desktop.shared.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from shared.application.services.option_picker.sequence_option_service import (
+            from desktop.shared.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
 
@@ -384,13 +384,13 @@ class ServiceRegistrationHelper:
     def _register_option_picker_components(container: DIContainer) -> None:
         """Register option picker components with proper animation orchestrator injection."""
         try:
-            from shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from shared.application.services.option_picker.option_pool_service import (
+            from desktop.shared.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from shared.application.services.option_picker.sequence_option_service import (
+            from desktop.shared.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
 
@@ -408,7 +408,7 @@ class ServiceRegistrationHelper:
                 option_sizing_service = container.resolve(OptionPickerSizeCalculator)
 
                 # Get option config service
-                from shared.application.services.option_picker.option_configuration_service import (
+                from desktop.shared.application.services.option_picker.option_configuration_service import (
                     OptionConfigurationService,
                 )
 
@@ -448,7 +448,7 @@ class ServiceRegistrationHelper:
     def apply_service_registration_manager(container: DIContainer) -> None:
         """Apply the service registration manager for additional services."""
         try:
-            from shared.application.services.core.service_registration_manager import (
+            from desktop.shared.application.services.core.service_registration_manager import (
                 ServiceRegistrationManager,
             )
 

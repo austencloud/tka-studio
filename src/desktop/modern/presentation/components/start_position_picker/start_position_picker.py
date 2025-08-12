@@ -241,7 +241,6 @@ class StartPositionPicker(QWidget):
                 logger.info(f"✅ Position selection successful: {position_key}")
 
                 # Publish event via event bus (modern approach)
-                self._publish_start_position_event(position_key)
 
                 # Also emit Qt signal for backward compatibility
                 self.start_position_selected.emit(position_key)
@@ -255,30 +254,7 @@ class StartPositionPicker(QWidget):
             # Fallback - still emit signal
             self.start_position_selected.emit(position_key)
 
-    def _publish_start_position_event(self, position_key: str):
-        """Publish start position selection event via event bus."""
-        if self.event_bus and EVENT_BUS_AVAILABLE:
-            try:
-                # Get beat data from orchestrator if available
-                if hasattr(self.orchestrator, "get_last_created_beat_data"):
-                    beat_data_obj = self.orchestrator.get_last_created_beat_data()
-                    if beat_data_obj:
-                        # Convert beat data to dict for event
-                        {
-                            "letter": getattr(beat_data_obj, "letter", position_key),
-                            "position_key": position_key,
-                            "timestamp": str(datetime.now()),
-                        }
 
-                # Event bus removed - Qt signal already emitted above
-                logger.info(
-                    f"📡 Emitted start_position_selected signal for {position_key}"
-                )
-
-            except Exception as e:
-                logger.exception(f"Failed to publish start position event: {e}")
-        else:
-            logger.debug("Event bus not available, skipping event publication")
 
     def _switch_to_basic_mode(self):
         """Switch to basic mode."""

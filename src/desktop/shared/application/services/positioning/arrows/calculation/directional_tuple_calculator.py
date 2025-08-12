@@ -16,7 +16,7 @@ from desktop.modern.domain.models import (
     MotionType,
     RotationDirection,
 )
-from shared.application.services.core.interfaces.positioning_services import (
+from desktop.shared.application.services.core.interfaces.positioning_services import (
     IDirectionalTupleCalculator,
 )
 

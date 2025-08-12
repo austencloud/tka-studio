@@ -296,7 +296,7 @@ class BrowseActionHandler:
         logger.warning("Initializing fallback services")
 
         # Create basic fallback implementations
-        from shared.application.services.image_export.sequence_metadata_extractor import (
+        from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
             SequenceMetadataExtractor,
         )
 

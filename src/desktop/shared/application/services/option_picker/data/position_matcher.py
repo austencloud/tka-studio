@@ -13,7 +13,7 @@ from desktop.modern.core.interfaces.positioning_services import IPositionMapper
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models import BeatData
-    from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+    from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
         PictographPositionMatcher,
     )
 

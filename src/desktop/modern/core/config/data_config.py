@@ -117,7 +117,7 @@ def _find_project_data_dir() -> Path:
         Path to data directory
     """
     try:
-        from shared.infrastructure.path_resolver import path_resolver
+        from desktop.shared.infrastructure.path_resolver import path_resolver
         return path_resolver.data_dir
     except Exception as e:
         print(f"Warning: Could not use centralized path resolver: {e}")

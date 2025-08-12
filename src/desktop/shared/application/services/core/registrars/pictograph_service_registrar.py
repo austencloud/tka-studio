@@ -63,25 +63,25 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.pictograph_services import (
                 IPictographValidator,
             )
-            from shared.application.services.data.pictograph_data_manager import (
+            from desktop.shared.application.services.data.pictograph_data_manager import (
                 IPictographDataManager,
                 PictographDataManager,
             )
-            from shared.application.services.pictograph.border_manager import (
+            from desktop.shared.application.services.pictograph.border_manager import (
                 PictographBorderManager,
             )
-            from shared.application.services.pictograph.context_detection_service import (
+            from desktop.shared.application.services.pictograph.context_detection_service import (
                 PictographContextDetector,
             )
-            from shared.application.services.pictograph.pictograph_csv_manager import (
+            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
-            from shared.application.services.pictograph.pictograph_validator import (
+            from desktop.shared.application.services.pictograph.pictograph_validator import (
                 PictographValidator,
             )
 
             # PictographScaler removed - direct views handle their own scaling
-            from shared.application.services.pictograph.simple_visibility_service import (
+            from desktop.shared.application.services.pictograph.simple_visibility_service import (
                 PictographVisibilityService,
             )
 
@@ -157,10 +157,10 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
                 from desktop.modern.application.adapters.qt_pictograph_adapter import (
                     create_qt_pictograph_adapter,
                 )
-                from shared.application.services.core.pictograph_renderer import (
+                from desktop.shared.application.services.core.pictograph_renderer import (
                     create_pictograph_renderer,
                 )
-                from shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
+                from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
                     PictographAssetManager,
                 )
 

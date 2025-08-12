@@ -11,10 +11,10 @@ from abc import ABCMeta
 from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.data.modern_to_legacy_converter import (
+from desktop.shared.application.services.data.modern_to_legacy_converter import (
     ModernToLegacyConverter,
 )
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.sequence_data_services import (
     ISequenceStartPositionManager,

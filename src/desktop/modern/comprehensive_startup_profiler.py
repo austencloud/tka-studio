@@ -162,11 +162,11 @@ def profile_complete_startup():
 
         # Phase 2: Core Imports
         with profiler.time_operation("2. Core imports"):
-            from core.application.application_factory import (
+            from desktop.modern.core.application.application_factory import (
                 ApplicationFactory,
                 ApplicationMode,
             )
-            from presentation.components.ui.splash_screen import SplashScreen
+            from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
             from PyQt6.QtGui import QGuiApplication
 
         # Phase 3: Container & Services
@@ -174,7 +174,7 @@ def profile_complete_startup():
             container = ApplicationFactory.create_app(ApplicationMode.PRODUCTION)
 
         with profiler.time_operation("4. Service initialization"):
-            from core.service_locator import initialize_services
+            from desktop.modern.core.service_locator import initialize_services
 
             initialize_services()
 
@@ -186,7 +186,7 @@ def profile_complete_startup():
 
         # Phase 5: Main Window Setup
         with profiler.time_operation("6. Main window imports"):
-            from application.services.core.application_orchestrator import (
+            from desktop.modern.application.services.core.application_orchestrator import (
                 ApplicationOrchestrator,
             )
 
@@ -213,7 +213,7 @@ def profile_complete_startup():
             )
 
         with profiler.time_operation("10. Service registration"):
-            from core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import get_container
 
             window.orchestrator.container = get_container()
             window.orchestrator.service_manager.register_all_services(

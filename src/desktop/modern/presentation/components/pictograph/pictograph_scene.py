@@ -12,7 +12,7 @@ import uuid
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtWidgets import QGraphicsScene
-from shared.application.services.pictograph.pictograph_visibility_manager import (
+from desktop.shared.application.services.pictograph.pictograph_visibility_manager import (
     get_pictograph_visibility_manager,
 )
 
@@ -60,7 +60,7 @@ class PictographScene(QGraphicsScene):
         self.scene_id = f"pictograph_scene_{uuid.uuid4().hex[:8]}"
 
         # Get simple visibility service
-        from shared.application.services.pictograph.simple_visibility_service import (
+        from desktop.shared.application.services.pictograph.simple_visibility_service import (
             get_visibility_service,
         )
 
@@ -175,7 +175,7 @@ class PictographScene(QGraphicsScene):
             return
 
         try:
-            from shared.application.services.pictograph.arrow_rendering_service import (
+            from desktop.shared.application.services.pictograph.arrow_rendering_service import (
                 ArrowRenderingService,
             )
 

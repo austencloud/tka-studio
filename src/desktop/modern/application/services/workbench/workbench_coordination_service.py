@@ -10,11 +10,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
     OperationType,
     WorkbenchOperationCoordinator,
 )
-from shared.application.services.workbench.workbench_state_manager import (
+from desktop.shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
 

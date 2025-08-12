@@ -15,13 +15,13 @@ from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
 # Import the framework-agnostic services
-from shared.application.services.core.pictograph_orchestration_service import (
+from desktop.shared.application.services.core.pictograph_orchestration_service import (
     CorePictographOrchestrationService,
 )
-from shared.application.services.core.pictograph_rendering.real_asset_provider import (
+from desktop.shared.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )
-from shared.application.services.core.types import Point, Size
+from desktop.shared.application.services.core.types import Point, Size
 
 # Import the Qt render engine from existing adapter
 from desktop.modern.application.adapters.qt_pictograph_adapter import (
@@ -359,7 +359,7 @@ class QtPictographRenderingServiceAdapter:
 
         try:
             # Import positioning services
-            from shared.application.services.positioning.arrows.calculation import (
+            from desktop.shared.application.services.positioning.arrows.calculation import (
                 ArrowLocationCalculatorService,
             )
 

@@ -11,13 +11,13 @@ import logging
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
-from shared.application.services.core.pictograph_rendering.real_asset_provider import (
+from desktop.shared.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )
-from shared.application.services.core.prop_rendering_service import (
+from desktop.shared.application.services.core.prop_rendering_service import (
     create_prop_rendering_service,
 )
-from shared.application.services.core.types import Size
+from desktop.shared.application.services.core.types import Size
 
 # Import Qt render engine from existing adapter
 from desktop.modern.application.adapters.qt_pictograph_adapter import (

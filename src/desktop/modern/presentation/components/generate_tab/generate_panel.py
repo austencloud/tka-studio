@@ -317,17 +317,12 @@ class GeneratePanel(QWidget):
     def _update_config(self, **kwargs):
         """Update configuration and emit signal."""
         try:
-            # DEBUG: Log length changes specifically
-            if "length" in kwargs:
-                print(f"🔍 [GENERATE_PANEL] Length updated to: {kwargs['length']}")
 
             self._current_config = self._current_config.with_updates(**kwargs)
             self._current_state = self._current_state.with_config(self._current_config)
 
             # DEBUG: Log the final config length
-            print(
-                f"🔍 [GENERATE_PANEL] Current config length: {self._current_config.length}"
-            )
+
 
             self.config_changed.emit(self._current_config)
         except Exception as e:
@@ -420,7 +415,6 @@ class GeneratePanel(QWidget):
             self._controller.generation_completed.connect(self._on_generation_completed)
             self._controller.config_changed.connect(self._on_controller_config_changed)
 
-            print("✅ Generation controller initialized")
 
         except Exception as e:
             print(f"❌ Failed to initialize generation controller: {e!s}")

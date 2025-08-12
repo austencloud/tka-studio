@@ -19,7 +19,7 @@ from typing import Any
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from core.performance import (
+from desktop.modern.core.performance import (
     get_memory_tracker,
     get_performance_config,
     get_profiler,
@@ -27,7 +27,7 @@ from core.performance import (
     profile,
     profile_block,
 )
-from core.performance.integration import (
+from desktop.modern.core.performance.integration import (
     get_performance_integration,
     initialize_performance_framework,
 )
@@ -122,7 +122,7 @@ class PerformanceFrameworkValidator:
             assert validation_result.is_success()
 
             # Test environment configuration
-            from core.performance.config import PerformanceConfig
+            from desktop.modern.core.performance.config import PerformanceConfig
 
             env_config_result = PerformanceConfig.from_environment()
             assert env_config_result.is_success()
@@ -260,8 +260,8 @@ class PerformanceFrameworkValidator:
         try:
             from datetime import datetime
 
-            from core.performance.metrics import FunctionMetrics
-            from core.performance.profiler import ProfilerSession
+            from desktop.modern.core.performance.metrics import FunctionMetrics
+            from desktop.modern.core.performance.profiler import ProfilerSession
 
             # Create test session
             session = ProfilerSession(
@@ -414,7 +414,7 @@ class PerformanceFrameworkValidator:
             assert result.is_success()  # Should return None gracefully
 
             # Test configuration validation with invalid data
-            from core.performance.config import ProfilingConfig
+            from desktop.modern.core.performance.config import ProfilingConfig
 
             invalid_config = ProfilingConfig(
                 overhead_threshold_percent=-1.0  # Invalid value

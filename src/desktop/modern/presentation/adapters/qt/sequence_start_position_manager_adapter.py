@@ -10,12 +10,12 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.data.modern_to_legacy_converter import (
+from desktop.shared.application.services.data.modern_to_legacy_converter import (
     ModernToLegacyConverter,
 )
-from shared.application.services.sequence.beat_factory import BeatFactory
-from shared.application.services.sequence.sequence_persister import SequencePersister
-from shared.application.services.sequence.sequence_start_position_service import (
+from desktop.shared.application.services.sequence.beat_factory import BeatFactory
+from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.shared.application.services.sequence.sequence_start_position_service import (
     SequenceStartPositionService,
 )
 

@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 # Add the project root to the path
 sys.path.insert(0, "F:/CODE/TKA")
 
-from application.services.browse.dictionary_data_manager import DictionaryDataManager
+from desktop.modern.application.services.browse.dictionary_data_manager import DictionaryDataManager
 from desktop.modern.presentation.components.browse.components.accordion_filter_panel import AccordionFilterPanel
 
 

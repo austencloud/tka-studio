@@ -19,7 +19,6 @@ class SequenceSorterService(ISequenceSorter):
         self, sequences: list[SequenceData], sort_method: str
     ) -> list[SequenceData]:
         """Sort sequences based on the selected method."""
-        print(f"🔄 Sorting {len(sequences)} sequences by {sort_method}")
 
         if sort_method == "alphabetical":
             result = sorted(sequences, key=lambda s: s.word.lower() if s.word else "")
@@ -27,9 +26,7 @@ class SequenceSorterService(ISequenceSorter):
             result = sorted(
                 sequences, key=lambda s: s.sequence_length if s.sequence_length else 0
             )
-            print(
-                f"  🔢 Length sorted: {[(seq.word, seq.sequence_length) for seq in result[:5]]}"
-            )
+
         elif sort_method == "level":
             result = sorted(sequences, key=lambda s: s.level if s.level else 0)
         elif sort_method == "date_added":

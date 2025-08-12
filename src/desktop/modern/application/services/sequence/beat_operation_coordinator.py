@@ -10,10 +10,10 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.option_picker.option_orientation_updater import (
+from desktop.shared.application.services.option_picker.option_orientation_updater import (
     OptionOrientationUpdater,
 )
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData

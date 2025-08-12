@@ -36,17 +36,14 @@ class UISetupHelper:
 
     def complete_ui_setup(self):
         """Complete UI setup with all components."""
-        print("🔧 [WORKBENCH] Starting complete UI setup...")
 
         # Remove placeholder
         if hasattr(self.workbench, "_placeholder"):
-            print("🔧 [WORKBENCH] Removing placeholder...")
             self.workbench._main_layout.removeWidget(self.workbench._placeholder)
             self.workbench._placeholder.deleteLater()
             del self.workbench._placeholder
 
         # Create sections using existing components
-        print("🔧 [WORKBENCH] Creating indicator section...")
         self.workbench._indicator_section = WorkbenchIndicatorSection(
             dictionary_service=self.workbench._safe_resolve(
                 "SequenceDictionaryService"
@@ -54,18 +51,14 @@ class UISetupHelper:
             parent=self.workbench._widget,
         )
         self.workbench._main_layout.addWidget(self.workbench._indicator_section, 0)
-        print("✅ [WORKBENCH] Indicator section created and added")
 
-        print("🔧 [WORKBENCH] Creating beat frame section...")
         self.workbench._beat_frame_section = WorkbenchBeatFrameSection(
             layout_service=self.workbench._layout_service,
             beat_selection_service=self.workbench._beat_selection_service,
             parent=self.workbench._widget,
         )
         self.workbench._main_layout.addWidget(self.workbench._beat_frame_section, 1)
-        print("✅ [WORKBENCH] Beat frame section created and added")
 
-        print("🔧 [WORKBENCH] Complete UI setup finished")
 
     def setup_button_interface(self):
         """Setup button interface adapter."""

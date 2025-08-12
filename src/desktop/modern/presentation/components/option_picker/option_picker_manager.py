@@ -11,7 +11,7 @@ import time
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.data.conversion_utils import (
+from desktop.shared.application.services.data.conversion_utils import (
     extract_end_position_from_position_key,
 )
 

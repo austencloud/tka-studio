@@ -5,7 +5,7 @@ from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
-from shared.application.services.pictograph.pictograph_csv_manager import (
+from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
     PictographCSVManager,
 )
 

@@ -67,17 +67,17 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.ui_services import (
                 IThumbnailGenerationService,
             )
-            from shared.application.services.layout.beat_layout_calculator import (
+            from desktop.shared.application.services.layout.beat_layout_calculator import (
                 BeatLayoutCalculator,
             )
-            from shared.application.services.layout.layout_manager import LayoutManager
-            from shared.application.services.ui.coordination.ui_coordinator import (
+            from desktop.shared.application.services.layout.layout_manager import LayoutManager
+            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
-            from shared.application.services.ui.thumbnail_generation_service import (
+            from desktop.shared.application.services.ui.thumbnail_generation_service import (
                 ThumbnailGenerationService,
             )
-            from shared.application.services.ui.ui_state_manager import UIStateManager
+            from desktop.shared.application.services.ui.ui_state_manager import UIStateManager
 
             # Register service types with factory functions for proper DI
             def create_layout_service():
@@ -150,11 +150,11 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
                 IWindowDiscoveryService,
                 WindowDiscoveryService,
             )
-            from shared.application.services.core.session_restoration_coordinator import (
+            from desktop.shared.application.services.core.session_restoration_coordinator import (
                 ISessionRestorationCoordinator,
                 SessionRestorationCoordinator,
             )
-            from shared.application.services.sequence.sequence_restorer import (
+            from desktop.shared.application.services.sequence.sequence_restorer import (
                 ISequenceRestorer,
                 SequenceRestorer,
             )

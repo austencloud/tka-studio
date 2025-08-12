@@ -12,7 +12,7 @@ from typing import Optional
 
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from shared.application.services.assets.image_asset_utils import (
+from desktop.shared.application.services.assets.image_asset_utils import (
     get_image_path,
 )
 

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import json
 import logging
-from pathlib import Path
 from typing import Any
 
 from desktop.modern.core.interfaces.generation_services import (
@@ -20,6 +19,7 @@ from desktop.modern.core.interfaces.generation_services import (
 )
 from desktop.modern.domain.models.enums import GridMode
 from desktop.modern.domain.models.generation_models import GenerationConfig
+from desktop.shared.infrastructure.path_resolver import path_resolver
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class SequenceConfigurationService(ISequenceConfigurationService):
         self.container = container
         self._current_config = self._create_default_config()
         self._presets: dict[str, GenerationConfig] = {}
-        self._config_file = Path("data/generation_config.json")
+        self._config_file = path_resolver.data_dir / "generation_config.json"
         self._load_config_from_file()
         logger.info("✅ Real sequence configuration service initialized")
 

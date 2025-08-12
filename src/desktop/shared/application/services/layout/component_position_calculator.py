@@ -12,7 +12,7 @@ from .beat_layout_calculator import BeatLayoutCalculator
 from .layout_types import LayoutMode
 
 try:
-    from core.decorators import handle_service_errors
+    from desktop.modern.core.decorators import handle_service_errors
 
     from desktop.modern.core.monitoring import monitor_performance
 except ImportError:

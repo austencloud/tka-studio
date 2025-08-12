@@ -65,7 +65,7 @@ from ..specialization import (
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from shared.application.services.core.events import IEventBus
+    from desktop.shared.application.services.core.events import IEventBus
 
 try:
     from desktop.modern.core.events import get_event_bus

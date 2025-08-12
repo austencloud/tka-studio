@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from shared.application.services.option_picker.option_configuration_service import (
+from desktop.shared.application.services.option_picker.option_configuration_service import (
     OptionConfigurationService,
 )
 

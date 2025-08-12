@@ -11,7 +11,7 @@ from typing import Optional
 
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
-from shared.application.services.workbench.beat_selection_service import (
+from desktop.shared.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
     SelectionChangeResult,
     SelectionType,

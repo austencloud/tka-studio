@@ -45,19 +45,19 @@ from typing import Any
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
 
 from PyQt6.QtCore import QPointF
-from shared.application.services.positioning.props.calculation.direction_calculation_service import (
+from desktop.shared.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
 )
-from shared.application.services.positioning.props.calculation.offset_calculation_service import (
+from desktop.shared.application.services.positioning.props.calculation.offset_calculation_service import (
     IOffsetCalculationService,
     OffsetCalculationService,
 )
-from shared.application.services.positioning.props.calculation.prop_classification_service import (
+from desktop.shared.application.services.positioning.props.calculation.prop_classification_service import (
     IPropClassificationService,
     PropClassificationService,
 )
-from shared.application.services.positioning.props.configuration.json_configuration_service import (
+from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
     IJSONConfigurator,
     JSONConfigurator,
 )
@@ -68,10 +68,10 @@ from desktop.modern.domain.models.enums import PropType
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from shared.application.services.core.events import IEventBus
+    from desktop.shared.application.services.core.events import IEventBus
 
 try:
-    from shared.application.services.core.events import (
+    from desktop.shared.application.services.core.events import (
         EventPriority,
         PropPositionedEvent,
         get_event_bus,

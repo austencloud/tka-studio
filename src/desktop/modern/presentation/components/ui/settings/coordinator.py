@@ -8,7 +8,7 @@ from collections.abc import Callable
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.settings.settings_coordinator import (
+from desktop.shared.application.services.settings.settings_coordinator import (
     SettingsCoordinator,
 )
 

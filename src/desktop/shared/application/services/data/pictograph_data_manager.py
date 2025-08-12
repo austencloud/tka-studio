@@ -27,18 +27,6 @@ from .dataset_query import IDatasetQuery
 logger = logging.getLogger(__name__)
 
 
-class PictographDataManager(IPictographDataManager):
-    """
-    Handles all core pictograph data operations.
-
-    Provides a clean interface for creating, updating, and querying pictographs
-    while maintaining efficient caching and indexing.
-    """
-
-    def __init__(self, cache_manager: DataCacheManager):
-        self.cache_manager = cache_manager
-
-
 class IPictographDataManager(ABC):
     """Interface for pictograph data operations."""
 

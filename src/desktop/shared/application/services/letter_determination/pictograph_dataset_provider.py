@@ -30,8 +30,8 @@ class PictographDatasetProvider(IPictographDatasetProvider):
     def __init__(self):
         """Initialize with dependency injection."""
         from desktop.modern.core.dependency_injection.di_container import get_container
-        from shared.application.services.data.dataset_query import IDatasetQuery
-        from shared.application.services.pictograph.pictograph_csv_manager import (
+        from desktop.shared.application.services.data.dataset_query import IDatasetQuery
+        from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
             IPictographCSVManager,
         )
 

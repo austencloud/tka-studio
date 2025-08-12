@@ -58,13 +58,13 @@ def test_service_imports():
     print("🔧 Testing service imports...")
 
     try:
-        from application.services.data.pictograph_dataset_service import (
+        from desktop.modern.application.services.data.pictograph_dataset_service import (
             PictographDatasetService,
         )
-        from application.services.sequences.sequence_management_service import (
+        from desktop.modern.application.services.sequences.sequence_management_service import (
             SequenceManager,
         )
-        from presentation.components.workbench.workbench import SequenceWorkbench
+        from desktop.modern.presentation.components.workbench.workbench import SequenceWorkbench
 
         print("✅ Key services import successfully!")
         return True

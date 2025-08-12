@@ -24,21 +24,21 @@ from __future__ import annotations
 
 import logging
 
-from shared.application.services.positioning.arrows.key_generators.placement_key_generator import (
+from desktop.shared.application.services.positioning.arrows.key_generators.placement_key_generator import (
     PlacementKeyGenerator,
 )
-from shared.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
+from desktop.shared.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
     TurnsTupleKeyGenerator,
 )
 
 # Import required services
-from shared.application.services.positioning.arrows.placement.default_placement_service import (
+from desktop.shared.application.services.positioning.arrows.placement.default_placement_service import (
     DefaultPlacementService,
 )
-from shared.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
+from desktop.shared.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
     SpecialPlacementOriKeyGenerator,
 )
-from shared.application.services.positioning.arrows.placement.special_placement_service import (
+from desktop.shared.application.services.positioning.arrows.placement.special_placement_service import (
     SpecialPlacementService,
 )
 

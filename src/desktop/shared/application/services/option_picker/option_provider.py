@@ -52,7 +52,7 @@ class OptionProvider(IOptionProvider):
     def _initialize_position_service(self):
         """Initialize the position matching service."""
         try:
-            from shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 

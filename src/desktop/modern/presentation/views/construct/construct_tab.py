@@ -88,10 +88,9 @@ class ConstructTab(QWidget):
     def _on_option_picker_ready(self, option_picker):
         """Handle option picker ready callback from layout manager."""
         try:
-            print("🔧 ConstructTab: Creating signal coordinator with services...")
 
             # Import required services and components
-            from shared.application.services.data.legacy_to_modern_converter import (
+            from desktop.shared.application.services.data.legacy_to_modern_converter import (
                 LegacyToModernConverter,
             )
 
@@ -173,7 +172,6 @@ class ConstructTab(QWidget):
             # Load sequence on startup
             loading_service.load_sequence_on_startup()
 
-            print("✅ ConstructTab: Signal coordinator created and services connected")
 
         except Exception as e:
             print(f"❌ ConstructTab: Failed to create signal coordinator: {e}")
@@ -294,9 +292,7 @@ class ConstructTab(QWidget):
                         self._signal_coordinator.beat_operations.add_pictograph_to_sequence(
                             beat_data
                         )
-                        print(
-                            f"✅ ConstructTab: Added beat {i + 1}: {pictograph_data.letter}"
-                        )
+
                     else:
                         print(
                             f"❌ ConstructTab: No beat operations available for beat {i + 1}"
@@ -305,9 +301,7 @@ class ConstructTab(QWidget):
                 except Exception as beat_error:
                     print(f"❌ ConstructTab: Failed to add beat {i + 1}: {beat_error}")
 
-            print(
-                f"✅ ConstructTab: Generated sequence loaded successfully ({len(sequence_data)} beats)"
-            )
+
 
         except Exception as e:
             print(f"❌ ConstructTab: Failed to load generated sequence: {e}")

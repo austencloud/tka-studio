@@ -51,9 +51,7 @@ class ComponentConnector(QObject):
         # CRITICAL: If export panel already exists, connect it to workbench
         if self.export_panel and hasattr(self.export_panel, "set_workbench_widget"):
             self.export_panel.set_workbench_widget(self.workbench)
-            print(
-                "🔗 [COMPONENT_CONNECTOR] Workbench connected to existing export panel"
-            )
+
             self._connect_export_panel_updates()
 
     def set_graph_editor(self, graph_editor):
@@ -76,7 +74,6 @@ class ComponentConnector(QObject):
         controller = getattr(generate_panel, "_controller", None)
         if controller and hasattr(controller, "generation_completed"):
             controller.generation_completed.connect(self._on_generation_completed)
-            print("🔗 [COMPONENT_CONNECTOR] Connected to GeneratePanel controller")
         # Fallback to old method if controller not available
         elif hasattr(generate_panel, "generate_requested"):
             generate_panel.generate_requested.connect(self._on_generate_requested)
@@ -99,7 +96,6 @@ class ComponentConnector(QObject):
         if self.workbench and export_panel:
             if hasattr(export_panel, "set_workbench_widget"):
                 export_panel.set_workbench_widget(self.workbench)
-                print("🔗 [COMPONENT_CONNECTOR] Workbench connected to export panel")
 
             self._connect_export_panel_updates()
 

@@ -23,15 +23,15 @@ from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
-from shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
     WorkbenchOperationCoordinator,
 )
-from shared.application.services.workbench.workbench_session_manager import (
+from desktop.shared.application.services.workbench.workbench_session_manager import (
     WorkbenchSessionManager,
 )
-from shared.application.services.workbench.workbench_state_manager import (
+from desktop.shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
 
@@ -51,7 +51,7 @@ from .beat_frame_section import WorkbenchBeatFrameSection
 
 
 if TYPE_CHECKING:
-    from shared.application.services.workbench.beat_selection_service import (
+    from desktop.shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -122,9 +122,6 @@ class SequenceWorkbench(ViewableComponentBase):
             # CRITICAL FIX: Ensure workbench widget is visible
             self._widget.show()
             self._widget.setVisible(True)
-            print(
-                f"🔧 [WORKBENCH] Workbench widget made visible: {self._widget.isVisible()}"
-            )
 
             # Mark as initialized
             self._initialized = True
@@ -254,9 +251,7 @@ class SequenceWorkbench(ViewableComponentBase):
                 self.sequence_modified.emit(complete_sequence)
 
                 # Debug output to track sequence updates
-                print(
-                    f"🔄 [WORKBENCH] Sequence updated: {sequence.length if sequence else 0} beats"
-                )
+
                 if sequence:
                     for i, beat in enumerate(sequence.beats):
                         print(
@@ -437,9 +432,7 @@ class SequenceWorkbench(ViewableComponentBase):
             new_beats[beat_index] = beat_data
             updated_sequence = sequence.update(beats=new_beats)
 
-            print(
-                f"🔧 [WORKBENCH] Beat {beat_index + 1} modified: {beat_data.letter if hasattr(beat_data, 'letter') else 'Unknown'}"
-            )
+
             self.set_sequence(updated_sequence)
 
     def _on_sequence_modified(self, sequence):

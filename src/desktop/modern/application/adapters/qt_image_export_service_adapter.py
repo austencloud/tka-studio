@@ -12,10 +12,10 @@ from typing import Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
-from shared.application.services.core.image_export_service import (
+from desktop.shared.application.services.core.image_export_service import (
     create_image_export_service,
 )
-from shared.application.services.core.types import Point, Size
+from desktop.shared.application.services.core.types import Point, Size
 
 
 logger = logging.getLogger(__name__)

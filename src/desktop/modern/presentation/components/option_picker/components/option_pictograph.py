@@ -12,7 +12,7 @@ from typing import Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
-from shared.application.services.option_picker.option_picker_size_calculator import (
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
 

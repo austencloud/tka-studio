@@ -111,7 +111,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
         """Create start position data using existing business logic"""
         try:
             # Get the dataset query service via dependency injection
-            from shared.application.services.data.dataset_query import IDatasetQuery
+            from desktop.shared.application.services.data.dataset_query import IDatasetQuery
 
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
@@ -184,10 +184,10 @@ class SetStartPositionCommand(ICommand[BeatData]):
     def _create_fallback_start_position_data(self) -> BeatData:
         """Create fallback start position data when dataset lookup fails"""
         try:
-            from shared.application.services.data.conversion_utils import (
+            from desktop.shared.application.services.data.conversion_utils import (
                 extract_end_position_from_position_key,
             )
-            from shared.application.services.sequence.beat_factory import BeatFactory
+            from desktop.shared.application.services.sequence.beat_factory import BeatFactory
 
             from desktop.modern.domain.models.pictograph_data import PictographData
 

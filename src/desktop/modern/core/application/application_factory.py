@@ -256,7 +256,7 @@ class ApplicationFactory:
     def _register_headless_business_services(container: DIContainer) -> None:
         """Register real business logic services for headless mode."""
         try:
-            from shared.application.services.pictograph.pictograph_csv_manager import (
+            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
 

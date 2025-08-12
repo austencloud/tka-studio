@@ -15,7 +15,7 @@ All domain/application/presentation absolute imports are preserved.
 
 from __future__ import annotations
 
-from shared.application.services.option_picker.option_provider import OptionProvider
+from desktop.shared.application.services.option_picker.option_provider import OptionProvider
 
 # Core components (primary public API)
 from .components.option_picker import OptionPicker

@@ -26,7 +26,7 @@ from desktop.modern.presentation.styles.mixins import StyleMixin
 
 
 try:
-    from shared.application.services.assets.image_asset_utils import get_image_path
+    from desktop.shared.application.services.assets.image_asset_utils import get_image_path
 except ImportError:
     # Fallback if import fails
     def get_image_path(filename: str) -> str:
@@ -169,7 +169,6 @@ class ImageAccordionContent(QFrame, StyleMixin):
 
     def _create_difficulty_layout(self, layout: QHBoxLayout) -> None:
         """Create difficulty layout with large level images like legacy version."""
-        print(f"🔍 [DEBUG] Difficulty options received: {self.options}")
 
         # Legacy difficulty level configuration (matching legacy system)
         DIFFICULTY_CONFIG = {
@@ -184,7 +183,7 @@ class ImageAccordionContent(QFrame, StyleMixin):
 
         # Image directory (using centralized path resolver)
         try:
-            from shared.infrastructure.path_resolver import path_resolver
+            from desktop.shared.infrastructure.path_resolver import path_resolver
             image_dir = path_resolver.get_image_path("level_images")
         except Exception as e:
             print(f"Warning: Could not use centralized path resolver: {e}")
@@ -193,8 +192,6 @@ class ImageAccordionContent(QFrame, StyleMixin):
             desktop_root = current_file.parent.parent.parent.parent.parent.parent
             image_dir = desktop_root / "images" / "level_images"
 
-        print(f"🔍 [DEBUG] Looking for level images at: {image_dir}")
-        print(f"🔍 [DEBUG] Directory exists: {image_dir.exists()}")
 
         # Create grid layout for proper spacing and centering
         grid_layout = QGridLayout()
@@ -294,13 +291,12 @@ class ImageAccordionContent(QFrame, StyleMixin):
 
     def _create_grid_mode_layout(self, layout: QHBoxLayout) -> None:
         """Create grid mode layout with large SVG pictographs like legacy version."""
-        print(f"🔍 [DEBUG] Grid mode options received: {self.options}")
 
         # Legacy grid mode configuration (matching legacy system)
 
         # Image directory (using centralized path resolver)
         try:
-            from shared.infrastructure.path_resolver import path_resolver
+            from desktop.shared.infrastructure.path_resolver import path_resolver
             image_dir = path_resolver.get_image_path("grid")
         except Exception as e:
             print(f"Warning: Could not use centralized path resolver: {e}")
@@ -308,9 +304,6 @@ class ImageAccordionContent(QFrame, StyleMixin):
             current_file = Path(__file__)
             desktop_root = current_file.parent.parent.parent.parent.parent.parent
             image_dir = desktop_root / "images" / "grid"
-
-        print(f"🔍 [DEBUG] Looking for grid images at: {image_dir}")
-        print(f"🔍 [DEBUG] Directory exists: {image_dir.exists()}")
 
         # Create grid layout for proper spacing and centering
         grid_layout = QGridLayout()

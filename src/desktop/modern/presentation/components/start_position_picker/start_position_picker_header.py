@@ -14,8 +14,8 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 # Import the legacy PyToggle for animated grid mode switching
-from domain.models.enums import PickerMode
-from presentation.components.ui.pytoggle import PyToggle
+from desktop.modern.domain.models.enums import PickerMode
+from desktop.modern.presentation.components.ui.pytoggle import PyToggle
 
 
 logger = logging.getLogger(__name__)

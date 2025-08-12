@@ -1,0 +1,73 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A81CED;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8c0bcf;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#6a0a9e;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <!-- Flow patterns -->
+    <pattern id="flowPattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+      <circle cx="100" cy="100" r="2" fill="rgba(255,255,255,0.1)"/>
+      <path d="M50,50 Q100,20 150,50 T250,50" stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
+      <path d="M20,100 Q50,70 80,100 T140,100" stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
+    </pattern>
+  </defs>
+  
+  <!-- Main background -->
+  <rect width="1920" height="1080" fill="url(#heroGradient)"/>
+  
+  <!-- Flow pattern overlay -->
+  <rect width="1920" height="1080" fill="url(#flowPattern)"/>
+  
+  <!-- Abstract flow art shapes representing poi/staff movements -->
+  <!-- Poi trails -->
+  <g opacity="0.15">
+    <circle cx="300" cy="200" r="8" fill="white">
+      <animateTransform attributeName="transform" type="rotate" values="0 300 200;360 300 200" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M300,200 Q350,150 400,200 Q450,250 500,200" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+  </g>
+  
+  <g opacity="0.12">
+    <circle cx="1500" cy="300" r="6" fill="white">
+      <animateTransform attributeName="transform" type="rotate" values="0 1500 300;-360 1500 300" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M1500,300 Q1450,250 1400,300 Q1350,350 1300,300" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+  </g>
+  
+  <!-- Staff movement arcs -->
+  <g opacity="0.1">
+    <path d="M200,800 Q600,600 1000,800 Q1400,1000 1800,800" stroke="white" stroke-width="3" fill="none"/>
+    <path d="M100,900 Q500,700 900,900 Q1300,1100 1700,900" stroke="white" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Geometric flow elements -->
+  <g opacity="0.08">
+    <!-- Infinity symbol representing continuous flow -->
+    <path d="M800,400 Q850,350 900,400 Q950,450 1000,400 Q950,350 900,400 Q850,450 800,400" stroke="white" stroke-width="2" fill="none"/>
+    
+    <!-- Spiral representing poi movement -->
+    <path d="M1200,600 Q1250,550 1300,600 Q1350,650 1300,700 Q1250,750 1200,700 Q1150,650 1200,600" stroke="white" stroke-width="1.5" fill="none"/>
+  </g>
+  
+  <!-- Subtle particle effects -->
+  <g opacity="0.2">
+    <circle cx="150" cy="150" r="1" fill="white">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1750" cy="200" r="1.5" fill="white">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="300" cy="950" r="1" fill="white">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1600" cy="900" r="1.5" fill="white">
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Central focal area (lighter for text readability) -->
+  <ellipse cx="960" cy="540" rx="400" ry="200" fill="rgba(255,255,255,0.05)"/>
+</svg>

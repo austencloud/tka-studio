@@ -41,7 +41,7 @@ class MotionServiceRegistrar(BaseServiceRegistrar):
         self._update_progress("Registering motion services...")
 
         try:
-            from shared.application.services.motion.orientation_calculator import (
+            from desktop.shared.application.services.motion.orientation_calculator import (
                 IOrientationCalculator,
                 OrientationCalculator,
             )

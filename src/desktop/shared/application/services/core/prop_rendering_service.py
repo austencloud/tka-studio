@@ -10,10 +10,10 @@ import logging
 from abc import ABC, abstractmethod
 
 from desktop.modern.domain.models import MotionData, PictographData
-from shared.application.services.core.pictograph_renderer import (
+from desktop.shared.application.services.core.pictograph_renderer import (
     IPictographAssetProvider,
 )
-from shared.application.services.core.types import Point, RenderCommand, Size
+from desktop.shared.application.services.core.types import Point, RenderCommand, Size
 
 logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ class CorePropRenderingService(IPropRenderingService):
             # the existing PropManagementService.calculate_separation_offsets()
 
             # Import here to avoid circular dependencies
-            from shared.application.services.positioning.props.orchestration.prop_management_service import (
+            from desktop.shared.application.services.positioning.props.orchestration.prop_management_service import (
                 PropManagementService,
             )
 

@@ -105,7 +105,7 @@ class SequenceGenerator(ISequenceGenerator):
             )
 
             # FIXED: Use proper turn allocation algorithm
-            from shared.application.services.generation.turn_intensity_manager import (
+            from desktop.shared.application.services.generation.turn_intensity_manager import (
                 TurnIntensityManagerFactory,
             )
 
@@ -116,7 +116,7 @@ class SequenceGenerator(ISequenceGenerator):
             )
 
             # FIXED: Use proper rotation determination
-            from shared.application.services.generation.freeform_generation_service import (
+            from desktop.shared.application.services.generation.freeform_generation_service import (
                 RotationDeterminer,
             )
 

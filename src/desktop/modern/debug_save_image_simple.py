@@ -39,7 +39,7 @@ def test_coordinator_without_rendering():
 
         # Step 2: Create state manager and set sequence
         print("\n🔧 Step 2: Creating state manager...")
-        from shared.application.services.workbench.workbench_state_manager import (
+        from desktop.shared.application.services.workbench.workbench_state_manager import (
             WorkbenchStateManager,
         )
 
@@ -64,7 +64,7 @@ def test_coordinator_without_rendering():
 
         # Step 4: Create operation coordinator
         print("\n🔧 Step 4: Creating operation coordinator...")
-        from shared.application.services.workbench.workbench_operation_coordinator import (
+        from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
             WorkbenchOperationCoordinator,
         )
 
@@ -110,7 +110,7 @@ def test_actual_workbench_setup():
         # Check how the workbench service registrar creates the coordinator
         print("\n🔧 Testing service registrar...")
         from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from shared.application.services.core.registrars.workbench_service_registrar import (
+        from desktop.shared.application.services.core.registrars.workbench_service_registrar import (
             WorkbenchServiceRegistrar,
         )
 

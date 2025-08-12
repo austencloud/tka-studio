@@ -10,11 +10,11 @@ from __future__ import annotations
 from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.sequence.beat_factory import BeatFactory
-from shared.application.services.sequence.sequence_beat_operations_service import (
+from desktop.shared.application.services.sequence.beat_factory import BeatFactory
+from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
     SequenceBeatOperationsService,
 )
-from shared.application.services.sequence.sequence_persister import SequencePersister
+from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.beat_data import BeatData

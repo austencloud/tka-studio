@@ -74,7 +74,7 @@ def register_browse_services(
         container.register_factory(IBrowseService, lambda: BrowseService(sequences_dir))
 
         # Register dictionary data manager
-        from application.services.browse.dictionary_data_manager import (
+        from desktop.modern.application.services.browse.dictionary_data_manager import (
             DictionaryDataManager,
         )
 

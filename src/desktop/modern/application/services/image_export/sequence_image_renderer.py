@@ -28,11 +28,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 from PyQt6.QtGui import QImage
 
 # Import the Qt adapter for actual rendering
-from shared.application.adapters.qt_image_export_adapter import (
+from desktop.shared.application.adapters.qt_image_export_adapter import (
     QtImageExportAdapter,
     create_qt_image_export_adapter,
 )
-from shared.application.services.core.image_export_service import CoreImageExportService
+from desktop.shared.application.services.core.image_export_service import CoreImageExportService
 
 from desktop.modern.core.interfaces.image_export_services import (
     ImageExportOptions,

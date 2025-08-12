@@ -20,7 +20,7 @@ from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.enums import MotionType
 from desktop.modern.domain.models.letter_condition import LetterCondition
 from desktop.modern.domain.models.pictograph_data import PictographData
-from shared.application.services.pictograph.pictograph_validator import (
+from desktop.shared.application.services.pictograph.pictograph_validator import (
     PictographValidator,
 )
 
@@ -239,7 +239,7 @@ class PlacementKeyGenerator(IPlacementKeyGenerator):
             return Orientation.IN  # Default
 
         # Calculate end orientation similar to legacy
-        from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
             OrientationCalculator,
         )
 

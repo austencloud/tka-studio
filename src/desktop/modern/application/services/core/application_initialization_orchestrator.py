@@ -17,7 +17,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 
 from PyQt6.QtWidgets import QMainWindow
-from shared.application.services.core.session_restoration_coordinator import (
+from desktop.shared.application.services.core.session_restoration_coordinator import (
     ISessionRestorationCoordinator,
 )
 

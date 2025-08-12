@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from shared.application.services.ui.ui_settings_manager import UISettingsManager
+from desktop.shared.application.services.ui.ui_settings_manager import UISettingsManager
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.presentation.components.ui.settings.tabs.background_tab import (
@@ -151,7 +151,7 @@ class SettingsDialog(QDialog, StyleMixin):
 
     def _setup_coordinator(self):
         """Setup the settings coordinator for managing state."""
-        from shared.application.services.settings.settings_coordinator import (
+        from desktop.shared.application.services.settings.settings_coordinator import (
             SettingsCoordinator,
         )
 

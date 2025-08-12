@@ -8,7 +8,7 @@ from __future__ import annotations
 import time
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from shared.application.services.backgrounds.snowfall.snowflake_physics import (
+from desktop.shared.application.services.backgrounds.snowfall.snowflake_physics import (
     SnowflakePhysics,
 )
 

@@ -49,15 +49,15 @@ def test_service_registrar_imports():
     """Test that service registrars can be imported."""
     try:
         # Test sequence card registrar
-        from shared.application.services.core.registrars.sequence_card_service_registrar import SequenceCardServiceRegistrar
+        from desktop.shared.application.services.core.registrars.sequence_card_service_registrar import SequenceCardServiceRegistrar
         logger.info("✅ SequenceCardServiceRegistrar imports successfully")
         
         # Test that it's included in registrars init
-        from shared.application.services.core.registrars import SequenceCardServiceRegistrar as ImportedRegistrar
+        from desktop.shared.application.services.core.registrars import SequenceCardServiceRegistrar as ImportedRegistrar
         logger.info("✅ SequenceCardServiceRegistrar available in registrars module")
         
         # Test service registration coordinator includes it
-        from shared.application.services.core.service_registration_manager import ServiceRegistrationCoordinator
+        from desktop.shared.application.services.core.service_registration_manager import ServiceRegistrationCoordinator
         coordinator = ServiceRegistrationCoordinator()
         
         registrar_names = [r.get_domain_name() for r in coordinator._registrars]

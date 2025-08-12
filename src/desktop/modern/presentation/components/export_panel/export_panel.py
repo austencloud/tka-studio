@@ -216,9 +216,7 @@ class ExportPanel(QWidget):
         if self.workbench_widget and hasattr(self.workbench_widget, "get_sequence"):
             try:
                 current_sequence = self.workbench_widget.get_sequence()
-                print(
-                    f"📊 [EXPORT_PANEL] Got sequence: {current_sequence.length if current_sequence else 0} beats"
-                )
+
 
                 # Try to get word/name
                 if hasattr(self.workbench_widget, "get_current_word"):
@@ -316,9 +314,7 @@ class ExportPanel(QWidget):
 
     def _on_workbench_sequence_changed(self, sequence):
         """Handle sequence changes from workbench."""
-        print(
-            f"📊 [EXPORT_PANEL] Sequence changed: {sequence.length if sequence else 0} beats"
-        )
+
         self._update_preview()
 
     def update_preview_from_external(self, pixmap=None):

@@ -63,7 +63,6 @@ class ConstructTabView(QWidget):
             # Let layout manager setup the UI on parent widget
             self._layout_manager.setup_ui(self._parent_widget)
 
-            print("✅ ConstructTabView UI setup completed")
 
         except Exception as e:
             print(f"❌ Failed to setup ConstructTabView UI: {e}")

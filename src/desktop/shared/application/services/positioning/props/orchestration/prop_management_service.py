@@ -663,7 +663,7 @@ class PropManagementService(IPropManagementService):
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
-            from shared.application.services.positioning.props.configuration.json_configuration_service import (
+            from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
                 IJSONConfigurator,
             )
 
@@ -679,7 +679,7 @@ class PropManagementService(IPropManagementService):
             )
 
             # Fallback to creating new instance if DI fails
-            from shared.application.services.positioning.props.configuration.json_configuration_service import (
+            from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
                 JSONConfigurator,
             )
 

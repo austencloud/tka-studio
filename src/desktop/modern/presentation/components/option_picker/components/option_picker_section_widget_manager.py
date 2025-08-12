@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from shared.application.services.option_picker.option_pool_service import (
+from desktop.shared.application.services.option_picker.option_pool_service import (
     OptionPoolService,
 )
 

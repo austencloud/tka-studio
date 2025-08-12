@@ -256,7 +256,7 @@ class SequenceOrientationValidator:
         updated_props = {}
 
         # Import orientation calculator for end orientation calculation
-        from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
             OrientationCalculator,
         )
 
@@ -392,7 +392,7 @@ class SequenceOrientationValidator:
                         fixed_motion = curr_motion.update(start_ori=prev_end_ori)
 
                         # Recalculate end orientation with the fixed start
-                        from shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+                        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
                             OrientationCalculator,
                         )
 

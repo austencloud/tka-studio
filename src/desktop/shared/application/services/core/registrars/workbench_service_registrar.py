@@ -90,16 +90,16 @@ class WorkbenchServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.workbench_services import (
                 IWorkbenchSessionManager,
             )
-            from shared.application.services.workbench.beat_selection_service import (
+            from desktop.shared.application.services.workbench.beat_selection_service import (
                 BeatSelectionService,
             )
-            from shared.application.services.workbench.workbench_operation_coordinator import (
+            from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
                 WorkbenchOperationCoordinator,
             )
-            from shared.application.services.workbench.workbench_session_manager import (
+            from desktop.shared.application.services.workbench.workbench_session_manager import (
                 WorkbenchSessionManager,
             )
-            from shared.application.services.workbench.workbench_state_manager import (
+            from desktop.shared.application.services.workbench.workbench_state_manager import (
                 WorkbenchStateManager,
             )
 

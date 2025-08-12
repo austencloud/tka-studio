@@ -12,7 +12,7 @@ import logging
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
-from shared.application.services.pictograph.simple_visibility_service import (
+from desktop.shared.application.services.pictograph.simple_visibility_service import (
     get_visibility_service,
 )
 
@@ -273,7 +273,7 @@ class VisibilityTab(QWidget):
                 element_states = self.element_section.get_element_states()
 
             # Update the simple visibility service with all states
-            from shared.application.services.pictograph.simple_visibility_service import (
+            from desktop.shared.application.services.pictograph.simple_visibility_service import (
                 get_visibility_service,
             )
 

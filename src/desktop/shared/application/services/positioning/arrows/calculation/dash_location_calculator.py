@@ -18,7 +18,7 @@ from desktop.modern.domain.models import (
 )
 from desktop.modern.domain.models.enums import GridMode
 from desktop.modern.domain.models.pictograph_data import PictographData
-from shared.application.services.pictograph.analyzer import PictographAnalyzer
+from desktop.shared.application.services.pictograph.analyzer import PictographAnalyzer
 
 
 class DashLocationCalculator(IDashLocationCalculator):

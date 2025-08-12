@@ -3,10 +3,10 @@ from __future__ import annotations
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtWidgets import QWidget
-from shared.application.services.backgrounds.starfield.comet_trajectory import (
+from desktop.shared.application.services.backgrounds.starfield.comet_trajectory import (
     CometTrajectory,
 )
-from shared.application.services.backgrounds.starfield.star_twinkling import (
+from desktop.shared.application.services.backgrounds.starfield.star_twinkling import (
     StarTwinkling,
 )
 

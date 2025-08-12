@@ -15,7 +15,7 @@ from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
 
 
 if TYPE_CHECKING:
-    from shared.application.services.workbench.beat_selection_service import (
+    from desktop.shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -132,7 +132,6 @@ class WorkbenchBeatFrameSection(QWidget):
             f"📊 [BEAT_FRAME_SECTION] Current selected beat index: {self.get_selected_beat_index()}"
         )
         self.delete_beat_requested.emit()
-        print("✅ [BEAT_FRAME_SECTION] Delete beat signal emitted")
 
     def _handle_clear_sequence_request(self):
         """Handle clear sequence request from button panel"""
@@ -147,14 +146,11 @@ class WorkbenchBeatFrameSection(QWidget):
 
     def set_sequence(self, sequence: Optional[SequenceData]):
         """Set the current sequence"""
-        print(
-            f"🎯 [BEAT_FRAME_SECTION] Setting sequence: {sequence.length if sequence else 0} beats"
-        )
+
 
         self._current_sequence = sequence
         if self._beat_frame:
             self._beat_frame.set_sequence(sequence)
-            print("✅ [BEAT_FRAME_SECTION] Beat frame updated with sequence")
         else:
             print("⚠️ [BEAT_FRAME_SECTION] No beat frame available")
 
@@ -183,18 +179,12 @@ class WorkbenchBeatFrameSection(QWidget):
 
     def initialize_cleared_start_position(self):
         """Initialize start position view in cleared state (shows START text only)"""
-        print("🔧 [BEAT_FRAME_SECTION] Making beat frame section visible...")
         self.show()
         self.setVisible(True)
-        print(
-            f"🔧 [BEAT_FRAME_SECTION] Beat frame section visible after show(): {self.isVisible()}"
-        )
+
 
         # Debug parent visibility
         parent = self.parent()
-        if parent:
-            print(f"🔧 [BEAT_FRAME_SECTION] Parent visible: {parent.isVisible()}")
-            print(f"🔧 [BEAT_FRAME_SECTION] Parent class: {parent.__class__.__name__}")
 
         self._start_position_data = None
         if self._beat_frame:
