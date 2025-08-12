@@ -21,18 +21,18 @@ from .question_display import (
 
 
 __all__ = [
+    "AnswerLayoutManager",
+    "AnswerOptionFactory",
+    "AnswerOptions",
+    "LessonControls",
+    "LessonTimer",
+    "LetterQuestionRenderer",
+    "PictographQuestionRenderer",
+    "ProgressControls",
+    "ProgressInfo",
     # Main components
     "QuestionDisplay",
-    "AnswerOptions",
-    "ProgressControls",
-    "LessonTimer",
-    "LessonControls",
     # Supporting classes
     "QuestionRenderer",
-    "PictographQuestionRenderer",
-    "LetterQuestionRenderer",
     "TextQuestionRenderer",
-    "AnswerOptionFactory",
-    "AnswerLayoutManager",
-    "ProgressInfo",
 ]

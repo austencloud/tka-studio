@@ -92,7 +92,7 @@ class PerformanceFrameworkValidator:
                     all_passed = False
 
             except Exception as e:
-                logger.error(f"❌ {test_name}: EXCEPTION - {e}")
+                logger.exception(f"❌ {test_name}: EXCEPTION - {e}")
                 self.validation_results[test_name] = {
                     "passed": False,
                     "error": str(e),
@@ -328,7 +328,6 @@ class PerformanceFrameworkValidator:
                 "validation_integration_test"
             )
             assert result.is_success()
-            session_id = result.value
 
             result = self.integration.stop_performance_session()
             assert result.is_success()
@@ -416,7 +415,7 @@ class PerformanceFrameworkValidator:
             # Test configuration validation with invalid data
             from desktop.modern.core.performance.config import ProfilingConfig
 
-            invalid_config = ProfilingConfig(
+            ProfilingConfig(
                 overhead_threshold_percent=-1.0  # Invalid value
             )
 

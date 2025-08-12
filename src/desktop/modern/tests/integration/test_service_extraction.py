@@ -4,10 +4,10 @@ Integration Tests for Service Extraction
 This module tests the integration between extracted services and the dependency
 injection container to ensure the refactoring maintains functionality.
 """
-
-from unittest.mock import Mock, patch
+from __future__ import annotations
 
 import pytest
+
 from core.application.application_factory import ApplicationFactory
 from core.interfaces.core_services import IObjectPoolManager
 from core.interfaces.positioning_services import IPositionMatchingService

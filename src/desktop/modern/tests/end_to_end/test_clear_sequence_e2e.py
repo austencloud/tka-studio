@@ -9,22 +9,20 @@ This test validates the complete clear sequence workflow by:
 3. Validating state transitions and persistence
 4. Confirming the exact user experience works correctly
 """
+from __future__ import annotations
 
-import json
-import os
-import sys
-import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequence.sequence_persister import SequencePersister
-from core.application.application_factory import ApplicationFactory
-from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QPushButton, QWidget
+
+from application.services.sequence.sequence_persister import SequencePersister
+from core.application.application_factory import ApplicationFactory
 
 
 class TKAUIAutomation:
@@ -74,21 +72,21 @@ class TKAUIAutomation:
 
         return self.main_window is not None
 
-    def _find_widget_by_type(self, type_name: str) -> Optional[QWidget]:
+    def _find_widget_by_type(self, type_name: str) -> QWidget | None:
         """Find widget by class name"""
         for widget in self.app.allWidgets():
             if type_name in str(type(widget)):
                 return widget
         return None
 
-    def _find_widget_by_object_name(self, object_name: str) -> Optional[QWidget]:
+    def _find_widget_by_object_name(self, object_name: str) -> QWidget | None:
         """Find widget by object name"""
         for widget in self.app.allWidgets():
             if hasattr(widget, "objectName") and widget.objectName() == object_name:
                 return widget
         return None
 
-    def find_clear_sequence_button(self) -> Optional[QPushButton]:
+    def find_clear_sequence_button(self) -> QPushButton | None:
         """Locate the clear sequence button"""
         print("🔍 [UI_AUTOMATION] Searching for clear sequence button...")
 
@@ -134,12 +132,11 @@ class TKAUIAutomation:
         current_index = picker_stack.currentIndex()
         if current_index == 0:
             return "start_position_picker"
-        elif current_index == 1:
+        if current_index == 1:
             return "option_picker"
-        elif current_index == 2:
+        if current_index == 2:
             return "graph_editor"
-        else:
-            return f"unknown_index_{current_index}"
+        return f"unknown_index_{current_index}"
 
     def click_clear_sequence_button(self) -> bool:
         """Click the clear sequence button"""
@@ -147,7 +144,7 @@ class TKAUIAutomation:
         if not button:
             return False
 
-        print(f"🖱️ [UI_AUTOMATION] Clicking clear sequence button...")
+        print("🖱️ [UI_AUTOMATION] Clicking clear sequence button...")
         QTest.mouseClick(button, 1)  # Left click
 
         # Wait for UI to update
@@ -211,9 +208,6 @@ class ClearSequenceE2ETest:
 
             # Create the main UI components directly
             try:
-                from presentation.components.workbench.workbench import (
-                    SequenceWorkbench,
-                )
                 from presentation.tabs.construct.construct_tab_widget import (
                     ConstructTabWidget,
                 )
@@ -311,11 +305,10 @@ class ClearSequenceE2ETest:
                     f"📝 [E2E_TEST] Beat 1: letter='{loaded_sequence[2].get('letter')}'"
                 )
                 return True
-            else:
-                print(
-                    f"❌ [E2E_TEST] REAL test sequence creation failed: only {len(loaded_sequence)} items"
-                )
-                return False
+            print(
+                f"❌ [E2E_TEST] REAL test sequence creation failed: only {len(loaded_sequence)} items"
+            )
+            return False
 
         except Exception as e:
             print(f"❌ [E2E_TEST] Failed to create REAL test sequence: {e}")
@@ -495,9 +488,8 @@ def main():
     if success:
         print("\n🎉 END-TO-END TEST SUITE: SUCCESS")
         return 0
-    else:
-        print("\n❌ END-TO-END TEST SUITE: FAILED")
-        return 1
+    print("\n❌ END-TO-END TEST SUITE: FAILED")
+    return 1
 
 
 if __name__ == "__main__":

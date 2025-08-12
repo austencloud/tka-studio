@@ -4,13 +4,13 @@ Arrow Rendering Service Interface
 Interface for arrow rendering business logic to ensure proper separation
 of concerns and enable testing.
 """
+from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Set, Tuple
 
-from domain.models import Location, MotionData
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.pictograph_data import PictographData
+from domain.models import MotionData
 
 
 class IArrowRenderingService(ABC):
@@ -31,7 +31,7 @@ class IArrowRenderingService(ABC):
 
     # Caching Operations
     @abstractmethod
-    def load_cached_svg_data(self, svg_path: str) -> Optional[str]:
+    def load_cached_svg_data(self, svg_path: str) -> str | None:
         """Load and cache SVG data from file."""
 
     @abstractmethod
@@ -43,15 +43,15 @@ class IArrowRenderingService(ABC):
     def calculate_arrow_position(
         self,
         arrow_data: ArrowData,
-        pictograph_data: Optional[PictographData] = None,
+        pictograph_data: PictographData | None = None,
         positioning_orchestrator=None,
         coordinate_system=None,
-    ) -> Tuple[float, float, float]:
+    ) -> tuple[float, float, float]:
         """Calculate arrow position using available positioning services."""
 
     # Cache Management
     @abstractmethod
-    def get_cache_statistics(self) -> Dict[str, int]:
+    def get_cache_statistics(self) -> dict[str, int]:
         """Get current cache statistics for monitoring."""
 
     @abstractmethod
@@ -68,5 +68,5 @@ class IArrowRenderingService(ABC):
         """Validate if a motion should be rendered as visible."""
 
     @abstractmethod
-    def get_service_summary(self) -> Dict[str, any]:
+    def get_service_summary(self) -> dict[str, any]:
         """Get a summary of the service state."""

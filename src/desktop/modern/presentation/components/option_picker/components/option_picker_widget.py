@@ -38,7 +38,7 @@ class OptionPickerWidget(QWidget):
     def __init__(
         self,
         parent=None,
-        mw_size_provider: Callable[[], QSize] = None,
+        mw_size_provider: Callable[[], QSize] | None = None,
         progress_callback: Callable[[str, float], None] | None = None,
         container: DIContainer | None = None,
     ):

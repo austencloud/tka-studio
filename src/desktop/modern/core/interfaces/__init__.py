@@ -92,49 +92,49 @@ from .workbench_services import *
 
 
 __all__ = [
-    # Core services
-    "ILayoutService",
-    "ISettingsCoordinator",
-    "ISequenceDataService",
-    "IValidationService",
     "IArrowManagementService",
-    "ISequenceManager",
-    "IPictographManager",
-    "IUIStateManager",
-    "IUIStateManagementService",
-    "IPictographContextDetector",
-    "IPictographBorderManager",
-    "IObjectPoolManager",
-    "IObjectPoolService",
-    # Layout services
-    "IBeatLayoutCalculator",
-    "IResponsiveScalingCalculator",
-    "IBeatResizer",
-    "IComponentSizer",
-    "IComponentPositionCalculator",
-    "IDimensionCalculator",
-    # Motion services
-    "IOrientationCalculator",
-    "ITurnIntensityManager",
-    "ITurnIntensityManagerFactory",
-    # Pictograph services
-    "IPictographValidator",
-    "RenderingContext",
     # Settings services
     "IBackgroundSettingsManager",
-    "IVisibilitySettingsManager",
+    # Layout services
+    "IBeatLayoutCalculator",
+    "IBeatLayoutService",
     "IBeatLayoutSettingsManager",
-    "IPropTypeSettingsManager",
-    "IUserProfileSettingsManager",
+    "IBeatResizer",
+    "IComponentPositionCalculator",
+    "IComponentSizer",
+    "IDimensionCalculator",
     "IImageExportSettingsManager",
+    "IImageExporter",
+    # Core services
+    "ILayoutService",
+    "IObjectPoolManager",
+    "IObjectPoolService",
+    # Motion services
+    "IOrientationCalculator",
+    "IPictographBorderManager",
+    "IPictographContextDetector",
+    "IPictographManager",
+    # Pictograph services
+    "IPictographValidator",
+    "IPropTypeSettingsManager",
+    "IPropTypeSettingsManager",
+    "IResponsiveScalingCalculator",
+    "ISequenceDataService",
+    "ISequenceManager",
+    "ISettingsCoordinator",
+    "ITurnIntensityManager",
+    "ITurnIntensityManagerFactory",
+    "IUIStateManagementService",
+    "IUIStateManager",
     # Tab settings
     "IUserProfileService",
-    "IPropTypeSettingsManager",
+    "IUserProfileSettingsManager",
+    "IValidationService",
     "IVisibilityService",
     "IVisibilitySettingsManager",
-    "IBeatLayoutService",
-    "IImageExporter",
+    "IVisibilitySettingsManager",
+    "IWorkbenchClipboardService",
     # Workbench services
     "IWorkbenchExportService",
-    "IWorkbenchClipboardService",
+    "RenderingContext",
 ]

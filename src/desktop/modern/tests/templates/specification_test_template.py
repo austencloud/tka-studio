@@ -9,9 +9,9 @@ This is a PERMANENT test that enforces a behavioral contract.
 NEVER suggest deletion unless the entire feature is removed.
 Focus on testing contracts, not implementation details.
 """
+from __future__ import annotations
 
 import pytest
-from unittest.mock import Mock, patch
 
 
 @pytest.mark.specification

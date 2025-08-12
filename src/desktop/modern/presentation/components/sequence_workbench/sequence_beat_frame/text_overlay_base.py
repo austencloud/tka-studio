@@ -10,8 +10,6 @@ Unified approach based on successful BeatNumberOverlay implementation.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QLabel, QWidget
@@ -27,7 +25,7 @@ class TextOverlayBase(QLabel):
     Provides common scaling, positioning, and styling functionality.
     """
 
-    def __init__(self, text: str, parent_widget: Optional[QWidget] = None):
+    def __init__(self, text: str, parent_widget: QWidget | None = None):
         super().__init__(text, parent_widget)
 
         self._parent_widget = parent_widget
@@ -252,7 +250,7 @@ class TextOverlayBase(QLabel):
 
 def add_text_overlay_to_view(
     view_widget: QWidget, overlay_instance
-) -> Optional[object]:
+) -> object | None:
     """
     Add text overlay to a view widget with proper lifecycle management.
 

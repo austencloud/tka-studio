@@ -164,7 +164,7 @@ class ServiceRegistry:
         registrations = {}
 
         # Add singleton instances
-        for interface in self.singletons.keys():
+        for interface in self.singletons:
             registrations[interface] = type(self.singletons[interface])
 
         # Add service registrations

@@ -8,10 +8,10 @@ AUTHOR: @austencloud
 """
 
 # Setup project imports using proper path resolution
-
-from pathlib import Path
+from __future__ import annotations
 
 import pytest
+
 from application.services.pictograph.pictograph_manager import (
     PictographManager as PictographManagementService,
 )
@@ -171,5 +171,5 @@ class TestGlyphVisibilityType2Prevention:
         for letter in all_letters:
             beat_data = BeatData(letter=letter)
             # Should not raise an exception
-            glyph_data = pictograph_service._generate_glyph_data(beat_data)
+            pictograph_service._generate_glyph_data(beat_data)
             # Glyph data can be None or a valid object, but should not crash

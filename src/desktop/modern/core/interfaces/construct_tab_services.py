@@ -7,7 +7,7 @@ and eliminate the None initialization anti-pattern.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Protocol
+from typing import Any, Protocol
 
 from PyQt6.QtWidgets import QWidget
 
@@ -81,7 +81,7 @@ class IConstructTabComponentFactory(Protocol):
 class IConstructTabCoordinationService(Protocol):
     """Interface for coordinating construct tab components."""
 
-    def setup_component_coordination(self, components: Dict[str, Any]) -> None:
+    def setup_component_coordination(self, components: dict[str, Any]) -> None:
         """Set up coordination between components."""
         ...
 
@@ -97,7 +97,7 @@ class IConstructTabCoordinationService(Protocol):
         """Handle beat added events."""
         ...
 
-    def handle_generation_request(self, generation_config: Dict[str, Any]) -> None:
+    def handle_generation_request(self, generation_config: dict[str, Any]) -> None:
         """Handle generation request events."""
         ...
 
@@ -117,7 +117,7 @@ class IWorkbenchCoordinationService(Protocol):
         """Handle workbench operations."""
         ...
 
-    def update_workbench_state(self, sequence: Optional[SequenceData]) -> None:
+    def update_workbench_state(self, sequence: SequenceData | None) -> None:
         """Update workbench state."""
         ...
 
@@ -129,11 +129,11 @@ class IWorkbenchUIService(Protocol):
         """Set up workbench UI and return the main widget."""
         ...
 
-    def update_sequence_display(self, sequence: Optional[SequenceData]) -> None:
+    def update_sequence_display(self, sequence: SequenceData | None) -> None:
         """Update sequence display."""
         ...
 
-    def update_beat_selection(self, beat_index: Optional[int]) -> None:
+    def update_beat_selection(self, beat_index: int | None) -> None:
         """Update beat selection display."""
         ...
 

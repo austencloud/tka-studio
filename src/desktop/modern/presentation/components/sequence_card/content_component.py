@@ -251,7 +251,7 @@ class SequenceCardContentComponent(QWidget):
             self.sequences_displayed.emit(len(self.current_sequences))
 
         except Exception as e:
-            logger.error(f"Error refreshing display immediately: {e}")
+            logger.exception(f"Error refreshing display immediately: {e}")
             self._show_error_state(str(e))
 
     def refresh_display(self) -> None:
@@ -282,7 +282,7 @@ class SequenceCardContentComponent(QWidget):
             self.sequences_displayed.emit(len(self.current_sequences))
 
         except Exception as e:
-            logger.error(f"Error refreshing display: {e}")
+            logger.exception(f"Error refreshing display: {e}")
             self._show_error_state(str(e))
 
     def _show_error_state(self, error_message: str) -> None:

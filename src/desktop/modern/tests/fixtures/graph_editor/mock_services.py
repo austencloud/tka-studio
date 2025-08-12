@@ -6,18 +6,19 @@ Mock Services for Graph Editor Testing
 Provides comprehensive mock services for testing graph editor components
 following TKA architecture patterns and testing protocols.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-from unittest.mock import MagicMock, Mock
+import sys
+from typing import Any
+from unittest.mock import Mock
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
-from core.interfaces.workbench_services import IGraphEditorService
-from domain.models import BeatData, MotionData, SequenceData
+from domain.models import BeatData, SequenceData
 
 
 class MockGraphEditorService:
@@ -29,15 +30,15 @@ class MockGraphEditorService:
     """
 
     def __init__(self):
-        self._selected_beat: Optional[BeatData] = None
-        self._selected_beat_index: Optional[int] = None
-        self._current_sequence: Optional[SequenceData] = None
-        self._selected_arrow_id: Optional[str] = None
+        self._selected_beat: BeatData | None = None
+        self._selected_beat_index: int | None = None
+        self._current_sequence: SequenceData | None = None
+        self._selected_arrow_id: str | None = None
 
         # Track method calls for verification
-        self.method_calls: List[Dict[str, Any]] = []
+        self.method_calls: list[dict[str, Any]] = []
 
-    def get_selected_beat(self) -> Optional[BeatData]:
+    def get_selected_beat(self) -> BeatData | None:
         """Get the currently selected beat."""
         self._record_call("get_selected_beat")
         return self._selected_beat
@@ -50,7 +51,7 @@ class MockGraphEditorService:
         self._selected_beat = beat_data
         self._selected_beat_index = beat_index
 
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """Get the current sequence."""
         self._record_call("get_current_sequence")
         return self._current_sequence
@@ -89,7 +90,7 @@ class MockGraphEditorService:
         self._record_call("set_arrow_selection", arrow_id=arrow_id)
         self._selected_arrow_id = arrow_id
 
-    def get_selected_arrow_id(self) -> Optional[str]:
+    def get_selected_arrow_id(self) -> str | None:
         """Get the selected arrow ID."""
         self._record_call("get_selected_arrow_id")
         return self._selected_arrow_id
@@ -134,8 +135,8 @@ class MockDataFlowService:
         self.sequence_modified = Mock()
         self.panel_mode_changed = Mock()
 
-        self._current_sequence: Optional[SequenceData] = None
-        self._selected_beat_index: Optional[int] = None
+        self._current_sequence: SequenceData | None = None
+        self._selected_beat_index: int | None = None
 
     def set_context(self, sequence_data: SequenceData, beat_index: int) -> None:
         """Set the current context."""
@@ -171,7 +172,7 @@ class MockDataFlowService:
         self.beat_data_updated.emit(beat_data, self._selected_beat_index or 0)
         return beat_data
 
-    def determine_panel_mode(self, beat_data: Optional[BeatData]) -> str:
+    def determine_panel_mode(self, beat_data: BeatData | None) -> str:
         """Determine panel mode based on beat data."""
         if beat_data is None:
             return "orientation"
@@ -220,7 +221,7 @@ def create_mock_hotkey_service() -> MockHotkeyService:
 
 
 # Convenience function for creating all mock services
-def create_all_mock_services() -> Dict[str, Any]:
+def create_all_mock_services() -> dict[str, Any]:
     """Create all mock services needed for graph editor testing."""
     return {
         "graph_service": create_mock_graph_editor_service(),

@@ -26,7 +26,9 @@ from desktop.modern.presentation.styles.mixins import StyleMixin
 
 
 try:
-    from desktop.shared.application.services.assets.image_asset_utils import get_image_path
+    from desktop.shared.application.services.assets.image_asset_utils import (
+        get_image_path,
+    )
 except ImportError:
     # Fallback if import fails
     def get_image_path(filename: str) -> str:
@@ -300,7 +302,7 @@ class ImageAccordionContent(QFrame, StyleMixin):
             image_dir = path_resolver.get_image_path("grid")
         except Exception as e:
             print(f"Warning: Could not use centralized path resolver: {e}")
-            # Fallback to manual discovery  
+            # Fallback to manual discovery
             current_file = Path(__file__)
             desktop_root = current_file.parent.parent.parent.parent.parent.parent
             image_dir = desktop_root / "images" / "grid"

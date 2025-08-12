@@ -5,8 +5,6 @@ Handles single and parallel stack fade operations.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtWidgets import QStackedWidget
 
 from desktop.modern.core.interfaces.animation_interfaces import (
@@ -24,7 +22,7 @@ class StackAnimationService(IStackAnimationService):
     def __init__(
         self,
         animation_service: IAnimationService,
-        layout_service: Optional[ILayoutService] = None,
+        layout_service: ILayoutService | None = None,
     ):
         self._animation_service = animation_service
         self._layout_service = layout_service
@@ -33,7 +31,7 @@ class StackAnimationService(IStackAnimationService):
         self,
         stack: QStackedWidget,
         new_index: int,
-        options: Optional[StackFadeOptions] = None,
+        options: StackFadeOptions | None = None,
     ) -> None:
         """Fade transition between stack widgets."""
         if not stack:

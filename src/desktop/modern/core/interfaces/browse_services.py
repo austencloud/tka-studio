@@ -7,7 +7,6 @@ Interfaces for browse-related services following clean architecture patterns.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from PyQt6.QtWidgets import QWidget
 
@@ -23,7 +22,7 @@ class ISequenceDeletionService(ABC):
         word: str,
         thumbnails: list[str],
         variation_index: int,
-        parent_widget: Optional[QWidget] = None,
+        parent_widget: QWidget | None = None,
     ) -> bool:
         """
         Delete a specific variation of a sequence.
@@ -40,7 +39,7 @@ class ISequenceDeletionService(ABC):
 
     @abstractmethod
     def delete_entire_sequence(
-        self, word: str, parent_widget: Optional[QWidget] = None
+        self, word: str, parent_widget: QWidget | None = None
     ) -> bool:
         """
         Delete an entire sequence (all variations).
@@ -263,7 +262,7 @@ class IBrowseDataManager(ABC):
         """Apply filter and return matching sequences."""
 
     @abstractmethod
-    def get_sequence_by_id(self, sequence_id: str) -> Optional[SequenceData]:
+    def get_sequence_by_id(self, sequence_id: str) -> SequenceData | None:
         """Get sequence by ID."""
 
 

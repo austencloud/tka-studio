@@ -12,9 +12,6 @@ import logging
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
-from desktop.shared.application.services.pictograph.simple_visibility_service import (
-    get_visibility_service,
-)
 
 from desktop.modern.core.interfaces.tab_settings_interfaces import (
     IVisibilitySettingsManager,
@@ -24,6 +21,9 @@ from desktop.modern.presentation.components.ui.settings.visibility.components im
     ElementVisibilitySection,
     MotionControlsSection,
     VisibilityPreviewSection,
+)
+from desktop.shared.application.services.pictograph.simple_visibility_service import (
+    get_visibility_service,
 )
 
 
@@ -208,7 +208,7 @@ class VisibilityTab(QWidget):
             logger.debug(f"Motion visibility changed: {color} = {visible}")
 
         except Exception as e:
-            logger.error(f"Error handling motion visibility change: {e}")
+            logger.exception(f"Error handling motion visibility change: {e}")
 
     def _on_element_visibility_changed(self, name: str, visible: bool):
         """
@@ -235,7 +235,7 @@ class VisibilityTab(QWidget):
             logger.debug(f"Element visibility changed: {name} = {visible}")
 
         except Exception as e:
-            logger.error(f"Error handling element visibility change: {e}")
+            logger.exception(f"Error handling element visibility change: {e}")
 
     def _update_dependency_states(self):
         """Update UI based on motion dependency states."""
@@ -295,7 +295,7 @@ class VisibilityTab(QWidget):
             logger.info("Successfully applied global visibility updates")
 
         except Exception as e:
-            logger.error(f"Error applying global visibility updates: {e}")
+            logger.exception(f"Error applying global visibility updates: {e}")
 
     def _update_all_pictograph_scenes(self):
         """
@@ -361,7 +361,7 @@ class VisibilityTab(QWidget):
                 app.processEvents()
 
         except Exception as e:
-            logger.error(f"Error finding pictograph scenes: {e}")
+            logger.exception(f"Error finding pictograph scenes: {e}")
 
     def _schedule_global_update(self):
         """Schedule a global update with debouncing."""
@@ -385,7 +385,7 @@ class VisibilityTab(QWidget):
             logger.debug("Visibility tab cleaned up")
 
         except Exception as e:
-            logger.error(f"Error during visibility tab cleanup: {e}")
+            logger.exception(f"Error during visibility tab cleanup: {e}")
 
     def _apply_styling(self):
         """Apply modern glassmorphism styling to the entire tab."""

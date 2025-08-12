@@ -2,11 +2,12 @@
 Sequence Repository for TKA Modern API
 Provides in-memory storage for sequences with CRUD operations.
 """
+from __future__ import annotations
 
 import logging
-from typing import Dict, List, Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
+
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +23,8 @@ class SequenceRepository:
 
     def __init__(self):
         """Initialize the repository with empty storage."""
-        self._sequences: Dict[str, SequenceData] = {}
-        self._current_sequence_id: Optional[str] = None
+        self._sequences: dict[str, SequenceData] = {}
+        self._current_sequence_id: str | None = None
         logger.info("SequenceRepository initialized")
 
     def save(self, sequence: SequenceData) -> None:
@@ -36,7 +37,7 @@ class SequenceRepository:
         self._sequences[sequence.id] = sequence
         logger.debug(f"Saved sequence {sequence.id}: {sequence.name}")
 
-    def get_by_id(self, sequence_id: str) -> Optional[SequenceData]:
+    def get_by_id(self, sequence_id: str) -> SequenceData | None:
         """
         Retrieve a sequence by its ID.
 
@@ -53,7 +54,7 @@ class SequenceRepository:
             logger.debug(f"Sequence {sequence_id} not found")
         return sequence
 
-    def get_all(self) -> List[SequenceData]:
+    def get_all(self) -> list[SequenceData]:
         """
         Get all sequences in the repository.
 
@@ -78,9 +79,8 @@ class SequenceRepository:
             self._sequences[sequence.id] = sequence
             logger.debug(f"Updated sequence {sequence.id}: {sequence.name}")
             return True
-        else:
-            logger.warning(f"Attempted to update non-existent sequence {sequence.id}")
-            return False
+        logger.warning(f"Attempted to update non-existent sequence {sequence.id}")
+        return False
 
     def delete(self, sequence_id: str) -> bool:
         """
@@ -102,9 +102,8 @@ class SequenceRepository:
                 logger.debug("Cleared current sequence (was deleted)")
 
             return True
-        else:
-            logger.warning(f"Attempted to delete non-existent sequence {sequence_id}")
-            return False
+        logger.warning(f"Attempted to delete non-existent sequence {sequence_id}")
+        return False
 
     def set_current_sequence(self, sequence_id: str) -> bool:
         """
@@ -120,13 +119,12 @@ class SequenceRepository:
             self._current_sequence_id = sequence_id
             logger.debug(f"Set current sequence to {sequence_id}")
             return True
-        else:
-            logger.warning(
-                f"Attempted to set non-existent sequence {sequence_id} as current"
-            )
-            return False
+        logger.warning(
+            f"Attempted to set non-existent sequence {sequence_id} as current"
+        )
+        return False
 
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """
         Get the currently active sequence.
 
@@ -137,7 +135,7 @@ class SequenceRepository:
             return self.get_by_id(self._current_sequence_id)
         return None
 
-    def get_current_sequence_id(self) -> Optional[str]:
+    def get_current_sequence_id(self) -> str | None:
         """
         Get the ID of the currently active sequence.
 

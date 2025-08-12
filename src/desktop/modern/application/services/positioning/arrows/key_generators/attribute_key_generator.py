@@ -89,7 +89,7 @@ class AttributeKeyGenerator(IAttributeKeyGenerator):
             )
 
         except Exception as e:
-            logger.error(f"Error generating attribute key for {arrow_data.color}: {e}")
+            logger.exception(f"Error generating attribute key for {arrow_data.color}: {e}")
             # Fallback to color
             return arrow_data.color
 
@@ -127,23 +127,20 @@ class AttributeKeyGenerator(IAttributeKeyGenerator):
             if starts_from_mixed_orientation:
                 if letter in ["S", "T"]:
                     return lead_state if lead_state else color
-                elif has_hybrid_motions:
+                if has_hybrid_motions:
                     if start_ori in [IN, OUT]:
                         return f"{motion_type}_from_layer1"
-                    elif start_ori in [CLOCK, COUNTER]:
+                    if start_ori in [CLOCK, COUNTER]:
                         return f"{motion_type}_from_layer2"
-                    else:
-                        return color
-                elif self._is_non_hybrid_letter(letter):
                     return color
-                else:
-                    return motion_type
-            else:
-                # Standard orientation - return color for most cases
-                return color
+                if self._is_non_hybrid_letter(letter):
+                    return color
+                return motion_type
+            # Standard orientation - return color for most cases
+            return color
 
         except Exception as e:
-            logger.error(f"Error in key generation: {e}")
+            logger.exception(f"Error in key generation: {e}")
             # Fallback to color
             return color
 

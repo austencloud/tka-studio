@@ -10,19 +10,21 @@ This test validates:
 4. Click Clear Sequence (should return to start position picker)
 5. Verify final state is start position picker
 """
+from __future__ import annotations
 
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequence.sequence_persister import SequencePersister
-from core.application.application_factory import ApplicationFactory
-from PyQt6.QtCore import QTimer
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication
+
+from application.services.sequence.sequence_persister import SequencePersister
+from core.application.application_factory import ApplicationFactory
 
 
 class SignalBasedWorkflowTester:
@@ -144,9 +146,8 @@ class SignalBasedWorkflowTester:
                 self.log_workflow_state("AFTER_START_POSITION_SELECT")
                 print("✅ [SIGNAL_TEST] Step 2: Start position selected via command")
                 return True
-            else:
-                print("❌ [SIGNAL_TEST] Start position command failed")
-                return False
+            print("❌ [SIGNAL_TEST] Start position command failed")
+            return False
 
         except Exception as e:
             print(f"❌ [SIGNAL_TEST] Step 2 failed: {e}")
@@ -199,9 +200,8 @@ class SignalBasedWorkflowTester:
                 self.log_workflow_state("AFTER_OPTION_SELECT")
                 print("✅ [SIGNAL_TEST] Step 3: Option selected")
                 return True
-            else:
-                print("❌ [SIGNAL_TEST] Could not find option picker")
-                return False
+            print("❌ [SIGNAL_TEST] Could not find option picker")
+            return False
 
         except Exception as e:
             print(f"❌ [SIGNAL_TEST] Step 3 failed: {e}")
@@ -231,9 +231,8 @@ class SignalBasedWorkflowTester:
 
                 print("✅ [SIGNAL_TEST] Step 4: Clear sequence completed")
                 return True
-            else:
-                print("❌ [SIGNAL_TEST] Could not find clear_sequence method")
-                return False
+            print("❌ [SIGNAL_TEST] Could not find clear_sequence method")
+            return False
 
         except Exception as e:
             print(f"❌ [SIGNAL_TEST] Step 4 failed: {e}")
@@ -423,7 +422,7 @@ class SignalBasedWorkflowTester:
                         QTest.qWait(500)  # Wait for processing
                     else:
                         print(
-                            f"❌ [MULTI_BEAT] Option picker missing beat_data_selected signal"
+                            "❌ [MULTI_BEAT] Option picker missing beat_data_selected signal"
                         )
                         return False
                 else:
@@ -486,10 +485,10 @@ class SignalBasedWorkflowTester:
                     event_bus = get_event_bus()
 
                     if not command_processor:
-                        print(f"❌ [START_POS_VAR] Command processor not available")
+                        print("❌ [START_POS_VAR] Command processor not available")
                         return False
                     if not event_bus:
-                        print(f"❌ [START_POS_VAR] Event bus not available")
+                        print("❌ [START_POS_VAR] Event bus not available")
                         return False
 
                     print(f"🎯 [START_POS_VAR] Executing command for: {position}")

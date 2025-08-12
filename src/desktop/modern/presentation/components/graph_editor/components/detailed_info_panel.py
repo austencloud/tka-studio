@@ -22,7 +22,6 @@ Architecture:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
@@ -141,7 +140,7 @@ class DetailedInfoPanel(QWidget):
         """
         )
 
-    def update_beat_info(self, beat_index: int, beat_data: Optional[BeatData]):
+    def update_beat_info(self, beat_index: int, beat_data: BeatData | None):
         """
         Update the panel with beat information.
 

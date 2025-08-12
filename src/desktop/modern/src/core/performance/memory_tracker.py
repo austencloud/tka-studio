@@ -5,18 +5,20 @@ Provides comprehensive memory usage tracking and leak detection
 for the TKA desktop application. Integrates with existing Qt
 resource management and monitoring infrastructure.
 """
+from __future__ import annotations
 
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 import gc
 import logging
 import threading
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psutil
 
 # Result pattern removed - using simple exceptions
 from .config import PerformanceConfig, get_performance_config
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +33,7 @@ class MemorySnapshot:
     percent: float  # Memory percentage
     available_mb: float  # Available system memory
     gc_objects: int  # Number of objects tracked by GC
-    gc_collections: Dict[int, int] = field(
+    gc_collections: dict[int, int] = field(
         default_factory=dict
     )  # GC collections by generation
 
@@ -60,17 +62,17 @@ class MemoryTracker:
     - Memory usage profiling per function
     """
 
-    def __init__(self, config: Optional[PerformanceConfig] = None):
+    def __init__(self, config: PerformanceConfig | None = None):
         self.config = config or get_performance_config()
         self.is_tracking = False
 
         # Memory snapshots
-        self.snapshots: List[MemorySnapshot] = []
+        self.snapshots: list[MemorySnapshot] = []
         self.max_snapshots = 1000
 
         # Leak detection
-        self.object_counts: Dict[str, List[int]] = {}
-        self.detected_leaks: List[MemoryLeak] = []
+        self.object_counts: dict[str, list[int]] = {}
+        self.detected_leaks: list[MemoryLeak] = []
 
         # Thread safety
         self._lock = threading.RLock()
@@ -208,9 +210,9 @@ class MemoryTracker:
                 )
 
         except Exception as e:
-            logger.error(f"Failed to take memory snapshot: {e}")
+            logger.exception(f"Failed to take memory snapshot: {e}")
 
-    def detect_leaks(self) -> List[MemoryLeak]:
+    def detect_leaks(self) -> list[MemoryLeak]:
         """
         Detect potential memory leaks.
 
@@ -269,11 +271,11 @@ class MemoryTracker:
                 detected_leaks.append(leak)
 
         except Exception as e:
-            logger.error(f"Failed to detect memory leaks: {e}")
+            logger.exception(f"Failed to detect memory leaks: {e}")
 
         return detected_leaks
 
-    def get_memory_summary(self) -> Dict[str, Any]:
+    def get_memory_summary(self) -> dict[str, Any]:
         """
         Get comprehensive memory usage summary.
 
@@ -333,10 +335,10 @@ class MemoryTracker:
                 return summary
 
         except Exception as e:
-            logger.error(f"Failed to generate memory summary: {e}")
+            logger.exception(f"Failed to generate memory summary: {e}")
             return {"error": f"Failed to generate summary: {e}"}
 
-    def _generate_memory_recommendations(self) -> List[Dict[str, str]]:
+    def _generate_memory_recommendations(self) -> list[dict[str, str]]:
         """Generate memory optimization recommendations."""
         recommendations = []
 
@@ -382,11 +384,11 @@ class MemoryTracker:
                     )
 
         except Exception as e:
-            logger.error(f"Failed to generate memory recommendations: {e}")
+            logger.exception(f"Failed to generate memory recommendations: {e}")
 
         return recommendations
 
-    def force_gc(self) -> Dict[str, int]:
+    def force_gc(self) -> dict[str, int]:
         """
         Force garbage collection and return statistics.
 
@@ -405,12 +407,12 @@ class MemoryTracker:
                 "gc_collected": collected,
             }
         except Exception as e:
-            logger.error(f"Failed to force garbage collection: {e}")
+            logger.exception(f"Failed to force garbage collection: {e}")
             return {"error": str(e)}
 
 
 # Global memory tracker instance
-_global_memory_tracker: Optional[MemoryTracker] = None
+_global_memory_tracker: MemoryTracker | None = None
 
 
 def get_memory_tracker() -> MemoryTracker:

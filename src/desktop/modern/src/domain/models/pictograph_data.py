@@ -1,11 +1,12 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
 import json
+from typing import Any
 import uuid
-from dataclasses import dataclass, field, fields, is_dataclass
-from enum import Enum
-from typing import Any, Dict, Optional, Tuple, Union
 
 from desktop.modern.domain.models.arrow_data import ArrowData
-from desktop.modern.domain.models.enums import ArrowType, GridMode, PropType
+from desktop.modern.domain.models.enums import ArrowType
 from desktop.modern.domain.models.glyph_models import GlyphData
 from desktop.modern.domain.models.grid_data import GridData
 from desktop.modern.domain.models.prop_data import PropData
@@ -31,24 +32,24 @@ class PictographData:
     grid_data: GridData = field(default_factory=GridData)
 
     # Arrows, props, and motions (consistent dictionary approach)
-    arrows: Dict[str, ArrowData] = field(default_factory=dict)  # "blue", "red"
-    props: Dict[str, PropData] = field(default_factory=dict)  # "blue", "red"
-    motions: Dict[str, MotionData] = field(default_factory=dict)  # "blue", "red"
+    arrows: dict[str, ArrowData] = field(default_factory=dict)  # "blue", "red"
+    props: dict[str, PropData] = field(default_factory=dict)  # "blue", "red"
+    motions: dict[str, MotionData] = field(default_factory=dict)  # "blue", "red"
 
     # Letter and position data
-    letter: Optional[str] = None
-    start_position: Optional[str] = None
-    end_position: Optional[str] = None
+    letter: str | None = None
+    start_position: str | None = None
+    end_position: str | None = None
 
     # Glyph data for notation rendering
-    glyph_data: Optional[GlyphData] = None
+    glyph_data: GlyphData | None = None
 
     # Visual state
     is_blank: bool = False
     is_mirrored: bool = False
 
     # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate pictograph data."""
@@ -103,7 +104,7 @@ class PictographData:
         """Get the red prop."""
         return self.props.get("red", PropData(color="red"))
 
-    def update_arrow(self, color: str, **kwargs) -> "PictographData":
+    def update_arrow(self, color: str, **kwargs) -> PictographData:
         """Create a new pictograph with an updated arrow."""
         if color not in self.arrows:
             raise ValueError(f"Arrow color '{color}' not found")
@@ -117,7 +118,7 @@ class PictographData:
 
         return replace(self, arrows=new_arrows)
 
-    def update_prop(self, color: str, **kwargs) -> "PictographData":
+    def update_prop(self, color: str, **kwargs) -> PictographData:
         """Create a new pictograph with an updated prop."""
         if color not in self.props:
             raise ValueError(f"Prop color '{color}' not found")
@@ -131,13 +132,13 @@ class PictographData:
 
         return replace(self, props=new_props)
 
-    def update(self, **kwargs) -> "PictographData":
+    def update(self, **kwargs) -> PictographData:
         """Create a new pictograph with updated fields."""
         from dataclasses import replace
 
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "id": self.id,
@@ -154,7 +155,7 @@ class PictographData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "PictographData":
+    def from_dict(cls, data: dict[str, Any]) -> PictographData:
         """Create from dictionary."""
         grid_data = GridData.from_dict(data.get("grid_data", {}))
 
@@ -184,7 +185,7 @@ class PictographData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -196,16 +197,14 @@ class PictographData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "PictographData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> PictographData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

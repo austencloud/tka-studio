@@ -72,7 +72,7 @@ class SequenceJsonExporter(ISequenceJsonExporter):
             return True, json_string
 
         except Exception as e:
-            logger.error(f"JSON export failed: {e}")
+            logger.exception(f"JSON export failed: {e}")
             return False, f"JSON export failed: {e}"
 
     def format_json_output(self, data: list[dict[str, Any]]) -> str:
@@ -88,6 +88,6 @@ class SequenceJsonExporter(ISequenceJsonExporter):
         try:
             return json.dumps(data, indent=4, ensure_ascii=False)
         except Exception as e:
-            logger.error(f"JSON formatting failed: {e}")
+            logger.exception(f"JSON formatting failed: {e}")
             # Fallback to basic JSON without formatting
             return json.dumps(data, ensure_ascii=False)

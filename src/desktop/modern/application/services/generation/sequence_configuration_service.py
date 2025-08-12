@@ -21,6 +21,7 @@ from desktop.modern.domain.models.enums import GridMode
 from desktop.modern.domain.models.generation_models import GenerationConfig
 from desktop.shared.infrastructure.path_resolver import path_resolver
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,20 +69,20 @@ class SequenceConfigurationService(ISequenceConfigurationService):
                 "slice_size": self._current_config.slice_size,
                 "cap_type": self._current_config.cap_type,
             }
-            
+
             # Apply updates
             current_dict.update(updates)
-            
+
             # Create new config
             self._current_config = GenerationConfig(**current_dict)
-            
+
             # Save to file
             self._save_config_to_file()
-            
+
             logger.debug(f"Configuration updated: {list(updates.keys())}")
-            
+
         except Exception as e:
-            logger.error(f"Failed to update configuration: {e}")
+            logger.exception(f"Failed to update configuration: {e}")
 
     def save_config_as_preset(self, name: str) -> None:
         """Save current configuration as a preset."""
@@ -90,7 +91,7 @@ class SequenceConfigurationService(ISequenceConfigurationService):
             self._save_config_to_file()
             logger.info(f"Saved preset '{name}'")
         except Exception as e:
-            logger.error(f"Failed to save preset '{name}': {e}")
+            logger.exception(f"Failed to save preset '{name}': {e}")
 
     def load_config_preset(self, name: str) -> GenerationConfig:
         """Load configuration from preset."""
@@ -99,11 +100,10 @@ class SequenceConfigurationService(ISequenceConfigurationService):
                 self._current_config = self._presets[name]
                 logger.info(f"Loaded preset '{name}'")
                 return self._current_config
-            else:
-                logger.warning(f"Preset '{name}' not found")
-                return self._create_default_config()
+            logger.warning(f"Preset '{name}' not found")
+            return self._create_default_config()
         except Exception as e:
-            logger.error(f"Failed to load preset '{name}': {e}")
+            logger.exception(f"Failed to load preset '{name}': {e}")
             return self._create_default_config()
 
     def get_default_config(self) -> GenerationConfig:
@@ -118,47 +118,47 @@ class SequenceConfigurationService(ISequenceConfigurationService):
         """Load configuration and presets from file."""
         try:
             if self._config_file.exists():
-                with open(self._config_file, 'r') as f:
+                with open(self._config_file) as f:
                     data = json.load(f)
-                
+
                 # Load current config
                 if 'current_config' in data:
                     config_data = data['current_config']
                     self._current_config = self._dict_to_config(config_data)
-                
+
                 # Load presets
                 if 'presets' in data:
                     for name, preset_data in data['presets'].items():
                         self._presets[name] = self._dict_to_config(preset_data)
-                
+
                 logger.info(f"Loaded configuration from {self._config_file}")
             else:
                 logger.info("No configuration file found, using defaults")
-                
+
         except Exception as e:
-            logger.error(f"Failed to load configuration from file: {e}")
+            logger.exception(f"Failed to load configuration from file: {e}")
 
     def _save_config_to_file(self) -> None:
         """Save configuration and presets to file."""
         try:
             # Ensure directory exists
             self._config_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
             data = {
                 'current_config': self._config_to_dict(self._current_config),
                 'presets': {
-                    name: self._config_to_dict(config) 
+                    name: self._config_to_dict(config)
                     for name, config in self._presets.items()
                 }
             }
-            
+
             with open(self._config_file, 'w') as f:
                 json.dump(data, f, indent=2)
-                
+
             logger.debug(f"Saved configuration to {self._config_file}")
-            
+
         except Exception as e:
-            logger.error(f"Failed to save configuration to file: {e}")
+            logger.exception(f"Failed to save configuration to file: {e}")
 
     def _config_to_dict(self, config: GenerationConfig) -> dict:
         """Convert GenerationConfig to dictionary for JSON serialization."""

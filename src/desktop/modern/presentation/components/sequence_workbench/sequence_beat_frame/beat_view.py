@@ -7,7 +7,7 @@ with modern architecture patterns and Modern pictograph integration.
 
 from __future__ import annotations
 
-from typing import Optional
+import contextlib
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QAction, QColor, QPainter, QPen
@@ -45,20 +45,20 @@ class BeatView(QFrame):
         self._beat_number = beat_number
 
         # Common state (previously from PictographViewBase)
-        self._beat_data: Optional[BeatData] = None
+        self._beat_data: BeatData | None = None
         self._is_selected = False
         self._is_highlighted = False
 
         # UI components
-        self._pictograph_component: Optional[BeatPictographView] = None
-        self._selection_overlay: Optional[SelectionOverlay] = None
+        self._pictograph_component: BeatPictographView | None = None
+        self._selection_overlay: SelectionOverlay | None = None
 
         # START text overlay for preserved start position beat
-        self._start_text_overlay: Optional[StartTextOverlay] = None
+        self._start_text_overlay: StartTextOverlay | None = None
         self._show_start_text = False
 
         # Beat number overlay for sequence beats
-        self._beat_number_overlay: Optional[BeatNumberOverlay] = None
+        self._beat_number_overlay: BeatNumberOverlay | None = None
         self._show_beat_number = False
 
         # Initialize UI
@@ -117,7 +117,7 @@ class BeatView(QFrame):
     # Direct view handles its own scaling and styling - no configuration needed
 
     # State management
-    def set_beat_data(self, beat_data: Optional[BeatData]):
+    def set_beat_data(self, beat_data: BeatData | None):
         """Set beat data and update display."""
         if self._beat_data != beat_data:
             self._beat_data = beat_data
@@ -392,10 +392,8 @@ class BeatView(QFrame):
         """Cleanup resources when the view is being destroyed"""
         # Clean up selection overlay
         if self._selection_overlay:
-            try:
+            with contextlib.suppress(RuntimeError, AttributeError):
                 self._selection_overlay.deleteLater()
-            except (RuntimeError, AttributeError):
-                pass
             self._selection_overlay = None
 
         # Cleanup pictograph component
@@ -460,7 +458,5 @@ class BeatView(QFrame):
 
     def __del__(self):
         """Destructor to ensure cleanup"""
-        try:
+        with contextlib.suppress(Exception):
             self.cleanup()
-        except Exception:
-            pass

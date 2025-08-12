@@ -13,7 +13,6 @@ Replaces object management logic previously embedded in OptionFactory.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtWidgets import QWidget
 
@@ -45,7 +44,7 @@ class FramePoolService:
         """
         self._max_frames = max_frames
         self._pool: list[OptionPictograph] = []
-        self._parent_widget: Optional[QWidget] = None
+        self._parent_widget: QWidget | None = None
         self._initialized = False
 
         # Pool statistics
@@ -76,7 +75,7 @@ class FramePoolService:
 
             # Create all frames upfront with direct view approach
             self._pool = []
-            for i in range(self._max_frames):
+            for _i in range(self._max_frames):
                 frame = OptionPictograph(
                     parent=parent_widget,
                     pictograph_component=None,  # DEPRECATED - creates own direct view
@@ -89,7 +88,7 @@ class FramePoolService:
             logger.debug(f"Initialized frame pool with {self._max_frames} frames")
 
         except Exception as e:
-            logger.error(f"Failed to initialize frame pool: {e}")
+            logger.exception(f"Failed to initialize frame pool: {e}")
             self._pool = []
 
     def checkin_frame(self, frame: OptionPictograph) -> None:
@@ -121,7 +120,7 @@ class FramePoolService:
             logger.debug(f"Checked in frame (total checkins: {self._checkin_count})")
 
         except Exception as e:
-            logger.error(f"Error checking in frame: {e}")
+            logger.exception(f"Error checking in frame: {e}")
 
     def reset_all_frames(self) -> None:
         """
@@ -136,7 +135,7 @@ class FramePoolService:
             logger.debug(f"Reset all {len(self._pool)} frames in pool")
 
         except Exception as e:
-            logger.error(f"Error resetting frames: {e}")
+            logger.exception(f"Error resetting frames: {e}")
 
     def cleanup(self) -> None:
         """
@@ -156,7 +155,7 @@ class FramePoolService:
             logger.debug("Frame pool cleanup completed")
 
         except Exception as e:
-            logger.error(f"Error during frame pool cleanup: {e}")
+            logger.exception(f"Error during frame pool cleanup: {e}")
 
     def __len__(self) -> int:
         """Return pool size."""

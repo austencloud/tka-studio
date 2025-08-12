@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 # ScalingContext removed - direct views handle their own scaling
@@ -116,7 +116,7 @@ class IPictographDataManager(ABC):
         """Get all available dataset categories."""
 
     @abstractmethod
-    def get_pictograph_data(self, pictograph_id: str) -> Optional[Any]:
+    def get_pictograph_data(self, pictograph_id: str) -> Any | None:
         """
         Get pictograph data by ID.
 

@@ -8,7 +8,6 @@ This replaces the complex web of signal coordinators and multiple state holders.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -46,8 +45,8 @@ class SequenceStateTracker(QObject):
         self.command_processor = command_processor
 
         # Current state (single source of truth)
-        self.current_sequence: Optional[SequenceData] = None
-        self.start_position: Optional[BeatData] = None
+        self.current_sequence: SequenceData | None = None
+        self.start_position: BeatData | None = None
 
         # Setup Qt signal connections if command processor is available
         if self.command_processor:
@@ -67,7 +66,7 @@ class SequenceStateTracker(QObject):
                 self.command_processor.command_redone.connect(self._on_command_redone)
 
         except Exception as e:
-            logger.error(f"❌ Failed to setup signal connections: {e}")
+            logger.exception(f"❌ Failed to setup signal connections: {e}")
 
     def _on_command_executed(self, command_type: str, result=None):
         """Update state when commands execute successfully"""
@@ -94,7 +93,7 @@ class SequenceStateTracker(QObject):
             logger.debug(f"✅ State updated from command: {command_type}")
 
         except Exception as e:
-            logger.error(f"❌ Error updating state from command: {e}")
+            logger.exception(f"❌ Error updating state from command: {e}")
 
     def _on_command_undone(self, command_type: str):
         """Update state when commands are undone"""
@@ -138,15 +137,14 @@ class SequenceStateTracker(QObject):
         """Refresh state from persistence (for undo/redo scenarios)"""
         try:
             # Load current state from persistence
+            from desktop.modern.application.services.sequence.sequence_start_position_manager import (
+                SequenceStartPositionManager,
+            )
             from desktop.shared.application.services.sequence.sequence_persister import (
                 SequencePersister,
             )
 
-            from desktop.modern.application.services.sequence.sequence_start_position_manager import (
-                SequenceStartPositionManager,
-            )
-
-            persistence_service = SequencePersister()
+            SequencePersister()
 
             # Use dependency injection to get the start position manager
             from desktop.modern.core.dependency_injection.di_container import (
@@ -154,7 +152,7 @@ class SequenceStateTracker(QObject):
             )
 
             container = get_container()
-            start_position_manager = container.resolve(SequenceStartPositionManager)
+            container.resolve(SequenceStartPositionManager)
 
             # Load sequence (this will need to be converted from legacy format)
             # For now, we'll just refresh what we have
@@ -163,14 +161,14 @@ class SequenceStateTracker(QObject):
             logger.debug("🔄 State refreshed from persistence")
 
         except Exception as e:
-            logger.error(f"❌ Error refreshing state from persistence: {e}")
+            logger.exception(f"❌ Error refreshing state from persistence: {e}")
 
     # Public API for accessing current state
-    def get_sequence(self) -> Optional[SequenceData]:
+    def get_sequence(self) -> SequenceData | None:
         """Get the current sequence"""
         return self.current_sequence
 
-    def get_start_position(self) -> Optional[BeatData]:
+    def get_start_position(self) -> BeatData | None:
         """Get the current start position"""
         return self.start_position
 
@@ -187,11 +185,11 @@ class SequenceStateTracker(QObject):
         return not self.has_sequence() and not self.has_start_position()
 
     # Direct state setting methods (for non-command scenarios like loading)
-    def set_sequence_direct(self, sequence: Optional[SequenceData]):
+    def set_sequence_direct(self, sequence: SequenceData | None):
         """Set sequence directly (for loading scenarios, bypasses commands)"""
         self._update_sequence(sequence)
 
-    def set_start_position_direct(self, start_position: Optional[BeatData]):
+    def set_start_position_direct(self, start_position: BeatData | None):
         """Set start position directly (for loading scenarios, bypasses commands)"""
         self._update_start_position(start_position)
 
@@ -216,4 +214,4 @@ class SequenceStateTracker(QObject):
             logger.info("🧹 SequenceStateTracker cleaned up")
 
         except Exception as e:
-            logger.error(f"❌ Error during SequenceStateTracker cleanup: {e}")
+            logger.exception(f"❌ Error during SequenceStateTracker cleanup: {e}")

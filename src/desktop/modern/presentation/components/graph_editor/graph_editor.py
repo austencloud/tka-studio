@@ -16,7 +16,7 @@ This version uses clean component-based architecture with:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout
@@ -74,11 +74,11 @@ class GraphEditor(QFrame):
 
     def __init__(
         self,
-        graph_service: Optional[IGraphEditorService] = None,
-        parent: Optional[SequenceWorkbench] = None,
+        graph_service: IGraphEditorService | None = None,
+        parent: SequenceWorkbench | None = None,
         workbench_width: int = 800,
         workbench_height: int = 600,
-        session_service: Optional[ISessionStateTracker] = None,
+        session_service: ISessionStateTracker | None = None,
     ):
         super().__init__(parent)
         self._graph_service = graph_service
@@ -86,13 +86,13 @@ class GraphEditor(QFrame):
         self._session_service = session_service
 
         # Core state
-        self._current_sequence: Optional[SequenceData] = None
-        self._selected_beat_index: Optional[int] = None
-        self._selected_beat_data: Optional[BeatData] = None
+        self._current_sequence: SequenceData | None = None
+        self._selected_beat_index: int | None = None
+        self._selected_beat_data: BeatData | None = None
 
         # Component references
-        self._pictograph_display: Optional[PictographDisplaySection] = None
-        self._adjustment_panel: Optional[MainAdjustmentPanel] = None
+        self._pictograph_display: PictographDisplaySection | None = None
+        self._adjustment_panel: MainAdjustmentPanel | None = None
 
         # Initialize with simple error handling
         try:
@@ -101,7 +101,7 @@ class GraphEditor(QFrame):
             self._apply_styling()
             self.resize(workbench_width, 300)
         except Exception as e:
-            logger.error(f"Graph editor initialization failed: {e}")
+            logger.exception(f"Graph editor initialization failed: {e}")
             self._create_minimal_error_ui(str(e))
 
     def _setup_ui(self) -> None:
@@ -257,7 +257,7 @@ class GraphEditor(QFrame):
             logger.warning(f"Error handling turn amount change: {e}")
 
     # Public API Methods - Clean and Simple
-    def set_sequence(self, sequence: Optional[SequenceData]) -> bool:
+    def set_sequence(self, sequence: SequenceData | None) -> bool:
         """Set the sequence data with clean error handling."""
         try:
             # Basic input validation (keep simple)
@@ -274,15 +274,15 @@ class GraphEditor(QFrame):
             return True
 
         except Exception as e:
-            logger.error(f"Error setting sequence: {e}")
+            logger.exception(f"Error setting sequence: {e}")
             return False
 
-    def update_current_sequence(self, sequence: Optional[SequenceData]) -> bool:
+    def update_current_sequence(self, sequence: SequenceData | None) -> bool:
         """Update the current sequence when it's modified externally."""
         return self.set_sequence(sequence)
 
     def set_selected_beat_data(
-        self, beat_index: int, beat_data: Optional[BeatData]
+        self, beat_index: int, beat_data: BeatData | None
     ) -> bool:
         """Set the selected beat data with clean error handling."""
         try:
@@ -314,18 +314,18 @@ class GraphEditor(QFrame):
             return True
 
         except Exception as e:
-            logger.error(f"Error setting beat data: {e}")
+            logger.exception(f"Error setting beat data: {e}")
             return False
 
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """Get the current sequence data."""
         return self._current_sequence
 
-    def get_selected_beat_index(self) -> Optional[int]:
+    def get_selected_beat_index(self) -> int | None:
         """Get the currently selected beat index."""
         return self._selected_beat_index
 
-    def _get_current_selected_arrow(self) -> Optional[str]:
+    def _get_current_selected_arrow(self) -> str | None:
         """Get the currently selected arrow identifier."""
         # Try to get selected arrow from adjustment panel
         if self._adjustment_panel and hasattr(

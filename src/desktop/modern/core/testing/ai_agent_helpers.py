@@ -146,7 +146,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"Sequence creation failed: {e}")
+            logger.exception(f"Sequence creation failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"Sequence creation failed: {e!s}"],
@@ -216,7 +216,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"Beat creation failed: {e}")
+            logger.exception(f"Beat creation failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"Beat creation failed: {e!s}"],
@@ -311,7 +311,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"Command pattern test failed: {e}")
+            logger.exception(f"Command pattern test failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"Command pattern test failed: {e!s}"],
@@ -366,7 +366,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"Pictograph creation failed: {e}")
+            logger.exception(f"Pictograph creation failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"Pictograph creation failed: {e!s}"],
@@ -427,7 +427,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"Pictograph from beat test failed: {e}")
+            logger.exception(f"Pictograph from beat test failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"Pictograph from beat test failed: {e!s}"],
@@ -463,7 +463,7 @@ class TKAAITestHelper:
             return result
 
         except Exception as e:
-            logger.error(f"CSV dataset test failed: {e}")
+            logger.exception(f"CSV dataset test failed: {e}")
             result = AITestResult(
                 success=False,
                 errors=[f"CSV dataset test failed: {e!s}"],

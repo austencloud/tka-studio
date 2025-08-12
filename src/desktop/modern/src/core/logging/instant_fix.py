@@ -18,12 +18,13 @@ WHAT IT DOES:
 4. Preserves error logs and performance timing
 5. No other code changes required
 """
+from __future__ import annotations
 
 import logging
 import os
 
 
-def apply_instant_fix(mode: str = None):
+def apply_instant_fix(mode: str | None = None):
     """
     Apply instant fix for verbose arrow positioning logs.
 
@@ -41,12 +42,11 @@ def _detect_mode() -> str:
     # Check environment variables
     if os.getenv("TKA_ENVIRONMENT") == "production":
         return "quiet"
-    elif os.getenv("TKA_DEBUG_POSITIONING") == "true":
+    if os.getenv("TKA_DEBUG_POSITIONING") == "true":
         return "debug"
-    elif "pytest" in os.environ.get("_", "") or "PYTEST_CURRENT_TEST" in os.environ:
+    if "pytest" in os.environ.get("_", "") or "PYTEST_CURRENT_TEST" in os.environ:
         return "quiet"  # Silent for tests
-    else:
-        return "normal"  # Default for development
+    return "normal"  # Default for development
 
 
 def _apply_fallback_fix(mode: str):

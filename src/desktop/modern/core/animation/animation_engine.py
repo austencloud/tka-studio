@@ -54,7 +54,7 @@ class EasingFunctions:
     def spring(t: float, tension: float = 0.8, friction: float = 0.1) -> float:
         """Spring easing with configurable tension and friction."""
         # Simplified spring calculation
-        if t == 0 or t == 1:
+        if t in {0, 1}:
             return t
 
         # Damped harmonic oscillator
@@ -219,7 +219,6 @@ class CoreAnimationEngine(IAnimationEngine):
         self, targets: list[AnimationTarget], config: AnimationConfig
     ) -> list[str]:
         """Animate multiple targets simultaneously."""
-        tasks = []
         animation_ids = []
 
         for target in targets:
@@ -284,7 +283,7 @@ class CoreAnimationEngine(IAnimationEngine):
         animation_id = str(uuid.uuid4())
 
         # Emit events for instant completion
-        event = AnimationEvent(
+        AnimationEvent(
             animation_id=animation_id,
             target=target,
             state=AnimationState.COMPLETED,
@@ -320,7 +319,7 @@ class CoreAnimationEngine(IAnimationEngine):
                 )
 
                 # Emit frame event with current value
-                frame_event = AnimationEvent(
+                AnimationEvent(
                     animation_id=animation.id,
                     target=animation.target,
                     state=AnimationState.RUNNING,
@@ -349,7 +348,7 @@ class CoreAnimationEngine(IAnimationEngine):
             self._emit_animation_event(animation, AnimationState.CANCELLED)
         except Exception as e:
             animation.state = AnimationState.FAILED
-            event = AnimationEvent(
+            AnimationEvent(
                 animation_id=animation.id,
                 target=animation.target,
                 state=AnimationState.FAILED,
@@ -381,7 +380,7 @@ class CoreAnimationEngine(IAnimationEngine):
         self, animation: ActiveAnimation, state: AnimationState
     ) -> None:
         """Emit animation lifecycle event."""
-        event = AnimationEvent(
+        AnimationEvent(
             animation_id=animation.id,
             target=animation.target,
             state=state,

@@ -8,7 +8,7 @@ These interfaces complete the coverage for data building and factory operations.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import ElementalType, VTGMode
@@ -280,7 +280,7 @@ class IPictographDataService(ABC):
     """Interface for pictograph data service operations."""
 
     @abstractmethod
-    def get_pictograph_data(self, pictograph_id: str) -> Optional[Any]:
+    def get_pictograph_data(self, pictograph_id: str) -> Any | None:
         """
         Get pictograph data by ID.
 
@@ -333,7 +333,7 @@ class IPositionResolver(ABC):
     """Interface for position resolution services."""
 
     @abstractmethod
-    def resolve_position(self, position_key: str) -> Optional[Any]:
+    def resolve_position(self, position_key: str) -> Any | None:
         """Resolve position from key."""
 
     @abstractmethod
@@ -377,11 +377,11 @@ class IGlyphDataService(ABC):
         """Convert BeatData to PictographData for glyph processing."""
 
     @abstractmethod
-    def _determine_letter_type(self, letter: str) -> Optional[LetterType]:
+    def _determine_letter_type(self, letter: str) -> LetterType | None:
         """Determine the letter type from the letter string."""
 
     @abstractmethod
-    def _determine_vtg_mode(self, pictograph_data: PictographData) -> Optional[VTGMode]:
+    def _determine_vtg_mode(self, pictograph_data: PictographData) -> VTGMode | None:
         """
         Determine VTG mode from motion data.
 
@@ -400,11 +400,11 @@ class IGlyphDataService(ABC):
         """Determine if motions are split, together, or quarter pattern."""
 
     @abstractmethod
-    def _vtg_to_elemental(self, vtg_mode: Optional[VTGMode]) -> Optional[ElementalType]:
+    def _vtg_to_elemental(self, vtg_mode: VTGMode | None) -> ElementalType | None:
         """Convert VTG mode to elemental type."""
 
     @abstractmethod
     def _determine_positions(
         self, pictograph_data: PictographData
-    ) -> tuple[Optional[str], Optional[str]]:
+    ) -> tuple[str | None, str | None]:
         """Determine start and end positions from pictograph data."""

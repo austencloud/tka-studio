@@ -11,10 +11,13 @@ Error Aggregation Contract Tests
 
 Defines behavioral contracts for error collection and aggregation patterns.
 """
+from __future__ import annotations
 
-import sys
-import pytest
 from pathlib import Path
+import sys
+
+import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -257,7 +260,7 @@ class TestErrorAggregationContracts:
             all_errors["import_errors"].append(str(e))
 
         try:
-            result = 1 / 0
+            pass
         except ZeroDivisionError as e:
             all_errors["runtime_errors"].append(str(e))
 

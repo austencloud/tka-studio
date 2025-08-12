@@ -8,7 +8,7 @@ being tied to specific implementations or UI frameworks.
 
 from __future__ import annotations
 
-from typing import Optional, Protocol
+from typing import Protocol
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -17,7 +17,7 @@ class IWorkbenchExportService(Protocol):
     """Interface for workbench export operations."""
 
     def export_sequence_image(
-        self, sequence: SequenceData, file_path: Optional[str] = None
+        self, sequence: SequenceData, file_path: str | None = None
     ) -> tuple[bool, str]:
         """
         Export sequence as image file.
@@ -112,7 +112,7 @@ class IWorkbenchClipboardService(Protocol):
         """
         ...
 
-    def paste_sequence_from_clipboard(self) -> tuple[bool, Optional[SequenceData], str]:
+    def paste_sequence_from_clipboard(self) -> tuple[bool, SequenceData | None, str]:
         """
         Paste sequence data from clipboard.
 

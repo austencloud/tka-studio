@@ -8,7 +8,7 @@ lesson management, quiz sessions, question generation, and UI services.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models.learn import (
     LessonConfig,
@@ -33,7 +33,7 @@ class ILessonConfigurationService(ABC):
         """
 
     @abstractmethod
-    def get_lesson_config(self, lesson_type: LessonType) -> Optional[LessonConfig]:
+    def get_lesson_config(self, lesson_type: LessonType) -> LessonConfig | None:
         """
         Get configuration for specific lesson type.
 
@@ -71,7 +71,7 @@ class IQuizSessionService(ABC):
         """
 
     @abstractmethod
-    def get_session(self, session_id: str) -> Optional[QuizSession]:
+    def get_session(self, session_id: str) -> QuizSession | None:
         """
         Get quiz session by ID.
 
@@ -359,7 +359,7 @@ class ILearnDataService(ABC):
         """
 
     @abstractmethod
-    def load_lesson_progress(self, session_id: str) -> Optional[dict[str, Any]]:
+    def load_lesson_progress(self, session_id: str) -> dict[str, Any] | None:
         """
         Load lesson progress from persistent storage.
 

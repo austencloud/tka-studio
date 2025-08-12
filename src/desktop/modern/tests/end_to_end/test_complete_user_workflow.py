@@ -10,20 +10,22 @@ This test validates:
 4. Click Clear Sequence button
 5. Verify it correctly resets to start position picker
 """
+from __future__ import annotations
 
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from core.application.application_factory import ApplicationFactory
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QPushButton
 
 from application.services.sequence.sequence_persister import SequencePersister
+from core.application.application_factory import ApplicationFactory
 
 
 class CompleteUserWorkflowTester:
@@ -137,23 +139,20 @@ class CompleteUserWorkflowTester:
                         self.verify_start_position_data_integrity()
 
                         return True
-                    else:
-                        print("❌ [WORKFLOW] Could not find alpha1_alpha1 option")
-                        available_keys = [
-                            opt.position_key
-                            for opt in start_pos_picker.position_options
-                            if hasattr(opt, "position_key")
-                        ]
-                        print(
-                            f"🔍 [WORKFLOW] Available position keys: {available_keys}"
-                        )
-                        return False
-                else:
-                    print("❌ [WORKFLOW] Start position picker has no position_options")
+                    print("❌ [WORKFLOW] Could not find alpha1_alpha1 option")
+                    available_keys = [
+                        opt.position_key
+                        for opt in start_pos_picker.position_options
+                        if hasattr(opt, "position_key")
+                    ]
+                    print(
+                        f"🔍 [WORKFLOW] Available position keys: {available_keys}"
+                    )
                     return False
-            else:
-                print("❌ [WORKFLOW] Could not find start position picker")
+                print("❌ [WORKFLOW] Start position picker has no position_options")
                 return False
+            print("❌ [WORKFLOW] Could not find start position picker")
+            return False
 
         except Exception as e:
             print(f"❌ [WORKFLOW] Step 2 failed: {e}")
@@ -193,30 +192,25 @@ class CompleteUserWorkflowTester:
                             first_frame = pool_manager.get_pictograph_from_pool(0)
 
                             if first_frame and hasattr(first_frame, "clicked"):
-                                print(f"🖱️ [WORKFLOW] Clicking first option frame")
+                                print("🖱️ [WORKFLOW] Clicking first option frame")
                                 QTest.mouseClick(first_frame, Qt.MouseButton.LeftButton)
                                 QTest.qWait(1000)  # Wait for processing
 
                                 self.log_workflow_state("AFTER_OPTION_SELECT")
                                 print("✅ [WORKFLOW] Step 3: Option selected")
                                 return True
-                            else:
-                                print("❌ [WORKFLOW] No clickable frame found in pool")
-                                return False
-                        else:
-                            print(
-                                "❌ [WORKFLOW] Pool manager has no get_pictograph_from_pool method"
-                            )
+                            print("❌ [WORKFLOW] No clickable frame found in pool")
                             return False
-                    else:
-                        print("❌ [WORKFLOW] Orchestrator has no pool_manager")
+                        print(
+                            "❌ [WORKFLOW] Pool manager has no get_pictograph_from_pool method"
+                        )
                         return False
-                else:
-                    print("❌ [WORKFLOW] Option picker has no orchestrator")
+                    print("❌ [WORKFLOW] Orchestrator has no pool_manager")
                     return False
-            else:
-                print("❌ [WORKFLOW] Could not find option picker")
+                print("❌ [WORKFLOW] Option picker has no orchestrator")
                 return False
+            print("❌ [WORKFLOW] Could not find option picker")
+            return False
 
         except Exception as e:
             print(f"❌ [WORKFLOW] Step 3 failed: {e}")
@@ -247,9 +241,8 @@ class CompleteUserWorkflowTester:
 
                 print("✅ [WORKFLOW] Step 4: Clear Sequence button clicked")
                 return True
-            else:
-                print("❌ [WORKFLOW] Could not find Clear Sequence button")
-                return False
+            print("❌ [WORKFLOW] Could not find Clear Sequence button")
+            return False
 
         except Exception as e:
             print(f"❌ [WORKFLOW] Step 4 failed: {e}")
@@ -303,7 +296,7 @@ class CompleteUserWorkflowTester:
                 beat_data = start_position_view.get_beat_data()
 
                 if beat_data:
-                    print(f"📊 [DATA_INTEGRITY] StartPositionView BeatData:")
+                    print("📊 [DATA_INTEGRITY] StartPositionView BeatData:")
                     print(f"   Letter: {beat_data.letter}")
                     print(f"   Beat Number: {beat_data.beat_number}")
                     print(f"   Duration: {beat_data.duration}")
@@ -340,7 +333,7 @@ class CompleteUserWorkflowTester:
                         start_pos_match = False
                         print("❌ [DATA_INTEGRITY] No glyph_data found in BeatData")
 
-                    print(f"🔍 [DATA_INTEGRITY] Verification results:")
+                    print("🔍 [DATA_INTEGRITY] Verification results:")
                     print(
                         f"   Letter match: {letter_match} (expected: {expected_letter}, actual: {beat_data.letter})"
                     )
@@ -357,7 +350,7 @@ class CompleteUserWorkflowTester:
                     # NEW: Also check separate PictographData if available
                     pictograph_data = start_position_view.get_pictograph_data()
                     if pictograph_data:
-                        print(f"🎯 [DATA_INTEGRITY] Separate PictographData found!")
+                        print("🎯 [DATA_INTEGRITY] Separate PictographData found!")
                         print(f"   Letter: {pictograph_data.letter}")
                         print(f"   Start Position: {pictograph_data.start_position}")
                         print(f"   End Position: {pictograph_data.end_position}")
@@ -370,7 +363,7 @@ class CompleteUserWorkflowTester:
                         )
 
                         print(
-                            f"🔍 [DATA_INTEGRITY] PictographData verification results:"
+                            "🔍 [DATA_INTEGRITY] PictographData verification results:"
                         )
                         print(
                             f"   Letter match: {pictograph_letter_match} (expected: {expected_letter}, actual: {pictograph_data.letter})"
@@ -448,10 +441,9 @@ class CompleteUserWorkflowTester:
         # Determine picker type
         if current_index == 0:
             return f"START_POSITION_PICKER(index_0_of_{widget_count})"
-        elif current_index == 1:
+        if current_index == 1:
             return f"OPTION_PICKER(index_1_of_{widget_count})"
-        else:
-            return f"UNKNOWN_PICKER(index_{current_index}_of_{widget_count})"
+        return f"UNKNOWN_PICKER(index_{current_index}_of_{widget_count})"
 
     def get_sequence_state(self) -> str:
         """Get the current sequence state"""
@@ -596,9 +588,8 @@ def main():
         print("\n🎉 COMPLETE WORKFLOW TEST COMPLETED")
         print("✅ Check analysis above for the exact bug location")
         return 0
-    else:
-        print("\n❌ COMPLETE WORKFLOW TEST FAILED")
-        return 1
+    print("\n❌ COMPLETE WORKFLOW TEST FAILED")
+    return 1
 
 
 if __name__ == "__main__":

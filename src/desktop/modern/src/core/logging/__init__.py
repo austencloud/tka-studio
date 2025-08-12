@@ -28,6 +28,8 @@ arrow_logger = get_arrow_positioning_logger()
 """
 
 # Specialized arrow positioning logger
+from __future__ import annotations
+
 from .arrow_positioning_logger import (
     ArrowPositioningLogger,
     get_arrow_positioning_logger,
@@ -59,37 +61,38 @@ from .smart_logger import (
     reset_all_smart_loggers,
 )
 
+
 # Version info
 __version__ = "1.0.0"
 __author__ = "TKA Development Team"
 
 # Default exports for convenience
 __all__ = [
+    "ArrowPositioningLogger",
+    "LogLevel",
+    "LoggingConfig",
+    "LoggingEnvironments",
     # Core classes
     "SmartLogger",
-    "LoggingConfig",
-    "LogLevel",
-    "ArrowPositioningLogger",
-    "LoggingEnvironments",
+    "configure_from_environment",
     # Factory functions
     "create_smart_logger",
-    "get_smart_logger",
-    "get_arrow_positioning_logger",
-    # Setup functions (most commonly used)
-    "setup_smart_logging",
-    "enable_verbose_mode",
     "enable_performance_monitoring",
-    "configure_from_environment",
+    "enable_verbose_mode",
+    "get_all_performance_stats",
+    "get_arrow_positioning_logger",
+    # Utilities
+    "get_logging_performance_report",
+    "get_smart_logger",
+    "log_adjustment_lookup",
     # Decorators for services
     "log_arrow_adjustment",
     "log_directional_processing",
-    "log_adjustment_lookup",
-    # Utilities
-    "get_logging_performance_report",
     "reset_all_logging_stats",
     "reset_all_smart_loggers",
     "reset_arrow_positioning_logger",
-    "get_all_performance_stats",
+    # Setup functions (most commonly used)
+    "setup_smart_logging",
 ]
 
 
@@ -117,6 +120,7 @@ def quick_setup(mode: str = "auto") -> None:
 
 # Auto-configure if environment variables are set
 import os
+
 
 if os.getenv("TKA_AUTO_CONFIGURE_LOGGING", "").lower() in ["true", "1", "yes"]:
     configure_from_environment()

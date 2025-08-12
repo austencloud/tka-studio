@@ -5,15 +5,14 @@ Startup Timing Analyzer - Detailed Performance Profiling for TKA Startup
 This tool provides comprehensive timing analysis of the TKA application startup process,
 measuring individual function calls and identifying performance bottlenecks.
 """
+from __future__ import annotations
 
-import logging
-import sys
-import time
-from collections import defaultdict
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+import sys
+import time
+
 
 # Add the modern src directory to Python path
 modern_src_path = Path(__file__).parent / "src"
@@ -28,8 +27,8 @@ class TimingResult:
     duration_ms: float
     start_time: float
     end_time: float
-    parent: Optional[str] = None
-    children: List[str] = None
+    parent: str | None = None
+    children: list[str] = None
 
     def __post_init__(self):
         if self.children is None:
@@ -45,13 +44,13 @@ class StartupTimingAnalyzer:
     """
 
     def __init__(self):
-        self.timings: Dict[str, TimingResult] = {}
-        self.operation_stack: List[str] = []
+        self.timings: dict[str, TimingResult] = {}
+        self.operation_stack: list[str] = []
         self.total_start_time = None
-        self.phase_times: Dict[str, float] = {}
+        self.phase_times: dict[str, float] = {}
 
     @contextmanager
-    def time_operation(self, operation_name: str, parent: Optional[str] = None):
+    def time_operation(self, operation_name: str, parent: str | None = None):
         """Context manager for timing operations."""
         start_time = time.perf_counter()
 
@@ -170,7 +169,7 @@ class StartupTimingAnalyzer:
         heaviest_phase = max(phase_totals.items(), key=lambda x: x[1])
         print(f"\n🎯 HEAVIEST PHASE: {heaviest_phase[0]} ({heaviest_phase[1]:.1f}ms)")
 
-    def _generate_recommendations(self, sorted_operations: List[TimingResult]):
+    def _generate_recommendations(self, sorted_operations: list[TimingResult]):
         """Generate performance improvement recommendations."""
         print("\n💡 OPTIMIZATION RECOMMENDATIONS:")
 
@@ -242,8 +241,11 @@ def time_function_calls():
 
         # Time splash screen creation
         with analyzer.time_operation("SplashScreen creation"):
-            from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
             from PyQt6.QtGui import QGuiApplication
+
+            from desktop.modern.presentation.components.ui.splash_screen import (
+                SplashScreen,
+            )
 
             screens = QGuiApplication.screens()
             target_screen = screens[0] if screens else None
@@ -276,7 +278,7 @@ def time_function_calls():
                                 "ApplicationOrchestrator creation",
                                 "TKAMainWindow.__init__",
                             ):
-                                orchestrator = ApplicationOrchestrator(
+                                ApplicationOrchestrator(
                                     container=container_arg
                                 )
 
@@ -295,7 +297,7 @@ def time_function_calls():
             TKAMainWindow.__init__ = instrumented_init
 
             try:
-                window = TKAMainWindow(
+                TKAMainWindow(
                     container=container,
                     splash_screen=splash,
                     target_screen=target_screen,

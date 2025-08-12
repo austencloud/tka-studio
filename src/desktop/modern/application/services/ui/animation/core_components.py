@@ -5,7 +5,6 @@ Core animation components for the modern fade system.
 from __future__ import annotations
 
 import asyncio
-from typing import Optional
 
 from PyQt6.QtCore import QParallelAnimationGroup, QPropertyAnimation
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QWidget
@@ -20,7 +19,7 @@ from desktop.modern.core.interfaces.animation_interfaces import (
 class FadableOpacityEffect(QGraphicsOpacityEffect):
     """Custom opacity effect for fade animations."""
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
         self.in_animation = False
 

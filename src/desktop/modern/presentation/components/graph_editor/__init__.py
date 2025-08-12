@@ -38,13 +38,13 @@ from .managers.state_manager import GraphEditorStateManager
 
 
 __all__ = [
+    "AdjustmentPanel",
     # Main public API
     "GraphEditor",
-    # Component managers
-    "GraphEditorSignalCoordinator",
     "GraphEditorLayoutManager",
-    "GraphEditorStateManager",
     # UI components
     "GraphEditorPictographContainer",
-    "AdjustmentPanel",
+    # Component managers
+    "GraphEditorSignalCoordinator",
+    "GraphEditorStateManager",
 ]

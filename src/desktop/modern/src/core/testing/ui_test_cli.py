@@ -3,20 +3,21 @@ CLI Interface for TKA UI Testing Framework
 
 Provides command-line interface for running UI tests with various options.
 """
+from __future__ import annotations
 
 import argparse
-import sys
 import logging
 from pathlib import Path
-from typing import Optional
+import sys
+
 
 # Add the src directory to the Python path
 current_dir = Path(__file__).parent
 src_dir = current_dir.parent.parent  # Go up to the src directory
 sys.path.insert(0, str(src_dir))
 
-from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
 from desktop.modern.core.testing.ai_agent_helpers import TKAAITestHelper
+from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
 
 
 def setup_logging(verbose: bool = False):
@@ -32,9 +33,9 @@ def setup_logging(verbose: bool = False):
     )
 
 
-def run_button_test(button_name: Optional[str] = None, verbose: bool = False):
+def run_button_test(button_name: str | None = None, verbose: bool = False):
     """Run button tests."""
-    print(f"🚀 Starting button testing...")
+    print("🚀 Starting button testing...")
 
     tester = SimpleUITester(headless=True)
 
@@ -53,7 +54,7 @@ def run_button_test(button_name: Optional[str] = None, verbose: bool = False):
 
 def run_graph_editor_test(verbose: bool = False):
     """Run graph editor tests."""
-    print(f"🚀 Starting graph editor testing...")
+    print("🚀 Starting graph editor testing...")
 
     tester = SimpleUITester(headless=True)
     result = tester.test_graph_editor_interactions()
@@ -64,7 +65,7 @@ def run_graph_editor_test(verbose: bool = False):
 
 def run_comprehensive_test(verbose: bool = False):
     """Run comprehensive UI tests."""
-    print(f"🚀 Starting comprehensive UI testing...")
+    print("🚀 Starting comprehensive UI testing...")
 
     tester = SimpleUITester(headless=True)
     result = tester.run_comprehensive_tests()
@@ -75,7 +76,7 @@ def run_comprehensive_test(verbose: bool = False):
 
 def run_ai_helper_test(verbose: bool = False):
     """Run AI helper validation tests."""
-    print(f"🚀 Starting AI helper validation...")
+    print("🚀 Starting AI helper validation...")
 
     helper = TKAAITestHelper(use_test_mode=True)
     result = helper.run_comprehensive_test_suite()
@@ -98,7 +99,7 @@ def print_test_results(result, test_name: str):
     print(f"⏱️  Execution Time: {result.execution_time:.2f}s")
 
     if result.metadata:
-        print(f"📋 Metadata:")
+        print("📋 Metadata:")
         for key, value in result.metadata.items():
             print(f"   • {key}: {value}")
 

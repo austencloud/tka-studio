@@ -5,13 +5,13 @@ Detailed Startup Profiler - Deep Analysis of TKA Startup Performance
 This profiler instruments the actual startup process to measure timing
 of individual components within the orchestrator initialization.
 """
+from __future__ import annotations
 
-import logging
-import sys
-import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, List
+import sys
+import time
+
 
 # Add the modern src directory to Python path
 modern_src_path = Path(__file__).parent / "src"
@@ -57,7 +57,7 @@ class DetailedProfiler:
             print(f"   {name:<50} {duration:>8.1f}ms ({percentage:>5.1f}%)")
 
         # Identify major bottlenecks
-        print(f"\n⚠️  BOTTLENECKS (>100ms):")
+        print("\n⚠️  BOTTLENECKS (>100ms):")
         bottlenecks = [
             (name, duration) for name, duration in sorted_timings if duration > 100
         ]
@@ -86,12 +86,15 @@ def profile_startup():
 
         # Import timing
         with profiler.time_operation("Core imports"):
+            from PyQt6.QtGui import QGuiApplication
+
             from desktop.modern.core.application.application_factory import (
                 ApplicationFactory,
                 ApplicationMode,
             )
-            from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
-            from PyQt6.QtGui import QGuiApplication
+            from desktop.modern.presentation.components.ui.splash_screen import (
+                SplashScreen,
+            )
 
         # Container creation
         with profiler.time_operation("Container creation"):
@@ -114,7 +117,6 @@ def profile_startup():
             from desktop.modern.application.services.core.application_orchestrator import (
                 ApplicationOrchestrator,
             )
-
             from main import TKAMainWindow
 
         with profiler.time_operation("Main window - constructor setup"):
@@ -167,7 +169,9 @@ def profile_startup():
 
                 # Step 2: Service registration
                 with profiler.time_operation("  2. Service registration"):
-                    from desktop.modern.core.dependency_injection.di_container import get_container
+                    from desktop.modern.core.dependency_injection.di_container import (
+                        get_container,
+                    )
 
                     window.orchestrator.container = get_container()
                     window.orchestrator.service_manager.register_all_services(

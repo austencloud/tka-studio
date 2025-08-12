@@ -112,10 +112,7 @@ class WindowDiscoveryService(IWindowDiscoveryService):
 
         # Check for reasonable size (main windows are typically large)
         size = widget.size()
-        if size.width() > 800 and size.height() > 600:
-            return True
-
-        return False
+        return bool(size.width() > 800 and size.height() > 600)
 
     def get_main_window_size(self) -> QSize:
         """Get main window size with proper fallbacks."""
@@ -193,5 +190,5 @@ class WindowDiscoveryService(IWindowDiscoveryService):
             return True
 
         except Exception as e:
-            logger.error(f"Main window validation error: {e}")
+            logger.exception(f"Main window validation error: {e}")
             return False

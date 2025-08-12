@@ -5,10 +5,11 @@ Focused test for Full Screen Viewer functionality.
 This script tests only the full screen viewer components to verify
 they work correctly in isolation.
 """
+from __future__ import annotations
 
-import sys
-import tempfile
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -46,14 +47,18 @@ def test_full_screen_end_to_end():
         )
 
         # Create full screen service
-        from desktop.modern.application.services.ui.full_screen_viewer import FullScreenViewer
+        from desktop.modern.application.services.ui.full_screen_viewer import (
+            FullScreenViewer,
+        )
         from desktop.modern.application.services.ui.sequence_state_reader import (
             MockSequenceStateReader,
         )
         from desktop.modern.application.services.ui.thumbnail_generation_service import (
             MockThumbnailGenerationService,
         )
-        from desktop.modern.presentation.components.ui.full_screen import FullScreenOverlayFactory
+        from desktop.modern.presentation.components.ui.full_screen import (
+            FullScreenOverlayFactory,
+        )
 
         thumbnail_generator = MockThumbnailGenerationService()
         sequence_state_reader = MockSequenceStateReader()
@@ -122,7 +127,9 @@ def test_overlay_widget():
         if app is None:
             app = QApplication(sys.argv)
 
-        from desktop.modern.presentation.components.ui.full_screen import FullScreenOverlay
+        from desktop.modern.presentation.components.ui.full_screen import (
+            FullScreenOverlay,
+        )
 
         # Create overlay
         overlay = FullScreenOverlay()
@@ -186,9 +193,8 @@ def test_di_integration_focused():
                 return False
 
             return True
-        else:
-            print("❌ Could not resolve IFullScreenService")
-            return False
+        print("❌ Could not resolve IFullScreenService")
+        return False
 
     except Exception as e:
         print(f"❌ DI integration test failed: {e}")
@@ -228,9 +234,8 @@ def main():
         print("  ✅ Dependency injection integration")
         print("  ✅ Interface compliance (IFullScreenService)")
         return True
-    else:
-        print("⚠️ Some tests failed. Check the output above for details.")
-        return False
+    print("⚠️ Some tests failed. Check the output above for details.")
+    return False
 
 
 if __name__ == "__main__":

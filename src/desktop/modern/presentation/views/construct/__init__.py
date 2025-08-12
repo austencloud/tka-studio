@@ -56,15 +56,15 @@ from desktop.modern.presentation.views.construct.construct_tab import ConstructT
 ModernConstructTab = ConstructTab
 
 __all__ = [
+    "ConstructTab",
     # Presentation components (local)
     "ConstructTabLayoutManager",
-    "StartPositionSelectionHandler",
-    "OptionPickerManager",
-    "SignalCoordinator",
-    "ConstructTab",
     "ModernConstructTab",  # Alias for backward compatibility
+    "OptionPickerManager",
     # Business services (re-exported from application layer)
     "QtSequenceLoaderAdapter",
     "SequenceBeatOperations",
     "SequenceStartPositionManager",
+    "SignalCoordinator",
+    "StartPositionSelectionHandler",
 ]

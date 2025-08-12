@@ -23,7 +23,6 @@ Architecture:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
@@ -76,15 +75,15 @@ class DualOrientationPicker(QWidget):
             parent: Parent widget (typically the graph editor)
         """
         super().__init__(parent)
-        self._current_beat_data: Optional[BeatData] = None
+        self._current_beat_data: BeatData | None = None
 
         # State tracking for orientations
         self._blue_orientation = Orientation.IN
         self._red_orientation = Orientation.IN
 
         # UI component references
-        self._blue_orientation_label: Optional[QLabel] = None
-        self._red_orientation_label: Optional[QLabel] = None
+        self._blue_orientation_label: QLabel | None = None
+        self._red_orientation_label: QLabel | None = None
 
         self._setup_ui()
         logger.debug("DualOrientationPicker initialized")
@@ -223,7 +222,7 @@ class DualOrientationPicker(QWidget):
         self.orientation_changed.emit(color, orientation)
         logger.debug(f"{color.title()} orientation set to: {orientation.value}")
 
-    def set_beat_data(self, beat_data: Optional[BeatData]):
+    def set_beat_data(self, beat_data: BeatData | None):
         """
         Set the current beat data and update the UI.
 
@@ -307,6 +306,6 @@ class DualOrientationPicker(QWidget):
         self._set_orientation("blue", Orientation.IN)
         self._set_orientation("red", Orientation.IN)
 
-    def get_current_beat_data(self) -> Optional[BeatData]:
+    def get_current_beat_data(self) -> BeatData | None:
         """Get the currently set beat data."""
         return self._current_beat_data

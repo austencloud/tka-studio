@@ -112,7 +112,7 @@ class QtCompatibilityManager:
             )
 
         except Exception as e:
-            logger.error(f"Failed to detect Qt environment: {e}")
+            logger.exception(f"Failed to detect Qt environment: {e}")
             # Create fallback environment
             self._environment = self._create_fallback_environment()
 

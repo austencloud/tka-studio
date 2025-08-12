@@ -9,11 +9,6 @@ from __future__ import annotations
 
 import logging
 
-from desktop.shared.application.services.data.dataset_query import IDatasetQuery
-from desktop.shared.application.services.learn.question_generation_service import (
-    QuestionGenerationService,
-)
-
 from desktop.modern.application.services.learn import (
     AnswerValidationService,
     LearnDataService,
@@ -40,6 +35,10 @@ from desktop.modern.infrastructure.file_system.file_system_service import (
     FileSystemService,
 )
 from desktop.modern.presentation.views.learn import LearnTab
+from desktop.shared.application.services.data.dataset_query import IDatasetQuery
+from desktop.shared.application.services.learn.question_generation_service import (
+    QuestionGenerationService,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -116,7 +115,7 @@ def register_learn_services(container: DIContainer) -> None:
         container.register_factory(LearnTab, lambda: LearnTab(container))
 
     except Exception as e:
-        logger.error(f"Failed to register learn services: {e}")
+        logger.exception(f"Failed to register learn services: {e}")
         raise
 
 
@@ -181,7 +180,7 @@ def validate_learn_service_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Learn service registration validation failed: {e}")
+        logger.exception(f"Learn service registration validation failed: {e}")
         return False
 
 

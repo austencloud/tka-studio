@@ -10,6 +10,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.domain.models import BeatData, SequenceData
 from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
     OperationType,
     WorkbenchOperationCoordinator,
@@ -17,8 +19,6 @@ from desktop.shared.application.services.workbench.workbench_operation_coordinat
 from desktop.shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
-
-from desktop.modern.domain.models import BeatData, SequenceData
 
 
 if TYPE_CHECKING:

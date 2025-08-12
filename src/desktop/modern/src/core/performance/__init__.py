@@ -35,46 +35,48 @@ USAGE:
     # ... operations ...
     results = profiler.stop_session()
 """
+from __future__ import annotations
 
-from .profiler import AdvancedProfiler, get_profiler, profile, profile_block
-from .metrics import PerformanceMetrics, FunctionMetrics, SystemMetrics, QtEventMetrics
 from .config import PerformanceConfig, get_performance_config
-from .qt_profiler import QtProfiler, get_qt_profiler
-from .memory_tracker import MemoryTracker, get_memory_tracker
 from .integration import (
     PerformanceIntegration,
     get_performance_integration,
     initialize_performance_framework,
-    shutdown_performance_framework,
-    profile_critical_path,
     monitor_memory_intensive,
+    profile_critical_path,
+    shutdown_performance_framework,
 )
+from .memory_tracker import MemoryTracker, get_memory_tracker
+from .metrics import FunctionMetrics, PerformanceMetrics, QtEventMetrics, SystemMetrics
+from .profiler import AdvancedProfiler, get_profiler, profile, profile_block
+from .qt_profiler import QtProfiler, get_qt_profiler
+
 
 __all__ = [
     # Core profiling
     "AdvancedProfiler",
-    "get_profiler",
-    "profile",
-    "profile_block",
+    "FunctionMetrics",
+    # Memory tracking
+    "MemoryTracker",
+    # Configuration
+    "PerformanceConfig",
+    # Integration
+    "PerformanceIntegration",
     # Metrics
     "PerformanceMetrics",
-    "FunctionMetrics",
-    "SystemMetrics",
     "QtEventMetrics",
     # Qt profiling
     "QtProfiler",
-    "get_qt_profiler",
-    # Memory tracking
-    "MemoryTracker",
+    "SystemMetrics",
     "get_memory_tracker",
-    # Configuration
-    "PerformanceConfig",
     "get_performance_config",
-    # Integration
-    "PerformanceIntegration",
     "get_performance_integration",
+    "get_profiler",
+    "get_qt_profiler",
     "initialize_performance_framework",
-    "shutdown_performance_framework",
-    "profile_critical_path",
     "monitor_memory_intensive",
+    "profile",
+    "profile_block",
+    "profile_critical_path",
+    "shutdown_performance_framework",
 ]

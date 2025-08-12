@@ -14,7 +14,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from desktop.shared.application.services.ui.ui_settings_manager import UISettingsManager
 
 from desktop.modern.core.interfaces.core_services import IUIStateManager
 from desktop.modern.presentation.components.ui.settings.tabs.background_tab import (
@@ -41,6 +40,7 @@ from desktop.modern.presentation.components.ui.settings.visibility.visibility_ta
 
 # Import new design system instead of scattered components
 from desktop.modern.presentation.styles.mixins import StyleMixin
+from desktop.shared.application.services.ui.ui_settings_manager import UISettingsManager
 
 from .components import (
     SettingsActionButtons,
@@ -151,12 +151,11 @@ class SettingsDialog(QDialog, StyleMixin):
 
     def _setup_coordinator(self):
         """Setup the settings coordinator for managing state."""
-        from desktop.shared.application.services.settings.settings_coordinator import (
-            SettingsCoordinator,
-        )
-
         from desktop.modern.presentation.components.ui.settings.settings_ui_adapter import (
             SettingsUIAdapter,
+        )
+        from desktop.shared.application.services.settings.settings_coordinator import (
+            SettingsCoordinator,
         )
 
         # Create the framework-agnostic service

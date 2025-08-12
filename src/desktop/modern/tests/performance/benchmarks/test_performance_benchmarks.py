@@ -4,12 +4,11 @@ Performance Benchmarks
 Comprehensive benchmarks for TKA performance framework components.
 Tests performance targets and validates optimization effectiveness.
 """
+from __future__ import annotations
 
-import pytest
-import time
+import contextlib
 import statistics
-from typing import List, Dict, Any
-from unittest.mock import Mock, patch
+import time
 
 from core.performance import get_profiler, profile, profile_block
 from core.performance.config import get_performance_config
@@ -168,7 +167,7 @@ class TestPerformanceBenchmarks:
 
         def memory_intensive_operation():
             """Operation that allocates and deallocates memory."""
-            data = [i for i in range(10000)]
+            data = list(range(10000))
             return len(data)
 
         # Test without memory tracking
@@ -295,8 +294,8 @@ class TestPerformanceBenchmarks:
 
     def test_concurrent_profiling_performance(self):
         """Test profiling performance under concurrent load."""
-        import threading
         import queue
+        import threading
 
         self.profiler.start_session("concurrent_test")
 
@@ -318,7 +317,7 @@ class TestPerformanceBenchmarks:
             thread_times = []
             for _ in range(operations_per_thread):
                 start_time = time.perf_counter()
-                result = concurrent_operation(thread_id)
+                concurrent_operation(thread_id)
                 end_time = time.perf_counter()
                 thread_times.append(end_time - start_time)
             results_queue.put(thread_times)
@@ -367,14 +366,15 @@ class TestPerformanceBenchmarks:
 
     def test_performance_data_storage_benchmark(self):
         """Test performance data storage and retrieval performance."""
-        from infrastructure.performance.storage import PerformanceStorage
-        from core.performance.profiler import ProfilerSession
-        from core.performance.metrics import FunctionMetrics
         from datetime import datetime
+        import os
 
         # Use temporary database for testing
         import tempfile
-        import os
+
+        from core.performance.metrics import FunctionMetrics
+        from core.performance.profiler import ProfilerSession
+        from infrastructure.performance.storage import PerformanceStorage
 
         config = get_performance_config()
 
@@ -453,10 +453,8 @@ class TestPerformanceBenchmarks:
 
         finally:
             # Clean up temporary database file
-            try:
+            with contextlib.suppress(OSError):
                 os.unlink(temp_db.name)
-            except OSError:
-                pass
 
 
 class TestRegressionDetection:
@@ -464,7 +462,7 @@ class TestRegressionDetection:
 
     def test_regression_detection_accuracy(self):
         """Test accuracy of regression detection algorithm."""
-        from core.performance.metrics import PerformanceMetrics, FunctionMetrics
+        from core.performance.metrics import FunctionMetrics, PerformanceMetrics
 
         metrics = PerformanceMetrics()
 

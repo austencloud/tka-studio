@@ -5,10 +5,12 @@ PURPOSE: Contract testing for enhanced dependency injection container
 SCOPE: Core DI functionality, constructor injection, Protocol validation
 EXPECTED_DURATION: permanent
 """
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol, runtime_checkable
 
 import pytest
-from typing import Protocol, Optional, runtime_checkable
-from dataclasses import dataclass
 
 from core.dependency_injection.di_container import (
     DIContainer,
@@ -47,7 +49,7 @@ class TestService:
     """Test service implementation with dependencies."""
 
     def __init__(
-        self, repository: ITestRepository, config: Optional[TestConfig] = None
+        self, repository: ITestRepository, config: TestConfig | None = None
     ):
         self.repository = repository
         self.config = config or TestConfig("default", 42)

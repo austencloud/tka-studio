@@ -67,7 +67,7 @@ class TurnApplicator:
             )
 
         except Exception as e:
-            logger.error(f"Failed to apply turns: {e}")
+            logger.exception(f"Failed to apply turns: {e}")
             return pictograph  # Return original on error
 
     def allocate_turns_for_sequence(
@@ -90,7 +90,7 @@ class TurnApplicator:
         blue_turns = []
         red_turns = []
 
-        for i in range(sequence_length):
+        for _i in range(sequence_length):
             # Filter possible turns by turn_intensity (EXACT legacy logic)
             valid_turns = [
                 t
@@ -129,5 +129,5 @@ class TurnApplicator:
                 turns=turns,
             )
         except Exception as e:
-            logger.error(f"Failed to apply turns to motion: {e}")
+            logger.exception(f"Failed to apply turns to motion: {e}")
             return motion  # Return original on error

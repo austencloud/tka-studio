@@ -11,6 +11,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
+
 from desktop.shared.application.services.graph_editor.graph_editor_auto_transform_service import (
     GraphEditorAutoTransformService,
 )

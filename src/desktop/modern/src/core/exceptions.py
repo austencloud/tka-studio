@@ -13,8 +13,9 @@ EXCEPTION HIERARCHY:
   - ConfigurationError: Configuration and settings errors
   - DataProcessingError: Data transformation and processing errors
 """
+from __future__ import annotations
 
-from typing import Optional, Dict, Any
+from typing import Any
 
 
 class TKABaseException(Exception):
@@ -25,7 +26,7 @@ class TKABaseException(Exception):
     consistent error handling and logging capabilities.
     """
 
-    def __init__(self, message: str, context: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, context: dict[str, Any] | None = None):
         """
         Initialize TKA base exception.
 
@@ -56,9 +57,9 @@ class ServiceOperationError(TKABaseException):
     def __init__(
         self,
         message: str,
-        service_name: Optional[str] = None,
-        operation: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        service_name: str | None = None,
+        operation: str | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize service operation error.
@@ -91,9 +92,9 @@ class ValidationError(TKABaseException):
     def __init__(
         self,
         message: str,
-        field: Optional[str] = None,
-        value: Optional[Any] = None,
-        context: Optional[Dict[str, Any]] = None,
+        field: str | None = None,
+        value: Any | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize validation error.
@@ -126,9 +127,9 @@ class DependencyInjectionError(TKABaseException):
     def __init__(
         self,
         message: str,
-        interface_name: Optional[str] = None,
-        dependency_chain: Optional[list] = None,
-        context: Optional[Dict[str, Any]] = None,
+        interface_name: str | None = None,
+        dependency_chain: list | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize dependency injection error.
@@ -161,11 +162,11 @@ class PerformanceError(TKABaseException):
     def __init__(
         self,
         message: str,
-        operation: Optional[str] = None,
-        threshold: Optional[float] = None,
-        actual: Optional[float] = None,
-        metric_type: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        operation: str | None = None,
+        threshold: float | None = None,
+        actual: float | None = None,
+        metric_type: str | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize performance error.
@@ -206,9 +207,9 @@ class ConfigurationError(TKABaseException):
     def __init__(
         self,
         message: str,
-        config_file: Optional[str] = None,
-        setting_name: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        config_file: str | None = None,
+        setting_name: str | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize configuration error.
@@ -241,9 +242,9 @@ class DataProcessingError(TKABaseException):
     def __init__(
         self,
         message: str,
-        data_type: Optional[str] = None,
-        processing_stage: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        data_type: str | None = None,
+        processing_stage: str | None = None,
+        context: dict[str, Any] | None = None,
     ):
         """
         Initialize data processing error.

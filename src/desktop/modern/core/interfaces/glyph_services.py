@@ -9,7 +9,7 @@ that must behave identically across desktop and web platforms.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models import (
     BeatData,
@@ -462,7 +462,7 @@ class IGlyphCacheService(ABC):
         """
 
     @abstractmethod
-    def get_cached_glyph(self, key: str) -> Optional[GlyphData]:
+    def get_cached_glyph(self, key: str) -> GlyphData | None:
         """
         Get cached glyph data by key.
 

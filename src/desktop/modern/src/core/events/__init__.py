@@ -1,60 +1,61 @@
 """Event system exports for easy importing."""
-
-from .event_bus import (
-    TypeSafeEventBus,
-    IEventBus,
-    get_event_bus,
-    reset_event_bus,
-    BaseEvent,
-    EventPriority,
-)
+from __future__ import annotations
 
 from .domain_events import (
+    # Arrow/Pictograph events
+    ArrowPositionedEvent,
+    BeatAddedEvent,
+    BeatRemovedEvent,
+    BeatUpdatedEvent,
+    # Command events
+    CommandExecutedEvent,
+    CommandRedoneEvent,
+    CommandUndoneEvent,
+    ComponentResizedEvent,
+    # Layout events
+    LayoutRecalculatedEvent,
+    # Motion events
+    MotionValidatedEvent,
+    PictographUpdatedEvent,
+    PropPositionedEvent,
     # Sequence events
     SequenceCreatedEvent,
     SequenceUpdatedEvent,
-    BeatAddedEvent,
-    BeatUpdatedEvent,
-    BeatRemovedEvent,
-    # Motion events
-    MotionValidatedEvent,
-    # Layout events
-    LayoutRecalculatedEvent,
-    ComponentResizedEvent,
-    # Arrow/Pictograph events
-    ArrowPositionedEvent,
-    PropPositionedEvent,
-    PictographUpdatedEvent,
     # UI events
     UIStateChangedEvent,
-    # Command events
-    CommandExecutedEvent,
-    CommandUndoneEvent,
-    CommandRedoneEvent,
+)
+from .event_bus import (
+    BaseEvent,
+    EventPriority,
+    IEventBus,
+    TypeSafeEventBus,
+    get_event_bus,
+    reset_event_bus,
 )
 
+
 __all__ = [
-    # Event bus core
-    "TypeSafeEventBus",
-    "IEventBus",
-    "get_event_bus",
-    "reset_event_bus",
+    "ArrowPositionedEvent",
     "BaseEvent",
+    "BeatAddedEvent",
+    "BeatRemovedEvent",
+    "BeatUpdatedEvent",
+    "CommandExecutedEvent",
+    "CommandRedoneEvent",
+    "CommandUndoneEvent",
+    "ComponentResizedEvent",
     "EventPriority",
+    "IEventBus",
+    "LayoutRecalculatedEvent",
+    "MotionValidatedEvent",
+    "PictographUpdatedEvent",
+    "PropPositionedEvent",
     # Domain events
     "SequenceCreatedEvent",
     "SequenceUpdatedEvent",
-    "BeatAddedEvent",
-    "BeatUpdatedEvent",
-    "BeatRemovedEvent",
-    "MotionValidatedEvent",
-    "LayoutRecalculatedEvent",
-    "ComponentResizedEvent",
-    "ArrowPositionedEvent",
-    "PropPositionedEvent",
-    "PictographUpdatedEvent",
+    # Event bus core
+    "TypeSafeEventBus",
     "UIStateChangedEvent",
-    "CommandExecutedEvent",
-    "CommandUndoneEvent",
-    "CommandRedoneEvent",
+    "get_event_bus",
+    "reset_event_bus",
 ]

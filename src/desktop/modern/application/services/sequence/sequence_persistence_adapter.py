@@ -7,14 +7,15 @@ Extracted from SequenceBeatOperations God Object.
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
+from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.shared.application.services.data.modern_to_legacy_converter import (
     ModernToLegacyConverter,
 )
-from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
-
-from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.shared.application.services.sequence.sequence_persister import (
+    SequencePersister,
+)
 
 
 class SequencePersistenceAdapter:
@@ -30,8 +31,8 @@ class SequencePersistenceAdapter:
 
     def __init__(
         self,
-        converter: Optional[ModernToLegacyConverter] = None,
-        persister: Optional[SequencePersister] = None,
+        converter: ModernToLegacyConverter | None = None,
+        persister: SequencePersister | None = None,
     ):
         self.converter = converter or ModernToLegacyConverter()
         self.persister = persister or SequencePersister()
@@ -138,7 +139,7 @@ class SequencePersistenceAdapter:
 
     def preserve_start_position_from_existing(
         self, existing_sequence: list[dict[str, Any]]
-    ) -> Optional[dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Extract start position from existing sequence if present.
 

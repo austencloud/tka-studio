@@ -17,10 +17,10 @@ USAGE:
     # Inject into DI container
     container.register_singleton(AppConfig, lambda: app_config)
 """
+from __future__ import annotations
 
-import os
 from dataclasses import dataclass
-from typing import Optional
+import os
 
 # Result pattern removed - using simple exceptions
 from desktop.modern.core.config.data_config import DataConfig, create_data_config
@@ -117,7 +117,7 @@ class AppConfig:
         return True
 
     @classmethod
-    def from_environment(cls) -> "AppConfig":
+    def from_environment(cls) -> AppConfig:
         """Load configuration from environment variables and defaults."""
         # Create data configuration
         data_config = create_data_config()
@@ -180,10 +180,10 @@ class AppConfig:
 
 
 def create_app_config(
-    data_config: Optional[DataConfig] = None,
-    positioning_config: Optional[PositioningConfig] = None,
-    ui_config: Optional[UIConfig] = None,
-    logging_config: Optional[LoggingConfig] = None,
+    data_config: DataConfig | None = None,
+    positioning_config: PositioningConfig | None = None,
+    ui_config: UIConfig | None = None,
+    logging_config: LoggingConfig | None = None,
 ) -> AppConfig:
     """
     Create application configuration with optional overrides.

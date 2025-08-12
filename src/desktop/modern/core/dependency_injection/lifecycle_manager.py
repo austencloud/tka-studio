@@ -41,7 +41,7 @@ class LifecycleManager:
                 self._initialized_services.append(instance)
                 logger.debug(f"Initialized service: {type(instance).__name__}")
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Failed to initialize service {type(instance).__name__}: {e}"
                 )
                 raise
@@ -62,7 +62,7 @@ class LifecycleManager:
                 cleanup_handler()
                 logger.debug("Service cleanup completed successfully")
             except Exception as e:
-                logger.error(f"Error during service cleanup: {e}")
+                logger.exception(f"Error during service cleanup: {e}")
 
         self.cleanup_handlers.clear()
         self._initialized_services.clear()
@@ -97,7 +97,7 @@ class LifecycleManager:
                         f"Cleaned up scoped instance: {type(instance).__name__}"
                     )
                 except Exception as e:
-                    logger.error(f"Error cleaning up scoped instance: {e}")
+                    logger.exception(f"Error cleaning up scoped instance: {e}")
 
         del self._scoped_instances[scope_id]
         if self._current_scope == scope_id:
@@ -186,7 +186,7 @@ class LifecycleManager:
                 )
                 return True
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error during force cleanup of {type(service_instance).__name__}: {e}"
                 )
                 return False

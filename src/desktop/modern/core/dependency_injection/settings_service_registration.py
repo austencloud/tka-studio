@@ -107,7 +107,7 @@ def register_settings_services(container: DIContainer) -> None:
         )
 
     except Exception as e:
-        logger.error(f"❌ Failed to register settings services: {e}")
+        logger.exception(f"❌ Failed to register settings services: {e}")
         raise
 
 
@@ -123,7 +123,7 @@ def _create_settings_service(container: DIContainer) -> ModernSettingsService:
         return settings_service
 
     except Exception as e:
-        logger.error(f"Failed to create settings service: {e}")
+        logger.exception(f"Failed to create settings service: {e}")
         raise
 
 
@@ -162,7 +162,7 @@ def validate_settings_registration(container: DIContainer) -> bool:
                     return False
                 logger.debug(f"✅ {name} manager validated")
             except Exception as e:
-                logger.error(f"❌ Failed to resolve {name} manager: {e}")
+                logger.exception(f"❌ Failed to resolve {name} manager: {e}")
                 return False
 
         # Test basic functionality
@@ -173,7 +173,7 @@ def validate_settings_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"❌ Settings validation failed: {e}")
+        logger.exception(f"❌ Settings validation failed: {e}")
         return False
 
 
@@ -209,7 +209,7 @@ def _test_basic_functionality(
                 logger.error("Background manager not resolvable from container")
                 return False
         except Exception as e:
-            logger.error(f"Failed to resolve background manager from container: {e}")
+            logger.exception(f"Failed to resolve background manager from container: {e}")
             return False
 
         # Clean up test data
@@ -220,7 +220,7 @@ def _test_basic_functionality(
         return True
 
     except Exception as e:
-        logger.error(f"❌ Basic functionality test failed: {e}")
+        logger.exception(f"❌ Basic functionality test failed: {e}")
         return False
 
 
@@ -290,7 +290,7 @@ def create_configured_settings_container(
                 return not current
 
             # Legacy methods for compatibility
-            def get_ui_state(self, key: str = None):
+            def get_ui_state(self, key: str | None = None):
                 return self._state.get(key) if key else self._state.copy()
 
             def set_ui_state(self, key: str, value):
@@ -331,5 +331,5 @@ def create_configured_settings_container(
         return container
 
     except Exception as e:
-        logger.error(f"❌ Failed to create configured settings container: {e}")
+        logger.exception(f"❌ Failed to create configured settings container: {e}")
         raise

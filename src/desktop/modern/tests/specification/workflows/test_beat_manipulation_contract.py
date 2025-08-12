@@ -11,11 +11,13 @@ Beat Manipulation Workflow Contract Tests
 
 Defines behavioral contracts for beat manipulation workflows.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"

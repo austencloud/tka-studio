@@ -86,7 +86,7 @@ class LessonResultsController(QObject):
             self._log_performance_summary(results)
 
         except Exception as e:
-            logger.error(f"Failed to display results: {e}")
+            logger.exception(f"Failed to display results: {e}")
             # Don't set error state here as results are already calculated
             # Just log the error and show what we can
 
@@ -160,11 +160,11 @@ class LessonResultsController(QObject):
             logger.info(f"Successfully restarted lesson {lesson_type.value}")
 
         except SessionCreationError as e:
-            logger.error(f"Failed to restart lesson: {e}")
+            logger.exception(f"Failed to restart lesson: {e}")
             self.state_manager.set_error(e)
 
         except Exception as e:
-            logger.error(f"Unexpected error restarting lesson: {e}")
+            logger.exception(f"Unexpected error restarting lesson: {e}")
             self.state_manager.set_error(
                 SessionCreationError(
                     lesson_type.value, "unknown", f"Unexpected error: {e!s}"
@@ -182,7 +182,7 @@ class LessonResultsController(QObject):
             self.state_manager.transition_to_lesson_selector()
 
         except Exception as e:
-            logger.error(f"Failed to return to lesson selector: {e}")
+            logger.exception(f"Failed to return to lesson selector: {e}")
             # Force transition even if there's an error
             self.state_manager.transition_to_lesson_selector()
 

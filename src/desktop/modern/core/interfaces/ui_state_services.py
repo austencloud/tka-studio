@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import LetterType, MotionType
@@ -53,7 +53,7 @@ class IOptionPickerStateManager(ABC):
         """
 
     @abstractmethod
-    def get_selected_option(self) -> Optional[str]:
+    def get_selected_option(self) -> str | None:
         """
         Get currently selected option.
 
@@ -293,7 +293,7 @@ class IMainWindowStateManager(ABC):
         """
 
     @abstractmethod
-    def get_active_panel(self) -> Optional[str]:
+    def get_active_panel(self) -> str | None:
         """
         Get currently active panel.
 
@@ -407,7 +407,7 @@ class IDialogStateManager(ABC):
 
     @abstractmethod
     def show_dialog(
-        self, dialog_id: str, data: Optional[dict[str, Any]] = None
+        self, dialog_id: str, data: dict[str, Any] | None = None
     ) -> None:
         """
         Show a dialog.
@@ -445,7 +445,7 @@ class IDialogStateManager(ABC):
         """
 
     @abstractmethod
-    def get_dialog_data(self, dialog_id: str) -> Optional[dict[str, Any]]:
+    def get_dialog_data(self, dialog_id: str) -> dict[str, Any] | None:
         """
         Get data for a dialog.
 
@@ -470,7 +470,7 @@ class IDialogStateManager(ABC):
         """
 
     @abstractmethod
-    def get_dialog_result(self, dialog_id: str) -> Optional[Any]:
+    def get_dialog_result(self, dialog_id: str) -> Any | None:
         """
         Get result from a dialog.
 
@@ -564,7 +564,7 @@ class IProgressStateManager(ABC):
         """
 
     @abstractmethod
-    def get_progress_status(self, operation_id: str) -> Optional[dict[str, Any]]:
+    def get_progress_status(self, operation_id: str) -> dict[str, Any] | None:
         """
         Get status of a progress operation.
 

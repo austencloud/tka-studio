@@ -56,7 +56,7 @@ class QtMessageFilter:
             return
 
         # For critical messages, always let them through
-        if msg_type == QtMsgType.QtCriticalMsg or msg_type == QtMsgType.QtFatalMsg:
+        if msg_type in (QtMsgType.QtCriticalMsg, QtMsgType.QtFatalMsg):
             if self.original_handler:
                 self.original_handler(msg_type, context, message)
             else:
@@ -64,7 +64,7 @@ class QtMessageFilter:
             return
 
         # For debug and info messages, apply more filtering
-        if msg_type == QtMsgType.QtDebugMsg or msg_type == QtMsgType.QtInfoMsg:
+        if msg_type in (QtMsgType.QtDebugMsg, QtMsgType.QtInfoMsg):
             # Suppress debug messages by default unless they're important
             important_keywords = ["error", "failed", "critical", "exception"]
             if any(keyword in message.lower() for keyword in important_keywords):

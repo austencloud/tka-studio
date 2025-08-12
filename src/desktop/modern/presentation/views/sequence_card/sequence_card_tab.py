@@ -298,7 +298,7 @@ class SequenceCardTab(QWidget):
             self.display_adaptor.display_sequences(length, column_count)
 
         except Exception as e:
-            logger.error(f"Error initializing content progressively: {e}")
+            logger.exception(f"Error initializing content progressively: {e}")
             self.header.set_description_text(f"Error loading sequences: {e}")
         finally:
             self.setCursor(Qt.CursorShape.ArrowCursor)
@@ -340,7 +340,7 @@ class SequenceCardTab(QWidget):
 
             logger.info("Sequence card tab cleanup completed")
         except Exception as e:
-            logger.error(f"Error during cleanup: {e}")
+            logger.exception(f"Error during cleanup: {e}")
 
     def closeEvent(self, event) -> None:
         """Handle close event."""

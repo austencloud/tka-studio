@@ -3,6 +3,7 @@ from __future__ import annotations
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPainterPath
 from PyQt6.QtWidgets import QWidget
+
 from desktop.shared.application.services.backgrounds.aurora.blob_animation import (
     AuroraBlobAnimation,
 )
@@ -40,7 +41,7 @@ class AuroraBackground(BaseBackground):
         gradient = QLinearGradient(0, widget.height(), widget.width(), 0)
         colors = [(255, 0, 255, 100), (0, 255, 255, 100), (255, 255, 0, 100)]
 
-        for i, (r, g, b, a) in enumerate(colors):
+        for i, (_r, _g, _b, a) in enumerate(colors):
             hue = self.wave_effects.get_color_hue(0, i)
             color = QColor.fromHsv(hue, 255, 255, a)
 

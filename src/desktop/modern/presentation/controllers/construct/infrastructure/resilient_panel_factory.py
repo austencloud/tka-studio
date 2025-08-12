@@ -76,9 +76,7 @@ class CircuitBreaker:
                     self._transition_to_half_open()
                     return True
             return False
-        if self.state == CircuitBreakerState.HALF_OPEN:
-            return True
-        return False
+        return self.state == CircuitBreakerState.HALF_OPEN
 
     def record_success(self):
         """Record successful operation."""

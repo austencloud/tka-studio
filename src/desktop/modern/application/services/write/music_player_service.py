@@ -60,7 +60,7 @@ class MusicPlayerService(IMusicPlayerService):
                 logger.info("pygame mixer initialized successfully")
             return True
         except Exception as e:
-            logger.error(f"Failed to initialize pygame mixer: {e}")
+            logger.exception(f"Failed to initialize pygame mixer: {e}")
             return False
 
     def load_music(self, file_path: Path) -> bool:
@@ -108,7 +108,7 @@ class MusicPlayerService(IMusicPlayerService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to load music file {file_path}: {e}")
+            logger.exception(f"Failed to load music file {file_path}: {e}")
             return False
 
     def play(self) -> bool:
@@ -133,7 +133,7 @@ class MusicPlayerService(IMusicPlayerService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to start playback: {e}")
+            logger.exception(f"Failed to start playback: {e}")
             return False
 
     def pause(self) -> bool:
@@ -154,7 +154,7 @@ class MusicPlayerService(IMusicPlayerService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to pause playback: {e}")
+            logger.exception(f"Failed to pause playback: {e}")
             return False
 
     def stop(self) -> bool:
@@ -176,7 +176,7 @@ class MusicPlayerService(IMusicPlayerService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to stop playback: {e}")
+            logger.exception(f"Failed to stop playback: {e}")
             return False
 
     def set_position(self, position_seconds: float) -> bool:
@@ -218,7 +218,7 @@ class MusicPlayerService(IMusicPlayerService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set position to {position_seconds}: {e}")
+            logger.exception(f"Failed to set position to {position_seconds}: {e}")
             return False
 
     def get_position(self) -> float:
@@ -293,4 +293,4 @@ class MusicPlayerService(IMusicPlayerService):
                 self.is_initialized = False
                 logger.info("Music player cleaned up successfully")
             except Exception as e:
-                logger.error(f"Error during music player cleanup: {e}")
+                logger.exception(f"Error during music player cleanup: {e}")

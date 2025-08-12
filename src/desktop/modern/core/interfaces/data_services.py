@@ -7,14 +7,14 @@ Interface definitions for data management services following TKA's clean archite
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
 class IDataCacheManager(ABC):
     """Interface for data cache management operations."""
 
     @abstractmethod
-    def get_position_cache(self, key: str) -> Optional[Any]:
+    def get_position_cache(self, key: str) -> Any | None:
         """
         Get item from position cache.
 
@@ -36,7 +36,7 @@ class IDataCacheManager(ABC):
         """
 
     @abstractmethod
-    def get_sequence_cache(self, key: str) -> Optional[Any]:
+    def get_sequence_cache(self, key: str) -> Any | None:
         """
         Get item from sequence cache.
 
@@ -58,7 +58,7 @@ class IDataCacheManager(ABC):
         """
 
     @abstractmethod
-    def get_pictograph_cache(self, key: str) -> Optional[Any]:
+    def get_pictograph_cache(self, key: str) -> Any | None:
         """
         Get item from pictograph cache.
 
@@ -80,7 +80,7 @@ class IDataCacheManager(ABC):
         """
 
     @abstractmethod
-    def get_conversion_cache(self, key: str) -> Optional[Any]:
+    def get_conversion_cache(self, key: str) -> Any | None:
         """
         Get item from conversion cache.
 
@@ -148,7 +148,7 @@ class IDatasetManager(ABC):
         """
 
     @abstractmethod
-    def get_from_dataset(self, pictograph_id: str) -> Optional[Any]:
+    def get_from_dataset(self, pictograph_id: str) -> Any | None:
         """
         Get pictograph from dataset by ID.
 
@@ -234,7 +234,7 @@ class ICsvReader(ABC):
     """Interface for CSV reading operations."""
 
     @abstractmethod
-    def read_csv(self, file_path: str) -> Optional[list[dict[str, Any]]]:
+    def read_csv(self, file_path: str) -> list[dict[str, Any]] | None:
         """
         Read CSV file and return data.
 
@@ -246,7 +246,7 @@ class ICsvReader(ABC):
         """
 
     @abstractmethod
-    def read_csv_with_headers(self, file_path: str) -> Optional[dict[str, Any]]:
+    def read_csv_with_headers(self, file_path: str) -> dict[str, Any] | None:
         """
         Read CSV file with header processing.
 
@@ -277,7 +277,7 @@ class IPositionResolver(ABC):
     """Interface for position resolution operations."""
 
     @abstractmethod
-    def resolve_position(self, position_data: dict[str, Any]) -> Optional[Any]:
+    def resolve_position(self, position_data: dict[str, Any]) -> Any | None:
         """
         Resolve position from position data.
 
@@ -291,7 +291,7 @@ class IPositionResolver(ABC):
     @abstractmethod
     def resolve_start_position(
         self, start_position_data: dict[str, Any]
-    ) -> Optional[Any]:
+    ) -> Any | None:
         """
         Resolve start position from data.
 
@@ -303,7 +303,7 @@ class IPositionResolver(ABC):
         """
 
     @abstractmethod
-    def resolve_end_position(self, end_position_data: dict[str, Any]) -> Optional[Any]:
+    def resolve_end_position(self, end_position_data: dict[str, Any]) -> Any | None:
         """
         Resolve end position from data.
 
@@ -365,7 +365,7 @@ class ILegacyToModernConverter(ABC):
     """Interface for legacy to modern data conversion."""
 
     @abstractmethod
-    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Optional[Any]:
+    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Any | None:
         """
         Convert legacy sequence to modern format.
 
@@ -377,7 +377,7 @@ class ILegacyToModernConverter(ABC):
         """
 
     @abstractmethod
-    def convert_beat(self, legacy_beat: dict[str, Any]) -> Optional[Any]:
+    def convert_beat(self, legacy_beat: dict[str, Any]) -> Any | None:
         """
         Convert legacy beat to modern format.
 
@@ -389,7 +389,7 @@ class ILegacyToModernConverter(ABC):
         """
 
     @abstractmethod
-    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Optional[Any]:
+    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Any | None:
         """
         Convert legacy pictograph to modern format.
 
@@ -407,7 +407,7 @@ class IModernToLegacyConverter(ABC):
     @abstractmethod
     def convert_beat_data_to_legacy_format(
         self, beat: Any, beat_number: int
-    ) -> Optional[dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Convert modern BeatData to legacy format.
 
@@ -422,7 +422,7 @@ class IModernToLegacyConverter(ABC):
     @abstractmethod
     def convert_start_position_to_legacy_format(
         self, start_position_beat_data: Any
-    ) -> Optional[dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Convert start position BeatData to legacy format.
 

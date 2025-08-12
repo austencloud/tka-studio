@@ -23,7 +23,6 @@ Architecture:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
@@ -72,13 +71,13 @@ class MainAdjustmentPanel(QWidget):
             parent: Parent widget (typically the graph editor)
         """
         super().__init__(parent)
-        self._current_beat_data: Optional[BeatData] = None
-        self._current_beat_index: Optional[int] = None
+        self._current_beat_data: BeatData | None = None
+        self._current_beat_index: int | None = None
 
         # Component references
-        self._stacked_widget: Optional[QStackedWidget] = None
-        self._orientation_picker: Optional[DualOrientationPicker] = None
-        self._turn_controls: Optional[TurnAdjustmentControls] = None
+        self._stacked_widget: QStackedWidget | None = None
+        self._orientation_picker: DualOrientationPicker | None = None
+        self._turn_controls: TurnAdjustmentControls | None = None
 
         self._setup_ui()
         self._connect_signals()
@@ -121,7 +120,7 @@ class MainAdjustmentPanel(QWidget):
             )
             self._turn_controls.beat_data_updated.connect(self.beat_data_updated)
 
-    def set_beat_data(self, beat_index: int, beat_data: Optional[BeatData]):
+    def set_beat_data(self, beat_index: int, beat_data: BeatData | None):
         """
         Set the current beat data and switch panels based on beat type.
 
@@ -143,7 +142,7 @@ class MainAdjustmentPanel(QWidget):
         logger.debug(f"Panel switched to {panel_mode} mode for beat {beat_index}")
 
     def _determine_panel_mode(
-        self, beat_index: int, beat_data: Optional[BeatData]
+        self, beat_index: int, beat_data: BeatData | None
     ) -> str:
         """
         Determine whether to show orientation picker or turn controls.
@@ -175,7 +174,7 @@ class MainAdjustmentPanel(QWidget):
 
         return "orientation" if is_start_position else "turns"
 
-    def _show_orientation_picker(self, beat_data: Optional[BeatData]):
+    def _show_orientation_picker(self, beat_data: BeatData | None):
         """
         Show the orientation picker panel and update it with beat data.
 
@@ -186,7 +185,7 @@ class MainAdjustmentPanel(QWidget):
         if self._orientation_picker:
             self._orientation_picker.set_beat_data(beat_data)
 
-    def _show_turn_controls(self, beat_data: Optional[BeatData]):
+    def _show_turn_controls(self, beat_data: BeatData | None):
         """
         Show the turn controls panel and update it with beat data.
 
@@ -219,7 +218,7 @@ class MainAdjustmentPanel(QWidget):
         if self._turn_controls and self._current_beat_data:
             self._turn_controls.set_beat_data(self._current_beat_data)
 
-    def get_orientation_picker(self) -> Optional[DualOrientationPicker]:
+    def get_orientation_picker(self) -> DualOrientationPicker | None:
         """
         Get the orientation picker component for direct access if needed.
 
@@ -228,7 +227,7 @@ class MainAdjustmentPanel(QWidget):
         """
         return self._orientation_picker
 
-    def get_turn_controls(self) -> Optional[TurnAdjustmentControls]:
+    def get_turn_controls(self) -> TurnAdjustmentControls | None:
         """
         Get the turn controls component for direct access if needed.
 
@@ -237,7 +236,7 @@ class MainAdjustmentPanel(QWidget):
         """
         return self._turn_controls
 
-    def get_current_beat_data(self) -> Optional[BeatData]:
+    def get_current_beat_data(self) -> BeatData | None:
         """
         Get the currently set beat data.
 
@@ -246,7 +245,7 @@ class MainAdjustmentPanel(QWidget):
         """
         return self._current_beat_data
 
-    def get_current_beat_index(self) -> Optional[int]:
+    def get_current_beat_index(self) -> int | None:
         """
         Get the currently set beat index.
 

@@ -14,13 +14,15 @@ from typing import TYPE_CHECKING
 
 # Removed circular import - workbench should be passed as parameter if needed
 from PyQt6.QtCore import QObject, pyqtSignal
-from desktop.shared.application.services.data.legacy_to_modern_converter import (
-    LegacyToModernConverter,
-)
-from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
 from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.shared.application.services.data.legacy_to_modern_converter import (
+    LegacyToModernConverter,
+)
+from desktop.shared.application.services.sequence.sequence_persister import (
+    SequencePersister,
+)
 
 
 if TYPE_CHECKING:
@@ -111,17 +113,16 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
             if start_position_data:
                 try:
                     # Extract the position key from the start position data
-                    end_position = start_position_data.get("end_pos", "alpha1")
-                    position_key = f"{end_position}_{end_position}"
+                    start_position_data.get("end_pos", "alpha1")
 
                     # Create start position data in both formats
                     # Create BeatData for workbench - direct return
                     try:
-                        start_position_beat = self.legacy_to_modern_converter.convert_legacy_start_position_to_beat_data(
+                        self.legacy_to_modern_converter.convert_legacy_start_position_to_beat_data(
                             start_position_data
                         )
                     except Exception as e:
-                        logger.error(f"Failed to convert start position: {e}")
+                        logger.exception(f"Failed to convert start position: {e}")
                         return  # Skip start position loading if conversion fails
 
                 except Exception as e:
@@ -154,13 +155,14 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
-            from desktop.shared.application.services.data.dataset_query import IDatasetQuery
-
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.domain.models.grid_data import GridData
             from desktop.modern.domain.models.pictograph_data import PictographData
+            from desktop.shared.application.services.data.dataset_query import (
+                IDatasetQuery,
+            )
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)
@@ -270,7 +272,7 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
         try:
             return self.persistence_service.load_sequence_from_file(filepath)
         except Exception as e:
-            logger.error(f"Failed to load sequence from file {filepath}: {e}")
+            logger.exception(f"Failed to load sequence from file {filepath}: {e}")
             return None
 
     def load_current_sequence(self) -> SequenceData | None:
@@ -286,7 +288,7 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
             if sequence_data and len(sequence_data) > 1:
                 # Convert to modern format
                 metadata = sequence_data[0]
-                beats_data = [
+                [
                     item for item in sequence_data[1:] if item.get("beat", 0) > 0
                 ]
 
@@ -297,6 +299,6 @@ class SequenceLoader(QObject, ISequenceLoader, metaclass=QObjectABCMeta):
                     beats=[],  # Would need proper conversion
                 )
         except Exception as e:
-            logger.error(f"Failed to load current sequence: {e}")
+            logger.exception(f"Failed to load current sequence: {e}")
 
         return None

@@ -5,19 +5,21 @@ PURPOSE: Validate refactored visibility components maintain all functionality
 PERMANENT: Ensure component decomposition preserves architectural contracts
 AUTHOR: @ai-agent
 """
+from __future__ import annotations
 
 import logging
+import sys
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 import pytest
+
 from application.services.pictograph.global_visibility_service import (
     PictographVisibilityManager as GlobalVisibilityService,
 )
 from application.services.pictograph.visibility_state_manager import (
     VisibilityStateManager as ModernVisibilityStateManager,
 )
-from core.application.application_factory import ApplicationFactory
 from core.interfaces.tab_settings_interfaces import IVisibilityService
 from core.testing.ai_agent_helpers import TKAAITestHelper
 from presentation.components.ui.settings.components import ElementToggle, MotionToggle
@@ -30,6 +32,7 @@ from presentation.components.ui.settings.visibility.components import (
 
 # Import refactored components
 from presentation.components.ui.settings.visibility.visibility_tab import VisibilityTab
+
 
 logger = logging.getLogger(__name__)
 
@@ -319,7 +322,7 @@ class TestRefactoredVisibilityComponents:
 
         # Create multiple tabs to test performance
         tabs = []
-        for i in range(5):
+        for _i in range(5):
             tab = VisibilityTab(
                 visibility_service=self.visibility_service,
                 global_visibility_service=self.global_service,
@@ -347,7 +350,7 @@ class TestRefactoredVisibilityComponents:
         self.test_results["performance_characteristics"] = True
         logger.info("✓ Performance characteristics validated")
 
-    def run_comprehensive_refactoring_test(self) -> Dict[str, Any]:
+    def run_comprehensive_refactoring_test(self) -> dict[str, Any]:
         """Run all refactoring validation tests."""
         logger.info("Starting comprehensive refactoring validation...")
 
@@ -368,7 +371,7 @@ class TestRefactoredVisibilityComponents:
             try:
                 test_method()
             except Exception as e:
-                logger.error(f"Test {test_method.__name__} failed: {e}")
+                logger.exception(f"Test {test_method.__name__} failed: {e}")
                 self.test_results[test_method.__name__] = False
 
         success_count = sum(1 for result in self.test_results.values() if result)
@@ -389,7 +392,7 @@ class TestRefactoredVisibilityComponents:
 
 
 # Convenience function for quick validation
-def validate_refactored_visibility_components() -> Dict[str, Any]:
+def validate_refactored_visibility_components() -> dict[str, Any]:
     """Quick validation of refactored visibility components."""
     test_instance = TestRefactoredVisibilityComponents()
     test_instance.setup_method()
@@ -411,4 +414,4 @@ if __name__ == "__main__":
             if not passed:
                 print(f"  - {test_name}")
 
-    exit(0 if result["overall_success"] else 1)
+    sys.exit(0 if result["overall_success"] else 1)

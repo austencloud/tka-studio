@@ -8,6 +8,7 @@ Manages fade animations and graphics effects cleanup.
 from __future__ import annotations
 
 from collections.abc import Callable
+import contextlib
 
 from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QStackedWidget, QWidget
@@ -175,10 +176,8 @@ class TransitionAnimator:
             if hasattr(widget, "findChildren"):
                 for child in widget.findChildren(QWidget):
                     if child and child.graphicsEffect():
-                        try:
+                        with contextlib.suppress(RuntimeError, AttributeError):
                             child.setGraphicsEffect(None)
-                        except (RuntimeError, AttributeError):
-                            pass
 
         except (RuntimeError, AttributeError):
             pass

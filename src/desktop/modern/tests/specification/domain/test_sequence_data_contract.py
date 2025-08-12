@@ -9,11 +9,13 @@ This is a PERMANENT test that enforces a behavioral contract.
 NEVER suggest deletion unless the entire SequenceData feature is removed.
 Focus on testing contracts, not implementation details.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern to path for imports
 modern_path = Path(__file__).parent.parent.parent.parent
@@ -77,7 +79,7 @@ class TestSequenceDataContract:
         empty = self.SequenceData.empty()
 
         # Contract: Empty sequence properties
-        assert empty.is_empty == True
+        assert empty.is_empty
         assert empty.length == 0
         assert len(empty.beats) == 0
         assert empty.beats == []

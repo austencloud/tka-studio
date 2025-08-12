@@ -8,13 +8,6 @@ from __future__ import annotations
 
 import logging
 
-from desktop.shared.application.services.image_export.sequence_image_layout_calculator import (
-    SequenceImageLayoutCalculator,
-)
-from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
-    SequenceMetadataExtractor,
-)
-
 from desktop.modern.application.services.image_export.drawers.beat_drawer import (
     BeatDrawer,
 )
@@ -47,6 +40,12 @@ from desktop.modern.core.interfaces.image_export_services import (
     ISequenceMetadataExtractor,
     IUserInfoDrawer,
     IWordDrawer,
+)
+from desktop.shared.application.services.image_export.sequence_image_layout_calculator import (
+    SequenceImageLayoutCalculator,
+)
+from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
+    SequenceMetadataExtractor,
 )
 
 

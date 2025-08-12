@@ -1,23 +1,6 @@
 from __future__ import annotations
 
 from PyQt6.QtWidgets import QWidget
-from desktop.shared.application.services.graph_editor.graph_editor_coordinator import (
-    GraphEditorCoordinator,
-)
-from desktop.shared.application.services.sequence.sequence_dictionary_manager import (
-    SequenceDictionaryManager,
-)
-from desktop.shared.application.services.ui.full_screen_viewer import FullScreenViewer
-from desktop.shared.application.services.ui.sequence_state_reader import SequenceStateReader
-from desktop.shared.application.services.ui.thumbnail_generation_service import (
-    ThumbnailGenerationService,
-)
-from desktop.shared.application.services.workbench.beat_selection_service import (
-    BeatSelectionService,
-)
-from desktop.shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
-)
 
 from desktop.modern.application.services.sequence.loader import SequenceLoader
 from desktop.modern.application.services.sequence.sequence_beat_operations import (
@@ -38,6 +21,25 @@ from desktop.modern.presentation.components.sequence_workbench.sequence_workbenc
 )
 from desktop.modern.presentation.components.ui.full_screen import (
     FullScreenOverlayFactory,
+)
+from desktop.shared.application.services.graph_editor.graph_editor_coordinator import (
+    GraphEditorCoordinator,
+)
+from desktop.shared.application.services.sequence.sequence_dictionary_manager import (
+    SequenceDictionaryManager,
+)
+from desktop.shared.application.services.ui.full_screen_viewer import FullScreenViewer
+from desktop.shared.application.services.ui.sequence_state_reader import (
+    SequenceStateReader,
+)
+from desktop.shared.application.services.ui.thumbnail_generation_service import (
+    ThumbnailGenerationService,
+)
+from desktop.shared.application.services.workbench.beat_selection_service import (
+    BeatSelectionService,
+)
+from desktop.shared.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
 )
 
 
@@ -151,7 +153,7 @@ def _create_fullscreen_service(container: DIContainer) -> IFullScreenViewer:
         import logging
 
         logger = logging.getLogger(__name__)
-        logger.error(f"Failed to create full screen service: {e}")
+        logger.exception(f"Failed to create full screen service: {e}")
 
         # Return a minimal working service
         thumbnail_generator = ThumbnailGenerationService()

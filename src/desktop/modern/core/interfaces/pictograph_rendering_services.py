@@ -8,7 +8,7 @@ high-performance rendering of pictograph elements.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
@@ -30,7 +30,7 @@ class IPictographRenderingService(ABC):
     @abstractmethod
     def render_grid(
         self, scene: QGraphicsScene, grid_mode: str = "diamond"
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render grid using cached renderer.
 
@@ -49,7 +49,7 @@ class IPictographRenderingService(ABC):
         color: str,
         motion_data: MotionData,
         pictograph_data=None,
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render prop using cached, colored renderer.
 
@@ -65,7 +65,7 @@ class IPictographRenderingService(ABC):
     @abstractmethod
     def render_glyph(
         self, scene: QGraphicsScene, glyph_type: str, glyph_data: Any
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render glyph using cached renderer.
 
@@ -115,8 +115,8 @@ class IArrowRenderingService(ABC):
         scene: QGraphicsScene,
         color: str,
         motion_data: MotionData,
-        pictograph_data: Optional[PictographData] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        pictograph_data: PictographData | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render arrow using cached renderer.
 
@@ -159,7 +159,7 @@ class IPictographAssetManager(ABC):
         """Get file path for glyph SVG."""
 
     @abstractmethod
-    def load_svg_data(self, svg_path: str) -> Optional[str]:
+    def load_svg_data(self, svg_path: str) -> str | None:
         """Load SVG data from file with caching."""
 
     @abstractmethod
@@ -179,7 +179,7 @@ class IPictographCacheManager(ABC):
     """
 
     @abstractmethod
-    def get_renderer(self, cache_key: str) -> Optional[Any]:
+    def get_renderer(self, cache_key: str) -> Any | None:
         """Get cached renderer by key."""
 
     @abstractmethod
@@ -187,7 +187,7 @@ class IPictographCacheManager(ABC):
         """Store renderer in cache."""
 
     @abstractmethod
-    def get_svg_data(self, cache_key: str) -> Optional[str]:
+    def get_svg_data(self, cache_key: str) -> str | None:
         """Get cached SVG data by key."""
 
     @abstractmethod

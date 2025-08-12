@@ -5,39 +5,19 @@ Global Test Configuration for TKA Modern Tests
 
 Provides global pytest fixtures and configuration for all TKA modern tests.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
+
 import pytest
-from unittest.mock import Mock
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
 # Import specific fixtures from graph editor to avoid conflicts
-from tests.fixtures.graph_editor.conftest import (
-    qapp,
-    tka_test_helper,
-    test_di_container,
-    mock_graph_service,
-    mock_data_flow_service,
-    mock_hotkey_service,
-    all_mock_services,
-    sample_beat_data,
-    sample_sequence_data,
-    start_position_beat,
-    regular_beat,
-    complex_beat,
-    basic_test_data,
-    complex_test_data,
-    edge_case_data,
-    comprehensive_test_data,
-    mock_parent_widget,
-    mock_workbench,
-    signal_spy,
-    reset_mocks,
-)
 
 
 # Global pytest configuration

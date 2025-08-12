@@ -67,32 +67,32 @@ from .threading_integration import (
 
 
 __all__ = [
+    "AsyncQtWidget",
+    # Lifecycle Management
+    "AutoManagedWidget",
+    "LeakReport",
+    "MemorySnapshot",
+    "PooledResource",
+    # Threading Integration
+    "QtAsyncBridge",
     # Compatibility
     "QtCompatibilityManager",
     "QtEnvironment",
-    "QtVersion",
-    "QtVariant",
-    "qt_compat",
-    # Lifecycle Management
-    "AutoManagedWidget",
-    "QtObjectFactory",
-    "qt_factory",
-    # Resource Management
-    "QtResourceManager",
-    "ResourcePool",
-    "PooledResource",
-    "pooled_pen",
-    "pooled_brush",
-    "pooled_font",
-    "qt_resources",
     # Memory Management
     "QtMemoryLeakDetector",
+    "QtObjectFactory",
+    # Resource Management
+    "QtResourceManager",
+    "QtVariant",
+    "QtVersion",
+    "ResourcePool",
     "SmartQtPointer",
-    "MemorySnapshot",
-    "LeakReport",
     "memory_detector",
-    # Threading Integration
-    "QtAsyncBridge",
-    "AsyncQtWidget",
+    "pooled_brush",
+    "pooled_font",
+    "pooled_pen",
     "qt_async_bridge",
+    "qt_compat",
+    "qt_factory",
+    "qt_resources",
 ]

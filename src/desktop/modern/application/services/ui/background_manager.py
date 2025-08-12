@@ -14,7 +14,7 @@ PROVIDES:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QMainWindow
 
@@ -34,7 +34,7 @@ class IBackgroundManager(ABC):
         self,
         main_window: QMainWindow,
         container: DIContainer,
-        progress_callback: Optional[callable] = None,
+        progress_callback: callable | None = None,
     ) -> MainBackgroundWidget:
         """Setup background widget for the main window."""
 
@@ -59,13 +59,13 @@ class BackgroundManager(IBackgroundManager):
 
     def __init__(self):
         """Initialize background manager."""
-        self.current_background: Optional[MainBackgroundWidget] = None
+        self.current_background: MainBackgroundWidget | None = None
 
     def setup_background(
         self,
         main_window: QMainWindow,
         container: DIContainer,
-        progress_callback: Optional[callable] = None,
+        progress_callback: callable | None = None,
     ) -> MainBackgroundWidget:
         """Setup background widget for the main window."""
         # Don't override progress - let orchestrator handle it

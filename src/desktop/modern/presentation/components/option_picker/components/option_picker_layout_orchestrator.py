@@ -7,7 +7,7 @@ Handles Qt layout management and widget organization.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
@@ -38,7 +38,7 @@ class OptionPickerLayoutOrchestrator:
         self._layout = layout
         self._container = container
         self._option_config_service = option_config_service
-        self._header_widget: Optional[QWidget] = None
+        self._header_widget: QWidget | None = None
         self._section_widgets: list[QWidget] = []
         self._group_widgets: list[QWidget] = []
 
@@ -113,7 +113,7 @@ class OptionPickerLayoutOrchestrator:
 
     def _find_header_index(self, all_widgets: list[tuple]) -> int:
         """Find the index of the header widget in the layout."""
-        for i, (index, widget) in enumerate(all_widgets):
+        for _i, (index, widget) in enumerate(all_widgets):
             if widget == self._header_widget:
                 return index
         return -1

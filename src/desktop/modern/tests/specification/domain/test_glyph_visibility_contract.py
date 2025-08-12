@@ -12,11 +12,13 @@ Glyph Visibility Contract Tests
 Migrated from test_glyph_visibility_fix.py.
 Defines behavioral contracts for VTG and elemental glyph visibility based on letter types.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"

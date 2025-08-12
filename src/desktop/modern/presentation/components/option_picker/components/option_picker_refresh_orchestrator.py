@@ -45,7 +45,7 @@ class OptionPickerRefreshOrchestrator:
         self._is_preparing_for_transition = False
 
         # Debounced refresh setup
-        debounce_delay = self._option_config_service.get_debounce_delay()
+        self._option_config_service.get_debounce_delay()
         self._refresh_timer = QTimer()
         self._refresh_timer.setSingleShot(True)
         self._refresh_timer.timeout.connect(self._perform_refresh)

@@ -3,15 +3,22 @@ Test script for the accordion filter panel.
 
 Run this to test the basic accordion functionality.
 """
+from __future__ import annotations
 
 import sys
+
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+
 
 # Add the project root to the path
 sys.path.insert(0, "F:/CODE/TKA")
 
-from desktop.modern.application.services.browse.dictionary_data_manager import DictionaryDataManager
-from desktop.modern.presentation.components.browse.components.accordion_filter_panel import AccordionFilterPanel
+from desktop.modern.application.services.browse.dictionary_data_manager import (
+    DictionaryDataManager,
+)
+from desktop.modern.presentation.components.browse.components.accordion_filter_panel import (
+    AccordionFilterPanel,
+)
 
 
 class TestWindow(QMainWindow):
@@ -21,10 +28,10 @@ class TestWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Accordion Filter Panel Test")
         self.setGeometry(100, 100, 600, 800)
-        
+
         # Create a mock dictionary manager
         self.dictionary_manager = DictionaryDataManager()
-        
+
         # Setup UI
         self._setup_ui()
         self._apply_styling()
@@ -33,14 +40,14 @@ class TestWindow(QMainWindow):
         """Setup the test UI."""
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        
+
         layout = QVBoxLayout(central_widget)
         layout.setContentsMargins(20, 20, 20, 20)
-        
+
         # Create accordion filter panel
         self.accordion_panel = AccordionFilterPanel(self.dictionary_manager)
         self.accordion_panel.filter_selected.connect(self._on_filter_selected)
-        
+
         layout.addWidget(self.accordion_panel)
 
     def _apply_styling(self):
@@ -60,10 +67,10 @@ class TestWindow(QMainWindow):
 def main():
     """Run the test application."""
     app = QApplication(sys.argv)
-    
+
     window = TestWindow()
     window.show()
-    
+
     sys.exit(app.exec())
 
 

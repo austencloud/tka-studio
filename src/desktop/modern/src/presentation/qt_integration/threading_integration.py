@@ -7,14 +7,16 @@ for seamless integration of asynchronous operations with Qt widgets.
 ARCHITECTURE: Provides threading bridge for Qt applications with async/await
 support, thread-safe operations, and automatic resource management.
 """
+from __future__ import annotations
 
 import asyncio
+from concurrent.futures import Future, ThreadPoolExecutor
+from dataclasses import dataclass
 import logging
 import threading
 import time
-from concurrent.futures import Future, ThreadPoolExecutor
-from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Dict, List, Optional, TypeVar
+from typing import Any, Awaitable, Callable, TypeVar
+
 
 # Import Qt modules with compatibility
 try:
@@ -85,8 +87,8 @@ class QtAsyncBridge(QObject):
 
         self.max_workers = max_workers
         self._thread_pool = ThreadPoolExecutor(max_workers=max_workers)
-        self._pending_operations: Dict[str, Future] = {}
-        self._operation_callbacks: Dict[str, Callable] = {}
+        self._pending_operations: dict[str, Future] = {}
+        self._operation_callbacks: dict[str, Callable] = {}
         self._metrics = ThreadingMetrics()
         self._mutex = QMutex() if QMutex != object else threading.Lock()
 
@@ -133,9 +135,9 @@ class QtAsyncBridge(QObject):
             result = await future
             self._metrics.async_operations_completed += 1
             return result
-        except Exception as e:
+        except Exception:
             self._metrics.async_operations_failed += 1
-            raise e
+            raise
         finally:
             # Cleanup
             self._cleanup_operation(operation_id)
@@ -225,7 +227,7 @@ class QtAsyncBridge(QObject):
     def shutdown(self) -> None:
         """Shutdown the async bridge and cleanup resources."""
         # Cancel pending operations
-        for operation_id, future in self._pending_operations.items():
+        for _operation_id, future in self._pending_operations.items():
             future.cancel()
 
         # Shutdown thread pool
@@ -246,13 +248,13 @@ class AsyncQtWidget(QWidget):
     and automatic resource management.
     """
 
-    def __init__(self, parent: Optional[Any] = None):
+    def __init__(self, parent: Any | None = None):
         """Initialize async Qt widget."""
         super().__init__(parent)
 
         self._async_bridge = qt_async_bridge()
-        self._async_operations: List[asyncio.Task] = []
-        self._cleanup_handlers: List[Callable] = []
+        self._async_operations: list[asyncio.Task] = []
+        self._cleanup_handlers: list[Callable] = []
 
         logger.debug(f"AsyncQtWidget created: {self.__class__.__name__}")
 
@@ -321,7 +323,7 @@ class AsyncQtWidget(QWidget):
             try:
                 handler()
             except Exception as e:
-                logger.error(f"Error in cleanup handler: {e}")
+                logger.exception(f"Error in cleanup handler: {e}")
 
         # Clear lists
         self._async_operations.clear()
@@ -349,8 +351,8 @@ class QtThreadManager:
 
     def __init__(self):
         """Initialize Qt thread manager."""
-        self._active_threads: Dict[str, QThread] = {}
-        self._thread_metrics: Dict[str, Dict[str, Any]] = {}
+        self._active_threads: dict[str, QThread] = {}
+        self._thread_metrics: dict[str, dict[str, Any]] = {}
         self._lock = threading.Lock()
 
         logger.info("Qt thread manager initialized")
@@ -425,13 +427,12 @@ class QtThreadManager:
                 self._cleanup_thread(thread_name)
                 logger.info(f"Thread stopped gracefully: {thread_name}")
                 return True
-            else:
-                # Force termination if timeout
-                thread.terminate()
-                thread.wait(1000)  # Wait 1 second for termination
-                self._cleanup_thread(thread_name)
-                logger.warning(f"Thread terminated forcefully: {thread_name}")
-                return False
+            # Force termination if timeout
+            thread.terminate()
+            thread.wait(1000)  # Wait 1 second for termination
+            self._cleanup_thread(thread_name)
+            logger.warning(f"Thread terminated forcefully: {thread_name}")
+            return False
 
     def _cleanup_thread(self, thread_name: str) -> None:
         """Cleanup thread resources."""
@@ -443,7 +444,7 @@ class QtThreadManager:
                 self._thread_metrics[thread_name]["status"] = "finished"
                 self._thread_metrics[thread_name]["finished_at"] = time.time()
 
-    def get_thread_metrics(self) -> Dict[str, Any]:
+    def get_thread_metrics(self) -> dict[str, Any]:
         """Get thread management metrics."""
         with self._lock:
             return {
@@ -464,8 +465,8 @@ class QtThreadManager:
 
 
 # Global instances
-_qt_async_bridge: Optional[QtAsyncBridge] = None
-_qt_thread_manager: Optional[QtThreadManager] = None
+_qt_async_bridge: QtAsyncBridge | None = None
+_qt_thread_manager: QtThreadManager | None = None
 
 
 def qt_async_bridge() -> QtAsyncBridge:

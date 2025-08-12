@@ -9,11 +9,10 @@ pictograph system while maintaining exact legacy positioning and layout logic.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
-from desktop.shared.application.services.data.pictograph_factory import PictographFactory
 
 from desktop.modern.core.interfaces.image_export_services import (
     IBeatDrawer,
@@ -22,6 +21,9 @@ from desktop.modern.core.interfaces.image_export_services import (
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.pictograph_scene import (
     PictographScene,
+)
+from desktop.shared.application.services.data.pictograph_factory import (
+    PictographFactory,
 )
 
 
@@ -61,7 +63,7 @@ class BeatDrawer(IBeatDrawer):
         columns: int,
         rows: int,
         options: ImageExportOptions,
-        beat_size: int = None,
+        beat_size: int | None = None,
     ) -> None:
         """
         Draw sequence beats onto the image using legacy layout logic.
@@ -213,7 +215,7 @@ class BeatDrawer(IBeatDrawer):
 
     def _convert_beat_data_to_pictograph(
         self, beat_data: dict[str, Any]
-    ) -> Optional[PictographData]:
+    ) -> PictographData | None:
         """
         Convert sequence beat data to PictographData.
 

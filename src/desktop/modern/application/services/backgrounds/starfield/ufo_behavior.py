@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import math
 import random
-from typing import Optional
 
 from PyQt6.QtGui import QPixmap
+
 from desktop.shared.application.services.backgrounds.shared.animation_types import (
     Position2D,
     UFOState,
@@ -19,7 +19,7 @@ class UFOBehavior:
 
     def __init__(self, behavior_mode: str = "wandering"):
         self.behavior_mode = behavior_mode
-        self.ufo: Optional[UFOState] = None
+        self.ufo: UFOState | None = None
         self._pause_timer = 0
         self._appearance_timer = 0
         self._active_duration = 0
@@ -175,7 +175,7 @@ class UFOBehavior:
             return 0.0
         return (math.sin(self.ufo.glow_phase) + 1) / 2
 
-    def get_ufo_state(self) -> Optional[UFOState]:
+    def get_ufo_state(self) -> UFOState | None:
         """Get current UFO state for rendering"""
         return self.ufo if self.ufo and self.ufo.active else None
 

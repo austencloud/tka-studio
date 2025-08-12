@@ -187,7 +187,6 @@ class ServiceAnalyzer:
 
     def _determine_category(self, file_path: Path) -> str:
         """Determine the category of a service based on its path."""
-        path_parts = file_path.parts
 
         for category, keywords in self.service_categories.items():
             if any(keyword in str(file_path).lower() for keyword in keywords):

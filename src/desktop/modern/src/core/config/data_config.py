@@ -20,11 +20,12 @@ USAGE:
         def __init__(self, config: DataConfig):
             self.config = config
 """
+from __future__ import annotations
 
-import os
 from dataclasses import dataclass
+import os
 from pathlib import Path
-from typing import Optional
+
 
 # Removed Result pattern - using simple exceptions instead
 
@@ -67,7 +68,7 @@ class DataConfig:
 
 
 def create_data_config(
-    base_path: Optional[Path] = None,
+    base_path: Path | None = None,
 ) -> DataConfig:
     """
     Create data configuration with simple, predictable logic.
@@ -149,7 +150,7 @@ def create_data_config_from_env() -> DataConfig:
     """
     env_path = os.environ.get("TKA_DATA_DIR")
     if not env_path:
-        available_vars = [k for k in os.environ.keys() if "TKA" in k]
+        available_vars = [k for k in os.environ if "TKA" in k]
         raise ValueError(
             f"TKA_DATA_DIR environment variable not set. Available TKA vars: {available_vars}"
         )

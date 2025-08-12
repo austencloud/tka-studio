@@ -93,7 +93,7 @@ class BeatLayoutSettingsManager(QObject):
             return self._calculate_optimal_layout(sequence_length)
 
         except Exception as e:
-            logger.error(f"Failed to get layout for length {sequence_length}: {e}")
+            logger.exception(f"Failed to get layout for length {sequence_length}: {e}")
             return (1, max(1, sequence_length))
 
     def set_layout_for_length(self, sequence_length: int, rows: int, cols: int) -> None:
@@ -129,7 +129,7 @@ class BeatLayoutSettingsManager(QObject):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to set layout for length {sequence_length}: {e}")
+            logger.exception(f"Failed to set layout for length {sequence_length}: {e}")
 
     def get_default_sequence_length(self) -> int:
         """
@@ -143,7 +143,7 @@ class BeatLayoutSettingsManager(QObject):
                 "layout/default_sequence_length", self.DEFAULT_SEQUENCE_LENGTH, type=int
             )
         except Exception as e:
-            logger.error(f"Failed to get default sequence length: {e}")
+            logger.exception(f"Failed to get default sequence length: {e}")
             return self.DEFAULT_SEQUENCE_LENGTH
 
     def set_default_sequence_length(self, length: int) -> None:
@@ -169,7 +169,7 @@ class BeatLayoutSettingsManager(QObject):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to set default sequence length: {e}")
+            logger.exception(f"Failed to set default sequence length: {e}")
 
     def get_layout_options_for_length(
         self, sequence_length: int
@@ -220,7 +220,7 @@ class BeatLayoutSettingsManager(QObject):
             return options
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to get layout options for length {sequence_length}: {e}"
             )
             return {"1x1": (1, 1)}
@@ -241,14 +241,14 @@ class BeatLayoutSettingsManager(QObject):
             return None
 
         except Exception as e:
-            logger.error(f"Failed to get custom layout for {sequence_length}: {e}")
+            logger.exception(f"Failed to get custom layout for {sequence_length}: {e}")
             return None
 
     def _calculate_optimal_layout(self, sequence_length: int) -> tuple[int, int]:
         """Calculate optimal layout for a sequence length."""
         try:
             # Find the factors closest to square root for best aspect ratio
-            sqrt_length = math.sqrt(sequence_length)
+            math.sqrt(sequence_length)
             best_rows = 1
             best_cols = sequence_length
             min_aspect_ratio = float("inf")
@@ -267,7 +267,7 @@ class BeatLayoutSettingsManager(QObject):
             return (best_rows, best_cols)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to calculate optimal layout for {sequence_length}: {e}"
             )
             return (1, sequence_length)
@@ -282,10 +282,7 @@ class BeatLayoutSettingsManager(QObject):
                 return False
 
             # Allow some extra space but not too much waste
-            if rows * cols > sequence_length * 2:
-                return False
-
-            return True
+            return not rows * cols > sequence_length * 2
 
         except Exception:
             return False

@@ -8,18 +8,20 @@ Provides a type-safe, high-performance event system for Modern architecture:
 - Comprehensive logging and debugging
 - Memory-efficient subscription management
 """
+from __future__ import annotations
 
-from typing import Dict, List, Callable, Any, TypeVar, Optional, Union
-from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from enum import Enum
 import asyncio
-import weakref
-import logging
-from datetime import datetime
-import uuid
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+import logging
 import threading
+from typing import Any, Callable, TypeVar, Union
+import uuid
+import weakref
+
 
 # Type definitions
 T = TypeVar("T")
@@ -42,7 +44,7 @@ class BaseEvent(ABC):
 
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: datetime = field(default_factory=datetime.now)
-    source: Optional[str] = None
+    source: str | None = None
     priority: EventPriority = EventPriority.NORMAL
 
     @property
@@ -57,7 +59,7 @@ class SequenceEvent(BaseEvent):
 
     sequence_id: str = ""
     operation: str = ""  # 'created', 'updated', 'deleted', 'beat_added', 'beat_removed'
-    data: Dict[str, Any] = field(default_factory=dict)
+    data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def event_type(self) -> str:
@@ -70,8 +72,8 @@ class ArrowEvent(BaseEvent):
 
     arrow_color: str = ""
     operation: str = ""  # 'positioned', 'mirrored', 'updated'
-    pictograph_id: Optional[str] = None
-    position_data: Dict[str, Any] = field(default_factory=dict)
+    pictograph_id: str | None = None
+    position_data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def event_type(self) -> str:
@@ -84,8 +86,8 @@ class MotionEvent(BaseEvent):
 
     motion_id: str = ""
     operation: str = ""  # 'validated', 'generated', 'orientation_calculated'
-    validation_result: Optional[bool] = None
-    errors: List[str] = field(default_factory=list)
+    validation_result: bool | None = None
+    errors: list[str] = field(default_factory=list)
 
     @property
     def event_type(self) -> str:
@@ -98,7 +100,7 @@ class UIEvent(BaseEvent):
 
     component: str = ""
     action: str = ""  # 'shown', 'hidden', 'updated', 'clicked'
-    state_data: Dict[str, Any] = field(default_factory=dict)
+    state_data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def event_type(self) -> str:
@@ -115,7 +117,7 @@ class EventSubscription:
     priority: EventPriority
     is_async: bool
     weak_ref: bool = True
-    filter_func: Optional[Callable[[BaseEvent], bool]] = None
+    filter_func: Callable[[BaseEvent], bool] | None = None
 
     def __post_init__(self):
         if self.weak_ref and hasattr(self.handler, "__self__"):
@@ -140,7 +142,7 @@ class IEventBus(ABC):
         event_type: str,
         handler: EventHandler,
         priority: EventPriority = EventPriority.NORMAL,
-        filter_func: Optional[Callable[[BaseEvent], bool]] = None,
+        filter_func: Callable[[BaseEvent], bool] | None = None,
     ) -> str:
         """Subscribe to an event type."""
 
@@ -163,12 +165,12 @@ class TypeSafeEventBus(IEventBus):
     """
 
     def __init__(self, max_workers: int = 4):
-        self._subscriptions: Dict[str, List[EventSubscription]] = {}
-        self._subscription_lookup: Dict[str, EventSubscription] = {}
+        self._subscriptions: dict[str, list[EventSubscription]] = {}
+        self._subscription_lookup: dict[str, EventSubscription] = {}
         self._lock = threading.RLock()
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
         self._logger = logging.getLogger(__name__)
-        self._event_stats: Dict[str, int] = {}
+        self._event_stats: dict[str, int] = {}
 
     def publish(self, event: BaseEvent) -> None:
         """Publish an event to all subscribers synchronously."""
@@ -191,7 +193,7 @@ class TypeSafeEventBus(IEventBus):
                 try:
                     self._handle_subscription(subscription, event)
                 except Exception as e:
-                    self._logger.error(f"Error handling event {event.event_type}: {e}")
+                    self._logger.exception(f"Error handling event {event.event_type}: {e}")
 
     async def publish_async(self, event: BaseEvent) -> None:
         """Publish an event to all subscribers asynchronously."""
@@ -228,7 +230,7 @@ class TypeSafeEventBus(IEventBus):
                         )
                         async_tasks.append(task)
                 except Exception as e:
-                    self._logger.error(
+                    self._logger.exception(
                         f"Error handling async event {event.event_type}: {e}"
                     )
 
@@ -241,7 +243,7 @@ class TypeSafeEventBus(IEventBus):
         event_type: str,
         handler: EventHandler,
         priority: EventPriority = EventPriority.NORMAL,
-        filter_func: Optional[Callable[[BaseEvent], bool]] = None,
+        filter_func: Callable[[BaseEvent], bool] | None = None,
     ) -> str:
         """Subscribe to an event type with optional filtering."""
         subscription_id = str(uuid.uuid4())
@@ -295,18 +297,17 @@ class TypeSafeEventBus(IEventBus):
             self._logger.debug(f"Unsubscribed from {event_type}")
             return True
 
-    def get_event_stats(self) -> Dict[str, int]:
+    def get_event_stats(self) -> dict[str, int]:
         """Get event publishing statistics."""
         with self._lock:
             return self._event_stats.copy()
 
-    def get_subscription_count(self, event_type: Optional[str] = None) -> int:
+    def get_subscription_count(self, event_type: str | None = None) -> int:
         """Get number of active subscriptions."""
         with self._lock:
             if event_type:
                 return len(self._subscriptions.get(event_type, []))
-            else:
-                return len(self._subscription_lookup)
+            return len(self._subscription_lookup)
 
     def clear_dead_references(self) -> int:
         """Clean up dead weak references and return count removed."""
@@ -403,7 +404,7 @@ class TypeSafeEventBus(IEventBus):
 
     def _resolve_handler(
         self, subscription: EventSubscription
-    ) -> Optional[EventHandler]:
+    ) -> EventHandler | None:
         """Resolve handler from subscription (handle weak references)."""
         if isinstance(subscription.handler, weakref.WeakMethod):
             return subscription.handler()
@@ -420,7 +421,7 @@ class TypeSafeEventBus(IEventBus):
 
 
 # Global event bus instance
-_global_event_bus: Optional[TypeSafeEventBus] = None
+_global_event_bus: TypeSafeEventBus | None = None
 
 
 def get_event_bus() -> TypeSafeEventBus:

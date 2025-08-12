@@ -8,7 +8,7 @@ functionality, following TKA's clean architecture principles.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -85,7 +85,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def get_option_by_index(self, index: int) -> Optional[PictographData]:
+    def get_option_by_index(self, index: int) -> PictographData | None:
         """
         Get option by index.
 

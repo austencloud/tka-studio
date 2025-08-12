@@ -7,7 +7,7 @@ Target: <30 seconds total fixture setup time.
 
 Fixture Categories:
 - DI container fixtures
-- Qt testing fixtures  
+- Qt testing fixtures
 - Domain model fixtures
 - Service fixtures
 

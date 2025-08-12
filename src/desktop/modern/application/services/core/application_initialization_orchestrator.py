@@ -17,9 +17,6 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 
 from PyQt6.QtWidgets import QMainWindow
-from desktop.shared.application.services.core.session_restoration_coordinator import (
-    ISessionRestorationCoordinator,
-)
 
 from desktop.modern.application.services.core.window_management_service import (
     IWindowManagementService,
@@ -28,6 +25,9 @@ from desktop.modern.application.services.ui.window_discovery_service import (
     IWindowDiscoveryService,
 )
 from desktop.modern.core.interfaces.session_services import ISessionStateTracker
+from desktop.shared.application.services.core.session_restoration_coordinator import (
+    ISessionRestorationCoordinator,
+)
 
 
 class IApplicationInitializationOrchestrator(ABC):
@@ -108,9 +108,8 @@ class ApplicationInitializationOrchestrator(IApplicationInitializationOrchestrat
             progress_callback(60, "Preparing session restoration...")
 
         # Load session state if available using session coordinator
-        session_data = None
         if self.session_service:
-            session_data = self.session_coordinator.load_and_prepare_session(
+            self.session_coordinator.load_and_prepare_session(
                 self.session_service
             )
 

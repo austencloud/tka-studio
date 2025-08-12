@@ -12,11 +12,13 @@ Start Position Behavior Contract Tests
 Migrated from test_start_position_clear.py.
 Defines behavioral contracts for start position management and clearing.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"

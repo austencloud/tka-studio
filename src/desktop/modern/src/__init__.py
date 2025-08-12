@@ -1,9 +1,7 @@
 # Modern Source Root Module
+from __future__ import annotations
 
-from . import application
-from . import core
-from . import domain
-from . import infrastructure
-from . import presentation
+from . import application, core, domain, infrastructure, presentation
+
 
 __all__ = ["application", "core", "domain", "infrastructure", "presentation"]

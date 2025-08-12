@@ -111,9 +111,9 @@ class QtAsyncBridge(QObject):
             result = await future
             self._metrics.async_operations_completed += 1
             return result
-        except Exception as e:
+        except Exception:
             self._metrics.async_operations_failed += 1
-            raise e
+            raise
         finally:
             # Cleanup
             self._cleanup_operation(operation_id)
@@ -203,7 +203,7 @@ class QtAsyncBridge(QObject):
     def shutdown(self) -> None:
         """Shutdown the async bridge and cleanup resources."""
         # Cancel pending operations
-        for operation_id, future in self._pending_operations.items():
+        for _operation_id, future in self._pending_operations.items():
             future.cancel()
 
         # Shutdown thread pool
@@ -271,7 +271,7 @@ class AsyncQtWidget(QWidget):
             try:
                 handler()
             except Exception as e:
-                logger.error(f"Error in cleanup handler: {e}")
+                logger.exception(f"Error in cleanup handler: {e}")
 
         # Clear lists
         self._async_operations.clear()

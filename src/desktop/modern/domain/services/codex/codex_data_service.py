@@ -519,10 +519,10 @@ class CodexDataService:
             return PictographData.from_dict(pictograph_dict)
 
         except Exception as e:
-            logger.error(f"Error creating pictograph data for {letter}: {e}")
+            logger.exception(f"Error creating pictograph data for {letter}: {e}")
             import traceback
 
-            logger.error(f"Traceback: {traceback.format_exc()}")
+            logger.exception(f"Traceback: {traceback.format_exc()}")
             raise
 
     def _get_pictograph_from_dataset(
@@ -695,10 +695,10 @@ class CodexDataService:
             return PictographData.from_dict(pictograph_dict)
 
         except Exception as e:
-            logger.error(f"Error converting CSV data to pictograph for {letter}: {e}")
+            logger.exception(f"Error converting CSV data to pictograph for {letter}: {e}")
             import traceback
 
-            logger.error(f"Traceback: {traceback.format_exc()}")
+            logger.exception(f"Traceback: {traceback.format_exc()}")
             return None
 
     def _convert_motion_type_string(self, motion_type_str: str):
@@ -735,10 +735,7 @@ class CodexDataService:
                 if "data" in pictograph_entry:
                     # Extract from nested data structure
                     data = pictograph_entry["data"]
-                    if hasattr(data, "to_dict"):
-                        entry_dict = data.to_dict()
-                    else:
-                        entry_dict = data
+                    entry_dict = data.to_dict() if hasattr(data, "to_dict") else data
                 else:
                     entry_dict = pictograph_entry
             else:
@@ -776,7 +773,7 @@ class CodexDataService:
         # For now, return all letters
         return [
             letter
-            for letter in self._pictograph_cache.keys()
+            for letter in self._pictograph_cache
             if self._pictograph_cache[letter] is not None
         ]
 

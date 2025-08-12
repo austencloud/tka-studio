@@ -4,6 +4,7 @@ Letter Type Classification
 Domain service for classifying beat letters into display categories.
 This contains the business rules for how letters are grouped and organized.
 """
+from __future__ import annotations
 
 
 class LetterType:
@@ -60,15 +61,15 @@ class LetterTypeClassifier:
 
         if letter in type1_letters:
             return LetterType.TYPE1
-        elif letter in type2_letters:
+        if letter in type2_letters:
             return LetterType.TYPE2
-        elif letter in type3_letters:
+        if letter in type3_letters:
             return LetterType.TYPE3
-        elif letter in type4_letters:
+        if letter in type4_letters:
             return LetterType.TYPE4
-        elif letter in type5_letters:
+        if letter in type5_letters:
             return LetterType.TYPE5
-        elif letter in type6_letters:
+        if letter in type6_letters:
             return LetterType.TYPE6
         return LetterType.TYPE1
 

@@ -7,13 +7,11 @@ stored redundantly in GlyphData, such as VTG mode, elemental type, and dash stat
 
 from __future__ import annotations
 
-from typing import Optional
-
 from .enums import Direction, ElementalType, LetterType, Timing, VTGMode
 from .pictograph_data import PictographData
 
 
-def compute_vtg_mode(pictograph_data: PictographData) -> Optional[VTGMode]:
+def compute_vtg_mode(pictograph_data: PictographData) -> VTGMode | None:
     """
     Compute VTG mode from timing and direction in PictographData.
 
@@ -45,7 +43,7 @@ def compute_vtg_mode(pictograph_data: PictographData) -> Optional[VTGMode]:
     return VTGMode.SPLIT_SAME
 
 
-def compute_elemental_type(vtg_mode: Optional[VTGMode]) -> Optional[ElementalType]:
+def compute_elemental_type(vtg_mode: VTGMode | None) -> ElementalType | None:
     """
     Compute elemental type from VTG mode.
 
@@ -73,7 +71,7 @@ def compute_elemental_type(vtg_mode: Optional[VTGMode]) -> Optional[ElementalTyp
 
 def compute_elemental_type_from_pictograph(
     pictograph_data: PictographData,
-) -> Optional[ElementalType]:
+) -> ElementalType | None:
     """
     Compute elemental type directly from PictographData.
 
@@ -87,7 +85,7 @@ def compute_elemental_type_from_pictograph(
     return compute_elemental_type(vtg_mode)
 
 
-def has_dash(letter_type: Optional[LetterType]) -> bool:
+def has_dash(letter_type: LetterType | None) -> bool:
     """
     Determine if a letter has a dash based on its type.
 
@@ -105,7 +103,7 @@ def has_dash(letter_type: Optional[LetterType]) -> bool:
     return letter_type in (LetterType.TYPE3, LetterType.TYPE5)
 
 
-def has_dash_from_letter_string(letter: Optional[str]) -> bool:
+def has_dash_from_letter_string(letter: str | None) -> bool:
     """
     Determine if a letter has a dash based on the letter string.
 
@@ -141,7 +139,7 @@ def has_dash_from_pictograph(pictograph_data: PictographData) -> bool:
     return has_dash_from_letter_string(pictograph_data.letter)
 
 
-def get_turns_from_motions(pictograph_data: PictographData) -> Optional[str]:
+def get_turns_from_motions(pictograph_data: PictographData) -> str | None:
     """
     Get turns data from motion data in PictographData.
 
@@ -172,7 +170,7 @@ def get_turns_from_motions(pictograph_data: PictographData) -> Optional[str]:
     return None
 
 
-def should_show_elemental(letter_type: Optional[LetterType]) -> bool:
+def should_show_elemental(letter_type: LetterType | None) -> bool:
     """
     Determine if elemental glyph should be shown based on letter type.
 
@@ -185,7 +183,7 @@ def should_show_elemental(letter_type: Optional[LetterType]) -> bool:
     return letter_type == LetterType.TYPE1 if letter_type else False
 
 
-def should_show_vtg(letter_type: Optional[LetterType]) -> bool:
+def should_show_vtg(letter_type: LetterType | None) -> bool:
     """
     Determine if VTG glyph should be shown based on letter type.
 
@@ -198,7 +196,7 @@ def should_show_vtg(letter_type: Optional[LetterType]) -> bool:
     return letter_type == LetterType.TYPE1 if letter_type else False
 
 
-def should_show_positions(letter_type: Optional[LetterType]) -> bool:
+def should_show_positions(letter_type: LetterType | None) -> bool:
     """
     Determine if position glyphs should be shown based on letter type.
 
@@ -212,7 +210,7 @@ def should_show_positions(letter_type: Optional[LetterType]) -> bool:
     return letter_type != LetterType.TYPE6 if letter_type else True
 
 
-def should_show_tka(letter_type: Optional[LetterType]) -> bool:
+def should_show_tka(letter_type: LetterType | None) -> bool:
     """
     Determine if TKA glyph should be shown based on letter type.
 

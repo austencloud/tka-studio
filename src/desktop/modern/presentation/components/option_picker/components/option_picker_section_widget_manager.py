@@ -15,16 +15,15 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from desktop.shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
-)
-
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
+)
+from desktop.shared.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
 )
 
 

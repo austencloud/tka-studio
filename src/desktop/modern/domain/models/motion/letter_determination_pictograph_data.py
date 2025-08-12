@@ -41,6 +41,7 @@ class LetterDeterminationPictographData:
         blue_motion_data = self.pictograph_data.motions.get("blue")
         if blue_motion_data:
             return ExtendedMotionData.from_motion_data(blue_motion_data)
+        return None
 
     @property
     def red_motion(self) -> ExtendedMotionData:
@@ -48,6 +49,7 @@ class LetterDeterminationPictographData:
         red_motion_data = self.pictograph_data.motions.get("red")
         if red_motion_data:
             return ExtendedMotionData.from_motion_data(red_motion_data)
+        return None
 
     @property
     def start_pos(self) -> GridPosition | None:

@@ -203,7 +203,7 @@ class LessonControls(QWidget):
                 button.setFont(font)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")
 
     def is_restart_button_visible(self) -> bool:
         """Check if restart button is visible."""

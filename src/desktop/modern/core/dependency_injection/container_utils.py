@@ -61,7 +61,7 @@ def ensure_container_initialized(force_reinit: bool = False) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Failed to initialize DI container: {e}")
+        logger.exception(f"Failed to initialize DI container: {e}")
         return False
 
 
@@ -126,14 +126,14 @@ def validate_positioning_services() -> bool:
                     )
                     return False
             except Exception as e:
-                logger.error(f"Failed to resolve {service_interface.__name__}: {e}")
+                logger.exception(f"Failed to resolve {service_interface.__name__}: {e}")
                 return False
 
         logger.debug("All positioning services validated successfully")
         return True
 
     except Exception as e:
-        logger.error(f"Error during positioning services validation: {e}")
+        logger.exception(f"Error during positioning services validation: {e}")
         return False
 
 
@@ -169,11 +169,10 @@ def create_test_container():
         RuntimeError: If container creation or service registration fails
     """
     try:
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
         from desktop.shared.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
-
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         # Create fresh container
         container = DIContainer()
@@ -186,7 +185,7 @@ def create_test_container():
         return container
 
     except Exception as e:
-        logger.error(f"Failed to create test container: {e}")
+        logger.exception(f"Failed to create test container: {e}")
         raise RuntimeError(f"Test container creation failed: {e}")
 
 

@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 import json
 
 # Forward reference for PictographData to avoid circular imports
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 import uuid
 
 from .motion_data import MotionData
@@ -38,7 +38,7 @@ class BeatData:
     is_blank: bool = False
 
     # NEW: Optional pictograph data
-    pictograph_data: Optional[PictographData] = None
+    pictograph_data: PictographData | None = None
 
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -72,14 +72,14 @@ class BeatData:
         return self.metadata.get("letter")
 
     @property
-    def blue_motion(self) -> Optional[MotionData]:
+    def blue_motion(self) -> MotionData | None:
         """Get blue motion from pictograph data if available."""
         if self.has_pictograph and self.pictograph_data.motions:
             return self.pictograph_data.motions.get("blue")
         return None
 
     @property
-    def red_motion(self) -> Optional[MotionData]:
+    def red_motion(self) -> MotionData | None:
         """Get red motion from pictograph data if available."""
         if self.has_pictograph and self.pictograph_data.motions:
             return self.pictograph_data.motions.get("red")

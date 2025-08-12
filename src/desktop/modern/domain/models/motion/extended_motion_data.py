@@ -8,7 +8,6 @@ for letter determination without modifying the core domain model.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from desktop.modern.domain.models.enums import MotionType, RotationDirection
 from desktop.modern.domain.models.motion_data import MotionData
@@ -24,8 +23,8 @@ class ExtendedMotionData(MotionData):
     """
 
     # Prefloat attributes for handling float state transitions
-    prefloat_motion_type: Optional[MotionType] = None
-    prefloat_prop_rot_dir: Optional[RotationDirection] = None
+    prefloat_motion_type: MotionType | None = None
+    prefloat_prop_rot_dir: RotationDirection | None = None
 
     @property
     def is_float(self) -> bool:
@@ -80,8 +79,8 @@ class ExtendedMotionData(MotionData):
     def from_motion_data(
         cls,
         motion_data: MotionData,
-        prefloat_motion_type: Optional[MotionType] = None,
-        prefloat_prop_rot_dir: Optional[RotationDirection] = None,
+        prefloat_motion_type: MotionType | None = None,
+        prefloat_prop_rot_dir: RotationDirection | None = None,
     ) -> ExtendedMotionData:
         """Create ExtendedMotionData from existing MotionData."""
         return cls(

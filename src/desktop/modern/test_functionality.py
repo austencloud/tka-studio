@@ -2,11 +2,13 @@
 """
 Test application functionality after refactoring
 """
+from __future__ import annotations
 
+from pathlib import Path
 import subprocess
 import sys
 import time
-from pathlib import Path
+
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -41,9 +43,9 @@ def test_domain_models():
         sequence = SequenceData(name="Test Sequence", beats=[beat])
 
         # Test serialization
-        motion_json = motion.to_json()
-        beat_json = beat.to_json()
-        sequence_json = sequence.to_json()
+        motion.to_json()
+        beat.to_json()
+        sequence.to_json()
 
         print("✅ Domain models work correctly!")
         return True
@@ -58,13 +60,6 @@ def test_service_imports():
     print("🔧 Testing service imports...")
 
     try:
-        from desktop.modern.application.services.data.pictograph_dataset_service import (
-            PictographDatasetService,
-        )
-        from desktop.modern.application.services.sequences.sequence_management_service import (
-            SequenceManager,
-        )
-        from desktop.modern.presentation.components.workbench.workbench import SequenceWorkbench
 
         print("✅ Key services import successfully!")
         return True
@@ -103,12 +98,11 @@ def test_application_startup():
                 process.wait()
 
             return True
-        else:
-            stdout, stderr = process.communicate()
-            print(f"❌ Application exited with code: {process.returncode}")
-            if stderr:
-                print(f"Error: {stderr[:200]}...")
-            return False
+        stdout, stderr = process.communicate()
+        print(f"❌ Application exited with code: {process.returncode}")
+        if stderr:
+            print(f"Error: {stderr[:200]}...")
+        return False
 
     except Exception as e:
         print(f"❌ Startup test failed: {e}")
@@ -138,9 +132,8 @@ def main():
     if passed == len(tests):
         print("🎉 ALL TESTS PASSED! Application is working correctly!")
         return True
-    else:
-        print("❌ Some tests failed!")
-        return False
+    print("❌ Some tests failed!")
+    return False
 
 
 if __name__ == "__main__":

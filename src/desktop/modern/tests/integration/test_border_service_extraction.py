@@ -5,8 +5,10 @@ Integration test for border service extraction.
 Validates that the border service extraction maintains all functionality
 while properly separating business logic from presentation layer.
 """
+from __future__ import annotations
 
 import pytest
+
 from domain.models import LetterType
 
 
@@ -19,8 +21,6 @@ class TestBorderServiceExtraction:
             from application.services.pictograph.border_manager import (
                 BorderConfiguration,
                 BorderDimensions,
-            )
-            from application.services.pictograph.border_manager import (
                 PictographBorderManager as PictographBorderService,
             )
 

@@ -147,40 +147,40 @@ from .modern_service_registration import (
 
 
 __all__ = [
-    # Main interfaces
-    "IAnimationOrchestrator",
-    "IAnimationEngine",
-    "IAnimationCommand",
+    "AnimationConfig",
+    "AnimationState",
     # Data classes
     "AnimationTarget",
-    "AnimationConfig",
     "AnimationType",
-    "EasingType",
-    "AnimationState",
-    # Commands
-    "FadeCommand",
-    "TransitionCommand",
     # Core engine
     "CoreAnimationEngine",
     "DefaultSettingsProvider",
     "EasingFunctions",
-    "create_default_animation_engine",
-    # Qt adapters
-    "QtTargetAdapter",
-    "QtAnimationRenderer",
-    "QtAnimationScheduler",
-    "QtStackWidgetAdapter",
-    "QtGraphicsEffectManager",
-    "create_qt_animation_components",
-    # Modern orchestrator (primary interface)
-    "ModernAnimationOrchestrator",
+    "EasingType",
+    # Commands
+    "FadeCommand",
+    "IAnimationCommand",
+    "IAnimationEngine",
+    # Main interfaces
+    "IAnimationOrchestrator",
     "LegacyFadeManagerWrapper",
-    "create_modern_animation_system",
-    # DI setup
-    "setup_modern_animation_services",
-    "ModernAnimationServiceRegistration",
     # Legacy compatibility
     "LegacyFadeOrchestrator",
+    # Modern orchestrator (primary interface)
+    "ModernAnimationOrchestrator",
+    "ModernAnimationServiceRegistration",
+    "QtAnimationRenderer",
+    "QtAnimationScheduler",
+    "QtGraphicsEffectManager",
+    "QtStackWidgetAdapter",
+    # Qt adapters
+    "QtTargetAdapter",
+    "TransitionCommand",
+    "create_default_animation_engine",
+    "create_modern_animation_system",
+    "create_qt_animation_components",
+    # DI setup
+    "setup_modern_animation_services",
 ]
 
 # Version info

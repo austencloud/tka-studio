@@ -97,7 +97,7 @@ def run_start_position_service_tests():
         try:
             selection_service = StartPositionSelectionService()
             result = selection_service.validate_selection("alpha1_alpha1")
-            assert result == True
+            assert result
             print("  ✅ test_basic_functionality - PASSED")
             passed += 1
         except Exception as e:

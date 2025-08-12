@@ -11,12 +11,13 @@ This service handles:
 
 No business logic, completely testable in isolation.
 """
+from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import List
 
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
+
 
 logger = logging.getLogger(__name__)
 
@@ -48,20 +49,20 @@ class FileSystemService(IFileSystemService):
             UnicodeDecodeError: If file encoding is invalid
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             logger.debug(f"Successfully read file: {file_path}")
             return content
 
         except FileNotFoundError:
-            logger.error(f"File not found: {file_path}")
+            logger.exception(f"File not found: {file_path}")
             raise
         except PermissionError:
-            logger.error(f"Permission denied reading file: {file_path}")
+            logger.exception(f"Permission denied reading file: {file_path}")
             raise
         except UnicodeDecodeError as e:
-            logger.error(f"Encoding error reading file {file_path}: {e}")
+            logger.exception(f"Encoding error reading file {file_path}: {e}")
             raise
 
     def write_file(self, file_path: Path, content: str) -> None:
@@ -86,13 +87,13 @@ class FileSystemService(IFileSystemService):
             logger.debug(f"Successfully wrote file: {file_path}")
 
         except PermissionError:
-            logger.error(f"Permission denied writing file: {file_path}")
+            logger.exception(f"Permission denied writing file: {file_path}")
             raise
         except OSError as e:
-            logger.error(f"OS error writing file {file_path}: {e}")
+            logger.exception(f"OS error writing file {file_path}: {e}")
             raise
 
-    def find_python_files(self, root_path: Path) -> List[Path]:
+    def find_python_files(self, root_path: Path) -> list[Path]:
         """
         Find all Python files in a directory tree.
 
@@ -127,7 +128,7 @@ class FileSystemService(IFileSystemService):
             return python_files
 
         except Exception as e:
-            logger.error(f"Error finding Python files in {root_path}: {e}")
+            logger.exception(f"Error finding Python files in {root_path}: {e}")
             raise
 
     def _should_skip_file(self, file_path: Path) -> bool:
@@ -152,11 +153,7 @@ class FileSystemService(IFileSystemService):
 
         file_str = str(file_path)
 
-        for pattern in skip_patterns:
-            if pattern in file_str:
-                return True
-
-        return False
+        return any(pattern in file_str for pattern in skip_patterns)
 
     def validate_file_path(self, file_path: Path) -> bool:
         """
@@ -190,7 +187,7 @@ class FileSystemService(IFileSystemService):
             return True
 
         except Exception as e:
-            logger.error(f"Error validating file path {file_path}: {e}")
+            logger.exception(f"Error validating file path {file_path}: {e}")
             return False
 
     def get_file_stats(self, file_path: Path) -> dict:
@@ -219,7 +216,7 @@ class FileSystemService(IFileSystemService):
             }
 
         except Exception as e:
-            logger.error(f"Error getting file stats for {file_path}: {e}")
+            logger.exception(f"Error getting file stats for {file_path}: {e}")
             return {"error": str(e)}
 
     def backup_file(self, file_path: Path) -> Path:
@@ -242,5 +239,5 @@ class FileSystemService(IFileSystemService):
             return backup_path
 
         except Exception as e:
-            logger.error(f"Error creating backup for {file_path}: {e}")
+            logger.exception(f"Error creating backup for {file_path}: {e}")
             raise

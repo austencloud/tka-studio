@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QPointF
 
@@ -52,7 +52,7 @@ class SpecialPlacementService:
     def _find_project_root(self) -> Path:
         """Automatically find the project root by looking for pyproject.toml or .git."""
         current = Path(__file__).resolve()
-        for parent in [current] + list(current.parents):
+        for parent in [current, *list(current.parents)]:
             if (parent / "pyproject.toml").exists() or (parent / ".git").exists():
                 return parent
         return current.parent  # fallback
@@ -61,8 +61,8 @@ class SpecialPlacementService:
         self,
         motion_data: MotionData,
         pictograph_data: PictographData,
-        arrow_color: str = None,
-    ) -> Optional[QPointF]:
+        arrow_color: str | None = None,
+    ) -> QPointF | None:
         """
         Get special adjustment for arrow based on special placement logic.
 
@@ -236,8 +236,8 @@ class SpecialPlacementService:
         Format: "(blue_turns, red_turns)" e.g., "(0, 1.5)", "(1, 0.5)"
         """
         try:
-            blue_arrow = pictograph_data.arrows.get("blue")
-            red_arrow = pictograph_data.arrows.get("red")
+            pictograph_data.arrows.get("blue")
+            pictograph_data.arrows.get("red")
 
             blue_motion = pictograph_data.motions.get("blue")
             red_motion = pictograph_data.motions.get("red")

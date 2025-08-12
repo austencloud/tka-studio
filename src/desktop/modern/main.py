@@ -60,8 +60,8 @@ def _position_window_on_secondary_monitor(window):
         return  # Fallback to default positioning
 
     # Log which screen we're using
-    screen_name = target_screen.name() if hasattr(target_screen, "name") else "Unknown"
-    screen_type = "secondary" if len(screens) > 1 else "primary"
+    target_screen.name() if hasattr(target_screen, "name") else "Unknown"
+    "secondary" if len(screens) > 1 else "primary"
 
     # Calculate window dimensions (90% of screen size, centered)
     available_geometry = target_screen.availableGeometry()
@@ -138,7 +138,7 @@ def main():
         return app.exec()
 
     except Exception as e:
-        logger.error(f"Failed to start TKA application: {e}")
+        logger.exception(f"Failed to start TKA application: {e}")
         import traceback
 
         traceback.print_exc()

@@ -3,12 +3,11 @@ Simple UI Testing Framework - Chunk 4: Graph Editor Testing
 
 Tests graph editor interactions and provides clear guidance for AI agents.
 """
+from __future__ import annotations
 
 import time
-from typing import Dict, List, Optional, Any
-from PyQt6.QtWidgets import QWidget, QPushButton
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QKeyEvent
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
 
 from desktop.modern.core.testing.ai_agent_helpers import AITestResult
@@ -166,7 +165,7 @@ class GraphEditorTester:
 
         except Exception as e:
             return self._create_failure_result(
-                control_name, [f"Exception during testing: {str(e)}"], start_time
+                control_name, [f"Exception during testing: {e!s}"], start_time
             )
 
     def test_keyboard_shortcuts(self) -> AITestResult:
@@ -260,7 +259,7 @@ class GraphEditorTester:
         except Exception as e:
             return AITestResult(
                 success=False,
-                errors=[f"Exception testing key '{key}': {str(e)}"],
+                errors=[f"Exception testing key '{key}': {e!s}"],
                 execution_time=time.time() - start_time,
                 metadata={"key": key, "description": description},
             )
@@ -285,7 +284,7 @@ class GraphEditorTester:
             initial_state = self._capture_graph_state()
 
             # Click orientation picker multiple times to test cycling
-            for i in range(3):
+            for _i in range(3):
                 QTest.mouseClick(orientation_picker, Qt.MouseButton.LeftButton)
                 self.app.processEvents()
                 time.sleep(0.1)
@@ -317,7 +316,7 @@ class GraphEditorTester:
         except Exception as e:
             return self._create_failure_result(
                 "orientation_picker",
-                [f"Exception during testing: {str(e)}"],
+                [f"Exception during testing: {e!s}"],
                 start_time,
             )
 
@@ -351,7 +350,7 @@ class GraphEditorTester:
         return state
 
     def _create_failure_result(
-        self, control_name: str, errors: List[str], start_time: float
+        self, control_name: str, errors: list[str], start_time: float
     ) -> AITestResult:
         """Create a failure result with control guidance."""
         self._print_control_guidance(control_name)
@@ -374,7 +373,7 @@ class GraphEditorTester:
         print(f"\n🔍 CONTROL GUIDANCE for {control_name}:")
         print(f"   📋 Description: {guidance.get('description', 'Unknown')}")
         print(f"   🎯 Expected: {guidance.get('expected_behavior', 'Unknown')}")
-        print(f"   🐛 Common Issues:")
+        print("   🐛 Common Issues:")
 
         for issue in guidance.get("common_issues", []):
             print(f"      • {issue}")
@@ -382,7 +381,7 @@ class GraphEditorTester:
 
     def test_all_graph_editor_interactions(self, controls: dict) -> AITestResult:
         """Test all graph editor interactions."""
-        print(f"🧪 Testing all graph editor interactions...")
+        print("🧪 Testing all graph editor interactions...")
 
         start_time = time.time()
         all_results = []
@@ -408,7 +407,7 @@ class GraphEditorTester:
         overall_success = successful_tests > 0  # At least some tests should pass
         execution_time = time.time() - start_time
 
-        print(f"\n📊 GRAPH EDITOR TESTING SUMMARY:")
+        print("\n📊 GRAPH EDITOR TESTING SUMMARY:")
         print(f"   ✅ Successful test suites: {successful_tests}/{len(all_results)}")
         print(
             f"   ❌ Failed test suites: {len(all_results) - successful_tests}/{len(all_results)}"

@@ -8,7 +8,7 @@ the Single Responsibility Principle.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -38,7 +38,7 @@ class IExportDirectoryService(ABC):
         word: str,
         beat_count: int,
         file_extension: str = ".png",
-        custom_path: Optional[str] = None,
+        custom_path: str | None = None,
     ) -> str:
         """Generate a file path for export with timestamp and proper naming."""
         ...
@@ -101,7 +101,7 @@ class IWorkbenchExportOrchestrator(ABC):
 
     @abstractmethod
     def export_sequence_image(
-        self, sequence: SequenceData, file_path: Optional[str] = None
+        self, sequence: SequenceData, file_path: str | None = None
     ) -> tuple[bool, str]:
         """Export sequence as image file."""
         ...

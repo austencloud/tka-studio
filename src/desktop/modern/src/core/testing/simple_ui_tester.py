@@ -4,19 +4,21 @@ Simple UI Testing Framework - Chunk 1: Basic Infrastructure
 Tests UI components and provides clear console guidance for AI agents.
 Uses existing current_sequence.json and SequenceDataConverter.
 """
+from __future__ import annotations
 
 import json
-import time
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+import time
+
 from PyQt6.QtWidgets import QApplication
 
 from desktop.modern.core.application.application_factory import ApplicationFactory
-from desktop.modern.core.testing.ai_agent_helpers import TKAAITestHelper, AITestResult
-from desktop.modern.core.testing.component_initializer import ComponentInitializer
+from desktop.modern.core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
 from desktop.modern.core.testing.button_tester import ButtonTester
+from desktop.modern.core.testing.component_initializer import ComponentInitializer
 from desktop.modern.core.testing.graph_editor_tester import GraphEditorTester
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,22 +43,21 @@ class SimpleUITester:
         self.workbench = None
         self.graph_editor = None
 
-    def _load_real_sequence_data(self) -> List[Dict]:
+    def _load_real_sequence_data(self) -> list[dict]:
         """Load the real current_sequence.json data."""
         try:
             if self.current_sequence_path.exists():
-                with open(self.current_sequence_path, 'r') as f:
+                with open(self.current_sequence_path) as f:
                     data = json.load(f)
                 print(f"✅ Loaded real sequence data: {len(data)-1} beats")
                 return data
-            else:
-                print(f"⚠️  current_sequence.json not found, using minimal data")
-                return self._create_minimal_sequence()
+            print("⚠️  current_sequence.json not found, using minimal data")
+            return self._create_minimal_sequence()
         except Exception as e:
             print(f"❌ Error loading sequence data: {e}")
             return self._create_minimal_sequence()
 
-    def _create_minimal_sequence(self) -> List[Dict]:
+    def _create_minimal_sequence(self) -> list[dict]:
         """Create minimal sequence data if file not found."""
         return [
             {"word": "TEST", "author": "tester", "level": 1, "prop_type": "staff"},
@@ -74,7 +75,7 @@ class SimpleUITester:
 
             # Create test sequence using existing AI helper
             sequence_result = self.ai_helper.create_sequence("UI Test Sequence", 8)
-            
+
             if not sequence_result.success:
                 print(f"❌ Failed to create test sequence: {sequence_result.errors}")
                 return False
@@ -92,23 +93,22 @@ class SimpleUITester:
     def _initialize_components_with_data(self, sequence_data):
         """Initialize UI components with real sequence data."""
         print("� Initializing UI components...")
-        
+
         # Use ComponentInitializer to set up workbench and graph editor
         self.workbench, self.graph_editor = ComponentInitializer.initialize_workbench_and_graph_editor(
             self.container, sequence_data
         )
-        
+
         if self.workbench and self.graph_editor:
             print("✅ UI components initialized successfully")
             return True
-        else:
-            print("❌ Failed to initialize UI components")
-            return False
+        print("❌ Failed to initialize UI components")
+        return False
 
     def test_workbench_buttons(self) -> AITestResult:
         """Test all workbench buttons."""
         print("🧪 Testing workbench buttons...")
-        
+
         if not self.workbench:
             return AITestResult(
                 success=False,
@@ -117,7 +117,7 @@ class SimpleUITester:
 
         # Get button references
         button_map = ComponentInitializer.get_workbench_button_references(self.workbench)
-        
+
         if not button_map:
             return AITestResult(
                 success=False,
@@ -131,7 +131,7 @@ class SimpleUITester:
     def test_graph_editor_interactions(self) -> AITestResult:
         """Test graph editor interactions."""
         print("🧪 Testing graph editor interactions...")
-        
+
         if not self.graph_editor:
             return AITestResult(
                 success=False,
@@ -140,7 +140,7 @@ class SimpleUITester:
 
         # Get control references
         control_map = ComponentInitializer.get_graph_editor_controls(self.graph_editor)
-        
+
         # Create graph editor tester and run tests
         graph_tester = GraphEditorTester(self.graph_editor, self.app)
         return graph_tester.test_all_graph_editor_interactions(control_map)
@@ -148,10 +148,10 @@ class SimpleUITester:
     def run_comprehensive_tests(self) -> AITestResult:
         """Run all UI tests and return comprehensive results."""
         print("🚀 Starting comprehensive UI testing...")
-        
+
         start_time = time.time()
         all_results = []
-        
+
         # Setup environment
         if not self.setup_test_environment():
             return AITestResult(
@@ -183,10 +183,10 @@ class SimpleUITester:
             all_errors.extend(result.errors)
 
         execution_time = time.time() - start_time
-        
+
         print(f"✅ Comprehensive testing completed in {execution_time:.2f}s")
         print(f"📊 Overall success: {overall_success}")
-        
+
         return AITestResult(
             success=overall_success,
             errors=all_errors,

@@ -13,21 +13,21 @@ This service handles:
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QByteArray
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
+
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
 from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
 from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
-)
-
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
 )
 
 
@@ -66,7 +66,7 @@ class GlyphRenderingService:
 
     def render_glyph(
         self, scene: QGraphicsScene, glyph_type: str, glyph_data: Any
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render glyph using cached renderer with performance monitoring.
 
@@ -99,15 +99,15 @@ class GlyphRenderingService:
             return None
 
         except Exception as e:
-            logger.error(f"❌ [GLYPH_RENDERER] Glyph rendering failed: {e}")
+            logger.exception(f"❌ [GLYPH_RENDERER] Glyph rendering failed: {e}")
             self._performance_monitor.record_error("glyph_render", str(e))
             return None
         finally:
             self._performance_monitor.end_render_timer(timer_id)
 
     def render_letter_glyph(
-        self, scene: QGraphicsScene, letter: str, position: tuple[float, float] = None
-    ) -> Optional[QGraphicsSvgItem]:
+        self, scene: QGraphicsScene, letter: str, position: tuple[float, float] | None = None
+    ) -> QGraphicsSvgItem | None:
         """
         Render a letter glyph (A-Z).
 
@@ -124,8 +124,8 @@ class GlyphRenderingService:
         )
 
     def render_elemental_glyph(
-        self, scene: QGraphicsScene, element: str, position: tuple[float, float] = None
-    ) -> Optional[QGraphicsSvgItem]:
+        self, scene: QGraphicsScene, element: str, position: tuple[float, float] | None = None
+    ) -> QGraphicsSvgItem | None:
         """
         Render an elemental glyph (fire, water, earth, air).
 
@@ -145,8 +145,8 @@ class GlyphRenderingService:
         self,
         scene: QGraphicsScene,
         vtg_data: dict,
-        position: tuple[float, float] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        position: tuple[float, float] | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render a VTG (Vertical Turning Glyph).
 
@@ -166,8 +166,8 @@ class GlyphRenderingService:
         self,
         scene: QGraphicsScene,
         tka_data: dict,
-        position: tuple[float, float] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        position: tuple[float, float] | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render a TKA (Turning Key Analysis) glyph.
 
@@ -187,8 +187,8 @@ class GlyphRenderingService:
         self,
         scene: QGraphicsScene,
         position_data: dict,
-        position: tuple[float, float] = None,
-    ) -> Optional[QGraphicsSvgItem]:
+        position: tuple[float, float] | None = None,
+    ) -> QGraphicsSvgItem | None:
         """
         Render a position glyph.
 
@@ -206,7 +206,7 @@ class GlyphRenderingService:
 
     def _get_glyph_renderer(
         self, glyph_type: str, glyph_data: Any
-    ) -> Optional[QSvgRenderer]:
+    ) -> QSvgRenderer | None:
         """Get cached glyph renderer or create new one."""
         # Create a cache key based on glyph type and data
         cache_key = f"glyph_{glyph_type}_{hash(str(glyph_data))}"
@@ -228,7 +228,7 @@ class GlyphRenderingService:
 
     def _create_glyph_renderer(
         self, glyph_type: str, glyph_data: Any
-    ) -> Optional[QSvgRenderer]:
+    ) -> QSvgRenderer | None:
         """Create new glyph renderer with actual SVG loading."""
         timer_id = self._performance_monitor.start_render_timer("svg_load")
 
@@ -265,7 +265,7 @@ class GlyphRenderingService:
             return self._create_fallback_glyph_renderer(glyph_type)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [GLYPH_RENDERER] Failed to create {glyph_type} glyph renderer: {e}"
             )
             self._performance_monitor.record_error("glyph_create", str(e))
@@ -275,7 +275,7 @@ class GlyphRenderingService:
 
     def _create_fallback_glyph_renderer(
         self, glyph_type: str
-    ) -> Optional[QSvgRenderer]:
+    ) -> QSvgRenderer | None:
         """Create fallback glyph renderer when SVG loading fails."""
         try:
             # Create simple fallback glyph SVG
@@ -296,7 +296,7 @@ class GlyphRenderingService:
             return None
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [GLYPH_RENDERER] Failed to create fallback glyph renderer: {e}"
             )
             return None

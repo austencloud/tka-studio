@@ -73,29 +73,29 @@ __author__ = "TKA Development Team"
 
 # Default exports for convenience
 __all__ = [
+    "ArrowPositioningLogger",
+    "LogLevel",
+    "LoggingConfig",
+    "LoggingEnvironments",
     # Core classes
     "SmartLogger",
-    "LoggingConfig",
-    "LogLevel",
-    "ArrowPositioningLogger",
-    "LoggingEnvironments",
+    "configure_from_environment",
+    "disable_qt_message_filter",
+    "enable_performance_monitoring",
+    "enable_verbose_mode",
+    "get_all_performance_stats",
     # Factory functions
     "get_arrow_positioning_logger",
-    # Setup functions (most commonly used)
-    "setup_smart_logging",
-    "enable_verbose_mode",
-    "enable_performance_monitoring",
-    "configure_from_environment",
+    "get_qt_message_filter_stats",
     # Qt message filtering
     "install_qt_message_filter",
-    "get_qt_message_filter_stats",
-    "disable_qt_message_filter",
     # Decorators for services
     "log_directional_processing",
     # Utilities
     "reset_all_logging_stats",
     "reset_all_smart_loggers",
-    "get_all_performance_stats",
+    # Setup functions (most commonly used)
+    "setup_smart_logging",
 ]
 
 

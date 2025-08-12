@@ -172,5 +172,5 @@ def validate_browse_panel_service_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"❌ Browse panel service registration validation failed: {e}")
+        logger.exception(f"❌ Browse panel service registration validation failed: {e}")
         return False

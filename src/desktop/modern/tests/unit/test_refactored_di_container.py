@@ -2,10 +2,13 @@
 Tests for the refactored DI container.
 Verifies that the modular architecture works correctly.
 """
+from __future__ import annotations
+
+import os
+import sys
 
 import pytest
-import sys
-import os
+
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../src"))
@@ -27,15 +30,15 @@ def test_di_container_imports():
 
         # Test focused module imports
         from core.dependency_injection import (
+            DebuggingTools,
+            IServiceResolver,
+            LazyProxy,
+            LifecycleManager,
+            ResolverChain,
+            ServiceDescriptor,
             ServiceRegistry,
             ServiceScope,
-            ServiceDescriptor,
-            ResolverChain,
-            LazyProxy,
-            IServiceResolver,
-            LifecycleManager,
             ValidationEngine,
-            DebuggingTools,
         )
 
         assert ServiceRegistry is not None

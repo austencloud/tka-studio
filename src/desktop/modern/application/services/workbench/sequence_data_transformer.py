@@ -9,7 +9,7 @@ data format conversion.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.export_services import ISequenceDataTransformer
 from desktop.modern.domain.models import BeatData, PictographData, SequenceData
@@ -97,7 +97,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
         return sequence_json
 
     def extract_beat_attributes(
-        self, pictograph_data: Optional[PictographData], color: str
+        self, pictograph_data: PictographData | None, color: str
     ) -> dict[str, Any]:
         """Extract motion attributes for a specific color from beat data."""
         attributes = {}
@@ -140,7 +140,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
 
     def _convert_beat_to_legacy_format(
         self, beat: BeatData
-    ) -> Optional[dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Convert modern BeatData to legacy JSON format."""
         try:
             if not beat.pictograph_data:
@@ -201,7 +201,7 @@ class SequenceDataTransformer(ISequenceDataTransformer):
             return beat_json
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to convert beat {beat.beat_number} to legacy format: {e}"
             )
             return None

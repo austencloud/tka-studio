@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 class SessionState(Enum):
@@ -41,7 +41,7 @@ class ISessionRestorationCoordinator(ABC):
         """
 
     @abstractmethod
-    def restore_session_state(self) -> Optional[dict[str, Any]]:
+    def restore_session_state(self) -> dict[str, Any] | None:
         """
         Restore session state from storage.
 
@@ -69,7 +69,7 @@ class IDatasetManager(ABC):
     """Interface for dataset management operations."""
 
     @abstractmethod
-    def load_dataset(self, dataset_name: str) -> Optional[Any]:
+    def load_dataset(self, dataset_name: str) -> Any | None:
         """
         Load a dataset.
 
@@ -131,7 +131,7 @@ class IDataManager(ABC):
     """Interface for data management operations."""
 
     @abstractmethod
-    def get_data(self, key: str) -> Optional[Any]:
+    def get_data(self, key: str) -> Any | None:
         """
         Get data by key.
 
@@ -232,7 +232,7 @@ class IOptionDataService(ABC):
     """Interface for option data service operations."""
 
     @abstractmethod
-    def get_option_data(self, option_id: str) -> Optional[dict[str, Any]]:
+    def get_option_data(self, option_id: str) -> dict[str, Any] | None:
         """
         Get option data by ID.
 
@@ -282,7 +282,7 @@ class IPictographCSVManager(ABC):
     """Interface for pictograph CSV management operations."""
 
     @abstractmethod
-    def load_csv_data(self, csv_path: str) -> Optional[list[dict[str, Any]]]:
+    def load_csv_data(self, csv_path: str) -> list[dict[str, Any]] | None:
         """
         Load CSV data from file.
 
@@ -461,7 +461,7 @@ class ISequenceRepository(ABC):
         """
 
     @abstractmethod
-    def load_sequence(self, sequence_id: str) -> Optional[Any]:
+    def load_sequence(self, sequence_id: str) -> Any | None:
         """
         Load sequence data.
 
@@ -515,7 +515,7 @@ class ISequenceRepository(ABC):
         """
 
     @abstractmethod
-    def get_sequence_metadata(self, sequence_id: str) -> Optional[dict[str, Any]]:
+    def get_sequence_metadata(self, sequence_id: str) -> dict[str, Any] | None:
         """
         Get metadata for a sequence.
 
@@ -579,7 +579,7 @@ class IClipboardAdapter(ABC):
         """
 
     @abstractmethod
-    def paste_from_clipboard(self) -> Optional[str]:
+    def paste_from_clipboard(self) -> str | None:
         """
         Paste data from clipboard.
 

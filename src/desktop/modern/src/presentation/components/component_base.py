@@ -12,15 +12,18 @@ ALL modern components should inherit from this base class to ensure:
 REPLACES: Direct QObject inheritance with global state access
 PROVIDES: Clean component architecture with dependency injection
 """
+from __future__ import annotations
 
-from abc import ABC, abstractmethod, ABCMeta
-from typing import Optional, Any, List
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QObject, pyqtSignal
+from abc import ABC, ABCMeta, abstractmethod
 import logging
+from typing import Any
+
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QWidget
 
 # Type imports
 from desktop.modern.core.dependency_injection.di_container import DIContainer
+
 
 # A+ Enhancement: Import Qt integration - Temporarily disabled due to import issues
 # try:
@@ -36,7 +39,7 @@ AutoManagedWidget = QWidget
 
 # Event system imports with fallback
 try:
-    from desktop.modern.core.events import IEventBus, BaseEvent
+    from desktop.modern.core.events import BaseEvent, IEventBus
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:
@@ -92,7 +95,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
     data_changed = pyqtSignal(object)  # Emitted when component data changes
     state_changed = pyqtSignal(str, object)  # Emitted when component state changes
 
-    def __init__(self, container: DIContainer, parent: Optional[QObject] = None):
+    def __init__(self, container: DIContainer, parent: QObject | None = None):
         """
         Initialize component with dependency injection.
 
@@ -104,12 +107,12 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
 
         # Core dependencies
         self.container = container
-        self.event_bus: Optional[Any] = None
+        self.event_bus: Any | None = None
 
         # Component state
-        self._widget: Optional[QWidget] = None
+        self._widget: QWidget | None = None
         self._initialized = False
-        self._cleanup_handlers: List[callable] = []
+        self._cleanup_handlers: list[callable] = []
 
         # A+ Enhancement: Register with Qt integration - Temporarily disabled
         # if QT_INTEGRATION_AVAILABLE:
@@ -175,7 +178,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         return self._initialized
 
     @property
-    def widget(self) -> Optional[QWidget]:
+    def widget(self) -> QWidget | None:
         """Get the component's widget (read-only property)."""
         return self._widget
 
@@ -199,7 +202,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
             try:
                 handler()
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error in cleanup handler for {self.__class__.__name__}: {e}"
                 )
 
@@ -209,7 +212,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
                 self._widget.deleteLater()
                 self._widget = None
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error cleaning up widget for {self.__class__.__name__}: {e}"
                 )
 
@@ -226,7 +229,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
         """
         self._cleanup_handlers.append(handler)
 
-    def emit_error(self, message: str, exception: Optional[Exception] = None) -> None:
+    def emit_error(self, message: str, exception: Exception | None = None) -> None:
         """
         Emit component error signal with proper logging.
 
@@ -254,7 +257,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
             try:
                 self.event_bus.publish(event)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Failed to publish event from {self.__class__.__name__}: {e}"
                 )
         else:

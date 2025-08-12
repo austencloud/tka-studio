@@ -7,7 +7,7 @@ Ensures all pictograph components use the correct main window width for scaling 
 
 from __future__ import annotations
 
-from typing import Optional, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -36,7 +36,7 @@ class WindowResizeCoordinator(QObject):
     def __init__(self):
         super().__init__()
         self._registered_components: list[IPictographRescalable] = []
-        self._current_window_width: Optional[int] = None
+        self._current_window_width: int | None = None
         self._resize_threshold = 50  # Minimum change to trigger re-scaling
 
         # Connect to our own signal to handle re-scaling
@@ -124,7 +124,7 @@ class WindowResizeCoordinator(QObject):
                 else:
                     component._rescale_failures = 1
 
-    def get_current_window_width(self) -> Optional[int]:
+    def get_current_window_width(self) -> int | None:
         """
         Get the current main window width.
 

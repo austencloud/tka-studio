@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPainter
 from PyQt6.QtWidgets import QWidget
@@ -31,7 +29,7 @@ class MainBackgroundWidget(QWidget):
         super().__init__(main_widget)
         self.main_widget = main_widget
         self.background_type = background_type
-        self.background: Optional[BaseBackground] = None
+        self.background: BaseBackground | None = None
 
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.setAttribute(Qt.WidgetAttribute.WA_NoSystemBackground)
@@ -68,7 +66,7 @@ class MainBackgroundWidget(QWidget):
         if self.background:
             self.background.animate_background()
 
-    def _get_background(self, bg_type: str) -> Optional[BaseBackground]:
+    def _get_background(self, bg_type: str) -> BaseBackground | None:
         background_map = {
             "Starfield": StarfieldBackground,
             "Aurora": AuroraBackground,

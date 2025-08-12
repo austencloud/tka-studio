@@ -12,14 +12,13 @@ Extracted from OptionPickerSection to follow Single Responsibility Principle.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
-
-from desktop.shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
+from typing import TYPE_CHECKING
 
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
+)
+from desktop.shared.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
 )
 
 
@@ -57,8 +56,8 @@ class OptionPickerSectionStateManager:
         self._scroll_area_ready = False
 
         # Configuration state
-        self._option_picker_width: Optional[int] = None
-        self._is_groupable: Optional[bool] = None
+        self._option_picker_width: int | None = None
+        self._is_groupable: bool | None = None
 
     def set_loading_state(self, loading: bool) -> None:
         """Set the loading state."""
@@ -93,11 +92,11 @@ class OptionPickerSectionStateManager:
             self._letter_type
         )
 
-    def get_option_picker_width(self) -> Optional[int]:
+    def get_option_picker_width(self) -> int | None:
         """Get current option picker width."""
         return self._option_picker_width
 
-    def is_groupable(self) -> Optional[bool]:
+    def is_groupable(self) -> bool | None:
         """Check if this section type is groupable."""
         return self._is_groupable
 
@@ -144,10 +143,7 @@ class OptionPickerSectionStateManager:
         if not self._ui_initialized:
             return False
 
-        if not self._scroll_area_ready:
-            return False
-
-        return True
+        return self._scroll_area_ready
 
     def can_load_options(self) -> bool:
         """Check if options can be loaded in current state."""

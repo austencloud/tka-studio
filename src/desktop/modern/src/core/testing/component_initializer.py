@@ -3,10 +3,8 @@ Simple UI Testing Framework - Chunk 2: Component Initialization
 
 Initializes workbench and graph editor with real data.
 """
+from __future__ import annotations
 
-from typing import Any, List, Optional
-
-from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
 
 
@@ -37,7 +35,9 @@ class ComponentInitializer:
             dictionary_service = container.resolve(IDictionaryService)
 
             # Create workbench
-            from desktop.modern.presentation.components.workbench.workbench import SequenceWorkbench
+            from desktop.modern.presentation.components.workbench.workbench import (
+                SequenceWorkbench,
+            )
 
             workbench = SequenceWorkbench(
                 layout_service=layout_service,
@@ -49,7 +49,9 @@ class ComponentInitializer:
             )
 
             # Create graph editor
-            from desktop.modern.presentation.components.graph_editor.graph_editor import GraphEditor
+            from desktop.modern.presentation.components.graph_editor.graph_editor import (
+                GraphEditor,
+            )
 
             graph_editor = GraphEditor(
                 graph_service=graph_service,

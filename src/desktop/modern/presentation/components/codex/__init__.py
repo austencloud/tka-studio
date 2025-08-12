@@ -12,9 +12,10 @@ from .control_panel import CodexControlPanel
 from .pictograph_grid import CodexPictographGrid
 from .scroll_area import CodexScrollArea
 
+
 __all__ = [
     "CodexComponent",
-    "CodexControlPanel", 
+    "CodexControlPanel",
     "CodexPictographGrid",
     "CodexScrollArea",
 ]

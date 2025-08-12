@@ -7,7 +7,7 @@ replacing Legacy's SequenceBeatFrame with modern architecture patterns.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QGridLayout, QScrollArea, QWidget
@@ -25,11 +25,10 @@ from .start_position_view import StartPositionView
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
+    from desktop.modern.core.events import IEventBus
     from desktop.shared.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
-
-    from desktop.modern.core.events import IEventBus
 
 try:
     from desktop.modern.core.events import (
@@ -86,8 +85,8 @@ class SequenceBeatFrame(QScrollArea):
         self,
         layout_service: ILayoutService,
         beat_selection_service: BeatSelectionService,
-        event_bus: Optional[IEventBus] = None,
-        parent: Optional[QWidget] = None,
+        event_bus: IEventBus | None = None,
+        parent: QWidget | None = None,
     ):
         super().__init__(parent)  # Injected dependencies
         self._layout_service = layout_service
@@ -101,7 +100,7 @@ class SequenceBeatFrame(QScrollArea):
         self._subscription_ids: list[str] = []
 
         # Current state
-        self._current_sequence: Optional[SequenceData] = None
+        self._current_sequence: SequenceData | None = None
         self._beat_views: list[BeatView] = []
         self._current_layout: dict[str, int] = {"rows": 1, "columns": 8}
 
@@ -150,11 +149,11 @@ class SequenceBeatFrame(QScrollArea):
 
         self._setup_start_position()
 
-    def _on_state_sequence_updated(self, sequence: Optional[SequenceData]):
+    def _on_state_sequence_updated(self, sequence: SequenceData | None):
         """Handle sequence updates from state manager"""
         self.set_sequence(sequence)
 
-    def _on_state_start_position_updated(self, start_position: Optional[BeatData]):
+    def _on_state_start_position_updated(self, start_position: BeatData | None):
         """Handle start position updates from state manager"""
         self.set_start_position(start_position)
 
@@ -264,20 +263,20 @@ class SequenceBeatFrame(QScrollArea):
             self._subscription_ids.clear()
 
     # Public API methods
-    def set_sequence(self, sequence: Optional[SequenceData]):
+    def set_sequence(self, sequence: SequenceData | None):
         """Set the current sequence and update display"""
         self._current_sequence = sequence
         self._update_layout()
         self._update_display()
 
-    def get_sequence(self) -> Optional[SequenceData]:
+    def get_sequence(self) -> SequenceData | None:
         """Get the current sequence"""
         return self._current_sequence
 
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional[PictographData] = None,
+        pictograph_data: PictographData | None = None,
     ):
         """
         Set the start position data (separate from sequence beats like legacy).
@@ -307,7 +306,7 @@ class SequenceBeatFrame(QScrollArea):
         else:
             print("❌ [SEQUENCE_BEAT_FRAME] No start position view to initialize!")
 
-    def get_selected_beat_index(self) -> Optional[int]:
+    def get_selected_beat_index(self) -> int | None:
         """Get the currently selected beat index"""
         return (
             self._selection_manager.get_selected_index()
@@ -440,7 +439,7 @@ class SequenceBeatFrame(QScrollArea):
         self.beat_modified.emit(beat_index, beat_data)
         self.sequence_modified.emit(new_sequence)
 
-    def _on_selection_changed(self, beat_index: Optional[int]):
+    def _on_selection_changed(self, beat_index: int | None):
         """Handle selection change events"""
         if beat_index is not None:
             self.beat_selected.emit(beat_index)

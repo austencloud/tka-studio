@@ -75,7 +75,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
                     logger.warning(f"Failed to load sequence from {file_path}: {e}")
                     continue
         except Exception as e:
-            logger.error(f"Error reading sequences directory: {e}")
+            logger.exception(f"Error reading sequences directory: {e}")
 
         logger.debug(f"Loaded {len(sequences)} sequences from {self.data_dir}")
         return sequences
@@ -94,7 +94,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
             logger.debug(f"Loaded sequence {sequence_id} from {file_path}")
             return sequence_data
         except (OSError, json.JSONDecodeError) as e:
-            logger.error(f"Failed to load sequence {sequence_id}: {e}")
+            logger.exception(f"Failed to load sequence {sequence_id}: {e}")
             return None
 
     def save_sequence(self, sequence_data: dict[str, Any]) -> bool:
@@ -122,7 +122,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save sequence: {e}")
+            logger.exception(f"Failed to save sequence: {e}")
             return False
 
     def delete_sequence(self, sequence_id: str) -> bool:
@@ -138,7 +138,7 @@ class FileBasedSequenceDataService(ISequenceDataService):
             logger.debug(f"Deleted sequence {sequence_id} file: {file_path}")
             return True
         except Exception as e:
-            logger.error(f"Failed to delete sequence {sequence_id}: {e}")
+            logger.exception(f"Failed to delete sequence {sequence_id}: {e}")
             return False
 
     def create_new_sequence(self, name: str) -> dict[str, Any]:

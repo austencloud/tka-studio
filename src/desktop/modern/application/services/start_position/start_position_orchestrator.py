@@ -8,7 +8,7 @@ Handles complex workflows and service interactions.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
@@ -92,7 +92,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             try:
                 command = self.selection_service.create_selection_command(position_key)
             except Exception as e:
-                logger.error(f"Failed to create selection command: {e}")
+                logger.exception(f"Failed to create selection command: {e}")
                 return False
 
             # Step 3: Execute the command directly (command processor removed)
@@ -103,16 +103,16 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
                 )
                 return True
             except Exception as e:
-                logger.error(f"❌ Command execution failed: {e}")
+                logger.exception(f"❌ Command execution failed: {e}")
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Error in position selection workflow: {e}")
+            logger.exception(f"❌ Error in position selection workflow: {e}")
             return False
 
     def get_position_data_for_display(
         self, position_key: str, grid_mode: str
-    ) -> Optional[PictographData]:
+    ) -> PictographData | None:
         """
         Get position data optimized for display in the UI.
 
@@ -144,7 +144,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             return None
 
         except Exception as e:
-            logger.error(f"Error getting position data for display: {e}")
+            logger.exception(f"Error getting position data for display: {e}")
             return None
 
     def calculate_responsive_layout(
@@ -174,7 +174,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             return layout_params
 
         except Exception as e:
-            logger.error(f"Error calculating responsive layout: {e}")
+            logger.exception(f"Error calculating responsive layout: {e}")
             # Return safe fallback
             return {
                 "rows": 1,
@@ -234,7 +234,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             return result
 
         except Exception as e:
-            logger.error(f"Error getting positions and layout for mode: {e}")
+            logger.exception(f"Error getting positions and layout for mode: {e}")
             # Safe fallback
             return {
                 "positions": ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"],
@@ -246,7 +246,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
                 "position_count": 3,
             }
 
-    def validate_and_normalize_position(self, position_key: str) -> Optional[str]:
+    def validate_and_normalize_position(self, position_key: str) -> str | None:
         """
         Validate and normalize a position key for consistency.
 
@@ -271,7 +271,7 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             return normalized_key
 
         except Exception as e:
-            logger.error(f"Error validating and normalizing position: {e}")
+            logger.exception(f"Error validating and normalizing position: {e}")
             return None
 
     def preload_position_data(self, grid_mode: str, is_advanced: bool = False) -> int:
@@ -310,5 +310,5 @@ class StartPositionOrchestrator(IStartPositionOrchestrator):
             return loaded_count
 
         except Exception as e:
-            logger.error(f"Error preloading position data: {e}")
+            logger.exception(f"Error preloading position data: {e}")
             return 0

@@ -19,21 +19,10 @@ BUSINESS LOGIC DELEGATED TO:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
-    OperationResult,
-    OperationType,
-    WorkbenchOperationCoordinator,
-)
-from desktop.shared.application.services.workbench.workbench_session_manager import (
-    WorkbenchSessionManager,
-)
-from desktop.shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
-)
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService
@@ -45,6 +34,17 @@ from desktop.modern.presentation.components.sequence_workbench.button_interface 
 )
 from desktop.modern.presentation.components.sequence_workbench.indicator_section import (
     WorkbenchIndicatorSection,
+)
+from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+    OperationResult,
+    OperationType,
+    WorkbenchOperationCoordinator,
+)
+from desktop.shared.application.services.workbench.workbench_session_manager import (
+    WorkbenchSessionManager,
+)
+from desktop.shared.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
 )
 
 from .beat_frame_section import WorkbenchBeatFrameSection
@@ -76,7 +76,7 @@ class SequenceWorkbench(ViewableComponentBase):
         container: DIContainer,
         layout_service: ILayoutService,
         beat_selection_service: BeatSelectionService,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ):
         """Initialize workbench with injected services."""
         super().__init__(container, parent)
@@ -97,9 +97,9 @@ class SequenceWorkbench(ViewableComponentBase):
         )
 
         # Qt components
-        self._indicator_section: Optional[WorkbenchIndicatorSection] = None
-        self._beat_frame_section: Optional[WorkbenchBeatFrameSection] = None
-        self._button_interface: Optional[WorkbenchButtonInterfaceAdapter] = None
+        self._indicator_section: WorkbenchIndicatorSection | None = None
+        self._beat_frame_section: WorkbenchBeatFrameSection | None = None
+        self._button_interface: WorkbenchButtonInterfaceAdapter | None = None
 
         # Session restoration tracking
         self._subscription_ids: list[str] = []
@@ -260,14 +260,14 @@ class SequenceWorkbench(ViewableComponentBase):
         else:
             print("🎯 [WORKBENCH] No change detected, UI not updated")
 
-    def get_sequence(self) -> Optional[SequenceData]:
+    def get_sequence(self) -> SequenceData | None:
         """Get the current sequence from state manager."""
         return self._state_manager.get_current_sequence()
 
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional[PictographData] = None,
+        pictograph_data: PictographData | None = None,
         from_restoration: bool = False,
     ):
         """Set the start position via state manager."""
@@ -308,7 +308,7 @@ class SequenceWorkbench(ViewableComponentBase):
                 f"🎯 [WORKBENCH] Skipping sequence modified signal (changed={result.changed}, auto_save_prevented={self._state_manager.should_prevent_auto_save()})"
             )
 
-    def get_start_position(self) -> Optional[BeatData]:
+    def get_start_position(self) -> BeatData | None:
         """Get the current start position from state manager."""
         return self._state_manager.get_start_position()
 

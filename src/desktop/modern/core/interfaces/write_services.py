@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -21,9 +21,9 @@ class ActData:
         self,
         name: str = "Untitled Act",
         description: str = "",
-        sequences: List[Dict[str, Any]] = None,
-        music_file: Optional[Path] = None,
-        metadata: Dict[str, Any] = None,
+        sequences: list[dict[str, Any]] | None = None,
+        music_file: Path | None = None,
+        metadata: dict[str, Any] | None = None,
     ):
         self.name = name
         self.description = description
@@ -31,7 +31,7 @@ class ActData:
         self.music_file = music_file
         self.metadata = metadata or {}
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "name": self.name,
@@ -42,7 +42,7 @@ class ActData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> ActData:
+    def from_dict(cls, data: dict[str, Any]) -> ActData:
         """Create from dictionary."""
         return cls(
             name=data.get("name", "Untitled Act"),
@@ -62,12 +62,12 @@ class IActDataService(ABC):
         pass
 
     @abstractmethod
-    def load_act(self, file_path: Path) -> Optional[ActData]:
+    def load_act(self, file_path: Path) -> ActData | None:
         """Load an act from file."""
         pass
 
     @abstractmethod
-    def get_available_acts(self, acts_directory: Path) -> List[Path]:
+    def get_available_acts(self, acts_directory: Path) -> list[Path]:
         """Get list of available act files."""
         pass
 
@@ -77,7 +77,7 @@ class IActDataService(ABC):
         pass
 
     @abstractmethod
-    def create_act_thumbnail(self, act: ActData) -> Optional[bytes]:
+    def create_act_thumbnail(self, act: ActData) -> bytes | None:
         """Create thumbnail image for an act."""
         pass
 
@@ -131,7 +131,7 @@ class IActEditingService(ABC):
 
     @abstractmethod
     def add_sequence_to_act(
-        self, act: ActData, sequence_data: Dict[str, Any], position: int = -1
+        self, act: ActData, sequence_data: dict[str, Any], position: int = -1
     ) -> bool:
         """Add a sequence to an act."""
         pass
@@ -149,7 +149,7 @@ class IActEditingService(ABC):
         pass
 
     @abstractmethod
-    def update_act_metadata(self, act: ActData, metadata: Dict[str, Any]) -> bool:
+    def update_act_metadata(self, act: ActData, metadata: dict[str, Any]) -> bool:
         """Update act metadata."""
         pass
 
@@ -213,16 +213,16 @@ class IWriteTabCoordinator(ABC):
         pass
 
     @abstractmethod
-    def save_current_act(self, file_path: Optional[Path] = None) -> bool:
+    def save_current_act(self, file_path: Path | None = None) -> bool:
         """Save the current act."""
         pass
 
     @abstractmethod
-    def get_current_act(self) -> Optional[ActData]:
+    def get_current_act(self) -> ActData | None:
         """Get the currently loaded act."""
         pass
 
     @abstractmethod
-    def add_sequence_to_current_act(self, sequence_data: Dict[str, Any]) -> bool:
+    def add_sequence_to_current_act(self, sequence_data: dict[str, Any]) -> bool:
         """Add a sequence to the current act."""
         pass

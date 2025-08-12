@@ -237,7 +237,7 @@ def generate_quick_sequence(
     """Generate a quick sequence image for testing"""
     print(f"=== GENERATING QUICK SEQUENCE: {sequence_name.upper()} ===")
 
-    app = QApplication(sys.argv)
+    QApplication(sys.argv)
 
     # Setup export service
     container = DIContainer()

@@ -164,7 +164,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
             try:
                 handler()
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error in cleanup handler for {self.__class__.__name__}: {e}"
                 )
 
@@ -174,7 +174,7 @@ class ViewableComponentBase(QObject, ABC, metaclass=QObjectABCMeta):
                 self._widget.deleteLater()
                 self._widget = None
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error cleaning up widget for {self.__class__.__name__}: {e}"
                 )
 

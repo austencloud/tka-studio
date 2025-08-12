@@ -5,10 +5,13 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
+
 from desktop.shared.application.services.backgrounds.snowfall.santa_movement import (
     SantaMovement,
 )
-from desktop.shared.application.services.backgrounds.snowfall.shooting_star import ShootingStar
+from desktop.shared.application.services.backgrounds.snowfall.shooting_star import (
+    ShootingStar,
+)
 from desktop.shared.application.services.backgrounds.snowfall.snowflake_physics import (
     SnowflakePhysics,
 )

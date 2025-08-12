@@ -16,17 +16,17 @@ This test validates:
 Usage:
     python test_clear_sequence_and_startup.py
 """
+from __future__ import annotations
 
-import json
-import os
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from application.services.sequence.sequence_persister import SequencePersister
-from core.testing.ai_agent_helpers import TKAAITestHelper, ai_test_tka_comprehensive
+from core.testing.ai_agent_helpers import TKAAITestHelper
 
 
 class ClearSequenceAndStartupTester:
@@ -295,9 +295,8 @@ class ClearSequenceAndStartupTester:
         if passed == total:
             print("🎉 All tests passed!")
             return True
-        else:
-            print("⚠️ Some tests failed!")
-            return False
+        print("⚠️ Some tests failed!")
+        return False
 
 
 if __name__ == "__main__":

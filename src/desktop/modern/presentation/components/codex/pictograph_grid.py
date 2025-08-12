@@ -83,7 +83,7 @@ class CodexPictographGrid(QWidget):
             logger.debug(f"Loaded {len(self.pictograph_views)} pictographs in grid")
 
         except Exception as e:
-            logger.error(f"Failed to load pictographs: {e}")
+            logger.exception(f"Failed to load pictographs: {e}")
 
     def _create_row(self, letters: list[str]) -> None:
         """
@@ -137,8 +137,8 @@ class CodexPictographGrid(QWidget):
             except Exception as e:
                 import traceback
 
-                logger.error(f"Error creating pictograph for {letter}: {e}")
-                logger.error(f"Traceback: {traceback.format_exc()}")
+                logger.exception(f"Error creating pictograph for {letter}: {e}")
+                logger.exception(f"Traceback: {traceback.format_exc()}")
                 # Add placeholder on error
                 placeholder = self._create_placeholder(letter)
                 row_layout.addWidget(placeholder)
@@ -259,7 +259,7 @@ class CodexPictographGrid(QWidget):
             logger.debug("Grid refreshed successfully")
 
         except Exception as e:
-            logger.error(f"Failed to refresh grid: {e}")
+            logger.exception(f"Failed to refresh grid: {e}")
 
     def get_pictograph_view(self, letter: str) -> CodexPictographView | None:
         """

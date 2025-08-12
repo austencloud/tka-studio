@@ -135,7 +135,7 @@ class StartPositionUIService(IStartPositionUIService):
             return size
 
         except Exception as e:
-            logger.error(f"Error calculating option size: {e}")
+            logger.exception(f"Error calculating option size: {e}")
             # Safe fallback
             return 80 if is_advanced else 100
 
@@ -181,7 +181,7 @@ class StartPositionUIService(IStartPositionUIService):
             return config
 
         except Exception as e:
-            logger.error(f"Error generating grid layout config: {e}")
+            logger.exception(f"Error generating grid layout config: {e}")
             # Safe fallback
             return {
                 "rows": 1,
@@ -226,7 +226,7 @@ class StartPositionUIService(IStartPositionUIService):
             return positions.copy()  # Return a copy to prevent modification
 
         except Exception as e:
-            logger.error(f"Error getting positions for mode {grid_mode}: {e}")
+            logger.exception(f"Error getting positions for mode {grid_mode}: {e}")
             # Safe fallback - basic diamond positions
             return self.DIAMOND_START_POSITIONS.copy()
 
@@ -294,7 +294,7 @@ class StartPositionUIService(IStartPositionUIService):
             return layout_params
 
         except Exception as e:
-            logger.error(f"Error calculating responsive layout: {e}")
+            logger.exception(f"Error calculating responsive layout: {e}")
             # Safe fallback
             return {
                 "rows": 1,
@@ -340,7 +340,7 @@ class StartPositionUIService(IStartPositionUIService):
             return result
 
         except Exception as e:
-            logger.error(f"Error checking single row layout: {e}")
+            logger.exception(f"Error checking single row layout: {e}")
             return position_count <= 3  # Safe fallback
 
     def get_layout_style_config(self, is_advanced: bool = False) -> dict[str, str]:
@@ -371,7 +371,7 @@ class StartPositionUIService(IStartPositionUIService):
             }
 
         except Exception as e:
-            logger.error(f"Error getting layout style config: {e}")
+            logger.exception(f"Error getting layout style config: {e}")
             # Safe fallback
             return {
                 "container_style": "background: rgba(255,255,255,0.18); border-radius: 24px;",

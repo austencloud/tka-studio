@@ -24,6 +24,13 @@ from __future__ import annotations
 
 import logging
 
+from desktop.modern.application.services.positioning.arrows.key_generators.attribute_key_generator import (
+    AttributeKeyGenerator,
+)
+from desktop.modern.core.types.coordinates import qpoint_to_point
+from desktop.modern.core.types.geometry import Point
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.shared.application.services.positioning.arrows.key_generators.placement_key_generator import (
     PlacementKeyGenerator,
 )
@@ -41,14 +48,6 @@ from desktop.shared.application.services.positioning.arrows.placement.special_pl
 from desktop.shared.application.services.positioning.arrows.placement.special_placement_service import (
     SpecialPlacementService,
 )
-
-from desktop.modern.application.services.positioning.arrows.key_generators.attribute_key_generator import (
-    AttributeKeyGenerator,
-)
-from desktop.modern.core.types.coordinates import qpoint_to_point
-from desktop.modern.core.types.geometry import Point
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 logger = logging.getLogger(__name__)
@@ -86,7 +85,7 @@ class ArrowAdjustmentLookup:
         pictograph_data: PictographData,
         motion_data: MotionData,
         letter: str,
-        arrow_color: str = None,
+        arrow_color: str | None = None,
     ) -> Point:
         """
         Get base adjustment using streamlined lookup logic.
@@ -136,7 +135,7 @@ class ArrowAdjustmentLookup:
             return default_adjustment
 
         except Exception as e:
-            logger.error(f"Error in base adjustment lookup: {e}")
+            logger.exception(f"Error in base adjustment lookup: {e}")
             raise RuntimeError(f"Arrow adjustment lookup failed: {e}") from e
 
     def _generate_lookup_keys(
@@ -162,14 +161,14 @@ class ArrowAdjustmentLookup:
             return (ori_key, turns_tuple, attr_key)
 
         except Exception as e:
-            logger.error(f"Failed to generate lookup keys: {e}")
+            logger.exception(f"Failed to generate lookup keys: {e}")
             raise RuntimeError(f"Key generation failed: {e}") from e
 
     def _lookup_special_placement(
         self,
         motion_data: MotionData,
         pictograph_data: PictographData,
-        arrow_color: str = None,
+        arrow_color: str | None = None,
     ) -> Point:
         """
         Look up special placement using exact legacy logic.
@@ -195,7 +194,7 @@ class ArrowAdjustmentLookup:
         except Exception as e:
             if isinstance(e, ValueError):
                 raise  # Re-raise ValueError as-is
-            logger.error(f"Error in special placement lookup: {e}")
+            logger.exception(f"Error in special placement lookup: {e}")
             raise RuntimeError(f"Special placement lookup failed: {e}") from e
 
     def _calculate_default_adjustment(
@@ -230,5 +229,5 @@ class ArrowAdjustmentLookup:
             return adjustment_point
 
         except Exception as e:
-            logger.error(f"Error calculating default adjustment: {e}")
+            logger.exception(f"Error calculating default adjustment: {e}")
             raise RuntimeError(f"Default adjustment calculation failed: {e}") from e

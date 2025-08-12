@@ -8,7 +8,7 @@ These provide type-safe, immutable representations of letter determination opera
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 from ..enums import Letter
 
@@ -22,7 +22,7 @@ class LetterDeterminationResult:
     including confidence, strategy used, and any warnings.
     """
 
-    letter: Optional[Letter]
+    letter: Letter | None
     confidence: float
     strategy_used: str
     attributes_compared: dict[str, Any] = field(default_factory=dict)
@@ -52,7 +52,7 @@ class LetterDeterminationResult:
         """Create a new result with an additional warning."""
         from dataclasses import replace
 
-        new_warnings = list(self.warnings) + [warning]
+        new_warnings = [*list(self.warnings), warning]
         return replace(self, warnings=new_warnings)
 
     @classmethod
@@ -61,7 +61,7 @@ class LetterDeterminationResult:
         letter: Letter,
         confidence: float,
         strategy: str,
-        attributes: dict[str, Any] = None,
+        attributes: dict[str, Any] | None = None,
     ) -> LetterDeterminationResult:
         """Create a successful determination result."""
         return cls(
@@ -73,7 +73,7 @@ class LetterDeterminationResult:
         )
 
     @classmethod
-    def failure(cls, strategy: str, reason: str = None) -> LetterDeterminationResult:
+    def failure(cls, strategy: str, reason: str | None = None) -> LetterDeterminationResult:
         """Create a failed determination result."""
         warnings = [reason] if reason else []
         return cls(
@@ -201,7 +201,7 @@ class AttributeComparisonResult:
         """Create result with additional transformation recorded."""
         from dataclasses import replace
 
-        new_transformations = list(self.transformations_applied) + [transformation]
+        new_transformations = [*list(self.transformations_applied), transformation]
         return replace(self, transformations_applied=new_transformations)
 
     @classmethod
@@ -217,7 +217,7 @@ class AttributeComparisonResult:
         )
 
     @classmethod
-    def no_match(cls, differences: dict[str, Any] = None) -> AttributeComparisonResult:
+    def no_match(cls, differences: dict[str, Any] | None = None) -> AttributeComparisonResult:
         """Create a no match result."""
         return cls(
             locations_match=False,

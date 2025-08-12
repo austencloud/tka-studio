@@ -51,21 +51,21 @@ except ImportError:
 
 # Export all public interfaces
 __all__ = [
-    # Core design system
-    "DesignSystem",
-    "get_design_system",
     # Type definitions
     "ComponentType",
-    "StyleVariant",
+    # Core design system
+    "DesignSystem",
     # Glassmorphism
     "GlassmorphismColors",
     "GlassmorphismEffects",
     "GlassmorphismStyleGenerator",
     # Mixins and utilities
     "StyleMixin",
+    "StyleVariant",
     "StyledWidget",
-    "apply_style_to_widget",
     "apply_dialog_style_to_widget",
+    "apply_style_to_widget",
+    "get_design_system",
 ]
 
 

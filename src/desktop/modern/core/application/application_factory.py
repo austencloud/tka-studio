@@ -256,10 +256,6 @@ class ApplicationFactory:
     def _register_headless_business_services(container: DIContainer) -> None:
         """Register real business logic services for headless mode."""
         try:
-            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-                PictographCSVManager,
-            )
-
             from desktop.modern.application.services.core.session_state_tracker import (
                 SessionStateTracker,
             )
@@ -272,6 +268,9 @@ class ApplicationFactory:
             )
             from desktop.modern.core.interfaces.session_services import (
                 ISessionStateTracker,
+            )
+            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
             )
 
             container.register_singleton(ISequenceManager, SequenceBeatOperations)

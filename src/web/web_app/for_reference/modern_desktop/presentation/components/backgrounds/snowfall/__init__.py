@@ -1,1 +1,0 @@
-# Snowfall background components

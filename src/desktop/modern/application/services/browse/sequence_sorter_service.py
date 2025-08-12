@@ -78,7 +78,7 @@ class SequenceSorterService(ISequenceSorter):
         if sort_method == "alphabetical":
             # Return alphabetical order A-Z, with special characters at end
             letters = [chr(i) for i in range(ord("A"), ord("Z") + 1)]
-            return letters + ["?"]
+            return [*letters, "?"]
         if sort_method == "length":
             # Return numerical order for lengths
             # This would need to be determined dynamically from actual data

@@ -1,4 +1,7 @@
-from typing import TYPE_CHECKING, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from PyQt6.QtWidgets import QWidget
@@ -31,28 +34,27 @@ from desktop.modern.application.services.sequence.sequence_start_position_manage
 from desktop.modern.application.services.ui.full_screen_viewer import FullScreenViewer
 from desktop.modern.application.services.ui.sequence_state_reader import (
     MockSequenceStateReader,
-    SequenceStateReader,
 )
 from desktop.modern.application.services.ui.thumbnail_generation_service import (
     MockThumbnailGenerationService,
-    ThumbnailGenerationService,
 )
-from desktop.modern.application.services.workbench.beat_selection_service import BeatSelectionService
+from desktop.modern.application.services.workbench.beat_selection_service import (
+    BeatSelectionService,
+)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
 from desktop.modern.core.interfaces.workbench_services import (
-    IBeatDeletionService,
-    IDictionaryService,
     IFullScreenViewer,
     IGraphEditorService,
-    ISequenceWorkbenchService,
 )
-from desktop.modern.presentation.components.ui.full_screen import FullScreenOverlayFactory
+from desktop.modern.presentation.components.ui.full_screen import (
+    FullScreenOverlayFactory,
+)
 from desktop.modern.presentation.components.workbench import SequenceWorkbench
 
 
 def create_modern_workbench(
-    container: DIContainer, parent: Optional[QWidget] = None
+    container: DIContainer, parent: QWidget | None = None
 ) -> SequenceWorkbench:
     """Factory function to create a fully configured modern sequence workbench"""
 
@@ -160,7 +162,7 @@ def _create_fullscreen_service(container: DIContainer) -> IFullScreenViewer:
         import logging
 
         logger = logging.getLogger(__name__)
-        logger.error(f"Failed to create full screen service: {e}")
+        logger.exception(f"Failed to create full screen service: {e}")
 
         # Return a minimal working service
         thumbnail_generator = MockThumbnailGenerationService()

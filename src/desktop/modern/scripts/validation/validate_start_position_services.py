@@ -85,12 +85,14 @@ def validate_services():
 
         # Test UI calculations
         size = ui_service.calculate_option_size(1000, False)
-        assert isinstance(size, int) and size > 0
+        assert isinstance(size, int)
+        assert size > 0
         print("    ✅ UI size calculation works")
 
         # Test positions for mode
         positions = ui_service.get_positions_for_mode("diamond", False)
-        assert isinstance(positions, list) and len(positions) == 3
+        assert isinstance(positions, list)
+        assert len(positions) == 3
         print("    ✅ Position retrieval works")
 
         print("🎉 All validations passed! Services are properly structured.")

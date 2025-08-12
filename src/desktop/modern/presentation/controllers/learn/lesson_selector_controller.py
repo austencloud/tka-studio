@@ -82,7 +82,7 @@ class LessonSelectorController(QObject):
             )
 
         except Exception as e:
-            logger.error(f"Failed to initialize lesson selector: {e}")
+            logger.exception(f"Failed to initialize lesson selector: {e}")
             self.state_manager.set_error(LessonNotAvailable("initialization", str(e)))
 
     def _get_available_lessons(self) -> list[LessonType]:
@@ -98,7 +98,7 @@ class LessonSelectorController(QObject):
             return available_lessons
 
         except Exception as e:
-            logger.error(f"Failed to get available lessons: {e}")
+            logger.exception(f"Failed to get available lessons: {e}")
             return []  # Return empty list on error
 
     def _is_lesson_available(self, lesson_type: LessonType) -> bool:
@@ -189,11 +189,11 @@ class LessonSelectorController(QObject):
             )
 
         except (LessonNotAvailable, SessionCreationError) as e:
-            logger.error(f"Lesson request failed: {e}")
+            logger.exception(f"Lesson request failed: {e}")
             self.state_manager.set_error(e)
 
         except Exception as e:
-            logger.error(f"Unexpected error in lesson request: {e}")
+            logger.exception(f"Unexpected error in lesson request: {e}")
             self.state_manager.set_error(
                 SessionCreationError(
                     lesson_type.value if "lesson_type" in locals() else "unknown",
@@ -244,7 +244,7 @@ class LessonSelectorController(QObject):
             logger.debug("Refreshed available lessons")
 
         except Exception as e:
-            logger.error(f"Failed to refresh available lessons: {e}")
+            logger.exception(f"Failed to refresh available lessons: {e}")
 
     def activate(self) -> None:
         """Activate the controller (called when view becomes active)."""

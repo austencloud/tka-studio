@@ -8,7 +8,7 @@ This service bridges graph editor changes to beat repository and UI components w
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -32,9 +32,9 @@ class GraphEditorDataFlowManager(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._current_sequence: Optional[SequenceData] = None
-        self._current_beat_index: Optional[int] = None
-        self._sequence_service: Optional[ISequenceManager] = None
+        self._current_sequence: SequenceData | None = None
+        self._current_beat_index: int | None = None
+        self._sequence_service: ISequenceManager | None = None
 
     def process_turn_change(
         self, beat_data: BeatData, arrow_color: str, new_turns: float
@@ -110,10 +110,10 @@ class GraphEditorDataFlowManager(QObject):
 
         return updated_beat
 
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """Get the current sequence"""
         return self._current_sequence
 
-    def get_current_beat_index(self) -> Optional[int]:
+    def get_current_beat_index(self) -> int | None:
         """Get the current beat index"""
         return self._current_beat_index

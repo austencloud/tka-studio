@@ -105,7 +105,7 @@ class AnswerOptionFactory:
             return pictograph_widget
 
         except Exception as e:
-            logger.error(f"Failed to create pictograph option: {e}")
+            logger.exception(f"Failed to create pictograph option: {e}")
             # Fallback to button
             return AnswerOptionFactory.create_button_option(str(option), parent)
 
@@ -226,7 +226,7 @@ class AnswerOptions(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Failed to show options: {e}")
+            logger.exception(f"Failed to show options: {e}")
             self._show_error_message(f"Failed to display options: {e}")
 
     def _create_option_widgets(self, options: list[Any], format_type: str) -> None:
@@ -333,4 +333,4 @@ class AnswerOptions(QWidget):
                         widget.setFont(font)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")

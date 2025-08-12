@@ -72,7 +72,6 @@ def calculate_font_size_differences():
     modern_beat_size = 300  # Current modern beat size
 
     # Beat scale is always 1 in both systems
-    beat_scale = 1.0
 
     print("Base font sizes:")
     print(f"  Word font: {word_font_base}pt")

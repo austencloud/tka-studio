@@ -78,13 +78,7 @@ class DebuggingTools:
 
                 # Skip primitive types, optional parameters, and special parameters
                 if (
-                    param_type == inspect.Parameter.empty
-                    or param_type == inspect._empty
-                    or str(param_type) == "_empty"
-                    or self._is_primitive_type(param_type)
-                    or param.default != inspect.Parameter.empty
-                    or param.kind
-                    in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
+                    param_type in (inspect.Parameter.empty, inspect._empty) or str(param_type) == "_empty" or self._is_primitive_type(param_type) or param.default != inspect.Parameter.empty or param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
                 ):
                     continue
 

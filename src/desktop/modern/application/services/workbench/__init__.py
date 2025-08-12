@@ -36,16 +36,16 @@ from desktop.shared.application.services.workbench.workbench_state_manager impor
 __all__ = [
     # Business Services
     "BeatSelectionService",
-    "WorkbenchStateManager",
+    "OperationResult",
+    # Operation Coordination
+    "OperationType",
+    # Session Management
+    "SessionRestorationPhase",
+    "SessionRestorationResult",
+    "StateChangeResult",
     "WorkbenchOperationCoordinator",
     "WorkbenchSessionManager",
     # State Management
     "WorkbenchState",
-    "StateChangeResult",
-    # Operation Coordination
-    "OperationType",
-    "OperationResult",
-    # Session Management
-    "SessionRestorationPhase",
-    "SessionRestorationResult",
+    "WorkbenchStateManager",
 ]

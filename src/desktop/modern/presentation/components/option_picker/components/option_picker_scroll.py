@@ -20,15 +20,6 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
-from desktop.shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
-)
-from desktop.shared.application.services.option_picker.sequence_option_service import (
-    SequenceOptionService,
-)
 
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     IAnimationOrchestrator,
@@ -41,6 +32,15 @@ from desktop.modern.presentation.components.option_picker.components.option_pict
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
+from desktop.shared.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
+from desktop.shared.application.services.option_picker.sequence_option_service import (
+    SequenceOptionService,
+)
 
 # Import our new focused components
 from .option_picker_animator import OptionPickerAnimator
@@ -51,12 +51,11 @@ from .option_picker_size_manager import OptionPickerSizeManager
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.option_picker.option_configuration_service import (
-        OptionConfigurationService,
-    )
-
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
         OptionPickerSection,
+    )
+    from desktop.shared.application.services.option_picker.option_configuration_service import (
+        OptionConfigurationService,
     )
 
 
@@ -77,7 +76,7 @@ class OptionPickerScroll(QScrollArea):
         option_sizing_service: OptionPickerSizeCalculator,
         option_config_service: OptionConfigurationService,
         parent=None,
-        mw_size_provider: Callable[[], QSize] = None,
+        mw_size_provider: Callable[[], QSize] | None = None,
         animation_orchestrator: IAnimationOrchestrator | None = None,
     ):
         """Initialize with injected services - no service location."""
@@ -395,13 +394,13 @@ class OptionPickerScroll(QScrollArea):
                 self._update_all_sections_directly(sequence_data)
 
         except Exception as e:
-            logger.error(f"Error during refresh: {e}")
+            logger.exception(f"Error during refresh: {e}")
             traceback.print_exc()
             # Fallback to direct update to ensure UI doesn't get stuck
             try:
                 self._update_all_sections_directly(sequence_data)
             except Exception as fallback_error:
-                logger.error(f"Fallback update also failed: {fallback_error}")
+                logger.exception(f"Fallback update also failed: {fallback_error}")
         finally:
             # Always reset loading state
             self._set_loading_state(False)
@@ -444,7 +443,7 @@ class OptionPickerScroll(QScrollArea):
 
         except Exception as e:
             logger = logging.getLogger(__name__)
-            logger.error(f"Error in direct update: {e}")
+            logger.exception(f"Error in direct update: {e}")
 
     def _fade_and_update_all_sections(self, sequence_data: SequenceData) -> None:
         """Fade pictographs only (keeping headers stable) using animator component."""
@@ -481,7 +480,7 @@ class OptionPickerScroll(QScrollArea):
 
         except Exception as e:
             logger = logging.getLogger(__name__)
-            logger.error(f"Fade transition failed: {e}")
+            logger.exception(f"Fade transition failed: {e}")
             # Fallback to direct update
             self._update_all_sections_directly(sequence_data)
 

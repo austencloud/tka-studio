@@ -67,7 +67,7 @@ class BackgroundSettingsManager(QObject):
         try:
             return self.settings.value("global/background_type", "Snowfall", type=str)
         except Exception as e:
-            logger.error(f"Failed to get current background: {e}")
+            logger.exception(f"Failed to get current background: {e}")
             return "Snowfall"
 
     def set_background(self, background_type: str) -> bool:
@@ -101,7 +101,7 @@ class BackgroundSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set background {background_type}: {e}")
+            logger.exception(f"Failed to set background {background_type}: {e}")
             return False
 
     def is_valid_background(self, background_type: str) -> bool:
@@ -116,7 +116,7 @@ class BackgroundSettingsManager(QObject):
         """
         return background_type in self.AVAILABLE_BACKGROUNDS
 
-    def get_font_color_for_background(self, background_type: str = None) -> str:
+    def get_font_color_for_background(self, background_type: str | None = None) -> str:
         """
         Get the appropriate font color for a background.
 

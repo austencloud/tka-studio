@@ -6,7 +6,6 @@ Provides in-memory storage for sequences with CRUD operations.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from desktop.modern.domain.models.sequence_data import SequenceData
 
@@ -26,7 +25,7 @@ class SequenceRepository:
     def __init__(self):
         """Initialize the repository with empty storage."""
         self._sequences: dict[str, SequenceData] = {}
-        self._current_sequence_id: Optional[str] = None
+        self._current_sequence_id: str | None = None
         logger.info("SequenceRepository initialized")
 
     def save(self, sequence: SequenceData) -> None:
@@ -39,7 +38,7 @@ class SequenceRepository:
         self._sequences[sequence.id] = sequence
         logger.debug(f"Saved sequence {sequence.id}: {sequence.name}")
 
-    def get_by_id(self, sequence_id: str) -> Optional[SequenceData]:
+    def get_by_id(self, sequence_id: str) -> SequenceData | None:
         """
         Retrieve a sequence by its ID.
 
@@ -126,7 +125,7 @@ class SequenceRepository:
         )
         return False
 
-    def get_current_sequence(self) -> Optional[SequenceData]:
+    def get_current_sequence(self) -> SequenceData | None:
         """
         Get the currently active sequence.
 
@@ -137,7 +136,7 @@ class SequenceRepository:
             return self.get_by_id(self._current_sequence_id)
         return None
 
-    def get_current_sequence_id(self) -> Optional[str]:
+    def get_current_sequence_id(self) -> str | None:
         """
         Get the ID of the currently active sequence.
 

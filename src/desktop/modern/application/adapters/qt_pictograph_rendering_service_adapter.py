@@ -14,6 +14,13 @@ from typing import Any
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
+# Import the Qt render engine from existing adapter
+from desktop.modern.application.adapters.qt_pictograph_adapter import (
+    QtRenderEngine,
+    QtTypeConverter,
+)
+from desktop.modern.domain.models import MotionData, PictographData
+
 # Import the framework-agnostic services
 from desktop.shared.application.services.core.pictograph_orchestration_service import (
     CorePictographOrchestrationService,
@@ -22,13 +29,6 @@ from desktop.shared.application.services.core.pictograph_rendering.real_asset_pr
     create_real_asset_provider,
 )
 from desktop.shared.application.services.core.types import Point, Size
-
-# Import the Qt render engine from existing adapter
-from desktop.modern.application.adapters.qt_pictograph_adapter import (
-    QtRenderEngine,
-    QtTypeConverter,
-)
-from desktop.modern.domain.models import MotionData, PictographData
 
 
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ class QtPictographRenderingServiceAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"❌ [QT_ADAPTER] Failed to render grid: {e}")
+            logger.exception(f"❌ [QT_ADAPTER] Failed to render grid: {e}")
             return None
 
     def render_prop(
@@ -187,7 +187,7 @@ class QtPictographRenderingServiceAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"❌ [QT_ADAPTER] Failed to render prop: {e}")
+            logger.exception(f"❌ [QT_ADAPTER] Failed to render prop: {e}")
             return None
 
     def render_glyph(
@@ -228,7 +228,7 @@ class QtPictographRenderingServiceAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"❌ [QT_ADAPTER] Failed to render glyph: {e}")
+            logger.exception(f"❌ [QT_ADAPTER] Failed to render glyph: {e}")
             return None
 
     # ========================================================================
@@ -279,7 +279,7 @@ class QtPictographRenderingServiceAdapter:
             return success_count > 0
 
         except Exception as e:
-            logger.error(f"❌ [QT_ADAPTER] Failed to render complete pictograph: {e}")
+            logger.exception(f"❌ [QT_ADAPTER] Failed to render complete pictograph: {e}")
             return False
 
     def get_performance_stats(self) -> dict[str, Any]:
@@ -348,7 +348,7 @@ class QtPictographRenderingServiceAdapter:
             return result
 
         except Exception as e:
-            logger.error(f"Failed to convert pictograph data: {e}")
+            logger.exception(f"Failed to convert pictograph data: {e}")
             return {"grid_mode": "diamond", "motions": {}, "props": [], "glyphs": []}
 
     def _generate_props_from_motions(
@@ -364,7 +364,7 @@ class QtPictographRenderingServiceAdapter:
             )
 
             # Create positioning service instance
-            positioning_service = ArrowLocationCalculatorService()
+            ArrowLocationCalculatorService()
 
             # Generate props for each motion
             for color, motion_data in pictograph_data.motions.items():
@@ -429,7 +429,7 @@ class QtPictographRenderingServiceAdapter:
                     )
 
                 except Exception as e:
-                    logger.error(f"Failed to generate prop for {color}: {e}")
+                    logger.exception(f"Failed to generate prop for {color}: {e}")
                     # Add fallback prop
                     props.append(
                         {
@@ -442,7 +442,7 @@ class QtPictographRenderingServiceAdapter:
                     )
 
         except Exception as e:
-            logger.error(f"Failed to generate props from motions: {e}")
+            logger.exception(f"Failed to generate props from motions: {e}")
 
         return props
 
@@ -499,5 +499,5 @@ class QtPictographRenderingServiceAdapter:
             return Point(prop_x, prop_y)
 
         except Exception as e:
-            logger.error(f"Failed to calculate prop position: {e}")
+            logger.exception(f"Failed to calculate prop position: {e}")
             return Point(475.0, 475.0)  # Fallback to center

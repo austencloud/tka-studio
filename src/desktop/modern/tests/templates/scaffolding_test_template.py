@@ -10,9 +10,9 @@ INSTRUCTIONS FOR AI AGENTS:
 This is a TEMPORARY test that should be DELETED after its purpose is achieved.
 Do not suggest making this test permanent - suggest deletion instead.
 """
+from __future__ import annotations
 
 import pytest
-from unittest.mock import Mock, patch
 
 
 @pytest.mark.scaffolding

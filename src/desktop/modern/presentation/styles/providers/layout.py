@@ -19,7 +19,6 @@ class MenuBarStyleProvider(StyleProvider):
     ) -> str:
         """Generate menu bar styling."""
         colors = self.design_system.colors
-        tokens = self.design_system.tokens
 
         return f"""
         MenuBarWidget {{

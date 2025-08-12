@@ -76,7 +76,7 @@ class StartPositionLayoutManager:
             return False
 
         except Exception as e:
-            logger.error(f"Error arranging positions in layout: {e}")
+            logger.exception(f"Error arranging positions in layout: {e}")
             return False
 
     def _arrange_horizontal_layout(
@@ -95,7 +95,7 @@ class StartPositionLayoutManager:
         """
         try:
             # Use arrangement coordinates from service
-            for i, (widget, (row, col)) in enumerate(
+            for _i, (widget, (row, col)) in enumerate(
                 zip(position_widgets, config["arrangement"])
             ):
                 grid_layout.addWidget(widget, row, col)
@@ -113,7 +113,7 @@ class StartPositionLayoutManager:
             return True
 
         except Exception as e:
-            logger.error(f"Error in horizontal layout arrangement: {e}")
+            logger.exception(f"Error in horizontal layout arrangement: {e}")
             return False
 
     def _arrange_grid_layout(
@@ -146,7 +146,7 @@ class StartPositionLayoutManager:
             return True
 
         except Exception as e:
-            logger.error(f"Error in grid layout arrangement: {e}")
+            logger.exception(f"Error in grid layout arrangement: {e}")
             return False
 
     def clear_grid_layout(self, grid_layout: QGridLayout) -> bool:
@@ -181,7 +181,7 @@ class StartPositionLayoutManager:
             return True
 
         except Exception as e:
-            logger.error(f"Error clearing grid layout: {e}")
+            logger.exception(f"Error clearing grid layout: {e}")
             return False
 
     def _force_layout_update(self, grid_layout: QGridLayout) -> None:
@@ -204,7 +204,7 @@ class StartPositionLayoutManager:
             logger.debug("Forced layout update completed")
 
         except Exception as e:
-            logger.error(f"Error forcing layout update: {e}")
+            logger.exception(f"Error forcing layout update: {e}")
 
     def validate_layout_arrangement(
         self, grid_layout: QGridLayout, expected_count: int
@@ -243,7 +243,7 @@ class StartPositionLayoutManager:
             return True
 
         except Exception as e:
-            logger.error(f"Error validating layout arrangement: {e}")
+            logger.exception(f"Error validating layout arrangement: {e}")
             return False
 
     def apply_layout_spacing(
@@ -270,4 +270,4 @@ class StartPositionLayoutManager:
             logger.debug(f"Applied layout spacing for {layout_mode.value} mode")
 
         except Exception as e:
-            logger.error(f"Error applying layout spacing: {e}")
+            logger.exception(f"Error applying layout spacing: {e}")

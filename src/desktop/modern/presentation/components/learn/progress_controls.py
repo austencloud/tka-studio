@@ -139,7 +139,7 @@ class ProgressControls(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Failed to update progress: {e}")
+            logger.exception(f"Failed to update progress: {e}")
 
     def _update_question_mode_display(self, progress_info: ProgressInfo) -> None:
         """Update display for question-based mode."""
@@ -288,7 +288,7 @@ class ProgressControls(QWidget):
             self.progress_bar.setFixedHeight(bar_height)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")
 
     def get_current_progress(self) -> ProgressInfo | None:
         """Get current progress information."""

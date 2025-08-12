@@ -12,6 +12,7 @@ from typing import Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
+
 from desktop.shared.application.services.core.image_export_service import (
     create_image_export_service,
 )
@@ -83,7 +84,7 @@ class QtImageExportServiceAdapter:
             return qt_image
 
         except Exception as e:
-            logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render sequence image: {e}")
+            logger.exception(f"❌ [QT_EXPORT_ADAPTER] Failed to render sequence image: {e}")
             # Return error image
             error_image = QImage(800, 600, QImage.Format.Format_ARGB32)
             error_image.fill(Qt.GlobalColor.white)
@@ -103,7 +104,7 @@ class QtImageExportServiceAdapter:
                 self._execute_single_command(painter, command)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_EXPORT_ADAPTER] Failed to execute render commands: {e}"
             )
 
@@ -124,7 +125,7 @@ class QtImageExportServiceAdapter:
                 )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_EXPORT_ADAPTER] Failed to execute command {command.get('type')}: {e}"
             )
 
@@ -146,7 +147,7 @@ class QtImageExportServiceAdapter:
             )
 
         except Exception as e:
-            logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render background: {e}")
+            logger.exception(f"❌ [QT_EXPORT_ADAPTER] Failed to render background: {e}")
 
     def _render_text(self, painter: QPainter, command: dict[str, Any]):
         """Render text command."""
@@ -172,12 +173,12 @@ class QtImageExportServiceAdapter:
             painter.drawText(int(position.x), int(position.y), text)
 
         except Exception as e:
-            logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render text: {e}")
+            logger.exception(f"❌ [QT_EXPORT_ADAPTER] Failed to render text: {e}")
 
     def _render_beat(self, painter: QPainter, command: dict[str, Any]):
         """Render beat command."""
         try:
-            beat_data = command.get("beat_data", {})
+            command.get("beat_data", {})
             position = command.get("position", Point(0, 0))
             size = command.get("size", Size(200, 200))
 
@@ -207,7 +208,7 @@ class QtImageExportServiceAdapter:
             # QtPictographRenderingServiceAdapter
 
         except Exception as e:
-            logger.error(f"❌ [QT_EXPORT_ADAPTER] Failed to render beat: {e}")
+            logger.exception(f"❌ [QT_EXPORT_ADAPTER] Failed to render beat: {e}")
 
     def _convert_color_to_qt(self, color) -> QColor:
         """Convert framework-agnostic color to Qt color."""

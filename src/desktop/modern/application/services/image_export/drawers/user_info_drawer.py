@@ -148,7 +148,7 @@ class UserInfoDrawer(IUserInfoDrawer):
         font: QFont,
         margin: int,
         position: str,
-        text_width: int = None,
+        text_width: int | None = None,
     ) -> None:
         """
         Draw text at the specified position using exact legacy positioning.

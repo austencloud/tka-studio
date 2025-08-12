@@ -105,7 +105,7 @@ class CodexComponent(QWidget):
             logger.debug("Codex UI setup complete")
 
         except Exception as e:
-            logger.error(f"Failed to setup codex UI: {e}")
+            logger.exception(f"Failed to setup codex UI: {e}")
             self.error_occurred.emit(f"Failed to initialize codex: {e!s}")
 
     def _connect_signals(self) -> None:
@@ -140,7 +140,7 @@ class CodexComponent(QWidget):
             logger.info("Rotate operation completed")
 
         except Exception as e:
-            logger.error(f"Failed to rotate pictographs: {e}")
+            logger.exception(f"Failed to rotate pictographs: {e}")
             self.error_occurred.emit(f"Failed to rotate pictographs: {e!s}")
 
     def _handle_mirror(self) -> None:
@@ -164,7 +164,7 @@ class CodexComponent(QWidget):
             logger.info("Mirror operation completed")
 
         except Exception as e:
-            logger.error(f"Failed to mirror pictographs: {e}")
+            logger.exception(f"Failed to mirror pictographs: {e}")
             self.error_occurred.emit(f"Failed to mirror pictographs: {e!s}")
 
     def _handle_color_swap(self) -> None:
@@ -188,7 +188,7 @@ class CodexComponent(QWidget):
             logger.info("Color swap operation completed")
 
         except Exception as e:
-            logger.error(f"Failed to swap colors: {e}")
+            logger.exception(f"Failed to swap colors: {e}")
             self.error_occurred.emit(f"Failed to swap colors: {e!s}")
 
     def _handle_orientation_change(self, orientation: str) -> None:
@@ -208,7 +208,7 @@ class CodexComponent(QWidget):
             logger.info(f"Orientation changed to: {orientation}")
 
         except Exception as e:
-            logger.error(f"Failed to change orientation: {e}")
+            logger.exception(f"Failed to change orientation: {e}")
             self.error_occurred.emit(f"Failed to change orientation: {e!s}")
 
     def refresh_codex(self) -> None:
@@ -226,7 +226,7 @@ class CodexComponent(QWidget):
             logger.info("Codex refreshed successfully")
 
         except Exception as e:
-            logger.error(f"Failed to refresh codex: {e}")
+            logger.exception(f"Failed to refresh codex: {e}")
             self.error_occurred.emit(f"Failed to refresh codex: {e!s}")
 
     def set_pictograph_size(self, size: int) -> None:

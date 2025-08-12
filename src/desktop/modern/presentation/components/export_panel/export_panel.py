@@ -6,8 +6,6 @@ Uses Qt layout system properly with stretch factors and size policies.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout, QWidget
@@ -37,7 +35,7 @@ class ExportPanel(QWidget):
     def __init__(
         self,
         container: DIContainer,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ):
         super().__init__(parent)
         self.container = container

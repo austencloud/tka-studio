@@ -25,9 +25,10 @@ class EventHandlerHelper:
         # Handle copy JSON specially to pass the current sequence
         if operation_type == OperationType.COPY_JSON:
             current_sequence = self.workbench._state_manager.get_current_sequence()
-            operation_method = lambda: self.workbench._operation_coordinator.copy_json(
-                current_sequence
-            )
+            def operation_method():
+                return self.workbench._operation_coordinator.copy_json(
+                            current_sequence
+                        )
         else:
             # Get the operation method from coordinator
             operation_methods = {

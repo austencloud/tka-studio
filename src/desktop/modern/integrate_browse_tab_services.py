@@ -53,7 +53,7 @@ def integrate_new_browse_tab():
         return True
 
     except Exception as e:
-        logger.error(f"❌ Integration failed: {e}")
+        logger.exception(f"❌ Integration failed: {e}")
         return False
 
 

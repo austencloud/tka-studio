@@ -10,9 +10,9 @@ This is a REGRESSION test that prevents a specific bug from reoccurring.
 Only suggest deletion if the entire feature is removed from the system.
 Focus on reproducing the exact scenario that caused the original bug.
 """
+from __future__ import annotations
 
 import pytest
-from unittest.mock import Mock, patch
 
 
 @pytest.mark.regression
@@ -106,8 +106,9 @@ class TestMemoryLeakRegression:
     def test_repeated_operations_no_memory_growth(self):
         """REGRESSION: Repeated operations must not cause memory growth"""
         import gc
-        import psutil
         import os
+
+        import psutil
 
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss

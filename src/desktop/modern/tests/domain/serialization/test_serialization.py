@@ -1,8 +1,8 @@
 """Test domain model serialization."""
+from __future__ import annotations
 
 import json
 
-import pytest
 from src.domain.models import (
     ArrowData,
     ArrowType,
@@ -144,8 +144,8 @@ class TestBeatDataSerialization:
         # Verify values
         assert data["beatNumber"] == 1
         assert data["letter"] == "A"
-        assert data["blueReversal"] == True
-        assert data["isBlank"] == False
+        assert data["blueReversal"]
+        assert not data["isBlank"]
 
     def test_beat_data_round_trip_serialization(self):
         """Test complete round-trip serialization."""
@@ -241,8 +241,8 @@ class TestPictographDataSerialization:
         # Verify values
         assert data["startPosition"] == "north"
         assert data["endPosition"] == "south"
-        assert data["isBlank"] == False
-        assert data["isMirrored"] == True
+        assert not data["isBlank"]
+        assert data["isMirrored"]
 
     def test_pictograph_data_round_trip_serialization(self):
         """Test complete round-trip serialization."""

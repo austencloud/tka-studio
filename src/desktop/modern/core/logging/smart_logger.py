@@ -106,7 +106,7 @@ class SmartLogger:
                     duration_ms = (time.time() - start_time) * 1000
 
                     # Errors always get verbose logging
-                    self.logger.error(
+                    self.logger.exception(
                         f"❌ FAILED {operation_name}: {duration_ms:.1f}ms - {e!s}"
                     )
                     if self.config.error_always_verbose:
@@ -148,7 +148,7 @@ class SmartLogger:
                     f"📊 {batch_name}: {items_processed} items, {avg_time:.1f}ms avg"
                 )
 
-    def log_with_suppression(self, level: int, message: str, suppress_key: str = None):
+    def log_with_suppression(self, level: int, message: str, suppress_key: str | None = None):
         """Log with automatic suppression of repeated messages."""
         suppress_key = suppress_key or message
 
@@ -192,7 +192,7 @@ class SmartLogger:
         args: tuple,
         kwargs: dict,
         result: Any,
-        error: Exception = None,
+        error: Exception | None = None,
     ):
         """Log detailed operation information."""
         self.logger.debug(f"📋 DETAILS for {operation_name}:")

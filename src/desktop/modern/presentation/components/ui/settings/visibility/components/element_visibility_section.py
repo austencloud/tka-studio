@@ -128,7 +128,7 @@ class ElementVisibilitySection(QFrame):
             logger.debug(f"Element visibility changed: {name} = {visible}")
 
         except Exception as e:
-            logger.error(f"Error changing element visibility: {e}")
+            logger.exception(f"Error changing element visibility: {e}")
             # Revert toggle state on error
             toggle = self.element_toggles.get(name)
             if toggle:

@@ -5,13 +5,15 @@ PURPOSE: Contract testing for TypeSafeSerializer cross-language serialization
 SCOPE: Domain model serialization, type validation, round-trip integrity
 EXPECTED_DURATION: permanent
 """
+from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+import json
+from typing import Any
 
 import pytest
+
 from core.serialization.type_safe_serializer import (
     BatchSerializer,
     SerializationError,
@@ -30,9 +32,9 @@ class TestDomainModel:
     id: str
     name: str
     value: int
-    optional_field: Optional[str] = None
+    optional_field: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "name": self.name,
@@ -41,7 +43,7 @@ class TestDomainModel:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "TestDomainModel":
+    def from_dict(cls, data: dict[str, Any]) -> TestDomainModel:
         return cls(
             id=data["id"],
             name=data["name"],

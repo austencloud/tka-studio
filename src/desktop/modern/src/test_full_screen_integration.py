@@ -5,10 +5,11 @@ Test script for Full Screen Viewer integration.
 This script tests the full screen viewer functionality to ensure
 it integrates correctly with the workbench and DI container.
 """
+from __future__ import annotations
 
-import sys
-import tempfile
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -19,14 +20,18 @@ def test_full_screen_service_creation():
     print("🧪 Testing FullScreenService creation...")
 
     try:
-        from desktop.modern.application.services.ui.full_screen_viewer import FullScreenViewer
+        from desktop.modern.application.services.ui.full_screen_viewer import (
+            FullScreenViewer,
+        )
         from desktop.modern.application.services.ui.sequence_state_reader import (
             MockSequenceStateReader,
         )
         from desktop.modern.application.services.ui.thumbnail_generation_service import (
             MockThumbnailGenerationService,
         )
-        from desktop.modern.presentation.components.ui.full_screen import FullScreenOverlayFactory
+        from desktop.modern.presentation.components.ui.full_screen import (
+            FullScreenOverlayFactory,
+        )
 
         # Create dependencies
         thumbnail_generator = MockThumbnailGenerationService()
@@ -85,9 +90,8 @@ def test_thumbnail_generation():
         if thumbnail_data:
             print(f"✅ Thumbnail generated: {len(thumbnail_data)} bytes")
             return True
-        else:
-            print("❌ No thumbnail data returned")
-            return False
+        print("❌ No thumbnail data returned")
+        return False
 
     except Exception as e:
         print(f"❌ Thumbnail generation failed: {e}")
@@ -119,9 +123,8 @@ def test_di_container_integration():
                 f"✅ FullScreenService resolved from DI container: {type(fullscreen_service).__name__}"
             )
             return True
-        else:
-            print("❌ Could not resolve FullScreenService from DI container")
-            return False
+        print("❌ Could not resolve FullScreenService from DI container")
+        return False
 
     except Exception as e:
         print(f"❌ DI container integration failed: {e}")
@@ -153,9 +156,8 @@ def test_workbench_factory():
         if workbench:
             print(f"✅ Workbench created successfully: {type(workbench).__name__}")
             return True
-        else:
-            print("❌ Could not create workbench")
-            return False
+        print("❌ Could not create workbench")
+        return False
 
     except Exception as e:
         print(f"❌ Workbench factory integration failed: {e}")
@@ -191,9 +193,8 @@ def main():
     if passed == total:
         print("🎉 All tests passed! Full screen viewer integration is working.")
         return True
-    else:
-        print("⚠️ Some tests failed. Check the output above for details.")
-        return False
+    print("⚠️ Some tests failed. Check the output above for details.")
+    return False
 
 
 if __name__ == "__main__":

@@ -84,7 +84,7 @@ class WorkbenchIntegrator:
             return success_count == len(sequence)
 
         except Exception as e:
-            logger.error(f"❌ Failed to update workbench: {e}")
+            logger.exception(f"❌ Failed to update workbench: {e}")
             return False
 
     def _clear_workbench(self) -> None:
@@ -97,7 +97,7 @@ class WorkbenchIntegrator:
             else:
                 logger.debug("Workbench manager doesn't support clearing")
         except Exception as e:
-            logger.error(f"Failed to clear workbench: {e}")
+            logger.exception(f"Failed to clear workbench: {e}")
 
     def _add_beat_individually(
         self, pictograph: PictographData, beat_number: int
@@ -135,7 +135,7 @@ class WorkbenchIntegrator:
             )
             return False
         except Exception as e:
-            logger.error(f"Failed to add beat {beat_number} individually: {e}")
+            logger.exception(f"Failed to add beat {beat_number} individually: {e}")
             import traceback
 
             traceback.print_exc()
@@ -215,7 +215,7 @@ class WorkbenchIntegrator:
             else:
                 logger.warning("First beat has no start position data")
         except Exception as e:
-            logger.error(f"Failed to establish start position: {e}")
+            logger.exception(f"Failed to establish start position: {e}")
             import traceback
 
             traceback.print_exc()
@@ -237,7 +237,7 @@ class WorkbenchIntegrator:
 
             return start_position_beat
         except Exception as e:
-            logger.error(f"Failed to create start position beat data: {e}")
+            logger.exception(f"Failed to create start position beat data: {e}")
             return None
 
     def set_workbench_manager(self, workbench_manager) -> None:
@@ -320,6 +320,9 @@ class WorkbenchIntegrator:
         """Try to create arrow positioning orchestrator with fallback initialization."""
         try:
             # Import all required services
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
+                ArrowPositioningOrchestrator,
+            )
             from desktop.shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
                 ArrowLocationCalculatorService,
             )
@@ -331,10 +334,6 @@ class WorkbenchIntegrator:
             )
             from desktop.shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
                 ArrowAdjustmentCalculator,
-            )
-
-            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
-                ArrowPositioningOrchestrator,
             )
 
             # Create services with default configurations

@@ -7,7 +7,7 @@ with proper dependency injection and configuration.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QWidget
 
@@ -23,7 +23,7 @@ class OptionPickerWidgetFactory:
         """Initialize the factory with a DI container."""
         self.container = container
 
-    def create_option_picker(self, parent: Optional[QWidget] = None) -> QWidget:
+    def create_option_picker(self, parent: QWidget | None = None) -> QWidget:
         """Create an option picker widget."""
         from desktop.modern.presentation.components.option_picker.components.option_picker_widget import (
             OptionPickerWidget,
@@ -31,7 +31,7 @@ class OptionPickerWidgetFactory:
 
         return OptionPickerWidget(parent)
 
-    def create_filter_widget(self, parent: Optional[QWidget] = None) -> QWidget:
+    def create_filter_widget(self, parent: QWidget | None = None) -> QWidget:
         """Create a filter widget for the option picker."""
         from desktop.modern.presentation.components.option_picker.components.option_filter import (
             OptionPickerFilter,
@@ -48,15 +48,15 @@ class WidgetFactory:
         self.container = container
         self.option_picker_factory = OptionPickerWidgetFactory(container)
 
-    def create_option_picker(self, parent: Optional[QWidget] = None) -> QWidget:
+    def create_option_picker(self, parent: QWidget | None = None) -> QWidget:
         """Create an option picker widget."""
         return self.option_picker_factory.create_option_picker(parent)
 
-    def create_filter_widget(self, parent: Optional[QWidget] = None) -> QWidget:
+    def create_filter_widget(self, parent: QWidget | None = None) -> QWidget:
         """Create a filter widget."""
         return self.option_picker_factory.create_filter_widget(parent)
 
-    def create_pictograph_widget(self, parent: Optional[QWidget] = None):
+    def create_pictograph_widget(self, parent: QWidget | None = None):
         """Create a pictograph view with injected dependencies."""
         from desktop.modern.presentation.components.pictograph.views import (
             create_pictograph_view,

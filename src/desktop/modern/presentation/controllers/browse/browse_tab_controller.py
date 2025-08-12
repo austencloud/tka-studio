@@ -100,7 +100,7 @@ class BrowseTabController(QObject):
 
         except Exception as e:
             error_msg = f"Failed to initialize: {e!s}"
-            logger.error(f"❌ {error_msg}")
+            logger.exception(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
 
@@ -127,7 +127,7 @@ class BrowseTabController(QObject):
 
         except Exception as e:
             error_msg = f"Failed to apply filter {filter_type.value}: {e!s}"
-            logger.error(f"❌ {error_msg}")
+            logger.exception(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
 
@@ -156,7 +156,7 @@ class BrowseTabController(QObject):
 
         except Exception as e:
             error_msg = f"Failed to select sequence: {e!s}"
-            logger.error(f"❌ {error_msg}")
+            logger.exception(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
 
@@ -265,7 +265,7 @@ class BrowseTabController(QObject):
 
         except Exception as e:
             error_msg = f"Failed to refresh data: {e!s}"
-            logger.error(f"❌ {error_msg}")
+            logger.exception(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
             self.error_occurred.emit(error_msg)
 
@@ -337,7 +337,7 @@ class BrowseTabController(QObject):
 
         except Exception as e:
             error_msg = f"Failed to start progressive loading: {e!s}"
-            logger.error(f"❌ {error_msg}")
+            logger.exception(f"❌ {error_msg}")
             self.view_model.set_error(error_msg)
 
     def _update_browser_panel_with_sequences(self, sequences) -> None:
@@ -361,7 +361,7 @@ class BrowseTabController(QObject):
                 )
 
         except Exception as e:
-            logger.error(f"❌ Failed to update browser panel: {e}")
+            logger.exception(f"❌ Failed to update browser panel: {e}")
 
     def _on_panel_changed(self, panel_name: str) -> None:
         """Handle panel change events."""

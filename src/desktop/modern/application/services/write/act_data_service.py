@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.write_services import ActData, IActDataService
 
@@ -26,7 +26,7 @@ class ActDataService(IActDataService):
     thumbnail generation and file management capabilities.
     """
 
-    def __init__(self, acts_directory: Optional[Path] = None):
+    def __init__(self, acts_directory: Path | None = None):
         """
         Initialize the act data service.
 
@@ -74,10 +74,10 @@ class ActDataService(IActDataService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save act '{act.name}' to {file_path}: {e}")
+            logger.exception(f"Failed to save act '{act.name}' to {file_path}: {e}")
             return False
 
-    def load_act(self, file_path: Path) -> Optional[ActData]:
+    def load_act(self, file_path: Path) -> ActData | None:
         """
         Load an act from a JSON file.
 
@@ -100,10 +100,10 @@ class ActDataService(IActDataService):
             return act
 
         except Exception as e:
-            logger.error(f"Failed to load act from {file_path}: {e}")
+            logger.exception(f"Failed to load act from {file_path}: {e}")
             return None
 
-    def get_available_acts(self, acts_directory: Optional[Path] = None) -> List[Path]:
+    def get_available_acts(self, acts_directory: Path | None = None) -> list[Path]:
         """
         Get list of available act files in a directory.
 
@@ -131,7 +131,7 @@ class ActDataService(IActDataService):
             return act_files
 
         except Exception as e:
-            logger.error(f"Failed to get available acts from {acts_directory}: {e}")
+            logger.exception(f"Failed to get available acts from {acts_directory}: {e}")
             return []
 
     def delete_act(self, file_path: Path) -> bool:
@@ -154,10 +154,10 @@ class ActDataService(IActDataService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to delete act file {file_path}: {e}")
+            logger.exception(f"Failed to delete act file {file_path}: {e}")
             return False
 
-    def create_act_thumbnail(self, act: ActData) -> Optional[bytes]:
+    def create_act_thumbnail(self, act: ActData) -> bytes | None:
         """
         Create a thumbnail image for an act.
 
@@ -175,7 +175,7 @@ class ActDataService(IActDataService):
             return None
 
         except Exception as e:
-            logger.error(f"Failed to create thumbnail for act '{act.name}': {e}")
+            logger.exception(f"Failed to create thumbnail for act '{act.name}': {e}")
             return None
 
     def get_acts_directory(self) -> Path:
@@ -188,7 +188,7 @@ class ActDataService(IActDataService):
         self.acts_directory.mkdir(parents=True, exist_ok=True)
         logger.info(f"Acts directory changed to: {self.acts_directory}")
 
-    def get_act_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
+    def get_act_info(self, file_path: Path) -> dict[str, Any] | None:
         """
         Get basic info about an act without fully loading it.
 
@@ -215,5 +215,5 @@ class ActDataService(IActDataService):
             }
 
         except Exception as e:
-            logger.error(f"Failed to get act info from {file_path}: {e}")
+            logger.exception(f"Failed to get act info from {file_path}: {e}")
             return None

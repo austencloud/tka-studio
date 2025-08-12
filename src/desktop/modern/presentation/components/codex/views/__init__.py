@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from .codex_pictograph_view import CodexPictographView
 
+
 __all__ = [
     "CodexPictographView",
 ]

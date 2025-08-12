@@ -7,19 +7,19 @@ This maintains the separation between platform-agnostic services and Qt-specific
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import QObject, pyqtSignal
-from desktop.shared.application.services.sequence.beat_factory import BeatFactory
-from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
-    SequenceBeatOperationsService,
-)
-from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
 
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.shared.application.services.sequence.beat_factory import BeatFactory
+from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
+    SequenceBeatOperationsService,
+)
+from desktop.shared.application.services.sequence.sequence_persister import (
+    SequencePersister,
+)
 
 
 class QtSequenceBeatOperationsAdapter(QObject):
@@ -45,8 +45,8 @@ class QtSequenceBeatOperationsAdapter(QObject):
     def __init__(
         self,
         workbench_state_manager: IWorkbenchStateManager,
-        beat_factory: Optional[BeatFactory] = None,
-        persistence_service: Optional[SequencePersister] = None,
+        beat_factory: BeatFactory | None = None,
+        persistence_service: SequencePersister | None = None,
     ):
         super().__init__()
 
@@ -83,7 +83,7 @@ class QtSequenceBeatOperationsAdapter(QObject):
         self,
         pictograph_data: PictographData,
         position: int,
-        sequence_data: Optional[SequenceData] = None,
+        sequence_data: SequenceData | None = None,
         persist: bool = True,
     ) -> SequenceData:
         """Add a beat to the sequence at the specified position."""
@@ -92,7 +92,7 @@ class QtSequenceBeatOperationsAdapter(QObject):
     def remove_beat(
         self,
         position: int,
-        sequence_data: Optional[SequenceData] = None,
+        sequence_data: SequenceData | None = None,
         persist: bool = True,
     ) -> SequenceData:
         """Remove a beat from the sequence at the specified position."""
@@ -102,7 +102,7 @@ class QtSequenceBeatOperationsAdapter(QObject):
         self,
         position: int,
         pictograph_data: PictographData,
-        sequence_data: Optional[SequenceData] = None,
+        sequence_data: SequenceData | None = None,
         persist: bool = True,
     ) -> SequenceData:
         """Update a beat in the sequence at the specified position."""
@@ -113,12 +113,12 @@ class QtSequenceBeatOperationsAdapter(QObject):
     def get_beat(
         self,
         position: int,
-        sequence_data: Optional[SequenceData] = None,
-    ) -> Optional[BeatData]:
+        sequence_data: SequenceData | None = None,
+    ) -> BeatData | None:
         """Get a beat from the sequence at the specified position."""
         return self._service.get_beat(position, sequence_data)
 
-    def get_beat_count(self, sequence_data: Optional[SequenceData] = None) -> int:
+    def get_beat_count(self, sequence_data: SequenceData | None = None) -> int:
         """Get the number of beats in the sequence."""
         return self._service.get_beat_count(sequence_data)
 

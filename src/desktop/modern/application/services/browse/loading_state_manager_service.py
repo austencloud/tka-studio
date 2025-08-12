@@ -67,7 +67,7 @@ class LoadingStateManagerService(ILoadingStateManager):
         if self.loading_label and message:
             self.loading_label.setText(message)
 
-        progress_percent = (current / total * 100) if total > 0 else 0
+        (current / total * 100) if total > 0 else 0
 
     def show_empty_state(self) -> None:
         """Show empty state when no sequences are found."""

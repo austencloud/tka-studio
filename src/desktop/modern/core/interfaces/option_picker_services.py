@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 class OptionType(Enum):
@@ -26,7 +26,7 @@ class IOptionConfigurationService(ABC):
     """Interface for option configuration service operations."""
 
     @abstractmethod
-    def get_configuration(self, config_key: str) -> Optional[Any]:
+    def get_configuration(self, config_key: str) -> Any | None:
         """
         Get configuration value by key.
 
@@ -178,7 +178,7 @@ class IOptionLoader(ABC):
         """
 
     @abstractmethod
-    def load_option_by_id(self, option_id: str) -> Optional[dict[str, Any]]:
+    def load_option_by_id(self, option_id: str) -> dict[str, Any] | None:
         """
         Load specific option by ID.
 
@@ -280,7 +280,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def get_option_details(self, option_id: str) -> Optional[dict[str, Any]]:
+    def get_option_details(self, option_id: str) -> dict[str, Any] | None:
         """
         Get detailed information for a specific option.
 
@@ -350,7 +350,7 @@ class IOptionProvider(ABC):
         """
 
     @abstractmethod
-    def get_option_preview(self, option_id: str) -> Optional[Any]:
+    def get_option_preview(self, option_id: str) -> Any | None:
         """
         Get preview representation of an option.
 
@@ -565,7 +565,7 @@ class IPositionMatcher(ABC):
     """Interface for position matcher operations."""
 
     @abstractmethod
-    def match_position(self, position_data: dict[str, Any]) -> Optional[str]:
+    def match_position(self, position_data: dict[str, Any]) -> str | None:
         """
         Match position data to a position ID.
 

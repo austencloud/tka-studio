@@ -9,19 +9,6 @@ from __future__ import annotations
 
 import logging
 
-from desktop.shared.application.services.sequence_card.sequence_cache_service import (
-    SequenceCardCacheService,
-)
-from desktop.shared.application.services.sequence_card.sequence_data_service import (
-    SequenceCardDataService,
-)
-from desktop.shared.application.services.sequence_card.sequence_display_service import (
-    SequenceCardDisplayService,
-)
-from desktop.shared.application.services.sequence_card.sequence_settings_service import (
-    SequenceCardSettingsService,
-)
-
 from desktop.modern.application.services.sequence_card.sequence_export_service import (
     SequenceCardExportService,
 )
@@ -41,6 +28,18 @@ from desktop.modern.core.interfaces.sequence_card_services import (
 # Import the actual tab component
 from desktop.modern.presentation.views.sequence_card.sequence_card_tab import (
     SequenceCardTab,
+)
+from desktop.shared.application.services.sequence_card.sequence_cache_service import (
+    SequenceCardCacheService,
+)
+from desktop.shared.application.services.sequence_card.sequence_data_service import (
+    SequenceCardDataService,
+)
+from desktop.shared.application.services.sequence_card.sequence_display_service import (
+    SequenceCardDisplayService,
+)
+from desktop.shared.application.services.sequence_card.sequence_settings_service import (
+    SequenceCardSettingsService,
 )
 
 
@@ -106,7 +105,7 @@ def register_sequence_card_services(container: DIContainer) -> None:
         )
 
     except Exception as e:
-        logger.error(f"Failed to register sequence card services: {e}")
+        logger.exception(f"Failed to register sequence card services: {e}")
         raise
 
 
@@ -189,7 +188,7 @@ def validate_sequence_card_service_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Sequence card service registration validation failed: {e}")
+        logger.exception(f"Sequence card service registration validation failed: {e}")
         return False
 
 

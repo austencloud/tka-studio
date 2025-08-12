@@ -14,8 +14,6 @@ from pathlib import Path
 import sys
 
 # Import the framework-agnostic core services
-from typing import Optional
-
 from PyQt6.QtCore import QPointF, QSizeF
 from PyQt6.QtGui import QColor
 from PyQt6.QtSvg import QSvgRenderer
@@ -122,7 +120,7 @@ class QtRenderEngine:
             return False
 
         except Exception as e:
-            logger.error(f"Failed to execute render command {command.command_id}: {e}")
+            logger.exception(f"Failed to execute render command {command.command_id}: {e}")
             return False
 
     def _render_svg_command(
@@ -149,7 +147,7 @@ class QtRenderEngine:
 
             # Set position and size with LAYER-SPECIFIC POSITIONING
             qt_pos = QtTypeConverter.point_to_qt(command.position)
-            qt_size = QtTypeConverter.size_to_qt(command.size)
+            QtTypeConverter.size_to_qt(command.size)
 
             # Different positioning logic based on layer type
             layer = command.properties.get("layer", "unknown")
@@ -195,7 +193,7 @@ class QtRenderEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to render SVG command: {e}")
+            logger.exception(f"Failed to render SVG command: {e}")
             return False
 
     def _render_error_command(
@@ -222,7 +220,7 @@ class QtRenderEngine:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to render error command: {e}")
+            logger.exception(f"Failed to render error command: {e}")
             return False
 
     def clear_created_items(self, scene: QGraphicsScene) -> None:
@@ -234,7 +232,7 @@ class QtRenderEngine:
             self._created_items.clear()
             logger.debug("Cleared all created items")
         except Exception as e:
-            logger.error(f"Failed to clear items: {e}")
+            logger.exception(f"Failed to clear items: {e}")
 
 
 # ============================================================================
@@ -251,7 +249,7 @@ class QtAssetProvider(IPictographAssetProvider):
         if not self.legacy_asset_manager:
             logger.warning("No legacy asset manager provided to QT asset provider")
 
-    def get_grid_asset(self, grid_mode: str) -> Optional[SvgAsset]:
+    def get_grid_asset(self, grid_mode: str) -> SvgAsset | None:
         """Get grid asset from existing QT asset management."""
         try:
             from desktop.shared.application.services.core.types import Size, SvgAsset
@@ -274,12 +272,12 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
         except Exception as e:
-            logger.error(f"Failed to get grid asset: {e}")
+            logger.exception(f"Failed to get grid asset: {e}")
             return None
 
     def get_prop_asset(
         self, prop_type: str, color: str, pictograph_data: dict | None = None
-    ) -> Optional[SvgAsset]:
+    ) -> SvgAsset | None:
         """Get prop asset from existing QT asset management with color transformation and beta positioning support."""
         try:
             from desktop.shared.application.services.core.types import Size, SvgAsset
@@ -311,10 +309,10 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
         except Exception as e:
-            logger.error(f"Failed to get prop asset: {e}")
+            logger.exception(f"Failed to get prop asset: {e}")
             return None
 
-    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> Optional[SvgAsset]:
+    def get_glyph_asset(self, glyph_type: str, glyph_id: str) -> SvgAsset | None:
         """Get glyph asset from existing QT asset management."""
         try:
             from desktop.shared.application.services.core.types import Size, SvgAsset
@@ -338,10 +336,10 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
         except Exception as e:
-            logger.error(f"Failed to get glyph asset: {e}")
+            logger.exception(f"Failed to get glyph asset: {e}")
             return None
 
-    def get_arrow_asset(self, arrow_type: str) -> Optional[SvgAsset]:
+    def get_arrow_asset(self, arrow_type: str) -> SvgAsset | None:
         """Get arrow asset from existing QT asset management."""
         try:
             from desktop.shared.application.services.core.types import Size, SvgAsset
@@ -363,7 +361,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
 
         except Exception as e:
-            logger.error(f"Failed to get arrow asset: {e}")
+            logger.exception(f"Failed to get arrow asset: {e}")
             return None
 
     def _load_grid_from_existing_system(self, grid_mode: str) -> str | None:
@@ -412,7 +410,7 @@ class QtAssetProvider(IPictographAssetProvider):
                 )
                 return self._load_grid_directly(grid_mode)
         except Exception as e:
-            logger.error(f"Failed to load grid from existing system: {e}")
+            logger.exception(f"Failed to load grid from existing system: {e}")
             return self._load_grid_directly(grid_mode)
 
     def _load_prop_from_existing_system(self, prop_type: str) -> str | None:
@@ -441,7 +439,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
             return self._load_prop_directly(prop_type)
         except Exception as e:
-            logger.error(f"Failed to load prop from existing system: {e}")
+            logger.exception(f"Failed to load prop from existing system: {e}")
             return self._load_prop_directly(prop_type)
 
     def _load_glyph_from_existing_system(
@@ -476,7 +474,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
             return self._load_glyph_directly(glyph_type, glyph_id)
         except Exception as e:
-            logger.error(f"Failed to load glyph from existing system: {e}")
+            logger.exception(f"Failed to load glyph from existing system: {e}")
             return self._load_glyph_directly(glyph_type, glyph_id)
 
     def _load_arrow_from_existing_system(self, arrow_type: str) -> str | None:
@@ -492,7 +490,7 @@ class QtAssetProvider(IPictographAssetProvider):
             )
             return None
         except Exception as e:
-            logger.error(f"Failed to load arrow from existing system: {e}")
+            logger.exception(f"Failed to load arrow from existing system: {e}")
             return None
 
     def _load_grid_directly(self, grid_mode: str) -> str | None:
@@ -508,7 +506,7 @@ class QtAssetProvider(IPictographAssetProvider):
                 logger.debug(f"Loaded grid directly: {grid_path}")
                 return content
         except Exception as e:
-            logger.error(f"Failed to load grid directly: {e}")
+            logger.exception(f"Failed to load grid directly: {e}")
             return None
 
     def _load_prop_directly(self, prop_type: str) -> str | None:
@@ -524,7 +522,7 @@ class QtAssetProvider(IPictographAssetProvider):
                 logger.debug(f"Loaded prop directly: {prop_path}")
                 return content
         except Exception as e:
-            logger.error(f"Failed to load prop directly: {e}")
+            logger.exception(f"Failed to load prop directly: {e}")
             return None
 
     def _load_glyph_directly(self, glyph_type: str, glyph_id: str) -> str | None:
@@ -550,7 +548,7 @@ class QtAssetProvider(IPictographAssetProvider):
                 logger.debug(f"Loaded glyph directly: {glyph_path}")
                 return content
         except Exception as e:
-            logger.error(f"Failed to load glyph directly: {e}")
+            logger.exception(f"Failed to load glyph directly: {e}")
             return None
 
     def _apply_color_transformation(self, svg_content: str, color: str) -> str:
@@ -607,7 +605,7 @@ class QtAssetProvider(IPictographAssetProvider):
             return result
 
         except Exception as e:
-            logger.error(f"Failed to apply color transformation for {color}: {e}")
+            logger.exception(f"Failed to apply color transformation for {color}: {e}")
             return svg_content
 
     def _should_apply_beta_positioning(self, pictograph_data) -> bool:
@@ -735,7 +733,7 @@ class QtPictographRenderingAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"Failed to render grid: {e}")
+            logger.exception(f"Failed to render grid: {e}")
             return None
 
     def render_prop(
@@ -769,7 +767,7 @@ class QtPictographRenderingAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"Failed to render prop: {e}")
+            logger.exception(f"Failed to render prop: {e}")
             return None
 
     def render_glyph(
@@ -795,7 +793,7 @@ class QtPictographRenderingAdapter:
             return None
 
         except Exception as e:
-            logger.error(f"Failed to render glyph: {e}")
+            logger.exception(f"Failed to render glyph: {e}")
             return None
 
     # ========================================================================
@@ -831,7 +829,7 @@ class QtPictographRenderingAdapter:
             return success_count > 0
 
         except Exception as e:
-            logger.error(f"Failed to render complete pictograph: {e}")
+            logger.exception(f"Failed to render complete pictograph: {e}")
             return False
 
     def clear_rendered_items(self, scene: QGraphicsScene) -> None:

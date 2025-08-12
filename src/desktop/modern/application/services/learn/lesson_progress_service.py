@@ -63,7 +63,7 @@ class LessonProgressService(ILessonProgressService):
                 return {}
 
             # Get answer history for additional metrics
-            answer_history = self.validation_service.get_answer_history(session_id)
+            self.validation_service.get_answer_history(session_id)
             current_streak = self.validation_service.get_correct_streak(session_id)
             accuracy = self.validation_service.get_session_accuracy(session_id)
 
@@ -99,7 +99,7 @@ class LessonProgressService(ILessonProgressService):
             return progress_info
 
         except Exception as e:
-            logger.error(f"Failed to get progress info for session {session_id}: {e}")
+            logger.exception(f"Failed to get progress info for session {session_id}: {e}")
             return {}
 
     def is_lesson_complete(self, session_id: str) -> bool:
@@ -141,7 +141,7 @@ class LessonProgressService(ILessonProgressService):
             return is_complete
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to check lesson completion for session {session_id}: {e}"
             )
             return False
@@ -198,7 +198,7 @@ class LessonProgressService(ILessonProgressService):
             return results
 
         except Exception as e:
-            logger.error(f"Failed to calculate results for session {session_id}: {e}")
+            logger.exception(f"Failed to calculate results for session {session_id}: {e}")
             raise
 
     def should_advance_to_next_question(self, session_id: str) -> bool:
@@ -235,7 +235,7 @@ class LessonProgressService(ILessonProgressService):
             return False
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to check if should advance for session {session_id}: {e}"
             )
             return False
@@ -248,7 +248,7 @@ class LessonProgressService(ILessonProgressService):
                 return f"Time Remaining: {minutes}:{seconds:02d}"
             return f"{session.current_question}/{session.total_questions}"
         except Exception as e:
-            logger.error(f"Failed to format progress text: {e}")
+            logger.exception(f"Failed to format progress text: {e}")
             return "Progress: N/A"
 
     def _format_time_display(self, session) -> str:
@@ -261,7 +261,7 @@ class LessonProgressService(ILessonProgressService):
             elapsed_seconds = int(session.elapsed_time_seconds % 60)
             return f"{elapsed_minutes}:{elapsed_seconds:02d}"
         except Exception as e:
-            logger.error(f"Failed to format time display: {e}")
+            logger.exception(f"Failed to format time display: {e}")
             return "0:00"
 
     def get_performance_summary(self, session_id: str) -> dict[str, Any]:
@@ -315,7 +315,7 @@ class LessonProgressService(ILessonProgressService):
             }
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to get performance summary for session {session_id}: {e}"
             )
             return {}

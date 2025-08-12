@@ -12,7 +12,7 @@ This service handles:
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtSvg import QSvgRenderer
 
@@ -69,7 +69,7 @@ class PictographCacheManager(IPictographCacheManager):
             "memory_warnings": 0,
         }
 
-    def get_renderer(self, cache_key: str) -> Optional[QSvgRenderer]:
+    def get_renderer(self, cache_key: str) -> QSvgRenderer | None:
         """Get cached renderer by key."""
         # Check all renderer caches
         for cache in [
@@ -127,7 +127,7 @@ class PictographCacheManager(IPictographCacheManager):
 
         logger.debug(f"🗄️ [CACHE_MANAGER] Cached renderer: {cache_key}")
 
-    def get_svg_data(self, cache_key: str) -> Optional[str]:
+    def get_svg_data(self, cache_key: str) -> str | None:
         """Get cached SVG data by key."""
         if cache_key in self._svg_data_cache:
             self._stats["cache_hits"] += 1

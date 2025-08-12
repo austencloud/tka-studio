@@ -8,7 +8,6 @@ that updates in real-time as visibility settings change.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -42,8 +41,8 @@ class VisibilityPictographPreview(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.pictograph_view: Optional[BasePictographView] = None
-        self.sample_beat_data: Optional[BeatData] = None
+        self.pictograph_view: BasePictographView | None = None
+        self.sample_beat_data: BeatData | None = None
 
         # Animation properties
         self._fade_animations: dict[str, QPropertyAnimation] = {}
@@ -184,7 +183,7 @@ class VisibilityPictographPreview(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Error creating sample data: {e}")
+            logger.exception(f"Error creating sample data: {e}")
             # Create minimal fallback data
             self.sample_beat_data = BeatData(beat_number=1, is_blank=True)
 
@@ -200,7 +199,7 @@ class VisibilityPictographPreview(QWidget):
             logger.debug("Initialized pictograph view for preview")
 
         except Exception as e:
-            logger.error(f"Error initializing view: {e}")
+            logger.exception(f"Error initializing view: {e}")
 
     # _fit_view method removed - PictographWidget handles scaling automatically
 
@@ -247,7 +246,7 @@ class VisibilityPictographPreview(QWidget):
             logger.debug(f"Updated {element_type} visibility to {visible}")
 
         except Exception as e:
-            logger.error(f"Error updating visibility for {element_type}: {e}")
+            logger.exception(f"Error updating visibility for {element_type}: {e}")
 
     def _schedule_delayed_update(self):
         """Schedule a delayed update to batch rapid changes."""
@@ -271,7 +270,7 @@ class VisibilityPictographPreview(QWidget):
                 )
                 self.preview_updated.emit()
             except Exception as e:
-                logger.error(f"Error updating view: {e}")
+                logger.exception(f"Error updating view: {e}")
 
     def refresh_preview(self):
         """Force refresh the entire preview."""
@@ -293,4 +292,4 @@ class VisibilityPictographPreview(QWidget):
                 self.pictograph_view = None
 
         except Exception as e:
-            logger.error(f"Error during cleanup: {e}")
+            logger.exception(f"Error during cleanup: {e}")

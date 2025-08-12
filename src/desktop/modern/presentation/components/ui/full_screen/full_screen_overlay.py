@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
@@ -31,7 +30,7 @@ class FullScreenOverlay(QWidget):
     - Semi-transparent background
     """
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         """
         Initialize the full screen overlay.
 
@@ -138,7 +137,7 @@ class FullScreenOverlay(QWidget):
             logger.info(f"Displaying image in full screen: {image_path}")
 
         except Exception as e:
-            logger.error(f"Failed to display image: {e}")
+            logger.exception(f"Failed to display image: {e}")
 
     def _calculate_available_size(self):
         """
@@ -181,7 +180,7 @@ class FullScreenOverlay(QWidget):
             logger.info("Full screen overlay clicked - closing")
             self.close()
         except Exception as e:
-            logger.error(f"Error handling mouse press: {e}")
+            logger.exception(f"Error handling mouse press: {e}")
         finally:
             super().mousePressEvent(event)
 
@@ -194,7 +193,7 @@ class FullScreenOverlay(QWidget):
             else:
                 super().keyPressEvent(event)
         except Exception as e:
-            logger.error(f"Error handling key press: {e}")
+            logger.exception(f"Error handling key press: {e}")
 
     def resizeEvent(self, event):
         """Handle resize events - update image scaling"""
@@ -218,7 +217,7 @@ class FullScreenOverlay(QWidget):
                 self._image_label.setPixmap(scaled_pixmap)
 
         except Exception as e:
-            logger.error(f"Error handling resize: {e}")
+            logger.exception(f"Error handling resize: {e}")
 
     def closeEvent(self, event):
         """Handle close events - cleanup"""
@@ -226,7 +225,7 @@ class FullScreenOverlay(QWidget):
             logger.info("Full screen overlay closing")
             super().closeEvent(event)
         except Exception as e:
-            logger.error(f"Error during close: {e}")
+            logger.exception(f"Error during close: {e}")
 
 
 class FullScreenOverlayFactory:
@@ -268,6 +267,6 @@ class FullScreenOverlayFactory:
             return overlay
 
         except Exception as e:
-            logger.error(f"Failed to create FullScreenOverlay: {e}")
+            logger.exception(f"Failed to create FullScreenOverlay: {e}")
             # Return a basic overlay as fallback
             return FullScreenOverlay(parent=None)

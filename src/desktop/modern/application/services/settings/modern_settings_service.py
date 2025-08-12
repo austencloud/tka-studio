@@ -255,7 +255,7 @@ class ModernSettingsService(QObject):
 
             # Execute command
             full_key = f"{section}/{key}"
-            old_value = self.settings.value(full_key)
+            self.settings.value(full_key)
 
             self.settings.setValue(full_key, value)
             self.settings.sync()
@@ -271,7 +271,7 @@ class ModernSettingsService(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to execute setting command {section}/{key}: {e}")
+            logger.exception(f"Failed to execute setting command {section}/{key}: {e}")
             return False
 
     def execute_bulk_setting_command(
@@ -301,7 +301,7 @@ class ModernSettingsService(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Bulk setting command failed: {e}")
+            logger.exception(f"Bulk setting command failed: {e}")
             return False
 
     def _validate_setting_command(self, section: str, key: str, value: Any) -> bool:
@@ -319,7 +319,7 @@ class ModernSettingsService(QObject):
     # ============================================================================
 
     def query_setting(
-        self, section: str, key: str, default: Any = None, type_hint: type[T] = None
+        self, section: str, key: str, default: Any = None, type_hint: type[T] | None = None
     ) -> T:
         """
         Query a setting value (CQRS query side).
@@ -341,7 +341,7 @@ class ModernSettingsService(QObject):
             return self.settings.value(full_key, default)
 
         except Exception as e:
-            logger.error(f"Failed to query setting {section}/{key}: {e}")
+            logger.exception(f"Failed to query setting {section}/{key}: {e}")
             return default
 
     def query_section(self, section: str) -> dict[str, Any]:
@@ -366,7 +366,7 @@ class ModernSettingsService(QObject):
             return result
 
         except Exception as e:
-            logger.error(f"Failed to query section {section}: {e}")
+            logger.exception(f"Failed to query section {section}: {e}")
             return {}
 
     def query_all_settings(self) -> dict[str, dict[str, Any]]:
@@ -393,7 +393,7 @@ class ModernSettingsService(QObject):
             return result
 
         except Exception as e:
-            logger.error(f"Failed to query all settings: {e}")
+            logger.exception(f"Failed to query all settings: {e}")
             return {}
 
     # ============================================================================
@@ -443,7 +443,7 @@ class ModernSettingsService(QObject):
             return memento
 
         except Exception as e:
-            logger.error(f"Failed to create state memento: {e}")
+            logger.exception(f"Failed to create state memento: {e}")
             return ApplicationStateMemento(current_tab)
 
     def restore_from_memento(self, memento: ApplicationStateMemento) -> bool:
@@ -470,7 +470,7 @@ class ModernSettingsService(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to restore from memento: {e}")
+            logger.exception(f"Failed to restore from memento: {e}")
             return False
 
     def save_state_memento(
@@ -501,7 +501,7 @@ class ModernSettingsService(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save state memento: {e}")
+            logger.exception(f"Failed to save state memento: {e}")
             return False
 
     def load_state_memento(
@@ -534,7 +534,7 @@ class ModernSettingsService(QObject):
             return memento
 
         except Exception as e:
-            logger.error(f"Failed to load state memento: {e}")
+            logger.exception(f"Failed to load state memento: {e}")
             return None
 
     # ============================================================================
@@ -577,7 +577,7 @@ class ModernSettingsService(QObject):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to save application state: {e}")
+            logger.exception(f"Failed to save application state: {e}")
             return False
 
     def restore_application_state(self) -> ApplicationStateMemento | None:
@@ -603,7 +603,7 @@ class ModernSettingsService(QObject):
             return None
 
         except Exception as e:
-            logger.error(f"Failed to restore application state: {e}")
+            logger.exception(f"Failed to restore application state: {e}")
             return None
 
     # ============================================================================

@@ -150,8 +150,7 @@ class StyledButton(QPushButton, StyleMixin):
         """Update button appearance based on current state and context."""
         # Try to use new design system for supported contexts
         if (
-            self._context == ButtonContext.NAVIGATION
-            or self._context == ButtonContext.STANDARD
+            self._context in (ButtonContext.NAVIGATION, ButtonContext.STANDARD)
         ):
             self._apply_design_system_styling()
         else:

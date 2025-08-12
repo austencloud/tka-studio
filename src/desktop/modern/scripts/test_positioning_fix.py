@@ -85,7 +85,7 @@ def demonstrate_positioning_difference():
 def create_visual_comparison():
     """Create visual comparison images to show the difference."""
 
-    app = QApplication(sys.argv)
+    QApplication(sys.argv)
 
     # Test parameters
     beat_size = 100

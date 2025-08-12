@@ -25,16 +25,16 @@ from .validation_engine import ValidationEngine
 __all__ = [
     # Main container
     "DIContainer",
-    "get_container",
-    "reset_container",
+    "DebuggingTools",
+    "IServiceResolver",
+    "LazyProxy",
+    "LifecycleManager",
+    "ResolverChain",
+    "ServiceDescriptor",
     # Focused modules
     "ServiceRegistry",
     "ServiceScope",
-    "ServiceDescriptor",
-    "ResolverChain",
-    "LazyProxy",
-    "IServiceResolver",
-    "LifecycleManager",
     "ValidationEngine",
-    "DebuggingTools",
+    "get_container",
+    "reset_container",
 ]

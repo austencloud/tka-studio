@@ -92,7 +92,7 @@ class ImageExportSettingsManager(QObject):
             return format_name
 
         except Exception as e:
-            logger.error(f"Failed to get export format: {e}")
+            logger.exception(f"Failed to get export format: {e}")
             return self.DEFAULT_FORMAT
 
     def set_export_format(self, format_name: str) -> bool:
@@ -123,7 +123,7 @@ class ImageExportSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set export format {format_name}: {e}")
+            logger.exception(f"Failed to set export format {format_name}: {e}")
             return False
 
     def get_supported_formats(self) -> list[str]:
@@ -153,7 +153,7 @@ class ImageExportSettingsManager(QObject):
             return quality
 
         except Exception as e:
-            logger.error(f"Failed to get export quality: {e}")
+            logger.exception(f"Failed to get export quality: {e}")
             return self.DEFAULT_QUALITY
 
     def set_export_quality(self, quality: int) -> bool:
@@ -184,7 +184,7 @@ class ImageExportSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set export quality {quality}: {e}")
+            logger.exception(f"Failed to set export quality {quality}: {e}")
             return False
 
     def get_export_dimensions(self) -> tuple[int, int]:
@@ -205,7 +205,7 @@ class ImageExportSettingsManager(QObject):
             return (width, height)
 
         except Exception as e:
-            logger.error(f"Failed to get export dimensions: {e}")
+            logger.exception(f"Failed to get export dimensions: {e}")
             return (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT)
 
     def set_export_dimensions(self, width: int, height: int) -> bool:
@@ -250,7 +250,7 @@ class ImageExportSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set export dimensions {width}x{height}: {e}")
+            logger.exception(f"Failed to set export dimensions {width}x{height}: {e}")
             return False
 
     def get_include_background(self) -> bool:
@@ -265,7 +265,7 @@ class ImageExportSettingsManager(QObject):
                 "export/include_background", self.DEFAULT_INCLUDE_BACKGROUND, type=bool
             )
         except Exception as e:
-            logger.error(f"Failed to get include background setting: {e}")
+            logger.exception(f"Failed to get include background setting: {e}")
             return self.DEFAULT_INCLUDE_BACKGROUND
 
     def set_include_background(self, include: bool) -> None:
@@ -285,7 +285,7 @@ class ImageExportSettingsManager(QObject):
                 logger.debug(f"Include background changed to {include}")
 
         except Exception as e:
-            logger.error(f"Failed to set include background {include}: {e}")
+            logger.exception(f"Failed to set include background {include}: {e}")
 
     def get_scale_factor(self) -> float:
         """
@@ -305,7 +305,7 @@ class ImageExportSettingsManager(QObject):
             return scale
 
         except Exception as e:
-            logger.error(f"Failed to get scale factor: {e}")
+            logger.exception(f"Failed to get scale factor: {e}")
             return self.DEFAULT_SCALE_FACTOR
 
     def set_scale_factor(self, scale: float) -> bool:
@@ -339,7 +339,7 @@ class ImageExportSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to set scale factor {scale}: {e}")
+            logger.exception(f"Failed to set scale factor {scale}: {e}")
             return False
 
     def get_quality_presets(self) -> dict[str, int]:
@@ -370,7 +370,7 @@ class ImageExportSettingsManager(QObject):
             return self.set_export_quality(quality)
 
         except Exception as e:
-            logger.error(f"Failed to apply quality preset {preset_name}: {e}")
+            logger.exception(f"Failed to apply quality preset {preset_name}: {e}")
             return False
 
     def get_dimension_presets(self) -> dict[str, tuple[int, int]]:
@@ -401,10 +401,10 @@ class ImageExportSettingsManager(QObject):
             return self.set_export_dimensions(width, height)
 
         except Exception as e:
-            logger.error(f"Failed to apply dimension preset {preset_name}: {e}")
+            logger.exception(f"Failed to apply dimension preset {preset_name}: {e}")
             return False
 
-    def get_format_recommendations(self, format_name: str = None) -> dict[str, str]:
+    def get_format_recommendations(self, format_name: str | None = None) -> dict[str, str]:
         """
         Get recommendations for optimal settings for a format.
 
@@ -454,7 +454,7 @@ class ImageExportSettingsManager(QObject):
             return recommendations.get(format_name, {})
 
         except Exception as e:
-            logger.error(f"Failed to get format recommendations for {format_name}: {e}")
+            logger.exception(f"Failed to get format recommendations for {format_name}: {e}")
             return {}
 
     def reset_to_defaults(self) -> None:
@@ -471,4 +471,4 @@ class ImageExportSettingsManager(QObject):
             logger.info("Reset all export settings to defaults")
 
         except Exception as e:
-            logger.error(f"Failed to reset export settings: {e}")
+            logger.exception(f"Failed to reset export settings: {e}")

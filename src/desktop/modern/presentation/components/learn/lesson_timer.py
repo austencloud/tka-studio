@@ -158,7 +158,7 @@ class LessonTimer(QWidget):
             logger.info(f"Started countdown timer: {total_seconds} seconds")
 
         except Exception as e:
-            logger.error(f"Failed to start countdown: {e}")
+            logger.exception(f"Failed to start countdown: {e}")
 
     def pause_timer(self) -> None:
         """Pause the countdown timer."""
@@ -220,7 +220,7 @@ class LessonTimer(QWidget):
                 self._on_time_expired()
 
         except Exception as e:
-            logger.error(f"Timer tick error: {e}")
+            logger.exception(f"Timer tick error: {e}")
 
     def _update_display(self) -> None:
         """Update timer display."""
@@ -240,7 +240,7 @@ class LessonTimer(QWidget):
             self._update_urgency_styling()
 
         except Exception as e:
-            logger.error(f"Failed to update timer display: {e}")
+            logger.exception(f"Failed to update timer display: {e}")
 
     def _update_urgency_styling(self) -> None:
         """Update styling based on time urgency."""
@@ -350,4 +350,4 @@ class LessonTimer(QWidget):
             self.time_progress.setFixedHeight(bar_height)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")

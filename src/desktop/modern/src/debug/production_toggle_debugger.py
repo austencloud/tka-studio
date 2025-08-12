@@ -5,9 +5,11 @@ Production Toggle Debugger
 Real-time debugging tool that runs within the actual TKA application
 to monitor toggle functionality and identify production-specific failures.
 """
+from __future__ import annotations
 
 import time
-from typing import Optional, Any, Dict, List
+from typing import Any
+
 from PyQt6.QtCore import QObject, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
@@ -29,18 +31,18 @@ class ProductionToggleDebugger(QObject):
 
     debug_event = pyqtSignal(str, dict)  # event_type, data
 
-    def __init__(self, parent: Optional[QObject] = None):
+    def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
         self._monitoring_active = False
-        self._graph_editor: Optional[QWidget] = None
-        self._toggle_tab: Optional[QWidget] = None
-        self._animation_controller: Optional[QObject] = None
-        self._layout_manager: Optional[QObject] = None
-        self._workbench: Optional[QWidget] = None
+        self._graph_editor: QWidget | None = None
+        self._toggle_tab: QWidget | None = None
+        self._animation_controller: QObject | None = None
+        self._layout_manager: QObject | None = None
+        self._workbench: QWidget | None = None
 
         # State tracking
-        self._event_sequence: List[Dict[str, Any]] = []
-        self._last_click_time: Optional[float] = None
+        self._event_sequence: list[dict[str, Any]] = []
+        self._last_click_time: float | None = None
 
         production_log("Production Toggle Debugger initialized")
 
@@ -126,7 +128,7 @@ class ProductionToggleDebugger(QObject):
             production_log(f"   Traceback: {traceback.format_exc()}")
             return False
 
-    def _find_workbench(self, main_window: QWidget) -> Optional[QWidget]:
+    def _find_workbench(self, main_window: QWidget) -> QWidget | None:
         """Find the workbench widget in the main window"""
         # Look for workbench in main window children
         for child in main_window.findChildren(QWidget):
@@ -137,7 +139,7 @@ class ProductionToggleDebugger(QObject):
                 return child
         return None
 
-    def _find_graph_section(self, workbench: QWidget) -> Optional[QWidget]:
+    def _find_graph_section(self, workbench: QWidget) -> QWidget | None:
         """Find the graph section in the workbench"""
         if hasattr(workbench, "_graph_section"):
             return workbench._graph_section
@@ -151,7 +153,7 @@ class ProductionToggleDebugger(QObject):
                 return child
         return None
 
-    def _find_graph_editor(self, graph_section: QWidget) -> Optional[QWidget]:
+    def _find_graph_editor(self, graph_section: QWidget) -> QWidget | None:
         """Find the graph editor in the graph section"""
         if hasattr(graph_section, "_graph_editor"):
             return graph_section._graph_editor
@@ -244,7 +246,7 @@ class ProductionToggleDebugger(QObject):
 
         self._last_state = current_state
 
-    def _get_current_state(self) -> Dict[str, Any]:
+    def _get_current_state(self) -> dict[str, Any]:
         """Get current state of all monitored components"""
         state = {
             "timestamp": time.time(),
@@ -282,7 +284,7 @@ class ProductionToggleDebugger(QObject):
         return state
 
     def _state_changed(
-        self, old_state: Dict[str, Any], new_state: Dict[str, Any]
+        self, old_state: dict[str, Any], new_state: dict[str, Any]
     ) -> bool:
         """Check if state has changed significantly"""
         # Check for visibility changes
@@ -296,15 +298,9 @@ class ProductionToggleDebugger(QObject):
             return True
 
         # Check for animation state changes
-        if (
-            old_state["animation"]["is_animating"]
-            != new_state["animation"]["is_animating"]
-        ):
-            return True
+        return old_state["animation"]["is_animating"] != new_state["animation"]["is_animating"]
 
-        return False
-
-    def _log_event(self, event_type: str, data: Dict[str, Any]) -> None:
+    def _log_event(self, event_type: str, data: dict[str, Any]) -> None:
         """Log a debug event"""
         event = {"type": event_type, "timestamp": time.time(), "data": data}
         self._event_sequence.append(event)
@@ -341,7 +337,7 @@ class ProductionToggleDebugger(QObject):
             {"is_visible": is_visible, "current_state": self._get_current_state()},
         )
 
-    def get_event_sequence(self) -> List[Dict[str, Any]]:
+    def get_event_sequence(self) -> list[dict[str, Any]]:
         """Get the complete event sequence"""
         return self._event_sequence.copy()
 
@@ -432,7 +428,7 @@ class ProductionToggleDebugger(QObject):
 
 
 # Global debugger instance
-_production_debugger: Optional[ProductionToggleDebugger] = None
+_production_debugger: ProductionToggleDebugger | None = None
 
 
 def get_production_debugger() -> ProductionToggleDebugger:
@@ -457,7 +453,7 @@ def attach_to_application(main_window: QWidget) -> bool:
     return debugger.attach_to_application(main_window)
 
 
-def get_debug_events() -> List[Dict[str, Any]]:
+def get_debug_events() -> list[dict[str, Any]]:
     """Get all debug events from the production debugger"""
     debugger = get_production_debugger()
     return debugger.get_event_sequence()

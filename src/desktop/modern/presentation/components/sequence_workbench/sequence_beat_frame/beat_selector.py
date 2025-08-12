@@ -7,10 +7,9 @@ Delegates all business logic to BeatSelectionService.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
+
 from desktop.shared.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
     SelectionChangeResult,
@@ -113,7 +112,7 @@ class BeatSelector(QObject):
         self._handle_selection_change(result)
 
     # Query Methods
-    def get_selected_index(self) -> Optional[int]:
+    def get_selected_index(self) -> int | None:
         """Get the currently selected beat index."""
         return self._selection_service.get_selected_index()
 

@@ -8,7 +8,6 @@ of concerns and enable testing.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from desktop.modern.domain.models import MotionData
 
@@ -18,7 +17,7 @@ class IArrowRenderingService(ABC):
 
     # Caching Operations
     @abstractmethod
-    def load_cached_svg_data(self, svg_path: str) -> Optional[str]:
+    def load_cached_svg_data(self, svg_path: str) -> str | None:
         """Load and cache SVG data from file."""
 
     # Validation and Utilities

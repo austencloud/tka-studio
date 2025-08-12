@@ -28,18 +28,18 @@ from .sequence_workbench import SequenceWorkbench
 
 
 __all__ = [
-    "SequenceWorkbench",
-    "SequenceBeatFrame",
-    "BeatView",
-    "StartPositionView",
     "BeatSelector",
-    # Core components
-    "WorkbenchIndicatorSection",
+    "BeatView",
+    "ButtonInterface",  # Legacy alias
+    "ButtonOperationResult",
+    "IWorkbenchButtonInterface",
+    "SequenceBeatFrame",
+    "SequenceWorkbench",
+    "StartPositionView",
     "WorkbenchBeatFrameSection",
     # Interface adapters
     "WorkbenchButtonInterfaceAdapter",
-    "IWorkbenchButtonInterface",
     "WorkbenchButtonSignals",
-    "ButtonOperationResult",
-    "ButtonInterface",  # Legacy alias
+    # Core components
+    "WorkbenchIndicatorSection",
 ]

@@ -74,7 +74,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             return self._new_beat_data
 
         except Exception as e:
-            logger.error(f"❌ Error executing SetStartPositionCommand: {e}")
+            logger.exception(f"❌ Error executing SetStartPositionCommand: {e}")
             raise
 
     def undo(self) -> BeatData | None:
@@ -93,7 +93,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             return None
 
         except Exception as e:
-            logger.error(f"❌ Error undoing SetStartPositionCommand: {e}")
+            logger.exception(f"❌ Error undoing SetStartPositionCommand: {e}")
             raise
 
     def extract_end_position_from_position_key(self, position_key: str) -> str:
@@ -111,10 +111,11 @@ class SetStartPositionCommand(ICommand[BeatData]):
         """Create start position data using existing business logic"""
         try:
             # Get the dataset query service via dependency injection
-            from desktop.shared.application.services.data.dataset_query import IDatasetQuery
-
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
+            )
+            from desktop.shared.application.services.data.dataset_query import (
+                IDatasetQuery,
             )
 
             container = get_container()
@@ -150,12 +151,12 @@ class SetStartPositionCommand(ICommand[BeatData]):
             return self._create_fallback_start_position_data()
 
         except Exception as e:
-            logger.error(f"❌ Error creating start position data: {e}")
+            logger.exception(f"❌ Error creating start position data: {e}")
             # Try fallback before giving up
             try:
                 return self._create_fallback_start_position_data()
             except Exception as fallback_error:
-                logger.error(f"❌ Fallback also failed: {fallback_error}")
+                logger.exception(f"❌ Fallback also failed: {fallback_error}")
                 raise
 
     def _save_to_persistence(self, beat_data: BeatData):
@@ -178,18 +179,19 @@ class SetStartPositionCommand(ICommand[BeatData]):
             logger.debug(f"💾 Start position saved to persistence: {beat_data.letter}")
 
         except Exception as e:
-            logger.error(f"❌ Error saving start position to persistence: {e}")
+            logger.exception(f"❌ Error saving start position to persistence: {e}")
             raise
 
     def _create_fallback_start_position_data(self) -> BeatData:
         """Create fallback start position data when dataset lookup fails"""
         try:
+            from desktop.modern.domain.models.pictograph_data import PictographData
             from desktop.shared.application.services.data.conversion_utils import (
                 extract_end_position_from_position_key,
             )
-            from desktop.shared.application.services.sequence.beat_factory import BeatFactory
-
-            from desktop.modern.domain.models.pictograph_data import PictographData
+            from desktop.shared.application.services.sequence.beat_factory import (
+                BeatFactory,
+            )
 
             # Extract end position from position key
             specific_end_pos = extract_end_position_from_position_key(self.position_key)
@@ -216,7 +218,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             return beat_data
 
         except Exception as e:
-            logger.error(f"❌ Error creating fallback start position data: {e}")
+            logger.exception(f"❌ Error creating fallback start position data: {e}")
             raise
 
     def _clear_from_persistence(self):
@@ -230,7 +232,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             start_position_manager.clear_start_position()
 
         except Exception as e:
-            logger.error(f"❌ Error clearing start position from persistence: {e}")
+            logger.exception(f"❌ Error clearing start position from persistence: {e}")
             raise
 
 
@@ -287,7 +289,7 @@ class ClearStartPositionCommand(ICommand[None]):
             return
 
         except Exception as e:
-            logger.error(f"❌ Error executing ClearStartPositionCommand: {e}")
+            logger.exception(f"❌ Error executing ClearStartPositionCommand: {e}")
             raise
 
     def undo(self) -> None:
@@ -311,5 +313,5 @@ class ClearStartPositionCommand(ICommand[None]):
             return
 
         except Exception as e:
-            logger.error(f"❌ Error undoing ClearStartPositionCommand: {e}")
+            logger.exception(f"❌ Error undoing ClearStartPositionCommand: {e}")
             raise

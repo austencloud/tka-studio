@@ -8,7 +8,7 @@ These interfaces handle sequence manipulation, validation, and transformation op
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
 class IBeatFactory(ABC):
@@ -88,7 +88,7 @@ class ISequenceLoader(ABC):
     """Interface for sequence loading operations."""
 
     @abstractmethod
-    def load_sequence(self, sequence_id: str) -> Optional[Any]:
+    def load_sequence(self, sequence_id: str) -> Any | None:
         """
         Load sequence by ID.
 
@@ -103,7 +103,7 @@ class ISequenceLoader(ABC):
         """
 
     @abstractmethod
-    def load_sequence_from_file(self, file_path: str) -> Optional[Any]:
+    def load_sequence_from_file(self, file_path: str) -> Any | None:
         """
         Load sequence from file.
 
@@ -118,7 +118,7 @@ class ISequenceLoader(ABC):
         """
 
     @abstractmethod
-    def load_sequence_from_data(self, sequence_data: dict[str, Any]) -> Optional[Any]:
+    def load_sequence_from_data(self, sequence_data: dict[str, Any]) -> Any | None:
         """
         Load sequence from raw data.
 
@@ -161,7 +161,7 @@ class ISequenceBeatOperations(ABC):
     """Interface for sequence beat operation services."""
 
     @abstractmethod
-    def add_beat(self, sequence: Any, beat: Any, position: Optional[int] = None) -> Any:
+    def add_beat(self, sequence: Any, beat: Any, position: int | None = None) -> Any:
         """
         Add beat to sequence.
 
@@ -281,7 +281,7 @@ class ISequenceDictionaryManager(ABC):
         """
 
     @abstractmethod
-    def get_sequence_by_word(self, word: str) -> Optional[Any]:
+    def get_sequence_by_word(self, word: str) -> Any | None:
         """
         Get sequence by associated word.
 
@@ -296,7 +296,7 @@ class ISequenceDictionaryManager(ABC):
         """
 
     @abstractmethod
-    def get_word_by_sequence(self, sequence: Any) -> Optional[str]:
+    def get_word_by_sequence(self, sequence: Any) -> str | None:
         """
         Get word associated with sequence.
 
@@ -373,7 +373,7 @@ class ISequenceGenerator(ABC):
 
     @abstractmethod
     def generate_random_sequence(
-        self, length: int, constraints: Optional[dict[str, Any]] = None
+        self, length: int, constraints: dict[str, Any] | None = None
     ) -> Any:
         """
         Generate random sequence.
@@ -453,7 +453,7 @@ class ISequenceStartPositionManager(ABC):
         """
 
     @abstractmethod
-    def get_start_position(self, sequence: Any) -> Optional[Any]:
+    def get_start_position(self, sequence: Any) -> Any | None:
         """
         Get start position from sequence.
 
@@ -699,7 +699,7 @@ class ISequenceStateTracker(ABC):
     """Interface for sequence state tracking operations."""
 
     @abstractmethod
-    def get_current_sequence(self) -> Optional[Any]:
+    def get_current_sequence(self) -> Any | None:
         """Get current sequence."""
 
     @abstractmethod

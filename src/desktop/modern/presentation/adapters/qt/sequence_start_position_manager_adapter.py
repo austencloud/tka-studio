@@ -10,18 +10,20 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from desktop.shared.application.services.data.modern_to_legacy_converter import (
-    ModernToLegacyConverter,
-)
-from desktop.shared.application.services.sequence.beat_factory import BeatFactory
-from desktop.shared.application.services.sequence.sequence_persister import SequencePersister
-from desktop.shared.application.services.sequence.sequence_start_position_service import (
-    SequenceStartPositionService,
-)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.shared.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
+from desktop.shared.application.services.sequence.beat_factory import BeatFactory
+from desktop.shared.application.services.sequence.sequence_persister import (
+    SequencePersister,
+)
+from desktop.shared.application.services.sequence.sequence_start_position_service import (
+    SequenceStartPositionService,
+)
 
 
 class QtSequenceStartPositionManagerAdapter(QObject):

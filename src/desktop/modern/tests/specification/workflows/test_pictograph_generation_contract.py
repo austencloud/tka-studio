@@ -11,11 +11,13 @@ Pictograph Generation Workflow Contract Tests
 
 Defines behavioral contracts for pictograph generation workflows.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -50,7 +52,7 @@ class TestPictographGenerationWorkflowContract:
             # Verify pictograph creation
             assert pictograph is not None
             assert pictograph.grid_data is not None
-            assert pictograph.is_blank == True
+            assert pictograph.is_blank
 
         except ImportError:
             pytest.skip("Pictograph domain models not available")
@@ -74,7 +76,7 @@ class TestPictographGenerationWorkflowContract:
             service = PictographManagementService()
 
             # Create test beat
-            beat = BeatData(beat_number=1, letter="A")
+            BeatData(beat_number=1, letter="A")
 
             # Test service exists and can be called
             assert service is not None

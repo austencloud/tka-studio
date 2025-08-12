@@ -9,12 +9,11 @@ This test validates:
 3. Validates persistence layer changes
 4. Confirms expected default state
 """
+from __future__ import annotations
 
-import json
-import os
-import sys
-import time
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -77,11 +76,10 @@ class SimpleClearSequenceTest:
                 )
                 print(f"📝 [SIMPLE_TEST] Beat 1: {loaded[2].get('letter')}")
                 return True
-            else:
-                print(
-                    f"❌ [SIMPLE_TEST] Failed to create sequence: {len(loaded)} items"
-                )
-                return False
+            print(
+                f"❌ [SIMPLE_TEST] Failed to create sequence: {len(loaded)} items"
+            )
+            return False
 
         except Exception as e:
             print(f"❌ [SIMPLE_TEST] Error creating sequence: {e}")
@@ -166,11 +164,10 @@ class SimpleClearSequenceTest:
             if default_seq == cleared_seq:
                 print("✅ [SIMPLE_TEST] Default and cleared sequences are consistent")
                 return True
-            else:
-                print("❌ [SIMPLE_TEST] Default and cleared sequences differ")
-                print(f"📝 [SIMPLE_TEST] Default: {default_seq}")
-                print(f"📝 [SIMPLE_TEST] Cleared: {cleared_seq}")
-                return False
+            print("❌ [SIMPLE_TEST] Default and cleared sequences differ")
+            print(f"📝 [SIMPLE_TEST] Default: {default_seq}")
+            print(f"📝 [SIMPLE_TEST] Cleared: {cleared_seq}")
+            return False
 
         except Exception as e:
             print(f"❌ [SIMPLE_TEST] Error testing consistency: {e}")
@@ -222,9 +219,8 @@ def main():
         print("✅ REAL data is handled properly")
         print("✅ Default sequence consistency maintained")
         return 0
-    else:
-        print("\n❌ SIMPLIFIED E2E TEST: FAILED")
-        return 1
+    print("\n❌ SIMPLIFIED E2E TEST: FAILED")
+    return 1
 
 
 if __name__ == "__main__":

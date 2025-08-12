@@ -123,11 +123,7 @@ def create_verbose_message_filter():
             suppressed_patterns = []
 
             message = record.getMessage()
-            for pattern in suppressed_patterns:
-                if pattern in message:
-                    return False  # Suppress this message
-
-            return True  # Allow other messages
+            return all(pattern not in message for pattern in suppressed_patterns)  # Allow other messages
 
     return VerboseMessageFilter()
 

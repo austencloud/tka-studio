@@ -29,24 +29,24 @@ from .geometry import (
 
 
 __all__ = [
+    "AnimationGroup",
+    "AnimationGroupType",
+    "DesktopImplementationHints",
+    "OpacityEffect",
+    "OpacityEffectType",
+    "Point",
+    "PointType",
+    "PropertyAnimation",
+    "PropertyAnimationType",
+    "Rect",
+    "RectType",
     # Geometry types
     "Size",
-    "Point",
-    "Rect",
-    "Widget",
     "SizeType",
-    "PointType",
-    "RectType",
-    "WidgetType",
+    "StackContainer",
     # Animation types
     "StackWidget",
-    "OpacityEffectType",
-    "PropertyAnimationType",
-    "AnimationGroupType",
-    "StackContainer",
-    "OpacityEffect",
-    "PropertyAnimation",
-    "AnimationGroup",
     "WebImplementationHints",
-    "DesktopImplementationHints",
+    "Widget",
+    "WidgetType",
 ]

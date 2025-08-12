@@ -73,7 +73,7 @@ class QtImageLoader(IThumbnailImageLoader):
             )
 
         except Exception as e:
-            logger.error(f"Qt image loading failed for {image_path}: {e}")
+            logger.exception(f"Qt image loading failed for {image_path}: {e}")
             return None
 
     def create_placeholder_image(self, text: str, size: Size, style: dict) -> ImageData:
@@ -97,7 +97,7 @@ class QtImageLoader(IThumbnailImageLoader):
             )
 
         except Exception as e:
-            logger.error(f"Qt placeholder creation failed: {e}")
+            logger.exception(f"Qt placeholder creation failed: {e}")
             # Return empty image data
             return ImageData(
                 width=size.width,
@@ -172,7 +172,7 @@ class QtThumbnailWidgetFactory:
             return thumbnail
 
         except Exception as e:
-            logger.error(f"Failed to create thumbnail widget: {e}")
+            logger.exception(f"Failed to create thumbnail widget: {e}")
             return self._create_error_widget(thumbnail_data.spec.thumbnail_size)
 
     def _set_thumbnail_image(self, image_label: QLabel, thumbnail_data: ThumbnailData):
@@ -231,7 +231,7 @@ class QtThumbnailWidgetFactory:
                 )
 
         except Exception as e:
-            logger.error(f"Failed to set thumbnail image: {e}")
+            logger.exception(f"Failed to set thumbnail image: {e}")
             image_label.setText("❌\nError")
 
     def _create_error_widget(self, size: Size) -> QWidget:
@@ -298,7 +298,7 @@ class QtThumbnailFactoryAdapter:
             )
 
         except Exception as e:
-            logger.error(f"Failed to create thumbnail: {e}")
+            logger.exception(f"Failed to create thumbnail: {e}")
             return self.widget_factory._create_error_widget(
                 Size(thumbnail_width, thumbnail_width)
             )
@@ -334,7 +334,7 @@ class QtThumbnailFactoryAdapter:
             return widgets
 
         except Exception as e:
-            logger.error(f"Failed to create thumbnail batch: {e}")
+            logger.exception(f"Failed to create thumbnail batch: {e}")
             # Return error widgets
             error_size = Size(thumbnail_width, thumbnail_width)
             return [
@@ -347,7 +347,7 @@ class QtThumbnailFactoryAdapter:
             thumbnail_spec = convert_sequence_data_to_spec(sequence, thumbnail_width)
             return self.core_service.create_thumbnail_data(thumbnail_spec)
         except Exception as e:
-            logger.error(f"Failed to get thumbnail data: {e}")
+            logger.exception(f"Failed to get thumbnail data: {e}")
             return ThumbnailData(
                 thumbnail_id="error",
                 spec=ThumbnailSpec(

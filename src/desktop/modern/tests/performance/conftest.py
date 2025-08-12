@@ -4,14 +4,16 @@ Performance Test Configuration
 Pytest configuration and fixtures for performance testing.
 Provides test setup, teardown, and common utilities for performance tests.
 """
+from __future__ import annotations
 
+from pathlib import Path
 import shutil
 import tempfile
-from pathlib import Path
-from typing import Any, Dict, Generator
+from typing import Any, Generator
 from unittest.mock import Mock, patch
 
 import pytest
+
 from core.performance.config import PerformanceConfig, reset_performance_config
 from core.performance.memory_tracker import reset_memory_tracker
 from core.performance.profiler import reset_profiler
@@ -19,7 +21,7 @@ from core.performance.qt_profiler import reset_qt_profiler
 from infrastructure.performance.storage import reset_performance_storage
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def performance_config() -> Generator[PerformanceConfig, None, None]:
     """Provide a test performance configuration."""
     # Create test configuration
@@ -38,7 +40,7 @@ def performance_config() -> Generator[PerformanceConfig, None, None]:
     reset_performance_config()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def temp_performance_storage() -> Generator[Path, None, None]:
     """Provide temporary storage for performance data."""
     temp_dir = Path(tempfile.mkdtemp(prefix="tka_perf_test_"))
@@ -50,7 +52,7 @@ def temp_performance_storage() -> Generator[Path, None, None]:
         shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def isolated_profiler(performance_config, temp_performance_storage):
     """Provide an isolated profiler instance for testing."""
     # Update config to use temp storage (create new config with updated storage)
@@ -79,7 +81,7 @@ def isolated_profiler(performance_config, temp_performance_storage):
     reset_profiler()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def mock_qt_environment():
     """Mock Qt environment for testing without requiring PyQt6."""
     with patch("core.performance.qt_profiler.QT_AVAILABLE", True):
@@ -100,8 +102,8 @@ def mock_qt_environment():
             }
 
 
-@pytest.fixture(scope="function")
-def performance_test_data() -> Dict[str, Any]:
+@pytest.fixture
+def performance_test_data() -> dict[str, Any]:
     """Provide test data for performance tests."""
     return {
         "test_functions": [
@@ -130,7 +132,7 @@ def performance_test_data() -> Dict[str, Any]:
     }
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def mock_system_resources():
     """Mock system resource monitoring for consistent testing."""
     with patch("psutil.Process") as mock_process:
@@ -180,7 +182,7 @@ def performance_test_session_setup():
     reset_performance_storage()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def performance_test_cleanup():
     """Automatic cleanup after each performance test."""
     yield
@@ -278,8 +280,8 @@ def performance_assertion_helper():
 @pytest.fixture
 def performance_data_generator():
     """Generate test performance data."""
-    import random
     from datetime import datetime, timedelta
+    import random
 
     from core.performance.metrics import FunctionMetrics, SystemMetrics
 

@@ -7,15 +7,17 @@ for automatic memory management and leak prevention.
 ARCHITECTURE: Provides smart pointer management, memory leak detection,
 and automatic cleanup for Qt objects to prevent memory leaks.
 """
+from __future__ import annotations
 
+from dataclasses import dataclass
 import gc
 import logging
 import os
-import time
-import weakref
-from dataclasses import dataclass
 from threading import Lock
-from typing import Any, Callable, Dict, Generic, List, Optional, Set, TypeVar
+import time
+from typing import Any, Callable, Generic, TypeVar
+import weakref
+
 
 # Import Qt modules with compatibility
 try:
@@ -61,11 +63,11 @@ class LeakReport:
     """Memory leak detection report."""
 
     detection_time: float
-    suspected_leaks: List[Dict[str, Any]]
+    suspected_leaks: list[dict[str, Any]]
     memory_growth_mb: float
     object_growth_count: int
     leak_severity: str  # 'low', 'medium', 'high', 'critical'
-    recommendations: List[str]
+    recommendations: list[str]
 
 
 class SmartQtPointer(Generic[T]):
@@ -87,7 +89,7 @@ class SmartQtPointer(Generic[T]):
         self._obj_ref = weakref.ref(obj, self._on_object_deleted)
         self._obj_id = id(obj)
         self._auto_delete = auto_delete
-        self._cleanup_handlers: List[Callable] = []
+        self._cleanup_handlers: list[Callable] = []
         self._is_deleted = False
 
         # Register with memory detector
@@ -95,13 +97,13 @@ class SmartQtPointer(Generic[T]):
 
         logger.debug(f"SmartQtPointer created for object {self._obj_id}")
 
-    def get(self) -> Optional[T]:
+    def get(self) -> T | None:
         """Get the managed object."""
         if self._is_deleted:
             return None
         return self._obj_ref()
 
-    def reset(self, new_obj: Optional[T] = None) -> None:
+    def reset(self, new_obj: T | None = None) -> None:
         """Reset pointer to new object or None."""
         old_obj = self.get()
         if old_obj and self._auto_delete:
@@ -128,7 +130,7 @@ class SmartQtPointer(Generic[T]):
                 try:
                     handler()
                 except Exception as e:
-                    logger.error(f"Error in cleanup handler: {e}")
+                    logger.exception(f"Error in cleanup handler: {e}")
 
             # Delete Qt object if it has deleteLater
             if hasattr(obj, "deleteLater"):
@@ -137,7 +139,7 @@ class SmartQtPointer(Generic[T]):
             logger.debug(f"SmartQtPointer cleaned up object {self._obj_id}")
 
         except Exception as e:
-            logger.error(f"Error cleaning up object {self._obj_id}: {e}")
+            logger.exception(f"Error cleaning up object {self._obj_id}: {e}")
 
     def _on_object_deleted(self, ref) -> None:
         """Called when the managed object is deleted."""
@@ -173,12 +175,12 @@ class QtMemoryLeakDetector:
             monitoring_interval: Interval in seconds between memory checks
         """
         self.monitoring_interval = monitoring_interval
-        self._snapshots: List[MemorySnapshot] = []
-        self._smart_pointers: Set[SmartQtPointer] = set()
-        self._tracked_objects: Dict[int, weakref.ReferenceType] = {}
+        self._snapshots: list[MemorySnapshot] = []
+        self._smart_pointers: set[SmartQtPointer] = set()
+        self._tracked_objects: dict[int, weakref.ReferenceType] = {}
         self._lock = Lock()
         self._monitoring_active = False
-        self._timer: Optional[QTimer] = None
+        self._timer: QTimer | None = None
 
         # Leak detection thresholds
         self.memory_growth_threshold_mb = 50.0  # MB
@@ -292,7 +294,7 @@ class QtMemoryLeakDetector:
             return snapshot
 
         except Exception as e:
-            logger.error(f"Error taking memory snapshot: {e}")
+            logger.exception(f"Error taking memory snapshot: {e}")
             return MemorySnapshot(
                 timestamp=time.time(),
                 process_memory_mb=0.0,
@@ -309,13 +311,13 @@ class QtMemoryLeakDetector:
             with self._lock:
                 return len(self._tracked_objects)
         except Exception as e:
-            logger.error(f"Error counting Qt objects: {e}")
+            logger.exception(f"Error counting Qt objects: {e}")
             return 0
 
     def _periodic_check(self) -> None:
         """Periodic memory check for leak detection."""
         try:
-            snapshot = self._take_memory_snapshot()
+            self._take_memory_snapshot()
 
             # Check for potential leaks
             if len(self._snapshots) >= 3:
@@ -334,9 +336,9 @@ class QtMemoryLeakDetector:
                         logger.warning(f"Recommendation: {rec}")
 
         except Exception as e:
-            logger.error(f"Error in periodic memory check: {e}")
+            logger.exception(f"Error in periodic memory check: {e}")
 
-    def _analyze_for_leaks(self) -> Optional[LeakReport]:
+    def _analyze_for_leaks(self) -> LeakReport | None:
         """Analyze memory snapshots for potential leaks."""
         if len(self._snapshots) < 3:
             return None
@@ -396,10 +398,10 @@ class QtMemoryLeakDetector:
             )
 
         except Exception as e:
-            logger.error(f"Error analyzing for leaks: {e}")
+            logger.exception(f"Error analyzing for leaks: {e}")
             return None
 
-    def get_memory_report(self) -> Dict[str, Any]:
+    def get_memory_report(self) -> dict[str, Any]:
         """Get comprehensive memory usage report."""
         with self._lock:
             # Simplified report to avoid hanging issues
@@ -429,7 +431,7 @@ class QtMemoryLeakDetector:
 
 
 # Global memory detector instance
-_memory_detector: Optional[QtMemoryLeakDetector] = None
+_memory_detector: QtMemoryLeakDetector | None = None
 
 
 def memory_detector() -> QtMemoryLeakDetector:

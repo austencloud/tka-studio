@@ -66,7 +66,7 @@ class UserProfileSettingsManager(QObject):
                 "users/current_user", self.DEFAULT_USER, type=str
             )
         except Exception as e:
-            logger.error(f"Failed to get current user: {e}")
+            logger.exception(f"Failed to get current user: {e}")
             return self.DEFAULT_USER
 
     def set_current_user(self, username: str) -> None:
@@ -96,7 +96,7 @@ class UserProfileSettingsManager(QObject):
                 logger.info(f"Current user changed from {old_user} to {username}")
 
         except Exception as e:
-            logger.error(f"Failed to set current user {username}: {e}")
+            logger.exception(f"Failed to set current user {username}: {e}")
 
     def get_all_users(self) -> list[str]:
         """
@@ -117,7 +117,7 @@ class UserProfileSettingsManager(QObject):
             return sorted(users)
 
         except Exception as e:
-            logger.error(f"Failed to get all users: {e}")
+            logger.exception(f"Failed to get all users: {e}")
             return [self.DEFAULT_USER]
 
     def add_user(self, username: str) -> bool:
@@ -153,7 +153,7 @@ class UserProfileSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to add user {username}: {e}")
+            logger.exception(f"Failed to add user {username}: {e}")
             return False
 
     def remove_user(self, username: str) -> bool:
@@ -197,7 +197,7 @@ class UserProfileSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to remove user {username}: {e}")
+            logger.exception(f"Failed to remove user {username}: {e}")
             return False
 
     def get_user_setting(
@@ -223,7 +223,7 @@ class UserProfileSettingsManager(QObject):
             return self.settings.value(full_key, default)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to get user setting {setting_key} for {username}: {e}"
             )
             return default
@@ -263,7 +263,7 @@ class UserProfileSettingsManager(QObject):
                 )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to set user setting {setting_key} for {username}: {e}"
             )
 
@@ -320,7 +320,7 @@ class UserProfileSettingsManager(QObject):
             return user_settings
 
         except Exception as e:
-            logger.error(f"Failed to get all user settings for {username}: {e}")
+            logger.exception(f"Failed to get all user settings for {username}: {e}")
             return {}
 
     def copy_user_settings(self, from_user: str, to_user: str) -> bool:
@@ -355,7 +355,7 @@ class UserProfileSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to copy user settings from {from_user} to {to_user}: {e}"
             )
             return False
@@ -385,7 +385,7 @@ class UserProfileSettingsManager(QObject):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to reset settings for user {username}: {e}")
+            logger.exception(f"Failed to reset settings for user {username}: {e}")
             return False
 
     def _ensure_default_user(self) -> None:
@@ -401,7 +401,7 @@ class UserProfileSettingsManager(QObject):
                 self.set_current_user(self.DEFAULT_USER)
 
         except Exception as e:
-            logger.error(f"Failed to ensure default user: {e}")
+            logger.exception(f"Failed to ensure default user: {e}")
 
     def _save_user_list(self, users: list[str]) -> None:
         """Save the user list to settings."""
@@ -410,7 +410,7 @@ class UserProfileSettingsManager(QObject):
             self.settings.setValue("users/user_list", users_json)
             self.settings.sync()
         except Exception as e:
-            logger.error(f"Failed to save user list: {e}")
+            logger.exception(f"Failed to save user list: {e}")
 
     def _is_valid_username(self, username: str) -> bool:
         """Validate username format."""
@@ -423,10 +423,7 @@ class UserProfileSettingsManager(QObject):
 
         # Check for invalid characters
         invalid_chars = ["/", "\\", ":", "*", "?", '"', "<", ">", "|"]
-        if any(char in username for char in invalid_chars):
-            return False
-
-        return True
+        return not any(char in username for char in invalid_chars)
 
     def _user_exists(self, username: str) -> bool:
         """Check if a user exists."""
@@ -452,7 +449,7 @@ class UserProfileSettingsManager(QObject):
                     self.set_user_setting(username, key, value)
 
         except Exception as e:
-            logger.error(f"Failed to initialize settings for user {username}: {e}")
+            logger.exception(f"Failed to initialize settings for user {username}: {e}")
 
     def _clear_user_settings(self, username: str) -> None:
         """Clear all settings for a user."""
@@ -471,4 +468,4 @@ class UserProfileSettingsManager(QObject):
             self.settings.sync()
 
         except Exception as e:
-            logger.error(f"Failed to clear settings for user {username}: {e}")
+            logger.exception(f"Failed to clear settings for user {username}: {e}")

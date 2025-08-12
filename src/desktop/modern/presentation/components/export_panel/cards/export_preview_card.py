@@ -7,8 +7,6 @@ Part of the refactored export panel system.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QFont, QPixmap
 from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
@@ -127,7 +125,7 @@ class ExportPreviewCard(QFrame):
             }
         """)
 
-    def update_preview(self, pixmap: Optional[QPixmap] = None, delay_ms: int = 500):
+    def update_preview(self, pixmap: QPixmap | None = None, delay_ms: int = 500):
         """
         Update the preview with optional delay for debouncing.
 

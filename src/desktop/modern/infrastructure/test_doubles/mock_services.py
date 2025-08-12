@@ -7,7 +7,7 @@ but use in-memory storage and simplified logic for fast testing.
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 # Import service interfaces
 from desktop.modern.core.interfaces.core_services import (
@@ -36,7 +36,7 @@ class InMemorySequenceDataService(ISequenceDataService):
         """Get all sequences from memory."""
         return list(self.sequences.values())
 
-    def get_sequence_by_id(self, sequence_id: str) -> Optional[dict[str, Any]]:
+    def get_sequence_by_id(self, sequence_id: str) -> dict[str, Any] | None:
         """Get sequence by ID."""
         return self.sequences.get(sequence_id)
 

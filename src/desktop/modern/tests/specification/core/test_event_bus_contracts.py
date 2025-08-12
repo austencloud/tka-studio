@@ -11,10 +11,13 @@ Event Bus Contract Tests
 
 Defines behavioral contracts for the event bus system.
 """
+from __future__ import annotations
 
-import sys
-import pytest
 from pathlib import Path
+import sys
+
+import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -59,7 +62,8 @@ class TestEventBusContracts:
 
             # Verify consistency (implementation dependent)
             # Some implementations return same instance, others don't
-            assert bus1 is not None and bus2 is not None
+            assert bus1 is not None
+            assert bus2 is not None
 
         except ImportError:
             pytest.skip("Event bus not available for creation testing")
@@ -172,7 +176,7 @@ class TestEventBusContracts:
             from core.events import get_event_bus, reset_event_bus
 
             # Get initial bus
-            bus1 = get_event_bus()
+            get_event_bus()
 
             # Reset bus
             reset_event_bus()

@@ -6,7 +6,7 @@ These adapters connect the core animation engine to Qt widgets.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QGraphicsOpacityEffect, QStackedWidget, QWidget
@@ -204,7 +204,7 @@ class QtStackWidgetAdapter:
 
     def prepare_stack_transition(
         self, stack: QStackedWidget, new_index: int
-    ) -> tuple[Optional[AnimationTarget], Optional[AnimationTarget]]:
+    ) -> tuple[AnimationTarget | None, AnimationTarget | None]:
         """Prepare stack transition and return current/next targets."""
         current_widget = stack.currentWidget()
         next_widget = stack.widget(new_index)

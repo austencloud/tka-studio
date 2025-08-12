@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
-from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
-)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.views import (
     create_pictograph_view,
+)
+from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
 )
 
 from ..config import ColorConfig, LayoutConfig, SizeConfig, StateConfig, UIConfig
@@ -28,8 +27,8 @@ class GraphEditorPictographContainer(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self._graph_editor = parent
-        self._current_beat: Optional[BeatData] = None
-        self._selected_arrow_id: Optional[str] = None
+        self._current_beat: BeatData | None = None
+        self._selected_arrow_id: str | None = None
         self._selected_arrow_items = {}  # Track selected arrow visual items
         self._selection_highlight_color = ColorConfig.SELECTION_HIGHLIGHT_COLOR
 
@@ -40,7 +39,7 @@ class GraphEditorPictographContainer(QWidget):
         else:
             self._pictograph_service = None
 
-        self._current_pictograph: Optional[PictographData] = None
+        self._current_pictograph: PictographData | None = None
 
         self._setup_ui()
 
@@ -83,7 +82,7 @@ class GraphEditorPictographContainer(QWidget):
         """
         )
 
-    def set_beat(self, beat_data: Optional[BeatData]):
+    def set_beat(self, beat_data: BeatData | None):
         self._current_beat = beat_data
         if beat_data and beat_data.pictograph_data:
             self._pictograph_widget.update_from_pictograph_data(

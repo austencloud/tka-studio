@@ -48,7 +48,7 @@ class SequenceCardSettingsService(ISequenceCardSettingsService):
                 self._internal_settings["last_length"] = length
             logger.debug(f"Saved selected length: {length}")
         except Exception as e:
-            logger.error(f"Error saving selected length {length}: {e}")
+            logger.exception(f"Error saving selected length {length}: {e}")
 
     def get_column_count(self) -> int:
         """Get column count setting."""
@@ -71,4 +71,4 @@ class SequenceCardSettingsService(ISequenceCardSettingsService):
                 self._internal_settings["column_count"] = count
             logger.debug(f"Saved column count: {count}")
         except Exception as e:
-            logger.error(f"Error saving column count {count}: {e}")
+            logger.exception(f"Error saving column count {count}: {e}")

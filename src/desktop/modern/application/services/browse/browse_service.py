@@ -153,9 +153,7 @@ class BrowseService:
     ) -> list[SequenceData]:
         """Filter by difficulty level, supporting 'All Levels' option."""
         if (
-            filter_value is None
-            or filter_value == "all"
-            or filter_value == "All Levels"
+            filter_value is None or filter_value in {"all", "All Levels"}
         ):
             return sequences
 
@@ -186,9 +184,7 @@ class BrowseService:
     ) -> list[SequenceData]:
         """Filter by grid mode, supporting 'All Styles' option."""
         if (
-            filter_value is None
-            or filter_value == "all"
-            or filter_value == "All Styles"
+            filter_value is None or filter_value in {"all", "All Styles"}
         ):
             return sequences
 

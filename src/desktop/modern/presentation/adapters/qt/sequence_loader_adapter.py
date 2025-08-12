@@ -13,18 +13,16 @@ Benefits:
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import QObject, pyqtSignal
+
+from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
+from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.shared.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
 from desktop.shared.application.services.sequence.sequence_loader_service import (
     SequenceLoaderService,
 )
-
-from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
-from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class QtSequenceLoaderAdapter(QObject):
@@ -49,7 +47,7 @@ class QtSequenceLoaderAdapter(QObject):
     def __init__(
         self,
         workbench_state_manager: IWorkbenchStateManager,
-        legacy_to_modern_converter: Optional[LegacyToModernConverter] = None,
+        legacy_to_modern_converter: LegacyToModernConverter | None = None,
     ):
         super().__init__()
 
@@ -78,15 +76,15 @@ class QtSequenceLoaderAdapter(QObject):
         """Load sequence from current_sequence.json on startup."""
         return self._service.load_sequence_on_startup()
 
-    def get_current_sequence_from_workbench(self) -> Optional[SequenceData]:
+    def get_current_sequence_from_workbench(self) -> SequenceData | None:
         """Get the current sequence from workbench."""
         return self._service.get_current_sequence_from_workbench()
 
-    def load_sequence_from_file(self, filepath: str) -> Optional[SequenceData]:
+    def load_sequence_from_file(self, filepath: str) -> SequenceData | None:
         """Load sequence from file."""
         return self._service.load_sequence_from_file(filepath)
 
-    def load_current_sequence(self) -> Optional[SequenceData]:
+    def load_current_sequence(self) -> SequenceData | None:
         """Load the current sequence from default location."""
         return self._service.load_current_sequence()
 

@@ -5,16 +5,17 @@ Provides comprehensive function-level profiling with minimal overhead,
 memory tracking, and statistical analysis. Integrates with existing
 monitoring infrastructure and follows TKA architectural patterns.
 """
+from __future__ import annotations
 
+from contextlib import contextmanager
+from dataclasses import dataclass, field
+from datetime import datetime
 import functools
 import logging
 import sys
 import threading
 import time
-from contextlib import contextmanager
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional, ParamSpec, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 
 import psutil
 
@@ -23,6 +24,7 @@ from .memory_tracker import MemoryTracker
 
 # Result pattern removed - using simple exceptions
 from .metrics import FunctionMetrics, PerformanceMetrics, SystemMetrics
+
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +38,10 @@ class ProfilerSession:
 
     session_id: str
     start_time: datetime
-    end_time: Optional[datetime] = None
-    function_metrics: Dict[str, FunctionMetrics] = field(default_factory=dict)
-    system_metrics: List[SystemMetrics] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    end_time: datetime | None = None
+    function_metrics: dict[str, FunctionMetrics] = field(default_factory=dict)
+    system_metrics: list[SystemMetrics] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class AdvancedProfiler:
@@ -54,16 +56,16 @@ class AdvancedProfiler:
     - Integration with existing TKA monitoring infrastructure
     """
 
-    def __init__(self, config: Optional[PerformanceConfig] = None):
+    def __init__(self, config: PerformanceConfig | None = None):
         self.config = config or get_performance_config()
         self.is_profiling = False
-        self.current_session: Optional[ProfilerSession] = None
+        self.current_session: ProfilerSession | None = None
 
         # Thread-safe data structures
         self._lock = threading.RLock()
-        self._function_stats: Dict[str, FunctionMetrics] = {}
-        self._call_stack: List[str] = []
-        self._start_times: Dict[str, float] = {}
+        self._function_stats: dict[str, FunctionMetrics] = {}
+        self._call_stack: list[str] = []
+        self._start_times: dict[str, float] = {}
 
         # Performance monitoring
         self.metrics = PerformanceMetrics()
@@ -85,7 +87,7 @@ class AdvancedProfiler:
             logger.debug("Existing monitoring system not available for integration")
 
     def start_session(
-        self, session_name: Optional[str] = None
+        self, session_name: str | None = None
     ) -> Result[str, AppError]:
         """
         Start a new profiling session.
@@ -142,7 +144,7 @@ class AdvancedProfiler:
                 )
             )
 
-    def stop_session(self) -> Result[Optional[ProfilerSession], AppError]:
+    def stop_session(self) -> Result[ProfilerSession | None, AppError]:
         """
         Stop the current profiling session and return results.
 
@@ -290,7 +292,7 @@ class AdvancedProfiler:
             stats.memory_usages.append(memory_delta)
             stats.update_statistics()
 
-    def get_top_bottlenecks(self, limit: int = 10) -> List[FunctionMetrics]:
+    def get_top_bottlenecks(self, limit: int = 10) -> list[FunctionMetrics]:
         """Get the top performance bottlenecks by total execution time."""
         with self._lock:
             sorted_functions = sorted(
@@ -298,7 +300,7 @@ class AdvancedProfiler:
             )
             return sorted_functions[:limit]
 
-    def get_memory_hotspots(self, limit: int = 10) -> List[FunctionMetrics]:
+    def get_memory_hotspots(self, limit: int = 10) -> list[FunctionMetrics]:
         """Get functions with highest memory usage."""
         with self._lock:
             sorted_functions = sorted(
@@ -308,14 +310,14 @@ class AdvancedProfiler:
             )
             return sorted_functions[:limit]
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive performance summary."""
         with self._lock:
             return self.metrics.get_performance_summary()
 
 
 # Global profiler instance for easy access
-_global_profiler: Optional[AdvancedProfiler] = None
+_global_profiler: AdvancedProfiler | None = None
 
 
 def get_profiler() -> AdvancedProfiler:

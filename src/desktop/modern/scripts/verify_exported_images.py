@@ -16,6 +16,7 @@ import sys
 modern_src_path = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QApplication
@@ -85,7 +86,7 @@ class ExportedImageVerifier:
         tka_root = Path(__file__).parent.parent.parent.parent.parent
         return tka_root / "images" / "sequence_card_images"
 
-    def verify_all_images(self, export_path: Path = None) -> bool:
+    def verify_all_images(self, export_path: Path | None = None) -> bool:
         """
         Verify all exported sequence card images.
 
@@ -126,7 +127,7 @@ class ExportedImageVerifier:
                     self._verify_single_image(word, image_path)
                     self.verification_results["valid_images"] += 1
                 except Exception as e:
-                    logger.error(f"Error verifying {image_path}: {e}")
+                    logger.exception(f"Error verifying {image_path}: {e}")
                     self.verification_results["invalid_images"] += 1
                     self.verification_results["errors"].append(
                         {"file": str(image_path), "error": str(e)}

@@ -8,7 +8,6 @@ Extracted from the monolithic visibility tab following TKA clean architecture pr
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -42,7 +41,7 @@ class VisibilityPreviewSection(QWidget):
         super().__init__(parent)
 
         # UI components
-        self.preview: Optional[VisibilityPictographPreview] = None
+        self.preview: VisibilityPictographPreview | None = None
 
         self._setup_ui()
         self._setup_connections()
@@ -87,7 +86,7 @@ class VisibilityPreviewSection(QWidget):
                 self.preview.update_visibility(element_name, visible)
                 logger.debug(f"Preview updated for {element_name}: {visible}")
             except Exception as e:
-                logger.error(f"Error updating preview visibility: {e}")
+                logger.exception(f"Error updating preview visibility: {e}")
 
     def refresh_preview(self):
         """Force refresh the preview display."""
@@ -96,7 +95,7 @@ class VisibilityPreviewSection(QWidget):
                 self.preview.refresh_preview()
                 logger.debug("Preview refreshed")
             except Exception as e:
-                logger.error(f"Error refreshing preview: {e}")
+                logger.exception(f"Error refreshing preview: {e}")
 
     def cleanup(self):
         """Clean up preview resources."""
@@ -105,4 +104,4 @@ class VisibilityPreviewSection(QWidget):
                 self.preview.cleanup()
                 logger.debug("Preview section cleaned up")
             except Exception as e:
-                logger.error(f"Error during preview cleanup: {e}")
+                logger.exception(f"Error during preview cleanup: {e}")

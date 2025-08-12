@@ -18,11 +18,12 @@ The script automatically:
 - Runs the test with proper error handling
 - Provides detailed debugging info on failure
 """
+from __future__ import annotations
 
-import sys
-import subprocess
 import argparse
 from pathlib import Path
+import subprocess
+import sys
 
 
 def main():
@@ -50,10 +51,10 @@ def main():
     # Setup project environment
     try:
         from project_root import (
-            ensure_project_setup,
-            validate_imports,
-            print_debug_info,
             PROJECT_ROOT,
+            ensure_project_setup,
+            print_debug_info,
+            validate_imports,
         )
     except ImportError as e:
         print(f"ERROR: Cannot import project_root module: {e}")
@@ -110,7 +111,7 @@ def main():
             # Run directly
             cmd = [sys.executable, str(test_path)]
 
-        result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+        result = subprocess.run(cmd, check=False, cwd=PROJECT_ROOT)
         return result.returncode
 
     except Exception as e:

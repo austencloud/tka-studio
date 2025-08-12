@@ -9,15 +9,18 @@ This script tests the key components of the new architecture:
 4. State management
 5. Undo/redo functionality
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the path
 modern_src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(modern_src_path))
 
 import logging
+
 
 # Set up logging
 logging.basicConfig(
@@ -32,7 +35,10 @@ def test_service_initialization():
     logger.info("🧪 Testing service initialization...")
 
     try:
-        from desktop.modern.core.service_locator import initialize_services, is_initialized
+        from desktop.modern.core.service_locator import (
+            initialize_services,
+            is_initialized,
+        )
 
         # Initialize services
         success = initialize_services()
@@ -40,12 +46,11 @@ def test_service_initialization():
         if success and is_initialized():
             logger.info("✅ Service initialization test PASSED")
             return True
-        else:
-            logger.error("❌ Service initialization test FAILED")
-            return False
+        logger.error("❌ Service initialization test FAILED")
+        return False
 
     except Exception as e:
-        logger.error(f"❌ Service initialization test ERROR: {e}")
+        logger.exception(f"❌ Service initialization test ERROR: {e}")
         return False
 
 
@@ -54,9 +59,17 @@ def test_start_position_command():
     logger.info("🧪 Testing start position command...")
 
     try:
-        from desktop.modern.core.commands.start_position_commands import SetStartPositionCommand
-        from desktop.modern.core.debugging.event_logger import enable_event_logging, log_debug_info
-        from desktop.modern.core.service_locator import get_command_processor, get_event_bus
+        from desktop.modern.core.commands.start_position_commands import (
+            SetStartPositionCommand,
+        )
+        from desktop.modern.core.debugging.event_logger import (
+            enable_event_logging,
+            log_debug_info,
+        )
+        from desktop.modern.core.service_locator import (
+            get_command_processor,
+            get_event_bus,
+        )
 
         # Enable event logging for this test
         enable_event_logging()
@@ -101,14 +114,13 @@ def test_start_position_command():
             log_debug_info()
 
             return True
-        else:
-            logger.error(
-                f"❌ Start position command execution test FAILED: {result.error_message}"
-            )
-            return False
+        logger.error(
+            f"❌ Start position command execution test FAILED: {result.error_message}"
+        )
+        return False
 
     except Exception as e:
-        logger.error(f"❌ Start position command test ERROR: {e}")
+        logger.exception(f"❌ Start position command test ERROR: {e}")
         import traceback
 
         traceback.print_exc()
@@ -162,14 +174,13 @@ def test_beat_command():
                 logger.warning("⚠️ State manager was not updated")
 
             return True
-        else:
-            logger.error(
-                f"❌ Beat addition command test FAILED: {result.error_message}"
-            )
-            return False
+        logger.error(
+            f"❌ Beat addition command test FAILED: {result.error_message}"
+        )
+        return False
 
     except Exception as e:
-        logger.error(f"❌ Beat addition command test ERROR: {e}")
+        logger.exception(f"❌ Beat addition command test ERROR: {e}")
         import traceback
 
         traceback.print_exc()
@@ -182,8 +193,6 @@ def test_state_manager():
 
     try:
         from desktop.modern.core.service_locator import get_sequence_state_manager
-        from desktop.modern.domain.models.beat_models import BeatData
-        from desktop.modern.domain.models.sequence_data import SequenceData
 
         state_manager = get_sequence_state_manager()
 
@@ -215,7 +224,7 @@ def test_state_manager():
         return True
 
     except Exception as e:
-        logger.error(f"❌ State manager test ERROR: {e}")
+        logger.exception(f"❌ State manager test ERROR: {e}")
         return False
 
 
@@ -241,7 +250,7 @@ def run_all_tests():
             result = test_func()
             results.append((test_name, result))
         except Exception as e:
-            logger.error(f"❌ Test {test_name} crashed: {e}")
+            logger.exception(f"❌ Test {test_name} crashed: {e}")
             results.append((test_name, False))
 
     # Report results
@@ -265,9 +274,8 @@ def run_all_tests():
             "🎉 All tests PASSED! Event-driven architecture is working correctly."
         )
         return True
-    else:
-        logger.error(f"💥 {total - passed} tests FAILED. Architecture needs debugging.")
-        return False
+    logger.error(f"💥 {total - passed} tests FAILED. Architecture needs debugging.")
+    return False
 
 
 if __name__ == "__main__":
@@ -275,7 +283,7 @@ if __name__ == "__main__":
         success = run_all_tests()
         sys.exit(0 if success else 1)
     except Exception as e:
-        logger.error(f"💥 Test suite crashed: {e}")
+        logger.exception(f"💥 Test suite crashed: {e}")
         import traceback
 
         traceback.print_exc()

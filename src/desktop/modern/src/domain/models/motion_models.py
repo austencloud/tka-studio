@@ -4,10 +4,11 @@ Motion Domain Models
 Immutable data structures for motion representation in TKA.
 Handles prop and arrow motion data with type safety and serialization.
 """
+from __future__ import annotations
 
-import json
 from dataclasses import dataclass, fields
-from typing import Any, Dict
+import json
+from typing import Any
 
 from ._shared_utils import process_field_value
 from .enums import Location, MotionType, Orientation, RotationDirection
@@ -148,7 +149,7 @@ class MotionData:
             return location_map.get(value_lower, Location.NORTH)
         return Location.NORTH
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary with snake_case keys."""
         return {
             "motion_type": (
@@ -180,7 +181,7 @@ class MotionData:
             "turns": self.turns,
         }
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -192,11 +193,10 @@ class MotionData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "MotionData":
+    def from_dict(cls, data: dict[str, Any]) -> MotionData:
         """Create instance from dictionary."""
         # Handle nested dataclasses and enums
         field_types = {f.name: f.type for f in fields(cls)}
@@ -212,17 +212,16 @@ class MotionData:
         return cls(**processed_data)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "MotionData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> MotionData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
-    def update(self, **kwargs) -> "MotionData":
+    def update(self, **kwargs) -> MotionData:
         """Create a new MotionData with updated fields."""
         from dataclasses import replace
 

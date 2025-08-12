@@ -10,8 +10,15 @@ TESTS:
 - SequenceData invariants and operations
 - GlyphData serialization roundtrips
 """
+from __future__ import annotations
 
+from hypothesis import (
+    assume,
+    given,
+    strategies as st,
+)
 import pytest
+
 from domain.models.beat_data import BeatData
 from domain.models.enums import (
     ElementalType,
@@ -25,8 +32,6 @@ from domain.models.enums import (
 from domain.models.glyph_models import GlyphData
 from domain.models.motion_models import MotionData
 from domain.models.sequence_data import SequenceData
-from hypothesis import assume, given
-from hypothesis import strategies as st
 
 
 class TestMotionDataProperties:

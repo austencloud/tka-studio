@@ -4,16 +4,15 @@ Beat Domain Models
 Immutable data structures for individual beats in kinetic sequences.
 Handles beat data, motion references, and glyph information.
 """
+from __future__ import annotations
 
-import json
-import uuid
 from dataclasses import dataclass, field
+import json
 
 # Forward reference for PictographData to avoid circular imports
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
+import uuid
 
-from .glyph_models import GlyphData
-from .motion_models import MotionData
 
 if TYPE_CHECKING:
     from .pictograph_data import PictographData
@@ -36,9 +35,9 @@ class BeatData:
     is_blank: bool = False
 
     # NEW: Optional pictograph data
-    pictograph_data: Optional["PictographData"] = None
+    pictograph_data: PictographData | None = None
 
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate beat data."""
@@ -47,7 +46,7 @@ class BeatData:
         if self.beat_number < 0:
             raise ValueError("Beat number must be non-negative")
 
-    def update(self, **kwargs) -> "BeatData":
+    def update(self, **kwargs) -> BeatData:
         """Create a new BeatData with updated fields."""
         from dataclasses import replace
 
@@ -63,13 +62,13 @@ class BeatData:
         return self.pictograph_data is not None
 
     @property
-    def letter(self) -> Optional[str]:
+    def letter(self) -> str | None:
         """Get beat letter from pictograph data if available, fallback to metadata."""
         if self.has_pictograph and self.pictograph_data.letter:
             return self.pictograph_data.letter
         return self.metadata.get("letter")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         result = {
             "id": self.id,
@@ -88,7 +87,7 @@ class BeatData:
         return result
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BeatData":
+    def from_dict(cls, data: dict[str, Any]) -> BeatData:
         """Create from dictionary."""
         # Handle pictograph data
         pictograph_data = None
@@ -108,7 +107,7 @@ class BeatData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -120,21 +119,19 @@ class BeatData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "BeatData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> BeatData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
     @classmethod
-    def empty(cls) -> "BeatData":
+    def empty(cls) -> BeatData:
         """Create an empty beat data."""
         return cls(is_blank=True)

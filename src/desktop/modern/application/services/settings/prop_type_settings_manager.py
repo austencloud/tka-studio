@@ -63,7 +63,7 @@ class PropTypeSettingsManager(QObject):
                 return PropType.STAFF
 
         except Exception as e:
-            logger.error(f"Failed to get current prop type: {e}")
+            logger.exception(f"Failed to get current prop type: {e}")
             return PropType.STAFF
 
     def set_prop_type(self, prop_type: PropType) -> None:
@@ -88,7 +88,7 @@ class PropTypeSettingsManager(QObject):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to set prop type {prop_type}: {e}")
+            logger.exception(f"Failed to set prop type {prop_type}: {e}")
 
     def get_available_prop_types(self) -> list[PropType]:
         """
@@ -129,7 +129,7 @@ class PropTypeSettingsManager(QObject):
             full_key = f"prop/{setting_key}"
             return self.settings.value(full_key, default)
         except Exception as e:
-            logger.error(f"Failed to get prop setting {setting_key}: {e}")
+            logger.exception(f"Failed to get prop setting {setting_key}: {e}")
             return default
 
     def set_prop_setting(self, setting_key: str, value: Any) -> None:
@@ -153,7 +153,7 @@ class PropTypeSettingsManager(QObject):
                 logger.debug(f"Prop setting {setting_key} changed to {value}")
 
         except Exception as e:
-            logger.error(f"Failed to set prop setting {setting_key}: {e}")
+            logger.exception(f"Failed to set prop setting {setting_key}: {e}")
 
     def get_prop_type_display_name(self, prop_type: PropType = None) -> str:
         """
@@ -200,7 +200,7 @@ class PropTypeSettingsManager(QObject):
             return next_prop_type
 
         except Exception as e:
-            logger.error(f"Failed to cycle prop type: {e}")
+            logger.exception(f"Failed to cycle prop type: {e}")
             return self.get_current_prop_type()
 
     def get_prop_type_by_name(self, name: str) -> PropType | None:
@@ -224,7 +224,7 @@ class PropTypeSettingsManager(QObject):
             return None
 
         except Exception as e:
-            logger.error(f"Failed to get prop type by name {name}: {e}")
+            logger.exception(f"Failed to get prop type by name {name}: {e}")
             return None
 
     def get_prop_specific_settings(self, prop_type: PropType = None) -> dict[str, Any]:
@@ -257,7 +257,7 @@ class PropTypeSettingsManager(QObject):
             return specific_settings
 
         except Exception as e:
-            logger.error(f"Failed to get prop-specific settings for {prop_type}: {e}")
+            logger.exception(f"Failed to get prop-specific settings for {prop_type}: {e}")
             return {}
 
     def set_prop_specific_setting(
@@ -280,7 +280,7 @@ class PropTypeSettingsManager(QObject):
             self.set_prop_setting(prefixed_key, value)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to set prop-specific setting {setting_key} for {prop_type}: {e}"
             )
 
@@ -303,13 +303,13 @@ class PropTypeSettingsManager(QObject):
 
             prop_prefix = f"{prop_type.name.lower()}_"
 
-            for setting_key in specific_settings.keys():
+            for setting_key in specific_settings:
                 try:
                     full_key = f"prop/{prop_prefix}{setting_key}"
                     self.settings.remove(full_key)
                     count += 1
                 except Exception as e:
-                    logger.error(f"Failed to remove prop setting {setting_key}: {e}")
+                    logger.exception(f"Failed to remove prop setting {setting_key}: {e}")
 
             if count > 0:
                 self.settings.sync()
@@ -318,5 +318,5 @@ class PropTypeSettingsManager(QObject):
             return count
 
         except Exception as e:
-            logger.error(f"Failed to clear prop-specific settings for {prop_type}: {e}")
+            logger.exception(f"Failed to clear prop-specific settings for {prop_type}: {e}")
             return 0

@@ -6,15 +6,17 @@ Mock Beat Data Fixtures for Graph Editor Testing
 Provides comprehensive mock beat data fixtures following TKA immutable
 domain model patterns for consistent testing.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
-from typing import List, Optional
+import sys
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
+from application.services.sequence.beat_factory import BeatFactory
 from domain.models import (
     ArrowData,
     BeatData,
@@ -26,8 +28,6 @@ from domain.models import (
     RotationDirection,
     SequenceData,
 )
-
-from application.services.sequence.beat_factory import BeatFactory
 
 
 def create_sample_motion_data(
@@ -55,9 +55,9 @@ def create_sample_beat_data(
     beat_number: int = 1,
     letter: str = "A",
     duration: float = 1.0,
-    blue_motion: Optional[MotionData] = None,
-    red_motion: Optional[MotionData] = None,
-    metadata: Optional[dict] = None,
+    blue_motion: MotionData | None = None,
+    red_motion: MotionData | None = None,
+    metadata: dict | None = None,
 ) -> BeatData:
     """Create sample beat data with embedded pictograph."""
     if blue_motion is None:
@@ -153,7 +153,7 @@ def create_complex_beat() -> BeatData:
 def create_sample_sequence_data(
     name: str = "Test Sequence",
     word: str = "ABC",
-    beats: Optional[List[BeatData]] = None,
+    beats: list[BeatData] | None = None,
     start_position: str = "alpha1",
 ) -> SequenceData:
     """Create sample sequence data with customizable parameters."""

@@ -5,13 +5,13 @@ UI Setup Profiler - Deep Analysis of UI Creation Performance
 This profiler specifically targets the UI setup process which takes 1370ms,
 breaking it down into individual component creation steps.
 """
+from __future__ import annotations
 
-import logging
-import sys
-import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict
+import sys
+import time
+
 
 # Add the modern src directory to Python path
 modern_src_path = Path(__file__).parent / "src"
@@ -57,7 +57,7 @@ class UIProfiler:
             print(f"   {name:<60} {duration:>8.1f}ms ({percentage:>5.1f}%)")
 
         # Identify UI bottlenecks
-        print(f"\n⚠️  UI BOTTLENECKS (>50ms):")
+        print("\n⚠️  UI BOTTLENECKS (>50ms):")
         bottlenecks = [
             (name, duration) for name, duration in sorted_timings if duration > 50
         ]
@@ -68,11 +68,11 @@ class UIProfiler:
 
                 # Provide specific recommendations
                 if "option_picker" in name.lower():
-                    print(f"     💡 Consider lazy loading option picker components")
+                    print("     💡 Consider lazy loading option picker components")
                 elif "pictograph" in name.lower():
-                    print(f"     💡 Consider deferring pictograph pool creation")
+                    print("     💡 Consider deferring pictograph pool creation")
                 elif "workbench" in name.lower():
-                    print(f"     💡 Consider progressive workbench initialization")
+                    print("     💡 Consider progressive workbench initialization")
         else:
             print("   ✅ No major UI bottlenecks detected")
 
@@ -101,8 +101,9 @@ def profile_ui_setup():
 
         initialize_services()
 
-        from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
         from PyQt6.QtGui import QGuiApplication
+
+        from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
 
         screens = QGuiApplication.screens()
         target_screen = screens[0] if screens else None
@@ -111,7 +112,6 @@ def profile_ui_setup():
         from desktop.modern.application.services.core.application_orchestrator import (
             ApplicationOrchestrator,
         )
-
         from main import TKAMainWindow
 
         # Create window
@@ -184,17 +184,17 @@ def profile_ui_setup():
 
             with profiler.time_operation("Workbench creation"):
                 if hasattr(layout_mgr, "_create_workbench_widget"):
-                    workbench_widget = layout_mgr._create_workbench_widget()
+                    layout_mgr._create_workbench_widget()
 
             with profiler.time_operation("Option picker creation"):
                 if hasattr(layout_mgr, "_create_option_picker_widget_with_progress"):
-                    option_picker_widget = (
+                    (
                         layout_mgr._create_option_picker_widget_with_progress()
                     )
 
             with profiler.time_operation("Graph editor creation"):
                 if hasattr(layout_mgr, "_create_graph_editor_widget"):
-                    graph_editor_widget = layout_mgr._create_graph_editor_widget()
+                    layout_mgr._create_graph_editor_widget()
 
         # Add placeholder tabs
         with profiler.time_operation("Placeholder tabs creation"):

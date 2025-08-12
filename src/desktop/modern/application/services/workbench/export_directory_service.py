@@ -57,7 +57,7 @@ class ExportDirectoryService(IExportDirectoryService):
             Path(directory_path).mkdir(parents=True, exist_ok=True)
             logger.debug(f"Directory ensured: {directory_path}")
         except Exception as e:
-            logger.error(f"Failed to create directory {directory_path}: {e}")
+            logger.exception(f"Failed to create directory {directory_path}: {e}")
             raise
 
     def validate_directory(self, directory_path: str) -> bool:
@@ -78,7 +78,7 @@ class ExportDirectoryService(IExportDirectoryService):
             return True
 
         except Exception as e:
-            logger.error(f"Directory validation failed: {e}")
+            logger.exception(f"Directory validation failed: {e}")
             return False
 
     def generate_file_path(
@@ -103,7 +103,7 @@ class ExportDirectoryService(IExportDirectoryService):
             return file_path
 
         except Exception as e:
-            logger.error(f"Failed to generate file path: {e}")
+            logger.exception(f"Failed to generate file path: {e}")
             # Fallback to simple naming
             fallback_filename = f"export_{timestamp}{file_extension}"
             return str(Path(self._base_directory) / fallback_filename)
@@ -132,7 +132,7 @@ class ExportDirectoryService(IExportDirectoryService):
             }
 
         except Exception as e:
-            logger.error(f"Failed to get directory stats: {e}")
+            logger.exception(f"Failed to get directory stats: {e}")
             return {"directory": directory_path, "error": str(e)}
 
     def _get_default_export_directory(self) -> str:

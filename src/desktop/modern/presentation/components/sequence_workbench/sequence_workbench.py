@@ -19,10 +19,16 @@ BUSINESS LOGIC DELEGATED TO:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
+
+from desktop.modern.core.dependency_injection.di_container import DIContainer
+from desktop.modern.core.interfaces.core_services import ILayoutService
+from desktop.modern.domain.models import BeatData, SequenceData
+from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.modern.presentation.components.component_base import ViewableComponentBase
 from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
@@ -34,12 +40,6 @@ from desktop.shared.application.services.workbench.workbench_session_manager imp
 from desktop.shared.application.services.workbench.workbench_state_manager import (
     WorkbenchStateManager,
 )
-
-from desktop.modern.core.dependency_injection.di_container import DIContainer
-from desktop.modern.core.interfaces.core_services import ILayoutService
-from desktop.modern.domain.models import BeatData, SequenceData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.modern.presentation.components.component_base import ViewableComponentBase
 
 from .beat_frame_section import WorkbenchBeatFrameSection
 from .button_interface import WorkbenchButtonInterfaceAdapter
@@ -153,7 +153,7 @@ class SequenceWorkbench(ViewableComponentBase):
             self._ui_setup.complete_ui_setup()
             self._signal_connector.connect_signals()
             self._ui_setup.setup_button_interface()
-            self._setup_state_monitoring() 
+            self._setup_state_monitoring()
 
 
         except Exception as e:
@@ -276,7 +276,7 @@ class SequenceWorkbench(ViewableComponentBase):
     def set_start_position(
         self,
         start_position_data: BeatData,
-        pictograph_data: Optional[PictographData] = None,
+        pictograph_data: PictographData | None = None,
         from_restoration: bool = False,
     ):
         """Set the start position via state manager."""

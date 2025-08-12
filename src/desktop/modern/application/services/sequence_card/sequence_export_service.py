@@ -47,7 +47,7 @@ class ExportWorker(QThread):
             self.export_completed.emit(success)
 
         except Exception as e:
-            logger.error(f"Export worker error: {e}")
+            logger.exception(f"Export worker error: {e}")
             self.export_completed.emit(False)
 
     def _run_export(self) -> bool:
@@ -83,7 +83,7 @@ class ExportWorker(QThread):
                 return self._mock_export()
 
         except Exception as e:
-            logger.error(f"Export operation failed: {e}")
+            logger.exception(f"Export operation failed: {e}")
             return False
 
     def _run_regenerate(self) -> bool:
@@ -141,7 +141,7 @@ class SequenceCardExportService(ISequenceCardExportService):
             return True
 
         except Exception as e:
-            logger.error(f"Error starting export: {e}")
+            logger.exception(f"Error starting export: {e}")
             return False
 
     def regenerate_all_images(self) -> bool:
@@ -160,7 +160,7 @@ class SequenceCardExportService(ISequenceCardExportService):
             return True
 
         except Exception as e:
-            logger.error(f"Error starting regeneration: {e}")
+            logger.exception(f"Error starting regeneration: {e}")
             return False
 
     def set_export_progress_callback(

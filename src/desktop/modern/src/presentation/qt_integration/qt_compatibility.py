@@ -7,12 +7,14 @@ to ensure seamless operation across different Qt versions.
 ARCHITECTURE: Provides runtime Qt version detection, feature adaptation,
 and compatibility fallbacks for unsupported Qt features.
 """
+from __future__ import annotations
 
-import sys
-import logging
-from typing import Dict, Any, Optional, Tuple, List
 from dataclasses import dataclass
 from enum import Enum
+import logging
+import sys
+from typing import Any
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ class QtVersion:
     version_string: str
 
     @property
-    def version_tuple(self) -> Tuple[int, int, int]:
+    def version_tuple(self) -> tuple[int, int, int]:
         """Get version as tuple for comparison."""
         return (self.major, self.minor, self.patch)
 
@@ -51,8 +53,8 @@ class QtEnvironment:
     """Complete Qt environment information."""
 
     version: QtVersion
-    features: Dict[str, bool]
-    modules: List[str]
+    features: dict[str, bool]
+    modules: list[str]
     platform: str
     high_dpi_support: bool
     opengl_support: bool
@@ -69,9 +71,9 @@ class QtCompatibilityManager:
 
     def __init__(self):
         """Initialize Qt compatibility manager."""
-        self._environment: Optional[QtEnvironment] = None
-        self._feature_cache: Dict[str, bool] = {}
-        self._compatibility_warnings: List[str] = []
+        self._environment: QtEnvironment | None = None
+        self._feature_cache: dict[str, bool] = {}
+        self._compatibility_warnings: list[str] = []
 
         # Detect Qt environment on initialization
         self._detect_qt_environment()
@@ -109,7 +111,7 @@ class QtCompatibilityManager:
             )
 
         except Exception as e:
-            logger.error(f"Failed to detect Qt environment: {e}")
+            logger.exception(f"Failed to detect Qt environment: {e}")
             # Create fallback environment
             self._environment = self._create_fallback_environment()
 
@@ -117,7 +119,7 @@ class QtCompatibilityManager:
         """Detect Qt variant and version."""
         # Try PyQt6 first (preferred)
         try:
-            import PyQt6.QtCore as QtCore
+            from PyQt6 import QtCore
 
             version_str = QtCore.qVersion() or "6.0.0"
             major, minor, patch = map(int, version_str.split("."))
@@ -133,7 +135,7 @@ class QtCompatibilityManager:
 
         # Try PySide6
         try:
-            import PySide6.QtCore as QtCore
+            from PySide6 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))
@@ -149,7 +151,7 @@ class QtCompatibilityManager:
 
         # Try PyQt5
         try:
-            import PyQt5.QtCore as QtCore
+            from PyQt5 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))
@@ -165,7 +167,7 @@ class QtCompatibilityManager:
 
         # Try PySide2
         try:
-            import PySide2.QtCore as QtCore
+            from PySide2 import QtCore
 
             version_str = QtCore.qVersion()
             major, minor, patch = map(int, version_str.split("."))
@@ -185,7 +187,7 @@ class QtCompatibilityManager:
             variant=QtVariant.UNKNOWN, major=0, minor=0, patch=0, version_string="0.0.0"
         )
 
-    def _detect_qt_features(self, version: QtVersion) -> Dict[str, bool]:
+    def _detect_qt_features(self, version: QtVersion) -> dict[str, bool]:
         """Detect available Qt features based on version."""
         features = {}
 
@@ -223,7 +225,7 @@ class QtCompatibilityManager:
 
         return features
 
-    def _detect_qt_modules(self, version: QtVersion) -> List[str]:
+    def _detect_qt_modules(self, version: QtVersion) -> list[str]:
         """Detect available Qt modules."""
         modules = []
 
@@ -311,7 +313,7 @@ class QtCompatibilityManager:
         return available
 
     def require_feature(
-        self, feature_name: str, fallback_message: Optional[str] = None
+        self, feature_name: str, fallback_message: str | None = None
     ) -> bool:
         """Require a specific Qt feature, log warning if not available."""
         if self.has_feature(feature_name):
@@ -325,16 +327,16 @@ class QtCompatibilityManager:
 
         return False
 
-    def get_compatibility_warnings(self) -> List[str]:
+    def get_compatibility_warnings(self) -> list[str]:
         """Get list of compatibility warnings."""
         return self._compatibility_warnings.copy()
 
-    def is_compatible_version(self, min_version: Tuple[int, int, int]) -> bool:
+    def is_compatible_version(self, min_version: tuple[int, int, int]) -> bool:
         """Check if current Qt version meets minimum requirements."""
         current_version = self._environment.version.version_tuple
         return current_version >= min_version
 
-    def get_recommended_settings(self) -> Dict[str, Any]:
+    def get_recommended_settings(self) -> dict[str, Any]:
         """Get recommended Qt settings for current environment."""
         settings = {}
 
@@ -357,7 +359,7 @@ class QtCompatibilityManager:
 
 
 # Global compatibility manager instance
-_qt_compat_manager: Optional[QtCompatibilityManager] = None
+_qt_compat_manager: QtCompatibilityManager | None = None
 
 
 def qt_compat() -> QtCompatibilityManager:

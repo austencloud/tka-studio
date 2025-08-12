@@ -8,10 +8,10 @@ AUTHOR: @austencloud
 """
 
 # Setup project imports using proper path resolution
-
-from pathlib import Path
+from __future__ import annotations
 
 import pytest
+
 from application.services.pictograph.pictograph_manager import (
     PictographManager as PictographManagementService,
 )

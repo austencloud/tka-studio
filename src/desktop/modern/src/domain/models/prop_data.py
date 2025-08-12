@@ -1,7 +1,9 @@
-import json
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+import json
+from typing import Any
+import uuid
 
 from desktop.modern.domain.models.enums import PropType
 
@@ -21,7 +23,7 @@ class PropData:
     prop_type: PropType = PropType.STAFF
 
     # Motion reference
-    motion_data: Optional[MotionData] = None
+    motion_data: MotionData | None = None
 
     # Visual properties
     color: str = "blue"
@@ -29,7 +31,7 @@ class PropData:
     rotation_direction: str = "cw"
 
     # Position data (calculated by positioning system)
-    location: Optional[str] = None
+    location: str | None = None
     position_x: float = 0.0
     position_y: float = 0.0
 
@@ -37,7 +39,7 @@ class PropData:
     is_visible: bool = True
     is_selected: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         # Handle both enum and string values for prop_type
         prop_type_value = (
@@ -67,7 +69,7 @@ class PropData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "PropData":
+    def from_dict(cls, data: dict[str, Any]) -> PropData:
         """Create from dictionary."""
         motion_data = None
         if data.get("motion_data"):
@@ -87,7 +89,7 @@ class PropData:
             is_selected=data.get("is_selected", False),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -99,16 +101,14 @@ class PropData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "PropData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> PropData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

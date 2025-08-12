@@ -8,16 +8,17 @@ Tests the complete session state functionality including:
 - Session staleness detection
 - Integration with TKA services
 """
+from __future__ import annotations
 
+from datetime import datetime, timedelta
 import json
+from pathlib import Path
 import sys
 import tempfile
-import time
-from datetime import datetime, timedelta
-from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
+
 
 # Add TKA src to path
 tka_src_path = Path(__file__).parent.parent.parent / "src"
@@ -29,7 +30,6 @@ from application.services.core.session_state_tracker import (
 from core.application.application_factory import ApplicationFactory
 from core.interfaces.core_services import IUIStateManagementService
 from core.interfaces.organization_services import IFileSystemService
-from core.interfaces.session_services import ISessionStateService, SessionState
 from core.testing.ai_agent_helpers import TKAAITestHelper
 from domain.models.beat_data import BeatData
 from domain.models.sequence_data import SequenceData

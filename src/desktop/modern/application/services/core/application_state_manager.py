@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication, QMainWindow
@@ -39,7 +38,7 @@ class ApplicationStateManager:
         self,
         settings_service: ModernSettingsService,
         session_tracker: ISessionStateTracker,
-        main_window: Optional[QMainWindow] = None,
+        main_window: QMainWindow | None = None,
     ):
         self.settings_service = settings_service
         self.session_tracker = session_tracker
@@ -93,10 +92,10 @@ class ApplicationStateManager:
             return False
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize application state: {e}")
+            logger.exception(f"❌ Failed to initialize application state: {e}")
             return False
 
-    def save_application_state(self, current_tab: str = None) -> bool:
+    def save_application_state(self, current_tab: str | None = None) -> bool:
         """
         Save complete application state.
 
@@ -135,7 +134,7 @@ class ApplicationStateManager:
             return success
 
         except Exception as e:
-            logger.error(f"❌ Error saving application state: {e}")
+            logger.exception(f"❌ Error saving application state: {e}")
             return False
 
     def mark_user_interaction(self, interaction_type: str = "general") -> None:
@@ -157,7 +156,7 @@ class ApplicationStateManager:
             logger.debug(f"🖱️ User interaction marked: {interaction_type}")
 
         except Exception as e:
-            logger.error(f"Failed to mark user interaction: {e}")
+            logger.exception(f"Failed to mark user interaction: {e}")
 
     def force_save_state(self) -> bool:
         """
@@ -170,7 +169,7 @@ class ApplicationStateManager:
             self._auto_save_timer.stop()
             return self._perform_auto_save()
         except Exception as e:
-            logger.error(f"Failed to force save state: {e}")
+            logger.exception(f"Failed to force save state: {e}")
             return False
 
     def set_main_window(self, main_window: QMainWindow) -> None:
@@ -198,7 +197,7 @@ class ApplicationStateManager:
 
         logger.info(f"Auto-save {'enabled' if enabled else 'disabled'}")
 
-    def export_application_state(self, file_path: Optional[Path] = None) -> bool:
+    def export_application_state(self, file_path: Path | None = None) -> bool:
         """
         Export complete application state to a file.
 
@@ -233,7 +232,7 @@ class ApplicationStateManager:
             return success
 
         except Exception as e:
-            logger.error(f"Failed to export application state: {e}")
+            logger.exception(f"Failed to export application state: {e}")
             return False
 
     def import_application_state(self, file_path: Path) -> bool:
@@ -269,7 +268,7 @@ class ApplicationStateManager:
             return success
 
         except Exception as e:
-            logger.error(f"Failed to import application state: {e}")
+            logger.exception(f"Failed to import application state: {e}")
             return False
 
     def get_state_statistics(self) -> dict:
@@ -298,7 +297,7 @@ class ApplicationStateManager:
             return stats
 
         except Exception as e:
-            logger.error(f"Failed to get state statistics: {e}")
+            logger.exception(f"Failed to get state statistics: {e}")
             return {"error": str(e)}
 
     def _perform_auto_save(self) -> bool:
@@ -315,7 +314,7 @@ class ApplicationStateManager:
             return success
 
         except Exception as e:
-            logger.error(f"Auto-save error: {e}")
+            logger.exception(f"Auto-save error: {e}")
             return False
 
     def _determine_current_tab(self) -> str:
@@ -337,12 +336,12 @@ class ApplicationStateManager:
             return current_tab or "construct"
 
         except Exception as e:
-            logger.error(f"Failed to determine current tab: {e}")
+            logger.exception(f"Failed to determine current tab: {e}")
             return "construct"
 
 
 def create_application_state_manager(
-    container: DIContainer, main_window: Optional[QMainWindow] = None
+    container: DIContainer, main_window: QMainWindow | None = None
 ) -> ApplicationStateManager:
     """
     Create and configure an application state manager from DI container.
@@ -374,7 +373,7 @@ def create_application_state_manager(
         return manager
 
     except Exception as e:
-        logger.error(f"❌ Failed to create ApplicationStateManager: {e}")
+        logger.exception(f"❌ Failed to create ApplicationStateManager: {e}")
         raise
 
 
@@ -400,7 +399,7 @@ def integrate_with_application_startup(
         state_manager = create_application_state_manager(container, main_window)
 
         # Initialize application state
-        state_restored = state_manager.initialize_application_state()
+        state_manager.initialize_application_state()
 
         # Connect to application events for auto-save
         def on_application_about_to_quit():
@@ -418,7 +417,7 @@ def integrate_with_application_startup(
         return state_manager
 
     except Exception as e:
-        logger.error(f"❌ Failed to integrate state persistence: {e}")
+        logger.exception(f"❌ Failed to integrate state persistence: {e}")
         raise
 
 
@@ -455,4 +454,4 @@ def mark_user_interaction_globally(interaction_type: str = "general") -> None:
         # For now, we'll document the pattern
         logger.debug(f"Global interaction marked: {interaction_type}")
     except Exception as e:
-        logger.error(f"Failed to mark global interaction: {e}")
+        logger.exception(f"Failed to mark global interaction: {e}")

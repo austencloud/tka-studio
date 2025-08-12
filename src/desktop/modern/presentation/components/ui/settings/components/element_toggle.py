@@ -7,15 +7,13 @@ Extracted from the monolithic visibility tab for better component organization.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtWidgets import QCheckBox
 
 
 class ElementToggle(QCheckBox):
     """Modern styled checkbox for element visibility with dependency awareness."""
 
-    def __init__(self, label: str, tooltip: Optional[str] = None, parent=None):
+    def __init__(self, label: str, tooltip: str | None = None, parent=None):
         """
         Initialize element toggle checkbox.
 

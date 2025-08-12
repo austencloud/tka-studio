@@ -44,7 +44,7 @@ class SequenceCardDataService(ISequenceCardDataService):
                 return sequences
             return [seq for seq in sequences if seq.length == length]
         except Exception as e:
-            logger.error(f"Error getting sequences by length {length}: {e}")
+            logger.exception(f"Error getting sequences by length {length}: {e}")
             return []
 
     def get_all_sequences(self, base_path: Path) -> list[SequenceCardData]:
@@ -78,7 +78,7 @@ class SequenceCardDataService(ISequenceCardDataService):
                         continue
 
         except Exception as e:
-            logger.error(f"Error scanning sequences from {base_path}: {e}")
+            logger.exception(f"Error scanning sequences from {base_path}: {e}")
 
         return sequences
 

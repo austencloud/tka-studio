@@ -90,7 +90,7 @@ class LoggingEnvironments:
         )
 
 
-def setup_smart_logging(environment: str = None) -> LoggingConfig:
+def setup_smart_logging(environment: str | None = None) -> LoggingConfig:
     """
     Setup smart logging for the entire TKA application.
 
@@ -116,7 +116,7 @@ def setup_smart_logging(environment: str = None) -> LoggingConfig:
     config = configs.get(environment, LoggingEnvironments.get_development_config())
 
     # Configure arrow positioning logger (this fixes the immediate verbosity issue)
-    arrow_logger = get_arrow_positioning_logger(config)
+    get_arrow_positioning_logger(config)
 
     # Configure other service loggers
     _configure_service_loggers(environment, config)

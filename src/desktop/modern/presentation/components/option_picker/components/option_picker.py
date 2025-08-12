@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QSize, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -144,7 +144,7 @@ class OptionPicker(ViewableComponentBase):
         if self.option_picker_widget:
             self.option_picker_widget.load_motion_combinations(sequence_data)
 
-    def get_pictograph_for_option(self, option_id: str) -> Optional[PictographData]:
+    def get_pictograph_for_option(self, option_id: str) -> PictographData | None:
         """Get PictographData for a specific option ID - simplified stub."""
         # For now, return None - can be enhanced later if needed
         return None

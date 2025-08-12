@@ -66,7 +66,7 @@ class VisibilitySettingsManager(QObject):
                 f"visibility/glyph_{glyph_name}", default, type=bool
             )
         except Exception as e:
-            logger.error(f"Failed to get glyph visibility for {glyph_name}: {e}")
+            logger.exception(f"Failed to get glyph visibility for {glyph_name}: {e}")
             return self.DEFAULT_VISIBILITY.get(glyph_name, True)
 
     def set_glyph_visibility(self, glyph_name: str, visible: bool) -> None:
@@ -89,7 +89,7 @@ class VisibilitySettingsManager(QObject):
                 logger.debug(f"Glyph {glyph_name} visibility changed to {visible}")
 
         except Exception as e:
-            logger.error(f"Failed to set glyph visibility for {glyph_name}: {e}")
+            logger.exception(f"Failed to set glyph visibility for {glyph_name}: {e}")
 
     def get_motion_visibility(self, motion_color: str) -> bool:
         """
@@ -111,7 +111,7 @@ class VisibilitySettingsManager(QObject):
                 f"visibility/{motion_color}_motion", default, type=bool
             )
         except Exception as e:
-            logger.error(f"Failed to get motion visibility for {motion_color}: {e}")
+            logger.exception(f"Failed to get motion visibility for {motion_color}: {e}")
             return True
 
     def set_motion_visibility(self, motion_color: str, visible: bool) -> None:
@@ -138,7 +138,7 @@ class VisibilitySettingsManager(QObject):
                 logger.debug(f"{motion_color} motion visibility changed to {visible}")
 
         except Exception as e:
-            logger.error(f"Failed to set motion visibility for {motion_color}: {e}")
+            logger.exception(f"Failed to set motion visibility for {motion_color}: {e}")
 
     def get_non_radial_visibility(self) -> bool:
         """
@@ -151,7 +151,7 @@ class VisibilitySettingsManager(QObject):
             default = self.DEFAULT_VISIBILITY.get("non_radial", True)
             return self.settings.value("visibility/non_radial", default, type=bool)
         except Exception as e:
-            logger.error(f"Failed to get non-radial visibility: {e}")
+            logger.exception(f"Failed to get non-radial visibility: {e}")
             return True
 
     def set_non_radial_visibility(self, visible: bool) -> None:
@@ -173,7 +173,7 @@ class VisibilitySettingsManager(QObject):
                 logger.debug(f"Non-radial visibility changed to {visible}")
 
         except Exception as e:
-            logger.error(f"Failed to set non-radial visibility: {e}")
+            logger.exception(f"Failed to set non-radial visibility: {e}")
 
     def get_grid_visibility(self) -> bool:
         """
@@ -186,7 +186,7 @@ class VisibilitySettingsManager(QObject):
             default = self.DEFAULT_VISIBILITY.get("grid", True)
             return self.settings.value("visibility/grid", default, type=bool)
         except Exception as e:
-            logger.error(f"Failed to get grid visibility: {e}")
+            logger.exception(f"Failed to get grid visibility: {e}")
             return True
 
     def set_grid_visibility(self, visible: bool) -> None:
@@ -208,7 +208,7 @@ class VisibilitySettingsManager(QObject):
                 logger.debug(f"Grid visibility changed to {visible}")
 
         except Exception as e:
-            logger.error(f"Failed to set grid visibility: {e}")
+            logger.exception(f"Failed to set grid visibility: {e}")
 
     def get_all_visibility_settings(self) -> dict[str, bool]:
         """
@@ -235,7 +235,7 @@ class VisibilitySettingsManager(QObject):
             return result
 
         except Exception as e:
-            logger.error(f"Failed to get all visibility settings: {e}")
+            logger.exception(f"Failed to get all visibility settings: {e}")
             return self.DEFAULT_VISIBILITY.copy()
 
     def set_all_visibility_settings(self, visibility_dict: dict[str, bool]) -> bool:
@@ -272,13 +272,13 @@ class VisibilitySettingsManager(QObject):
                     success_count += 1
 
                 except Exception as e:
-                    logger.error(f"Failed to set visibility for {element_name}: {e}")
+                    logger.exception(f"Failed to set visibility for {element_name}: {e}")
 
             logger.info(f"Set {success_count}/{total_count} visibility settings")
             return success_count == total_count
 
         except Exception as e:
-            logger.error(f"Failed to set all visibility settings: {e}")
+            logger.exception(f"Failed to set all visibility settings: {e}")
             return False
 
     def reset_to_defaults(self) -> None:
@@ -289,7 +289,7 @@ class VisibilitySettingsManager(QObject):
             self.set_all_visibility_settings(self.DEFAULT_VISIBILITY)
             logger.info("Reset all visibility settings to defaults")
         except Exception as e:
-            logger.error(f"Failed to reset visibility settings: {e}")
+            logger.exception(f"Failed to reset visibility settings: {e}")
 
     def toggle_glyph_visibility(self, glyph_name: str) -> bool:
         """

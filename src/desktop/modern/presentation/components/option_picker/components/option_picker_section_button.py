@@ -92,7 +92,7 @@ class OptionPickerSectionButton(QPushButton):
 
         self._update_style()
 
-    def _update_style(self, background_color: str = None) -> None:
+    def _update_style(self, background_color: str | None = None) -> None:
         """Update button style with glassmorphism effect matching main header."""
         background_color = background_color or self._base_background_color
         style = (

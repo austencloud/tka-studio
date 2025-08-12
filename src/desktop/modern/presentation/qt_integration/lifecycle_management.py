@@ -161,7 +161,7 @@ class QtObjectFactory:
                         handler()
                         self._metrics.cleanup_handlers_executed += 1
                     except Exception as e:
-                        logger.error(f"Error executing cleanup handler: {e}")
+                        logger.exception(f"Error executing cleanup handler: {e}")
 
                 del self._cleanup_handlers[obj_id]
 
@@ -235,7 +235,7 @@ class AutoManagedWidget(QWidget):
                 try:
                     callback()
                 except Exception as e:
-                    logger.error(f"Error in cleanup callback: {e}")
+                    logger.exception(f"Error in cleanup callback: {e}")
 
             # Cleanup managed resources
             for resource in self._managed_resources:
@@ -247,7 +247,7 @@ class AutoManagedWidget(QWidget):
                     elif hasattr(resource, "close"):
                         resource.close()
                 except Exception as e:
-                    logger.error(f"Error cleaning up resource: {e}")
+                    logger.exception(f"Error cleaning up resource: {e}")
 
             # Clear lists
             self._managed_resources.clear()
@@ -258,7 +258,7 @@ class AutoManagedWidget(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Error in auto cleanup: {e}")
+            logger.exception(f"Error in auto cleanup: {e}")
 
 
 # Note: AsyncViewableComponentBase is defined in component_base.py to avoid circular imports

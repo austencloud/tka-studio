@@ -9,7 +9,6 @@ type-safe, immutable domain model.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from ..enums import Location, MotionType, Orientation, PropRotationDirection
 
@@ -32,8 +31,8 @@ class MotionAttributes:
     turns: int | float | str  # Can be 'fl' for float transitions
 
     # Prefloat attributes for handling float state transitions
-    prefloat_motion_type: Optional[MotionType] = None
-    prefloat_prop_rot_dir: Optional[PropRotationDirection] = None
+    prefloat_motion_type: MotionType | None = None
+    prefloat_prop_rot_dir: PropRotationDirection | None = None
 
     def __post_init__(self):
         """Validate motion attributes after initialization."""

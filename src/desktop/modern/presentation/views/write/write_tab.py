@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
@@ -58,7 +57,7 @@ class WriteTab(QWidget):
         super().__init__(parent)
 
         self.container = container
-        self.coordinator: Optional[IWriteTabCoordinator] = None
+        self.coordinator: IWriteTabCoordinator | None = None
 
         self._setup_coordinator()
         self._setup_ui()
@@ -72,7 +71,7 @@ class WriteTab(QWidget):
             self.coordinator = self.container.resolve(IWriteTabCoordinator)
             logger.info("Write tab coordinator resolved successfully")
         except Exception as e:
-            logger.error(f"Failed to resolve write tab coordinator: {e}")
+            logger.exception(f"Failed to resolve write tab coordinator: {e}")
             self.error_occurred.emit(f"Failed to initialize Write Tab: {e}")
 
     def _setup_ui(self):
@@ -200,7 +199,7 @@ class WriteTab(QWidget):
             signals.playback_stopped.connect(self._on_playback_stopped)
 
         except Exception as e:
-            logger.error(f"Failed to connect write tab signals: {e}")
+            logger.exception(f"Failed to connect write tab signals: {e}")
 
     def _on_new_act(self):
         """Handle new act creation."""
@@ -227,7 +226,7 @@ class WriteTab(QWidget):
             logger.info("Created new act")
 
         except Exception as e:
-            logger.error(f"Failed to create new act: {e}")
+            logger.exception(f"Failed to create new act: {e}")
             self.error_occurred.emit(f"Failed to create new act: {e}")
 
     def _on_save_act(self):
@@ -245,7 +244,7 @@ class WriteTab(QWidget):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to save act: {e}")
+            logger.exception(f"Failed to save act: {e}")
             self.error_occurred.emit(f"Failed to save act: {e}")
 
     def _on_save_as_act(self):
@@ -279,7 +278,7 @@ class WriteTab(QWidget):
                     )
 
         except Exception as e:
-            logger.error(f"Failed to save act as: {e}")
+            logger.exception(f"Failed to save act as: {e}")
             self.error_occurred.emit(f"Failed to save act as: {e}")
 
     def _on_act_selected(self, file_path: str):
@@ -307,7 +306,7 @@ class WriteTab(QWidget):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to load act: {e}")
+            logger.exception(f"Failed to load act: {e}")
             self.error_occurred.emit(f"Failed to load act: {e}")
 
     def _on_act_info_changed(self, name: str, description: str):
@@ -320,7 +319,7 @@ class WriteTab(QWidget):
             self._update_button_states()
 
         except Exception as e:
-            logger.error(f"Failed to update act info: {e}")
+            logger.exception(f"Failed to update act info: {e}")
 
     def _on_load_music(self):
         """Handle music loading request."""
@@ -346,7 +345,7 @@ class WriteTab(QWidget):
                     )
 
         except Exception as e:
-            logger.error(f"Failed to load music: {e}")
+            logger.exception(f"Failed to load music: {e}")
             self.error_occurred.emit(f"Failed to load music: {e}")
 
     def _on_remove_sequence(self, position: int):
@@ -370,7 +369,7 @@ class WriteTab(QWidget):
                     self._update_button_states()
 
         except Exception as e:
-            logger.error(f"Failed to remove sequence: {e}")
+            logger.exception(f"Failed to remove sequence: {e}")
 
     def _on_play_music(self):
         """Handle music play."""
@@ -378,7 +377,7 @@ class WriteTab(QWidget):
             if self.coordinator:
                 self.coordinator.play_music()
         except Exception as e:
-            logger.error(f"Failed to play music: {e}")
+            logger.exception(f"Failed to play music: {e}")
 
     def _on_pause_music(self):
         """Handle music pause."""
@@ -386,7 +385,7 @@ class WriteTab(QWidget):
             if self.coordinator:
                 self.coordinator.pause_music()
         except Exception as e:
-            logger.error(f"Failed to pause music: {e}")
+            logger.exception(f"Failed to pause music: {e}")
 
     def _on_stop_music(self):
         """Handle music stop."""
@@ -394,7 +393,7 @@ class WriteTab(QWidget):
             if self.coordinator:
                 self.coordinator.stop_music()
         except Exception as e:
-            logger.error(f"Failed to stop music: {e}")
+            logger.exception(f"Failed to stop music: {e}")
 
     def _on_seek_music(self, position: float):
         """Handle music seek."""
@@ -402,7 +401,7 @@ class WriteTab(QWidget):
             if self.coordinator:
                 self.coordinator.set_music_position(position)
         except Exception as e:
-            logger.error(f"Failed to seek music: {e}")
+            logger.exception(f"Failed to seek music: {e}")
 
     def _on_act_loaded(self, act: ActData):
         """Handle act loaded signal."""
@@ -429,7 +428,7 @@ class WriteTab(QWidget):
             )
             self.music_player.set_music_loaded(filename, duration)
         except Exception as e:
-            logger.error(f"Failed to handle music loaded signal: {e}")
+            logger.exception(f"Failed to handle music loaded signal: {e}")
 
     def _on_playback_started(self):
         """Handle playback started signal."""
@@ -476,7 +475,7 @@ class WriteTab(QWidget):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to add sequence to current act: {e}")
+            logger.exception(f"Failed to add sequence to current act: {e}")
             return False
 
     def refresh(self):
@@ -490,7 +489,7 @@ class WriteTab(QWidget):
                 self.act_sheet.set_act(current_act)
 
         except Exception as e:
-            logger.error(f"Failed to refresh write tab: {e}")
+            logger.exception(f"Failed to refresh write tab: {e}")
 
     def cleanup(self):
         """Clean up resources when tab is closed."""
@@ -499,7 +498,7 @@ class WriteTab(QWidget):
                 self.coordinator.cleanup()
             logger.info("Write tab cleanup completed")
         except Exception as e:
-            logger.error(f"Error during write tab cleanup: {e}")
+            logger.exception(f"Error during write tab cleanup: {e}")
 
     def __del__(self):
         """Cleanup when tab is destroyed."""

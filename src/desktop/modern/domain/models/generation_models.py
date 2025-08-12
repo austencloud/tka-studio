@@ -8,7 +8,6 @@ for sequence generation, following Modern's clean architecture principles.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from typing import Optional
 
 # Import enums and data classes for runtime use
 from desktop.modern.core.interfaces.generation_services import (
@@ -32,10 +31,10 @@ class GenerationConfig:
     turn_intensity: float = 1.0
     grid_mode: GridMode = None
     prop_continuity: PropContinuity = None
-    letter_types: Optional[set[LetterType]] = None
+    letter_types: set[LetterType] | None = None
     slice_size: SliceSize = None
-    cap_type: Optional[CAPType] = None
-    start_position_key: Optional[str] = None
+    cap_type: CAPType | None = None
+    start_position_key: str | None = None
 
     def __post_init__(self):
         # Set defaults if None
@@ -83,11 +82,11 @@ class GenerationResult:
     """Result of a sequence generation operation"""
 
     success: bool
-    sequence_data: Optional[list[dict]] = None
-    start_position_data: Optional[dict] = None
-    metadata: Optional[GenerationMetadata] = None
-    error_message: Optional[str] = None
-    warnings: Optional[list[str]] = None
+    sequence_data: list[dict] | None = None
+    start_position_data: dict | None = None
+    metadata: GenerationMetadata | None = None
+    error_message: str | None = None
+    warnings: list[str] | None = None
 
     def __post_init__(self):
         if self.warnings is None:
@@ -100,8 +99,8 @@ class GenerationState:
 
     config: GenerationConfig
     is_generating: bool = False
-    last_result: Optional[GenerationResult] = None
-    validation_errors: Optional[list[str]] = None
+    last_result: GenerationResult | None = None
+    validation_errors: list[str] | None = None
 
     def __post_init__(self):
         if self.validation_errors is None:

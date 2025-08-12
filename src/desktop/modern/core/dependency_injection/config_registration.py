@@ -22,8 +22,6 @@ from __future__ import annotations
 
 import logging
 
-from desktop.shared.application.services.data.data_service import DataManager
-
 from desktop.modern.core.config.app_config import (
     AppConfig,
     LoggingConfig,
@@ -34,6 +32,7 @@ from desktop.modern.core.config.app_config import (
 from desktop.modern.core.config.data_config import DataConfig, create_data_config
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
+from desktop.shared.application.services.data.data_service import DataManager
 
 
 # Removed Result pattern imports - using simple exceptions
@@ -62,7 +61,7 @@ def register_configurations(
             try:
                 app_config = create_app_config()
             except Exception as e:
-                logger.error(f"Failed to create app config: {e}")
+                logger.exception(f"Failed to create app config: {e}")
                 raise
 
         # Register the main app configuration
@@ -82,7 +81,7 @@ def register_configurations(
         logger.info("Successfully registered all configurations in DI container")
 
     except Exception as e:
-        logger.error(f"Failed to register configurations: {e}")
+        logger.exception(f"Failed to register configurations: {e}")
         raise
 
 
@@ -105,7 +104,7 @@ def register_data_config_only(container, data_config: DataConfig | None = None) 
             try:
                 config = create_data_config()
             except Exception as e:
-                logger.error(f"Failed to create data config: {e}")
+                logger.exception(f"Failed to create data config: {e}")
                 raise
 
         # Register data configuration
@@ -117,7 +116,7 @@ def register_data_config_only(container, data_config: DataConfig | None = None) 
         logger.info("Successfully registered data configuration in DI container")
 
     except Exception as e:
-        logger.error(f"Failed to register data configuration: {e}")
+        logger.exception(f"Failed to register data configuration: {e}")
         raise
 
 
@@ -136,10 +135,7 @@ def register_positioning_services_with_config(
     """
     try:
         # Use provided config or create default
-        if positioning_config:
-            config = positioning_config
-        else:
-            config = PositioningConfig()
+        config = positioning_config or PositioningConfig()
 
         # Register positioning configuration
         container.register_instance(PositioningConfig, config)
@@ -150,7 +146,7 @@ def register_positioning_services_with_config(
         logger.info("Successfully registered positioning services with configuration")
 
     except Exception as e:
-        logger.error(f"Failed to register positioning services: {e}")
+        logger.exception(f"Failed to register positioning services: {e}")
         raise
 
 
@@ -214,7 +210,7 @@ def validate_configuration_registration(container) -> bool:
                     )
                     return False
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Failed to resolve configuration {config_type.__name__}: {e}"
                 )
                 return False
@@ -226,14 +222,14 @@ def validate_configuration_registration(container) -> bool:
                 logger.error("DataService resolved to None")
                 return False
         except Exception as e:
-            logger.error(f"Failed to resolve DataService: {e}")
+            logger.exception(f"Failed to resolve DataService: {e}")
             return False
 
         logger.info("All configuration registrations validated successfully")
         return True
 
     except Exception as e:
-        logger.error(f"Configuration validation failed: {e}")
+        logger.exception(f"Configuration validation failed: {e}")
         raise
 
 
@@ -250,13 +246,6 @@ def register_start_position_services(container: DIContainer) -> None:
     try:
         # Import start position interfaces
         # Import start position service implementations
-        from desktop.shared.application.services.start_position.start_position_data_service import (
-            StartPositionDataService,
-        )
-        from desktop.shared.application.services.start_position.start_position_selection_service import (
-            StartPositionSelectionService,
-        )
-
         from desktop.modern.application.services.start_position import (
             StartPositionOrchestrator,
             StartPositionSelectionService,
@@ -267,6 +256,12 @@ def register_start_position_services(container: DIContainer) -> None:
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
             IStartPositionUIService,
+        )
+        from desktop.shared.application.services.start_position.start_position_data_service import (
+            StartPositionDataService,
+        )
+        from desktop.shared.application.services.start_position.start_position_selection_service import (
+            StartPositionSelectionService,
         )
 
         # Register individual services
@@ -284,7 +279,7 @@ def register_start_position_services(container: DIContainer) -> None:
         logger.debug("Successfully registered start position services")
 
     except Exception as e:
-        logger.error(f"Failed to register start position services: {e}")
+        logger.exception(f"Failed to register start position services: {e}")
         raise
 
 
@@ -356,5 +351,5 @@ def register_extracted_services(container: DIContainer) -> None:
         # DI registration log removed to reduce startup noise
 
     except Exception as e:
-        logger.error(f"Failed to register extracted services: {e}")
+        logger.exception(f"Failed to register extracted services: {e}")
         raise

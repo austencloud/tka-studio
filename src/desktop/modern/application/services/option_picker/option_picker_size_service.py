@@ -74,10 +74,7 @@ class OptionPickerSizeService:
 
             # Additional check: avoid the specific problematic width (622px)
             # This suggests the widget was measured during an intermediate layout state
-            if picker_width == 622:
-                return False
-
-            return True
+            return picker_width != 622
 
         except Exception:
             return False

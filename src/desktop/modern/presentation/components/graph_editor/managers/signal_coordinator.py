@@ -9,7 +9,7 @@ Simplified to remove over-engineered manager dependencies and complex routing.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -46,7 +46,7 @@ class GraphEditorSignalCoordinator(QObject):
     arrow_selected = pyqtSignal(str)  # arrow_id
     visibility_changed = pyqtSignal(bool)  # is_visible
 
-    def __init__(self, graph_editor: GraphEditor, parent: Optional[QObject] = None):
+    def __init__(self, graph_editor: GraphEditor, parent: QObject | None = None):
         super().__init__(parent)
         self._graph_editor = graph_editor
 

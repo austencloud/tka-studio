@@ -90,7 +90,7 @@ class LearnTab(QWidget):
             logger.debug("Learn tab UI setup complete with codex")
 
         except Exception as e:
-            logger.error(f"Failed to setup learn tab UI: {e}")
+            logger.exception(f"Failed to setup learn tab UI: {e}")
             self.error_occurred.emit(f"Failed to initialize learn tab: {e!s}")
 
     def resizeEvent(self, event) -> None:
@@ -99,7 +99,7 @@ class LearnTab(QWidget):
             super().resizeEvent(event)
             # Coordinator handles its own responsive updates
         except Exception as e:
-            logger.error(f"Failed to handle resize event: {e}")
+            logger.exception(f"Failed to handle resize event: {e}")
 
     def showEvent(self, event) -> None:
         """Handle show events (tab activation)."""
@@ -107,7 +107,7 @@ class LearnTab(QWidget):
             super().showEvent(event)
             logger.debug("Learn tab shown")
         except Exception as e:
-            logger.error(f"Failed to handle show event: {e}")
+            logger.exception(f"Failed to handle show event: {e}")
 
     def hideEvent(self, event) -> None:
         """Handle hide events (tab deactivation)."""
@@ -115,7 +115,7 @@ class LearnTab(QWidget):
             super().hideEvent(event)
             logger.debug("Learn tab hidden")
         except Exception as e:
-            logger.error(f"Failed to handle hide event: {e}")
+            logger.exception(f"Failed to handle hide event: {e}")
 
     # Public interface methods (if needed by main application)
 

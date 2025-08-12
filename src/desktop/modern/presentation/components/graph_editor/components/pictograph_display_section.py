@@ -22,7 +22,6 @@ Architecture:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
@@ -83,13 +82,13 @@ class PictographDisplaySection(QWidget):
         self._container_margins = 8
 
         # State tracking
-        self._current_beat_index: Optional[int] = None
-        self._current_beat_data: Optional[BeatData] = None
+        self._current_beat_index: int | None = None
+        self._current_beat_data: BeatData | None = None
         self._resize_pending = False
 
         # Initialize components
-        self._pictograph_component: Optional[BasePictographView] = None
-        self._info_panel: Optional[DetailedInfoPanel] = None
+        self._pictograph_component: BasePictographView | None = None
+        self._info_panel: DetailedInfoPanel | None = None
 
         self._setup_ui()
         logger.debug("PictographDisplaySection initialized with responsive sizing")
@@ -243,7 +242,7 @@ class PictographDisplaySection(QWidget):
         finally:
             self._resize_pending = False
 
-    def update_display(self, beat_index: int, beat_data: Optional[BeatData]):
+    def update_display(self, beat_index: int, beat_data: BeatData | None):
         """
         Update both the pictograph and information panel with new beat data.
 
@@ -290,7 +289,7 @@ class PictographDisplaySection(QWidget):
             self.pictograph_updated.emit(beat_index, beat_data)
             logger.debug(f"Pictograph-only update: {beat_data.letter}")
 
-    def update_info_panel_only(self, beat_index: int, beat_data: Optional[BeatData]):
+    def update_info_panel_only(self, beat_index: int, beat_data: BeatData | None):
         """
         Update only the information panel without changing the pictograph.
 
@@ -309,7 +308,7 @@ class PictographDisplaySection(QWidget):
         """Clear both the pictograph and information panel"""
         self.update_display(-1, None)
 
-    def get_pictograph_component(self) -> Optional[BasePictographView]:
+    def get_pictograph_component(self) -> BasePictographView | None:
         """
         Get the pictograph view for direct access if needed.
 
@@ -318,7 +317,7 @@ class PictographDisplaySection(QWidget):
         """
         return self._pictograph_component
 
-    def get_info_panel(self) -> Optional[DetailedInfoPanel]:
+    def get_info_panel(self) -> DetailedInfoPanel | None:
         """
         Get the info panel component for direct access if needed.
 
@@ -327,7 +326,7 @@ class PictographDisplaySection(QWidget):
         """
         return self._info_panel
 
-    def get_current_beat_data(self) -> Optional[BeatData]:
+    def get_current_beat_data(self) -> BeatData | None:
         """
         Get the currently displayed beat data.
 
@@ -336,7 +335,7 @@ class PictographDisplaySection(QWidget):
         """
         return self._current_beat_data
 
-    def get_current_beat_index(self) -> Optional[int]:
+    def get_current_beat_index(self) -> int | None:
         """
         Get the currently displayed beat index.
 

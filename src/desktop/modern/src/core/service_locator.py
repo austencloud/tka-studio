@@ -4,9 +4,10 @@ Global service locator for accessing core services in event-driven architecture.
 This provides centralized access to the event bus, command processor, and state manager
 without requiring dependency injection in every component.
 """
+from __future__ import annotations
 
 import logging
-from typing import Optional
+
 
 # Import core services
 try:
@@ -22,12 +23,12 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 # Global service instances
-_event_bus: Optional[TypeSafeEventBus] = None
-_command_processor: Optional[CommandProcessor] = None
-_sequence_state_manager: Optional[object] = (
+_event_bus: TypeSafeEventBus | None = None
+_command_processor: CommandProcessor | None = None
+_sequence_state_manager: object | None = (
     None  # Will be imported later to avoid circular imports
 )
-_data_conversion_service: Optional[object] = None
+_data_conversion_service: object | None = None
 
 
 def initialize_services():
@@ -56,7 +57,7 @@ def initialize_services():
         try:
             from desktop.modern.core.debugging.event_logger import setup_event_logger
 
-            event_logger = setup_event_logger(_event_bus)
+            setup_event_logger(_event_bus)
 
             # Optionally enable event logging for debugging
             # Uncomment the next line to enable detailed event logging
@@ -67,18 +68,18 @@ def initialize_services():
         return True
 
     except Exception as e:
-        logger.error(f"❌ Failed to initialize services: {e}")
+        logger.exception(f"❌ Failed to initialize services: {e}")
         return False
 
 
-def get_event_bus() -> Optional[TypeSafeEventBus]:
+def get_event_bus() -> TypeSafeEventBus | None:
     """Get the global event bus instance"""
     if _event_bus is None:
         logger.warning("Event bus not initialized - call initialize_services() first")
     return _event_bus
 
 
-def get_command_processor() -> Optional[CommandProcessor]:
+def get_command_processor() -> CommandProcessor | None:
     """Get the global command processor instance"""
     if _command_processor is None:
         logger.warning(
@@ -87,7 +88,7 @@ def get_command_processor() -> Optional[CommandProcessor]:
     return _command_processor
 
 
-def get_sequence_state_manager() -> Optional[object]:
+def get_sequence_state_manager() -> object | None:
     """Get the global sequence state manager instance"""
     if _sequence_state_manager is None:
         logger.warning(
@@ -103,12 +104,14 @@ def get_data_conversion_service():
     if _data_conversion_service is None:
         # Lazy initialize data conversion service
         try:
-            from desktop.modern.application.services.data.data_converter import DataConverter
+            from desktop.modern.application.services.data.data_converter import (
+                DataConverter,
+            )
 
             _data_conversion_service = DataConverter()
             logger.info("✅ Data conversion service initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize data conversion service: {e}")
+            logger.exception(f"❌ Failed to initialize data conversion service: {e}")
     return _data_conversion_service
 
 
@@ -134,7 +137,7 @@ def cleanup_services():
         logger.info("🧹 All services cleaned up")
 
     except Exception as e:
-        logger.error(f"❌ Error during service cleanup: {e}")
+        logger.exception(f"❌ Error during service cleanup: {e}")
 
 
 def is_initialized() -> bool:

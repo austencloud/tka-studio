@@ -1,9 +1,10 @@
-import json
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, Tuple
+import json
+from typing import Any
 
 from desktop.modern.domain.models.enums import GridMode
-
 
 
 @dataclass(frozen=True)
@@ -21,9 +22,9 @@ class GridData:
     radius: float = 100.0
 
     # Grid points (calculated positions)
-    grid_points: Dict[str, Tuple[float, float]] = field(default_factory=dict)
+    grid_points: dict[str, tuple[float, float]] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "grid_mode": self.grid_mode.value,
@@ -34,7 +35,7 @@ class GridData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "GridData":
+    def from_dict(cls, data: dict[str, Any]) -> GridData:
         """Create from dictionary."""
         return cls(
             grid_mode=GridMode(data.get("grid_mode", "diamond")),
@@ -44,7 +45,7 @@ class GridData:
             grid_points=data.get("grid_points", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -56,16 +57,14 @@ class GridData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "GridData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> GridData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

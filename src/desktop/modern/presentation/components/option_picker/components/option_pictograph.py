@@ -8,16 +8,15 @@ and click handling, replacing the placeholder widgets.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
 
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.views import create_option_view
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -47,7 +46,7 @@ class OptionPictograph(QFrame):
         """
         super().__init__(parent)
 
-        self._pictograph_data: Optional[PictographData] = None
+        self._pictograph_data: PictographData | None = None
         self._letter_type = letter_type
 
         # Create direct pictograph view (no widget wrapper)
@@ -153,17 +152,16 @@ class OptionPictograph(QFrame):
                 )
                 self._pictograph_component.update_from_pictograph_data(pictograph_data)
             except Exception as e:
-                logger.error(f"Error updating pictograph option: {e}")
+                logger.exception(f"Error updating pictograph option: {e}")
 
     def clear_pictograph(self):
         """Clear the displayed pictograph."""
         self._pictograph_data = None
-        if self._pictograph_component:
-            if (
-                hasattr(self._pictograph_component, "scene")
-                and self._pictograph_component.scene
-            ):
-                self._pictograph_component.scene.clear()
+        if self._pictograph_component and (
+            hasattr(self._pictograph_component, "scene")
+            and self._pictograph_component.scene
+        ):
+            self._pictograph_component.scene.clear()
 
     def cleanup(self):
         """
@@ -241,7 +239,7 @@ class OptionPictograph(QFrame):
             self.setFixedSize(frame_size, frame_size)
 
         except Exception as e:
-            logger.error(f"Error resizing option view: {e}")
+            logger.exception(f"Error resizing option view: {e}")
             # Fallback sizing
             fallback_size = 60
             self._pictograph_component.setFixedSize(fallback_size, fallback_size)

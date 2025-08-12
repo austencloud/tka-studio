@@ -7,7 +7,7 @@ Extracted from the large LayoutManager to provide focused responsibility.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QVBoxLayout, QWidget
@@ -39,21 +39,21 @@ class ConstructTabLayoutService(IConstructTabLayoutService):
         self,
         container: DIContainer,
         component_factory: ConstructTabComponentFactory,
-        progress_callback: Optional[Callable[[int, str], None]] = None,
+        progress_callback: Callable[[int, str], None] | None = None,
     ):
         self._container = container
         self._component_factory = component_factory
         self._progress_callback = progress_callback
 
         # Layout components
-        self._main_widget: Optional[QWidget] = None
-        self._workbench_widget: Optional[QWidget] = None
-        self._picker_widget: Optional[QWidget] = None
-        self._picker_stack: Optional[QStackedWidget] = None
-        self._tab_widget: Optional[RightPanelTabWidget] = None
+        self._main_widget: QWidget | None = None
+        self._workbench_widget: QWidget | None = None
+        self._picker_widget: QWidget | None = None
+        self._picker_stack: QStackedWidget | None = None
+        self._tab_widget: RightPanelTabWidget | None = None
 
         # Component references
-        self._components: Dict[str, Any] = {}
+        self._components: dict[str, Any] = {}
         self._is_transitioning = False
 
     def setup_layout(self, parent_widget: QWidget) -> None:

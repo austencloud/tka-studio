@@ -10,21 +10,20 @@ This test validates:
 4. Validates UI state transitions
 5. Confirms persistence layer changes
 """
+from __future__ import annotations
 
-import json
-import os
-import sys
-import time
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from application.services.sequence.sequence_persister import SequencePersister
-from core.application.application_factory import ApplicationFactory
-from PyQt6.QtCore import QTimer
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication
+
+from application.services.sequence.sequence_persister import SequencePersister
+from core.application.application_factory import ApplicationFactory
 
 
 class ClearSequenceUITest:
@@ -101,9 +100,8 @@ class ClearSequenceUITest:
             if len(loaded) >= 3:
                 print(f"✅ [UI_TEST] REAL sequence created: {len(loaded)} items")
                 return True
-            else:
-                print(f"❌ [UI_TEST] Failed to create sequence: {len(loaded)} items")
-                return False
+            print(f"❌ [UI_TEST] Failed to create sequence: {len(loaded)} items")
+            return False
 
         except Exception as e:
             print(f"❌ [UI_TEST] Error creating sequence: {e}")
@@ -177,9 +175,8 @@ class ClearSequenceUITest:
             if len(after_clear) == 1 and after_clear[0].get("word") == "":
                 print("✅ [UI_TEST] Clear sequence via workbench successful")
                 return True
-            else:
-                print(f"❌ [UI_TEST] Clear sequence failed: {after_clear}")
-                return False
+            print(f"❌ [UI_TEST] Clear sequence failed: {after_clear}")
+            return False
 
         except Exception as e:
             print(f"❌ [UI_TEST] Error during clear sequence: {e}")
@@ -223,9 +220,8 @@ class ClearSequenceUITest:
             if len(after_clear) == 1 and after_clear[0].get("word") == "":
                 print("✅ [UI_TEST] Clear sequence via construct tab successful")
                 return True
-            else:
-                print(f"❌ [UI_TEST] Clear sequence failed: {after_clear}")
-                return False
+            print(f"❌ [UI_TEST] Clear sequence failed: {after_clear}")
+            return False
 
         except Exception as e:
             print(f"❌ [UI_TEST] Error during clear sequence: {e}")
@@ -289,9 +285,8 @@ def main():
         print("✅ UI components function correctly")
         print("✅ Persistence layer validated")
         return 0
-    else:
-        print("\n❌ COMPREHENSIVE UI TEST: FAILED")
-        return 1
+    print("\n❌ COMPREHENSIVE UI TEST: FAILED")
+    return 1
 
 
 if __name__ == "__main__":

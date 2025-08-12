@@ -24,9 +24,9 @@ except ImportError:
         def __init__(
             self,
             message: str,
-            interface_name: str = None,
-            dependency_chain: list = None,
-            context: dict[str, Any] = None,
+            interface_name: str | None = None,
+            dependency_chain: list | None = None,
+            context: dict[str, Any] | None = None,
         ):
             super().__init__(message)
             self.interface_name = interface_name
@@ -171,13 +171,7 @@ class ValidationEngine:
 
                 # Skip primitive types, optional parameters, and special parameters
                 if (
-                    param_type == inspect.Parameter.empty
-                    or param_type == inspect._empty
-                    or str(param_type) == "_empty"
-                    or self.is_primitive_type(param_type)
-                    or param.default != inspect.Parameter.empty
-                    or param.kind
-                    in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
+                    param_type in (inspect.Parameter.empty, inspect._empty) or str(param_type) == "_empty" or self.is_primitive_type(param_type) or param.default != inspect.Parameter.empty or param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
                 ):
                     continue
 
@@ -200,7 +194,7 @@ class ValidationEngine:
             ) from e
 
     def detect_circular_dependencies(
-        self, start_type: type, registry: Any, visited: set[type] = None
+        self, start_type: type, registry: Any, visited: set[type] | None = None
     ) -> None:
         """Detect circular dependencies in the service graph."""
         if visited is None:

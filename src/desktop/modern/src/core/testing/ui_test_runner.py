@@ -3,13 +3,14 @@ UI Testing Integration for TKA Main Application
 
 Provides integration points for running UI tests from the main application.
 """
+from __future__ import annotations
 
 import logging
 import sys
-from typing import Optional
 
-from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
 from desktop.modern.core.testing.ai_agent_helpers import TKAAITestHelper
+from desktop.modern.core.testing.simple_ui_tester import SimpleUITester
+
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class UITestRunner:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Quick validation failed with exception: {e}")
+            logger.exception(f"❌ Quick validation failed with exception: {e}")
             return False
 
     def run_button_tests(self) -> bool:
@@ -86,7 +87,7 @@ class UITestRunner:
             return result.success
 
         except Exception as e:
-            logger.error(f"❌ Button tests failed with exception: {e}")
+            logger.exception(f"❌ Button tests failed with exception: {e}")
             return False
 
     def run_graph_editor_tests(self) -> bool:
@@ -107,7 +108,7 @@ class UITestRunner:
             return result.success
 
         except Exception as e:
-            logger.error(f"❌ Graph editor tests failed with exception: {e}")
+            logger.exception(f"❌ Graph editor tests failed with exception: {e}")
             return False
 
     def run_comprehensive_tests(self) -> bool:
@@ -128,7 +129,7 @@ class UITestRunner:
             return result.success
 
         except Exception as e:
-            logger.error(f"❌ Comprehensive tests failed with exception: {e}")
+            logger.exception(f"❌ Comprehensive tests failed with exception: {e}")
             return False
 
 
@@ -142,13 +143,12 @@ def handle_test_ui_command(args):
     # Determine which tests to run based on args
     if hasattr(args, "quick") and args.quick:
         return runner.run_quick_validation()
-    elif hasattr(args, "buttons") and args.buttons:
+    if hasattr(args, "buttons") and args.buttons:
         return runner.run_button_tests()
-    elif hasattr(args, "graph_editor") and args.graph_editor:
+    if hasattr(args, "graph_editor") and args.graph_editor:
         return runner.run_graph_editor_tests()
-    else:
-        # Default to comprehensive tests
-        return runner.run_comprehensive_tests()
+    # Default to comprehensive tests
+    return runner.run_comprehensive_tests()
 
 
 # Convenience functions for direct usage

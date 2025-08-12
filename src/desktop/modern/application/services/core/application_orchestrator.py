@@ -26,10 +26,6 @@ import logging
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QMainWindow, QTabWidget
-from desktop.shared.application.services.core.service_registration_manager import (
-    IServiceRegistrationManager,
-    ServiceRegistrationManager,
-)
 
 from desktop.modern.application.services.core.application_initialization_orchestrator import (
     ApplicationInitializationOrchestrator,
@@ -38,6 +34,10 @@ from desktop.modern.application.services.core.application_initialization_orchest
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.error_handling import ErrorSeverity, StandardErrorHandler
 from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
+from desktop.shared.application.services.core.service_registration_manager import (
+    IServiceRegistrationManager,
+    ServiceRegistrationManager,
+)
 
 from ..ui.background_manager import BackgroundManager, IBackgroundManager
 from ..ui.ui_setup_manager import IUISetupManager, UISetupManager
@@ -107,15 +107,14 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
 
         try:
             # Try to create with default services
-            from desktop.shared.application.services.core.session_restoration_coordinator import (
-                SessionRestorationCoordinator,
-            )
-
             from desktop.modern.application.services.core.window_management_service import (
                 WindowManagementService,
             )
             from desktop.modern.application.services.ui.window_discovery_service import (
                 WindowDiscoveryService,
+            )
+            from desktop.shared.application.services.core.session_restoration_coordinator import (
+                SessionRestorationCoordinator,
             )
 
             window_service = WindowManagementService()

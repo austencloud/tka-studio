@@ -90,5 +90,5 @@ def register_export_services(
         logger.debug("Export services registered successfully")
 
     except Exception as e:
-        logger.error(f"Failed to register export services: {e}")
+        logger.exception(f"Failed to register export services: {e}")
         raise

@@ -13,6 +13,7 @@ from typing import Any
 
 from PyQt6.QtCore import QObject, QPropertyAnimation, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QWidget
+
 from desktop.shared.application.services.core.animation_service import (
     AnimationCommand,
     AnimationType,
@@ -107,7 +108,7 @@ class QtAnimationServiceAdapter(QObject):
             return command.command_id
 
         except Exception as e:
-            logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate widget: {e}")
+            logger.exception(f"❌ [QT_ANIMATION_ADAPTER] Failed to animate widget: {e}")
             return ""
 
     def stop_animation(self, animation_id: str):
@@ -127,7 +128,7 @@ class QtAnimationServiceAdapter(QObject):
                 del self._timers[animation_id]
 
         except Exception as e:
-            logger.error(f"❌ [QT_ANIMATION_ADAPTER] Failed to stop animation: {e}")
+            logger.exception(f"❌ [QT_ANIMATION_ADAPTER] Failed to stop animation: {e}")
 
     def _execute_qt_animation(
         self,
@@ -154,7 +155,7 @@ class QtAnimationServiceAdapter(QObject):
                 )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_ANIMATION_ADAPTER] Failed to execute Qt animation: {e}"
             )
 
@@ -208,7 +209,7 @@ class QtAnimationServiceAdapter(QObject):
             animation.start()
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_ANIMATION_ADAPTER] Failed to start Qt property animation: {e}"
             )
 
@@ -224,7 +225,7 @@ class QtAnimationServiceAdapter(QObject):
             )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_ANIMATION_ADAPTER] Error handling animation finished: {e}"
             )
 
@@ -238,7 +239,7 @@ class QtAnimationServiceAdapter(QObject):
                 self.animation_progress.emit(animation_id, progress)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [QT_ANIMATION_ADAPTER] Error handling animation progress: {e}"
             )
 

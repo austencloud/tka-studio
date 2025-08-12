@@ -7,15 +7,15 @@ This adapter wraps the pure SequenceStateTrackerService to provide Qt-specific s
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from desktop.shared.application.services.sequence.sequence_state_tracker_service import (
-    SequenceStateTrackerService,
-)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
+from desktop.shared.application.services.sequence.sequence_state_tracker_service import (
+    SequenceStateTrackerService,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -46,11 +46,11 @@ class QtSequenceStateTrackerAdapter(QObject):
         )
         self.service.add_state_changed_callback(self._on_state_changed)
 
-    def get_sequence(self) -> Optional[SequenceData]:
+    def get_sequence(self) -> SequenceData | None:
         """Get the current sequence"""
         return self.service.get_sequence()
 
-    def get_start_position(self) -> Optional[BeatData]:
+    def get_start_position(self) -> BeatData | None:
         """Get the current start position"""
         return self.service.get_start_position()
 
@@ -66,11 +66,11 @@ class QtSequenceStateTrackerAdapter(QObject):
         """Check if both sequence and start position are empty"""
         return self.service.is_empty()
 
-    def set_sequence_direct(self, sequence: Optional[SequenceData]):
+    def set_sequence_direct(self, sequence: SequenceData | None):
         """Set sequence directly (for loading scenarios, bypasses commands)"""
         self.service.set_sequence_direct(sequence)
 
-    def set_start_position_direct(self, start_position: Optional[BeatData]):
+    def set_start_position_direct(self, start_position: BeatData | None):
         """Set start position directly (for loading scenarios, bypasses commands)"""
         self.service.set_start_position_direct(start_position)
 
@@ -82,11 +82,11 @@ class QtSequenceStateTrackerAdapter(QObject):
         """Cleanup resources when the state manager is being destroyed"""
         self.service.cleanup()
 
-    def _on_sequence_updated(self, sequence: Optional[SequenceData]):
+    def _on_sequence_updated(self, sequence: SequenceData | None):
         """Handle sequence updated callback from service."""
         self.sequence_updated.emit(sequence)
 
-    def _on_start_position_updated(self, start_position: Optional[BeatData]):
+    def _on_start_position_updated(self, start_position: BeatData | None):
         """Handle start position updated callback from service."""
         self.start_position_updated.emit(start_position)
 

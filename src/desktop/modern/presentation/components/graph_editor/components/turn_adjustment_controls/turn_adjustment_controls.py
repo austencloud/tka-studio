@@ -9,7 +9,6 @@ Features glassmorphism styling and direct turn value selection.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
@@ -50,7 +49,7 @@ class TurnAdjustmentControls(QWidget):
     def __init__(self, parent=None):
         """Initialize the modern turn adjustment controls."""
         super().__init__(parent)
-        self._current_beat_data: Optional[BeatData] = None
+        self._current_beat_data: BeatData | None = None
 
         # Available turn values (fl = float = 0.25)
         self._turn_values = ["fl", "0", "0.5", "1", "1.5", "2", "2.5", "3"]
@@ -70,10 +69,10 @@ class TurnAdjustmentControls(QWidget):
         self._red_turn_amount = 0.0
 
         # UI component references
-        self._blue_current_display: Optional[CurrentTurnDisplay] = None
-        self._red_current_display: Optional[CurrentTurnDisplay] = None
-        self._blue_turn_grid: Optional[TurnValueButtonGrid] = None
-        self._red_turn_grid: Optional[TurnValueButtonGrid] = None
+        self._blue_current_display: CurrentTurnDisplay | None = None
+        self._red_current_display: CurrentTurnDisplay | None = None
+        self._blue_turn_grid: TurnValueButtonGrid | None = None
+        self._red_turn_grid: TurnValueButtonGrid | None = None
 
         self._setup_ui()
         logger.debug("Modern TurnAdjustmentControls initialized")
@@ -206,9 +205,9 @@ class TurnAdjustmentControls(QWidget):
             logger.debug("Beat data updated with turn changes")
 
         except Exception as e:
-            logger.error(f"Error updating beat with turn changes: {e}")
+            logger.exception(f"Error updating beat with turn changes: {e}")
 
-    def set_beat_data(self, beat_data: Optional[BeatData]):
+    def set_beat_data(self, beat_data: BeatData | None):
         """Set the current beat data and update the UI."""
         self._current_beat_data = beat_data
 

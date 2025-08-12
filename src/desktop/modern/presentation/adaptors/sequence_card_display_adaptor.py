@@ -8,7 +8,6 @@ Converts service callbacks to Qt signals for UI communication.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
@@ -35,7 +34,7 @@ class SequenceCardDisplayAdaptor(QObject):
     def __init__(
         self,
         display_service: ISequenceCardDisplayService,
-        parent: Optional[QObject] = None,
+        parent: QObject | None = None,
     ):
         """
         Initialize the Qt adaptor.

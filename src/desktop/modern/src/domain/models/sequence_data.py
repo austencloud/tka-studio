@@ -4,11 +4,12 @@ Sequence Domain Models
 Immutable data structures for complete kinetic sequences.
 Handles sequence composition, beat management, and validation.
 """
+from __future__ import annotations
 
-import json
-import uuid
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+import json
+from typing import Any
+import uuid
 
 from .beat_data import BeatData
 
@@ -28,11 +29,11 @@ class SequenceData:
     word: str = ""  # Generated word from sequence
 
     # Business data
-    beats: List[BeatData] = field(default_factory=list)
-    start_position: Optional[BeatData] = None
+    beats: list[BeatData] = field(default_factory=list)
+    start_position: BeatData | None = None
 
     # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Validate sequence data."""
@@ -91,14 +92,14 @@ class SequenceData:
             return False
         return all(beat.is_valid() for beat in self.beats)
 
-    def get_beat(self, beat_number: int) -> Optional[BeatData]:
+    def get_beat(self, beat_number: int) -> BeatData | None:
         """Get a beat by its number."""
         for beat in self.beats:
             if beat.beat_number == beat_number:
                 return beat
         return None
 
-    def add_beat(self, beat_data: BeatData) -> "SequenceData":
+    def add_beat(self, beat_data: BeatData) -> SequenceData:
         """Create a new sequence with an additional beat."""
         # Calculate the correct beat number (excluding start position beat)
         non_start_beats = [
@@ -107,13 +108,13 @@ class SequenceData:
         next_beat_number = len(non_start_beats) + 1
 
         new_beat = beat_data.update(beat_number=next_beat_number)
-        new_beats = list(self.beats) + [new_beat]
+        new_beats = [*list(self.beats), new_beat]
 
         from dataclasses import replace
 
         return replace(self, beats=new_beats)
 
-    def remove_beat(self, beat_number: int) -> "SequenceData":
+    def remove_beat(self, beat_number: int) -> SequenceData:
         """Create a new sequence with a beat removed."""
         new_beats = []
         for beat in self.beats:
@@ -126,7 +127,7 @@ class SequenceData:
 
         return replace(self, beats=new_beats)
 
-    def update_beat(self, beat_number: int, **kwargs) -> "SequenceData":
+    def update_beat(self, beat_number: int, **kwargs) -> SequenceData:
         """Create a new sequence with an updated beat."""
         new_beats = []
         for beat in self.beats:
@@ -139,13 +140,13 @@ class SequenceData:
 
         return replace(self, beats=new_beats)
 
-    def update(self, **kwargs) -> "SequenceData":
+    def update(self, **kwargs) -> SequenceData:
         """Create a new sequence with updated fields."""
         from dataclasses import replace
 
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "id": self.id,
@@ -159,7 +160,7 @@ class SequenceData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SequenceData":
+    def from_dict(cls, data: dict[str, Any]) -> SequenceData:
         """Create from dictionary."""
         beats = [BeatData.from_dict(beat_data) for beat_data in data.get("beats", [])]
 
@@ -176,7 +177,7 @@ class SequenceData:
             metadata=data.get("metadata", {}),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
 
@@ -188,21 +189,19 @@ class SequenceData:
 
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
     @classmethod
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "SequenceData":
+    def from_json(cls, json_str: str, camel_case: bool = True) -> SequenceData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
 
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)
 
     @classmethod
-    def empty(cls) -> "SequenceData":
+    def empty(cls) -> SequenceData:
         """Create an empty sequence."""
         return cls(name="", beats=[])

@@ -8,7 +8,7 @@ These interfaces support the animated background system with cross-platform comp
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
 class IBlobAnimation(ABC):
@@ -255,7 +255,7 @@ class IFishSpawning(ABC):
 
     @abstractmethod
     def spawn_fish(
-        self, fish_type: str, position: Optional[tuple[float, float]] = None
+        self, fish_type: str, position: tuple[float, float] | None = None
     ) -> str:
         """
         Spawn a new fish.
@@ -324,7 +324,7 @@ class ISnowflakePhysics(ABC):
         """
 
     @abstractmethod
-    def add_snowflake(self, position: Optional[tuple[float, float]] = None) -> str:
+    def add_snowflake(self, position: tuple[float, float] | None = None) -> str:
         """
         Add snowflake to simulation.
 

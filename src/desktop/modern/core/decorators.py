@@ -275,7 +275,7 @@ def retry_on_failure(
                         time.sleep(delay)
                         delay *= backoff_multiplier
                     else:
-                        logger.error(
+                        logger.exception(
                             f"All {max_attempts} attempts failed for {func.__name__}: {e}"
                         )
 

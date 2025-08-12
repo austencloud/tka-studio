@@ -10,23 +10,26 @@ PURPOSE: Provide reusable testing infrastructure for TKA workflows
 PERMANENT: Core testing framework for all TKA workflow tests
 AUTHOR: AI Agent
 """
+from __future__ import annotations
 
+from dataclasses import dataclass
+from enum import Enum
 import os
 import sys
 import time
-from dataclasses import dataclass
-from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from application.services.sequence.sequence_persister import SequencePersister
-from core.application.application_factory import ApplicationFactory
-from core.testing.ai_agent_helpers import AITestResult, TKAAITestHelper
-from domain.models import BeatData, SequenceData
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication
+
+from application.services.sequence.sequence_persister import SequencePersister
+from core.application.application_factory import ApplicationFactory
+from core.testing.ai_agent_helpers import TKAAITestHelper
+from domain.models import BeatData
 
 
 class TestMode(Enum):
@@ -63,7 +66,7 @@ class TestConfiguration:
     mode: TestMode = TestMode.HEADLESS
     enable_arrow_positioning: bool = True
     debug_logging: bool = False
-    timing_delays: Dict[str, int] = None
+    timing_delays: dict[str, int] = None
     visual_validation: bool = True
 
     def __post_init__(self):
@@ -85,7 +88,7 @@ class TKAWorkflowTester:
     comprehensive validation.
     """
 
-    def __init__(self, config: Optional[TestConfiguration] = None):
+    def __init__(self, config: TestConfiguration | None = None):
         """Initialize the workflow tester with configuration."""
         self.config = config or TestConfiguration()
         self.app = None
@@ -97,8 +100,8 @@ class TKAWorkflowTester:
         self.ai_helper = None
 
         # State tracking
-        self.workflow_log: List[WorkflowState] = []
-        self.test_results: Dict[str, Any] = {}
+        self.workflow_log: list[WorkflowState] = []
+        self.test_results: dict[str, Any] = {}
 
         # Component references
         self._component_refs = {}
@@ -244,11 +247,10 @@ class TKAWorkflowTester:
 
                 # Wait for startup
                 QTest.qWait(self.config.timing_delays["startup"])
-            else:
-                # Clear existing sequence
-                if hasattr(self.construct_tab, "clear_sequence"):
-                    self.construct_tab.clear_sequence()
-                    QTest.qWait(self.config.timing_delays["operation"])
+            # Clear existing sequence
+            elif hasattr(self.construct_tab, "clear_sequence"):
+                self.construct_tab.clear_sequence()
+                QTest.qWait(self.config.timing_delays["operation"])
 
             # Log initial state
             self._log_workflow_state("FRESH_SEQUENCE_CREATED")
@@ -305,7 +307,7 @@ class TKAWorkflowTester:
             traceback.print_exc()
             return False
 
-    def add_beats(self, beat_data_list: List[BeatData]) -> bool:
+    def add_beats(self, beat_data_list: list[BeatData]) -> bool:
         """Add multiple beats to the sequence."""
         try:
             if not self.workbench:
@@ -320,7 +322,7 @@ class TKAWorkflowTester:
                 if hasattr(self.workbench, "add_beat"):
                     self.workbench.add_beat(beat_data)
                 else:
-                    print(f"❌ [FRAMEWORK] Workbench missing add_beat method")
+                    print("❌ [FRAMEWORK] Workbench missing add_beat method")
                     return False
 
                 # Wait for processing
@@ -352,11 +354,10 @@ class TKAWorkflowTester:
                         f"✅ [FRAMEWORK] Picker state validation passed: {expected_picker.value}"
                     )
                 return True
-            else:
-                print(
-                    f"❌ [FRAMEWORK] Picker state mismatch: expected {expected_picker.value}, got {current_state.picker_type.value}"
-                )
-                return False
+            print(
+                f"❌ [FRAMEWORK] Picker state mismatch: expected {expected_picker.value}, got {current_state.picker_type.value}"
+            )
+            return False
 
         except Exception as e:
             print(f"❌ [FRAMEWORK] Picker state validation failed: {e}")
@@ -373,11 +374,10 @@ class TKAWorkflowTester:
                         f"✅ [FRAMEWORK] Sequence length validation passed: {expected_length}"
                     )
                 return True
-            else:
-                print(
-                    f"❌ [FRAMEWORK] Sequence length mismatch: expected {expected_length}, got {current_state.sequence_length}"
-                )
-                return False
+            print(
+                f"❌ [FRAMEWORK] Sequence length mismatch: expected {expected_length}, got {current_state.sequence_length}"
+            )
+            return False
 
         except Exception as e:
             print(f"❌ [FRAMEWORK] Sequence length validation failed: {e}")
@@ -399,7 +399,7 @@ class TKAWorkflowTester:
                     IArrowPositioningOrchestrator,
                 )
 
-                orchestrator = self.container.resolve(IArrowPositioningOrchestrator)
+                self.container.resolve(IArrowPositioningOrchestrator)
 
                 if self.config.debug_logging:
                     print(
@@ -520,7 +520,7 @@ class TKAWorkflowTester:
                 event_name="",
             )
 
-    def _workflow_state_to_dict(self, state: WorkflowState) -> Dict[str, Any]:
+    def _workflow_state_to_dict(self, state: WorkflowState) -> dict[str, Any]:
         """Convert workflow state to dictionary for serialization."""
         return {
             "picker_type": state.picker_type.value,
@@ -545,7 +545,7 @@ class TKAWorkflowTester:
         except Exception as e:
             print(f"⚠️ [FRAMEWORK] Cleanup warning: {e}")
 
-    def run_comprehensive_workflow_test(self) -> Dict[str, Any]:
+    def run_comprehensive_workflow_test(self) -> dict[str, Any]:
         """Run a comprehensive workflow test covering all major user interactions."""
         results = {
             "overall_success": False,
@@ -618,10 +618,7 @@ class TKAWorkflowTester:
                 return False
 
             # Validate return to start position picker
-            if not self.validate_picker_state(PickerType.START_POSITION):
-                return False
-
-            return True
+            return self.validate_picker_state(PickerType.START_POSITION)
 
         except Exception as e:
             print(f"❌ [FRAMEWORK] Basic workflow test failed: {e}")
@@ -630,7 +627,7 @@ class TKAWorkflowTester:
 
 # Convenience functions for easy import and use
 def create_workflow_tester(
-    config: Optional[TestConfiguration] = None,
+    config: TestConfiguration | None = None,
 ) -> TKAWorkflowTester:
     """Create and initialize a workflow tester."""
     tester = TKAWorkflowTester(config)
@@ -639,7 +636,7 @@ def create_workflow_tester(
     raise RuntimeError("Failed to initialize TKA workflow tester")
 
 
-def run_quick_workflow_test(debug: bool = False) -> Dict[str, Any]:
+def run_quick_workflow_test(debug: bool = False) -> dict[str, Any]:
     """Run a quick workflow test with default configuration."""
     config = TestConfiguration(
         mode=TestMode.HEADLESS,

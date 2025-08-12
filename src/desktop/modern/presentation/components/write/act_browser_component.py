@@ -8,7 +8,7 @@ Displays acts as thumbnails with metadata.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -32,7 +32,7 @@ class ActThumbnailWidget(QFrame):
 
     clicked = pyqtSignal(str)  # file path
 
-    def __init__(self, act_info: Dict[str, Any], parent: QWidget = None):
+    def __init__(self, act_info: dict[str, Any], parent: QWidget = None):
         super().__init__(parent)
 
         self.act_info = act_info
@@ -130,7 +130,7 @@ class ActBrowserComponent(QScrollArea):
         super().__init__(parent)
 
         self.coordinator = coordinator
-        self.thumbnail_widgets: List[ActThumbnailWidget] = []
+        self.thumbnail_widgets: list[ActThumbnailWidget] = []
 
         self._setup_ui()
         self._setup_styling()
@@ -213,7 +213,7 @@ class ActBrowserComponent(QScrollArea):
             logger.info(f"Loaded {len(acts_info)} acts in browser")
 
         except Exception as e:
-            logger.error(f"Failed to load acts: {e}")
+            logger.exception(f"Failed to load acts: {e}")
             self._show_empty_state()
 
     def _clear_thumbnails(self):
@@ -260,4 +260,4 @@ class ActBrowserComponent(QScrollArea):
                 self.content_layout.addWidget(thumbnail, row, col)
 
         except Exception as e:
-            logger.error(f"Failed to reflow thumbnails: {e}")
+            logger.exception(f"Failed to reflow thumbnails: {e}")

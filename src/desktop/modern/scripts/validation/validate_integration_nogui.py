@@ -100,8 +100,8 @@ def test_service_integration():
         assert len(positions) > 0
 
         # Test selection service
-        assert selection_service.validate_selection("alpha1_alpha1") == True
-        assert selection_service.validate_selection("invalid") == False
+        assert selection_service.validate_selection("alpha1_alpha1")
+        assert not selection_service.validate_selection("invalid")
 
         # Test UI service
         size = ui_service.calculate_option_size(1000, False)
@@ -166,8 +166,8 @@ def test_service_integration():
         )  # Should return empty list, not crash
 
         # Test invalid selection
-        assert selection_service.validate_selection(None) == False
-        assert selection_service.validate_selection("") == False
+        assert not selection_service.validate_selection(None)
+        assert not selection_service.validate_selection("")
 
         print("    ✅ Error handling works correctly")
         success_count += 1
@@ -185,7 +185,7 @@ def test_service_integration():
         assert normalized == "alpha1_alpha1"
 
         # Now validate the normalized position
-        assert selection_service.validate_selection(normalized) == True
+        assert selection_service.validate_selection(normalized)
 
         # Test that UI service can work with data service results
         positions = data_service.get_available_positions("diamond")

@@ -8,7 +8,7 @@ The container has been refactored into specialized components for better maintai
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional, TypeVar
+from typing import Any, TypeVar
 
 from .debugging_tools import DebuggingTools
 from .lifecycle_manager import LifecycleManager
@@ -45,7 +45,7 @@ T = TypeVar("T")
 logger = logging.getLogger(__name__)
 
 # Global container instance
-_container: Optional[DIContainer] = None
+_container: DIContainer | None = None
 _container_initialized: bool = False
 
 
@@ -163,7 +163,7 @@ class DIContainer:
 
         # Check for circular dependencies
         if interface in self._resolution_stack:
-            dependency_chain = list(self._resolution_stack) + [interface]
+            dependency_chain = [*list(self._resolution_stack), interface]
             chain_names = [dep.__name__ for dep in dependency_chain]
             raise DependencyInjectionError(
                 f"Circular dependency detected: {' -> '.join(chain_names)}",
@@ -190,7 +190,7 @@ class DIContainer:
 
             # Service not registered - provide helpful error message
             all_registrations = self._registry.get_all_registrations()
-            available_names = [svc.__name__ for svc in all_registrations.keys()]
+            available_names = [svc.__name__ for svc in all_registrations]
 
             # Record failed resolution
             resolution_time = time.time() - start_time

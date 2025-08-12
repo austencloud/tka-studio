@@ -7,7 +7,6 @@ Widget representing a page of sequence cards with letter-sized dimensions.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
@@ -36,7 +35,7 @@ class SequenceCardPageWidget(QFrame):
         layout_service: ISequenceCardLayoutService,
         image_loader: ImageLoader | None = None,
         cache_service: ISequenceCardCacheService | None = None,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ):
         super().__init__(parent)
         self.sequences: list[SequenceCardData] = sequences

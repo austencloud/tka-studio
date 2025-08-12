@@ -65,7 +65,7 @@ def run_final_validation():
         assert len(positions) > 0
 
         # Test selection logic
-        assert selection_service.validate_selection("alpha1_alpha1") == True
+        assert selection_service.validate_selection("alpha1_alpha1")
         assert selection_service.normalize_position_key("alpha1") == "alpha1_alpha1"
 
         # Test UI logic
@@ -154,9 +154,9 @@ def run_final_validation():
         invalid_positions = data_service.get_available_positions("invalid")
         assert isinstance(invalid_positions, list)  # Should return empty list
 
-        assert selection_service.validate_selection("invalid") == False
-        assert selection_service.validate_selection("") == False
-        assert selection_service.validate_selection(None) == False
+        assert not selection_service.validate_selection("invalid")
+        assert not selection_service.validate_selection("")
+        assert not selection_service.validate_selection(None)
 
         print("✅ Error handling validation passed")
         passed_tests += 1

@@ -42,15 +42,15 @@ class SequenceActionType(Enum):
 
 # Re-export domain models for backward compatibility
 __all__ = [
+    # Legacy compatibility aliases
+    "FILTER_TYPES",
+    "NAVIGATION_MODES",
+    "SORT_METHODS",
     "BrowseState",
     "BrowseTabSection",
     "FilterType",
     "GridMode",
     "NavigationMode",
-    "SortMethod",
     "SequenceActionType",
-    # Legacy compatibility aliases
-    "FILTER_TYPES",
-    "NAVIGATION_MODES",
-    "SORT_METHODS",
+    "SortMethod",
 ]

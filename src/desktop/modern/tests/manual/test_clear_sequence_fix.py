@@ -9,9 +9,11 @@ RELATED_ISSUE: Clear sequence button and minimal sequence startup
 
 Simple test to validate the fixes using TKA testing infrastructure.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))

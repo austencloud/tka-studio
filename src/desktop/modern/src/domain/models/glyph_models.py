@@ -4,13 +4,14 @@ Glyph Domain Models
 Data structures for pictograph glyphs (elemental, VTG, TKA, position).
 Handles glyph classification and visualization data.
 """
+from __future__ import annotations
 
-import json
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Union
 from enum import Enum
+import json
+from typing import Any, Union
 
-from .enums import VTGMode, ElementalType, LetterType
+from .enums import ElementalType, LetterType, VTGMode
 
 
 def _process_field_value(value: Any, field_type: Any) -> Any:
@@ -23,22 +24,22 @@ def _process_field_value(value: Any, field_type: Any) -> Any:
             if value is None:
                 return None
             return _process_field_value(value, actual_type)
-    
+
     # Handle dataclasses
     from dataclasses import is_dataclass
     if is_dataclass(field_type) and isinstance(value, dict):
         return field_type.from_dict(value)
-    
+
     # Handle enums
     if isinstance(field_type, type) and issubclass(field_type, Enum):
         return field_type(value)
-    
+
     # Handle lists
     if hasattr(field_type, '__origin__') and field_type.__origin__ is list:
         if isinstance(value, list):
             list_type = field_type.__args__[0]
             return [_process_field_value(item, list_type) for item in value]
-    
+
     return value
 
 
@@ -49,19 +50,19 @@ class GlyphData:
     """
 
     # VTG glyph data
-    vtg_mode: Optional[VTGMode] = None
+    vtg_mode: VTGMode | None = None
 
     # Elemental glyph data
-    elemental_type: Optional[ElementalType] = None
+    elemental_type: ElementalType | None = None
 
     # TKA glyph data
-    letter_type: Optional[LetterType] = None
+    letter_type: LetterType | None = None
     has_dash: bool = False
-    turns_data: Optional[str] = None  # Turns tuple string
+    turns_data: str | None = None  # Turns tuple string
 
     # Start-to-end position glyph data
-    start_position: Optional[str] = None
-    end_position: Optional[str] = None
+    start_position: str | None = None
+    end_position: str | None = None
 
     # Visibility flags
     show_elemental: bool = True
@@ -69,12 +70,12 @@ class GlyphData:
     show_tka: bool = True
     show_positions: bool = True
 
-    def update(self, **kwargs) -> "GlyphData":
+    def update(self, **kwargs) -> GlyphData:
         """Create a new GlyphData with updated fields."""
         from dataclasses import replace
         return replace(self, **kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "vtg_mode": self.vtg_mode.value if self.vtg_mode else None,
@@ -93,7 +94,7 @@ class GlyphData:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "GlyphData":
+    def from_dict(cls, data: dict[str, Any]) -> GlyphData:
         """Create from dictionary."""
         vtg_mode = None
         if data.get("vtg_mode"):
@@ -121,7 +122,7 @@ class GlyphData:
             show_positions=data.get("show_positions", True),
         )
 
-    def to_camel_dict(self) -> Dict[str, Any]:
+    def to_camel_dict(self) -> dict[str, Any]:
         """Convert to dictionary with camelCase keys for JSON APIs."""
         from ..serialization import dataclass_to_camel_dict
         return dataclass_to_camel_dict(self)
@@ -131,15 +132,13 @@ class GlyphData:
         from ..serialization import domain_model_to_json
         if camel_case:
             return domain_model_to_json(self, **kwargs)
-        else:
-            return json.dumps(self.to_dict(), **kwargs)
+        return json.dumps(self.to_dict(), **kwargs)
 
-    @classmethod  
-    def from_json(cls, json_str: str, camel_case: bool = True) -> "GlyphData":
+    @classmethod
+    def from_json(cls, json_str: str, camel_case: bool = True) -> GlyphData:
         """Create instance from JSON string."""
         from ..serialization import domain_model_from_json
         if camel_case:
             return domain_model_from_json(json_str, cls)
-        else:
-            data = json.loads(json_str)
-            return cls.from_dict(data)
+        data = json.loads(json_str)
+        return cls.from_dict(data)

@@ -52,7 +52,7 @@ def get_sequence_state_manager():
 
         return _container.resolve(QtSequenceStateTrackerAdapter)
     except Exception as e:
-        logger.error(f"Failed to get sequence state manager: {e}")
+        logger.exception(f"Failed to get sequence state manager: {e}")
         return None
 
 

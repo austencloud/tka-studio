@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QMouseEvent
@@ -61,12 +60,12 @@ class AdjustmentPanel(QWidget):
     beat_modified = pyqtSignal(BeatData)
     turn_applied = pyqtSignal(str, float)  # arrow_color, turn_value
 
-    def __init__(self, parent, side: str = "right", color: str = None):
+    def __init__(self, parent, side: str = "right", color: str | None = None):
         super().__init__(parent)
         self._graph_editor = parent
         self._side = side  # "left" or "right" to match Legacy's left_stack/right_stack
-        self._current_beat: Optional[BeatData] = None
-        self._selected_arrow_id: Optional[str] = None
+        self._current_beat: BeatData | None = None
+        self._selected_arrow_id: str | None = None
 
         # Determine arrow color - use provided color or derive from side
         self._arrow_color = color if color else ("blue" if side == "left" else "red")
@@ -98,11 +97,11 @@ class AdjustmentPanel(QWidget):
         self._apply_color_styling()
 
         # UI components for turn controls (will be created in _create_turn_controls_widget)
-        self._hand_indicator: Optional[QLabel] = None
-        self._turn_display: Optional[QPushButton] = None
-        self._decrement_button: Optional[QPushButton] = None
-        self._increment_button: Optional[QPushButton] = None
-        self._motion_type_label: Optional[QLabel] = None
+        self._hand_indicator: QLabel | None = None
+        self._turn_display: QPushButton | None = None
+        self._decrement_button: QPushButton | None = None
+        self._increment_button: QPushButton | None = None
+        self._motion_type_label: QLabel | None = None
 
     def _create_turn_controls_widget(self):
         """Create widget containing existing turn controls"""
@@ -317,10 +316,7 @@ class AdjustmentPanel(QWidget):
     def _update_turn_display_value(self, turn_value: float):
         """Update the turn display with new value."""
         # Format like Legacy: show "fl" for float, otherwise show number
-        if turn_value == float("inf"):
-            display_text = "fl"
-        else:
-            display_text = str(turn_value)
+        display_text = "fl" if turn_value == float("inf") else str(turn_value)
 
         if self._turn_display:
             self._turn_display.setText(display_text)
@@ -387,7 +383,7 @@ class AdjustmentPanel(QWidget):
                 if self._current_beat:
                     self.beat_modified.emit(self._current_beat)
 
-    def set_beat(self, beat_data: Optional[BeatData]):
+    def set_beat(self, beat_data: BeatData | None):
         """Enhanced panel switching with perfect beat type detection"""
         self._current_beat = beat_data
 
@@ -403,7 +399,7 @@ class AdjustmentPanel(QWidget):
             self._update_turn_controls(beat_data)
             logger.debug("Showing turn controls for %s motion", self._arrow_color)
 
-    def _determine_panel_mode(self, beat_data: Optional[BeatData]) -> str:
+    def _determine_panel_mode(self, beat_data: BeatData | None) -> str:
         """Determine whether to show orientation picker or turns controls"""
         if not beat_data:
             return "orientation"

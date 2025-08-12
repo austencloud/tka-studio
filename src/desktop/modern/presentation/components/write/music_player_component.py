@@ -305,7 +305,7 @@ class MusicPlayerComponent(QFrame):
                 self.set_playing(False)
 
         except Exception as e:
-            logger.error(f"Failed to update music position: {e}")
+            logger.exception(f"Failed to update music position: {e}")
 
     def _update_button_states(self):
         """Update button enable/disable states."""

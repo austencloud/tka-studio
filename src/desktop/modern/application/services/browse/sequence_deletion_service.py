@@ -209,7 +209,7 @@ class SequenceDeletionService(QObject):
             logger.warning(f"File not found for deletion: {file_path}")
             return False
         except Exception as e:
-            logger.error(f"Failed to delete file {file_path}: {e}")
+            logger.exception(f"Failed to delete file {file_path}: {e}")
             return False
 
     def _delete_word_directory(self, word_directory: Path) -> bool:
@@ -235,14 +235,14 @@ class SequenceDeletionService(QObject):
             logger.warning(f"Directory not found for deletion: {word_directory}")
             return False
         except Exception as e:
-            logger.error(f"Failed to delete directory {word_directory}: {e}")
+            logger.exception(f"Failed to delete directory {word_directory}: {e}")
             return False
 
     def _cleanup_empty_directories(self):
         """Remove empty directories from the sequences directory."""
         try:
             # Walk the directory tree bottom-up to remove empty directories
-            for root, dirs, files in os.walk(self.sequences_directory, topdown=False):
+            for root, dirs, _files in os.walk(self.sequences_directory, topdown=False):
                 for dir_name in dirs:
                     dir_path = Path(root) / dir_name
                     try:
@@ -254,7 +254,7 @@ class SequenceDeletionService(QObject):
                         # Directory not empty or permission error - skip
                         continue
         except Exception as e:
-            logger.error(f"Error during directory cleanup: {e}")
+            logger.exception(f"Error during directory cleanup: {e}")
 
     def _is_directory_empty(self, directory: Path) -> bool:
         """Check if a directory is empty."""
@@ -307,7 +307,7 @@ class SequenceDeletionService(QObject):
                             )
 
         except Exception as e:
-            logger.error(f"Error fixing variation numbering: {e}")
+            logger.exception(f"Error fixing variation numbering: {e}")
 
     def _extract_variation_number(self, path: Path) -> int:
         """Extract variation number from filename."""

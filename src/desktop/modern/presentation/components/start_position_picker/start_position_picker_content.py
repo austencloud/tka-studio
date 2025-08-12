@@ -166,7 +166,7 @@ class StartPositionPickerContent(QWidget):
                         existing_widgets, update_callback, config
                     )
                 except Exception as e:
-                    logger.error(f"Fade transition failed: {e}")
+                    logger.exception(f"Fade transition failed: {e}")
                     # Fallback to direct update
                     update_callback()
                 finally:
@@ -177,7 +177,7 @@ class StartPositionPickerContent(QWidget):
             asyncio.create_task(run_fade_transition())
 
         except Exception as e:
-            logger.error(f"Error in fade: {e}")
+            logger.exception(f"Error in fade: {e}")
             self._is_transitioning = False
             self._load_positions_directly(grid_mode, is_advanced)
 
@@ -219,7 +219,7 @@ class StartPositionPickerContent(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Error loading positions for current mode: {e}")
+            logger.exception(f"Error loading positions for current mode: {e}")
             # Create fallback options
             self._create_fallback_options(grid_mode)
         finally:

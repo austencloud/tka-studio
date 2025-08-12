@@ -18,18 +18,18 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QFrame, QGridLayout, QGroupBox, QSizePolicy, QVBoxLayout
-from desktop.shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
 
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
+)
+from desktop.shared.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
+from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
 )
 
 
@@ -232,8 +232,8 @@ class OptionPickerSectionLayoutManager:
 
     def _show_actual_dimensions(self) -> None:
         """Show actual widget dimensions after Qt applies them (for debugging)."""
-        actual_width = self._section_widget.width()
-        actual_height = self._section_widget.height()
+        self._section_widget.width()
+        self._section_widget.height()
 
         # Calculate layout metrics if we have pictographs
         if self._pictographs_layout and self._pictographs_layout.count() > 0:
@@ -241,12 +241,11 @@ class OptionPickerSectionLayoutManager:
             first_item = self._pictographs_layout.itemAt(0)
             if first_item and first_item.widget():
                 frame_width = first_item.widget().width()
-                frame_height = first_item.widget().height()
+                first_item.widget().height()
 
                 # Calculate if 8 frames + spacing fit within section width
                 spacing = self._option_config_service.get_layout_config()["spacing"]
-                total_frames_width = 8 * frame_width + 7 * spacing
-                fits = total_frames_width <= actual_width
+                8 * frame_width + 7 * spacing
 
                 # This could be used for debugging or metrics
                 # Currently just calculated for potential future use

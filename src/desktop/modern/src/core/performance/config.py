@@ -4,11 +4,12 @@ Performance Configuration Management
 Provides configuration management for the TKA performance framework.
 Integrates with existing configuration patterns and supports environment-based settings.
 """
+from __future__ import annotations
 
+from dataclasses import dataclass
 import logging
 import os
-from dataclasses import dataclass
-from typing import Dict, List, Optional
+
 
 # Result pattern removed - using simple exceptions
 
@@ -37,7 +38,7 @@ class MonitoringConfig:
     system_metrics: bool = True
     qt_metrics: bool = True
     memory_tracking: bool = True
-    alert_thresholds: Dict[str, float] = None
+    alert_thresholds: dict[str, float] = None
 
     def __post_init__(self):
         if self.alert_thresholds is None:
@@ -56,7 +57,7 @@ class RegressionConfig:
     threshold_percent: float = 5.0
     baseline_days: int = 7
     auto_baseline_update: bool = True
-    critical_functions: List[str] = None
+    critical_functions: list[str] = None
 
     def __post_init__(self):
         if self.critical_functions is None:
@@ -82,7 +83,7 @@ class StorageConfig:
     retention_days: int = 30
     backup_enabled: bool = True
 
-    def with_database_path(self, new_path: str) -> "StorageConfig":
+    def with_database_path(self, new_path: str) -> StorageConfig:
         """Create a new StorageConfig with a different database path."""
         return StorageConfig(
             data_dir=self.data_dir,
@@ -109,7 +110,7 @@ class PerformanceConfig:
     environment: str = "development"
 
     @classmethod
-    def create_default(cls) -> "PerformanceConfig":
+    def create_default(cls) -> PerformanceConfig:
         """Create default performance configuration."""
         return cls(
             profiling=ProfilingConfig(),
@@ -120,7 +121,7 @@ class PerformanceConfig:
         )
 
     @classmethod
-    def from_environment(cls) -> "PerformanceConfig":
+    def from_environment(cls) -> PerformanceConfig:
         """
         Create configuration from environment variables.
 
@@ -200,7 +201,7 @@ class PerformanceConfig:
             return config
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to create performance configuration from environment: {e}"
             )
             return cls.create_default()
@@ -245,12 +246,12 @@ class PerformanceConfig:
             return True
 
         except Exception as e:
-            logger.error(f"Configuration validation failed: {e}")
+            logger.exception(f"Configuration validation failed: {e}")
             return False
 
 
 # Global configuration instance
-_global_config: Optional[PerformanceConfig] = None
+_global_config: PerformanceConfig | None = None
 
 
 def get_performance_config() -> PerformanceConfig:

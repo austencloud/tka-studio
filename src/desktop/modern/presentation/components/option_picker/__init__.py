@@ -15,7 +15,9 @@ All domain/application/presentation absolute imports are preserved.
 
 from __future__ import annotations
 
-from desktop.shared.application.services.option_picker.option_provider import OptionProvider
+from desktop.shared.application.services.option_picker.option_provider import (
+    OptionProvider,
+)
 
 # Core components (primary public API)
 from .components.option_picker import OptionPicker
@@ -33,11 +35,11 @@ from .types.letter_types import LetterType
 
 # Backward compatibility exports (maintain old interface)
 __all__ = [
+    # "PictographPoolManager", # Moved to application.services.option_picker.data.pool_manager
+    "LetterType",
     "OptionPicker",
     "OptionPickerWidget",
     "OptionProvider",
-    # "PictographPoolManager", # Moved to application.services.option_picker.data.pool_manager
-    "LetterType",
 ]
 
 __version__ = "2.0.0"

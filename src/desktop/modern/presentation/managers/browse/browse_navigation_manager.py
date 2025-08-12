@@ -82,7 +82,7 @@ class BrowseNavigationManager(QObject):
                 logger.warning("⚠️ Viewer panel set to None")
 
         except Exception as e:
-            logger.error(f"❌ Failed to set viewer panel: {e}")
+            logger.exception(f"❌ Failed to set viewer panel: {e}")
             import traceback
 
             traceback.print_exc()
@@ -148,7 +148,7 @@ class BrowseNavigationManager(QObject):
             self.navigation_requested.emit(BrowsePanel.VIEWER.value, sequence_data)
 
         except Exception as e:
-            logger.error(f"❌ Failed to navigate to viewer: {e}")
+            logger.exception(f"❌ Failed to navigate to viewer: {e}")
             import traceback
 
             traceback.print_exc()
@@ -258,7 +258,7 @@ class BrowseNavigationManager(QObject):
                 self.navigation_requested.emit(target_panel.value, data)
 
         except Exception as e:
-            logger.error(f"❌ Failed to navigate to {target_panel.value}: {e}")
+            logger.exception(f"❌ Failed to navigate to {target_panel.value}: {e}")
 
     def get_navigation_breadcrumb(self) -> str:
         """

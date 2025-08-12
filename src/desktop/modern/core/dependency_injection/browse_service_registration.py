@@ -167,5 +167,5 @@ def validate_browse_service_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"❌ Browse service registration validation failed: {e}")
+        logger.exception(f"❌ Browse service registration validation failed: {e}")
         return False

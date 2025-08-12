@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.sequence_data import SequenceData
@@ -191,7 +191,7 @@ class ISessionCoordinator(ABC):
         """
 
     @abstractmethod
-    def coordinate_session_load(self) -> Optional[dict]:
+    def coordinate_session_load(self) -> dict | None:
         """
         Coordinate loading session data from storage.
 
@@ -240,7 +240,7 @@ class IWorkbenchStateCoordinator(ABC):
 
     @abstractmethod
     def update_sequence_state(
-        self, sequence_data: Optional[SequenceData], from_restoration: bool = False
+        self, sequence_data: SequenceData | None, from_restoration: bool = False
     ) -> bool:
         """
         Update sequence state during restoration.
@@ -255,7 +255,7 @@ class IWorkbenchStateCoordinator(ABC):
 
     @abstractmethod
     def update_start_position_state(
-        self, start_position_data: Optional[BeatData], from_restoration: bool = False
+        self, start_position_data: BeatData | None, from_restoration: bool = False
     ) -> bool:
         """
         Update start position state during restoration.

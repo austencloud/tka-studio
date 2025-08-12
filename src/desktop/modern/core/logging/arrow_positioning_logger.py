@@ -59,7 +59,7 @@ class ArrowPositioningLogger:
             "start_time": self.current_letter_start_time,
         }
 
-    def finish_letter_positioning(self, letter: str = None):
+    def finish_letter_positioning(self, letter: str | None = None):
         """Finish tracking and log summary for letter positioning."""
         letter = letter or self.current_letter
         if not letter or letter not in self.letter_operations:
@@ -146,7 +146,7 @@ class ArrowPositioningLogger:
                             str(e)
                         )
 
-                    self.smart_logger.logger.error(
+                    self.smart_logger.logger.exception(
                         f"❌ Directional processing failed: {e!s}"
                     )
                     raise
@@ -237,7 +237,7 @@ class ArrowPositioningLogger:
         total_calculations = 0
         total_errors = 0
 
-        for letter, ops in self.letter_operations.items():
+        for _letter, ops in self.letter_operations.items():
             total_duration += (time.time() - ops["start_time"]) * 1000
             total_arrows += ops["arrows_processed"]
             total_calculations += ops["calculations"]

@@ -7,12 +7,14 @@ resource tracking, and memory leak prevention.
 ARCHITECTURE: Provides automatic lifecycle management for Qt objects with
 smart cleanup registration, resource tracking, and automatic memory management.
 """
+from __future__ import annotations
 
-import logging
-import weakref
 from dataclasses import dataclass
+import logging
 from threading import Lock
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, Callable, TypeVar
+import weakref
+
 
 # Import Qt modules with compatibility
 try:
@@ -62,9 +64,9 @@ class QtObjectFactory:
 
     def __init__(self):
         """Initialize Qt object factory."""
-        self._tracked_objects: Dict[int, weakref.ReferenceType] = {}
-        self._cleanup_handlers: Dict[int, List[Callable]] = {}
-        self._object_metadata: Dict[int, Dict[str, Any]] = {}
+        self._tracked_objects: dict[int, weakref.ReferenceType] = {}
+        self._cleanup_handlers: dict[int, list[Callable]] = {}
+        self._object_metadata: dict[int, dict[str, Any]] = {}
         self._metrics = LifecycleMetrics()
         self._lock = Lock()
 
@@ -73,7 +75,7 @@ class QtObjectFactory:
 
         logger.info("Qt object factory initialized with automatic lifecycle management")
 
-    def create_widget(self, widget_class: Type[T], *args, **kwargs) -> T:
+    def create_widget(self, widget_class: type[T], *args, **kwargs) -> T:
         """
         Create a widget with automatic lifecycle management.
 
@@ -100,7 +102,7 @@ class QtObjectFactory:
         logger.debug(f"Created widget: {widget_class.__name__} (id: {id(widget)})")
         return widget
 
-    def create_object(self, object_class: Type[T], *args, **kwargs) -> T:
+    def create_object(self, object_class: type[T], *args, **kwargs) -> T:
         """
         Create a QObject with automatic lifecycle management.
 
@@ -173,7 +175,7 @@ class QtObjectFactory:
                         handler()
                         self._metrics.cleanup_handlers_executed += 1
                     except Exception as e:
-                        logger.error(f"Error executing cleanup handler: {e}")
+                        logger.exception(f"Error executing cleanup handler: {e}")
 
                 del self._cleanup_handlers[obj_id]
 
@@ -194,13 +196,13 @@ class QtObjectFactory:
             logger.info(f"Cleaning up {len(self._tracked_objects)} tracked Qt objects")
 
             # Execute all remaining cleanup handlers
-            for obj_id, handlers in self._cleanup_handlers.items():
+            for _obj_id, handlers in self._cleanup_handlers.items():
                 for handler in handlers:
                     try:
                         handler()
                         self._metrics.cleanup_handlers_executed += 1
                     except Exception as e:
-                        logger.error(f"Error in final cleanup: {e}")
+                        logger.exception(f"Error in final cleanup: {e}")
 
             # Clear all tracking data
             self._tracked_objects.clear()
@@ -218,7 +220,7 @@ class QtObjectFactory:
             )
             return self._metrics
 
-    def get_tracked_objects_info(self) -> List[Dict[str, Any]]:
+    def get_tracked_objects_info(self) -> list[dict[str, Any]]:
         """Get information about currently tracked objects."""
         with self._lock:
             info = []
@@ -255,13 +257,13 @@ class AutoManagedWidget(QWidget):
     and memory management for Qt widgets.
     """
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         """Initialize auto-managed widget."""
         super().__init__(parent)
 
         # Track resources
-        self._managed_resources: List[Any] = []
-        self._cleanup_callbacks: List[Callable] = []
+        self._managed_resources: list[Any] = []
+        self._cleanup_callbacks: list[Callable] = []
         self._factory_registered = False
 
         logger.debug(f"AutoManagedWidget created: {self.__class__.__name__}")
@@ -298,7 +300,7 @@ class AutoManagedWidget(QWidget):
                 try:
                     callback()
                 except Exception as e:
-                    logger.error(f"Error in cleanup callback: {e}")
+                    logger.exception(f"Error in cleanup callback: {e}")
 
             # Cleanup managed resources
             for resource in self._managed_resources:
@@ -310,7 +312,7 @@ class AutoManagedWidget(QWidget):
                     elif hasattr(resource, "close"):
                         resource.close()
                 except Exception as e:
-                    logger.error(f"Error cleaning up resource: {e}")
+                    logger.exception(f"Error cleaning up resource: {e}")
 
             # Clear lists
             self._managed_resources.clear()
@@ -321,7 +323,7 @@ class AutoManagedWidget(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Error in auto cleanup: {e}")
+            logger.exception(f"Error in auto cleanup: {e}")
 
 
 # Note: AsyncViewableComponentBase is defined in component_base.py to avoid circular imports
@@ -330,7 +332,7 @@ AsyncViewableComponentBase = AutoManagedWidget  # Fallback for direct usage
 
 
 # Global Qt object factory instance
-_qt_factory: Optional[QtObjectFactory] = None
+_qt_factory: QtObjectFactory | None = None
 
 
 def qt_factory() -> QtObjectFactory:

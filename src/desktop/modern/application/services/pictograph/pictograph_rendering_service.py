@@ -51,6 +51,9 @@ from desktop.modern.domain.models import MotionData
 
 # Import from shared application services
 sys.path.insert(0, str(_project_root / "src"))
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
 from desktop.shared.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     create_pictograph_renderer,
@@ -60,10 +63,6 @@ from desktop.shared.application.services.pictograph.asset_management.pictograph_
 )
 from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
-)
-
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
 )
 
 
@@ -180,7 +179,7 @@ class PictographRenderingService:
             # Delegate to Qt adapter which uses the core service
             return self._qt_adapter.render_grid(scene, grid_mode)
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Grid rendering failed: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Grid rendering failed: {e}")
             return None
 
     def render_prop(
@@ -218,7 +217,7 @@ class PictographRenderingService:
                 scene, color, motion_dict, pictograph_data
             )
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Prop rendering failed: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Prop rendering failed: {e}")
             return None
 
     def render_glyph(
@@ -239,7 +238,7 @@ class PictographRenderingService:
             # Delegate to Qt adapter which uses the core service
             return self._qt_adapter.render_glyph(scene, glyph_type, glyph_data)
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Glyph rendering failed: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Glyph rendering failed: {e}")
             return None
 
     def get_cache_stats(self) -> dict[str, Any]:
@@ -264,7 +263,7 @@ class PictographRenderingService:
 
             return combined_stats
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Failed to get cache stats: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Failed to get cache stats: {e}")
             return {"error": str(e)}
 
     def clear_rendered_props(self):
@@ -283,7 +282,7 @@ class PictographRenderingService:
 
             logger.info("🧹 [RENDERING_SERVICE] Cleared all caches across services")
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Failed to clear caches: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Failed to clear caches: {e}")
 
     def get_cache_info(self) -> str:
         """Get detailed cache information for debugging."""
@@ -303,7 +302,7 @@ class PictographRenderingService:
                 f"Adapter Stats: {cache_stats.get('adapter_stats', 'unavailable')}"
             )
         except Exception as e:
-            logger.error(f"❌ [RENDERING_SERVICE] Failed to get cache info: {e}")
+            logger.exception(f"❌ [RENDERING_SERVICE] Failed to get cache info: {e}")
             return f"Error getting cache info: {e}"
 
     # ============================================================================

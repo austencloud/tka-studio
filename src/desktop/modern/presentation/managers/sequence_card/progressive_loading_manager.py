@@ -216,8 +216,7 @@ class ProgressiveLoadingManager:
                 pass
 
         # Check if we've finished loading
-        if loaded_count >= total_cards:
-            if self._progressive_timer:
-                self._progressive_timer.stop()
-                self._progressive_timer.deleteLater()
-                self._progressive_timer = None
+        if loaded_count >= total_cards and self._progressive_timer:
+            self._progressive_timer.stop()
+            self._progressive_timer.deleteLater()
+            self._progressive_timer = None

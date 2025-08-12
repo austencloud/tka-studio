@@ -3,13 +3,13 @@ Simple UI Testing Framework - Chunk 3: Button Testing with Legacy Guidance
 
 Tests buttons and provides clear guidance for AI agents when buttons fail.
 """
+from __future__ import annotations
 
 import time
-from typing import Dict, List, Optional, Any
-from PyQt6.QtWidgets import QPushButton, QWidget
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QMouseEvent
+
+from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QPushButton
 
 from desktop.modern.core.testing.ai_agent_helpers import AITestResult
 
@@ -194,14 +194,14 @@ class ButtonTester:
         except Exception as e:
             print(f"❌ Exception testing button {button_name}: {e}")
             return self._create_failure_result(
-                button_name, [f"Exception during testing: {str(e)}"], start_time
+                button_name, [f"Exception during testing: {e!s}"], start_time
             )
 
     def _perform_button_click(self, button_widget: QPushButton) -> bool:
         """Perform the actual button click and verify it worked."""
         try:
             # Record initial state
-            initial_state = self._capture_application_state()
+            self._capture_application_state()
 
             # Perform click
             QTest.mouseClick(button_widget, Qt.MouseButton.LeftButton)
@@ -213,7 +213,7 @@ class ButtonTester:
             time.sleep(0.1)
 
             # Check if state changed (indicates button worked)
-            final_state = self._capture_application_state()
+            self._capture_application_state()
 
             # Basic success check - if no exception occurred, consider it successful
             # More sophisticated checks could be added here
@@ -254,9 +254,9 @@ class ButtonTester:
     def _create_failure_result(
         self,
         button_name: str,
-        errors: List[str],
+        errors: list[str],
         start_time: float,
-        warnings: List[str] = None,
+        warnings: list[str] | None = None,
     ) -> AITestResult:
         """Create a failure result with legacy guidance."""
         self._print_legacy_guidance(button_name)
@@ -280,7 +280,7 @@ class ButtonTester:
         print(f"   📁 File: {guidance.get('file', 'Unknown')}")
         print(f"   ⚙️  Method: {guidance.get('method', 'Unknown')}")
         print(f"   🔗 Signal: {guidance.get('signal', 'Unknown')}")
-        print(f"   🐛 Common Issues:")
+        print("   🐛 Common Issues:")
 
         for issue in guidance.get("common_issues", []):
             print(f"      • {issue}")
@@ -311,7 +311,7 @@ class ButtonTester:
         overall_success = failed_tests == 0
         execution_time = time.time() - start_time
 
-        print(f"\n📊 BUTTON TESTING SUMMARY:")
+        print("\n📊 BUTTON TESTING SUMMARY:")
         print(f"   ✅ Successful: {successful_tests}/{len(results)}")
         print(f"   ❌ Failed: {failed_tests}/{len(results)}")
         print(f"   ⏱️  Total time: {execution_time:.2f}s")

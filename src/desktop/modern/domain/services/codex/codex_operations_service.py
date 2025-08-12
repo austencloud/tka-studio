@@ -90,7 +90,7 @@ class CodexOperationsService:
             return PictographData.from_dict(data_dict)
 
         except Exception as e:
-            logger.error(f"Failed to rotate pictograph data: {e}")
+            logger.exception(f"Failed to rotate pictograph data: {e}")
             return pictograph_data  # Return original on error
 
     def mirror_pictograph_data(self, pictograph_data: PictographData) -> PictographData:
@@ -115,7 +115,7 @@ class CodexOperationsService:
             return PictographData.from_dict(data_dict)
 
         except Exception as e:
-            logger.error(f"Failed to mirror pictograph data: {e}")
+            logger.exception(f"Failed to mirror pictograph data: {e}")
             return pictograph_data  # Return original on error
 
     def swap_colors_pictograph_data(
@@ -146,7 +146,7 @@ class CodexOperationsService:
             return PictographData.from_dict(data_dict)
 
         except Exception as e:
-            logger.error(f"Failed to swap colors in pictograph data: {e}")
+            logger.exception(f"Failed to swap colors in pictograph data: {e}")
             return pictograph_data  # Return original on error
 
     def _rotate_position(self, position: str) -> str:
@@ -204,7 +204,7 @@ class CodexOperationsService:
                     result[letter] = pictograph_data
 
             except Exception as e:
-                logger.error(f"Failed to apply {operation} to letter {letter}: {e}")
+                logger.exception(f"Failed to apply {operation} to letter {letter}: {e}")
                 result[letter] = pictograph_data  # Keep original on error
 
         return result

@@ -4,9 +4,9 @@ Positioning Domain Models
 Immutable data models for arrow and prop positioning results.
 Follows TKA's clean architecture and immutable domain model patterns.
 """
+from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -16,9 +16,9 @@ class ArrowPositionResult:
     x: float
     y: float
     rotation: float
-    location: Optional[str] = None
+    location: str | None = None
 
-    def update(self, **kwargs) -> "ArrowPositionResult":
+    def update(self, **kwargs) -> ArrowPositionResult:
         """Create updated copy with new values."""
         current_values = {
             "x": self.x,
@@ -39,7 +39,7 @@ class PropPositionResult:
     rotation: float
     separation_applied: bool = False
 
-    def update(self, **kwargs) -> "PropPositionResult":
+    def update(self, **kwargs) -> PropPositionResult:
         """Create updated copy with new values."""
         current_values = {
             "x": self.x,

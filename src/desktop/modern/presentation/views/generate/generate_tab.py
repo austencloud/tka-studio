@@ -8,7 +8,6 @@ and GenerateTabController in a tab-compatible interface.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
@@ -38,7 +37,7 @@ class GenerateTab(QWidget):
     error_occurred = pyqtSignal(str)
     sequence_generated = pyqtSignal(object)  # Generated sequence data
 
-    def __init__(self, container: Optional[DIContainer] = None, parent: QWidget = None):
+    def __init__(self, container: DIContainer | None = None, parent: QWidget = None):
         """
         Initialize the generate tab.
 
@@ -49,8 +48,8 @@ class GenerateTab(QWidget):
         super().__init__(parent)
 
         self.container = container
-        self._generate_panel: Optional[GeneratePanel] = None
-        self._controller: Optional[GenerateTabController] = None
+        self._generate_panel: GeneratePanel | None = None
+        self._controller: GenerateTabController | None = None
 
         self._setup_ui()
         self._connect_signals()
@@ -75,7 +74,7 @@ class GenerateTab(QWidget):
             """)
 
         except Exception as e:
-            logger.error(f"Failed to setup Generate Tab UI: {e}")
+            logger.exception(f"Failed to setup Generate Tab UI: {e}")
             self.error_occurred.emit(f"Failed to setup Generate Tab: {e}")
             self._create_error_fallback()
 
@@ -128,11 +127,11 @@ class GenerateTab(QWidget):
             logger.warning(f"Generate Tab: Generation failed - {error_msg}")
             self.error_occurred.emit(error_msg)
 
-    def get_generate_panel(self) -> Optional[GeneratePanel]:
+    def get_generate_panel(self) -> GeneratePanel | None:
         """Get the underlying generate panel for direct access."""
         return self._generate_panel
 
-    def get_controller(self) -> Optional[GenerateTabController]:
+    def get_controller(self) -> GenerateTabController | None:
         """Get the generation controller for direct access."""
         return self._controller
 

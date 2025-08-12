@@ -4,15 +4,17 @@ Performance Metrics Collection and Analysis
 Provides comprehensive metrics collection, statistical analysis,
 and performance trend detection for the TKA performance framework.
 """
+from __future__ import annotations
 
-import statistics
-import numpy as np
 from dataclasses import dataclass, field
-from typing import Dict, List, Any
 from datetime import datetime
 from enum import Enum
-
 import logging
+import statistics
+from typing import Any
+
+import numpy as np
+
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +52,8 @@ class FunctionMetrics:
     cache_misses: int = 0
 
     # Historical data for trend analysis
-    execution_times: List[float] = field(default_factory=list)
-    memory_usages: List[float] = field(default_factory=list)
+    execution_times: list[float] = field(default_factory=list)
+    memory_usages: list[float] = field(default_factory=list)
 
     def update_statistics(self):
         """Update calculated statistics from raw data."""
@@ -59,7 +61,7 @@ class FunctionMetrics:
             self.avg_time = statistics.mean(self.execution_times)
             if len(self.execution_times) > 1:
                 self.std_dev = statistics.stdev(self.execution_times)
-            
+
             # Use numpy for percentile calculations if available
             try:
                 self.percentile_95 = np.percentile(self.execution_times, 95)
@@ -122,10 +124,10 @@ class PerformanceMetrics:
     """
 
     def __init__(self):
-        self.function_metrics: Dict[str, FunctionMetrics] = {}
-        self.system_metrics: List[SystemMetrics] = []
-        self.qt_event_metrics: Dict[str, QtEventMetrics] = {}
-        self.performance_baselines: Dict[str, float] = {}
+        self.function_metrics: dict[str, FunctionMetrics] = {}
+        self.system_metrics: list[SystemMetrics] = []
+        self.qt_event_metrics: dict[str, QtEventMetrics] = {}
+        self.performance_baselines: dict[str, float] = {}
 
     def record_function_execution(self, function_name: str, execution_time: float,
                                 memory_usage: float = 0.0):
@@ -179,7 +181,7 @@ class PerformanceMetrics:
         metrics.avg_time = metrics.total_time / metrics.count
         metrics.max_time = max(metrics.max_time, execution_time)
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Generate comprehensive performance summary."""
         if not self.function_metrics:
             return {"error": "No performance data available"}
@@ -256,7 +258,7 @@ class PerformanceMetrics:
             "optimization_recommendations": self._generate_optimization_recommendations()
         }
 
-    def _get_collection_period(self) -> Dict[str, Any]:
+    def _get_collection_period(self) -> dict[str, Any]:
         """Get the time period over which data was collected."""
         if not self.system_metrics:
             return {"error": "No system metrics available"}
@@ -270,7 +272,7 @@ class PerformanceMetrics:
             "duration_seconds": (end_time - start_time).total_seconds()
         }
 
-    def _generate_optimization_recommendations(self) -> List[Dict[str, str]]:
+    def _generate_optimization_recommendations(self) -> list[dict[str, str]]:
         """Generate AI-powered optimization recommendations."""
         recommendations = []
 
@@ -308,8 +310,8 @@ class PerformanceMetrics:
 
         return recommendations
 
-    def detect_performance_regressions(self, baseline_metrics: Dict[str, FunctionMetrics],
-                                     threshold_percent: float = 5.0) -> List[Dict[str, Any]]:
+    def detect_performance_regressions(self, baseline_metrics: dict[str, FunctionMetrics],
+                                     threshold_percent: float = 5.0) -> list[dict[str, Any]]:
         """Detect performance regressions compared to baseline metrics."""
         regressions = []
 

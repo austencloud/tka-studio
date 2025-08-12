@@ -5,12 +5,11 @@ This test establishes a baseline for the current arrow positioning system
 before refactoring. It captures the expected outputs for various inputs
 to ensure the refactored system produces identical results.
 """
+from __future__ import annotations
 
 import os
 import sys
-from typing import Any, Dict, Tuple
 
-import pytest
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -32,7 +31,6 @@ from application.services.positioning.arrows.orchestration.arrow_adjustment_calc
 from application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
     ArrowPositioningOrchestrator,
 )
-from core.types.geometry import Point
 from domain.models.arrow_data import ArrowData
 from domain.models.enums import Location
 from domain.models.motion_models import MotionData, MotionType, RotationDirection
@@ -78,10 +76,10 @@ class TestArrowPositioningBaseline:
         return ArrowData(color=color, is_visible=True)
 
     def create_test_pictograph(
-        self, motions: Dict[str, MotionData], letter: str = "A"
+        self, motions: dict[str, MotionData], letter: str = "A"
     ) -> PictographData:
         """Create test pictograph data."""
-        arrows = {color: self.create_test_arrow(color) for color in motions.keys()}
+        arrows = {color: self.create_test_arrow(color) for color in motions}
         return PictographData(letter=letter, arrows=arrows, motions=motions)
 
     def test_static_motion_baseline(self):
@@ -123,8 +121,8 @@ class TestArrowPositioningBaseline:
 
         # Test individual services
         location = self.location_calculator.calculate_location(motion, pictograph)
-        rotation = self.rotation_calculator.calculate_rotation(motion, location)
-        initial_pos = self.coordinate_system.get_initial_position(motion, location)
+        self.rotation_calculator.calculate_rotation(motion, location)
+        self.coordinate_system.get_initial_position(motion, location)
 
         # Test full orchestrator
         x, y, rot = self.orchestrator.calculate_arrow_position(

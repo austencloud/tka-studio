@@ -4,19 +4,21 @@ Domain models for Modern Generate Tab.
 These immutable data classes represent the core business entities
 for sequence generation, following Modern's clean architecture principles.
 """
+from __future__ import annotations
 
-from typing import Optional, Set, List, TYPE_CHECKING
 from dataclasses import dataclass, replace
+from typing import TYPE_CHECKING
+
 
 # Use TYPE_CHECKING to avoid circular imports
 if TYPE_CHECKING:
     from desktop.modern.core.interfaces.generation_services import (
-        GenerationMode,
-        PropContinuity,
-        LetterType,
-        SliceSize,
         CAPType,
         GenerationMetadata,
+        GenerationMode,
+        LetterType,
+        PropContinuity,
+        SliceSize,
     )
 
 
@@ -24,15 +26,15 @@ if TYPE_CHECKING:
 class GenerationConfig:
     """Immutable configuration for sequence generation"""
 
-    mode: "GenerationMode" = None
+    mode: GenerationMode = None
     length: int = 16
     level: int = 1
     turn_intensity: float = 1.0
-    prop_continuity: "PropContinuity" = None
-    letter_types: Optional[Set["LetterType"]] = None
-    slice_size: "SliceSize" = None
-    cap_type: Optional["CAPType"] = None
-    start_position_key: Optional[str] = None
+    prop_continuity: PropContinuity = None
+    letter_types: set[LetterType] | None = None
+    slice_size: SliceSize = None
+    cap_type: CAPType | None = None
+    start_position_key: str | None = None
 
     def __post_init__(self):
         # Set defaults if None
@@ -58,7 +60,7 @@ class GenerationConfig:
                 },
             )
 
-    def with_updates(self, **kwargs) -> "GenerationConfig":
+    def with_updates(self, **kwargs) -> GenerationConfig:
         """Create a new config with updated values"""
         return replace(self, **kwargs)
 
@@ -78,11 +80,11 @@ class GenerationResult:
     """Result of a sequence generation operation"""
 
     success: bool
-    sequence_data: Optional[List[dict]] = None
-    start_position_data: Optional[dict] = None
-    metadata: Optional["GenerationMetadata"] = None
-    error_message: Optional[str] = None
-    warnings: Optional[List[str]] = None
+    sequence_data: list[dict] | None = None
+    start_position_data: dict | None = None
+    metadata: GenerationMetadata | None = None
+    error_message: str | None = None
+    warnings: list[str] | None = None
 
     def __post_init__(self):
         if self.warnings is None:
@@ -95,21 +97,21 @@ class GenerationState:
 
     config: GenerationConfig
     is_generating: bool = False
-    last_result: Optional[GenerationResult] = None
-    validation_errors: Optional[List[str]] = None
+    last_result: GenerationResult | None = None
+    validation_errors: list[str] | None = None
 
     def __post_init__(self):
         if self.validation_errors is None:
             object.__setattr__(self, "validation_errors", [])
 
-    def with_config(self, config: GenerationConfig) -> "GenerationState":
+    def with_config(self, config: GenerationConfig) -> GenerationState:
         """Create new state with updated config"""
         return replace(self, config=config)
 
-    def with_result(self, result: GenerationResult) -> "GenerationState":
+    def with_result(self, result: GenerationResult) -> GenerationState:
         """Create new state with generation result"""
         return replace(self, last_result=result, is_generating=False)
 
-    def start_generation(self) -> "GenerationState":
+    def start_generation(self) -> GenerationState:
         """Create new state marking generation as started"""
         return replace(self, is_generating=True)

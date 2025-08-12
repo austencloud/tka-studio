@@ -8,7 +8,7 @@ that follow TKA's clean architecture principles.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.commands.start_position_commands import SetStartPositionCommand
 from desktop.modern.core.types import Size
@@ -22,7 +22,7 @@ class IStartPositionDataService(ABC):
     @abstractmethod
     def get_position_data(
         self, position_key: str, grid_mode: str = "diamond"
-    ) -> Optional[PictographData]:
+    ) -> PictographData | None:
         """
         Get pictograph data for a start position.
 
@@ -49,7 +49,7 @@ class IStartPositionDataService(ABC):
     @abstractmethod
     def get_position_beat_data(
         self, position_key: str, grid_mode: str = "diamond"
-    ) -> Optional[BeatData]:
+    ) -> BeatData | None:
         """
         Get complete beat data for a start position.
 
@@ -169,7 +169,7 @@ class IStartPositionOrchestrator(ABC):
     @abstractmethod
     def get_position_data_for_display(
         self, position_key: str, grid_mode: str
-    ) -> Optional[PictographData]:
+    ) -> PictographData | None:
         """
         Get position data optimized for display in the UI.
 

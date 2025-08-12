@@ -1,6 +1,7 @@
-import os
-from typing import Optional, List
+from __future__ import annotations
+
 import logging
+import os
 
 
 class CacheManager:
@@ -22,7 +23,7 @@ class CacheManager:
                 if os.path.isfile(file_path):
                     os.unlink(file_path)
             except Exception as e:
-                self.logger.error(f"Error deleting cache file {filename}: {e}")
+                self.logger.exception(f"Error deleting cache file {filename}: {e}")
 
 
 class AssetManager:
@@ -35,7 +36,7 @@ class AssetManager:
     def asset_exists(self, filename: str) -> bool:
         return os.path.exists(self.get_asset_path(filename))
 
-    def list_assets(self, extension: Optional[str] = None) -> List[str]:
+    def list_assets(self, extension: str | None = None) -> list[str]:
         assets = []
         for filename in os.listdir(self.assets_path):
             if extension is None or filename.endswith(extension):

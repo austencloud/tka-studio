@@ -9,8 +9,10 @@ from __future__ import annotations
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from desktop.modern.application.services.browse.dictionary_data_manager import DictionaryDataManager
 from desktop.modern.application.services.browse.browse_service import BrowseService
+from desktop.modern.application.services.browse.dictionary_data_manager import (
+    DictionaryDataManager,
+)
 from desktop.modern.domain.models.browse_models import FilterType
 from desktop.modern.presentation.styles.mixins import StyleMixin
 

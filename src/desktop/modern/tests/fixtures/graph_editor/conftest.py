@@ -6,35 +6,38 @@ Graph Editor Test Configuration
 Provides pytest fixtures and configuration for graph editor testing.
 Follows TKA testing protocols and architectural patterns.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
-from typing import Dict, Any
+import sys
+from unittest.mock import Mock
+
 import pytest
-from unittest.mock import Mock, MagicMock
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(modern_src))
 
 # Import TKA testing infrastructure
-from core.testing.ai_agent_helpers import TKAAITestHelper
 from core.application.application_factory import ApplicationFactory
+from core.testing.ai_agent_helpers import TKAAITestHelper
 
-# Import mock infrastructure
-from .mock_services import (
-    MockGraphEditorService,
-    MockDataFlowService,
-    MockHotkeyService,
-    create_all_mock_services,
-)
 from .mock_beat_data import (
+    GraphEditorTestData,
+    create_complex_beat,
+    create_regular_beat,
     create_sample_beat_data,
     create_sample_sequence_data,
     create_start_position_beat,
-    create_regular_beat,
-    create_complex_beat,
-    GraphEditorTestData,
+)
+
+# Import mock infrastructure
+from .mock_services import (
+    MockDataFlowService,
+    MockGraphEditorService,
+    MockHotkeyService,
+    create_all_mock_services,
 )
 
 
@@ -46,7 +49,7 @@ def qapp():
     app = QApplication.instance()
     if app is None:
         app = QApplication([])
-    yield app
+    return app
     # Don't quit the app as it might be used by other tests
 
 
@@ -158,7 +161,6 @@ def mock_parent_widget(qapp):
 @pytest.fixture
 def mock_workbench(qapp, all_mock_services):
     """Provide mock workbench for integration testing."""
-    from PyQt6.QtWidgets import QWidget
 
     workbench = Mock()
     workbench.container = Mock()

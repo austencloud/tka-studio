@@ -5,18 +5,23 @@ Provides persistent storage for performance metrics, session data,
 and historical performance information. Uses SQLite for local storage
 with proper schema management and data retention policies.
 """
+from __future__ import annotations
 
+from datetime import datetime, timedelta
 import json
 import logging
+from pathlib import Path
 import sqlite3
 import threading
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Result pattern removed - using simple exceptions
-from desktop.modern.core.performance.config import PerformanceConfig, get_performance_config
+from desktop.modern.core.performance.config import (
+    PerformanceConfig,
+    get_performance_config,
+)
 from desktop.modern.core.performance.profiler import ProfilerSession
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +38,7 @@ class PerformanceStorage:
     - Thread-safe operations
     """
 
-    def __init__(self, config: Optional[PerformanceConfig] = None):
+    def __init__(self, config: PerformanceConfig | None = None):
         self.config = config or get_performance_config()
         self._lock = threading.RLock()
 
@@ -138,7 +143,7 @@ class PerformanceStorage:
                 logger.info("Performance database initialized successfully")
 
         except Exception as e:
-            logger.error(f"Failed to initialize performance database: {e}")
+            logger.exception(f"Failed to initialize performance database: {e}")
             raise
 
     def save_session(self, session: ProfilerSession) -> Result[bool, AppError]:
@@ -169,7 +174,7 @@ class PerformanceStorage:
                     for func_name, metrics in session.function_metrics.items():
                         conn.execute(
                             """INSERT INTO function_metrics
-                               (session_id, function_name, call_count, total_time, avg_time, min_time, max_time, 
+                               (session_id, function_name, call_count, total_time, avg_time, min_time, max_time,
                                 memory_total, memory_avg, cache_hits, cache_misses)
                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                             (
@@ -220,7 +225,7 @@ class PerformanceStorage:
 
     def get_session(
         self, session_id: str
-    ) -> Result[Optional[Dict[str, Any]], AppError]:
+    ) -> Result[dict[str, Any] | None, AppError]:
         """
         Retrieve a session from the database.
 
@@ -281,7 +286,7 @@ class PerformanceStorage:
 
     def get_recent_sessions(
         self, limit: int = 10
-    ) -> Result[List[Dict[str, Any]], AppError]:
+    ) -> Result[list[dict[str, Any]], AppError]:
         """
         Get recent profiling sessions.
 
@@ -292,31 +297,30 @@ class PerformanceStorage:
             Result containing list of recent sessions
         """
         try:
-            with self._lock:
-                with sqlite3.connect(self.db_path) as conn:
-                    conn.row_factory = sqlite3.Row
+            with self._lock, sqlite3.connect(self.db_path) as conn:
+                conn.row_factory = sqlite3.Row
 
-                    rows = conn.execute(
-                        "SELECT * FROM sessions ORDER BY start_time DESC LIMIT ?",
-                        (limit,),
-                    ).fetchall()
+                rows = conn.execute(
+                    "SELECT * FROM sessions ORDER BY start_time DESC LIMIT ?",
+                    (limit,),
+                ).fetchall()
 
-                    sessions = []
-                    for row in rows:
-                        sessions.append(
-                            {
-                                "session_id": row["session_id"],
-                                "start_time": row["start_time"],
-                                "end_time": row["end_time"],
-                                "metadata": (
-                                    json.loads(row["metadata"])
-                                    if row["metadata"]
-                                    else {}
-                                ),
-                            }
-                        )
+                sessions = []
+                for row in rows:
+                    sessions.append(
+                        {
+                            "session_id": row["session_id"],
+                            "start_time": row["start_time"],
+                            "end_time": row["end_time"],
+                            "metadata": (
+                                json.loads(row["metadata"])
+                                if row["metadata"]
+                                else {}
+                            ),
+                        }
+                    )
 
-                    return success(sessions)
+                return success(sessions)
 
         except Exception as e:
             return failure(
@@ -329,7 +333,7 @@ class PerformanceStorage:
 
     def get_function_performance_history(
         self, function_name: str, days: int = 7
-    ) -> Result[List[Dict[str, Any]], AppError]:
+    ) -> Result[list[dict[str, Any]], AppError]:
         """
         Get performance history for a specific function.
 
@@ -343,21 +347,20 @@ class PerformanceStorage:
         try:
             cutoff_date = datetime.now() - timedelta(days=days)
 
-            with self._lock:
-                with sqlite3.connect(self.db_path) as conn:
-                    conn.row_factory = sqlite3.Row
+            with self._lock, sqlite3.connect(self.db_path) as conn:
+                conn.row_factory = sqlite3.Row
 
-                    rows = conn.execute(
-                        """SELECT fm.*, s.start_time 
+                rows = conn.execute(
+                    """SELECT fm.*, s.start_time
                            FROM function_metrics fm
                            JOIN sessions s ON fm.session_id = s.session_id
                            WHERE fm.function_name = ? AND s.start_time >= ?
                            ORDER BY s.start_time""",
-                        (function_name, cutoff_date),
-                    ).fetchall()
+                    (function_name, cutoff_date),
+                ).fetchall()
 
-                    history = [dict(row) for row in rows]
-                    return success(history)
+                history = [dict(row) for row in rows]
+                return success(history)
 
         except Exception as e:
             return failure(
@@ -410,7 +413,7 @@ class PerformanceStorage:
 
 
 # Global storage instance
-_global_storage: Optional[PerformanceStorage] = None
+_global_storage: PerformanceStorage | None = None
 
 
 def get_performance_storage() -> PerformanceStorage:

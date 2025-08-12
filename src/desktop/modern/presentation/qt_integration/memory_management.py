@@ -114,7 +114,7 @@ class SmartQtPointer(Generic[T]):
                 try:
                     handler()
                 except Exception as e:
-                    logger.error(f"Error in cleanup handler: {e}")
+                    logger.exception(f"Error in cleanup handler: {e}")
 
             # Delete Qt object if it has deleteLater
             if hasattr(obj, "deleteLater"):
@@ -123,7 +123,7 @@ class SmartQtPointer(Generic[T]):
             logger.debug(f"SmartQtPointer cleaned up object {self._obj_id}")
 
         except Exception as e:
-            logger.error(f"Error cleaning up object {self._obj_id}: {e}")
+            logger.exception(f"Error cleaning up object {self._obj_id}: {e}")
 
     def _on_object_deleted(self, ref) -> None:
         """Called when the managed object is deleted."""
@@ -248,7 +248,7 @@ class QtMemoryLeakDetector:
             return snapshot
 
         except Exception as e:
-            logger.error(f"Error taking memory snapshot: {e}")
+            logger.exception(f"Error taking memory snapshot: {e}")
             return MemorySnapshot(
                 timestamp=time.time(),
                 process_memory_mb=0.0,
@@ -265,13 +265,13 @@ class QtMemoryLeakDetector:
             with self._lock:
                 return len(self._tracked_objects)
         except Exception as e:
-            logger.error(f"Error counting Qt objects: {e}")
+            logger.exception(f"Error counting Qt objects: {e}")
             return 0
 
     def _periodic_check(self) -> None:
         """Periodic memory check for leak detection."""
         try:
-            snapshot = self._take_memory_snapshot()
+            self._take_memory_snapshot()
 
             # Check for potential leaks
             if len(self._snapshots) >= 3:
@@ -290,7 +290,7 @@ class QtMemoryLeakDetector:
                         logger.warning(f"Recommendation: {rec}")
 
         except Exception as e:
-            logger.error(f"Error in periodic memory check: {e}")
+            logger.exception(f"Error in periodic memory check: {e}")
 
     def _analyze_for_leaks(self) -> LeakReport | None:
         """Analyze memory snapshots for potential leaks."""
@@ -352,7 +352,7 @@ class QtMemoryLeakDetector:
             )
 
         except Exception as e:
-            logger.error(f"Error analyzing for leaks: {e}")
+            logger.exception(f"Error analyzing for leaks: {e}")
             return None
 
 

@@ -16,12 +16,12 @@ from .lesson_workspace_view import LessonWorkspaceView
 __all__ = [
     # Main tab
     "LearnTab",
+    "LessonButton",
+    # Sub-components
+    "LessonModeToggle",
+    "LessonResultsView",
     # Main views
     "LessonSelectorView",
     "LessonWorkspaceView",
-    "LessonResultsView",
-    # Sub-components
-    "LessonModeToggle",
-    "LessonButton",
     "ResultsStatsWidget",
 ]

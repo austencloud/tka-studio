@@ -61,18 +61,18 @@ class ServiceContainer:
             self.register(ISequenceDataService, FileBasedSequenceDataService)
 
             # Layout services
-            from desktop.shared.application.services.layout.layout_manager import LayoutManager
-
             from desktop.modern.core.interfaces.core_services import ILayoutService
+            from desktop.shared.application.services.layout.layout_manager import (
+                LayoutManager,
+            )
 
             self.register(ILayoutService, LayoutManager)
 
             # Pictograph services
+            from desktop.modern.core.interfaces.core_services import IPictographManager
             from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
-
-            from desktop.modern.core.interfaces.core_services import IPictographManager
 
             self.register(IPictographManager, PictographCSVManager)
 
@@ -85,11 +85,10 @@ class ServiceContainer:
             self.register(ISequenceManager, SequenceBeatOperations)
 
             # UI services
+            from desktop.modern.core.interfaces.core_services import IUIStateManager
             from desktop.shared.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
-
-            from desktop.modern.core.interfaces.core_services import IUIStateManager
 
             self.register(IUIStateManager, UICoordinator)
 
@@ -114,11 +113,11 @@ class ServiceContainer:
             logger.info("✅ Core services registered")
 
         except Exception as e:
-            logger.error(f"❌ Failed to register some services: {e}")
+            logger.exception(f"❌ Failed to register some services: {e}")
             # Continue anyway - app should work with minimal services
 
     def register(
-        self, interface: type[T], implementation: type[T] = None, instance: T = None
+        self, interface: type[T], implementation: type[T] | None = None, instance: T = None
     ) -> None:
         """Register a service class or instance"""
         if instance:
@@ -160,7 +159,7 @@ class ServiceContainer:
         # Check if registered
         if service_class not in self._services:
             # Try to find by name for backward compatibility
-            for registered_interface, implementation in self._services.items():
+            for registered_interface, _implementation in self._services.items():
                 if (
                     hasattr(registered_interface, "__name__")
                     and hasattr(service_class, "__name__")
@@ -183,7 +182,7 @@ class ServiceContainer:
             self._singletons[service_class] = instance  # Store as singleton
             return instance
         except Exception as e:
-            logger.error(f"❌ Failed to create {service_class.__name__}: {e}")
+            logger.exception(f"❌ Failed to create {service_class.__name__}: {e}")
             raise
 
 

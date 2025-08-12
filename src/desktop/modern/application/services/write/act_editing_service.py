@@ -8,7 +8,7 @@ managing act structure, and updating metadata.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.write_services import ActData, IActEditingService
 
@@ -29,7 +29,7 @@ class ActEditingService(IActEditingService):
         logger.info("ActEditingService initialized")
 
     def add_sequence_to_act(
-        self, act: ActData, sequence_data: Dict[str, Any], position: int = -1
+        self, act: ActData, sequence_data: dict[str, Any], position: int = -1
     ) -> bool:
         """
         Add a sequence to an act.
@@ -75,7 +75,7 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to add sequence to act '{act.name}': {e}")
+            logger.exception(f"Failed to add sequence to act '{act.name}': {e}")
             return False
 
     def remove_sequence_from_act(self, act: ActData, position: int) -> bool:
@@ -96,7 +96,7 @@ class ActEditingService(IActEditingService):
                 )
                 return False
 
-            removed_sequence = act.sequences.pop(position)
+            act.sequences.pop(position)
             logger.info(
                 f"Removed sequence from position {position} in act '{act.name}'"
             )
@@ -107,7 +107,7 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to remove sequence at position {position} from act '{act.name}': {e}"
             )
             return False
@@ -158,12 +158,12 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to move sequence in act '{act.name}' from {from_position} to {to_position}: {e}"
             )
             return False
 
-    def update_act_metadata(self, act: ActData, metadata: Dict[str, Any]) -> bool:
+    def update_act_metadata(self, act: ActData, metadata: dict[str, Any]) -> bool:
         """
         Update act metadata.
 
@@ -187,7 +187,7 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to update metadata for act '{act.name}': {e}")
+            logger.exception(f"Failed to update metadata for act '{act.name}': {e}")
             return False
 
     def duplicate_sequence_in_act(self, act: ActData, position: int) -> bool:
@@ -233,7 +233,7 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Failed to duplicate sequence at position {position} in act '{act.name}': {e}"
             )
             return False
@@ -259,10 +259,10 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to clear sequences from act '{act.name}': {e}")
+            logger.exception(f"Failed to clear sequences from act '{act.name}': {e}")
             return False
 
-    def _validate_sequence_data(self, sequence_data: Dict[str, Any]) -> bool:
+    def _validate_sequence_data(self, sequence_data: dict[str, Any]) -> bool:
         """
         Validate sequence data structure.
 
@@ -297,7 +297,7 @@ class ActEditingService(IActEditingService):
             return True
 
         except Exception as e:
-            logger.error(f"Error validating sequence data: {e}")
+            logger.exception(f"Error validating sequence data: {e}")
             return False
 
     def _update_sequence_count_metadata(self, act: ActData) -> None:
@@ -315,9 +315,9 @@ class ActEditingService(IActEditingService):
             act.metadata["last_modified"] = time.time()
 
         except Exception as e:
-            logger.error(f"Failed to update sequence count metadata: {e}")
+            logger.exception(f"Failed to update sequence count metadata: {e}")
 
-    def get_act_statistics(self, act: ActData) -> Dict[str, Any]:
+    def get_act_statistics(self, act: ActData) -> dict[str, Any]:
         """
         Get statistics about an act.
 
@@ -346,5 +346,5 @@ class ActEditingService(IActEditingService):
             return stats
 
         except Exception as e:
-            logger.error(f"Failed to calculate act statistics for '{act.name}': {e}")
+            logger.exception(f"Failed to calculate act statistics for '{act.name}': {e}")
             return {}

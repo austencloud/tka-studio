@@ -130,7 +130,7 @@ class LessonWorkspaceController(QObject):
             logger.info(f"Lesson started successfully for {session.lesson_type.value}")
 
         except Exception as e:
-            logger.error(f"Failed to start lesson: {e}")
+            logger.exception(f"Failed to start lesson: {e}")
             if isinstance(e, QuestionGenerationError):
                 self.state_manager.set_error(e)
             else:
@@ -161,7 +161,7 @@ class LessonWorkspaceController(QObject):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to display question and answers: {e}")
+            logger.exception(f"Failed to display question and answers: {e}")
 
     def _determine_layout_mode(self, lesson_type) -> LayoutMode:
         """Determine layout mode based on lesson type."""
@@ -208,7 +208,7 @@ class LessonWorkspaceController(QObject):
             logger.debug(f"Generated first question: {question.question_id}")
 
         except Exception as e:
-            logger.error(f"Failed to generate first question: {e}")
+            logger.exception(f"Failed to generate first question: {e}")
             raise QuestionGenerationError(
                 session.session_id,
                 session.lesson_type.value,
@@ -275,7 +275,7 @@ class LessonWorkspaceController(QObject):
             logger.debug(f"Generated next question: {question.question_id}")
 
         except Exception as e:
-            logger.error(f"Failed to generate next question: {e}")
+            logger.exception(f"Failed to generate next question: {e}")
             self.state_manager.set_error(
                 QuestionGenerationError(
                     (
@@ -337,7 +337,7 @@ class LessonWorkspaceController(QObject):
             logger.debug(f"Answer processed: {answer}, correct: {is_correct}")
 
         except Exception as e:
-            logger.error(f"Failed to handle answer selection: {e}")
+            logger.exception(f"Failed to handle answer selection: {e}")
             self.state_manager.set_error(
                 AnswerValidationError(
                     (
@@ -389,7 +389,7 @@ class LessonWorkspaceController(QObject):
             )
 
         except Exception as e:
-            logger.error(f"Failed to update session progress: {e}")
+            logger.exception(f"Failed to update session progress: {e}")
             raise ProgressCalculationError(
                 (
                     current_state.current_session.session_id
@@ -457,7 +457,7 @@ class LessonWorkspaceController(QObject):
             )
 
         except Exception as e:
-            logger.error(f"Failed to complete lesson: {e}")
+            logger.exception(f"Failed to complete lesson: {e}")
             self.state_manager.set_error(
                 ProgressCalculationError(
                     (

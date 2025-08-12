@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout, QWidget
@@ -26,7 +24,7 @@ class SequenceWorkbenchButtonPanel(QWidget):
     delete_beat_requested = pyqtSignal()
     clear_sequence_requested = pyqtSignal()
 
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
         self._buttons: dict[str, QPushButton] = {}
         self._setup_ui()
@@ -161,7 +159,7 @@ class SequenceWorkbenchButtonPanel(QWidget):
             }
         """
 
-        for button_name, button in self._buttons.items():
+        for _button_name, button in self._buttons.items():
             button.setStyleSheet(button_style)
 
     def set_button_enabled(self, button_name: str, enabled: bool):

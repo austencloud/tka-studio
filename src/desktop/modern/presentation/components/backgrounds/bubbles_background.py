@@ -10,9 +10,16 @@ from PyQt6.QtGui import (
     QTransform,
 )
 from PyQt6.QtWidgets import QWidget
-from desktop.shared.application.services.backgrounds.bubbles.bubble_physics import BubblePhysics
-from desktop.shared.application.services.backgrounds.bubbles.fish_movement import FishMovement
-from desktop.shared.application.services.backgrounds.bubbles.fish_spawning import FishSpawning
+
+from desktop.shared.application.services.backgrounds.bubbles.bubble_physics import (
+    BubblePhysics,
+)
+from desktop.shared.application.services.backgrounds.bubbles.fish_movement import (
+    FishMovement,
+)
+from desktop.shared.application.services.backgrounds.bubbles.fish_spawning import (
+    FishSpawning,
+)
 
 from .base_background import BaseBackground
 

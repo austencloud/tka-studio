@@ -8,9 +8,11 @@ AUTHOR: @ai-agent
 
 Test to debug why clear sequence is not transitioning to start position picker.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
+
 
 # Add the src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -121,7 +123,7 @@ def test_persistence_consistency():
             print("✅ Default and cleared sequences match!")
         else:
             print("❌ Default and cleared sequences don't match!")
-            print(f"Differences:")
+            print("Differences:")
             for i, (default_item, cleared_item) in enumerate(
                 zip(default_seq, cleared_seq)
             ):

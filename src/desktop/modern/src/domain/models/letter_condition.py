@@ -4,6 +4,7 @@ Letter Condition Enum - Legacy Compatible
 This module provides the letter condition classifications used by the legacy system
 for placement key generation and pictograph validation.
 """
+from __future__ import annotations
 
 from enum import Enum
 

@@ -69,7 +69,7 @@ def register_write_services(container: DIContainer) -> None:
         logger.info("Write services registered successfully")
 
     except Exception as e:
-        logger.error(f"Failed to register write services: {e}")
+        logger.exception(f"Failed to register write services: {e}")
         raise
 
 
@@ -97,11 +97,10 @@ def validate_write_service_registration(container: DIContainer) -> bool:
 
         # Test main component resolution (skip in headless environments)
         try:
-            write_tab = container.resolve(WriteTab)
+            container.resolve(WriteTab)
         except Exception as e:
             if "QApplication" in str(e):
                 logger.warning("Skipping UI component test in headless environment")
-                write_tab = None
             else:
                 raise
 
@@ -140,7 +139,7 @@ def validate_write_service_registration(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Write service registration validation failed: {e}")
+        logger.exception(f"Write service registration validation failed: {e}")
         return False
 
 

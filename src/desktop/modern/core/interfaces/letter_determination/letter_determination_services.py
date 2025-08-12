@@ -8,7 +8,7 @@ These interfaces work with the enhanced PictographData and MotionData models.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
@@ -34,7 +34,7 @@ class ILetterDeterminationService(ABC):
     def determine_letter(
         self,
         pictograph_data: PictographData,
-        context: Optional[MotionComparisonContext] = None,
+        context: MotionComparisonContext | None = None,
     ) -> LetterDeterminationResult:
         """
         Determine the letter for given pictograph motion data.
@@ -93,7 +93,7 @@ class IMotionComparisonService(ABC):
         self,
         motion1: PictographData,
         motion2: PictographData,
-        context: Optional[MotionComparisonContext] = None,
+        context: MotionComparisonContext | None = None,
     ) -> float:
         """
         Compare two complete motion pictographs.
@@ -112,7 +112,7 @@ class IMotionComparisonService(ABC):
         self,
         attrs1: MotionData,
         attrs2: MotionData,
-        context: Optional[MotionComparisonContext] = None,
+        context: MotionComparisonContext | None = None,
     ) -> AttributeComparisonResult:
         """
         Compare motion attributes with detailed breakdown.
@@ -178,7 +178,7 @@ class ILetterDeterminationStrategy(ABC):
         motion_data: PictographData,
         dataset: dict[Letter, list[PictographData]],
         comparison_service: IMotionComparisonService,
-        context: Optional[MotionComparisonContext] = None,
+        context: MotionComparisonContext | None = None,
     ) -> LetterDeterminationResult:
         """
         Execute the letter determination strategy.

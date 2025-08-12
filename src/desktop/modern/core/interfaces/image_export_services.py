@@ -9,7 +9,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QFont, QImage, QPainter
@@ -51,9 +51,9 @@ class ExportResult:
     """Result of an image export operation."""
 
     success: bool
-    output_path: Optional[Path] = None
-    error_message: Optional[str] = None
-    metadata: Optional[dict[str, Any]] = None
+    output_path: Path | None = None
+    error_message: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -100,7 +100,7 @@ class ISequenceImageExporter(ABC):
         source_directory: Path,
         export_directory: Path,
         options: ImageExportOptions,
-        progress_callback: Optional[callable] = None,
+        progress_callback: callable | None = None,
     ) -> dict[str, Any]:
         """
         Export all sequences from a directory.
@@ -168,11 +168,11 @@ class ISequenceMetadataExtractor(ABC):
     """Interface for extracting metadata from sequence files."""
 
     @abstractmethod
-    def extract_sequence_data(self, file_path: Path) -> Optional[list[dict[str, Any]]]:
+    def extract_sequence_data(self, file_path: Path) -> list[dict[str, Any]] | None:
         """Extract sequence data from a file."""
 
     @abstractmethod
-    def extract_metadata(self, file_path: Path) -> Optional[dict[str, Any]]:
+    def extract_metadata(self, file_path: Path) -> dict[str, Any] | None:
         """Extract metadata from a sequence file."""
 
     @abstractmethod
@@ -289,7 +289,7 @@ class IBeatDrawer(ABC):
         columns: int,
         rows: int,
         options: ImageExportOptions,
-        beat_size: int = None,
+        beat_size: int | None = None,
     ) -> None:
         """
         Draw sequence beats onto the image.

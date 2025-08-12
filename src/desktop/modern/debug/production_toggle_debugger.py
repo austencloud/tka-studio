@@ -9,7 +9,7 @@ to monitor toggle functionality and identify production-specific failures.
 from __future__ import annotations
 
 import time
-from typing import Any, Optional
+from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QWidget
@@ -31,18 +31,18 @@ class ProductionToggleDebugger(QObject):
 
     debug_event = pyqtSignal(str, dict)  # event_type, data
 
-    def __init__(self, parent: Optional[QObject] = None):
+    def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
         self._monitoring_active = False
-        self._graph_editor: Optional[QWidget] = None
-        self._toggle_tab: Optional[QWidget] = None
-        self._animation_controller: Optional[QObject] = None
-        self._layout_manager: Optional[QObject] = None
-        self._workbench: Optional[QWidget] = None
+        self._graph_editor: QWidget | None = None
+        self._toggle_tab: QWidget | None = None
+        self._animation_controller: QObject | None = None
+        self._layout_manager: QObject | None = None
+        self._workbench: QWidget | None = None
 
         # State tracking
         self._event_sequence: list[dict[str, Any]] = []
-        self._last_click_time: Optional[float] = None
+        self._last_click_time: float | None = None
 
         production_log("Production Toggle Debugger initialized")
 
@@ -128,7 +128,7 @@ class ProductionToggleDebugger(QObject):
             production_log(f"   Traceback: {traceback.format_exc()}")
             return False
 
-    def _find_workbench(self, main_window: QWidget) -> Optional[QWidget]:
+    def _find_workbench(self, main_window: QWidget) -> QWidget | None:
         """Find the workbench widget in the main window"""
         # Look for workbench in main window children
         for child in main_window.findChildren(QWidget):
@@ -139,7 +139,7 @@ class ProductionToggleDebugger(QObject):
                 return child
         return None
 
-    def _find_graph_section(self, workbench: QWidget) -> Optional[QWidget]:
+    def _find_graph_section(self, workbench: QWidget) -> QWidget | None:
         """Find the graph section in the workbench"""
         if hasattr(workbench, "_graph_section"):
             return workbench._graph_section
@@ -153,7 +153,7 @@ class ProductionToggleDebugger(QObject):
                 return child
         return None
 
-    def _find_graph_editor(self, graph_section: QWidget) -> Optional[QWidget]:
+    def _find_graph_editor(self, graph_section: QWidget) -> QWidget | None:
         """Find the graph editor in the graph section"""
         if hasattr(graph_section, "_graph_editor"):
             return graph_section._graph_editor
@@ -189,5 +189,4 @@ class ProductionToggleDebugger(QObject):
 
         # Hook graph editor toggle method
         if self._graph_editor and hasattr(self._graph_editor, "toggle_visibility"):
-            original_toggle = self._graph_editor.toggle_visibility
             self._graph_editor.toggle_visibility = debug_toggle_visibility

@@ -11,11 +11,13 @@ Sequence Creation Workflow Contract Tests
 
 Defines behavioral contracts for sequence creation workflows.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -265,7 +267,7 @@ class TestSequenceCreationWorkflowContract:
             # Test creating sequence with invalid data
             try:
                 # Test with None beats (should be handled)
-                sequence_none_beats = SequenceData(
+                SequenceData(
                     name="Test", word="", beats=None, start_position=""
                 )
                 # If this works, that's fine

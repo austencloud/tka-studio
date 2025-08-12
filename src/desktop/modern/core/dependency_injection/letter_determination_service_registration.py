@@ -32,7 +32,6 @@ def register_letter_determination_services(container: DIContainer) -> None:
         logger.info("Registering letter determination services...")
 
         # Import implementations
-        from desktop.shared.application.services.data.dataset_query import DatasetQuery
         from desktop.shared.application.services.letter_determination.letter_determination_service import (
             LetterDeterminationService,
         )
@@ -44,9 +43,6 @@ def register_letter_determination_services(container: DIContainer) -> None:
         )
 
         # Import dependencies
-        from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-            PictographCSVManager,
-        )
 
         # Register dataset provider (singleton for caching)
         container.register_factory(
@@ -104,7 +100,7 @@ def register_letter_determination_services(container: DIContainer) -> None:
         logger.info("Letter determination services registration completed successfully")
 
     except Exception as e:
-        logger.error(f"Failed to register letter determination services: {e}")
+        logger.exception(f"Failed to register letter determination services: {e}")
         raise
 
 
@@ -144,7 +140,7 @@ def validate_letter_determination_services(container: DIContainer) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Letter determination services validation failed: {e}")
+        logger.exception(f"Letter determination services validation failed: {e}")
         return False
 
 

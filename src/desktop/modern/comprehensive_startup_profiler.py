@@ -5,13 +5,13 @@ Comprehensive Startup Profiler - Complete Analysis of TKA Startup Performance
 This profiler instruments the entire startup process with detailed timing
 for each major component, providing actionable optimization insights.
 """
+from __future__ import annotations
 
-import logging
-import sys
-import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+import sys
+import time
+
 
 # Add the modern src directory to Python path
 modern_src_path = Path(__file__).parent / "src"
@@ -101,33 +101,33 @@ class ComprehensiveProfiler:
 
             if "construct tab" in name_lower:
                 print(f"   🎯 CONSTRUCT TAB ({duration:.1f}ms):")
-                print(f"      • Consider lazy loading of construct tab components")
-                print(f"      • Defer option picker initialization until needed")
-                print(f"      • Use progressive loading for workbench components")
+                print("      • Consider lazy loading of construct tab components")
+                print("      • Defer option picker initialization until needed")
+                print("      • Use progressive loading for workbench components")
 
             elif "option" in name_lower and "picker" in name_lower:
                 print(f"   🎯 OPTION PICKER ({duration:.1f}ms):")
-                print(f"      • Implement lazy loading for pictograph pool")
-                print(f"      • Consider virtual scrolling for large option lists")
-                print(f"      • Cache pictograph frames between sessions")
+                print("      • Implement lazy loading for pictograph pool")
+                print("      • Consider virtual scrolling for large option lists")
+                print("      • Cache pictograph frames between sessions")
 
             elif "pictograph" in name_lower and "pool" in name_lower:
                 print(f"   🎯 PICTOGRAPH POOL ({duration:.1f}ms):")
-                print(f"      • Create pool in background thread")
-                print(f"      • Use progressive pool initialization")
-                print(f"      • Implement on-demand pictograph creation")
+                print("      • Create pool in background thread")
+                print("      • Use progressive pool initialization")
+                print("      • Implement on-demand pictograph creation")
 
             elif "api" in name_lower or "server" in name_lower:
                 print(f"   🎯 API SERVER ({duration:.1f}ms):")
-                print(f"      • Start API server in background thread")
-                print(f"      • Defer API server startup until after UI is ready")
-                print(f"      • Use async server initialization")
+                print("      • Start API server in background thread")
+                print("      • Defer API server startup until after UI is ready")
+                print("      • Use async server initialization")
 
             elif "import" in name_lower:
                 print(f"   🎯 IMPORTS ({duration:.1f}ms):")
-                print(f"      • Use lazy imports where possible")
-                print(f"      • Consider import optimization")
-                print(f"      • Profile individual module import times")
+                print("      • Use lazy imports where possible")
+                print("      • Consider import optimization")
+                print("      • Profile individual module import times")
 
         # Category-based recommendations
         heaviest_category = max(category_totals.items(), key=lambda x: x[1])
@@ -137,12 +137,12 @@ class ComprehensiveProfiler:
             )
 
             if heaviest_category[0] == "UI Components":
-                print(f"      • Implement progressive UI loading")
-                print(f"      • Use placeholder widgets during initialization")
-                print(f"      • Consider component virtualization")
+                print("      • Implement progressive UI loading")
+                print("      • Use placeholder widgets during initialization")
+                print("      • Consider component virtualization")
             elif heaviest_category[0] == "Option Picker":
-                print(f"      • Defer option picker creation until first use")
-                print(f"      • Implement background pool initialization")
+                print("      • Defer option picker creation until first use")
+                print("      • Implement background pool initialization")
 
 
 def profile_complete_startup():
@@ -162,12 +162,15 @@ def profile_complete_startup():
 
         # Phase 2: Core Imports
         with profiler.time_operation("2. Core imports"):
+            from PyQt6.QtGui import QGuiApplication
+
             from desktop.modern.core.application.application_factory import (
                 ApplicationFactory,
                 ApplicationMode,
             )
-            from desktop.modern.presentation.components.ui.splash_screen import SplashScreen
-            from PyQt6.QtGui import QGuiApplication
+            from desktop.modern.presentation.components.ui.splash_screen import (
+                SplashScreen,
+            )
 
         # Phase 3: Container & Services
         with profiler.time_operation("3. Container creation"):
@@ -189,7 +192,6 @@ def profile_complete_startup():
             from desktop.modern.application.services.core.application_orchestrator import (
                 ApplicationOrchestrator,
             )
-
             from main import TKAMainWindow
 
         with profiler.time_operation("7. Main window creation"):
@@ -213,7 +215,9 @@ def profile_complete_startup():
             )
 
         with profiler.time_operation("10. Service registration"):
-            from desktop.modern.core.dependency_injection.di_container import get_container
+            from desktop.modern.core.dependency_injection.di_container import (
+                get_container,
+            )
 
             window.orchestrator.container = get_container()
             window.orchestrator.service_manager.register_all_services(

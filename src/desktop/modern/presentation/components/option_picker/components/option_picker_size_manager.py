@@ -83,10 +83,7 @@ class OptionPickerSizeManager:
                     return False
 
                 # Check for known problematic widths
-                if picker_width == 622:
-                    return False
-
-                return True
+                return picker_width != 622
             # Fallback to absolute values if main window size unavailable
             return 200 <= picker_width <= 2000
 
@@ -111,10 +108,7 @@ class OptionPickerSizeManager:
                 return False
 
             # Check if widget has been properly sized (not default/zero size)
-            if self._widget.width() <= 0 or self._widget.height() <= 0:
-                return False
-
-            return True
+            return not (self._widget.width() <= 0 or self._widget.height() <= 0)
 
         except Exception:
             return False
@@ -144,10 +138,7 @@ class OptionPickerSizeManager:
                 return True
 
             # Check if this widget hasn't been properly shown yet
-            if not self._widget.isVisible() or self._widget.width() <= 0:
-                return True
-
-            return False
+            return bool(not self._widget.isVisible() or self._widget.width() <= 0)
 
         except Exception:
             # If we can't determine, assume we're during startup to be safe

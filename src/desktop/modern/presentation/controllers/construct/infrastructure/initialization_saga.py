@@ -120,7 +120,7 @@ class CreateWorkbenchStep(SagaStep):
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
-            logger.error(f"Failed to create workbench: {e}")
+            logger.exception(f"Failed to create workbench: {e}")
 
             return SagaStepResult(
                 step_id=self.step_id,
@@ -200,7 +200,7 @@ class CreatePickersStep(SagaStep):
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
-            logger.error(f"Failed to create pickers: {e}")
+            logger.exception(f"Failed to create pickers: {e}")
 
             return SagaStepResult(
                 step_id=self.step_id,
@@ -276,7 +276,7 @@ class SetupServiceMeshStep(SagaStep):
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
-            logger.error(f"Failed to setup service mesh: {e}")
+            logger.exception(f"Failed to setup service mesh: {e}")
 
             return SagaStepResult(
                 step_id=self.step_id,
@@ -328,7 +328,7 @@ class SetupEventIntegrationStep(SagaStep):
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
-            logger.error(f"Failed to setup event integration: {e}")
+            logger.exception(f"Failed to setup event integration: {e}")
 
             return SagaStepResult(
                 step_id=self.step_id,
@@ -373,7 +373,7 @@ class FinalizeInitializationStep(SagaStep):
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
-            logger.error(f"Failed to finalize initialization: {e}")
+            logger.exception(f"Failed to finalize initialization: {e}")
 
             return SagaStepResult(
                 step_id=self.step_id,
@@ -438,7 +438,7 @@ class ConstructTabInitializationSaga:
             return True
 
         except Exception as e:
-            self.logger.error(f"Saga execution failed: {e}")
+            self.logger.exception(f"Saga execution failed: {e}")
             await self._rollback(context)
             self.status = SagaStatus.FAILED
             return False
@@ -460,7 +460,7 @@ class ConstructTabInitializationSaga:
                     )
 
             except Exception as e:
-                self.logger.error(f"Error during compensation for {step.step_id}: {e}")
+                self.logger.exception(f"Error during compensation for {step.step_id}: {e}")
 
         self.status = SagaStatus.COMPENSATED
         self._publish_saga_compensated()

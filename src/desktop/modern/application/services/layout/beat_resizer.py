@@ -7,7 +7,7 @@ dimension calculations and intelligent responsive behavior.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QScrollArea, QWidget
@@ -44,7 +44,7 @@ class BeatResizer(IBeatResizer):
         self._size_cache = {}
 
         # Graph editor reference for accurate height calculations
-        self._graph_editor_ref: Optional[GraphEditor] = None
+        self._graph_editor_ref: GraphEditor | None = None
 
     def set_graph_editor_reference(self, graph_editor: GraphEditor):
         """Set reference to graph editor for accurate height calculations"""
@@ -184,7 +184,7 @@ class BeatResizer(IBeatResizer):
                     Qt.ScrollBarPolicy.ScrollBarAlwaysOff
                 )
 
-    def _find_main_window(self, widget: QWidget) -> Optional[QWidget]:
+    def _find_main_window(self, widget: QWidget) -> QWidget | None:
         """Find the main widget by traversing up to the top-level window"""
         # Get the top-level widget (main window)
         top_level = widget.window()
@@ -195,7 +195,7 @@ class BeatResizer(IBeatResizer):
 
         return None
 
-    def _find_scroll_area_parent(self, widget: QWidget) -> Optional[QScrollArea]:
+    def _find_scroll_area_parent(self, widget: QWidget) -> QScrollArea | None:
         """Find QScrollArea parent widget"""
         parent = widget.parent()
         while parent:
@@ -224,14 +224,13 @@ class BeatResizer(IBeatResizer):
             graph_editor
             and hasattr(graph_editor, "height")
             and hasattr(graph_editor, "is_visible")
-        ):
-            if graph_editor.is_visible():
-                return graph_editor.height()
+        ) and graph_editor.is_visible():
+            return graph_editor.height()
 
         # If not visible, don't subtract any height
         return 0
 
-    def _find_child_by_name(self, widget: QWidget, name: str) -> Optional[QWidget]:
+    def _find_child_by_name(self, widget: QWidget, name: str) -> QWidget | None:
         """Find child widget by object name"""
         for child in widget.findChildren(QWidget):
             if child.objectName() == name:
@@ -297,7 +296,4 @@ class BeatResizer(IBeatResizer):
 
         if width < min_size or height < min_size:
             return False
-        if width > max_size or height > max_size:
-            return False
-
-        return True
+        return not (width > max_size or height > max_size)

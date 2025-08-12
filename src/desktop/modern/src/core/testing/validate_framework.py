@@ -4,10 +4,11 @@ TKA UI Testing Framework - Validation Script
 
 Validates that the UI testing framework is properly installed and working.
 """
+from __future__ import annotations
 
-import sys
-import os
 from pathlib import Path
+import sys
+
 
 # Add the src directory to the Python path
 current_dir = Path(__file__).parent
@@ -21,15 +22,15 @@ def validate_imports():
 
     try:
         from desktop.modern.core.testing import (
-            SimpleUITester,
-            UITestRunner,
-            ComponentInitializer,
-            ButtonTester,
-            GraphEditorTester,
-            TKAAITestHelper,
             AITestResult,
-            quick_ui_test,
+            ButtonTester,
+            ComponentInitializer,
+            GraphEditorTester,
+            SimpleUITester,
+            TKAAITestHelper,
+            UITestRunner,
             full_ui_test,
+            quick_ui_test,
             test_buttons_only,
             test_graph_editor_only,
         )
@@ -49,13 +50,13 @@ def validate_basic_functionality():
         from desktop.modern.core.testing import TKAAITestHelper
 
         # Test AI helper initialization
-        helper = TKAAITestHelper(use_test_mode=True)
+        TKAAITestHelper(use_test_mode=True)
         print("✅ AI helper initialization successful")
 
         # Test basic result creation
         from desktop.modern.core.testing import AITestResult
 
-        result = AITestResult(success=True, metadata={"test": "validation"})
+        AITestResult(success=True, metadata={"test": "validation"})
         print("✅ AITestResult creation successful")
 
         return True
@@ -173,9 +174,8 @@ def validate_file_structure():
     if missing_files:
         print(f"❌ Missing files: {missing_files}")
         return False
-    else:
-        print("✅ All required files present")
-        return True
+    print("✅ All required files present")
+    return True
 
 
 def main():
@@ -211,10 +211,9 @@ def main():
         print("🎉 ALL VALIDATIONS PASSED!")
         print("✅ UI Testing Framework is ready to use")
         return 0
-    else:
-        print("💥 SOME VALIDATIONS FAILED!")
-        print("❌ UI Testing Framework may have issues")
-        return 1
+    print("💥 SOME VALIDATIONS FAILED!")
+    print("❌ UI Testing Framework may have issues")
+    return 1
 
 
 if __name__ == "__main__":

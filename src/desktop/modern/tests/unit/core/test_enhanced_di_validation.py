@@ -3,13 +3,11 @@ TEST LIFECYCLE: UNIT
 PURPOSE: Test enhanced DI container validation and error handling
 AUTHOR: @ai-agent
 """
+from __future__ import annotations
+
+from typing import Protocol
 
 import pytest
-from pathlib import Path
-from typing import Protocol
-from abc import ABC, abstractmethod
-
-import os
 
 from core.dependency_injection.di_container import DIContainer
 from core.exceptions import DependencyInjectionError
@@ -50,7 +48,7 @@ class Controller:
 
 
 class CircularA:
-    def __init__(self, b: "CircularB"):
+    def __init__(self, b: CircularB):
         self.b = b
 
 
@@ -60,7 +58,7 @@ class CircularB:
 
 
 class InvalidService:
-    def __init__(self, missing_dependency: "NonExistentService"):
+    def __init__(self, missing_dependency: NonExistentService):
         self.missing = missing_dependency
 
 

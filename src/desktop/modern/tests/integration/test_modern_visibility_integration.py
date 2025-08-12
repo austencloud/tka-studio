@@ -9,24 +9,24 @@ Tests the complete integration of:
 
 Uses TKAAITestHelper for comprehensive validation.
 """
+from __future__ import annotations
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
-import pytest
 from application.services.pictograph.global_visibility_service import (
     PictographVisibilityManager as GlobalVisibilityService,
 )
 from application.services.settings.visibility_settings_manager import (
     VisibilitySettingsManager as ModernVisibilityStateManager,
 )
-from core.application.application_factory import ApplicationFactory
 from core.interfaces.tab_settings_interfaces import IVisibilityService
 from core.testing.ai_agent_helpers import TKAAITestHelper
 from presentation.components.ui.settings.visibility.visibility_pictograph_preview import (
     VisibilityPictographPreview,
 )
 from presentation.components.ui.settings.visibility.visibility_tab import VisibilityTab
+
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +219,7 @@ class TestModernVisibilityIntegration:
             logger.info("✓ Pictograph preview creation successful")
 
         except Exception as e:
-            logger.error(f"Preview creation failed: {e}")
+            logger.exception(f"Preview creation failed: {e}")
             self.test_results["preview_creation"] = False
 
     def test_visibility_tab_creation(self):
@@ -251,7 +251,7 @@ class TestModernVisibilityIntegration:
             logger.info("✓ Visibility tab creation successful")
 
         except Exception as e:
-            logger.error(f"Tab creation failed: {e}")
+            logger.exception(f"Tab creation failed: {e}")
             self.test_results["tab_creation"] = False
 
     def test_tka_system_integration(self):
@@ -315,7 +315,7 @@ class TestModernVisibilityIntegration:
             f"✓ Performance test passed ({update_time:.3f}s for 50 pictographs)"
         )
 
-    def run_comprehensive_test(self) -> Dict[str, Any]:
+    def run_comprehensive_test(self) -> dict[str, Any]:
         """Run all integration tests and return results."""
         logger.info("Starting comprehensive modern visibility integration test...")
 
@@ -335,7 +335,7 @@ class TestModernVisibilityIntegration:
             try:
                 test_method()
             except Exception as e:
-                logger.error(f"Test {test_method.__name__} failed: {e}")
+                logger.exception(f"Test {test_method.__name__} failed: {e}")
                 self.test_results[test_method.__name__] = False
 
         # Calculate overall success
@@ -365,7 +365,7 @@ class TestModernVisibilityIntegration:
 
 
 # Convenience function for AI agents
-def test_modern_visibility_integration() -> Dict[str, Any]:
+def test_modern_visibility_integration() -> dict[str, Any]:
     """One-line integration test for AI agents."""
     tester = TestModernVisibilityIntegration()
     tester.setup_method()

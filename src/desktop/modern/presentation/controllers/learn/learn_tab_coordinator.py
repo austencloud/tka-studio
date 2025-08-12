@@ -118,7 +118,7 @@ class LearnTabCoordinator(QWidget):
             logger.debug("Services resolved successfully")
 
         except Exception as e:
-            logger.error(f"Failed to resolve services: {e}")
+            logger.exception(f"Failed to resolve services: {e}")
             raise
 
     def _setup_ui(self) -> None:
@@ -153,7 +153,7 @@ class LearnTabCoordinator(QWidget):
             logger.debug("UI structure setup complete")
 
         except Exception as e:
-            logger.error(f"Failed to setup UI: {e}")
+            logger.exception(f"Failed to setup UI: {e}")
             raise
 
     def _create_views(self) -> None:
@@ -189,7 +189,7 @@ class LearnTabCoordinator(QWidget):
             logger.debug("Signal connections setup complete")
 
         except Exception as e:
-            logger.error(f"Failed to setup connections: {e}")
+            logger.exception(f"Failed to setup connections: {e}")
 
     def _initialize_coordinator(self) -> None:
         """Initialize coordinator after UI is ready."""
@@ -219,7 +219,7 @@ class LearnTabCoordinator(QWidget):
             logger.info("✅ Learn Tab Coordinator initialized successfully")
 
         except Exception as e:
-            logger.error(f"❌ Failed to initialize coordinator: {e}")
+            logger.exception(f"❌ Failed to initialize coordinator: {e}")
             # Don't emit error for missing services in test environments
             if "Service" not in str(e):
                 self.error_occurred.emit(f"Failed to initialize learn tab: {e!s}")
@@ -263,7 +263,7 @@ class LearnTabCoordinator(QWidget):
             logger.debug("Controllers created successfully")
 
         except Exception as e:
-            logger.error(f"Failed to create controllers: {e}")
+            logger.exception(f"Failed to create controllers: {e}")
             raise
 
     def _connect_workspace_components(self) -> None:
@@ -302,7 +302,7 @@ class LearnTabCoordinator(QWidget):
             logger.info(f"Switched to view: {view_name}")
 
         except Exception as e:
-            logger.error(f"Failed to handle view change: {e}")
+            logger.exception(f"Failed to handle view change: {e}")
 
     def _deactivate_current_controller(self) -> None:
         """Deactivate currently active controller."""
@@ -326,7 +326,7 @@ class LearnTabCoordinator(QWidget):
             self._update_responsive_styling()
             super().resizeEvent(event)
         except Exception as e:
-            logger.error(f"Failed to handle resize event: {e}")
+            logger.exception(f"Failed to handle resize event: {e}")
 
     def _update_responsive_styling(self) -> None:
         """Update responsive styling for all components."""
@@ -355,7 +355,7 @@ class LearnTabCoordinator(QWidget):
                 self.lesson_controls.update_responsive_styling(width, height)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")
 
     def get_current_view(self) -> LearnView:
         """Get current active view."""

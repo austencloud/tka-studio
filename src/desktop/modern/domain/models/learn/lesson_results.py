@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from .lesson_config import LessonType, QuizMode
 
@@ -44,8 +44,8 @@ class LessonResults:
     completed_at: datetime = field(default_factory=datetime.now)
 
     # Additional statistics
-    average_time_per_question: Optional[float] = None
-    streak_longest_correct: Optional[int] = None
+    average_time_per_question: float | None = None
+    streak_longest_correct: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """

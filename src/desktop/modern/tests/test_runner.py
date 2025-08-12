@@ -12,21 +12,21 @@ Features:
 - Integration with test lifecycle management
 - Performance monitoring and reporting
 """
+from __future__ import annotations
 
-import sys
-import subprocess
-import time
-from pathlib import Path
-from typing import List, Dict, Set
 import argparse
+from datetime import datetime
 import json
-from datetime import datetime, date
+from pathlib import Path
+import subprocess
+import sys
+import time
 
 
 class TestRunner:
     """Advanced test runner with intelligent test management."""
 
-    def __init__(self, test_dir: Path = None):
+    def __init__(self, test_dir: Path | None = None):
         self.test_dir = test_dir or Path(__file__).parent
         self.src_dir = self.test_dir.parent / "src"
         self.results_dir = self.test_dir / "results"
@@ -65,7 +65,7 @@ class TestRunner:
             self.lifecycle_manager = None
             print("Warning: Test lifecycle manager not available")
 
-    def discover_tests(self) -> Dict[str, List[Path]]:
+    def discover_tests(self) -> dict[str, list[Path]]:
         """Discover all tests organized by category."""
         tests = {category: [] for category in self.categories}
 
@@ -76,7 +76,7 @@ class TestRunner:
 
         return tests
 
-    def check_test_health(self) -> Dict[str, any]:
+    def check_test_health(self) -> dict[str, any]:
         """Check overall test suite health and lifecycle compliance."""
         health_report = {
             "expired_tests": [],
@@ -152,7 +152,7 @@ class TestRunner:
 
         return health_report
 
-    def detect_outdated_tests(self) -> Set[Path]:
+    def detect_outdated_tests(self) -> set[Path]:
         """Detect tests that may be outdated based on code changes."""
         outdated = set()
 
@@ -170,7 +170,7 @@ class TestRunner:
 
         return outdated
 
-    def run_category(self, category: str, verbose: bool = False) -> Dict:
+    def run_category(self, category: str, verbose: bool = False) -> dict:
         """Run tests for a specific category."""
         if category not in self.categories:
             raise ValueError(f"Unknown category: {category}")
@@ -187,7 +187,7 @@ class TestRunner:
             "-m",
             "pytest",
             str(category_dir),
-            f"-m",
+            "-m",
             category,
             "--tb=short",
         ]
@@ -254,7 +254,7 @@ class TestRunner:
                 "returncode": -2,  # Indicate general error
             }
 
-    def run_all(self, categories: List[str] = None, verbose: bool = False) -> Dict:
+    def run_all(self, categories: list[str] | None = None, verbose: bool = False) -> dict:
         """Run all tests or specified categories."""
         if categories is None:
             categories = list(self.categories.keys())
@@ -309,7 +309,7 @@ class TestRunner:
 
         return results
 
-    def _save_results(self, results: Dict, total_duration: float):
+    def _save_results(self, results: dict, total_duration: float):
         """Save test results to file."""
         timestamp = datetime.now().isoformat()
         result_data = {
@@ -324,7 +324,7 @@ class TestRunner:
         with open(result_file, "w") as f:
             json.dump(result_data, f, indent=2)
 
-    def clean_obsolete_tests(self, dry_run: bool = True) -> List[Path]:
+    def clean_obsolete_tests(self, dry_run: bool = True) -> list[Path]:
         """Remove obsolete test files (with safety checks)."""
         # This would implement intelligent obsolete test detection
         # For now, just return empty list for safety
@@ -388,7 +388,7 @@ class TestRunner:
             suggestions
         )
 
-    def auto_fix_suggestions(self, dry_run: bool = True) -> List[str]:
+    def auto_fix_suggestions(self, dry_run: bool = True) -> list[str]:
         """Provide automatic fix suggestions for misplaced tests"""
         fixes = []
 
@@ -442,7 +442,7 @@ def main():
                 print(f"  - {test['file']} (expired: {test['expired_date']})")
 
         if health["problematic_tests"]:
-            print(f"\n⚠️ Problematic tests:")
+            print("\n⚠️ Problematic tests:")
             for problem_type, tests in health["problematic_tests"].items():
                 print(f"  {problem_type}: {len(tests)} tests")
                 for test in tests[:3]:  # Show first 3
@@ -451,12 +451,12 @@ def main():
                     print(f"    ... and {len(tests) - 3} more")
 
         if health["warnings"]:
-            print(f"\n⚠️ Warnings:")
+            print("\n⚠️ Warnings:")
             for warning in health["warnings"]:
                 print(f"  {warning}")
 
         if health["recommendations"]:
-            print(f"\n💡 Recommendations:")
+            print("\n💡 Recommendations:")
             for rec in health["recommendations"]:
                 print(f"  - {rec}")
 

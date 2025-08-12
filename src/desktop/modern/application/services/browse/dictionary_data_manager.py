@@ -230,7 +230,7 @@ class DictionaryDataManager(QObject):
         sorted_thumbnails = sorted(thumbnails)
 
         # Create a string combining word and thumbnail paths
-        identifier_parts = [word] + sorted_thumbnails
+        identifier_parts = [word, *sorted_thumbnails]
         identifier_string = "|".join(identifier_parts)
 
         # Generate a hash to create a shorter, deterministic ID

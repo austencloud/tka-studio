@@ -168,6 +168,7 @@ class DynamicTextColorMixin:
         """Update text color based on background."""
         if hasattr(self, "styleSheet") and hasattr(self, "setStyleSheet"):
             return apply_dynamic_text_color(self, background_color)
+        return None
 
     def set_glassmorphism_text_color(
         self,
@@ -192,3 +193,4 @@ class DynamicTextColorMixin:
 
             self.setStyleSheet(new_style)
             return text_color
+        return None

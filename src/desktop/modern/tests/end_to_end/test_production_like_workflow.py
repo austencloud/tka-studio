@@ -18,27 +18,28 @@ PURPOSE: Validate complete production-like TKA user workflow with JSON persisten
 PERMANENT: Production workflow validation for TKA application
 AUTHOR: AI Agent
 """
+from __future__ import annotations
 
-import json
-import sys
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+import sys
+from typing import Any
+
 
 # Add the modern src directory to Python path
 modern_src = Path(__file__).parent.parent.parent / "src"
 if str(modern_src) not in sys.path:
     sys.path.insert(0, str(modern_src))
 
-import time
 
 # Import TKA application components
-from core.application.application_factory import ApplicationFactory
-from core.testing.ai_agent_helpers import TKAAITestHelper
-from PyQt6.QtCore import QRect, Qt, QTimer
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import QApplication, QMainWindow
+
+from core.application.application_factory import ApplicationFactory
 
 
 class ProductionLikeTKATest:
@@ -109,7 +110,7 @@ class ProductionLikeTKATest:
 
         print(log_entry)
 
-    def _extract_scaling_info(self, view_widget) -> Dict[str, Any]:
+    def _extract_scaling_info(self, view_widget) -> dict[str, Any]:
         """Extract scaling information from view widget"""
         try:
             if (
@@ -127,12 +128,11 @@ class ProductionLikeTKATest:
                     "compensation_factor": overlay.SCALE_COMPENSATION,
                     "is_scaled": overlay._is_selection_mode or overlay._is_hover_mode,
                 }
-            else:
-                return {
-                    "scale_factor": 1.0,
-                    "compensation_factor": "N/A",
-                    "is_scaled": False,
-                }
+            return {
+                "scale_factor": 1.0,
+                "compensation_factor": "N/A",
+                "is_scaled": False,
+            }
         except Exception as e:
             return {
                 "scale_factor": "ERROR",
@@ -141,7 +141,7 @@ class ProductionLikeTKATest:
                 "error": str(e),
             }
 
-    def _extract_overlay_info(self, view_widget) -> Dict[str, Any]:
+    def _extract_overlay_info(self, view_widget) -> dict[str, Any]:
         """Extract overlay state information"""
         try:
             if (
@@ -176,14 +176,13 @@ class ProductionLikeTKATest:
                     "selection_mode": overlay._is_selection_mode,
                     "hover_mode": overlay._is_hover_mode,
                 }
-            else:
-                return {
-                    "mode": "NO_OVERLAY",
-                    "border_color": "NONE",
-                    "is_visible": False,
-                    "selection_mode": False,
-                    "hover_mode": False,
-                }
+            return {
+                "mode": "NO_OVERLAY",
+                "border_color": "NONE",
+                "is_visible": False,
+                "selection_mode": False,
+                "hover_mode": False,
+            }
         except Exception as e:
             return {
                 "mode": "ERROR",
@@ -192,7 +191,7 @@ class ProductionLikeTKATest:
                 "error": str(e),
             }
 
-    def _extract_transform_info(self, view_widget) -> Dict[str, Any]:
+    def _extract_transform_info(self, view_widget) -> dict[str, Any]:
         """Extract transform matrix information"""
         try:
             if (
@@ -221,14 +220,13 @@ class ProductionLikeTKATest:
                     "effective_scale": (scale_x + scale_y) / 2,
                     "full_matrix": [m11, m12, m13, m21, m22, m23, m31, m32, m33],
                 }
-            else:
-                return {
-                    "matrix_str": "NO_COMPONENT",
-                    "is_identity": "N/A",
-                    "scale_x": "N/A",
-                    "scale_y": "N/A",
-                    "effective_scale": "N/A",
-                }
+            return {
+                "matrix_str": "NO_COMPONENT",
+                "is_identity": "N/A",
+                "scale_x": "N/A",
+                "scale_y": "N/A",
+                "effective_scale": "N/A",
+            }
         except Exception as e:
             return {"matrix_str": "ERROR", "is_identity": "ERROR", "error": str(e)}
 
@@ -805,7 +803,7 @@ class ProductionLikeTKATest:
     def load_sequence_file(self):
         """Load and return current sequence file contents."""
         try:
-            with open(self.current_sequence_file, "r", encoding="utf-8") as f:
+            with open(self.current_sequence_file, encoding="utf-8") as f:
                 data = json.load(f)
             return data
         except Exception as e:
@@ -822,11 +820,10 @@ class ProductionLikeTKATest:
         if actual_length == expected_length:
             print(f"✅ [PRODUCTION] Sequence file updated: {actual_length} items")
             return True
-        else:
-            print(
-                f"❌ [PRODUCTION] Sequence file length mismatch: expected {expected_length}, got {actual_length}"
-            )
-            return False
+        print(
+            f"❌ [PRODUCTION] Sequence file length mismatch: expected {expected_length}, got {actual_length}"
+        )
+        return False
 
     def select_start_position(self, position_name):
         """Select a start position using the production UI."""
@@ -861,14 +858,12 @@ class ProductionLikeTKATest:
                         f"🔍 [PRODUCTION] Available options: {[opt.position_key for opt in start_picker.position_options if hasattr(opt, 'position_key')]}"
                     )
                     return False
-                else:
-                    print(
-                        "❌ [PRODUCTION] Start position picker options not accessible"
-                    )
-                    return False
-            else:
-                print("❌ [PRODUCTION] Start position picker not accessible")
+                print(
+                    "❌ [PRODUCTION] Start position picker options not accessible"
+                )
                 return False
+            print("❌ [PRODUCTION] Start position picker not accessible")
+            return False
 
         except Exception as e:
             print(f"❌ [PRODUCTION] Error selecting start position: {e}")
@@ -1008,33 +1003,30 @@ class ProductionLikeTKATest:
                             f"✅ [PRODUCTION] Beat frame displays {actual_beat_count} beats correctly"
                         )
                         return True
-                    else:
-                        print(
-                            f"❌ [PRODUCTION] Beat frame beat count mismatch: expected {expected_beat_count}, got {actual_beat_count}"
-                        )
-                        return False
-                else:
-                    print("❌ [PRODUCTION] Beat frame sequence not accessible")
+                    print(
+                        f"❌ [PRODUCTION] Beat frame beat count mismatch: expected {expected_beat_count}, got {actual_beat_count}"
+                    )
                     return False
-            else:
-                print(
-                    "❌ [PRODUCTION] Beat frame not accessible - checking attribute structure..."
-                )
-                # Debug: Show what attributes are actually available
-                if hasattr(self.workbench, "_beat_frame_section"):
-                    print(f"🔍 [PRODUCTION] Workbench has _beat_frame_section")
-                    beat_frame_section = self.workbench._beat_frame_section
-                    if hasattr(beat_frame_section, "_beat_frame"):
-                        print(f"🔍 [PRODUCTION] Beat frame section has _beat_frame")
-                    else:
-                        print(
-                            f"🔍 [PRODUCTION] Beat frame section attributes: {[attr for attr in dir(beat_frame_section) if not attr.startswith('__')]}"
-                        )
+                print("❌ [PRODUCTION] Beat frame sequence not accessible")
+                return False
+            print(
+                "❌ [PRODUCTION] Beat frame not accessible - checking attribute structure..."
+            )
+            # Debug: Show what attributes are actually available
+            if hasattr(self.workbench, "_beat_frame_section"):
+                print("🔍 [PRODUCTION] Workbench has _beat_frame_section")
+                beat_frame_section = self.workbench._beat_frame_section
+                if hasattr(beat_frame_section, "_beat_frame"):
+                    print("🔍 [PRODUCTION] Beat frame section has _beat_frame")
                 else:
                     print(
-                        f"🔍 [PRODUCTION] Workbench attributes: {[attr for attr in dir(self.workbench) if not attr.startswith('__')]}"
+                        f"🔍 [PRODUCTION] Beat frame section attributes: {[attr for attr in dir(beat_frame_section) if not attr.startswith('__')]}"
                     )
-                return False
+            else:
+                print(
+                    f"🔍 [PRODUCTION] Workbench attributes: {[attr for attr in dir(self.workbench) if not attr.startswith('__')]}"
+                )
+            return False
 
         except Exception as e:
             print(f"❌ [PRODUCTION] Error validating beat frame display: {e}")
@@ -1146,7 +1138,7 @@ class ProductionLikeTKATest:
                 print("❌ [PRODUCTION] Could not load final sequence file")
                 return False
 
-            print(f"📄 [PRODUCTION] Final sequence file contents:")
+            print("📄 [PRODUCTION] Final sequence file contents:")
             for i, item in enumerate(final_sequence):
                 if i == 0:
                     print(f"   [{i}] Metadata: {item}")

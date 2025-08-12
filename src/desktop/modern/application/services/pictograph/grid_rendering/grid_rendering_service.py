@@ -11,21 +11,20 @@ This service handles:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from PyQt6.QtCore import QByteArray
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
+
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
 from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
 from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
-)
-
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
 )
 
 
@@ -56,7 +55,7 @@ class GridRenderingService:
 
     def render_grid(
         self, scene: QGraphicsScene, grid_mode: str = "diamond"
-    ) -> Optional[QGraphicsSvgItem]:
+    ) -> QGraphicsSvgItem | None:
         """
         Render grid using cached renderer with performance monitoring.
 
@@ -92,13 +91,13 @@ class GridRenderingService:
             return grid_item
 
         except Exception as e:
-            logger.error(f"❌ [GRID_RENDERER] Grid rendering failed: {e}")
+            logger.exception(f"❌ [GRID_RENDERER] Grid rendering failed: {e}")
             self._performance_monitor.record_error("grid_render", str(e))
             return None
         finally:
             self._performance_monitor.end_render_timer(timer_id)
 
-    def _get_grid_renderer(self, grid_mode: str) -> Optional[QSvgRenderer]:
+    def _get_grid_renderer(self, grid_mode: str) -> QSvgRenderer | None:
         """Get cached grid renderer or create new one."""
         cache_key = f"grid_{grid_mode}"
 
@@ -117,7 +116,7 @@ class GridRenderingService:
 
         return renderer
 
-    def _create_grid_renderer(self, grid_mode: str) -> Optional[QSvgRenderer]:
+    def _create_grid_renderer(self, grid_mode: str) -> QSvgRenderer | None:
         """Create new grid renderer with actual SVG loading."""
         timer_id = self._performance_monitor.start_render_timer("svg_load")
 
@@ -148,7 +147,7 @@ class GridRenderingService:
             return self._create_fallback_grid_renderer(grid_mode)
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [GRID_RENDERER] Failed to create {grid_mode} grid renderer: {e}"
             )
             self._performance_monitor.record_error("grid_create", str(e))
@@ -156,7 +155,7 @@ class GridRenderingService:
         finally:
             self._performance_monitor.end_render_timer(timer_id)
 
-    def _create_fallback_grid_renderer(self, grid_mode: str) -> Optional[QSvgRenderer]:
+    def _create_fallback_grid_renderer(self, grid_mode: str) -> QSvgRenderer | None:
         """Create fallback grid renderer when SVG loading fails."""
         try:
             fallback_svg = self._asset_manager.create_fallback_grid_svg(grid_mode)
@@ -171,7 +170,7 @@ class GridRenderingService:
             return None
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [GRID_RENDERER] Failed to create fallback grid renderer: {e}"
             )
             return None

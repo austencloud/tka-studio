@@ -5,10 +5,12 @@ DI Container Test Fixtures
 
 Provides reusable dependency injection container fixtures for testing.
 """
+from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent / "src"
@@ -82,10 +84,6 @@ def configured_di_container():
 def workbench_di_container():
     """Provide a DI container with workbench services configured."""
     try:
-        from presentation.factories.workbench_factory import (
-            configure_workbench_services,
-        )
-
         from application.services.layout.layout_management_service import (
             LayoutManagementService,
         )
@@ -99,6 +97,9 @@ def workbench_di_container():
         from core.interfaces.core_services import (
             ILayoutService,
             IUIStateManagementService,
+        )
+        from presentation.factories.workbench_factory import (
+            configure_workbench_services,
         )
 
         # Reset container to clean state

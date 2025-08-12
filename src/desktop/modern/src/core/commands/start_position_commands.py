@@ -4,16 +4,16 @@ Start Position Commands for Event-Driven Architecture
 Commands for handling start position operations with undo/redo support.
 These replace the complex signal chains in the original architecture.
 """
+from __future__ import annotations
 
-import logging
-import uuid
 from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, Optional
+import logging
+from typing import Any
+import uuid
 
 from desktop.modern.core.commands.command_system import ICommand
 from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.pictograph_data import PictographData
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +25,8 @@ class SetStartPositionCommand(ICommand[BeatData]):
     position_key: str
     event_bus: Any  # IEventBus
     _command_id: str = ""
-    _previous_position: Optional[BeatData] = None
-    _new_beat_data: Optional[BeatData] = None
+    _previous_position: BeatData | None = None
+    _new_beat_data: BeatData | None = None
 
     def __post_init__(self):
         if not self._command_id:
@@ -73,10 +73,10 @@ class SetStartPositionCommand(ICommand[BeatData]):
             return self._new_beat_data
 
         except Exception as e:
-            logger.error(f"❌ Error executing SetStartPositionCommand: {e}")
+            logger.exception(f"❌ Error executing SetStartPositionCommand: {e}")
             raise
 
-    def undo(self) -> Optional[BeatData]:
+    def undo(self) -> BeatData | None:
         """Undo: Restore previous start position"""
         try:
             if self._previous_position:
@@ -86,14 +86,13 @@ class SetStartPositionCommand(ICommand[BeatData]):
                     f"✅ Start position undone, restored: {self._previous_position.letter}"
                 )
                 return self._previous_position
-            else:
-                # Clear start position
-                self._clear_from_persistence()
-                logger.info("✅ Start position undone, cleared")
-                return None
+            # Clear start position
+            self._clear_from_persistence()
+            logger.info("✅ Start position undone, cleared")
+            return None
 
         except Exception as e:
-            logger.error(f"❌ Error undoing SetStartPositionCommand: {e}")
+            logger.exception(f"❌ Error undoing SetStartPositionCommand: {e}")
             raise
 
     def extract_end_position_from_position_key(self, position_key: str) -> str:
@@ -119,7 +118,9 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 raise ValueError("Data conversion service not available")
 
             # Get the dataset query service
-            from desktop.modern.application.services.data.dataset_query import DatasetQuery
+            from desktop.modern.application.services.data.dataset_query import (
+                DatasetQuery,
+            )
             from desktop.modern.domain.models.glyph_models import GlyphData
 
             dataset_service = DatasetQuery()
@@ -154,7 +155,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
                 return start_pos_beat_data
 
         except Exception as e:
-            logger.error(f"❌ Error creating start position data: {e}")
+            logger.exception(f"❌ Error creating start position data: {e}")
             raise
 
     def _save_to_persistence(self, beat_data: BeatData):
@@ -171,7 +172,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             logger.debug(f"💾 Start position saved to persistence: {beat_data.letter}")
 
         except Exception as e:
-            logger.error(f"❌ Error saving start position to persistence: {e}")
+            logger.exception(f"❌ Error saving start position to persistence: {e}")
             raise
 
     def _clear_from_persistence(self):
@@ -185,7 +186,7 @@ class SetStartPositionCommand(ICommand[BeatData]):
             start_position_manager.clear_start_position()
 
         except Exception as e:
-            logger.error(f"❌ Error clearing start position from persistence: {e}")
+            logger.exception(f"❌ Error clearing start position from persistence: {e}")
             raise
 
 
@@ -195,7 +196,7 @@ class ClearStartPositionCommand(ICommand[None]):
 
     event_bus: Any  # IEventBus
     _command_id: str = ""
-    _previous_position: Optional[BeatData] = None
+    _previous_position: BeatData | None = None
 
     def __post_init__(self):
         if not self._command_id:
@@ -235,10 +236,10 @@ class ClearStartPositionCommand(ICommand[None]):
             start_position_manager = SequenceStartPositionManager()
             start_position_manager.clear_start_position()
 
-            return None
+            return
 
         except Exception as e:
-            logger.error(f"❌ Error executing ClearStartPositionCommand: {e}")
+            logger.exception(f"❌ Error executing ClearStartPositionCommand: {e}")
             raise
 
     def undo(self) -> None:
@@ -259,8 +260,8 @@ class ClearStartPositionCommand(ICommand[None]):
             else:
                 logger.warning("⚠️ No previous start position to restore")
 
-            return None
+            return
 
         except Exception as e:
-            logger.error(f"❌ Error undoing ClearStartPositionCommand: {e}")
+            logger.exception(f"❌ Error undoing ClearStartPositionCommand: {e}")
             raise

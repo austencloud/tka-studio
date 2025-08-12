@@ -7,8 +7,6 @@ QGraphicsView-based pictograph display like the legacy system.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QResizeEvent
 from PyQt6.QtWidgets import QGraphicsView
@@ -40,7 +38,7 @@ class BasePictographView(QGraphicsView):
         self._setup_view()
 
         # Store current pictograph data
-        self._current_pictograph_data: Optional[PictographData] = None
+        self._current_pictograph_data: PictographData | None = None
 
     def _setup_view(self):
         """Configure view settings for optimal pictograph display."""
@@ -200,7 +198,7 @@ class BasePictographView(QGraphicsView):
         return self._scene
 
     @property
-    def current_pictograph_data(self) -> Optional[PictographData]:
+    def current_pictograph_data(self) -> PictographData | None:
         """Get the current pictograph data."""
         return self._current_pictograph_data
 

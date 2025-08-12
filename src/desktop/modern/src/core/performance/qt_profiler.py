@@ -10,12 +10,14 @@ Specialized profiler for PyQt6 applications that monitors:
 
 Integrates with existing Qt integration layer and follows TKA patterns.
 """
+from __future__ import annotations
 
+from dataclasses import dataclass, field
 import logging
 import time
+from typing import Any
 import weakref
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set
+
 
 try:
     from PyQt6.QtCore import QEvent, QObject, pyqtSignal
@@ -27,12 +29,14 @@ except ImportError:
     QT_AVAILABLE = False
     QObject = object
     QEvent = object
-    pyqtSignal = lambda: None
+    def pyqtSignal():
+        return None
 
 from .config import PerformanceConfig, get_performance_config
 
 # Result pattern removed - using simple exceptions
 from .metrics import QtEventMetrics
+
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +50,7 @@ class QtObjectMetrics:
     destroyed_count: int = 0
     active_count: int = 0
     peak_count: int = 0
-    creation_times: List[float] = field(default_factory=list)
+    creation_times: list[float] = field(default_factory=list)
 
 
 @dataclass
@@ -76,8 +80,8 @@ class QtProfiler(QObject if QT_AVAILABLE else object):
 
     def __init__(
         self,
-        parent: Optional[QObject] = None,
-        config: Optional[PerformanceConfig] = None,
+        parent: QObject | None = None,
+        config: PerformanceConfig | None = None,
     ):
         if QT_AVAILABLE:
             super().__init__(parent)
@@ -86,17 +90,17 @@ class QtProfiler(QObject if QT_AVAILABLE else object):
         self.is_profiling = False
 
         # Metrics storage
-        self.event_metrics: Dict[str, QtEventMetrics] = {}
-        self.signal_slot_metrics: Dict[str, SignalSlotMetrics] = {}
-        self.paint_metrics: Dict[str, Dict[str, Any]] = {}
-        self.object_metrics: Dict[str, QtObjectMetrics] = {}
+        self.event_metrics: dict[str, QtEventMetrics] = {}
+        self.signal_slot_metrics: dict[str, SignalSlotMetrics] = {}
+        self.paint_metrics: dict[str, dict[str, Any]] = {}
+        self.object_metrics: dict[str, QtObjectMetrics] = {}
 
         # Qt object tracking
-        self.tracked_objects: Set[weakref.ref] = set()
-        self.object_creation_times: Dict[int, float] = {}
+        self.tracked_objects: set[weakref.ref] = set()
+        self.object_creation_times: dict[int, float] = {}
 
         # Event filtering
-        self.original_event_filter: Optional[Any] = None
+        self.original_event_filter: Any | None = None
         self._event_filter_installed = False
 
         # Integration with existing Qt integration
@@ -277,7 +281,7 @@ class QtProfiler(QObject if QT_AVAILABLE else object):
         self.tracked_objects.clear()
         self.object_creation_times.clear()
 
-    def get_qt_performance_summary(self) -> Dict[str, Any]:
+    def get_qt_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive Qt performance summary."""
         return {
             "event_performance": {
@@ -318,7 +322,7 @@ class QtProfiler(QObject if QT_AVAILABLE else object):
             "recommendations": self._generate_qt_recommendations(),
         }
 
-    def _generate_qt_recommendations(self) -> List[Dict[str, str]]:
+    def _generate_qt_recommendations(self) -> list[dict[str, str]]:
         """Generate Qt-specific optimization recommendations."""
         recommendations = []
 
@@ -350,7 +354,7 @@ class QtProfiler(QObject if QT_AVAILABLE else object):
 
 
 # Global Qt profiler instance
-_global_qt_profiler: Optional[QtProfiler] = None
+_global_qt_profiler: QtProfiler | None = None
 
 
 def get_qt_profiler() -> QtProfiler:

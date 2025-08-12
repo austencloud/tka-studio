@@ -2,9 +2,11 @@
 TKA-specific domain events for sequence, motion, and layout operations.
 These events replace direct method calls between services.
 """
+from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional, Any, Dict, List
+from typing import Any
+
 from .event_bus import BaseEvent
 
 
@@ -32,8 +34,8 @@ class SequenceUpdatedEvent(BaseEvent):
     change_type: str = (
         ""  # "beat_added", "beat_removed", "beat_updated", "metadata_changed"
     )
-    previous_state: Optional[Dict[str, Any]] = None
-    new_state: Optional[Dict[str, Any]] = None
+    previous_state: dict[str, Any] | None = None
+    new_state: dict[str, Any] | None = None
 
     @property
     def event_type(self) -> str:
@@ -45,7 +47,7 @@ class BeatAddedEvent(BaseEvent):
     """Published when a beat is added to a sequence."""
 
     sequence_id: str = ""
-    beat_data: Dict[str, Any] = field(default_factory=dict)
+    beat_data: dict[str, Any] = field(default_factory=dict)
     beat_position: int = 0
     total_beats: int = 0
 
@@ -74,7 +76,7 @@ class BeatRemovedEvent(BaseEvent):
     """Published when a beat is removed from a sequence."""
 
     sequence_id: str = ""
-    removed_beat_data: Dict[str, Any] = field(default_factory=dict)
+    removed_beat_data: dict[str, Any] = field(default_factory=dict)
     old_position: int = 0
     remaining_beats: int = 0
 
@@ -91,9 +93,9 @@ class MotionValidatedEvent(BaseEvent):
     """Published when motion validation occurs."""
 
     motion_id: str = ""
-    motion_data: Dict[str, Any] = field(default_factory=dict)
+    motion_data: dict[str, Any] = field(default_factory=dict)
     is_valid: bool = False
-    validation_errors: List[str] = field(default_factory=list)
+    validation_errors: list[str] = field(default_factory=list)
 
     @property
     def event_type(self) -> str:
@@ -108,7 +110,7 @@ class LayoutRecalculatedEvent(BaseEvent):
     """Published when layout is recalculated."""
 
     layout_type: str = ""  # "beat_frame", "component", "responsive"
-    layout_data: Dict[str, Any] = field(default_factory=dict)
+    layout_data: dict[str, Any] = field(default_factory=dict)
     trigger_reason: str = ""  # "sequence_changed", "window_resized", "manual"
 
     @property
@@ -139,7 +141,7 @@ class ArrowPositionedEvent(BaseEvent):
     sequence_id: str = ""
     beat_number: int = 0
     arrow_color: str = ""
-    position_data: Dict[str, Any] = field(default_factory=dict)
+    position_data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def event_type(self) -> str:
@@ -154,7 +156,7 @@ class PropPositionedEvent(BaseEvent):
     beat_number: int = 0
     prop_color: str = ""
     positioning_type: str = ""  # "beta_positioning", "separation", "overlap_detected"
-    position_data: Dict[str, Any] = field(default_factory=dict)
+    position_data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def event_type(self) -> str:

@@ -9,7 +9,6 @@ container lifecycle management.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.dependency_injection.image_export_service_registration import (
@@ -35,8 +34,8 @@ class ExportContainerManager(IExportContainerManager):
 
     def __init__(self):
         """Initialize the container manager."""
-        self._original_container: Optional[DIContainer] = None
-        self._export_container: Optional[DIContainer] = None
+        self._original_container: DIContainer | None = None
+        self._export_container: DIContainer | None = None
         logger.debug("ExportContainerManager initialized")
 
     def setup_export_container(self) -> DIContainer:
@@ -60,7 +59,7 @@ class ExportContainerManager(IExportContainerManager):
             return container
 
         except Exception as e:
-            logger.error(f"Failed to set up export container: {e}")
+            logger.exception(f"Failed to set up export container: {e}")
             raise
 
     def set_as_global_container(self, container: DIContainer) -> None:
@@ -123,5 +122,5 @@ class ExportContainerManager(IExportContainerManager):
         try:
             return container.resolve(ISequenceImageExporter)
         except Exception as e:
-            logger.error(f"Failed to resolve image export service: {e}")
+            logger.exception(f"Failed to resolve image export service: {e}")
             raise

@@ -122,7 +122,7 @@ class SessionStateTracker(ISessionStateTracker):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save session state: {e}")
+            logger.exception(f"Failed to save session state: {e}")
             return False
 
     def load_session_state(self) -> SessionRestoreResult:
@@ -165,7 +165,7 @@ class SessionStateTracker(ISessionStateTracker):
             )
 
         except json.JSONDecodeError as e:
-            logger.error(f"Session file is corrupted: {e}")
+            logger.exception(f"Session file is corrupted: {e}")
             return SessionRestoreResult(
                 success=True,
                 session_restored=False,
@@ -173,7 +173,7 @@ class SessionStateTracker(ISessionStateTracker):
                 error_message="Session file was corrupted",
             )
         except Exception as e:
-            logger.error(f"Failed to load session state: {e}")
+            logger.exception(f"Failed to load session state: {e}")
             return SessionRestoreResult(
                 success=False,
                 session_restored=False,
@@ -208,7 +208,7 @@ class SessionStateTracker(ISessionStateTracker):
             logger.debug(f"Updated current sequence: {sequence_id}")
 
         except Exception as e:
-            logger.error(f"Failed to update current sequence: {e}")
+            logger.exception(f"Failed to update current sequence: {e}")
 
     def update_workbench_state(
         self,
@@ -263,7 +263,7 @@ class SessionStateTracker(ISessionStateTracker):
             logger.debug(f"Updated workbench state: beat_index={beat_index}")
 
         except Exception as e:
-            logger.error(f"Failed to update workbench state: {e}")
+            logger.exception(f"Failed to update workbench state: {e}")
 
     def update_graph_editor_state(
         self,
@@ -289,7 +289,7 @@ class SessionStateTracker(ISessionStateTracker):
             )
 
         except Exception as e:
-            logger.error(f"Failed to update graph editor state: {e}")
+            logger.exception(f"Failed to update graph editor state: {e}")
 
     def update_ui_state(
         self,
@@ -313,7 +313,7 @@ class SessionStateTracker(ISessionStateTracker):
             logger.debug(f"Updated UI state: active_tab={active_tab}")
 
         except Exception as e:
-            logger.error(f"Failed to update UI state: {e}")
+            logger.exception(f"Failed to update UI state: {e}")
 
     def should_restore_session(self) -> bool:
         """Determine if session should be restored (not too stale)."""
@@ -334,7 +334,7 @@ class SessionStateTracker(ISessionStateTracker):
             return self._is_session_fresh(last_interaction)
 
         except Exception as e:
-            logger.error(f"Failed to check session staleness: {e}")
+            logger.exception(f"Failed to check session staleness: {e}")
             return False
 
     def mark_interaction(self) -> None:
@@ -352,7 +352,7 @@ class SessionStateTracker(ISessionStateTracker):
                 self._auto_save_timer.start(self.auto_save_delay_ms)
 
         except Exception as e:
-            logger.error(f"Failed to mark interaction: {e}")
+            logger.exception(f"Failed to mark interaction: {e}")
 
     def clear_session(self) -> bool:
         """Clear current session state and remove session file."""
@@ -368,7 +368,7 @@ class SessionStateTracker(ISessionStateTracker):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to clear session: {e}")
+            logger.exception(f"Failed to clear session: {e}")
             return False
 
     def get_current_session_state(self) -> SessionState | None:
@@ -398,7 +398,7 @@ class SessionStateTracker(ISessionStateTracker):
                 logger.warning("Auto-save failed")
 
         except Exception as e:
-            logger.error(f"Auto-save error: {e}")
+            logger.exception(f"Auto-save error: {e}")
 
     def _is_session_fresh(self, last_interaction: datetime) -> bool:
         """Check if session is fresh enough to restore."""
@@ -458,7 +458,7 @@ class SessionStateTracker(ISessionStateTracker):
             )
 
         except Exception as e:
-            logger.error(f"Failed to parse session data: {e}")
+            logger.exception(f"Failed to parse session data: {e}")
             # Return default session state on parse error
             return SessionState()
 
@@ -475,7 +475,7 @@ class SessionStateTracker(ISessionStateTracker):
             }
             return json.dumps(session_data, indent=2)
         except Exception as e:
-            logger.error(f"Failed to export session state: {e}")
+            logger.exception(f"Failed to export session state: {e}")
             return "{}"
 
     def import_session_state(self, session_json: str) -> bool:
@@ -496,10 +496,10 @@ class SessionStateTracker(ISessionStateTracker):
             return result.success
 
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse session JSON: {e}")
+            logger.exception(f"Failed to parse session JSON: {e}")
             return False
         except Exception as e:
-            logger.error(f"Failed to import session state: {e}")
+            logger.exception(f"Failed to import session state: {e}")
             return False
 
     def migrate_session_state(self, from_version: str, to_version: str) -> bool:
@@ -522,5 +522,5 @@ class SessionStateTracker(ISessionStateTracker):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to migrate session state: {e}")
+            logger.exception(f"Failed to migrate session state: {e}")
             return False

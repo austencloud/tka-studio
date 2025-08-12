@@ -1,1 +1,0 @@
-"""Graphics_Items Package"""

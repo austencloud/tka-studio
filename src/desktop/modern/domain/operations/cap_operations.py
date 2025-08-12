@@ -109,7 +109,7 @@ class StrictRotatedCAP(CAPOperation):
             return result_sequence
 
         except Exception as e:
-            logger.error(f"Error in StrictRotatedCAP.execute: {e}")
+            logger.exception(f"Error in StrictRotatedCAP.execute: {e}")
             return sequence
 
     def validate_applicability(self, sequence: SequenceData) -> bool:
@@ -164,7 +164,7 @@ class StrictRotatedCAP(CAPOperation):
             return rotation_mapping
 
         except Exception as e:
-            logger.error(f"Error calculating rotation mapping: {e}")
+            logger.exception(f"Error calculating rotation mapping: {e}")
             return {}
 
     def _apply_rotation_to_beat(
@@ -217,7 +217,7 @@ class StrictRotatedCAP(CAPOperation):
             return rotated_beat
 
         except Exception as e:
-            logger.error(f"Error applying rotation to beat: {e}")
+            logger.exception(f"Error applying rotation to beat: {e}")
             return beat
 
 
@@ -255,7 +255,7 @@ class StrictMirroredCAP(CAPOperation):
             return result_sequence
 
         except Exception as e:
-            logger.error(f"Error in StrictMirroredCAP.execute: {e}")
+            logger.exception(f"Error in StrictMirroredCAP.execute: {e}")
             return sequence
 
     def validate_applicability(self, sequence: SequenceData) -> bool:
@@ -326,7 +326,7 @@ class StrictMirroredCAP(CAPOperation):
             return mirrored_beat
 
         except Exception as e:
-            logger.error(f"Error applying mirror to beat: {e}")
+            logger.exception(f"Error applying mirror to beat: {e}")
             return beat
 
 
@@ -380,7 +380,7 @@ def apply_cap_to_sequence(
         executor = CAPExecutorFactory.create_executor(cap_type)
         return executor.execute(sequence, **kwargs)
     except Exception as e:
-        logger.error(f"Error applying CAP {cap_type}: {e}")
+        logger.exception(f"Error applying CAP {cap_type}: {e}")
         return sequence
 
 

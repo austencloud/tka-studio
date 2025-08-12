@@ -150,7 +150,7 @@ class WorkbenchExportService(QObject):
                 return False, result.error_message
 
             except Exception as e:
-                logger.error(f"Image export failed with exception: {e}")
+                logger.exception(f"Image export failed with exception: {e}")
                 return self._create_fallback_placeholder(
                     file_path, word, len(sequence_data), e
                 )
@@ -160,7 +160,7 @@ class WorkbenchExportService(QObject):
                 self._container_manager.restore_original_container()
 
         except Exception as e:
-            logger.error(f"Image export failed: {e}")
+            logger.exception(f"Image export failed: {e}")
             return False, f"Image export failed: {e}"
 
     def get_export_directory(self) -> str:
@@ -184,7 +184,7 @@ class WorkbenchExportService(QObject):
             return False, f"Real export failed: {error}. Placeholder created."
 
         except Exception as fallback_error:
-            logger.error(f"Failed to create fallback placeholder: {fallback_error}")
+            logger.exception(f"Failed to create fallback placeholder: {fallback_error}")
             return False, f"Image export failed: {error}"
 
     def _create_default_export_options(self) -> ImageExportOptions:

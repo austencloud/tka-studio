@@ -90,10 +90,6 @@ class ConstructTab(QWidget):
         try:
 
             # Import required services and components
-            from desktop.shared.application.services.data.legacy_to_modern_converter import (
-                LegacyToModernConverter,
-            )
-
             from desktop.modern.application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
@@ -114,6 +110,9 @@ class ConstructTab(QWidget):
             )
             from desktop.modern.presentation.controllers.construct.signal_coordinator import (
                 SignalCoordinator,
+            )
+            from desktop.shared.application.services.data.legacy_to_modern_converter import (
+                LegacyToModernConverter,
             )
 
             # Resolve core services from DI container

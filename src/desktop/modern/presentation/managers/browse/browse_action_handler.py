@@ -62,7 +62,7 @@ class BrowseActionHandler:
             self.metadata_extractor = container.resolve(ISequenceMetadataExtractor)
             self.deletion_service = container.resolve(ISequenceDeletionService)
         except Exception as e:
-            logger.error(f"❌ Failed to initialize services from DI container: {e}")
+            logger.exception(f"❌ Failed to initialize services from DI container: {e}")
             self._initialize_fallback_services()
 
     def handle_edit_sequence(self, sequence_id: str) -> str:
@@ -296,12 +296,11 @@ class BrowseActionHandler:
         logger.warning("Initializing fallback services")
 
         # Create basic fallback implementations
-        from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
-            SequenceMetadataExtractor,
-        )
-
         from desktop.modern.application.services.browse.sequence_deletion_service import (
             SequenceDeletionService,
+        )
+        from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
+            SequenceMetadataExtractor,
         )
 
         self.metadata_extractor = SequenceMetadataExtractor()

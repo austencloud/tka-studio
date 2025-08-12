@@ -3,15 +3,17 @@ Integration tests for Graph Editor functionality
 
 Tests the complete data flow from beat selection through modification to UI updates.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+import sys
+from unittest.mock import Mock
 
-import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import QApplication
+import pytest
+
 
 # Add modern/src to path for imports
 modern_src_path = Path(__file__).parent.parent.parent / "src"
@@ -39,7 +41,7 @@ class TestGraphEditorIntegration:
         app = QApplication.instance()
         if app is None:
             app = QApplication([])
-        yield app
+        return app
         # Don't quit the app as it might be used by other tests
 
     @pytest.fixture

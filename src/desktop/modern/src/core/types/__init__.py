@@ -1,14 +1,16 @@
 """
 Core types module for framework-agnostic data structures.
 """
+from __future__ import annotations
 
-from .geometry import Size, Point, Rect, SizeType, PointType, RectType
+from .geometry import Point, PointType, Rect, RectType, Size, SizeType
+
 
 __all__ = [
-    "Size",
     "Point",
-    "Rect",
-    "SizeType",
     "PointType",
+    "Rect",
     "RectType",
+    "Size",
+    "SizeType",
 ]

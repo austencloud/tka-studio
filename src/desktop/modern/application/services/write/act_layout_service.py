@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Tuple
 
 from desktop.modern.core.interfaces.write_services import IActLayoutService
 
@@ -40,7 +39,7 @@ class ActLayoutService(IActLayoutService):
             f"ActLayoutService initialized (size range: {min_sequence_size}-{max_sequence_size})"
         )
 
-    def calculate_grid_dimensions(self, sequence_count: int) -> Tuple[int, int]:
+    def calculate_grid_dimensions(self, sequence_count: int) -> tuple[int, int]:
         """
         Calculate optimal grid dimensions for sequences.
 
@@ -109,7 +108,7 @@ class ActLayoutService(IActLayoutService):
         grid_cols: int,
         grid_rows: int,
         padding: int = 10,
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate size for individual sequences in the grid.
 
@@ -152,7 +151,7 @@ class ActLayoutService(IActLayoutService):
 
         return (sequence_size, sequence_size)
 
-    def get_sequence_position(self, index: int, grid_cols: int) -> Tuple[int, int]:
+    def get_sequence_position(self, index: int, grid_cols: int) -> tuple[int, int]:
         """
         Get grid position for a sequence index.
 
@@ -173,7 +172,7 @@ class ActLayoutService(IActLayoutService):
 
     def calculate_total_grid_size(
         self, sequence_count: int, sequence_size: int, padding: int = 10
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Calculate total size needed for a grid of sequences.
 
@@ -197,7 +196,7 @@ class ActLayoutService(IActLayoutService):
 
     def get_sequence_rect(
         self, index: int, grid_cols: int, sequence_size: int, padding: int = 10
-    ) -> Tuple[int, int, int, int]:
+    ) -> tuple[int, int, int, int]:
         """
         Get the bounding rectangle for a sequence at the given index.
 
@@ -295,7 +294,7 @@ class ActLayoutService(IActLayoutService):
         available_height: int,
         sequence_count: int,
         padding: int = 10,
-    ) -> Tuple[int, int, int]:
+    ) -> tuple[int, int, int]:
         """
         Get recommended grid dimensions and sequence size for available space.
 

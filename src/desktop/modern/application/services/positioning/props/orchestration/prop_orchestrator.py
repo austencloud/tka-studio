@@ -16,7 +16,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 import uuid
 
 
@@ -45,6 +45,9 @@ from typing import Any
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
 
 from PyQt6.QtCore import QPointF
+
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import PropType
 from desktop.shared.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
@@ -61,9 +64,6 @@ from desktop.shared.application.services.positioning.props.configuration.json_co
     IJSONConfigurator,
     JSONConfigurator,
 )
-
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.enums import PropType
 
 
 # Event-driven architecture imports
@@ -121,7 +121,7 @@ class PropOrchestrator(IPropOrchestrator):
         offset_service: IOffsetCalculationService | None = None,
         config_service: IJSONConfigurator | None = None,
         classification_service: IPropClassificationService | None = None,
-        event_bus: Optional[IEventBus] = None,
+        event_bus: IEventBus | None = None,
     ):
         """Initialize with dependency injection."""
         self.direction_service = direction_service or DirectionCalculationService()
@@ -305,7 +305,7 @@ class PropOrchestrator(IPropOrchestrator):
 
     def _apply_swap_override(self, beat_data: BeatData) -> BeatData:
         """Apply manual swap override from special placements."""
-        override_data = self.config_service.get_swap_override_data(beat_data)
+        self.config_service.get_swap_override_data(beat_data)
 
         # TODO: Implement specific override application logic
         # This would modify the beat_data with specific positioning overrides

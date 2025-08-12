@@ -4,14 +4,15 @@ Performance Framework Tests
 Comprehensive test suite for the TKA performance framework including
 profiler functionality, metrics collection, Qt integration, and regression detection.
 """
+from __future__ import annotations
 
+import contextlib
+from datetime import datetime, timedelta
 import threading
 import time
-from datetime import datetime, timedelta
-from typing import Any, Dict
-from unittest.mock import MagicMock, Mock, patch
 
 import pytest
+
 from core.performance import (
     AdvancedProfiler,
     FunctionMetrics,
@@ -129,7 +130,7 @@ class TestAdvancedProfiler:
         @self.profiler.profile_function
         def memory_intensive_function():
             # Allocate some memory
-            data = [i for i in range(10000)]
+            data = list(range(10000))
             return len(data)
 
         result = memory_intensive_function()
@@ -353,7 +354,6 @@ class TestPerformanceStorage:
     def setup_method(self):
         """Setup test environment."""
         # Use temporary database for testing
-        import os
         import tempfile
 
         config = PerformanceConfig.create_default()
@@ -376,10 +376,8 @@ class TestPerformanceStorage:
         """Clean up test environment."""
         import os
 
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(self.temp_db.name)
-        except OSError:
-            pass
 
     def test_storage_initialization(self):
         """Test storage initialization."""
@@ -443,7 +441,6 @@ class TestPerformanceIntegration:
         # Start session
         result = profiler.start_session("integration_test")
         assert result.is_success()
-        session_id = result.value
 
         # Profile some functions
         @profile

@@ -52,9 +52,9 @@ def test_basic_structure():
             StartPositionUIService,
         )
 
-        data_service = StartPositionDataService()
+        StartPositionDataService()
         selection_service = StartPositionSelectionService()
-        ui_service = StartPositionUIService()
+        StartPositionUIService()
 
         print("    ✅ Basic services instantiated successfully")
         success_count += 1
@@ -94,8 +94,8 @@ def test_basic_structure():
         selection_service = StartPositionSelectionService()
 
         # Test validation
-        assert selection_service.validate_selection("alpha1_alpha1") == True
-        assert selection_service.validate_selection("invalid") == False
+        assert selection_service.validate_selection("alpha1_alpha1")
+        assert not selection_service.validate_selection("invalid")
 
         # Test extraction
         assert (

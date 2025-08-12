@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 from desktop.modern.core.interfaces.workbench_services import IDictionaryService
@@ -12,11 +10,11 @@ class WorkbenchIndicatorSection(QWidget):
     """Indicator section component for sequence workbench status display"""
 
     def __init__(
-        self, dictionary_service: IDictionaryService, parent: Optional[QWidget] = None
+        self, dictionary_service: IDictionaryService, parent: QWidget | None = None
     ):
         super().__init__(parent)
         self._dictionary_service = dictionary_service
-        self._current_sequence: Optional[SequenceData] = None
+        self._current_sequence: SequenceData | None = None
         self._setup_ui()
 
     def _setup_ui(self):
@@ -53,7 +51,7 @@ class WorkbenchIndicatorSection(QWidget):
         layout.addWidget(self._current_word_label)
         layout.addWidget(self._circular_indicator)
 
-    def update_sequence(self, sequence: Optional[SequenceData]):
+    def update_sequence(self, sequence: SequenceData | None):
         """Update display based on current sequence"""
         self._current_sequence = sequence
 

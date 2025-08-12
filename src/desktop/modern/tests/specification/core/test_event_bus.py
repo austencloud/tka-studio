@@ -5,19 +5,20 @@ PURPOSE: Contract testing for TypeSafeEventBus implementation
 SCOPE: Event publishing, subscription, async handling, type safety
 EXPECTED_DURATION: permanent
 """
+from __future__ import annotations
 
-import pytest
 import asyncio
-from typing import List
 from unittest.mock import Mock
 
+import pytest
+
 from core.events.event_bus import (
-    TypeSafeEventBus,
-    SequenceEvent,
     ArrowEvent,
-    MotionEvent,
-    UIEvent,
     EventPriority,
+    MotionEvent,
+    SequenceEvent,
+    TypeSafeEventBus,
+    UIEvent,
     get_event_bus,
     reset_event_bus,
 )

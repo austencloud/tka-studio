@@ -3,14 +3,16 @@ File-based Settings Service for TKA
 
 Provides persistent settings storage using JSON files.
 """
+from __future__ import annotations
 
+from datetime import datetime
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from desktop.modern.core.interfaces.core_services import ISettingsCoordinator
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,20 +35,20 @@ class FileBasedSettingsService(ISettingsCoordinator):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.settings_file = self.data_dir / "settings.json"
-        self.settings: Dict[str, Any] = self._load_initial_settings()
+        self.settings: dict[str, Any] = self._load_initial_settings()
         logger.info(
             f"FileBasedSettingsService initialized with data_dir: {self.data_dir}"
         )
 
-    def _load_initial_settings(self) -> Dict[str, Any]:
+    def _load_initial_settings(self) -> dict[str, Any]:
         """Load initial settings from file or create defaults."""
         if self.settings_file.exists():
             try:
-                with open(self.settings_file, "r", encoding="utf-8") as f:
+                with open(self.settings_file, encoding="utf-8") as f:
                     settings = json.load(f)
                 logger.debug(f"Loaded settings from {self.settings_file}")
                 return settings
-            except (json.JSONDecodeError, IOError) as e:
+            except (OSError, json.JSONDecodeError) as e:
                 logger.warning(f"Failed to load settings file: {e}, using defaults")
 
         # Return default settings
@@ -65,7 +67,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
         self._save_to_file(default_settings)
         return default_settings
 
-    def _save_to_file(self, settings: Dict[str, Any]) -> bool:
+    def _save_to_file(self, settings: dict[str, Any]) -> bool:
         """Save settings to file."""
         try:
             # Add timestamp
@@ -83,7 +85,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save settings: {e}")
+            logger.exception(f"Failed to save settings: {e}")
             return False
 
     def get_setting(self, key: str, default: Any = None) -> Any:
@@ -109,19 +111,19 @@ class FileBasedSettingsService(ISettingsCoordinator):
         """Load settings from persistent storage."""
         if self.settings_file.exists():
             try:
-                with open(self.settings_file, "r", encoding="utf-8") as f:
+                with open(self.settings_file, encoding="utf-8") as f:
                     loaded_settings = json.load(f)
 
                 # Update current settings with loaded values
                 self.settings.update(loaded_settings)
                 logger.info(f"Settings loaded successfully from {self.settings_file}")
 
-            except (json.JSONDecodeError, IOError) as e:
-                logger.error(f"Failed to load settings: {e}")
+            except (OSError, json.JSONDecodeError) as e:
+                logger.exception(f"Failed to load settings: {e}")
         else:
             logger.warning(f"Settings file not found: {self.settings_file}")
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> dict[str, Any]:
         """Get all settings as a dictionary."""
         return self.settings.copy()
 

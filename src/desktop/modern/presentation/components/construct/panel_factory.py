@@ -85,7 +85,7 @@ class PanelFactory:
                     IAnimationOrchestrator,
                 )
 
-                animation_orchestrator = self.container.resolve(IAnimationOrchestrator)
+                self.container.resolve(IAnimationOrchestrator)
                 # Store it in the orchestrator for the picker to access
                 orchestrator._container = self.container
             except Exception:

@@ -34,14 +34,14 @@ from .turn_adjustment_controls.turn_adjustment_controls import TurnAdjustmentCon
 
 
 __all__ = [
-    # Refactored components (primary)
-    "PictographDisplaySection",
-    "MainAdjustmentPanel",
-    "DetailedInfoPanel",
-    "DualOrientationPicker",
-    "TurnAdjustmentControls",
     # Legacy components (backward compatibility)
     "AdjustmentPanel",
+    "DetailedInfoPanel",
+    "DualOrientationPicker",
     "GraphEditorPictographContainer",
+    "MainAdjustmentPanel",
     "OrientationPickerWidget",
+    # Refactored components (primary)
+    "PictographDisplaySection",
+    "TurnAdjustmentControls",
 ]

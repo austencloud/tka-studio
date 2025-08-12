@@ -10,15 +10,11 @@ from __future__ import annotations
 import logging
 import os
 import traceback
-from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from desktop.shared.application.services.pictograph.arrow_rendering_service import (
-    ArrowRenderingService,
-)
 
 from desktop.modern.core.dependency_injection.di_container import get_container
 from desktop.modern.core.interfaces.positioning_services import (
@@ -28,6 +24,9 @@ from desktop.modern.core.interfaces.positioning_services import (
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
+from desktop.shared.application.services.pictograph.arrow_rendering_service import (
+    ArrowRenderingService,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +42,7 @@ class ArrowItem(QGraphicsSvgItem):
 
     def __init__(
         self,
-        color: str = None,
+        color: str | None = None,
         motion_data: MotionData = None,
         pictograph_data: PictographData = None,
         parent=None,
@@ -51,7 +50,7 @@ class ArrowItem(QGraphicsSvgItem):
         super().__init__(parent)
 
         # Arrow data
-        self.arrow_color: Optional[str] = color
+        self.arrow_color: str | None = color
         self.motion_data = motion_data
         self.pictograph_data = pictograph_data
 
@@ -112,7 +111,7 @@ class ArrowItem(QGraphicsSvgItem):
         # Business Logic: Calculate position and apply transforms
         self._calculate_and_apply_position()
 
-    def _load_svg_renderer(self) -> Optional[QSvgRenderer]:
+    def _load_svg_renderer(self) -> QSvgRenderer | None:
         """Load SVG renderer using business logic for asset management."""
         # Business Logic: Get primary SVG path
         arrow_svg_path = self._arrow_renderer.asset_manager.get_arrow_svg_path(
@@ -203,7 +202,7 @@ class ArrowItem(QGraphicsSvgItem):
                     )
 
                 except Exception as e:
-                    logger.error(f"Positioning orchestrator failed: {e}")
+                    logger.exception(f"Positioning orchestrator failed: {e}")
                     traceback.print_exc()
                     position_x, position_y, rotation = 475.0, 475.0, 0.0  # Fallback
                     logger.warning(
@@ -223,7 +222,6 @@ class ArrowItem(QGraphicsSvgItem):
         if self._positioning_orchestrator:
             # Use existing arrow data if available, otherwise create new
             if existing_arrow_data:
-                arrow_data_for_mirror = existing_arrow_data
                 # Check if mirror state is already set in the data
                 if existing_arrow_data.is_mirrored:
                     logger.debug(
@@ -296,7 +294,7 @@ class ArrowItem(QGraphicsSvgItem):
 
     def update_arrow(
         self,
-        color: str = None,
+        color: str | None = None,
         motion_data: MotionData = None,
         pictograph_data: PictographData = None,
     ):

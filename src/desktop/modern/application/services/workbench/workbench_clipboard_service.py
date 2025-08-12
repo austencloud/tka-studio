@@ -67,7 +67,7 @@ class WorkbenchClipboardService:
             return False, "Failed to copy text to clipboard"
 
         except Exception as e:
-            logger.error(f"Clipboard copy operation failed: {e}")
+            logger.exception(f"Clipboard copy operation failed: {e}")
             return False, f"Clipboard operation failed: {e}"
 
     def get_clipboard_text(self) -> tuple[bool, str]:
@@ -92,7 +92,7 @@ class WorkbenchClipboardService:
             return False, "No text in clipboard"
 
         except Exception as e:
-            logger.error(f"Clipboard get operation failed: {e}")
+            logger.exception(f"Clipboard get operation failed: {e}")
             return False, f"Clipboard operation failed: {e}"
 
     def is_clipboard_available(self) -> bool:
@@ -103,7 +103,7 @@ class WorkbenchClipboardService:
                 and self._clipboard_adapter.is_available()
             )
         except Exception as e:
-            logger.error(f"Clipboard availability check failed: {e}")
+            logger.exception(f"Clipboard availability check failed: {e}")
             return False
 
     def get_clipboard_stats(self) -> dict:
@@ -153,7 +153,7 @@ class QtClipboardAdapter(IClipboardAdapter):
         except ImportError:
             logger.warning("PyQt6 not available, clipboard operations disabled")
         except Exception as e:
-            logger.error(f"Failed to initialize Qt clipboard: {e}")
+            logger.exception(f"Failed to initialize Qt clipboard: {e}")
 
     def set_text(self, text: str) -> bool:
         """Set text in Qt clipboard."""
@@ -165,7 +165,7 @@ class QtClipboardAdapter(IClipboardAdapter):
             return True
 
         except Exception as e:
-            logger.error(f"Qt clipboard set_text failed: {e}")
+            logger.exception(f"Qt clipboard set_text failed: {e}")
             return False
 
     def get_text(self) -> str:
@@ -177,7 +177,7 @@ class QtClipboardAdapter(IClipboardAdapter):
             return self._clipboard.text()
 
         except Exception as e:
-            logger.error(f"Qt clipboard get_text failed: {e}")
+            logger.exception(f"Qt clipboard get_text failed: {e}")
             return ""
 
     def is_available(self) -> bool:

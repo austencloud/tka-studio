@@ -124,7 +124,7 @@ class MotionControlsSection(QFrame):
             logger.debug(f"Motion visibility changed: {color} = {visible}")
 
         except Exception as e:
-            logger.error(f"Error changing motion visibility: {e}")
+            logger.exception(f"Error changing motion visibility: {e}")
             # Revert toggle state on error
             toggle = self.motion_toggles.get(color)
             if toggle:

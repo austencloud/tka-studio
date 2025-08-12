@@ -68,7 +68,7 @@ class PictographDataManager:
             )
 
         except Exception as e:
-            logger.error(f"❌ Failed to load pictograph data: {e}")
+            logger.exception(f"❌ Failed to load pictograph data: {e}")
             self.all_data = []
 
     def _find_data_directory(self) -> Path | None:
@@ -321,7 +321,7 @@ class CSVToPictographConverter:
             )
 
         except Exception as e:
-            logger.error(f"Failed to convert CSV row to PictographData: {e}")
+            logger.exception(f"Failed to convert CSV row to PictographData: {e}")
             return None
 
     def _create_motion_data(
@@ -352,7 +352,7 @@ class CSVToPictographConverter:
             )
 
         except Exception as e:
-            logger.error(f"Failed to create {color} motion data: {e}")
+            logger.exception(f"Failed to create {color} motion data: {e}")
             return None
 
     def _str_to_motion_type(self, value: str) -> MotionType:

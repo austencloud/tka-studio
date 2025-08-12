@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Optional
+
 import pandas as pd
 
 
 class DataPathHandler:
     """Centralized handler for data file paths and loading operations."""
 
-    _instance: Optional["DataPathHandler"] = None
-    _data_dir: Optional[Path] = None
+    _instance: DataPathHandler | None = None
+    _data_dir: Path | None = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -26,7 +28,7 @@ class DataPathHandler:
         # To: data/
         project_root = current_file.parent.parent.parent.parent
         data_dir = project_root / "data"
-        
+
         # Fallback: if data dir doesn't exist, look for it by searching upwards
         if not data_dir.exists():
             # Search upwards from current file to find the data directory
@@ -36,14 +38,14 @@ class DataPathHandler:
                 if potential_data.exists() and (potential_data / "DiamondPictographDataframe.csv").exists():
                     return potential_data
                 search_path = search_path.parent
-            
+
             # Last resort: look for TKA directory structure
             search_path = current_file.parent
             while search_path.parent != search_path:
                 if search_path.name == "TKA":
                     return search_path / "data"
                 search_path = search_path.parent
-        
+
         return data_dir
 
     @property
@@ -63,13 +65,13 @@ class DataPathHandler:
         """Get the box pictograph CSV file path."""
         return self.data_dir / "BoxPictographDataframe.csv"
 
-    def load_diamond_dataset(self) -> Optional[pd.DataFrame]:
+    def load_diamond_dataset(self) -> pd.DataFrame | None:
         """Load diamond pictograph dataset."""
         if self.diamond_csv_path.exists():
             return pd.read_csv(self.diamond_csv_path)
         return None
 
-    def load_box_dataset(self) -> Optional[pd.DataFrame]:
+    def load_box_dataset(self) -> pd.DataFrame | None:
         """Load box pictograph dataset."""
         if self.box_csv_path.exists():
             return pd.read_csv(self.box_csv_path)

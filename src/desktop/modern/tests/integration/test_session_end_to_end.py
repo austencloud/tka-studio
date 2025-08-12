@@ -4,14 +4,16 @@ End-to-End Tests for TKA Auto-Save/Restore System
 Tests the complete user workflow from application startup to shutdown,
 validating that users can continue exactly where they left off.
 """
+from __future__ import annotations
 
+from pathlib import Path
 import sys
 import tempfile
 import time
-from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
+
 
 # Add TKA src to path
 tka_src_path = Path(__file__).parent.parent.parent / "src"
@@ -25,7 +27,6 @@ from core.interfaces.core_services import IUIStateManagementService
 from core.interfaces.session_services import ISessionStateService
 from core.testing.ai_agent_helpers import TKAAITestHelper
 from domain.models.beat_data import BeatData
-from domain.models.sequence_data import SequenceData
 
 
 class TestSessionEndToEnd:
@@ -131,7 +132,7 @@ class TestSessionEndToEnd:
         # Simulate application restart by creating new service instances
         new_container = ApplicationFactory.create_test_app()
         new_session_service = new_container.resolve(ISessionStateService)
-        new_ui_state_service = new_container.resolve(IUIStateManagementService)
+        new_container.resolve(IUIStateManagementService)
 
         # Override session file location for new service
         if hasattr(new_session_service, "session_file"):
@@ -199,7 +200,8 @@ class TestSessionEndToEnd:
         # Test initialization with session restore
         # Note: In real app, this would restore UI state
         restore_result = self.session_service.load_session_state()
-        assert restore_result.success and restore_result.session_restored
+        assert restore_result.success
+        assert restore_result.session_restored
         print("✅ Session restored during application initialization")
 
     def test_performance_no_ui_lag(self):
@@ -291,12 +293,13 @@ class TestSessionEndToEnd:
 
         # Save session
         save_success = self.session_service.save_session_state()
-        assert save_success and self.session_file.exists()
+        assert save_success
+        assert self.session_file.exists()
 
         # Verify file format
         import json
 
-        with open(self.session_file, "r") as f:
+        with open(self.session_file) as f:
             session_data = json.load(f)
 
         # Check required sections

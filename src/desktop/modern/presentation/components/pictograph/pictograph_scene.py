@@ -12,9 +12,6 @@ import uuid
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtWidgets import QGraphicsScene
-from desktop.shared.application.services.pictograph.pictograph_visibility_manager import (
-    get_pictograph_visibility_manager,
-)
 
 from desktop.modern.domain.models import BeatData
 from desktop.modern.domain.models.arrow_data import ArrowData
@@ -25,6 +22,9 @@ from desktop.modern.domain.models.pictograph_utils import (
     should_show_positions,
     should_show_tka,
     should_show_vtg,
+)
+from desktop.shared.application.services.pictograph.pictograph_visibility_manager import (
+    get_pictograph_visibility_manager,
 )
 
 
@@ -175,16 +175,15 @@ class PictographScene(QGraphicsScene):
             return
 
         try:
-            from desktop.shared.application.services.pictograph.arrow_rendering_service import (
-                ArrowRenderingService,
-            )
-
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.core.interfaces.positioning_services import (
                 IArrowCoordinateSystemService,
                 IArrowPositioningOrchestrator,
+            )
+            from desktop.shared.application.services.pictograph.arrow_rendering_service import (
+                ArrowRenderingService,
             )
 
             container = get_container()
@@ -221,12 +220,12 @@ class PictographScene(QGraphicsScene):
             self.visibility_changed.emit()
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Error updating visibility in PictographScene {self.scene_id}: {e}"
             )
             import traceback
 
-            logger.error(f"Traceback: {traceback.format_exc()}")
+            logger.exception(f"Traceback: {traceback.format_exc()}")
 
     def _update_element_visibility(
         self, element_type: str, element_name: str, visible: bool
@@ -256,22 +255,22 @@ class PictographScene(QGraphicsScene):
                     self.refresh_with_current_visibility()
                     return
 
-            elif element_type == "glyph" or element_type == "other":
+            elif element_type in {"glyph", "other"}:
                 # For glyphs and other elements, use the full refresh approach
                 # since identifying specific glyph items is complex
                 self.refresh_with_current_visibility()
                 return
 
         except Exception as e:
-            logger.error(f"Error in targeted visibility update: {e}")
+            logger.exception(f"Error in targeted visibility update: {e}")
             import traceback
 
-            logger.error(f"Traceback: {traceback.format_exc()}")
+            logger.exception(f"Traceback: {traceback.format_exc()}")
             # Fallback to full refresh if targeted update fails
             try:
                 self.refresh_with_current_visibility()
             except Exception as refresh_error:
-                logger.error(f"Even refresh failed: {refresh_error}")
+                logger.exception(f"Even refresh failed: {refresh_error}")
 
     def render_pictograph(self, pictograph_data: PictographData) -> None:
         """Render a complete pictograph from pictograph data."""

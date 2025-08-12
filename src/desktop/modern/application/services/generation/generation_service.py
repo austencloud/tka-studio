@@ -51,7 +51,7 @@ class GenerationService(IGenerationService):
             self.freeform_service = FreeformGenerator()
             logger.info("✅ Freeform generator initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize freeform generator: {e!s}")
+            logger.exception(f"❌ Failed to initialize freeform generator: {e!s}")
             raise RuntimeError(f"Cannot initialize freeform generation: {e}")
 
         try:
@@ -60,7 +60,7 @@ class GenerationService(IGenerationService):
             self.circular_service = CircularGenerator()
             logger.info("✅ Circular generator initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize circular generator: {e!s}")
+            logger.exception(f"❌ Failed to initialize circular generator: {e!s}")
             raise RuntimeError(f"Cannot initialize circular generation: {e}")
 
         # Validation service removed - validation is now built into generators

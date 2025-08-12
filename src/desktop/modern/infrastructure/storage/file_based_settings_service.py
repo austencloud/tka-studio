@@ -86,7 +86,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to save settings: {e}")
+            logger.exception(f"Failed to save settings: {e}")
             return False
 
     def get_setting(self, key: str, default: Any = None) -> Any:
@@ -120,7 +120,7 @@ class FileBasedSettingsService(ISettingsCoordinator):
                 logger.info(f"Settings loaded successfully from {self.settings_file}")
 
             except (OSError, json.JSONDecodeError) as e:
-                logger.error(f"Failed to load settings: {e}")
+                logger.exception(f"Failed to load settings: {e}")
         else:
             logger.warning(f"Settings file not found: {self.settings_file}")
 

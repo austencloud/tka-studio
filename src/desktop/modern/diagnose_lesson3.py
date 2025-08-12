@@ -31,7 +31,7 @@ def diagnose_learn_tab():
         from PyQt6.QtWidgets import QApplication
 
         # Create Qt application
-        app = QApplication(sys.argv)
+        QApplication(sys.argv)
 
         print("\n📋 Step 1: Check Service Registration")
         print("-" * 40)
@@ -97,8 +97,8 @@ def diagnose_learn_tab():
             )
 
             # Check position variety for answer options
-            start_positions = set(p.get("start_pos") for p in letter_data)
-            end_positions = set(p.get("end_pos") for p in letter_data)
+            start_positions = {p.get("start_pos") for p in letter_data}
+            end_positions = {p.get("end_pos") for p in letter_data}
             print(f"✅ Unique start positions: {sorted(start_positions)}")
             print(f"✅ Unique end positions: {sorted(end_positions)}")
 
@@ -120,11 +120,10 @@ def diagnose_learn_tab():
         question_service = container.resolve(IQuestionGenerationService)
 
         # Test Lesson3 specifically
+        from desktop.modern.domain.models.learn import LessonType, QuizMode
         from desktop.shared.application.services.learn.lesson_configuration_service import (
             LessonConfigurationService,
         )
-
-        from desktop.modern.domain.models.learn import LessonType, QuizMode
 
         # Get Lesson3 config
         config_service = LessonConfigurationService()

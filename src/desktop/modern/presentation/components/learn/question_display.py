@@ -59,7 +59,7 @@ class PictographQuestionRenderer(QuestionRenderer):
             return pictograph_widget
 
         except Exception as e:
-            logger.error(f"Failed to render pictograph: {e}")
+            logger.exception(f"Failed to render pictograph: {e}")
             return self._create_error_widget(f"Rendering error: {e}", parent)
 
     def _extract_pictograph_data(self, question_content: Any) -> PictographData | None:
@@ -208,7 +208,7 @@ class QuestionDisplay(QWidget):
             logger.debug(f"Displayed {format_type} question: {question.question_id}")
 
         except Exception as e:
-            logger.error(f"Failed to show question: {e}")
+            logger.exception(f"Failed to show question: {e}")
             self._show_error_message(f"Failed to display question: {e}")
 
     def _get_renderer(self, format_type: str) -> QuestionRenderer:
@@ -257,7 +257,7 @@ class QuestionDisplay(QWidget):
                 self.content_widget.setFont(font)
 
         except Exception as e:
-            logger.error(f"Failed to update responsive styling: {e}")
+            logger.exception(f"Failed to update responsive styling: {e}")
 
     def get_current_format(self) -> str:
         """Get current display format."""

@@ -8,18 +8,17 @@ Responsible for coordinating between the option picker component and sequence ma
 from __future__ import annotations
 
 import time
-from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
-from desktop.shared.application.services.data.conversion_utils import (
-    extract_end_position_from_position_key,
-)
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.components.option_picker import (
     OptionPicker,
+)
+from desktop.shared.application.services.data.conversion_utils import (
+    extract_end_position_from_position_key,
 )
 
 
@@ -41,7 +40,7 @@ class OptionPickerManager(QObject):
 
     def __init__(
         self,
-        option_picker: Optional[OptionPicker],
+        option_picker: OptionPicker | None,
     ):
         super().__init__()
         self.option_picker = option_picker
@@ -231,7 +230,7 @@ class OptionPickerManager(QObject):
 
         try:
             self.option_picker.refresh_options_from_modern_sequence(sequence)
-            total_time = (time.perf_counter() - start_time) * 1000
+            (time.perf_counter() - start_time) * 1000
         except Exception as e:
             print(f"❌ [OPTION_PICKER_MANAGER] Error during refresh: {e}")
             import traceback

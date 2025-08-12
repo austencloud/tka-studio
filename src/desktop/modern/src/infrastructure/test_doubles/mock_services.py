@@ -4,8 +4,9 @@ Mock service implementations for testing.
 These services provide the same interface as production services
 but use in-memory storage and simplified logic for fast testing.
 """
+from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Import service interfaces
 from desktop.modern.core.interfaces.core_services import (
@@ -27,18 +28,18 @@ class InMemorySequenceDataService(ISequenceDataService):
     """In-memory sequence data service for testing."""
 
     def __init__(self):
-        self.sequences: Dict[str, Dict[str, Any]] = {}
+        self.sequences: dict[str, dict[str, Any]] = {}
         self._id_counter = 0
 
-    def get_all_sequences(self) -> List[Dict[str, Any]]:
+    def get_all_sequences(self) -> list[dict[str, Any]]:
         """Get all sequences from memory."""
         return list(self.sequences.values())
 
-    def get_sequence_by_id(self, sequence_id: str) -> Optional[Dict[str, Any]]:
+    def get_sequence_by_id(self, sequence_id: str) -> dict[str, Any] | None:
         """Get sequence by ID."""
         return self.sequences.get(sequence_id)
 
-    def save_sequence(self, sequence_data: Dict[str, Any]) -> bool:
+    def save_sequence(self, sequence_data: dict[str, Any]) -> bool:
         """Save sequence to memory."""
         if "id" not in sequence_data:
             sequence_data["id"] = f"seq_{self._id_counter}"
@@ -54,7 +55,7 @@ class InMemorySequenceDataService(ISequenceDataService):
             return True
         return False
 
-    def create_new_sequence(self, name: str) -> Dict[str, Any]:
+    def create_new_sequence(self, name: str) -> dict[str, Any]:
         """Create new empty sequence."""
         sequence = {
             "id": f"seq_{self._id_counter}",
@@ -94,14 +95,13 @@ class MockLayoutService(ILayoutService):
         """Calculate component size with simple logic."""
         if component_type == "beat_frame":
             return Size(200, 200)
-        elif component_type == "pictograph":
+        if component_type == "pictograph":
             return Size(150, 150)
-        else:
-            return Size(parent_size.width // 2, parent_size.height // 2)
+        return Size(parent_size.width // 2, parent_size.height // 2)
 
     def calculate_beat_frame_layout(
-        self, sequence: Any, container_size: Tuple[int, int]
-    ) -> Dict[str, Any]:
+        self, sequence: Any, container_size: tuple[int, int]
+    ) -> dict[str, Any]:
         """Mock beat frame layout calculation."""
         return {
             "grid_size": (4, 4),
@@ -111,22 +111,22 @@ class MockLayoutService(ILayoutService):
         }
 
     def calculate_responsive_scaling(
-        self, content_size: Tuple[int, int], container_size: Tuple[int, int]
+        self, content_size: tuple[int, int], container_size: tuple[int, int]
     ) -> float:
         """Mock responsive scaling."""
         return 1.0
 
     def get_optimal_grid_layout(
-        self, item_count: int, container_size: Tuple[int, int]
-    ) -> Tuple[int, int]:
+        self, item_count: int, container_size: tuple[int, int]
+    ) -> tuple[int, int]:
         """Mock grid layout calculation."""
         cols = min(4, item_count)
         rows = (item_count + cols - 1) // cols
         return (rows, cols)
 
     def calculate_component_positions(
-        self, layout_config: Dict[str, Any]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, layout_config: dict[str, Any]
+    ) -> dict[str, tuple[int, int]]:
         """Mock component position calculation."""
         return {"component_1": (0, 0), "component_2": (200, 0), "component_3": (0, 200)}
 
@@ -135,7 +135,7 @@ class InMemorySettingsService(ISettingsCoordinator):
     """In-memory settings service for testing."""
 
     def __init__(self):
-        self.settings: Dict[str, Any] = {
+        self.settings: dict[str, Any] = {
             "window_width": 1920,
             "window_height": 1080,
             "layout_ratio": [3, 1],
@@ -161,19 +161,19 @@ class InMemorySettingsService(ISettingsCoordinator):
 class MockValidationService(IValidationService):
     """Mock validation service that always passes."""
 
-    def validate_sequence(self, sequence_data: Dict[str, Any]) -> bool:
+    def validate_sequence(self, sequence_data: dict[str, Any]) -> bool:
         """Mock sequence validation."""
         return "name" in sequence_data and "beats" in sequence_data
 
-    def validate_beat(self, beat_data: Dict[str, Any]) -> bool:
+    def validate_beat(self, beat_data: dict[str, Any]) -> bool:
         """Mock beat validation."""
         return True
 
-    def validate_motion(self, motion_data: Dict[str, Any]) -> bool:
+    def validate_motion(self, motion_data: dict[str, Any]) -> bool:
         """Mock motion validation."""
         return True
 
-    def get_validation_errors(self, data: Dict[str, Any]) -> List[str]:
+    def get_validation_errors(self, data: dict[str, Any]) -> list[str]:
         """Mock validation errors."""
         return []
 
@@ -183,7 +183,7 @@ class MockArrowManagementService(IArrowManagementService):
 
     def calculate_arrow_position(
         self, arrow_data: Any, pictograph_data: Any
-    ) -> Tuple[float, float, float]:
+    ) -> tuple[float, float, float]:
         """Mock arrow position calculation."""
         return (100.0, 100.0, 0.0)
 
@@ -204,7 +204,7 @@ class MockSequenceManager(ISequenceManager):
     """Mock sequence management service."""
 
     def __init__(self):
-        self.sequences: Dict[str, Any] = {}
+        self.sequences: dict[str, Any] = {}
         self._id_counter = 0
 
     def create_sequence(self, name: str, length: int = 16) -> Any:
@@ -268,7 +268,7 @@ class MockPictographManagementService(IPictographManager):
         """Create pictograph from beat data."""
         return self.create_pictograph()
 
-    def search_dataset(self, query: Dict[str, Any]) -> List[Any]:
+    def search_dataset(self, query: dict[str, Any]) -> list[Any]:
         """Mock dataset search."""
         # Return some mock results
         return [
@@ -276,7 +276,7 @@ class MockPictographManagementService(IPictographManager):
             self.create_pictograph(),
         ]
 
-    def get_pictographs_by_letter(self, letter: str) -> List[Any]:
+    def get_pictographs_by_letter(self, letter: str) -> list[Any]:
         """Mock get pictographs by letter."""
         # Return some mock pictographs for any letter
         return [
@@ -289,8 +289,8 @@ class MockUIStateManagementService(IUIStateManager):
     """Mock UI state management service."""
 
     def __init__(self):
-        self.settings: Dict[str, Any] = {}
-        self.tab_states: Dict[str, Dict[str, Any]] = {}
+        self.settings: dict[str, Any] = {}
+        self.tab_states: dict[str, dict[str, Any]] = {}
         self.graph_editor_visible = False
         self._session_service = None
 
@@ -302,7 +302,7 @@ class MockUIStateManagementService(IUIStateManager):
         """Set UI setting."""
         self.settings[key] = value
 
-    def get_tab_state(self, tab_name: str) -> Dict[str, Any]:
+    def get_tab_state(self, tab_name: str) -> dict[str, Any]:
         """Get tab state."""
         return self.tab_states.get(tab_name, {})
 

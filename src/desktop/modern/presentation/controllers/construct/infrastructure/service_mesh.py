@@ -81,9 +81,9 @@ class CircuitBreaker:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except Exception as e:
+        except Exception:
             self._on_failure()
-            raise e
+            raise
 
     def _should_attempt_reset(self) -> bool:
         """Check if we should attempt to reset the circuit."""
@@ -179,7 +179,7 @@ class ServiceProxy:
                     method_name, duration, success=False, error=str(e)
                 )
 
-                raise e
+                raise
 
         return wrapper
 
@@ -286,7 +286,7 @@ class ComponentServiceMesh:
             self.logger.info(f"Component {service_name} registered in service mesh")
             return proxy
         except Exception as e:
-            self.logger.error(f"Failed to register component {service_name}: {e}")
+            self.logger.exception(f"Failed to register component {service_name}: {e}")
             # Return original component as fallback
             return component
 

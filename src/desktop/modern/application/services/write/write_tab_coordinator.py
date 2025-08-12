@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.write_services import (
     ActData,
@@ -55,8 +55,8 @@ class WriteTabCoordinator(IWriteTabCoordinator):
         self.act_layout_service = act_layout_service
 
         # Current state
-        self.current_act: Optional[ActData] = None
-        self.current_file_path: Optional[Path] = None
+        self.current_act: ActData | None = None
+        self.current_file_path: Path | None = None
         self.is_modified = False
 
         # Signals for UI communication
@@ -96,7 +96,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return new_act
 
         except Exception as e:
-            logger.error(f"Failed to create new act: {e}")
+            logger.exception(f"Failed to create new act: {e}")
             return ActData()  # Return empty act as fallback
 
     def load_act_from_file(self, file_path: Path) -> bool:
@@ -133,10 +133,10 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to load act from {file_path}: {e}")
+            logger.exception(f"Failed to load act from {file_path}: {e}")
             return False
 
-    def save_current_act(self, file_path: Optional[Path] = None) -> bool:
+    def save_current_act(self, file_path: Path | None = None) -> bool:
         """
         Save the current act.
 
@@ -179,14 +179,14 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to save current act: {e}")
+            logger.exception(f"Failed to save current act: {e}")
             return False
 
-    def get_current_act(self) -> Optional[ActData]:
+    def get_current_act(self) -> ActData | None:
         """Get the currently loaded act."""
         return self.current_act
 
-    def add_sequence_to_current_act(self, sequence_data: Dict[str, Any]) -> bool:
+    def add_sequence_to_current_act(self, sequence_data: dict[str, Any]) -> bool:
         """
         Add a sequence to the current act.
 
@@ -216,7 +216,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to add sequence to current act: {e}")
+            logger.exception(f"Failed to add sequence to current act: {e}")
             return False
 
     def remove_sequence_from_current_act(self, position: int) -> bool:
@@ -248,7 +248,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to remove sequence from current act: {e}")
+            logger.exception(f"Failed to remove sequence from current act: {e}")
             return False
 
     def move_sequence_in_current_act(
@@ -284,11 +284,11 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to move sequence in current act: {e}")
+            logger.exception(f"Failed to move sequence in current act: {e}")
             return False
 
     def update_current_act_info(
-        self, name: str = None, description: str = None
+        self, name: str | None = None, description: str | None = None
     ) -> bool:
         """
         Update basic info for the current act.
@@ -330,7 +330,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to update current act info: {e}")
+            logger.exception(f"Failed to update current act info: {e}")
             return False
 
     def load_music_for_current_act(self, music_file_path: Path) -> bool:
@@ -362,7 +362,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to load music for current act: {e}")
+            logger.exception(f"Failed to load music for current act: {e}")
             return False
 
     def play_music(self) -> bool:
@@ -373,7 +373,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
                 self._signals.playback_started.emit()
             return success
         except Exception as e:
-            logger.error(f"Failed to start music playback: {e}")
+            logger.exception(f"Failed to start music playback: {e}")
             return False
 
     def pause_music(self) -> bool:
@@ -384,7 +384,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
                 self._signals.playback_paused.emit()
             return success
         except Exception as e:
-            logger.error(f"Failed to pause music playback: {e}")
+            logger.exception(f"Failed to pause music playback: {e}")
             return False
 
     def stop_music(self) -> bool:
@@ -395,7 +395,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
                 self._signals.playback_stopped.emit()
             return success
         except Exception as e:
-            logger.error(f"Failed to stop music playback: {e}")
+            logger.exception(f"Failed to stop music playback: {e}")
             return False
 
     def get_music_position(self) -> float:
@@ -403,7 +403,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
         try:
             return self.music_player_service.get_position()
         except Exception as e:
-            logger.error(f"Failed to get music position: {e}")
+            logger.exception(f"Failed to get music position: {e}")
             return 0.0
 
     def set_music_position(self, position: float) -> bool:
@@ -414,7 +414,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
                 self._signals.position_changed.emit(position)
             return success
         except Exception as e:
-            logger.error(f"Failed to set music position: {e}")
+            logger.exception(f"Failed to set music position: {e}")
             return False
 
     def get_music_duration(self) -> float:
@@ -422,7 +422,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
         try:
             return self.music_player_service.get_duration()
         except Exception as e:
-            logger.error(f"Failed to get music duration: {e}")
+            logger.exception(f"Failed to get music duration: {e}")
             return 0.0
 
     def is_music_playing(self) -> bool:
@@ -430,10 +430,10 @@ class WriteTabCoordinator(IWriteTabCoordinator):
         try:
             return self.music_player_service.is_playing()
         except Exception as e:
-            logger.error(f"Failed to check music playback status: {e}")
+            logger.exception(f"Failed to check music playback status: {e}")
             return False
 
-    def get_available_acts(self) -> list[Dict[str, Any]]:
+    def get_available_acts(self) -> list[dict[str, Any]]:
         """
         Get list of available acts with metadata.
 
@@ -454,7 +454,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             return acts_info
 
         except Exception as e:
-            logger.error(f"Failed to get available acts: {e}")
+            logger.exception(f"Failed to get available acts: {e}")
             return []
 
     def calculate_grid_layout(self, sequence_count: int) -> tuple[int, int]:
@@ -465,7 +465,7 @@ class WriteTabCoordinator(IWriteTabCoordinator):
         """Check if the current act has unsaved changes."""
         return self.is_modified
 
-    def get_current_file_path(self) -> Optional[Path]:
+    def get_current_file_path(self) -> Path | None:
         """Get the current act file path."""
         return self.current_file_path
 
@@ -502,4 +502,4 @@ class WriteTabCoordinator(IWriteTabCoordinator):
             logger.info("WriteTabCoordinator cleanup completed")
 
         except Exception as e:
-            logger.error(f"Error during WriteTabCoordinator cleanup: {e}")
+            logger.exception(f"Error during WriteTabCoordinator cleanup: {e}")

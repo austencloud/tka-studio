@@ -8,7 +8,7 @@ These models represent settings data without any UI coupling.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.domain.models.enums import BackgroundType, GridMode, PropType
 
@@ -18,8 +18,8 @@ class UserProfileData:
     """Immutable user profile data."""
 
     name: str
-    created_at: Optional[str] = None
-    last_used: Optional[str] = None
+    created_at: str | None = None
+    last_used: str | None = None
     preferences: dict[str, Any] = field(default_factory=dict)
 
     def update(self, **kwargs) -> UserProfileData:

@@ -11,11 +11,13 @@ Service Lifecycle Contract Tests
 
 Defines behavioral contracts for service lifecycle management.
 """
+from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
+
 
 # Add modern source to path
 modern_src = Path(__file__).parent.parent.parent.parent / "src"
@@ -197,7 +199,7 @@ class TestServiceLifecycleContracts:
 
             # Test initial state
             initial_state1 = graph_service1.is_visible()
-            initial_state2 = graph_service2.is_visible()
+            graph_service2.is_visible()
 
             # Modify state of first service
             new_state1 = graph_service1.toggle_graph_visibility()

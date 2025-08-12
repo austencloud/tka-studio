@@ -8,7 +8,6 @@ following the stack-based navigation pattern.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import ILearnNavigationService
 
@@ -32,7 +31,7 @@ class LearnNavigationService(ILearnNavigationService):
     def __init__(self):
         """Initialize learn navigation service."""
         self._current_view: str = self.VIEW_LESSON_SELECTOR
-        self._current_session_id: Optional[str] = None
+        self._current_session_id: str | None = None
         self._navigation_history: list[str] = [self.VIEW_LESSON_SELECTOR]
 
         logger.info("Learn navigation service initialized")
@@ -47,7 +46,7 @@ class LearnNavigationService(ILearnNavigationService):
             logger.debug("Navigated to lesson selector")
 
         except Exception as e:
-            logger.error(f"Failed to navigate to lesson selector: {e}")
+            logger.exception(f"Failed to navigate to lesson selector: {e}")
 
     def navigate_to_lesson(self, session_id: str) -> None:
         """
@@ -68,7 +67,7 @@ class LearnNavigationService(ILearnNavigationService):
             logger.debug(f"Navigated to lesson view for session {session_id}")
 
         except Exception as e:
-            logger.error(f"Failed to navigate to lesson for session {session_id}: {e}")
+            logger.exception(f"Failed to navigate to lesson for session {session_id}: {e}")
 
     def navigate_to_results(self, session_id: str) -> None:
         """
@@ -89,7 +88,7 @@ class LearnNavigationService(ILearnNavigationService):
             logger.debug(f"Navigated to results view for session {session_id}")
 
         except Exception as e:
-            logger.error(f"Failed to navigate to results for session {session_id}: {e}")
+            logger.exception(f"Failed to navigate to results for session {session_id}: {e}")
 
     def get_current_view(self) -> str:
         """
@@ -100,7 +99,7 @@ class LearnNavigationService(ILearnNavigationService):
         """
         return self._current_view
 
-    def get_current_session_id(self) -> Optional[str]:
+    def get_current_session_id(self) -> str | None:
         """
         Get current session ID if in lesson or results view.
 
@@ -120,7 +119,7 @@ class LearnNavigationService(ILearnNavigationService):
             # Can navigate back if there's history beyond current view
             return len(self._navigation_history) > 1
         except Exception as e:
-            logger.error(f"Failed to check back navigation: {e}")
+            logger.exception(f"Failed to check back navigation: {e}")
             return False
 
     def navigate_back(self) -> bool:
@@ -165,7 +164,7 @@ class LearnNavigationService(ILearnNavigationService):
             return True
 
         except Exception as e:
-            logger.error(f"Failed to navigate back: {e}")
+            logger.exception(f"Failed to navigate back: {e}")
             return False
 
     def get_navigation_stack_index(self) -> int:
@@ -185,7 +184,7 @@ class LearnNavigationService(ILearnNavigationService):
             return view_to_index.get(self._current_view, 0)
 
         except Exception as e:
-            logger.error(f"Failed to get navigation stack index: {e}")
+            logger.exception(f"Failed to get navigation stack index: {e}")
             return 0
 
     def reset_navigation(self) -> None:
@@ -198,7 +197,7 @@ class LearnNavigationService(ILearnNavigationService):
             logger.debug("Navigation state reset")
 
         except Exception as e:
-            logger.error(f"Failed to reset navigation: {e}")
+            logger.exception(f"Failed to reset navigation: {e}")
 
     def _add_to_history(self, view: str) -> None:
         """
@@ -218,7 +217,7 @@ class LearnNavigationService(ILearnNavigationService):
                 self._navigation_history = self._navigation_history[-max_history_size:]
 
         except Exception as e:
-            logger.error(f"Failed to add view to history: {e}")
+            logger.exception(f"Failed to add view to history: {e}")
 
     def get_navigation_state(self) -> dict:
         """
@@ -236,7 +235,7 @@ class LearnNavigationService(ILearnNavigationService):
                 "can_navigate_back": self.can_navigate_back(),
             }
         except Exception as e:
-            logger.error(f"Failed to get navigation state: {e}")
+            logger.exception(f"Failed to get navigation state: {e}")
             return {
                 "current_view": "unknown",
                 "current_session_id": None,

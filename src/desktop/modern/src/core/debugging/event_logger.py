@@ -3,17 +3,18 @@ Event Logger for debugging event-driven architecture.
 
 This provides comprehensive logging of all events and commands for debugging purposes.
 """
+from __future__ import annotations
 
 import logging
-from typing import Any, Dict
-from datetime import datetime
+from typing import Any
 
-from desktop.modern.core.events.event_bus import BaseEvent
 from desktop.modern.core.events.domain_events import (
     CommandExecutedEvent,
-    CommandUndoneEvent,
     CommandRedoneEvent,
+    CommandUndoneEvent,
 )
+from desktop.modern.core.events.event_bus import BaseEvent
+
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +54,7 @@ class EventLogger:
             )
 
         except Exception as e:
-            logger.error(f"❌ Error setting up EventLogger subscriptions: {e}")
+            logger.exception(f"❌ Error setting up EventLogger subscriptions: {e}")
 
     def enable(self):
         """Enable event logging"""
@@ -173,8 +174,8 @@ def log_debug_info():
 
     try:
         from desktop.modern.core.service_locator import (
-            get_sequence_state_manager,
             get_command_processor,
+            get_sequence_state_manager,
         )
 
         # Log state manager info
@@ -211,4 +212,4 @@ def log_debug_info():
             logger.info(f"   Events Logged: {_event_logger.get_event_count()}")
 
     except Exception as e:
-        logger.error(f"❌ Error logging debug info: {e}")
+        logger.exception(f"❌ Error logging debug info: {e}")

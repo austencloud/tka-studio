@@ -27,16 +27,18 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 # Import Qt types for compatibility (only for interface)
 from PyQt6.QtGui import QImage
 
+from desktop.modern.core.interfaces.image_export_services import (
+    ImageExportOptions,
+    ISequenceImageRenderer,
+)
+
 # Import the Qt adapter for actual rendering
 from desktop.shared.application.adapters.qt_image_export_adapter import (
     QtImageExportAdapter,
     create_qt_image_export_adapter,
 )
-from desktop.shared.application.services.core.image_export_service import CoreImageExportService
-
-from desktop.modern.core.interfaces.image_export_services import (
-    ImageExportOptions,
-    ISequenceImageRenderer,
+from desktop.shared.application.services.core.image_export_service import (
+    CoreImageExportService,
 )
 
 
@@ -162,7 +164,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             self._copy_qt_image_to_target(rendered_image, image)
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Sequence beats rendering failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Sequence beats rendering failed: {e}")
             # Fall back to legacy method if available
             if hasattr(self, "beat_drawer"):
                 self._legacy_render_sequence_beats(image, sequence_data, options)
@@ -184,7 +186,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             logger.debug("Word rendering integrated into complete image rendering")
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Word rendering failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Word rendering failed: {e}")
             # Fall back to legacy method if available
             if hasattr(self, "word_drawer"):
                 self._legacy_render_word(image, word, options)
@@ -200,7 +202,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             # The core service includes user info in its commands
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] User info rendering failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] User info rendering failed: {e}")
             # Fall back to legacy method if available
             if hasattr(self, "user_info_drawer"):
                 self._legacy_render_user_info(image, options)
@@ -218,7 +220,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             # The core service includes difficulty level in its commands
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Difficulty level rendering failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Difficulty level rendering failed: {e}")
             # Fall back to legacy method if available
             if hasattr(self, "difficulty_drawer"):
                 self._legacy_render_difficulty_level(image, difficulty_level, options)
@@ -272,7 +274,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ [IMAGE_RENDERER] Complete sequence image rendering failed: {e}"
             )
             # Fall back to legacy implementation if available
@@ -303,7 +305,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             return layout_info.get("beat_size", 100)
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Beat size calculation failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Beat size calculation failed: {e}")
             # Legacy fallback calculation
             return self._legacy_calculate_beat_size(
                 image_width, image_height, columns, rows
@@ -329,7 +331,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             return (header_height, footer_height)
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Height calculation failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Height calculation failed: {e}")
             # Legacy fallback
             return self._legacy_calculate_additional_height(options)
 
@@ -362,7 +364,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                 "include_timestamp": False,
             }
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Options conversion failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Options conversion failed: {e}")
             return {"beat_count": beat_count}
 
     def _copy_qt_image_to_target(self, source: QImage, target: QImage) -> None:
@@ -378,7 +380,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             painter.end()
 
         except Exception as e:
-            logger.error(f"❌ [IMAGE_RENDERER] Image copy failed: {e}")
+            logger.exception(f"❌ [IMAGE_RENDERER] Image copy failed: {e}")
 
     # ========================================================================
     # LEGACY FALLBACK METHODS (Maintained for transition)
@@ -393,7 +395,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                 rows = (len(sequence_data) + cols - 1) // cols
                 self.beat_drawer.draw_beats(image, sequence_data, cols, rows, options)
             except Exception as e:
-                logger.error(f"Legacy sequence beats fallback failed: {e}")
+                logger.exception(f"Legacy sequence beats fallback failed: {e}")
 
     def _legacy_render_word(self, image, word, options):
         """Legacy fallback for word rendering."""
@@ -403,7 +405,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                 num_filled_beats = getattr(options, "num_filled_beats", 0)
                 self.word_drawer.draw_word(image, word, num_filled_beats, options)
             except Exception as e:
-                logger.error(f"Legacy word fallback failed: {e}")
+                logger.exception(f"Legacy word fallback failed: {e}")
 
     def _legacy_render_user_info(self, image, options):
         """Legacy fallback for user info rendering."""
@@ -413,7 +415,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                 num_filled_beats = getattr(options, "num_filled_beats", 0)
                 self.user_info_drawer.draw_user_info(image, options, num_filled_beats)
             except Exception as e:
-                logger.error(f"Legacy user info fallback failed: {e}")
+                logger.exception(f"Legacy user info fallback failed: {e}")
 
     def _legacy_render_difficulty_level(self, image, difficulty_level, options):
         """Legacy fallback for difficulty level rendering."""
@@ -424,7 +426,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                     image, difficulty_level, options
                 )
             except Exception as e:
-                logger.error(f"Legacy difficulty level fallback failed: {e}")
+                logger.exception(f"Legacy difficulty level fallback failed: {e}")
 
     def _legacy_render_sequence_image(
         self, image, sequence_data, word, columns, rows, options
@@ -446,7 +448,7 @@ class SequenceImageRenderer(ISequenceImageRenderer):
                 self._legacy_render_difficulty_level(image, difficulty_level, options)
 
         except Exception as e:
-            logger.error(f"Legacy complete rendering fallback failed: {e}")
+            logger.exception(f"Legacy complete rendering fallback failed: {e}")
 
     def _legacy_calculate_beat_size(self, image_width, image_height, columns, rows):
         """Legacy fallback for beat size calculation."""

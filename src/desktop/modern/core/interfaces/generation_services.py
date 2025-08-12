@@ -10,7 +10,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 
 if TYPE_CHECKING:
@@ -63,15 +63,15 @@ class GenerationMetadata:
     generation_time_ms: int
     algorithm_used: str
     parameters_hash: str
-    warnings: Optional[list[str]] = None
+    warnings: list[str] | None = None
 
 
 @dataclass(frozen=True)
 class ValidationResult:
     is_valid: bool
-    errors: Optional[list[str]] = None
-    warnings: Optional[list[str]] = None
-    suggestions: Optional[list[str]] = None
+    errors: list[str] | None = None
+    warnings: list[str] | None = None
+    suggestions: list[str] | None = None
 
 
 class IGenerationService(ABC):

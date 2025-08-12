@@ -88,7 +88,7 @@ class LearnStateManager(QObject):
             logger.info("Transitioned to lesson selector")
 
         except Exception as e:
-            logger.error(f"Failed to transition to lesson selector: {e}")
+            logger.exception(f"Failed to transition to lesson selector: {e}")
             self._handle_error(
                 InvalidStateTransition(
                     self._state.current_view.value,
@@ -169,7 +169,7 @@ class LearnStateManager(QObject):
             )
 
         except Exception as e:
-            logger.error(f"Failed to transition to lesson workspace: {e}")
+            logger.exception(f"Failed to transition to lesson workspace: {e}")
             self._handle_error(
                 e
                 if isinstance(e, LearnError)
@@ -209,7 +209,7 @@ class LearnStateManager(QObject):
             logger.info("Transitioned to results view")
 
         except Exception as e:
-            logger.error(f"Failed to transition to results: {e}")
+            logger.exception(f"Failed to transition to results: {e}")
             self._handle_error(
                 e
                 if isinstance(e, LearnError)
@@ -243,7 +243,7 @@ class LearnStateManager(QObject):
             logger.debug(f"Updated current question: {question.question_id}")
 
         except Exception as e:
-            logger.error(f"Failed to update question: {e}")
+            logger.exception(f"Failed to update question: {e}")
             self._handle_error(e if isinstance(e, LearnError) else LearnError(str(e)))
 
     def update_progress(self, **kwargs) -> None:
@@ -264,7 +264,7 @@ class LearnStateManager(QObject):
             logger.debug(f"Updated progress: {kwargs}")
 
         except Exception as e:
-            logger.error(f"Failed to update progress: {e}")
+            logger.exception(f"Failed to update progress: {e}")
             self._handle_error(LearnError(f"Progress update failed: {e}"))
 
     def update_ui_state(self, **kwargs) -> None:
@@ -286,7 +286,7 @@ class LearnStateManager(QObject):
             logger.debug(f"Updated UI state: {kwargs}")
 
         except Exception as e:
-            logger.error(f"Failed to update UI state: {e}")
+            logger.exception(f"Failed to update UI state: {e}")
             self._handle_error(LearnError(f"UI state update failed: {e}"))
 
     def set_error(self, error: LearnError) -> None:

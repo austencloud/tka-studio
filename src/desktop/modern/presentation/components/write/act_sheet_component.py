@@ -8,7 +8,7 @@ Displays the current act's sequences and provides editing capabilities.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -40,7 +40,7 @@ class ActHeaderComponent(QFrame):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
 
-        self.current_act: Optional[ActData] = None
+        self.current_act: ActData | None = None
 
         self._setup_ui()
         self._setup_styling()
@@ -154,7 +154,7 @@ class ActHeaderComponent(QFrame):
         description = self.description_edit.toPlainText().strip()
         self.act_info_changed.emit(name, description)
 
-    def set_act(self, act: Optional[ActData]):
+    def set_act(self, act: ActData | None):
         """Set the current act to edit."""
         self.current_act = act
 
@@ -219,7 +219,7 @@ class SequenceThumbnailWidget(QFrame):
     remove_requested = pyqtSignal(int)  # position
 
     def __init__(
-        self, position: int, sequence_data: Dict[str, Any], parent: QWidget = None
+        self, position: int, sequence_data: dict[str, Any], parent: QWidget = None
     ):
         super().__init__(parent)
 
@@ -316,7 +316,7 @@ class SequenceGridComponent(QScrollArea):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
 
-        self.sequence_widgets: List[SequenceThumbnailWidget] = []
+        self.sequence_widgets: list[SequenceThumbnailWidget] = []
 
         self._setup_ui()
         self._setup_styling()
@@ -367,7 +367,7 @@ class SequenceGridComponent(QScrollArea):
             }
         """)
 
-    def set_sequences(self, sequences: List[Dict[str, Any]]):
+    def set_sequences(self, sequences: list[dict[str, Any]]):
         """Set the sequences to display."""
         self._clear_widgets()
 
@@ -455,7 +455,7 @@ class ActSheetComponent(QFrame):
             self.sequence_remove_requested.emit
         )
 
-    def set_act(self, act: Optional[ActData]):
+    def set_act(self, act: ActData | None):
         """Set the current act to display."""
         self.header.set_act(act)
 

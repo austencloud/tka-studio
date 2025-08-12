@@ -95,7 +95,7 @@ class ProgressiveLoadingService(QObject):
             self._loading_timer.start(50)  # Process chunk every 50ms
 
         except Exception as e:
-            logger.error(f"❌ Failed to start progressive loading: {e}")
+            logger.exception(f"❌ Failed to start progressive loading: {e}")
             self._finish_loading_with_error(str(e))
 
     def cancel_loading(self) -> None:
@@ -211,7 +211,7 @@ class ProgressiveLoadingService(QObject):
             return sequences
 
         except Exception as e:
-            logger.error(f"❌ [PROGRESSIVE] Error filtering sequences: {e}")
+            logger.exception(f"❌ [PROGRESSIVE] Error filtering sequences: {e}")
             raise DataLoadError(f"Failed to filter sequences: {e}") from e
 
     def _apply_starting_letter_filter(self, filter_value) -> list[SequenceData]:
@@ -266,7 +266,7 @@ class ProgressiveLoadingService(QObject):
 
     def _apply_difficulty_filter(self, filter_value) -> list[SequenceData]:
         """Apply difficulty filter logic."""
-        if filter_value == "All" or filter_value == "All Levels":
+        if filter_value in {"All", "All Levels"}:
             return self.dictionary_manager.get_all_sequences()
         logger.info(f"📊 [PROGRESSIVE] Filtering by difficulty: {filter_value}")
         return self.dictionary_manager.get_sequences_by_difficulty(filter_value)
@@ -279,7 +279,7 @@ class ProgressiveLoadingService(QObject):
 
     def _apply_grid_mode_filter(self, filter_value) -> list[SequenceData]:
         """Apply grid mode filter logic."""
-        if filter_value == "All" or filter_value == "All Styles":
+        if filter_value in {"All", "All Styles"}:
             return self.dictionary_manager.get_all_sequences()
         return self.dictionary_manager.get_sequences_by_grid_mode(filter_value)
 
