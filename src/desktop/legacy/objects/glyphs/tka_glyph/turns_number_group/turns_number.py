@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Union,Optional
-from typing import TYPE_CHECKING,Optional
+from typing import TYPE_CHECKING
 
 from PyQt6.QtGui import QColor, QPainter, QPen
 from PyQt6.QtSvg import QSvgRenderer

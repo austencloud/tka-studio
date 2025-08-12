@@ -45,14 +45,26 @@ class ICSVReader(ABC):
 class CSVReader(ICSVReader):
     def __init__(self, data_path: Optional[Path] = None):
         if data_path is None:
-            # Find project root by searching for a 'data' folder upwards from this file
+            # Find desktop data directory first, then fallback to project root
             current = Path(__file__).resolve().parent
             root_data = None
+            
+            # First, try to find desktop/data directory
             for parent in [current] + list(current.parents):
-                candidate = parent / "data"
-                if candidate.is_dir():
-                    root_data = candidate
-                    break
+                if parent.name == "desktop":
+                    candidate = parent / "data"
+                    if candidate.is_dir() and (candidate / "DiamondPictographDataframe.csv").exists():
+                        root_data = candidate
+                        break
+            
+            # If desktop data not found, search for any data directory upwards
+            if root_data is None:
+                for parent in [current] + list(current.parents):
+                    candidate = parent / "data"
+                    if candidate.is_dir():
+                        root_data = candidate
+                        break
+            
             if root_data is None:
                 raise FileNotFoundError(
                     "Could not locate 'data' directory in parent paths."
