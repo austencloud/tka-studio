@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Staff Orientation Test Interface</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 20px;
+				background-color: #f5f5f5;
+			}
+
+			.header {
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+			.controls {
+				display: flex;
+				justify-content: center;
+				gap: 20px;
+				margin-bottom: 30px;
+				flex-wrap: wrap;
+			}
+
+			.control-group {
+				background: white;
+				padding: 15px;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			.main-container {
+				display: flex;
+				gap: 20px;
+				max-width: 1600px;
+				margin: 0 auto;
+			}
+
+			.grid-container {
+				flex: 2;
+				background: white;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.pictograph-grid {
+				position: relative;
+				width: 500px;
+				height: 500px;
+				margin: 20px auto;
+				background: white;
+				border: 2px solid #ddd;
+				border-radius: 8px;
+			}
+
+			.grid-svg {
+				width: 100%;
+				height: 100%;
+			}
+
+			.position-marker {
+				position: absolute;
+				width: 40px;
+				height: 40px;
+				border: 2px solid #007bff;
+				border-radius: 50%;
+				background: rgba(0, 123, 255, 0.1);
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 10px;
+				font-weight: bold;
+				color: #007bff;
+				transition: all 0.3s ease;
+				transform: translate(-50%, -50%);
+			}
+
+			.position-marker:hover {
+				background: rgba(0, 123, 255, 0.2);
+				border-width: 3px;
+			}
+
+			.position-marker.selected {
+				background: rgba(0, 123, 255, 0.3);
+				border-width: 3px;
+				box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+			}
+
+			.staff-on-grid {
+				position: absolute;
+				width: 60px;
+				height: 20px;
+				transform: translate(-50%, -50%);
+				pointer-events: none;
+			}
+
+			.position-cell {
+				aspect-ratio: 1;
+				border: 2px solid #ddd;
+				border-radius: 8px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				background: #fafafa;
+				position: relative;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.position-cell:hover {
+				border-color: #007bff;
+				background: #f0f8ff;
+			}
+
+			.position-cell.selected {
+				border-color: #007bff;
+				background: #e3f2fd;
+				box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+			}
+
+			.position-label {
+				font-weight: bold;
+				margin-bottom: 5px;
+				font-size: 12px;
+			}
+
+			.staff-preview {
+				width: 40px;
+				height: 40px;
+				position: relative;
+			}
+
+			.staff-line {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 30px;
+				height: 3px;
+				background: #333;
+				transform-origin: center;
+				transition: transform 0.3s ease;
+			}
+
+			.angle-display {
+				font-size: 10px;
+				color: #666;
+				margin-top: 2px;
+			}
+
+			.detail-panel {
+				flex: 1;
+				background: white;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				max-height: 800px;
+				overflow-y: auto;
+			}
+
+			.single-orientation-control {
+				background: #f8f9fa;
+				padding: 20px;
+				border-radius: 8px;
+				border: 2px solid #007bff;
+				margin-bottom: 20px;
+			}
+
+			.orientation-controls {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 15px;
+				margin-bottom: 20px;
+			}
+
+			.orientation-item {
+				border: 1px solid #ddd;
+				border-radius: 6px;
+				padding: 15px;
+				background: #fafafa;
+			}
+
+			.orientation-item.active {
+				border-color: #007bff;
+				background: #f0f8ff;
+			}
+
+			.orientation-label {
+				font-weight: bold;
+				margin-bottom: 10px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.angle-input {
+				width: 80px;
+				padding: 5px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				text-align: center;
+			}
+
+			.angle-controls {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				margin-top: 5px;
+			}
+
+			.angle-shift-btn {
+				width: 50px;
+				height: 35px;
+				padding: 5px;
+				font-size: 14px;
+				font-weight: bold;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				background: #f8f9fa;
+				cursor: pointer;
+				transition: background 0.2s ease;
+			}
+
+			.angle-shift-btn:hover {
+				background: #e9ecef;
+				border-color: #007bff;
+			}
+
+			.large-staff-preview {
+				width: 80px;
+				height: 80px;
+				margin: 10px auto;
+				position: relative;
+				border: 1px solid #eee;
+				border-radius: 50%;
+				background: radial-gradient(circle, #f9f9f9 0%, #e9e9e9 100%);
+			}
+
+			.large-staff-svg {
+				width: 60px;
+				height: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transform-origin: center;
+				transition: transform 0.3s ease;
+			}
+
+			.large-staff-svg svg {
+				width: 100%;
+				height: 100%;
+				transform-origin: center;
+				transition: transform 0.3s ease;
+			}
+
+			.staff-on-grid svg {
+				width: 100%;
+				height: 100%;
+				transform-origin: center;
+				transition: transform 0.3s ease;
+			}
+
+			.data-panel {
+				margin-top: 20px;
+				padding: 15px;
+				background: #f8f9fa;
+				border-radius: 6px;
+			}
+
+			.export-controls {
+				display: flex;
+				gap: 10px;
+				margin-top: 15px;
+			}
+
+			button {
+				padding: 8px 16px;
+				border: none;
+				border-radius: 4px;
+				background: #007bff;
+				color: white;
+				cursor: pointer;
+				transition: background 0.3s ease;
+			}
+
+			button:hover {
+				background: #0056b3;
+			}
+
+			button.secondary {
+				background: #6c757d;
+			}
+
+			button.secondary:hover {
+				background: #545b62;
+			}
+
+			.status-bar {
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				background: #28a745;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 6px;
+				display: none;
+			}
+
+			.comparison-mode {
+				margin-top: 20px;
+				padding: 15px;
+				background: #fff3cd;
+				border-radius: 6px;
+				border: 1px solid #ffeaa7;
+			}
+
+			.comparison-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 10px;
+				margin-top: 10px;
+			}
+
+			.comparison-item {
+				text-align: center;
+				padding: 10px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				background: white;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<h1>Staff Orientation Test Interface</h1>
+			<p>Systematically define and validate staff orientations at different hand positions</p>
+		</div>
+
+		<div class="controls">
+			<div class="control-group">
+				<label>Orientation Mode: </label>
+				<select id="orientationMode" onchange="switchOrientationMode(this.value)">
+					<option value="in">IN - Pointing toward center</option>
+					<option value="out">OUT - Pointing away from center</option>
+					<option value="clockwise">CLOCKWISE - Clockwise from in</option>
+					<option value="counter">COUNTER - Counter-clockwise from in</option>
+				</select>
+			</div>
+			<div class="control-group">
+				<label>Current Position: </label>
+				<span id="currentPosition">None Selected</span>
+			</div>
+			<div class="control-group">
+				<button onclick="resetAllData()" class="secondary">Reset All Data</button>
+				<button onclick="cleanCorruptedData()" class="secondary">Fix Corrupted Data</button>
+				<button onclick="exportAllData()">Export Data</button>
+			</div>
+		</div>
+
+		<div class="main-container">
+			<div class="grid-container">
+				<h3>Pictograph Grid</h3>
+				<div class="pictograph-grid" id="pictographGrid">
+					<!-- Actual pictograph grid SVG -->
+					<svg class="grid-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 950">
+						<g>
+							<circle fill="#000000" cx="475" cy="175" r="25" />
+							<circle fill="#000000" cx="775" cy="475" r="25" />
+							<circle fill="#000000" cx="475" cy="775" r="25" />
+							<circle fill="#000000" cx="175" cy="475" r="25" />
+						</g>
+						<g>
+							<circle fill="#000000" cx="475" cy="331.9" r="8" />
+							<circle fill="#000000" cx="618.1" cy="475" r="8" />
+							<circle fill="#000000" cx="475" cy="618.1" r="8" />
+							<circle fill="#000000" cx="331.9" cy="475" r="8" />
+						</g>
+						<g>
+							<circle fill="#000000" cx="618.1" cy="331.9" r="8.8" />
+							<circle fill="#000000" cx="618.1" cy="618.1" r="8.8" />
+							<circle fill="#000000" cx="331.9" cy="618.1" r="8.8" />
+							<circle fill="#000000" cx="331.9" cy="331.9" r="8.8" />
+						</g>
+						<circle fill="#000000" cx="475" cy="475" r="12" />
+					</svg>
+					<!-- Position markers will be added by JavaScript -->
+				</div>
+			</div>
+
+			<div class="detail-panel">
+				<h3>Orientation Details</h3>
+				<div id="positionDetails">
+					<p>Select a position from the grid to configure orientations</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="status-bar" id="statusBar">Data saved successfully!</div>
+
+		<script>
+			// Configuration - using actual pictograph grid coordinates
+			const GRID_VIEWBOX_SIZE = 950;
+			const GRID_CENTER = 475;
+
+			// Actual grid positions from your animation system
+			const GRID_POSITIONS = {
+				// Hand points (r=8) - these are the main staff positions
+				n_hand: { x: 475, y: 331.9, radius: 8, hasStaff: true },
+				e_hand: { x: 618.1, y: 475, radius: 8, hasStaff: true },
+				s_hand: { x: 475, y: 618.1, radius: 8, hasStaff: true },
+				w_hand: { x: 331.9, y: 475, radius: 8, hasStaff: true },
+
+				// Diagonal points (r=8.8)
+				ne: { x: 618.1, y: 331.9, radius: 8.8, hasStaff: true },
+				se: { x: 618.1, y: 618.1, radius: 8.8, hasStaff: true },
+				sw: { x: 331.9, y: 618.1, radius: 8.8, hasStaff: true },
+				nw: { x: 331.9, y: 331.9, radius: 8.8, hasStaff: true },
+
+				// Center - excluded for now
+				// center: { x: 475, y: 475, radius: 12, hasStaff: true },
+
+				// Outer diamond points (r=25) - markers only, no staffs
+				n: { x: 475, y: 175, radius: 25, hasStaff: false },
+				e: { x: 775, y: 475, radius: 25, hasStaff: false },
+				s: { x: 475, y: 775, radius: 25, hasStaff: false },
+				w: { x: 175, y: 475, radius: 25, hasStaff: false }
+			};
+
+			const ORIENTATIONS = ['in', 'out', 'clockwise', 'counter'];
+
+			// Staff SVG from your actual system
+			const STAFF_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252.8 77.8" style="enable-background:new 0 0 252.8 77.8;">
+				<style type="text/css">
+					.staff-body { fill: #2E3192; stroke: #FFFFFF; stroke-width: 2.75; stroke-miterlimit: 10; }
+					.center-point { fill: #0000FF; }
+				</style>
+				<path class="staff-body" d="M251.4,67.7V10.1c0-4.8-4.1-8.7-9.1-8.7s-9.1,3.9-9.1,8.7v19.2H10.3c-4.9,0-8.9,3.8-8.9,8.5V41
+					c0,4.6,4,8.5,8.9,8.5h222.9v18.2c0,4.8,4.1,8.7,9.1,8.7S251.4,72.5,251.4,67.7z"/>
+				<circle class="center-point" cx="126.4" cy="38.9" r="2"/>
+			</svg>`;
+
+			// State
+			let currentPosition = null;
+			let currentOrientationMode = 'in'; // Current orientation type being edited
+			let orientationData = {};
+
+			// Initialize with all positions having default angles for each orientation
+			function initializeDefaultData() {
+				Object.keys(GRID_POSITIONS).forEach((position) => {
+					if (GRID_POSITIONS[position] && GRID_POSITIONS[position].hasStaff) {
+						if (!orientationData[position]) {
+							orientationData[position] = {};
+						}
+						// Set default angles if not already set
+						if (orientationData[position].in === undefined) orientationData[position].in = 0;
+						if (orientationData[position].out === undefined) orientationData[position].out = 180;
+						if (orientationData[position].clockwise === undefined)
+							orientationData[position].clockwise = 90;
+						if (orientationData[position].counter === undefined)
+							orientationData[position].counter = 270;
+					}
+				});
+			}
+
+			// Initialize the interface
+			function init() {
+				initializeDefaultData();
+				createPositionGrid();
+				loadSavedData();
+				updateAllGridStaffs(); // Show initial orientation
+			}
+
+			function switchOrientationMode(newMode) {
+				currentOrientationMode = newMode;
+				console.log(`Switched to orientation mode: ${newMode}`);
+
+				// Update all grid staffs to show the new orientation
+				updateAllGridStaffs();
+
+				// Update the detail panel if a position is selected
+				if (currentPosition) {
+					showPositionDetails(currentPosition);
+				}
+			}
+
+			function updateAllGridStaffs() {
+				Object.keys(GRID_POSITIONS).forEach((position) => {
+					if (GRID_POSITIONS[position].hasStaff) {
+						updateGridStaff(position);
+					}
+				});
+			}
+
+			function updateGridStaff(position) {
+				const staffElement = document.getElementById(`staff-${position}`);
+				if (!staffElement) return;
+
+				const angle = getStoredAngle(position, currentOrientationMode);
+				const svg = staffElement.querySelector('svg');
+				if (svg) {
+					svg.style.transform = `rotate(${angle}deg)`;
+					svg.style.transformOrigin = 'center center';
+				}
+			}
+
+			function createPositionGrid() {
+				const gridContainer = document.getElementById('pictographGrid');
+
+				// Clear any existing position markers
+				const existingMarkers = gridContainer.querySelectorAll('.position-marker, .staff-on-grid');
+				existingMarkers.forEach((marker) => marker.remove());
+
+				// Create position markers for each grid position
+				Object.entries(GRID_POSITIONS).forEach(([position, coords]) => {
+					// Create position marker
+					const marker = document.createElement('div');
+					marker.className = 'position-marker';
+					marker.id = `marker-${position}`;
+					marker.textContent = position;
+
+					// Convert grid coordinates to percentage positions
+					const leftPercent = (coords.x / GRID_VIEWBOX_SIZE) * 100;
+					const topPercent = (coords.y / GRID_VIEWBOX_SIZE) * 100;
+
+					marker.style.left = `${leftPercent}%`;
+					marker.style.top = `${topPercent}%`;
+					marker.onclick = () => selectPosition(position);
+
+					gridContainer.appendChild(marker);
+
+					// Only create staff preview for positions that can have staffs
+					if (coords.hasStaff) {
+						const staffContainer = document.createElement('div');
+						staffContainer.className = 'staff-on-grid';
+						staffContainer.id = `staff-${position}`;
+						staffContainer.style.left = `${leftPercent}%`;
+						staffContainer.style.top = `${topPercent}%`;
+						staffContainer.innerHTML = STAFF_SVG;
+
+						gridContainer.appendChild(staffContainer);
+					}
+				});
+			}
+
+			function selectPosition(position) {
+				currentPosition = position;
+				document.getElementById('currentPosition').textContent = position;
+
+				// Update visual selection
+				document.querySelectorAll('.position-marker').forEach((marker) => {
+					marker.classList.remove('selected');
+				});
+				document.getElementById(`marker-${position}`).classList.add('selected');
+
+				showPositionDetails(position);
+			}
+
+			function showPositionDetails(position) {
+				const detailsContainer = document.getElementById('positionDetails');
+				const positionData = GRID_POSITIONS[position];
+
+				if (!positionData.hasStaff) {
+					// Show message for positions that don't have staffs
+					detailsContainer.innerHTML = `
+                        <h4>Position: ${position}</h4>
+                        <p><em>This position (outer diamond point) does not have staff orientations.</em></p>
+                        <p>Select a hand position, diagonal position, or center to configure staff orientations.</p>
+                    `;
+					return;
+				}
+
+				const currentAngle = getStoredAngle(position, currentOrientationMode);
+				const orientationDescription = getOrientationDescription(currentOrientationMode);
+
+				detailsContainer.innerHTML = `
+                <h4>Position: ${position}</h4>
+                <h5>Orientation: ${currentOrientationMode.toUpperCase()}</h5>
+                <p><em>${orientationDescription}</em></p>
+
+                <div class="single-orientation-control">
+                    <div class="orientation-label">
+                        <span>Angle (degrees):</span>
+                        <input type="number"
+                               class="angle-input"
+                               id="angle-${position}-${currentOrientationMode}"
+                               value="${currentAngle}"
+                               onchange="updateAngle('${position}', '${currentOrientationMode}', this.value)"
+                               min="0" max="359" step="1">
+                    </div>
+
+                    <div class="angle-controls">
+                        <button class="angle-shift-btn" onclick="shiftAngle('${position}', '${currentOrientationMode}', -45)">-45°</button>
+                        <button class="angle-shift-btn" onclick="shiftAngle('${position}', '${currentOrientationMode}', 45)">+45°</button>
+                        <button class="angle-shift-btn" onclick="shiftAngle('${position}', '${currentOrientationMode}', 90)">+90°</button>
+                        <button class="angle-shift-btn" onclick="shiftAngle('${position}', '${currentOrientationMode}', 180)">+180°</button>
+                    </div>
+
+                    <div class="large-staff-preview">
+                        <div class="large-staff-svg" id="large-staff-${position}-${currentOrientationMode}">${STAFF_SVG}</div>
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <h5>All Orientations for ${position}</h5>
+                    <pre id="positionData">${JSON.stringify(orientationData[position] || {}, null, 2)}</pre>
+
+                    <div class="export-controls">
+                        <button onclick="exportPositionData('${position}')">Export Position</button>
+                        <button onclick="exportAllData()">Export All Data</button>
+                        <button onclick="importData()" class="secondary">Import Data</button>
+                    </div>
+                </div>
+            `;
+
+				// Update the staff preview for this position and orientation
+				updateLargeStaffPreview(position, currentOrientationMode);
+			}
+
+			function getOrientationDescription(orientation) {
+				switch (orientation) {
+					case 'in':
+						return 'Staff pointing toward the center of the grid';
+					case 'out':
+						return 'Staff pointing away from the center of the grid';
+					case 'clockwise':
+						return 'Staff rotated clockwise from the "in" position';
+					case 'counter':
+						return 'Staff rotated counter-clockwise from the "in" position';
+					default:
+						return '';
+				}
+			}
+
+			// Removed selectOrientation - no longer needed with single orientation mode
+
+			function updateAngle(position, orientation, angle) {
+				// Initialize position data if it doesn't exist
+				if (!orientationData[position]) {
+					orientationData[position] = {};
+				}
+
+				// Store the angle
+				orientationData[position][orientation] = parseFloat(angle) || 0;
+
+				console.log(`Updated ${position} ${orientation} to ${angle}°`);
+
+				// Update the input field to reflect the new value
+				const inputElement = document.getElementById(`angle-${position}-${orientation}`);
+				if (inputElement) {
+					inputElement.value = orientationData[position][orientation];
+				}
+
+				// Update the large preview in the detail panel
+				updateLargeStaffPreview(position, orientation);
+
+				// ALWAYS update the grid staff if this matches the current orientation mode
+				if (orientation === currentOrientationMode) {
+					console.log(
+						`Updating grid staff for ${position} because orientation matches current mode`
+					);
+					updateGridStaff(position);
+				}
+
+				// Update position data display
+				const positionDataElement = document.getElementById('positionData');
+				if (positionDataElement) {
+					positionDataElement.textContent = JSON.stringify(orientationData[position], null, 2);
+				}
+
+				// Save to localStorage
+				saveData();
+				showStatus('Data saved successfully!');
+			}
+
+			function shiftAngle(position, orientation, shift) {
+				const currentAngle = getStoredAngle(position, orientation);
+				let newAngle = currentAngle + shift;
+
+				// Normalize angle to 0-359 range
+				while (newAngle < 0) newAngle += 360;
+				while (newAngle >= 360) newAngle -= 360;
+
+				updateAngle(position, orientation, newAngle);
+			}
+
+			function getStoredAngle(position, orientation) {
+				return orientationData[position]?.[orientation] || 0;
+			}
+
+			// Old updateStaffPreview function removed - replaced with updateGridStaff
+
+			function updateLargeStaffPreview(position, orientation) {
+				const staffElement = document.getElementById(`large-staff-${position}-${orientation}`);
+				if (staffElement) {
+					const angle = getStoredAngle(position, orientation);
+					const svg = staffElement.querySelector('svg');
+					if (svg) {
+						svg.style.transform = `rotate(${angle}deg)`;
+					}
+				}
+			}
+
+			function createComparisonView(position) {
+				return `
+                <div class="comparison-mode">
+                    <h5>Orientation Comparison for ${position}</h5>
+                    <div class="comparison-grid">
+                        ${ORIENTATIONS.map(
+													(orientation) => `
+                            <div class="comparison-item">
+                                <div><strong>${orientation}</strong></div>
+                                <div class="large-staff-preview">
+                                    <div class="large-staff-svg" style="transform: rotate(${getStoredAngle(position, orientation)}deg)">${STAFF_SVG}</div>
+                                </div>
+                                <div>${getStoredAngle(position, orientation)}°</div>
+                            </div>
+                        `
+												).join('')}
+                    </div>
+                </div>
+            `;
+			}
+
+			function toggleComparisonMode() {
+				comparisonMode = !comparisonMode;
+				if (currentPosition) {
+					showPositionDetails(currentPosition);
+				}
+			}
+
+			function exportPositionData(position) {
+				const data = orientationData[position] || {};
+				const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `staff-orientations-${position}.json`;
+				a.click();
+				URL.revokeObjectURL(url);
+			}
+
+			function exportAllData() {
+				const blob = new Blob([JSON.stringify(orientationData, null, 2)], {
+					type: 'application/json'
+				});
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'staff-orientations-complete.json';
+				a.click();
+				URL.revokeObjectURL(url);
+			}
+
+			function importData() {
+				const input = document.createElement('input');
+				input.type = 'file';
+				input.accept = '.json';
+				input.onchange = (e) => {
+					const file = e.target.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = (e) => {
+							try {
+								const data = JSON.parse(e.target.result);
+								orientationData = data;
+								saveData();
+								if (currentPosition) {
+									showPositionDetails(currentPosition);
+								}
+								showStatus('Data imported successfully!');
+							} catch (error) {
+								alert('Error importing data: ' + error.message);
+							}
+						};
+						reader.readAsText(file);
+					}
+				};
+				input.click();
+			}
+
+			function resetAllData() {
+				if (confirm('Are you sure you want to reset all orientation data?')) {
+					orientationData = {};
+					localStorage.removeItem('staffOrientationData');
+					initializeDefaultData();
+					updateAllGridStaffs();
+					if (currentPosition) {
+						showPositionDetails(currentPosition);
+					}
+					showStatus('All data reset!');
+				}
+			}
+
+			function cleanCorruptedData() {
+				console.log('Cleaning corrupted data...');
+				const saved = localStorage.getItem('staffOrientationData');
+				if (saved) {
+					try {
+						const loadedData = JSON.parse(saved);
+						console.log('Original corrupted data:', loadedData);
+						orientationData = cleanOrientationData(loadedData);
+						console.log('Cleaned data:', orientationData);
+						saveData();
+						updateAllGridStaffs();
+						if (currentPosition) {
+							showPositionDetails(currentPosition);
+						}
+						showStatus('Corrupted data cleaned and fixed!');
+					} catch (error) {
+						console.error('Error cleaning data:', error);
+						showStatus('Error cleaning data - try Reset All Data instead');
+					}
+				} else {
+					initializeDefaultData();
+					saveData();
+					updateAllGridStaffs();
+					showStatus('No saved data found - initialized with defaults');
+				}
+			}
+
+			function saveData() {
+				localStorage.setItem('staffOrientationData', JSON.stringify(orientationData));
+			}
+
+			function loadSavedData() {
+				const saved = localStorage.getItem('staffOrientationData');
+				if (saved) {
+					try {
+						const loadedData = JSON.parse(saved);
+						// Clean up old orientation data and keep only valid orientations
+						orientationData = cleanOrientationData(loadedData);
+						console.log('Cleaned orientation data:', orientationData);
+					} catch (error) {
+						console.error('Error loading saved data:', error);
+						// Reset to defaults if data is corrupted
+						orientationData = {};
+						initializeDefaultData();
+					}
+				}
+			}
+
+			function cleanOrientationData(data) {
+				const validOrientations = ['in', 'out', 'clockwise', 'counter'];
+				const cleanedData = {};
+
+				Object.keys(data).forEach((position) => {
+					// Only process positions that should have staffs
+					if (GRID_POSITIONS[position] && GRID_POSITIONS[position].hasStaff) {
+						cleanedData[position] = {};
+
+						// Only keep valid orientations
+						validOrientations.forEach((orientation) => {
+							if (data[position] && typeof data[position][orientation] === 'number') {
+								cleanedData[position][orientation] = data[position][orientation];
+							} else {
+								// Set default values for missing orientations
+								switch (orientation) {
+									case 'in':
+										cleanedData[position][orientation] = 0;
+										break;
+									case 'out':
+										cleanedData[position][orientation] = 180;
+										break;
+									case 'clockwise':
+										cleanedData[position][orientation] = 90;
+										break;
+									case 'counter':
+										cleanedData[position][orientation] = 270;
+										break;
+								}
+							}
+						});
+					}
+				});
+
+				return cleanedData;
+			}
+
+			function showStatus(message) {
+				const statusBar = document.getElementById('statusBar');
+				statusBar.textContent = message;
+				statusBar.style.display = 'block';
+				setTimeout(() => {
+					statusBar.style.display = 'none';
+				}, 2000);
+			}
+
+			// Initialize when page loads
+			window.onload = init;
+		</script>
+	</body>
+</html>

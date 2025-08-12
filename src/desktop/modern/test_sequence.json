@@ -1,0 +1,36 @@
+[
+  {
+    "sequence_name": "Test Sequence",
+    "beat_count": 1,
+    "length": 1,
+    "level": 1,
+    "sequence_start_position": "alpha"
+  },
+  {
+    "beat": 1,
+    "letter": "A",
+    "duration": 1.0,
+    "start_pos": "alpha1",
+    "end_pos": "alpha1",
+    "timing": "same",
+    "direction": "cw",
+    "blue_attributes": {
+      "start_loc": "s",
+      "end_loc": "w",
+      "start_ori": "in",
+      "end_ori": "out",
+      "prop_rot_dir": "no_rot",
+      "turns": 0.0,
+      "motion_type": "static"
+    },
+    "red_attributes": {
+      "start_loc": "n",
+      "end_loc": "e",
+      "start_ori": "in",
+      "end_ori": "out",
+      "prop_rot_dir": "no_rot",
+      "turns": 0.0,
+      "motion_type": "static"
+    }
+  }
+]

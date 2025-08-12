@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Step-by-Step Animator (Pasted Input)</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* Tailwind styles from previous version - kept for brevity */
+			body {
+				font-family: 'Inter', sans-serif;
+				background-color: #f3f4f6;
+				color: #1f2937;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 1rem;
+				min-height: 100vh;
+			}
+			.canvas-container {
+				background-color: #ffffff;
+				border-radius: 0.5rem;
+				box-shadow:
+					0 4px 6px -1px rgba(0, 0, 0, 0.1),
+					0 2px 4px -2px rgba(0, 0, 0, 0.1);
+				margin-bottom: 1rem;
+				overflow: hidden;
+				border: 1px solid #e5e7eb;
+			}
+			canvas {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+			.controls,
+			.input-section {
+				background-color: #ffffff;
+				padding: 1rem;
+				border-radius: 0.5rem;
+				box-shadow:
+					0 4px 6px -1px rgba(0, 0, 0, 0.1),
+					0 2px 4px -2px rgba(0, 0, 0, 0.1);
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1rem;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				max-width: 600px;
+				margin-bottom: 1rem;
+			}
+			.input-section {
+				flex-direction: column;
+				align-items: stretch;
+			} /* Input section specific */
+			.input-section textarea {
+				width: 100%;
+				min-height: 150px;
+				border: 1px solid #d1d5db;
+				border-radius: 0.375rem;
+				padding: 0.5rem;
+				font-family: monospace;
+				font-size: 0.8rem;
+				margin-bottom: 0.5rem;
+			}
+			.input-section button {
+				align-self: flex-end;
+			} /* Align button right */
+			.control-group {
+				display: flex;
+				gap: 0.5rem;
+				align-items: center;
+			}
+			.control-group label {
+				font-size: 0.875rem;
+				font-weight: 500;
+				color: #4b5563;
+			}
+			.control-group label.checkbox-label {
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+			}
+			.control-group input[type='checkbox'] {
+				margin-right: 0.25rem;
+				cursor: pointer;
+				accent-color: #3b82f6;
+			}
+			button,
+			input[type='range'],
+			input[type='number'] {
+				padding: 0.5rem 1rem;
+				border-radius: 0.375rem;
+				border: 1px solid #d1d5db;
+				font-size: 0.875rem;
+				transition: all 0.2s ease-in-out;
+			}
+			button {
+				background-color: #3b82f6;
+				color: white;
+				font-weight: 600;
+				cursor: pointer;
+			}
+			button:hover:not(:disabled) {
+				background-color: #2563eb;
+			}
+			button:disabled {
+				background-color: #9ca3af;
+				cursor: not-allowed;
+			}
+			button.active {
+				background-color: #10b981;
+			}
+			button.active:hover {
+				background-color: #059669;
+			}
+			input[type='range'] {
+				padding: 0;
+				cursor: pointer;
+				accent-color: #3b82f6;
+			}
+			input[type='number'] {
+				width: 5rem;
+				text-align: center;
+			}
+			.info {
+				background-color: #ffffff;
+				padding: 1rem;
+				border-radius: 0.5rem;
+				box-shadow:
+					0 4px 6px -1px rgba(0, 0, 0, 0.1),
+					0 2px 4px -2px rgba(0, 0, 0, 0.1);
+				width: 100%;
+				max-width: 600px;
+				font-size: 0.875rem;
+				border: 1px solid #e5e7eb;
+				text-align: center;
+			}
+			.info span {
+				font-weight: 600;
+				font-family: monospace;
+				margin: 0 0.5rem;
+			}
+			.message {
+				margin-top: -0.5rem;
+				margin-bottom: 1rem;
+				text-align: center;
+				font-size: 0.875rem;
+				width: 100%;
+				max-width: 600px;
+				padding: 0.5rem;
+				border-radius: 0.375rem;
+			}
+			.message.error {
+				color: #b91c1c;
+				background-color: #fee2e2;
+				border: 1px solid #fecaca;
+			} /* Red */
+			.message.success {
+				color: #047857;
+				background-color: #d1fae5;
+				border: 1px solid #a7f3d0;
+			} /* Green */
+		</style>
+	</head>
+	<body class="bg-gray-100">
+		<h1 class="mb-4 text-2xl font-bold text-gray-800">Step-by-Step Animator (Pasted Input)</h1>
+
+		<div class="input-section">
+			<label for="sequenceInput" class="mb-1 block text-sm font-medium text-gray-700"
+				>Paste Sequence JSON:</label
+			>
+			<textarea id="sequenceInput" placeholder="Paste your sequence JSON array here..."></textarea>
+			<button id="loadSequenceBtn">Load Sequence</button>
+		</div>
+		<div id="messageArea" class="message" style="display: none"></div>
+		<div class="canvas-container">
+			<canvas id="animationCanvas" width="600" height="600"></canvas>
+		</div>
+
+		<div class="controls">
+			<div class="control-group">
+				<button id="resetBtn">⏮</button>
+				<button id="playPauseBtn">▶️</button>
+			</div>
+			<div class="control-group">
+				<label for="speedSlider">Speed:</label>
+				<input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1.0" />
+				<span id="speedValue" class="font-medium">1.0x</span>
+			</div>
+			<div class="control-group">
+				<label for="beatSlider">Time:</label>
+				<input type="range" id="beatSlider" min="0" max="0" step="0.01" value="0" />
+				<span id="beatValue" class="font-medium">0.00</span>
+				/ <span id="totalBeatsDisplay">0</span>
+			</div>
+			<div class="control-group">
+				<label for="loopCheckbox" class="checkbox-label">
+					<input type="checkbox" id="loopCheckbox" />
+					Loop
+				</label>
+			</div>
+		</div>
+
+		<div class="info">
+			Elapsed Time: <span id="infoBeat">0.00</span> | Current Beat:
+			<span id="infoStepIndex">Start</span>
+			| Progress (t): <span id="infoT">0.000</span>
+		</div>
+
+		<script>
+			// --- Constants and Setup ---
+			const canvas = document.getElementById('animationCanvas');
+			const ctx = canvas.getContext('2d');
+			const canvasSize = 600;
+			const PI = Math.PI;
+			const TWO_PI = 2 * PI;
+			const HALF_PI = PI / 2;
+
+			// --- DOM Elements ---
+			const playPauseBtn = document.getElementById('playPauseBtn');
+			const resetBtn = document.getElementById('resetBtn');
+			const speedSlider = document.getElementById('speedSlider');
+			const speedValue = document.getElementById('speedValue');
+			const beatSlider = document.getElementById('beatSlider');
+			const beatValue = document.getElementById('beatValue');
+			const loopCheckbox = document.getElementById('loopCheckbox');
+			const infoBeat = document.getElementById('infoBeat');
+			const infoStepIndex = document.getElementById('infoStepIndex');
+			const infoT = document.getElementById('infoT');
+			const totalBeatsDisplay = document.getElementById('totalBeatsDisplay');
+			const sequenceInput = document.getElementById('sequenceInput'); // Textarea
+			const loadSequenceBtn = document.getElementById('loadSequenceBtn'); // Load button
+			const messageArea = document.getElementById('messageArea'); // Message display
+
+			// --- Animation State ---
+			let animationFrameId = null;
+			let isPlaying = false;
+			let currentBeat = 0;
+			let lastTimestamp = null;
+			let speed = 1.0;
+			let continuousLoop = false;
+			let totalBeats = 0;
+			let parsedSteps = [];
+			let currentSequence = null; // Holds the currently loaded sequence data
+
+			// --- Prop State ---
+			let bluePropState = { centerPathAngle: 0, staffRotationAngle: 0, x: 0, y: 0 };
+			let redPropState = { centerPathAngle: 0, staffRotationAngle: 0, x: 0, y: 0 };
+
+			// --- Default Sequence (Example) ---
+			const defaultSequence = [
+				/* ALFBBLFA sequence data */
+				{
+					word: 'ALFBBLFA',
+					author: 'Austen Cloud',
+					level: 0,
+					prop_type: 'staff',
+					grid_mode: 'diamond',
+					is_circular: false,
+					can_be_CAP: false,
+					is_strict_rotated_CAP: false,
+					is_strict_mirrored_CAP: false,
+					is_strict_swapped_CAP: false,
+					is_mirrored_swapped_CAP: false,
+					is_rotated_swapped_CAP: false
+				},
+				{
+					beat: 0,
+					sequence_start_position: 'alpha',
+					letter: 'α',
+					end_pos: 'alpha1',
+					timing: 'none',
+					direction: 'none',
+					blue_attributes: {
+						start_loc: 's',
+						end_loc: 's',
+						start_ori: 'in',
+						end_ori: 'in',
+						prop_rot_dir: 'no_rot',
+						turns: 0,
+						motion_type: 'static'
+					},
+					red_attributes: {
+						start_loc: 'n',
+						end_loc: 'n',
+						start_ori: 'in',
+						end_ori: 'in',
+						prop_rot_dir: 'no_rot',
+						turns: 0,
+						motion_type: 'static'
+					}
+				},
+				{
+					beat: 1,
+					letter: 'A',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha1',
+					end_pos: 'alpha3',
+					timing: 'split',
+					direction: 'same',
+					blue_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 's',
+						end_loc: 'w',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'n',
+						end_loc: 'e',
+						turns: 0,
+						end_ori: 'in'
+					}
+				},
+				{
+					beat: 2,
+					letter: 'L',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha3',
+					end_pos: 'beta1',
+					timing: 'tog',
+					direction: 'opp',
+					blue_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'w',
+						end_loc: 'n',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'anti',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'e',
+						end_loc: 'n',
+						turns: 0,
+						end_ori: 'out'
+					}
+				},
+				{
+					beat: 3,
+					letter: 'F',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'beta1',
+					end_pos: 'alpha7',
+					timing: 'tog',
+					direction: 'opp',
+					blue_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'n',
+						end_loc: 'e',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'anti',
+						start_ori: 'out',
+						prop_rot_dir: 'cw',
+						start_loc: 'n',
+						end_loc: 'w',
+						turns: 0,
+						end_ori: 'in'
+					}
+				},
+				{
+					beat: 4,
+					letter: 'B',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha7',
+					end_pos: 'alpha5',
+					timing: 'split',
+					direction: 'same',
+					blue_attributes: {
+						motion_type: 'anti',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'e',
+						end_loc: 'n',
+						turns: 0,
+						end_ori: 'out'
+					},
+					red_attributes: {
+						motion_type: 'anti',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'w',
+						end_loc: 's',
+						turns: 0,
+						end_ori: 'out'
+					}
+				},
+				{
+					beat: 5,
+					letter: 'B',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha5',
+					end_pos: 'alpha3',
+					timing: 'split',
+					direction: 'same',
+					blue_attributes: {
+						motion_type: 'anti',
+						start_ori: 'out',
+						prop_rot_dir: 'cw',
+						start_loc: 'n',
+						end_loc: 'w',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'anti',
+						start_ori: 'out',
+						prop_rot_dir: 'cw',
+						start_loc: 's',
+						end_loc: 'e',
+						turns: 0,
+						end_ori: 'in'
+					}
+				},
+				{
+					beat: 6,
+					letter: 'L',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha3',
+					end_pos: 'beta5',
+					timing: 'tog',
+					direction: 'opp',
+					blue_attributes: {
+						motion_type: 'anti',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'w',
+						end_loc: 's',
+						turns: 0,
+						end_ori: 'out'
+					},
+					red_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'e',
+						end_loc: 's',
+						turns: 0,
+						end_ori: 'in'
+					}
+				},
+				{
+					beat: 7,
+					letter: 'F',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'beta5',
+					end_pos: 'alpha7',
+					timing: 'tog',
+					direction: 'opp',
+					blue_attributes: {
+						motion_type: 'anti',
+						start_ori: 'out',
+						prop_rot_dir: 'cw',
+						start_loc: 's',
+						end_loc: 'e',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 's',
+						end_loc: 'w',
+						turns: 0,
+						end_ori: 'in'
+					}
+				},
+				{
+					beat: 8,
+					letter: 'A',
+					letter_type: 'Type1',
+					duration: 1,
+					start_pos: 'alpha7',
+					end_pos: 'alpha1',
+					timing: 'split',
+					direction: 'same',
+					blue_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'e',
+						end_loc: 's',
+						turns: 0,
+						end_ori: 'in'
+					},
+					red_attributes: {
+						motion_type: 'pro',
+						start_ori: 'in',
+						prop_rot_dir: 'cw',
+						start_loc: 'w',
+						end_loc: 'n',
+						turns: 0,
+						end_ori: 'in'
+					}
+				}
+			];
+
+			// --- Grid & Staff Constants ---
+			const GRID_VIEWBOX_SIZE = 950;
+			const GRID_CENTER = GRID_VIEWBOX_SIZE / 2;
+			const GRID_HALFWAY_POINT_OFFSET = 151.5;
+			const STAFF_VIEWBOX_WIDTH = 252.8;
+			const STAFF_VIEWBOX_HEIGHT = 77.8;
+			const STAFF_CENTER_X = 126.4;
+			const STAFF_CENTER_Y = 38.9;
+			const gridScaleFactor = canvasSize / GRID_VIEWBOX_SIZE;
+			const scaledHalfwayRadius = GRID_HALFWAY_POINT_OFFSET * gridScaleFactor;
+
+			// --- Image Loading ---
+			let gridImage, blueStaffImage, redStaffImage;
+			let imagesLoaded = false;
+			const gridSvgString = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 950 950" style="enable-background:new 0 0 950 950; background-color: #ffffff;" xml:space="preserve"><g id="outer_points"><circle fill="#000000" cx="475" cy="175" r="25"/><circle fill="#000000" cx="775" cy="475" r="25"/><circle fill="#000000" cx="475" cy="775" r="25"/><circle fill="#000000" cx="175" cy="475" r="25"/></g><g id="halfway_points"><circle fill="#000000" cx="475" cy="323.5" r="8"/><circle fill="#000000" cx="626.5" cy="475" r="8"/><circle fill="#000000" cx="475" cy="626.5" r="8"/><circle fill="#000000" cx="323.5" cy="475" r="8"/></g><g id="center_group"><circle fill="#000000" cx="475" cy="475" r="12"/></g></svg>`;
+			const staffBaseSvgString = (fillColor) =>
+				`<svg version="1.1" id="staff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 252.8 77.8" style="enable-background:new 0 0 252.8 77.8;" xml:space="preserve"><path fill="${fillColor}" stroke="#555555" stroke-width="1" stroke-miterlimit="10" d="M251.4,67.7V10.1c0-4.8-4.1-8.7-9.1-8.7s-9.1,3.9-9.1,8.7v19.2H10.3c-4.9,0-8.9,3.8-8.9,8.5V41 c0,4.6,4,8.5,8.9,8.5h222.9v18.2c0,4.8,4.1,8.7,9.1,8.7S251.4,72.5,251.4,67.7z"/><circle id="centerPoint" fill="#FF0000" cx="126.4" cy="38.9" r="5" /></svg>`;
+
+			function loadImage(svgString) {
+				/* ... (same as before) ... */
+				return new Promise((resolve, reject) => {
+					const img = new Image();
+					const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+					const url = URL.createObjectURL(svgBlob);
+					img.onload = () => {
+						URL.revokeObjectURL(url);
+						resolve(img);
+					};
+					img.onerror = (e) => {
+						URL.revokeObjectURL(url);
+						reject(new Error('Image load error'));
+					};
+					img.src = url;
+				});
+			}
+			async function loadAllImages() {
+				/* ... (same as before) ... */
+				try {
+					[gridImage, blueStaffImage, redStaffImage] = await Promise.all([
+						loadImage(gridSvgString),
+						loadImage(staffBaseSvgString('#2E3192')),
+						loadImage(staffBaseSvgString('#ED1C24'))
+					]);
+					imagesLoaded = true;
+					console.log('Images loaded successfully.');
+					initialize();
+				} catch (error) {
+					console.error('Failed to load images:', error);
+					if (ctx) {
+						ctx.fillStyle = 'red';
+						ctx.font = '16px Arial';
+						ctx.textAlign = 'center';
+						ctx.fillText('Error loading images.', canvasSize / 2, canvasSize / 2);
+					}
+				}
+			}
+
+			// --- Utility Functions ---
+			const locationAngles = { e: 0, s: HALF_PI, w: PI, n: -HALF_PI };
+			function normalizeAnglePositive(angle) {
+				return ((angle % TWO_PI) + TWO_PI) % TWO_PI;
+			}
+			function normalizeAngleSigned(angle) {
+				let norm = normalizeAnglePositive(angle);
+				return norm > PI ? norm - TWO_PI : norm;
+			}
+			function mapPositionToAngle(loc) {
+				const l = loc?.toLowerCase();
+				return locationAngles[l] ?? 0;
+			}
+			function mapOrientationToAngle(ori, centerPathAngle) {
+				if (!ori) return centerPathAngle + PI;
+				const l = ori.toLowerCase();
+				if (locationAngles.hasOwnProperty(l)) return locationAngles[l];
+				if (l === 'in') return normalizeAnglePositive(centerPathAngle + PI);
+				if (l === 'out') return normalizeAnglePositive(centerPathAngle);
+				return normalizeAnglePositive(centerPathAngle + PI);
+			}
+			function lerp(a, b, t) {
+				return a * (1 - t) + b * t;
+			}
+			function lerpAngle(a, b, t) {
+				const d = normalizeAngleSigned(b - a);
+				return normalizeAnglePositive(a + d * t);
+			}
+
+			// --- Physics Functions ---
+			function calculateProIsolationStaffAngle(centerPathAngle, propRotDir) {
+				return normalizeAnglePositive(centerPathAngle + PI);
+			}
+			function calculateAntispinTargetAngle(
+				startCenterAngle,
+				endCenterAngle,
+				startStaffAngle,
+				turns,
+				propRotDir
+			) {
+				let delta = normalizeAngleSigned(endCenterAngle - startCenterAngle);
+				const base = -delta;
+				const turn = PI * turns;
+				const dir = propRotDir?.toLowerCase() === 'ccw' ? -1 : 1;
+				return normalizeAnglePositive(startStaffAngle + base + turn * dir);
+			}
+			function calculateStaticStaffAngle(centerPathAngle, orientation) {
+				return mapOrientationToAngle(orientation, centerPathAngle);
+			}
+			function calculateDashTargetAngle(
+				startCenterAngle,
+				endCenterAngle,
+				startStaffAngle,
+				propRotDir
+			) {
+				return startStaffAngle;
+			}
+
+			// --- Core Logic ---
+			function calculateStepEndpoints(stepDefinition, propType) {
+				/* ... (same as before) ... */
+				const attributes =
+					propType === 'blue' ? stepDefinition.blue_attributes : stepDefinition.red_attributes;
+				if (!attributes) return null;
+				const {
+					start_loc,
+					end_loc,
+					start_ori,
+					end_ori,
+					motion_type,
+					prop_rot_dir,
+					turns = 0
+				} = attributes;
+				const startCenterAngle = mapPositionToAngle(start_loc);
+				const startStaffAngle = mapOrientationToAngle(start_ori || 'in', startCenterAngle);
+				const targetCenterAngle = mapPositionToAngle(end_loc);
+				let calculatedTargetStaffAngle;
+				switch (motion_type) {
+					case 'pro':
+						calculatedTargetStaffAngle = calculateProIsolationStaffAngle(
+							targetCenterAngle,
+							prop_rot_dir
+						);
+						break;
+					case 'anti':
+						calculatedTargetStaffAngle = calculateAntispinTargetAngle(
+							startCenterAngle,
+							targetCenterAngle,
+							startStaffAngle,
+							turns,
+							prop_rot_dir
+						);
+						break;
+					case 'static':
+						let targetStaticAngle = startStaffAngle;
+						const endOriAngleStatic = mapOrientationToAngle(end_ori || 'in', targetCenterAngle);
+						const angleDiffStatic = normalizeAngleSigned(endOriAngleStatic - startStaffAngle);
+						calculatedTargetStaffAngle =
+							Math.abs(angleDiffStatic) > 0.1 ? endOriAngleStatic : startStaffAngle;
+						break;
+					case 'dash':
+						calculatedTargetStaffAngle = calculateDashTargetAngle(
+							startCenterAngle,
+							targetCenterAngle,
+							startStaffAngle,
+							prop_rot_dir
+						);
+						break;
+					default:
+						console.warn(`Unknown motion type '${motion_type}'. Treating as static.`);
+						calculatedTargetStaffAngle = startStaffAngle;
+						break;
+				}
+				if (motion_type !== 'pro') {
+					const endOriAngleOverride = mapOrientationToAngle(end_ori || 'in', targetCenterAngle);
+					const explicitEndOri = ['n', 'e', 's', 'w', 'in', 'out'].includes(
+						(end_ori || '').toLowerCase()
+					);
+					if (explicitEndOri) {
+						calculatedTargetStaffAngle = endOriAngleOverride;
+					}
+				}
+				return {
+					startCenterAngle,
+					startStaffAngle,
+					targetCenterAngle,
+					targetStaffAngle: calculatedTargetStaffAngle
+				};
+			}
+
+			// --- Rendering ---
+			function drawGrid() {
+				if (!imagesLoaded || !ctx) return;
+				ctx.drawImage(gridImage, 0, 0, canvasSize, canvasSize);
+			}
+			function drawStaff(propState, staffImage) {
+				/* ... (same as before) ... */
+				if (!imagesLoaded || !propState || !ctx) return;
+				const centerX = canvasSize / 2;
+				const centerY = canvasSize / 2;
+				const inwardFactor = 0.95;
+				const x =
+					centerX + Math.cos(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
+				const y =
+					centerY + Math.sin(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
+				const staffWidth = STAFF_VIEWBOX_WIDTH * gridScaleFactor;
+				const staffHeight = STAFF_VIEWBOX_HEIGHT * gridScaleFactor;
+				ctx.save();
+				ctx.translate(x, y);
+				ctx.rotate(propState.staffRotationAngle);
+				ctx.drawImage(
+					staffImage,
+					-STAFF_CENTER_X * gridScaleFactor,
+					-STAFF_CENTER_Y * gridScaleFactor,
+					staffWidth,
+					staffHeight
+				);
+				ctx.restore();
+			}
+			function render() {
+				if (!ctx || !imagesLoaded) return;
+				ctx.clearRect(0, 0, canvasSize, canvasSize);
+				drawGrid();
+				drawStaff(bluePropState, blueStaffImage);
+				drawStaff(redPropState, redStaffImage);
+			}
+
+			// --- Animation Loop ---
+			function animationLoop(timestamp) {
+				if (!isPlaying) return;
+
+				if (lastTimestamp === null) lastTimestamp = timestamp;
+				const deltaTime = timestamp - lastTimestamp;
+				lastTimestamp = timestamp;
+				const effectiveSpeed = Math.max(0.01, speed);
+				currentBeat += (deltaTime / 1000) * effectiveSpeed;
+
+				// --- Loop Handling ---
+				if (currentBeat >= totalBeats) {
+					if (continuousLoop) {
+						currentBeat = 0; // Reset beat time to 0 for the loop
+						lastTimestamp = timestamp;
+						console.log('Looping back to time 0');
+					} else {
+						currentBeat = totalBeats; // Clamp to end
+						pause();
+						console.log('Animation ended.');
+						updateBeat(currentBeat, true); // Render final frame precisely
+						updateUI();
+						return; // Exit loop function
+					}
+				}
+
+				// --- State Calculation for Current Frame ---
+				const clampedBeat = Math.max(0, Math.min(currentBeat, totalBeats));
+				const currentAnimationStepIndex = Math.floor(
+					clampedBeat === totalBeats ? totalBeats - 1 : clampedBeat
+				);
+				const currentStepArrayIndex = currentAnimationStepIndex + 2; // Map beat 0..N-1 to array index 2..N+1
+				const t = clampedBeat === totalBeats ? 1.0 : clampedBeat - currentAnimationStepIndex;
+
+				const stepDefinition = parsedSteps[currentStepArrayIndex];
+
+				if (!stepDefinition) {
+					console.error(
+						`Loop Error: No step definition for array index ${currentStepArrayIndex} (beat: ${clampedBeat})`
+					);
+					pause();
+					return;
+				}
+
+				const blueEndpoints = calculateStepEndpoints(stepDefinition, 'blue');
+				const redEndpoints = calculateStepEndpoints(stepDefinition, 'red');
+
+				if (blueEndpoints && redEndpoints) {
+					bluePropState.centerPathAngle = lerpAngle(
+						blueEndpoints.startCenterAngle,
+						blueEndpoints.targetCenterAngle,
+						t
+					);
+					bluePropState.staffRotationAngle = lerpAngle(
+						blueEndpoints.startStaffAngle,
+						blueEndpoints.targetStaffAngle,
+						t
+					);
+					redPropState.centerPathAngle = lerpAngle(
+						redEndpoints.startCenterAngle,
+						redEndpoints.targetCenterAngle,
+						t
+					);
+					redPropState.staffRotationAngle = lerpAngle(
+						redEndpoints.startStaffAngle,
+						redEndpoints.targetStaffAngle,
+						t
+					);
+
+					if (stepDefinition.blue_attributes.motion_type === 'pro') {
+						bluePropState.staffRotationAngle = calculateProIsolationStaffAngle(
+							bluePropState.centerPathAngle,
+							stepDefinition.blue_attributes.prop_rot_dir
+						);
+					}
+					if (stepDefinition.red_attributes.motion_type === 'pro') {
+						redPropState.staffRotationAngle = calculateProIsolationStaffAngle(
+							redPropState.centerPathAngle,
+							stepDefinition.red_attributes.prop_rot_dir
+						);
+					}
+				} else {
+					console.error(`Could not calculate endpoints for step index ${currentStepArrayIndex}`);
+				}
+
+				render();
+				updateUI();
+
+				if (isPlaying) {
+					animationFrameId = requestAnimationFrame(animationLoop);
+				}
+			}
+
+			// --- Control Functions ---
+			function play() {
+				if (isPlaying) return;
+				isPlaying = true;
+				playPauseBtn.textContent = '⏸';
+				playPauseBtn.classList.add('active');
+				lastTimestamp = null;
+				animationFrameId = requestAnimationFrame(animationLoop);
+			}
+			function pause() {
+				if (!isPlaying) return;
+				isPlaying = false;
+				playPauseBtn.textContent = '▶️';
+				playPauseBtn.classList.remove('active');
+				if (animationFrameId) {
+					cancelAnimationFrame(animationFrameId);
+					animationFrameId = null;
+				}
+			}
+			function reset() {
+				pause();
+				currentBeat = 0;
+				initializeState();
+				render();
+				updateUI();
+			}
+			function updateSpeed(newSpeed) {
+				speed = parseFloat(newSpeed);
+				speedValue.textContent = `${speed.toFixed(1)}x`;
+			}
+			function updateBeat(newBeat, renderImmediately = true) {
+				currentBeat = Math.max(0, Math.min(parseFloat(newBeat), totalBeats));
+				beatValue.textContent = currentBeat.toFixed(2);
+				beatSlider.value = currentBeat;
+
+				const clampedBeat = currentBeat;
+				const currentAnimationStepIndex = Math.floor(
+					clampedBeat === totalBeats ? totalBeats - 1 : clampedBeat
+				);
+				const currentStepArrayIndex = currentAnimationStepIndex + 2;
+				const t = clampedBeat === totalBeats ? 1.0 : clampedBeat - currentAnimationStepIndex;
+				const stepDef = parsedSteps[currentStepArrayIndex];
+
+				if (stepDef) {
+					const blueEP = calculateStepEndpoints(stepDef, 'blue');
+					const redEP = calculateStepEndpoints(stepDef, 'red');
+					if (blueEP && redEP) {
+						bluePropState.centerPathAngle = lerpAngle(
+							blueEP.startCenterAngle,
+							blueEP.targetCenterAngle,
+							t
+						);
+						bluePropState.staffRotationAngle = lerpAngle(
+							blueEP.startStaffAngle,
+							blueEP.targetStaffAngle,
+							t
+						);
+						redPropState.centerPathAngle = lerpAngle(
+							redEP.startCenterAngle,
+							redEP.targetCenterAngle,
+							t
+						);
+						redPropState.staffRotationAngle = lerpAngle(
+							redEP.startStaffAngle,
+							redEP.targetStaffAngle,
+							t
+						);
+						if (stepDef.blue_attributes.motion_type === 'pro') {
+							bluePropState.staffRotationAngle = calculateProIsolationStaffAngle(
+								bluePropState.centerPathAngle,
+								stepDef.blue_attributes.prop_rot_dir
+							);
+						}
+						if (stepDef.red_attributes.motion_type === 'pro') {
+							redPropState.staffRotationAngle = calculateProIsolationStaffAngle(
+								redPropState.centerPathAngle,
+								stepDef.red_attributes.prop_rot_dir
+							);
+						}
+					}
+				} else if (currentBeat === 0) {
+					initializeState();
+				} else {
+					console.warn(
+						`Could not find step definition for beat ${currentBeat} (index ${currentStepArrayIndex})`
+					);
+				}
+
+				if (renderImmediately) render();
+				updateInfoDisplay();
+			}
+			function updateUI() {
+				beatSlider.value = currentBeat;
+				beatValue.textContent = currentBeat.toFixed(2);
+				updateInfoDisplay();
+			}
+			function updateInfoDisplay() {
+				const clampedBeat = Math.max(0, Math.min(currentBeat, totalBeats));
+				const currentAnimationStepIndex = Math.floor(
+					clampedBeat === totalBeats ? totalBeats - 1 : clampedBeat
+				);
+				const displayBeatNum = clampedBeat === totalBeats ? 'End' : currentAnimationStepIndex + 1;
+				const t = clampedBeat === totalBeats ? 1.0 : clampedBeat - currentAnimationStepIndex;
+				infoBeat.textContent = clampedBeat.toFixed(2);
+				infoStepIndex.textContent = displayBeatNum;
+				infoT.textContent = t.toFixed(3);
+			}
+
+			// --- Initialization ---
+			function initializeState() {
+				if (!parsedSteps || parsedSteps.length < 2) return;
+				const startStateStep = parsedSteps[1]; // Use index 1 (original beat 0) for initial state
+				const blueStartEndpoints = calculateStepEndpoints(startStateStep, 'blue');
+				const redStartEndpoints = calculateStepEndpoints(startStateStep, 'red');
+				if (blueStartEndpoints) {
+					bluePropState.centerPathAngle = blueStartEndpoints.startCenterAngle;
+					bluePropState.staffRotationAngle = blueStartEndpoints.startStaffAngle;
+				} else {
+					bluePropState.centerPathAngle = mapPositionToAngle('s');
+					bluePropState.staffRotationAngle = bluePropState.centerPathAngle + PI;
+				}
+				if (redStartEndpoints) {
+					redPropState.centerPathAngle = redStartEndpoints.startCenterAngle;
+					redPropState.staffRotationAngle = redStartEndpoints.startStaffAngle;
+				} else {
+					redPropState.centerPathAngle = mapPositionToAngle('n');
+					redPropState.staffRotationAngle = redPropState.centerPathAngle + PI;
+				}
+				console.log('Initial State Set (from original beat 0 def):', {
+					blue: { ...bluePropState },
+					red: { ...redPropState }
+				});
+			}
+
+			function processSequenceData(sequenceArray) {
+				if (!Array.isArray(sequenceArray) || sequenceArray.length < 2) {
+					throw new Error(
+						'Invalid sequence data: Must be an array with at least 2 elements (metadata + start state).'
+					);
+				}
+				// Basic validation of first two elements
+				if (typeof sequenceArray[0] !== 'object' || typeof sequenceArray[1] !== 'object') {
+					throw new Error('Invalid sequence data: First two elements must be objects.');
+				}
+
+				parsedSteps = sequenceArray.map((step, index) => ({ ...step, arrayIndex: index }));
+				totalBeats = parsedSteps.length - 2; // Exclude metadata and start state
+
+				if (totalBeats <= 0) {
+					throw new Error('Sequence has no animation steps.');
+				}
+
+				// Update UI elements for the new sequence length
+				beatSlider.max = totalBeats;
+				beatValue.textContent = `0.00 / ${totalBeats}`;
+				totalBeatsDisplay.textContent = totalBeats;
+
+				initializeState(); // Set initial state based on the new sequence
+				render();
+				updateUI();
+			}
+
+			function loadPastedSequence() {
+				const jsonString = sequenceInput.value.trim();
+				messageArea.textContent = '';
+				messageArea.style.display = 'none';
+				messageArea.className = 'message'; // Reset classes
+
+				if (!jsonString) {
+					showMessage('error', 'Textarea is empty.');
+					return;
+				}
+
+				try {
+					const pastedData = JSON.parse(jsonString);
+					pause(); // Stop current animation
+					currentBeat = 0; // Reset beat
+					currentSequence = pastedData; // Store the new sequence
+					processSequenceData(currentSequence); // Process and initialize
+					showMessage(
+						'success',
+						`Sequence "${currentSequence[0]?.word || 'Untitled'}" loaded successfully (${totalBeats} beats).`
+					);
+					sequenceInput.value = ''; // Clear textarea after successful load
+				} catch (e) {
+					console.error('Failed to parse or process sequence:', e);
+					showMessage('error', `Error loading sequence: ${e.message}`);
+					// Optionally, revert to default sequence if loading fails?
+					// currentSequence = defaultSequence;
+					// processSequenceData(currentSequence);
+				}
+			}
+
+			function showMessage(type, text) {
+				messageArea.textContent = text;
+				messageArea.classList.add(type === 'error' ? 'error' : 'success');
+				messageArea.style.display = 'block';
+			}
+
+			function initialize() {
+				// Load default sequence initially
+				currentSequence = defaultSequence;
+				try {
+					processSequenceData(currentSequence);
+				} catch (e) {
+					console.error('Error processing default sequence:', e);
+					showMessage('error', `Failed to load default sequence: ${e.message}`);
+				}
+
+				// Event listeners
+				playPauseBtn.onclick = () => (isPlaying ? pause() : play());
+				resetBtn.onclick = reset;
+				speedSlider.oninput = (e) => updateSpeed(e.target.value);
+				beatSlider.oninput = (e) => {
+					if (isPlaying) pause();
+					updateBeat(e.target.value, true);
+				};
+				loopCheckbox.onchange = (e) => {
+					continuousLoop = e.target.checked;
+				};
+				loadSequenceBtn.onclick = loadPastedSequence; // Add listener for load button
+			}
+
+			// --- Start Loading ---
+			loadAllImages(); // This calls initialize() when done
+		</script>
+	</body>
+</html>

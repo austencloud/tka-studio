@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true
+  },
+  "include": ["global.d.ts"],
+  "exclude": [
+    "node_modules",
+    "apps/**",
+    "packages/**",
+    "scripts/**",
+    "dist",
+    "build",
+    ".svelte-kit",
+    ".vercel_build_output",
+    ".vercel",
+    "**/*.js"
+  ]
+}
