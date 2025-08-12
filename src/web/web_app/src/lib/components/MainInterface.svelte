@@ -15,6 +15,9 @@
 	import { foldTransition } from '$lib/utils/foldTransition';
 	import { fade } from '$lib/utils/simpleFade';
 	
+	// Import Svelte routing
+	import { page } from '$app/stores';
+	
 	// Import components - App Interface
 	import BackgroundCanvas from './backgrounds/BackgroundCanvas.svelte';
 	import BackgroundProvider from './backgrounds/BackgroundProvider.svelte';
@@ -28,6 +31,9 @@
 	
 	// Import components - Landing Interface
 	import Home from './landing/Home.svelte';
+	import About from './landing/About.svelte';
+	import Contact from './landing/Contact.svelte';
+	import Links from './landing/Links.svelte';
 
 	// Reactive state for template using proper derived
 	let appMode = $derived(getAppMode());
@@ -35,6 +41,9 @@
 	let showSettings = $derived(getShowSettings());
 	let settings = $derived(getSettings());
 	let landingBackground = $derived(getLandingBackground());
+
+	// Current route information
+	let currentRoute = $derived($page.route.id);
 
 	// Simple transition functions that respect animation settings
 	const tabOut = (node: Element) => {
@@ -67,6 +76,21 @@
 
 	function handleBackgroundChange(background: string) {
 		console.log('🌌 Background changed to:', background);
+	}
+
+	// Determine which landing component to show based on route
+	function getLandingComponent() {
+		switch (currentRoute) {
+			case '/about':
+				return About;
+			case '/contact':
+				return Contact;
+			case '/links':
+				return Links;
+			case '/':
+			default:
+				return Home;
+		}
 	}
 </script>
 
@@ -108,9 +132,13 @@
 		<!-- Main Content Area -->
 		<main class="content-area">
 			{#if isLandingMode()}
-				<!-- Landing Page Content -->
+				<!-- Landing Page Content with Routing -->
 				<div class="landing-content" in:foldTransition={{ direction: 'fold-in', duration: 400 }}>
-					<Home />
+					{#key currentRoute}
+						<div class="landing-page" in:fade={{ duration: 300, delay: 100 }} out:fade={{ duration: 200 }}>
+							<svelte:component this={getLandingComponent()} />
+						</div>
+					{/key}
 				</div>
 			{:else if isAppMode()}
 				<!-- App Content with reliable transitions -->
@@ -182,6 +210,12 @@
 		scroll-behavior: smooth;
 	}
 
+	.landing-page {
+		position: relative;
+		width: 100%;
+		min-height: 100%;
+	}
+
 	.tab-content {
 		position: absolute;
 		top: 0;
@@ -231,6 +265,7 @@
 	@media (prefers-reduced-motion: reduce) {
 		.main-interface,
 		.landing-content,
+		.landing-page,
 		.tab-content {
 			transition: none !important;
 			animation: none !important;

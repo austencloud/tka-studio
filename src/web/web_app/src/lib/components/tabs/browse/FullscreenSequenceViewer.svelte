@@ -24,6 +24,44 @@
 
 	// State for current variation (shared with image viewer)
 	let currentVariationIndex = $state(0);
+	
+	// Dynamic header height detection
+	let closeButtonTopOffset = $state(16); // Default 1rem
+
+	// Calculate header height on mount and window resize
+	$effect(() => {
+		function calculateHeaderOffset() {
+			// Look for navigation bar or any fixed header
+			const navBar = document.querySelector('.app-navigation-bar') || 
+			              document.querySelector('.landing-navbar') ||
+			              document.querySelector('nav') ||
+			              document.querySelector('header');
+			
+			if (navBar) {
+				const rect = navBar.getBoundingClientRect();
+				// Position button below the header with some margin
+				closeButtonTopOffset = rect.bottom + 16; // Add 1rem margin
+			} else {
+				// Fallback if no header found
+				closeButtonTopOffset = 16;
+			}
+		}
+
+		// Calculate on mount
+		calculateHeaderOffset();
+
+		// Recalculate on window resize
+		const handleResize = () => calculateHeaderOffset();
+		window.addEventListener('resize', handleResize);
+		
+		// Also recalculate after a short delay to ensure DOM is ready
+		const timeoutId = setTimeout(calculateHeaderOffset, 100);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			clearTimeout(timeoutId);
+		};
+	});
 
 	// Reset state when sequence changes
 	$effect(() => {
@@ -57,8 +95,13 @@
 		aria-labelledby="fullscreen-title"
 		tabindex="-1"
 	>
-		<!-- Close button in absolute top-right corner -->
-		<button class="close-button" onclick={handleClose} aria-label="Close fullscreen viewer">
+		<!-- Close button positioned intelligently below header -->
+		<button 
+			class="close-button" 
+			onclick={handleClose} 
+			aria-label="Close fullscreen viewer"
+			style="top: {closeButtonTopOffset}px;"
+		>
 			<span class="close-icon">✕</span>
 		</button>
 
@@ -107,11 +150,10 @@
 
 	.close-button {
 		position: fixed;
-		top: 1rem;
 		right: 1rem;
-		z-index: 1002;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
+		z-index: 9999;
+		background: rgba(0, 0, 0, 0.8);
+		border: 2px solid rgba(255, 255, 255, 0.3);
 		border-radius: 50%;
 		width: 3rem;
 		height: 3rem;
@@ -121,12 +163,14 @@
 		cursor: pointer;
 		transition: all 0.2s ease;
 		color: white;
+		backdrop-filter: blur(4px);
 	}
 
 	.close-button:hover {
-		background: rgba(255, 255, 255, 0.2);
-		border-color: rgba(255, 255, 255, 0.3);
-		transform: scale(1.05);
+		background: rgba(0, 0, 0, 0.9);
+		border-color: rgba(255, 255, 255, 0.5);
+		transform: scale(1.1);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	}
 
 	.close-button:active {
@@ -205,8 +249,8 @@
 		.close-button {
 			width: 2.5rem;
 			height: 2.5rem;
-			top: 0.75rem;
 			right: 0.75rem;
+			z-index: 10000;
 		}
 
 		.close-icon {

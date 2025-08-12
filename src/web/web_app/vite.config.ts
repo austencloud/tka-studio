@@ -7,21 +7,12 @@ export default defineConfig({
 
 	// Optimize dependencies
 	optimizeDeps: {
-		include: ['@tka/schemas', '@tka/shared'],
+		include: [],
 	},
 
 	// Build configuration
 	build: {
 		sourcemap: true, // Enable source maps for production builds
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					'tka-core': ['@tka/schemas', '@tka/shared'],
-					pictograph: ['src/lib/components/pictograph'],
-					sequence: ['src/lib/components/sequence'],
-				},
-			},
-		},
 	},
 
 	// Development server configuration
@@ -29,17 +20,11 @@ export default defineConfig({
 		port: 5174,
 		host: 'localhost',
 		open: true, // Auto-open browser
-		fs: {
-			allow: ['..'], // Allow access to parent directories for shared modules
-		},
 	},
 
 	// Path resolution
 	resolve: {
-		alias: {
-			'@tka/schemas': '../../../schemas/generated-types.ts',
-			'@tka/shared': '../shared',
-		},
+		alias: {},
 	},
 
 	// Test configuration

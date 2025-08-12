@@ -1,12 +1,6 @@
 {
   // Pyright/Pylance Configuration for TKA Desktop
-  "include": [
-    "modern/**",
-    "legacy/**",
-    "data/**",
-    "../../src/shared/**",
-    "../../src/desktop/**"
-  ],
+  "include": ["modern/**", "legacy/**", "data/**", "../../src/desktop/**"],
   "exclude": [
     "**/__pycache__",
     "**/.pytest_cache",
@@ -24,10 +18,7 @@
   "autoSearchPaths": true,
   "autoImportCompletions": true,
   "indexing": true,
-  "includeFileSpecs": [
-    "**/*.py",
-    "**/*.pyi"
-  ],
+  "includeFileSpecs": ["**/*.py", "**/*.pyi"],
   "extraPaths": [
     "./modern/src",
     "./legacy",
@@ -35,7 +26,6 @@
     "../../src",
     "../../src/desktop/modern/src",
     "../../src/desktop/legacy",
-    "../../src/shared",
     "../../launcher",
     "../../packages"
   ],

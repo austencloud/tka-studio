@@ -22,7 +22,6 @@ export default defineConfig({
 		alias: {
 			$lib: './src/lib',
 			$app: './node_modules/@sveltejs/kit/src/runtime/app',
-			'@tka/schemas': './src/lib/domain',
 		},
 	},
 });

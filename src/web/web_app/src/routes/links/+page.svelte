@@ -1,4 +1,4 @@
-<!-- Main Page Route - Landing Home by default -->
+<!-- Links Page Route -->
 <script lang="ts">
 	import MainApplication from '$components/MainApplication.svelte';
 </script>

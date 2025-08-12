@@ -33,13 +33,9 @@ class ImportFixer:
             (r'from\s+core\.([a-zA-Z0-9_\.]+)\s+import', 
              r'from desktop.modern.core.\1 import'),
              
-            # from infrastructure.xxx import yyy  
-            (r'from\s+infrastructure\.([a-zA-Z0-9_\.]+)\s+import', 
+            # from infrastructure.xxx import yyy
+            (r'from\s+infrastructure\.([a-zA-Z0-9_\.]+)\s+import',
              r'from desktop.modern.infrastructure.\1 import'),
-             
-            # from shared.xxx import yyy
-            (r'from\s+shared\.([a-zA-Z0-9_\.]+)\s+import', 
-             r'from desktop.shared.\1 import'),
         ]
         
         # Files to exclude from processing
@@ -103,11 +99,7 @@ class ImportFixer:
             print(f"📁 Processing modern directory: {modern_dir}")
             self._process_directory(modern_dir)
         
-        # Process shared directory for modern-specific files
-        shared_dir = self.base_path / "src" / "desktop" / "shared"
-        if shared_dir.exists():
-            print(f"📁 Processing shared directory: {shared_dir}")
-            self._process_directory(shared_dir)
+        # Shared directory is no longer used - services moved to modern
             
         print(f"\n✅ Import fixing complete!")
         print(f"   Files processed: {self.fixed_files}")

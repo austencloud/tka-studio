@@ -1,34 +1,41 @@
 """Core Services."""
 
-# Import shared src modules to make them available in the modern src namespace
 from __future__ import annotations
 
+# Import from modern core services - these modules are now in the modern directory
+__all__ = []
 
+# Core services (no Qt dependencies)
 try:
-    # Import from shared src - these modules exist in the TKA/src directory
-    from pathlib import Path
-    import sys
-
-    # Find and add shared src to path if not already there
-    current_file = Path(__file__).resolve()
-    # Navigate up: __init__.py -> core -> services -> application -> src -> desktop -> modern -> src -> desktop -> TKA
-    tka_root = current_file.parents[8]
-    shared_src = tka_root / "src"
-
-    if shared_src.exists() and str(shared_src) not in sys.path:
-        sys.path.append(str(shared_src))
-
-    # Now import the shared modules
-    from desktop.shared.application.adapters.qt_image_export_adapter import (
-        QtImageExportAdapter,
-    )
-    from desktop.shared.application.services.core.pictograph_renderer import (
+    from desktop.modern.application.services.core.pictograph_renderer import (
         CorePictographRenderer,
     )
-
-    # Make them available in this namespace
-    __all__ = ["CorePictographRenderer", "QtImageExportAdapter"]
-
+    __all__.append("CorePictographRenderer")
 except ImportError:
-    # If shared modules aren't available, that's okay - they're optional
+    pass
+
+try:
+    from desktop.modern.application.services.core.image_export_service import (
+        CoreImageExportService,
+    )
+    __all__.append("CoreImageExportService")
+except ImportError:
+    pass
+
+try:
+    from desktop.modern.application.services.core.thumbnail_service import (
+        CoreThumbnailService,
+    )
+    __all__.append("CoreThumbnailService")
+except ImportError:
+    pass
+
+# Qt adapters (may fail if PyQt6 not available)
+try:
+    from desktop.modern.application.adapters.qt_image_export_adapter import (
+        QtImageExportAdapter,
+    )
+    __all__.append("QtImageExportAdapter")
+except ImportError:
+    # PyQt6 not available - that's okay for testing environments
     pass

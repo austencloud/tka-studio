@@ -1,6 +1,6 @@
 // src/lib/components/backgrounds/types/types.ts
-// Background types - curated selection of beautiful backgrounds (removed starfield and auroraBorealis)
-export type BackgroundType = 'snowfall' | 'nightSky' | 'aurora' | 'bubbles';
+// Background types - includes all landing page backgrounds
+export type BackgroundType = 'snowfall' | 'nightSky' | 'aurora' | 'bubbles' | 'deepOcean';
 
 // --- Other type definitions remain the same ---
 export interface ParallaxLayer {
@@ -104,7 +104,7 @@ export interface SantaState {
 }
 // --- End Snowfall specific types ---
 
-// --- Night Sky specific types (NEW) ---
+// --- Night Sky specific types ---
 export interface Star {
 	x: number;
 	y: number;
@@ -151,6 +151,60 @@ export interface EasterEggState<T> {
 	interval: number;
 }
 // --- End Night Sky specific types ---
+
+// --- Deep Ocean specific types ---
+export interface Bubble {
+	x: number;
+	y: number;
+	radius: number;
+	speed: number;
+	sway: number;
+	opacity: number;
+	swayOffset: number;
+	startY: number;
+}
+
+export interface MarineLife {
+	x: number;
+	y: number;
+	dx: number;
+	dy: number;
+	size: number;
+	speed: number;
+	opacity: number;
+	type: 'fish' | 'jellyfish' | 'seaweed';
+	animationPhase: number;
+	color: string;
+}
+
+export interface OceanParticle {
+	x: number;
+	y: number;
+	vx: number;
+	vy: number;
+	size: number;
+	opacity: number;
+	color: string;
+	life: number;
+	maxLife: number;
+}
+
+export interface DeepOceanState {
+	bubbles: Bubble[];
+	marineLife: MarineLife[];
+	particles: OceanParticle[];
+	currentGradient: {
+		top: string;
+		bottom: string;
+	};
+	lightRays: Array<{
+		x: number;
+		opacity: number;
+		width: number;
+		angle: number;
+	}>;
+}
+// --- End Deep Ocean specific types ---
 
 export interface AnimationSystem<T> {
 	initialize: (dimensions: Dimensions, quality: QualityLevel) => T;

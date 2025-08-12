@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch TKA Web App",
+            "url": "http://localhost:5174",
+            "webRoot": "${workspaceFolder}/web_app/src"
+        }
+    ]
+}

@@ -15,6 +15,7 @@
 	import { createBrowseState } from '$lib/state/browse-state.svelte';
 	import { onMount } from 'svelte';
 	// Extracted components
+	import AnimationPanel from './browse/AnimationPanel.svelte';
 	import BrowseLayout from './browse/BrowseLayout.svelte';
 	import DeleteConfirmationDialog from './browse/DeleteConfirmationDialog.svelte';
 	import ErrorBanner from './browse/ErrorBanner.svelte';
@@ -58,6 +59,10 @@
 	let isNavigationCollapsed = $state(false); // Navigation sidebar collapse state
 	let showFullscreenViewer = $state(false); // Fullscreen sequence viewer state
 	let fullscreenSequence = $state<BrowseSequenceMetadata | undefined>(undefined); // Current sequence for fullscreen
+
+	// Phase 3: Animation panel state
+	let showAnimationPanel = $state(false); // Animation panel visibility
+	let animationSequence = $state<BrowseSequenceMetadata | null>(null); // Current sequence for animation
 
 	// ✅ DERIVED RUNES: Computed UI state from browse state
 	let selectedFilter = $derived(browseState.currentFilter);
@@ -136,9 +141,14 @@
 	}
 
 	function handleSequenceAction(action: string, sequence: BrowseSequenceMetadata) {
-		console.log(`🎬 Fullscreen action: ${action} on sequence:`, sequence.id);
+		console.log(`🎬 Sequence action: ${action} on sequence:`, sequence.id);
 
-		if (action === 'edit') {
+		if (action === 'animate') {
+			// Phase 3: Handle animate action
+			console.log('🎬 Opening animation panel for sequence:', sequence.id);
+			animationSequence = sequence;
+			showAnimationPanel = true;
+		} else if (action === 'edit') {
 			// Close fullscreen and handle edit
 			handleCloseFullscreen();
 			originalHandleSequenceAction(action, sequence);
@@ -149,7 +159,17 @@
 			// Close fullscreen and handle delete
 			handleCloseFullscreen();
 			originalHandleSequenceAction(action, sequence);
+		} else {
+			// Pass through other actions to original handler
+			originalHandleSequenceAction(action, sequence);
 		}
+	}
+
+	// Phase 3: Animation panel handlers
+	function handleCloseAnimationPanel() {
+		console.log('🎬 Closing animation panel');
+		showAnimationPanel = false;
+		animationSequence = null;
 	}
 </script>
 

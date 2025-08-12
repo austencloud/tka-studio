@@ -29,27 +29,7 @@
 		"noImplicitOverride": true,
 		"noPropertyAccessFromIndexSignature": false,
 
-		// Modules
-		"baseUrl": ".",
-		"paths": {
-			"$lib": ["./src/lib"],
-			"$lib/*": ["./src/lib/*"],
-			"$app/*": ["./node_modules/@sveltejs/kit/src/runtime/app/*"],
-			"@/*": ["./src/*"],
-			"$domain": ["./src/lib/domain"],
-			"$domain/*": ["./src/lib/domain/*"],
-			"$services": ["./src/lib/services"],
-			"$services/*": ["./src/lib/services/*"],
-			"$stores": ["./src/lib/stores"],
-			"$stores/*": ["./src/lib/stores/*"],
-			"$components": ["./src/lib/components"],
-			"$components/*": ["./src/lib/components/*"],
-			"$utils": ["./src/lib/utils"],
-			"$utils/*": ["./src/lib/utils/*"],
-			"@tka/schemas": ["../../../schemas/generated-types.ts"],
-			"@tka/shared": ["../shared"],
-			"@tka/shared/*": ["../shared/*"]
-		},
+		// Modules - SvelteKit handles path aliases via kit.alias in svelte.config.js
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,

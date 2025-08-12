@@ -11,7 +11,13 @@
 </script>
 
 <script lang="ts">
-	import type { SequenceData, PropState, SequenceStep } from '../../types/core.js';
+	import type {
+		SequenceData,
+		PropState,
+		SequenceStep,
+		AnySequenceData,
+		UnifiedSequenceData
+	} from '../../types/core.js';
 	import { SimplifiedAnimationEngine } from '../../core/engine/simplified-animation-engine.js';
 	import { AnimatorErrorHandler } from '../../utils/error/error-handler.js';
 	import { InputValidator } from '../../utils/validation/input-validator.js';
@@ -27,10 +33,10 @@
 		onSuccess,
 		renderControls = true
 	}: {
-		sequenceData: SequenceData | null;
+		sequenceData: AnySequenceData | null;
 		blueProp: PropState;
 		redProp: PropState;
-		onSequenceLoad?: (_data: SequenceData) => void;
+		onSequenceLoad?: (_data: AnySequenceData) => void;
 		onError?: (_message: string) => void;
 		onSuccess?: (_message: string) => void;
 		renderControls?: boolean;
@@ -61,8 +67,8 @@
 		};
 	});
 
-	// Handle sequence load
-	function handleLoadSequence(data: SequenceData): void {
+	// Handle sequence load (PHASE 2: Now accepts any sequence format)
+	function handleLoadSequence(data: AnySequenceData): void {
 		try {
 			// Validate sequence data first
 			const validation = InputValidator.validateSequenceData(data);
@@ -118,17 +124,44 @@
 	}
 
 	// Detect if sequence should automatically loop (ends in start position)
-	function detectAutoLoop(data: SequenceData): boolean {
-		if (data.length < 3) return false; // Need at least metadata, start, and one step
+	// PHASE 2: Updated to work with UnifiedSequenceData
+	function detectAutoLoop(data: AnySequenceData): boolean {
+		try {
+			// Use the engine's current steps (already extracted)
+			if (engine.getTotalBeats() < 2) return false;
 
-		const startPosition = data[1] as SequenceStep;
-		const lastStep = data[data.length - 1] as SequenceStep;
+			const steps = engine.getSteps();
+			if (!steps || steps.length < 2) return false;
 
-		// Check if both props end in their start positions
-		const blueLoops = startPosition.blue_attributes.start_loc === lastStep.blue_attributes.end_loc;
-		const redLoops = startPosition.red_attributes.start_loc === lastStep.red_attributes.end_loc;
+			// Get start position from sequence data or first step
+			let startBluePos = 'center';
+			let startRedPos = 'center';
 
-		return blueLoops && redLoops;
+			// Try to get start position from sequence data
+			if (engine.getSequenceData()?.start_position?.pictograph_data?.motions) {
+				const startMotions = engine.getSequenceData()?.start_position?.pictograph_data?.motions;
+				startBluePos = startMotions?.blue?.start_loc || 'center';
+				startRedPos = startMotions?.red?.start_loc || 'center';
+			} else if (steps.length > 0) {
+				// Fallback to first step's start positions
+				startBluePos = steps[0].blue_attributes.start_loc;
+				startRedPos = steps[0].red_attributes.start_loc;
+			}
+
+			// Get last step's end positions
+			const lastStep = steps[steps.length - 1];
+			const lastBluePos = lastStep.blue_attributes.end_loc;
+			const lastRedPos = lastStep.red_attributes.end_loc;
+
+			// Check if both props end in their start positions
+			const blueLoops = startBluePos === lastBluePos;
+			const redLoops = startRedPos === lastRedPos;
+
+			return blueLoops && redLoops;
+		} catch (error) {
+			console.warn('Failed to detect auto loop:', error);
+			return false;
+		}
 	}
 
 	// Animation loop

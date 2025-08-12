@@ -45,6 +45,14 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
 <!-- Action buttons (show on hover) -->
 <div class="action-buttons">
 	<button
+		class="action-button animate-button"
+		onclick={(e) => handleActionClick('animate', e)}
+		aria-label="Animate sequence"
+		title="Animate sequence"
+	>
+		🎬
+	</button>
+	<button
 		class="action-button delete-button"
 		onclick={(e) => handleActionClick('delete', e)}
 		aria-label="Delete sequence"
@@ -135,6 +143,11 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
 	.action-button:hover {
 		background: rgba(255, 255, 255, 1);
 		transform: scale(1.1);
+	}
+
+	.animate-button:hover {
+		background: rgba(139, 92, 246, 0.1);
+		border-color: rgba(139, 92, 246, 0.3);
 	}
 
 	.delete-button:hover {

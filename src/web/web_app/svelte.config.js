@@ -20,8 +20,6 @@ const config = {
 			$stores: 'src/lib/stores',
 			$components: 'src/lib/components',
 			$utils: 'src/lib/utils',
-			'@tka/schemas': '../../../schemas/generated-types.ts',
-			'@tka/shared': '../shared',
 		},
 	},
 };
