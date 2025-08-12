@@ -5,9 +5,10 @@
             "type": "chrome",
             "request": "launch",
             "name": "🚀 Launch TKA Web App",
-            "url": "http://localhost:5174",
+            "url": "http://localhost:5173",
             "webRoot": "${workspaceFolder}/web_app/src",
-            "preLaunchTask": "npm: dev"
+            "preLaunchTask": "npm: dev",
+            "runtimeArgs": ["--auto-open-devtools-for-tabs"]
         }
     ]
 }

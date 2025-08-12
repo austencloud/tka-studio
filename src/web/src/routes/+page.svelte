@@ -9,7 +9,7 @@
 		// Enter app mode and go to constructor
 		console.log('🔧 Root route accessed - entering app mode...');
 		await enterAppMode();
-		switchTab('constructor');
+		switchTab('construct');
 	});
 </script>
 
