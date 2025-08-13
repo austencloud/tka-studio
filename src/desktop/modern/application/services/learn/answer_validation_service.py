@@ -5,8 +5,6 @@ Validates quiz answers and tracks answer history for scoring
 and progress tracking.
 """
 
-from __future__ import annotations
-
 import logging
 from typing import Any
 
@@ -15,7 +13,6 @@ from desktop.modern.core.interfaces.learn_services import (
     IQuizSessionService,
 )
 from desktop.modern.domain.models.learn import QuestionData
-
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +67,7 @@ class AnswerValidationService(IAnswerValidationService):
             return is_correct
 
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to check answer for question {question.question_id}: {e}"
             )
             return False
@@ -109,7 +106,7 @@ class AnswerValidationService(IAnswerValidationService):
             return False
 
         except Exception as e:
-            logger.exception(f"Failed to compare answers: {e}")
+            logger.error(f"Failed to compare answers: {e}")
             return False
 
     def _compare_pictographs(self, correct: dict, selected: dict) -> bool:
@@ -141,7 +138,7 @@ class AnswerValidationService(IAnswerValidationService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to compare pictographs: {e}")
+            logger.error(f"Failed to compare pictographs: {e}")
             return False
 
     def record_answer(self, session_id: str, question_id: str, correct: bool) -> None:
@@ -185,7 +182,7 @@ class AnswerValidationService(IAnswerValidationService):
             )
 
         except Exception as e:
-            logger.exception(f"Failed to record answer for session {session_id}: {e}")
+            logger.error(f"Failed to record answer for session {session_id}: {e}")
 
     def get_answer_history(self, session_id: str) -> list[tuple[str, bool]]:
         """
@@ -200,7 +197,7 @@ class AnswerValidationService(IAnswerValidationService):
         try:
             return self._answer_history.get(session_id, [])
         except Exception as e:
-            logger.exception(f"Failed to get answer history for session {session_id}: {e}")
+            logger.error(f"Failed to get answer history for session {session_id}: {e}")
             return []
 
     def get_session_accuracy(self, session_id: str) -> float:
@@ -222,7 +219,7 @@ class AnswerValidationService(IAnswerValidationService):
             return (correct_count / len(history)) * 100.0
 
         except Exception as e:
-            logger.exception(f"Failed to calculate accuracy for session {session_id}: {e}")
+            logger.error(f"Failed to calculate accuracy for session {session_id}: {e}")
             return 0.0
 
     def get_correct_streak(self, session_id: str) -> int:
@@ -250,7 +247,7 @@ class AnswerValidationService(IAnswerValidationService):
             return streak
 
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to calculate correct streak for session {session_id}: {e}"
             )
             return 0
@@ -283,7 +280,7 @@ class AnswerValidationService(IAnswerValidationService):
             return max_streak
 
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to calculate longest streak for session {session_id}: {e}"
             )
             return 0
@@ -306,7 +303,7 @@ class AnswerValidationService(IAnswerValidationService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to clear history for session {session_id}: {e}")
+            logger.error(f"Failed to clear history for session {session_id}: {e}")
             return False
 
     def get_statistics(self) -> dict[str, Any]:
@@ -325,13 +322,13 @@ class AnswerValidationService(IAnswerValidationService):
             return {
                 "tracked_sessions": total_sessions,
                 "total_answers_recorded": total_answers,
-                "average_answers_per_session": (
-                    total_answers / total_sessions if total_sessions > 0 else 0
-                ),
+                "average_answers_per_session": total_answers / total_sessions
+                if total_sessions > 0
+                else 0,
             }
 
         except Exception as e:
-            logger.exception(f"Failed to get validation service statistics: {e}")
+            logger.error(f"Failed to get validation service statistics: {e}")
             return {
                 "tracked_sessions": 0,
                 "total_answers_recorded": 0,

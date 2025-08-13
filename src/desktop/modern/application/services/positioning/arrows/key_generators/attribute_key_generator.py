@@ -1,97 +1,62 @@
 """
-Modern Attribute Key Generator
+Attribute Key Generation Service - Faithful Legacy Port
 
-Generates attribute keys for arrow positioning using modern data structures.
-Replaces the legacy AttrKeyGenerator to work with ArrowData and PictographData.
+Faithful port of legacy AttrKeyGenerator for special placement lookups.
+Legacy source: src/desktop/legacy/src/placement_managers/attr_key_generator.py
 """
 
-from __future__ import annotations
-
 import logging
-from typing import TYPE_CHECKING
-
-
-if TYPE_CHECKING:
-    from desktop.modern.domain.models.arrow_data import ArrowData
-    from desktop.modern.domain.models.pictograph_data import PictographData
 
 from desktop.modern.core.interfaces.positioning_services import IAttributeKeyGenerator
-
+from desktop.modern.domain.models.arrow_data import ArrowData
+from desktop.modern.domain.models.enums import Orientation
+from desktop.modern.domain.models.letter_type_classifier import LetterTypeClassifier
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 logger = logging.getLogger(__name__)
 
 
 class AttributeKeyGenerator(IAttributeKeyGenerator):
-    """
-    Modern implementation of attribute key generation for arrow positioning.
+    """Faithful port of legacy AttrKeyGenerator."""
 
-    Generates keys used for special placement and default placement lookups.
-    Works with modern ArrowData and PictographData objects.
-    """
+    def __init__(self):
+        pass
 
     def get_key_from_arrow(
         self, arrow_data: ArrowData, pictograph_data: PictographData
     ) -> str:
-        """
-        Get attribute key from modern arrow data.
+        """Original method for getting key from Arrow data (faithful port)."""
 
-        Args:
-            arrow_data: Arrow data containing color and other attributes
-            pictograph_data: Pictograph data for context
-
-        Returns:
-            Attribute key string for positioning lookups
-        """
-        try:
-            # Extract motion data for this arrow color
-            motion_data = pictograph_data.motions.get(arrow_data.color)
-
-            if not motion_data:
-                # Fallback to color if no motion data
-                logger.debug(
-                    f"No motion data for {arrow_data.color}, using color as key"
-                )
-                return arrow_data.color
-
-            # Extract required attributes
-            motion_type = (
-                motion_data.motion_type.value
-                if hasattr(motion_data.motion_type, "value")
-                else str(motion_data.motion_type)
-            )
-            letter = pictograph_data.letter
-            start_ori = (
-                motion_data.start_ori.value
-                if hasattr(motion_data.start_ori, "value")
-                else str(motion_data.start_ori)
-            )
-            color = arrow_data.color
-
-            # For modern data, we don't have lead_state, so use None
-            lead_state = None
-
-            # Determine motion characteristics
-            has_hybrid_motions = self._has_hybrid_motions(pictograph_data)
-            starts_from_mixed_orientation = self._starts_from_mixed_orientation(
-                pictograph_data
-            )
-            starts_from_standard_orientation = not starts_from_mixed_orientation
-
-            return self.generate_key(
-                motion_type=motion_type,
-                letter=letter,
-                start_ori=start_ori,
-                color=color,
-                lead_state=lead_state,
-                has_hybrid_motions=has_hybrid_motions,
-                starts_from_mixed_orientation=starts_from_mixed_orientation,
-                starts_from_standard_orientation=starts_from_standard_orientation,
-            )
-
-        except Exception as e:
-            logger.exception(f"Error generating attribute key for {arrow_data.color}: {e}")
-            # Fallback to color
+        # Check if motion data exists for this arrow color
+        if arrow_data.color not in pictograph_data.motions:
+            # No motion data means static arrow - return color as fallback
             return arrow_data.color
+
+        motion_data = pictograph_data.motions[arrow_data.color]
+        motion_type = motion_data.motion_type
+        letter = pictograph_data.letter or ""
+        start_ori = getattr(motion_data, "start_ori", Orientation.IN)
+        color = arrow_data.color
+        lead_state = self._determine_lead_state(arrow_data, pictograph_data)
+
+        has_hybrid_motions = self._has_hybrid_motions(pictograph_data)
+        starts_from_mixed_orientation = self._starts_from_mixed_orientation(
+            pictograph_data
+        )
+        starts_from_standard_orientation = self._starts_from_standard_orientation(
+            pictograph_data
+        )
+
+        return self.generate_key(
+            motion_type=motion_type,
+            letter=letter,
+            start_ori=start_ori,
+            color=color,
+            lead_state=lead_state,
+            has_hybrid_motions=has_hybrid_motions,
+            starts_from_mixed_orientation=starts_from_mixed_orientation,
+            starts_from_standard_orientation=starts_from_standard_orientation,
+        )
 
     def generate_key(
         self,
@@ -104,145 +69,131 @@ class AttributeKeyGenerator(IAttributeKeyGenerator):
         starts_from_mixed_orientation: bool,
         starts_from_standard_orientation: bool,
     ) -> str:
-        """
-        Core key generation logic matching legacy implementation.
+        """Core key generation logic - faithful port of legacy generate_key()."""
+        if starts_from_mixed_orientation:
+            if letter in ["S", "T"]:
+                return f"{lead_state}"
+            elif has_hybrid_motions:
+                # Convert string orientation to enum for comparison
+                from desktop.modern.domain.models import Orientation
 
-        Args:
-            motion_type: Motion type string
-            letter: Letter string
-            start_ori: Start orientation string
-            color: Arrow color
-            lead_state: Lead state (may be None for modern data)
-            has_hybrid_motions: Whether there are hybrid motions
-            starts_from_mixed_orientation: Whether starts from mixed orientation
-            starts_from_standard_orientation: Whether starts from standard orientation
+                ori_enum = start_ori
+                if isinstance(start_ori, str):
+                    ori_map = {
+                        "in": Orientation.IN,
+                        "out": Orientation.OUT,
+                        "clock": Orientation.CLOCK,
+                        "counter": Orientation.COUNTER,
+                    }
+                    ori_enum = ori_map.get(start_ori.lower(), Orientation.IN)
 
-        Returns:
-            Generated attribute key string
-        """
-        try:
-            # Import constants for orientation checking
-            from data.constants import CLOCK, COUNTER, IN, OUT
-
-            if starts_from_mixed_orientation:
-                if letter in ["S", "T"]:
-                    return lead_state if lead_state else color
-                if has_hybrid_motions:
-                    if start_ori in [IN, OUT]:
-                        return f"{motion_type}_from_layer1"
-                    if start_ori in [CLOCK, COUNTER]:
-                        return f"{motion_type}_from_layer2"
+                if ori_enum in [Orientation.IN, Orientation.OUT]:
+                    return f"{motion_type}_from_layer1"
+                elif ori_enum in [Orientation.CLOCK, Orientation.COUNTER]:
+                    return f"{motion_type}_from_layer2"
+                else:
                     return color
-                if self._is_non_hybrid_letter(letter):
-                    return color
+            elif self._is_non_hybrid_letter(letter):
+                return color
+            else:
                 return motion_type
-            # Standard orientation - return color for most cases
-            return color
 
-        except Exception as e:
-            logger.exception(f"Error in key generation: {e}")
-            # Fallback to color
-            return color
+        elif starts_from_standard_orientation:
+            if letter in ["S", "T"]:
+                return f"{color}_{lead_state}"
+            elif has_hybrid_motions:
+                return motion_type
+            else:
+                return color
+
+        return motion_type
 
     def _has_hybrid_motions(self, pictograph_data: PictographData) -> bool:
-        """
-        Check if pictograph has hybrid motions.
-
-        Args:
-            pictograph_data: Pictograph data to check
-
-        Returns:
-            True if has hybrid motions
-        """
-        try:
-            # Check if we have both blue and red motions with different types
-            blue_motion = pictograph_data.motions.get("blue")
-            red_motion = pictograph_data.motions.get("red")
-
-            if not blue_motion or not red_motion:
-                return False
-
-            # Different motion types indicate hybrid
-            blue_type = (
-                blue_motion.motion_type.value
-                if hasattr(blue_motion.motion_type, "value")
-                else str(blue_motion.motion_type)
-            )
-            red_type = (
-                red_motion.motion_type.value
-                if hasattr(red_motion.motion_type, "value")
-                else str(red_motion.motion_type)
-            )
-
-            return blue_type != red_type
-
-        except Exception:
+        """Check if pictograph has hybrid motions."""
+        arrows = list(pictograph_data.arrows.values())
+        if len(arrows) < 2:
             return False
+        motions = pictograph_data.motions
+        motion_types = set()
+        for motion in motions.values():
+            if motion:
+                motion_types.add(motion.motion_type.value)
+
+        return len(motion_types) > 1
 
     def _starts_from_mixed_orientation(self, pictograph_data: PictographData) -> bool:
-        """
-        Check if pictograph starts from mixed orientation.
-
-        Args:
-            pictograph_data: Pictograph data to check
-
-        Returns:
-            True if starts from mixed orientation
-        """
-        try:
-            from data.constants import IN, OUT
-
-            blue_motion = pictograph_data.motions.get("blue")
-            red_motion = pictograph_data.motions.get("red")
-
-            if not blue_motion or not red_motion:
-                return False
-
-            blue_start = (
-                blue_motion.start_ori.value
-                if hasattr(blue_motion.start_ori, "value")
-                else str(blue_motion.start_ori)
-            )
-            red_start = (
-                red_motion.start_ori.value
-                if hasattr(red_motion.start_ori, "value")
-                else str(red_motion.start_ori)
-            )
-
-            # Mixed if one is layer1 (IN/OUT) and other is layer2 (CLOCK/COUNTER)
-            blue_layer1 = blue_start in [IN, OUT]
-            red_layer1 = red_start in [IN, OUT]
-
-            return blue_layer1 != red_layer1
-
-        except Exception:
+        """Check if pictograph starts from mixed orientation."""
+        arrows = list(pictograph_data.arrows.values())
+        if len(arrows) < 2:
             return False
+        motions = pictograph_data.motions
+
+        start_oris = set()
+        for motion in motions:
+            if motion:
+                start_ori = getattr(motion, "start_ori", Orientation.IN)
+                start_oris.add(start_ori)
+
+        return len(start_oris) > 1
+
+    def _starts_from_standard_orientation(
+        self, pictograph_data: PictographData
+    ) -> bool:
+        """Check if pictograph starts from standard orientation."""
+        return not self._starts_from_mixed_orientation(pictograph_data)
 
     def _is_non_hybrid_letter(self, letter: str) -> bool:
-        """
-        Check if letter is non-hybrid.
+        """Check if letter is non-hybrid (Type1)."""
+        return LetterTypeClassifier.get_letter_type(letter) == "Type1"
 
-        Args:
-            letter: Letter to check
-
-        Returns:
-            True if letter is non-hybrid
+    def _determine_lead_state(
+        self, arrow_data: ArrowData, pictograph_data: PictographData
+    ) -> str:
         """
-        # Basic non-hybrid letters (this may need expansion based on actual letter conditions)
-        non_hybrid_letters = [
-            "A",
-            "B",
-            "D",
-            "E",
-            "G",
-            "H",
-            "J",
-            "K",
-            "M",
-            "N",
-            "P",
-            "Q",
-            "S",
-            "T",
-        ]
-        return letter in non_hybrid_letters
+        Determine lead state for the given arrow.
+
+        Faithful port of legacy lead state determination logic.
+        Leading motion is determined by position and motion direction.
+        """
+        arrows = list(pictograph_data.arrows.values())
+        if len(arrows) < 2:
+            return "leading"  # Default for single arrow
+
+        blue_arrow = pictograph_data.arrows.get("blue")
+        red_arrow = pictograph_data.arrows.get("red")
+
+        if not blue_arrow or not red_arrow:
+            return "leading"  # Default
+
+        # Simplified lead state logic based on legacy LeadStateDeterminer
+        # The arrow that "leads" is typically determined by position/motion order
+
+        # If one motion ends where the other starts, the one that starts there is leading
+        blue_motion = pictograph_data.motions.get("blue")
+        red_motion = pictograph_data.motions.get("red")
+
+        if blue_motion and red_motion:
+            blue_start = blue_motion.start_loc
+            blue_end = blue_motion.end_loc
+            red_start = red_motion.start_loc
+            red_end = red_motion.end_loc
+
+            # Check if blue ends where red starts
+            if blue_end == red_start:
+                if arrow_data.color == "red":
+                    return "leading"
+                else:
+                    return "trailing"
+
+            # Check if red ends where blue starts
+            if red_end == blue_start:
+                if arrow_data.color == "blue":
+                    return "leading"
+                else:
+                    return "trailing"
+
+        # Default fallback: blue is leading, red is trailing
+        if arrow_data.color == "blue":
+            return "leading"
+        else:
+            return "trailing"

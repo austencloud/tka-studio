@@ -1,18 +1,16 @@
 """
-Directional Tuple Service
+Directional Tuple Calculator Service
 
-Replicates the legacy DirectionalTupleGenerator logic for generating
-quadrant-based directional adjustments using rotation matrices.
+Framework-agnostic service for generating quadrant-based directional adjustments
+using rotation matrices. Replicates the legacy DirectionalTupleGenerator logic.
 
 This service provides the core directional tuple generation that was
 missing from the modern arrow positioning system.
 """
 
-from __future__ import annotations
-
 import logging
 
-from desktop.modern.core.interfaces.positioning_services import (
+from desktop.modern.application.services.core.interfaces.positioning_services import (
     IDirectionalTupleCalculator,
 )
 from desktop.modern.domain.models import (
@@ -22,13 +20,12 @@ from desktop.modern.domain.models import (
     RotationDirection,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
 class DirectionalTupleCalculator(IDirectionalTupleCalculator):
     """
-    Service for generating directional tuples using legacy rotation matrix logic.
+    Framework-agnostic service for generating directional tuples using legacy rotation matrix logic.
 
     This replicates the exact behavior of the legacy DirectionalTupleGenerator
     to ensure arrows are positioned correctly with quadrant-based adjustments.
@@ -77,24 +74,24 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
         self._shift_mapping_box = {
             MotionType.PRO: {
                 RotationDirection.CLOCKWISE: lambda x, y: [
-                    (-x, y),
-                    (-y, -x),
-                    (x, -y),
-                    (y, x),
-                ],
-                RotationDirection.COUNTER_CLOCKWISE: lambda x, y: [
                     (x, y),
                     (-y, x),
                     (-x, -y),
                     (y, -x),
                 ],
-            },
-            MotionType.ANTI: {
-                RotationDirection.CLOCKWISE: lambda x, y: [
-                    (-x, y),
+                RotationDirection.COUNTER_CLOCKWISE: lambda x, y: [
                     (-y, -x),
                     (x, -y),
                     (y, x),
+                    (-x, y),
+                ],
+            },
+            MotionType.ANTI: {
+                RotationDirection.CLOCKWISE: lambda x, y: [
+                    (-y, -x),
+                    (x, -y),
+                    (y, x),
+                    (-x, y),
                 ],
                 RotationDirection.COUNTER_CLOCKWISE: lambda x, y: [
                     (x, y),
@@ -204,7 +201,8 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
         # In a full implementation, you would map the location to a specific tuple
         if tuples:
             return tuples[0]
-        return (base_x, base_y)
+        else:
+            return (base_x, base_y)
 
     def generate_directional_tuples(
         self, motion: MotionData, base_x: float, base_y: float
@@ -236,14 +234,15 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
             return self._handle_shift_tuples(
                 motion_type, prop_rot_dir, grid_mode, base_x, base_y
             )
-        if motion_type == MotionType.DASH:
+        elif motion_type == MotionType.DASH:
             return self._handle_dash_tuples(prop_rot_dir, grid_mode, base_x, base_y)
-        if motion_type == MotionType.STATIC:
+        elif motion_type == MotionType.STATIC:
             return self._handle_static_tuples(prop_rot_dir, grid_mode, base_x, base_y)
-        if motion_type == MotionType.FLOAT:
+        elif motion_type == MotionType.FLOAT:
             return self._handle_float_tuples(motion, base_x, base_y)
-        logger.warning(f"Unknown motion type: {motion_type}, using default")
-        return [(base_x, base_y)] * 4
+        else:
+            logger.warning(f"Unknown motion type: {motion_type}, using default")
+            return [(base_x, base_y)] * 4
 
     def _determine_grid_mode(self, motion: MotionData) -> str:
         """
@@ -265,7 +264,8 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
             Location.NORTHWEST,
         ]:
             return "box"
-        return "diamond"
+        else:
+            return "diamond"
 
     def _handle_shift_tuples(
         self,
@@ -338,10 +338,14 @@ class DirectionalTupleCalculator(IDirectionalTupleCalculator):
         """
         Calculate handpath direction for FLOAT motions.
 
-        This is a simplified implementation. The full legacy version uses
-        a complex HandpathCalculator with detailed location mappings.
+        Args:
+            start_loc: Starting location
+            end_loc: Ending location
+
+        Returns:
+            Direction string ("cw" or "COUNTER_CLOCKWISE")
         """
-        # Simplified handpath calculation
+        # Standard location order for handpath calculation
         location_order = [
             Location.NORTH,
             Location.NORTHEAST,

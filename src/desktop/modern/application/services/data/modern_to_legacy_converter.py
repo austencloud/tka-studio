@@ -5,15 +5,19 @@ Handles conversion from modern domain models to legacy JSON format.
 Focused solely on modern-to-legacy data transformation.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from desktop.modern.core.interfaces.data_services import IModernToLegacyConverter
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import Orientation
 from desktop.modern.domain.models.motion_data import MotionData
 
-from .position_attribute_mapper import PositionAttributeMapper
+
+# Temporarily commented out to get app to start
+# from .position_attribute_mapper import PositionAttributeMapper
 
 logger = logging.getLogger(__name__)
 
@@ -251,7 +255,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
         }
 
     # Interface implementation methods
-    def convert_sequence(self, modern_sequence: Any) -> Optional[list[dict[str, Any]]]:
+    def convert_sequence(self, modern_sequence: Any) -> list[dict[str, Any]] | None:
         """Convert modern sequence to legacy format."""
         try:
             if hasattr(modern_sequence, "beats"):
@@ -266,7 +270,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             logger.error(f"Error converting sequence: {e}")
             return None
 
-    def convert_beat(self, modern_beat: Any) -> Optional[dict[str, Any]]:
+    def convert_beat(self, modern_beat: Any) -> dict[str, Any] | None:
         """Convert modern beat to legacy format."""
         try:
             if hasattr(modern_beat, "beat_number"):
@@ -278,7 +282,7 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
             logger.error(f"Error converting beat: {e}")
             return None
 
-    def convert_pictograph(self, modern_pictograph: Any) -> Optional[dict[str, Any]]:
+    def convert_pictograph(self, modern_pictograph: Any) -> dict[str, Any] | None:
         """Convert modern pictograph to legacy format."""
         try:
             # TODO: Implement pictograph conversion

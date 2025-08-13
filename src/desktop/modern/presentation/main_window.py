@@ -24,7 +24,7 @@ class TKAMainWindow(QMainWindow):
 
         TKAMainWindow._instance_count += 1
         print(
-            f"🔧 [MAIN_WINDOW] Creating TKAMainWindow instance #{TKAMainWindow._instance_count}"
+            f"[MAIN_WINDOW] Creating TKAMainWindow instance #{TKAMainWindow._instance_count}"
         )
 
         self.container = container

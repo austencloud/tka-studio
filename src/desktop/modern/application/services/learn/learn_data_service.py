@@ -5,19 +5,15 @@ Handles data persistence and retrieval for the learning module,
 including lesson progress, results, and session data.
 """
 
-from __future__ import annotations
-
-import contextlib
-from datetime import datetime
 import json
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from desktop.modern.core.interfaces.learn_services import ILearnDataService
 from desktop.modern.core.interfaces.organization_services import IFileSystemService
 from desktop.modern.domain.models.learn import LessonResults, LessonType
-
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +63,7 @@ class LearnDataService(ILearnDataService):
             logger.debug(f"Learn data directories setup at {self.data_dir}")
 
         except Exception as e:
-            logger.exception(f"Failed to setup data directories: {e}")
+            logger.error(f"Failed to setup data directories: {e}")
             # Fallback to temporary directory
             import tempfile
 
@@ -114,7 +110,7 @@ class LearnDataService(ILearnDataService):
             return True
 
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to save lesson progress for session {session_id}: {e}"
             )
             return False
@@ -150,10 +146,10 @@ class LearnDataService(ILearnDataService):
             return progress_data
 
         except json.JSONDecodeError as e:
-            logger.exception(f"Failed to parse progress file for session {session_id}: {e}")
+            logger.error(f"Failed to parse progress file for session {session_id}: {e}")
             return None
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to load lesson progress for session {session_id}: {e}"
             )
             return None
@@ -198,7 +194,7 @@ class LearnDataService(ILearnDataService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to save lesson results: {e}")
+            logger.error(f"Failed to save lesson results: {e}")
             return False
 
     def get_lesson_history(
@@ -253,7 +249,7 @@ class LearnDataService(ILearnDataService):
             return limited_results
 
         except Exception as e:
-            logger.exception(f"Failed to get lesson history for {lesson_type}: {e}")
+            logger.error(f"Failed to get lesson history for {lesson_type}: {e}")
             return []
 
     def get_all_lesson_results(self, limit: int = 50) -> list[LessonResults]:
@@ -296,7 +292,7 @@ class LearnDataService(ILearnDataService):
             return limited_results
 
         except Exception as e:
-            logger.exception(f"Failed to get all lesson results: {e}")
+            logger.error(f"Failed to get all lesson results: {e}")
             return []
 
     def delete_lesson_progress(self, session_id: str) -> bool:
@@ -322,7 +318,7 @@ class LearnDataService(ILearnDataService):
             return True
 
         except Exception as e:
-            logger.exception(
+            logger.error(
                 f"Failed to delete lesson progress for session {session_id}: {e}"
             )
             return False
@@ -383,7 +379,7 @@ class LearnDataService(ILearnDataService):
             return cleanup_count
 
         except Exception as e:
-            logger.exception(f"Failed to cleanup old data: {e}")
+            logger.error(f"Failed to cleanup old data: {e}")
             return 0
 
     def get_data_statistics(self) -> dict[str, Any]:
@@ -413,15 +409,17 @@ class LearnDataService(ILearnDataService):
 
                     # Calculate disk usage
                     for file_path in files:
-                        with contextlib.suppress(Exception):
+                        try:
                             stats["total_disk_usage_mb"] += file_path.stat().st_size / (
                                 1024 * 1024
                             )
+                        except Exception:
+                            pass
 
             return stats
 
         except Exception as e:
-            logger.exception(f"Failed to get data statistics: {e}")
+            logger.error(f"Failed to get data statistics: {e}")
             return {
                 "progress_files": 0,
                 "results_files": 0,

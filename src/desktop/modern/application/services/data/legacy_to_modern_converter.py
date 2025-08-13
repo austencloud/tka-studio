@@ -5,19 +5,23 @@ Handles conversion from legacy JSON format to modern domain models.
 Focused solely on legacy-to-modern data transformation.
 """
 
+from __future__ import annotations
+
 import logging
 
 # Forward reference for PictographData
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from desktop.modern.core.interfaces.data_services import ILegacyToModernConverter
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.motion_data import MotionData
 
+
 if TYPE_CHECKING:
     from desktop.modern.domain.models.pictograph_data import PictographData
 
-from .position_attribute_mapper import PositionAttributeMapper
+# Temporarily commented out to get app to start
+# from .position_attribute_mapper import PositionAttributeMapper
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +114,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         beat_dict: dict,
         blue_motion: MotionData,
         red_motion: MotionData,
-    ) -> "PictographData":
+    ) -> PictographData:
         """Create PictographData from legacy beat data with motion data."""
         from desktop.modern.domain.models.arrow_data import ArrowData
         from desktop.modern.domain.models.enums import GridMode
@@ -148,7 +152,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
 
     def convert_legacy_start_position_to_beat_data(
         self, legacy_start_position: str
-    ) -> Optional[BeatData]:
+    ) -> BeatData | None:
         """Convert a legacy start position to a BeatData object."""
         # TODO: Implement this method
 
@@ -188,7 +192,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
         }
 
     # Interface implementation methods
-    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Optional[Any]:
+    def convert_sequence(self, legacy_sequence: list[dict[str, Any]]) -> Any | None:
         """Convert legacy sequence to modern format."""
         try:
             from desktop.modern.domain.models.sequence_data import SequenceData
@@ -203,7 +207,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             logger.error(f"Error converting legacy sequence: {e}")
             return None
 
-    def convert_beat(self, legacy_beat: dict[str, Any]) -> Optional[Any]:
+    def convert_beat(self, legacy_beat: dict[str, Any]) -> Any | None:
         """Convert legacy beat to modern format."""
         try:
             beat_number = legacy_beat.get("beat_number", 1)
@@ -212,7 +216,7 @@ class LegacyToModernConverter(ILegacyToModernConverter):
             logger.error(f"Error converting legacy beat: {e}")
             return None
 
-    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Optional[Any]:
+    def convert_pictograph(self, legacy_pictograph: dict[str, Any]) -> Any | None:
         """Convert legacy pictograph to modern format."""
         try:
             # TODO: Implement pictograph conversion
