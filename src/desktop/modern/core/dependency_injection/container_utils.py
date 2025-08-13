@@ -48,7 +48,7 @@ def ensure_container_initialized(force_reinit: bool = False) -> bool:
 
         # Register all services
         logger.info("Initializing DI container with all services...")
-        from desktop.shared.application.services.core.service_registration_manager import (
+        from desktop.modern.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
 
@@ -169,10 +169,10 @@ def create_test_container():
         RuntimeError: If container creation or service registration fails
     """
     try:
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.shared.application.services.core.service_registration_manager import (
+        from desktop.modern.application.services.core.service_registration_manager import (
             ServiceRegistrationManager,
         )
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         # Create fresh container
         container = DIContainer()

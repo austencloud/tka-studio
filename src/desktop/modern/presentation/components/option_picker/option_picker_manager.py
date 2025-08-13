@@ -11,14 +11,14 @@ import time
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from desktop.modern.application.services.data.conversion_utils import (
+    extract_end_position_from_position_key,
+)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.components.option_picker import (
     OptionPicker,
-)
-from desktop.shared.application.services.data.conversion_utils import (
-    extract_end_position_from_position_key,
 )
 
 

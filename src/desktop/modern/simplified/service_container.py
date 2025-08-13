@@ -61,18 +61,18 @@ class ServiceContainer:
             self.register(ISequenceDataService, FileBasedSequenceDataService)
 
             # Layout services
-            from desktop.modern.core.interfaces.core_services import ILayoutService
-            from desktop.shared.application.services.layout.layout_manager import (
+            from desktop.modern.application.services.layout.layout_manager import (
                 LayoutManager,
             )
+            from desktop.modern.core.interfaces.core_services import ILayoutService
 
             self.register(ILayoutService, LayoutManager)
 
             # Pictograph services
-            from desktop.modern.core.interfaces.core_services import IPictographManager
-            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
+            from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
                 PictographCSVManager,
             )
+            from desktop.modern.core.interfaces.core_services import IPictographManager
 
             self.register(IPictographManager, PictographCSVManager)
 
@@ -85,10 +85,10 @@ class ServiceContainer:
             self.register(ISequenceManager, SequenceBeatOperations)
 
             # UI services
-            from desktop.modern.core.interfaces.core_services import IUIStateManager
-            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
+            from desktop.modern.application.services.ui.coordination.ui_coordinator import (
                 UICoordinator,
             )
+            from desktop.modern.core.interfaces.core_services import IUIStateManager
 
             self.register(IUIStateManager, UICoordinator)
 
@@ -103,7 +103,7 @@ class ServiceContainer:
             self.register(ISessionStateTracker, SessionStateTracker)
 
             # Register additional services using the service registration manager
-            from desktop.shared.application.services.core.service_registration_manager import (
+            from desktop.modern.application.services.core.service_registration_manager import (
                 ServiceRegistrationManager,
             )
 
@@ -117,7 +117,10 @@ class ServiceContainer:
             # Continue anyway - app should work with minimal services
 
     def register(
-        self, interface: type[T], implementation: type[T] | None = None, instance: T = None
+        self,
+        interface: type[T],
+        implementation: type[T] | None = None,
+        instance: T = None,
     ) -> None:
         """Register a service class or instance"""
         if instance:

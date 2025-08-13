@@ -3,9 +3,12 @@
 Simple debug script to test Save Image functionality without Qt rendering.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Add src to Python path
 project_root = Path(__file__).parent
@@ -39,7 +42,7 @@ def test_coordinator_without_rendering():
 
         # Step 2: Create state manager and set sequence
         print("\n🔧 Step 2: Creating state manager...")
-        from desktop.shared.application.services.workbench.workbench_state_manager import (
+        from desktop.modern.application.services.workbench.workbench_state_manager import (
             WorkbenchStateManager,
         )
 
@@ -64,7 +67,7 @@ def test_coordinator_without_rendering():
 
         # Step 4: Create operation coordinator
         print("\n🔧 Step 4: Creating operation coordinator...")
-        from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+        from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
             WorkbenchOperationCoordinator,
         )
 
@@ -109,10 +112,10 @@ def test_actual_workbench_setup():
     try:
         # Check how the workbench service registrar creates the coordinator
         print("\n🔧 Testing service registrar...")
-        from desktop.modern.core.dependency_injection.di_container import DIContainer
-        from desktop.shared.application.services.core.registrars.workbench_service_registrar import (
+        from desktop.modern.application.services.core.registrars.workbench_service_registrar import (
             WorkbenchServiceRegistrar,
         )
+        from desktop.modern.core.dependency_injection.di_container import DIContainer
 
         container = DIContainer()
         registrar = WorkbenchServiceRegistrar()

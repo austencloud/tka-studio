@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.shared.application.services.graph_editor.graph_editor_state_manager import (
+from desktop.modern.application.services.graph_editor.graph_editor_state_manager import (
     GraphEditorStateManager as GraphEditorStateService,
 )
 

@@ -7,6 +7,7 @@ Tests the new tab integrations we've implemented:
 2. Sequence card service registrar
 3. Learn tab DI resolution
 """
+
 from __future__ import annotations
 
 import logging
@@ -20,6 +21,7 @@ sys.path.insert(0, str(tka_root / "src"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 def test_tab_factory_definitions():
     """Test that all tabs are properly defined in TabFactory."""
@@ -49,6 +51,7 @@ def test_tab_factory_definitions():
         logger.exception(f"❌ TabFactory test failed: {e}")
         return False
 
+
 def test_service_registrar_imports():
     """Test that service registrars can be imported."""
     try:
@@ -59,22 +62,26 @@ def test_service_registrar_imports():
         logger.info("✅ SequenceCardServiceRegistrar available in registrars module")
 
         # Test service registration coordinator includes it
-        from desktop.shared.application.services.core.service_registration_manager import (
+        from desktop.modern.application.services.core.service_registration_manager import (
             ServiceRegistrationCoordinator,
         )
+
         coordinator = ServiceRegistrationCoordinator()
 
         registrar_names = [r.get_domain_name() for r in coordinator._registrars]
         if "Sequence Card Tab Services" in registrar_names:
             logger.info("✅ SequenceCardServiceRegistrar is included in coordinator")
         else:
-            logger.warning(f"⚠️ SequenceCardServiceRegistrar not found in coordinator. Available: {registrar_names}")
+            logger.warning(
+                f"⚠️ SequenceCardServiceRegistrar not found in coordinator. Available: {registrar_names}"
+            )
 
         return True
 
     except Exception as e:
         logger.exception(f"❌ Service registrar test failed: {e}")
         return False
+
 
 def test_generate_component_import():
     """Test that GeneratePanel component can be imported for use within Construct tab."""
@@ -86,6 +93,7 @@ def test_generate_component_import():
         logger.exception(f"❌ GeneratePanel component import failed: {e}")
         return False
 
+
 def test_write_tab_import():
     """Test that WriteTab can be imported."""
     try:
@@ -95,6 +103,7 @@ def test_write_tab_import():
     except Exception as e:
         logger.exception(f"❌ WriteTab import failed: {e}")
         return False
+
 
 def test_menu_bar_configuration():
     """Test that menu bar includes all expected tabs."""
@@ -125,6 +134,7 @@ def test_menu_bar_configuration():
     except Exception as e:
         logger.exception(f"❌ Menu bar test failed: {e}")
         return False
+
 
 def main():
     """Run all integration tests."""
@@ -159,10 +169,13 @@ def main():
     logger.info(f"\n🎯 Summary: {passed}/{len(tests)} tests passed")
 
     if passed == len(tests):
-        logger.info("🎉 All integration tests passed! TKA Modern now has full parity with legacy!")
+        logger.info(
+            "🎉 All integration tests passed! TKA Modern now has full parity with legacy!"
+        )
         return True
     logger.info("⚠️ Some tests failed. Review the issues above.")
     return False
+
 
 if __name__ == "__main__":
     success = main()

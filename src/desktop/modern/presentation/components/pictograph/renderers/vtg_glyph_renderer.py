@@ -12,10 +12,10 @@ import os
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
-from desktop.modern.domain.models import VTGMode
-from desktop.shared.application.services.assets.image_asset_utils import (
+from desktop.modern.application.services.assets.image_asset_utils import (
     get_image_path,
 )
+from desktop.modern.domain.models import VTGMode
 
 
 class VTGGlyphRenderer:

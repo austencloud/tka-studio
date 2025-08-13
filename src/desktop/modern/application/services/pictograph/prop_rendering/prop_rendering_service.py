@@ -46,18 +46,18 @@ from PyQt6.QtWidgets import QGraphicsScene
 from desktop.modern.application.adapters.qt_prop_rendering_service_adapter import (
     QtPropRenderingServiceAdapter,
 )
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
 
 # Import framework-agnostic core services (using established import pattern)
-from desktop.shared.application.services.core.prop_rendering_service import (
+from desktop.modern.application.services.core.prop_rendering_service import (
     CorePropRenderingService,
 )
 
 # Support dependencies for existing functionality
-from desktop.shared.application.services.pictograph.prop_rendering.asset_manager import (
+from desktop.modern.application.services.pictograph.prop_rendering.asset_manager import (
     PropAssetManager,
 )
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 logger = logging.getLogger(__name__)

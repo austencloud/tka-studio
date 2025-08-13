@@ -87,20 +87,20 @@ class WorkbenchServiceRegistrar(BaseServiceRegistrar):
                 sys.path.remove(shared_src_str)
                 sys.path.insert(0, shared_src_str)
 
-            from desktop.modern.core.interfaces.workbench_services import (
-                IWorkbenchSessionManager,
-            )
-            from desktop.shared.application.services.workbench.beat_selection_service import (
+            from desktop.modern.application.services.workbench.beat_selection_service import (
                 BeatSelectionService,
             )
-            from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+            from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
                 WorkbenchOperationCoordinator,
             )
-            from desktop.shared.application.services.workbench.workbench_session_manager import (
+            from desktop.modern.application.services.workbench.workbench_session_manager import (
                 WorkbenchSessionManager,
             )
-            from desktop.shared.application.services.workbench.workbench_state_manager import (
+            from desktop.modern.application.services.workbench.workbench_state_manager import (
                 WorkbenchStateManager,
+            )
+            from desktop.modern.core.interfaces.workbench_services import (
+                IWorkbenchSessionManager,
             )
 
             # Register beat selection service (no dependencies)

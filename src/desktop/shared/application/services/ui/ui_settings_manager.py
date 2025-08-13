@@ -22,22 +22,22 @@ class UISettingsManager(IUIStateManager):
     def _initialize_services(self):
         """Initialize all the tab-specific services."""
         # Import services only when needed to avoid circular imports
-        from desktop.shared.application.services.settings.background_settings_manager import (
+        from desktop.modern.application.services.settings.background_settings_manager import (
             BackgroundSettingsManager,
         )
-        from desktop.shared.application.services.settings.beat_layout_settings_manager import (
+        from desktop.modern.application.services.settings.beat_layout_settings_manager import (
             BeatLayoutSettingsManager,
         )
-        from desktop.shared.application.services.settings.image_export_settings_manager import (
+        from desktop.modern.application.services.settings.image_export_settings_manager import (
             ImageExportSettingsManager,
         )
-        from desktop.shared.application.services.settings.prop_type_settings_manager import (
+        from desktop.modern.application.services.settings.prop_type_settings_manager import (
             PropTypeSettingsManager,
         )
-        from desktop.shared.application.services.settings.user_profile_settings_manager import (
+        from desktop.modern.application.services.settings.user_profile_settings_manager import (
             UserProfileSettingsManager,
         )
-        from desktop.shared.application.services.settings.visibility_settings_manager import (
+        from desktop.modern.application.services.settings.visibility_settings_manager import (
             VisibilitySettingsManager,
         )
 

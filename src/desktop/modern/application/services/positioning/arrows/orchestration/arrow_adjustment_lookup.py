@@ -27,27 +27,27 @@ import logging
 from desktop.modern.application.services.positioning.arrows.key_generators.attribute_key_generator import (
     AttributeKeyGenerator,
 )
-from desktop.modern.core.types.coordinates import qpoint_to_point
-from desktop.modern.core.types.geometry import Point
-from desktop.modern.domain.models.motion_data import MotionData
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.positioning.arrows.key_generators.placement_key_generator import (
+from desktop.modern.application.services.positioning.arrows.key_generators.placement_key_generator import (
     PlacementKeyGenerator,
 )
-from desktop.shared.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
+from desktop.modern.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
     TurnsTupleKeyGenerator,
 )
 
 # Import required services
-from desktop.shared.application.services.positioning.arrows.placement.default_placement_service import (
+from desktop.modern.application.services.positioning.arrows.placement.default_placement_service import (
     DefaultPlacementService,
 )
-from desktop.shared.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
+from desktop.modern.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
     SpecialPlacementOriKeyGenerator,
 )
-from desktop.shared.application.services.positioning.arrows.placement.special_placement_service import (
+from desktop.modern.application.services.positioning.arrows.placement.special_placement_service import (
     SpecialPlacementService,
 )
+from desktop.modern.core.types.coordinates import qpoint_to_point
+from desktop.modern.core.types.geometry import Point
+from desktop.modern.domain.models.motion_data import MotionData
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 logger = logging.getLogger(__name__)

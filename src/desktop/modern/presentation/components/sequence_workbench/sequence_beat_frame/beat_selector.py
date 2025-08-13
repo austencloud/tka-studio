@@ -10,7 +10,7 @@ from __future__ import annotations
 from PyQt6.QtCore import QObject, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
-from desktop.shared.application.services.workbench.beat_selection_service import (
+from desktop.modern.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
     SelectionChangeResult,
     SelectionType,

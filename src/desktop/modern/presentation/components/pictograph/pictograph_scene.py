@@ -13,6 +13,9 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from PyQt6.QtWidgets import QGraphicsScene
 
+from desktop.modern.application.services.pictograph.pictograph_visibility_manager import (
+    get_pictograph_visibility_manager,
+)
 from desktop.modern.domain.models import BeatData
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.pictograph_data import PictographData
@@ -22,9 +25,6 @@ from desktop.modern.domain.models.pictograph_utils import (
     should_show_positions,
     should_show_tka,
     should_show_vtg,
-)
-from desktop.shared.application.services.pictograph.pictograph_visibility_manager import (
-    get_pictograph_visibility_manager,
 )
 
 
@@ -60,7 +60,7 @@ class PictographScene(QGraphicsScene):
         self.scene_id = f"pictograph_scene_{uuid.uuid4().hex[:8]}"
 
         # Get simple visibility service
-        from desktop.shared.application.services.pictograph.simple_visibility_service import (
+        from desktop.modern.application.services.pictograph.simple_visibility_service import (
             get_visibility_service,
         )
 
@@ -175,15 +175,15 @@ class PictographScene(QGraphicsScene):
             return
 
         try:
+            from desktop.modern.application.services.pictograph.arrow_rendering_service import (
+                ArrowRenderingService,
+            )
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.core.interfaces.positioning_services import (
                 IArrowCoordinateSystemService,
                 IArrowPositioningOrchestrator,
-            )
-            from desktop.shared.application.services.pictograph.arrow_rendering_service import (
-                ArrowRenderingService,
             )
 
             container = get_container()

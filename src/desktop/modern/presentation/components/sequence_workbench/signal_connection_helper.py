@@ -7,7 +7,7 @@ Just moves the code to reduce the main file size.
 
 from __future__ import annotations
 
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
     OperationType,
 )
 

@@ -88,8 +88,10 @@ class ConstructTab(QWidget):
     def _on_option_picker_ready(self, option_picker):
         """Handle option picker ready callback from layout manager."""
         try:
-
             # Import required services and components
+            from desktop.modern.application.services.data.legacy_to_modern_converter import (
+                LegacyToModernConverter,
+            )
             from desktop.modern.application.services.sequence.sequence_start_position_manager import (
                 SequenceStartPositionManager,
             )
@@ -110,9 +112,6 @@ class ConstructTab(QWidget):
             )
             from desktop.modern.presentation.controllers.construct.signal_coordinator import (
                 SignalCoordinator,
-            )
-            from desktop.shared.application.services.data.legacy_to_modern_converter import (
-                LegacyToModernConverter,
             )
 
             # Resolve core services from DI container
@@ -170,7 +169,6 @@ class ConstructTab(QWidget):
 
             # Load sequence on startup
             loading_service.load_sequence_on_startup()
-
 
         except Exception as e:
             print(f"❌ ConstructTab: Failed to create signal coordinator: {e}")
@@ -299,8 +297,6 @@ class ConstructTab(QWidget):
 
                 except Exception as beat_error:
                     print(f"❌ ConstructTab: Failed to add beat {i + 1}: {beat_error}")
-
-
 
         except Exception as e:
             print(f"❌ ConstructTab: Failed to load generated sequence: {e}")

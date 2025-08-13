@@ -3,9 +3,12 @@
 Debug script to test Save Image functionality step by step.
 """
 
+from __future__ import annotations
+
 import logging
-import sys
 from pathlib import Path
+import sys
+
 
 # Add src to Python path
 project_root = Path(__file__).parent
@@ -39,7 +42,7 @@ def test_save_image_step_by_step():
 
         # Step 2: Create state manager and set sequence
         print("\n🔧 Step 2: Creating state manager...")
-        from desktop.shared.application.services.workbench.workbench_state_manager import (
+        from desktop.modern.application.services.workbench.workbench_state_manager import (
             WorkbenchStateManager,
         )
 
@@ -60,7 +63,7 @@ def test_save_image_step_by_step():
 
         # Step 4: Create operation coordinator
         print("\n🔧 Step 4: Creating operation coordinator...")
-        from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+        from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
             WorkbenchOperationCoordinator,
         )
 

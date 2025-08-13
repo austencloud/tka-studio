@@ -11,7 +11,6 @@ from the actual sequence context.
 """
 
 import logging
-from typing import Optional
 
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import Orientation
@@ -169,7 +168,7 @@ class SequenceOrientationValidator:
         logger.debug(f"Updated start orientations for {len(updated_options)} options")
         return updated_options
 
-    def _get_last_valid_beat(self, sequence: SequenceData) -> Optional[BeatData]:
+    def _get_last_valid_beat(self, sequence: SequenceData) -> BeatData | None:
         """
         Get the last valid beat from sequence, excluding blank beats and placeholders.
         """
@@ -256,7 +255,7 @@ class SequenceOrientationValidator:
         updated_props = {}
 
         # Import orientation calculator for end orientation calculation
-        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+        from desktop.modern.application.services.positioning.arrows.calculation.orientation_calculator import (
             OrientationCalculator,
         )
 
@@ -392,7 +391,7 @@ class SequenceOrientationValidator:
                         fixed_motion = curr_motion.update(start_ori=prev_end_ori)
 
                         # Recalculate end orientation with the fixed start
-                        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+                        from desktop.modern.application.services.positioning.arrows.calculation.orientation_calculator import (
                             OrientationCalculator,
                         )
 

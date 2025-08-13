@@ -17,14 +17,14 @@ from desktop.modern.application.adapters.qt_pictograph_adapter import (
     QtRenderEngine,
     QtTypeConverter,
 )
-from desktop.modern.application.services.core.types import Size
-from desktop.modern.domain.models import MotionData, PictographData
-from desktop.shared.application.services.core.pictograph_rendering.real_asset_provider import (
+from desktop.modern.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )
-from desktop.shared.application.services.core.prop_rendering_service import (
+from desktop.modern.application.services.core.prop_rendering_service import (
     create_prop_rendering_service,
 )
+from desktop.modern.application.services.core.types import Size
+from desktop.modern.domain.models import MotionData, PictographData
 
 
 logger = logging.getLogger(__name__)

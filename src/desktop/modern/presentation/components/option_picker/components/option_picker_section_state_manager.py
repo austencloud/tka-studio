@@ -14,11 +14,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from desktop.modern.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
-)
-from desktop.shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
 )
 
 

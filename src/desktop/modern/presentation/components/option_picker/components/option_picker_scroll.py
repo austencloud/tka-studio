@@ -21,6 +21,15 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
+from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
+from desktop.modern.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
+from desktop.modern.application.services.option_picker.sequence_option_service import (
+    SequenceOptionService,
+)
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     IAnimationOrchestrator,
 )
@@ -32,15 +41,6 @@ from desktop.modern.presentation.components.option_picker.components.option_pict
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
-from desktop.shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
-)
-from desktop.shared.application.services.option_picker.sequence_option_service import (
-    SequenceOptionService,
-)
 
 # Import our new focused components
 from .option_picker_animator import OptionPickerAnimator
@@ -51,11 +51,11 @@ from .option_picker_size_manager import OptionPickerSizeManager
 
 
 if TYPE_CHECKING:
+    from desktop.modern.application.services.option_picker.option_configuration_service import (
+        OptionConfigurationService,
+    )
     from desktop.modern.presentation.components.option_picker.components.option_picker_section import (
         OptionPickerSection,
-    )
-    from desktop.shared.application.services.option_picker.option_configuration_service import (
-        OptionConfigurationService,
     )
 
 

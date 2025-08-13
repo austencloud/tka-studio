@@ -11,16 +11,17 @@ PROVIDES:
 """
 
 from abc import ABCMeta
-from typing import Optional
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from desktop.modern.application.services.sequence.sequence_restorer import (
+    ISequenceRestorer,
+)
 from desktop.modern.core.interfaces.core_services import ISessionRestorationCoordinator
 from desktop.modern.core.interfaces.session_services import (
     ISessionStateTracker,
     SessionState,
 )
-from desktop.shared.application.services.sequence.sequence_restorer import ISequenceRestorer
 
 
 class QObjectABCMeta(type(QObject), ABCMeta):
@@ -41,9 +42,7 @@ class SessionRestorationCoordinator(
     sequence_restored = pyqtSignal(dict)  # sequence restoration data
     tab_restored = pyqtSignal(str)  # active_tab
 
-    def __init__(
-        self, sequence_restoration_service: Optional[ISequenceRestorer] = None
-    ):
+    def __init__(self, sequence_restoration_service: ISequenceRestorer | None = None):
         """Initialize session restoration coordinator."""
         super().__init__()
         self.sequence_restoration_service = sequence_restoration_service
@@ -51,7 +50,7 @@ class SessionRestorationCoordinator(
 
     def load_and_prepare_session(
         self, session_service: ISessionStateTracker
-    ) -> Optional[SessionState]:
+    ) -> SessionState | None:
         """Load and prepare session data for restoration."""
         if not session_service:
             return None

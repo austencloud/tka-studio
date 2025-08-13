@@ -2,12 +2,31 @@ from __future__ import annotations
 
 from PyQt6.QtWidgets import QWidget
 
+from desktop.modern.application.services.graph_editor.graph_editor_coordinator import (
+    GraphEditorCoordinator,
+)
 from desktop.modern.application.services.sequence.loader import SequenceLoader
 from desktop.modern.application.services.sequence.sequence_beat_operations import (
     SequenceBeatOperations,
 )
+from desktop.modern.application.services.sequence.sequence_dictionary_manager import (
+    SequenceDictionaryManager,
+)
 from desktop.modern.application.services.sequence.sequence_start_position_manager import (
     SequenceStartPositionManager,
+)
+from desktop.modern.application.services.ui.full_screen_viewer import FullScreenViewer
+from desktop.modern.application.services.ui.sequence_state_reader import (
+    SequenceStateReader,
+)
+from desktop.modern.application.services.ui.thumbnail_generation_service import (
+    ThumbnailGenerationService,
+)
+from desktop.modern.application.services.workbench.beat_selection_service import (
+    BeatSelectionService,
+)
+from desktop.modern.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService, IUIStateManager
@@ -21,25 +40,6 @@ from desktop.modern.presentation.components.sequence_workbench.sequence_workbenc
 )
 from desktop.modern.presentation.components.ui.full_screen import (
     FullScreenOverlayFactory,
-)
-from desktop.shared.application.services.graph_editor.graph_editor_coordinator import (
-    GraphEditorCoordinator,
-)
-from desktop.shared.application.services.sequence.sequence_dictionary_manager import (
-    SequenceDictionaryManager,
-)
-from desktop.shared.application.services.ui.full_screen_viewer import FullScreenViewer
-from desktop.shared.application.services.ui.sequence_state_reader import (
-    SequenceStateReader,
-)
-from desktop.shared.application.services.ui.thumbnail_generation_service import (
-    ThumbnailGenerationService,
-)
-from desktop.shared.application.services.workbench.beat_selection_service import (
-    BeatSelectionService,
-)
-from desktop.shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
 )
 
 

@@ -51,17 +51,17 @@ from desktop.modern.domain.models import MotionData
 
 # Import from shared application services
 sys.path.insert(0, str(_project_root / "src"))
-from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
-    PictographCacheManager,
-)
-from desktop.shared.application.services.core.pictograph_renderer import (
+from desktop.modern.application.services.core.pictograph_renderer import (
     CorePictographRenderer,
     create_pictograph_renderer,
 )
-from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
+from desktop.modern.application.services.pictograph.asset_management.pictograph_asset_manager import (
     PictographAssetManager,
 )
-from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
+from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
+    PictographCacheManager,
+)
+from desktop.modern.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
 

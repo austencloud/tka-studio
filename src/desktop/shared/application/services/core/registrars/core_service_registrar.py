@@ -57,6 +57,21 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
     def _register_basic_core_services(self, container: "DIContainer") -> None:
         """Register basic core services (layout, UI coordination)."""
         try:
+            from desktop.modern.application.services.layout.beat_layout_calculator import (
+                BeatLayoutCalculator,
+            )
+            from desktop.modern.application.services.layout.layout_manager import (
+                LayoutManager,
+            )
+            from desktop.modern.application.services.ui.coordination.ui_coordinator import (
+                UICoordinator,
+            )
+            from desktop.modern.application.services.ui.thumbnail_generation_service import (
+                ThumbnailGenerationService,
+            )
+            from desktop.modern.application.services.ui.ui_state_manager import (
+                UIStateManager,
+            )
             from desktop.modern.core.interfaces.core_services import (
                 ILayoutService,
                 IUIStateManager,
@@ -67,17 +82,6 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.core.interfaces.ui_services import (
                 IThumbnailGenerationService,
             )
-            from desktop.shared.application.services.layout.beat_layout_calculator import (
-                BeatLayoutCalculator,
-            )
-            from desktop.shared.application.services.layout.layout_manager import LayoutManager
-            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
-                UICoordinator,
-            )
-            from desktop.shared.application.services.ui.thumbnail_generation_service import (
-                ThumbnailGenerationService,
-            )
-            from desktop.shared.application.services.ui.ui_state_manager import UIStateManager
 
             # Register service types with factory functions for proper DI
             def create_layout_service():
@@ -142,21 +146,21 @@ class CoreServiceRegistrar(BaseServiceRegistrar):
                 ApplicationInitializationOrchestrator,
                 IApplicationInitializationOrchestrator,
             )
+            from desktop.modern.application.services.core.session_restoration_coordinator import (
+                ISessionRestorationCoordinator,
+                SessionRestorationCoordinator,
+            )
             from desktop.modern.application.services.core.window_management_service import (
                 IWindowManagementService,
                 WindowManagementService,
             )
+            from desktop.modern.application.services.sequence.sequence_restorer import (
+                ISequenceRestorer,
+                SequenceRestorer,
+            )
             from desktop.modern.application.services.ui.window_discovery_service import (
                 IWindowDiscoveryService,
                 WindowDiscoveryService,
-            )
-            from desktop.shared.application.services.core.session_restoration_coordinator import (
-                ISessionRestorationCoordinator,
-                SessionRestorationCoordinator,
-            )
-            from desktop.shared.application.services.sequence.sequence_restorer import (
-                ISequenceRestorer,
-                SequenceRestorer,
             )
 
             # Register individual services

@@ -10,6 +10,18 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+from desktop.modern.application.services.option_picker.option_orientation_updater import (
+    OptionOrientationUpdater,
+)
+from desktop.modern.application.services.positioning.arrows.calculation.orientation_calculator import (
+    OrientationCalculator,
+)
+from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+    PictographPositionMatcher,
+)
+from desktop.modern.application.services.sequence.sequence_orientation_validator import (
+    SequenceOrientationValidator,
+)
 from desktop.modern.core.interfaces.sequence_operation_services import (
     ISequenceOptionService,
 )
@@ -25,18 +37,6 @@ from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
-)
-from desktop.shared.application.services.option_picker.option_orientation_updater import (
-    OptionOrientationUpdater,
-)
-from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
-    OrientationCalculator,
-)
-from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
-    PictographPositionMatcher,
-)
-from desktop.shared.application.services.sequence.sequence_orientation_validator import (
-    SequenceOrientationValidator,
 )
 
 

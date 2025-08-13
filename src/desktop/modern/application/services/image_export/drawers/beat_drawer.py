@@ -14,6 +14,9 @@ from typing import TYPE_CHECKING, Any
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QBrush, QFont, QImage, QPainter, QPen
 
+from desktop.modern.application.services.data.pictograph_factory import (
+    PictographFactory,
+)
 from desktop.modern.core.interfaces.image_export_services import (
     IBeatDrawer,
     ImageExportOptions,
@@ -21,9 +24,6 @@ from desktop.modern.core.interfaces.image_export_services import (
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.pictograph.pictograph_scene import (
     PictographScene,
-)
-from desktop.shared.application.services.data.pictograph_factory import (
-    PictographFactory,
 )
 
 

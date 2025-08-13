@@ -27,18 +27,17 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../"))
 # Import Qt types for compatibility (only for interface)
 from PyQt6.QtGui import QImage
 
-from desktop.modern.core.interfaces.image_export_services import (
-    ImageExportOptions,
-    ISequenceImageRenderer,
-)
-
 # Import the Qt adapter for actual rendering
-from desktop.shared.application.adapters.qt_image_export_adapter import (
+from desktop.modern.application.adapters.qt_image_export_adapter import (
     QtImageExportAdapter,
     create_qt_image_export_adapter,
 )
-from desktop.shared.application.services.core.image_export_service import (
+from desktop.modern.application.services.core.image_export_service import (
     CoreImageExportService,
+)
+from desktop.modern.core.interfaces.image_export_services import (
+    ImageExportOptions,
+    ISequenceImageRenderer,
 )
 
 
@@ -164,7 +163,9 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             self._copy_qt_image_to_target(rendered_image, image)
 
         except Exception as e:
-            logger.exception(f"❌ [IMAGE_RENDERER] Sequence beats rendering failed: {e}")
+            logger.exception(
+                f"❌ [IMAGE_RENDERER] Sequence beats rendering failed: {e}"
+            )
             # Fall back to legacy method if available
             if hasattr(self, "beat_drawer"):
                 self._legacy_render_sequence_beats(image, sequence_data, options)
@@ -220,7 +221,9 @@ class SequenceImageRenderer(ISequenceImageRenderer):
             # The core service includes difficulty level in its commands
 
         except Exception as e:
-            logger.exception(f"❌ [IMAGE_RENDERER] Difficulty level rendering failed: {e}")
+            logger.exception(
+                f"❌ [IMAGE_RENDERER] Difficulty level rendering failed: {e}"
+            )
             # Fall back to legacy method if available
             if hasattr(self, "difficulty_drawer"):
                 self._legacy_render_difficulty_level(image, difficulty_level, options)

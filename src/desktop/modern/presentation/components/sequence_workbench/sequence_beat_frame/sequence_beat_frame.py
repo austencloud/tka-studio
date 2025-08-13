@@ -25,10 +25,10 @@ from .start_position_view import StartPositionView
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from desktop.modern.core.events import IEventBus
-    from desktop.shared.application.services.workbench.beat_selection_service import (
+    from desktop.modern.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
+    from desktop.modern.core.events import IEventBus
 
 try:
     from desktop.modern.core.events import (

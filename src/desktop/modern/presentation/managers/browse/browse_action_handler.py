@@ -299,7 +299,7 @@ class BrowseActionHandler:
         from desktop.modern.application.services.browse.sequence_deletion_service import (
             SequenceDeletionService,
         )
-        from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
+        from desktop.modern.application.services.image_export.sequence_metadata_extractor import (
             SequenceMetadataExtractor,
         )
 

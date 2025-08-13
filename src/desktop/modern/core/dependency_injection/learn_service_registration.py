@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 
+from desktop.modern.application.services.data.dataset_query import IDatasetQuery
 from desktop.modern.application.services.learn import (
     AnswerValidationService,
     LearnDataService,
@@ -17,6 +18,9 @@ from desktop.modern.application.services.learn import (
     LessonConfigurationService,
     LessonProgressService,
     QuizSessionService,
+)
+from desktop.modern.application.services.learn.question_generation_service import (
+    QuestionGenerationService,
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.learn_services import (
@@ -35,10 +39,6 @@ from desktop.modern.infrastructure.file_system.file_system_service import (
     FileSystemService,
 )
 from desktop.modern.presentation.views.learn import LearnTab
-from desktop.shared.application.services.data.dataset_query import IDatasetQuery
-from desktop.shared.application.services.learn.question_generation_service import (
-    QuestionGenerationService,
-)
 
 
 logger = logging.getLogger(__name__)
@@ -53,13 +53,13 @@ def register_learn_services(container: DIContainer) -> None:
     """
     try:
         # First register IDatasetQuery dependency
-        from desktop.shared.application.services.data.dataset_query import DatasetQuery
+        from desktop.modern.application.services.data.dataset_query import DatasetQuery
 
         container.register_singleton(IDatasetQuery, DatasetQuery)
 
         # External dependencies (use real data services)
         # Use the real pictograph service with actual TKA dataset
-        from desktop.shared.application.services.data.pictograph_data_manager import (
+        from desktop.modern.application.services.data.pictograph_data_manager import (
             PictographDataManager,
         )
 

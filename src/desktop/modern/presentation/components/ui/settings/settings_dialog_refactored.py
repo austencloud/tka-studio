@@ -168,7 +168,7 @@ class SettingsDialog(QDialog):
 
     def _setup_coordinator(self):
         """Setup the settings coordinator for managing state."""
-        from desktop.shared.application.services.settings.settings_coordinator import (
+        from desktop.modern.application.services.settings.settings_coordinator import (
             SettingsCoordinator,
         )
 

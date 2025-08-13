@@ -259,6 +259,9 @@ class ApplicationFactory:
             from desktop.modern.application.services.core.session_state_tracker import (
                 SessionStateTracker,
             )
+            from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
+            )
             from desktop.modern.application.services.sequence.sequence_beat_operations import (
                 SequenceBeatOperations,
             )
@@ -268,9 +271,6 @@ class ApplicationFactory:
             )
             from desktop.modern.core.interfaces.session_services import (
                 ISessionStateTracker,
-            )
-            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-                PictographCSVManager,
             )
 
             container.register_singleton(ISequenceManager, SequenceBeatOperations)

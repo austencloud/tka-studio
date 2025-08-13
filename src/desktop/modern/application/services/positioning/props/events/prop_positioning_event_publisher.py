@@ -35,19 +35,19 @@ _project_root = _get_project_root()
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
 
+from desktop.modern.application.services.positioning.props.calculation.direction_calculation_service import (
+    SeparationDirection,
+)
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.enums import PropType
 from desktop.modern.domain.models.motion_data import MotionData
-from desktop.shared.application.services.positioning.props.calculation.direction_calculation_service import (
-    SeparationDirection,
-)
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from desktop.shared.application.services.core.events import IEventBus
+    from desktop.modern.application.services.core.events import IEventBus
 
 try:
-    from desktop.shared.application.services.core.events import PropPositionedEvent
+    from desktop.modern.application.services.core.events import PropPositionedEvent
 
     EVENT_SYSTEM_AVAILABLE = True
 except ImportError:

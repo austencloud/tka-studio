@@ -9,15 +9,15 @@ import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
+from desktop.modern.application.services.data.legacy_to_modern_converter import (
+    LegacyToModernConverter,
+)
 from desktop.modern.application.services.sequence.sequence_persister import (
     SequencePersister,
 )
 from desktop.modern.core.interfaces.sequence_data_services import ISequenceLoader
 from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.data.legacy_to_modern_converter import (
-    LegacyToModernConverter,
-)
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.pictograph_data import PictographData
@@ -162,14 +162,14 @@ class SequenceLoaderService(ISequenceLoader):
         """Create PictographData for start position using dataset service."""
         try:
             # Use dependency injection to get shared services
+            from desktop.modern.application.services.data.dataset_query import (
+                IDatasetQuery,
+            )
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
             )
             from desktop.modern.domain.models.grid_data import GridData
             from desktop.modern.domain.models.pictograph_data import PictographData
-            from desktop.shared.application.services.data.dataset_query import (
-                IDatasetQuery,
-            )
 
             container = get_container()
             dataset_service = container.resolve(IDatasetQuery)

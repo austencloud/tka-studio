@@ -26,8 +26,14 @@ from desktop.modern.application.services.image_export.drawers.word_drawer import
 from desktop.modern.application.services.image_export.sequence_image_exporter import (
     SequenceImageExporter,
 )
+from desktop.modern.application.services.image_export.sequence_image_layout_calculator import (
+    SequenceImageLayoutCalculator,
+)
 from desktop.modern.application.services.image_export.sequence_image_renderer import (
     SequenceImageRenderer,
+)
+from desktop.modern.application.services.image_export.sequence_metadata_extractor import (
+    SequenceMetadataExtractor,
 )
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.image_export_services import (
@@ -40,12 +46,6 @@ from desktop.modern.core.interfaces.image_export_services import (
     ISequenceMetadataExtractor,
     IUserInfoDrawer,
     IWordDrawer,
-)
-from desktop.shared.application.services.image_export.sequence_image_layout_calculator import (
-    SequenceImageLayoutCalculator,
-)
-from desktop.shared.application.services.image_export.sequence_metadata_extractor import (
-    SequenceMetadataExtractor,
 )
 
 
@@ -118,7 +118,7 @@ def _register_pictograph_services(container: DIContainer) -> None:
             sys.path.insert(0, shared_src_str)
 
         # Import and register the pictograph service registrar
-        from desktop.shared.application.services.core.registrars.pictograph_service_registrar import (
+        from desktop.modern.application.services.core.registrars.pictograph_service_registrar import (
             PictographServiceRegistrar,
         )
 
@@ -138,7 +138,7 @@ def _register_positioning_services(container: DIContainer) -> None:
     """Register positioning services needed for pictograph scenes."""
     try:
         # Import and register the positioning service registrar
-        from desktop.shared.application.services.core.registrars.positioning_service_registrar import (
+        from desktop.modern.application.services.core.registrars.positioning_service_registrar import (
             PositioningServiceRegistrar,
         )
 

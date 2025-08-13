@@ -46,32 +46,32 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../../../../"))
 
 from PyQt6.QtCore import QPointF
 
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.enums import PropType
-from desktop.shared.application.services.positioning.props.calculation.direction_calculation_service import (
+from desktop.modern.application.services.positioning.props.calculation.direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
 )
-from desktop.shared.application.services.positioning.props.calculation.offset_calculation_service import (
+from desktop.modern.application.services.positioning.props.calculation.offset_calculation_service import (
     IOffsetCalculationService,
     OffsetCalculationService,
 )
-from desktop.shared.application.services.positioning.props.calculation.prop_classification_service import (
+from desktop.modern.application.services.positioning.props.calculation.prop_classification_service import (
     IPropClassificationService,
     PropClassificationService,
 )
-from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
+from desktop.modern.application.services.positioning.props.configuration.json_configuration_service import (
     IJSONConfigurator,
     JSONConfigurator,
 )
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.enums import PropType
 
 
 # Event-driven architecture imports
 if TYPE_CHECKING:
-    from desktop.shared.application.services.core.events import IEventBus
+    from desktop.modern.application.services.core.events import IEventBus
 
 try:
-    from desktop.shared.application.services.core.events import (
+    from desktop.modern.application.services.core.events import (
         EventPriority,
         PropPositionedEvent,
         get_event_bus,

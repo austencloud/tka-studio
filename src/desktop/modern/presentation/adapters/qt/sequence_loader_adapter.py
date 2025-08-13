@@ -15,14 +15,14 @@ from __future__ import annotations
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
-from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.data.legacy_to_modern_converter import (
+from desktop.modern.application.services.data.legacy_to_modern_converter import (
     LegacyToModernConverter,
 )
-from desktop.shared.application.services.sequence.sequence_loader_service import (
+from desktop.modern.application.services.sequence.sequence_loader_service import (
     SequenceLoaderService,
 )
+from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateManager
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class QtSequenceLoaderAdapter(QObject):

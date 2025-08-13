@@ -49,7 +49,6 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
         """Register positioning services with graceful degradation."""
         self._update_progress("Registering positioning services...")
 
-
         # Register arrow positioning services
         self._register_arrow_positioning_services(container)
 
@@ -70,6 +69,18 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_arrow_positioning_services(self, container: "DIContainer") -> None:
         """Register arrow positioning microservices."""
         try:
+            from desktop.modern.application.services.positioning.arrows.calculation.arrow_location_calculator import (
+                ArrowLocationCalculatorService,
+            )
+            from desktop.modern.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
+                ArrowRotationCalculatorService,
+            )
+            from desktop.modern.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
+                ArrowCoordinateSystemService,
+            )
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+                ArrowAdjustmentCalculator,
+            )
             from desktop.modern.application.services.positioning.arrows.orchestration.arrow_positioning_orchestrator import (
                 ArrowPositioningOrchestrator,
             )
@@ -79,18 +90,6 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
                 IArrowLocationCalculator,
                 IArrowPositioningOrchestrator,
                 IArrowRotationCalculator,
-            )
-            from desktop.shared.application.services.positioning.arrows.calculation.arrow_location_calculator import (
-                ArrowLocationCalculatorService,
-            )
-            from desktop.shared.application.services.positioning.arrows.calculation.arrow_rotation_calculator import (
-                ArrowRotationCalculatorService,
-            )
-            from desktop.shared.application.services.positioning.arrows.coordinate_system.arrow_coordinate_system_service import (
-                ArrowCoordinateSystemService,
-            )
-            from desktop.shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
-                ArrowAdjustmentCalculator,
             )
 
             # Register calculator microservices
@@ -135,7 +134,6 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             )
             self._mark_service_available("ArrowPositioningOrchestrator")
 
-
         except ImportError as e:
             print(f"❌ [POSITIONING_REGISTRAR] Import error: {e}")
             self._handle_service_unavailable(
@@ -154,23 +152,23 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
         """Register arrow placement services (special placement, default placement, etc.)."""
         try:
             # Import arrow placement services
-            from desktop.modern.application.services.positioning.arrows.placement.special_placement_service import (
-                SpecialPlacementService,
-            )
-            from desktop.shared.application.services.positioning.arrows.key_generators.attribute_key_generator import (
+            from desktop.modern.application.services.positioning.arrows.key_generators.attribute_key_generator import (
                 AttributeKeyGenerator,
             )
-            from desktop.shared.application.services.positioning.arrows.key_generators.placement_key_generator import (
+            from desktop.modern.application.services.positioning.arrows.key_generators.placement_key_generator import (
                 PlacementKeyGenerator,
             )
-            from desktop.shared.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
+            from desktop.modern.application.services.positioning.arrows.key_generators.turns_tuple_key_generator import (
                 TurnsTupleKeyGenerator,
             )
-            from desktop.shared.application.services.positioning.arrows.placement.default_placement_service import (
+            from desktop.modern.application.services.positioning.arrows.placement.default_placement_service import (
                 DefaultPlacementService,
             )
-            from desktop.shared.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
+            from desktop.modern.application.services.positioning.arrows.placement.special_placement_ori_key_generator import (
                 SpecialPlacementOriKeyGenerator,
+            )
+            from desktop.modern.application.services.positioning.arrows.placement.special_placement_service import (
+                SpecialPlacementService,
             )
 
             # Register placement services as singletons
@@ -188,13 +186,13 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             container.register_singleton(AttributeKeyGenerator, AttributeKeyGenerator)
 
             # Register arrow adjustment services that depend on placement services
+            from desktop.modern.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
+                ArrowAdjustmentCalculator,
+            )
             from desktop.modern.application.services.positioning.arrows.orchestration.arrow_adjustment_lookup import (
                 ArrowAdjustmentLookup,
             )
-            from desktop.shared.application.services.positioning.arrows.orchestration.arrow_adjustment_calculator import (
-                ArrowAdjustmentCalculator,
-            )
-            from desktop.shared.application.services.positioning.arrows.orchestration.directional_tuple_processor import (
+            from desktop.modern.application.services.positioning.arrows.orchestration.directional_tuple_processor import (
                 DirectionalTupleProcessor,
             )
 
@@ -229,7 +227,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_position_matching_service(self, container: "DIContainer") -> None:
         """Register position matching service for option picker."""
         try:
-            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 
@@ -247,7 +245,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
         """Register prop management services."""
         try:
             # Register legacy PropManagementService for backward compatibility
-            from desktop.shared.application.services.positioning.props.orchestration.prop_management_service import (
+            from desktop.modern.application.services.positioning.props.orchestration.prop_management_service import (
                 IPropManagementService,
                 PropManagementService,
             )
@@ -256,7 +254,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
             self._mark_service_available("PropManagementService")
 
             # Register new modular PropPositioningOrchestrator
-            from desktop.shared.application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
+            from desktop.modern.application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
                 IPropPositioningOrchestrator,
                 PropPositioningOrchestrator,
             )
@@ -282,7 +280,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
         try:
             # Note: PropOrchestrator has Qt dependencies and remains in desktop location
             # Using PropPositioningOrchestrator instead which is framework-agnostic
-            from desktop.shared.application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
+            from desktop.modern.application.services.positioning.props.orchestration.prop_positioning_orchestrator import (
                 IPropPositioningOrchestrator,
                 PropPositioningOrchestrator,
             )
@@ -302,7 +300,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_prop_detection_services(self, container: "DIContainer") -> None:
         """Register prop detection services."""
         try:
-            from desktop.shared.application.services.positioning.props.detection import (
+            from desktop.modern.application.services.positioning.props.detection import (
                 BetaPositioningDetector,
                 IBetaPositioningDetector,
                 IPropOverlapDetector,
@@ -323,7 +321,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_prop_calculation_services(self, container: "DIContainer") -> None:
         """Register prop calculation services."""
         try:
-            from desktop.shared.application.services.positioning.props.calculation import (
+            from desktop.modern.application.services.positioning.props.calculation import (
                 DirectionCalculationService,
                 IDirectionCalculationService,
                 IOffsetCalculationService,
@@ -358,7 +356,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_prop_specialization_services(self, container: "DIContainer") -> None:
         """Register prop specialization services."""
         try:
-            from desktop.shared.application.services.positioning.props.specialization import (
+            from desktop.modern.application.services.positioning.props.specialization import (
                 ILetterIPositioningService,
                 ISpecialPlacementOverrideService,
                 LetterIPositioningService,
@@ -383,7 +381,7 @@ class PositioningServiceRegistrar(BaseServiceRegistrar):
     def _register_prop_event_services(self, container: "DIContainer") -> None:
         """Register prop event services."""
         try:
-            from desktop.shared.application.services.positioning.props.events import (
+            from desktop.modern.application.services.positioning.props.events import (
                 IPropPositioningEventPublisher,
                 PropPositioningEventPublisher,
             )

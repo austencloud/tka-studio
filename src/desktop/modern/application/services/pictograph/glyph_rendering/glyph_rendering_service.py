@@ -20,13 +20,13 @@ from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
+from desktop.modern.application.services.pictograph.asset_management.pictograph_asset_manager import (
+    PictographAssetManager,
+)
 from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
     PictographCacheManager,
 )
-from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
-    PictographAssetManager,
-)
-from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
+from desktop.modern.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
 
@@ -106,7 +106,10 @@ class GlyphRenderingService:
             self._performance_monitor.end_render_timer(timer_id)
 
     def render_letter_glyph(
-        self, scene: QGraphicsScene, letter: str, position: tuple[float, float] | None = None
+        self,
+        scene: QGraphicsScene,
+        letter: str,
+        position: tuple[float, float] | None = None,
     ) -> QGraphicsSvgItem | None:
         """
         Render a letter glyph (A-Z).
@@ -124,7 +127,10 @@ class GlyphRenderingService:
         )
 
     def render_elemental_glyph(
-        self, scene: QGraphicsScene, element: str, position: tuple[float, float] | None = None
+        self,
+        scene: QGraphicsScene,
+        element: str,
+        position: tuple[float, float] | None = None,
     ) -> QGraphicsSvgItem | None:
         """
         Render an elemental glyph (fire, water, earth, air).
@@ -273,9 +279,7 @@ class GlyphRenderingService:
         finally:
             self._performance_monitor.end_render_timer(timer_id)
 
-    def _create_fallback_glyph_renderer(
-        self, glyph_type: str
-    ) -> QSvgRenderer | None:
+    def _create_fallback_glyph_renderer(self, glyph_type: str) -> QSvgRenderer | None:
         """Create fallback glyph renderer when SVG loading fails."""
         try:
             # Create simple fallback glyph SVG

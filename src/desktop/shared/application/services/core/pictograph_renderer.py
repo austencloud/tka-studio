@@ -386,11 +386,11 @@ class CorePictographRenderer(IPictographRenderer):
 
         try:
             # Import and use the existing modern prop rotation calculator
-            from desktop.modern.domain.models import MotionData, Orientation
-            from desktop.modern.domain.models.enums import Location, MotionType
-            from desktop.shared.application.services.positioning.props.calculation.prop_rotation_calculator import (
+            from desktop.modern.application.services.positioning.props.calculation.prop_rotation_calculator import (
                 PropRotationCalculator,
             )
+            from desktop.modern.domain.models import MotionData, Orientation
+            from desktop.modern.domain.models.enums import Location, MotionType
 
             # Convert dict to MotionData object with proper value mapping
             location_map = {
@@ -460,13 +460,13 @@ class CorePictographRenderer(IPictographRenderer):
 
         try:
             # Import beta positioning services
-            from desktop.modern.domain.models.beat_data import BeatData
-            from desktop.shared.application.services.positioning.props.detection.beta_positioning_detector import (
+            from desktop.modern.application.services.positioning.props.detection.beta_positioning_detector import (
                 BetaPositioningDetector,
             )
-            from desktop.shared.application.services.positioning.props.orchestration.prop_management_service import (
+            from desktop.modern.application.services.positioning.props.orchestration.prop_management_service import (
                 PropManagementService,
             )
+            from desktop.modern.domain.models.beat_data import BeatData
 
             # Handle both dictionary and PictographData object formats
             if hasattr(pictograph_data, "letter"):
@@ -609,7 +609,7 @@ def create_pictograph_renderer(
     """
     if asset_provider is None:
         # Import the real asset provider from the correct module
-        from desktop.shared.application.services.core.pictograph_rendering.real_asset_provider import (
+        from desktop.modern.application.services.core.pictograph_rendering.real_asset_provider import (
             create_real_asset_provider,
         )
 

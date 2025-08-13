@@ -16,7 +16,7 @@ from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.option_picker.option_configuration_service import (
+    from desktop.modern.application.services.option_picker.option_configuration_service import (
         OptionConfigurationService,
     )
 

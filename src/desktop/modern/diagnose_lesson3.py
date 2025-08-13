@@ -120,10 +120,10 @@ def diagnose_learn_tab():
         question_service = container.resolve(IQuestionGenerationService)
 
         # Test Lesson3 specifically
-        from desktop.modern.domain.models.learn import LessonType, QuizMode
-        from desktop.shared.application.services.learn.lesson_configuration_service import (
+        from desktop.modern.application.services.learn.lesson_configuration_service import (
             LessonConfigurationService,
         )
+        from desktop.modern.domain.models.learn import LessonType, QuizMode
 
         # Get Lesson3 config
         config_service = LessonConfigurationService()

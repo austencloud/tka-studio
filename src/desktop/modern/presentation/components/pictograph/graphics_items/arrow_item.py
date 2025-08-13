@@ -16,6 +16,9 @@ from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 
+from desktop.modern.application.services.pictograph.arrow_rendering_service import (
+    ArrowRenderingService,
+)
 from desktop.modern.core.dependency_injection.di_container import get_container
 from desktop.modern.core.interfaces.positioning_services import (
     IArrowCoordinateSystemService,
@@ -24,9 +27,6 @@ from desktop.modern.core.interfaces.positioning_services import (
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.pictograph.arrow_rendering_service import (
-    ArrowRenderingService,
-)
 
 
 logger = logging.getLogger(__name__)

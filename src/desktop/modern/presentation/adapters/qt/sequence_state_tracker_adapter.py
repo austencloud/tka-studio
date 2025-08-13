@@ -11,11 +11,11 @@ from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.sequence.sequence_state_tracker_service import (
+from desktop.modern.application.services.sequence.sequence_state_tracker_service import (
     SequenceStateTrackerService,
 )
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 logger = logging.getLogger(__name__)

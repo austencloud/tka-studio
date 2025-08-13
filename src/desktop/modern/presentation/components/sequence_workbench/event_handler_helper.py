@@ -7,7 +7,7 @@ Just moves the code to reduce the main file size.
 
 from __future__ import annotations
 
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
 )
@@ -25,10 +25,9 @@ class EventHandlerHelper:
         # Handle copy JSON specially to pass the current sequence
         if operation_type == OperationType.COPY_JSON:
             current_sequence = self.workbench._state_manager.get_current_sequence()
+
             def operation_method():
-                return self.workbench._operation_coordinator.copy_json(
-                            current_sequence
-                        )
+                return self.workbench._operation_coordinator.copy_json(current_sequence)
         else:
             # Get the operation method from coordinator
             operation_methods = {

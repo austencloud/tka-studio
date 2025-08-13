@@ -15,7 +15,7 @@ from .sequence_beat_frame.sequence_beat_frame import SequenceBeatFrame
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.workbench.beat_selection_service import (
+    from desktop.modern.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -147,7 +147,6 @@ class WorkbenchBeatFrameSection(QWidget):
     def set_sequence(self, sequence: SequenceData | None):
         """Set the current sequence"""
 
-
         self._current_sequence = sequence
         if self._beat_frame:
             self._beat_frame.set_sequence(sequence)
@@ -181,7 +180,6 @@ class WorkbenchBeatFrameSection(QWidget):
         """Initialize start position view in cleared state (shows START text only)"""
         self.show()
         self.setVisible(True)
-
 
         # Debug parent visibility
         self.parent()

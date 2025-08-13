@@ -17,13 +17,13 @@ from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsScene
 
+from desktop.modern.application.services.pictograph.asset_management.pictograph_asset_manager import (
+    PictographAssetManager,
+)
 from desktop.modern.application.services.pictograph.cache_management.pictograph_cache_manager import (
     PictographCacheManager,
 )
-from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
-    PictographAssetManager,
-)
-from desktop.shared.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
+from desktop.modern.application.services.pictograph.performance_monitoring.pictograph_performance_monitor import (
     PictographPerformanceMonitor,
 )
 

@@ -13,8 +13,8 @@ from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsItemGroup
 
+from desktop.modern.application.services.assets.image_asset_utils import get_image_path
 from desktop.modern.domain.models import LetterType
-from desktop.shared.application.services.assets.image_asset_utils import get_image_path
 
 
 class TKAGlyphRenderer:

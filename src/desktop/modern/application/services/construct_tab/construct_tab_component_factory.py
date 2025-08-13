@@ -20,7 +20,7 @@ from desktop.modern.core.interfaces.core_services import ILayoutService
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.workbench.beat_selection_service import (
+    from desktop.modern.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 

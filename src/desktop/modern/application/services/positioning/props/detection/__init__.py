@@ -1,18 +1,15 @@
 """
 Prop Detection Services
 
-Services for detecting prop positioning conditions and requirements.
+Services for detecting prop positioning conditions and overlaps.
 """
-
-from __future__ import annotations
 
 from .beta_positioning_detector import BetaPositioningDetector, IBetaPositioningDetector
 from .prop_overlap_detector import IPropOverlapDetector, PropOverlapDetector
 
-
 __all__ = [
-    "BetaPositioningDetector",
     "IBetaPositioningDetector",
+    "BetaPositioningDetector",
     "IPropOverlapDetector",
     "PropOverlapDetector",
 ]

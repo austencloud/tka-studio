@@ -4,7 +4,7 @@ from __future__ import annotations
 
 QT_SERVICES_AVAILABLE = False  # Set to False to avoid Qt dependencies in tests
 
-from desktop.shared.application.services.motion.orientation_calculator import (
+from desktop.modern.application.services.motion.orientation_calculator import (
     IOrientationCalculator,
     OrientationCalculator,
 )

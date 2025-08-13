@@ -7,15 +7,15 @@ using the extracted business service.
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from desktop.modern.core.interfaces.positioning_services import IPositionMapper
 
 if TYPE_CHECKING:
-    from desktop.modern.domain.models import BeatData
-    from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+    from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
         PictographPositionMatcher,
     )
+    from desktop.modern.domain.models import BeatData
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class PositionMatcher:
 
     def extract_end_position(
         self, last_beat: dict[str, Any], position_service: "PictographPositionMatcher"
-    ) -> Optional[str]:
+    ) -> str | None:
         """
         Extract end position from last beat data using Legacy-compatible logic.
 
@@ -62,7 +62,7 @@ class PositionMatcher:
         # Delegate to business service
         return self._position_service.extract_end_position(last_beat)
 
-    def extract_modern_end_position(self, beat_data: "BeatData") -> Optional[str]:
+    def extract_modern_end_position(self, beat_data: "BeatData") -> str | None:
         """
         Extract end position directly from Modern BeatData.
 
@@ -96,9 +96,7 @@ class PositionMatcher:
         # Delegate to business service
         return self._position_service.has_motion_attributes(beat_data)
 
-    def get_position_from_locations(
-        self, start_loc: str, end_loc: str
-    ) -> Optional[str]:
+    def get_position_from_locations(self, start_loc: str, end_loc: str) -> str | None:
         """
         Get position key from start and end locations.
 

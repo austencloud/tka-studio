@@ -13,6 +13,9 @@ from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from desktop.modern.application.services.pictograph.simple_visibility_service import (
+    get_visibility_service,
+)
 from desktop.modern.core.interfaces.tab_settings_interfaces import (
     IVisibilitySettingsManager,
 )
@@ -21,9 +24,6 @@ from desktop.modern.presentation.components.ui.settings.visibility.components im
     ElementVisibilitySection,
     MotionControlsSection,
     VisibilityPreviewSection,
-)
-from desktop.shared.application.services.pictograph.simple_visibility_service import (
-    get_visibility_service,
 )
 
 
@@ -273,7 +273,7 @@ class VisibilityTab(QWidget):
                 element_states = self.element_section.get_element_states()
 
             # Update the simple visibility service with all states
-            from desktop.shared.application.services.pictograph.simple_visibility_service import (
+            from desktop.modern.application.services.pictograph.simple_visibility_service import (
                 get_visibility_service,
             )
 

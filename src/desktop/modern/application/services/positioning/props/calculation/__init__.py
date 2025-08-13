@@ -1,15 +1,10 @@
 """
-Prop Calculation Services
-
-Services for calculating prop positioning, offsets, directions, and rotations.
+Prop calculation services for positioning.
 """
-
-from __future__ import annotations
 
 from .direction_calculation_service import (
     DirectionCalculationService,
     IDirectionCalculationService,
-    SeparationDirection,
 )
 from .offset_calculation_service import (
     IOffsetCalculationService,
@@ -21,15 +16,13 @@ from .prop_classification_service import (
 )
 from .prop_rotation_calculator import IPropRotationCalculator, PropRotationCalculator
 
-
 __all__ = [
     "DirectionCalculationService",
     "IDirectionCalculationService",
+    "OffsetCalculationService",
     "IOffsetCalculationService",
     "IPropClassificationService",
-    "IPropRotationCalculator",
-    "OffsetCalculationService",
     "PropClassificationService",
+    "IPropRotationCalculator",
     "PropRotationCalculator",
-    "SeparationDirection",
 ]

@@ -12,10 +12,10 @@ import logging
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QVBoxLayout
 
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
     OptionPickerSizeCalculator,
 )
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 
 logger = logging.getLogger(__name__)

@@ -17,15 +17,15 @@ from PyQt6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPen
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
 
+from desktop.modern.application.services.core.image_export_service import (
+    CoreImageExportService,
+)
 from desktop.modern.application.services.core.types import (
     Color,
     ImageData,
     ImageFormat,
     Point,
     Size,
-)
-from desktop.shared.application.services.core.image_export_service import (
-    CoreImageExportService,
 )
 
 logger = logging.getLogger(__name__)

@@ -8,7 +8,7 @@ It imports from the shared animation system to avoid code duplication.
 # Import the shared implementation
 from __future__ import annotations
 
-from desktop.shared.application.services.ui.animation.animation_service import (
+from desktop.modern.application.services.ui.animation.animation_service import (
     AnimationService,
 )
 

@@ -19,6 +19,15 @@ from collections.abc import Callable
 from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QGroupBox
 
+from desktop.modern.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
+from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
+from desktop.modern.application.services.option_picker.option_pool_service import (
+    OptionPoolService,
+)
 from desktop.modern.core.interfaces.animation_core_interfaces import (
     IAnimationOrchestrator,
 )
@@ -40,15 +49,6 @@ from desktop.modern.presentation.components.option_picker.components.option_pick
 )
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
-)
-from desktop.shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
-)
-from desktop.shared.application.services.option_picker.option_pool_service import (
-    OptionPoolService,
 )
 
 

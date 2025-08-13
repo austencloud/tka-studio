@@ -24,6 +24,17 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QVBoxLayout, QWidget
 
+from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
+    OperationResult,
+    OperationType,
+    WorkbenchOperationCoordinator,
+)
+from desktop.modern.application.services.workbench.workbench_session_manager import (
+    WorkbenchSessionManager,
+)
+from desktop.modern.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
+)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService
 from desktop.modern.domain.models import BeatData, SequenceData
@@ -35,23 +46,12 @@ from desktop.modern.presentation.components.sequence_workbench.button_interface 
 from desktop.modern.presentation.components.sequence_workbench.indicator_section import (
     WorkbenchIndicatorSection,
 )
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
-    OperationResult,
-    OperationType,
-    WorkbenchOperationCoordinator,
-)
-from desktop.shared.application.services.workbench.workbench_session_manager import (
-    WorkbenchSessionManager,
-)
-from desktop.shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
-)
 
 from .beat_frame_section import WorkbenchBeatFrameSection
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.workbench.beat_selection_service import (
+    from desktop.modern.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -431,7 +431,6 @@ class SequenceWorkbench(ViewableComponentBase):
             new_beats = list(sequence.beats)
             new_beats[beat_index] = beat_data
             updated_sequence = sequence.update(beats=new_beats)
-
 
             self.set_sequence(updated_sequence)
 

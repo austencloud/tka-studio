@@ -56,33 +56,33 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
     def _register_core_pictograph_services(self, container: "DIContainer") -> None:
         """Register core pictograph management services."""
         try:
+            from desktop.modern.application.services.data.pictograph_data_manager import (
+                IPictographDataManager,
+                PictographDataManager,
+            )
+            from desktop.modern.application.services.pictograph.border_manager import (
+                PictographBorderManager,
+            )
+            from desktop.modern.application.services.pictograph.context_detection_service import (
+                PictographContextDetector,
+            )
+            from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
+            )
+            from desktop.modern.application.services.pictograph.pictograph_validator import (
+                PictographValidator,
+            )
+
+            # PictographScaler removed - direct views handle their own scaling
+            from desktop.modern.application.services.pictograph.simple_visibility_service import (
+                PictographVisibilityService,
+            )
             from desktop.modern.core.interfaces.core_services import (
                 IPictographBorderManager,
                 IPictographContextDetector,
             )
             from desktop.modern.core.interfaces.pictograph_services import (
                 IPictographValidator,
-            )
-            from desktop.shared.application.services.data.pictograph_data_manager import (
-                IPictographDataManager,
-                PictographDataManager,
-            )
-            from desktop.shared.application.services.pictograph.border_manager import (
-                PictographBorderManager,
-            )
-            from desktop.shared.application.services.pictograph.context_detection_service import (
-                PictographContextDetector,
-            )
-            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-                PictographCSVManager,
-            )
-            from desktop.shared.application.services.pictograph.pictograph_validator import (
-                PictographValidator,
-            )
-
-            # PictographScaler removed - direct views handle their own scaling
-            from desktop.shared.application.services.pictograph.simple_visibility_service import (
-                PictographVisibilityService,
             )
 
             # Register pictograph data manager
@@ -157,10 +157,10 @@ class PictographServiceRegistrar(BaseServiceRegistrar):
                 from desktop.modern.application.adapters.qt_pictograph_adapter import (
                     create_qt_pictograph_adapter,
                 )
-                from desktop.shared.application.services.core.pictograph_renderer import (
+                from desktop.modern.application.services.core.pictograph_renderer import (
                     create_pictograph_renderer,
                 )
-                from desktop.shared.application.services.pictograph.asset_management.pictograph_asset_manager import (
+                from desktop.modern.application.services.pictograph.asset_management.pictograph_asset_manager import (
                     PictographAssetManager,
                 )
 

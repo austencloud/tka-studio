@@ -7,14 +7,13 @@ between BeatData and PictographData as needed.
 """
 
 import logging
-from typing import Optional
 
+from desktop.modern.application.services.data.dataset_query import IDatasetQuery
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
 )
-from desktop.shared.application.services.data.dataset_query import IDatasetQuery
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class OptionDataService:
     def __init__(self, container: DIContainer):
         """Initialize with dependency injection container."""
         self.container = container
-        self._dataset_query_service: Optional[IDatasetQuery] = None
+        self._dataset_query_service: IDatasetQuery | None = None
 
     @property
     def dataset_query_service(self) -> IDatasetQuery:

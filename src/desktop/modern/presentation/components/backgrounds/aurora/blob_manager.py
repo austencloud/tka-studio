@@ -8,7 +8,7 @@ from __future__ import annotations
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPainter, QPainterPath
 
-from desktop.shared.application.services.backgrounds.aurora.blob_animation import (
+from desktop.modern.application.services.backgrounds.aurora.blob_animation import (
     AuroraBlobAnimation,
 )
 

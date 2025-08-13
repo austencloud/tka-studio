@@ -10,14 +10,14 @@ missing from the modern arrow positioning system.
 
 import logging
 
+from desktop.modern.application.services.core.interfaces.positioning_services import (
+    IDirectionalTupleCalculator,
+)
 from desktop.modern.domain.models import (
     Location,
     MotionData,
     MotionType,
     RotationDirection,
-)
-from desktop.shared.application.services.core.interfaces.positioning_services import (
-    IDirectionalTupleCalculator,
 )
 
 logger = logging.getLogger(__name__)

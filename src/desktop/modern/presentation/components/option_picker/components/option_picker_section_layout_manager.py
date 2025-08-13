@@ -19,17 +19,17 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QFrame, QGridLayout, QGroupBox, QSizePolicy, QVBoxLayout
 
+from desktop.modern.application.services.option_picker.option_configuration_service import (
+    OptionConfigurationService,
+)
+from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
+    OptionPickerSizeCalculator,
+)
 from desktop.modern.presentation.components.option_picker.components.option_pictograph import (
     OptionPictograph,
 )
 from desktop.modern.presentation.components.option_picker.types.letter_types import (
     LetterType,
-)
-from desktop.shared.application.services.option_picker.option_configuration_service import (
-    OptionConfigurationService,
-)
-from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-    OptionPickerSizeCalculator,
 )
 
 

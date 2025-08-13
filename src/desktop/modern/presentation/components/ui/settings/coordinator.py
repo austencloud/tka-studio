@@ -9,7 +9,7 @@ from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.shared.application.services.settings.settings_coordinator import (
+from desktop.modern.application.services.settings.settings_coordinator import (
     SettingsCoordinator,
 )
 

@@ -28,6 +28,12 @@ from PyQt6.QtWidgets import (
 # Add src to path for imports
 sys.path.insert(0, "src")
 
+from desktop.modern.application.services.data.pictograph_factory import (
+    PictographFactory,
+)
+from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
 from desktop.modern.application.services.ui.animation.modern_service_registration import (
     setup_modern_animation_services,
 )
@@ -39,12 +45,6 @@ from desktop.modern.core.interfaces.animation_core_interfaces import (
 )
 from desktop.modern.presentation.components.pictograph.pictograph_widget import (
     PictographWidget,
-)
-from desktop.shared.application.services.data.pictograph_factory import (
-    PictographFactory,
-)
-from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
 )
 
 

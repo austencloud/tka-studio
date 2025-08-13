@@ -19,16 +19,16 @@ from desktop.modern.application.adapters.qt_pictograph_adapter import (
     QtRenderEngine,
     QtTypeConverter,
 )
-from desktop.modern.application.services.core.types import Point, Size
-from desktop.modern.domain.models import MotionData, PictographData
 
 # Import the framework-agnostic services
-from desktop.shared.application.services.core.pictograph_orchestration_service import (
+from desktop.modern.application.services.core.pictograph_orchestration_service import (
     CorePictographOrchestrationService,
 )
-from desktop.shared.application.services.core.pictograph_rendering.real_asset_provider import (
+from desktop.modern.application.services.core.pictograph_rendering.real_asset_provider import (
     create_real_asset_provider,
 )
+from desktop.modern.application.services.core.types import Point, Size
+from desktop.modern.domain.models import MotionData, PictographData
 
 
 logger = logging.getLogger(__name__)
@@ -361,7 +361,7 @@ class QtPictographRenderingServiceAdapter:
 
         try:
             # Import positioning services
-            from desktop.shared.application.services.positioning.arrows.calculation import (
+            from desktop.modern.application.services.positioning.arrows.calculation import (
                 ArrowLocationCalculatorService,
             )
 

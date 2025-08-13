@@ -9,12 +9,12 @@ from __future__ import annotations
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from desktop.modern.application.services.data.conversion_utils import (
+    extract_end_position_from_position_key,
+)
 from desktop.modern.application.services.sequence.beat_factory import BeatFactory
 from desktop.modern.domain.models.grid_data import GridData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.data.conversion_utils import (
-    extract_end_position_from_position_key,
-)
 
 
 class StartPositionSelectionHandler(QObject):
@@ -79,11 +79,11 @@ class StartPositionSelectionHandler(QObject):
         """Create start position data from position key using real dataset (separate from sequence beats)"""
         try:
             # Use dependency injection to get shared services
+            from desktop.modern.application.services.data.dataset_query import (
+                IDatasetQuery,
+            )
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
-            )
-            from desktop.shared.application.services.data.dataset_query import (
-                IDatasetQuery,
             )
 
             container = get_container()

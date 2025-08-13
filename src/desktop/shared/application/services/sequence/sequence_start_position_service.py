@@ -9,6 +9,9 @@ import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
+from desktop.modern.application.services.data.modern_to_legacy_converter import (
+    ModernToLegacyConverter,
+)
 from desktop.modern.application.services.sequence.beat_factory import BeatFactory
 from desktop.modern.application.services.sequence.sequence_persister import (
     SequencePersister,
@@ -19,9 +22,6 @@ from desktop.modern.core.interfaces.sequence_data_services import (
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.data.modern_to_legacy_converter import (
-    ModernToLegacyConverter,
-)
 
 if TYPE_CHECKING:
     from desktop.modern.presentation.components.sequence_workbench.sequence_workbench import (

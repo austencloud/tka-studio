@@ -11,15 +11,15 @@ from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from desktop.modern.application.services.option_picker.option_orientation_updater import (
+    OptionOrientationUpdater,
+)
 from desktop.modern.application.services.sequence.sequence_persister import (
     SequencePersister,
 )
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.option_picker.option_orientation_updater import (
-    OptionOrientationUpdater,
-)
 
 from .beat_creation_service import BeatCreationService
 from .beat_sequence_service import BeatSequenceService

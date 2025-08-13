@@ -8,10 +8,13 @@ REFACTORED: Now works with PictographData directly instead of BeatData, followin
 the principle that pictographs should be standalone without beat-specific fields.
 """
 
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
 
+from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
+    PictographCSVManager,
+)
 from desktop.modern.domain.models import (
     ArrowData,
     GridData,
@@ -21,9 +24,6 @@ from desktop.modern.domain.models import (
     MotionType,
     PictographData,
     RotationDirection,
-)
-from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-    PictographCSVManager,
 )
 
 
@@ -41,7 +41,7 @@ class PictographPositionMatcher:
         """Initialize position matching service with Modern's native dataset."""
         self.pictograph_manager = PictographCSVManager()
 
-        self.pictograph_dataset: Optional[dict[str, list[dict[str, Any]]]] = None
+        self.pictograph_dataset: dict[str, list[dict[str, Any]]] | None = None
         self._load_dataset()
 
     def _load_dataset(self):
@@ -265,7 +265,7 @@ class PictographPositionMatcher:
 
     def _generate_glyph_data(self, pictograph_data: PictographData) -> None:
         """Generate glyph data for pictograph data using the glyph data service."""
-        from desktop.shared.application.services.glyphs.glyph_data_service import (
+        from desktop.modern.application.services.glyphs.glyph_data_service import (
             GlyphDataService,
         )
 

@@ -24,22 +24,22 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget
 
+from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
+    OperationResult,
+    OperationType,
+    WorkbenchOperationCoordinator,
+)
+from desktop.modern.application.services.workbench.workbench_session_manager import (
+    WorkbenchSessionManager,
+)
+from desktop.modern.application.services.workbench.workbench_state_manager import (
+    WorkbenchStateManager,
+)
 from desktop.modern.core.dependency_injection.di_container import DIContainer
 from desktop.modern.core.interfaces.core_services import ILayoutService
 from desktop.modern.domain.models import BeatData, SequenceData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.presentation.components.component_base import ViewableComponentBase
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
-    OperationResult,
-    OperationType,
-    WorkbenchOperationCoordinator,
-)
-from desktop.shared.application.services.workbench.workbench_session_manager import (
-    WorkbenchSessionManager,
-)
-from desktop.shared.application.services.workbench.workbench_state_manager import (
-    WorkbenchStateManager,
-)
 
 from .beat_frame_section import WorkbenchBeatFrameSection
 from .button_interface import WorkbenchButtonInterfaceAdapter
@@ -50,7 +50,7 @@ from .ui_setup_helper import UISetupHelper
 
 
 if TYPE_CHECKING:
-    from desktop.shared.application.services.workbench.beat_selection_service import (
+    from desktop.modern.application.services.workbench.beat_selection_service import (
         BeatSelectionService,
     )
 
@@ -155,7 +155,6 @@ class SequenceWorkbench(ViewableComponentBase):
             self._ui_setup.setup_button_interface()
             self._setup_state_monitoring()
 
-
         except Exception as e:
             print(f"❌ [WORKBENCH] Error in deferred initialization: {e}")
             import traceback
@@ -181,7 +180,6 @@ class SequenceWorkbench(ViewableComponentBase):
             original_set_sequence = self._state_manager.set_sequence
 
             def monitored_set_sequence(sequence, from_restoration=False):
-
                 result = original_set_sequence(sequence, from_restoration)
 
                 # If the state changed, update our UI
@@ -351,7 +349,6 @@ class SequenceWorkbench(ViewableComponentBase):
 
             # Update state if sequence was modified
             if result.updated_sequence:
-
                 state_result = self._state_manager.set_sequence(result.updated_sequence)
 
                 if state_result.changed:
@@ -384,7 +381,6 @@ class SequenceWorkbench(ViewableComponentBase):
     def _update_ui_from_state(self):
         """Update UI components based on current business state."""
         sequence = self._state_manager.get_current_sequence()
-
 
         # Update indicator section
         if self._indicator_section:

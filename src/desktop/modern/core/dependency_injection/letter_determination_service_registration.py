@@ -32,13 +32,13 @@ def register_letter_determination_services(container: DIContainer) -> None:
         logger.info("Registering letter determination services...")
 
         # Import implementations
-        from desktop.shared.application.services.letter_determination.letter_determination_service import (
+        from desktop.modern.application.services.letter_determination.letter_determination_service import (
             LetterDeterminationService,
         )
-        from desktop.shared.application.services.letter_determination.motion_comparison_service import (
+        from desktop.modern.application.services.letter_determination.motion_comparison_service import (
             MotionComparisonService,
         )
-        from desktop.shared.application.services.letter_determination.pictograph_dataset_provider import (
+        from desktop.modern.application.services.letter_determination.pictograph_dataset_provider import (
             PictographDatasetProvider,
         )
 
@@ -62,7 +62,7 @@ def register_letter_determination_services(container: DIContainer) -> None:
 
         # Register motion attribute service (if it exists)
         try:
-            from desktop.shared.application.services.letter_determination.motion_attribute_service import (
+            from desktop.modern.application.services.letter_determination.motion_attribute_service import (
                 MotionAttributeService,
             )
 

@@ -80,7 +80,7 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             pass
 
         try:
-            from desktop.shared.application.services.ui.animation.modern_service_registration import (
+            from desktop.modern.application.services.ui.animation.modern_service_registration import (
                 setup_modern_animation_services,
             )
 
@@ -94,14 +94,14 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
     def _register_core_option_services(self, container: "DIContainer") -> None:
         """Register core option picker services."""
         try:
-            from desktop.modern.core.interfaces.option_picker_interfaces import (
-                IOptionProvider,
-            )
-            from desktop.shared.application.services.option_picker.option_provider import (
+            from desktop.modern.application.services.option_picker.option_provider import (
                 OptionProvider,
             )
-            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
+            )
+            from desktop.modern.core.interfaces.option_picker_interfaces import (
+                IOptionProvider,
             )
 
             # Register core option provider
@@ -125,22 +125,22 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
             from desktop.modern.application.services.option_picker.frame_pool_service import (
                 FramePoolService,
             )
-            from desktop.shared.application.services.option_picker.option_configuration_service import (
+            from desktop.modern.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from desktop.shared.application.services.option_picker.option_loader import (
+            from desktop.modern.application.services.option_picker.option_loader import (
                 OptionLoader,
             )
-            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from desktop.shared.application.services.option_picker.option_pool_service import (
+            from desktop.modern.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from desktop.shared.application.services.option_picker.sequence_option_service import (
+            from desktop.modern.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
-            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 
@@ -203,20 +203,20 @@ class OptionPickerServiceRegistrar(BaseServiceRegistrar):
     def _register_presentation_components(self, container: "DIContainer") -> None:
         """Register option picker presentation component factories."""
         try:
-            from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
-                OptionPickerScroll,
-            )
-            from desktop.shared.application.services.option_picker.option_configuration_service import (
+            from desktop.modern.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from desktop.shared.application.services.option_picker.option_pool_service import (
+            from desktop.modern.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from desktop.shared.application.services.option_picker.sequence_option_service import (
+            from desktop.modern.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
+            )
+            from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
+                OptionPickerScroll,
             )
 
             # Register OptionPickerScroll factory with injected microservices

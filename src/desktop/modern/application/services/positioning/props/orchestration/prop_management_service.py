@@ -660,11 +660,11 @@ class PropManagementService(IPropManagementService):
     def _get_json_configurator(self):
         """Get JSONConfigurator singleton from DI container."""
         try:
+            from desktop.modern.application.services.positioning.props.configuration.json_configuration_service import (
+                IJSONConfigurator,
+            )
             from desktop.modern.core.dependency_injection.di_container import (
                 get_container,
-            )
-            from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
-                IJSONConfigurator,
             )
 
             container = get_container()
@@ -679,7 +679,7 @@ class PropManagementService(IPropManagementService):
             )
 
             # Fallback to creating new instance if DI fails
-            from desktop.shared.application.services.positioning.props.configuration.json_configuration_service import (
+            from desktop.modern.application.services.positioning.props.configuration.json_configuration_service import (
                 JSONConfigurator,
             )
 

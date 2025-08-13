@@ -183,7 +183,7 @@ class ThumbnailGenerationService(IThumbnailGenerationService):
         """Get the legacy data converter instance"""
         try:
             # Try to import and create the legacy data converter
-            from desktop.shared.application.services.data.modern_to_legacy_converter import (
+            from desktop.modern.application.services.data.modern_to_legacy_converter import (
                 ModernToLegacyConverter,
             )
 

@@ -21,11 +21,11 @@ from desktop.modern.presentation.components.sequence_workbench.indicator_section
 
 
 if TYPE_CHECKING:
+    from desktop.modern.application.services.workbench.beat_selection_service import (
+        BeatSelectionService,
+    )
     from desktop.modern.presentation.components.workbench.beat_frame_section import (
         WorkbenchBeatFrameSection,
-    )
-    from desktop.shared.application.services.workbench.beat_selection_service import (
-        BeatSelectionService,
     )
 
 

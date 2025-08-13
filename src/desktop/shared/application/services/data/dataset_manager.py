@@ -14,11 +14,11 @@ PROVIDES:
 import uuid
 from typing import Any
 
-from desktop.modern.core.interfaces.data_services import IDatasetManager
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
+from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
     PictographSearchQuery,
 )
+from desktop.modern.core.interfaces.data_services import IDatasetManager
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 from .cache_manager import DataCacheManager
 

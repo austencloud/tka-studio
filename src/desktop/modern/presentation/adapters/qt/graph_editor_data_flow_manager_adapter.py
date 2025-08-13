@@ -12,11 +12,11 @@ from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from desktop.modern.domain.models.beat_data import BeatData
-from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.graph_editor.graph_editor_data_flow_service import (
+from desktop.modern.application.services.graph_editor.graph_editor_data_flow_service import (
     GraphEditorDataFlowService,
 )
+from desktop.modern.domain.models.beat_data import BeatData
+from desktop.modern.domain.models.sequence_data import SequenceData
 
 
 class QtGraphEditorDataFlowManagerAdapter(QObject):

@@ -251,17 +251,17 @@ def register_start_position_services(container: DIContainer) -> None:
             StartPositionSelectionService,
             StartPositionUIService,
         )
+        from desktop.modern.application.services.start_position.start_position_data_service import (
+            StartPositionDataService,
+        )
+        from desktop.modern.application.services.start_position.start_position_selection_service import (
+            StartPositionSelectionService,
+        )
         from desktop.modern.core.interfaces.start_position_services import (
             IStartPositionDataService,
             IStartPositionOrchestrator,
             IStartPositionSelectionService,
             IStartPositionUIService,
-        )
-        from desktop.shared.application.services.start_position.start_position_data_service import (
-            StartPositionDataService,
-        )
-        from desktop.shared.application.services.start_position.start_position_selection_service import (
-            StartPositionSelectionService,
         )
 
         # Register individual services
@@ -295,7 +295,7 @@ def register_extracted_services(container: DIContainer) -> None:
     """
     try:
         # Register position matching service
-        from desktop.shared.application.services.positioning.position_mapper import (
+        from desktop.modern.application.services.positioning.position_mapper import (
             PositionMapper,
         )
 
@@ -309,7 +309,7 @@ def register_extracted_services(container: DIContainer) -> None:
 
         # Register positioning services using ServiceRegistrationManager
         try:
-            from desktop.shared.application.services.core.service_registration_manager import (
+            from desktop.modern.application.services.core.service_registration_manager import (
                 ServiceRegistrationCoordinator,
             )
 

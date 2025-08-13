@@ -10,9 +10,9 @@ import os
 import re
 from functools import lru_cache
 
+from desktop.modern.application.services.assets.image_asset_utils import get_image_path
 from desktop.modern.core.interfaces.core_services import IAssetManager
 from desktop.modern.domain.models import MotionData, MotionType
-from desktop.shared.application.services.assets.image_asset_utils import get_image_path
 
 logger = logging.getLogger(__name__)
 

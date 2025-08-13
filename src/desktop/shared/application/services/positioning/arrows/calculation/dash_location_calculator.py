@@ -5,8 +5,7 @@ This service implements comprehensive dash location calculation logic,
 providing all the complex dash location maps and calculations with high precision.
 """
 
-from typing import Optional
-
+from desktop.modern.application.services.pictograph.analyzer import PictographAnalyzer
 from desktop.modern.core.interfaces.positioning_services import IDashLocationCalculator
 from desktop.modern.domain.models import (
     ArrowColor,
@@ -18,7 +17,6 @@ from desktop.modern.domain.models import (
 )
 from desktop.modern.domain.models.enums import GridMode
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.pictograph.analyzer import PictographAnalyzer
 
 
 class DashLocationCalculator(IDashLocationCalculator):
@@ -274,11 +272,11 @@ class DashLocationCalculator(IDashLocationCalculator):
     def calculate_dash_location(
         self,
         motion: MotionData,
-        other_motion: Optional[MotionData] = None,
-        letter_type: Optional[LetterType] = None,
-        arrow_color: Optional[ArrowColor] = None,
-        grid_mode: Optional[GridMode] = None,
-        shift_location: Optional[Location] = None,
+        other_motion: MotionData | None = None,
+        letter_type: LetterType | None = None,
+        arrow_color: ArrowColor | None = None,
+        grid_mode: GridMode | None = None,
+        shift_location: Location | None = None,
         is_phi_dash: bool = False,
         is_psi_dash: bool = False,
         is_lambda: bool = False,
@@ -332,8 +330,8 @@ class DashLocationCalculator(IDashLocationCalculator):
     def _get_phi_dash_psi_dash_location(
         self,
         motion: MotionData,
-        other_motion: Optional[MotionData],
-        arrow_color: Optional[ArrowColor],
+        other_motion: MotionData | None,
+        arrow_color: ArrowColor | None,
     ) -> Location:
         """Handle Φ_DASH and Ψ_DASH location calculation."""
         if not other_motion or not arrow_color:
@@ -364,9 +362,9 @@ class DashLocationCalculator(IDashLocationCalculator):
     def _default_zero_turns_dash_location(
         self,
         motion: MotionData,
-        letter_type: Optional[LetterType] = None,
-        grid_mode: Optional[GridMode] = None,
-        shift_location: Optional[Location] = None,
+        letter_type: LetterType | None = None,
+        grid_mode: GridMode | None = None,
+        shift_location: Location | None = None,
     ) -> Location:
         """Calculate default zero turns dash location."""
         # Type 3 scenario detection and handling

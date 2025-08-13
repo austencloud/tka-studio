@@ -11,7 +11,7 @@ Presentation Layer → OptionServiceQtAdapter → OptionService
 """
 
 import logging
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from desktop.modern.core.interfaces.option_picker_interfaces import (
     IOptionProvider,
@@ -37,7 +37,7 @@ class OptionProvider(IOptionProvider):
     abstracted through the IOptionServiceSignals interface.
     """
 
-    def __init__(self, signal_emitter: Optional[IOptionServiceSignals] = None):
+    def __init__(self, signal_emitter: IOptionServiceSignals | None = None):
         """
         Initialize the option service.
 
@@ -52,7 +52,7 @@ class OptionProvider(IOptionProvider):
     def _initialize_position_service(self):
         """Initialize the position matching service."""
         try:
-            from desktop.shared.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
+            from desktop.modern.application.services.positioning.arrows.utilities.pictograph_position_matcher import (
                 PictographPositionMatcher,
             )
 
@@ -182,7 +182,7 @@ class OptionProvider(IOptionProvider):
         """Get the number of currently loaded options."""
         return len(self._pictograph_options)
 
-    def get_option_by_index(self, index: int) -> Optional[PictographData]:
+    def get_option_by_index(self, index: int) -> PictographData | None:
         """Get option by index."""
         if 0 <= index < len(self._pictograph_options):
             return self._pictograph_options[index]

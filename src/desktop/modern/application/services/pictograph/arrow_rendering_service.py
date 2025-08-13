@@ -8,11 +8,11 @@ calculations without any Qt dependencies.
 import logging
 from functools import lru_cache
 
+from desktop.modern.application.services.assets.asset_manager import AssetManager
 from desktop.modern.core.interfaces.arrow_rendering_services import (
     IArrowRenderingService,
 )
 from desktop.modern.domain.models import MotionData
-from desktop.shared.application.services.assets.asset_manager import AssetManager
 
 logger = logging.getLogger(__name__)
 

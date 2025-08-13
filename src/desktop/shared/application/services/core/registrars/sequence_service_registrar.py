@@ -53,30 +53,30 @@ class SequenceServiceRegistrar(BaseServiceRegistrar):
                 BeatFactory,
                 IBeatFactory,
             )
+            from desktop.modern.application.services.sequence.sequence_beat_operations_service import (
+                SequenceBeatOperationsService,
+            )
+            from desktop.modern.application.services.sequence.sequence_loader_service import (
+                SequenceLoaderService,
+            )
             from desktop.modern.application.services.sequence.sequence_persister import (
                 ISequencePersister,
                 SequencePersister,
             )
-            from desktop.modern.core.interfaces.sequence_data_services import (
-                ISequenceLoader,
-                ISequenceStartPositionManager,
-            )
-            from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
-                SequenceBeatOperationsService,
-            )
-            from desktop.shared.application.services.sequence.sequence_loader_service import (
-                SequenceLoaderService,
-            )
-            from desktop.shared.application.services.sequence.sequence_repository import (
+            from desktop.modern.application.services.sequence.sequence_repository import (
                 ISequenceRepository,
                 SequenceRepository,
             )
-            from desktop.shared.application.services.sequence.sequence_start_position_service import (
+            from desktop.modern.application.services.sequence.sequence_start_position_service import (
                 SequenceStartPositionService,
             )
-            from desktop.shared.application.services.sequence.sequence_validator import (
+            from desktop.modern.application.services.sequence.sequence_validator import (
                 ISequenceValidator,
                 SequenceValidator,
+            )
+            from desktop.modern.core.interfaces.sequence_data_services import (
+                ISequenceLoader,
+                ISequenceStartPositionManager,
             )
 
             # Register sequence services with interfaces

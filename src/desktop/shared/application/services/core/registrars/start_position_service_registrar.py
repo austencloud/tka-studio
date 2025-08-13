@@ -68,8 +68,14 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
         try:
             # Import service interfaces and implementations
 
+            from desktop.modern.application.services.start_position.start_position_data_service import (
+                StartPositionDataService,
+            )
             from desktop.modern.application.services.start_position.start_position_orchestrator import (
                 StartPositionOrchestrator,
+            )
+            from desktop.modern.application.services.start_position.start_position_selection_service import (
+                StartPositionSelectionService,
             )
             from desktop.modern.application.services.start_position.start_position_ui_service import (
                 StartPositionUIService,
@@ -79,12 +85,6 @@ class StartPositionServiceRegistrar(BaseServiceRegistrar):
                 IStartPositionOrchestrator,
                 IStartPositionSelectionService,
                 IStartPositionUIService,
-            )
-            from desktop.shared.application.services.start_position.start_position_data_service import (
-                StartPositionDataService,
-            )
-            from desktop.shared.application.services.start_position.start_position_selection_service import (
-                StartPositionSelectionService,
             )
 
             # Register data service (no dependencies)

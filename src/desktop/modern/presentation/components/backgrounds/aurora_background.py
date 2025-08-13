@@ -4,13 +4,13 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QLinearGradient, QPainter, QPainterPath
 from PyQt6.QtWidgets import QWidget
 
-from desktop.shared.application.services.backgrounds.aurora.blob_animation import (
+from desktop.modern.application.services.backgrounds.aurora.blob_animation import (
     AuroraBlobAnimation,
 )
-from desktop.shared.application.services.backgrounds.aurora.sparkle_animation import (
+from desktop.modern.application.services.backgrounds.aurora.sparkle_animation import (
     AuroraSparkleAnimation,
 )
-from desktop.shared.application.services.backgrounds.aurora.wave_effects import (
+from desktop.modern.application.services.backgrounds.aurora.wave_effects import (
     AuroraWaveEffects,
 )
 

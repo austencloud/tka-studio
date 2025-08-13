@@ -11,21 +11,27 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from desktop.modern.core.interfaces.core_services import IUIStateManager
-from desktop.modern.core.interfaces.session_services import ISessionStateTracker
-from desktop.shared.application.services.ui.settings.settings_manager import SettingsManager
-from desktop.shared.application.services.ui.state.component_visibility_manager import (
+from desktop.modern.application.services.ui.settings.settings_manager import (
+    SettingsManager,
+)
+from desktop.modern.application.services.ui.state.component_visibility_manager import (
     ComponentVisibilityManager,
 )
-from desktop.shared.application.services.ui.state.graph_editor_state_manager import (
+from desktop.modern.application.services.ui.state.graph_editor_state_manager import (
     GraphEditorStateManager,
 )
-from desktop.shared.application.services.ui.state.hotkey_registry import HotkeyRegistry
-from desktop.shared.application.services.ui.state.option_picker_state_manager import (
+from desktop.modern.application.services.ui.state.hotkey_registry import HotkeyRegistry
+from desktop.modern.application.services.ui.state.option_picker_state_manager import (
     OptionPickerStateManager,
 )
-from desktop.shared.application.services.ui.state.tab_state_manager import TabStateManager
-from desktop.shared.application.services.ui.state.window_state_manager import WindowStateManager
+from desktop.modern.application.services.ui.state.tab_state_manager import (
+    TabStateManager,
+)
+from desktop.modern.application.services.ui.state.window_state_manager import (
+    WindowStateManager,
+)
+from desktop.modern.core.interfaces.core_services import IUIStateManager
+from desktop.modern.core.interfaces.session_services import ISessionStateTracker
 
 logger = logging.getLogger(__name__)
 

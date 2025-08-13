@@ -8,15 +8,15 @@ Extracts data access logic from presentation components.
 import logging
 from functools import lru_cache
 
+from desktop.modern.application.services.data.dataset_query import (
+    DatasetQuery,
+    IDatasetQuery,
+)
 from desktop.modern.core.interfaces.start_position_services import (
     IStartPositionDataService,
 )
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.data.dataset_query import (
-    DatasetQuery,
-    IDatasetQuery,
-)
 
 logger = logging.getLogger(__name__)
 

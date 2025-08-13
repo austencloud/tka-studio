@@ -10,6 +10,9 @@ from __future__ import annotations
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from desktop.modern.application.services.sequence.beat_factory import BeatFactory
+from desktop.modern.application.services.sequence.sequence_beat_operations_service import (
+    SequenceBeatOperationsService,
+)
 from desktop.modern.application.services.sequence.sequence_persister import (
     SequencePersister,
 )
@@ -17,9 +20,6 @@ from desktop.modern.core.interfaces.workbench_services import IWorkbenchStateMan
 from desktop.modern.domain.models.beat_data import BeatData
 from desktop.modern.domain.models.pictograph_data import PictographData
 from desktop.modern.domain.models.sequence_data import SequenceData
-from desktop.shared.application.services.sequence.sequence_beat_operations_service import (
-    SequenceBeatOperationsService,
-)
 
 
 class QtSequenceBeatOperationsAdapter(QObject):

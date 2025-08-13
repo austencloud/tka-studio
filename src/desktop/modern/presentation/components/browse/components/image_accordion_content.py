@@ -26,7 +26,7 @@ from desktop.modern.presentation.styles.mixins import StyleMixin
 
 
 try:
-    from desktop.shared.application.services.assets.image_asset_utils import (
+    from desktop.modern.application.services.assets.image_asset_utils import (
         get_image_path,
     )
 except ImportError:

@@ -9,11 +9,11 @@ by any rendering framework.
 import logging
 from abc import ABC, abstractmethod
 
-from desktop.modern.application.services.core.types import Point, RenderCommand, Size
-from desktop.modern.domain.models import MotionData, PictographData
-from desktop.shared.application.services.core.pictograph_renderer import (
+from desktop.modern.application.services.core.pictograph_renderer import (
     IPictographAssetProvider,
 )
+from desktop.modern.application.services.core.types import Point, RenderCommand, Size
+from desktop.modern.domain.models import MotionData, PictographData
 
 logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ class CorePropRenderingService(IPropRenderingService):
             # the existing PropManagementService.calculate_separation_offsets()
 
             # Import here to avoid circular dependencies
-            from desktop.shared.application.services.positioning.props.orchestration.prop_management_service import (
+            from desktop.modern.application.services.positioning.props.orchestration.prop_management_service import (
                 PropManagementService,
             )
 

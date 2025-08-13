@@ -10,6 +10,9 @@ from typing import Any
 
 import pandas as pd
 
+from desktop.modern.application.services.glyphs.glyph_data_service import (
+    GlyphDataService,
+)
 from desktop.modern.core.interfaces.data_builder_services import IPictographFactory
 from desktop.modern.domain.models.arrow_data import ArrowData
 from desktop.modern.domain.models.beat_data import BeatData
@@ -23,9 +26,6 @@ from desktop.modern.domain.models.enums import (
 from desktop.modern.domain.models.grid_data import GridData
 from desktop.modern.domain.models.motion_data import MotionData
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.glyphs.glyph_data_service import (
-    GlyphDataService,
-)
 
 logger = logging.getLogger(__name__)
 

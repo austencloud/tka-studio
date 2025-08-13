@@ -9,13 +9,12 @@ Faithful port of the orientation key generation logic from legacy special placem
 """
 
 import logging
-from typing import Optional
 
-from desktop.modern.domain.models import MotionData, Orientation
-from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.pictograph.pictograph_validator import (
+from desktop.modern.application.services.pictograph.pictograph_validator import (
     PictographValidator,
 )
+from desktop.modern.domain.models import MotionData, Orientation
+from desktop.modern.domain.models.pictograph_data import PictographData
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +107,7 @@ class SpecialPlacementOriKeyGenerator:
             # Default layer 3 key
             return "from_layer3"
 
-    def _get_arrow_layer(self, motion_data: Optional[MotionData]) -> int:
+    def _get_arrow_layer(self, motion_data: MotionData | None) -> int:
         """
         Determine which layer an arrow belongs to based on its orientations.
 

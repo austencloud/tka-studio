@@ -13,16 +13,16 @@ This achieves 100% functional parity with the legacy PlacementKeyGenerator.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
+from desktop.modern.application.services.pictograph.pictograph_validator import (
+    PictographValidator,
+)
 from desktop.modern.core.interfaces.positioning_services import IPlacementKeyGenerator
 from desktop.modern.domain.models import MotionData, Orientation
 from desktop.modern.domain.models.enums import MotionType
 from desktop.modern.domain.models.letter_condition import LetterCondition
 from desktop.modern.domain.models.pictograph_data import PictographData
-from desktop.shared.application.services.pictograph.pictograph_validator import (
-    PictographValidator,
-)
 
 if TYPE_CHECKING:
     from desktop.modern.domain.models.arrow_data import ArrowData
@@ -147,7 +147,7 @@ class PlacementKeyGenerator(IPlacementKeyGenerator):
         else:
             return ""
 
-    def _get_letter_suffix(self, letter: Optional[str]) -> str:
+    def _get_letter_suffix(self, letter: str | None) -> str:
         """
         Generate letter suffix component.
 
@@ -239,7 +239,7 @@ class PlacementKeyGenerator(IPlacementKeyGenerator):
             return Orientation.IN  # Default
 
         # Calculate end orientation similar to legacy
-        from desktop.shared.application.services.positioning.arrows.calculation.orientation_calculator import (
+        from desktop.modern.application.services.positioning.arrows.calculation.orientation_calculator import (
             OrientationCalculator,
         )
 

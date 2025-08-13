@@ -77,8 +77,17 @@ class ServiceRegistrationHelper:
             from desktop.modern.application.services.core.session_state_tracker import (
                 SessionStateTracker,
             )
+            from desktop.modern.application.services.layout.layout_manager import (
+                LayoutManager,
+            )
+            from desktop.modern.application.services.pictograph.pictograph_csv_manager import (
+                PictographCSVManager,
+            )
             from desktop.modern.application.services.sequence.sequence_beat_operations import (
                 SequenceBeatOperations,
+            )
+            from desktop.modern.application.services.ui.coordination.ui_coordinator import (
+                UICoordinator,
             )
             from desktop.modern.core.interfaces.core_services import (
                 ILayoutService,
@@ -88,15 +97,6 @@ class ServiceRegistrationHelper:
             )
             from desktop.modern.core.interfaces.session_services import (
                 ISessionStateTracker,
-            )
-            from desktop.shared.application.services.layout.layout_manager import (
-                LayoutManager,
-            )
-            from desktop.shared.application.services.pictograph.pictograph_csv_manager import (
-                PictographCSVManager,
-            )
-            from desktop.shared.application.services.ui.coordination.ui_coordinator import (
-                UICoordinator,
             )
 
             registrations = [
@@ -121,15 +121,15 @@ class ServiceRegistrationHelper:
     def register_common_pictograph_services(container: DIContainer) -> None:
         """Register pictograph services common to all modes."""
         try:
+            from desktop.modern.application.services.pictograph.border_manager import (
+                PictographBorderManager,
+            )
+            from desktop.modern.application.services.pictograph.context_detection_service import (
+                PictographContextDetector,
+            )
             from desktop.modern.core.interfaces.core_services import (
                 IPictographBorderManager,
                 IPictographContextDetector,
-            )
-            from desktop.shared.application.services.pictograph.border_manager import (
-                PictographBorderManager,
-            )
-            from desktop.shared.application.services.pictograph.context_detection_service import (
-                PictographContextDetector,
             )
 
             registrations = [
@@ -154,21 +154,21 @@ class ServiceRegistrationHelper:
     def register_common_session_services(container: DIContainer) -> None:
         """Register session and lifecycle services common to all modes."""
         try:
+            from desktop.modern.application.services.core.session_restoration_coordinator import (
+                ISessionRestorationCoordinator,
+                SessionRestorationCoordinator,
+            )
             from desktop.modern.application.services.core.window_management_service import (
                 IWindowManagementService,
                 WindowManagementService,
             )
+            from desktop.modern.application.services.sequence.sequence_restorer import (
+                ISequenceRestorer,
+                SequenceRestorer,
+            )
             from desktop.modern.application.services.ui.window_discovery_service import (
                 IWindowDiscoveryService,
                 WindowDiscoveryService,
-            )
-            from desktop.shared.application.services.core.session_restoration_coordinator import (
-                ISessionRestorationCoordinator,
-                SessionRestorationCoordinator,
-            )
-            from desktop.shared.application.services.sequence.sequence_restorer import (
-                ISequenceRestorer,
-                SequenceRestorer,
             )
 
             # Register basic services first
@@ -218,11 +218,11 @@ class ServiceRegistrationHelper:
     def register_visibility_services(container: DIContainer) -> None:
         """Register visibility settings services."""
         try:
+            from desktop.modern.application.services.settings.visibility_settings_manager import (
+                VisibilitySettingsManager,
+            )
             from desktop.modern.core.interfaces.tab_settings_interfaces import (
                 IVisibilitySettingsManager,
-            )
-            from desktop.shared.application.services.settings.visibility_settings_manager import (
-                VisibilitySettingsManager,
             )
 
             container.register_singleton(
@@ -344,16 +344,16 @@ class ServiceRegistrationHelper:
     def _register_option_picker_services(container: DIContainer) -> None:
         """Register the core option picker services that OptionPickerScroll depends on."""
         try:
-            from desktop.shared.application.services.option_picker.option_configuration_service import (
+            from desktop.modern.application.services.option_picker.option_configuration_service import (
                 OptionConfigurationService,
             )
-            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
+            from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
                 OptionPickerSizeCalculator,
             )
-            from desktop.shared.application.services.option_picker.option_pool_service import (
+            from desktop.modern.application.services.option_picker.option_pool_service import (
                 OptionPoolService,
             )
-            from desktop.shared.application.services.option_picker.sequence_option_service import (
+            from desktop.modern.application.services.option_picker.sequence_option_service import (
                 SequenceOptionService,
             )
 
@@ -382,20 +382,20 @@ class ServiceRegistrationHelper:
     def _register_option_picker_components(container: DIContainer) -> None:
         """Register option picker components with proper animation orchestrator injection."""
         try:
+            from desktop.modern.application.services.option_picker.option_picker_size_calculator import (
+                OptionPickerSizeCalculator,
+            )
+            from desktop.modern.application.services.option_picker.option_pool_service import (
+                OptionPoolService,
+            )
+            from desktop.modern.application.services.option_picker.sequence_option_service import (
+                SequenceOptionService,
+            )
             from desktop.modern.core.interfaces.animation_core_interfaces import (
                 IAnimationOrchestrator,
             )
             from desktop.modern.presentation.components.option_picker.components.option_picker_scroll import (
                 OptionPickerScroll,
-            )
-            from desktop.shared.application.services.option_picker.option_picker_size_calculator import (
-                OptionPickerSizeCalculator,
-            )
-            from desktop.shared.application.services.option_picker.option_pool_service import (
-                OptionPoolService,
-            )
-            from desktop.shared.application.services.option_picker.sequence_option_service import (
-                SequenceOptionService,
             )
 
             # Register OptionPickerScroll with factory that injects animation orchestrator
@@ -405,7 +405,7 @@ class ServiceRegistrationHelper:
                 option_sizing_service = container.resolve(OptionPickerSizeCalculator)
 
                 # Get option config service
-                from desktop.shared.application.services.option_picker.option_configuration_service import (
+                from desktop.modern.application.services.option_picker.option_configuration_service import (
                     OptionConfigurationService,
                 )
 
@@ -445,7 +445,7 @@ class ServiceRegistrationHelper:
     def apply_service_registration_manager(container: DIContainer) -> None:
         """Apply the service registration manager for additional services."""
         try:
-            from desktop.shared.application.services.core.service_registration_manager import (
+            from desktop.modern.application.services.core.service_registration_manager import (
                 ServiceRegistrationManager,
             )
 

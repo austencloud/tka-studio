@@ -13,20 +13,20 @@ Components:
 
 from __future__ import annotations
 
-from desktop.shared.application.services.workbench.beat_selection_service import (
+from desktop.modern.application.services.workbench.beat_selection_service import (
     BeatSelectionService,
 )
-from desktop.shared.application.services.workbench.workbench_operation_coordinator import (
+from desktop.modern.application.services.workbench.workbench_operation_coordinator import (
     OperationResult,
     OperationType,
     WorkbenchOperationCoordinator,
 )
-from desktop.shared.application.services.workbench.workbench_session_manager import (
+from desktop.modern.application.services.workbench.workbench_session_manager import (
     SessionRestorationPhase,
     SessionRestorationResult,
     WorkbenchSessionManager,
 )
-from desktop.shared.application.services.workbench.workbench_state_manager import (
+from desktop.modern.application.services.workbench.workbench_state_manager import (
     StateChangeResult,
     WorkbenchState,
     WorkbenchStateManager,
