@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TKA Motion Tester - Individual Motion Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            margin-bottom: 20px;
+            color: #e0e7ff;
+            font-size: 1.25rem;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #c7d2fe;
+        }
+
+        .input-group select,
+        .input-group input[type="number"],
+        .input-group input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        .input-group select option {
+            background: #312e81;
+            color: white;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .location-btn {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .location-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .location-btn.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .canvas-container h2 {
+            margin-bottom: 20px;
+            color: #e0e7ff;
+            text-align: center;
+        }
+
+        #animationCanvas {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .animation-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            transform: translateY(-2px);
+        }
+
+        .debug-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .debug-section h3 {
+            margin-bottom: 10px;
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .debug-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.875rem;
+        }
+
+        .debug-item .label {
+            color: #c7d2fe;
+        }
+
+        .debug-item .value {
+            color: #34d399;
+            font-family: 'Courier New', monospace;
+        }
+
+        .motion-info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .motion-info h3 {
+            margin-bottom: 10px;
+            color: #a5b4fc;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.1s ease;
+        }
+
+        .orientation-visualizer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .orientation-display {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .orientation-display h4 {
+            margin-bottom: 10px;
+            color: #fbbf24;
+        }
+
+        .orientation-arrow {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+
+        .current-values {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .current-values h3 {
+            margin-bottom: 10px;
+            color: #4ade80;
+        }
+
+        .slider-container {
+            margin-top: 10px;
+        }
+
+        .slider-container input[type="range"] {
+            margin-bottom: 5px;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #c7d2fe;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel: Motion Parameters -->
+        <div class="panel">
+            <h2>🎯 Motion Parameters</h2>
+            
+            <div class="input-group">
+                <label>Start Location</label>
+                <div class="location-grid">
+                    <div></div>
+                    <button class="location-btn" data-location="n">N</button>
+                    <div></div>
+                    <button class="location-btn" data-location="w">W</button>
+                    <button class="location-btn" data-location="center">⊙</button>
+                    <button class="location-btn" data-location="e">E</button>
+                    <div></div>
+                    <button class="location-btn" data-location="s">S</button>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>End Location</label>
+                <div class="location-grid">
+                    <div></div>
+                    <button class="location-btn" data-location="n">N</button>
+                    <div></div>
+                    <button class="location-btn" data-location="w">W</button>
+                    <button class="location-btn" data-location="center">⊙</button>
+                    <button class="location-btn" data-location="e">E</button>
+                    <div></div>
+                    <button class="location-btn" data-location="s">S</button>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="motionType">Motion Type</label>
+                <select id="motionType">
+                    <option value="pro">Pro</option>
+                    <option value="anti">Anti</option>
+                    <option value="static">Static</option>
+                    <option value="dash">Dash</option>
+                    <option value="fl">Float</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="turns">Turns</label>
+                <input type="number" id="turns" value="0" min="0" max="10" step="0.5">
+            </div>
+
+            <div class="input-group">
+                <label for="propRotDir">Rotation Direction</label>
+                <select id="propRotDir">
+                    <option value="cw">Clockwise (CW)</option>
+                    <option value="ccw">Counter-Clockwise (CCW)</option>
+                    <option value="no_rot">No Rotation</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="startOri">Start Orientation</label>
+                <select id="startOri">
+                    <option value="in">In</option>
+                    <option value="out">Out</option>
+                    <option value="n">North</option>
+                    <option value="e">East</option>
+                    <option value="s">South</option>
+                    <option value="w">West</option>
+                    <option value="clock">Clock</option>
+                    <option value="counter">Counter</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="endOri">End Orientation</label>
+                <select id="endOri">
+                    <option value="in">In</option>
+                    <option value="out">Out</option>
+                    <option value="n">North</option>
+                    <option value="e">East</option>
+                    <option value="s">South</option>
+                    <option value="w">West</option>
+                    <option value="clock">Clock</option>
+                    <option value="counter">Counter</option>
+                </select>
+            </div>
+
+            <div class="motion-info">
+                <h3>Current Motion</h3>
+                <div id="motionDescription">N → E (Pro, 0 turns, CW)</div>
+            </div>
+
+            <div class="progress-container">
+                <label>Animation Progress</label>
+                <div class="slider-container">
+                    <input type="range" id="progressSlider" min="0" max="100" value="0">
+                    <div class="slider-value">
+                        <span id="progressValue">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel: Animation Canvas -->
+        <div class="canvas-container">
+            <h2>🎬 Motion Visualization</h2>
+            <canvas id="animationCanvas" width="500" height="500"></canvas>
+            
+            <div class="animation-controls">
+                <button class="control-btn" id="playBtn">▶ Play</button>
+                <button class="control-btn" id="pauseBtn">⏸ Pause</button>
+                <button class="control-btn" id="resetBtn">⏹ Reset</button>
+                <button class="control-btn" id="stepBtn">Step</button>
+            </div>
+
+            <div class="orientation-visualizer">
+                <div class="orientation-display">
+                    <h4>Start Orientation</h4>
+                    <div class="orientation-arrow" id="startOrientationArrow">↑</div>
+                    <div id="startOrientationText">In</div>
+                </div>
+                <div class="orientation-display">
+                    <h4>End Orientation</h4>
+                    <div class="orientation-arrow" id="endOrientationArrow">↑</div>
+                    <div id="endOrientationText">In</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Debug Information -->
+        <div class="panel">
+            <h2>🔧 Debug Information</h2>
+
+            <div class="current-values">
+                <h3>Current Prop State</h3>
+                <div class="debug-item">
+                    <span class="label">Center Angle:</span>
+                    <span class="value" id="currentCenterAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Staff Angle:</span>
+                    <span class="value" id="currentStaffAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">X Position:</span>
+                    <span class="value" id="currentX">0.0 px</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Y Position:</span>
+                    <span class="value" id="currentY">0.0 px</span>
+                </div>
+            </div>
+
+            <div class="debug-section">
+                <h3>Start Endpoints</h3>
+                <div class="debug-item">
+                    <span class="label">Center Angle:</span>
+                    <span class="value" id="startCenterAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Staff Angle:</span>
+                    <span class="value" id="startStaffAngle">0.000 rad</span>
+                </div>
+            </div>
+
+            <div class="debug-section">
+                <h3>Target Endpoints</h3>
+                <div class="debug-item">
+                    <span class="label">Center Angle:</span>
+                    <span class="value" id="targetCenterAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Staff Angle:</span>
+                    <span class="value" id="targetStaffAngle">0.000 rad</span>
+                </div>
+            </div>
+
+            <div class="debug-section">
+                <h3>Motion Calculation</h3>
+                <div class="debug-item">
+                    <span class="label">Motion Type:</span>
+                    <span class="value" id="debugMotionType">pro</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Delta Angle:</span>
+                    <span class="value" id="deltaAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Turn Angle:</span>
+                    <span class="value" id="turnAngle">0.000 rad</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Interpolation (t):</span>
+                    <span class="value" id="interpolationT">0.000</span>
+                </div>
+            </div>
+
+            <div class="debug-section">
+                <h3>Grid Positions</h3>
+                <div class="debug-item">
+                    <span class="label">Start Location:</span>
+                    <span class="value" id="debugStartLoc">n</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">End Location:</span>
+                    <span class="value" id="debugEndLoc">e</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Distance:</span>
+                    <span class="value" id="motionDistance">90.0 deg</span>
+                </div>
+            </div>
+
+            <div class="debug-section">
+                <h3>Angle Conversions</h3>
+                <div class="debug-item">
+                    <span class="label">Center (degrees):</span>
+                    <span class="value" id="centerDegrees">0.0°</span>
+                </div>
+                <div class="debug-item">
+                    <span class="label">Staff (degrees):</span>
+                    <span class="value" id="staffDegrees">0.0°</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Motion calculation utilities (simplified from TKA codebase)
+        const PI = Math.PI;
+        const TWO_PI = 2 * PI;
+        const HALF_PI = PI / 2;
+
+        const locationAngles = {
+            e: 0,
+            s: HALF_PI, 
+            w: PI,
+            n: -HALF_PI,
+            center: 0
+        };
+
+        function normalizeAnglePositive(angle) {
+            let norm = angle % TWO_PI;
+            return norm < 0 ? norm + TWO_PI : norm;
+        }
+
+        function normalizeAngleSigned(angle) {
+            let norm = normalizeAnglePositive(angle);
+            return norm > PI ? norm - TWO_PI : norm;
+        }
+
+        function mapPositionToAngle(loc) {
+            const l = loc?.toLowerCase();
+            return locationAngles[l] ?? 0;
+        }
+
+        function mapOrientationToAngle(ori, centerPathAngle) {
+            if (!ori) return centerPathAngle + PI;
+            const l = ori.toLowerCase();
+            
+            if (locationAngles.hasOwnProperty(l)) {
+                return locationAngles[l];
+            }
+            
+            if (l === "in") {
+                return normalizeAnglePositive(centerPathAngle + PI);
+            }
+            
+            if (l === "out") {
+                return normalizeAnglePositive(centerPathAngle);
+            }
+            
+            return normalizeAnglePositive(centerPathAngle + PI);
+        }
+
+        function lerpAngle(a, b, t) {
+            const d = normalizeAngleSigned(b - a);
+            return normalizeAnglePositive(a + d * t);
+        }
+
+        function calculateMotionEndpoints(motionParams) {
+            const { start_loc, end_loc, start_ori, end_ori, motion_type, prop_rot_dir, turns } = motionParams;
+            
+            const startCenterAngle = mapPositionToAngle(start_loc);
+            const startStaffAngle = mapOrientationToAngle(start_ori || "in", startCenterAngle);
+            const targetCenterAngle = mapPositionToAngle(end_loc);
+            
+            let targetStaffAngle;
+            
+            switch (motion_type) {
+                case "pro":
+                    if (turns > 0) {
+                        let delta = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
+                        const base = delta;
+                        const turn = PI * turns;
+                        const dir = prop_rot_dir?.toLowerCase() === "ccw" ? -1 : 1;
+                        targetStaffAngle = normalizeAnglePositive(startStaffAngle + base + turn * dir);
+                    } else {
+                        targetStaffAngle = normalizeAnglePositive(targetCenterAngle + PI);
+                    }
+                    break;
+                case "anti":
+                    let delta = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
+                    const base = -delta;
+                    const turn = PI * turns;
+                    const dir = prop_rot_dir?.toLowerCase() === "ccw" ? -1 : 1;
+                    targetStaffAngle = normalizeAnglePositive(startStaffAngle + base + turn * dir);
+                    break;
+                case "static":
+                    targetStaffAngle = mapOrientationToAngle(end_ori || "in", targetCenterAngle);
+                    break;
+                case "dash":
+                    targetStaffAngle = mapOrientationToAngle(end_ori || "in", targetCenterAngle);
+                    break;
+                default:
+                    targetStaffAngle = startStaffAngle;
+                    break;
+            }
+            
+            return {
+                startCenterAngle,
+                startStaffAngle,
+                targetCenterAngle,
+                targetStaffAngle
+            };
+        }
+
+        // Canvas rendering
+        function drawGrid(ctx, size) {
+            const center = size / 2;
+            const radius = size * 0.3;
+            
+            ctx.clearRect(0, 0, size, size);
+            
+            // Grid background
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Grid circle
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, TWO_PI);
+            ctx.stroke();
+            
+            // Grid positions
+            const positions = [
+                { label: 'N', angle: -HALF_PI },
+                { label: 'E', angle: 0 },
+                { label: 'S', angle: HALF_PI },
+                { label: 'W', angle: PI }
+            ];
+            
+            ctx.fillStyle = '#475569';
+            ctx.font = '16px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            positions.forEach(pos => {
+                const x = center + Math.cos(pos.angle) * (radius + 25);
+                const y = center + Math.sin(pos.angle) * (radius + 25);
+                ctx.fillText(pos.label, x, y);
+            });
+            
+            // Center point
+            ctx.fillStyle = '#374151';
+            ctx.beginPath();
+            ctx.arc(center, center, 8, 0, TWO_PI);
+            ctx.fill();
+        }
+
+        function drawProp(ctx, centerX, centerY, radius, centerAngle, staffAngle, color) {
+            // Prop position
+            const propX = centerX + Math.cos(centerAngle) * radius;
+            const propY = centerY + Math.sin(centerAngle) * radius;
+            
+            // Draw prop (circle)
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(propX, propY, 12, 0, TWO_PI);
+            ctx.fill();
+            
+            // Draw staff (line showing orientation)
+            const staffLength = 40;
+            const staffEndX = propX + Math.cos(staffAngle) * staffLength;
+            const staffEndY = propY + Math.sin(staffAngle) * staffLength;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(propX, propY);
+            ctx.lineTo(staffEndX, staffEndY);
+            ctx.stroke();
+            
+            // Arrow head
+            const arrowLength = 10;
+            const arrowAngle = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(staffEndX, staffEndY);
+            ctx.lineTo(
+                staffEndX - arrowLength * Math.cos(staffAngle - arrowAngle),
+                staffEndY - arrowLength * Math.sin(staffAngle - arrowAngle)
+            );
+            ctx.moveTo(staffEndX, staffEndY);
+            ctx.lineTo(
+                staffEndX - arrowLength * Math.cos(staffAngle + arrowAngle),
+                staffEndY - arrowLength * Math.sin(staffAngle + arrowAngle)
+            );
+            ctx.stroke();
+        }
+
+        // State management
+        let currentMotion = {
+            start_loc: 'n',
+            end_loc: 'e',
+            motion_type: 'pro',
+            turns: 0,
+            prop_rot_dir: 'cw',
+            start_ori: 'in',
+            end_ori: 'in'
+        };
+
+        let animationState = {
+            progress: 0,
+            isPlaying: false,
+            endpoints: null,
+            currentPropState: null
+        };
+
+        let animationId = null;
+
+        // DOM elements
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        const progressSlider = document.getElementById('progressSlider');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const stepBtn = document.getElementById('stepBtn');
+
+        // Input elements
+        const motionTypeSelect = document.getElementById('motionType');
+        const turnsInput = document.getElementById('turns');
+        const propRotDirSelect = document.getElementById('propRotDir');
+        const startOriSelect = document.getElementById('startOri');
+        const endOriSelect = document.getElementById('endOri');
+
+        // Initialize
+        function init() {
+            setupLocationButtons();
+            updateMotion();
+            setupEventListeners();
+            render();
+        }
+
+        function setupLocationButtons() {
+            const locationButtons = document.querySelectorAll('.location-btn');
+            
+            locationButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const location = e.target.dataset.location;
+                    const isStartGroup = e.target.closest('.input-group').querySelector('label').textContent === 'Start Location';
+                    
+                    // Remove active class from siblings
+                    const siblings = e.target.parentElement.querySelectorAll('.location-btn');
+                    siblings.forEach(sibling => sibling.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    e.target.classList.add('active');
+                    
+                    // Update motion
+                    if (isStartGroup) {
+                        currentMotion.start_loc = location;
+                    } else {
+                        currentMotion.end_loc = location;
+                    }
+                    
+                    updateMotion();
+                });
+            });
+            
+            // Set initial active states
+            document.querySelector(`[data-location="${currentMotion.start_loc}"]`).classList.add('active');
+            document.querySelector(`.input-group:nth-child(2) [data-location="${currentMotion.end_loc}"]`).classList.add('active');
+        }
+
+        function setupEventListeners() {
+            motionTypeSelect.addEventListener('change', (e) => {
+                currentMotion.motion_type = e.target.value;
+                updateMotion();
+            });
+            
+            turnsInput.addEventListener('input', (e) => {
+                currentMotion.turns = parseFloat(e.target.value);
+                updateMotion();
+            });
+            
+            propRotDirSelect.addEventListener('change', (e) => {
+                currentMotion.prop_rot_dir = e.target.value;
+                updateMotion();
+            });
+            
+            startOriSelect.addEventListener('change', (e) => {
+                currentMotion.start_ori = e.target.value;
+                updateMotion();
+            });
+            
+            endOriSelect.addEventListener('change', (e) => {
+                currentMotion.end_ori = e.target.value;
+                updateMotion();
+            });
+            
+            progressSlider.addEventListener('input', (e) => {
+                animationState.progress = parseFloat(e.target.value) / 100;
+                updatePropState();
+                render();
+            });
+            
+            playBtn.addEventListener('click', startAnimation);
+            pauseBtn.addEventListener('click', pauseAnimation);
+            resetBtn.addEventListener('click', resetAnimation);
+            stepBtn.addEventListener('click', stepAnimation);
+        }
+
+        function updateMotion() {
+            // Calculate endpoints
+            animationState.endpoints = calculateMotionEndpoints(currentMotion);
+            
+            // Update UI
+            updateMotionDescription();
+            updateOrientationVisualizers();
+            updateDebugInfo();
+            updatePropState();
+            render();
+        }
+
+        function updatePropState() {
+            if (!animationState.endpoints) return;
+            
+            const t = animationState.progress;
+            const { startCenterAngle, startStaffAngle, targetCenterAngle, targetStaffAngle } = animationState.endpoints;
+            
+            const currentCenterAngle = lerpAngle(startCenterAngle, targetCenterAngle, t);
+            const currentStaffAngle = lerpAngle(startStaffAngle, targetStaffAngle, t);
+            
+            const center = canvas.width / 2;
+            const radius = canvas.width * 0.3;
+            const x = center + Math.cos(currentCenterAngle) * radius;
+            const y = center + Math.sin(currentCenterAngle) * radius;
+            
+            animationState.currentPropState = {
+                centerAngle: currentCenterAngle,
+                staffAngle: currentStaffAngle,
+                x: x,
+                y: y
+            };
+            
+            updateCurrentValues();
+        }
+
+        function updateMotionDescription() {
+            const desc = `${currentMotion.start_loc.toUpperCase()} → ${currentMotion.end_loc.toUpperCase()} (${currentMotion.motion_type}, ${currentMotion.turns} turns, ${currentMotion.prop_rot_dir.toUpperCase()})`;
+            document.getElementById('motionDescription').textContent = desc;
+        }
+
+        function updateOrientationVisualizers() {
+            // Start orientation
+            const startArrow = getOrientationArrow(currentMotion.start_ori);
+            document.getElementById('startOrientationArrow').textContent = startArrow;
+            document.getElementById('startOrientationText').textContent = currentMotion.start_ori;
+            
+            // End orientation  
+            const endArrow = getOrientationArrow(currentMotion.end_ori);
+            document.getElementById('endOrientationArrow').textContent = endArrow;
+            document.getElementById('endOrientationText').textContent = currentMotion.end_ori;
+        }
+
+        function getOrientationArrow(orientation) {
+            const arrows = {
+                'in': '→',
+                'out': '←',
+                'n': '↑',
+                'e': '→',
+                's': '↓',
+                'w': '←',
+                'clock': '↻',
+                'counter': '↺'
+            };
+            return arrows[orientation] || '→';
+        }
+
+        function updateDebugInfo() {
+            if (!animationState.endpoints) return;
+            
+            const { startCenterAngle, startStaffAngle, targetCenterAngle, targetStaffAngle } = animationState.endpoints;
+            
+            // Start endpoints
+            document.getElementById('startCenterAngle').textContent = `${startCenterAngle.toFixed(3)} rad`;
+            document.getElementById('startStaffAngle').textContent = `${startStaffAngle.toFixed(3)} rad`;
+            
+            // Target endpoints
+            document.getElementById('targetCenterAngle').textContent = `${targetCenterAngle.toFixed(3)} rad`;
+            document.getElementById('targetStaffAngle').textContent = `${targetStaffAngle.toFixed(3)} rad`;
+            
+            // Motion calculation
+            document.getElementById('debugMotionType').textContent = currentMotion.motion_type;
+            const deltaAngle = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
+            document.getElementById('deltaAngle').textContent = `${deltaAngle.toFixed(3)} rad`;
+            document.getElementById('turnAngle').textContent = `${(PI * currentMotion.turns).toFixed(3)} rad`;
+            document.getElementById('interpolationT').textContent = animationState.progress.toFixed(3);
+            
+            // Grid positions
+            document.getElementById('debugStartLoc').textContent = currentMotion.start_loc;
+            document.getElementById('debugEndLoc').textContent = currentMotion.end_loc;
+            const distance = Math.abs(deltaAngle) * 180 / PI;
+            document.getElementById('motionDistance').textContent = `${distance.toFixed(1)} deg`;
+        }
+
+        function updateCurrentValues() {
+            if (!animationState.currentPropState) return;
+            
+            const { centerAngle, staffAngle, x, y } = animationState.currentPropState;
+            
+            document.getElementById('currentCenterAngle').textContent = `${centerAngle.toFixed(3)} rad`;
+            document.getElementById('currentStaffAngle').textContent = `${staffAngle.toFixed(3)} rad`;
+            document.getElementById('currentX').textContent = `${x.toFixed(1)} px`;
+            document.getElementById('currentY').textContent = `${y.toFixed(1)} px`;
+            
+            // Progress value
+            document.getElementById('progressValue').textContent = `${(animationState.progress * 100).toFixed(1)}%`;
+            progressSlider.value = animationState.progress * 100;
+            
+            // Angle conversions
+            document.getElementById('centerDegrees').textContent = `${(centerAngle * 180 / PI).toFixed(1)}°`;
+            document.getElementById('staffDegrees').textContent = `${(staffAngle * 180 / PI).toFixed(1)}°`;
+        }
+
+        function render() {
+            const size = canvas.width;
+            const center = size / 2;
+            const radius = size * 0.3;
+            
+            // Draw grid
+            drawGrid(ctx, size);
+            
+            if (animationState.currentPropState) {
+                const { centerAngle, staffAngle } = animationState.currentPropState;
+                drawProp(ctx, center, center, radius, centerAngle, staffAngle, '#6366f1');
+            }
+        }
+
+        function startAnimation() {
+            animationState.isPlaying = true;
+            animate();
+        }
+
+        function pauseAnimation() {
+            animationState.isPlaying = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        function resetAnimation() {
+            pauseAnimation();
+            animationState.progress = 0;
+            updatePropState();
+            render();
+        }
+
+        function stepAnimation() {
+            animationState.progress = Math.min(1, animationState.progress + 0.1);
+            updatePropState();
+            render();
+        }
+
+        function animate() {
+            if (!animationState.isPlaying) return;
+            
+            animationState.progress += 0.01;
+            if (animationState.progress > 1) {
+                animationState.progress = 0;
+            }
+            
+            updatePropState();
+            render();
+            
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>

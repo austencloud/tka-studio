@@ -1,1 +1,343 @@
-/**\n * Glass Scrollbar Utilities\n *\n * Utility functions for applying and managing glassmorphism scrollbars\n * across the application. Provides programmatic control over scrollbar\n * styling and behavior.\n */\n\nexport type ScrollbarVariant = \n\t| 'primary'\n\t| 'secondary' \n\t| 'minimal'\n\t| 'hover'\n\t| 'gradient';\n\nexport type ScrollDirection = 'vertical' | 'horizontal' | 'both' | 'auto';\n\nexport interface ScrollbarConfig {\n\tvariant: ScrollbarVariant;\n\tdirection?: ScrollDirection;\n\tsmooth?: boolean;\n\tresponsive?: boolean;\n}\n\n/**\n * Apply glassmorphism scrollbar to an element\n */\nexport function applyGlassScrollbar(\n\telement: HTMLElement, \n\tconfig: ScrollbarConfig\n): void {\n\tif (!element) {\n\t\tconsole.warn('Glass scrollbar: Element is null or undefined');\n\t\treturn;\n\t}\n\n\t// Remove any existing glass scrollbar classes\n\tremoveGlassScrollbar(element);\n\n\t// Apply the new scrollbar variant\n\tconst scrollbarClass = `glass-scrollbar-${config.variant}`;\n\telement.classList.add(scrollbarClass);\n\n\t// Apply scroll direction\n\tif (config.direction) {\n\t\tapplyScrollDirection(element, config.direction);\n\t}\n\n\t// Apply smooth scrolling if requested\n\tif (config.smooth !== false) {\n\t\telement.style.scrollBehavior = 'smooth';\n\t}\n\n\t// Apply responsive behavior if requested\n\tif (config.responsive !== false) {\n\t\telement.classList.add('glass-scrollbar-responsive');\n\t}\n\n\tconsole.log(`✨ Glass scrollbar '${config.variant}' applied to element`);\n}\n\n/**\n * Remove glassmorphism scrollbar from an element\n */\nexport function removeGlassScrollbar(element: HTMLElement): void {\n\tif (!element) return;\n\n\t// Remove all glass scrollbar classes\n\tconst classesToRemove = [\n\t\t'glass-scrollbar-primary',\n\t\t'glass-scrollbar-secondary',\n\t\t'glass-scrollbar-minimal',\n\t\t'glass-scrollbar-hover',\n\t\t'glass-scrollbar-gradient',\n\t\t'glass-scrollbar-responsive'\n\t];\n\n\tclassesToRemove.forEach(className => {\n\t\telement.classList.remove(className);\n\t});\n\n\t// Reset scroll behavior\n\telement.style.scrollBehavior = '';\n}\n\n/**\n * Apply scroll direction styling to an element\n */\nexport function applyScrollDirection(\n\telement: HTMLElement, \n\tdirection: ScrollDirection\n): void {\n\tif (!element) return;\n\n\t// Remove existing overflow classes\n\tconst overflowClasses = [\n\t\t'overflow-y-scroll', 'overflow-x-scroll', 'overflow-scroll',\n\t\t'overflow-y-auto', 'overflow-x-auto', 'overflow-auto',\n\t\t'overflow-y-hidden', 'overflow-x-hidden', 'overflow-hidden'\n\t];\n\n\toverflowClasses.forEach(className => {\n\t\telement.classList.remove(className);\n\t});\n\n\t// Apply new direction\n\tswitch (direction) {\n\t\tcase 'vertical':\n\t\t\telement.classList.add('overflow-y-auto', 'overflow-x-hidden');\n\t\t\tbreak;\n\t\tcase 'horizontal':\n\t\t\telement.classList.add('overflow-x-auto', 'overflow-y-hidden');\n\t\t\tbreak;\n\t\tcase 'both':\n\t\t\telement.classList.add('overflow-auto');\n\t\t\tbreak;\n\t\tcase 'auto':\n\t\t\telement.classList.add('overflow-auto');\n\t\t\tbreak;\n\t}\n}\n\n/**\n * Get recommended scrollbar variant based on context\n */\nexport function getRecommendedVariant(context: string): ScrollbarVariant {\n\tswitch (context.toLowerCase()) {\n\t\tcase 'codex':\n\t\tcase 'main-content':\n\t\tcase 'primary':\n\t\t\treturn 'primary';\n\t\t\n\t\tcase 'sidebar':\n\t\tcase 'panel':\n\t\tcase 'secondary':\n\t\t\treturn 'secondary';\n\t\t\n\t\tcase 'modal':\n\t\tcase 'dropdown':\n\t\tcase 'tooltip':\n\t\t\treturn 'minimal';\n\t\t\n\t\tcase 'background':\n\t\tcase 'overlay':\n\t\t\treturn 'hover';\n\t\t\n\t\tcase 'feature':\n\t\tcase 'highlight':\n\t\tcase 'special':\n\t\t\treturn 'gradient';\n\t\t\n\t\tdefault:\n\t\t\treturn 'primary';\n\t}\n}\n\n/**\n * Create a scroll event listener with throttling\n */\nexport function createScrollListener(\n\tcallback: (event: Event) => void,\n\tthrottleMs: number = 16\n): (event: Event) => void {\n\tlet ticking = false;\n\n\treturn (event: Event) => {\n\t\tif (!ticking) {\n\t\t\trequestAnimationFrame(() => {\n\t\t\t\tcallback(event);\n\t\t\t\tticking = false;\n\t\t\t});\n\t\t\tticking = true;\n\t\t}\n\t};\n}\n\n/**\n * Smooth scroll to element with glassmorphism styling\n */\nexport function smoothScrollToElement(\n\tcontainer: HTMLElement,\n\ttarget: HTMLElement,\n\toptions: {\n\t\toffset?: number;\n\t\tduration?: number;\n\t\tvariant?: ScrollbarVariant;\n\t} = {}\n): Promise<void> {\n\treturn new Promise((resolve) => {\n\t\tconst { offset = 0, duration = 500, variant = 'primary' } = options;\n\n\t\t// Apply glass scrollbar if not already present\n\t\tif (!container.classList.contains(`glass-scrollbar-${variant}`)) {\n\t\t\tapplyGlassScrollbar(container, { variant });\n\t\t}\n\n\t\t// Calculate target position\n\t\tconst containerRect = container.getBoundingClientRect();\n\t\tconst targetRect = target.getBoundingClientRect();\n\t\tconst targetPosition = targetRect.top - containerRect.top + container.scrollTop - offset;\n\n\t\t// Perform smooth scroll\n\t\tcontainer.scrollTo({\n\t\t\ttop: targetPosition,\n\t\t\tbehavior: 'smooth'\n\t\t});\n\n\t\t// Resolve after animation completes\n\t\tsetTimeout(resolve, duration);\n\t});\n}\n\n/**\n * Auto-apply glass scrollbars to elements with data attributes\n */\nexport function autoApplyGlassScrollbars(): void {\n\tconst elements = document.querySelectorAll('[data-glass-scrollbar]');\n\t\n\telements.forEach(element => {\n\t\tif (element instanceof HTMLElement) {\n\t\t\tconst variant = element.dataset.glassScrollbar as ScrollbarVariant;\n\t\t\tconst direction = element.dataset.scrollDirection as ScrollDirection;\n\t\t\tconst smooth = element.dataset.smoothScroll !== 'false';\n\t\t\tconst responsive = element.dataset.responsive !== 'false';\n\n\t\t\tapplyGlassScrollbar(element, {\n\t\t\t\tvariant: variant || 'primary',\n\t\t\t\tdirection,\n\t\t\t\tsmooth,\n\t\t\t\tresponsive\n\t\t\t});\n\t\t}\n\t});\n\n\tconsole.log(`🎨 Auto-applied glass scrollbars to ${elements.length} elements`);\n}\n\n/**\n * Initialize glass scrollbars system\n */\nexport function initializeGlassScrollbars(): void {\n\t// Auto-apply to existing elements\n\tautoApplyGlassScrollbars();\n\n\t// Set up mutation observer for dynamic elements\n\tif (typeof window !== 'undefined' && 'MutationObserver' in window) {\n\t\tconst observer = new MutationObserver((mutations) => {\n\t\t\tmutations.forEach((mutation) => {\n\t\t\t\tmutation.addedNodes.forEach((node) => {\n\t\t\t\t\tif (node instanceof HTMLElement) {\n\t\t\t\t\t\t// Check if the added element has glass scrollbar data attribute\n\t\t\t\t\t\tif (node.hasAttribute('data-glass-scrollbar')) {\n\t\t\t\t\t\t\tconst variant = node.dataset.glassScrollbar as ScrollbarVariant;\n\t\t\t\t\t\t\tapplyGlassScrollbar(node, { variant: variant || 'primary' });\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\t// Check child elements\n\t\t\t\t\t\tconst childElements = node.querySelectorAll('[data-glass-scrollbar]');\n\t\t\t\t\t\tchildElements.forEach(child => {\n\t\t\t\t\t\t\tif (child instanceof HTMLElement) {\n\t\t\t\t\t\t\t\tconst variant = child.dataset.glassScrollbar as ScrollbarVariant;\n\t\t\t\t\t\t\t\tapplyGlassScrollbar(child, { variant: variant || 'primary' });\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\n\t\tobserver.observe(document.body, {\n\t\t\tchildList: true,\n\t\t\tsubtree: true\n\t\t});\n\n\t\tconsole.log('🔄 Glass scrollbars mutation observer initialized');\n\t}\n\n\tconsole.log('✨ Glass scrollbars system initialized');\n}\n\n/**\n * Scroll position utilities\n */\nexport const scrollUtils = {\n\t/**\n\t * Check if element is scrolled to top\n\t */\n\tisAtTop(element: HTMLElement): boolean {\n\t\treturn element.scrollTop === 0;\n\t},\n\n\t/**\n\t * Check if element is scrolled to bottom\n\t */\n\tisAtBottom(element: HTMLElement): boolean {\n\t\treturn element.scrollTop + element.clientHeight >= element.scrollHeight - 1;\n\t},\n\n\t/**\n\t * Get scroll percentage (0-100)\n\t */\n\tgetScrollPercentage(element: HTMLElement): number {\n\t\tconst scrollTop = element.scrollTop;\n\t\tconst scrollHeight = element.scrollHeight - element.clientHeight;\n\t\treturn scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;\n\t},\n\n\t/**\n\t * Scroll to percentage\n\t */\n\tscrollToPercentage(element: HTMLElement, percentage: number): void {\n\t\tconst scrollHeight = element.scrollHeight - element.clientHeight;\n\t\tconst targetScroll = (percentage / 100) * scrollHeight;\n\t\telement.scrollTo({ top: targetScroll, behavior: 'smooth' });\n\t}\n};\n\n/**\n * Export all utilities as default object\n */\nexport default {\n\tapplyGlassScrollbar,\n\tremoveGlassScrollbar,\n\tapplyScrollDirection,\n\tgetRecommendedVariant,\n\tcreateScrollListener,\n\tsmoothScrollToElement,\n\tautoApplyGlassScrollbars,\n\tinitializeGlassScrollbars,\n\tscrollUtils\n};\n
+/**
+ * Glass Scrollbar Utilities
+ *
+ * Utility functions for applying and managing glassmorphism scrollbars
+ * across the application. Provides programmatic control over scrollbar
+ * styling and behavior.
+ */
+
+export type ScrollbarVariant =
+  | "primary"
+  | "secondary"
+  | "minimal"
+  | "hover"
+  | "gradient";
+
+export type ScrollDirection = "vertical" | "horizontal" | "both" | "auto";
+
+export interface ScrollbarConfig {
+  variant: ScrollbarVariant;
+  direction?: ScrollDirection;
+  smooth?: boolean;
+  responsive?: boolean;
+}
+
+/**
+ * Apply glassmorphism scrollbar to an element
+ */
+export function applyGlassScrollbar(
+  element: HTMLElement,
+  config: ScrollbarConfig
+): void {
+  if (!element) {
+    console.warn("Glass scrollbar: Element is null or undefined");
+    return;
+  }
+
+  // Remove any existing glass scrollbar classes
+  removeGlassScrollbar(element);
+
+  // Apply the new scrollbar variant
+  const scrollbarClass = `glass-scrollbar-${config.variant}`;
+  element.classList.add(scrollbarClass);
+
+  // Apply scroll direction
+  if (config.direction) {
+    applyScrollDirection(element, config.direction);
+  }
+
+  // Apply smooth scrolling if requested
+  if (config.smooth !== false) {
+    element.style.scrollBehavior = "smooth";
+  }
+
+  // Apply responsive behavior if requested
+  if (config.responsive !== false) {
+    element.classList.add("glass-scrollbar-responsive");
+  }
+
+  console.log(`✨ Glass scrollbar '${config.variant}' applied to element`);
+}
+
+/**
+ * Remove glassmorphism scrollbar from an element
+ */
+export function removeGlassScrollbar(element: HTMLElement): void {
+  if (!element) return;
+
+  // Remove all glass scrollbar classes
+  const classesToRemove = [
+    "glass-scrollbar-primary",
+    "glass-scrollbar-secondary",
+    "glass-scrollbar-minimal",
+    "glass-scrollbar-hover",
+    "glass-scrollbar-gradient",
+    "glass-scrollbar-responsive",
+  ];
+
+  classesToRemove.forEach((className) => {
+    element.classList.remove(className);
+  });
+
+  // Reset scroll behavior
+  element.style.scrollBehavior = "";
+}
+
+/**
+ * Apply scroll direction styling to an element
+ */
+export function applyScrollDirection(
+  element: HTMLElement,
+  direction: ScrollDirection
+): void {
+  if (!element) return;
+
+  // Remove existing overflow classes
+  const overflowClasses = [
+    "overflow-y-scroll",
+    "overflow-x-scroll",
+    "overflow-scroll",
+    "overflow-y-auto",
+    "overflow-x-auto",
+    "overflow-auto",
+    "overflow-y-hidden",
+    "overflow-x-hidden",
+    "overflow-hidden",
+  ];
+
+  overflowClasses.forEach((className) => {
+    element.classList.remove(className);
+  });
+
+  // Apply new direction
+  switch (direction) {
+    case "vertical":
+      element.classList.add("overflow-y-auto", "overflow-x-hidden");
+      break;
+    case "horizontal":
+      element.classList.add("overflow-x-auto", "overflow-y-hidden");
+      break;
+    case "both":
+      element.classList.add("overflow-auto");
+      break;
+    case "auto":
+      element.classList.add("overflow-auto");
+      break;
+  }
+}
+
+/**
+ * Get recommended scrollbar variant based on context
+ */
+export function getRecommendedVariant(context: string): ScrollbarVariant {
+  switch (context.toLowerCase()) {
+    case "codex":
+    case "main-content":
+    case "primary":
+      return "primary";
+
+    case "sidebar":
+    case "panel":
+    case "secondary":
+      return "secondary";
+
+    case "modal":
+    case "dropdown":
+    case "tooltip":
+      return "minimal";
+
+    case "background":
+    case "overlay":
+      return "hover";
+
+    case "feature":
+    case "highlight":
+    case "special":
+      return "gradient";
+
+    default:
+      return "primary";
+  }
+}
+
+/**
+ * Create a scroll event listener with throttling
+ */
+export function createScrollListener(
+  callback: (event: Event) => void,
+  throttleMs: number = 16
+): (event: Event) => void {
+  let ticking = false;
+
+  return (event: Event) => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        callback(event);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+}
+
+/**
+ * Smooth scroll to element with glassmorphism styling
+ */
+export function smoothScrollToElement(
+  container: HTMLElement,
+  target: HTMLElement,
+  options: {
+    offset?: number;
+    duration?: number;
+    variant?: ScrollbarVariant;
+  } = {}
+): Promise<void> {
+  return new Promise((resolve) => {
+    const { offset = 0, duration = 500, variant = "primary" } = options;
+
+    // Apply glass scrollbar if not already present
+    if (!container.classList.contains(`glass-scrollbar-${variant}`)) {
+      applyGlassScrollbar(container, { variant });
+    }
+
+    // Calculate target position
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const targetPosition =
+      targetRect.top - containerRect.top + container.scrollTop - offset;
+
+    // Perform smooth scroll
+    container.scrollTo({
+      top: targetPosition,
+      behavior: "smooth",
+    });
+
+    // Resolve after animation completes
+    setTimeout(resolve, duration);
+  });
+}
+
+/**
+ * Auto-apply glass scrollbars to elements with data attributes
+ */
+export function autoApplyGlassScrollbars(): void {
+  const elements = document.querySelectorAll("[data-glass-scrollbar]");
+
+  elements.forEach((element) => {
+    if (element instanceof HTMLElement) {
+      const variant = element.dataset.glassScrollbar as ScrollbarVariant;
+      const direction = element.dataset.scrollDirection as ScrollDirection;
+      const smooth = element.dataset.smoothScroll !== "false";
+      const responsive = element.dataset.responsive !== "false";
+
+      applyGlassScrollbar(element, {
+        variant: variant || "primary",
+        direction,
+        smooth,
+        responsive,
+      });
+    }
+  });
+
+  console.log(
+    `🎨 Auto-applied glass scrollbars to ${elements.length} elements`
+  );
+}
+
+/**
+ * Initialize glass scrollbars system
+ */
+export function initializeGlassScrollbars(): void {
+  // Auto-apply to existing elements
+  autoApplyGlassScrollbars();
+
+  // Set up mutation observer for dynamic elements
+  if (typeof window !== "undefined" && "MutationObserver" in window) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            // Check if the added element has glass scrollbar data attribute
+            if (node.hasAttribute("data-glass-scrollbar")) {
+              const variant = node.dataset.glassScrollbar as ScrollbarVariant;
+              applyGlassScrollbar(node, { variant: variant || "primary" });
+            }
+
+            // Check child elements
+            const childElements = node.querySelectorAll(
+              "[data-glass-scrollbar]"
+            );
+            childElements.forEach((child) => {
+              if (child instanceof HTMLElement) {
+                const variant = child.dataset
+                  .glassScrollbar as ScrollbarVariant;
+                applyGlassScrollbar(child, { variant: variant || "primary" });
+              }
+            });
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    console.log("🔄 Glass scrollbars mutation observer initialized");
+  }
+
+  console.log("✨ Glass scrollbars system initialized");
+}
+
+/**
+ * Scroll position utilities
+ */
+export const scrollUtils = {
+  /**
+   * Check if element is scrolled to top
+   */
+  isAtTop(element: HTMLElement): boolean {
+    return element.scrollTop === 0;
+  },
+
+  /**
+   * Check if element is scrolled to bottom
+   */
+  isAtBottom(element: HTMLElement): boolean {
+    return element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
+  },
+
+  /**
+   * Get scroll percentage (0-100)
+   */
+  getScrollPercentage(element: HTMLElement): number {
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight - element.clientHeight;
+    return scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  },
+
+  /**
+   * Scroll to percentage
+   */
+  scrollToPercentage(element: HTMLElement, percentage: number): void {
+    const scrollHeight = element.scrollHeight - element.clientHeight;
+    const targetScroll = (percentage / 100) * scrollHeight;
+    element.scrollTo({ top: targetScroll, behavior: "smooth" });
+  },
+};
+
+/**
+ * Export all utilities as default object
+ */
+export default {
+  applyGlassScrollbar,
+  removeGlassScrollbar,
+  applyScrollDirection,
+  getRecommendedVariant,
+  createScrollListener,
+  smoothScrollToElement,
+  autoApplyGlassScrollbars,
+  initializeGlassScrollbars,
+  scrollUtils,
+};

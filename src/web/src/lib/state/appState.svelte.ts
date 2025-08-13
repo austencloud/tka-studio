@@ -54,7 +54,8 @@ type TabId =
   | "sequence_card"
   | "write"
   | "learn"
-  | "about";
+  | "about"
+  | "motion-tester";
 
 const uiState = $state({
   activeTab: "construct" as TabId,

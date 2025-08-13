@@ -5,6 +5,11 @@
  * DO NOT MODIFY - these are tested and working.
  */
 
+import type { PropAttributes } from "../types/core.js";
+
+// Re-export PropAttributes for other modules
+export type { PropAttributes };
+
 // Math constants from standalone
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
@@ -88,7 +93,7 @@ export function lerpAngle(a: number, b: number, t: number): number {
  */
 export function calculateProIsolationStaffAngle(
   centerPathAngle: number,
-  propRotDir: string // propRotDir can be ignored for pro motion
+  _propRotDir: string // propRotDir can be ignored for pro motion
 ): number {
   // For pro motion, staff always points toward center (angle + 180°)
   return normalizeAnglePositive(centerPathAngle + PI);
@@ -304,15 +309,7 @@ export interface StepEndpoints {
   targetStaffAngle: number;
 }
 
-export interface PropAttributes {
-  start_loc: string;
-  end_loc: string;
-  start_ori?: string;
-  end_ori?: string;
-  motion_type: string;
-  prop_rot_dir?: string;
-  turns?: number;
-}
+// PropAttributes is imported from core.ts to avoid duplication
 
 export interface StepDefinition {
   beat?: number;
@@ -355,24 +352,25 @@ export function calculateStepEndpoints(
 
   let calculatedTargetStaffAngle: number;
 
-  console.log("🔧 [ENDPOINT DEBUG] ===== CALCULATING STEP ENDPOINTS =====");
-  console.log("🔧 [ENDPOINT DEBUG] Motion type:", motion_type);
-  console.log("🔧 [ENDPOINT DEBUG] Prop type:", propType);
-  console.log("🔧 [ENDPOINT DEBUG] Motion attributes:", {
-    start_loc,
-    end_loc,
-    start_ori,
-    end_ori,
-    motion_type,
-    prop_rot_dir,
-    turns,
-  });
+  // Debug logging removed to reduce console clutter
+  // console.log("🔧 [ENDPOINT DEBUG] ===== CALCULATING STEP ENDPOINTS =====");
+  // console.log("🔧 [ENDPOINT DEBUG] Motion type:", motion_type);
+  // console.log("🔧 [ENDPOINT DEBUG] Prop type:", propType);
+  // console.log("🔧 [ENDPOINT DEBUG] Motion attributes:", {
+  //   start_loc,
+  //   end_loc,
+  //   start_ori,
+  //   end_ori,
+  //   motion_type,
+  //   prop_rot_dir,
+  //   turns,
+  // });
 
   switch (motion_type) {
     case "pro":
-      console.log("🔧 [ENDPOINT DEBUG] Processing PRO motion");
+      // console.log("🔧 [ENDPOINT DEBUG] Processing PRO motion");
       if (turns > 0) {
-        console.log("🔧 [ENDPOINT DEBUG] PRO motion with turns:", turns);
+        // console.log("🔧 [ENDPOINT DEBUG] PRO motion with turns:", turns);
         calculatedTargetStaffAngle = calculateProTargetAngle(
           startCenterAngle,
           targetCenterAngle,
@@ -381,7 +379,7 @@ export function calculateStepEndpoints(
           prop_rot_dir || "cw"
         );
       } else {
-        console.log("🔧 [ENDPOINT DEBUG] PRO motion isolation (zero turns)");
+        // console.log("🔧 [ENDPOINT DEBUG] PRO motion isolation (zero turns)");
         calculatedTargetStaffAngle = calculateProIsolationStaffAngle(
           targetCenterAngle,
           prop_rot_dir || "cw"
@@ -389,7 +387,7 @@ export function calculateStepEndpoints(
       }
       break;
     case "anti":
-      console.log("🔧 [ENDPOINT DEBUG] Processing ANTI motion");
+      // console.log("🔧 [ENDPOINT DEBUG] Processing ANTI motion");
       calculatedTargetStaffAngle = calculateAntispinTargetAngle(
         startCenterAngle,
         targetCenterAngle,
@@ -399,7 +397,7 @@ export function calculateStepEndpoints(
       );
       break;
     case "static":
-      console.log("🔧 [ENDPOINT DEBUG] Processing STATIC motion");
+      // console.log("🔧 [ENDPOINT DEBUG] Processing STATIC motion");
       const endOriAngleStatic = mapOrientationToAngle(
         end_ori || "in",
         targetCenterAngle
@@ -411,7 +409,7 @@ export function calculateStepEndpoints(
         Math.abs(angleDiffStatic) > 0.1 ? endOriAngleStatic : startStaffAngle;
       break;
     case "dash":
-      console.log("🔧 [ENDPOINT DEBUG] Processing DASH motion");
+      // console.log("🔧 [ENDPOINT DEBUG] Processing DASH motion");
       calculatedTargetStaffAngle = calculateDashTargetAngle(
         startStaffAngle,
         end_ori || "in",
@@ -424,13 +422,13 @@ export function calculateStepEndpoints(
       break;
   }
 
-  console.log(
-    "🔧 [ENDPOINT DEBUG] Calculated target staff angle:",
-    calculatedTargetStaffAngle,
-    "radians",
-    ((calculatedTargetStaffAngle * 180) / PI).toFixed(1),
-    "degrees"
-  );
+  // console.log(
+  //   "🔧 [ENDPOINT DEBUG] Calculated target staff angle:",
+  //   calculatedTargetStaffAngle,
+  //   "radians",
+  //   ((calculatedTargetStaffAngle * 180) / PI).toFixed(1),
+  //   "degrees"
+  // );
 
   // Handle explicit end orientation override (except for pro)
   if (motion_type !== "pro") {

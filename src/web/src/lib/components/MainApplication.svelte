@@ -156,9 +156,13 @@
 						switchTab('write');
 						break;
 					case '5':
-						event.preventDefault();
-						switchTab('learn');
-						break;
+					event.preventDefault();
+					switchTab('learn');
+					break;
+				case '6':
+					event.preventDefault();
+					switchTab('motion-tester');
+					break;
 				}
 			}
 		}

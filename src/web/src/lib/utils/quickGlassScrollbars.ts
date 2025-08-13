@@ -1,1 +1,81 @@
-/**\n * Quick Glass Scrollbar Application Utility\n *\n * Simple function to apply glass scrollbars to any existing scrollable element.\n * No complex setup required - just import and apply.\n */\n\n/**\n * Apply glass scrollbar to any scrollable element\n * @param element - The scrollable element\n * @param variant - The scrollbar style variant\n */\nexport function applyQuickGlassScrollbar(\n\telement: HTMLElement | null,\n\tvariant: 'primary' | 'secondary' | 'minimal' | 'hover' | 'gradient' = 'primary'\n): void {\n\tif (!element) return;\n\n\t// Remove any existing glass scrollbar classes\n\telement.classList.remove(\n\t\t'quick-glass-primary',\n\t\t'quick-glass-secondary', \n\t\t'quick-glass-minimal',\n\t\t'quick-glass-hover',\n\t\t'quick-glass-gradient'\n\t);\n\n\t// Add the new variant class\n\telement.classList.add(`quick-glass-${variant}`);\n\n\t// Ensure the element is scrollable\n\tif (!element.style.overflow && !element.style.overflowY) {\n\t\telement.style.overflowY = 'auto';\n\t}\n\n\tconsole.log(`✨ Applied ${variant} glass scrollbar to element`);\n}\n\n/**\n * Initialize glass scrollbars for all elements with data-glass attribute\n */\nexport function initQuickGlassScrollbars(): void {\n\t// Apply to elements with data-glass attribute\n\tconst elements = document.querySelectorAll('[data-glass]');\n\t\n\telements.forEach(element => {\n\t\tconst variant = element.getAttribute('data-glass') as any || 'primary';\n\t\tapplyQuickGlassScrollbar(element as HTMLElement, variant);\n\t});\n\n\tconsole.log(`🎨 Applied glass scrollbars to ${elements.length} elements`);\n}\n\n/**\n * Remove glass scrollbar from element\n */\nexport function removeQuickGlassScrollbar(element: HTMLElement | null): void {\n\tif (!element) return;\n\n\telement.classList.remove(\n\t\t'quick-glass-primary',\n\t\t'quick-glass-secondary', \n\t\t'quick-glass-minimal',\n\t\t'quick-glass-hover',\n\t\t'quick-glass-gradient'\n\t);\n}\n\n// Auto-initialize when DOM is ready\nif (typeof window !== 'undefined') {\n\tif (document.readyState === 'loading') {\n\t\tdocument.addEventListener('DOMContentLoaded', initQuickGlassScrollbars);\n\t} else {\n\t\tinitQuickGlassScrollbars();\n\t}\n}\n
+/**
+ * Quick Glass Scrollbar Application Utility
+ *
+ * Simple function to apply glass scrollbars to any existing scrollable element.
+ * No complex setup required - just import and apply.
+ */
+
+/**
+ * Apply glass scrollbar to any scrollable element
+ * @param element - The scrollable element
+ * @param variant - The scrollbar style variant
+ */
+export function applyQuickGlassScrollbar(
+  element: HTMLElement | null,
+  variant:
+    | "primary"
+    | "secondary"
+    | "minimal"
+    | "hover"
+    | "gradient" = "primary"
+): void {
+  if (!element) return;
+
+  // Remove any existing glass scrollbar classes
+  element.classList.remove(
+    "quick-glass-primary",
+    "quick-glass-secondary",
+    "quick-glass-minimal",
+    "quick-glass-hover",
+    "quick-glass-gradient"
+  );
+
+  // Add the new variant class
+  element.classList.add(`quick-glass-${variant}`);
+
+  // Ensure the element is scrollable
+  if (!element.style.overflow && !element.style.overflowY) {
+    element.style.overflowY = "auto";
+  }
+
+  console.log(`✨ Applied ${variant} glass scrollbar to element`);
+}
+
+/**
+ * Initialize glass scrollbars for all elements with data-glass attribute
+ */
+export function initQuickGlassScrollbars(): void {
+  // Apply to elements with data-glass attribute
+  const elements = document.querySelectorAll("[data-glass]");
+
+  elements.forEach((element) => {
+    const variant = (element.getAttribute("data-glass") as any) || "primary";
+    applyQuickGlassScrollbar(element as HTMLElement, variant);
+  });
+
+  console.log(`🎨 Applied glass scrollbars to ${elements.length} elements`);
+}
+
+/**
+ * Remove glass scrollbar from element
+ */
+export function removeQuickGlassScrollbar(element: HTMLElement | null): void {
+  if (!element) return;
+
+  element.classList.remove(
+    "quick-glass-primary",
+    "quick-glass-secondary",
+    "quick-glass-minimal",
+    "quick-glass-hover",
+    "quick-glass-gradient"
+  );
+}
+
+// Auto-initialize when DOM is ready
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initQuickGlassScrollbars);
+  } else {
+    initQuickGlassScrollbars();
+  }
+}

@@ -50,8 +50,7 @@ export const ISequenceServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as ISequenceDomainService,
-          args[1] as IPersistenceService,
-          args[2] as any
+          args[1] as IPersistenceService
         );
       }
     }

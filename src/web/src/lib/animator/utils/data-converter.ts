@@ -4,7 +4,8 @@
  * Converts web app sequence data to the format expected by the standalone engine.
  */
 
-import type { StepDefinition, PropAttributes } from "./standalone-math.js";
+import type { PropAttributes } from "./standalone-math.js";
+import type { Orientation, PropRotDir, MotionType } from "../types/core.js";
 
 // Web app data types
 export interface WebAppSequenceData {
@@ -192,11 +193,11 @@ function convertMotionToPropAttributes(
   return {
     start_loc: motion.start_loc,
     end_loc: motion.end_loc,
-    start_ori: motion.start_ori || "in",
-    end_ori: motion.end_ori || "in",
-    prop_rot_dir: motion.prop_rot_dir || "no_rot",
+    start_ori: (motion.start_ori || "in") as Orientation,
+    end_ori: (motion.end_ori || "in") as Orientation,
+    prop_rot_dir: (motion.prop_rot_dir || "no_rot") as PropRotDir,
     turns: motion.turns || 0,
-    motion_type: motion.motion_type,
+    motion_type: motion.motion_type as MotionType,
   };
 }
 

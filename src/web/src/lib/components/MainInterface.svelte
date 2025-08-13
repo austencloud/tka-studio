@@ -22,6 +22,7 @@
 	import SequenceCardTab from './tabs/SequenceCardTab.svelte';
 	import WriteTab from './tabs/WriteTab.svelte';
 	import AboutTab from './tabs/AboutTab.svelte';
+	import MotionTesterTab from './tabs/MotionTesterTab.svelte';
 
 	// Reactive state for template using proper derived
 	let activeTab = $derived(getActiveTab());
@@ -51,11 +52,12 @@
 		{ id: 'sequence_card', label: 'Sequence Card', icon: '🎴' },
 		{ id: 'write', label: 'Write', icon: '✍️' },
 		{ id: 'learn', label: 'Learn', icon: '🧠' },
+		{ id: 'motion-tester', label: 'Motion Tester', icon: '🎯' },
 		{ id: 'about', label: 'About', icon: 'ℹ️' },
 	] as const;
 
 	function handleTabSelect(tabId: string) {
-		switchTab(tabId as 'construct' | 'browse' | 'sequence_card' | 'write' | 'learn' | 'about');
+		switchTab(tabId as 'construct' | 'browse' | 'sequence_card' | 'write' | 'learn' | 'about' | 'motion-tester');
 	}
 
 	function handleBackgroundChange(background: string) {
@@ -99,6 +101,8 @@ onBackgroundChange={handleBackgroundChange}
    <WriteTab />
  {:else if isTabActive('learn')}
   <LearnTab />
+{:else if isTabActive('motion-tester')}
+	<MotionTesterTab />
 {:else if isTabActive('about')}
 <AboutTab />
 {/if}
