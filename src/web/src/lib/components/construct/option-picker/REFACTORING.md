@@ -75,7 +75,7 @@ The large `OptionPickerScroll.svelte` file has been successfully refactored into
 ### Service Usage (Advanced)
 
 ```typescript
-import { createPictographOrganizer } from './services/PictographOrganizerService';
+import { createPictographOrganizer } from "./services/PictographOrganizerService";
 
 const organizer = createPictographOrganizer();
 const organized = organizer.organizePictographs(pictographs);
@@ -84,7 +84,7 @@ const organized = organizer.organizePictographs(pictographs);
 ### State Management (Advanced)
 
 ```typescript
-import { createOptionPickerScrollState } from './optionPickerScrollState.svelte.ts';
+import { createOptionPickerScrollState } from "./optionPickerScrollState.svelte.ts";
 
 const scrollState = createOptionPickerScrollState(props);
 // Access reactive state: scrollState.layoutMetrics, scrollState.organizedPictographs, etc.

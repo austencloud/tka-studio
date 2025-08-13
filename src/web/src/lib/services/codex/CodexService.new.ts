@@ -329,7 +329,7 @@ export class CodexService implements ICodexService {
     return (
       allPictographs.find(
         (pictograph) =>
-          pictograph.letter?.toLowerCase() === letter.toLowerCase()
+          pictograph.letter?.toLowerCase() === letter.toLowerCase(),
       ) || null
     );
   }
@@ -362,7 +362,7 @@ export class CodexService implements ICodexService {
 
       this.initialized = true;
       console.log(
-        `✅ CodexService initialized with ${this.codexPictographs.length} specific pictographs from mapping`
+        `✅ CodexService initialized with ${this.codexPictographs.length} specific pictographs from mapping`,
       );
     } catch (error) {
       console.error("❌ Failed to initialize CodexService:", error);
@@ -385,21 +385,21 @@ export class CodexService implements ICodexService {
           row.startPos === mapping.startPos &&
           row.endPos === mapping.endPos &&
           row.blueMotionType === mapping.blueMotion &&
-          row.redMotionType === mapping.redMotion
+          row.redMotionType === mapping.redMotion,
       );
 
       if (matchingRow) {
         const pictograph = this.convertCsvRowToPictographData(
           matchingRow,
           gridMode,
-          codexPictographs.length // Use codex index for unique IDs
+          codexPictographs.length, // Use codex index for unique IDs
         );
         if (pictograph) {
           codexPictographs.push(pictograph);
         }
       } else {
         console.warn(
-          `⚠️ No CSV data found for codex letter ${letter} in ${gridMode} mode`
+          `⚠️ No CSV data found for codex letter ${letter} in ${gridMode} mode`,
         );
       }
     });
@@ -413,20 +413,20 @@ export class CodexService implements ICodexService {
   private convertCsvRowToPictographData(
     row: ParsedCsvRow,
     gridMode: GridMode,
-    index: number
+    index: number,
   ): PictographData | null {
     try {
       // Use the public conversion method from OptionDataService
       return this.optionDataService.convertCsvRowToPictographData(
         row,
         gridMode,
-        index
+        index,
       );
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",
         error,
-        row
+        row,
       );
       return null;
     }
@@ -449,7 +449,7 @@ export class CodexService implements ICodexService {
    * Apply rotate operation to all pictographs
    */
   async rotateAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement rotation logic
     console.warn("rotateAllPictographs not yet implemented");
@@ -460,7 +460,7 @@ export class CodexService implements ICodexService {
    * Apply mirror operation to all pictographs
    */
   async mirrorAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement mirror logic
     console.warn("mirrorAllPictographs not yet implemented");
@@ -471,7 +471,7 @@ export class CodexService implements ICodexService {
    * Apply color swap operation to all pictographs
    */
   async colorSwapAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement color swap logic
     console.warn("colorSwapAllPictographs not yet implemented");

@@ -4,10 +4,7 @@
     "name": "internal",
     "src": ".svelte-kit/generated/server/internal.js",
     "isEntry": true,
-    "imports": [
-      "_internal.js",
-      "_environment.js"
-    ]
+    "imports": ["_internal.js", "_environment.js"]
   },
   "_MainApplication.BsCtcX9S.css": {
     "file": "_app/immutable/assets/MainApplication.BsCtcX9S.css",
@@ -16,12 +13,8 @@
   "_MainApplication.js": {
     "file": "chunks/MainApplication.js",
     "name": "MainApplication",
-    "imports": [
-      "_index.js"
-    ],
-    "css": [
-      "_app/immutable/assets/MainApplication.BsCtcX9S.css"
-    ]
+    "imports": ["_index.js"],
+    "css": ["_app/immutable/assets/MainApplication.BsCtcX9S.css"]
   },
   "_environment.js": {
     "file": "chunks/environment.js",
@@ -34,16 +27,12 @@
   "_event-state.js": {
     "file": "chunks/event-state.js",
     "name": "event-state",
-    "imports": [
-      "_utils.js"
-    ]
+    "imports": ["_utils.js"]
   },
   "_exports.js": {
     "file": "chunks/exports.js",
     "name": "exports",
-    "imports": [
-      "_equality.js"
-    ]
+    "imports": ["_equality.js"]
   },
   "_false.js": {
     "file": "chunks/false.js",
@@ -52,22 +41,13 @@
   "_index.js": {
     "file": "chunks/index.js",
     "name": "index",
-    "imports": [
-      "_false.js"
-    ]
+    "imports": ["_false.js"]
   },
   "_internal.js": {
     "file": "chunks/internal.js",
     "name": "internal",
-    "imports": [
-      "_index.js",
-      "_false.js",
-      "_equality.js",
-      "_environment.js"
-    ],
-    "dynamicImports": [
-      "src/hooks.server.ts"
-    ]
+    "imports": ["_index.js", "_false.js", "_equality.js", "_environment.js"],
+    "dynamicImports": ["src/hooks.server.ts"]
   },
   "_utils.js": {
     "file": "chunks/utils.js",
@@ -78,23 +58,14 @@
     "name": "remote-entry",
     "src": "node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js",
     "isEntry": true,
-    "imports": [
-      "_event-state.js",
-      "_false.js",
-      "_environment.js"
-    ]
+    "imports": ["_event-state.js", "_false.js", "_environment.js"]
   },
   "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
     "file": "entries/fallbacks/error.svelte.js",
     "name": "entries/fallbacks/error.svelte",
     "src": "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
     "isEntry": true,
-    "imports": [
-      "_index.js",
-      "_equality.js",
-      "_exports.js",
-      "_utils.js"
-    ]
+    "imports": ["_index.js", "_equality.js", "_exports.js", "_utils.js"]
   },
   "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
     "file": "index.js",
@@ -127,22 +98,15 @@
     "name": "entries/pages/_layout.svelte",
     "src": "src/routes/+layout.svelte",
     "isEntry": true,
-    "imports": [
-      "_index.js"
-    ],
-    "css": [
-      "_app/immutable/assets/_layout.BYf3dM2L.css"
-    ]
+    "imports": ["_index.js"],
+    "css": ["_app/immutable/assets/_layout.BYf3dM2L.css"]
   },
   "src/routes/+page.svelte": {
     "file": "entries/pages/_page.svelte.js",
     "name": "entries/pages/_page.svelte",
     "src": "src/routes/+page.svelte",
     "isEntry": true,
-    "imports": [
-      "_index.js",
-      "_MainApplication.js"
-    ]
+    "imports": ["_index.js", "_MainApplication.js"]
   },
   "src/routes/api/console-log/+server.ts": {
     "file": "entries/endpoints/api/console-log/_server.ts.js",
@@ -155,21 +119,14 @@
     "name": "entries/pages/constructor/_page.svelte",
     "src": "src/routes/constructor/+page.svelte",
     "isEntry": true,
-    "imports": [
-      "_index.js",
-      "_MainApplication.js"
-    ]
+    "imports": ["_index.js", "_MainApplication.js"]
   },
   "src/routes/motion-tester/+page.svelte": {
     "file": "entries/pages/motion-tester/_page.svelte.js",
     "name": "entries/pages/motion-tester/_page.svelte",
     "src": "src/routes/motion-tester/+page.svelte",
     "isEntry": true,
-    "imports": [
-      "_index.js"
-    ],
-    "css": [
-      "_app/immutable/assets/_page.B_PWfsoZ.css"
-    ]
+    "imports": ["_index.js"],
+    "css": ["_app/immutable/assets/_page.B_PWfsoZ.css"]
   }
 }

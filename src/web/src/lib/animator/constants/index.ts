@@ -3,7 +3,7 @@
  */
 
 // Color constants
-export * from './colors.js';
+export * from "./colors.js";
 
 // Animation constants
-export * from './animation.js';
+export * from "./animation.js";

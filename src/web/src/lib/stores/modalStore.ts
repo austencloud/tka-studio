@@ -43,7 +43,7 @@ class ModalManager {
       window.history.pushState(
         { modal: resourceName },
         "",
-        currentUrl.toString()
+        currentUrl.toString(),
       );
     }
   }

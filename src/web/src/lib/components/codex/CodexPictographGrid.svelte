@@ -7,6 +7,8 @@
 <script lang="ts">
 	import Pictograph from '$lib/components/pictograph/Pictograph.svelte';
 	import type { PictographData } from '$lib/domain/PictographData';
+	import { createGridData } from '$lib/domain/GridData';
+	import { GridMode } from '$lib/domain/enums';
 
 	// Props
 	interface Props {
@@ -36,7 +38,10 @@
 			// Add other required fields with default values
 			start_position: 'alpha1',
 			end_position: 'alpha3',
-			grid_data: {},
+			beat: 0,
+			is_blank: true,
+			is_mirrored: false,
+			grid_data: createGridData({ grid_mode: GridMode.DIAMOND }),
 			arrows: {},
 			motions: {},
 			props: {},

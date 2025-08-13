@@ -35,7 +35,7 @@ export class CodexService implements ICodexService {
 
     // Get pictographs from both grid modes
     const diamondPictographs = this.getAllPictographsForGridMode(
-      GridMode.DIAMOND
+      GridMode.DIAMOND,
     );
     const boxPictographs = this.getAllPictographsForGridMode(GridMode.BOX);
     const allPictographs = [...diamondPictographs, ...boxPictographs];
@@ -79,7 +79,7 @@ export class CodexService implements ICodexService {
     return (
       allPictographs.find(
         (pictograph) =>
-          pictograph.letter?.toLowerCase() === letter.toLowerCase()
+          pictograph.letter?.toLowerCase() === letter.toLowerCase(),
       ) || null
     );
   }
@@ -124,10 +124,10 @@ export class CodexService implements ICodexService {
 
     return csvRows
       .map((row, index) =>
-        this.convertCsvRowToPictographData(row, gridMode, index)
+        this.convertCsvRowToPictographData(row, gridMode, index),
       )
       .filter(
-        (pictograph): pictograph is PictographData => pictograph !== null
+        (pictograph): pictograph is PictographData => pictograph !== null,
       );
   }
 
@@ -137,20 +137,20 @@ export class CodexService implements ICodexService {
   private convertCsvRowToPictographData(
     row: ParsedCsvRow,
     gridMode: GridMode,
-    index: number
+    index: number,
   ): PictographData | null {
     try {
       // Use the public conversion method from OptionDataService
       return this.optionDataService.convertCsvRowToPictographData(
         row,
         gridMode,
-        index
+        index,
       );
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",
         error,
-        row
+        row,
       );
       return null;
     }
@@ -173,7 +173,7 @@ export class CodexService implements ICodexService {
    * Apply rotate operation to all pictographs
    */
   async rotateAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement rotation logic
     console.warn("rotateAllPictographs not yet implemented");
@@ -184,7 +184,7 @@ export class CodexService implements ICodexService {
    * Apply mirror operation to all pictographs
    */
   async mirrorAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement mirror logic
     console.warn("mirrorAllPictographs not yet implemented");
@@ -195,7 +195,7 @@ export class CodexService implements ICodexService {
    * Apply color swap operation to all pictographs
    */
   async colorSwapAllPictographs(
-    pictographs: PictographData[]
+    pictographs: PictographData[],
   ): Promise<PictographData[]> {
     // TODO: Implement color swap logic
     console.warn("colorSwapAllPictographs not yet implemented");

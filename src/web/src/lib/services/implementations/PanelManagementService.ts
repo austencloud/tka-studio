@@ -32,7 +32,7 @@ export class PanelManagementService implements IPanelManagementService {
     if (!this.panels.has(config.id)) {
       const savedWidth = this.loadPanelWidth(
         config.persistKey,
-        config.defaultWidth
+        config.defaultWidth,
       );
       const initialState: PanelState = {
         id: config.id,
@@ -248,13 +248,13 @@ export class PanelManagementService implements IPanelManagementService {
 
   // Event handling
   onPanelStateChanged(
-    callback: (panelId: string, state: PanelState) => void
+    callback: (panelId: string, state: PanelState) => void,
   ): void {
     this.stateChangeCallbacks.push(callback);
   }
 
   offPanelStateChanged(
-    callback: (panelId: string, state: PanelState) => void
+    callback: (panelId: string, state: PanelState) => void,
   ): void {
     const index = this.stateChangeCallbacks.indexOf(callback);
     if (index > -1) {

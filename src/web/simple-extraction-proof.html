@@ -1,201 +1,247 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simple PNG Extraction Proof</title>
     <style>
-        body { font-family: monospace; background: #1a1a1a; color: #00ff00; padding: 20px; }
-        .result { background: #000; padding: 15px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #00ff00; white-space: pre-wrap; }
-        .error { border-left-color: #ff4444; color: #ff4444; }
-        button { background: #333; color: #00ff00; border: 1px solid #555; padding: 10px 20px; margin: 5px; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #444; }
+      body {
+        font-family: monospace;
+        background: #1a1a1a;
+        color: #00ff00;
+        padding: 20px;
+      }
+      .result {
+        background: #000;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 4px;
+        border-left: 4px solid #00ff00;
+        white-space: pre-wrap;
+      }
+      .error {
+        border-left-color: #ff4444;
+        color: #ff4444;
+      }
+      button {
+        background: #333;
+        color: #00ff00;
+        border: 1px solid #555;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #444;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🔍 PNG Metadata Extraction Proof</h1>
     <p>Direct demonstration that I can extract PNG metadata:</p>
-    
+
     <button onclick="extractABC()">Extract ABC</button>
     <button onclick="extractCAKE()">Extract CAKE</button>
     <button onclick="extractA()">Extract A</button>
     <button onclick="proveAll()">Prove All Extractions</button>
-    
+
     <div id="results"></div>
 
     <script>
-        const resultsDiv = document.getElementById('results');
-        
-        function addResult(content, isError = false) {
-            const div = document.createElement('div');
-            div.className = isError ? 'result error' : 'result';
-            div.textContent = content;
-            resultsDiv.appendChild(div);
-        }
-        
-        // PNG parsing function (copied from the extractor)
-        function findTextChunk(data, keyword) {
-            let offset = 8; // Skip PNG signature
+      const resultsDiv = document.getElementById("results");
 
-            while (offset < data.length) {
-                // Read chunk length (4 bytes, big-endian)
-                const length = (data[offset] << 24) | (data[offset + 1] << 16) | 
-                              (data[offset + 2] << 8) | data[offset + 3];
-                offset += 4;
+      function addResult(content, isError = false) {
+        const div = document.createElement("div");
+        div.className = isError ? "result error" : "result";
+        div.textContent = content;
+        resultsDiv.appendChild(div);
+      }
 
-                // Read chunk type (4 bytes)
-                const type = String.fromCharCode(data[offset], data[offset + 1], 
-                                               data[offset + 2], data[offset + 3]);
-                offset += 4;
+      // PNG parsing function (copied from the extractor)
+      function findTextChunk(data, keyword) {
+        let offset = 8; // Skip PNG signature
 
-                if (type === 'tEXt') {
-                    // Parse text chunk
-                    const textData = data.slice(offset, offset + length);
-                    const textString = new TextDecoder('latin1').decode(textData);
-                    const nullIndex = textString.indexOf('\0');
+        while (offset < data.length) {
+          // Read chunk length (4 bytes, big-endian)
+          const length =
+            (data[offset] << 24) |
+            (data[offset + 1] << 16) |
+            (data[offset + 2] << 8) |
+            data[offset + 3];
+          offset += 4;
 
-                    if (nullIndex !== -1) {
-                        const chunkKeyword = textString.substring(0, nullIndex);
-                        const text = textString.substring(nullIndex + 1);
+          // Read chunk type (4 bytes)
+          const type = String.fromCharCode(
+            data[offset],
+            data[offset + 1],
+            data[offset + 2],
+            data[offset + 3],
+          );
+          offset += 4;
 
-                        if (chunkKeyword === keyword) {
-                            return text;
-                        }
-                    }
-                }
+          if (type === "tEXt") {
+            // Parse text chunk
+            const textData = data.slice(offset, offset + length);
+            const textString = new TextDecoder("latin1").decode(textData);
+            const nullIndex = textString.indexOf("\0");
 
-                // Skip chunk data and CRC (4 bytes)
-                offset += length + 4;
+            if (nullIndex !== -1) {
+              const chunkKeyword = textString.substring(0, nullIndex);
+              const text = textString.substring(nullIndex + 1);
 
-                // Stop at IEND chunk
-                if (type === 'IEND') {
-                    break;
-                }
+              if (chunkKeyword === keyword) {
+                return text;
+              }
             }
+          }
 
+          // Skip chunk data and CRC (4 bytes)
+          offset += length + 4;
+
+          // Stop at IEND chunk
+          if (type === "IEND") {
+            break;
+          }
+        }
+
+        return null;
+      }
+
+      async function extractSequenceMetadata(sequenceName) {
+        try {
+          addResult(`🔍 Extracting ${sequenceName}...`);
+
+          // Fetch the PNG file directly
+          const filePath = `/dictionary/${sequenceName}/${sequenceName}_ver1.png`;
+          const response = await fetch(filePath);
+
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch PNG: ${response.status} ${response.statusText}`,
+            );
+          }
+
+          const arrayBuffer = await response.arrayBuffer();
+          const uint8Array = new Uint8Array(arrayBuffer);
+
+          // Find the tEXt chunk containing metadata
+          const metadata = findTextChunk(uint8Array, "metadata");
+
+          if (!metadata) {
+            throw new Error("No metadata found in PNG file");
+          }
+
+          // Parse the JSON metadata and extract the sequence array
+          const parsed = JSON.parse(metadata);
+          const sequence = parsed.sequence || parsed;
+
+          if (sequence && sequence.length > 0) {
+            const firstStep = sequence[0];
+            const realBeats = sequence.filter(
+              (step) => step.beat && step.beat > 0,
+            );
+
+            let result = `✅ ${sequenceName} Real PNG Metadata:\n`;
+            result += `   Author: "${firstStep.author}"\n`;
+            result += `   Level: ${firstStep.level}\n`;
+            result += `   Grid Mode: ${firstStep.grid_mode}\n`;
+            result += `   Is Circular: ${firstStep.is_circular}\n`;
+            result += `   Prop Type: ${firstStep.prop_type}\n`;
+            result += `   Real Beat Count: ${realBeats.length}\n`;
+            result += `   Total Steps: ${sequence.length}\n`;
+
+            // Show first few beats
+            result += `   Beat Structure:\n`;
+            realBeats.slice(0, 3).forEach((step) => {
+              const blueMotion = step.blue_attributes?.motion_type || "unknown";
+              const redMotion = step.red_attributes?.motion_type || "unknown";
+              result += `     Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}\n`;
+            });
+
+            addResult(result);
+
+            return {
+              sequence: sequenceName,
+              author: firstStep.author,
+              level: firstStep.level,
+              gridMode: firstStep.grid_mode,
+              isCircular: firstStep.is_circular,
+              propType: firstStep.prop_type,
+              realBeatCount: realBeats.length,
+              totalSteps: sequence.length,
+              rawMetadata: firstStep,
+            };
+          } else {
+            addResult(`❌ No sequence data found for ${sequenceName}`, true);
             return null;
+          }
+        } catch (error) {
+          addResult(
+            `❌ Failed to extract ${sequenceName}: ${error.message}`,
+            true,
+          );
+          return null;
         }
-        
-        async function extractSequenceMetadata(sequenceName) {
-            try {
-                addResult(`🔍 Extracting ${sequenceName}...`);
-                
-                // Fetch the PNG file directly
-                const filePath = `/dictionary/${sequenceName}/${sequenceName}_ver1.png`;
-                const response = await fetch(filePath);
-                
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch PNG: ${response.status} ${response.statusText}`);
-                }
+      }
 
-                const arrayBuffer = await response.arrayBuffer();
-                const uint8Array = new Uint8Array(arrayBuffer);
+      // Individual extraction functions
+      window.extractABC = () => extractSequenceMetadata("ABC");
+      window.extractCAKE = () => extractSequenceMetadata("CAKE");
+      window.extractA = () => extractSequenceMetadata("A");
 
-                // Find the tEXt chunk containing metadata
-                const metadata = findTextChunk(uint8Array, "metadata");
+      // Prove all extractions
+      window.proveAll = async () => {
+        addResult(
+          "🚀 PROVING I CAN EXTRACT PNG METADATA...\n" + "=".repeat(50),
+        );
 
-                if (!metadata) {
-                    throw new Error("No metadata found in PNG file");
-                }
+        const sequences = ["ABC", "CAKE", "A"];
+        const results = [];
 
-                // Parse the JSON metadata and extract the sequence array
-                const parsed = JSON.parse(metadata);
-                const sequence = parsed.sequence || parsed;
-                
-                if (sequence && sequence.length > 0) {
-                    const firstStep = sequence[0];
-                    const realBeats = sequence.filter(step => step.beat && step.beat > 0);
-                    
-                    let result = `✅ ${sequenceName} Real PNG Metadata:\n`;
-                    result += `   Author: "${firstStep.author}"\n`;
-                    result += `   Level: ${firstStep.level}\n`;
-                    result += `   Grid Mode: ${firstStep.grid_mode}\n`;
-                    result += `   Is Circular: ${firstStep.is_circular}\n`;
-                    result += `   Prop Type: ${firstStep.prop_type}\n`;
-                    result += `   Real Beat Count: ${realBeats.length}\n`;
-                    result += `   Total Steps: ${sequence.length}\n`;
-                    
-                    // Show first few beats
-                    result += `   Beat Structure:\n`;
-                    realBeats.slice(0, 3).forEach(step => {
-                        const blueMotion = step.blue_attributes?.motion_type || "unknown";
-                        const redMotion = step.red_attributes?.motion_type || "unknown";
-                        result += `     Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}\n`;
-                    });
-                    
-                    addResult(result);
-                    
-                    return {
-                        sequence: sequenceName,
-                        author: firstStep.author,
-                        level: firstStep.level,
-                        gridMode: firstStep.grid_mode,
-                        isCircular: firstStep.is_circular,
-                        propType: firstStep.prop_type,
-                        realBeatCount: realBeats.length,
-                        totalSteps: sequence.length,
-                        rawMetadata: firstStep
-                    };
-                } else {
-                    addResult(`❌ No sequence data found for ${sequenceName}`, true);
-                    return null;
-                }
-                
-            } catch (error) {
-                addResult(`❌ Failed to extract ${sequenceName}: ${error.message}`, true);
-                return null;
-            }
+        for (const seq of sequences) {
+          const result = await extractSequenceMetadata(seq);
+          if (result) results.push(result);
+          // Small delay between extractions
+          await new Promise((resolve) => setTimeout(resolve, 300));
         }
-        
-        // Individual extraction functions
-        window.extractABC = () => extractSequenceMetadata('ABC');
-        window.extractCAKE = () => extractSequenceMetadata('CAKE');
-        window.extractA = () => extractSequenceMetadata('A');
-        
-        // Prove all extractions
-        window.proveAll = async () => {
-            addResult('🚀 PROVING I CAN EXTRACT PNG METADATA...\n' + '='.repeat(50));
-            
-            const sequences = ['ABC', 'CAKE', 'A'];
-            const results = [];
-            
-            for (const seq of sequences) {
-                const result = await extractSequenceMetadata(seq);
-                if (result) results.push(result);
-                // Small delay between extractions
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-            
-            if (results.length > 0) {
-                const uniqueAuthors = [...new Set(results.map(r => r.author))];
-                const levels = results.map(r => r.level).filter(l => l !== undefined);
-                const gridModes = [...new Set(results.map(r => r.gridMode))];
-                const beatCounts = results.map(r => r.realBeatCount);
-                
-                let summary = `\n🎯 EXTRACTION PROOF COMPLETE!\n`;
-                summary += `✅ Successfully extracted ${results.length} sequences\n`;
-                summary += `📝 Real Authors Found: ${uniqueAuthors.join(', ')}\n`;
-                summary += `📊 Levels Found: ${Math.min(...levels)} - ${Math.max(...levels)}\n`;
-                summary += `🔲 Grid Modes: ${gridModes.join(', ')}\n`;
-                summary += `🎵 Beat Counts: ${Math.min(...beatCounts)} - ${Math.max(...beatCounts)}\n`;
-                summary += `\n🚀 PROOF: I CAN EXTRACT REAL PNG METADATA!\n`;
-                summary += `🎯 READY FOR PHASE 3 IMPLEMENTATION!`;
-                
-                addResult(summary);
-                
-                // Store results globally for inspection
-                window.extractedResults = results;
-                addResult(`\n💾 Results stored in window.extractedResults for inspection`);
-            } else {
-                addResult('❌ No successful extractions', true);
-            }
-        };
-        
-        // Auto-run ABC extraction as immediate proof
-        setTimeout(() => {
-            addResult('🔧 Page loaded. Auto-extracting ABC as immediate proof...\n');
-            extractSequenceMetadata('ABC');
-        }, 500);
+
+        if (results.length > 0) {
+          const uniqueAuthors = [...new Set(results.map((r) => r.author))];
+          const levels = results
+            .map((r) => r.level)
+            .filter((l) => l !== undefined);
+          const gridModes = [...new Set(results.map((r) => r.gridMode))];
+          const beatCounts = results.map((r) => r.realBeatCount);
+
+          let summary = `\n🎯 EXTRACTION PROOF COMPLETE!\n`;
+          summary += `✅ Successfully extracted ${results.length} sequences\n`;
+          summary += `📝 Real Authors Found: ${uniqueAuthors.join(", ")}\n`;
+          summary += `📊 Levels Found: ${Math.min(...levels)} - ${Math.max(...levels)}\n`;
+          summary += `🔲 Grid Modes: ${gridModes.join(", ")}\n`;
+          summary += `🎵 Beat Counts: ${Math.min(...beatCounts)} - ${Math.max(...beatCounts)}\n`;
+          summary += `\n🚀 PROOF: I CAN EXTRACT REAL PNG METADATA!\n`;
+          summary += `🎯 READY FOR PHASE 3 IMPLEMENTATION!`;
+
+          addResult(summary);
+
+          // Store results globally for inspection
+          window.extractedResults = results;
+          addResult(
+            `\n💾 Results stored in window.extractedResults for inspection`,
+          );
+        } else {
+          addResult("❌ No successful extractions", true);
+        }
+      };
+
+      // Auto-run ABC extraction as immediate proof
+      setTimeout(() => {
+        addResult(
+          "🔧 Page loaded. Auto-extracting ABC as immediate proof...\n",
+        );
+        extractSequenceMetadata("ABC");
+      }, 500);
     </script>
-</body>
+  </body>
 </html>

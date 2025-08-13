@@ -6,8 +6,8 @@
  */
 
 // Re-export all types and interfaces
-export * from './core-services';
-export * from './data-services';
-export * from './factory';
-export * from './placement-services';
-export * from './types';
+export * from "./core-services";
+export * from "./data-services";
+export * from "./factory";
+export * from "./placement-services";
+export * from "./types";

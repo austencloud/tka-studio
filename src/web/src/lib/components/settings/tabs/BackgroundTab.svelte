@@ -51,6 +51,7 @@
 		nightSky: 'Starry night with celestial bodies and shooting stars',
 		aurora: 'Colorful aurora with animated blobs and sparkles',
 		bubbles: 'Underwater scene with floating bubbles and light rays',
+		deepOcean: 'Deep ocean depths with mysterious creatures and bioluminescence',
 	};
 
 	// Get current background description

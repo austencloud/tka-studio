@@ -186,10 +186,19 @@ class TabFactory:
     def _create_sequence_card_tab(self, container: DIContainer) -> QWidget:
         """Create the sequence card tab."""
         try:
+            print("🔧 [TAB_FACTORY] Attempting to create sequence card tab...")
             from desktop.modern.presentation.views.sequence_card import SequenceCardTab
 
-            return container.resolve(SequenceCardTab)
-        except Exception:
+            print("🔧 [TAB_FACTORY] SequenceCardTab imported successfully")
+            result = container.resolve(SequenceCardTab)
+            print("🔧 [TAB_FACTORY] SequenceCardTab resolved successfully")
+            return result
+        except Exception as e:
+            print(f"❌ [TAB_FACTORY] Failed to create sequence card tab: {e}")
+            print(f"❌ [TAB_FACTORY] Exception type: {type(e)}")
+            import traceback
+
+            print(f"❌ [TAB_FACTORY] Full traceback:\n{traceback.format_exc()}")
             # If sequence card tab can't be resolved, create placeholder
             return self._create_placeholder_tab("sequence_card")
 

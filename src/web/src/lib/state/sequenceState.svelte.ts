@@ -5,34 +5,34 @@
  * This provides basic sequence state management with proper Svelte 5 patterns.
  */
 
-import type { BeatData, SequenceData } from '$lib/domain';
+import type { BeatData, SequenceData } from "$lib/domain";
 // (Removed unused SequenceCreateRequest import after domain model migration)
-import { GridMode } from '$lib/domain/enums';
-import type { ArrowPosition } from '$services/interfaces';
+import { GridMode } from "$lib/domain/enums";
+import type { ArrowPosition } from "$services/interfaces";
 
 // ============================================================================
 // CORE STATE
 // ============================================================================
 
 const state = $state({
-	// Sequence state
-	currentSequence: null as SequenceData | null,
-	sequences: [] as SequenceData[],
-	isLoading: false,
-	error: null as string | null,
+  // Sequence state
+  currentSequence: null as SequenceData | null,
+  sequences: [] as SequenceData[],
+  isLoading: false,
+  error: null as string | null,
 
-	// Selection state
-	selectedBeatIndex: null as number | null,
-	selectedSequenceId: null as string | null,
+  // Selection state
+  selectedBeatIndex: null as number | null,
+  selectedSequenceId: null as string | null,
 
-	// UI state
-	showBeatNumbers: true,
-	gridMode: GridMode.DIAMOND as GridMode,
+  // UI state
+  showBeatNumbers: true,
+  gridMode: GridMode.DIAMOND as GridMode,
 
-	// Arrow positioning state
-	arrowPositions: new Map<string, ArrowPosition>(),
-	arrowPositioningInProgress: false,
-	arrowPositioningError: null as string | null,
+  // Arrow positioning state
+  arrowPositions: new Map<string, ArrowPosition>(),
+  arrowPositioningInProgress: false,
+  arrowPositioningError: null as string | null,
 });
 
 // ============================================================================
@@ -47,37 +47,37 @@ export { state };
 // ============================================================================
 
 export function getCurrentSequence() {
-	return state.currentSequence;
+  return state.currentSequence;
 }
 export function getSequences() {
-	return state.sequences;
+  return state.sequences;
 }
 export function getIsLoading() {
-	return state.isLoading;
+  return state.isLoading;
 }
 export function getError() {
-	return state.error;
+  return state.error;
 }
 export function getSelectedBeatIndex() {
-	return state.selectedBeatIndex;
+  return state.selectedBeatIndex;
 }
 export function getSelectedSequenceId() {
-	return state.selectedSequenceId;
+  return state.selectedSequenceId;
 }
 export function getShowBeatNumbers() {
-	return state.showBeatNumbers;
+  return state.showBeatNumbers;
 }
 export function getGridMode() {
-	return state.gridMode;
+  return state.gridMode;
 }
 export function getArrowPositions() {
-	return state.arrowPositions;
+  return state.arrowPositions;
 }
 export function getArrowPositioningInProgress() {
-	return state.arrowPositioningInProgress;
+  return state.arrowPositioningInProgress;
 }
 export function getArrowPositioningError() {
-	return state.arrowPositioningError;
+  return state.arrowPositioningError;
 }
 
 // ============================================================================
@@ -85,42 +85,44 @@ export function getArrowPositioningError() {
 // ============================================================================
 
 export function getCurrentBeats(): BeatData[] {
-	// Return a mutable copy to allow UI modifications without violating readonly domain model
-	return state.currentSequence ? [...state.currentSequence.beats] : [];
+  // Return a mutable copy to allow UI modifications without violating readonly domain model
+  return state.currentSequence ? [...state.currentSequence.beats] : [];
 }
 
 export function getSelectedBeatData(): BeatData | null {
-	if (state.selectedBeatIndex === null || !state.currentSequence) {
-		return null;
-	}
-	return state.currentSequence.beats[state.selectedBeatIndex] ?? null;
+  if (state.selectedBeatIndex === null || !state.currentSequence) {
+    return null;
+  }
+  return state.currentSequence.beats[state.selectedBeatIndex] ?? null;
 }
 
 export function getSelectedBeat(): BeatData | null {
-	const beatIndex = state.selectedBeatIndex;
-	const sequence = state.currentSequence;
-	return beatIndex !== null && sequence ? (sequence.beats[beatIndex] ?? null) : null;
+  const beatIndex = state.selectedBeatIndex;
+  const sequence = state.currentSequence;
+  return beatIndex !== null && sequence
+    ? (sequence.beats[beatIndex] ?? null)
+    : null;
 }
 
 export function getHasCurrentSequence(): boolean {
-	return state.currentSequence !== null;
+  return state.currentSequence !== null;
 }
 
 export function getSequenceCount(): number {
-	return state.sequences.length;
+  return state.sequences.length;
 }
 
 export function getHasUnsavedChanges(): boolean {
-	// TODO: Implement change tracking
-	return false;
+  // TODO: Implement change tracking
+  return false;
 }
 
 export function getHasArrowPositions(): boolean {
-	return state.arrowPositions.size > 0;
+  return state.arrowPositions.size > 0;
 }
 
 export function getArrowPositioningComplete(): boolean {
-	return !state.arrowPositioningInProgress && state.arrowPositions.size > 0;
+  return !state.arrowPositioningInProgress && state.arrowPositions.size > 0;
 }
 
 // ============================================================================
@@ -131,154 +133,161 @@ export function getArrowPositioningComplete(): boolean {
  * Set the current sequence
  */
 export function setCurrentSequence(sequence: SequenceData | null): void {
-	state.currentSequence = sequence;
-	state.selectedSequenceId = sequence?.id ?? null;
-	state.selectedBeatIndex = null; // Reset beat selection
+  state.currentSequence = sequence;
+  state.selectedSequenceId = sequence?.id ?? null;
+  state.selectedBeatIndex = null; // Reset beat selection
 }
 
 /**
  * Add sequence to the list
  */
 export function addSequence(sequence: SequenceData): void {
-	state.sequences.push(sequence);
-	setCurrentSequence(sequence);
+  state.sequences.push(sequence);
+  setCurrentSequence(sequence);
 }
 
 /**
  * Update sequence in the list
  */
 export function updateSequence(updatedSequence: SequenceData): void {
-	const index = state.sequences.findIndex((s) => s.id === updatedSequence.id);
-	if (index >= 0) {
-		state.sequences[index] = updatedSequence;
-	}
+  const index = state.sequences.findIndex((s) => s.id === updatedSequence.id);
+  if (index >= 0) {
+    state.sequences[index] = updatedSequence;
+  }
 
-	// Update current sequence if it's the same one
-	if (state.currentSequence?.id === updatedSequence.id) {
-		state.currentSequence = updatedSequence;
-	}
+  // Update current sequence if it's the same one
+  if (state.currentSequence?.id === updatedSequence.id) {
+    state.currentSequence = updatedSequence;
+  }
 }
 
 /**
  * Remove sequence from the list
  */
 export function removeSequence(sequenceId: string): void {
-	state.sequences = state.sequences.filter((s) => s.id !== sequenceId);
+  state.sequences = state.sequences.filter((s) => s.id !== sequenceId);
 
-	// Clear current sequence if it was deleted
-	if (state.currentSequence?.id === sequenceId) {
-		setCurrentSequence(null);
-	}
+  // Clear current sequence if it was deleted
+  if (state.currentSequence?.id === sequenceId) {
+    setCurrentSequence(null);
+  }
 }
 
 /**
  * Set sequences list
  */
 export function setSequences(newSequences: SequenceData[]): void {
-	state.sequences = newSequences;
+  state.sequences = newSequences;
 }
 
 /**
  * Set loading state
  */
 export function setLoading(loading: boolean): void {
-	state.isLoading = loading;
+  state.isLoading = loading;
 }
 
 /**
  * Set error state
  */
 export function setError(error: string | null): void {
-	state.error = error;
+  state.error = error;
 }
 
 /**
  * Clear error state
  */
 export function clearError(): void {
-	state.error = null;
+  state.error = null;
 }
 
 /**
  * Update current beat in sequence
  */
 export function updateCurrentBeat(beatIndex: number, beatData: BeatData): void {
-	if (state.currentSequence && beatIndex >= 0 && beatIndex < state.currentSequence.beats.length) {
-		// Create a new beats array (respecting immutability of domain model) and assign
-		const newBeats = [...state.currentSequence.beats];
-		newBeats[beatIndex] = beatData;
-		state.currentSequence = { ...state.currentSequence, beats: newBeats } as SequenceData;
-	}
+  if (
+    state.currentSequence &&
+    beatIndex >= 0 &&
+    beatIndex < state.currentSequence.beats.length
+  ) {
+    // Create a new beats array (respecting immutability of domain model) and assign
+    const newBeats = [...state.currentSequence.beats];
+    newBeats[beatIndex] = beatData;
+    state.currentSequence = {
+      ...state.currentSequence,
+      beats: newBeats,
+    } as SequenceData;
+  }
 }
 
 /**
  * Select a beat
  */
 export function selectBeat(beatIndex: number | null): void {
-	state.selectedBeatIndex = beatIndex;
+  state.selectedBeatIndex = beatIndex;
 }
 
 /**
  * Set grid mode
  */
 export function setGridMode(mode: GridMode): void {
-	state.gridMode = mode;
+  state.gridMode = mode;
 }
 
 /**
  * Set show beat numbers
  */
 export function setShowBeatNumbers(show: boolean): void {
-	state.showBeatNumbers = show;
+  state.showBeatNumbers = show;
 }
 
 /**
  * Set arrow positions
  */
 export function setArrowPositions(positions: Map<string, ArrowPosition>): void {
-	state.arrowPositions = positions;
+  state.arrowPositions = positions;
 }
 
 /**
  * Set arrow positioning in progress
  */
 export function setArrowPositioningInProgress(inProgress: boolean): void {
-	state.arrowPositioningInProgress = inProgress;
+  state.arrowPositioningInProgress = inProgress;
 }
 
 /**
  * Set arrow positioning error
  */
 export function setArrowPositioningError(error: string | null): void {
-	state.arrowPositioningError = error;
+  state.arrowPositioningError = error;
 }
 
 /**
  * Get arrow position for color
  */
 export function getArrowPosition(color: string): ArrowPosition | null {
-	return state.arrowPositions.get(color) || null;
+  return state.arrowPositions.get(color) || null;
 }
 
 /**
  * Clear all arrow positions
  */
 export function clearArrowPositions(): void {
-	state.arrowPositions.clear();
+  state.arrowPositions.clear();
 }
 
 /**
  * Reset all state
  */
 export function resetSequenceState(): void {
-	state.currentSequence = null;
-	state.sequences = [];
-	state.isLoading = false;
-	state.error = null;
-	state.selectedBeatIndex = null;
-	state.selectedSequenceId = null;
-	state.gridMode = GridMode.DIAMOND;
-	state.arrowPositions.clear();
-	state.arrowPositioningInProgress = false;
-	state.arrowPositioningError = null;
+  state.currentSequence = null;
+  state.sequences = [];
+  state.isLoading = false;
+  state.error = null;
+  state.selectedBeatIndex = null;
+  state.selectedSequenceId = null;
+  state.gridMode = GridMode.DIAMOND;
+  state.arrowPositions.clear();
+  state.arrowPositioningInProgress = false;
+  state.arrowPositioningError = null;
 }

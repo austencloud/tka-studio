@@ -1,213 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PNG Metadata Extraction Test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #1a1a1a;
-            color: #fff;
-        }
-        .test-section {
-            background: #2a2a2a;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid #444;
-        }
-        .test-button {
-            background: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        .test-button:hover {
-            background: #45a049;
-        }
-        .results {
-            background: #1e1e1e;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border-left: 4px solid #4CAF50;
-            white-space: pre-wrap;
-            font-family: monospace;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .error {
-            border-left-color: #f44336;
-            background: #2a1a1a;
-        }
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-        }
-        .comparison-table th,
-        .comparison-table td {
-            border: 1px solid #444;
-            padding: 8px;
-            text-align: left;
-        }
-        .comparison-table th {
-            background: #333;
-        }
-        .placeholder-data {
-            background: #4a2a2a;
-        }
-        .real-data {
-            background: #2a4a2a;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .test-section {
+        background: #2a2a2a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border: 1px solid #444;
+      }
+      .test-button {
+        background: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      .test-button:hover {
+        background: #45a049;
+      }
+      .results {
+        background: #1e1e1e;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 4px;
+        border-left: 4px solid #4caf50;
+        white-space: pre-wrap;
+        font-family: monospace;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .error {
+        border-left-color: #f44336;
+        background: #2a1a1a;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        border: 1px solid #444;
+        padding: 8px;
+        text-align: left;
+      }
+      .comparison-table th {
+        background: #333;
+      }
+      .placeholder-data {
+        background: #4a2a2a;
+      }
+      .real-data {
+        background: #2a4a2a;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🔍 PNG Metadata Extraction Test</h1>
-    <p>This page demonstrates the difference between placeholder data and real PNG metadata extraction.</p>
+    <p>
+      This page demonstrates the difference between placeholder data and real
+      PNG metadata extraction.
+    </p>
 
     <div class="test-section">
-        <h2>Phase 2: Demonstration</h2>
-        <p>Click the buttons below to extract real metadata from sequence PNG files:</p>
-        
-        <button class="test-button" onclick="testSequenceMetadata('ABC')">Test ABC Sequence</button>
-        <button class="test-button" onclick="testSequenceMetadata('CAKE')">Test CAKE Sequence</button>
-        <button class="test-button" onclick="testSequenceMetadata('A')">Test A Sequence</button>
-        <button class="test-button" onclick="compareWithPlaceholder()">Compare Real vs Placeholder</button>
-        
-        <div id="results" class="results"></div>
+      <h2>Phase 2: Demonstration</h2>
+      <p>
+        Click the buttons below to extract real metadata from sequence PNG
+        files:
+      </p>
+
+      <button class="test-button" onclick="testSequenceMetadata('ABC')">
+        Test ABC Sequence
+      </button>
+      <button class="test-button" onclick="testSequenceMetadata('CAKE')">
+        Test CAKE Sequence
+      </button>
+      <button class="test-button" onclick="testSequenceMetadata('A')">
+        Test A Sequence
+      </button>
+      <button class="test-button" onclick="compareWithPlaceholder()">
+        Compare Real vs Placeholder
+      </button>
+
+      <div id="results" class="results"></div>
     </div>
 
     <div class="test-section">
-        <h2>Current Browse Tab Data (Placeholder)</h2>
-        <p>This is what the Browse tab currently shows (generated placeholder data):</p>
-        <table class="comparison-table">
-            <thead>
-                <tr>
-                    <th>Property</th>
-                    <th>Current Placeholder Data</th>
-                    <th>Real Metadata (will be extracted)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="placeholder-data">
-                    <td>Authors</td>
-                    <td>"TKA User", "Demo Author", "Expert User"</td>
-                    <td id="real-authors">Loading...</td>
-                </tr>
-                <tr class="placeholder-data">
-                    <td>Difficulty Levels</td>
-                    <td>"beginner", "intermediate", "advanced"</td>
-                    <td id="real-difficulties">Loading...</td>
-                </tr>
-                <tr class="placeholder-data">
-                    <td>Sequence Lengths</td>
-                    <td>Random 3-8 beats</td>
-                    <td id="real-lengths">Loading...</td>
-                </tr>
-                <tr class="placeholder-data">
-                    <td>Starting Letters</td>
-                    <td>Hardcoded ranges A-D, E-H, etc.</td>
-                    <td id="real-letters">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
+      <h2>Current Browse Tab Data (Placeholder)</h2>
+      <p>
+        This is what the Browse tab currently shows (generated placeholder
+        data):
+      </p>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Current Placeholder Data</th>
+            <th>Real Metadata (will be extracted)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="placeholder-data">
+            <td>Authors</td>
+            <td>"TKA User", "Demo Author", "Expert User"</td>
+            <td id="real-authors">Loading...</td>
+          </tr>
+          <tr class="placeholder-data">
+            <td>Difficulty Levels</td>
+            <td>"beginner", "intermediate", "advanced"</td>
+            <td id="real-difficulties">Loading...</td>
+          </tr>
+          <tr class="placeholder-data">
+            <td>Sequence Lengths</td>
+            <td>Random 3-8 beats</td>
+            <td id="real-lengths">Loading...</td>
+          </tr>
+          <tr class="placeholder-data">
+            <td>Starting Letters</td>
+            <td>Hardcoded ranges A-D, E-H, etc.</td>
+            <td id="real-letters">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <script type="module">
-        // Import the PNG metadata extractor
-        import { PngMetadataExtractor } from '/src/lib/utils/png-metadata-extractor.js';
+      // Import the PNG metadata extractor
+      import { PngMetadataExtractor } from "/src/lib/utils/png-metadata-extractor.js";
 
-        window.testSequenceMetadata = async function(sequenceName) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.textContent = `🔍 Extracting metadata for ${sequenceName}...\n`;
-            
-            try {
-                // Extract metadata using the real extractor
-                const metadata = await PngMetadataExtractor.extractSequenceMetadata(sequenceName);
-                
-                resultsDiv.textContent += `✅ Successfully extracted metadata for ${sequenceName}:\n\n`;
-                resultsDiv.textContent += JSON.stringify(metadata, null, 2);
-                
-                // Extract key information
-                if (metadata && metadata.length > 0) {
-                    const firstStep = metadata[0];
-                    resultsDiv.textContent += `\n\n📊 Key Information:\n`;
-                    resultsDiv.textContent += `- Sequence Length: ${metadata.length - 1} beats\n`;
-                    resultsDiv.textContent += `- Starting Position: ${firstStep.sequence_start_position || 'Unknown'}\n`;
-                    resultsDiv.textContent += `- Grid Mode: ${firstStep.grid_mode || 'Unknown'}\n`;
-                    
-                    // Extract motion types for each beat
-                    resultsDiv.textContent += `\n🎯 Motion Types by Beat:\n`;
-                    metadata.forEach((step, index) => {
-                        if (step.beat && step.beat > 0) {
-                            const blueMotion = step.blue_attributes?.motion_type || "unknown";
-                            const redMotion = step.red_attributes?.motion_type || "unknown";
-                            resultsDiv.textContent += `  Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}\n`;
-                        }
-                    });
-                }
-                
-            } catch (error) {
-                resultsDiv.className = 'results error';
-                resultsDiv.textContent += `❌ Failed to extract metadata for ${sequenceName}:\n`;
-                resultsDiv.textContent += error.message;
-            }
-        };
+      window.testSequenceMetadata = async function (sequenceName) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.textContent = `🔍 Extracting metadata for ${sequenceName}...\n`;
 
-        window.compareWithPlaceholder = async function() {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.className = 'results';
-            resultsDiv.textContent = '🔄 Loading sequence index to compare real vs placeholder data...\n';
-            
-            try {
-                // Load the real sequence index
-                const response = await fetch('/sequence-index.json');
-                const data = await response.json();
-                const sequences = data.sequences || [];
-                
-                resultsDiv.textContent += `✅ Loaded ${sequences.length} real sequences from index\n\n`;
-                
-                // Extract real authors
-                const realAuthors = [...new Set(sequences.map(s => s.author).filter(Boolean))];
-                document.getElementById('real-authors').textContent = realAuthors.join(', ');
-                
-                // Extract real difficulty levels
-                const realDifficulties = [...new Set(sequences.map(s => s.difficultyLevel).filter(Boolean))];
-                document.getElementById('real-difficulties').textContent = realDifficulties.join(', ');
-                
-                // Extract real sequence lengths
-                const realLengths = [...new Set(sequences.map(s => s.sequenceLength).filter(Boolean))].sort((a, b) => a - b);
-                document.getElementById('real-lengths').textContent = `${realLengths[0]}-${realLengths[realLengths.length - 1]} beats`;
-                
-                // Extract real starting letters
-                const realLetters = [...new Set(sequences.map(s => s.word?.[0]).filter(Boolean))].sort();
-                document.getElementById('real-letters').textContent = realLetters.join(', ');
-                
-                resultsDiv.textContent += `📊 Real Data Summary:\n`;
-                resultsDiv.textContent += `- Authors: ${realAuthors.length} unique (${realAuthors.join(', ')})\n`;
-                resultsDiv.textContent += `- Difficulties: ${realDifficulties.join(', ')}\n`;
-                resultsDiv.textContent += `- Sequence Lengths: ${realLengths[0]}-${realLengths[realLengths.length - 1]} beats\n`;
-                resultsDiv.textContent += `- Starting Letters: ${realLetters.length} unique letters\n`;
-                resultsDiv.textContent += `\n🎯 This shows the real data available vs the current placeholder data!`;
-                
-            } catch (error) {
-                resultsDiv.className = 'results error';
-                resultsDiv.textContent += `❌ Failed to load sequence index: ${error.message}`;
-            }
-        };
+        try {
+          // Extract metadata using the real extractor
+          const metadata =
+            await PngMetadataExtractor.extractSequenceMetadata(sequenceName);
 
-        // Auto-load comparison on page load
-        window.addEventListener('load', () => {
-            setTimeout(compareWithPlaceholder, 1000);
-        });
+          resultsDiv.textContent += `✅ Successfully extracted metadata for ${sequenceName}:\n\n`;
+          resultsDiv.textContent += JSON.stringify(metadata, null, 2);
+
+          // Extract key information
+          if (metadata && metadata.length > 0) {
+            const firstStep = metadata[0];
+            resultsDiv.textContent += `\n\n📊 Key Information:\n`;
+            resultsDiv.textContent += `- Sequence Length: ${metadata.length - 1} beats\n`;
+            resultsDiv.textContent += `- Starting Position: ${firstStep.sequence_start_position || "Unknown"}\n`;
+            resultsDiv.textContent += `- Grid Mode: ${firstStep.grid_mode || "Unknown"}\n`;
+
+            // Extract motion types for each beat
+            resultsDiv.textContent += `\n🎯 Motion Types by Beat:\n`;
+            metadata.forEach((step, index) => {
+              if (step.beat && step.beat > 0) {
+                const blueMotion =
+                  step.blue_attributes?.motion_type || "unknown";
+                const redMotion = step.red_attributes?.motion_type || "unknown";
+                resultsDiv.textContent += `  Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}\n`;
+              }
+            });
+          }
+        } catch (error) {
+          resultsDiv.className = "results error";
+          resultsDiv.textContent += `❌ Failed to extract metadata for ${sequenceName}:\n`;
+          resultsDiv.textContent += error.message;
+        }
+      };
+
+      window.compareWithPlaceholder = async function () {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.className = "results";
+        resultsDiv.textContent =
+          "🔄 Loading sequence index to compare real vs placeholder data...\n";
+
+        try {
+          // Load the real sequence index
+          const response = await fetch("/sequence-index.json");
+          const data = await response.json();
+          const sequences = data.sequences || [];
+
+          resultsDiv.textContent += `✅ Loaded ${sequences.length} real sequences from index\n\n`;
+
+          // Extract real authors
+          const realAuthors = [
+            ...new Set(sequences.map((s) => s.author).filter(Boolean)),
+          ];
+          document.getElementById("real-authors").textContent =
+            realAuthors.join(", ");
+
+          // Extract real difficulty levels
+          const realDifficulties = [
+            ...new Set(sequences.map((s) => s.difficultyLevel).filter(Boolean)),
+          ];
+          document.getElementById("real-difficulties").textContent =
+            realDifficulties.join(", ");
+
+          // Extract real sequence lengths
+          const realLengths = [
+            ...new Set(sequences.map((s) => s.sequenceLength).filter(Boolean)),
+          ].sort((a, b) => a - b);
+          document.getElementById("real-lengths").textContent =
+            `${realLengths[0]}-${realLengths[realLengths.length - 1]} beats`;
+
+          // Extract real starting letters
+          const realLetters = [
+            ...new Set(sequences.map((s) => s.word?.[0]).filter(Boolean)),
+          ].sort();
+          document.getElementById("real-letters").textContent =
+            realLetters.join(", ");
+
+          resultsDiv.textContent += `📊 Real Data Summary:\n`;
+          resultsDiv.textContent += `- Authors: ${realAuthors.length} unique (${realAuthors.join(", ")})\n`;
+          resultsDiv.textContent += `- Difficulties: ${realDifficulties.join(", ")}\n`;
+          resultsDiv.textContent += `- Sequence Lengths: ${realLengths[0]}-${realLengths[realLengths.length - 1]} beats\n`;
+          resultsDiv.textContent += `- Starting Letters: ${realLetters.length} unique letters\n`;
+          resultsDiv.textContent += `\n🎯 This shows the real data available vs the current placeholder data!`;
+        } catch (error) {
+          resultsDiv.className = "results error";
+          resultsDiv.textContent += `❌ Failed to load sequence index: ${error.message}`;
+        }
+      };
+
+      // Auto-load comparison on page load
+      window.addEventListener("load", () => {
+        setTimeout(compareWithPlaceholder, 1000);
+      });
     </script>
-</body>
+  </body>
 </html>

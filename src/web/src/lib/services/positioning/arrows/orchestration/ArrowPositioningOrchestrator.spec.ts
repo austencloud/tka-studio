@@ -30,7 +30,7 @@ describe("ArrowPositioningOrchestrator Integration", () => {
       locationCalculator,
       rotationCalculator,
       adjustmentCalculator,
-      coordinateSystem
+      coordinateSystem,
     );
 
     const arrowData: ArrowData = {
@@ -79,7 +79,7 @@ describe("ArrowPositioningOrchestrator Integration", () => {
     const [x, y, rotation] = await orchestrator.calculateArrowPositionAsync(
       arrowData,
       pictographData,
-      motionData
+      motionData,
     );
 
     // The position should not be just the initial position (should include adjustments)
@@ -93,10 +93,10 @@ describe("ArrowPositioningOrchestrator Integration", () => {
     // The key test: position should be different from just the initial coordinate system position
     const initialPosition = coordinateSystem.getInitialPosition(
       motionData,
-      Location.SOUTH
+      Location.SOUTH,
     );
     console.log(
-      `Initial position: (${initialPosition.x}, ${initialPosition.y})`
+      `Initial position: (${initialPosition.x}, ${initialPosition.y})`,
     );
 
     // If adjustments are working, the final position should be different
@@ -119,7 +119,7 @@ describe("ArrowPositioningOrchestrator Integration", () => {
       locationCalculator,
       rotationCalculator,
       adjustmentCalculator,
-      coordinateSystem
+      coordinateSystem,
     );
 
     const pictographData: PictographData = {

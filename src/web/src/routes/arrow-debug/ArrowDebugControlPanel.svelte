@@ -243,9 +243,10 @@
 		
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={debugState.autoUpdate}
+				<input
+					type="checkbox"
+					checked={debugState.autoUpdate}
+					onchange={(e) => debugState.autoUpdate = (e.target as HTMLInputElement).checked}
 				/>
 				Auto-update on changes
 			</label>

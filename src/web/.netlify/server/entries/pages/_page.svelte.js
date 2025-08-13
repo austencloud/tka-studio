@@ -6,6 +6,4 @@ function _page($$payload, $$props) {
   MainApplication($$payload);
   pop();
 }
-export {
-  _page as default
-};
+export { _page as default };

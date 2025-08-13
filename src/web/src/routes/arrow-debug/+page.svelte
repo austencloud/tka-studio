@@ -7,9 +7,9 @@
 	import { initializeDebugApp } from './debug-app-init';
 
 	// Reactive state for app initialization
-	let isAppReady = $state(false);
-	let initError = $state<string | null>(null);
-	let state: ReturnType<typeof createArrowDebugState> | null = $state(null);
+	let isAppReady = false;
+	let initError: string | null = null;
+	let state: ReturnType<typeof createArrowDebugState> | null = null;
 
 	// Initialize the application on mount
 	onMount(async () => {

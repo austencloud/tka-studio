@@ -3,18 +3,30 @@
  *
  * Comprehensive state for debugging arrow positioning issues.
  * Tracks each step of the 3-phase positioning process.
+ *
+ * Note: Service interfaces removed temporarily - using mock data for now
+ * These will be restored when the DI container is fixed
  */
 
 import type { ArrowData, MotionData, PictographData } from "$lib/domain";
-import { Location } from "$lib/domain";
+import {
+  Location,
+  GridMode,
+  ArrowType,
+  MotionType,
+  RotationDirection,
+  Orientation,
+  GridPosition,
+} from "$lib/domain";
+import { createGridData } from "$lib/domain/GridData";
 import { resolve, createWebApplication } from "$lib/services/bootstrap";
+import type { Point } from "$lib/services/positioning/types";
 import type {
   IArrowCoordinateSystemService,
   IArrowLocationCalculator,
   IArrowRotationCalculator,
   IArrowAdjustmentCalculator,
-} from "$lib/services/interfaces";
-import type { Point } from "$lib/services/positioning/types";
+} from "$lib/services/positioning";
 
 export interface ArrowPositioningDebugData {
   // Input data
@@ -113,12 +125,6 @@ export interface ArrowDebugState {
   // Current positioning data for selected arrow
   currentDebugData: ArrowPositioningDebugData;
 
-  // Services (injected)
-  coordinateSystemService: IArrowCoordinateSystemService;
-  locationCalculator: IArrowLocationCalculator;
-  rotationCalculator: IArrowRotationCalculator;
-  adjustmentCalculator: IArrowAdjustmentCalculator;
-
   // UI state
   isCalculating: boolean;
   autoUpdate: boolean;
@@ -137,27 +143,6 @@ export interface ArrowDebugState {
 }
 
 export function createArrowDebugState(): ArrowDebugState {
-  // Initialize services (ensure DI container is ready)
-  let coordinateSystemService: IArrowCoordinateSystemService;
-  let locationCalculator: IArrowLocationCalculator;
-  let rotationCalculator: IArrowRotationCalculator;
-  let adjustmentCalculator: IArrowAdjustmentCalculator;
-
-  try {
-    // Get services from DI container
-    coordinateSystemService = resolve("IArrowCoordinateSystemService");
-    locationCalculator = resolve("IArrowLocationCalculator");
-    rotationCalculator = resolve("IArrowRotationCalculator");
-    adjustmentCalculator = resolve("IArrowAdjustmentCalculator");
-  } catch (error) {
-    console.warn("Services not yet available, will retry when needed:", error);
-    // Create placeholder services - these will be replaced when container is ready
-    coordinateSystemService = null as any;
-    locationCalculator = null as any;
-    rotationCalculator = null as any;
-    adjustmentCalculator = null as any;
-  }
-
   // Initialize reactive state
   let selectedPictograph = $state<PictographData | null>(null);
   let selectedArrowColor = $state<"red" | "blue">("blue");
@@ -173,26 +158,30 @@ export function createArrowDebugState(): ArrowDebugState {
   let showAdjustmentVectors = $state(true);
 
   let currentDebugData = $state<ArrowPositioningDebugData>(
-    createEmptyDebugData()
+    createEmptyDebugData(),
   );
 
   let isCalculating = $state(false);
   let autoUpdate = $state(true);
 
   let expandedSections = $state(
-    new Set(["coordinate_system", "positioning_steps"])
+    new Set(["coordinate_system", "positioning_steps"]),
   );
 
-  // Computed values
-  let currentMotionData = $derived(() => {
-    if (!selectedPictograph?.motions) return null;
-    return selectedPictograph.motions[selectedArrowColor];
-  });
+  // Service instances
+  let coordinateSystemService: IArrowCoordinateSystemService | null = null;
+  let locationCalculator: IArrowLocationCalculator | null = null;
+  let rotationCalculator: IArrowRotationCalculator | null = null;
+  let adjustmentCalculator: IArrowAdjustmentCalculator | null = null;
 
-  let currentArrowData = $derived(() => {
-    if (!selectedPictograph?.arrows) return null;
-    return selectedPictograph.arrows[selectedArrowColor];
-  });
+  // Computed values
+  let currentMotionData = $derived(
+    selectedPictograph?.motions?.[selectedArrowColor] || null,
+  );
+
+  let currentArrowData = $derived(
+    selectedPictograph?.arrows?.[selectedArrowColor] || null,
+  );
 
   // Function to ensure services are initialized
   function ensureServicesInitialized(): boolean {
@@ -252,16 +241,18 @@ export function createArrowDebugState(): ArrowDebugState {
       // Step 1: Calculate location
       const locationStart = performance.now();
       try {
-        debugData.calculatedLocation = locationCalculator.calculateLocation(
-          currentMotionData,
-          selectedPictograph
-        );
-        debugData.locationDebugInfo = {
-          motionType: currentMotionData.motion_type || "",
-          startOri: currentMotionData.start_ori || "",
-          endOri: currentMotionData.end_ori || "",
-          calculationMethod: getLocationCalculationMethod(currentMotionData),
-        };
+        if (locationCalculator) {
+          debugData.calculatedLocation = locationCalculator.calculateLocation(
+            currentMotionData,
+            selectedPictograph,
+          );
+          debugData.locationDebugInfo = {
+            motionType: currentMotionData.motion_type || "",
+            startOri: currentMotionData.start_ori || "",
+            endOri: currentMotionData.end_ori || "",
+            calculationMethod: getLocationCalculationMethod(currentMotionData),
+          };
+        }
       } catch (error) {
         debugData.errors.push({
           step: "location_calculation",
@@ -277,11 +268,11 @@ export function createArrowDebugState(): ArrowDebugState {
       // Step 2: Get initial position
       const positionStart = performance.now();
       try {
-        if (debugData.calculatedLocation) {
+        if (debugData.calculatedLocation && coordinateSystemService) {
           debugData.initialPosition =
             coordinateSystemService.getInitialPosition(
               currentMotionData,
-              debugData.calculatedLocation
+              debugData.calculatedLocation,
             );
 
           debugData.coordinateSystemDebugInfo = {
@@ -306,10 +297,10 @@ export function createArrowDebugState(): ArrowDebugState {
       // Step 3: Calculate rotation
       const rotationStart = performance.now();
       try {
-        if (debugData.calculatedLocation) {
+        if (debugData.calculatedLocation && rotationCalculator) {
           debugData.finalRotation = rotationCalculator.calculateRotation(
             currentMotionData,
-            debugData.calculatedLocation
+            debugData.calculatedLocation,
           );
         }
       } catch (error) {
@@ -325,20 +316,20 @@ export function createArrowDebugState(): ArrowDebugState {
       // Step 4: Calculate adjustment (this is where the 3-step process should happen)
       const adjustmentStart = performance.now();
       try {
-        if (debugData.calculatedLocation) {
+        if (debugData.calculatedLocation && adjustmentCalculator) {
           const fullAdjustment = await adjustmentCalculator.calculateAdjustment(
             selectedPictograph,
             currentMotionData,
             selectedPictograph.letter || "",
             debugData.calculatedLocation,
-            selectedArrowColor
+            selectedArrowColor,
           );
 
           // Also try to get individual components for debugging
           await calculateIndividualAdjustments(
             debugData,
             selectedPictograph,
-            currentMotionData
+            currentMotionData,
           );
 
           debugData.tupleProcessedAdjustment = fullAdjustment;
@@ -377,7 +368,7 @@ export function createArrowDebugState(): ArrowDebugState {
   async function calculateIndividualAdjustments(
     debugData: ArrowPositioningDebugData,
     pictograph: PictographData,
-    motion: MotionData
+    motion: MotionData,
   ): Promise<void> {
     // This would require access to the internal services of the adjustment calculator
     // For now, we'll provide placeholder debug info
@@ -414,7 +405,7 @@ export function createArrowDebugState(): ArrowDebugState {
   }
 
   function getUsedCoordinateSet(
-    motion: MotionData
+    motion: MotionData,
   ): "hand_points" | "layer2_points" | "center" {
     const motionType = motion.motion_type?.toLowerCase();
     if (["pro", "anti", "float"].includes(motionType || "")) {
@@ -464,57 +455,72 @@ export function createArrowDebugState(): ArrowDebugState {
       // You can replace this with actual data loading logic
       const samplePictographs: PictographData[] = [
         {
+          id: "sample_a",
           letter: "A",
           grid_mode: "diamond",
+          start_position: GridPosition.ALPHA1,
+          end_position: GridPosition.ALPHA3,
+          beat: 1,
+          is_blank: false,
+          is_mirrored: false,
+          grid_data: createGridData({ grid_mode: GridMode.DIAMOND }),
+          props: {},
+          metadata: {},
           motions: {
             blue: {
-              motion_type: "pro",
-              start_ori: "in",
-              end_ori: "out",
-              prop_rot_dir: "cw",
+              motion_type: MotionType.PRO,
+              start_ori: Orientation.IN,
+              end_ori: Orientation.OUT,
+              start_loc: Location.NORTH,
+              end_loc: Location.SOUTH,
+              prop_rot_dir: RotationDirection.CLOCKWISE,
               turns: 1,
+              is_visible: true,
             },
             red: {
-              motion_type: "anti",
-              start_ori: "out",
-              end_ori: "in",
-              prop_rot_dir: "ccw",
+              motion_type: MotionType.ANTI,
+              start_ori: Orientation.OUT,
+              end_ori: Orientation.IN,
+              start_loc: Location.NORTH,
+              end_loc: Location.SOUTH,
+              prop_rot_dir: RotationDirection.COUNTER_CLOCKWISE,
               turns: 1,
+              is_visible: true,
             },
           },
           arrows: {
             blue: {
               id: "blue_arrow",
               color: "blue",
-              arrow_type: "BLUE",
+              arrow_type: ArrowType.BLUE,
               is_visible: true,
               is_selected: false,
               position_x: 0,
               position_y: 0,
               rotation_angle: 0,
               is_mirrored: false,
-              motion_type: "pro",
-              location: "center",
-              start_orientation: "in",
-              end_orientation: "out",
-              rotation_direction: "cw",
+              motion_type: MotionType.PRO,
+              location: Location.NORTH,
+              start_orientation: Orientation.IN,
+              end_orientation: Orientation.OUT,
+              rotation_direction: RotationDirection.CLOCKWISE,
               turns: 1,
             },
             red: {
               id: "red_arrow",
               color: "red",
-              arrow_type: "RED",
+              arrow_type: ArrowType.RED,
               is_visible: true,
               is_selected: false,
               position_x: 0,
               position_y: 0,
               rotation_angle: 0,
               is_mirrored: false,
-              motion_type: "anti",
-              location: "center",
-              start_orientation: "out",
-              end_orientation: "in",
-              rotation_direction: "ccw",
+              motion_type: MotionType.ANTI,
+              location: Location.NORTH,
+              start_orientation: Orientation.OUT,
+              end_orientation: Orientation.IN,
+              rotation_direction: RotationDirection.COUNTER_CLOCKWISE,
               turns: 1,
             },
           },
@@ -625,12 +631,6 @@ export function createArrowDebugState(): ArrowDebugState {
     get currentArrowData() {
       return currentArrowData;
     },
-
-    // Services
-    coordinateSystemService,
-    locationCalculator,
-    rotationCalculator,
-    adjustmentCalculator,
 
     // Methods
     calculateFullPositioning,

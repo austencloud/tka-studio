@@ -19,27 +19,27 @@
   let submitStatus = $state<'idle' | 'success' | 'error'>('idle');
 
   // Form validation
-  let formErrors = $derived(() => {
+  let formErrors = $derived.by(() => {
     const errors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) {
       errors.name = 'Name is required';
     }
-    
+
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Please enter a valid email address';
     }
-    
+
     if (!formData.subject.trim()) {
       errors.subject = 'Subject is required';
     }
-    
+
     if (!formData.message.trim()) {
       errors.message = 'Message is required';
     }
-    
+
     return errors;
   });
 

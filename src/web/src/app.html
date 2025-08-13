@@ -1,129 +1,135 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content="TKA - The Kinetic Constructor V2 Modern" />
-		<meta name="theme-color" content="#1a1a1a" />
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="TKA - The Kinetic Constructor V2 Modern"
+    />
+    <meta name="theme-color" content="#1a1a1a" />
 
-		<!-- SMART CONSOLE FORWARDER - DEVELOPMENT ONLY -->
-		<script>
-			(function () {
-				// Only enable in development
-				const isDev =
-					window.location.hostname === 'localhost' ||
-					window.location.hostname === '127.0.0.1';
-				if (!isDev) return;
+    <!-- SMART CONSOLE FORWARDER - DEVELOPMENT ONLY -->
+    <script>
+      (function () {
+        // Only enable in development
+        const isDev =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1";
+        if (!isDev) return;
 
-				// Store original console methods
-				const originalConsole = {
-					log: console.log,
-					error: console.error,
-					warn: console.warn,
-					info: console.info,
-				};
+        // Store original console methods
+        const originalConsole = {
+          log: console.log,
+          error: console.error,
+          warn: console.warn,
+          info: console.info,
+        };
 
-				// Filter out noisy logs
-				function shouldForwardLog(args) {
-					const message = args.join(' ');
+        // Filter out noisy logs
+        function shouldForwardLog(args) {
+          const message = args.join(" ");
 
-					// Skip empty or whitespace-only messages
-					if (!message.trim()) return false;
+          // Skip empty or whitespace-only messages
+          if (!message.trim()) return false;
 
-					// Skip single numbers without context
-					if (args.length === 1 && typeof args[0] === 'number') return false;
+          // Skip single numbers without context
+          if (args.length === 1 && typeof args[0] === "number") return false;
 
-					// Skip very short messages that are likely debug noise
-					if (message.length < 3) return false;
+          // Skip very short messages that are likely debug noise
+          if (message.length < 3) return false;
 
-					// Skip repetitive debug messages
-					const skipPatterns = [
-						/^[0-9]+$/, // Just numbers
-						/^\s*$/, // Just whitespace
-						/^undefined$/,
-						/^null$/,
-					];
+          // Skip repetitive debug messages
+          const skipPatterns = [
+            /^[0-9]+$/, // Just numbers
+            /^\s*$/, // Just whitespace
+            /^undefined$/,
+            /^null$/,
+          ];
 
-					return !skipPatterns.some((pattern) => pattern.test(message));
-				}
+          return !skipPatterns.some((pattern) => pattern.test(message));
+        }
 
-				// Send to server (throttled)
-				let lastLogTime = 0;
-				const LOG_THROTTLE_MS = 100; // Minimum time between logs
+        // Send to server (throttled)
+        let lastLogTime = 0;
+        const LOG_THROTTLE_MS = 100; // Minimum time between logs
 
-				function sendToServer(level, args) {
-					const now = Date.now();
-					if (now - lastLogTime < LOG_THROTTLE_MS) return;
-					lastLogTime = now;
+        function sendToServer(level, args) {
+          const now = Date.now();
+          if (now - lastLogTime < LOG_THROTTLE_MS) return;
+          lastLogTime = now;
 
-					if (!shouldForwardLog(args)) return;
+          if (!shouldForwardLog(args)) return;
 
-					const message = args
-						.map((arg) => {
-							if (typeof arg === 'object') {
-								try {
-									return JSON.stringify(arg, null, 2);
-								} catch {
-									return String(arg);
-								}
-							}
-							return String(arg);
-						})
-						.join(' ');
+          const message = args
+            .map((arg) => {
+              if (typeof arg === "object") {
+                try {
+                  return JSON.stringify(arg, null, 2);
+                } catch {
+                  return String(arg);
+                }
+              }
+              return String(arg);
+            })
+            .join(" ");
 
-					fetch('/api/console-forward', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ level, message }),
-					}).catch(() => {}); // Ignore fetch errors
-				}
+          fetch("/api/console-forward", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ level, message }),
+          }).catch(() => {}); // Ignore fetch errors
+        }
 
-				// Override console methods with smart filtering
-				console.log = function (...args) {
-					originalConsole.log.apply(console, args);
-					sendToServer('LOG', args);
-				};
+        // Override console methods with smart filtering
+        console.log = function (...args) {
+          originalConsole.log.apply(console, args);
+          sendToServer("LOG", args);
+        };
 
-				console.error = function (...args) {
-					originalConsole.error.apply(console, args);
-					sendToServer('ERROR', args);
-				};
+        console.error = function (...args) {
+          originalConsole.error.apply(console, args);
+          sendToServer("ERROR", args);
+        };
 
-				console.warn = function (...args) {
-					originalConsole.warn.apply(console, args);
-					sendToServer('WARN', args);
-				};
+        console.warn = function (...args) {
+          originalConsole.warn.apply(console, args);
+          sendToServer("WARN", args);
+        };
 
-				console.info = function (...args) {
-					originalConsole.info.apply(console, args);
-					sendToServer('INFO', args);
-				};
+        console.info = function (...args) {
+          originalConsole.info.apply(console, args);
+          sendToServer("INFO", args);
+        };
 
-				// Capture global errors (always forward these)
-				window.addEventListener('error', function (event) {
-					console.error('🚨 GLOBAL ERROR:', {
-						message: event.message,
-						filename: event.filename,
-						line: event.lineno,
-						column: event.colno,
-						stack: event.error?.stack,
-					});
-				});
+        // Capture global errors (always forward these)
+        window.addEventListener("error", function (event) {
+          console.error("🚨 GLOBAL ERROR:", {
+            message: event.message,
+            filename: event.filename,
+            line: event.lineno,
+            column: event.colno,
+            stack: event.error?.stack,
+          });
+        });
 
-				// Capture unhandled promise rejections (always forward these)
-				window.addEventListener('unhandledrejection', function (event) {
-					console.error('🚨 UNHANDLED PROMISE REJECTION:', event.reason);
-				});
-			})();
-		</script>
+        // Capture unhandled promise rejections (always forward these)
+        window.addEventListener("unhandledrejection", function (event) {
+          console.error("🚨 UNHANDLED PROMISE REJECTION:", event.reason);
+        });
+      })();
+    </script>
 
-		<!-- Preload critical fonts if needed -->
-		<!-- <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin> -->
+    <!-- Preload critical fonts if needed -->
+    <!-- <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin> -->
 
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover" class="bg-background text-foreground">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+    %sveltekit.head%
+  </head>
+  <body
+    data-sveltekit-preload-data="hover"
+    class="bg-background text-foreground"
+  >
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
 </html>

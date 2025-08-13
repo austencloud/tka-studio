@@ -49,7 +49,7 @@ export interface AnimationTestState {
 // Create a test sequence with separate blue and red parameters
 function createDualPropTestSequence(
   blueParams: MotionTestParams,
-  redParams: MotionTestParams
+  redParams: MotionTestParams,
 ) {
   // Create a simple 2-beat sequence for testing
   const testSequence = [
@@ -100,7 +100,7 @@ function createDualPropTestSequence(
 function calculateRotationDirection(
   motionType: string,
   startLoc: string,
-  endLoc: string
+  endLoc: string,
 ): string {
   // Location order for clockwise movement: n -> e -> s -> w -> n
   const locationOrder = ["n", "e", "s", "w"];
@@ -215,7 +215,7 @@ function mapLocationToEnum(location: string): Location {
 
 // Helper function to convert MotionTestParams to PropAttributes
 function convertMotionTestParamsToPropAttributes(
-  params: MotionTestParams
+  params: MotionTestParams,
 ): PropAttributes {
   return {
     start_loc: params.startLoc,
@@ -279,7 +279,7 @@ export function createMotionTesterState() {
     const newRotDir = calculateRotationDirection(
       blueMotionParams.motionType,
       blueMotionParams.startLoc,
-      blueMotionParams.endLoc
+      blueMotionParams.endLoc,
     );
     if (newRotDir !== blueMotionParams.propRotDir) {
       blueMotionParams.propRotDir = newRotDir;
@@ -335,7 +335,7 @@ export function createMotionTesterState() {
     const newRotDir = calculateRotationDirection(
       redMotionParams.motionType,
       redMotionParams.startLoc,
-      redMotionParams.endLoc
+      redMotionParams.endLoc,
     );
     if (newRotDir !== redMotionParams.propRotDir) {
       redMotionParams.propRotDir = newRotDir;
@@ -390,7 +390,7 @@ export function createMotionTesterState() {
   $effect(() => {
     const testSequence = createDualPropTestSequence(
       blueMotionParams,
-      redMotionParams
+      redMotionParams,
     );
     if (animationEngine.initialize(testSequence)) {
       const metadata = animationEngine.getMetadata();
@@ -481,14 +481,14 @@ export function createMotionTesterState() {
   // Parameter update functions
   function updateBlueMotionParam<K extends keyof MotionTestParams>(
     key: K,
-    value: MotionTestParams[K]
+    value: MotionTestParams[K],
   ) {
     blueMotionParams[key] = value;
   }
 
   function updateRedMotionParam<K extends keyof MotionTestParams>(
     key: K,
-    value: MotionTestParams[K]
+    value: MotionTestParams[K],
   ) {
     redMotionParams[key] = value;
   }
@@ -569,10 +569,10 @@ export function createMotionTesterState() {
     if (!blueEndpoints || !redEndpoints) return null;
 
     const blueDeltaAngle = normalizeAngleSigned(
-      blueEndpoints.targetCenterAngle - blueEndpoints.startCenterAngle
+      blueEndpoints.targetCenterAngle - blueEndpoints.startCenterAngle,
     );
     const redDeltaAngle = normalizeAngleSigned(
-      redEndpoints.targetCenterAngle - redEndpoints.startCenterAngle
+      redEndpoints.targetCenterAngle - redEndpoints.startCenterAngle,
     );
 
     const blueTurnAngle = Math.PI * blueMotionParams.turns;

@@ -27,7 +27,7 @@ export interface TransitionReturn {
  */
 export function foldTransition(
   node: Element,
-  params: FoldTransitionParams = {}
+  params: FoldTransitionParams = {},
 ): TransitionReturn {
   const {
     duration = 600,
@@ -75,7 +75,7 @@ export function slideTransition(
     direction?: "up" | "down" | "left" | "right";
     duration?: number;
     delay?: number;
-  } = {}
+  } = {},
 ): TransitionReturn {
   const { direction = "up", duration = 400, delay = 0 } = params;
 
@@ -112,7 +112,7 @@ export function slideTransition(
  */
 export function flipTransition(
   node: Element,
-  params: { duration?: number; axis?: "x" | "y" } = {}
+  params: { duration?: number; axis?: "x" | "y" } = {},
 ): TransitionReturn {
   const { duration = 600, axis = "y" } = params;
 
@@ -139,7 +139,7 @@ export function flipTransition(
 export function staggeredEntrance(
   index: number,
   total: number,
-  baseDuration: number = 300
+  baseDuration: number = 300,
 ): TransitionReturn {
   const delay = (index / total) * 200; // Stagger delay
 
@@ -158,7 +158,7 @@ export function staggeredEntrance(
  */
 export function glassReveal(
   node: Element,
-  params: { duration?: number; blur?: number } = {}
+  params: { duration?: number; blur?: number } = {},
 ): TransitionReturn {
   const { duration = 500, blur = 20 } = params;
 
@@ -237,7 +237,7 @@ export class ModeTransitionOrchestrator {
   }
 
   private async executeFoldTransition(
-    direction: "fold-in" | "fold-out"
+    direction: "fold-in" | "fold-out",
   ): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, 600));
   }
@@ -272,7 +272,7 @@ export const transitionUtils = {
    */
   getAccessibleTransition(
     defaultTransition: () => TransitionReturn,
-    reducedTransition?: () => TransitionReturn
+    reducedTransition?: () => TransitionReturn,
   ): TransitionReturn {
     if (this.prefersReducedMotion()) {
       return reducedTransition

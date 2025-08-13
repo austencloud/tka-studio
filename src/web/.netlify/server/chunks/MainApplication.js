@@ -1,4 +1,13 @@
-import { K as derived, e as escape_html, N as attr_style, O as stringify, g as getContext, h as head, p as pop, a as push } from "./index.js";
+import {
+  K as derived,
+  e as escape_html,
+  N as attr_style,
+  O as stringify,
+  g as getContext,
+  h as head,
+  p as pop,
+  a as push,
+} from "./index.js";
 import "clsx";
 var MotionType = /* @__PURE__ */ ((MotionType2) => {
   MotionType2["PRO"] = "pro";
@@ -56,13 +65,13 @@ var PropType = /* @__PURE__ */ ((PropType2) => {
   return PropType2;
 })(PropType || {});
 const initState = {
-  initializationProgress: 0
+  initializationProgress: 0,
 };
 function getInitializationProgress() {
   return initState.initializationProgress;
 }
 ({
-  gridMode: GridMode.DIAMOND
+  gridMode: GridMode.DIAMOND,
 });
 function createServiceInterface(token, implementation) {
   return { token, implementation };
@@ -86,7 +95,7 @@ class ApplicationInitializationService {
     } catch (error) {
       console.error("❌ Application initialization failed:", error);
       throw new Error(
-        `Initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -118,7 +127,7 @@ class ApplicationInitializationService {
     } catch (error) {
       console.error("❌ Persistence initialization failed:", error);
       throw new Error(
-        `Persistence initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Persistence initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -130,7 +139,7 @@ class ApplicationInitializationService {
     const checks = [
       this.checkSVGSupport(),
       this.checkES6Support(),
-      this.checkLocalStorageSpace()
+      this.checkLocalStorageSpace(),
     ];
     const results = await Promise.allSettled(checks);
     const failures = results.filter((result) => result.status === "rejected");
@@ -198,7 +207,7 @@ class ApplicationInitializationService {
     return {
       isInitialized: true,
       version: "2.0.0",
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      timestamp: /* @__PURE__ */ new Date().toISOString(),
     };
   }
 }
@@ -209,7 +218,7 @@ const state = {
   error: null,
   selectedBeatIndex: null,
   selectedSequenceId: null,
-  gridMode: GridMode.DIAMOND
+  gridMode: GridMode.DIAMOND,
 };
 function getCurrentSequence() {
   return state.currentSequence;
@@ -242,7 +251,8 @@ async function createSequence(sequenceService, request) {
     console.log("Sequence created successfully:", sequence.id);
     return sequence;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     setError$1(errorMessage);
     console.error("Failed to create sequence:", error);
     throw error;
@@ -262,22 +272,30 @@ function createSequenceData(data = {}) {
     tags: data.tags ?? [],
     metadata: data.metadata ?? {},
     // Optional properties - only include if defined
-    ...data.sequence_length !== void 0 && { sequence_length: data.sequence_length },
-    ...data.author !== void 0 && { author: data.author },
-    ...data.level !== void 0 && { level: data.level },
-    ...data.date_added !== void 0 && { date_added: data.date_added },
-    ...data.grid_mode !== void 0 && { grid_mode: data.grid_mode },
-    ...data.prop_type !== void 0 && { prop_type: data.prop_type },
-    ...data.starting_position !== void 0 && { starting_position: data.starting_position },
-    ...data.difficulty_level !== void 0 && { difficulty_level: data.difficulty_level },
-    ...data.start_position !== void 0 && { start_position: data.start_position }
+    ...(data.sequence_length !== void 0 && {
+      sequence_length: data.sequence_length,
+    }),
+    ...(data.author !== void 0 && { author: data.author }),
+    ...(data.level !== void 0 && { level: data.level }),
+    ...(data.date_added !== void 0 && { date_added: data.date_added }),
+    ...(data.grid_mode !== void 0 && { grid_mode: data.grid_mode }),
+    ...(data.prop_type !== void 0 && { prop_type: data.prop_type }),
+    ...(data.starting_position !== void 0 && {
+      starting_position: data.starting_position,
+    }),
+    ...(data.difficulty_level !== void 0 && {
+      difficulty_level: data.difficulty_level,
+    }),
+    ...(data.start_position !== void 0 && {
+      start_position: data.start_position,
+    }),
   };
   return result;
 }
 function updateSequenceData(sequence, updates) {
   return {
     ...sequence,
-    ...updates
+    ...updates,
   };
 }
 class SequenceStateService {
@@ -346,31 +364,49 @@ class SequenceStateService {
     this.#error = null;
   }
   selectBeat(index) {
-    if (this.#currentSequence && index >= 0 && index < this.#currentSequence.beats.length) {
+    if (
+      this.#currentSequence &&
+      index >= 0 &&
+      index < this.#currentSequence.beats.length
+    ) {
       this.#selectedBeatIndex = index;
     } else {
       this.#selectedBeatIndex = -1;
     }
   }
   updateBeat(index, beatData) {
-    if (!this.#currentSequence || index < 0 || index >= this.#currentSequence.beats.length) {
+    if (
+      !this.#currentSequence ||
+      index < 0 ||
+      index >= this.#currentSequence.beats.length
+    ) {
       return;
     }
     const newBeats = [...this.#currentSequence.beats];
     newBeats[index] = beatData;
-    this.#currentSequence = updateSequenceData(this.#currentSequence, { beats: newBeats });
+    this.#currentSequence = updateSequenceData(this.#currentSequence, {
+      beats: newBeats,
+    });
   }
   addBeat(beatData) {
     if (!this.#currentSequence) return;
     const newBeats = [...this.#currentSequence.beats, beatData];
-    this.#currentSequence = updateSequenceData(this.#currentSequence, { beats: newBeats });
+    this.#currentSequence = updateSequenceData(this.#currentSequence, {
+      beats: newBeats,
+    });
   }
   removeBeat(index) {
-    if (!this.#currentSequence || index < 0 || index >= this.#currentSequence.beats.length) {
+    if (
+      !this.#currentSequence ||
+      index < 0 ||
+      index >= this.#currentSequence.beats.length
+    ) {
       return;
     }
     const newBeats = this.#currentSequence.beats.filter((_, i) => i !== index);
-    this.#currentSequence = updateSequenceData(this.#currentSequence, { beats: newBeats });
+    this.#currentSequence = updateSequenceData(this.#currentSequence, {
+      beats: newBeats,
+    });
     if (this.#selectedBeatIndex >= newBeats.length) {
       this.#selectedBeatIndex = newBeats.length - 1;
     }
@@ -386,7 +422,9 @@ class SequenceStateService {
   }
   setStartPosition(startPosition) {
     if (!this.#currentSequence) return;
-    this.#currentSequence = updateSequenceData(this.#currentSequence, { start_position: startPosition });
+    this.#currentSequence = updateSequenceData(this.#currentSequence, {
+      start_position: startPosition,
+    });
   }
   createNewSequence(name, length = 16) {
     const sequence = createSequenceData({
@@ -398,8 +436,8 @@ class SequenceStateService {
         blue_reversal: false,
         red_reversal: false,
         is_blank: true,
-        metadata: {}
-      }))
+        metadata: {},
+      })),
     });
     this.setCurrentSequence(sequence);
   }
@@ -414,7 +452,10 @@ class ConstructTabCoordinationService {
   components = {};
   isHandlingSequenceModification = false;
   setupComponentCoordination(components) {
-    console.log("🎭 Setting up component coordination:", Object.keys(components));
+    console.log(
+      "🎭 Setting up component coordination:",
+      Object.keys(components),
+    );
     this.components = components;
     this.connectComponentSignals();
   }
@@ -434,22 +475,32 @@ class ConstructTabCoordinationService {
     }
   }
   async handleStartPositionSet(startPosition) {
-    console.log("🎭 Handling start position set:", startPosition.pictograph_data?.id);
+    console.log(
+      "🎭 Handling start position set:",
+      startPosition.pictograph_data?.id,
+    );
     try {
       await this.startPositionService.setStartPosition(startPosition);
-      console.log("🎭 Creating sequence with start position stored separately from beats");
+      console.log(
+        "🎭 Creating sequence with start position stored separately from beats",
+      );
       const newSequence = await createSequence(this.sequenceService, {
-        name: `Sequence ${(/* @__PURE__ */ new Date()).toLocaleTimeString()}`,
+        name: `Sequence ${/* @__PURE__ */ new Date().toLocaleTimeString()}`,
         length: 0,
         // Start with 0 beats - beats will be added progressively
         gridMode: GridMode.DIAMOND,
         // Default grid mode
-        propType: "staff"
+        propType: "staff",
         // Default prop type
       });
       console.log("🎭 Setting start position in sequence.start_position field");
-      await this.sequenceService.setSequenceStartPosition(newSequence.id, startPosition);
-      const updatedSequence = await this.sequenceService.getSequence(newSequence.id);
+      await this.sequenceService.setSequenceStartPosition(
+        newSequence.id,
+        startPosition,
+      );
+      const updatedSequence = await this.sequenceService.getSequence(
+        newSequence.id,
+      );
       if (updatedSequence) {
         setCurrentSequence(updatedSequence);
         sequenceStateService.setCurrentSequence(updatedSequence);
@@ -459,17 +510,18 @@ class ConstructTabCoordinationService {
           "beats:",
           updatedSequence.beats.length,
           "start_position:",
-          updatedSequence.start_position?.pictograph_data?.id
+          updatedSequence.start_position?.pictograph_data?.id,
         );
         console.log(
-          "🎯 Updated both sequence state systems for beat frame synchronization"
+          "🎯 Updated both sequence state systems for beat frame synchronization",
         );
       } else {
         console.error("❌ Failed to reload updated sequence");
       }
       console.log("✅ Sequence created with start position stored separately");
       this.notifyComponents("start_position_set", { startPosition });
-      const { constructTabState: constructTabState2 } = await Promise.resolve().then(() => constructTabState_svelte);
+      const { constructTabState: constructTabState2 } =
+        await Promise.resolve().then(() => constructTabState_svelte);
       constructTabState2.updateShouldShowStartPositionPicker();
       console.log("🎭 Updated construct tab state to show option picker");
       await this.handleUITransitionRequest("option_picker");
@@ -487,8 +539,14 @@ class ConstructTabCoordinationService {
       }
       console.log("🎭 Adding beat to sequence:", currentSequence.id);
       const nextBeatIndex = currentSequence.beats.length;
-      await this.sequenceService.updateBeat(currentSequence.id, nextBeatIndex, beatData);
-      const updatedSequence = await this.sequenceService.getSequence(currentSequence.id);
+      await this.sequenceService.updateBeat(
+        currentSequence.id,
+        nextBeatIndex,
+        beatData,
+      );
+      const updatedSequence = await this.sequenceService.getSequence(
+        currentSequence.id,
+      );
       if (updatedSequence) {
         setCurrentSequence(updatedSequence);
         sequenceStateService.setCurrentSequence(updatedSequence);
@@ -496,7 +554,7 @@ class ConstructTabCoordinationService {
           "🎯 Updated sequence with new beat:",
           updatedSequence.id,
           "beats:",
-          updatedSequence.beats.length
+          updatedSequence.beats.length,
         );
       }
       this.notifyComponents("beat_added", { beatData });
@@ -512,7 +570,7 @@ class ConstructTabCoordinationService {
       setTimeout(() => {
         this.notifyComponents("generation_completed", {
           success: true,
-          message: "Generation completed"
+          message: "Generation completed",
         });
       }, 1e3);
     } catch (error) {
@@ -524,7 +582,7 @@ class ConstructTabCoordinationService {
     try {
       const transitionEvent = new CustomEvent("construct-tab-transition", {
         detail: { targetPanel },
-        bubbles: true
+        bubbles: true,
       });
       if (typeof window !== "undefined") {
         document.dispatchEvent(transitionEvent);
@@ -584,7 +642,7 @@ class ConstructTabCoordinationService {
     if (typeof window !== "undefined") {
       const event = new CustomEvent(`construct-coordination-${eventType}`, {
         detail: data,
-        bubbles: true
+        bubbles: true,
       });
       document.dispatchEvent(event);
     }
@@ -611,7 +669,8 @@ class DeviceDetectionService {
     const caps = this.getCapabilities();
     const minTouchTarget = caps.primaryInput === "touch" ? 48 : 32;
     const elementSpacing = caps.primaryInput === "touch" ? 16 : 8;
-    const allowScrolling = caps.screenSize === "mobile" || caps.screenSize === "tablet";
+    const allowScrolling =
+      caps.screenSize === "mobile" || caps.screenSize === "tablet";
     let layoutDensity = "comfortable";
     if (caps.screenSize === "mobile") {
       layoutDensity = "comfortable";
@@ -626,7 +685,7 @@ class DeviceDetectionService {
       elementSpacing,
       allowScrolling,
       layoutDensity,
-      fontScaling
+      fontScaling,
     };
   }
   isTouchPrimary() {
@@ -655,7 +714,7 @@ class DeviceDetectionService {
   detectCapabilities() {
     const viewport = {
       width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
     };
     const hasTouch = this.detectTouch();
     const hasPrecisePointer = this.detectPrecisePointer();
@@ -664,7 +723,7 @@ class DeviceDetectionService {
     const primaryInput = this.determinePrimaryInput(
       hasTouch,
       hasPrecisePointer,
-      screenSize
+      screenSize,
     );
     this.capabilities = {
       primaryInput,
@@ -678,13 +737,16 @@ class DeviceDetectionService {
       supportsHDR: this.detectHDRSupport(),
       hardwareConcurrency: navigator.hardwareConcurrency || 4,
       memoryEstimate: this.estimateMemory(),
-      connectionSpeed: this.detectConnectionSpeed()
+      connectionSpeed: this.detectConnectionSpeed(),
     };
     this.updateCSSProperties();
   }
   detectTouch() {
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0 || // Legacy IE support
-    (navigator.msMaxTouchPoints ?? 0) > 0;
+    return (
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 || // Legacy IE support
+      (navigator.msMaxTouchPoints ?? 0) > 0
+    );
   }
   detectPrecisePointer() {
     return window.matchMedia("(pointer: fine)").matches;
@@ -712,27 +774,27 @@ class DeviceDetectionService {
     const settings = this.getResponsiveSettings();
     document.documentElement.style.setProperty(
       "--min-touch-target",
-      `${settings.minTouchTarget}px`
+      `${settings.minTouchTarget}px`,
     );
     document.documentElement.style.setProperty(
       "--element-spacing",
-      `${settings.elementSpacing}px`
+      `${settings.elementSpacing}px`,
     );
     document.documentElement.style.setProperty(
       "--font-scaling",
-      settings.fontScaling.toString()
+      settings.fontScaling.toString(),
     );
     document.documentElement.setAttribute(
       "data-device-type",
-      this.capabilities.primaryInput
+      this.capabilities.primaryInput,
     );
     document.documentElement.setAttribute(
       "data-screen-size",
-      this.capabilities.screenSize
+      this.capabilities.screenSize,
     );
     document.documentElement.setAttribute(
       "data-layout-density",
-      settings.layoutDensity
+      settings.layoutDensity,
     );
   }
   setupListeners() {
@@ -767,7 +829,12 @@ class DeviceDetectionService {
   }
   hasCapabilitiesChanged(old, current) {
     if (!old || !current) return true;
-    return old.primaryInput !== current.primaryInput || old.screenSize !== current.screenSize || old.viewport.width !== current.viewport.width || old.viewport.height !== current.viewport.height;
+    return (
+      old.primaryInput !== current.primaryInput ||
+      old.screenSize !== current.screenSize ||
+      old.viewport.width !== current.viewport.width ||
+      old.viewport.height !== current.viewport.height
+    );
   }
   notifyListeners() {
     if (this.capabilities) {
@@ -785,7 +852,10 @@ class DeviceDetectionService {
   }
   detectHDRSupport() {
     if (typeof window !== "undefined" && window.matchMedia) {
-      return window.matchMedia("(dynamic-range: high)").matches || window.matchMedia("(color-gamut: p3)").matches;
+      return (
+        window.matchMedia("(dynamic-range: high)").matches ||
+        window.matchMedia("(color-gamut: p3)").matches
+      );
     }
     return false;
   }
@@ -819,8 +889,7 @@ class DeviceDetectionService {
 }
 class ExportService {
   // pictographService reserved for future richer rendering; omitted to reduce lint noise
-  constructor(_pictographService) {
-  }
+  constructor(_pictographService) {}
   /**
    * Export sequence as PNG image
    */
@@ -864,7 +933,7 @@ class ExportService {
     } catch (error) {
       console.error("Failed to export sequence as image:", error);
       throw new Error(
-        `Export failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Export failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -876,15 +945,15 @@ class ExportService {
       console.log(`Exporting sequence "${sequence.name}" as JSON`);
       const exportData = {
         ...sequence,
-        exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        exportedAt: /* @__PURE__ */ new Date().toISOString(),
         exportedBy: "TKA V2 Modern",
-        version: "2.0.0"
+        version: "2.0.0",
       };
       return JSON.stringify(exportData, null, 2);
     } catch (error) {
       console.error("Failed to export sequence as JSON:", error);
       throw new Error(
-        `JSON export failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `JSON export failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -943,7 +1012,7 @@ class ExportService {
       padding: 20,
       // Compression settings
       pngCompression: 6,
-      jpgQuality: 85
+      jpgQuality: 85,
     };
   }
 }
@@ -962,7 +1031,7 @@ class LocalStoragePersistenceService {
     } catch (error) {
       console.error("Failed to save sequence:", error);
       throw new Error(
-        `Failed to save sequence: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to save sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -1022,7 +1091,7 @@ class LocalStoragePersistenceService {
     } catch (error) {
       console.error(`Failed to delete sequence ${id}:`, error);
       throw new Error(
-        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -1060,15 +1129,22 @@ class LocalStoragePersistenceService {
    */
   validateSequenceData(raw) {
     const data = raw || {};
-    if (typeof data.id !== "string" || typeof data.name !== "string" || !Array.isArray(data.beats)) {
+    if (
+      typeof data.id !== "string" ||
+      typeof data.name !== "string" ||
+      !Array.isArray(data.beats)
+    ) {
       throw new Error("Invalid sequence data structure");
     }
-    const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+    const nowIso = /* @__PURE__ */ new Date().toISOString();
     const existingMeta = data.metadata || {};
     const metadata = {
       ...existingMeta,
-      saved_at: typeof existingMeta.saved_at === "string" ? existingMeta.saved_at : nowIso,
-      updated_at: nowIso
+      saved_at:
+        typeof existingMeta.saved_at === "string"
+          ? existingMeta.saved_at
+          : nowIso,
+      updated_at: nowIso,
     };
     const beatsArray = Array.isArray(data.beats) ? data.beats : [];
     const beats = beatsArray.filter((b) => {
@@ -1087,7 +1163,7 @@ class LocalStoragePersistenceService {
       tags: data.tags || [],
       metadata,
       // **CRITICAL: Include start_position field if it exists**
-      ...data.start_position ? { start_position: data.start_position } : {}
+      ...(data.start_position ? { start_position: data.start_position } : {}),
     };
     return result;
   }
@@ -1111,7 +1187,7 @@ class LocalStoragePersistenceService {
         // KB
         available: 5120,
         // Rough estimate of 5MB localStorage limit
-        sequences: sequenceCount
+        sequences: sequenceCount,
       };
     } catch {
       return { used: 0, available: 5120, sequences: 0 };
@@ -1130,7 +1206,7 @@ class MotionGenerationService {
         MotionType.ANTI,
         MotionType.FLOAT,
         MotionType.DASH,
-        MotionType.STATIC
+        MotionType.STATIC,
       ];
       const locations = [
         Location.NORTH,
@@ -1140,18 +1216,18 @@ class MotionGenerationService {
         Location.NORTHEAST,
         Location.SOUTHEAST,
         Location.SOUTHWEST,
-        Location.NORTHWEST
+        Location.NORTHWEST,
       ];
       const orientations = [
         Orientation.IN,
         Orientation.OUT,
         Orientation.CLOCK,
-        Orientation.COUNTER
+        Orientation.COUNTER,
       ];
       const rotationDirections = [
         RotationDirection.CLOCKWISE,
         RotationDirection.COUNTER_CLOCKWISE,
-        RotationDirection.NO_ROTATION
+        RotationDirection.NO_ROTATION,
       ];
       const motionType = this.randomChoice(motionTypes);
       const startLoc = this.randomChoice(locations);
@@ -1168,14 +1244,14 @@ class MotionGenerationService {
         turns,
         start_ori: startOri,
         end_ori: endOri,
-        is_visible: true
+        is_visible: true,
       };
       console.log(`Generated ${color} motion:`, motion);
       return motion;
     } catch (error) {
       console.error(`Failed to generate ${color} motion:`, error);
       throw new Error(
-        `Motion generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Motion generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -1223,7 +1299,7 @@ class MotionGenerationService {
     }
     return {
       isValid: reasons.length === 0,
-      reasons
+      reasons,
     };
   }
 }
@@ -1238,7 +1314,7 @@ function createMotionData(data = {}) {
     end_ori: data.end_ori ?? Orientation.IN,
     is_visible: data.is_visible ?? true,
     prefloat_motion_type: data.prefloat_motion_type ?? null,
-    prefloat_prop_rot_dir: data.prefloat_prop_rot_dir ?? null
+    prefloat_prop_rot_dir: data.prefloat_prop_rot_dir ?? null,
   };
 }
 function createGridData$1(data = {}) {
@@ -1247,7 +1323,7 @@ function createGridData$1(data = {}) {
     center_x: data.center_x ?? 0,
     center_y: data.center_y ?? 0,
     radius: data.radius ?? 100,
-    grid_points: data.grid_points ?? {}
+    grid_points: data.grid_points ?? {},
   };
 }
 function createArrowData(data = {}) {
@@ -1269,7 +1345,7 @@ function createArrowData(data = {}) {
     svg_center: data.svg_center ?? null,
     svg_mirrored: data.svg_mirrored ?? false,
     is_visible: data.is_visible ?? true,
-    is_selected: data.is_selected ?? false
+    is_selected: data.is_selected ?? false,
   };
 }
 function createPropData(data = {}) {
@@ -1278,7 +1354,8 @@ function createPropData(data = {}) {
     prop_type: data.prop_type ?? PropType.STAFF,
     color: data.color ?? "blue",
     orientation: data.orientation ?? Orientation.IN,
-    rotation_direction: data.rotation_direction ?? RotationDirection.NO_ROTATION,
+    rotation_direction:
+      data.rotation_direction ?? RotationDirection.NO_ROTATION,
     location: data.location ?? null,
     position_x: data.position_x ?? 0,
     position_y: data.position_y ?? 0,
@@ -1286,19 +1363,19 @@ function createPropData(data = {}) {
     coordinates: data.coordinates ?? null,
     svg_center: data.svg_center ?? null,
     is_visible: data.is_visible ?? true,
-    is_selected: data.is_selected ?? false
+    is_selected: data.is_selected ?? false,
   };
 }
 function createPictographData(data = {}) {
   const arrows = {
     blue: createArrowData({ arrow_type: ArrowType.BLUE, color: "blue" }),
     red: createArrowData({ arrow_type: ArrowType.RED, color: "red" }),
-    ...data.arrows
+    ...data.arrows,
   };
   const props = {
     blue: createPropData({ color: "blue" }),
     red: createPropData({ color: "red" }),
-    ...data.props
+    ...data.props,
   };
   return {
     id: data.id ?? crypto.randomUUID(),
@@ -1316,7 +1393,7 @@ function createPictographData(data = {}) {
     letter_type: data.letter_type ?? null,
     is_blank: data.is_blank ?? false,
     is_mirrored: data.is_mirrored ?? false,
-    metadata: data.metadata ?? {}
+    metadata: data.metadata ?? {},
   };
 }
 function createBeatData(data = {}) {
@@ -1328,7 +1405,7 @@ function createBeatData(data = {}) {
     red_reversal: data.red_reversal ?? false,
     is_blank: data.is_blank ?? false,
     pictograph_data: data.pictograph_data ?? null,
-    metadata: data.metadata ?? {}
+    metadata: data.metadata ?? {},
   };
 }
 var FilterType = /* @__PURE__ */ ((FilterType2) => {
@@ -1357,8 +1434,7 @@ class CsvDataService {
   csvData = null;
   parsedData = null;
   isInitialized = false;
-  constructor() {
-  }
+  constructor() {}
   /**
    * Load CSV data from multiple sources (global data or static files)
    */
@@ -1372,11 +1448,11 @@ class CsvDataService {
       } else {
         const [diamondResponse, boxResponse] = await Promise.all([
           fetch("/DiamondPictographDataframe.csv"),
-          fetch("/BoxPictographDataframe.csv")
+          fetch("/BoxPictographDataframe.csv"),
         ]);
         if (!diamondResponse.ok || !boxResponse.ok) {
           throw new Error(
-            `Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`
+            `Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`,
           );
         }
         const diamondData = await diamondResponse.text();
@@ -1386,14 +1462,14 @@ class CsvDataService {
       if (this.csvData) {
         this.parsedData = {
           [GridMode.DIAMOND]: this.parseCSV(this.csvData.diamondData),
-          [GridMode.BOX]: this.parseCSV(this.csvData.boxData)
+          [GridMode.BOX]: this.parseCSV(this.csvData.boxData),
         };
       }
       this.isInitialized = true;
     } catch (error) {
       console.error("❌ Error loading CSV data:", error);
       throw new Error(
-        `Failed to load CSV data: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to load CSV data: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -1421,7 +1497,9 @@ class CsvDataService {
     }
     try {
       const dataset = this.parsedData[gridMode];
-      const matchingOptions = dataset.filter((row) => row.startPos === endPosition);
+      const matchingOptions = dataset.filter(
+        (row) => row.startPos === endPosition,
+      );
       return matchingOptions;
     } catch (error) {
       console.error("❌ Error getting next options:", error);
@@ -1457,7 +1535,7 @@ class CsvDataService {
         redMotionType: row.redMotionType || "",
         redPropRotDir: row.redPropRotDir || "",
         redStartLoc: row.redStartLoc || "",
-        redEndLoc: row.redEndLoc || ""
+        redEndLoc: row.redEndLoc || "",
       });
     }
     return data;
@@ -1488,16 +1566,19 @@ class CsvDataService {
     return {
       [GridMode.DIAMOND]: {
         total: this.parsedData.diamond.length,
-        letters: [...new Set(this.parsedData.diamond.map((row) => row.letter))].length,
-        startPositions: this.getAvailableStartPositions(GridMode.DIAMOND).length,
-        endPositions: this.getAvailableEndPositions(GridMode.DIAMOND).length
+        letters: [...new Set(this.parsedData.diamond.map((row) => row.letter))]
+          .length,
+        startPositions: this.getAvailableStartPositions(GridMode.DIAMOND)
+          .length,
+        endPositions: this.getAvailableEndPositions(GridMode.DIAMOND).length,
       },
       [GridMode.BOX]: {
         total: this.parsedData.box.length,
-        letters: [...new Set(this.parsedData.box.map((row) => row.letter))].length,
+        letters: [...new Set(this.parsedData.box.map((row) => row.letter))]
+          .length,
         startPositions: this.getAvailableStartPositions(GridMode.BOX).length,
-        endPositions: this.getAvailableEndPositions(GridMode.BOX).length
-      }
+        endPositions: this.getAvailableEndPositions(GridMode.BOX).length,
+      },
     };
   }
   /**
@@ -1529,21 +1610,23 @@ class OrientationCalculationService {
     }
     const validTurns = [0, 0.5, 1, 1.5, 2, 2.5, 3];
     if (!validTurns.includes(motion.turns)) {
-      console.warn(`Invalid turns value: ${motion.turns}. Using start orientation.`);
+      console.warn(
+        `Invalid turns value: ${motion.turns}. Using start orientation.`,
+      );
       return motion.start_ori;
     }
     if (motion.turns % 1 === 0) {
       return this.calculateWholeTurnOrientation(
         motion.motion_type,
         motion.turns,
-        motion.start_ori
+        motion.start_ori,
       );
     } else {
       return this.calculateHalfTurnOrientation(
         motion.motion_type,
         motion.turns,
         motion.start_ori,
-        motion.prop_rot_dir
+        motion.prop_rot_dir,
       );
     }
   }
@@ -1555,7 +1638,7 @@ class OrientationCalculationService {
       [Orientation.IN]: Orientation.OUT,
       [Orientation.OUT]: Orientation.IN,
       [Orientation.CLOCK]: Orientation.COUNTER,
-      [Orientation.COUNTER]: Orientation.CLOCK
+      [Orientation.COUNTER]: Orientation.CLOCK,
     };
     return orientationMap[orientation] || orientation;
   }
@@ -1565,7 +1648,10 @@ class OrientationCalculationService {
   calculateWholeTurnOrientation(motionType, turns, startOri) {
     if (motionType === MotionType.PRO || motionType === MotionType.STATIC) {
       return turns % 2 === 0 ? startOri : this.switchOrientation(startOri);
-    } else if (motionType === MotionType.ANTI || motionType === MotionType.DASH) {
+    } else if (
+      motionType === MotionType.ANTI ||
+      motionType === MotionType.DASH
+    ) {
       return turns % 2 === 0 ? this.switchOrientation(startOri) : startOri;
     }
     return startOri;
@@ -1574,29 +1660,53 @@ class OrientationCalculationService {
    * Calculate orientation for half turns (0.5, 1.5, 2.5)
    */
   calculateHalfTurnOrientation(motionType, turns, startOri, propRotDir) {
-    const rotDir = propRotDir === RotationDirection.CLOCKWISE ? "cw" : propRotDir === RotationDirection.COUNTER_CLOCKWISE ? "ccw" : "cw";
+    const rotDir =
+      propRotDir === RotationDirection.CLOCKWISE
+        ? "cw"
+        : propRotDir === RotationDirection.COUNTER_CLOCKWISE
+          ? "ccw"
+          : "cw";
     let orientationMap;
     if (motionType === MotionType.ANTI || motionType === MotionType.DASH) {
       orientationMap = {
-        [`${Orientation.IN}_cw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-        [`${Orientation.IN}_ccw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-        [`${Orientation.OUT}_cw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-        [`${Orientation.OUT}_ccw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-        [`${Orientation.CLOCK}_cw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
-        [`${Orientation.CLOCK}_ccw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
-        [`${Orientation.COUNTER}_cw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
-        [`${Orientation.COUNTER}_ccw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN
+        [`${Orientation.IN}_cw`]:
+          turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+        [`${Orientation.IN}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+        [`${Orientation.OUT}_cw`]:
+          turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+        [`${Orientation.OUT}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+        [`${Orientation.CLOCK}_cw`]:
+          turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
+        [`${Orientation.CLOCK}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
+        [`${Orientation.COUNTER}_cw`]:
+          turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
+        [`${Orientation.COUNTER}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
       };
-    } else if (motionType === MotionType.PRO || motionType === MotionType.STATIC) {
+    } else if (
+      motionType === MotionType.PRO ||
+      motionType === MotionType.STATIC
+    ) {
       orientationMap = {
-        [`${Orientation.IN}_cw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-        [`${Orientation.IN}_ccw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-        [`${Orientation.OUT}_cw`]: turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
-        [`${Orientation.OUT}_ccw`]: turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
-        [`${Orientation.CLOCK}_cw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
-        [`${Orientation.CLOCK}_ccw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
-        [`${Orientation.COUNTER}_cw`]: turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
-        [`${Orientation.COUNTER}_ccw`]: turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT
+        [`${Orientation.IN}_cw`]:
+          turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+        [`${Orientation.IN}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+        [`${Orientation.OUT}_cw`]:
+          turns % 2 === 0.5 ? Orientation.CLOCK : Orientation.COUNTER,
+        [`${Orientation.OUT}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.COUNTER : Orientation.CLOCK,
+        [`${Orientation.CLOCK}_cw`]:
+          turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
+        [`${Orientation.CLOCK}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
+        [`${Orientation.COUNTER}_cw`]:
+          turns % 2 === 0.5 ? Orientation.OUT : Orientation.IN,
+        [`${Orientation.COUNTER}_ccw`]:
+          turns % 2 === 0.5 ? Orientation.IN : Orientation.OUT,
       };
     } else {
       return startOri;
@@ -1615,7 +1725,14 @@ class OrientationCalculationService {
   /**
    * Create motion data with properly calculated end orientation
    */
-  createMotionWithCalculatedOrientation(motionType, propRotDir, startLoc, endLoc, turns = 0, startOri = Orientation.IN) {
+  createMotionWithCalculatedOrientation(
+    motionType,
+    propRotDir,
+    startLoc,
+    endLoc,
+    turns = 0,
+    startOri = Orientation.IN,
+  ) {
     const motion = {
       motion_type: motionType,
       prop_rot_dir: propRotDir,
@@ -1627,29 +1744,23 @@ class OrientationCalculationService {
       // Will be calculated
       is_visible: true,
       prefloat_motion_type: null,
-      prefloat_prop_rot_dir: null
+      prefloat_prop_rot_dir: null,
     };
     return { ...motion, end_ori: this.calculateEndOrientation(motion) };
   }
 }
 class OptionDataService {
-  MOTION_TYPES = [
-    "pro",
-    "anti",
-    "float",
-    "dash",
-    "static"
-  ];
+  MOTION_TYPES = ["pro", "anti", "float", "dash", "static"];
   DIFFICULTY_MOTION_LIMITS = {
     beginner: { maxTurns: 1, allowedTypes: ["pro", "anti", "static"] },
     intermediate: {
       maxTurns: 2,
-      allowedTypes: ["pro", "anti", "float", "static"]
+      allowedTypes: ["pro", "anti", "float", "static"],
     },
     advanced: {
       maxTurns: 3,
-      allowedTypes: ["pro", "anti", "float", "dash", "static"]
-    }
+      allowedTypes: ["pro", "anti", "float", "dash", "static"],
+    },
   };
   csvDataService;
   orientationCalculationService;
@@ -1666,36 +1777,42 @@ class OptionDataService {
   /**
    * Get next options based on end position from CSV data (like legacy)
    */
-  async getNextOptionsFromEndPosition(endPosition, gridMode = GridMode.DIAMOND, filters) {
+  async getNextOptionsFromEndPosition(
+    endPosition,
+    gridMode = GridMode.DIAMOND,
+    filters,
+  ) {
     try {
       const csvOptions = this.csvDataService.getNextOptions(
         endPosition,
-        gridMode
+        gridMode,
       );
       if (csvOptions.length === 0) {
         return [];
       }
-      const pictographOptions = csvOptions.map(
-        (row, index) => this.convertCsvRowToPictographDataInternal(row, gridMode, index)
-      ).filter((option) => option !== null);
+      const pictographOptions = csvOptions
+        .map((row, index) =>
+          this.convertCsvRowToPictographDataInternal(row, gridMode, index),
+        )
+        .filter((option) => option !== null);
       let filteredOptions = pictographOptions;
       if (filters?.difficulty) {
         filteredOptions = this.filterOptionsByDifficulty(
           filteredOptions,
-          filters.difficulty
+          filters.difficulty,
         );
       }
       if (filters?.motionTypes) {
         filteredOptions = this.filterByMotionTypes(
           filteredOptions,
-          filters.motionTypes
+          filters.motionTypes,
         );
       }
       if (filters?.minTurns !== void 0 || filters?.maxTurns !== void 0) {
         filteredOptions = this.filterByTurns(
           filteredOptions,
           filters.minTurns,
-          filters.maxTurns
+          filters.maxTurns,
         );
       }
       return filteredOptions;
@@ -1714,11 +1831,14 @@ class OptionDataService {
       if (!endPosition) {
         return [];
       }
-      const gridMode = lastBeat.pictograph_data.grid_data?.grid_mode === GridMode.BOX ? GridMode.BOX : GridMode.DIAMOND;
+      const gridMode =
+        lastBeat.pictograph_data.grid_data?.grid_mode === GridMode.BOX
+          ? GridMode.BOX
+          : GridMode.DIAMOND;
       return await this.getNextOptionsFromEndPosition(
         endPosition,
         gridMode,
-        filters
+        filters,
       );
     } catch (error) {
       console.error("❌ Error generating options:", error);
@@ -1733,7 +1853,10 @@ class OptionDataService {
         if (!limits.allowedTypes.includes(blueMotion.motion_type)) {
           return false;
         }
-        if (typeof blueMotion.turns === "number" && blueMotion.turns > limits.maxTurns) {
+        if (
+          typeof blueMotion.turns === "number" &&
+          blueMotion.turns > limits.maxTurns
+        ) {
           return false;
         }
       }
@@ -1742,7 +1865,10 @@ class OptionDataService {
         if (!limits.allowedTypes.includes(redMotion.motion_type)) {
           return false;
         }
-        if (typeof redMotion.turns === "number" && redMotion.turns > limits.maxTurns) {
+        if (
+          typeof redMotion.turns === "number" &&
+          redMotion.turns > limits.maxTurns
+        ) {
           return false;
         }
       }
@@ -1756,26 +1882,26 @@ class OptionDataService {
       errors.push({
         code: "MISSING_MOTION_DATA",
         message: "Option must have at least one motion",
-        severity: "error"
+        severity: "error",
       });
     }
     const lastBeat = this.getLastBeat(sequence);
     if (lastBeat?.pictograph_data) {
       const continuityErrors = this.validateMotionContinuity(
         lastBeat.pictograph_data,
-        option
+        option,
       );
       const validationErrors = continuityErrors.map((error) => ({
         code: "MOTION_CONTINUITY_ERROR",
         message: error,
-        severity: "error"
+        severity: "error",
       }));
       errors.push(...validationErrors);
     }
     return {
       isValid: errors.length === 0,
       errors,
-      warnings: []
+      warnings: [],
     };
   }
   getAvailableMotionTypes() {
@@ -1799,29 +1925,29 @@ class OptionDataService {
         color: "blue",
         turns: 0,
         // Will be set from motion data
-        location: this.mapLocationString(row.blueStartLoc)
+        location: this.mapLocationString(row.blueStartLoc),
       });
       const redArrow = createArrowData({
         arrow_type: ArrowType.RED,
         color: "red",
         turns: 0,
         // Will be set from motion data
-        location: this.mapLocationString(row.redStartLoc)
+        location: this.mapLocationString(row.redStartLoc),
       });
       const blueProp = createPropData({
         prop_type: PropType.STAFF,
         color: "blue",
-        location: this.mapLocationString(row.blueEndLoc)
+        location: this.mapLocationString(row.blueEndLoc),
       });
       const redProp = createPropData({
         prop_type: PropType.STAFF,
         color: "red",
-        location: this.mapLocationString(row.redEndLoc)
+        location: this.mapLocationString(row.redEndLoc),
       });
       const pictograph = createPictographData({
         id: `${gridMode}-${row.letter || "unknown"}-${row.startPos || "unknown"}-${row.endPos || "unknown"}-${index}`,
         grid_data: createGridData$1({
-          grid_mode: gridMode
+          grid_mode: gridMode,
         }),
         arrows: { blue: blueArrow, red: redArrow },
         props: { blue: blueProp, red: redProp },
@@ -1829,14 +1955,14 @@ class OptionDataService {
         letter: row.letter,
         beat: 0,
         is_blank: false,
-        is_mirrored: false
+        is_mirrored: false,
       });
       return pictograph;
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",
         error,
-        row
+        row,
       );
       return null;
     }
@@ -1849,16 +1975,17 @@ class OptionDataService {
     const propRotDir = row[`${color}PropRotDir`];
     const startLoc = row[`${color}StartLoc`];
     const endLoc = row[`${color}EndLoc`];
-    const motion = this.orientationCalculationService.createMotionWithCalculatedOrientation(
-      this.mapMotionType(motionType),
-      this.mapRotationDirection(propRotDir),
-      this.mapLocationString(startLoc),
-      this.mapLocationString(endLoc),
-      0,
-      // Basic turns for now - could be enhanced to read from CSV
-      Orientation.IN
-      // Standard start orientation
-    );
+    const motion =
+      this.orientationCalculationService.createMotionWithCalculatedOrientation(
+        this.mapMotionType(motionType),
+        this.mapRotationDirection(propRotDir),
+        this.mapLocationString(startLoc),
+        this.mapLocationString(endLoc),
+        0,
+        // Basic turns for now - could be enhanced to read from CSV
+        Orientation.IN,
+        // Standard start orientation
+      );
     return motion;
   }
   /**
@@ -1944,24 +2071,30 @@ class OptionDataService {
   }
   filterByMotionTypes(options, motionTypes) {
     return options.filter((option) => {
-      const blueValid = !option.motions?.blue || motionTypes.includes(
-        option.motions.blue.motion_type
-      );
-      const redValid = !option.motions?.red || motionTypes.includes(
-        option.motions.red.motion_type
-      );
+      const blueValid =
+        !option.motions?.blue ||
+        motionTypes.includes(option.motions.blue.motion_type);
+      const redValid =
+        !option.motions?.red ||
+        motionTypes.includes(option.motions.red.motion_type);
       return blueValid && redValid;
     });
   }
   filterByTurns(options, minTurns, maxTurns) {
     return options.filter((option) => {
       if (option.motions?.blue) {
-        const blueTurns = typeof option.motions.blue.turns === "number" ? option.motions.blue.turns : 0;
+        const blueTurns =
+          typeof option.motions.blue.turns === "number"
+            ? option.motions.blue.turns
+            : 0;
         if (minTurns !== void 0 && blueTurns < minTurns) return false;
         if (maxTurns !== void 0 && blueTurns > maxTurns) return false;
       }
       if (option.motions?.red) {
-        const redTurns = typeof option.motions.red.turns === "number" ? option.motions.red.turns : 0;
+        const redTurns =
+          typeof option.motions.red.turns === "number"
+            ? option.motions.red.turns
+            : 0;
         if (minTurns !== void 0 && redTurns < minTurns) return false;
         if (maxTurns !== void 0 && redTurns > maxTurns) return false;
       }
@@ -1995,7 +2128,7 @@ class PanelManagementService {
     if (!this.panels.has(config.id)) {
       const savedWidth = this.loadPanelWidth(
         config.persistKey,
-        config.defaultWidth
+        config.defaultWidth,
       );
       const initialState = {
         id: config.id,
@@ -2006,7 +2139,7 @@ class PanelManagementService {
         maxWidth: config.maxWidth,
         defaultWidth: config.defaultWidth,
         collapsedWidth: config.collapsedWidth,
-        isResizing: false
+        isResizing: false,
       };
       this.panels.set(config.id, initialState);
     }
@@ -2029,7 +2162,7 @@ class PanelManagementService {
         maxWidth: 600,
         defaultWidth: 300,
         collapsedWidth: 60,
-        isResizing: false
+        isResizing: false,
       };
     }
     return { ...state2 };
@@ -2044,7 +2177,7 @@ class PanelManagementService {
     if (!state2) return;
     const updatedState = {
       ...state2,
-      isCollapsed
+      isCollapsed,
       // Don't change width when collapsing - layout handles this with CSS
     };
     this.panels.set(panelId, updatedState);
@@ -2056,7 +2189,7 @@ class PanelManagementService {
     if (!state2) return;
     const updatedState = {
       ...state2,
-      isVisible
+      isVisible,
     };
     this.panels.set(panelId, updatedState);
     this.notifyStateChange(panelId, updatedState);
@@ -2067,7 +2200,7 @@ class PanelManagementService {
     const validatedWidth = this.validateWidth(panelId, width);
     const updatedState = {
       ...state2,
-      width: validatedWidth
+      width: validatedWidth,
     };
     this.panels.set(panelId, updatedState);
     this.notifyStateChange(panelId, updatedState);
@@ -2083,7 +2216,7 @@ class PanelManagementService {
       panelId,
       startWidth: state2.width,
       startX,
-      currentX: startX
+      currentX: startX,
     };
     this.currentResize = operation;
     const updatedState = { ...state2, isResizing: true };
@@ -2102,7 +2235,7 @@ class PanelManagementService {
     const validatedWidth = this.validateWidth(operation.panelId, newWidth);
     const updatedState = {
       ...state2,
-      width: validatedWidth
+      width: validatedWidth,
     };
     this.panels.set(operation.panelId, updatedState);
     this.notifyStateChange(operation.panelId, updatedState);
@@ -2136,7 +2269,7 @@ class PanelManagementService {
         if (config) {
           states[config.persistKey] = {
             width: state2.width,
-            isCollapsed: state2.isCollapsed
+            isCollapsed: state2.isCollapsed,
           };
         }
       }
@@ -2203,7 +2336,7 @@ class PanelManagementService {
       maxWidth: config.maxWidth,
       defaultWidth: config.defaultWidth,
       collapsedWidth: config.collapsedWidth,
-      isResizing: false
+      isResizing: false,
     };
     this.panels.set(panelId, resetState);
     this.notifyStateChange(panelId, resetState);
@@ -2238,13 +2371,13 @@ const LETTER_CLASSIFICATIONS = {
     "S",
     "T",
     "U",
-    "V"
+    "V",
   ],
   Type2: ["W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"],
   Type3: ["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"],
   Type4: ["Φ", "Ψ", "Λ"],
   Type5: ["Φ-", "Ψ-", "Λ-"],
-  Type6: ["α", "β", "Γ"]
+  Type6: ["α", "β", "Γ"],
 };
 function getLetterType(letter) {
   if (!letter) return "Type1";
@@ -2271,36 +2404,36 @@ const gridCoordinates = {
         n_diamond_hand_point: "(475.0, 331.9)",
         e_diamond_hand_point: "(618.1, 475.0)",
         s_diamond_hand_point: "(475.0, 618.1)",
-        w_diamond_hand_point: "(331.9, 475.0)"
+        w_diamond_hand_point: "(331.9, 475.0)",
       },
       strict: {
         n_diamond_hand_point_strict: "(475.0, 325.0)",
         e_diamond_hand_point_strict: "(625.0, 475.0)",
         s_diamond_hand_point_strict: "(475.0, 625.0)",
-        w_diamond_hand_point_strict: "(325.0, 475.0)"
-      }
+        w_diamond_hand_point_strict: "(325.0, 475.0)",
+      },
     },
     layer2_points: {
       normal: {
         ne_diamond_layer2_point: "(618.1, 331.9)",
         se_diamond_layer2_point: "(618.1, 618.1)",
         sw_diamond_layer2_point: "(331.9, 618.1)",
-        nw_diamond_layer2_point: "(331.9, 331.9)"
+        nw_diamond_layer2_point: "(331.9, 331.9)",
       },
       strict: {
         ne_diamond_layer2_point_strict: "(625.0, 325.0)",
         se_diamond_layer2_point_strict: "(625.0, 625.0)",
         sw_diamond_layer2_point_strict: "(325.0, 625.0)",
-        nw_diamond_layer2_point_strict: "(325.0, 325.0)"
-      }
+        nw_diamond_layer2_point_strict: "(325.0, 325.0)",
+      },
     },
     outer_points: {
       n_diamond_outer_point: "(475, 175)",
       e_diamond_outer_point: "(775, 475)",
       s_diamond_outer_point: "(475, 775)",
-      w_diamond_outer_point: "(175, 475)"
+      w_diamond_outer_point: "(175, 475)",
     },
-    center_point: "(475.0, 475.0)"
+    center_point: "(475.0, 475.0)",
   },
   box: {
     hand_points: {
@@ -2308,37 +2441,37 @@ const gridCoordinates = {
         ne_box_hand_point: "(576.2, 373.8)",
         se_box_hand_point: "(576.2, 576.2)",
         sw_box_hand_point: "(373.8, 576.2)",
-        nw_box_hand_point: "(373.8, 373.8)"
+        nw_box_hand_point: "(373.8, 373.8)",
       },
       strict: {
         ne_box_hand_point_strict: "(581.1, 368.9)",
         se_box_hand_point_strict: "(581.1, 581.1)",
         sw_box_hand_point_strict: "(368.9, 581.1)",
-        nw_box_hand_point_strict: "(368.9, 368.9)"
-      }
+        nw_box_hand_point_strict: "(368.9, 368.9)",
+      },
     },
     layer2_points: {
       normal: {
         n_box_layer2_point: "(475, 272.6)",
         e_box_layer2_point: "(677.4, 475)",
         s_box_layer2_point: "(475, 677.4)",
-        w_box_layer2_point: "(272.6, 475)"
+        w_box_layer2_point: "(272.6, 475)",
       },
       strict: {
         n_box_layer2_point_strict: "(475, 262.9)",
         e_box_layer2_point_strict: "(687.1, 475)",
         s_box_layer2_point_strict: "(475, 687.1)",
-        w_box_layer2_point_strict: "(262.9, 475)"
-      }
+        w_box_layer2_point_strict: "(262.9, 475)",
+      },
     },
     outer_points: {
       ne_box_outer_point: "(262.9, 247.9)",
       se_box_outer_point: "(687.1, 247.9)",
       sw_box_outer_point: "(687.1, 672.1)",
-      nw_box_outer_point: "(262.9, 672.1)"
+      nw_box_outer_point: "(262.9, 672.1)",
     },
-    center_point: "(475.0, 475.0)"
-  }
+    center_point: "(475.0, 475.0)",
+  },
 };
 function parseCoordinates(coordString) {
   if (!coordString || coordString === "None") return null;
@@ -2361,19 +2494,20 @@ function parseCoordinates(coordString) {
 }
 function createGridData(mode) {
   const modeData = gridCoordinates[mode];
-  const parsePoints = (points) => Object.fromEntries(
-    Object.entries(points).map(([key, value]) => [
-      key,
-      { coordinates: parseCoordinates(value) }
-    ])
-  );
+  const parsePoints = (points) =>
+    Object.fromEntries(
+      Object.entries(points).map(([key, value]) => [
+        key,
+        { coordinates: parseCoordinates(value) },
+      ]),
+    );
   return {
     allHandPointsStrict: parsePoints(modeData.hand_points.strict),
     allHandPointsNormal: parsePoints(modeData.hand_points.normal),
     allLayer2PointsStrict: parsePoints(modeData.layer2_points.strict),
     allLayer2PointsNormal: parsePoints(modeData.layer2_points.normal),
     allOuterPoints: parsePoints(modeData.outer_points),
-    centerPoint: { coordinates: parseCoordinates(modeData.center_point) }
+    centerPoint: { coordinates: parseCoordinates(modeData.center_point) },
   };
 }
 class PictographRenderingService {
@@ -2393,18 +2527,14 @@ class PictographRenderingService {
       await this.renderGrid(svg, gridMode);
       const rawGridData = createGridData(gridMode);
       const gridDataWithMode = this.adaptGridData(rawGridData, gridMode);
-      const arrowPositions = await this.arrowPositioning.calculateAllArrowPositions(
-        data,
-        gridDataWithMode
-      );
+      const arrowPositions =
+        await this.arrowPositioning.calculateAllArrowPositions(
+          data,
+          gridDataWithMode,
+        );
       for (const [color, position] of arrowPositions.entries()) {
         const motionData = data.motions?.[color];
-        await this.renderArrowAtPosition(
-          svg,
-          color,
-          position,
-          motionData
-        );
+        await this.renderArrowAtPosition(svg, color, position, motionData);
       }
       await this.renderProps(svg, data);
       await this.renderOverlays(svg, data);
@@ -2413,7 +2543,8 @@ class PictographRenderingService {
       return svg;
     } catch (error) {
       console.error("❌ Error rendering pictograph:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       return this.createErrorSVG(errorMessage);
     }
   }
@@ -2423,8 +2554,7 @@ class PictographRenderingService {
       if (data.letter) {
         await this.renderLetterGlyph(svg, data.letter);
       }
-    } catch {
-    }
+    } catch {}
   }
   async renderLetterGlyph(svg, letter) {
     const path = getLetterImagePath(letter);
@@ -2471,7 +2601,10 @@ class PictographRenderingService {
     svg.setAttribute("height", this.SVG_SIZE.toString());
     svg.setAttribute("viewBox", `0 0 ${this.SVG_SIZE} ${this.SVG_SIZE}`);
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    const background = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    const background = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect",
+    );
     background.setAttribute("width", "100%");
     background.setAttribute("height", "100%");
     background.setAttribute("fill", "#ffffff");
@@ -2493,8 +2626,10 @@ class PictographRenderingService {
     };
     return {
       mode,
-      allLayer2PointsNormal: adaptPoints(rawGridData.allLayer2PointsNormal || {}),
-      allHandPointsNormal: adaptPoints(rawGridData.allHandPointsNormal || {})
+      allLayer2PointsNormal: adaptPoints(
+        rawGridData.allLayer2PointsNormal || {},
+      ),
+      allHandPointsNormal: adaptPoints(rawGridData.allHandPointsNormal || {}),
     };
   }
   /**
@@ -2508,8 +2643,14 @@ class PictographRenderingService {
         throw new Error(`Failed to load arrow SVG: ${response.status}`);
       }
       const svgContent = await response.text();
-      const arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      arrowGroup.setAttribute("class", `arrow-${color} sophisticated-positioning`);
+      const arrowGroup = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g",
+      );
+      arrowGroup.setAttribute(
+        "class",
+        `arrow-${color} sophisticated-positioning`,
+      );
       arrowGroup.setAttribute("data-color", color);
       arrowGroup.setAttribute("data-position", `${position.x},${position.y}`);
       arrowGroup.setAttribute("data-rotation", position.rotation.toString());
@@ -2566,11 +2707,14 @@ class PictographRenderingService {
    * Render fallback arrow if SVG loading fails
    */
   renderFallbackArrow(svg, color, position) {
-    const arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const arrowGroup = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g",
+    );
     arrowGroup.setAttribute("class", `arrow-${color} fallback`);
     arrowGroup.setAttribute(
       "transform",
-      `translate(${position.x}, ${position.y}) rotate(${position.rotation})`
+      `translate(${position.x}, ${position.y}) rotate(${position.rotation})`,
     );
     const arrowPath = this.createEnhancedArrowPath(color);
     arrowGroup.appendChild(arrowPath);
@@ -2610,7 +2754,10 @@ class PictographRenderingService {
   renderDebugInfo(svg, data, positions) {
     let yOffset = 15;
     for (const [color, position] of positions.entries()) {
-      const debugText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const debugText = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text",
+      );
       debugText.setAttribute("x", "10");
       debugText.setAttribute("y", yOffset.toString());
       debugText.setAttribute("font-family", "monospace");
@@ -2621,7 +2768,10 @@ class PictographRenderingService {
       yOffset += 12;
     }
     if (data.letter) {
-      const letterText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const letterText = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text",
+      );
       letterText.setAttribute("x", "10");
       letterText.setAttribute("y", yOffset.toString());
       letterText.setAttribute("font-family", "monospace");
@@ -2645,7 +2795,10 @@ class PictographRenderingService {
   async renderGrid(svg, gridMode = GridMode.DIAMOND) {
     try {
       const gridPath = `/images/grid/${gridMode}_grid.svg`;
-      const gridImage = document.createElementNS("http://www.w3.org/2000/svg", "image");
+      const gridImage = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "image",
+      );
       gridImage.setAttribute("href", gridPath);
       gridImage.setAttribute("x", "0");
       gridImage.setAttribute("y", "0");
@@ -2662,10 +2815,16 @@ class PictographRenderingService {
    * Fallback grid rendering if SVG loading fails
    */
   renderFallbackGrid(svg, gridMode) {
-    const gridGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const gridGroup = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g",
+    );
     gridGroup.setAttribute("class", `fallback-grid-${gridMode}`);
     if (gridMode === GridMode.DIAMOND) {
-      const diamond = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      const diamond = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "polygon",
+      );
       const size = 143;
       const points = [
         `${this.CENTER_X},${this.CENTER_Y - size}`,
@@ -2674,7 +2833,7 @@ class PictographRenderingService {
         // right
         `${this.CENTER_X},${this.CENTER_Y + size}`,
         // bottom
-        `${this.CENTER_X - size},${this.CENTER_Y}`
+        `${this.CENTER_X - size},${this.CENTER_Y}`,
         // left
       ].join(" ");
       diamond.setAttribute("points", points);
@@ -2683,7 +2842,10 @@ class PictographRenderingService {
       diamond.setAttribute("stroke-width", "2");
       gridGroup.appendChild(diamond);
     } else {
-      const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      const box = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect",
+      );
       const size = 202;
       box.setAttribute("x", (this.CENTER_X - size / 2).toString());
       box.setAttribute("y", (this.CENTER_Y - size / 2).toString());
@@ -2701,24 +2863,26 @@ class PictographRenderingService {
    */
   beatToPictographData(beat) {
     const motions = {};
-    if (beat.pictograph_data?.motions?.blue) motions.blue = beat.pictograph_data.motions.blue;
-    if (beat.pictograph_data?.motions?.red) motions.red = beat.pictograph_data.motions.red;
+    if (beat.pictograph_data?.motions?.blue)
+      motions.blue = beat.pictograph_data.motions.blue;
+    if (beat.pictograph_data?.motions?.red)
+      motions.red = beat.pictograph_data.motions.red;
     return createPictographData({
       id: `beat-${beat.beat_number}`,
       grid_data: createGridData$1(),
       arrows: {
         blue: createArrowData({ arrow_type: ArrowType.BLUE, color: "blue" }),
-        red: createArrowData({ arrow_type: ArrowType.RED, color: "red" })
+        red: createArrowData({ arrow_type: ArrowType.RED, color: "red" }),
       },
       props: {
         blue: createPropData({ prop_type: PropType.STAFF, color: "blue" }),
-        red: createPropData({ prop_type: PropType.STAFF, color: "red" })
+        red: createPropData({ prop_type: PropType.STAFF, color: "red" }),
       },
       motions,
       letter: beat.pictograph_data?.letter || null,
       beat: beat.beat_number,
       is_blank: beat.is_blank,
-      is_mirrored: false
+      is_mirrored: false,
     });
   }
   /**
@@ -2726,7 +2890,10 @@ class PictographRenderingService {
    */
   createErrorSVG(errorMessage) {
     const svg = this.createBaseSVG();
-    const errorText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const errorText = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text",
+    );
     errorText.setAttribute("x", this.CENTER_X.toString());
     errorText.setAttribute("y", this.CENTER_Y.toString());
     errorText.setAttribute("text-anchor", "middle");
@@ -2734,13 +2901,17 @@ class PictographRenderingService {
     errorText.setAttribute("font-weight", "bold");
     errorText.textContent = "Rendering Error";
     if (errorMessage) {
-      const detailText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const detailText = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text",
+      );
       detailText.setAttribute("x", this.CENTER_X.toString());
       detailText.setAttribute("y", (this.CENTER_Y + 20).toString());
       detailText.setAttribute("text-anchor", "middle");
       detailText.setAttribute("fill", "#dc2626");
       detailText.setAttribute("font-size", "12");
-      detailText.textContent = errorMessage.substring(0, 50) + (errorMessage.length > 50 ? "..." : "");
+      detailText.textContent =
+        errorMessage.substring(0, 50) + (errorMessage.length > 50 ? "..." : "");
       svg.appendChild(detailText);
     }
     svg.appendChild(errorText);
@@ -2803,7 +2974,10 @@ class DefaultPropPositioner {
       throw new Error("Invalid grid data provided to DefaultPropPositioner");
     }
     if (this.debugMode) {
-      console.log("🎯 DefaultPropPositioner initialized with grid mode:", gridMode);
+      console.log(
+        "🎯 DefaultPropPositioner initialized with grid mode:",
+        gridMode,
+      );
     }
   }
   debugMode = false;
@@ -2816,7 +2990,7 @@ class DefaultPropPositioner {
     ne: { x: 620, y: 330 },
     se: { x: 620, y: 620 },
     sw: { x: 330, y: 620 },
-    nw: { x: 330, y: 330 }
+    nw: { x: 330, y: 330 },
   };
   /**
    * Calculate coordinates for a prop based on its location
@@ -2826,14 +3000,17 @@ class DefaultPropPositioner {
     const gridPoint = this.getGridPoint(pointName);
     if (gridPoint && gridPoint.coordinates) {
       if (this.debugMode) {
-        console.log(`✅ Found grid point "${pointName}":`, gridPoint.coordinates);
+        console.log(
+          `✅ Found grid point "${pointName}":`,
+          gridPoint.coordinates,
+        );
       }
       return gridPoint.coordinates;
     } else {
       const fallback = this.getFallbackCoordinates(location);
       if (this.debugMode) {
         console.warn(
-          `⚠️ Grid point "${pointName}" not found, using fallback: (${fallback.x}, ${fallback.y})`
+          `⚠️ Grid point "${pointName}" not found, using fallback: (${fallback.x}, ${fallback.y})`,
         );
       }
       return fallback;
@@ -2843,7 +3020,10 @@ class DefaultPropPositioner {
    * Get grid point by name from grid data
    */
   getGridPoint(pointName) {
-    if (this.gridData.allHandPointsNormal && this.gridData.allHandPointsNormal[pointName]) {
+    if (
+      this.gridData.allHandPointsNormal &&
+      this.gridData.allHandPointsNormal[pointName]
+    ) {
       const point = this.gridData.allHandPointsNormal[pointName];
       if (point.coordinates) {
         return { coordinates: point.coordinates };
@@ -2853,10 +3033,13 @@ class DefaultPropPositioner {
       pointName,
       pointName.replace("_hand_point", ""),
       `${pointName}_normal`,
-      `hand_${pointName}`
+      `hand_${pointName}`,
     ];
     for (const altName of alternativeNames) {
-      if (this.gridData.allHandPointsNormal && this.gridData.allHandPointsNormal[altName]) {
+      if (
+        this.gridData.allHandPointsNormal &&
+        this.gridData.allHandPointsNormal[altName]
+      ) {
         const point = this.gridData.allHandPointsNormal[altName];
         if (point.coordinates) {
           return { coordinates: point.coordinates };
@@ -2902,13 +3085,13 @@ class PropRotAngleManager {
       [Orientation.IN]: { n: 90, s: 270, w: 0, e: 180 },
       [Orientation.OUT]: { n: 270, s: 90, w: 180, e: 0 },
       [Orientation.CLOCK]: { n: 0, s: 180, w: 270, e: 90 },
-      [Orientation.COUNTER]: { n: 180, s: 0, w: 90, e: 270 }
+      [Orientation.COUNTER]: { n: 180, s: 0, w: 90, e: 270 },
     };
     const boxAngleMap = {
       [Orientation.IN]: { ne: 135, nw: 45, sw: 315, se: 225 },
       [Orientation.OUT]: { ne: 315, nw: 225, sw: 135, se: 45 },
       [Orientation.CLOCK]: { ne: 45, nw: 315, sw: 225, se: 135 },
-      [Orientation.COUNTER]: { ne: 225, nw: 135, sw: 45, se: 315 }
+      [Orientation.COUNTER]: { ne: 225, nw: 135, sw: 45, se: 315 },
     };
     const angleMap = isDiamondLocation ? diamondAngleMap : boxAngleMap;
     const orientationAngles = angleMap[this.ori];
@@ -2928,15 +3111,19 @@ class PropRenderingService {
   // Color transformation constants (matching desktop)
   COLOR_TRANSFORMATIONS = {
     blue: "#2E3192",
-    red: "#ED1C24"
+    red: "#ED1C24",
   };
-  constructor() {
-  }
+  constructor() {}
   /**
    * Render a prop as an SVG element
    * DISABLED: Props are now rendered by Prop.svelte components to avoid duplicates
    */
-  async renderProp(_propType, _color, _motionData, _gridMode = GridMode.DIAMOND) {
+  async renderProp(
+    _propType,
+    _color,
+    _motionData,
+    _gridMode = GridMode.DIAMOND,
+  ) {
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     group.setAttribute("class", "prop-service-disabled");
     return group;
@@ -2947,13 +3134,16 @@ class PropRenderingService {
   async calculatePropPosition(motionData, color, gridMode = GridMode.DIAMOND) {
     try {
       const location = motionData?.end_loc || "s";
-      const basePosition = DefaultPropPositioner.calculatePosition(location, gridMode);
+      const basePosition = DefaultPropPositioner.calculatePosition(
+        location,
+        gridMode,
+      );
       const rotation = this.calculatePropRotation(motionData, location);
       const offset = this.getColorOffset(color);
       return {
         x: basePosition.x + offset.x,
         y: basePosition.y + offset.y,
-        rotation
+        rotation,
       };
     } catch (error) {
       console.error("❌ Error calculating prop position:", error);
@@ -2996,7 +3186,10 @@ class PropRenderingService {
     const targetColor = this.COLOR_TRANSFORMATIONS[color];
     svgContent = svgContent.replace(/fill="[^"]*"/g, `fill="${targetColor}"`);
     svgContent = svgContent.replace(/fill:[^;]*/g, `fill:${targetColor}`);
-    svgContent = svgContent.replace(/stroke="[^"]*"/g, `stroke="${targetColor}"`);
+    svgContent = svgContent.replace(
+      /stroke="[^"]*"/g,
+      `stroke="${targetColor}"`,
+    );
     svgContent = svgContent.replace(/stroke:[^;]*/g, `stroke:${targetColor}`);
     return svgContent;
   }
@@ -3056,7 +3249,7 @@ class SequenceDomainService {
         code: "MISSING_NAME",
         message: "Sequence name is required",
         field: "name",
-        severity: "error"
+        severity: "error",
       });
     }
     if (request.name && request.name.length > 100) {
@@ -3064,15 +3257,18 @@ class SequenceDomainService {
         code: "NAME_TOO_LONG",
         message: "Sequence name must be less than 100 characters",
         field: "name",
-        severity: "error"
+        severity: "error",
       });
     }
-    if (request.length !== void 0 && (request.length < 0 || request.length > 64)) {
+    if (
+      request.length !== void 0 &&
+      (request.length < 0 || request.length > 64)
+    ) {
       errors.push({
         code: "INVALID_LENGTH",
         message: "Sequence length must be between 0 and 64",
         field: "length",
-        severity: "error"
+        severity: "error",
       });
     }
     if (request.gridMode && !["diamond", "box"].includes(request.gridMode)) {
@@ -3080,13 +3276,13 @@ class SequenceDomainService {
         code: "INVALID_GRID_MODE",
         message: 'Grid mode must be either "diamond" or "box"',
         field: "gridMode",
-        severity: "error"
+        severity: "error",
       });
     }
     return {
       isValid: errors.length === 0,
       errors,
-      warnings: []
+      warnings: [],
     };
   }
   /**
@@ -3096,7 +3292,7 @@ class SequenceDomainService {
     const validation = this.validateCreateRequest(request);
     if (!validation.isValid) {
       throw new Error(
-        `Invalid sequence request: ${validation.errors.join(", ")}`
+        `Invalid sequence request: ${validation.errors.join(", ")}`,
       );
     }
     const beats = [];
@@ -3112,7 +3308,7 @@ class SequenceDomainService {
       is_favorite: false,
       is_circular: false,
       tags: [],
-      metadata: { length: request.length }
+      metadata: { length: request.length },
     };
     return sequence;
   }
@@ -3142,9 +3338,11 @@ class SequenceDomainService {
     if (!sequence.beats || sequence.beats.length === 0) {
       return "";
     }
-    const word = sequence.beats.map(
-      (beat) => beat.pictograph_data?.letter || beat.metadata?.letter || "?"
-    ).join("");
+    const word = sequence.beats
+      .map(
+        (beat) => beat.pictograph_data?.letter || beat.metadata?.letter || "?",
+      )
+      .join("");
     return this.simplifyRepeatedWord(word);
   }
   /**
@@ -3182,7 +3380,7 @@ class SequenceDomainService {
       red_reversal: false,
       is_blank: true,
       pictograph_data: null,
-      metadata: {}
+      metadata: {},
     };
   }
   /**
@@ -3221,16 +3419,16 @@ class SequenceGenerationService {
         tags: [],
         metadata: {
           generated: true,
-          generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
-          options
-        }
+          generatedAt: /* @__PURE__ */ new Date().toISOString(),
+          options,
+        },
       });
       console.log("Sequence generation complete:", generatedSequence.id);
       return generatedSequence;
     } catch (error) {
       console.error("Failed to generate sequence:", error);
       throw new Error(
-        `Sequence generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Sequence generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3243,12 +3441,12 @@ class SequenceGenerationService {
       const blueMotion = await this.motionGenerationService.generateMotion(
         "blue",
         options,
-        previousBeats
+        previousBeats,
       );
       const redMotion = await this.motionGenerationService.generateMotion(
         "red",
         options,
-        previousBeats
+        previousBeats,
       );
       const beat = {
         id: crypto.randomUUID(),
@@ -3261,19 +3459,19 @@ class SequenceGenerationService {
         // Will be set later with motions
         metadata: {
           generated: true,
-          generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+          generatedAt: /* @__PURE__ */ new Date().toISOString(),
           difficulty: options.difficulty,
           letter: null,
           // Will be calculated later
           blueMotion,
-          redMotion
-        }
+          redMotion,
+        },
       };
       return beat;
     } catch (error) {
       console.error(`Failed to generate beat ${beatNumber}:`, error);
       throw new Error(
-        `Beat generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Beat generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3287,21 +3485,26 @@ class SequenceGenerationService {
     if (!Object.values(GridMode).includes(options.gridMode)) {
       throw new Error('Grid mode must be either "diamond" or "box"');
     }
-    if (!["beginner", "intermediate", "advanced"].includes(options.difficulty)) {
-      throw new Error('Difficulty must be "beginner", "intermediate", or "advanced"');
+    if (
+      !["beginner", "intermediate", "advanced"].includes(options.difficulty)
+    ) {
+      throw new Error(
+        'Difficulty must be "beginner", "intermediate", or "advanced"',
+      );
     }
   }
   /**
    * Generate a sequence name based on options
    */
   generateSequenceName(options) {
-    const timestamp = (/* @__PURE__ */ new Date()).toLocaleString("en-US", {
+    const timestamp = /* @__PURE__ */ new Date().toLocaleString("en-US", {
       month: "short",
       day: "numeric",
       hour: "numeric",
-      minute: "2-digit"
+      minute: "2-digit",
     });
-    const difficulty = options.difficulty.charAt(0).toUpperCase() + options.difficulty.slice(1);
+    const difficulty =
+      options.difficulty.charAt(0).toUpperCase() + options.difficulty.slice(1);
     return `${difficulty} ${options.length}-Beat (${timestamp})`;
   }
   /**
@@ -3322,12 +3525,12 @@ class SequenceGenerationService {
         length: baseSequence.beats.length || 8,
         gridMode: baseSequence.grid_mode || GridMode.DIAMOND,
         propType: baseSequence.prop_type || "fan",
-        difficulty: baseSequence.difficulty_level || "intermediate"
+        difficulty: baseSequence.difficulty_level || "intermediate",
       };
       const variation = await this.generateSequence(options);
       const namedVariation = createSequenceData({
         ...variation,
-        name: `${baseSequence.name} - Variation ${i + 1}`
+        name: `${baseSequence.name} - Variation ${i + 1}`,
       });
       variations.push(namedVariation);
     }
@@ -3340,7 +3543,7 @@ class SequenceGenerationService {
     return {
       totalGenerated: 0,
       averageGenerationTime: 0,
-      lastGenerated: null
+      lastGenerated: null,
     };
   }
 }
@@ -3355,7 +3558,7 @@ class PngMetadataExtractor {
       const response = await fetch(filePath);
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch PNG file: ${response.status} ${response.statusText}`
+          `Failed to fetch PNG file: ${response.status} ${response.statusText}`,
         );
       }
       const arrayBuffer = await response.arrayBuffer();
@@ -3380,13 +3583,17 @@ class PngMetadataExtractor {
   static findTextChunk(data, keyword) {
     let offset = 8;
     while (offset < data.length) {
-      const length = data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8 | data[offset + 3];
+      const length =
+        (data[offset] << 24) |
+        (data[offset + 1] << 16) |
+        (data[offset + 2] << 8) |
+        data[offset + 3];
       offset += 4;
       const type = String.fromCharCode(
         data[offset],
         data[offset + 1],
         data[offset + 2],
-        data[offset + 3]
+        data[offset + 3],
       );
       offset += 4;
       if (type === "tEXt") {
@@ -3420,7 +3627,7 @@ class PngMetadataExtractor {
   static async debugSequenceMetadata(sequenceName) {
     try {
       console.log(
-        `🔍 [PNG METADATA] Extracting metadata for ${sequenceName}...`
+        `🔍 [PNG METADATA] Extracting metadata for ${sequenceName}...`,
       );
       const metadata = await this.extractSequenceMetadata(sequenceName);
       console.log(`📋 [PNG METADATA] Raw metadata for ${sequenceName}:`);
@@ -3431,14 +3638,14 @@ class PngMetadataExtractor {
           const blueMotion = step.blue_attributes?.motion_type || "unknown";
           const redMotion = step.red_attributes?.motion_type || "unknown";
           console.log(
-            `  Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}`
+            `  Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}`,
           );
         }
       });
     } catch (error) {
       console.error(
         `❌ [PNG METADATA] Failed to extract metadata for ${sequenceName}:`,
-        error
+        error,
       );
     }
   }
@@ -3462,7 +3669,7 @@ class SequenceService {
     } catch (error) {
       console.error("Failed to create sequence:", error);
       throw new Error(
-        `Failed to create sequence: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to create sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3471,20 +3678,21 @@ class SequenceService {
    */
   async updateBeat(sequenceId, beatIndex, beatData) {
     try {
-      const currentSequence = await this.persistenceService.loadSequence(sequenceId);
+      const currentSequence =
+        await this.persistenceService.loadSequence(sequenceId);
       if (!currentSequence) {
         throw new Error(`Sequence ${sequenceId} not found`);
       }
       const updatedSequence = this.sequenceDomainService.updateBeat(
         currentSequence,
         beatIndex,
-        beatData
+        beatData,
       );
       await this.persistenceService.saveSequence(updatedSequence);
     } catch (error) {
       console.error("Failed to update beat:", error);
       throw new Error(
-        `Failed to update beat: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to update beat: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3493,19 +3701,20 @@ class SequenceService {
    */
   async setSequenceStartPosition(sequenceId, startPosition) {
     try {
-      const currentSequence = await this.persistenceService.loadSequence(sequenceId);
+      const currentSequence =
+        await this.persistenceService.loadSequence(sequenceId);
       if (!currentSequence) {
         throw new Error(`Sequence ${sequenceId} not found`);
       }
       const updatedSequence = {
         ...currentSequence,
-        start_position: startPosition
+        start_position: startPosition,
       };
       await this.persistenceService.saveSequence(updatedSequence);
     } catch (error) {
       console.error("Failed to set start position:", error);
       throw new Error(
-        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3518,7 +3727,7 @@ class SequenceService {
     } catch (error) {
       console.error("Failed to delete sequence:", error);
       throw new Error(
-        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3530,7 +3739,7 @@ class SequenceService {
       let sequence = await this.persistenceService.loadSequence(id);
       if (!sequence) {
         console.log(
-          `🎬 Sequence ${id} not found, attempting to load from PNG metadata`
+          `🎬 Sequence ${id} not found, attempting to load from PNG metadata`,
         );
         try {
           sequence = await this.loadSequenceFromPNG(id);
@@ -3578,17 +3787,17 @@ class SequenceService {
         is_blank: true,
         pictograph_data: null,
         metadata: {},
-        ...beatData
+        ...beatData,
       };
       const updatedSequence = {
         ...sequence,
-        beats: [...sequence.beats, newBeat]
+        beats: [...sequence.beats, newBeat],
       };
       await this.persistenceService.saveSequence(updatedSequence);
     } catch (error) {
       console.error("Failed to add beat:", error);
       throw new Error(
-        `Failed to add beat: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to add beat: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3604,13 +3813,15 @@ class SequenceService {
       if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
         throw new Error(`Beat index ${beatIndex} is out of range`);
       }
-      const newBeats = sequence.beats.filter((_, index) => index !== beatIndex).map((beat, index) => ({ ...beat, beat_number: index + 1 }));
+      const newBeats = sequence.beats
+        .filter((_, index) => index !== beatIndex)
+        .map((beat, index) => ({ ...beat, beat_number: index + 1 }));
       const updatedSequence = { ...sequence, beats: newBeats };
       await this.persistenceService.saveSequence(updatedSequence);
     } catch (error) {
       console.error("Failed to remove beat:", error);
       throw new Error(
-        `Failed to remove beat: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to remove beat: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3621,7 +3832,7 @@ class SequenceService {
     console.log(`🎬 Loading sequence from PNG metadata for ID: ${id}`);
     try {
       const pngMetadata = await PngMetadataExtractor.extractSequenceMetadata(
-        id.toUpperCase()
+        id.toUpperCase(),
       );
       if (!pngMetadata || pngMetadata.length === 0) {
         console.error(`No metadata found in PNG for sequence: ${id}`);
@@ -3642,56 +3853,58 @@ class SequenceService {
     console.log(`🔄 Converting standalone data to web app format for ${id}`);
     const meta = pngMetadata[0];
     const steps = pngMetadata.slice(1);
-    const beats = steps.filter((step) => step.beat && step.beat > 0).map((step) => ({
-      id: `${step.beat}-${step.letter}`,
-      beat_number: step.beat,
-      duration: 1,
-      blue_reversal: false,
-      red_reversal: false,
-      is_blank: false,
-      pictograph_data: {
-        id: `pictograph-${step.beat}`,
-        grid_data: {
-          grid_mode: meta.grid_mode || "diamond",
-          center_x: 0,
-          center_y: 0,
-          radius: 100,
-          grid_points: {}
-        },
-        arrows: {},
-        props: {},
-        motions: {
-          blue: {
-            motion_type: step.blue_attributes?.motion_type || "static",
-            start_loc: step.blue_attributes?.start_loc || "s",
-            end_loc: step.blue_attributes?.end_loc || "s",
-            start_ori: step.blue_attributes?.start_ori || "in",
-            end_ori: step.blue_attributes?.end_ori,
-            // Don't set default - let it be undefined
-            prop_rot_dir: step.blue_attributes?.prop_rot_dir || "no_rot",
-            turns: step.blue_attributes?.turns || 0,
-            is_visible: true
-          },
-          red: {
-            motion_type: step.red_attributes?.motion_type || "static",
-            start_loc: step.red_attributes?.start_loc || "s",
-            end_loc: step.red_attributes?.end_loc || "s",
-            start_ori: step.red_attributes?.start_ori || "in",
-            end_ori: step.red_attributes?.end_ori,
-            // Don't set default - let it be undefined
-            prop_rot_dir: step.red_attributes?.prop_rot_dir || "no_rot",
-            turns: step.red_attributes?.turns || 0,
-            is_visible: true
-          }
-        },
-        letter: step.letter || "",
-        beat: step.beat,
+    const beats = steps
+      .filter((step) => step.beat && step.beat > 0)
+      .map((step) => ({
+        id: `${step.beat}-${step.letter}`,
+        beat_number: step.beat,
+        duration: 1,
+        blue_reversal: false,
+        red_reversal: false,
         is_blank: false,
-        is_mirrored: false,
-        metadata: {}
-      },
-      metadata: {}
-    }));
+        pictograph_data: {
+          id: `pictograph-${step.beat}`,
+          grid_data: {
+            grid_mode: meta.grid_mode || "diamond",
+            center_x: 0,
+            center_y: 0,
+            radius: 100,
+            grid_points: {},
+          },
+          arrows: {},
+          props: {},
+          motions: {
+            blue: {
+              motion_type: step.blue_attributes?.motion_type || "static",
+              start_loc: step.blue_attributes?.start_loc || "s",
+              end_loc: step.blue_attributes?.end_loc || "s",
+              start_ori: step.blue_attributes?.start_ori || "in",
+              end_ori: step.blue_attributes?.end_ori,
+              // Don't set default - let it be undefined
+              prop_rot_dir: step.blue_attributes?.prop_rot_dir || "no_rot",
+              turns: step.blue_attributes?.turns || 0,
+              is_visible: true,
+            },
+            red: {
+              motion_type: step.red_attributes?.motion_type || "static",
+              start_loc: step.red_attributes?.start_loc || "s",
+              end_loc: step.red_attributes?.end_loc || "s",
+              start_ori: step.red_attributes?.start_ori || "in",
+              end_ori: step.red_attributes?.end_ori,
+              // Don't set default - let it be undefined
+              prop_rot_dir: step.red_attributes?.prop_rot_dir || "no_rot",
+              turns: step.red_attributes?.turns || 0,
+              is_visible: true,
+            },
+          },
+          letter: step.letter || "",
+          beat: step.beat,
+          is_blank: false,
+          is_mirrored: false,
+          metadata: {},
+        },
+        metadata: {},
+      }));
     console.log(`✅ Converted to web app format: ${beats.length} beats`);
     return {
       id,
@@ -3712,9 +3925,9 @@ class SequenceService {
       tags: ["flow", "practice"],
       metadata: {
         source: "png_metadata",
-        extracted_at: (/* @__PURE__ */ new Date()).toISOString(),
-        ...meta
-      }
+        extracted_at: /* @__PURE__ */ new Date().toISOString(),
+        ...meta,
+      },
     };
   }
   /**
@@ -3740,7 +3953,7 @@ class SequenceService {
       console.warn(`⚠️ Failed to load PNG metadata for ${id}:`, error);
     }
     throw new Error(
-      `No PNG metadata found for sequence ${id}. Please ensure the sequence has a valid PNG thumbnail with embedded metadata.`
+      `No PNG metadata found for sequence ${id}. Please ensure the sequence has a valid PNG thumbnail with embedded metadata.`,
     );
   }
 }
@@ -3752,7 +3965,7 @@ class SettingsService {
     showBeatNumbers: true,
     autoSave: true,
     exportQuality: "high",
-    workbenchColumns: 3
+    workbenchColumns: 3,
   };
   constructor() {
     this.loadSettings();
@@ -3774,7 +3987,7 @@ class SettingsService {
     } catch (error) {
       console.error(`Failed to update setting ${key}:`, error);
       throw new Error(
-        `Failed to update setting: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to update setting: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3814,7 +4027,7 @@ class SettingsService {
       showBeatNumbers: true,
       autoSave: true,
       exportQuality: "high",
-      workbenchColumns: 3
+      workbenchColumns: 3,
     };
     await this.persistSettings();
     console.log("Settings reset to defaults");
@@ -3823,14 +4036,14 @@ class SettingsService {
 class StartPositionService {
   DEFAULT_START_POSITIONS = {
     diamond: ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"],
-    box: ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"]
+    box: ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"],
   };
   constructor() {
     console.log("🎯 StartPositionService initialized");
   }
   async getAvailableStartPositions(propType, gridMode) {
     console.log(
-      `📍 Getting available start positions for ${propType} in ${gridMode} mode`
+      `📍 Getting available start positions for ${propType} in ${gridMode} mode`,
     );
     try {
       const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
@@ -3841,8 +4054,8 @@ class StartPositionService {
           pictograph_data: this.createStartPositionPictograph(
             key,
             index,
-            gridMode
-          )
+            gridMode,
+          ),
         });
       });
       console.log(`✅ Generated ${beatData.length} start positions`);
@@ -3855,7 +4068,7 @@ class StartPositionService {
   async setStartPosition(startPosition) {
     console.log(
       "🎯 Setting start position:",
-      startPosition.pictograph_data?.id
+      startPosition.pictograph_data?.id,
     );
     try {
       if (typeof window !== "undefined") {
@@ -3865,12 +4078,11 @@ class StartPositionService {
             const parsed = JSON.parse(existingData);
             if (parsed.endPos) {
               console.log(
-                "✅ Start position already in correct format, not overwriting"
+                "✅ Start position already in correct format, not overwriting",
               );
               return;
             }
-          } catch {
-          }
+          } catch {}
         }
         const optionPickerFormat = {
           endPos: startPosition.metadata?.endPos || "alpha1",
@@ -3881,18 +4093,18 @@ class StartPositionService {
           // Default
           isStartPosition: true,
           // Include the full beat data for compatibility
-          ...startPosition
+          ...startPosition,
         };
         localStorage.setItem(
           "start_position",
-          JSON.stringify(optionPickerFormat)
+          JSON.stringify(optionPickerFormat),
         );
       }
       console.log("✅ Start position set successfully");
     } catch (error) {
       console.error("❌ Error setting start position:", error);
       throw new Error(
-        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -3902,45 +4114,52 @@ class StartPositionService {
       errors.push({
         code: "MISSING_PICTOGRAPH_DATA",
         message: "Start position must have pictograph data",
-        severity: "error"
+        severity: "error",
       });
     }
-    if (!position.pictograph_data?.motions?.blue && !position.pictograph_data?.motions?.red) {
+    if (
+      !position.pictograph_data?.motions?.blue &&
+      !position.pictograph_data?.motions?.red
+    ) {
       errors.push({
         code: "MISSING_MOTIONS",
         message: "Start position must have at least one motion",
-        severity: "error"
+        severity: "error",
       });
     }
-    if (position.pictograph_data?.motions?.blue?.motion_type !== MotionType.STATIC) {
+    if (
+      position.pictograph_data?.motions?.blue?.motion_type !== MotionType.STATIC
+    ) {
       errors.push({
         code: "INVALID_BLUE_MOTION",
         message: "Blue motion must be static for start positions",
-        severity: "error"
+        severity: "error",
       });
     }
-    if (position.pictograph_data?.motions?.red?.motion_type !== MotionType.STATIC) {
+    if (
+      position.pictograph_data?.motions?.red?.motion_type !== MotionType.STATIC
+    ) {
       errors.push({
         code: "INVALID_RED_MOTION",
         message: "Red motion must be static for start positions",
-        severity: "error"
+        severity: "error",
       });
     }
     return {
       isValid: errors.length === 0,
       errors,
-      warnings: []
+      warnings: [],
     };
   }
   async getDefaultStartPositions(gridMode) {
     console.log(`📍 Getting default start positions for ${gridMode} mode`);
     try {
       const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
-      const pictographData = startPositionKeys.map(
-        (key, index) => this.createStartPositionPictograph(key, index, gridMode)
+      const pictographData = startPositionKeys.map((key, index) =>
+        this.createStartPositionPictograph(key, index, gridMode),
       );
       console.log(
-        `✅ Generated ${pictographData.length} default start positions`
+        `✅ Generated ${pictographData.length} default start positions`,
       );
       return pictographData;
     } catch (error) {
@@ -3966,7 +4185,7 @@ class StartPositionService {
       // Alpha2: Blue=Southwest, Red=Northeast
       beta4_beta4: { blue: Location.SOUTHEAST, red: Location.SOUTHEAST },
       // Beta4: Blue=Southeast, Red=Southeast
-      gamma12_gamma12: { blue: Location.NORTHWEST, red: Location.NORTHEAST }
+      gamma12_gamma12: { blue: Location.NORTHWEST, red: Location.NORTHEAST },
       // Gamma12: Blue=Northwest, Red=Northeast
     };
     const mapping = positionMappings[key];
@@ -3976,29 +4195,29 @@ class StartPositionService {
     const blueLocation = mapping?.blue || Location.SOUTH;
     const redLocation = mapping?.red || Location.NORTH;
     console.log(
-      `🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`
+      `🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`,
     );
     const blueArrow = createArrowData({
       arrow_type: ArrowType.BLUE,
       color: "blue",
       turns: 0,
-      location: blueLocation
+      location: blueLocation,
     });
     const redArrow = createArrowData({
       arrow_type: ArrowType.RED,
       color: "red",
       turns: 0,
-      location: redLocation
+      location: redLocation,
     });
     const blueProp = createPropData({
       prop_type: PropType.STAFF,
       color: "blue",
-      location: blueLocation
+      location: blueLocation,
     });
     const redProp = createPropData({
       prop_type: PropType.STAFF,
       color: "red",
-      location: redLocation
+      location: redLocation,
     });
     const blueMotion = createMotionData({
       motion_type: MotionType.STATIC,
@@ -4007,7 +4226,7 @@ class StartPositionService {
       end_loc: blueLocation,
       turns: 0,
       start_ori: Orientation.IN,
-      end_ori: Orientation.IN
+      end_ori: Orientation.IN,
     });
     const redMotion = createMotionData({
       motion_type: MotionType.STATIC,
@@ -4016,12 +4235,12 @@ class StartPositionService {
       end_loc: redLocation,
       turns: 0,
       start_ori: Orientation.IN,
-      end_ori: Orientation.IN
+      end_ori: Orientation.IN,
     });
     const pictograph = createPictographData({
       id: `start-pos-${key}-${index}`,
       grid_data: createGridData$1({
-        grid_mode: gridMode === "diamond" ? GridMode.DIAMOND : GridMode.BOX
+        grid_mode: gridMode === "diamond" ? GridMode.DIAMOND : GridMode.BOX,
       }),
       arrows: { blue: blueArrow, red: redArrow },
       props: { blue: blueProp, red: redProp },
@@ -4029,7 +4248,7 @@ class StartPositionService {
       letter,
       beat: index,
       is_blank: false,
-      is_mirrored: false
+      is_mirrored: false,
     });
     return pictograph;
   }
@@ -4038,16 +4257,13 @@ const ISequenceServiceInterface = createServiceInterface(
   "ISequenceService",
   class extends SequenceService {
     constructor(...args) {
-      super(
-        args[0],
-        args[1]
-      );
+      super(args[0], args[1]);
     }
-  }
+  },
 );
 const ISequenceDomainServiceInterface = createServiceInterface(
   "ISequenceDomainService",
-  SequenceDomainService
+  SequenceDomainService,
 );
 const IPictographServiceInterface = createServiceInterface(
   "IPictographService",
@@ -4055,35 +4271,35 @@ const IPictographServiceInterface = createServiceInterface(
     constructor(...args) {
       super(args[0]);
     }
-  }
+  },
 );
 const IPictographRenderingServiceInterface = createServiceInterface(
   "IPictographRenderingService",
   class extends PictographRenderingService {
     constructor(...args) {
-      super(
-        args[0],
-        args[1]
-      );
+      super(args[0], args[1]);
     }
-  }
+  },
 );
 const IPropRenderingServiceInterface = createServiceInterface(
   "IPropRenderingService",
-  PropRenderingService
+  PropRenderingService,
 );
 const IPersistenceServiceInterface = createServiceInterface(
   "IPersistenceService",
-  LocalStoragePersistenceService
+  LocalStoragePersistenceService,
 );
-const ISettingsServiceInterface = createServiceInterface("ISettingsService", SettingsService);
+const ISettingsServiceInterface = createServiceInterface(
+  "ISettingsService",
+  SettingsService,
+);
 const IDeviceDetectionServiceInterface = createServiceInterface(
   "IDeviceDetectionService",
-  DeviceDetectionService
+  DeviceDetectionService,
 );
 const IPanelManagementServiceInterface = createServiceInterface(
   "IPanelManagementService",
-  PanelManagementService
+  PanelManagementService,
 );
 const IApplicationInitializationServiceInterface = createServiceInterface(
   "IApplicationInitializationService",
@@ -4091,7 +4307,7 @@ const IApplicationInitializationServiceInterface = createServiceInterface(
     constructor(...args) {
       super(args[0], args[1]);
     }
-  }
+  },
 );
 const IExportServiceInterface = createServiceInterface(
   "IExportService",
@@ -4099,11 +4315,11 @@ const IExportServiceInterface = createServiceInterface(
     constructor(...args) {
       super(args[0]);
     }
-  }
+  },
 );
 const IMotionGenerationServiceInterface = createServiceInterface(
   "IMotionGenerationService",
-  MotionGenerationService
+  MotionGenerationService,
 );
 const ISequenceGenerationServiceInterface = createServiceInterface(
   "ISequenceGenerationService",
@@ -4111,7 +4327,7 @@ const ISequenceGenerationServiceInterface = createServiceInterface(
     constructor(...args) {
       super(args[0]);
     }
-  }
+  },
 );
 const IConstructTabCoordinationServiceInterface = createServiceInterface(
   "IConstructTabCoordinationService",
@@ -4119,20 +4335,20 @@ const IConstructTabCoordinationServiceInterface = createServiceInterface(
     constructor(...args) {
       super(args[0], args[1]);
     }
-  }
+  },
 );
 const IOptionDataServiceInterface = createServiceInterface(
   "IOptionDataService",
-  OptionDataService
+  OptionDataService,
 );
 const IStartPositionServiceInterface = createServiceInterface(
   "IStartPositionService",
-  StartPositionService
+  StartPositionService,
 );
 class ArrowPlacementDataService {
   allPlacements = {
     [GridMode.DIAMOND]: {},
-    [GridMode.BOX]: {}
+    [GridMode.BOX]: {},
   };
   isDataLoaded = false;
   // File mapping for placement data
@@ -4140,17 +4356,21 @@ class ArrowPlacementDataService {
     [GridMode.DIAMOND]: {
       pro: "/data/arrow_placement/diamond/default/default_diamond_pro_placements.json",
       anti: "/data/arrow_placement/diamond/default/default_diamond_anti_placements.json",
-      float: "/data/arrow_placement/diamond/default/default_diamond_float_placements.json",
+      float:
+        "/data/arrow_placement/diamond/default/default_diamond_float_placements.json",
       dash: "/data/arrow_placement/diamond/default/default_diamond_dash_placements.json",
-      static: "/data/arrow_placement/diamond/default/default_diamond_static_placements.json"
+      static:
+        "/data/arrow_placement/diamond/default/default_diamond_static_placements.json",
     },
     [GridMode.BOX]: {
       pro: "/data/arrow_placement/box/default/default_box_pro_placements.json",
       anti: "/data/arrow_placement/box/default/default_box_anti_placements.json",
-      float: "/data/arrow_placement/box/default/default_box_float_placements.json",
+      float:
+        "/data/arrow_placement/box/default/default_box_float_placements.json",
       dash: "/data/arrow_placement/box/default/default_box_dash_placements.json",
-      static: "/data/arrow_placement/box/default/default_box_static_placements.json"
-    }
+      static:
+        "/data/arrow_placement/box/default/default_box_static_placements.json",
+    },
   };
   /**
    * Load all placement data from JSON files
@@ -4168,7 +4388,7 @@ class ArrowPlacementDataService {
     } catch (error) {
       console.error("❌ Failed to load arrow placement data:", error);
       throw new Error(
-        `Placement data loading failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Placement data loading failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -4184,7 +4404,9 @@ class ArrowPlacementDataService {
         this.allPlacements[gridMode][motionType] = placementData;
         console.log(`Loaded ${motionType} placements for ${gridMode} grid`);
       } catch (error) {
-        console.warn(`Could not load ${motionType} placements for ${gridMode}: ${error}`);
+        console.warn(
+          `Could not load ${motionType} placements for ${gridMode}: ${error}`,
+        );
         this.allPlacements[gridMode][motionType] = {};
       }
     }
@@ -4207,7 +4429,12 @@ class ArrowPlacementDataService {
   /**
    * Get default adjustment using placement key and turns
    */
-  async getDefaultAdjustment(motionType, placementKey, turns, gridMode = GridMode.DIAMOND) {
+  async getDefaultAdjustment(
+    motionType,
+    placementKey,
+    turns,
+    gridMode = GridMode.DIAMOND,
+  ) {
     await this.ensureDataLoaded();
     const gridPlacements = this.allPlacements[gridMode];
     if (!gridPlacements) {
@@ -4227,11 +4454,15 @@ class ArrowPlacementDataService {
     const turnsStr = this.formatTurnsForLookup(turns);
     const adjustment = placementData[turnsStr];
     if (!adjustment) {
-      console.warn(`No adjustment for turns: ${turnsStr} in placement: ${placementKey}`);
+      console.warn(
+        `No adjustment for turns: ${turnsStr} in placement: ${placementKey}`,
+      );
       return { x: 0, y: 0 };
     }
     const [x, y] = adjustment;
-    console.log(`Found adjustment for ${motionType} ${placementKey} ${turnsStr}: [${x}, ${y}]`);
+    console.log(
+      `Found adjustment for ${motionType} ${placementKey} ${turnsStr}: [${x}, ${y}]`,
+    );
     return { x, y };
   }
   /**
@@ -4277,12 +4508,19 @@ class ArrowPlacementDataService {
    */
   async debugAvailableKeys(motionType, gridMode = GridMode.DIAMOND) {
     const keys = await this.getAvailablePlacementKeys(motionType, gridMode);
-    console.log(`Available placement keys for ${motionType} (${gridMode}):`, keys);
+    console.log(
+      `Available placement keys for ${motionType} (${gridMode}):`,
+      keys,
+    );
   }
   /**
    * Get raw placement data for debugging
    */
-  async getPlacementData(motionType, placementKey, gridMode = GridMode.DIAMOND) {
+  async getPlacementData(
+    motionType,
+    placementKey,
+    gridMode = GridMode.DIAMOND,
+  ) {
     await this.ensureDataLoaded();
     const motionPlacements = this.allPlacements[gridMode]?.[motionType];
     return motionPlacements?.[placementKey] || {};
@@ -4292,7 +4530,7 @@ class ArrowPlacementKeyService {
   // Letter condition mappings from desktop
   dashLetterConditions = {
     TYPE3: ["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"],
-    TYPE5: ["Φ-", "Ψ-", "Λ-"]
+    TYPE5: ["Φ-", "Ψ-", "Λ-"],
   };
   /**
    * Generate placement key based on motion data and pictograph context
@@ -4305,8 +4543,13 @@ class ArrowPlacementKeyService {
     const rawMotionType = this.getRawMotionType(motionData);
     const motionType = this.normalizeMotionType(rawMotionType);
     const letter = pictographData.letter;
-    console.log(`Generating placement key for ${motionType}, letter: ${letter}`);
-    const candidateKeys = this.generateCandidateKeys(motionData, pictographData);
+    console.log(
+      `Generating placement key for ${motionType}, letter: ${letter}`,
+    );
+    const candidateKeys = this.generateCandidateKeys(
+      motionData,
+      pictographData,
+    );
     for (const key of candidateKeys) {
       if (availableKeys.includes(key)) {
         console.log(`Selected placement key: ${key}`);
@@ -4370,7 +4613,7 @@ class ArrowPlacementKeyService {
     }
     const allDashLetters = [
       ...this.dashLetterConditions.TYPE3,
-      ...this.dashLetterConditions.TYPE5
+      ...this.dashLetterConditions.TYPE5,
     ];
     if (allDashLetters.includes(letter)) {
       const baseString = letter.slice(0, -1);
@@ -4388,7 +4631,9 @@ class ArrowPlacementKeyService {
         return normalized;
       }
     }
-    console.warn(`Invalid motion type: ${String(motionType)}, defaulting to 'pro'`);
+    console.warn(
+      `Invalid motion type: ${String(motionType)}, defaulting to 'pro'`,
+    );
     return "pro";
   }
   /**
@@ -4412,14 +4657,14 @@ let ArrowPositioningService$1 = class ArrowPositioningService {
       return {
         x: this.CENTER_X,
         y: this.CENTER_Y,
-        rotation: 0
+        rotation: 0,
       };
     } catch (error) {
       console.warn("Arrow positioning failed, using default position:", error);
       return {
         x: this.CENTER_X,
         y: this.CENTER_Y,
-        rotation: 0
+        rotation: 0,
       };
     }
   }
@@ -4427,11 +4672,13 @@ let ArrowPositioningService$1 = class ArrowPositioningService {
     const positions = /* @__PURE__ */ new Map();
     try {
       if (pictographData.arrows) {
-        for (const [arrowId, arrowData] of Object.entries(pictographData.arrows)) {
+        for (const [arrowId, arrowData] of Object.entries(
+          pictographData.arrows,
+        )) {
           const position = await this.calculateArrowPosition(
             arrowData,
             pictographData,
-            gridData
+            gridData,
           );
           positions.set(arrowId, position);
         }
@@ -4468,11 +4715,13 @@ let ArrowPositioningService$1 = class ArrowPositioningService {
   // @ts-expect-error - Method reserved for future implementation
   _getInitialPosition(location, gridData) {
     try {
-      const gridPoint = gridData.allHandPointsNormal[location] || gridData.allLayer2PointsNormal[location];
+      const gridPoint =
+        gridData.allHandPointsNormal[location] ||
+        gridData.allLayer2PointsNormal[location];
       if (gridPoint && gridPoint.coordinates) {
         return {
           x: gridPoint.coordinates.x,
-          y: gridPoint.coordinates.y
+          y: gridPoint.coordinates.y,
         };
       }
     } catch (error) {
@@ -4507,7 +4756,9 @@ class AttributeKeyGenerator {
     try {
       const motionData = pictographData.motions?.[arrowData.color];
       if (!motionData) {
-        console.debug(`No motion data for ${arrowData.color}, using color as key`);
+        console.debug(
+          `No motion data for ${arrowData.color}, using color as key`,
+        );
         return arrowData.color;
       }
       const motionType = motionData.motion_type || "";
@@ -4516,7 +4767,8 @@ class AttributeKeyGenerator {
       const color = arrowData.color;
       const leadState = void 0;
       const hasHybridMotions = this.hasHybridMotions(pictographData);
-      const startsFromMixedOrientation = this.startsFromMixedOrientation(pictographData);
+      const startsFromMixedOrientation =
+        this.startsFromMixedOrientation(pictographData);
       const startsFromStandardOrientation = !startsFromMixedOrientation;
       return this.generateKey(
         motionType,
@@ -4526,14 +4778,26 @@ class AttributeKeyGenerator {
         leadState,
         hasHybridMotions,
         startsFromMixedOrientation,
-        startsFromStandardOrientation
+        startsFromStandardOrientation,
       );
     } catch (error) {
-      console.error(`Error generating attribute key for ${arrowData.color}:`, error);
+      console.error(
+        `Error generating attribute key for ${arrowData.color}:`,
+        error,
+      );
       return arrowData.color;
     }
   }
-  generateKey(motionType, letter, startOri, color, leadState, hasHybridMotions, startsFromMixedOrientation, _startsFromStandardOrientation) {
+  generateKey(
+    motionType,
+    letter,
+    startOri,
+    color,
+    leadState,
+    hasHybridMotions,
+    startsFromMixedOrientation,
+    _startsFromStandardOrientation,
+  ) {
     try {
       const IN = "in";
       const OUT = "out";
@@ -4610,23 +4874,37 @@ class AttributeKeyGenerator {
       "P",
       "Q",
       "S",
-      "T"
+      "T",
     ];
     return nonHybridLetters.includes(letter);
   }
 }
 class PlacementKeyGenerator {
   service = new ArrowPlacementKeyService();
-  generatePlacementKey(motionData, pictographData, defaultPlacements, _gridMode) {
+  generatePlacementKey(
+    motionData,
+    pictographData,
+    defaultPlacements,
+    _gridMode,
+  ) {
     const availableKeys = Object.keys(defaultPlacements || {});
     if (availableKeys.length === 0) {
-      const candidates2 = this.service.debugCandidateKeys(motionData, pictographData);
-      return candidates2[0] ?? this.service.generateBasicKey(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        motionData.motion_type || "pro"
+      const candidates2 = this.service.debugCandidateKeys(
+        motionData,
+        pictographData,
+      );
+      return (
+        candidates2[0] ??
+        this.service.generateBasicKey(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          motionData.motion_type || "pro",
+        )
       );
     }
-    const candidates = this.service.debugCandidateKeys(motionData, pictographData);
+    const candidates = this.service.debugCandidateKeys(
+      motionData,
+      pictographData,
+    );
     for (const key of candidates) {
       if (availableKeys.includes(key)) return key;
     }
@@ -4649,8 +4927,7 @@ class SpecialPlacementOriKeyGenerator {
         if (blueLayer === 2 && redLayer === 1) return "from_layer3_blue2_red1";
         return "from_layer1";
       }
-    } catch {
-    }
+    } catch {}
     return "from_layer1";
   }
 }
@@ -4684,7 +4961,14 @@ class ArrowAdjustmentLookup {
   placementKeyService;
   turnsTupleService;
   attributeKeyService;
-  constructor(specialPlacementService, defaultPlacementService, orientationKeyService, placementKeyService, turnsTupleService, attributeKeyService) {
+  constructor(
+    specialPlacementService,
+    defaultPlacementService,
+    orientationKeyService,
+    placementKeyService,
+    turnsTupleService,
+    attributeKeyService,
+  ) {
     this.specialPlacementService = specialPlacementService;
     this.defaultPlacementService = defaultPlacementService;
     this.orientationKeyService = orientationKeyService;
@@ -4699,16 +4983,16 @@ class ArrowAdjustmentLookup {
     try {
       const [oriKey, turnsTuple, attrKey] = this.generateLookupKeys(
         pictographData,
-        motionData
+        motionData,
       );
       console.debug(
-        `Generated keys - ori: ${oriKey}, turns: ${turnsTuple}, attr: ${attrKey}`
+        `Generated keys - ori: ${oriKey}, turns: ${turnsTuple}, attr: ${attrKey}`,
       );
       try {
         const specialAdjustment = await this.lookupSpecialPlacement(
           motionData,
           pictographData,
-          arrowColor
+          arrowColor,
         );
         return specialAdjustment;
       } catch {
@@ -4716,10 +5000,10 @@ class ArrowAdjustmentLookup {
       }
       const defaultAdjustment = await this.calculateDefaultAdjustment(
         motionData,
-        pictographData
+        pictographData,
       );
       console.debug(
-        `Using default adjustment: (${defaultAdjustment.x.toFixed(1)}, ${defaultAdjustment.y.toFixed(1)})`
+        `Using default adjustment: (${defaultAdjustment.x.toFixed(1)}, ${defaultAdjustment.y.toFixed(1)})`,
       );
       return defaultAdjustment;
     } catch (error) {
@@ -4731,9 +5015,10 @@ class ArrowAdjustmentLookup {
     try {
       const oriKey = this.orientationKeyService.generateOrientationKey(
         motionData,
-        pictographData
+        pictographData,
       );
-      const turnsTuple = this.turnsTupleService.generateTurnsTuple(pictographData);
+      const turnsTuple =
+        this.turnsTupleService.generateTurnsTuple(pictographData);
       const color = "blue";
       const tempArrow = {
         id: "temp",
@@ -4750,9 +5035,12 @@ class ArrowAdjustmentLookup {
         position_y: 0,
         rotation_angle: 0,
         is_visible: true,
-        is_selected: false
+        is_selected: false,
       };
-      const attrKey = this.attributeKeyService.getKeyFromArrow(tempArrow, pictographData);
+      const attrKey = this.attributeKeyService.getKeyFromArrow(
+        tempArrow,
+        pictographData,
+      );
       return [oriKey, turnsTuple.join(","), attrKey];
     } catch (error) {
       console.error("Failed to generate lookup keys:", error);
@@ -4761,44 +5049,53 @@ class ArrowAdjustmentLookup {
   }
   async lookupSpecialPlacement(motionData, pictographData, arrowColor) {
     try {
-      const adjustment = await this.specialPlacementService.getSpecialAdjustment(
-        motionData,
-        pictographData,
-        arrowColor
-      );
+      const adjustment =
+        await this.specialPlacementService.getSpecialAdjustment(
+          motionData,
+          pictographData,
+          arrowColor,
+        );
       if (adjustment) {
         return adjustment;
       }
       throw new Error("No special placement found");
     } catch (error) {
-      if (error instanceof Error && error.message === "No special placement found") {
+      if (
+        error instanceof Error &&
+        error.message === "No special placement found"
+      ) {
         throw error;
       }
       console.error("Error in special placement lookup:", error);
       throw new Error(`Special placement lookup failed: ${error}`);
     }
   }
-  async calculateDefaultAdjustment(motionData, pictographData, gridMode = "diamond") {
+  async calculateDefaultAdjustment(
+    motionData,
+    pictographData,
+    gridMode = "diamond",
+  ) {
     try {
       const keys = await this.defaultPlacementService.getAvailablePlacementKeys(
         motionData.motion_type,
-        pictographData.grid_mode
+        pictographData.grid_mode,
       );
       const defaultPlacements = Object.fromEntries(
-        (keys || []).map((k) => [k, true])
+        (keys || []).map((k) => [k, true]),
       );
       const placementKey = this.placementKeyService.generatePlacementKey(
         motionData,
         pictographData,
         defaultPlacements,
-        gridMode
+        gridMode,
       );
-      const adjustmentPoint = await this.defaultPlacementService.getDefaultAdjustment(
-        placementKey,
-        motionData.turns || 0,
-        motionData.motion_type,
-        gridMode
-      );
+      const adjustmentPoint =
+        await this.defaultPlacementService.getDefaultAdjustment(
+          placementKey,
+          motionData.turns || 0,
+          motionData.motion_type,
+          gridMode,
+        );
       return adjustmentPoint;
     } catch (error) {
       console.error("Error calculating default adjustment:", error);
@@ -4824,7 +5121,7 @@ class DefaultPlacementService {
   async getDefaultAdjustment(placementKey, turns, motionType, gridMode) {
     console.log(
       `DefaultPlacementService.getDefaultAdjustment() called with:`,
-      `placement_key=${placementKey}, turns=${turns}, motion_type=${motionType}, grid_mode=${gridMode}`
+      `placement_key=${placementKey}, turns=${turns}, motion_type=${motionType}, grid_mode=${gridMode}`,
     );
     try {
       await this._loadAllDefaultPlacements();
@@ -4832,16 +5129,16 @@ class DefaultPlacementService {
         motionType,
         placementKey,
         turns,
-        gridMode
+        gridMode,
       );
       console.log(
-        `Found default adjustment for ${placementKey} at ${turns} turns: [${adjustment.x}, ${adjustment.y}]`
+        `Found default adjustment for ${placementKey} at ${turns} turns: [${adjustment.x}, ${adjustment.y}]`,
       );
       return adjustment;
     } catch (error) {
       console.warn(
         `Failed to get default adjustment for ${placementKey} at ${turns} turns:`,
-        error
+        error,
       );
       return { x: 0, y: 0 };
     }
@@ -4856,7 +5153,10 @@ class DefaultPlacementService {
    */
   async getAvailablePlacementKeys(motionType, gridMode) {
     await this._loadAllDefaultPlacements();
-    return this.placementDataService.getAvailablePlacementKeys(motionType, gridMode);
+    return this.placementDataService.getAvailablePlacementKeys(
+      motionType,
+      gridMode,
+    );
   }
   /**
    * Check if placement data has been loaded.
@@ -4883,11 +5183,16 @@ class DefaultPlacementService {
     console.log("DefaultPlacementService: Loading all default placements...");
     try {
       await this.placementDataService.loadPlacementData();
-      console.log("✅ DefaultPlacementService: All placement data loaded successfully");
+      console.log(
+        "✅ DefaultPlacementService: All placement data loaded successfully",
+      );
     } catch (error) {
-      console.error("❌ DefaultPlacementService: Failed to load placement data:", error);
+      console.error(
+        "❌ DefaultPlacementService: Failed to load placement data:",
+        error,
+      );
       throw new Error(
-        `Default placement loading failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Default placement loading failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -4902,7 +5207,11 @@ class DefaultPlacementService {
    */
   async getPlacementData(motionType, placementKey, gridMode) {
     await this._loadAllDefaultPlacements();
-    return this.placementDataService.getPlacementData(motionType, placementKey, gridMode);
+    return this.placementDataService.getPlacementData(
+      motionType,
+      placementKey,
+      gridMode,
+    );
   }
   /**
    * Debug method to log available placement keys.
@@ -4952,9 +5261,15 @@ class SpecialPlacementService {
     let colorKey = "";
     if (arrowColor) {
       colorKey = arrowColor;
-    } else if (pictographData.motions?.blue && pictographData.motions.blue === motion) {
+    } else if (
+      pictographData.motions?.blue &&
+      pictographData.motions.blue === motion
+    ) {
       colorKey = "blue";
-    } else if (pictographData.motions?.red && pictographData.motions.red === motion) {
+    } else if (
+      pictographData.motions?.red &&
+      pictographData.motions.red === motion
+    ) {
       colorKey = "red";
     } else {
       colorKey = "blue";
@@ -4999,18 +5314,20 @@ class SpecialPlacementService {
         const response = await fetch(basePath);
         if (!response.ok) {
           console.debug(
-            `No special placement file for ${gridMode}/${oriKey}/${letter}: ${response.status} ${response.statusText}`
+            `No special placement file for ${gridMode}/${oriKey}/${letter}: ${response.status} ${response.statusText}`,
           );
           this.specialPlacements[gridMode][oriKey][letter] = {};
           return;
         }
         const data = await response.json();
         this.specialPlacements[gridMode][oriKey][letter] = data;
-        console.debug(`Loaded special placements for ${gridMode}/${oriKey}/${letter}`);
+        console.debug(
+          `Loaded special placements for ${gridMode}/${oriKey}/${letter}`,
+        );
       } catch (error) {
         console.debug(
           `Failed to load special placements for ${gridMode}/${oriKey}/${letter} from ${basePath}:`,
-          error
+          error,
         );
         this.specialPlacements[gridMode][oriKey][letter] = {};
       }
@@ -5066,10 +5383,18 @@ class SpecialPlacementService {
       const blueMotion = pictographData.motions?.blue;
       const redMotion = pictographData.motions?.red;
       if (blueMotion && redMotion) {
-        const blueTurns = typeof blueMotion.turns === "number" ? blueMotion.turns : 0;
-        const redTurns = typeof redMotion.turns === "number" ? redMotion.turns : 0;
-        const blueStr = blueTurns === Math.floor(blueTurns) ? Math.floor(blueTurns).toString() : blueTurns.toString();
-        const redStr = redTurns === Math.floor(redTurns) ? Math.floor(redTurns).toString() : redTurns.toString();
+        const blueTurns =
+          typeof blueMotion.turns === "number" ? blueMotion.turns : 0;
+        const redTurns =
+          typeof redMotion.turns === "number" ? redMotion.turns : 0;
+        const blueStr =
+          blueTurns === Math.floor(blueTurns)
+            ? Math.floor(blueTurns).toString()
+            : blueTurns.toString();
+        const redStr =
+          redTurns === Math.floor(redTurns)
+            ? Math.floor(redTurns).toString()
+            : redTurns.toString();
         return `(${blueStr}, ${redStr})`;
       }
       return "(0, 0)";
@@ -5098,7 +5423,8 @@ class DirectionalTupleCalculator {
     const S = Location.SOUTH;
     const W = Location.WEST;
     const diagonalSet = /* @__PURE__ */ new Set([NE, SE, SW, NW]);
-    const gridIsDiamond = diagonalSet.has(motion.start_loc) || diagonalSet.has(motion.end_loc);
+    const gridIsDiamond =
+      diagonalSet.has(motion.start_loc) || diagonalSet.has(motion.end_loc);
     const isCW = rot === "clockwise" || rot === "cw";
     const isCCW = rot === "counter_clockwise" || rot === "ccw";
     const isNoRot = rot === "no_rot";
@@ -5114,14 +5440,14 @@ class DirectionalTupleCalculator {
             tuple(baseX, baseY),
             tuple(-baseY, baseX),
             tuple(-baseX, -baseY),
-            tuple(baseY, -baseX)
+            tuple(baseY, -baseX),
           ];
         } else {
           return [
             tuple(-baseY, -baseX),
             tuple(baseX, -baseY),
             tuple(baseY, baseX),
-            tuple(-baseX, baseY)
+            tuple(-baseX, baseY),
           ];
         }
       }
@@ -5130,34 +5456,34 @@ class DirectionalTupleCalculator {
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       if (mt === "pro" && isCCW)
         return [
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
           tuple(baseY, baseX),
-          tuple(-baseX, baseY)
+          tuple(-baseX, baseY),
         ];
       if (mt === "anti" && isCW)
         return [
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
           tuple(baseY, baseX),
-          tuple(-baseX, baseY)
+          tuple(-baseX, baseY),
         ];
       if (mt === "anti" && isCCW)
         return [
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       return [
         tuple(baseX, baseY),
         tuple(baseX, baseY),
         tuple(baseX, baseY),
-        tuple(baseX, baseY)
+        tuple(baseX, baseY),
       ];
     };
     const shiftBox = () => {
@@ -5171,14 +5497,14 @@ class DirectionalTupleCalculator {
             tuple(baseX, baseY),
             tuple(-baseY, baseX),
             tuple(-baseX, -baseY),
-            tuple(baseY, -baseX)
+            tuple(baseY, -baseX),
           ];
         } else {
           return [
             tuple(-baseY, -baseX),
             tuple(baseX, -baseY),
             tuple(baseY, baseX),
-            tuple(-baseX, baseY)
+            tuple(-baseX, baseY),
           ];
         }
       }
@@ -5187,34 +5513,34 @@ class DirectionalTupleCalculator {
           tuple(-baseX, baseY),
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
-          tuple(baseY, baseX)
+          tuple(baseY, baseX),
         ];
       if (mt === "pro" && isCCW)
         return [
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       if (mt === "anti" && isCW)
         return [
           tuple(-baseX, baseY),
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
-          tuple(baseY, baseX)
+          tuple(baseY, baseX),
         ];
       if (mt === "anti" && isCCW)
         return [
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       return [
         tuple(baseX, baseY),
         tuple(baseX, baseY),
         tuple(baseX, baseY),
-        tuple(baseX, baseY)
+        tuple(baseX, baseY),
       ];
     };
     const dashDiamond = () => {
@@ -5223,27 +5549,27 @@ class DirectionalTupleCalculator {
           tuple(baseX, -baseY),
           tuple(baseY, baseX),
           tuple(-baseX, baseY),
-          tuple(-baseY, -baseX)
+          tuple(-baseY, -baseX),
         ];
       if (isCCW)
         return [
           tuple(-baseX, -baseY),
           tuple(baseY, -baseX),
           tuple(baseX, baseY),
-          tuple(-baseY, baseX)
+          tuple(-baseY, baseX),
         ];
       if (isNoRot)
         return [
           tuple(baseX, baseY),
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
-          tuple(baseY, baseX)
+          tuple(baseY, baseX),
         ];
       return [
         tuple(baseX, baseY),
         tuple(baseX, baseY),
         tuple(baseX, baseY),
-        tuple(baseX, baseY)
+        tuple(baseX, baseY),
       ];
     };
     const dashBox = () => {
@@ -5252,27 +5578,27 @@ class DirectionalTupleCalculator {
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
           tuple(baseY, -baseX),
-          tuple(baseX, baseY)
+          tuple(baseX, baseY),
         ];
       if (isCCW)
         return [
           tuple(-baseX, baseY),
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
-          tuple(baseY, baseX)
+          tuple(baseY, baseX),
         ];
       if (isNoRot)
         return [
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       return [
         tuple(baseX, baseY),
         tuple(baseX, baseY),
         tuple(baseX, baseY),
-        tuple(baseX, baseY)
+        tuple(baseX, baseY),
       ];
     };
     const staticDiamond = () => {
@@ -5281,20 +5607,20 @@ class DirectionalTupleCalculator {
           tuple(baseX, -baseY),
           tuple(baseY, baseX),
           tuple(-baseX, baseY),
-          tuple(-baseY, -baseX)
+          tuple(-baseY, -baseX),
         ];
       if (isCCW)
         return [
           tuple(-baseX, -baseY),
           tuple(baseY, -baseX),
           tuple(baseX, baseY),
-          tuple(-baseY, baseX)
+          tuple(-baseY, baseX),
         ];
       return [
         tuple(baseX, baseY),
         tuple(-baseX, -baseY),
         tuple(-baseY, baseX),
-        tuple(baseY, -baseX)
+        tuple(baseY, -baseX),
       ];
     };
     const staticBox = () => {
@@ -5303,20 +5629,20 @@ class DirectionalTupleCalculator {
           tuple(baseX, baseY),
           tuple(-baseY, baseX),
           tuple(-baseX, -baseY),
-          tuple(baseY, -baseX)
+          tuple(baseY, -baseX),
         ];
       if (isCCW)
         return [
           tuple(-baseY, -baseX),
           tuple(baseX, -baseY),
           tuple(baseY, baseX),
-          tuple(-baseX, baseY)
+          tuple(-baseX, baseY),
         ];
       return [
         tuple(baseX, baseY),
         tuple(-baseY, baseX),
         tuple(-baseX, -baseY),
-        tuple(baseY, -baseX)
+        tuple(baseY, -baseX),
       ];
     };
     if (mt === "dash") return gridIsDiamond ? dashDiamond() : dashBox();
@@ -5341,7 +5667,7 @@ class QuadrantIndexCalculator {
       // Maps to SE quadrant
       [Location.SOUTH]: 2,
       // Maps to SW quadrant
-      [Location.WEST]: 3
+      [Location.WEST]: 3,
       // Maps to NW quadrant
     };
     return quadrantMap[location] || 0;
@@ -5357,16 +5683,21 @@ class DirectionalTupleProcessor {
   }
   processDirectionalTuples(baseAdjustment, _motion, location) {
     try {
-      const directionalTuples = this.directionalTupleService.generateDirectionalTuples(
-        _motion,
-        baseAdjustment.x,
-        baseAdjustment.y
-      );
-      const quadrantIndex = this.quadrantIndexService.calculateQuadrantIndex(location);
+      const directionalTuples =
+        this.directionalTupleService.generateDirectionalTuples(
+          _motion,
+          baseAdjustment.x,
+          baseAdjustment.y,
+        );
+      const quadrantIndex =
+        this.quadrantIndexService.calculateQuadrantIndex(location);
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];
       return { x: selectedTuple[0], y: selectedTuple[1] };
     } catch (error) {
-      console.warn("Directional tuple processing failed, using base adjustment:", error);
+      console.warn(
+        "Directional tuple processing failed, using base adjustment:",
+        error,
+      );
       return baseAdjustment;
     }
   }
@@ -5387,94 +5718,117 @@ class ArrowAdjustmentCalculator {
     this.lookupService = lookupService || this.createDefaultLookupService();
     this.tupleProcessor = tupleProcessor || this.createDefaultTupleProcessor();
   }
-  async calculateAdjustment(pictographData, motionData, letter, location, arrowColor) {
+  async calculateAdjustment(
+    pictographData,
+    motionData,
+    letter,
+    location,
+    arrowColor,
+  ) {
     try {
       return await this.calculateAdjustmentResult(
         pictographData,
         motionData,
         letter,
         location,
-        arrowColor
+        arrowColor,
       );
     } catch (error) {
       console.error(`Adjustment calculation failed: ${error}`);
       return { x: 0, y: 0 };
     }
   }
-  async calculateAdjustmentResult(pictographData, motionData, letter, location, arrowColor) {
+  async calculateAdjustmentResult(
+    pictographData,
+    motionData,
+    letter,
+    location,
+    arrowColor,
+  ) {
     try {
       const baseAdjustment = await this.lookupService.getBaseAdjustment(
         pictographData,
         motionData,
         letter,
-        arrowColor
+        arrowColor,
       );
       const finalAdjustment = this.tupleProcessor.processDirectionalTuples(
         baseAdjustment,
         motionData,
-        location
+        location,
       );
       return finalAdjustment;
     } catch (error) {
-      console.error(`Adjustment calculation failed for letter ${letter}: ${error}`);
+      console.error(
+        `Adjustment calculation failed for letter ${letter}: ${error}`,
+      );
       throw new Error(`Arrow adjustment calculation failed: ${error}`);
     }
   }
-  calculateAdjustmentSync(pictographData, motionData, letter, location, arrowColor) {
+  calculateAdjustmentSync(
+    pictographData,
+    motionData,
+    letter,
+    location,
+    arrowColor,
+  ) {
     try {
       const baseAdjustment = this.getBasicAdjustmentSync(motionData);
       const finalAdjustment = this.tupleProcessor.processDirectionalTuples(
         baseAdjustment,
         motionData,
-        location
+        location,
       );
       console.debug(
-        `Sync adjustment for ${motionData.motion_type} ${motionData.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`
+        `Sync adjustment for ${motionData.motion_type} ${motionData.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`,
       );
       return finalAdjustment;
     } catch (error) {
-      console.warn(`Sync adjustment calculation failed for letter ${letter}: ${error}`);
+      console.warn(
+        `Sync adjustment calculation failed for letter ${letter}: ${error}`,
+      );
       return { x: 0, y: 0 };
     }
   }
   getBasicAdjustmentSync(motionData) {
     const motionType = motionData.motion_type;
     const turns = typeof motionData.turns === "number" ? motionData.turns : 0;
-    const turnsStr = turns === Math.floor(turns) ? turns.toString() : turns.toString();
+    const turnsStr =
+      turns === Math.floor(turns) ? turns.toString() : turns.toString();
     const placementData = {
       [MotionType.PRO]: {
-        "0": [-10, -40],
-        "0.5": [30, 105],
-        "1": [30, 25],
-        "1.5": [-35, 145],
-        "2": [-10, -35],
-        "2.5": [20, 100],
-        "3": [30, 25]
+        0: [-10, -40],
+        0.5: [30, 105],
+        1: [30, 25],
+        1.5: [-35, 145],
+        2: [-10, -35],
+        2.5: [20, 100],
+        3: [30, 25],
       },
       [MotionType.ANTI]: {
-        "0": [0, -40],
-        "0.5": [-15, 110],
-        "1": [0, -40],
-        "1.5": [20, 155],
-        "2": [0, -40],
-        "2.5": [0, 100],
-        "3": [0, -50]
+        0: [0, -40],
+        0.5: [-15, 110],
+        1: [0, -40],
+        1.5: [20, 155],
+        2: [0, -40],
+        2.5: [0, 100],
+        3: [0, -50],
       },
       [MotionType.STATIC]: {
-        "0": [0, 0],
-        "0.5": [0, -140],
-        "1": [50, 50],
-        "1.5": [0, 0],
-        "2": [0, 0],
-        "2.5": [0, 0],
-        "3": [0, 0]
+        0: [0, 0],
+        0.5: [0, -140],
+        1: [50, 50],
+        1.5: [0, 0],
+        2: [0, 0],
+        2.5: [0, 0],
+        3: [0, 0],
       },
       [MotionType.DASH]: {
-        "0": [0, 0]
+        0: [0, 0],
       },
       [MotionType.FLOAT]: {
-        fl: [30, -30]
-      }
+        fl: [30, -30],
+      },
     };
     const motionAdjustments = placementData[motionType];
     if (motionAdjustments && motionAdjustments[turnsStr]) {
@@ -5490,13 +5844,13 @@ class ArrowAdjustmentCalculator {
       new SpecialPlacementOriKeyGenerator(),
       new PlacementKeyGenerator(),
       new TurnsTupleKeyGenerator(),
-      new AttributeKeyGenerator()
+      new AttributeKeyGenerator(),
     );
   }
   createDefaultTupleProcessor() {
     return new DirectionalTupleProcessor(
       new DirectionalTupleCalculator(),
-      new QuadrantIndexCalculator()
+      new QuadrantIndexCalculator(),
     );
   }
 }
@@ -5528,7 +5882,7 @@ class DashLocationCalculator {
     [`blue,${Location.NORTHWEST},${Location.SOUTHEAST}`]: Location.SOUTHWEST,
     [`blue,${Location.NORTHEAST},${Location.SOUTHWEST}`]: Location.NORTHWEST,
     [`blue,${Location.SOUTHWEST},${Location.NORTHEAST}`]: Location.NORTHWEST,
-    [`blue,${Location.SOUTHEAST},${Location.NORTHWEST}`]: Location.SOUTHWEST
+    [`blue,${Location.SOUTHEAST},${Location.NORTHWEST}`]: Location.SOUTHWEST,
   };
   LAMBDA_ZERO_TURNS_LOCATION_MAP = {
     [`${Location.NORTH},${Location.SOUTH},${Location.WEST}`]: Location.EAST,
@@ -5539,14 +5893,22 @@ class DashLocationCalculator {
     [`${Location.EAST},${Location.WEST},${Location.NORTH}`]: Location.SOUTH,
     [`${Location.SOUTH},${Location.NORTH},${Location.EAST}`]: Location.WEST,
     [`${Location.WEST},${Location.EAST},${Location.NORTH}`]: Location.SOUTH,
-    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.NORTHWEST}`]: Location.SOUTHEAST,
-    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.NORTHEAST}`]: Location.SOUTHWEST,
-    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.SOUTHEAST}`]: Location.NORTHWEST,
-    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.SOUTHWEST}`]: Location.NORTHEAST,
-    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.SOUTHEAST}`]: Location.NORTHWEST,
-    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.SOUTHWEST}`]: Location.NORTHEAST,
-    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.NORTHWEST}`]: Location.SOUTHEAST,
-    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.NORTHEAST}`]: Location.SOUTHWEST
+    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.NORTHWEST}`]:
+      Location.SOUTHEAST,
+    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.NORTHEAST}`]:
+      Location.SOUTHWEST,
+    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.SOUTHEAST}`]:
+      Location.NORTHWEST,
+    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.SOUTHWEST}`]:
+      Location.NORTHEAST,
+    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.SOUTHEAST}`]:
+      Location.NORTHWEST,
+    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.SOUTHWEST}`]:
+      Location.NORTHEAST,
+    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.NORTHWEST}`]:
+      Location.SOUTHEAST,
+    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.NORTHEAST}`]:
+      Location.SOUTHWEST,
   };
   LAMBDA_DASH_ZERO_TURNS_LOCATION_MAP = {
     [`${Location.NORTH},${Location.SOUTH},${Location.WEST}`]: Location.EAST,
@@ -5557,14 +5919,22 @@ class DashLocationCalculator {
     [`${Location.EAST},${Location.WEST},${Location.NORTH}`]: Location.SOUTH,
     [`${Location.SOUTH},${Location.NORTH},${Location.EAST}`]: Location.WEST,
     [`${Location.WEST},${Location.EAST},${Location.NORTH}`]: Location.SOUTH,
-    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.NORTHWEST}`]: Location.SOUTHEAST,
-    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.NORTHEAST}`]: Location.SOUTHWEST,
-    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.SOUTHEAST}`]: Location.NORTHWEST,
-    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.SOUTHWEST}`]: Location.NORTHEAST,
-    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.SOUTHEAST}`]: Location.NORTHWEST,
-    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.SOUTHWEST}`]: Location.NORTHEAST,
-    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.NORTHWEST}`]: Location.SOUTHEAST,
-    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.NORTHEAST}`]: Location.SOUTHWEST
+    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.NORTHWEST}`]:
+      Location.SOUTHEAST,
+    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.NORTHEAST}`]:
+      Location.SOUTHWEST,
+    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.SOUTHEAST}`]:
+      Location.NORTHWEST,
+    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.SOUTHWEST}`]:
+      Location.NORTHEAST,
+    [`${Location.NORTHEAST},${Location.SOUTHWEST},${Location.SOUTHEAST}`]:
+      Location.NORTHWEST,
+    [`${Location.NORTHWEST},${Location.SOUTHEAST},${Location.SOUTHWEST}`]:
+      Location.NORTHEAST,
+    [`${Location.SOUTHWEST},${Location.NORTHEAST},${Location.NORTHWEST}`]:
+      Location.SOUTHEAST,
+    [`${Location.SOUTHEAST},${Location.NORTHWEST},${Location.NORTHEAST}`]:
+      Location.SOUTHWEST,
   };
   DEFAULT_ZERO_TURNS_DASH_LOCATION_MAP = {
     [`${Location.NORTH},${Location.SOUTH}`]: Location.EAST,
@@ -5574,7 +5944,7 @@ class DashLocationCalculator {
     [`${Location.NORTHEAST},${Location.SOUTHWEST}`]: Location.SOUTHEAST,
     [`${Location.NORTHWEST},${Location.SOUTHEAST}`]: Location.NORTHEAST,
     [`${Location.SOUTHWEST},${Location.NORTHEAST}`]: Location.NORTHWEST,
-    [`${Location.SOUTHEAST},${Location.NORTHWEST}`]: Location.SOUTHWEST
+    [`${Location.SOUTHEAST},${Location.NORTHWEST}`]: Location.SOUTHWEST,
   };
   NON_ZERO_TURNS_DASH_LOCATION_MAP = {
     clockwise: {
@@ -5585,7 +5955,7 @@ class DashLocationCalculator {
       [Location.NORTHEAST]: Location.SOUTHEAST,
       [Location.SOUTHEAST]: Location.SOUTHWEST,
       [Location.SOUTHWEST]: Location.NORTHWEST,
-      [Location.NORTHWEST]: Location.NORTHEAST
+      [Location.NORTHWEST]: Location.NORTHEAST,
     },
     counter_clockwise: {
       [Location.NORTH]: Location.WEST,
@@ -5595,8 +5965,8 @@ class DashLocationCalculator {
       [Location.NORTHEAST]: Location.NORTHWEST,
       [Location.SOUTHEAST]: Location.NORTHEAST,
       [Location.SOUTHWEST]: Location.SOUTHEAST,
-      [Location.NORTHWEST]: Location.SOUTHWEST
-    }
+      [Location.NORTHWEST]: Location.SOUTHWEST,
+    },
   };
   DIAMOND_DASH_LOCATION_MAP = {
     [`${Location.NORTH},${Location.NORTHWEST}`]: Location.EAST,
@@ -5614,7 +5984,7 @@ class DashLocationCalculator {
     [`${Location.WEST},${Location.NORTHWEST}`]: Location.SOUTH,
     [`${Location.WEST},${Location.NORTHEAST}`]: Location.SOUTH,
     [`${Location.WEST},${Location.SOUTHEAST}`]: Location.NORTH,
-    [`${Location.WEST},${Location.SOUTHWEST}`]: Location.NORTH
+    [`${Location.WEST},${Location.SOUTHWEST}`]: Location.NORTH,
   };
   BOX_DASH_LOCATION_MAP = {
     [`${Location.NORTHEAST},${Location.NORTH}`]: Location.SOUTHEAST,
@@ -5632,11 +6002,15 @@ class DashLocationCalculator {
     [`${Location.NORTHWEST},${Location.NORTH}`]: Location.SOUTHWEST,
     [`${Location.NORTHWEST},${Location.EAST}`]: Location.SOUTHWEST,
     [`${Location.NORTHWEST},${Location.SOUTH}`]: Location.NORTHEAST,
-    [`${Location.NORTHWEST},${Location.WEST}`]: Location.NORTHEAST
+    [`${Location.NORTHWEST},${Location.WEST}`]: Location.NORTHEAST,
   };
   calculateDashLocationFromPictographData(pictographData, isBlueArrow) {
-    const motion = isBlueArrow ? pictographData.motions?.blue : pictographData.motions?.red;
-    const otherMotion = isBlueArrow ? pictographData.motions?.red : pictographData.motions?.blue;
+    const motion = isBlueArrow
+      ? pictographData.motions?.blue
+      : pictographData.motions?.red;
+    const otherMotion = isBlueArrow
+      ? pictographData.motions?.red
+      : pictographData.motions?.blue;
     if (!motion || motion.motion_type?.toLowerCase() !== "dash") {
       return motion?.start_loc || Location.NORTH;
     }
@@ -5653,10 +6027,21 @@ class DashLocationCalculator {
       letterInfo.isPhiDash,
       letterInfo.isPsiDash,
       letterInfo.isLambda,
-      letterInfo.isLambdaDash
+      letterInfo.isLambdaDash,
     );
   }
-  calculateDashLocation(motion, otherMotion, letterType, arrowColor, gridMode, shiftLocation, isPhiDash = false, isPsiDash = false, isLambda = false, isLambdaDash = false) {
+  calculateDashLocation(
+    motion,
+    otherMotion,
+    letterType,
+    arrowColor,
+    gridMode,
+    shiftLocation,
+    isPhiDash = false,
+    isPsiDash = false,
+    isLambda = false,
+    isLambdaDash = false,
+  ) {
     if (isPhiDash || isPsiDash) {
       return this.getPhiDashPsiDashLocation(motion, otherMotion, arrowColor);
     }
@@ -5667,7 +6052,12 @@ class DashLocationCalculator {
       return this.getLambdaDashZeroTurnsLocation(motion, otherMotion);
     }
     if (motion.turns === 0) {
-      return this.defaultZeroTurnsDashLocation(motion, letterType, gridMode, shiftLocation);
+      return this.defaultZeroTurnsDashLocation(
+        motion,
+        letterType,
+        gridMode,
+        shiftLocation,
+      );
     }
     return this.dashLocationNonZeroTurns(motion);
   }
@@ -5695,7 +6085,11 @@ class DashLocationCalculator {
   }
   defaultZeroTurnsDashLocation(motion, letterType, gridMode, shiftLocation) {
     if (letterType === "Type3" && gridMode && shiftLocation) {
-      return this.calculateDashLocationBasedOnShift(motion, gridMode, shiftLocation);
+      return this.calculateDashLocationBasedOnShift(
+        motion,
+        gridMode,
+        shiftLocation,
+      );
     }
     const key = `${motion.start_loc},${motion.end_loc}`;
     return this.DEFAULT_ZERO_TURNS_DASH_LOCATION_MAP[key] || motion.start_loc;
@@ -5705,7 +6099,9 @@ class DashLocationCalculator {
     if (rotDir === "no_rotation" || rotDir === "none") {
       return motion.start_loc;
     }
-    const directionMap = this.NON_ZERO_TURNS_DASH_LOCATION_MAP[rotDir] || this.NON_ZERO_TURNS_DASH_LOCATION_MAP["clockwise"];
+    const directionMap =
+      this.NON_ZERO_TURNS_DASH_LOCATION_MAP[rotDir] ||
+      this.NON_ZERO_TURNS_DASH_LOCATION_MAP["clockwise"];
     return directionMap?.[motion.start_loc] || motion.start_loc;
   }
   calculateDashLocationBasedOnShift(motion, gridMode, shiftLocation) {
@@ -5728,7 +6124,7 @@ class DashLocationCalculator {
       [Location.NORTHEAST]: Location.SOUTHWEST,
       [Location.SOUTHWEST]: Location.NORTHEAST,
       [Location.SOUTHEAST]: Location.NORTHWEST,
-      [Location.NORTHWEST]: Location.SOUTHEAST
+      [Location.NORTHWEST]: Location.SOUTHEAST,
     };
     return oppositeMap[location] || location;
   }
@@ -5741,12 +6137,12 @@ class DashLocationCalculator {
       isPhiDash: letter.includes("Φ_DASH") || letter.includes("PHI_DASH"),
       isPsiDash: letter.includes("Ψ_DASH") || letter.includes("PSI_DASH"),
       isLambda: letter.includes("Λ") || letter === "LAMBDA",
-      isLambdaDash: letter.includes("Λ_DASH") || letter.includes("LAMBDA_DASH")
+      isLambdaDash: letter.includes("Λ_DASH") || letter.includes("LAMBDA_DASH"),
     };
   }
   getGridInfo(pictographData) {
     const result = {
-      gridMode: pictographData.grid_mode || "diamond"
+      gridMode: pictographData.grid_mode || "diamond",
     };
     return result;
   }
@@ -5766,18 +6162,27 @@ class ArrowLocationCalculator {
   // Maps start/end location pairs to their calculated arrow location
   shiftDirectionPairs = {
     // Cardinal + Diagonal combinations
-    [this.createLocationPairKey([Location.NORTH, Location.EAST])]: Location.NORTHEAST,
-    [this.createLocationPairKey([Location.EAST, Location.SOUTH])]: Location.SOUTHEAST,
-    [this.createLocationPairKey([Location.SOUTH, Location.WEST])]: Location.SOUTHWEST,
-    [this.createLocationPairKey([Location.WEST, Location.NORTH])]: Location.NORTHWEST,
+    [this.createLocationPairKey([Location.NORTH, Location.EAST])]:
+      Location.NORTHEAST,
+    [this.createLocationPairKey([Location.EAST, Location.SOUTH])]:
+      Location.SOUTHEAST,
+    [this.createLocationPairKey([Location.SOUTH, Location.WEST])]:
+      Location.SOUTHWEST,
+    [this.createLocationPairKey([Location.WEST, Location.NORTH])]:
+      Location.NORTHWEST,
     // Diagonal + Cardinal combinations
-    [this.createLocationPairKey([Location.NORTHEAST, Location.NORTHWEST])]: Location.NORTH,
-    [this.createLocationPairKey([Location.NORTHEAST, Location.SOUTHEAST])]: Location.EAST,
-    [this.createLocationPairKey([Location.SOUTHWEST, Location.SOUTHEAST])]: Location.SOUTH,
-    [this.createLocationPairKey([Location.NORTHWEST, Location.SOUTHWEST])]: Location.WEST
+    [this.createLocationPairKey([Location.NORTHEAST, Location.NORTHWEST])]:
+      Location.NORTH,
+    [this.createLocationPairKey([Location.NORTHEAST, Location.SOUTHEAST])]:
+      Location.EAST,
+    [this.createLocationPairKey([Location.SOUTHWEST, Location.SOUTHEAST])]:
+      Location.SOUTH,
+    [this.createLocationPairKey([Location.NORTHWEST, Location.SOUTHWEST])]:
+      Location.WEST,
   };
   constructor(dashLocationService) {
-    this.dashLocationService = dashLocationService || new DashLocationCalculator();
+    this.dashLocationService =
+      dashLocationService || new DashLocationCalculator();
   }
   calculateLocation(motion, pictographData) {
     const motionType = motion.motion_type?.toLowerCase();
@@ -5791,7 +6196,9 @@ class ArrowLocationCalculator {
       case "dash":
         return this.calculateDashLocation(motion, pictographData);
       default:
-        console.warn(`Unknown motion type: ${motionType}, using start location`);
+        console.warn(
+          `Unknown motion type: ${motionType}, using start location`,
+        );
         return motion.start_loc || Location.NORTH;
     }
   }
@@ -5800,24 +6207,30 @@ class ArrowLocationCalculator {
   }
   calculateShiftLocation(motion) {
     if (!motion.start_loc || !motion.end_loc) {
-      console.warn("Shift motion missing start_loc or end_loc, using start_loc");
+      console.warn(
+        "Shift motion missing start_loc or end_loc, using start_loc",
+      );
       return motion.start_loc || Location.NORTH;
     }
-    const locationPairKey = this.createLocationPairKey([motion.start_loc, motion.end_loc]);
-    const calculatedLocation = this.shiftDirectionPairs[locationPairKey] || motion.start_loc;
+    const locationPairKey = this.createLocationPairKey([
+      motion.start_loc,
+      motion.end_loc,
+    ]);
+    const calculatedLocation =
+      this.shiftDirectionPairs[locationPairKey] || motion.start_loc;
     return calculatedLocation;
   }
   calculateDashLocation(motion, pictographData) {
     if (!pictographData) {
       console.warn(
-        "No pictograph data provided for dash location calculation, using start location"
+        "No pictograph data provided for dash location calculation, using start location",
       );
       return motion.start_loc || Location.NORTH;
     }
     const isBlueArrow = this.isBlueArrowMotion(motion, pictographData);
     return this.dashLocationService.calculateDashLocationFromPictographData(
       pictographData,
-      isBlueArrow
+      isBlueArrow,
     );
   }
   getSupportedMotionTypes() {
@@ -5851,9 +6264,9 @@ class ArrowLocationCalculator {
       pictographData: {
         motions: {
           blue: blueMotion,
-          red: redMotion
-        }
-      }
+          red: redMotion,
+        },
+      },
     };
   }
   isBlueArrowMotion(motion, pictographData) {
@@ -5891,7 +6304,7 @@ class ArrowRotationCalculator {
     [Location.SOUTH]: 0,
     [Location.SOUTHWEST]: 45,
     [Location.WEST]: 90,
-    [Location.NORTHWEST]: 135
+    [Location.NORTHWEST]: 135,
   };
   // PRO rotation angles by rotation direction
   proClockwiseMap = {
@@ -5902,7 +6315,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 0,
     [Location.SOUTHEAST]: 90,
     [Location.SOUTHWEST]: 180,
-    [Location.NORTHWEST]: 270
+    [Location.NORTHWEST]: 270,
   };
   proCounterClockwiseMap = {
     [Location.NORTH]: 315,
@@ -5912,7 +6325,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 90,
     [Location.SOUTHEAST]: 180,
     [Location.SOUTHWEST]: 270,
-    [Location.NORTHWEST]: 0
+    [Location.NORTHWEST]: 0,
   };
   // ANTI rotation angles by rotation direction
   antiClockwiseMap = {
@@ -5923,7 +6336,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 90,
     [Location.SOUTHEAST]: 180,
     [Location.SOUTHWEST]: 270,
-    [Location.NORTHWEST]: 0
+    [Location.NORTHWEST]: 0,
   };
   antiCounterClockwiseMap = {
     [Location.NORTH]: 315,
@@ -5933,7 +6346,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 0,
     [Location.SOUTHEAST]: 90,
     [Location.SOUTHWEST]: 180,
-    [Location.NORTHWEST]: 270
+    [Location.NORTHWEST]: 270,
   };
   // DASH rotation angles by rotation direction
   dashClockwiseMap = {
@@ -5944,7 +6357,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 315,
     [Location.SOUTHEAST]: 45,
     [Location.SOUTHWEST]: 135,
-    [Location.NORTHWEST]: 225
+    [Location.NORTHWEST]: 225,
   };
   dashCounterClockwiseMap = {
     [Location.NORTH]: 270,
@@ -5954,7 +6367,7 @@ class ArrowRotationCalculator {
     [Location.NORTHEAST]: 225,
     [Location.SOUTHEAST]: 135,
     [Location.SOUTHWEST]: 45,
-    [Location.NORTHWEST]: 315
+    [Location.NORTHWEST]: 315,
   };
   // DASH NO_ROTATION mapping (start_loc, end_loc) -> angle
   dashNoRotationMap = {
@@ -5965,7 +6378,7 @@ class ArrowRotationCalculator {
     [`${Location.SOUTHEAST},${Location.NORTHWEST}`]: 225,
     [`${Location.SOUTHWEST},${Location.NORTHEAST}`]: 315,
     [`${Location.NORTHWEST},${Location.SOUTHEAST}`]: 45,
-    [`${Location.NORTHEAST},${Location.SOUTHWEST}`]: 135
+    [`${Location.NORTHEAST},${Location.SOUTHWEST}`]: 135,
   };
   calculateRotation(motion, location) {
     const motionType = motion.motion_type?.toLowerCase();
@@ -6058,7 +6471,7 @@ class ArrowCoordinateSystemService {
     [Location.NORTHEAST]: { x: 618.1, y: 331.9 },
     [Location.SOUTHEAST]: { x: 618.1, y: 618.1 },
     [Location.SOUTHWEST]: { x: 331.9, y: 618.1 },
-    [Location.NORTHWEST]: { x: 331.9, y: 331.9 }
+    [Location.NORTHWEST]: { x: 331.9, y: 331.9 },
   };
   // Layer2 point coordinates (for PRO/ANTI/FLOAT arrows)
   // Using DIAMOND layer2 points from circle_coords.json
@@ -6075,7 +6488,7 @@ class ArrowCoordinateSystemService {
     // Maps to SE
     [Location.SOUTH]: { x: 331.9, y: 618.1 },
     // Maps to SW
-    [Location.WEST]: { x: 331.9, y: 331.9 }
+    [Location.WEST]: { x: 331.9, y: 331.9 },
     // Maps to NW
   };
   getInitialPosition(motion, location) {
@@ -6095,7 +6508,9 @@ class ArrowCoordinateSystemService {
   getLayer2Coords(location) {
     const coords = this.LAYER2_POINTS[location];
     if (!coords) {
-      console.warn(`No layer2 coordinates for location: ${location}, using center`);
+      console.warn(
+        `No layer2 coordinates for location: ${location}, using center`,
+      );
       return this.getSceneCenter();
     }
     return coords;
@@ -6103,7 +6518,9 @@ class ArrowCoordinateSystemService {
   getHandPointCoords(location) {
     const coords = this.HAND_POINTS[location];
     if (!coords) {
-      console.warn(`No hand point coordinates for location: ${location}, using center`);
+      console.warn(
+        `No hand point coordinates for location: ${location}, using center`,
+      );
       return this.getSceneCenter();
     }
     return coords;
@@ -6118,18 +6535,26 @@ class ArrowCoordinateSystemService {
       location,
       hand_point: {
         x: handPoint?.x || null,
-        y: handPoint?.y || null
+        y: handPoint?.y || null,
       },
       layer2_point: {
         x: layer2Point?.x || null,
-        y: layer2Point?.y || null
+        y: layer2Point?.y || null,
       },
       scene_center: { x: this.CENTER_X, y: this.CENTER_Y },
-      scene_size: this.SCENE_SIZE
+      scene_size: this.SCENE_SIZE,
     };
   }
   validateCoordinates(point) {
-    return point && typeof point.x === "number" && typeof point.y === "number" && point.x >= 0 && point.x <= this.SCENE_SIZE && point.y >= 0 && point.y <= this.SCENE_SIZE;
+    return (
+      point &&
+      typeof point.x === "number" &&
+      typeof point.y === "number" &&
+      point.x >= 0 &&
+      point.x <= this.SCENE_SIZE &&
+      point.y >= 0 &&
+      point.y <= this.SCENE_SIZE
+    );
   }
   getAllHandPoints() {
     return { ...this.HAND_POINTS };
@@ -6146,7 +6571,7 @@ class ArrowCoordinateSystemService {
       Location.NORTHEAST,
       Location.SOUTHEAST,
       Location.SOUTHWEST,
-      Location.NORTHWEST
+      Location.NORTHWEST,
     ];
   }
 }
@@ -6166,9 +6591,14 @@ class ArrowPositioningOrchestrator {
   coordinateSystem;
   mirrorConditions = {
     anti: { cw: true, ccw: false },
-    other: { cw: false, ccw: true }
+    other: { cw: false, ccw: true },
   };
-  constructor(locationCalculator, rotationCalculator, adjustmentCalculator, coordinateSystem) {
+  constructor(
+    locationCalculator,
+    rotationCalculator,
+    adjustmentCalculator,
+    coordinateSystem,
+  ) {
     this.locationCalculator = locationCalculator;
     this.rotationCalculator = rotationCalculator;
     this.adjustmentCalculator = adjustmentCalculator;
@@ -6177,33 +6607,50 @@ class ArrowPositioningOrchestrator {
   // Main async method for full positioning calculation
   async calculateArrowPositionAsync(arrowData, pictographData, motionData) {
     try {
-      const motion = motionData || this.getMotionFromPictograph(arrowData, pictographData);
+      const motion =
+        motionData || this.getMotionFromPictograph(arrowData, pictographData);
       if (!motion) {
-        console.warn(`No motion data for ${arrowData.color}, returning center position`);
+        console.warn(
+          `No motion data for ${arrowData.color}, returning center position`,
+        );
         const center = this.coordinateSystem.getSceneCenter();
         return [center.x, center.y, 0];
       }
       const letter = pictographData.letter || "";
-      const location = this.locationCalculator.calculateLocation(motion, pictographData);
-      console.debug(
-        `Calculated location: ${location} for ${arrowData.color} ${motion.motion_type}`
+      const location = this.locationCalculator.calculateLocation(
+        motion,
+        pictographData,
       );
-      let initialPosition = this.coordinateSystem.getInitialPosition(motion, location);
-      initialPosition = this.ensureValidPosition(initialPosition);
-      console.debug(`Initial position: (${initialPosition.x}, ${initialPosition.y})`);
-      const rotation = this.rotationCalculator.calculateRotation(motion, location);
       console.debug(
-        `Calculated rotation: ${rotation}° for ${motion.motion_type} ${motion.prop_rot_dir}`
+        `Calculated location: ${location} for ${arrowData.color} ${motion.motion_type}`,
+      );
+      let initialPosition = this.coordinateSystem.getInitialPosition(
+        motion,
+        location,
+      );
+      initialPosition = this.ensureValidPosition(initialPosition);
+      console.debug(
+        `Initial position: (${initialPosition.x}, ${initialPosition.y})`,
+      );
+      const rotation = this.rotationCalculator.calculateRotation(
+        motion,
+        location,
+      );
+      console.debug(
+        `Calculated rotation: ${rotation}° for ${motion.motion_type} ${motion.prop_rot_dir}`,
       );
       const adjustment = await this.adjustmentCalculator.calculateAdjustment(
         pictographData,
         motion,
         letter,
         location,
-        arrowData.color
+        arrowData.color,
       );
-      console.debug(`Calculated adjustment: (${adjustment.x}, ${adjustment.y})`);
-      const [adjustmentX, adjustmentY] = this.extractAdjustmentValues(adjustment);
+      console.debug(
+        `Calculated adjustment: (${adjustment.x}, ${adjustment.y})`,
+      );
+      const [adjustmentX, adjustmentY] =
+        this.extractAdjustmentValues(adjustment);
       const finalX = initialPosition.x + adjustmentX;
       const finalY = initialPosition.y + adjustmentY;
       return [finalX, finalY, rotation];
@@ -6216,25 +6663,38 @@ class ArrowPositioningOrchestrator {
   // Synchronous version implementing IArrowPositioningOrchestrator interface
   calculateArrowPosition(arrowData, pictographData, motionData) {
     try {
-      const motion = motionData || this.getMotionFromPictograph(arrowData, pictographData);
+      const motion =
+        motionData || this.getMotionFromPictograph(arrowData, pictographData);
       if (!motion) {
-        console.warn(`No motion data for ${arrowData.color}, returning center position`);
+        console.warn(
+          `No motion data for ${arrowData.color}, returning center position`,
+        );
         const center = this.coordinateSystem.getSceneCenter();
         return [center.x, center.y, 0];
       }
       const letter = pictographData.letter || "";
-      const location = this.locationCalculator.calculateLocation(motion, pictographData);
-      let initialPosition = this.coordinateSystem.getInitialPosition(motion, location);
+      const location = this.locationCalculator.calculateLocation(
+        motion,
+        pictographData,
+      );
+      let initialPosition = this.coordinateSystem.getInitialPosition(
+        motion,
+        location,
+      );
       initialPosition = this.ensureValidPosition(initialPosition);
-      const rotation = this.rotationCalculator.calculateRotation(motion, location);
+      const rotation = this.rotationCalculator.calculateRotation(
+        motion,
+        location,
+      );
       const adjustment = this.adjustmentCalculator.calculateAdjustmentSync(
         pictographData,
         motion,
         letter,
         location,
-        arrowData.color
+        arrowData.color,
       );
-      const [adjustmentX, adjustmentY] = this.extractAdjustmentValues(adjustment);
+      const [adjustmentX, adjustmentY] =
+        this.extractAdjustmentValues(adjustment);
       const finalX = initialPosition.x + adjustmentX;
       const finalY = initialPosition.y + adjustmentY;
       return [finalX, finalY, rotation];
@@ -6256,17 +6716,24 @@ class ArrowPositioningOrchestrator {
           const [x, y, rotation] = this.calculateArrowPositionSync(
             arrowData,
             pictographData,
-            motionData
+            motionData,
           );
-          const shouldMirror = this.shouldMirrorArrow(arrowData, pictographData);
-          updatedPictograph = this.updateArrowInPictograph(updatedPictograph, color, {
-            position_x: x,
-            position_y: y,
-            rotation_angle: rotation,
-            is_mirrored: shouldMirror
-          });
+          const shouldMirror = this.shouldMirrorArrow(
+            arrowData,
+            pictographData,
+          );
+          updatedPictograph = this.updateArrowInPictograph(
+            updatedPictograph,
+            color,
+            {
+              position_x: x,
+              position_y: y,
+              rotation_angle: rotation,
+              is_mirrored: shouldMirror,
+            },
+          );
           console.log(
-            `Updated ${color} arrow: position=(${x}, ${y}), rotation=${rotation}°, mirrored=${shouldMirror}`
+            `Updated ${color} arrow: position=(${x}, ${y}), rotation=${rotation}°, mirrored=${shouldMirror}`,
           );
         }
       }
@@ -6315,10 +6782,19 @@ class ArrowPositioningOrchestrator {
   calculateArrowPositionSync(_arrowData, _pictographData, motionData) {
     const motion = motionData;
     const letter = _pictographData.letter || "";
-    const location = this.locationCalculator.calculateLocation(motion, _pictographData);
-    let initialPosition = this.coordinateSystem.getInitialPosition(motion, location);
+    const location = this.locationCalculator.calculateLocation(
+      motion,
+      _pictographData,
+    );
+    let initialPosition = this.coordinateSystem.getInitialPosition(
+      motion,
+      location,
+    );
     initialPosition = this.ensureValidPosition(initialPosition);
-    const rotation = this.rotationCalculator.calculateRotation(motion, location);
+    const rotation = this.rotationCalculator.calculateRotation(
+      motion,
+      location,
+    );
     const adjustment = this.getBasicAdjustment(motion, letter);
     const [adjustmentX, adjustmentY] = this.extractAdjustmentValues(adjustment);
     const finalX = initialPosition.x + adjustmentX;
@@ -6332,7 +6808,11 @@ class ArrowPositioningOrchestrator {
     return pictographData.motions[arrowData.color];
   }
   ensureValidPosition(initialPosition) {
-    if (initialPosition && typeof initialPosition.x === "number" && typeof initialPosition.y === "number") {
+    if (
+      initialPosition &&
+      typeof initialPosition.x === "number" &&
+      typeof initialPosition.y === "number"
+    ) {
       return initialPosition;
     }
     console.warn("Invalid initial position, using scene center");
@@ -6342,7 +6822,11 @@ class ArrowPositioningOrchestrator {
     if (typeof adjustment === "number") {
       return [adjustment, adjustment];
     }
-    if (adjustment && typeof adjustment.x === "number" && typeof adjustment.y === "number") {
+    if (
+      adjustment &&
+      typeof adjustment.x === "number" &&
+      typeof adjustment.y === "number"
+    ) {
       return [adjustment.x, adjustment.y];
     }
     return [0, 0];
@@ -6350,12 +6834,16 @@ class ArrowPositioningOrchestrator {
   getBasicAdjustment(motion, _letter) {
     try {
       const location = this.locationCalculator.calculateLocation(motion, {
-        letter: _letter
+        letter: _letter,
       });
       const baseAdjustment = this.getBaseAdjustmentValues(motion);
-      const finalAdjustment = this.processDirectionalTuples(baseAdjustment, motion, location);
+      const finalAdjustment = this.processDirectionalTuples(
+        baseAdjustment,
+        motion,
+        location,
+      );
       console.debug(
-        `Basic adjustment for ${motion.motion_type} ${motion.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`
+        `Basic adjustment for ${motion.motion_type} ${motion.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`,
       );
       return finalAdjustment;
     } catch (error) {
@@ -6366,35 +6854,36 @@ class ArrowPositioningOrchestrator {
   getBaseAdjustmentValues(motion) {
     const motionType = motion.motion_type;
     const turns = typeof motion.turns === "number" ? motion.turns : 0;
-    const turnsStr = turns === Math.floor(turns) ? turns.toString() : turns.toString();
+    const turnsStr =
+      turns === Math.floor(turns) ? turns.toString() : turns.toString();
     const defaultAdjustments = {
       pro: {
-        "0": [-10, -40],
-        "0.5": [30, 105],
-        "1": [30, 25],
-        "1.5": [-35, 145],
-        "2": [-10, -35],
-        "2.5": [20, 100],
-        "3": [30, 25]
+        0: [-10, -40],
+        0.5: [30, 105],
+        1: [30, 25],
+        1.5: [-35, 145],
+        2: [-10, -35],
+        2.5: [20, 100],
+        3: [30, 25],
       },
       anti: {
-        "0": [0, -40],
-        "0.5": [-15, 110],
-        "1": [0, -40],
-        "1.5": [20, 155],
-        "2": [0, -40],
-        "2.5": [0, 100],
-        "3": [0, -50]
+        0: [0, -40],
+        0.5: [-15, 110],
+        1: [0, -40],
+        1.5: [20, 155],
+        2: [0, -40],
+        2.5: [0, 100],
+        3: [0, -50],
       },
       static: {
-        "0": [0, 0]
+        0: [0, 0],
       },
       dash: {
-        "0": [0, 0]
+        0: [0, 0],
       },
       float: {
-        "0": [0, 0]
-      }
+        0: [0, 0],
+      },
     };
     const motionAdjustments = defaultAdjustments[motionType];
     if (motionAdjustments && motionAdjustments[turnsStr]) {
@@ -6408,23 +6897,31 @@ class ArrowPositioningOrchestrator {
       const directionalTuples = this.generateDirectionalTuples(
         motion,
         baseAdjustment.x,
-        baseAdjustment.y
+        baseAdjustment.y,
       );
       const quadrantIndex = this.calculateQuadrantIndex(location);
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];
       console.debug(
-        `Directional tuples: ${JSON.stringify(directionalTuples)}, quadrant: ${quadrantIndex}, selected: [${selectedTuple[0]}, ${selectedTuple[1]}]`
+        `Directional tuples: ${JSON.stringify(directionalTuples)}, quadrant: ${quadrantIndex}, selected: [${selectedTuple[0]}, ${selectedTuple[1]}]`,
       );
       return { x: selectedTuple[0], y: selectedTuple[1] };
     } catch (error) {
-      console.warn("Directional tuple processing failed, using base adjustment:", error);
+      console.warn(
+        "Directional tuple processing failed, using base adjustment:",
+        error,
+      );
       return baseAdjustment;
     }
   }
   generateDirectionalTuples(motion, baseX, baseY) {
     const motionType = motion.motion_type;
     const rotationDir = motion.prop_rot_dir;
-    const rotationStr = rotationDir === RotationDirection.CLOCKWISE ? "clockwise" : rotationDir === RotationDirection.COUNTER_CLOCKWISE ? "counter_clockwise" : "clockwise";
+    const rotationStr =
+      rotationDir === RotationDirection.CLOCKWISE
+        ? "clockwise"
+        : rotationDir === RotationDirection.COUNTER_CLOCKWISE
+          ? "counter_clockwise"
+          : "clockwise";
     const shiftMappingDiamond = {
       [MotionType.PRO]: {
         clockwise: (x, y) => [
@@ -6434,7 +6931,7 @@ class ArrowPositioningOrchestrator {
           // SE (1)
           [-x, -y],
           // SW (2)
-          [y, -x]
+          [y, -x],
           // NW (3)
         ],
         counter_clockwise: (x, y) => [
@@ -6444,9 +6941,9 @@ class ArrowPositioningOrchestrator {
           // SE (1)
           [y, x],
           // SW (2)
-          [-x, y]
+          [-x, y],
           // NW (3)
-        ]
+        ],
       },
       [MotionType.ANTI]: {
         clockwise: (x, y) => [
@@ -6456,7 +6953,7 @@ class ArrowPositioningOrchestrator {
           // SE (1)
           [y, x],
           // SW (2)
-          [-x, y]
+          [-x, y],
           // NW (3)
         ],
         counter_clockwise: (x, y) => [
@@ -6466,17 +6963,21 @@ class ArrowPositioningOrchestrator {
           // SE (1)
           [-x, -y],
           // SW (2)
-          [y, -x]
+          [y, -x],
           // NW (3)
-        ]
-      }
+        ],
+      },
     };
-    if (motionType === MotionType.STATIC || motionType === MotionType.DASH || motionType === MotionType.FLOAT) {
+    if (
+      motionType === MotionType.STATIC ||
+      motionType === MotionType.DASH ||
+      motionType === MotionType.FLOAT
+    ) {
       return [
         [baseX, baseY],
         [-baseX, -baseY],
         [-baseY, baseX],
-        [baseY, -baseX]
+        [baseY, -baseX],
       ];
     }
     const mapping = shiftMappingDiamond[motionType];
@@ -6488,7 +6989,7 @@ class ArrowPositioningOrchestrator {
       [baseX, baseY],
       [baseX, baseY],
       [baseX, baseY],
-      [baseX, baseY]
+      [baseX, baseY],
     ];
   }
   calculateQuadrantIndex(location) {
@@ -6504,7 +7005,7 @@ class ArrowPositioningOrchestrator {
       // Maps to SE quadrant
       [Location.SOUTH]: 2,
       // Maps to SW quadrant
-      [Location.WEST]: 3
+      [Location.WEST]: 3,
       // Maps to NW quadrant
     };
     return quadrantMap[location] || 0;
@@ -6516,8 +7017,8 @@ class ArrowPositioningOrchestrator {
         ...updatedPictograph.arrows,
         [color]: {
           ...updatedPictograph.arrows[color],
-          ...updates
-        }
+          ...updates,
+        },
       };
     }
     return updatedPictograph;
@@ -6571,12 +7072,12 @@ class PositioningServiceFactory {
       new SpecialPlacementOriKeyGenerator(),
       new PlacementKeyGenerator(),
       new TurnsTupleKeyGenerator(),
-      new AttributeKeyGenerator()
+      new AttributeKeyGenerator(),
     );
     return new ArrowAdjustmentCalculator(
       lookupService,
       // Use cached placement services
-      this.directionalTupleProcessor
+      this.directionalTupleProcessor,
     );
   }
   createCoordinateSystemService() {
@@ -6597,7 +7098,7 @@ class PositioningServiceFactory {
       const quadrantIndexCalculator = new QuadrantIndexCalculator();
       this.directionalTupleProcessor = new DirectionalTupleProcessor(
         directionalTupleCalculator,
-        quadrantIndexCalculator
+        quadrantIndexCalculator,
       );
     }
     return this.directionalTupleProcessor;
@@ -6611,7 +7112,7 @@ class PositioningServiceFactory {
       locationCalculator,
       rotationCalculator,
       adjustmentCalculator,
-      coordinateSystemService
+      coordinateSystemService,
     );
   }
   /**
@@ -6624,7 +7125,7 @@ class PositioningServiceFactory {
       rotationCalculator: this.createRotationCalculator(),
       adjustmentCalculator: this.createAdjustmentCalculator(),
       coordinateSystemService: this.createCoordinateSystemService(),
-      orchestrator: this.createPositioningOrchestrator()
+      orchestrator: this.createPositioningOrchestrator(),
     };
   }
   /**
@@ -6654,7 +7155,7 @@ class PositioningServiceFactory {
       try {
         await this.defaultPlacementService.debugAvailableKeys(
           MotionType.PRO,
-          GridMode.DIAMOND
+          GridMode.DIAMOND,
         );
         console.log("✅ Positioning services pre-warmed successfully");
       } catch (error) {
@@ -6668,22 +7169,19 @@ function getPositioningServiceFactory() {
 }
 const IArrowPlacementDataServiceInterface = createServiceInterface(
   "IArrowPlacementDataService",
-  ArrowPlacementDataService
+  ArrowPlacementDataService,
 );
 const IArrowPlacementKeyServiceInterface = createServiceInterface(
   "IArrowPlacementKeyService",
-  ArrowPlacementKeyService
+  ArrowPlacementKeyService,
 );
 const IArrowPositioningServiceInterface = createServiceInterface(
   "IArrowPositioningService",
   class extends ArrowPositioningService$1 {
     constructor(...args) {
-      super(
-        args[0],
-        args[1]
-      );
+      super(args[0], args[1]);
     }
-  }
+  },
 );
 const IArrowLocationCalculatorInterface = createServiceInterface(
   "IArrowLocationCalculator",
@@ -6691,65 +7189,58 @@ const IArrowLocationCalculatorInterface = createServiceInterface(
     constructor(...args) {
       super(args[0]);
     }
-  }
+  },
 );
 const IArrowRotationCalculatorInterface = createServiceInterface(
   "IArrowRotationCalculator",
-  ArrowRotationCalculator
+  ArrowRotationCalculator,
 );
 const IArrowAdjustmentCalculatorInterface = createServiceInterface(
   "IArrowAdjustmentCalculator",
   class extends ArrowAdjustmentCalculator {
     constructor(...args) {
-      super(
-        args[0],
-        args[1]
-      );
+      super(args[0], args[1]);
     }
-  }
+  },
 );
 const IArrowCoordinateSystemServiceInterface = createServiceInterface(
   "IArrowCoordinateSystemService",
-  ArrowCoordinateSystemService
+  ArrowCoordinateSystemService,
 );
 const IDashLocationCalculatorInterface = createServiceInterface(
   "IDashLocationCalculator",
-  DashLocationCalculator
+  DashLocationCalculator,
 );
 const IDirectionalTupleProcessorInterface = createServiceInterface(
   "IDirectionalTupleProcessor",
   class extends DirectionalTupleProcessor {
     constructor(...args) {
-      super(
-        args[0],
-        args[1]
-      );
+      super(args[0], args[1]);
     }
-  }
+  },
 );
 const IArrowPositioningOrchestratorInterface = createServiceInterface(
   "IArrowPositioningOrchestrator",
   class extends ArrowPositioningOrchestrator {
     constructor(...args) {
-      super(
-        args[0],
-        args[1],
-        args[2],
-        args[3]
-      );
+      super(args[0], args[1], args[2], args[3]);
     }
-  }
+  },
 );
 const IPositioningServiceFactoryInterface = createServiceInterface(
   "IPositioningServiceFactory",
-  PositioningServiceFactory
+  PositioningServiceFactory,
 );
 class BrowseService {
   cachedSequences = null;
   async loadSequenceMetadata() {
     console.log("🔍 BrowseService.loadSequenceMetadata() called");
     if (this.cachedSequences !== null) {
-      console.log("📦 Returning cached sequences:", this.cachedSequences.length, "items");
+      console.log(
+        "📦 Returning cached sequences:",
+        this.cachedSequences.length,
+        "items",
+      );
       return this.cachedSequences;
     }
     try {
@@ -6758,18 +7249,25 @@ class BrowseService {
       console.log(
         "✅ Successfully loaded from sequence index:",
         sequences.length,
-        "sequences"
+        "sequences",
       );
       console.log(
         "📋 Sequence IDs:",
-        sequences.map((s) => s.id)
+        sequences.map((s) => s.id),
       );
       this.cachedSequences = sequences;
       return sequences;
     } catch (error) {
-      console.warn("❌ Failed to load sequence index, generating from dictionary:", error);
+      console.warn(
+        "❌ Failed to load sequence index, generating from dictionary:",
+        error,
+      );
       const sequences = await this.generateSequenceIndex();
-      console.log("🔧 Generated sequences as fallback:", sequences.length, "sequences");
+      console.log(
+        "🔧 Generated sequences as fallback:",
+        sequences.length,
+        "sequences",
+      );
       this.cachedSequences = sequences;
       return sequences;
     }
@@ -6782,7 +7280,7 @@ class BrowseService {
     if (filterType === FilterType.ALL_SEQUENCES) {
       console.log(
         "✅ ALL_SEQUENCES filter detected - returning all sequences:",
-        sequences.length
+        sequences.length,
       );
       return sequences;
     }
@@ -6820,7 +7318,11 @@ class BrowseService {
         console.log("⚠️ Unknown filter type, returning all sequences");
         filtered = sequences;
     }
-    console.log("📊 Filter result:", filtered.length, "sequences after filtering");
+    console.log(
+      "📊 Filter result:",
+      filtered.length,
+      "sequences after filtering",
+    );
     return filtered;
   }
   async sortSequences(sequences, sortMethod) {
@@ -6841,11 +7343,17 @@ class BrowseService {
           return levelA - levelB;
         });
       case SortMethod.SEQUENCE_LENGTH:
-        return sorted.sort((a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0));
+        return sorted.sort(
+          (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0),
+        );
       case SortMethod.AUTHOR:
-        return sorted.sort((a, b) => (a.author || "").localeCompare(b.author || ""));
+        return sorted.sort((a, b) =>
+          (a.author || "").localeCompare(b.author || ""),
+        );
       case SortMethod.POPULARITY:
-        return sorted.sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite));
+        return sorted.sort(
+          (a, b) => Number(b.isFavorite) - Number(a.isFavorite),
+        );
       default:
         return sorted;
     }
@@ -6926,7 +7434,7 @@ class BrowseService {
       "OMICRON",
       "PI",
       "RHO",
-      "SIGMA"
+      "SIGMA",
     ];
     const authors = ["TKA User", "Demo Author", "Expert User"];
     const difficulties = ["beginner", "intermediate", "advanced"];
@@ -6943,14 +7451,16 @@ class BrowseService {
         isFavorite: Math.random() > 0.7,
         isCircular: false,
         tags: ["flow", "practice"],
-        metadata: { generated: true }
+        metadata: { generated: true },
       };
       if (authorValue) result.author = authorValue;
       if (gridModeValue) result.gridMode = gridModeValue;
       if (difficultyValue) result.difficultyLevel = difficultyValue;
       result.sequenceLength = Math.floor(Math.random() * 8) + 3;
       result.level = Math.floor(Math.random() * 4) + 1;
-      result.dateAdded = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1e3);
+      result.dateAdded = new Date(
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1e3,
+      );
       result.propType = "fans";
       result.startingPosition = "center";
       return result;
@@ -6962,14 +7472,24 @@ class BrowseService {
       const [start, end] = filterValue.split("-");
       return sequences.filter((s) => {
         const firstLetter = s.word[0]?.toUpperCase();
-        return firstLetter && start && end && firstLetter >= start && firstLetter <= end;
+        return (
+          firstLetter &&
+          start &&
+          end &&
+          firstLetter >= start &&
+          firstLetter <= end
+        );
       });
     }
-    return sequences.filter((s) => s.word[0]?.toUpperCase() === filterValue.toUpperCase());
+    return sequences.filter(
+      (s) => s.word[0]?.toUpperCase() === filterValue.toUpperCase(),
+    );
   }
   filterByContainsLetters(sequences, filterValue) {
     if (!filterValue || typeof filterValue !== "string") return sequences;
-    return sequences.filter((s) => s.word.toLowerCase().includes(filterValue.toLowerCase()));
+    return sequences.filter((s) =>
+      s.word.toLowerCase().includes(filterValue.toLowerCase()),
+    );
   }
   filterByLength(sequences, filterValue) {
     if (!filterValue) return sequences;
@@ -7042,12 +7562,13 @@ class DeleteService {
   async prepareDeleteConfirmation(sequence, allSequences) {
     const relatedSequences = this.findRelatedSequences(sequence, allSequences);
     const hasVariations = relatedSequences.length > 0;
-    const willFixVariationNumbers = hasVariations && this.needsVariationNumberFix(sequence, relatedSequences);
+    const willFixVariationNumbers =
+      hasVariations && this.needsVariationNumberFix(sequence, relatedSequences);
     return {
       sequence,
       relatedSequences,
       hasVariations,
-      willFixVariationNumbers
+      willFixVariationNumbers,
     };
   }
   async deleteSequence(sequenceId, allSequences) {
@@ -7058,7 +7579,7 @@ class DeleteService {
           success: false,
           deletedSequence: null,
           affectedSequences: [],
-          error: "Sequence not found"
+          error: "Sequence not found",
         };
       }
       const canDelete = await this.canDeleteSequence(sequence, allSequences);
@@ -7067,26 +7588,35 @@ class DeleteService {
           success: false,
           deletedSequence: null,
           affectedSequences: [],
-          error: "Sequence cannot be deleted"
+          error: "Sequence cannot be deleted",
         };
       }
-      const affectedSequences = await this.getAffectedSequences(sequence, allSequences);
-      const updatedSequences = await this.fixVariationNumbers(sequence, allSequences);
+      const affectedSequences = await this.getAffectedSequences(
+        sequence,
+        allSequences,
+      );
+      const updatedSequences = await this.fixVariationNumbers(
+        sequence,
+        allSequences,
+      );
       console.log(`Deleting sequence: ${sequence.word} (${sequence.id})`);
-      const remainingSequences = updatedSequences.filter((seq) => seq.id !== sequenceId);
+      const remainingSequences = updatedSequences.filter(
+        (seq) => seq.id !== sequenceId,
+      );
       return {
         success: true,
         deletedSequence: sequence,
-        affectedSequences: remainingSequences.filter(
-          (seq) => affectedSequences.some((affected) => affected.id === seq.id)
-        )
+        affectedSequences: remainingSequences.filter((seq) =>
+          affectedSequences.some((affected) => affected.id === seq.id),
+        ),
       };
     } catch (error) {
       return {
         success: false,
         deletedSequence: null,
         affectedSequences: [],
-        error: error instanceof Error ? error.message : "Unknown error occurred"
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
@@ -7102,13 +7632,20 @@ class DeleteService {
       }
       const sequenceBaseWord = this.extractBaseWord(sequence.word);
       const sequenceVariation = this.extractVariationNumber(sequence.word);
-      if (sequenceBaseWord === baseWord && sequenceVariation && sequenceVariation > deletedVariation) {
+      if (
+        sequenceBaseWord === baseWord &&
+        sequenceVariation &&
+        sequenceVariation > deletedVariation
+      ) {
         const newVariationNumber = sequenceVariation - 1;
-        const newWord = this.createWordWithVariation(baseWord, newVariationNumber);
+        const newWord = this.createWordWithVariation(
+          baseWord,
+          newVariationNumber,
+        );
         return {
           ...sequence,
           word: newWord,
-          name: sequence.name.replace(sequence.word, newWord)
+          name: sequence.name.replace(sequence.word, newWord),
         };
       }
       return sequence;
@@ -7137,7 +7674,11 @@ class DeleteService {
       if (seq.id === sequence.id) return;
       const seqBaseWord = this.extractBaseWord(seq.word);
       const seqVariation = this.extractVariationNumber(seq.word);
-      if (seqBaseWord === baseWord && seqVariation && seqVariation > deletedVariation) {
+      if (
+        seqBaseWord === baseWord &&
+        seqVariation &&
+        seqVariation > deletedVariation
+      ) {
         affected.push(seq);
       }
     });
@@ -7176,14 +7717,20 @@ class DeleteService {
   }
   // Utility methods for UI components
   async formatDeleteConfirmationMessage(data) {
-    const { sequence, relatedSequences, hasVariations, willFixVariationNumbers } = data;
+    const {
+      sequence,
+      relatedSequences,
+      hasVariations,
+      willFixVariationNumbers,
+    } = data;
     let message = `Are you sure you want to delete "${sequence.word}"?`;
     if (hasVariations) {
       message += `
 
 This sequence has ${relatedSequences.length} related variation(s).`;
       if (willFixVariationNumbers) {
-        message += "\nVariation numbers will be automatically updated to maintain sequence.";
+        message +=
+          "\nVariation numbers will be automatically updated to maintain sequence.";
       }
     }
     message += "\n\nThis action cannot be undone.";
@@ -7269,9 +7816,12 @@ class FilterPersistenceService {
     try {
       const stateToSave = {
         ...state2,
-        lastUpdated: /* @__PURE__ */ new Date()
+        lastUpdated: /* @__PURE__ */ new Date(),
       };
-      sessionStorage.setItem(this.BROWSE_STATE_KEY, JSON.stringify(stateToSave));
+      sessionStorage.setItem(
+        this.BROWSE_STATE_KEY,
+        JSON.stringify(stateToSave),
+      );
     } catch (error) {
       console.error("Failed to save browse state:", error);
     }
@@ -7282,13 +7832,18 @@ class FilterPersistenceService {
       if (!saved) return null;
       const parsed = JSON.parse(saved);
       if (parsed.currentFilter?.appliedAt) {
-        parsed.currentFilter.appliedAt = new Date(parsed.currentFilter.appliedAt);
+        parsed.currentFilter.appliedAt = new Date(
+          parsed.currentFilter.appliedAt,
+        );
       }
       if (parsed.lastUpdated) {
         parsed.lastUpdated = new Date(parsed.lastUpdated);
       }
       const oneDay = 24 * 60 * 60 * 1e3;
-      if (parsed.lastUpdated && Date.now() - parsed.lastUpdated.getTime() > oneDay) {
+      if (
+        parsed.lastUpdated &&
+        Date.now() - parsed.lastUpdated.getTime() > oneDay
+      ) {
         return null;
       }
       return parsed;
@@ -7301,11 +7856,18 @@ class FilterPersistenceService {
     try {
       const history = await this.getFilterHistory();
       const filteredHistory = history.filter(
-        (f) => !(f.type === filter.type && JSON.stringify(f.value) === JSON.stringify(filter.value))
+        (f) =>
+          !(
+            f.type === filter.type &&
+            JSON.stringify(f.value) === JSON.stringify(filter.value)
+          ),
       );
       const newHistory = [filter, ...filteredHistory];
       const trimmedHistory = newHistory.slice(0, this.MAX_HISTORY_SIZE);
-      sessionStorage.setItem(this.FILTER_HISTORY_KEY, JSON.stringify(trimmedHistory));
+      sessionStorage.setItem(
+        this.FILTER_HISTORY_KEY,
+        JSON.stringify(trimmedHistory),
+      );
     } catch (error) {
       console.error("Failed to save filter to history:", error);
     }
@@ -7315,12 +7877,10 @@ class FilterPersistenceService {
       const saved = sessionStorage.getItem(this.FILTER_HISTORY_KEY);
       if (!saved) return [];
       const parsed = JSON.parse(saved);
-      return parsed.map(
-        (filter) => ({
-          ...filter,
-          appliedAt: new Date(filter.appliedAt)
-        })
-      );
+      return parsed.map((filter) => ({
+        ...filter,
+        appliedAt: new Date(filter.appliedAt),
+      }));
     } catch (error) {
       console.warn("Failed to load filter history:", error);
       return [];
@@ -7365,11 +7925,13 @@ class FilterPersistenceService {
         filterMap.set(key, filter);
       }
     });
-    return Array.from(filterMap.values()).sort((a, b) => {
-      const keyA = `${a.type}:${JSON.stringify(a.value)}`;
-      const keyB = `${b.type}:${JSON.stringify(b.value)}`;
-      return (frequency.get(keyB) || 0) - (frequency.get(keyA) || 0);
-    }).slice(0, limit);
+    return Array.from(filterMap.values())
+      .sort((a, b) => {
+        const keyA = `${a.type}:${JSON.stringify(a.value)}`;
+        const keyB = `${b.type}:${JSON.stringify(b.value)}`;
+        return (frequency.get(keyB) || 0) - (frequency.get(keyA) || 0);
+      })
+      .slice(0, limit);
   }
   async getDefaultBrowseState() {
     return {
@@ -7377,7 +7939,7 @@ class FilterPersistenceService {
       sortMethod: "alphabetical",
       navigationMode: "filter_selection",
       searchQuery: "",
-      lastUpdated: /* @__PURE__ */ new Date()
+      lastUpdated: /* @__PURE__ */ new Date(),
     };
   }
 }
@@ -7389,14 +7951,15 @@ class NavigationService {
       await this.generateLengthSection(sequences),
       await this.generateLetterSection(sequences),
       await this.generateLevelSection(sequences),
-      await this.generateAuthorSection(sequences)
+      await this.generateAuthorSection(sequences),
     ];
     return sections;
   }
   toggleSectionExpansion(sectionId, sections) {
     return sections.map((section) => ({
       ...section,
-      isExpanded: section.id === sectionId ? !section.isExpanded : section.isExpanded
+      isExpanded:
+        section.id === sectionId ? !section.isExpanded : section.isExpanded,
     }));
   }
   setActiveItem(sectionId, itemId, sections) {
@@ -7404,8 +7967,8 @@ class NavigationService {
       ...section,
       items: section.items.map((item) => ({
         ...item,
-        isActive: section.id === sectionId && item.id === itemId
-      }))
+        isActive: section.id === sectionId && item.id === itemId,
+      })),
     }));
   }
   clearActiveStates(sections) {
@@ -7413,8 +7976,8 @@ class NavigationService {
       ...section,
       items: section.items.map((item) => ({
         ...item,
-        isActive: false
-      }))
+        isActive: false,
+      })),
     }));
   }
   getSequencesForNavigationItem(item, sectionType, allSequences) {
@@ -7448,13 +8011,16 @@ class NavigationService {
       totalCount: this.calculateSectionCount(section, sequences, favorites),
       items: section.items.map((item) => ({
         ...item,
-        count: this.getSequencesForNavigationItem(item, section.type, sequences).length
-      }))
+        count: this.getSequencesForNavigationItem(item, section.type, sequences)
+          .length,
+      })),
     }));
   }
   // Private helper methods
   async generateFavoritesSection(sequences, favorites) {
-    const favoriteSequences = sequences.filter((seq) => favorites.includes(seq.id));
+    const favoriteSequences = sequences.filter((seq) =>
+      favorites.includes(seq.id),
+    );
     return {
       id: "favorites",
       title: "⭐ Favorites",
@@ -7465,11 +8031,11 @@ class NavigationService {
           label: "All Favorites",
           value: "favorites",
           count: favoriteSequences.length,
-          isActive: false
-        }
+          isActive: false,
+        },
       ],
       isExpanded: false,
-      totalCount: favoriteSequences.length
+      totalCount: favoriteSequences.length,
     };
   }
   async generateDateSection(sequences) {
@@ -7487,20 +8053,23 @@ class NavigationService {
         }
       }
     });
-    const items = Array.from(dateGroups.entries()).sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime()).slice(0, 10).map(([date, seqs]) => ({
-      id: `date-${date}`,
-      label: this.formatDateLabel(new Date(date)),
-      value: date,
-      count: seqs.length,
-      isActive: false
-    }));
+    const items = Array.from(dateGroups.entries())
+      .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
+      .slice(0, 10)
+      .map(([date, seqs]) => ({
+        id: `date-${date}`,
+        label: this.formatDateLabel(new Date(date)),
+        value: date,
+        count: seqs.length,
+        isActive: false,
+      }));
     return {
       id: "date",
       title: "📅 Recently Added",
       type: "date",
       items,
       isExpanded: false,
-      totalCount: sequences.filter((seq) => seq.dateAdded).length
+      totalCount: sequences.filter((seq) => seq.dateAdded).length,
     };
   }
   async generateLengthSection(sequences) {
@@ -7515,20 +8084,22 @@ class NavigationService {
         group.push(seq);
       }
     });
-    const items = Array.from(lengthGroups.entries()).sort(([a], [b]) => a - b).map(([length, seqs]) => ({
-      id: `length-${length}`,
-      label: `${length} beats`,
-      value: length,
-      count: seqs.length,
-      isActive: false
-    }));
+    const items = Array.from(lengthGroups.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([length, seqs]) => ({
+        id: `length-${length}`,
+        label: `${length} beats`,
+        value: length,
+        count: seqs.length,
+        isActive: false,
+      }));
     return {
       id: "length",
       title: "📏 Length",
       type: "length",
       items,
       isExpanded: false,
-      totalCount: sequences.length
+      totalCount: sequences.length,
     };
   }
   async generateLetterSection(sequences) {
@@ -7543,13 +8114,15 @@ class NavigationService {
         group.push(seq);
       }
     });
-    const items = Array.from(letterGroups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([letter, seqs]) => ({
-      id: `letter-${letter}`,
-      label: letter,
-      value: letter,
-      count: seqs.length,
-      isActive: false
-    }));
+    const items = Array.from(letterGroups.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([letter, seqs]) => ({
+        id: `letter-${letter}`,
+        label: letter,
+        value: letter,
+        count: seqs.length,
+        isActive: false,
+      }));
     return {
       id: "letter",
       title: "🔤 Starting Letter",
@@ -7557,7 +8130,7 @@ class NavigationService {
       items,
       isExpanded: true,
       // Default expanded like desktop
-      totalCount: sequences.length
+      totalCount: sequences.length,
     };
   }
   async generateLevelSection(sequences) {
@@ -7573,20 +8146,22 @@ class NavigationService {
       }
     });
     const levelOrder = ["beginner", "intermediate", "advanced", "unknown"];
-    const items = levelOrder.filter((level) => levelGroups.has(level)).map((level) => ({
-      id: `level-${level}`,
-      label: level.charAt(0).toUpperCase() + level.slice(1),
-      value: level,
-      count: levelGroups.get(level)?.length || 0,
-      isActive: false
-    }));
+    const items = levelOrder
+      .filter((level) => levelGroups.has(level))
+      .map((level) => ({
+        id: `level-${level}`,
+        label: level.charAt(0).toUpperCase() + level.slice(1),
+        value: level,
+        count: levelGroups.get(level)?.length || 0,
+        isActive: false,
+      }));
     return {
       id: "level",
       title: "📊 Difficulty",
       type: "level",
       items,
       isExpanded: false,
-      totalCount: sequences.length
+      totalCount: sequences.length,
     };
   }
   async generateAuthorSection(sequences) {
@@ -7601,20 +8176,22 @@ class NavigationService {
         group.push(seq);
       }
     });
-    const items = Array.from(authorGroups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([author, seqs]) => ({
-      id: `author-${author}`,
-      label: author,
-      value: author,
-      count: seqs.length,
-      isActive: false
-    }));
+    const items = Array.from(authorGroups.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([author, seqs]) => ({
+        id: `author-${author}`,
+        label: author,
+        value: author,
+        count: seqs.length,
+        isActive: false,
+      }));
     return {
       id: "author",
       title: "👤 Author",
       type: "author",
       items,
       isExpanded: false,
-      totalCount: sequences.length
+      totalCount: sequences.length,
     };
   }
   calculateSectionCount(section, sequences, favorites) {
@@ -7646,8 +8223,8 @@ class SectionService {
           count: sequences.length,
           sequences,
           isExpanded: true,
-          sortOrder: 0
-        }
+          sortOrder: 0,
+        },
       ];
     }
     const grouped = this.groupSequences(sequences, config.groupBy);
@@ -7657,7 +8234,8 @@ class SectionService {
   toggleSectionExpansion(sectionId, sections) {
     return sections.map((section) => ({
       ...section,
-      isExpanded: section.id === sectionId ? !section.isExpanded : section.isExpanded
+      isExpanded:
+        section.id === sectionId ? !section.isExpanded : section.isExpanded,
     }));
   }
   getDefaultSectionConfiguration() {
@@ -7665,26 +8243,33 @@ class SectionService {
       groupBy: "letter",
       sortMethod: "alphabetical",
       showEmptySections: false,
-      expandedSections: /* @__PURE__ */ new Set(["A", "B", "C"])
+      expandedSections: /* @__PURE__ */ new Set(["A", "B", "C"]),
       // Default expand first few sections
     };
   }
   updateSectionConfiguration(config, updates) {
     return {
       ...config,
-      ...updates
+      ...updates,
     };
   }
   getSectionStatistics(sections) {
     const totalSections = sections.length;
-    const totalSequences = sections.reduce((sum, section) => sum + section.count, 0);
-    const expandedSections = sections.filter((section) => section.isExpanded).length;
-    const averageSequencesPerSection = totalSections > 0 ? totalSequences / totalSections : 0;
+    const totalSequences = sections.reduce(
+      (sum, section) => sum + section.count,
+      0,
+    );
+    const expandedSections = sections.filter(
+      (section) => section.isExpanded,
+    ).length;
+    const averageSequencesPerSection =
+      totalSections > 0 ? totalSequences / totalSections : 0;
     return {
       totalSections,
       totalSequences,
       expandedSections,
-      averageSequencesPerSection: Math.round(averageSequencesPerSection * 10) / 10
+      averageSequencesPerSection:
+        Math.round(averageSequencesPerSection * 10) / 10,
     };
   }
   // Private helper methods
@@ -7732,7 +8317,7 @@ class SectionService {
         count: sequences.length,
         sequences: this.sortSequencesInSection(sequences, config.sortMethod),
         isExpanded: config.expandedSections.has(key),
-        sortOrder: this.getSectionSortOrder(key, config.groupBy)
+        sortOrder: this.getSectionSortOrder(key, config.groupBy),
       };
       sections.push(section);
     });
@@ -7749,12 +8334,13 @@ class SectionService {
       case "length":
         return `${key} (${countText})`;
       case "difficulty": {
-        const difficultyEmoji = {
-          beginner: "🟢",
-          intermediate: "🟡",
-          advanced: "🔴",
-          Unknown: "⚪"
-        }[key] || "⚪";
+        const difficultyEmoji =
+          {
+            beginner: "🟢",
+            intermediate: "🟡",
+            advanced: "🔴",
+            Unknown: "⚪",
+          }[key] || "⚪";
         return `${difficultyEmoji} ${key} (${countText})`;
       }
       case "author":
@@ -7784,7 +8370,10 @@ class SectionService {
                 return 0;
             }
           };
-          return getDifficultyOrder(a.difficultyLevel) - getDifficultyOrder(b.difficultyLevel);
+          return (
+            getDifficultyOrder(a.difficultyLevel) -
+            getDifficultyOrder(b.difficultyLevel)
+          );
         });
       case "sequence_length":
         return sorted.sort((a, b) => {
@@ -7799,7 +8388,9 @@ class SectionService {
           return dateB - dateA;
         });
       case "author":
-        return sorted.sort((a, b) => (a.author || "").localeCompare(b.author || ""));
+        return sorted.sort((a, b) =>
+          (a.author || "").localeCompare(b.author || ""),
+        );
       default:
         return sorted;
     }
@@ -7821,7 +8412,12 @@ class SectionService {
         return match && match[1] ? parseInt(match[1]) : 999;
       }
       case "difficulty": {
-        const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3, Unknown: 4 };
+        const difficultyOrder = {
+          beginner: 1,
+          intermediate: 2,
+          advanced: 3,
+          Unknown: 4,
+        };
         return difficultyOrder[key] || 999;
       }
       case "author":
@@ -7874,22 +8470,34 @@ class SequenceIndexService {
       wordIndex: /* @__PURE__ */ new Map(),
       authorIndex: /* @__PURE__ */ new Map(),
       tagIndex: /* @__PURE__ */ new Map(),
-      metadataIndex: /* @__PURE__ */ new Map()
+      metadataIndex: /* @__PURE__ */ new Map(),
     };
     this.sequenceMap.clear();
     for (const sequence of sequences) {
       this.sequenceMap.set(sequence.id, sequence);
-      this.addToIndex(this.searchIndex.wordIndex, sequence.word.toLowerCase(), sequence.id);
-      this.addToIndex(this.searchIndex.wordIndex, sequence.name.toLowerCase(), sequence.id);
+      this.addToIndex(
+        this.searchIndex.wordIndex,
+        sequence.word.toLowerCase(),
+        sequence.id,
+      );
+      this.addToIndex(
+        this.searchIndex.wordIndex,
+        sequence.name.toLowerCase(),
+        sequence.id,
+      );
       if (sequence.author) {
         this.addToIndex(
           this.searchIndex.authorIndex,
           sequence.author.toLowerCase(),
-          sequence.id
+          sequence.id,
         );
       }
       for (const tag of sequence.tags) {
-        this.addToIndex(this.searchIndex.tagIndex, tag.toLowerCase(), sequence.id);
+        this.addToIndex(
+          this.searchIndex.tagIndex,
+          tag.toLowerCase(),
+          sequence.id,
+        );
       }
       const searchableText = this.buildSearchableText(sequence);
       for (const term of searchableText.split(/\s+/)) {
@@ -7897,7 +8505,7 @@ class SequenceIndexService {
           this.addToIndex(
             this.searchIndex.metadataIndex,
             term.toLowerCase(),
-            sequence.id
+            sequence.id,
           );
         }
       }
@@ -7907,7 +8515,10 @@ class SequenceIndexService {
     if (!this.searchIndex || !query.trim()) {
       return this.sequenceIndex || [];
     }
-    const searchTerms = query.toLowerCase().split(/\s+/).filter((term) => term.length > 0);
+    const searchTerms = query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((term) => term.length > 0);
     const resultIds = /* @__PURE__ */ new Set();
     for (const term of searchTerms) {
       const matchingIds = this.searchTerm(term);
@@ -7923,7 +8534,9 @@ class SequenceIndexService {
         });
       }
     }
-    const results = Array.from(resultIds).map((id) => this.sequenceMap.get(id)).filter((seq) => seq !== void 0);
+    const results = Array.from(resultIds)
+      .map((id) => this.sequenceMap.get(id))
+      .filter((seq) => seq !== void 0);
     return this.sortByRelevance(results, query);
   }
   async refreshIndex() {
@@ -7939,7 +8552,7 @@ class SequenceIndexService {
       indexedWords: this.searchIndex?.wordIndex.size || 0,
       indexedAuthors: this.searchIndex?.authorIndex.size || 0,
       indexedTags: this.searchIndex?.tagIndex.size || 0,
-      indexedMetadata: this.searchIndex?.metadataIndex.size || 0
+      indexedMetadata: this.searchIndex?.metadataIndex.size || 0,
     };
   }
   async getSequenceById(id) {
@@ -7983,18 +8596,22 @@ class SequenceIndexService {
   searchTerm(term) {
     const results = /* @__PURE__ */ new Set();
     if (!this.searchIndex) return results;
-    const wordMatches = this.searchIndex.wordIndex.get(term) || /* @__PURE__ */ new Set();
+    const wordMatches =
+      this.searchIndex.wordIndex.get(term) || /* @__PURE__ */ new Set();
     wordMatches.forEach((id) => results.add(id));
     for (const [word, ids] of this.searchIndex.wordIndex) {
       if (word.includes(term)) {
         ids.forEach((id) => results.add(id));
       }
     }
-    const authorMatches = this.searchIndex.authorIndex.get(term) || /* @__PURE__ */ new Set();
+    const authorMatches =
+      this.searchIndex.authorIndex.get(term) || /* @__PURE__ */ new Set();
     authorMatches.forEach((id) => results.add(id));
-    const tagMatches = this.searchIndex.tagIndex.get(term) || /* @__PURE__ */ new Set();
+    const tagMatches =
+      this.searchIndex.tagIndex.get(term) || /* @__PURE__ */ new Set();
     tagMatches.forEach((id) => results.add(id));
-    const metadataMatches = this.searchIndex.metadataIndex.get(term) || /* @__PURE__ */ new Set();
+    const metadataMatches =
+      this.searchIndex.metadataIndex.get(term) || /* @__PURE__ */ new Set();
     metadataMatches.forEach((id) => results.add(id));
     return results;
   }
@@ -8006,7 +8623,7 @@ class SequenceIndexService {
       sequence.difficultyLevel || "",
       sequence.gridMode || "",
       sequence.propType || "",
-      ...sequence.tags
+      ...sequence.tags,
     ];
     return parts.filter(Boolean).join(" ");
   }
@@ -8070,7 +8687,7 @@ class SequenceIndexService {
       "CAKE",
       "CCCΦ-",
       "CCKE",
-      "CCKΦ"
+      "CCKΦ",
       // Add more as needed...
     ];
     for (let i = 0; i < knownSequences.length; i++) {
@@ -8089,15 +8706,20 @@ class SequenceIndexService {
         thumbnails: [`${word}_ver1.png`],
         isFavorite: Math.random() > 0.8,
         isCircular: false,
-        tags: ["flow", "practice", "generated"].slice(0, Math.floor(Math.random() * 3) + 1),
-        metadata: { scanned: true, index: i }
+        tags: ["flow", "practice", "generated"].slice(
+          0,
+          Math.floor(Math.random() * 3) + 1,
+        ),
+        metadata: { scanned: true, index: i },
       };
       if (author) result.author = author;
       if (gridMode) result.gridMode = gridMode;
       if (difficulty) result.difficultyLevel = difficulty;
       result.sequenceLength = Math.floor(Math.random() * 8) + 3;
       result.level = Math.floor(Math.random() * 4) + 1;
-      result.dateAdded = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1e3);
+      result.dateAdded = new Date(
+        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1e3,
+      );
       result.propType = "fans";
       result.startingPosition = "center";
       sequences.push(result);
@@ -8149,7 +8771,10 @@ class ThumbnailService {
       this.metadataCache.set(cacheKey, metadata);
       return metadata;
     } catch (error) {
-      console.warn(`Failed to get thumbnail metadata for ${sequenceId}:`, error);
+      console.warn(
+        `Failed to get thumbnail metadata for ${sequenceId}:`,
+        error,
+      );
       return null;
     }
   }
@@ -8171,7 +8796,7 @@ class ThumbnailService {
     const commonPatterns = [
       `${sequenceId}_ver1.png`,
       `${sequenceId.toUpperCase()}_ver1.png`,
-      `${sequenceId.toLowerCase()}_ver1.png`
+      `${sequenceId.toLowerCase()}_ver1.png`,
     ];
     const validThumbnails = [];
     for (const pattern of commonPatterns) {
@@ -8193,7 +8818,7 @@ class ThumbnailService {
       img.onload = () => {
         this.metadataCache.set(sequenceId, {
           width: img.naturalWidth,
-          height: img.naturalHeight
+          height: img.naturalHeight,
         });
         resolve2();
       };
@@ -8209,7 +8834,7 @@ class ThumbnailService {
       img.onload = () => {
         resolve2({
           width: img.naturalWidth,
-          height: img.naturalHeight
+          height: img.naturalHeight,
         });
       };
       img.onerror = () => {
@@ -8222,7 +8847,7 @@ class ThumbnailService {
     const patterns = [
       `${sequenceId}_ver1.png`,
       `${sequenceId.toUpperCase()}_ver1.png`,
-      `${sequenceId.toLowerCase()}_ver1.png`
+      `${sequenceId.toLowerCase()}_ver1.png`,
     ];
     for (const pattern of patterns) {
       if (await this.validateThumbnailExists(sequenceId, pattern)) {
@@ -8233,54 +8858,56 @@ class ThumbnailService {
   }
   // Batch operations for performance
   async preloadThumbnails(thumbnails) {
-    const preloadPromises = thumbnails.map(
-      (thumb) => this.preloadThumbnail(thumb.sequenceId, thumb.thumbnailPath).catch((error) => {
-        console.warn(
-          `Failed to preload thumbnail ${thumb.sequenceId}/${thumb.thumbnailPath}:`,
-          error
-        );
-      })
+    const preloadPromises = thumbnails.map((thumb) =>
+      this.preloadThumbnail(thumb.sequenceId, thumb.thumbnailPath).catch(
+        (error) => {
+          console.warn(
+            `Failed to preload thumbnail ${thumb.sequenceId}/${thumb.thumbnailPath}:`,
+            error,
+          );
+        },
+      ),
     );
     await Promise.all(preloadPromises);
   }
   getThumbnailCacheStats() {
     return {
       cached: this.thumbnailCache.size,
-      metadataCached: this.metadataCache.size
+      metadataCached: this.metadataCache.size,
     };
   }
 }
 const IBrowseServiceInterface = createServiceInterface(
   "IBrowseService",
-  BrowseService
+  BrowseService,
 );
 const IThumbnailServiceInterface = createServiceInterface(
   "IThumbnailService",
-  ThumbnailService
+  ThumbnailService,
 );
 const ISequenceIndexServiceInterface = createServiceInterface(
   "ISequenceIndexService",
-  SequenceIndexService
+  SequenceIndexService,
 );
 const IFavoritesServiceInterface = createServiceInterface(
   "IFavoritesService",
-  FavoritesService
+  FavoritesService,
 );
 const INavigationServiceInterface = createServiceInterface(
   "INavigationService",
-  NavigationService
+  NavigationService,
 );
 const ISectionServiceInterface = createServiceInterface(
   "ISectionService",
-  SectionService
+  SectionService,
 );
 const IFilterPersistenceServiceInterface = createServiceInterface(
   "IFilterPersistenceService",
-  FilterPersistenceService
+  FilterPersistenceService,
 );
 const IDeleteServiceInterface = createServiceInterface(
   "IDeleteService",
-  DeleteService
+  DeleteService,
 );
 const serviceInterfaceMap = /* @__PURE__ */ new Map([
   // Core services
@@ -8294,14 +8921,14 @@ const serviceInterfaceMap = /* @__PURE__ */ new Map([
   ["IDeviceDetectionService", IDeviceDetectionServiceInterface],
   [
     "IApplicationInitializationService",
-    IApplicationInitializationServiceInterface
+    IApplicationInitializationServiceInterface,
   ],
   ["IExportService", IExportServiceInterface],
   ["IMotionGenerationService", IMotionGenerationServiceInterface],
   ["ISequenceGenerationService", ISequenceGenerationServiceInterface],
   [
     "IConstructTabCoordinationService",
-    IConstructTabCoordinationServiceInterface
+    IConstructTabCoordinationServiceInterface,
   ],
   ["IOptionDataService", IOptionDataServiceInterface],
   ["IStartPositionService", IStartPositionServiceInterface],
@@ -8326,12 +8953,12 @@ const serviceInterfaceMap = /* @__PURE__ */ new Map([
   ["INavigationService", INavigationServiceInterface],
   ["ISectionService", ISectionServiceInterface],
   ["IFilterPersistenceService", IFilterPersistenceServiceInterface],
-  ["IDeleteService", IDeleteServiceInterface]
+  ["IDeleteService", IDeleteServiceInterface],
 ]);
 function getContainer() {
   {
     throw new Error(
-      "Application container not initialized. Call createWebApplication() first."
+      "Application container not initialized. Call createWebApplication() first.",
     );
   }
 }
@@ -8340,7 +8967,9 @@ function resolve(serviceInterface) {
   {
     const mappedInterface = serviceInterfaceMap.get(serviceInterface);
     if (!mappedInterface) {
-      throw new Error(`Service interface not found for key: ${serviceInterface}`);
+      throw new Error(
+        `Service interface not found for key: ${serviceInterface}`,
+      );
     }
     return container.resolve(mappedInterface);
   }
@@ -8348,7 +8977,8 @@ function resolve(serviceInterface) {
 function LoadingScreen($$payload, $$props) {
   let { progress = 0, message = "Loading..." } = $$props;
   const clampedProgress = Math.max(0, Math.min(100, progress));
-  $$payload.out.push(`<!---->/** * Loading Screen - Pure Svelte 5 implementation * * Shows loading progress during application
+  $$payload.out
+    .push(`<!---->/** * Loading Screen - Pure Svelte 5 implementation * * Shows loading progress during application
 initialization. */ <div class="loading-screen svelte-191ks69"><div class="loading-content svelte-191ks69"><div class="spinner svelte-191ks69"></div> <h2 class="svelte-191ks69">TKA - The Kinetic Constructor</h2> <p class="message svelte-191ks69">${escape_html(message)}</p> <div class="progress-container svelte-191ks69"><div class="progress-bar svelte-191ks69"><div class="progress-fill svelte-191ks69"${attr_style(`width: ${stringify(clampedProgress)}%`)}></div></div> <span class="progress-text svelte-191ks69">${escape_html(Math.round(clampedProgress))}%</span></div></div></div>`);
 }
 class ConstructTabState {
@@ -8371,7 +9001,9 @@ class ConstructTabState {
     const sequence = state.currentSequence;
     const shouldShow = !sequence || !sequence.start_position;
     if (this.shouldShowStartPositionPicker !== shouldShow) {
-      console.log(`🎯 Start position picker: ${shouldShow ? "show" : "hide"} (has start_position: ${!!sequence?.start_position}, beats: ${sequence?.beats?.length || 0})`);
+      console.log(
+        `🎯 Start position picker: ${shouldShow ? "show" : "hide"} (has start_position: ${!!sequence?.start_position}, beats: ${sequence?.beats?.length || 0})`,
+      );
     }
     this.shouldShowStartPositionPicker = shouldShow;
   }
@@ -8425,13 +9057,19 @@ function setError(message) {
 function clearError() {
   constructTabState.clearError();
 }
-const constructTabState_svelte = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  clearError,
-  constructTabState,
-  setError,
-  setTransitioning
-}, Symbol.toStringTag, { value: "Module" }));
+const constructTabState_svelte = /* @__PURE__ */ Object.freeze(
+  /* @__PURE__ */ Object.defineProperty(
+    {
+      __proto__: null,
+      clearError,
+      constructTabState,
+      setError,
+      setTransitioning,
+    },
+    Symbol.toStringTag,
+    { value: "Module" },
+  ),
+);
 class ArrowPositioningService2 {
   orchestrator;
   constructor() {
@@ -8443,7 +9081,7 @@ class ArrowPositioningService2 {
    */
   async calculatePosition(arrowData, motionData, pictographData) {
     console.log(
-      `🎯 ArrowPositioningService.calculatePosition called for ${arrowData.color} arrow`
+      `🎯 ArrowPositioningService.calculatePosition called for ${arrowData.color} arrow`,
     );
     console.log(`Arrow data:`, {
       motion_type: arrowData.motion_type,
@@ -8451,22 +9089,24 @@ class ArrowPositioningService2 {
       end_orientation: arrowData.end_orientation,
       turns: arrowData.turns,
       position_x: arrowData.position_x,
-      position_y: arrowData.position_y
+      position_y: arrowData.position_y,
     });
     console.log(`Motion data:`, {
       motion_type: motionData.motion_type,
       start_loc: motionData.start_loc,
       end_loc: motionData.end_loc,
-      turns: motionData.turns
+      turns: motionData.turns,
     });
     try {
       console.log(`🔧 Calling orchestrator.calculateArrowPosition...`);
       const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
         arrowData,
         pictographData,
-        motionData
+        motionData,
       );
-      console.log(`✅ Orchestrator returned: (${x}, ${y}) rotation: ${rotation}°`);
+      console.log(
+        `✅ Orchestrator returned: (${x}, ${y}) rotation: ${rotation}°`,
+      );
       return { x, y, rotation };
     } catch (error) {
       console.error("Sophisticated positioning failed, using fallback:", error);
@@ -8480,14 +9120,16 @@ class ArrowPositioningService2 {
     try {
       console.log(`🎯 Calculating sync position for ${arrowData.color} arrow`);
       console.log(
-        `Motion: ${motionData.motion_type}, Start: ${motionData.start_loc}, End: ${motionData.end_loc}`
+        `Motion: ${motionData.motion_type}, Start: ${motionData.start_loc}, End: ${motionData.end_loc}`,
       );
       const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
         arrowData,
         pictographData,
-        motionData
+        motionData,
       );
-      console.log(`✅ Calculated sync position: (${x}, ${y}) rotation: ${rotation}°`);
+      console.log(
+        `✅ Calculated sync position: (${x}, ${y}) rotation: ${rotation}°`,
+      );
       return { x, y, rotation };
     } catch (error) {
       console.error("Synchronous positioning failed, using fallback:", error);
@@ -8513,7 +9155,7 @@ class ArrowPositioningService2 {
       color: input.arrow_type,
       arrow_type: input.arrow_type === "blue" ? ArrowType.BLUE : ArrowType.RED,
       location: input.location,
-      motion_type: input.motion_type
+      motion_type: input.motion_type,
     };
     const motionData = {
       motion_type: input.motion_type,
@@ -8521,28 +9163,36 @@ class ArrowPositioningService2 {
       start_ori: input.start_orientation || "in",
       end_ori: input.end_orientation || "in",
       prop_rot_dir: "cw",
-      turns: input.turns
+      turns: input.turns,
     };
     const pictographData = {
       letter: input.letter || "A",
       grid_mode: input.grid_mode,
       motions: {
-        [input.arrow_type]: motionData
-      }
+        [input.arrow_type]: motionData,
+      },
     };
-    const result = await this.calculatePosition(arrowData, motionData, pictographData);
+    const result = await this.calculatePosition(
+      arrowData,
+      motionData,
+      pictographData,
+    );
     return { x: result.x, y: result.y };
   }
   /**
    * Fallback position calculation using basic coordinates
    */
   getFallbackPosition(motionData) {
-    const coordinates = this.calculateLocationCoordinates(motionData.start_loc || "center");
-    console.log(`🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`);
+    const coordinates = this.calculateLocationCoordinates(
+      motionData.start_loc || "center",
+    );
+    console.log(
+      `🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`,
+    );
     return {
       x: coordinates.x,
       y: coordinates.y,
-      rotation: 0
+      rotation: 0,
     };
   }
   /**
@@ -8561,7 +9211,7 @@ class ArrowPositioningService2 {
       sw: { x: 331.9, y: 618.1 },
       nw: { x: 331.9, y: 331.9 },
       // Center point
-      center: { x: 475, y: 475 }
+      center: { x: 475, y: 475 },
     };
     const coords = diamondCoordinates[location.toLowerCase()];
     return coords || { x: 475, y: 475 };
@@ -8576,8 +9226,7 @@ class ConstructTabEventService {
   initializeServices() {
     try {
       this.constructCoordinator = resolve("IConstructTabCoordinationService");
-    } catch {
-    }
+    } catch {}
   }
   /**
    * Handle start position selection in the Build tab
@@ -8586,34 +9235,34 @@ class ConstructTabEventService {
     try {
       console.log(
         "🎭 Start position selected in ConstructTabEventService:",
-        startPosition.pictograph_data?.id
+        startPosition.pictograph_data?.id,
       );
       if (!this.constructCoordinator) {
         console.log(
-          "🎭 Coordination service not available, attempting to resolve..."
+          "🎭 Coordination service not available, attempting to resolve...",
         );
         try {
           this.constructCoordinator = resolve(
-            "IConstructTabCoordinationService"
+            "IConstructTabCoordinationService",
           );
           console.log("✅ Coordination service resolved successfully");
         } catch (resolveError) {
           console.error(
             "❌ Failed to resolve coordination service:",
-            resolveError
+            resolveError,
           );
           throw new Error("Coordination service not available");
         }
       }
       if (this.constructCoordinator) {
         console.log(
-          "🎭 Calling coordination service handleStartPositionSet..."
+          "🎭 Calling coordination service handleStartPositionSet...",
         );
         await this.constructCoordinator.handleStartPositionSet(startPosition);
         console.log("✅ Coordination service handleStartPositionSet completed");
       } else {
         throw new Error(
-          "Coordination service is null after resolution attempt"
+          "Coordination service is null after resolution attempt",
         );
       }
       clearError();
@@ -8621,7 +9270,7 @@ class ConstructTabEventService {
     } catch (error) {
       console.error("❌ Error handling start position selection:", error);
       setError(
-        error instanceof Error ? error.message : "Failed to set start position"
+        error instanceof Error ? error.message : "Failed to set start position",
       );
     } finally {
     }
@@ -8635,7 +9284,7 @@ class ConstructTabEventService {
       setTransitioning(true);
       const beatData = createBeatData({
         beat_number: (getCurrentSequence()?.beats.length || 0) + 1,
-        pictograph_data: option
+        pictograph_data: option,
       });
       if (this.constructCoordinator) {
         await this.constructCoordinator.handleBeatAdded(beatData);
@@ -8645,7 +9294,9 @@ class ConstructTabEventService {
     } catch (error) {
       console.error("❌ Error handling option selection:", error);
       setError(
-        error instanceof Error ? error.message : "Failed to add option to sequence"
+        error instanceof Error
+          ? error.message
+          : "Failed to add option to sequence",
       );
     } finally {
       setTransitioning(false);
@@ -8658,7 +9309,7 @@ class ConstructTabEventService {
     console.log(
       "ConstructTabEventService: Beat modified in graph editor",
       beatIndex,
-      beatData
+      beatData,
     );
     console.log("Beat modification handled locally for beat index:", beatIndex);
   }
@@ -8668,7 +9319,7 @@ class ConstructTabEventService {
   handleArrowSelected(arrowData) {
     console.log(
       "ConstructTabEventService: Arrow selected in graph editor",
-      arrowData
+      arrowData,
     );
   }
   /**
@@ -8677,7 +9328,7 @@ class ConstructTabEventService {
   handleGraphEditorVisibilityChanged(isVisible) {
     console.log(
       "ConstructTabEventService: Graph editor visibility changed",
-      isVisible
+      isVisible,
     );
   }
   /**
@@ -8688,7 +9339,7 @@ class ConstructTabEventService {
     console.log(
       "ConstructTabEventService: Export setting changed",
       setting,
-      value
+      value,
     );
   }
   /**
@@ -8707,7 +9358,7 @@ class ConstructTabEventService {
     if (type === "current") {
       console.log("Exporting current sequence:", config.sequence?.name);
       alert(
-        `Exporting sequence "${config.sequence?.name || "Untitled"}" with ${config.sequence?.beats?.length || 0} beats`
+        `Exporting sequence "${config.sequence?.name || "Untitled"}" with ${config.sequence?.beats?.length || 0} beats`,
       );
     } else if (type === "all") {
       console.log("Exporting all sequences");
@@ -8729,33 +9380,38 @@ class ConstructTabEventService {
               default:
                 console.log(
                   `ConstructTabEventService received event: ${eventType}`,
-                  data
+                  data,
                 );
             }
-          }
-        }
+          },
+        },
       });
     }
   }
 }
 new ConstructTabEventService();
-typeof window !== "undefined" && window.location.search.includes("debug=foldable");
+typeof window !== "undefined" &&
+  window.location.search.includes("debug=foldable");
 function MainApplication($$payload, $$props) {
   push();
   getContext("di-container");
   let initializationProgress = getInitializationProgress();
   head($$payload, ($$payload2) => {
     $$payload2.title = `<title>TKA Constructor - The Kinetic Alphabet</title>`;
-    $$payload2.out.push(`<meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Create, learn, and share movement sequences."/>`);
+    $$payload2.out.push(
+      `<meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Create, learn, and share movement sequences."/>`,
+    );
   });
-  $$payload.out.push(`<div class="tka-app svelte-e0pyof" data-testid="tka-application">`);
+  $$payload.out.push(
+    `<div class="tka-app svelte-e0pyof" data-testid="tka-application">`,
+  );
   {
     $$payload.out.push("<!--[!-->");
     {
       $$payload.out.push("<!--[-->");
       LoadingScreen($$payload, {
         progress: initializationProgress,
-        message: "Initializing Constructor..."
+        message: "Initializing Constructor...",
       });
     }
     $$payload.out.push(`<!--]-->`);
@@ -8763,6 +9419,4 @@ function MainApplication($$payload, $$props) {
   $$payload.out.push(`<!--]--></div>`);
   pop();
 }
-export {
-  MainApplication as M
-};
+export { MainApplication as M };

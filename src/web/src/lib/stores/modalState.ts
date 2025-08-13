@@ -14,8 +14,13 @@ export interface ResourceModalData {
   keywords: string;
   url: string;
   resourceName: string;
-  tableOfContents: Array<{id: string, label: string}>;
-  relatedResources: Array<{name: string, url: string, description: string, type: 'internal' | 'external'}>;
+  tableOfContents: Array<{ id: string; label: string }>;
+  relatedResources: Array<{
+    name: string;
+    url: string;
+    description: string;
+    type: "internal" | "external";
+  }>;
   heroGradient?: string;
   creatorColor?: string;
 }
@@ -25,7 +30,7 @@ class ModalManager {
   private _state = $state<ModalState>({
     isOpen: false,
     resourceName: null,
-    isLoading: false
+    isLoading: false,
   });
 
   private _data = $state<ResourceModalData | null>(null);
@@ -56,9 +61,9 @@ class ModalManager {
     this._state.isOpen = true;
     this._state.resourceName = resourceName;
     this._state.isLoading = true;
-    
+
     // Update URL hash for browser back button support
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.location.hash = `#modal-${resourceName}`;
     }
   }
@@ -68,10 +73,10 @@ class ModalManager {
     this._state.resourceName = null;
     this._state.isLoading = false;
     this._data = null;
-    
+
     // Clear URL hash
-    if (typeof window !== 'undefined') {
-      window.location.hash = '';
+    if (typeof window !== "undefined") {
+      window.location.hash = "";
     }
   }
 
@@ -94,18 +99,18 @@ class ModalManager {
 export const modalManager = new ModalManager();
 
 // Handle browser back button
-if (typeof window !== 'undefined') {
-  window.addEventListener('hashchange', () => {
+if (typeof window !== "undefined") {
+  window.addEventListener("hashchange", () => {
     if (!window.location.hash) {
       modalManager.closeModal();
     }
   });
-  
+
   // Handle initial page load with hash
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener("DOMContentLoaded", () => {
     const hash = window.location.hash;
-    if (hash.startsWith('#modal-')) {
-      const resourceName = hash.replace('#modal-', '');
+    if (hash.startsWith("#modal-")) {
+      const resourceName = hash.replace("#modal-", "");
       modalManager.openModal(resourceName);
     }
   });

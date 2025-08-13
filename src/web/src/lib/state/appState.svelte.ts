@@ -202,7 +202,7 @@ export function setInitializationState(
   initialized: boolean,
   initializing: boolean,
   error: string | null = null,
-  progress: number = 0
+  progress: number = 0,
 ): void {
   initState.isInitialized = initialized;
   initState.isInitializing = initializing;
@@ -338,7 +338,7 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
 
   console.log(
     "💾 Settings updated and saved. Current backgroundType:",
-    settingsState.backgroundType
+    settingsState.backgroundType,
   );
 }
 
@@ -346,7 +346,7 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
  * Set performance metrics
  */
 export function setPerformanceMetrics(
-  metrics: Partial<typeof perfState>
+  metrics: Partial<typeof perfState>,
 ): void {
   Object.assign(perfState, metrics);
 }
@@ -356,7 +356,7 @@ export function setPerformanceMetrics(
  */
 export function trackRenderTime(
   componentName: string,
-  renderTime: number
+  renderTime: number,
 ): void {
   perfState.lastRenderTime = renderTime;
 
@@ -477,7 +477,7 @@ async function saveCurrentTabState(currentTab: TabId): Promise<void> {
  */
 async function saveApplicationTabState(
   newTab: TabId,
-  previousTab: TabId
+  previousTab: TabId,
 ): Promise<void> {
   if (!browser) return;
 

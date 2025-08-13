@@ -94,7 +94,7 @@ let filteredSequences = $derived(() => {
   }
 
   return allSequences.filter(
-    (seq) => seq.beats && seq.beats.length === sequenceCardState.selectedLength
+    (seq) => seq.beats && seq.beats.length === sequenceCardState.selectedLength,
   );
 });
 
@@ -119,7 +119,7 @@ let currentLayout = $derived(() => {
     containerWidth,
     containerHeight,
     currentPageSequences.length,
-    columnCount
+    columnCount,
   );
 });
 
@@ -164,7 +164,7 @@ let cacheStatus = $derived(() => {
     lastCleared: sequenceCardState.cacheLastCleared,
     estimatedSize: Math.min(
       filteredSequences.length,
-      sequenceCardState.cacheSizeLimit
+      sequenceCardState.cacheSizeLimit,
     ),
   };
 });
@@ -177,7 +177,7 @@ function calculateOptimalLayout(
   containerWidth: number,
   containerHeight: number,
   itemCount: number,
-  preferredColumns: number
+  preferredColumns: number,
 ): LayoutConfig {
   const CARD_ASPECT_RATIO = 1.4; // Width/Height ratio from legacy
   const CARD_SPACING = 16;
@@ -345,7 +345,7 @@ export function setCacheSizeLimit(limit: number) {
 // Export settings management
 export function updateExportSetting<K extends keyof typeof exportSettingsState>(
   key: K,
-  value: (typeof exportSettingsState)[K]
+  value: (typeof exportSettingsState)[K],
 ) {
   (exportSettingsState as any)[key] = value;
 }

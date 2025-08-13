@@ -52,7 +52,7 @@ export function mapPositionToAngle(loc: string): number {
  */
 export function mapOrientationToAngle(
   ori: string,
-  centerPathAngle: number
+  centerPathAngle: number,
 ): number {
   if (!ori) return centerPathAngle + PI;
   const l = ori.toLowerCase();
@@ -93,7 +93,7 @@ export function lerpAngle(a: number, b: number, t: number): number {
  */
 export function calculateProIsolationStaffAngle(
   centerPathAngle: number,
-  _propRotDir: string // propRotDir can be ignored for pro motion
+  _propRotDir: string, // propRotDir can be ignored for pro motion
 ): number {
   // For pro motion, staff always points toward center (angle + 180°)
   return normalizeAnglePositive(centerPathAngle + PI);
@@ -107,10 +107,10 @@ export function calculateProTargetAngle(
   targetCenterAngle: number,
   startStaffAngle: number,
   turns: number,
-  propRotDir: string
+  propRotDir: string,
 ): number {
   console.log(
-    "🔧 [PRO DEBUG] ===== CALCULATING PRO TARGET ANGLE WITH TURNS ====="
+    "🔧 [PRO DEBUG] ===== CALCULATING PRO TARGET ANGLE WITH TURNS =====",
   );
   console.log("🔧 [PRO DEBUG] Input parameters:");
   console.log(
@@ -118,21 +118,21 @@ export function calculateProTargetAngle(
     startCenterAngle,
     "radians",
     ((startCenterAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [PRO DEBUG]   targetCenterAngle:",
     targetCenterAngle,
     "radians",
     ((targetCenterAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [PRO DEBUG]   startStaffAngle:",
     startStaffAngle,
     "radians",
     ((startStaffAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log("🔧 [PRO DEBUG]   turns:", turns);
   console.log("🔧 [PRO DEBUG]   propRotDir:", propRotDir);
@@ -150,33 +150,33 @@ export function calculateProTargetAngle(
     delta,
     "radians",
     ((delta * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [PRO DEBUG]   base (delta):",
     base,
     "radians",
     ((base * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [PRO DEBUG]   turn (PI * turns):",
     turn,
     "radians",
     ((turn * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log("🔧 [PRO DEBUG]   dir (rotation direction):", dir);
   console.log(
     "🔧 [PRO DEBUG]   raw result (start + base + turn * dir):",
-    startStaffAngle + base + turn * dir
+    startStaffAngle + base + turn * dir,
   );
   console.log(
     "🔧 [PRO DEBUG]   normalized result:",
     result,
     "radians",
     ((result * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
 
   return result;
@@ -190,7 +190,7 @@ export function calculateAntispinTargetAngle(
   targetCenterAngle: number,
   startStaffAngle: number,
   turns: number,
-  propRotDir: string
+  propRotDir: string,
 ): number {
   console.log("🔧 [ANTI DEBUG] ===== CALCULATING ANTI-SPIN TARGET ANGLE =====");
   console.log("🔧 [ANTI DEBUG] Input parameters:");
@@ -199,21 +199,21 @@ export function calculateAntispinTargetAngle(
     startCenterAngle,
     "radians",
     ((startCenterAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [ANTI DEBUG]   targetCenterAngle:",
     targetCenterAngle,
     "radians",
     ((targetCenterAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [ANTI DEBUG]   startStaffAngle:",
     startStaffAngle,
     "radians",
     ((startStaffAngle * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log("🔧 [ANTI DEBUG]   turns:", turns);
   console.log("🔧 [ANTI DEBUG]   propRotDir:", propRotDir);
@@ -230,33 +230,33 @@ export function calculateAntispinTargetAngle(
     delta,
     "radians",
     ((delta * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [ANTI DEBUG]   base (-delta):",
     base,
     "radians",
     ((base * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log(
     "🔧 [ANTI DEBUG]   turn (PI * turns):",
     turn,
     "radians",
     ((turn * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
   console.log("🔧 [ANTI DEBUG]   dir (rotation direction):", dir);
   console.log(
     "🔧 [ANTI DEBUG]   raw result (start + base + turn * dir):",
-    startStaffAngle + base + turn * dir
+    startStaffAngle + base + turn * dir,
   );
   console.log(
     "🔧 [ANTI DEBUG]   normalized result:",
     result,
     "radians",
     ((result * 180) / PI).toFixed(1),
-    "degrees"
+    "degrees",
   );
 
   return result;
@@ -268,7 +268,7 @@ export function calculateAntispinTargetAngle(
 export function calculateStaticStaffAngle(
   startStaffAngle: number,
   endOri: string,
-  targetCenterAngle: number
+  targetCenterAngle: number,
 ): number {
   if (endOri?.toLowerCase() === "in") {
     return normalizeAnglePositive(targetCenterAngle + PI);
@@ -284,7 +284,7 @@ export function calculateStaticStaffAngle(
 export function calculateDashTargetAngle(
   startStaffAngle: number,
   endOri: string,
-  targetCenterAngle: number
+  targetCenterAngle: number,
 ): number {
   if (endOri?.toLowerCase() === "in") {
     return normalizeAnglePositive(targetCenterAngle + PI);
@@ -324,7 +324,7 @@ export interface StepDefinition {
  */
 export function calculateStepEndpoints(
   stepDefinition: StepDefinition,
-  propType: "blue" | "red"
+  propType: "blue" | "red",
 ): StepEndpoints | null {
   const attributes =
     propType === "blue"
@@ -346,7 +346,7 @@ export function calculateStepEndpoints(
   const startCenterAngle = mapPositionToAngle(start_loc);
   const startStaffAngle = mapOrientationToAngle(
     start_ori || "in",
-    startCenterAngle
+    startCenterAngle,
   );
   const targetCenterAngle = mapPositionToAngle(end_loc);
 
@@ -376,13 +376,13 @@ export function calculateStepEndpoints(
           targetCenterAngle,
           startStaffAngle,
           turns,
-          prop_rot_dir || "cw"
+          prop_rot_dir || "cw",
         );
       } else {
         // console.log("🔧 [ENDPOINT DEBUG] PRO motion isolation (zero turns)");
         calculatedTargetStaffAngle = calculateProIsolationStaffAngle(
           targetCenterAngle,
-          prop_rot_dir || "cw"
+          prop_rot_dir || "cw",
         );
       }
       break;
@@ -393,17 +393,17 @@ export function calculateStepEndpoints(
         targetCenterAngle,
         startStaffAngle,
         turns || 0,
-        prop_rot_dir || "cw"
+        prop_rot_dir || "cw",
       );
       break;
     case "static":
       // console.log("🔧 [ENDPOINT DEBUG] Processing STATIC motion");
       const endOriAngleStatic = mapOrientationToAngle(
         end_ori || "in",
-        targetCenterAngle
+        targetCenterAngle,
       );
       const angleDiffStatic = normalizeAngleSigned(
-        endOriAngleStatic - startStaffAngle
+        endOriAngleStatic - startStaffAngle,
       );
       calculatedTargetStaffAngle =
         Math.abs(angleDiffStatic) > 0.1 ? endOriAngleStatic : startStaffAngle;
@@ -413,7 +413,7 @@ export function calculateStepEndpoints(
       calculatedTargetStaffAngle = calculateDashTargetAngle(
         startStaffAngle,
         end_ori || "in",
-        targetCenterAngle
+        targetCenterAngle,
       );
       break;
     default:
@@ -434,10 +434,10 @@ export function calculateStepEndpoints(
   if (motion_type !== "pro") {
     const endOriAngleOverride = mapOrientationToAngle(
       end_ori || "in",
-      targetCenterAngle
+      targetCenterAngle,
     );
     const explicitEndOri = ["n", "e", "s", "w", "in", "out"].includes(
-      (end_ori || "").toLowerCase()
+      (end_ori || "").toLowerCase(),
     );
     if (explicitEndOri) {
       calculatedTargetStaffAngle = endOriAngleOverride;

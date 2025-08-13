@@ -7,8 +7,7 @@ var object_prototype = Object.prototype;
 var array_prototype = Array.prototype;
 var get_prototype_of = Object.getPrototypeOf;
 var is_extensible = Object.isExtensible;
-const noop = () => {
-};
+const noop = () => {};
 function run_all(arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i]();
@@ -27,7 +26,11 @@ function equals(value) {
   return value === this.v;
 }
 function safe_not_equal(a, b) {
-  return a != a ? b == b : a !== b || a !== null && typeof a === "object" || typeof a === "function";
+  return a != a
+    ? b == b
+    : a !== b ||
+        (a !== null && typeof a === "object") ||
+        typeof a === "function";
 }
 function safe_equals(value) {
   return !safe_not_equal(value, this.v);
@@ -47,5 +50,5 @@ export {
   noop as n,
   object_prototype as o,
   run_all as r,
-  safe_not_equal as s
+  safe_not_equal as s,
 };

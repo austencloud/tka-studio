@@ -31,7 +31,7 @@ export class AnimationControlService {
   // Initialize the animation engine with motion data
   async initializeEngine(
     blueParams: MotionTestParams,
-    redParams: MotionTestParams
+    redParams: MotionTestParams,
   ): Promise<boolean> {
     try {
       const sequence = this.createDualPropTestSequence(blueParams, redParams);
@@ -47,7 +47,7 @@ export class AnimationControlService {
   // Create a test sequence with dual prop motion in standalone array format
   private createDualPropTestSequence(
     blueParams: MotionTestParams,
-    redParams: MotionTestParams
+    redParams: MotionTestParams,
   ) {
     return [
       // Index 0: Metadata

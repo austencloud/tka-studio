@@ -48,7 +48,7 @@ export function createMotionTesterState(): MotionTesterState {
 
   // Reactive state
   let blueMotionParams = $state<MotionTestParams>(
-    motionService.createDefaultParams()
+    motionService.createDefaultParams(),
   );
   let redMotionParams = $state<MotionTestParams>({
     ...motionService.createDefaultParams(),
@@ -77,7 +77,7 @@ export function createMotionTesterState(): MotionTesterState {
     const newRotDir = motionService.calculateRotationDirection(
       blueMotionParams.motionType,
       blueMotionParams.startLoc,
-      blueMotionParams.endLoc
+      blueMotionParams.endLoc,
     );
     if (newRotDir !== blueMotionParams.propRotDir) {
       blueMotionParams.propRotDir = newRotDir;
@@ -98,7 +98,7 @@ export function createMotionTesterState(): MotionTesterState {
     const newRotDir = motionService.calculateRotationDirection(
       redMotionParams.motionType,
       redMotionParams.startLoc,
-      redMotionParams.endLoc
+      redMotionParams.endLoc,
     );
     if (newRotDir !== redMotionParams.propRotDir) {
       redMotionParams.propRotDir = newRotDir;
@@ -119,7 +119,7 @@ export function createMotionTesterState(): MotionTesterState {
     const initEngine = async () => {
       const success = await animationService.initializeEngine(
         blueMotionParams,
-        redMotionParams
+        redMotionParams,
       );
       isEngineInitialized = success;
     };

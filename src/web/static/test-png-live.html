@@ -1,187 +1,223 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Live PNG Metadata Extraction Test</title>
     <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background: #1a1a1a;
-            color: #00ff00;
-            padding: 20px;
-            margin: 0;
-        }
-        .console {
-            background: #000;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            white-space: pre-wrap;
-            font-size: 14px;
-            line-height: 1.4;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .success { color: #00ff00; }
-        .error { color: #ff4444; }
-        .info { color: #44aaff; }
-        .warning { color: #ffaa44; }
-        button {
-            background: #333;
-            color: #00ff00;
-            border: 1px solid #555;
-            padding: 10px 20px;
-            margin: 10px 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        button:hover {
-            background: #444;
-        }
+      body {
+        font-family: "Courier New", monospace;
+        background: #1a1a1a;
+        color: #00ff00;
+        padding: 20px;
+        margin: 0;
+      }
+      .console {
+        background: #000;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.4;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .success {
+        color: #00ff00;
+      }
+      .error {
+        color: #ff4444;
+      }
+      .info {
+        color: #44aaff;
+      }
+      .warning {
+        color: #ffaa44;
+      }
+      button {
+        background: #333;
+        color: #00ff00;
+        border: 1px solid #555;
+        padding: 10px 20px;
+        margin: 10px 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      button:hover {
+        background: #444;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🔍 Live PNG Metadata Extraction Test</h1>
-    <p>Testing direct PNG metadata extraction to prove I can use the extractor:</p>
-    
+    <p>
+      Testing direct PNG metadata extraction to prove I can use the extractor:
+    </p>
+
     <button onclick="runFullTest()">Run Full Test</button>
     <button onclick="testSingleSequence('ABC')">Test ABC</button>
     <button onclick="testSingleSequence('CAKE')">Test CAKE</button>
     <button onclick="testSingleSequence('A')">Test A</button>
     <button onclick="clearConsole()">Clear</button>
-    
-    <div id="console" class="console">Ready to test PNG metadata extraction...\n</div>
+
+    <div id="console" class="console">
+      Ready to test PNG metadata extraction...\n
+    </div>
 
     <script>
-        const consoleDiv = document.getElementById('console');
-        
-        function log(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            const className = type;
-            consoleDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-        
-        function clearConsole() {
-            consoleDiv.innerHTML = 'Console cleared...\n';
-        }
+      const consoleDiv = document.getElementById("console");
 
-        // PNG parsing function
-        function findTextChunk(data, keyword) {
-            let offset = 8; // Skip PNG signature
+      function log(message, type = "info") {
+        const timestamp = new Date().toLocaleTimeString();
+        const className = type;
+        consoleDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+      }
 
-            while (offset < data.length) {
-                // Read chunk length (4 bytes, big-endian)
-                const length = (data[offset] << 24) | (data[offset + 1] << 16) | 
-                              (data[offset + 2] << 8) | data[offset + 3];
-                offset += 4;
+      function clearConsole() {
+        consoleDiv.innerHTML = "Console cleared...\n";
+      }
 
-                // Read chunk type (4 bytes)
-                const type = String.fromCharCode(data[offset], data[offset + 1], 
-                                               data[offset + 2], data[offset + 3]);
-                offset += 4;
+      // PNG parsing function
+      function findTextChunk(data, keyword) {
+        let offset = 8; // Skip PNG signature
 
-                if (type === 'tEXt') {
-                    // Parse text chunk
-                    const textData = data.slice(offset, offset + length);
-                    const textString = new TextDecoder('latin1').decode(textData);
-                    const nullIndex = textString.indexOf('\0');
+        while (offset < data.length) {
+          // Read chunk length (4 bytes, big-endian)
+          const length =
+            (data[offset] << 24) |
+            (data[offset + 1] << 16) |
+            (data[offset + 2] << 8) |
+            data[offset + 3];
+          offset += 4;
 
-                    if (nullIndex !== -1) {
-                        const chunkKeyword = textString.substring(0, nullIndex);
-                        const text = textString.substring(nullIndex + 1);
+          // Read chunk type (4 bytes)
+          const type = String.fromCharCode(
+            data[offset],
+            data[offset + 1],
+            data[offset + 2],
+            data[offset + 3],
+          );
+          offset += 4;
 
-                        if (chunkKeyword === keyword) {
-                            return text;
-                        }
-                    }
-                }
+          if (type === "tEXt") {
+            // Parse text chunk
+            const textData = data.slice(offset, offset + length);
+            const textString = new TextDecoder("latin1").decode(textData);
+            const nullIndex = textString.indexOf("\0");
 
-                // Skip chunk data and CRC (4 bytes)
-                offset += length + 4;
+            if (nullIndex !== -1) {
+              const chunkKeyword = textString.substring(0, nullIndex);
+              const text = textString.substring(nullIndex + 1);
 
-                // Stop at IEND chunk
-                if (type === 'IEND') {
-                    break;
-                }
+              if (chunkKeyword === keyword) {
+                return text;
+              }
             }
+          }
 
-            return null;
+          // Skip chunk data and CRC (4 bytes)
+          offset += length + 4;
+
+          // Stop at IEND chunk
+          if (type === "IEND") {
+            break;
+          }
         }
 
-        async function testSingleSequence(sequenceName) {
-            try {
-                log(`🔍 Extracting ${sequenceName}...`, 'info');
-                
-                // Fetch the PNG file
-                const response = await fetch(`/dictionary/${sequenceName}/${sequenceName}_ver1.png`);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch PNG: ${response.status} ${response.statusText}`);
-                }
+        return null;
+      }
 
-                const arrayBuffer = await response.arrayBuffer();
-                const uint8Array = new Uint8Array(arrayBuffer);
+      async function testSingleSequence(sequenceName) {
+        try {
+          log(`🔍 Extracting ${sequenceName}...`, "info");
 
-                // Find the tEXt chunk with metadata
-                const metadata = findTextChunk(uint8Array, "metadata");
-                if (!metadata) {
-                    throw new Error("No metadata found in PNG");
-                }
+          // Fetch the PNG file
+          const response = await fetch(
+            `/dictionary/${sequenceName}/${sequenceName}_ver1.png`,
+          );
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch PNG: ${response.status} ${response.statusText}`,
+            );
+          }
 
-                const parsed = JSON.parse(metadata);
-                const sequence = parsed.sequence || parsed;
+          const arrayBuffer = await response.arrayBuffer();
+          const uint8Array = new Uint8Array(arrayBuffer);
 
-                // Extract key information
-                const firstStep = sequence[0];
-                const realBeats = sequence.filter(step => step.beat && step.beat > 0);
+          // Find the tEXt chunk with metadata
+          const metadata = findTextChunk(uint8Array, "metadata");
+          if (!metadata) {
+            throw new Error("No metadata found in PNG");
+          }
 
-                log(`✅ ${sequenceName} Real Metadata:`, 'success');
-                log(`   Author: "${firstStep.author}"`, 'success');
-                log(`   Level: ${firstStep.level}`, 'success');
-                log(`   Grid Mode: ${firstStep.grid_mode}`, 'success');
-                log(`   Is Circular: ${firstStep.is_circular}`, 'success');
-                log(`   Prop Type: ${firstStep.prop_type}`, 'success');
-                log(`   Real Beat Count: ${realBeats.length}`, 'success');
-                log(`   Total Steps: ${sequence.length}`, 'success');
+          const parsed = JSON.parse(metadata);
+          const sequence = parsed.sequence || parsed;
 
-                // Show first few beats
-                log(`   Beat Structure:`, 'success');
-                realBeats.slice(0, 3).forEach(step => {
-                    const blueMotion = step.blue_attributes?.motion_type || "unknown";
-                    const redMotion = step.red_attributes?.motion_type || "unknown";
-                    log(`     Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}`, 'success');
-                });
+          // Extract key information
+          const firstStep = sequence[0];
+          const realBeats = sequence.filter(
+            (step) => step.beat && step.beat > 0,
+          );
 
-                log(``, 'info'); // Empty line
+          log(`✅ ${sequenceName} Real Metadata:`, "success");
+          log(`   Author: "${firstStep.author}"`, "success");
+          log(`   Level: ${firstStep.level}`, "success");
+          log(`   Grid Mode: ${firstStep.grid_mode}`, "success");
+          log(`   Is Circular: ${firstStep.is_circular}`, "success");
+          log(`   Prop Type: ${firstStep.prop_type}`, "success");
+          log(`   Real Beat Count: ${realBeats.length}`, "success");
+          log(`   Total Steps: ${sequence.length}`, "success");
 
-            } catch (error) {
-                log(`❌ Failed to extract ${sequenceName}: ${error.message}`, 'error');
-            }
+          // Show first few beats
+          log(`   Beat Structure:`, "success");
+          realBeats.slice(0, 3).forEach((step) => {
+            const blueMotion = step.blue_attributes?.motion_type || "unknown";
+            const redMotion = step.red_attributes?.motion_type || "unknown";
+            log(
+              `     Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}`,
+              "success",
+            );
+          });
+
+          log(``, "info"); // Empty line
+        } catch (error) {
+          log(
+            `❌ Failed to extract ${sequenceName}: ${error.message}`,
+            "error",
+          );
+        }
+      }
+
+      async function runFullTest() {
+        log("🚀 Starting Full PNG Metadata Extraction Test...", "info");
+        log("=".repeat(50), "info");
+
+        const testSequences = ["ABC", "CAKE", "A"];
+
+        for (const sequenceName of testSequences) {
+          await testSingleSequence(sequenceName);
+          // Small delay between tests
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
-        async function runFullTest() {
-            log('🚀 Starting Full PNG Metadata Extraction Test...', 'info');
-            log('='.repeat(50), 'info');
-            
-            const testSequences = ['ABC', 'CAKE', 'A'];
-            
-            for (const sequenceName of testSequences) {
-                await testSingleSequence(sequenceName);
-                // Small delay between tests
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-            
-            log('🎯 Test Complete! This proves I can extract real PNG metadata.', 'success');
-        }
+        log(
+          "🎯 Test Complete! This proves I can extract real PNG metadata.",
+          "success",
+        );
+      }
 
-        // Auto-run a quick test on page load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                log('🔧 Page loaded. Click buttons above to test PNG extraction.', 'info');
-            }, 500);
-        });
+      // Auto-run a quick test on page load
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          log(
+            "🔧 Page loaded. Click buttons above to test PNG extraction.",
+            "info",
+          );
+        }, 500);
+      });
     </script>
-</body>
+  </body>
 </html>

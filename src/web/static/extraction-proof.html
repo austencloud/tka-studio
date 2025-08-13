@@ -66,7 +66,7 @@
       async function extractSequence(sequenceName) {
         try {
           addResult(
-            `🔍 Extracting ${sequenceName} using PngMetadataExtractor...`
+            `🔍 Extracting ${sequenceName} using PngMetadataExtractor...`,
           );
 
           // Use the existing PNG metadata extractor
@@ -117,7 +117,7 @@
         } catch (error) {
           addResult(
             `❌ Failed to extract ${sequenceName}: ${error.message}`,
-            true
+            true,
           );
           return null;
         }

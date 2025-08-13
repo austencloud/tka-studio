@@ -12,7 +12,7 @@ import type { Action } from "svelte/action";
  */
 function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  delay: number
+  delay: number,
 ): T & { cancel: () => void } {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -114,7 +114,7 @@ export const resize: Action<
   } else {
     // Fallback for older browsers without ResizeObserver
     console.warn(
-      "ResizeObserver not supported. Using debounced window resize fallback."
+      "ResizeObserver not supported. Using debounced window resize fallback.",
     );
 
     const handleResize = () => {
@@ -221,10 +221,10 @@ export function createResizeObserver() {
  */
 export function createWindowResizeObserver() {
   let windowWidth = $state(
-    typeof window !== "undefined" ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0,
   );
   let windowHeight = $state(
-    typeof window !== "undefined" ? window.innerHeight : 0
+    typeof window !== "undefined" ? window.innerHeight : 0,
   );
   let isListening = $state(false);
 

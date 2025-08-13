@@ -5,13 +5,13 @@
  */
 
 // Main pictograph component
-export { default as ModernPictograph } from './Pictograph.svelte';
+export { default as ModernPictograph } from "./Pictograph.svelte";
 
 // Individual rendering components
-export { default as Grid } from './Grid.svelte';
-export { default as Prop } from './Prop.svelte';
-export { default as Arrow } from './Arrow.svelte';
-export { default as TKAGlyph } from './TKAGlyph.svelte';
+export { default as Grid } from "./Grid.svelte";
+export { default as Prop } from "./Prop.svelte";
+export { default as Arrow } from "./Arrow.svelte";
+export { default as TKAGlyph } from "./TKAGlyph.svelte";
 
 // Data adapters and utilities
-export * from './dataAdapter';
+export * from "./dataAdapter";

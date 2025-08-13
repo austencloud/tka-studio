@@ -35,17 +35,17 @@
   --color-primary: #3b82f6;
   --color-primary-hover: #2563eb;
   --primary-color-rgb: 59, 130, 246; /* For rgba() usage */
-  
+
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  
+
   --color-surface: rgba(17, 24, 39, 0.8);
   --color-surface-elevated: rgba(31, 41, 55, 0.9);
   --color-surface-hover: rgba(55, 65, 81, 0.6);
-  
+
   --color-border: rgba(75, 85, 99, 0.5);
-  
+
   --color-text-primary: rgba(255, 255, 255, 0.95);
   --color-text-secondary: rgba(255, 255, 255, 0.7);
   --color-text-tertiary: rgba(255, 255, 255, 0.5);
@@ -75,7 +75,7 @@
     --panel-bg: rgba(0, 0, 0, 0.3);
     --panel-bg-elevated: rgba(0, 0, 0, 0.5);
     --panel-bg-hover: rgba(255, 255, 255, 0.1);
-    
+
     --color-surface: rgba(17, 24, 39, 0.95);
     --color-surface-elevated: rgba(31, 41, 55, 0.95);
     --color-surface-hover: rgba(55, 65, 81, 0.8);

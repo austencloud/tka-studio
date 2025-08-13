@@ -29,7 +29,6 @@ Prop Component - Renders SVG props with proper positioning
 	}: Props = $props();
 
 	// Prop element used in bind:this
-	// @ts-expect-error: Used in bind:this but not referenced in code
 	let _propElement = $state<SVGGElement | null>(null);
 	let loaded = $state(false);
 	let error = $state<string | null>(null);

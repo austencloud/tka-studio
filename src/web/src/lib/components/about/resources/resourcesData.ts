@@ -291,7 +291,7 @@ export function getKeywordsForResource(resourceName: string): string {
 }
 
 export function getTableOfContentsForResource(
-  resourceName: string
+  resourceName: string,
 ): Array<{ id: string; label: string }> {
   switch (resourceName) {
     case "vulcan-tech-gospel":

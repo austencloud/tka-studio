@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { ArrowDebugState } from './state/arrow-debug-state.svelte';
-	import { Location } from '$lib/domain';
 
 	interface Props {
 		state: ArrowDebugState;
@@ -232,7 +231,7 @@
 
 		// Step 1-2: Show initial position
 		if (currentStep >= 1) {
-			drawInitialPosition(debugData.initialPosition, arrowColor);
+			drawInitialPosition(debugData.initialPosition);
 		}
 
 		// Step 3-4: Show adjustments
@@ -274,7 +273,7 @@
 		drawStepInfo();
 	}
 
-	function drawInitialPosition(position: any, color: string) {
+	function drawInitialPosition(position: any) {
 		const canvasX = position.x * SCALE;
 		const canvasY = position.y * SCALE;
 
@@ -333,7 +332,8 @@
 		const canvasY = position.y * SCALE;
 
 		// Draw final arrow
-		drawArrow(canvasX, canvasY, canvasX + 30, canvasY, COLORS.arrow[color], true);
+		const arrowColor = color === 'blue' ? COLORS.arrow.blue : COLORS.arrow.red;
+		drawArrow(canvasX, canvasY, canvasX + 30, canvasY, arrowColor, true);
 
 		// Apply rotation visualization
 		if (rotation !== 0) {

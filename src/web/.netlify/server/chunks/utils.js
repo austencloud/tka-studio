@@ -39,5 +39,5 @@ export {
   base64_encode as b,
   text_encoder as c,
   get_relative_path as g,
-  text_decoder as t
+  text_decoder as t,
 };

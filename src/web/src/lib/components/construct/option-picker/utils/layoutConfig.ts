@@ -26,7 +26,7 @@ interface LayoutParams {
 type ExtraCheck = (
   width: number,
   height: number,
-  params: LayoutParams
+  params: LayoutParams,
 ) => boolean;
 
 interface LayoutRule {

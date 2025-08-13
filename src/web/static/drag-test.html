@@ -1,206 +1,237 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drag Performance Test</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        overflow: hidden;
+      }
 
-        .container {
-            display: flex;
-            height: 100vh;
-            width: 100vw;
-        }
+      .container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+      }
 
-        .left-panel {
-            background-color: #f0f0f0;
-            border-right: 1px solid #ccc;
-            overflow: auto;
-            transition: width 0.2s ease;
-        }
+      .left-panel {
+        background-color: #f0f0f0;
+        border-right: 1px solid #ccc;
+        overflow: auto;
+        transition: width 0.2s ease;
+      }
 
-        .splitter {
-            width: 4px;
-            background-color: #ddd;
-            cursor: col-resize;
-            user-select: none;
-            position: relative;
-        }
+      .splitter {
+        width: 4px;
+        background-color: #ddd;
+        cursor: col-resize;
+        user-select: none;
+        position: relative;
+      }
 
-        .splitter:hover {
-            background-color: #bbb;
-        }
+      .splitter:hover {
+        background-color: #bbb;
+      }
 
-        .splitter.dragging {
-            background-color: #999;
-        }
+      .splitter.dragging {
+        background-color: #999;
+      }
 
-        .right-panel {
-            flex: 1;
-            background-color: #fff;
-            overflow: auto;
-        }
+      .right-panel {
+        flex: 1;
+        background-color: #fff;
+        overflow: auto;
+      }
 
-        .panel-content {
-            padding: 20px;
-        }
+      .panel-content {
+        padding: 20px;
+      }
 
-        .performance-info {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            z-index: 1000;
-        }
+      .performance-info {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 1000;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="performance-info" id="perfInfo">
-        Drag Performance Monitor<br>
-        Lag Events: <span id="lagCount">0</span><br>
-        Avg Time: <span id="avgTime">0ms</span><br>
-        Worst Lag: <span id="worstLag">0ms</span>
+      Drag Performance Monitor<br />
+      Lag Events: <span id="lagCount">0</span><br />
+      Avg Time: <span id="avgTime">0ms</span><br />
+      Worst Lag: <span id="worstLag">0ms</span>
     </div>
 
     <div class="container">
-        <div class="left-panel" id="leftPanel" style="width: 50%;">
-            <div class="panel-content">
-                <h3>Left Panel</h3>
-                <p>This is the left panel content. It should resize smoothly when dragging the splitter.</p>
-                <div style="height: 2000px; background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);">
-                    <p>Tall content to test scrolling...</p>
-                </div>
-            </div>
+      <div class="left-panel" id="leftPanel" style="width: 50%">
+        <div class="panel-content">
+          <h3>Left Panel</h3>
+          <p>
+            This is the left panel content. It should resize smoothly when
+            dragging the splitter.
+          </p>
+          <div
+            style="
+              height: 2000px;
+              background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            "
+          >
+            <p>Tall content to test scrolling...</p>
+          </div>
         </div>
-        
-        <div class="splitter" id="splitter"></div>
-        
-        <div class="right-panel">
-            <div class="panel-content">
-                <h3>Right Panel</h3>
-                <p>This is the right panel content. It should flex to fill remaining space.</p>
-                <div style="height: 2000px; background: linear-gradient(to bottom, #fff, #f9f9f9);">
-                    <p>More tall content...</p>
-                </div>
-            </div>
+      </div>
+
+      <div class="splitter" id="splitter"></div>
+
+      <div class="right-panel">
+        <div class="panel-content">
+          <h3>Right Panel</h3>
+          <p>
+            This is the right panel content. It should flex to fill remaining
+            space.
+          </p>
+          <div
+            style="
+              height: 2000px;
+              background: linear-gradient(to bottom, #fff, #f9f9f9);
+            "
+          >
+            <p>More tall content...</p>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        // Performance monitoring
-        let performanceData = {
-            lagEvents: [],
-            moveEvents: [],
-            lagThreshold: 5 // ms
-        };
+      // Performance monitoring
+      let performanceData = {
+        lagEvents: [],
+        moveEvents: [],
+        lagThreshold: 5, // ms
+      };
 
-        function updatePerformanceDisplay() {
-            const lagCount = performanceData.lagEvents.length;
-            const avgTime = performanceData.moveEvents.length > 0 
-                ? (performanceData.moveEvents.reduce((sum, e) => sum + e.duration, 0) / performanceData.moveEvents.length).toFixed(2)
-                : 0;
-            const worstLag = performanceData.lagEvents.length > 0
-                ? Math.max(...performanceData.lagEvents.map(e => e.duration)).toFixed(2)
-                : 0;
+      function updatePerformanceDisplay() {
+        const lagCount = performanceData.lagEvents.length;
+        const avgTime =
+          performanceData.moveEvents.length > 0
+            ? (
+                performanceData.moveEvents.reduce(
+                  (sum, e) => sum + e.duration,
+                  0,
+                ) / performanceData.moveEvents.length
+              ).toFixed(2)
+            : 0;
+        const worstLag =
+          performanceData.lagEvents.length > 0
+            ? Math.max(
+                ...performanceData.lagEvents.map((e) => e.duration),
+              ).toFixed(2)
+            : 0;
 
-            document.getElementById('lagCount').textContent = lagCount;
-            document.getElementById('avgTime').textContent = avgTime + 'ms';
-            document.getElementById('worstLag').textContent = worstLag + 'ms';
+        document.getElementById("lagCount").textContent = lagCount;
+        document.getElementById("avgTime").textContent = avgTime + "ms";
+        document.getElementById("worstLag").textContent = worstLag + "ms";
+      }
+
+      // Basic drag functionality
+      const splitter = document.getElementById("splitter");
+      const leftPanel = document.getElementById("leftPanel");
+      const container = document.querySelector(".container");
+
+      let isDragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      splitter.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startWidth = leftPanel.offsetWidth;
+
+        splitter.classList.add("dragging");
+        leftPanel.style.transition = "none"; // Disable transition during drag
+
+        // Reset performance data for this drag session
+        performanceData.lagEvents = [];
+        performanceData.moveEvents = [];
+
+        e.preventDefault();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        const moveStartTime = performance.now();
+
+        const deltaX = e.clientX - startX;
+        const containerWidth = container.offsetWidth;
+        const newWidth = startWidth + deltaX;
+        const newWidthPercent = (newWidth / containerWidth) * 100;
+
+        // Constrain between 15% and 60%
+        const constrainedPercent = Math.max(15, Math.min(60, newWidthPercent));
+
+        leftPanel.style.width = constrainedPercent + "%";
+
+        const moveEndTime = performance.now();
+        const moveDuration = moveEndTime - moveStartTime;
+
+        performanceData.moveEvents.push({
+          duration: moveDuration,
+          timestamp: moveEndTime,
+        });
+
+        if (moveDuration > performanceData.lagThreshold) {
+          performanceData.lagEvents.push({
+            duration: moveDuration,
+            timestamp: moveEndTime,
+          });
         }
 
-        // Basic drag functionality
-        const splitter = document.getElementById('splitter');
-        const leftPanel = document.getElementById('leftPanel');
-        const container = document.querySelector('.container');
-        
-        let isDragging = false;
-        let startX = 0;
-        let startWidth = 0;
+        updatePerformanceDisplay();
+      });
 
-        splitter.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            startWidth = leftPanel.offsetWidth;
-            
-            splitter.classList.add('dragging');
-            leftPanel.style.transition = 'none'; // Disable transition during drag
-            
-            // Reset performance data for this drag session
-            performanceData.lagEvents = [];
-            performanceData.moveEvents = [];
-            
-            e.preventDefault();
-        });
+      document.addEventListener("mouseup", () => {
+        if (isDragging) {
+          isDragging = false;
+          splitter.classList.remove("dragging");
+          leftPanel.style.transition = "width 0.2s ease"; // Re-enable transition
 
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            const moveStartTime = performance.now();
-            
-            const deltaX = e.clientX - startX;
-            const containerWidth = container.offsetWidth;
-            const newWidth = startWidth + deltaX;
-            const newWidthPercent = (newWidth / containerWidth) * 100;
-            
-            // Constrain between 15% and 60%
-            const constrainedPercent = Math.max(15, Math.min(60, newWidthPercent));
-            
-            leftPanel.style.width = constrainedPercent + '%';
-            
-            const moveEndTime = performance.now();
-            const moveDuration = moveEndTime - moveStartTime;
-            
-            performanceData.moveEvents.push({
-                duration: moveDuration,
-                timestamp: moveEndTime
-            });
-            
-            if (moveDuration > performanceData.lagThreshold) {
-                performanceData.lagEvents.push({
-                    duration: moveDuration,
-                    timestamp: moveEndTime
-                });
-            }
-            
-            updatePerformanceDisplay();
-        });
+          console.log("Drag session complete:", {
+            totalMoves: performanceData.moveEvents.length,
+            lagEvents: performanceData.lagEvents.length,
+            avgTime:
+              performanceData.moveEvents.length > 0
+                ? (
+                    performanceData.moveEvents.reduce(
+                      (sum, e) => sum + e.duration,
+                      0,
+                    ) / performanceData.moveEvents.length
+                  ).toFixed(2) + "ms"
+                : "0ms",
+          });
+        }
+      });
 
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                splitter.classList.remove('dragging');
-                leftPanel.style.transition = 'width 0.2s ease'; // Re-enable transition
-                
-                console.log('Drag session complete:', {
-                    totalMoves: performanceData.moveEvents.length,
-                    lagEvents: performanceData.lagEvents.length,
-                    avgTime: performanceData.moveEvents.length > 0 
-                        ? (performanceData.moveEvents.reduce((sum, e) => sum + e.duration, 0) / performanceData.moveEvents.length).toFixed(2) + 'ms'
-                        : '0ms'
-                });
-            }
-        });
-
-        // Prevent text selection during drag
-        document.addEventListener('selectstart', (e) => {
-            if (isDragging) e.preventDefault();
-        });
+      // Prevent text selection during drag
+      document.addEventListener("selectstart", (e) => {
+        if (isDragging) e.preventDefault();
+      });
     </script>
-</body>
+  </body>
 </html>

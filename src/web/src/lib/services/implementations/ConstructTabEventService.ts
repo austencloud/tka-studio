@@ -42,7 +42,7 @@ export class ConstructTabEventService {
     try {
       console.log(
         "🎭 Start position selected in ConstructTabEventService:",
-        startPosition.pictograph_data?.id
+        startPosition.pictograph_data?.id,
       );
       // DON'T set transitioning immediately - let the fade transitions handle the UI
       // setTransitioning(true); // ← REMOVED to prevent flash
@@ -50,17 +50,17 @@ export class ConstructTabEventService {
       // Ensure coordination service is available - retry resolution if needed
       if (!this.constructCoordinator) {
         console.log(
-          "🎭 Coordination service not available, attempting to resolve..."
+          "🎭 Coordination service not available, attempting to resolve...",
         );
         try {
           this.constructCoordinator = resolve(
-            "IConstructTabCoordinationService"
+            "IConstructTabCoordinationService",
           );
           console.log("✅ Coordination service resolved successfully");
         } catch (resolveError) {
           console.error(
             "❌ Failed to resolve coordination service:",
-            resolveError
+            resolveError,
           );
           throw new Error("Coordination service not available");
         }
@@ -69,13 +69,13 @@ export class ConstructTabEventService {
       // Use coordination service to handle the selection
       if (this.constructCoordinator) {
         console.log(
-          "🎭 Calling coordination service handleStartPositionSet..."
+          "🎭 Calling coordination service handleStartPositionSet...",
         );
         await this.constructCoordinator.handleStartPositionSet(startPosition);
         console.log("✅ Coordination service handleStartPositionSet completed");
       } else {
         throw new Error(
-          "Coordination service is null after resolution attempt"
+          "Coordination service is null after resolution attempt",
         );
       }
 
@@ -86,7 +86,7 @@ export class ConstructTabEventService {
     } catch (error) {
       console.error("❌ Error handling start position selection:", error);
       setError(
-        error instanceof Error ? error.message : "Failed to set start position"
+        error instanceof Error ? error.message : "Failed to set start position",
       );
     } finally {
       // No need to set transitioning to false since we don't set it to true
@@ -122,7 +122,7 @@ export class ConstructTabEventService {
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to add option to sequence"
+          : "Failed to add option to sequence",
       );
     } finally {
       setTransitioning(false);
@@ -136,7 +136,7 @@ export class ConstructTabEventService {
     console.log(
       "ConstructTabEventService: Beat modified in graph editor",
       beatIndex,
-      beatData
+      beatData,
     );
 
     // Handle beat modifications from graph editor
@@ -151,7 +151,7 @@ export class ConstructTabEventService {
   handleArrowSelected(arrowData: unknown): void {
     console.log(
       "ConstructTabEventService: Arrow selected in graph editor",
-      arrowData
+      arrowData,
     );
     // Handle arrow selection events from graph editor
     // This could be used for highlighting or additional UI feedback
@@ -163,7 +163,7 @@ export class ConstructTabEventService {
   handleGraphEditorVisibilityChanged(isVisible: boolean): void {
     console.log(
       "ConstructTabEventService: Graph editor visibility changed",
-      isVisible
+      isVisible,
     );
     // Handle graph editor visibility changes if needed
   }
@@ -176,7 +176,7 @@ export class ConstructTabEventService {
     console.log(
       "ConstructTabEventService: Export setting changed",
       setting,
-      value
+      value,
     );
     // Handle export setting changes - could save to settings service
   }
@@ -202,7 +202,7 @@ export class ConstructTabEventService {
       console.log("Exporting current sequence:", config.sequence?.name);
       // TODO: Implement actual export service call
       alert(
-        `Exporting sequence "${config.sequence?.name || "Untitled"}" with ${config.sequence?.beats?.length || 0} beats`
+        `Exporting sequence "${config.sequence?.name || "Untitled"}" with ${config.sequence?.beats?.length || 0} beats`,
       );
     } else if (type === "all") {
       console.log("Exporting all sequences");
@@ -229,7 +229,7 @@ export class ConstructTabEventService {
               default:
                 console.log(
                   `ConstructTabEventService received event: ${eventType}`,
-                  data
+                  data,
                 );
             }
           },

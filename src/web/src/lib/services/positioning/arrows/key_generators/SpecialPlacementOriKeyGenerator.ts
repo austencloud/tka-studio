@@ -1,29 +1,34 @@
-import type { MotionData, PictographData } from '$lib/domain';
-import type { ISpecialPlacementOriKeyGenerator } from '../../data-services';
+import type { MotionData, PictographData } from "$lib/domain";
+import type { ISpecialPlacementOriKeyGenerator } from "../../data-services";
 
 /**
  * SpecialPlacementOriKeyGenerator
  * Generates ori_key matching SpecialPlacementService's internal logic.
  */
-export class SpecialPlacementOriKeyGenerator implements ISpecialPlacementOriKeyGenerator {
-	generateOrientationKey(_motionData: MotionData, pictographData: PictographData): string {
-		try {
-			const blueMotion = pictographData.motions?.blue;
-			const redMotion = pictographData.motions?.red;
-			if (blueMotion && redMotion) {
-				const blueEndOri = blueMotion.end_ori || 'in';
-				const redEndOri = redMotion.end_ori || 'in';
-				const blueLayer = ['in', 'out'].includes(blueEndOri) ? 1 : 2;
-				const redLayer = ['in', 'out'].includes(redEndOri) ? 1 : 2;
-				if (blueLayer === 1 && redLayer === 1) return 'from_layer1';
-				if (blueLayer === 2 && redLayer === 2) return 'from_layer2';
-				if (blueLayer === 1 && redLayer === 2) return 'from_layer3_blue1_red2';
-				if (blueLayer === 2 && redLayer === 1) return 'from_layer3_blue2_red1';
-				return 'from_layer1';
-			}
-		} catch {
-			// fallthrough
-		}
-		return 'from_layer1';
-	}
+export class SpecialPlacementOriKeyGenerator
+  implements ISpecialPlacementOriKeyGenerator
+{
+  generateOrientationKey(
+    _motionData: MotionData,
+    pictographData: PictographData,
+  ): string {
+    try {
+      const blueMotion = pictographData.motions?.blue;
+      const redMotion = pictographData.motions?.red;
+      if (blueMotion && redMotion) {
+        const blueEndOri = blueMotion.end_ori || "in";
+        const redEndOri = redMotion.end_ori || "in";
+        const blueLayer = ["in", "out"].includes(blueEndOri) ? 1 : 2;
+        const redLayer = ["in", "out"].includes(redEndOri) ? 1 : 2;
+        if (blueLayer === 1 && redLayer === 1) return "from_layer1";
+        if (blueLayer === 2 && redLayer === 2) return "from_layer2";
+        if (blueLayer === 1 && redLayer === 2) return "from_layer3_blue1_red2";
+        if (blueLayer === 2 && redLayer === 1) return "from_layer3_blue2_red1";
+        return "from_layer1";
+      }
+    } catch {
+      // fallthrough
+    }
+    return "from_layer1";
+  }
 }

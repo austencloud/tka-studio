@@ -24,13 +24,13 @@ export class ArrowPositioningService implements IArrowPositioningService {
 
   constructor(
     private placementDataService?: IArrowPlacementDataService,
-    private placementKeyService?: IArrowPlacementKeyService
+    private placementKeyService?: IArrowPlacementKeyService,
   ) {}
 
   async calculateArrowPosition(
     _arrowData: ArrowData,
     _pictographData: PictographData,
-    _gridData: GridData
+    _gridData: GridData,
   ): Promise<ArrowPosition> {
     try {
       // Basic implementation - return center position with no rotation
@@ -52,7 +52,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
 
   async calculateAllArrowPositions(
     pictographData: PictographData,
-    gridData: GridData
+    gridData: GridData,
   ): Promise<Map<string, ArrowPosition>> {
     const positions = new Map<string, ArrowPosition>();
 
@@ -60,12 +60,12 @@ export class ArrowPositioningService implements IArrowPositioningService {
       // For each arrow in the pictograph, calculate its position
       if (pictographData.arrows) {
         for (const [arrowId, arrowData] of Object.entries(
-          pictographData.arrows
+          pictographData.arrows,
         )) {
           const position = await this.calculateArrowPosition(
             arrowData,
             pictographData,
-            gridData
+            gridData,
           );
           positions.set(arrowId, position);
         }
@@ -80,7 +80,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
   calculateRotationAngle(
     _motion: MotionData,
     _location: Location,
-    isMirrored: boolean
+    isMirrored: boolean,
   ): number {
     try {
       // Basic rotation calculation
@@ -116,7 +116,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
    */
   private _getInitialPosition(
     location: Location,
-    gridData: GridData
+    gridData: GridData,
   ): { x: number; y: number } {
     try {
       // Try to get position from grid data
@@ -145,7 +145,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
   private async _applyPositionAdjustments(
     basePosition: { x: number; y: number },
     _arrowData: ArrowData,
-    _pictographData: PictographData
+    _pictographData: PictographData,
   ): Promise<{ x: number; y: number }> {
     try {
       // If placement services are available, use them for adjustments

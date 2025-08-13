@@ -102,11 +102,11 @@ export interface ISequenceService {
   updateBeat(
     sequenceId: string,
     beatIndex: number,
-    beatData: BeatData
+    beatData: BeatData,
   ): Promise<void>;
   setSequenceStartPosition(
     sequenceId: string,
-    startPosition: BeatData
+    startPosition: BeatData,
   ): Promise<void>;
   deleteSequence(id: string): Promise<void>;
   getSequence(id: string): Promise<SequenceData | null>;
@@ -119,7 +119,7 @@ export interface ISequenceDomainService {
   updateBeat(
     sequence: SequenceData,
     beatIndex: number,
-    beatData: BeatData
+    beatData: BeatData,
   ): SequenceData;
   calculateSequenceWord(sequence: SequenceData): string;
 }
@@ -132,7 +132,7 @@ export interface IPictographService {
   renderPictograph(data: PictographData): Promise<SVGElement>;
   updateArrow(
     pictographId: string,
-    arrowData: ArrowData
+    arrowData: ArrowData,
   ): Promise<PictographData>;
 }
 
@@ -171,7 +171,7 @@ export interface IMotionGenerationService {
   generateMotion(
     color: "blue" | "red",
     options: GenerationOptions,
-    previousBeats: BeatData[]
+    previousBeats: BeatData[],
   ): Promise<MotionData>;
 }
 
@@ -248,18 +248,18 @@ export interface IArrowPositioningService {
   calculateArrowPosition(
     arrowData: ArrowData,
     pictographData: PictographData,
-    gridData: GridData
+    gridData: GridData,
   ): Promise<ArrowPosition>;
 
   calculateAllArrowPositions(
     pictographData: PictographData,
-    gridData: GridData
+    gridData: GridData,
   ): Promise<Map<string, ArrowPosition>>;
 
   calculateRotationAngle(
     motion: MotionData,
     location: Location,
-    isMirrored: boolean
+    isMirrored: boolean,
   ): number;
 
   shouldMirrorArrow(motion: MotionData): boolean;
@@ -289,13 +289,13 @@ export interface IPropRenderingService {
     propType: string,
     color: "blue" | "red",
     motionData: MotionData,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<SVGElement>;
 
   calculatePropPosition(
     motionData: MotionData,
     color: "blue" | "red",
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<PropPosition>;
 
   loadPropSVG(propType: string, color: "blue" | "red"): Promise<string>;
@@ -312,12 +312,12 @@ export interface IArrowPlacementDataService {
     motionType: MotionType,
     placementKey: string,
     turns: number | string,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<{ x: number; y: number }>;
 
   getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<string[]>;
 
   isLoaded(): boolean;
@@ -328,7 +328,7 @@ export interface IArrowPlacementKeyService {
   generatePlacementKey(
     motionData: MotionData,
     pictographData: PictographData,
-    availableKeys: string[]
+    availableKeys: string[],
   ): string;
 
   generateBasicKey(motionType: MotionType): string;
@@ -346,7 +346,7 @@ export interface ISettingsService {
   currentSettings: AppSettings;
   updateSetting<K extends keyof AppSettings>(
     key: K,
-    value: AppSettings[K]
+    value: AppSettings[K],
   ): Promise<void>;
   loadSettings(): Promise<void>;
 }
@@ -360,7 +360,7 @@ export interface ISettingsService {
 export interface IExportService {
   exportSequenceAsImage(
     sequence: SequenceData,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob>;
   exportSequenceAsJson(sequence: SequenceData): Promise<string>;
 }
@@ -381,15 +381,15 @@ export interface IConstructTabCoordinationService {
 export interface IOptionDataService {
   getNextOptions(
     currentSequence: SequenceData,
-    filters?: OptionFilters
+    filters?: OptionFilters,
   ): Promise<PictographData[]>;
   filterOptionsByDifficulty(
     options: PictographData[],
-    level: DifficultyLevel
+    level: DifficultyLevel,
   ): PictographData[];
   validateOptionCompatibility(
     option: PictographData,
-    sequence: SequenceData
+    sequence: SequenceData,
   ): ValidationResult;
   getAvailableMotionTypes(): MotionType[];
 }
@@ -397,7 +397,7 @@ export interface IOptionDataService {
 export interface IStartPositionService {
   getAvailableStartPositions(
     propType: string,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<BeatData[]>;
   setStartPosition(startPosition: BeatData): Promise<void>;
   validateStartPosition(position: BeatData): ValidationResult;
@@ -486,7 +486,7 @@ export interface IDeviceDetectionService {
 
   /** Listen for device capability changes (screen rotation, etc.) */
   onCapabilitiesChanged(
-    callback: (capabilities: DeviceCapabilities) => void
+    callback: (capabilities: DeviceCapabilities) => void,
   ): () => void;
 
   /** Get breakpoint for current viewport */
@@ -502,15 +502,15 @@ export interface IBrowseService {
   applyFilter(
     sequences: BrowseSequenceMetadata[],
     filterType: FilterType,
-    filterValue: FilterValue
+    filterValue: FilterValue,
   ): Promise<BrowseSequenceMetadata[]>;
   sortSequences(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod
+    sortMethod: SortMethod,
   ): Promise<BrowseSequenceMetadata[]>;
   groupSequencesIntoSections(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod
+    sortMethod: SortMethod,
   ): Promise<Record<string, BrowseSequenceMetadata[]>>;
   getUniqueValues(field: keyof BrowseSequenceMetadata): Promise<string[]>;
   getFilterOptions(filterType: FilterType): Promise<string[]>;
@@ -520,7 +520,7 @@ export interface IThumbnailService {
   getThumbnailUrl(sequenceId: string, thumbnailPath: string): string;
   preloadThumbnail(sequenceId: string, thumbnailPath: string): Promise<void>;
   getThumbnailMetadata(
-    sequenceId: string
+    sequenceId: string,
   ): Promise<{ width: number; height: number } | null>;
   clearThumbnailCache(): void;
 }
@@ -615,7 +615,7 @@ export interface ISequenceCardImageService {
    */
   generateSequenceCardImage(
     sequence: SequenceData,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob>;
 
   /**
@@ -624,7 +624,7 @@ export interface ISequenceCardImageService {
   generateBatchImages(
     sequences: SequenceData[],
     options: ExportOptions,
-    onProgress?: (progress: ProgressInfo) => void
+    onProgress?: (progress: ProgressInfo) => void,
   ): Promise<ExportResult[]>;
 
   /**
@@ -632,7 +632,7 @@ export interface ISequenceCardImageService {
    */
   getCachedImage(
     sequenceId: string,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob | null>;
 
   /**
@@ -640,7 +640,7 @@ export interface ISequenceCardImageService {
    */
   preloadImages(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<void>;
 
   /**
@@ -662,7 +662,7 @@ export interface ISequenceCardLayoutService {
     containerWidth: number,
     containerHeight: number,
     cardCount: number,
-    preferredColumns?: number
+    preferredColumns?: number,
   ): LayoutConfig;
 
   /**
@@ -670,7 +670,7 @@ export interface ISequenceCardLayoutService {
    */
   getResponsiveLayout(
     deviceCapabilities: DeviceCapabilities,
-    cardCount: number
+    cardCount: number,
   ): LayoutConfig;
 
   /**
@@ -679,7 +679,7 @@ export interface ISequenceCardLayoutService {
   calculateColumnLayout(
     columnCount: number,
     containerWidth: number,
-    cardAspectRatio?: number
+    cardAspectRatio?: number,
   ): { cardWidth: number; cardHeight: number; spacing: number };
 
   /**
@@ -687,7 +687,7 @@ export interface ISequenceCardLayoutService {
    */
   getPrintableLayout(
     printOptions: PrintLayoutOptions,
-    cardCount: number
+    cardCount: number,
   ): LayoutConfig;
 
   /**
@@ -700,7 +700,7 @@ export interface ISequenceCardLayoutService {
    */
   getOptimalColumnCount(
     containerWidth: number,
-    cardAspectRatio?: number
+    cardAspectRatio?: number,
   ): number;
 }
 
@@ -711,7 +711,7 @@ export interface ISequenceCardPageService {
   generatePage(
     sequences: SequenceData[],
     layout: LayoutConfig,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<HTMLElement>;
 
   /**
@@ -719,7 +719,7 @@ export interface ISequenceCardPageService {
    */
   generatePrintablePage(
     sequences: SequenceData[],
-    printOptions: PrintLayoutOptions
+    printOptions: PrintLayoutOptions,
   ): Promise<Blob>;
 
   /**
@@ -727,7 +727,7 @@ export interface ISequenceCardPageService {
    */
   generatePDF(
     sequences: SequenceData[],
-    printOptions: PrintLayoutOptions
+    printOptions: PrintLayoutOptions,
   ): Promise<Blob>;
 
   /**
@@ -735,7 +735,7 @@ export interface ISequenceCardPageService {
    */
   calculatePagination(
     sequences: SequenceData[],
-    itemsPerPage: number
+    itemsPerPage: number,
   ): SequenceData[][];
 
   /**
@@ -743,7 +743,7 @@ export interface ISequenceCardPageService {
    */
   generatePagePreview(
     sequences: SequenceData[],
-    layout: LayoutConfig
+    layout: LayoutConfig,
   ): Promise<string>; // Returns data URL
 }
 
@@ -754,7 +754,7 @@ export interface ISequenceCardBatchService {
   processBatch(
     sequences: SequenceData[],
     options: SequenceCardExportSettings,
-    onProgress?: (progress: ProgressInfo) => void
+    onProgress?: (progress: ProgressInfo) => void,
   ): Promise<ExportResult[]>;
 
   /**
@@ -762,7 +762,7 @@ export interface ISequenceCardBatchService {
    */
   estimateProcessingTime(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<number>; // milliseconds
 
   /**
@@ -770,7 +770,7 @@ export interface ISequenceCardBatchService {
    */
   getMemoryRequirements(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<number>; // bytes
 
   /**
@@ -791,7 +791,7 @@ export interface ISequenceCardCacheService {
   storeImage(
     sequenceId: string,
     imageBlob: Blob,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<void>;
 
   /**
@@ -799,7 +799,7 @@ export interface ISequenceCardCacheService {
    */
   retrieveImage(
     sequenceId: string,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob | null>;
 
   /**
@@ -845,7 +845,7 @@ export interface IEnhancedExportService extends IExportService {
    */
   exportSequenceCardsAsImages(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob[]>;
 
   /**
@@ -853,7 +853,7 @@ export interface IEnhancedExportService extends IExportService {
    */
   exportSequenceCardsAsPDF(
     sequences: SequenceData[],
-    layoutOptions: PrintLayoutOptions
+    layoutOptions: PrintLayoutOptions,
   ): Promise<Blob>;
 
   /**
@@ -861,7 +861,7 @@ export interface IEnhancedExportService extends IExportService {
    */
   exportSingleSequenceCard(
     sequence: SequenceData,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob>;
 
   /**
@@ -870,7 +870,7 @@ export interface IEnhancedExportService extends IExportService {
   exportSequenceCardsAsZip(
     sequences: SequenceData[],
     options: ExportOptions,
-    filename?: string
+    filename?: string,
   ): Promise<Blob>;
 
   /**

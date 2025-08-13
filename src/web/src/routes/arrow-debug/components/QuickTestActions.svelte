@@ -1,6 +1,8 @@
 <!-- Quick action buttons for common debugging scenarios -->
 <script lang="ts">
 	import type { ArrowDebugState } from '../state/arrow-debug-state.svelte';
+	import { createGridData } from '$lib/domain/GridData';
+	import { GridMode, ArrowType, MotionType, RotationDirection, Location, Orientation, GridPosition } from '$lib/domain/enums';
 
 	interface Props {
 		state: ArrowDebugState;
@@ -37,36 +39,62 @@
 	];
 
 	function createTestPictograph(
-		letter: string, 
-		blueMotion: string, 
-		redMotion: string, 
-		blueTurns: number | string, 
+		letter: string,
+		blueMotion: string,
+		redMotion: string,
+		blueTurns: number | string,
 		redTurns: number | string
 	) {
+		// Map string motion types to enum values
+		const mapMotionType = (motion: string): MotionType => {
+			switch (motion.toLowerCase()) {
+				case 'pro': return MotionType.PRO;
+				case 'anti': return MotionType.ANTI;
+				case 'static': return MotionType.STATIC;
+				case 'float': return MotionType.FLOAT;
+				case 'dash': return MotionType.DASH;
+				default: return MotionType.STATIC;
+			}
+		};
 		return {
+			id: `test_${letter.toLowerCase()}`,
 			letter,
 			grid_mode: 'diamond',
+			start_position: GridPosition.ALPHA1,
+			end_position: GridPosition.ALPHA3,
+			beat: 1,
+			is_blank: false,
+			is_mirrored: false,
+			grid_data: createGridData({ grid_mode: GridMode.DIAMOND }),
+			props: {},
+			metadata: {},
 			motions: {
 				blue: {
-					motion_type: blueMotion,
-					start_ori: blueMotion === 'pro' ? 'in' : blueMotion === 'anti' ? 'out' : 'in',
-					end_ori: blueMotion === 'pro' ? 'out' : blueMotion === 'anti' ? 'in' : 'out',
-					prop_rot_dir: 'cw',
-					turns: blueTurns
+					motion_type: mapMotionType(blueMotion),
+					start_ori: blueMotion === 'pro' ? Orientation.IN : blueMotion === 'anti' ? Orientation.OUT : Orientation.IN,
+					end_ori: blueMotion === 'pro' ? Orientation.OUT : blueMotion === 'anti' ? Orientation.IN : Orientation.OUT,
+					start_loc: Location.NORTH,
+					end_loc: Location.SOUTH,
+					prop_rot_dir: RotationDirection.CLOCKWISE,
+					turns: typeof blueTurns === 'string' && blueTurns.toLowerCase() === 'fl' ? 'fl' as const : Number(blueTurns),
+					is_visible: true
 				},
 				red: {
-					motion_type: redMotion,
-					start_ori: redMotion === 'pro' ? 'in' : redMotion === 'anti' ? 'out' : 'in',
-					end_ori: redMotion === 'pro' ? 'out' : redMotion === 'anti' ? 'in' : 'out',
-					prop_rot_dir: 'ccw',
-					turns: redTurns
+					motion_type: mapMotionType(redMotion),
+					start_ori: redMotion === 'pro' ? Orientation.IN : redMotion === 'anti' ? Orientation.OUT : Orientation.IN,
+					end_ori: redMotion === 'pro' ? Orientation.OUT : redMotion === 'anti' ? Orientation.IN : Orientation.OUT,
+					start_loc: Location.NORTH,
+					end_loc: Location.SOUTH,
+					prop_rot_dir: RotationDirection.COUNTER_CLOCKWISE,
+					turns: typeof redTurns === 'string' && redTurns.toLowerCase() === 'fl' ? 'fl' as const : Number(redTurns),
+					is_visible: true
 				}
 			},
 			arrows: {
 				blue: {
 					id: 'blue_arrow',
 					color: 'blue',
-					arrow_type: 'BLUE',
+					arrow_type: ArrowType.BLUE,
 					is_visible: true,
 					is_selected: false,
 					position_x: 0,
@@ -83,7 +111,7 @@
 				red: {
 					id: 'red_arrow',
 					color: 'red',
-					arrow_type: 'RED',
+					arrow_type: ArrowType.RED,
 					is_visible: true,
 					is_selected: false,
 					position_x: 0,

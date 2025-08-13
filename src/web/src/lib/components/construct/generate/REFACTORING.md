@@ -72,7 +72,7 @@ The large `GeneratePanel.svelte` file has been refactored into simple, focused c
 ### State Management (Advanced)
 
 ```typescript
-import { createGenerationConfigState } from './generateConfigState.svelte.ts';
+import { createGenerationConfigState } from "./generateConfigState.svelte.ts";
 
 const configState = createGenerationConfigState();
 // Access: configState.config, configState.isFreeformMode

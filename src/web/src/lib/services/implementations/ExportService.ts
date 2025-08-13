@@ -20,7 +20,7 @@ export class ExportService implements IExportService {
    */
   async exportSequenceAsImage(
     sequence: SequenceData,
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<Blob> {
     try {
       console.log(`Exporting sequence "${sequence.name}" as image`);
@@ -76,7 +76,7 @@ export class ExportService implements IExportService {
     } catch (error) {
       console.error("Failed to export sequence as image:", error);
       throw new Error(
-        `Export failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Export failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -100,7 +100,7 @@ export class ExportService implements IExportService {
     } catch (error) {
       console.error("Failed to export sequence as JSON:", error);
       throw new Error(
-        `JSON export failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `JSON export failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -113,7 +113,7 @@ export class ExportService implements IExportService {
     beat: BeatData,
     x: number,
     y: number,
-    size: number
+    size: number,
   ): Promise<void> {
     // Draw beat frame
     ctx.strokeStyle = "#e5e7eb";
@@ -146,7 +146,7 @@ export class ExportService implements IExportService {
   private renderTitle(
     ctx: CanvasRenderingContext2D,
     title: string,
-    canvasWidth: number
+    canvasWidth: number,
   ): void {
     ctx.fillStyle = "#111827";
     ctx.font = "bold 24px system-ui";

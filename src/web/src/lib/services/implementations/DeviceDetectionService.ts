@@ -81,7 +81,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
   }
 
   onCapabilitiesChanged(
-    callback: (capabilities: DeviceCapabilities) => void
+    callback: (capabilities: DeviceCapabilities) => void,
   ): () => void {
     this.listeners.push(callback);
 
@@ -116,7 +116,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
     const primaryInput = this.determinePrimaryInput(
       hasTouch,
       hasPrecisePointer,
-      screenSize
+      screenSize,
     );
 
     this.capabilities = {
@@ -170,7 +170,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
   private determinePrimaryInput(
     hasTouch: boolean,
     hasPrecisePointer: boolean,
-    screenSize: "mobile" | "tablet" | "desktop"
+    screenSize: "mobile" | "tablet" | "desktop",
   ): "touch" | "mouse" | "hybrid" {
     // Mobile devices are primarily touch
     if (screenSize === "mobile") return "touch";
@@ -199,29 +199,29 @@ export class DeviceDetectionService implements IDeviceDetectionService {
     // Update CSS custom properties for global use
     document.documentElement.style.setProperty(
       "--min-touch-target",
-      `${settings.minTouchTarget}px`
+      `${settings.minTouchTarget}px`,
     );
     document.documentElement.style.setProperty(
       "--element-spacing",
-      `${settings.elementSpacing}px`
+      `${settings.elementSpacing}px`,
     );
     document.documentElement.style.setProperty(
       "--font-scaling",
-      settings.fontScaling.toString()
+      settings.fontScaling.toString(),
     );
 
     // Set data attributes for CSS targeting
     document.documentElement.setAttribute(
       "data-device-type",
-      this.capabilities.primaryInput
+      this.capabilities.primaryInput,
     );
     document.documentElement.setAttribute(
       "data-screen-size",
-      this.capabilities.screenSize
+      this.capabilities.screenSize,
     );
     document.documentElement.setAttribute(
       "data-layout-density",
-      settings.layoutDensity
+      settings.layoutDensity,
     );
   }
 
@@ -271,7 +271,7 @@ export class DeviceDetectionService implements IDeviceDetectionService {
 
   private hasCapabilitiesChanged(
     old: DeviceCapabilities | null,
-    current: DeviceCapabilities | null
+    current: DeviceCapabilities | null,
   ): boolean {
     if (!old || !current) return true;
 

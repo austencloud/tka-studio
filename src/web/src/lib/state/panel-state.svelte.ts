@@ -49,14 +49,14 @@ export interface PanelStateManager {
  * Creates reactive panel state manager using Svelte 5 runes
  */
 export function createPanelState(
-  panelService: IPanelManagementService
+  panelService: IPanelManagementService,
 ): PanelStateManager {
   // ✅ PURE RUNES: Reactive state for UI
   let navigationPanel = $state<PanelState>(
-    panelService.getPanelState("navigation")
+    panelService.getPanelState("navigation"),
   );
   let animationPanel = $state<PanelState>(
-    panelService.getPanelState("animation")
+    panelService.getPanelState("animation"),
   );
   let currentResize = $state<ResizeOperation | null>(null);
 
@@ -64,19 +64,19 @@ export function createPanelState(
   let isAnyPanelResizing = $derived(
     navigationPanel.isResizing ||
       animationPanel.isResizing ||
-      currentResize !== null
+      currentResize !== null,
   );
 
   let navigationWidth = $derived(
     navigationPanel.isCollapsed
       ? navigationPanel.collapsedWidth
-      : navigationPanel.width
+      : navigationPanel.width,
   );
 
   let animationWidth = $derived(
     animationPanel.isCollapsed
       ? animationPanel.collapsedWidth
-      : animationPanel.width
+      : animationPanel.width,
   );
 
   let isNavigationCollapsed = $derived(navigationPanel.isCollapsed);

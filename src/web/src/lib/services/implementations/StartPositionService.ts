@@ -39,10 +39,10 @@ export class StartPositionService implements IStartPositionService {
 
   async getAvailableStartPositions(
     propType: string,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<BeatData[]> {
     console.log(
-      `📍 Getting available start positions for ${propType} in ${gridMode} mode`
+      `📍 Getting available start positions for ${propType} in ${gridMode} mode`,
     );
 
     try {
@@ -55,7 +55,7 @@ export class StartPositionService implements IStartPositionService {
           pictograph_data: this.createStartPositionPictograph(
             key,
             index,
-            gridMode
+            gridMode,
           ),
         });
       });
@@ -70,7 +70,7 @@ export class StartPositionService implements IStartPositionService {
   async setStartPosition(startPosition: BeatData): Promise<void> {
     console.log(
       "🎯 Setting start position:",
-      startPosition.pictograph_data?.id
+      startPosition.pictograph_data?.id,
     );
 
     try {
@@ -84,7 +84,7 @@ export class StartPositionService implements IStartPositionService {
             // If it already has top-level endPos, don't overwrite it
             if (parsed.endPos) {
               console.log(
-                "✅ Start position already in correct format, not overwriting"
+                "✅ Start position already in correct format, not overwriting",
               );
               return;
             }
@@ -106,7 +106,7 @@ export class StartPositionService implements IStartPositionService {
 
         localStorage.setItem(
           "start_position",
-          JSON.stringify(optionPickerFormat)
+          JSON.stringify(optionPickerFormat),
         );
       }
 
@@ -114,7 +114,7 @@ export class StartPositionService implements IStartPositionService {
     } catch (error) {
       console.error("❌ Error setting start position:", error);
       throw new Error(
-        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -171,7 +171,7 @@ export class StartPositionService implements IStartPositionService {
     };
   }
   async getDefaultStartPositions(
-    gridMode: GridMode
+    gridMode: GridMode,
   ): Promise<PictographData[]> {
     console.log(`📍 Getting default start positions for ${gridMode} mode`);
 
@@ -179,11 +179,12 @@ export class StartPositionService implements IStartPositionService {
       const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
 
       const pictographData: PictographData[] = startPositionKeys.map(
-        (key, index) => this.createStartPositionPictograph(key, index, gridMode)
+        (key, index) =>
+          this.createStartPositionPictograph(key, index, gridMode),
       );
 
       console.log(
-        `✅ Generated ${pictographData.length} default start positions`
+        `✅ Generated ${pictographData.length} default start positions`,
       );
       return pictographData;
     } catch (error) {
@@ -195,7 +196,7 @@ export class StartPositionService implements IStartPositionService {
   private createStartPositionPictograph(
     key: string,
     index: number,
-    gridMode: GridMode
+    gridMode: GridMode,
   ): PictographData {
     // Determine letter based on position key
     let letter: string;
@@ -226,7 +227,7 @@ export class StartPositionService implements IStartPositionService {
     const redLocation = mapping?.red || Location.NORTH;
 
     console.log(
-      `🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`
+      `🎯 Creating start position ${key} - Blue: ${blueLocation}, Red: ${redLocation}`,
     );
 
     // Create proper arrow data with location
