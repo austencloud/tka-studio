@@ -29,7 +29,7 @@ Integrates panel management service with runes for:
 	// Enhanced components
 	import BrowseLayoutEnhanced from './browse/BrowseLayout.svelte';
 	import NavigationSidebar from './browse/NavigationSidebar.svelte';
-	import AnimationPanelEnhanced from './browse/AnimationPanelEnhanced.svelte';
+	import AnimationPanel from './browse/AnimationPanel.svelte';
 
 	// Existing components
 	import DeleteConfirmationDialog from './browse/DeleteConfirmationDialog.svelte';
@@ -103,9 +103,7 @@ Integrates panel management service with runes for:
 	// Load initial data when component mounts
 	onMount(async () => {
 		try {
-			console.log('🚀 Loading browse data...');
 			await browseState.loadAllSequences();
-			console.log('✅ Browse data loaded successfully');
 		} catch (error) {
 			console.error('❌ Failed to load browse data:', error);
 		}
@@ -149,18 +147,14 @@ Integrates panel management service with runes for:
 
 	// ✅ FULLSCREEN HANDLERS
 	function handleCloseFullscreen() {
-		console.log('❌ Closing fullscreen viewer');
 		showFullscreenViewer = false;
 		fullscreenSequence = undefined;
 	}
 
 	// ✅ SEQUENCE ACTION HANDLER: Enhanced with animation panel integration
 	function handleSequenceAction(action: string, sequence: BrowseSequenceMetadata) {
-		console.log(`🎬 Sequence action: ${action} on sequence:`, sequence.id);
-
 		if (action === 'animate') {
 			// Show animation panel and set sequence
-			console.log('🎬 Opening animation panel for sequence:', sequence.id);
 			animationSequence = sequence;
 			panelState.setAnimationVisible(true);
 			// Expand panel if it's collapsed
@@ -180,7 +174,6 @@ Integrates panel management service with runes for:
 			originalHandleSequenceAction(action, sequence);
 		} else if (action === 'fullscreen') {
 			// Handle fullscreen action
-			console.log('🔍 Opening fullscreen viewer for sequence:', sequence.id);
 			fullscreenSequence = sequence;
 			showFullscreenViewer = true;
 		} else {
@@ -191,19 +184,16 @@ Integrates panel management service with runes for:
 
 	// ✅ ANIMATION PANEL HANDLERS
 	function handleCloseAnimationPanel() {
-		console.log('🎬 Closing animation panel');
 		panelState.setAnimationVisible(false);
 		animationSequence = null;
 	}
 
 	// ✅ RESIZE HANDLERS: For panel width changes
 	function handleNavigationResize(width: number) {
-		console.log('📏 Navigation panel resized to:', width);
 		// Additional logic if needed when navigation panel is resized
 	}
 
 	function handleAnimationResize(width: number) {
-		console.log('📏 Animation panel resized to:', width);
 		// Additional logic if needed when animation panel is resized
 	}
 </script>
@@ -254,7 +244,7 @@ Integrates panel management service with runes for:
 
 		{#snippet rightPanel()}
 			<!-- Enhanced Animation Panel with unified panel management -->
-			<AnimationPanelEnhanced
+			<AnimationPanel
 				sequence={animationSequence}
 				{panelState}
 				onClose={handleCloseAnimationPanel}

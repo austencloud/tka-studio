@@ -10,10 +10,10 @@
   
   let { isOpen = false, onClose = () => {}, children }: Props = $props();
   
-  // DOM element references (these should NOT be $state)
-  let modalContainer: HTMLElement | undefined;
-  let modalContent: HTMLElement | undefined;
-  let closeButton: HTMLElement | undefined;
+  // DOM element references - used in reactive contexts so need $state
+  let modalContainer: HTMLElement | undefined = $state();
+  let modalContent: HTMLElement | undefined = $state();
+  let closeButton: HTMLElement | undefined = $state();
   
   // Reactive state
   let previouslyFocusedElement: HTMLElement | null = null;

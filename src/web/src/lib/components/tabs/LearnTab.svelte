@@ -98,7 +98,6 @@
 
 	function handlePictographSelected(pictograph: PictographData) {
 		// Handle pictograph selection from codex (for reference during learning)
-		console.log('Pictograph selected from codex:', pictograph);
 	}
 
 	function handleLessonComplete(results: LessonResults) {
@@ -381,13 +380,6 @@
 			padding: 0.75rem;
 			padding-top: 3.5rem;
 		}
-
-		.codex-toggle {
-			top: 0.75rem;
-			left: 0.75rem;
-			font-size: 0.8rem;
-			padding: 0.4rem 0.8rem;
-		}
 	}
 
 	/* ONLY on very small mobile screens (phones) - stack vertically */
@@ -405,13 +397,6 @@
 			max-width: none;
 			height: 200px;
 			flex-shrink: 0;
-		}
-
-		.codex-toggle {
-			top: 0.5rem;
-			left: 0.5rem;
-			font-size: 0.75rem;
-			padding: 0.375rem 0.75rem;
 		}
 
 		.loading-text {

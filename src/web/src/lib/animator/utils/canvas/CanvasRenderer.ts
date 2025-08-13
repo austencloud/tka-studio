@@ -6,7 +6,7 @@
 import type { PropState } from "../../types/core.js";
 
 // Constants from standalone_animator.html
-const GRID_HALFWAY_POINT_OFFSET = 143.1;
+const GRID_HALFWAY_POINT_OFFSET = 151.5;
 const STAFF_VIEWBOX_WIDTH = 252.8;
 const STAFF_VIEWBOX_HEIGHT = 77.8;
 const STAFF_CENTER_X = 126.4;
@@ -82,6 +82,30 @@ export class CanvasRenderer {
 
     const staffWidth = STAFF_VIEWBOX_WIDTH * gridScaleFactor;
     const staffHeight = STAFF_VIEWBOX_HEIGHT * gridScaleFactor;
+
+    // 🔧 [RENDER DEBUG] Log rendering values
+    console.log("🔧 [RENDER DEBUG] Drawing staff:", {
+      canvasSize: canvasSize,
+      centerX: centerX,
+      centerY: centerY,
+      gridScaleFactor: gridScaleFactor,
+      scaledHalfwayRadius: scaledHalfwayRadius,
+      inwardFactor: inwardFactor,
+      centerPathAngle: propState.centerPathAngle,
+      centerPathAngleDegrees: (
+        (propState.centerPathAngle * 180) /
+        Math.PI
+      ).toFixed(1),
+      staffRotationAngle: propState.staffRotationAngle,
+      staffRotationAngleDegrees: (
+        (propState.staffRotationAngle * 180) /
+        Math.PI
+      ).toFixed(1),
+      calculatedX: x,
+      calculatedY: y,
+      propStateX: propState.x,
+      propStateY: propState.y,
+    });
 
     // Draw exactly as in standalone
     ctx.save();

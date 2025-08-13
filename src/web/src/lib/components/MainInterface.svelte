@@ -59,13 +59,13 @@
 	}
 
 	function handleBackgroundChange(background: string) {
-		console.log('🌌 Background changed to:', background);
+		// Background change handled
 	}
 </script>
 
 <BackgroundProvider>
 <div class="main-interface">
-<!-- Background Canvas - App Mode Only -->
+<!-- Background Canvas -->
 {#if settings.backgroundEnabled}
 <BackgroundCanvas
  backgroundType={settings.backgroundType === 'auroraBorealis' ||
@@ -73,10 +73,6 @@ settings.backgroundType === 'starfield'
   ? 'aurora'
  : settings.backgroundType || 'aurora'}
  quality={settings.backgroundQuality || 'medium'}
-onReady={() =>
-  console.log(
-    `🌌 App background ready: ${settings.backgroundType} at ${settings.backgroundQuality} quality`
-  )}
 />
 {/if}
 

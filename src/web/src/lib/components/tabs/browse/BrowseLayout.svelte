@@ -263,11 +263,6 @@ Provides three-section layout with:
 			left: auto;
 			transform: translateX(100%);
 		}
-
-		.navigation-panel.visible,
-		.animation-panel.visible {
-			transform: translateX(0);
-		}
 	}
 
 	/* High contrast mode support */

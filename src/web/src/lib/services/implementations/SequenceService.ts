@@ -6,15 +6,9 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
-import {
-  Location,
-  MotionType,
-  Orientation,
-  RotationDirection,
-} from "$lib/domain/enums";
-import { extractSequenceFromPNG } from "$lib/utils/png-parser.js";
+
+import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 import type {
-  IBrowseService,
   IPersistenceService,
   ISequenceDomainService,
   ISequenceService,
@@ -24,8 +18,7 @@ import type {
 export class SequenceService implements ISequenceService {
   constructor(
     private sequenceDomainService: ISequenceDomainService,
-    private persistenceService: IPersistenceService,
-    private browseService: IBrowseService
+    private persistenceService: IPersistenceService
   ) {}
 
   /**
@@ -33,12 +26,9 @@ export class SequenceService implements ISequenceService {
    */
   async createSequence(request: SequenceCreateRequest): Promise<SequenceData> {
     try {
-      console.log("Creating sequence:", request);
-
       // Use domain service to create the sequence
       const sequence = this.sequenceDomainService.createSequence(request);
       await this.persistenceService.saveSequence(sequence);
-      console.log("Sequence created successfully:", sequence.id);
       return sequence;
     } catch (error) {
       console.error("Failed to create sequence:", error);
@@ -57,8 +47,6 @@ export class SequenceService implements ISequenceService {
     beatData: BeatData
   ): Promise<void> {
     try {
-      console.log(`Updating beat ${beatIndex} in sequence ${sequenceId}`);
-
       // Load the current sequence
       const currentSequence =
         await this.persistenceService.loadSequence(sequenceId);
@@ -74,8 +62,6 @@ export class SequenceService implements ISequenceService {
       );
 
       await this.persistenceService.saveSequence(updatedSequence);
-
-      console.log("Beat updated successfully");
     } catch (error) {
       console.error("Failed to update beat:", error);
       throw new Error(
@@ -92,8 +78,6 @@ export class SequenceService implements ISequenceService {
     startPosition: BeatData
   ): Promise<void> {
     try {
-      console.log(`Setting start position for sequence ${sequenceId}`);
-
       // Load the current sequence
       const currentSequence =
         await this.persistenceService.loadSequence(sequenceId);
@@ -108,8 +92,6 @@ export class SequenceService implements ISequenceService {
       } as SequenceData;
 
       await this.persistenceService.saveSequence(updatedSequence);
-
-      console.log("Start position set successfully");
     } catch (error) {
       console.error("Failed to set start position:", error);
       throw new Error(
@@ -123,9 +105,7 @@ export class SequenceService implements ISequenceService {
    */
   async deleteSequence(id: string): Promise<void> {
     try {
-      console.log(`Deleting sequence ${id}`);
       await this.persistenceService.deleteSequence(id);
-      console.log("Sequence deleted successfully");
     } catch (error) {
       console.error("Failed to delete sequence:", error);
       throw new Error(
@@ -147,9 +127,11 @@ export class SequenceService implements ISequenceService {
           `🎬 Sequence ${id} not found, attempting to load from PNG metadata`
         );
         try {
-          sequence = await this.createTestSequence(id);
+          sequence = await this.loadSequenceFromPNG(id);
           // Save it to localStorage for future use
-          await this.persistenceService.saveSequence(sequence);
+          if (sequence) {
+            await this.persistenceService.saveSequence(sequence);
+          }
         } catch (error) {
           console.error(`Failed to load sequence ${id} from PNG:`, error);
           return null;
@@ -243,6 +225,135 @@ export class SequenceService implements ISequenceService {
   }
 
   /**
+   * Load sequence from PNG metadata using the reliable PNG metadata extractor
+   */
+  private async loadSequenceFromPNG(id: string): Promise<SequenceData | null> {
+    console.log(`🎬 Loading sequence from PNG metadata for ID: ${id}`);
+
+    try {
+      // Extract metadata from PNG file using the reliable extractor
+      const pngMetadata = await PngMetadataExtractor.extractSequenceMetadata(
+        id.toUpperCase()
+      );
+
+      if (!pngMetadata || pngMetadata.length === 0) {
+        console.error(`No metadata found in PNG for sequence: ${id}`);
+        return null;
+      }
+
+      // Convert PNG metadata to web app format
+      const sequence = await this.convertPngMetadataToSequence(id, pngMetadata);
+      console.log(`✅ Loaded real sequence data from PNG for ${id}`);
+      return sequence;
+    } catch (error) {
+      console.error(`Failed to load PNG metadata for ${id}:`, error);
+      // Fallback to test sequence
+      return this.createTestSequence(id);
+    }
+  }
+
+  /**
+   * Convert PNG metadata to SequenceData format
+   */
+  private async convertPngMetadataToSequence(
+    id: string,
+    pngMetadata: any[]
+  ): Promise<SequenceData> {
+    console.log(`🔄 Converting standalone data to web app format for ${id}`);
+
+    // Extract metadata from first element
+    const meta = pngMetadata[0];
+    const steps = pngMetadata.slice(1); // Skip metadata, get actual steps
+
+    // Convert steps to beats
+    const beats: BeatData[] = steps
+      .filter((step) => step.beat && step.beat > 0) // Only actual beats, not start state
+      .map((step) => ({
+        id: `${step.beat}-${step.letter}`,
+        beat_number: step.beat,
+        duration: 1,
+        blue_reversal: false,
+        red_reversal: false,
+        is_blank: false,
+        pictograph_data: {
+          id: `pictograph-${step.beat}`,
+          grid_data: {
+            grid_mode: meta.grid_mode || "diamond",
+            center_x: 0,
+            center_y: 0,
+            radius: 100,
+            grid_points: {},
+          },
+          arrows: {},
+          props: {},
+          motions: {
+            blue: {
+              motion_type: step.blue_attributes?.motion_type || "static",
+              start_loc: step.blue_attributes?.start_loc || "s",
+              end_loc: step.blue_attributes?.end_loc || "s",
+              start_ori: step.blue_attributes?.start_ori || "in",
+              end_ori: step.blue_attributes?.end_ori, // Don't set default - let it be undefined
+              prop_rot_dir: step.blue_attributes?.prop_rot_dir || "no_rot",
+              turns: step.blue_attributes?.turns || 0,
+              is_visible: true,
+            },
+            red: {
+              motion_type: step.red_attributes?.motion_type || "static",
+              start_loc: step.red_attributes?.start_loc || "s",
+              end_loc: step.red_attributes?.end_loc || "s",
+              start_ori: step.red_attributes?.start_ori || "in",
+              end_ori: step.red_attributes?.end_ori, // Don't set default - let it be undefined
+              prop_rot_dir: step.red_attributes?.prop_rot_dir || "no_rot",
+              turns: step.red_attributes?.turns || 0,
+              is_visible: true,
+            },
+          },
+          letter: step.letter || "",
+          beat: step.beat,
+          is_blank: false,
+          is_mirrored: false,
+          metadata: {},
+        },
+        metadata: {},
+      }));
+
+    console.log(`✅ Converted to web app format: ${beats.length} beats`);
+
+    return {
+      id,
+      name: meta.word || id.toUpperCase(),
+      word: meta.word || id.toUpperCase(),
+      beats,
+      thumbnails: [`${id.toUpperCase()}_ver1.png`],
+      sequence_length: beats.length,
+      author: meta.author || "Unknown",
+      level: meta.level || 1,
+      date_added: new Date(meta.date_added || Date.now()),
+      grid_mode: meta.grid_mode || "diamond",
+      prop_type: meta.prop_type || "unknown",
+      is_favorite: meta.is_favorite || false,
+      is_circular: meta.is_circular || false,
+      starting_position: meta.sequence_start_position || "beta",
+      difficulty_level: this.mapLevelToDifficulty(meta.level || 1),
+      tags: ["flow", "practice"],
+      metadata: {
+        source: "png_metadata",
+        extracted_at: new Date().toISOString(),
+        ...meta,
+      },
+    };
+  }
+
+  /**
+   * Map numeric level to difficulty string
+   */
+  private mapLevelToDifficulty(level: number): string {
+    if (level <= 1) return "beginner";
+    if (level <= 2) return "intermediate";
+    return "advanced";
+  }
+
+  /**
    * Load sequence from PNG metadata or create fallback
    */
   private async createTestSequence(id: string): Promise<SequenceData> {
@@ -263,277 +374,5 @@ export class SequenceService implements ISequenceService {
     throw new Error(
       `No PNG metadata found for sequence ${id}. Please ensure the sequence has a valid PNG thumbnail with embedded metadata.`
     );
-  }
-
-  /**
-   * Load sequence data from PNG metadata
-   */
-  private async loadSequenceFromPNG(
-    sequenceId: string
-  ): Promise<SequenceData | null> {
-    try {
-      // Get the PNG file for this sequence
-      const pngFile = await this.getPNGFileForSequence(sequenceId);
-      if (!pngFile) {
-        console.log(`No PNG file found for sequence ${sequenceId}`);
-        return null;
-      }
-
-      // Extract sequence data from PNG metadata
-      console.log(`🔍 Extracting metadata from PNG file for ${sequenceId}`);
-      const result = await extractSequenceFromPNG(pngFile);
-      if (result.success && result.data) {
-        console.log(`✅ Successfully extracted PNG metadata for ${sequenceId}`);
-        // Convert standalone format to web app format
-        const webAppSequence = this.convertStandaloneToWebApp(
-          result.data,
-          sequenceId
-        );
-        return webAppSequence;
-      } else {
-        console.warn(`Failed to extract PNG metadata: ${result.error}`);
-        return null;
-      }
-    } catch (error) {
-      console.error(`Error loading PNG metadata for ${sequenceId}:`, error);
-      return null;
-    }
-  }
-
-  /**
-   * Get PNG file for a sequence from thumbnail URL
-   */
-  private async getPNGFileForSequence(
-    sequenceId: string
-  ): Promise<File | null> {
-    try {
-      // First, get the sequence metadata to find the correct thumbnail path
-      const allSequences = await this.browseService.loadSequenceMetadata();
-      const sequenceMetadata = allSequences.find(
-        (seq) => seq.id === sequenceId
-      );
-
-      if (!sequenceMetadata) {
-        console.warn(`⚠️ Sequence ${sequenceId} not found in metadata index`);
-        return null;
-      }
-
-      if (
-        !sequenceMetadata.thumbnails ||
-        sequenceMetadata.thumbnails.length === 0
-      ) {
-        console.warn(
-          `⚠️ No thumbnail metadata found for sequence ${sequenceId}. Available metadata:`,
-          sequenceMetadata
-        );
-        return null;
-      }
-
-      // Try each thumbnail URL from the metadata
-      for (const thumbnailUrl of sequenceMetadata.thumbnails) {
-        try {
-          console.log(
-            `🖼️ Trying to fetch PNG file from metadata: ${thumbnailUrl}`
-          );
-
-          // Fetch the PNG file
-          const response = await fetch(thumbnailUrl);
-          if (response.ok) {
-            // Convert to File object
-            const blob = await response.blob();
-            const file = new File([blob], `${sequenceId}.png`, {
-              type: "image/png",
-            });
-
-            console.log(
-              `✅ Successfully loaded PNG file for ${sequenceId} from ${thumbnailUrl}, size: ${file.size} bytes`
-            );
-            return file;
-          } else {
-            console.log(
-              `❌ Failed to fetch from ${thumbnailUrl}: ${response.status}`
-            );
-          }
-        } catch (error) {
-          console.log(`❌ Error fetching from ${thumbnailUrl}:`, error);
-
-          // Provide specific error messages for different failure types
-          if (
-            error instanceof TypeError &&
-            error.message.includes("Failed to fetch")
-          ) {
-            console.warn(
-              `❌ Network error: PNG file may not exist at ${thumbnailUrl}`
-            );
-          } else {
-            console.warn(`❌ Unknown error fetching PNG: ${error}`);
-          }
-
-          continue;
-        }
-      }
-
-      console.warn(
-        `⚠️ No PNG file found for sequence ${sequenceId} using metadata thumbnail paths`
-      );
-      return null;
-    } catch (error) {
-      console.error(`Error fetching PNG file for ${sequenceId}:`, error);
-      return null;
-    }
-  }
-
-  /**
-   * Convert standalone format to web app format
-   */
-  private convertStandaloneToWebApp(
-    standaloneData: any[],
-    sequenceId: string
-  ): SequenceData {
-    console.log(
-      `🔄 Converting standalone data to web app format for ${sequenceId}`
-    );
-
-    if (!Array.isArray(standaloneData) || standaloneData.length < 2) {
-      throw new Error(
-        "Invalid standalone data: must be array with metadata + beats"
-      );
-    }
-
-    // First element is metadata
-    const metadata = standaloneData[0];
-    const word = metadata.word || sequenceId.toUpperCase();
-
-    // Remaining elements are beats
-    const beatElements = standaloneData.slice(1);
-    const beats: BeatData[] = [];
-
-    beatElements.forEach((beatData, index) => {
-      // Skip start position elements
-      if (beatData.sequence_start_position !== undefined) {
-        return;
-      }
-
-      const beat: BeatData = {
-        id: crypto.randomUUID(),
-        beat_number: beatData.beat || index + 1,
-        duration: 1.0,
-        blue_reversal: false,
-        red_reversal: false,
-        is_blank: false,
-        pictograph_data: {
-          id: crypto.randomUUID(),
-          letter: beatData.letter || "",
-          end_pos: beatData.end_pos || "",
-          timing: null,
-          direction: null,
-          grid_data: {} as any,
-          arrows: {},
-          props: {},
-          beat: beatData.beat || index + 1,
-          is_blank: false,
-          is_mirrored: false,
-          metadata: {},
-          motions: {
-            blue: this.convertMotionAttributes(beatData.blue_attributes),
-            red: this.convertMotionAttributes(beatData.red_attributes),
-          },
-        },
-        metadata: {},
-      };
-
-      beats.push(beat);
-    });
-
-    const sequence: SequenceData = {
-      id: sequenceId,
-      name: word,
-      word: word,
-      beats,
-      thumbnails: [],
-      is_favorite: false,
-      is_circular: false,
-      tags: ["imported", "animation"],
-      metadata: {
-        length: beats.length,
-        author: metadata.author || "Unknown",
-        level: metadata.level || 1,
-        imported_from_png: true,
-        created_at: new Date().toISOString(),
-      },
-    };
-
-    console.log(`✅ Converted to web app format: ${beats.length} beats`);
-    return sequence;
-  }
-
-  /**
-   * Convert standalone motion attributes to web app motion format
-   */
-  private convertMotionAttributes(attributes: any): any {
-    if (!attributes) {
-      return {
-        start_loc: Location.SOUTH,
-        end_loc: Location.SOUTH,
-        start_ori: Orientation.IN,
-        end_ori: Orientation.IN,
-        prop_rot_dir: RotationDirection.NO_ROTATION,
-        turns: 0,
-        motion_type: MotionType.STATIC,
-        is_visible: true,
-      };
-    }
-
-    return {
-      start_loc: this.convertLocation(attributes.start_loc),
-      end_loc: this.convertLocation(attributes.end_loc),
-      start_ori: this.convertOrientation(attributes.start_ori),
-      end_ori: this.convertOrientation(attributes.end_ori),
-      prop_rot_dir: this.convertRotationDirection(attributes.prop_rot_dir),
-      turns: attributes.turns || 0,
-      motion_type: this.convertMotionType(attributes.motion_type),
-      is_visible: true,
-    };
-  }
-
-  private convertLocation(loc: string): Location {
-    const locationMap: Record<string, Location> = {
-      s: Location.SOUTH,
-      n: Location.NORTH,
-      e: Location.EAST,
-      w: Location.WEST,
-      center: Location.SOUTH, // Use SOUTH as default for center
-      top: Location.NORTH,
-      bottom: Location.SOUTH,
-      left: Location.WEST,
-      right: Location.EAST,
-    };
-    return locationMap[loc] || Location.SOUTH;
-  }
-
-  private convertOrientation(ori: string): Orientation {
-    const orientationMap: Record<string, Orientation> = {
-      in: Orientation.IN,
-      out: Orientation.OUT,
-    };
-    return orientationMap[ori] || Orientation.IN;
-  }
-
-  private convertRotationDirection(dir: string): RotationDirection {
-    const rotationMap: Record<string, RotationDirection> = {
-      cw: RotationDirection.CLOCKWISE,
-      ccw: RotationDirection.COUNTER_CLOCKWISE,
-      no_rot: RotationDirection.NO_ROTATION,
-    };
-    return rotationMap[dir] || RotationDirection.NO_ROTATION;
-  }
-
-  private convertMotionType(type: string): MotionType {
-    const motionMap: Record<string, MotionType> = {
-      pro: MotionType.PRO,
-      anti: MotionType.ANTI,
-      static: MotionType.STATIC,
-    };
-    return motionMap[type] || MotionType.STATIC;
   }
 }

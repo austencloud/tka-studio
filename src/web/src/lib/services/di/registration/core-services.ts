@@ -22,7 +22,6 @@ import {
   ISettingsServiceInterface,
   IStartPositionServiceInterface,
 } from "../interfaces/core-interfaces";
-import { IBrowseServiceInterface } from "../interfaces/browse-interfaces";
 
 import { ApplicationInitializationService } from "../../implementations/ApplicationInitializationService";
 import { ConstructTabCoordinationService } from "../../implementations/ConstructTabCoordinationService";
@@ -59,12 +58,7 @@ export async function registerCoreServices(
       ISequenceDomainServiceInterface
     );
     const persistenceService = container.resolve(IPersistenceServiceInterface);
-    const browseService = container.resolve(IBrowseServiceInterface);
-    return new SequenceService(
-      sequenceDomainService,
-      persistenceService,
-      browseService
-    );
+    return new SequenceService(sequenceDomainService, persistenceService);
   });
 
   container.registerFactory(IConstructTabCoordinationServiceInterface, () => {

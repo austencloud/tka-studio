@@ -138,9 +138,12 @@ Follows Svelte 5 runes pattern with clean event handling.
 	class:left-direction={direction === 'left'}
 	class:right-direction={direction === 'right'}
 	style="width: {thickness}px;"
-	role="separator"
+	role="slider"
 	tabindex={disabled ? -1 : 0}
 	aria-label="Resize panel"
+	aria-valuemin="10"
+	aria-valuemax="90"
+	aria-valuenow="50"
 	onmousedown={handleMouseDown}
 	ontouchstart={handleTouchStart}
 	onkeydown={(e) => {

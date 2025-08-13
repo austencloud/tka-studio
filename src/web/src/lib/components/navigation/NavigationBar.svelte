@@ -1,6 +1,5 @@
-<!-- Unified Navigation Bar - App Mode Only -->
+<!-- Unified Navigation Bar -->
 <script lang="ts">
-	import { getAppMode } from '$lib/state/appModeState.svelte';
 	import { showSettingsDialog } from '$lib/state/appState.svelte';
 	import { foldTransition } from '$lib/utils/foldTransition';
 
@@ -19,18 +18,12 @@
 
 	let { tabs = [], activeTab = '', onTabSelect, onBackgroundChange }: Props = $props();
 
-	// Reactive state
-	let appMode = $derived(getAppMode());
-
-	// Handle logo click in app mode - go to About tab
+	// Handle logo click - go to About tab
 	async function handleLogoClick() {
-		if (appMode === 'app') {
-			console.log('🏠 Navigating to About tab via logo click...');
-			onTabSelect?.('about');
-		}
+		onTabSelect?.('about');
 	}
 
-	// Handle tab click in app mode
+	// Handle tab click
 	function handleTabClick(tab: TabDef) {
 		try {
 			onTabSelect?.(tab.id);
@@ -40,7 +33,7 @@
 	}
 </script>
 
-<!-- App Mode Navigation -->
+<!-- App Navigation -->
 <nav class="app-navigation-bar glass-surface" in:foldTransition={{ direction: 'fold-in', duration: 300 }}>
 	<!-- Clickable Logo/Brand - Go to About -->
 	<div 

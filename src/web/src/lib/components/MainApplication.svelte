@@ -1,4 +1,4 @@
-<!-- Unified Layout - Handles both Landing and App modes -->
+<!-- Main Application Layout -->
 <script lang="ts">
 	import { resolve } from '$services/bootstrap';
 	import type { ServiceContainer } from '$services/di/ServiceContainer';
@@ -58,7 +58,6 @@
 				settingsService = resolve('ISettingsService');
 				sequenceService = resolve('ISequenceService');
 				deviceService = resolve('IDeviceDetectionService');
-				console.log('✅ Services resolved successfully');
 			} catch (error) {
 				console.error('Failed to resolve services:', error);
 				setInitializationError(`Service resolution failed: ${error}`);
@@ -103,8 +102,6 @@
 
 			// Step 3: Initialize device detection
 			setInitializationProgress(50);
-			const capabilities = deviceService.getCapabilities();
-			console.log('📱 Device capabilities detected:', capabilities);
 
 			// Step 4: Load initial data
 			setInitializationProgress(70);
@@ -118,7 +115,6 @@
 			setInitializationProgress(100);
 			setInitializationState(true, false, null, 100);
 
-			console.log('✅ TKA Constructor initialized successfully');
 		} catch (error) {
 			console.error('❌ Application initialization failed:', error);
 			setInitializationError(

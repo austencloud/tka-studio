@@ -10,7 +10,7 @@ export * from "./types/core.js";
 export * from "./constants/index.js";
 
 // Animation engine
-export { StandalonePortedEngine } from "./core/engine/standalone-ported-engine.js";
+export { SequenceAnimationEngine as StandalonePortedEngine } from "./core/engine/sequence-animation-engine.js";
 
 // Data conversion utilities
 export {
