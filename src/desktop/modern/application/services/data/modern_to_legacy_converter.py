@@ -16,8 +16,7 @@ from desktop.modern.domain.models.enums import Orientation
 from desktop.modern.domain.models.motion_data import MotionData
 
 
-# Temporarily commented out to get app to start
-# from .position_attribute_mapper import PositionAttributeMapper
+# from .position_attribute_mapper import PositionAttributeMapper  # Circular import issue
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +34,8 @@ class ModernToLegacyConverter(IModernToLegacyConverter):
 
     def __init__(self):
         """Initialize the modern to legacy converter."""
+        # Lazy import to avoid circular dependency
+        from .position_attribute_mapper import PositionAttributeMapper
         self.position_mapper = PositionAttributeMapper()
 
     def convert_beat_data_to_legacy_format(

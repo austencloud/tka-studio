@@ -44,9 +44,9 @@ class ExportPanel(QWidget):
         try:
             self.workbench_export_service = container.resolve(IWorkbenchExportService)
             self.settings_manager = container.resolve(IImageExportSettingsManager)
-            print("✅ [EXPORT_PANEL] Export services resolved successfully")
+            print("[EXPORT_PANEL] Export services resolved successfully")
         except Exception as e:
-            print(f"⚠️ [EXPORT_PANEL] Failed to resolve export services: {e}")
+            print(f"[EXPORT_PANEL] Failed to resolve export services: {e}")
             self.workbench_export_service = None
             self.settings_manager = None
 

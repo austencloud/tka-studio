@@ -20,44 +20,59 @@ export interface PropStates {
 export class AnimationControlService {
   private animationEngine: StandalonePortedEngine;
   private animationFrameId: number | null = null;
+  private currentProgress: number = 0;
+  private isInitialized: boolean = false;
+  private propVisibility: PropVisibility = { blue: true, red: true };
 
   constructor() {
     this.animationEngine = new StandalonePortedEngine();
   }
 
   // Initialize the animation engine with motion data
-  async initializeEngine(blueParams: MotionTestParams, redParams: MotionTestParams): Promise<boolean> {
+  async initializeEngine(
+    blueParams: MotionTestParams,
+    redParams: MotionTestParams
+  ): Promise<boolean> {
     try {
       const sequence = this.createDualPropTestSequence(blueParams, redParams);
-      await this.animationEngine.initialize(sequence);
-      return true;
+      this.isInitialized = this.animationEngine.initialize(sequence);
+      return this.isInitialized;
     } catch (error) {
       console.error("Failed to initialize animation engine:", error);
+      this.isInitialized = false;
       return false;
     }
   }
 
-  // Create a test sequence with dual prop motion
-  private createDualPropTestSequence(blueParams: MotionTestParams, redParams: MotionTestParams) {
-    return {
-      metadata: {
-        title: "Motion Tester",
-        description: "Testing individual motions",
-        difficulty: "beginner",
-        beats_per_minute: 120,
-        total_beats: 1,
+  // Create a test sequence with dual prop motion in standalone array format
+  private createDualPropTestSequence(
+    blueParams: MotionTestParams,
+    redParams: MotionTestParams
+  ) {
+    return [
+      // Index 0: Metadata
+      {
+        word: "TEST",
+        author: "Motion Tester",
+        totalBeats: 1,
       },
-      steps: [
-        // Beat 1: Motion step
-        {
-          beat: 1,
-          letter: "TEST",
-          letter_type: "motion",
-          blue_attributes: this.convertToAttributes(blueParams),
-          red_attributes: this.convertToAttributes(redParams),
-        },
-      ],
-    };
+      // Index 1: Start position
+      {
+        beat: 0,
+        letter: "START",
+        letter_type: "start",
+        blue_attributes: this.convertToAttributes(blueParams),
+        red_attributes: this.convertToAttributes(redParams),
+      },
+      // Index 2: Motion step
+      {
+        beat: 1,
+        letter: "TEST",
+        letter_type: "motion",
+        blue_attributes: this.convertToAttributes(blueParams),
+        red_attributes: this.convertToAttributes(redParams),
+      },
+    ];
   }
 
   private convertToAttributes(params: MotionTestParams) {
@@ -74,22 +89,23 @@ export class AnimationControlService {
 
   // Get current prop states
   getCurrentPropStates(): PropStates {
-    const states = this.animationEngine.getCurrentPropStates();
     return {
-      blue: states?.blue,
-      red: states?.red,
+      blue: this.animationEngine.getBluePropState(),
+      red: this.animationEngine.getRedPropState(),
     };
   }
 
   // Set animation progress (0-1)
   setProgress(progress: number): void {
-    const clampedProgress = Math.max(0, Math.min(1, progress));
-    this.animationEngine.setProgress(clampedProgress);
+    this.currentProgress = Math.max(0, Math.min(1, progress));
+    // Calculate state for current progress
+    const currentBeat = this.currentProgress * this.getTotalBeats();
+    this.animationEngine.calculateState(currentBeat);
   }
 
   // Get current animation progress
   getProgress(): number {
-    return this.animationEngine.getProgress() || 0;
+    return this.currentProgress;
   }
 
   // Start animation playback
@@ -101,9 +117,11 @@ export class AnimationControlService {
     const animate = () => {
       const currentProgress = this.getProgress();
       if (currentProgress < 1) {
-        this.setProgress(currentProgress + 0.01); // Increment by 1%
+        // Animate over 2 seconds (0.016 per frame at 60fps = ~1 second, so 0.008 = ~2 seconds)
+        this.setProgress(currentProgress + 0.008);
         this.animationFrameId = requestAnimationFrame(animate);
       } else {
+        // Animation completed
         this.animationFrameId = null;
       }
     };
@@ -136,18 +154,18 @@ export class AnimationControlService {
   }
 
   // Set prop visibility
-  setPropVisibility(prop: 'blue' | 'red', visible: boolean): void {
-    this.animationEngine.setPropVisibility(prop, visible);
+  setPropVisibility(prop: "blue" | "red", visible: boolean): void {
+    this.propVisibility[prop] = visible;
   }
 
   // Get prop visibility
-  getPropVisibility(prop: 'blue' | 'red'): boolean {
-    return this.animationEngine.getPropVisibility(prop);
+  getPropVisibility(prop: "blue" | "red"): boolean {
+    return this.propVisibility[prop];
   }
 
   // Check if engine is initialized
   isEngineInitialized(): boolean {
-    return this.animationEngine.isInitialized();
+    return this.isInitialized;
   }
 
   // Get total beats

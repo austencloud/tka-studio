@@ -20,14 +20,6 @@
 
 <div class="animation-control">
 	<div class="control-row">
-		<div class="playback-controls">
-			<button class="play-button" onclick={onPlayPause}>
-				{isPlaying ? '⏸️' : '▶️'}
-			</button>
-			<button class="reset-button" onclick={onReset}>
-				⏹️
-			</button>
-		</div>
 		<div class="progress-control">
 			<label for="progress-slider">Progress:</label>
 			<div class="slider-container">
@@ -58,27 +50,8 @@
 		flex-wrap: wrap;
 	}
 
-	.playback-controls {
-		display: flex;
-		gap: 8px;
-	}
 
-	.play-button,
-	.reset-button {
-		background: rgba(99, 102, 241, 0.3);
-		border: 1px solid rgba(99, 102, 241, 0.5);
-		color: white;
-		padding: 8px 12px;
-		border-radius: 4px;
-		cursor: pointer;
-		font-size: 14px;
-		transition: background 0.2s;
-	}
 
-	.play-button:hover,
-	.reset-button:hover {
-		background: rgba(99, 102, 241, 0.5);
-	}
 
 	.progress-control {
 		display: flex;

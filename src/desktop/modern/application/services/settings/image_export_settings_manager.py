@@ -472,3 +472,69 @@ class ImageExportSettingsManager(QObject):
 
         except Exception as e:
             logger.exception(f"Failed to reset export settings: {e}")
+
+    def get_export_option(self, option: str) -> Any:
+        """
+        Get a specific export option value.
+
+        Args:
+            option: Option name to retrieve
+
+        Returns:
+            Option value or None if not found
+        """
+        try:
+            # Map option names to their corresponding methods
+            option_map = {
+                "format": self.get_export_format,
+                "quality": self.get_export_quality,
+                "width": lambda: self.get_export_dimensions()[0],
+                "height": lambda: self.get_export_dimensions()[1],
+                "scale_factor": self.get_scale_factor,
+                "include_background": self.get_include_background,
+                "use_last_save_directory": lambda: self.settings.value("export/use_last_save_directory", False, type=bool),
+            }
+
+            if option in option_map:
+                return option_map[option]()
+            else:
+                # Fallback: try to get directly from settings
+                return self.settings.value(f"export/{option}", None)
+
+        except Exception as e:
+            logger.exception(f"Failed to get export option {option}: {e}")
+            return None
+
+    def set_export_option(self, option: str, value: Any) -> None:
+        """
+        Set a specific export option value.
+
+        Args:
+            option: Option name to set
+            value: Value to set
+        """
+        try:
+            # Map option names to their corresponding methods
+            option_map = {
+                "format": self.set_export_format,
+                "quality": self.set_export_quality,
+                "scale_factor": self.set_scale_factor,
+                "include_background": self.set_include_background,
+                "use_last_save_directory": lambda v: self.settings.setValue("export/use_last_save_directory", v),
+            }
+
+            if option in option_map:
+                option_map[option](value)
+            elif option in ["width", "height"]:
+                # Handle dimensions specially
+                current_width, current_height = self.get_export_dimensions()
+                if option == "width":
+                    self.set_export_dimensions(value, current_height)
+                else:
+                    self.set_export_dimensions(current_width, value)
+            else:
+                # Fallback: set directly in settings
+                self.settings.setValue(f"export/{option}", value)
+
+        except Exception as e:
+            logger.exception(f"Failed to set export option {option}: {e}")

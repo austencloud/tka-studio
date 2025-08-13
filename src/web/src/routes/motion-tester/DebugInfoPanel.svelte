@@ -74,11 +74,11 @@
 				<h3>Start Endpoints</h3>
 				<div class="debug-item">
 					<span class="label">Center Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.startCenterAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.startCenterAngle) : 'N/A'} rad</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Staff Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.startStaffAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.startStaffAngle) : 'N/A'} rad</span>
 				</div>
 			</div>
 
@@ -87,11 +87,11 @@
 				<h3>Target Endpoints</h3>
 				<div class="debug-item">
 					<span class="label">Center Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.targetCenterAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.targetCenterAngle) : 'N/A'} rad</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Staff Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.targetStaffAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.targetStaffAngle) : 'N/A'} rad</span>
 				</div>
 			</div>
 
@@ -100,15 +100,15 @@
 				<h3>Motion Calculation</h3>
 				<div class="debug-item">
 					<span class="label">Motion Type:</span>
-					<span class="value">{state.motionParams.motionType}</span>
+					<span class="value">{state.blueMotionParams.motionType}</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Delta Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.deltaAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.deltaAngle) : 'N/A'} rad</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Turn Angle:</span>
-					<span class="value">{formatAngle(state.debugInfo.turnAngle)} rad</span>
+					<span class="value">{state.debugInfo ? formatAngle(state.debugInfo.blue.turnAngle) : 'N/A'} rad</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Interpolation (t):</span>
@@ -125,15 +125,15 @@
 				<h3>Grid Positions</h3>
 				<div class="debug-item">
 					<span class="label">Start Location:</span>
-					<span class="value">{state.motionParams.startLoc}</span>
+					<span class="value">{state.blueMotionParams.startLoc}</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">End Location:</span>
-					<span class="value">{state.motionParams.endLoc}</span>
+					<span class="value">{state.blueMotionParams.endLoc}</span>
 				</div>
 				<div class="debug-item">
 					<span class="label">Distance:</span>
-					<span class="value">{state.debugInfo.distance.toFixed(1)}°</span>
+					<span class="value">{state.debugInfo ? state.debugInfo.blue.distance.toFixed(1) : 'N/A'}°</span>
 				</div>
 			</div>
 
@@ -192,7 +192,7 @@
 		<h3>Motion Summary</h3>
 		<div class="debug-item">
 			<span class="label">Description:</span>
-			<span class="value motion-desc">{state.motionDescription}</span>
+			<span class="value motion-desc">{state.blueMotionDescription}</span>
 		</div>
 	</div>
 

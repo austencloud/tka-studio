@@ -15,39 +15,49 @@ if TYPE_CHECKING:
 class UISettingsManager(IUIStateManager):
     """Service factory and manager for the settings dialog."""
 
-    def __init__(self, ui_state_service: "IUIStateManager"):
+    def __init__(self, ui_state_service: "IUIStateManager", container=None):
         self.ui_state_service = ui_state_service
+        self.container = container
         self._initialize_services()
 
     def _initialize_services(self):
-        """Initialize all the tab-specific services."""
-        # Import services only when needed to avoid circular imports
-        from desktop.modern.application.services.settings.background_settings_manager import (
-            BackgroundSettingsManager,
-        )
-        from desktop.modern.application.services.settings.beat_layout_settings_manager import (
-            BeatLayoutSettingsManager,
-        )
-        from desktop.modern.application.services.settings.image_export_settings_manager import (
-            ImageExportSettingsManager,
-        )
-        from desktop.modern.application.services.settings.prop_type_settings_manager import (
-            PropTypeSettingsManager,
-        )
-        from desktop.modern.application.services.settings.user_profile_settings_manager import (
-            UserProfileSettingsManager,
-        )
-        from desktop.modern.application.services.settings.visibility_settings_manager import (
-            VisibilitySettingsManager,
+        """Initialize all the tab-specific services using DI container."""
+        from desktop.modern.core.interfaces.settings_services import (
+            IBackgroundSettingsManager,
+            IBeatLayoutSettingsManager,
+            IImageExportSettingsManager,
+            IPropTypeSettingsManager,
+            IUserProfileSettingsManager,
+            IVisibilitySettingsManager,
         )
 
-        # Initialize services
-        self.user_service = UserProfileSettingsManager(self.ui_state_service)
-        self.prop_service = PropTypeSettingsManager(self.ui_state_service)
-        self.visibility_service = VisibilitySettingsManager(self.ui_state_service)
-        self.layout_service = BeatLayoutSettingsManager(self.ui_state_service)
-        self.export_service = ImageExportSettingsManager(self.ui_state_service)
-        self.background_service = BackgroundSettingsManager(self.ui_state_service)
+        # Get services from DI container (they're properly configured with QSettings)
+        try:
+            self.user_service = self.container.resolve(IUserProfileSettingsManager)
+            self.prop_service = self.container.resolve(IPropTypeSettingsManager)
+            self.visibility_service = self.container.resolve(IVisibilitySettingsManager)
+            self.layout_service = self.container.resolve(IBeatLayoutSettingsManager)
+            self.export_service = self.container.resolve(IImageExportSettingsManager)
+            self.background_service = self.container.resolve(IBackgroundSettingsManager)
+        except Exception as e:
+            print(f"Failed to resolve settings services from DI container: {e}")
+            # Fallback: create QSettings directly
+            from PyQt6.QtCore import QSettings
+            settings = QSettings("TKA", "KineticConstructor")
+
+            from desktop.modern.application.services.settings.background_settings_manager import BackgroundSettingsManager
+            from desktop.modern.application.services.settings.beat_layout_settings_manager import BeatLayoutSettingsManager
+            from desktop.modern.application.services.settings.image_export_settings_manager import ImageExportSettingsManager
+            from desktop.modern.application.services.settings.prop_type_settings_manager import PropTypeSettingsManager
+            from desktop.modern.application.services.settings.user_profile_settings_manager import UserProfileSettingsManager
+            from desktop.modern.application.services.settings.visibility_settings_manager import VisibilitySettingsManager
+
+            self.user_service = UserProfileSettingsManager(settings)
+            self.prop_service = PropTypeSettingsManager(settings)
+            self.visibility_service = VisibilitySettingsManager(settings)
+            self.layout_service = BeatLayoutSettingsManager(settings)
+            self.export_service = ImageExportSettingsManager(settings)
+            self.background_service = BackgroundSettingsManager(settings)
 
     def get_user_service(self):
         """Get the user profile service."""

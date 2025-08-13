@@ -1,13 +1,21 @@
 /**
- * Simple PNG Metadata Extractor
- * Reads TKA sequence metadata directly from PNG files
+ * Unified PNG Metadata Extractor for TKA Sequences
+ *
+ * This class extracts ALL sequence metadata from a single JSON structure
+ * stored in the "metadata" tEXt chunk of PNG files. This includes:
+ * - Sequence information (author, level, start position, etc.)
+ * - Beat data (letters, motion types, attributes)
+ * - All other metadata fields
+ *
+ * We use ONE consistent system - JSON metadata only.
+ * No separate tEXt chunks for individual fields.
  */
 
 export class PngMetadataExtractor {
   /**
-   * Extract metadata from a PNG file
+   * Extract complete JSON metadata from a PNG file
    * @param filePath - Path to the PNG file (relative to static directory)
-   * @returns Promise<any> - The extracted metadata JSON
+   * @returns Promise<any> - The complete sequence metadata as JSON array
    */
   static async extractMetadata(filePath: string): Promise<any> {
     try {
@@ -22,15 +30,15 @@ export class PngMetadataExtractor {
       const arrayBuffer = await response.arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
 
-      // Find the tEXt chunk containing our metadata (use "metadata" keyword)
-      const metadata = this.findTextChunk(uint8Array, "metadata");
+      // Extract the unified JSON metadata from the "metadata" tEXt chunk
+      const metadataJson = this.findTextChunk(uint8Array, "metadata");
 
-      if (!metadata) {
-        throw new Error("No metadata found in PNG file");
+      if (!metadataJson) {
+        throw new Error("No unified JSON metadata found in PNG file");
       }
 
-      // Parse the JSON metadata and extract the sequence array
-      const parsed = JSON.parse(metadata);
+      // Parse and return the complete metadata structure
+      const parsed = JSON.parse(metadataJson);
       return parsed.sequence || parsed;
     } catch (error) {
       console.error("Error extracting PNG metadata:", error);
@@ -39,10 +47,15 @@ export class PngMetadataExtractor {
   }
 
   /**
-   * Find a specific tEXt chunk in PNG data
+   * Find the unified JSON metadata tEXt chunk in PNG data
+   *
+   * We only look for the "metadata" keyword which contains the complete
+   * JSON structure with all sequence information. This is our single
+   * source of truth for all metadata fields.
+   *
    * @param data - PNG file data as Uint8Array
-   * @param keyword - The keyword to search for (use "metadata" for TKA sequences)
-   * @returns string | null - The text data or null if not found
+   * @param keyword - Should always be "metadata" for TKA sequences
+   * @returns string | null - The JSON metadata string or null if not found
    */
   private static findTextChunk(
     data: Uint8Array,
@@ -101,21 +114,45 @@ export class PngMetadataExtractor {
   }
 
   /**
-   * Quick debug method to log metadata for a sequence
-   * @param sequenceName - Name of the sequence
+   * Debug method to display complete unified metadata for a sequence
+   *
+   * This shows the entire JSON metadata structure including:
+   * - Author, level, start position (from first entry)
+   * - All beat data with motion types and attributes
+   * - Any other fields in the unified metadata
+   *
+   * @param sequenceName - Name of the sequence to analyze
    */
   static async debugSequenceMetadata(sequenceName: string): Promise<void> {
     try {
       console.log(
-        `🔍 [PNG METADATA] Extracting metadata for ${sequenceName}...`
+        `🔍 [UNIFIED METADATA] Extracting complete metadata for ${sequenceName}...`
       );
       const metadata = await this.extractSequenceMetadata(sequenceName);
 
-      console.log(`📋 [PNG METADATA] Raw metadata for ${sequenceName}:`);
+      console.log(
+        `📋 [UNIFIED METADATA] Complete JSON structure for ${sequenceName}:`
+      );
       console.log(JSON.stringify(metadata, null, 2));
 
-      // Extract motion types for each beat (fix beat counting)
-      console.log(`🎯 [PNG METADATA] Motion types for ${sequenceName}:`);
+      // Show author and start position from the unified structure
+      const firstEntry = metadata[0] || {};
+      const startPositionEntries = metadata.filter(
+        (step: any) => step.sequence_start_position
+      );
+
+      console.log(
+        `👤 [UNIFIED METADATA] Author: ${firstEntry.author || "MISSING"}`
+      );
+      console.log(
+        `📍 [UNIFIED METADATA] Start Position: ${startPositionEntries[0]?.sequence_start_position || "MISSING"}`
+      );
+      console.log(
+        `📊 [UNIFIED METADATA] Level: ${firstEntry.level || "MISSING"}`
+      );
+
+      // Extract motion types for each beat
+      console.log(`🎯 [UNIFIED METADATA] Motion types for ${sequenceName}:`);
       const realBeats = metadata
         .slice(1)
         .filter((step: any) => step.letter && !step.sequence_start_position);
@@ -128,14 +165,14 @@ export class PngMetadataExtractor {
       });
     } catch (error) {
       console.error(
-        `❌ [PNG METADATA] Failed to extract metadata for ${sequenceName}:`,
+        `❌ [UNIFIED METADATA] Failed to extract metadata for ${sequenceName}:`,
         error
       );
     }
   }
 }
 
-// Global utility function for easy access in console (browser only)
+// Global utility function for easy debugging of unified metadata (browser only)
 if (typeof window !== "undefined") {
   (window as any).extractPngMetadata =
     PngMetadataExtractor.debugSequenceMetadata;

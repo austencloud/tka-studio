@@ -67,11 +67,11 @@
 			</select>
 		</div>
 		<div class="control-group">
-			<label>Turns:</label>
-			<div class="turns-control">
-				<button onclick={decrementTurns}>−</button>
-				<span class="turns-value">{turns}</span>
-				<button onclick={incrementTurns}>+</button>
+			<span class="control-label">Turns:</span>
+			<div class="turns-control" role="group" aria-label="Turns control">
+				<button onclick={decrementTurns} aria-label="Decrease turns">−</button>
+				<span class="turns-value" aria-live="polite">{turns}</span>
+				<button onclick={incrementTurns} aria-label="Increase turns">+</button>
 			</div>
 		</div>
 		<div class="control-group">

@@ -1,11 +1,13 @@
 <script lang="ts">
+
 	import type { ArrowDebugState } from './state/arrow-debug-state.svelte';
+	import QuickTestActions from './components/QuickTestActions.svelte';
 
 	interface Props {
 		state: ArrowDebugState;
 	}
 
-	let { state }: Props = $props();
+	let { state: debugState }: Props = $props();
 
 	// Local reactive state for UI
 	let loadingPictographs = $state(false);
@@ -13,40 +15,40 @@
 	function handlePictographSelect(event: Event) {
 		const target = event.target as HTMLSelectElement;
 		const index = parseInt(target.value);
-		if (index >= 0 && index < state.availablePictographs.length) {
-			state.selectedPictograph = state.availablePictographs[index];
+		if (index >= 0 && index < debugState.availablePictographs.length) {
+			debugState.selectedPictograph = debugState.availablePictographs[index];
 		}
 	}
 
 	function handleArrowColorChange(color: 'red' | 'blue') {
-		state.selectedArrowColor = color;
+		debugState.selectedArrowColor = color;
 	}
 
 	function toggleStepByStepMode() {
-		state.stepByStepMode = !state.stepByStepMode;
-		if (!state.stepByStepMode) {
-			state.currentStep = state.maxSteps; // Show all steps
+		debugState.stepByStepMode = !debugState.stepByStepMode;
+		if (!debugState.stepByStepMode) {
+			debugState.currentStep = debugState.maxSteps; // Show all steps
 		}
 	}
 
 	function nextStep() {
-		if (state.currentStep < state.maxSteps) {
-			state.currentStep++;
+		if (debugState.currentStep < debugState.maxSteps) {
+			debugState.currentStep++;
 		}
 	}
 
 	function prevStep() {
-		if (state.currentStep > 0) {
-			state.currentStep--;
+		if (debugState.currentStep > 0) {
+			debugState.currentStep--;
 		}
 	}
 
 	function resetSteps() {
-		state.currentStep = 0;
+		debugState.currentStep = 0;
 	}
 
 	async function recalculatePositioning() {
-		await state.calculateFullPositioning();
+		await debugState.calculateFullPositioning();
 	}
 
 	async function loadRealPictographs() {
@@ -54,7 +56,7 @@
 		try {
 			// In a real implementation, this would load actual pictograph data
 			// For now, we'll add more diverse sample data
-			await state.loadSamplePictographs();
+			await debugState.loadSamplePictographs();
 		} catch (error) {
 			console.error('Failed to load pictographs:', error);
 		} finally {
@@ -82,13 +84,13 @@
 		
 		<div class="control-group">
 			<label for="pictograph-select">Select Pictograph:</label>
-			<select 
-				id="pictograph-select" 
+			<select
+				id="pictograph-select"
 				onchange={handlePictographSelect}
-				disabled={state.isCalculating}
+				disabled={debugState.isCalculating}
 			>
-				{#each state.availablePictographs as pictograph, index}
-					<option value={index} selected={state.selectedPictograph === pictograph}>
+				{#each debugState.availablePictographs as pictograph, index}
+					<option value={index} selected={debugState.selectedPictograph === pictograph}>
 						Letter {pictograph.letter} ({pictograph.grid_mode})
 					</option>
 				{/each}
@@ -96,29 +98,29 @@
 		</div>
 
 		<div class="control-group">
-			<label>Arrow Color:</label>
-			<div class="arrow-color-buttons">
-				<button 
-					class="color-btn blue {state.selectedArrowColor === 'blue' ? 'active' : ''}"
+			<span class="control-label">Arrow Color:</span>
+			<div class="arrow-color-buttons" role="group" aria-label="Arrow color selection">
+				<button
+					class="color-btn blue {debugState.selectedArrowColor === 'blue' ? 'active' : ''}"
 					onclick={() => handleArrowColorChange('blue')}
-					disabled={state.isCalculating}
+					disabled={debugState.isCalculating}
 				>
 					🔵 Blue
 				</button>
-				<button 
-					class="color-btn red {state.selectedArrowColor === 'red' ? 'active' : ''}"
+				<button
+					class="color-btn red {debugState.selectedArrowColor === 'red' ? 'active' : ''}"
 					onclick={() => handleArrowColorChange('red')}
-					disabled={state.isCalculating}
+					disabled={debugState.isCalculating}
 				>
 					🔴 Red
 				</button>
 			</div>
 		</div>
 
-		<button 
+		<button
 			class="load-btn"
 			onclick={loadRealPictographs}
-			disabled={loadingPictographs || state.isCalculating}
+			disabled={loadingPictographs || debugState.isCalculating}
 		>
 			{loadingPictographs ? '⏳ Loading...' : '📁 Load Real Data'}
 		</button>
@@ -130,44 +132,44 @@
 		
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={state.stepByStepMode}
+				<input
+					type="checkbox"
+					checked={debugState.stepByStepMode}
 					onchange={toggleStepByStepMode}
 				/>
 				Enable Step-by-Step Mode
 			</label>
 		</div>
 
-		{#if state.stepByStepMode}
+		{#if debugState.stepByStepMode}
 			<div class="step-controls">
 				<div class="step-info">
 					<span class="step-counter">
-						Step {state.currentStep + 1} of {state.maxSteps + 1}
+						Step {debugState.currentStep + 1} of {debugState.maxSteps + 1}
 					</span>
 					<span class="step-name">
-						{stepNames[state.currentStep] || 'Complete'}
+						{stepNames[debugState.currentStep] || 'Complete'}
 					</span>
 				</div>
-				
+
 				<div class="step-buttons">
-					<button 
+					<button
 						onclick={resetSteps}
-						disabled={state.currentStep === 0 || state.isCalculating}
+						disabled={debugState.currentStep === 0 || debugState.isCalculating}
 						title="Reset to beginning"
 					>
 						⏮️
 					</button>
-					<button 
+					<button
 						onclick={prevStep}
-						disabled={state.currentStep === 0 || state.isCalculating}
+						disabled={debugState.currentStep === 0 || debugState.isCalculating}
 						title="Previous step"
 					>
 						⏪
 					</button>
-					<button 
+					<button
 						onclick={nextStep}
-						disabled={state.currentStep >= state.maxSteps || state.isCalculating}
+						disabled={debugState.currentStep >= debugState.maxSteps || debugState.isCalculating}
 						title="Next step"
 					>
 						⏩
@@ -177,9 +179,9 @@
 
 			<div class="step-progress">
 				<div class="progress-bar">
-					<div 
-						class="progress-fill" 
-						style="width: {((state.currentStep + 1) / (state.maxSteps + 1)) * 100}%"
+					<div
+						class="progress-fill"
+						style="width: {((debugState.currentStep + 1) / (debugState.maxSteps + 1)) * 100}%"
 					></div>
 				</div>
 			</div>
@@ -192,9 +194,10 @@
 		
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={state.showCoordinateGrid}
+				<input
+					type="checkbox"
+					checked={debugState.showCoordinateGrid}
+					onchange={(e) => debugState.showCoordinateGrid = (e.target as HTMLInputElement).checked}
 				/>
 				Show Coordinate Grid
 			</label>
@@ -202,9 +205,10 @@
 
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={state.showHandPoints}
+				<input
+					type="checkbox"
+					checked={debugState.showHandPoints}
+					onchange={(e) => debugState.showHandPoints = (e.target as HTMLInputElement).checked}
 				/>
 				Show Hand Points
 			</label>
@@ -212,9 +216,10 @@
 
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={state.showLayer2Points}
+				<input
+					type="checkbox"
+					checked={debugState.showLayer2Points}
+					onchange={(e) => debugState.showLayer2Points = (e.target as HTMLInputElement).checked}
 				/>
 				Show Layer2 Points
 			</label>
@@ -222,9 +227,10 @@
 
 		<div class="control-group">
 			<label class="checkbox-label">
-				<input 
-					type="checkbox" 
-					bind:checked={state.showAdjustmentVectors}
+				<input
+					type="checkbox"
+					checked={debugState.showAdjustmentVectors}
+					onchange={(e) => debugState.showAdjustmentVectors = (e.target as HTMLInputElement).checked}
 				/>
 				Show Adjustment Vectors
 			</label>
@@ -239,7 +245,7 @@
 			<label class="checkbox-label">
 				<input 
 					type="checkbox" 
-					bind:checked={state.autoUpdate}
+					bind:checked={debugState.autoUpdate}
 				/>
 				Auto-update on changes
 			</label>
@@ -248,40 +254,43 @@
 		<button 
 			class="calculate-btn"
 			onclick={recalculatePositioning}
-			disabled={state.isCalculating || !state.selectedPictograph}
+			disabled={debugState.isCalculating || !debugState.selectedPictograph}
 		>
-			{state.isCalculating ? '⏳ Calculating...' : '🔄 Recalculate'}
+			{debugState.isCalculating ? '⏳ Calculating...' : '🔄 Recalculate'}
 		</button>
 	</section>
 
+	<!-- Quick Test Actions -->
+	<QuickTestActions state={debugState} />
+
 	<!-- Current Input Summary -->
-	{#if state.selectedPictograph && state.currentMotionData}
+	{#if debugState.selectedPictograph && debugState.currentMotionData}
 		<section class="control-section">
 			<h3>📋 Current Input</h3>
 			<div class="input-summary">
 				<div class="summary-item">
 					<span class="label">Letter:</span>
-					<span class="value">{state.selectedPictograph.letter}</span>
+					<span class="value">{debugState.selectedPictograph.letter}</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Grid Mode:</span>
-					<span class="value">{state.selectedPictograph.grid_mode}</span>
+					<span class="value">{debugState.selectedPictograph.grid_mode}</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Motion Type:</span>
-					<span class="value">{state.currentMotionData.motion_type}</span>
+					<span class="value">{debugState.currentMotionData.motion_type}</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Start→End:</span>
-					<span class="value">{state.currentMotionData.start_ori}→{state.currentMotionData.end_ori}</span>
+					<span class="value">{debugState.currentMotionData.start_ori}→{debugState.currentMotionData.end_ori}</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Turns:</span>
-					<span class="value">{state.currentMotionData.turns}</span>
+					<span class="value">{debugState.currentMotionData.turns}</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Rotation:</span>
-					<span class="value">{state.currentMotionData.prop_rot_dir}</span>
+					<span class="value">{debugState.currentMotionData.prop_rot_dir}</span>
 				</div>
 			</div>
 		</section>

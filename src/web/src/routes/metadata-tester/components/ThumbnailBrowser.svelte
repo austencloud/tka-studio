@@ -8,6 +8,7 @@
 			extractMetadata: (thumbnail: ThumbnailFile) => Promise<void>;
 			loadThumbnails: () => Promise<void>;
 			clearSelection: () => void;
+			handleBatchAnalyze: () => Promise<void>;
 		};
 	}
 
@@ -22,14 +23,29 @@
 	async function handleRefresh() {
 		await state.loadThumbnails();
 	}
+
+	// Handle batch analyze
+	async function handleBatchAnalyze() {
+		await state.handleBatchAnalyze();
+	}
 </script>
 
 <div class="thumbnail-browser">
 	<div class="browser-header">
 		<h2>📁 Available Sequences</h2>
-		<button class="refresh-btn" onclick={handleRefresh} disabled={state.state.isLoadingThumbnails}>
-			{state.state.isLoadingThumbnails ? '🔄' : '↻'} Refresh
-		</button>
+		<div class="header-actions">
+			<button class="batch-analyze-btn" onclick={handleBatchAnalyze} 
+					disabled={state.state.isLoadingThumbnails || state.state.isBatchAnalyzing || state.state.thumbnails.length === 0}>
+				{#if state.state.isBatchAnalyzing}
+					⏳ Analyzing...
+				{:else}
+					🔍 Batch Analyze
+				{/if}
+			</button>
+			<button class="refresh-btn" onclick={handleRefresh} disabled={state.state.isLoadingThumbnails}>
+				{state.state.isLoadingThumbnails ? '🔄' : '↻'} Refresh
+			</button>
+		</div>
 	</div>
 
 	<div class="thumbnail-grid-container">
@@ -99,13 +115,13 @@
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
-	.browser-header h2 {
-		margin: 0;
-		font-size: 1.25rem;
-		color: #60a5fa;
+	.header-actions {
+		display: flex;
+		gap: 10px;
 	}
 
-	.refresh-btn {
+	.refresh-btn,
+	.batch-analyze-btn {
 		background: rgba(59, 130, 246, 0.2);
 		border: 1px solid rgba(59, 130, 246, 0.4);
 		color: #60a5fa;
@@ -116,12 +132,25 @@
 		transition: all 0.2s ease;
 	}
 
-	.refresh-btn:hover:not(:disabled) {
+	.batch-analyze-btn {
+		background: rgba(168, 85, 247, 0.2);
+		border-color: rgba(168, 85, 247, 0.4);
+		color: #a855f7;
+	}
+
+	.refresh-btn:hover:not(:disabled),
+	.batch-analyze-btn:hover:not(:disabled) {
 		background: rgba(59, 130, 246, 0.3);
 		border-color: rgba(59, 130, 246, 0.6);
 	}
 
-	.refresh-btn:disabled {
+	.batch-analyze-btn:hover:not(:disabled) {
+		background: rgba(168, 85, 247, 0.3);
+		border-color: rgba(168, 85, 247, 0.6);
+	}
+
+	.refresh-btn:disabled,
+	.batch-analyze-btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
 	}
@@ -198,9 +227,9 @@
 	}
 
 	.thumbnail-image img {
-		max-width: 100%;
-		max-height: 100%;
-		object-fit: contain;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 		border-radius: 6px;
 	}
 

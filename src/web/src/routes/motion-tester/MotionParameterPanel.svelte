@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { MotionTesterState } from './motion-tester-state.svelte.ts';
+	import type { MotionTesterState } from './state/motion-tester-state.svelte.ts';
 
 	interface Props {
 		state: MotionTesterState;
@@ -43,29 +43,67 @@
 		}
 	}
 
-	// Compact location options
+	// Location options for visual selector
 	const locations = ['n', 'e', 's', 'w'];
+	const motionTypes = ['pro', 'anti', 'float', 'dash'];
+	const orientations = ['in', 'out', 'clock', 'counter'];
 
-	// Simplified orientation options (no cardinal directions)
-	const orientations = [
-		{ value: 'in', label: 'In' },
-		{ value: 'out', label: 'Out' },
-		{ value: 'clock', label: 'Clock' },
-		{ value: 'counter', label: 'Counter' }
-	];
+	// Visual position mapping for location display in the path grid
+	const locationPositions: Record<string, any> = {
+		n: { top: '15%', left: '50%', transform: 'translateX(-50%)' },
+		e: { top: '50%', right: '15%', transform: 'translateY(-50%)' },
+		s: { bottom: '15%', left: '50%', transform: 'translateX(-50%)' },
+		w: { top: '50%', left: '15%', transform: 'translateY(-50%)' }
+	};
 
-	// Update motion type when locations change
-	function updateMotionType(propType: 'blue' | 'red') {
-		const params = propType === 'blue' ? state.blueMotionParams : state.redMotionParams;
-		const newMotionType = getMotionType(params.startLoc, params.endLoc);
-		const availableTypes = getAvailableMotionTypes(params.startLoc, params.endLoc);
+	// Get motion description for display
+	function getMotionDescription(startLoc: string, endLoc: string, motionType: string, turns: number): string {
+		const direction = startLoc === endLoc ? 'STATIC' : `${startLoc.toUpperCase()}→${endLoc.toUpperCase()}`;
+		const rotation = getRotationDirection(startLoc, endLoc, motionType, turns);
+		return `${direction} ${motionType.toUpperCase()} ${turns}T ${rotation}`;
+	}
 
-		// If current motion type is not available, switch to the first available
-		if (!availableTypes.includes(params.motionType)) {
-			if (propType === 'blue') {
-				state.updateBlueMotionParam('motionType', availableTypes[0]);
+	// Get rotation direction for display
+	function getRotationDirection(startLoc: string, endLoc: string, motionType: string, turns: number): string {
+		if (startLoc === endLoc) return 'NO_ROT';
+		if (motionType === 'dash') return 'NO_ROT';
+		if (turns === 0) return 'NO_ROT';
+
+		// Simplified rotation logic for display
+		const clockwisePairs = [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']];
+		const isClockwise = clockwisePairs.some(([start, end]) => start === startLoc && end === endLoc);
+
+		if (motionType === 'pro') {
+			return isClockwise ? 'CW' : 'CCW';
+		} else {
+			return isClockwise ? 'CCW' : 'CW';
+		}
+	}
+
+	// Handle location selection with smart logic
+	function handleLocationClick(prop: 'blue' | 'red', location: string) {
+		const params = prop === 'blue' ? state.blueMotionParams : state.redMotionParams;
+
+		if (params.startLoc === location) {
+			// Clicking start location makes it the end location
+			if (prop === 'blue') {
+				state.updateBlueMotionParam('endLoc', location);
 			} else {
-				state.updateRedMotionParam('motionType', availableTypes[0]);
+				state.updateRedMotionParam('endLoc', location);
+			}
+		} else if (params.endLoc === location) {
+			// Clicking end location makes it the start location
+			if (prop === 'blue') {
+				state.updateBlueMotionParam('startLoc', location);
+			} else {
+				state.updateRedMotionParam('startLoc', location);
+			}
+		} else {
+			// Clicking empty location makes it the end location
+			if (prop === 'blue') {
+				state.updateBlueMotionParam('endLoc', location);
+			} else {
+				state.updateRedMotionParam('endLoc', location);
 			}
 		}
 	}
@@ -73,153 +111,150 @@
 </script>
 
 <div class="motion-params-panel">
-	<h2>🎯 Motion Parameters</h2>
+	<h2>🎯 Motion Designer</h2>
 
-	<!-- Location Controls Section -->
-	<div class="section">
-		<h3>📍 Locations</h3>
-		<div class="location-controls">
-			<!-- Blue Prop -->
-			<div class="prop-row">
-				<div class="prop-label">🔵 Blue</div>
-				<div class="location-selectors">
-					<select
-						value={state.blueMotionParams.startLoc}
-						onchange={(e) => {
-							state.setBlueStartLocation(e.currentTarget.value);
-							updateMotionType('blue');
-						}}
-					>
-						{#each locations as loc}
-							<option value={loc}>{loc.toUpperCase()}</option>
-						{/each}
-					</select>
-					<span class="arrow">→</span>
-					<select
-						value={state.blueMotionParams.endLoc}
-						onchange={(e) => {
-							state.setBlueEndLocation(e.currentTarget.value);
-							updateMotionType('blue');
-						}}
-					>
-						{#each locations as loc}
-							<option value={loc}>{loc.toUpperCase()}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="motion-type-display">
-					{getMotionType(state.blueMotionParams.startLoc, state.blueMotionParams.endLoc).toUpperCase()}
-				</div>
+	<!-- Blue Prop Motion Card -->
+	<div class="motion-card blue-card">
+		<div class="card-header">
+			<div class="prop-indicator blue">
+				<span class="prop-icon">🔵</span>
+				<span class="prop-label">Blue Prop</span>
 			</div>
-
-			<!-- Red Prop -->
-			<div class="prop-row">
-				<div class="prop-label">🔴 Red</div>
-				<div class="location-selectors">
-					<select
-						value={state.redMotionParams.startLoc}
-						onchange={(e) => {
-							state.setRedStartLocation(e.currentTarget.value);
-							updateMotionType('red');
-						}}
-					>
-						{#each locations as loc}
-							<option value={loc}>{loc.toUpperCase()}</option>
-						{/each}
-					</select>
-					<span class="arrow">→</span>
-					<select
-						value={state.redMotionParams.endLoc}
-						onchange={(e) => {
-							state.setRedEndLocation(e.currentTarget.value);
-							updateMotionType('red');
-						}}
-					>
-						{#each locations as loc}
-							<option value={loc}>{loc.toUpperCase()}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="motion-type-display">
-					{getMotionType(state.redMotionParams.startLoc, state.redMotionParams.endLoc).toUpperCase()}
-				</div>
+			<div class="motion-summary">
+				{getMotionDescription(
+					state.blueMotionParams.startLoc,
+					state.blueMotionParams.endLoc,
+					state.blueMotionParams.motionType,
+					state.blueMotionParams.turns
+				)}
 			</div>
 		</div>
-	</div>
 
-	<!-- Motion Details Section -->
-	<div class="section">
-		<h3>⚙️ Motion Details</h3>
-		<div class="motion-controls">
-			<!-- Blue Prop Controls -->
-			<div class="prop-controls-row">
-				<div class="prop-header">🔵 Blue</div>
-				<div class="control-group">
-					<label for="blueMotionType">Motion:</label>
-					<select
-						id="blueMotionType"
-						value={state.blueMotionParams.motionType}
-						onchange={(e) => state.updateBlueMotionParam('motionType', e.currentTarget.value)}
-					>
-						{#each getAvailableMotionTypes(state.blueMotionParams.startLoc, state.blueMotionParams.endLoc) as motionType}
-							<option value={motionType}>{motionType.toUpperCase()}</option>
-						{/each}
-					</select>
+		<!-- Location Selectors -->
+		<div class="location-selectors">
+			<div class="location-group">
+				<label for="blue-start-location">Start Location</label>
+				<select id="blue-start-location" bind:value={state.blueMotionParams.startLoc}>
+					{#each locations as location}
+						<option value={location}>{location.toUpperCase()}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="location-group">
+				<label for="blue-end-location">End Location</label>
+				<select id="blue-end-location" bind:value={state.blueMotionParams.endLoc}>
+					{#each locations as location}
+						<option value={location}>{location.toUpperCase()}</option>
+					{/each}
+				</select>
+			</div>
+		</div>
+
+		<!-- Motion Parameters -->
+		<div class="motion-params">
+			<div class="param-group">
+				<label>Motion Type</label>
+				<div class="motion-type-selector" role="group" aria-label="Blue prop motion type">
+					{#each motionTypes as type}
+						<button
+							class="motion-type-btn {state.blueMotionParams.motionType === type ? 'active' : ''}"
+							onclick={() => state.updateBlueMotionParam('motionType', type)}
+						>
+							{type.toUpperCase()}
+						</button>
+					{/each}
 				</div>
-				<div class="control-group">
-					<label>Turns:</label>
-					<div class="turns-control">
-						<button onclick={() => state.updateBlueMotionParam('turns', Math.max(0, state.blueMotionParams.turns - 0.5))}>−</button>
+			</div>
+
+			<div class="param-row">
+				<div class="param-group">
+					<span class="param-label">Turns</span>
+					<div class="turns-control" role="group" aria-label="Blue prop turns">
+						<button onclick={() => state.updateBlueMotionParam('turns', Math.max(0, state.blueMotionParams.turns - 1))}>−</button>
 						<span class="turns-value">{state.blueMotionParams.turns}</span>
-						<button onclick={() => state.updateBlueMotionParam('turns', Math.min(10, state.blueMotionParams.turns + 0.5))}>+</button>
+						<button onclick={() => state.updateBlueMotionParam('turns', state.blueMotionParams.turns + 1)}>+</button>
 					</div>
 				</div>
-				<div class="control-group">
-					<label for="blueStartOri">Start Ori:</label>
-					<select
-						id="blueStartOri"
-						value={state.blueMotionParams.startOri}
-						onchange={(e) => state.updateBlueMotionParam('startOri', e.currentTarget.value)}
-					>
-						{#each orientations as ori}
-							<option value={ori.value}>{ori.label}</option>
+
+				<div class="param-group">
+					<label for="blue-start-orientation">Start Orientation</label>
+					<select id="blue-start-orientation" bind:value={state.blueMotionParams.startOri}>
+						{#each orientations as orientation}
+							<option value={orientation}>{orientation.charAt(0).toUpperCase() + orientation.slice(1)}</option>
 						{/each}
 					</select>
 				</div>
 			</div>
+		</div>
+	</div>
+	<!-- Red Prop Motion Card -->
+	<div class="motion-card red-card">
+		<div class="card-header">
+			<div class="prop-indicator red">
+				<span class="prop-icon">🔴</span>
+				<span class="prop-label">Red Prop</span>
+			</div>
+			<div class="motion-summary">
+				{getMotionDescription(
+					state.redMotionParams.startLoc,
+					state.redMotionParams.endLoc,
+					state.redMotionParams.motionType,
+					state.redMotionParams.turns
+				)}
+			</div>
+		</div>
 
-			<!-- Red Prop Controls -->
-			<div class="prop-controls-row">
-				<div class="prop-header">🔴 Red</div>
-				<div class="control-group">
-					<label for="redMotionType">Motion:</label>
-					<select
-						id="redMotionType"
-						value={state.redMotionParams.motionType}
-						onchange={(e) => state.updateRedMotionParam('motionType', e.currentTarget.value)}
-					>
-						{#each getAvailableMotionTypes(state.redMotionParams.startLoc, state.redMotionParams.endLoc) as motionType}
-							<option value={motionType}>{motionType.toUpperCase()}</option>
-						{/each}
-					</select>
+		<!-- Location Selectors -->
+		<div class="location-selectors">
+			<div class="location-group">
+				<label for="red-start-location">Start Location</label>
+				<select id="red-start-location" bind:value={state.redMotionParams.startLoc}>
+					{#each locations as location}
+						<option value={location}>{location.toUpperCase()}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="location-group">
+				<label for="red-end-location">End Location</label>
+				<select id="red-end-location" bind:value={state.redMotionParams.endLoc}>
+					{#each locations as location}
+						<option value={location}>{location.toUpperCase()}</option>
+					{/each}
+				</select>
+			</div>
+		</div>
+
+		<!-- Motion Parameters -->
+		<div class="motion-params">
+			<div class="param-group">
+				<span class="param-label">Motion Type</span>
+				<div class="motion-type-selector" role="group" aria-label="Red prop motion type">
+					{#each motionTypes as type}
+						<button
+							class="motion-type-btn {state.redMotionParams.motionType === type ? 'active' : ''}"
+							onclick={() => state.updateRedMotionParam('motionType', type)}
+						>
+							{type.toUpperCase()}
+						</button>
+					{/each}
 				</div>
-				<div class="control-group">
-					<label>Turns:</label>
+			</div>
+
+			<div class="param-row">
+				<div class="param-group">
+					<label>Turns</label>
 					<div class="turns-control">
-						<button onclick={() => state.updateRedMotionParam('turns', Math.max(0, state.redMotionParams.turns - 0.5))}>−</button>
+						<button onclick={() => state.updateRedMotionParam('turns', Math.max(0, state.redMotionParams.turns - 1))}>−</button>
 						<span class="turns-value">{state.redMotionParams.turns}</span>
-						<button onclick={() => state.updateRedMotionParam('turns', Math.min(10, state.redMotionParams.turns + 0.5))}>+</button>
+						<button onclick={() => state.updateRedMotionParam('turns', state.redMotionParams.turns + 1)}>+</button>
 					</div>
 				</div>
-				<div class="control-group">
-					<label for="redStartOri">Start Ori:</label>
-					<select
-						id="redStartOri"
-						value={state.redMotionParams.startOri}
-						onchange={(e) => state.updateRedMotionParam('startOri', e.currentTarget.value)}
-					>
-						{#each orientations as ori}
-							<option value={ori.value}>{ori.label}</option>
+
+				<div class="param-group">
+					<label>Start Orientation</label>
+					<select bind:value={state.redMotionParams.startOri} onchange={(e) => state.updateRedMotionParam('startOri', e.target.value)}>
+						{#each orientations as orientation}
+							<option value={orientation}>{orientation.charAt(0).toUpperCase() + orientation.slice(1)}</option>
 						{/each}
 					</select>
 				</div>
@@ -227,90 +262,36 @@
 		</div>
 	</div>
 
-	<!-- Animation Control Section -->
-	<div class="section">
-		<h3>🎬 Animation Control</h3>
-		<div class="animation-controls">
-			<div class="control-group">
-				<label for="progressSlider">Progress:</label>
-				<div class="slider-container">
-					<input
-						id="progressSlider"
-						type="range"
-						min="0"
-						max="1"
-						step="0.01"
-						value={state.animationState.progress}
-						oninput={(e) => state.setProgress(parseFloat(e.currentTarget.value))}
-					>
-					<span class="progress-value">{Math.round(state.animationState.progress * 100)}%</span>
-				</div>
-			</div>
+	<!-- Quick Test Section -->
+	<div class="quick-tests-section">
+		<h3>⚡ Quick Tests</h3>
+		<div class="quick-tests">
+			<button class="quick-test-btn" onclick={() => {
+				state.updateBlueMotionParam('startLoc', 'n');
+				state.updateBlueMotionParam('endLoc', 'e');
+				state.updateBlueMotionParam('motionType', 'pro');
+				state.updateBlueMotionParam('turns', 1);
+			}}>N→E PRO</button>
+			<button class="quick-test-btn" onclick={() => {
+				state.updateBlueMotionParam('startLoc', 'e');
+				state.updateBlueMotionParam('endLoc', 'w');
+				state.updateBlueMotionParam('motionType', 'dash');
+				state.updateBlueMotionParam('turns', 0);
+			}}>E→W DASH</button>
+			<button class="quick-test-btn" onclick={() => {
+				state.updateBlueMotionParam('startLoc', 's');
+				state.updateBlueMotionParam('endLoc', 'w');
+				state.updateBlueMotionParam('motionType', 'anti');
+				state.updateBlueMotionParam('turns', 1);
+			}}>S→W ANTI</button>
+			<button class="quick-test-btn" onclick={() => {
+				state.updateBlueMotionParam('startLoc', 'n');
+				state.updateBlueMotionParam('endLoc', 's');
+				state.updateBlueMotionParam('motionType', 'float');
+				state.updateBlueMotionParam('turns', 0);
+			}}>N→S FLOAT</button>
 		</div>
 	</div>
-
-	<!-- Prop Visibility Section -->
-	<div class="section">
-		<h3>👁️ Visibility</h3>
-		<div class="visibility-controls">
-			<div class="visibility-row">
-				<label>
-					<input
-						type="checkbox"
-						checked={state.propVisibility.blue}
-						onchange={(e) => state.setBluePropVisible(e.currentTarget.checked)}
-					>
-					🔵 Blue Prop
-				</label>
-				<label>
-					<input
-						type="checkbox"
-						checked={state.propVisibility.red}
-						onchange={(e) => state.setRedPropVisible(e.currentTarget.checked)}
-					>
-					🔴 Red Prop
-				</label>
-			</div>
-		</div>
-	</div>
-
-
-	<!-- Progress Control -->
-	<div class="input-group">
-		<label for="progressSlider">Animation Progress</label>
-		<div class="slider-container">
-			<input 
-				id="progressSlider"
-				type="range" 
-				min="0" 
-				max="100" 
-				value={state.animationState.progress * 100}
-				oninput={(e) => state.setProgress(parseFloat(e.currentTarget.value) / 100)}
-			>
-			<div class="slider-value">
-				{(state.animationState.progress * 100).toFixed(1)}%
-			</div>
-		</div>
-	</div>
-
-	<!-- Animation Speed -->
-	<div class="input-group">
-		<label for="speedSlider">Animation Speed</label>
-		<div class="slider-container">
-			<input 
-				id="speedSlider"
-				type="range" 
-				min="1" 
-				max="100" 
-				value={state.animationState.speed * 1000}
-				oninput={(e) => state.setSpeed(parseFloat(e.currentTarget.value) / 1000)}
-			>
-			<div class="slider-value">
-				{(state.animationState.speed * 1000).toFixed(0)}%
-			</div>
-		</div>
-	</div>
-
 
 </div>
 
@@ -319,275 +300,268 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		min-height: 100vh;
 		gap: 20px;
 		padding: 20px;
 		box-sizing: border-box;
+		overflow-y: auto;
 	}
 
 	h2 {
 		margin: 0 0 20px 0;
 		color: #e0e7ff;
-		font-size: 1.2rem;
-		border-bottom: 2px solid rgba(99, 102, 241, 0.3);
-		padding-bottom: 10px;
+		font-size: 1.3rem;
+		font-weight: 700;
 		text-align: center;
+		background: linear-gradient(135deg, #6366f1, #8b5cf6);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
 	}
 
-	h3 {
-		margin: 0 0 15px 0;
-		color: #c7d2fe;
-		font-size: 1rem;
-		font-weight: 600;
-	}
-
-	.section {
-		background: rgba(0, 0, 0, 0.1);
+	/* Motion Card Styles */
+	.motion-card {
+		background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
 		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 8px;
+		border-radius: 12px;
 		padding: 20px;
-		flex: 1;
-		min-height: 120px;
+		margin-bottom: 20px;
+		backdrop-filter: blur(10px);
+		transition: all 0.3s ease;
 	}
 
-	.prop-row {
-		display: grid;
-		grid-template-columns: 60px 1fr 80px;
-		gap: 10px;
+	.motion-card:hover {
+		border-color: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	}
+
+	.blue-card {
+		border-left: 4px solid #60a5fa;
+	}
+
+	.red-card {
+		border-left: 4px solid #f87171;
+	}
+
+	/* Card Header */
+	.card-header {
+		display: flex;
+		justify-content: space-between;
 		align-items: center;
+		margin-bottom: 20px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.prop-indicator {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.prop-icon {
+		font-size: 1.2rem;
 	}
 
 	.prop-label {
 		font-weight: 600;
-		font-size: 0.9rem;
-		color: #c7d2fe;
+		color: #e0e7ff;
+		font-size: 1.1rem;
 	}
 
+	.motion-summary {
+		background: rgba(99, 102, 241, 0.2);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		border-radius: 8px;
+		padding: 8px 16px;
+		color: #c7d2fe;
+		font-size: 13px;
+		font-weight: 600;
+		font-family: 'Courier New', monospace;
+	}
+
+	/* Location Selectors */
 	.location-selectors {
+		margin-bottom: 20px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 15px;
+	}
+
+	.location-group {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		gap: 8px;
 	}
 
-	.location-selectors select {
-		flex: 1;
-		padding: 6px 8px;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
-		background: rgba(255, 255, 255, 0.1);
-		color: white;
-		font-size: 13px;
-	}
-
-	.arrow {
-		color: #fbbf24;
-		font-weight: bold;
-		font-size: 16px;
-	}
-
-	.motion-type-display {
-		background: rgba(99, 102, 241, 0.2);
-		padding: 4px 8px;
-		border-radius: 4px;
-		text-align: center;
-		font-size: 11px;
+	.location-group label {
+		color: #c7d2fe;
+		font-size: 14px;
 		font-weight: 600;
-		color: #a5b4fc;
 	}
 
-	.motion-controls {
-		background: rgba(0, 0, 0, 0.15);
-		padding: 12px;
+	.location-group select {
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.2);
 		border-radius: 6px;
+		color: white;
+		padding: 10px 12px;
+		font-size: 14px;
+		transition: all 0.2s ease;
+	}
+
+	.location-group select:focus {
+		outline: none;
+		border-color: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+	}
+
+	/* Motion Parameters */
+	.motion-params {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 15px;
 	}
 
-	.prop-controls-row {
+	.param-group {
 		display: flex;
-		align-items: center;
-		gap: 12px;
-		flex-wrap: wrap;
+		flex-direction: column;
+		gap: 8px;
 	}
 
-	.prop-header {
+	.param-group label {
+		color: #c7d2fe;
+		font-size: 14px;
 		font-weight: 600;
-		font-size: 0.9rem;
-		color: #c7d2fe;
-		min-width: 60px;
 	}
 
-	.control-group {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 0.8rem;
+	.motion-type-selector {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 8px;
 	}
 
-	.control-group label {
-		color: #c7d2fe;
-		font-size: 0.75rem;
-		min-width: 50px;
+	.motion-type-btn {
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 6px;
+		color: #e0e7ff;
+		padding: 10px 15px;
+		cursor: pointer;
+		font-size: 13px;
+		font-weight: 600;
+		transition: all 0.2s ease;
 	}
 
-	.control-group select {
-		padding: 4px 6px;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 3px;
-		background: rgba(255, 255, 255, 0.1);
-		color: white;
-		font-size: 11px;
-		min-width: 70px;
+	.motion-type-btn:hover {
+		background: rgba(99, 102, 241, 0.2);
+		border-color: rgba(99, 102, 241, 0.4);
+	}
+
+	.motion-type-btn.active {
+		background: rgba(99, 102, 241, 0.4);
+		border-color: rgba(99, 102, 241, 0.6);
+		box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+	}
+
+	.param-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 15px;
 	}
 
 	.turns-control {
 		display: flex;
 		align-items: center;
-		gap: 4px;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 3px;
-		padding: 2px;
+		gap: 10px;
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 6px;
+		padding: 8px;
 	}
 
 	.turns-control button {
 		background: rgba(99, 102, 241, 0.3);
-		border: none;
+		border: 1px solid rgba(99, 102, 241, 0.5);
+		border-radius: 4px;
 		color: white;
-		width: 20px;
-		height: 20px;
-		border-radius: 2px;
-		cursor: pointer;
-		font-size: 12px;
+		width: 30px;
+		height: 30px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		cursor: pointer;
+		font-size: 16px;
+		font-weight: bold;
+		transition: all 0.2s ease;
 	}
 
 	.turns-control button:hover {
 		background: rgba(99, 102, 241, 0.5);
+		transform: scale(1.1);
 	}
 
 	.turns-value {
 		color: white;
-		font-size: 11px;
-		min-width: 20px;
-		text-align: center;
-	}
-
-	.location-controls {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-	}
-
-	.animation-controls {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-	}
-
-	.visibility-controls {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-	}
-
-	.visibility-row {
-		display: flex;
-		gap: 20px;
-		flex-wrap: wrap;
-	}
-
-	.visibility-row label {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		color: #c7d2fe;
-		font-size: 0.9rem;
-		cursor: pointer;
-	}
-
-	.visibility-row input[type="checkbox"] {
-		width: 16px;
-		height: 16px;
-		accent-color: #6366f1;
-	}
-
-	.slider-container {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
-
-	.slider-container input[type="range"] {
-		flex: 1;
-		height: 6px;
-		background: rgba(255, 255, 255, 0.2);
-		border-radius: 3px;
-		outline: none;
-		-webkit-appearance: none;
-	}
-
-	.slider-container input[type="range"]::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		width: 16px;
-		height: 16px;
-		background: #6366f1;
-		border-radius: 50%;
-		cursor: pointer;
-	}
-
-	.progress-value {
-		color: #fbbf24;
-		font-size: 0.8rem;
 		font-weight: 600;
-		min-width: 40px;
-		text-align: right;
+		min-width: 30px;
+		text-align: center;
+		font-size: 16px;
 	}
 
-
-	.auto-row {
-		display: flex;
-		justify-content: space-between;
-		font-size: 0.8rem;
-		color: #c7d2fe;
-		margin-bottom: 4px;
+	.param-group select {
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 6px;
+		color: white;
+		padding: 10px 12px;
+		font-size: 14px;
+		transition: all 0.2s ease;
 	}
 
-	.auto-row:last-child {
-		margin-bottom: 0;
+	.param-group select:focus {
+		outline: none;
+		border-color: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 	}
 
-	.orientation-visualizer {
+	/* Quick Tests */
+	.quick-tests-section {
+		background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+		border: 1px solid rgba(34, 197, 94, 0.2);
+		border-radius: 12px;
+		padding: 20px;
+		margin-top: 10px;
+	}
+
+	.quick-tests-section h3 {
+		margin: 0 0 15px 0;
+		color: #bbf7d0;
+		font-size: 1rem;
+		font-weight: 600;
+	}
+
+	.quick-tests {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(2, 1fr);
 		gap: 10px;
 	}
 
-	.orientation-display {
-		padding: 12px;
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 8px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		text-align: center;
+	.quick-test-btn {
+		background: rgba(34, 197, 94, 0.2);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+		border-radius: 6px;
+		color: #bbf7d0;
+		padding: 12px 16px;
+		cursor: pointer;
+		font-size: 13px;
+		font-weight: 600;
+		transition: all 0.2s ease;
 	}
 
-	.orientation-display h4 {
-		margin: 0 0 8px 0;
-		color: #fbbf24;
-		font-size: 0.9rem;
-	}
-
-	.orientation-arrow {
-		font-size: 1.5rem;
-		margin: 8px 0;
-	}
-
-	.orientation-text {
-		font-size: 0.8rem;
-		color: #c7d2fe;
-		text-transform: capitalize;
+	.quick-test-btn:hover {
+		background: rgba(34, 197, 94, 0.3);
+		border-color: rgba(34, 197, 94, 0.5);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
 	}
 </style>

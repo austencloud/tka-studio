@@ -5,14 +5,11 @@ Manages quiz sessions, state tracking, and session lifecycle
 for the learning module.
 """
 
-from __future__ import annotations
-
-from datetime import datetime
 import logging
+from datetime import datetime
 
 from desktop.modern.core.interfaces.learn_services import IQuizSessionService
 from desktop.modern.domain.models.learn import LessonType, QuizMode, QuizSession
-
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +70,7 @@ class QuizSessionService(IQuizSessionService):
             return session.session_id
 
         except Exception as e:
-            logger.exception(f"Failed to create quiz session: {e}")
+            logger.error(f"Failed to create quiz session: {e}")
             raise
 
     def get_session(self, session_id: str) -> QuizSession | None:
@@ -154,7 +151,7 @@ class QuizSessionService(IQuizSessionService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to update session {session_id}: {e}")
+            logger.error(f"Failed to update session {session_id}: {e}")
             return False
 
     def end_session(self, session_id: str) -> bool:
@@ -190,7 +187,7 @@ class QuizSessionService(IQuizSessionService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to end session {session_id}: {e}")
+            logger.error(f"Failed to end session {session_id}: {e}")
             return False
 
     def get_active_sessions(self) -> list[QuizSession]:
@@ -203,7 +200,7 @@ class QuizSessionService(IQuizSessionService):
         try:
             return list(self._active_sessions.values())
         except Exception as e:
-            logger.exception(f"Failed to get active sessions: {e}")
+            logger.error(f"Failed to get active sessions: {e}")
             return []
 
     def get_completed_sessions(self) -> list[QuizSession]:
@@ -216,7 +213,7 @@ class QuizSessionService(IQuizSessionService):
         try:
             return list(self._completed_sessions.values())
         except Exception as e:
-            logger.exception(f"Failed to get completed sessions: {e}")
+            logger.error(f"Failed to get completed sessions: {e}")
             return []
 
     def cleanup_old_sessions(self, max_age_hours: int = 24) -> int:
@@ -263,7 +260,7 @@ class QuizSessionService(IQuizSessionService):
             return cleaned_count
 
         except Exception as e:
-            logger.exception(f"Failed to cleanup old sessions: {e}")
+            logger.error(f"Failed to cleanup old sessions: {e}")
             return 0
 
     def get_session_statistics(self) -> dict[str, int]:
@@ -281,5 +278,5 @@ class QuizSessionService(IQuizSessionService):
                 + len(self._completed_sessions),
             }
         except Exception as e:
-            logger.exception(f"Failed to get session statistics: {e}")
+            logger.error(f"Failed to get session statistics: {e}")
             return {"active_sessions": 0, "completed_sessions": 0, "total_sessions": 0}

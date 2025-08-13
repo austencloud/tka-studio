@@ -12,6 +12,16 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+# Fix VS Code debugger Unicode encoding issue
+try:
+    if sys.stdout.encoding != 'utf-8':
+        sys.stdout.reconfigure(encoding='utf-8')
+    if sys.stderr.encoding != 'utf-8':
+        sys.stderr.reconfigure(encoding='utf-8')
+except (AttributeError, OSError):
+    # Fallback for older Python versions or restricted environments
+    pass
+
 
 # Check if tka_paths has already been imported (e.g., from root main.py)
 if "tka_paths" not in sys.modules:

@@ -240,7 +240,7 @@ class EnhancedExportPreviewCard(QFrame):
     def set_export_service(self, export_service):
         """Set the export service (for compatibility)."""
         self.export_service = export_service
-        print("🔌 [PREVIEW] Export service connected (fallback preview mode)")
+        print("[PREVIEW] Export service connected (fallback preview mode)")
 
     def set_sequence_data(self, sequence: SequenceData | None, word: str = "Preview"):
         """Set the current sequence data."""

@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { createMotionTesterState } from '../../../routes/motion-tester/motion-tester-state.svelte';
+	import { createMotionTesterState } from '../../../routes/motion-tester/state/motion-tester-state.svelte';
 	import MotionParameterPanel from '../../../routes/motion-tester/MotionParameterPanel.svelte';
-	import MotionTesterCanvas from '../../../routes/motion-tester/MotionTesterCanvas.svelte';
-	import DebugInfoPanel from '../../../routes/motion-tester/DebugInfoPanel.svelte';
+	import PictographVisualizationPanel from '../../../routes/motion-tester/PictographVisualizationPanel.svelte';
 
 	// Initialize the motion tester state
 	const state = createMotionTesterState();
-	
+
 	console.log('🎯 MotionTesterTab rendered!');
 </script>
 
@@ -22,14 +21,9 @@
 			<MotionParameterPanel {state} />
 		</div>
 
-		<!-- Center Panel: Canvas Visualization -->
-		<div class="panel canvas-panel">
-			<MotionTesterCanvas {state} />
-		</div>
-
-		<!-- Right Panel: Debug Information -->
-		<div class="panel debug-panel">
-			<DebugInfoPanel {state} />
+		<!-- Right Panel: Pictograph Visualization -->
+		<div class="panel visualization-panel">
+			<PictographVisualizationPanel {state} />
 		</div>
 	</main>
 </div>
@@ -71,8 +65,8 @@
 
 	.tester-main {
 		display: grid;
-		grid-template-columns: 320px 1fr 320px;
-		gap: 15px;
+		grid-template-columns: 400px 1fr;
+		gap: 20px;
 		flex: 1;
 		min-height: 0;
 	}
@@ -86,19 +80,17 @@
 		overflow-y: auto;
 	}
 
-	.canvas-panel {
+	.visualization-panel {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
 		background: rgba(255, 255, 255, 0.05);
 	}
 
 	/* Responsive design */
 	@media (max-width: 1200px) {
 		.tester-main {
-			grid-template-columns: 280px 1fr 280px;
-			gap: 12px;
+			grid-template-columns: 350px 1fr;
+			gap: 15px;
 		}
 	}
 
@@ -106,11 +98,11 @@
 		.motion-tester-tab {
 			padding: 15px;
 		}
-		
+
 		.tester-main {
 			grid-template-columns: 1fr;
-			grid-template-rows: auto auto 1fr;
-			gap: 10px;
+			grid-template-rows: auto 1fr;
+			gap: 15px;
 		}
 
 		.panel {

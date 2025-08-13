@@ -15,7 +15,6 @@ from .modern_to_legacy_converter import ModernToLegacyConverter
 
 
 # from .pictograph_factory import PictographFactory
-# from .position_attribute_mapper import PositionAttributeMapper
 
 
 # from .position_resolver import PositionResolver
@@ -28,6 +27,6 @@ __all__ = [
     "LegacyToModernConverter",
     "ModernToLegacyConverter",
     # "PictographFactory",
-    # "PositionAttributeMapper",
+    "PositionAttributeMapper",
     # "PositionResolver",
 ]

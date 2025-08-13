@@ -41,7 +41,14 @@
 
 	<!-- Calculation Status -->
 	<section class="debug-section">
-		<div class="section-header" onclick={() => state.toggleSection('calculation_status')}>
+		<div 
+			class="section-header" 
+			onclick={() => state.toggleSection('calculation_status')}
+			onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('calculation_status') : null}
+			role="button"
+			tabindex="0"
+			aria-expanded={state.expandedSections.has('calculation_status')}
+		>
 			<h3>⚙️ Calculation Status</h3>
 			<span class="toggle-icon {state.expandedSections.has('calculation_status') ? 'expanded' : ''}">▼</span>
 		</div>
@@ -81,7 +88,14 @@
 	<!-- Step 1: Location Calculation -->
 	{#if isStepVisible(1)}
 		<section class="debug-section step-section" data-status={getStepStatus(1)}>
-			<div class="section-header" onclick={() => state.toggleSection('location_calc')}>
+			<div 
+				class="section-header" 
+				onclick={() => state.toggleSection('location_calc')}
+				onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('location_calc') : null}
+				role="button"
+				tabindex="0"
+				aria-expanded={state.expandedSections.has('location_calc')}
+			>
 				<h3>📍 Step 1: Location Calculation</h3>
 				<span class="step-status">{getStepStatus(1)}</span>
 				<span class="toggle-icon {state.expandedSections.has('location_calc') ? 'expanded' : ''}">▼</span>
@@ -130,7 +144,14 @@
 	<!-- Step 2: Initial Position -->
 	{#if isStepVisible(2)}
 		<section class="debug-section step-section" data-status={getStepStatus(2)}>
-			<div class="section-header" onclick={() => state.toggleSection('initial_pos')}>
+			<div 
+				class="section-header" 
+				onclick={() => state.toggleSection('initial_pos')}
+				onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('initial_pos') : null}
+				role="button"
+				tabindex="0"
+				aria-expanded={state.expandedSections.has('initial_pos')}
+			>
 				<h3>🎯 Step 2: Initial Position</h3>
 				<span class="step-status">{getStepStatus(2)}</span>
 				<span class="toggle-icon {state.expandedSections.has('initial_pos') ? 'expanded' : ''}">▼</span>
@@ -182,7 +203,14 @@
 	<!-- Step 3: Default Adjustment -->
 	{#if isStepVisible(3)}
 		<section class="debug-section step-section" data-status={getStepStatus(3)}>
-			<div class="section-header" onclick={() => state.toggleSection('default_adj')}>
+			<div 
+				class="section-header" 
+				onclick={() => state.toggleSection('default_adj')}
+				onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('default_adj') : null}
+				role="button"
+				tabindex="0"
+				aria-expanded={state.expandedSections.has('default_adj')}
+			>
 				<h3>⚙️ Step 3: Default Adjustment</h3>
 				<span class="step-status">{getStepStatus(3)}</span>
 				<span class="toggle-icon {state.expandedSections.has('default_adj') ? 'expanded' : ''}">▼</span>
@@ -231,7 +259,14 @@
 	<!-- Step 4: Special Adjustment -->
 	{#if isStepVisible(4)}
 		<section class="debug-section step-section" data-status={getStepStatus(4)}>
-			<div class="section-header" onclick={() => state.toggleSection('special_adj')}>
+			<div 
+				class="section-header" 
+				onclick={() => state.toggleSection('special_adj')}
+				onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('special_adj') : null}
+				role="button"
+				tabindex="0"
+				aria-expanded={state.expandedSections.has('special_adj')}
+			>
 				<h3>✨ Step 4: Special Adjustment</h3>
 				<span class="step-status">{getStepStatus(4)}</span>
 				<span class="toggle-icon {state.expandedSections.has('special_adj') ? 'expanded' : ''}">▼</span>
@@ -288,7 +323,14 @@
 	<!-- Step 5: Final Result -->
 	{#if isStepVisible(5)}
 		<section class="debug-section step-section" data-status={getStepStatus(5)}>
-			<div class="section-header" onclick={() => state.toggleSection('final_result')}>
+			<div 
+				class="section-header" 
+				onclick={() => state.toggleSection('final_result')}
+				onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? state.toggleSection('final_result') : null}
+				role="button"
+				tabindex="0"
+				aria-expanded={state.expandedSections.has('final_result')}
+			>
 				<h3>🎯 Step 5: Final Result</h3>
 				<span class="step-status">{getStepStatus(5)}</span>
 				<span class="toggle-icon {state.expandedSections.has('final_result') ? 'expanded' : ''}">▼</span>

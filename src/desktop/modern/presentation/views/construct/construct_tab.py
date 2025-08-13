@@ -171,7 +171,7 @@ class ConstructTab(QWidget):
             loading_service.load_sequence_on_startup()
 
         except Exception as e:
-            print(f"❌ ConstructTab: Failed to create signal coordinator: {e}")
+            print(f"ConstructTab: Failed to create signal coordinator: {e}")
             import traceback
 
             traceback.print_exc()
@@ -251,10 +251,10 @@ class ConstructTab(QWidget):
         # This method should not be called anymore since we're using the real GeneratePanel
         # The GeneratePanel's controller will handle the generation and emit sequence_generated
         print(
-            f"⚠️ ConstructTab: Deprecated generation request handler called: {generation_config}"
+            f"ConstructTab: Deprecated generation request handler called: {generation_config}"
         )
         print(
-            "⚠️ ConstructTab: Generation should be handled by GeneratePanel controller"
+            "ConstructTab: Generation should be handled by GeneratePanel controller"
         )
 
         # Don't emit fake success - let the real generation system work
@@ -292,14 +292,14 @@ class ConstructTab(QWidget):
 
                     else:
                         print(
-                            f"❌ ConstructTab: No beat operations available for beat {i + 1}"
+                            f"ConstructTab: No beat operations available for beat {i + 1}"
                         )
 
                 except Exception as beat_error:
-                    print(f"❌ ConstructTab: Failed to add beat {i + 1}: {beat_error}")
+                    print(f"ConstructTab: Failed to add beat {i + 1}: {beat_error}")
 
         except Exception as e:
-            print(f"❌ ConstructTab: Failed to load generated sequence: {e}")
+            print(f"ConstructTab: Failed to load generated sequence: {e}")
             import traceback
 
             traceback.print_exc()

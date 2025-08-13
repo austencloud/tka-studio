@@ -5,12 +5,9 @@ Provides UI state management, responsive sizing calculations,
 and styling support for the learn tab components.
 """
 
-from __future__ import annotations
-
 import logging
 
 from desktop.modern.core.interfaces.learn_services import ILearnUIService
-
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +65,7 @@ class LearnUIService(ILearnUIService):
             return font_sizes
 
         except Exception as e:
-            logger.exception(f"Failed to calculate font sizes: {e}")
+            logger.error(f"Failed to calculate font sizes: {e}")
             return self._get_default_font_sizes()
 
     def get_component_sizes(
@@ -114,7 +111,7 @@ class LearnUIService(ILearnUIService):
             return component_sizes
 
         except Exception as e:
-            logger.exception(f"Failed to calculate component sizes: {e}")
+            logger.error(f"Failed to calculate component sizes: {e}")
             return self._get_default_component_sizes()
 
     def get_layout_spacing(
@@ -154,7 +151,7 @@ class LearnUIService(ILearnUIService):
             return spacing
 
         except Exception as e:
-            logger.exception(f"Failed to calculate layout spacing: {e}")
+            logger.error(f"Failed to calculate layout spacing: {e}")
             return self._get_default_spacing()
 
     def get_color_scheme(self, background_type: str = "default") -> dict[str, str]:
@@ -200,7 +197,7 @@ class LearnUIService(ILearnUIService):
             return colors
 
         except Exception as e:
-            logger.exception(f"Failed to get color scheme: {e}")
+            logger.error(f"Failed to get color scheme: {e}")
             return self._get_default_colors()
 
     def calculate_responsive_dimensions(
@@ -235,7 +232,7 @@ class LearnUIService(ILearnUIService):
             return (max(width, 100), max(height, 100))
 
         except Exception as e:
-            logger.exception(f"Failed to calculate responsive dimensions: {e}")
+            logger.error(f"Failed to calculate responsive dimensions: {e}")
             return (200, 200)
 
     def _get_default_font_sizes(self) -> dict[str, int]:

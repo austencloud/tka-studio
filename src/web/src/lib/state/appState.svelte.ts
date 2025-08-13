@@ -55,7 +55,8 @@ type TabId =
   | "write"
   | "learn"
   | "about"
-  | "motion-tester";
+  | "motion-tester"
+  | "arrow-debug";
 
 const uiState = $state({
   activeTab: "browse" as TabId, // Temporarily changed from construct to avoid About tab

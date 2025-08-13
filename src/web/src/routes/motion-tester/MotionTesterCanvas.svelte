@@ -1,12 +1,23 @@
 <script lang="ts">
 	import type { MotionTesterState } from './state/motion-tester-state.svelte';
 	import { AnimatorCanvas } from '$lib/animator';
+	import AnimationControl from './components/AnimationControl.svelte';
+	import GridOptionsControl from './components/GridOptionsControl.svelte';
 
 	interface Props {
 		state: MotionTesterState;
 	}
 
 	let { state }: Props = $props();
+
+	// Animation control handlers
+	function handlePlayPause() {
+		if (state.animationState.isPlaying) {
+			state.stopAnimation();
+		} else {
+			state.startAnimation();
+		}
+	}
 </script>
 
 <div class="canvas-container">
@@ -38,43 +49,43 @@
 		>
 			▶ Play
 		</button>
-		<button 
+		<button
 			class="control-btn"
-			onclick={state.pauseAnimation}
+			onclick={state.stopAnimation}
 			disabled={!state.animationState.isPlaying}
 		>
-			⏸ Pause
+			⏸ Stop
 		</button>
-		<button 
+		<button
 			class="control-btn"
 			onclick={state.resetAnimation}
 			disabled={!state.isEngineInitialized}
 		>
 			⏹ Reset
 		</button>
-		<button 
-			class="control-btn"
-			onclick={state.stepAnimation}
-			disabled={state.animationState.isPlaying || !state.isEngineInitialized}
-		>
-			⏭ Step
-		</button>
 	</div>
 
-	<div class="motion-legend">
-		<div class="legend-item">
-			<div class="legend-color blue"></div>
-			<span>Blue Prop</span>
-		</div>
-		<div class="legend-item">
-			<div class="legend-color red"></div>
-			<span>Red Prop</span>
-		</div>
-		<div class="legend-item">
-			<div class="legend-color grid"></div>
-			<span>Diamond Grid</span>
-		</div>
+	<!-- Progress Control -->
+	<div class="progress-section">
+		<AnimationControl
+			progress={state.animationState.progress}
+			isPlaying={state.animationState.isPlaying}
+			onProgressChange={state.setProgress}
+			onPlayPause={handlePlayPause}
+			onReset={state.resetAnimation}
+		/>
 	</div>
+
+	<!-- Grid Options -->
+	<div class="grid-section">
+		<h3>🔲 Grid Options</h3>
+		<GridOptionsControl
+			gridType={state.gridType}
+			onGridTypeChange={state.setGridType}
+		/>
+	</div>
+
+
 
 	<!-- Real-time state display -->
 	<div class="current-state">
@@ -177,40 +188,7 @@
 		background: linear-gradient(135deg, #10b981, #059669);
 	}
 
-	.motion-legend {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 15px;
-		justify-content: center;
-		margin-top: 10px;
-	}
 
-	.legend-item {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 0.875rem;
-		color: #c7d2fe;
-	}
-
-	.legend-color {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
-	}
-
-	.legend-color.blue {
-		background: #3b82f6;
-	}
-
-	.legend-color.red {
-		background: #ef4444;
-	}
-
-	.legend-color.grid {
-		background: rgba(255, 255, 255, 0.3);
-		border: 1px solid #6366f1;
-	}
 
 	.current-state {
 		background: rgba(34, 197, 94, 0.1);

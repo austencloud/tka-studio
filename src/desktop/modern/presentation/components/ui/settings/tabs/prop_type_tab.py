@@ -138,21 +138,25 @@ class PropTypeTab(QWidget):
         grid_layout.setSpacing(8)
         grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Define props with their icon paths (like legacy)
+        # Define props with their icon paths (absolute paths to modern/images)
+        from pathlib import Path
+        # Navigate from this file to the modern directory: tabs -> settings -> ui -> components -> presentation -> modern
+        modern_dir = Path(__file__).parent.parent.parent.parent.parent.parent
+        images_dir = modern_dir / "images"
         props = {
-            "Staff": "images/props/staff.svg",
-            "Simplestaff": "images/props/simple_staff.svg",
-            "Club": "images/props/club.svg",
-            "Fan": "images/props/fan.svg",
-            "Triad": "images/props/triad.svg",
-            "Minihoop": "images/props/minihoop.svg",
-            "Buugeng": "images/props/buugeng.svg",
-            "Triquetra": "images/props/triquetra.svg",
-            "Sword": "images/props/sword.svg",
-            "Chicken": "images/props/chicken.png",
-            "Hand": "images/props/hand.svg",
-            "Guitar": "images/props/guitar.svg",
-            "Ukulele": "images/props/ukulele.svg",
+            "Staff": str(images_dir / "props/staff.svg"),
+            "Simplestaff": str(images_dir / "props/simple_staff.svg"),
+            "Club": str(images_dir / "props/club.svg"),
+            "Fan": str(images_dir / "props/fan.svg"),
+            "Triad": str(images_dir / "props/triad.svg"),
+            "Minihoop": str(images_dir / "props/minihoop.svg"),
+            "Buugeng": str(images_dir / "props/buugeng.svg"),
+            "Triquetra": str(images_dir / "props/triquetra.svg"),
+            "Sword": str(images_dir / "props/sword.svg"),
+            "Chicken": str(images_dir / "props/chicken.png"),
+            "Hand": str(images_dir / "props/hand.svg"),
+            "Guitar": str(images_dir / "props/guitar.svg"),
+            "Ukulele": str(images_dir / "props/ukulele.svg"),
         }
 
         # Create prop buttons in a 4-column grid with cell containers like legacy

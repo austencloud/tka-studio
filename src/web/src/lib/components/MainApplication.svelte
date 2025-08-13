@@ -163,6 +163,10 @@
 					event.preventDefault();
 					switchTab('motion-tester');
 					break;
+				case '7':
+					event.preventDefault();
+					switchTab('arrow-debug');
+					break;
 				}
 			}
 		}

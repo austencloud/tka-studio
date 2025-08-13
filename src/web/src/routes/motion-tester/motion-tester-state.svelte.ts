@@ -266,6 +266,9 @@ export function createMotionTesterState() {
     speed: 0.01,
   });
 
+  // Grid type state
+  let gridType = $state<"diamond" | "box">("diamond");
+
   // Animation engine instance
   let animationEngine = new StandalonePortedEngine();
   let totalBeats = $state(1);
@@ -617,6 +620,11 @@ export function createMotionTesterState() {
     return arrows[orientation] || "→";
   }
 
+  // Grid type actions
+  function setGridType(type: "diamond" | "box") {
+    gridType = type;
+  }
+
   // Cleanup on destroy
   function destroy() {
     pauseAnimation();
@@ -636,6 +644,9 @@ export function createMotionTesterState() {
     },
     get animationState() {
       return animationState;
+    },
+    get gridType() {
+      return gridType;
     },
     get currentPropStates() {
       return currentPropStates();
@@ -680,6 +691,9 @@ export function createMotionTesterState() {
     showBothProps,
     showOnlyBlue,
     showOnlyRed,
+
+    // Grid actions
+    setGridType,
 
     // Utility actions
     getOrientationArrow,

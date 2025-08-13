@@ -77,7 +77,7 @@ class SettingsDialog(QDialog, StyleMixin):
         self.current_tab_index = 0
 
         # Initialize components
-        self.services = UISettingsManager(ui_state_service)
+        self.services = UISettingsManager(ui_state_service, container)
         self.animations = SettingsAnimations(self)
 
         self._setup_coordinator()

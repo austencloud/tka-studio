@@ -1,8 +1,6 @@
 <script lang="ts">
-
-	import MotionTesterCanvas from './MotionTesterCanvas.svelte';
-	import MotionParameterPanelNew from './MotionParameterPanelNew.svelte';
-	import DebugInfoPanelNew from './DebugInfoPanelNew.svelte';
+	import MotionParameterPanel from './MotionParameterPanel.svelte';
+	import PictographVisualizationPanel from './PictographVisualizationPanel.svelte';
 	import { createMotionTesterState } from './state/motion-tester-state.svelte';
 
 	// Initialize the motion tester state
@@ -22,17 +20,12 @@
 	<main class="tester-main">
 		<!-- Left Panel: Motion Parameters -->
 		<div class="panel motion-params">
-			<MotionParameterPanelNew {state} />
+			<MotionParameterPanel {state} />
 		</div>
 
-		<!-- Center Panel: Canvas Visualization -->
-		<div class="panel canvas-panel">
-			<MotionTesterCanvas {state} />
-		</div>
-
-		<!-- Right Panel: Debug Information -->
-		<div class="panel debug-panel">
-			<DebugInfoPanelNew {state} />
+		<!-- Right Panel: Pictograph Visualization -->
+		<div class="panel visualization-panel">
+			<PictographVisualizationPanel {state} />
 		</div>
 	</main>
 </div>
@@ -69,11 +62,11 @@
 
 	.tester-main {
 		display: grid;
-		grid-template-columns: 350px 1fr 350px;
+		grid-template-columns: 400px 1fr;
 		gap: 20px;
 		max-width: 1400px;
 		margin: 0 auto;
-		min-height: calc(100vh - 200px);
+		height: calc(100vh - 200px);
 	}
 
 	.panel {
@@ -85,23 +78,36 @@
 		overflow-y: auto;
 	}
 
-	.canvas-panel {
+	.motion-params {
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.visualization-panel {
+		background: rgba(255, 255, 255, 0.05);
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		background: rgba(255, 255, 255, 0.05);
 	}
 
 	@media (max-width: 1200px) {
 		.tester-main {
 			grid-template-columns: 1fr;
-			grid-template-rows: auto auto 1fr;
+			grid-template-rows: auto 1fr;
 			gap: 15px;
+			height: auto;
+			min-height: calc(100vh - 200px);
 		}
 
 		.panel {
 			min-height: auto;
+		}
+
+		.motion-params {
+			order: 1;
+		}
+
+		.visualization-panel {
+			order: 2;
+			min-height: 600px;
 		}
 	}
 

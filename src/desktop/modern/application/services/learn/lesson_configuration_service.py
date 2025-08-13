@@ -5,13 +5,11 @@ Provides lesson configurations and types for the learning module.
 Manages static lesson data and configuration parameters.
 """
 
-from __future__ import annotations
-
 import logging
+from typing import Optional
 
 from desktop.modern.core.interfaces.learn_services import ILessonConfigurationService
 from desktop.modern.domain.models.learn import LessonConfig, LessonType
-
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +62,7 @@ class LessonConfigurationService(ILessonConfigurationService):
             )
 
         except Exception as e:
-            logger.exception(f"Failed to setup lesson configurations: {e}")
+            logger.error(f"Failed to setup lesson configurations: {e}")
             raise
 
     def get_all_lesson_configs(self) -> dict[str, LessonConfig]:
@@ -76,7 +74,7 @@ class LessonConfigurationService(ILessonConfigurationService):
         """
         return self._lesson_configs.copy()
 
-    def get_lesson_config(self, lesson_type: LessonType) -> LessonConfig | None:
+    def get_lesson_config(self, lesson_type: LessonType) -> Optional[LessonConfig]:
         """
         Get configuration for specific lesson type.
 
@@ -96,7 +94,7 @@ class LessonConfigurationService(ILessonConfigurationService):
             return None
 
         except Exception as e:
-            logger.exception(f"Failed to get lesson config for {lesson_type}: {e}")
+            logger.error(f"Failed to get lesson config for {lesson_type}: {e}")
             return None
 
     def get_lesson_names(self) -> list[str]:
@@ -123,10 +121,10 @@ class LessonConfigurationService(ILessonConfigurationService):
             return sorted(lesson_names)
 
         except Exception as e:
-            logger.exception(f"Failed to get lesson names: {e}")
+            logger.error(f"Failed to get lesson names: {e}")
             return []
 
-    def get_lesson_config_by_name(self, lesson_name: str) -> LessonConfig | None:
+    def get_lesson_config_by_name(self, lesson_name: str) -> Optional[LessonConfig]:
         """
         Get lesson configuration by display name.
 
@@ -152,7 +150,7 @@ class LessonConfigurationService(ILessonConfigurationService):
             return None
 
         except Exception as e:
-            logger.exception(f"Failed to get lesson config by name {lesson_name}: {e}")
+            logger.error(f"Failed to get lesson config by name {lesson_name}: {e}")
             return None
 
     def validate_lesson_config(self, config: LessonConfig) -> bool:
@@ -196,5 +194,5 @@ class LessonConfigurationService(ILessonConfigurationService):
             return True
 
         except Exception as e:
-            logger.exception(f"Failed to validate lesson config: {e}")
+            logger.error(f"Failed to validate lesson config: {e}")
             return False

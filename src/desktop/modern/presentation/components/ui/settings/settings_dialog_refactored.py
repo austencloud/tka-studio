@@ -74,9 +74,10 @@ class SettingsDialog(QDialog):
 
     settings_changed = pyqtSignal(str, object)
 
-    def __init__(self, ui_state_service: IUIStateManager, parent=None):
+    def __init__(self, ui_state_service: IUIStateManager, container=None, parent=None):
         super().__init__(parent)
         self.ui_state_service = ui_state_service
+        self.container = container
 
         # Initialize drag position for window dragging
         self.drag_position = None
@@ -94,7 +95,7 @@ class SettingsDialog(QDialog):
         self.current_tab_index = 0
 
         # Initialize components
-        self.services = UISettingsManager(ui_state_service)
+        self.services = UISettingsManager(ui_state_service, container)
         self.animations = SettingsAnimations(self)
 
         self._setup_coordinator()
